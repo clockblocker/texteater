@@ -63,17 +63,6 @@ const sauerStorytelling = defineGoldenCaseGroup({
 	typeof outputSchema
 >);
 
-/**
- * ADJ emoji-picking rules:
- * - Name the stable property or state, not its bearer or the surrounding scene.
- * - Inflection, comparison, intensification, and attributive versus predicative
- *   syntax do not create a new reading.
- * - Reuse one emoji for the same broad property across different bearers.
- * - Split conventional senses when an existing emoji would materially mislead
- *   a beginner.
- *
- * Related: `battery/dumgen/docs/persistent/human-owned-and-verified/emoji-description-authoring.md`
- */
 export const adjectives = defineGoldenCaseCollection(import.meta.url, {
 	groups: {
 		sauerStorytelling,

@@ -1,38 +1,10 @@
----
-status: accepted
-source: "texteater#177"
-supersedes: relation clauses of 0001-keep-dumrel-ownerless-and-pure.md
-partially-superseded-by:
-  - 0004-project-inferences-from-direct-relation-claims.md
-  - system ADR 0016
----
-
 # Use Reading-owned, Lemma-targeted relations
 
-Local ADR 0004 supersedes this ADR's storage-choice and materialization
-language. The graph shape and pure inference boundary remain accepted.
+Dumrel represents Semantic Relations as claims owned by exact Readings, with
+Lemmas as the default targets. The finite graph supplied by callers contains
+the Reading inventory and direct claims needed for pure inference without
+giving Dumrel dictionary or persistence responsibilities.
 
-System ADR 0016 retains this shape as the default target mode and adds exact
-Reading targeting for reviewed closed inventories.
-
-Dumrel represents canonical Semantic Relation targets as concrete Dumling
-Lemmas inside Reading Knowledge. Pending Semantic Relations remain separate
-values containing a relation kind and a Unit Shadow.
-
-The pure propagation interface receives a finite graph with two explicit
-parts: the current Reading-to-Lemma ownership inventory and Reading-to-Lemma
-edges. This is the minimum information required to derive one-level inverse
-fan-out and exact-Synonym closure without teaching Dumrel about dictionary
-lookup or persistence.
-
-`propagateRelations` returns inferred edges only. It materializes an inverse
-for each supplied direct edge across the supplied current target-Lemma
-Readings, then applies exact-Synonym transitivity and two-endpoint substitution.
-It does not recursively invert inferred edges. Consequently Near Synonym and
-Antonym remain symmetric only, Hypernym/Hyponym and Meronym/Holonym remain
-paired one-level inverses only, and no hierarchy transitivity exists.
-
-Dumdict remains responsible for selecting the finite inventory, resolving
-Unit Shadows, preserving later-Reading inverse backfill, enforcing owner-aware
-same-language and self-edge rules, and choosing whether inferred edges become
-stored Reading Knowledge.
+System ADR 0012 replaced inferred-edge materialization with read-time
+projection. System ADR 0016 retained Lemma targeting as the default and added a
+homogeneous exact-Reading target mode for reviewed closed inventories.

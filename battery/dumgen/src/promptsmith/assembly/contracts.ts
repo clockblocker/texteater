@@ -3,6 +3,11 @@ import type { input, output, ZodType } from "zod";
 export type PromptInputSchema = ZodType;
 export type PromptOutputSchema = ZodType;
 
+/**
+ * One schema-bound semantic reference case. The containing registry key is its
+ * stable ID; `explanation` is short authoring guidance, not expected output.
+ * Contamination keys join distinct inputs that exercise the same stimulus.
+ */
 export type GoldenCase<Input, Output> = {
 	readonly input: Input;
 	readonly idealOutput: Output;
@@ -10,6 +15,7 @@ export type GoldenCase<Input, Output> = {
 	readonly contaminationKeys?: readonly string[];
 };
 
+/** A route-local example that teaches exchange shape without claiming corpus evidence. */
 export type LocalDemonstration<Input, Output> = {
 	readonly input: Input;
 	readonly idealOutput: Output;
@@ -26,6 +32,7 @@ export type GoldenCaseRegistry<
 
 declare const goldenCaseGroupCases: unique symbol;
 
+/** A named, role-neutral group of cases within one semantic collection. */
 export interface GoldenCaseGroup<
 	Cases extends Readonly<Record<string, object>> = Readonly<
 		Record<string, object>
@@ -38,6 +45,7 @@ export type GoldenCaseGroupRegistry = Readonly<Record<string, GoldenCaseGroup>>;
 
 declare const goldenCaseCollectionDefinition: unique symbol;
 
+/** A source-local semantic subdivision of one Golden Corpus. */
 export interface GoldenCaseCollection<
 	Groups extends GoldenCaseGroupRegistry = GoldenCaseGroupRegistry,
 	Cases extends Readonly<Record<string, object>> = Readonly<
@@ -64,6 +72,7 @@ export type ParsedLocalDemonstration<
 	OutputSchema extends PromptOutputSchema,
 > = LocalDemonstration<output<InputSchema>, output<OutputSchema>>;
 
+/** Ordered local examples parsed with the Prompt Source's exact schema instances. */
 export interface LocalDemonstrations<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
@@ -103,6 +112,10 @@ type ResolvedGoldenCollections<
 	>;
 };
 
+/**
+ * An immutable ordered view over one Golden Corpus. Set operations preserve
+ * corpus identity and deterministic order.
+ */
 export interface CaseSelection<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
@@ -123,6 +136,10 @@ export interface CaseSelection<
 	isDisjointFrom(other: CaseSelection<InputSchema, OutputSchema>): boolean;
 }
 
+/**
+ * The canonical, schema-validated case registry for one prompt route.
+ * Collections and groups describe semantics; selections assign consumer roles.
+ */
 export interface GoldenCorpus<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
@@ -149,6 +166,10 @@ export interface GoldenCorpus<
 	all(): CaseSelection<InputSchema, OutputSchema>;
 }
 
+/**
+ * Projects a representation-neutral case into a private model exchange and
+ * converts the private result back into the canonical semantic output.
+ */
 export interface PromptRepresentationAdapter<
 	CanonicalInputSchema extends PromptInputSchema,
 	CanonicalOutputSchema extends PromptOutputSchema,
@@ -171,6 +192,11 @@ export interface PromptRepresentationAdapter<
 	}): output<CanonicalOutputSchema>;
 }
 
+/**
+ * The complete human-authored definition of one executable prompt route.
+ * Schemas, body, corpus, and demonstrations share one route-local contract;
+ * Prompt Assembly owns rendering.
+ */
 export interface PromptSource<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
@@ -196,6 +222,7 @@ export type ExperimentEvaluation<
 	readonly output: output<OutputSchema>;
 }) => Result;
 
+/** A Prompt Source, independent evaluation selection, and pure evaluator. */
 export interface Experiment<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,

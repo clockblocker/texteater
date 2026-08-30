@@ -3,7 +3,7 @@
 This report records the retained route-local corpus built for
 [texteater#190](https://github.com/clockblocker/texteater/issues/190). The
 semantic oracle is Dumrel's
-[German Semantic Relation Judgment Contract](../../dumrel/docs/german-semantic-relation-judgment-contract.md).
+[German Semantic Relation Judgment Contract](../../dumrel/docs/reference/german-semantic-relation-judgment-contract.md).
 External factual classifications are checked in the
 [primary-source review](./german-semantic-relation-primary-sources.md); that
 review distinguishes source-settled evidence from project reviewer judgments.

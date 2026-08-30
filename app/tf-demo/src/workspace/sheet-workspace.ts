@@ -112,8 +112,11 @@ export type SheetWorkspaceTransition = {
 };
 
 /**
- * Pure semantic interface for placed workspace state. Card Layers and drag
- * sessions are deliberately not representable here.
+ * Pure transition boundary for placed workspace state.
+ *
+ * Commands preserve unique Pane and Sheet IDs, at most one Locked Sheet per
+ * Pane, top-Sheet-only movement, and the rule that Collapse cannot remove a
+ * Locked Sheet. Card Layers and drag sessions are deliberately absent.
  */
 export function transitionSheetWorkspace(
 	workspace: SheetWorkspace,

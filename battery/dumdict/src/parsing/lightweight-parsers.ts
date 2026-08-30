@@ -51,6 +51,11 @@ import type {
 	InternalDumdictValidationRouteOutput,
 } from "./validation-route-types.js";
 
+/**
+ * Lightweight parsers return canonical output, including normalization and
+ * transforms, or this shared error for caller-controlled invalid input.
+ * Language coordinates are authoritative and narrow the success type.
+ */
 export { ParsingError };
 
 type Parsed<Output> = Output | ParsingError<Output>;
@@ -482,6 +487,7 @@ export function parseAsChangePrecondition<Language extends SupportedLanguage>(
 	return parseLanguageRoute(input, "parseAsChangePrecondition", language);
 }
 
+/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsCommitChangesRequest<Language extends SupportedLanguage>(
 	input: unknown,
 	language: Language,
@@ -495,6 +501,7 @@ export function parseAsCommitChangesResult(
 	return parseDumdictRoute(input, "parseAsCommitChangesResult");
 }
 
+/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsDumdictPlan<Language extends SupportedLanguage>(
 	input: unknown,
 	language: Language,
@@ -535,6 +542,7 @@ export function parseAsPendingSemanticRelationRecord<
 	);
 }
 
+/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsPlannedChangeOp<Language extends SupportedLanguage>(
 	input: unknown,
 	language: Language,
@@ -542,6 +550,7 @@ export function parseAsPlannedChangeOp<Language extends SupportedLanguage>(
 	return parseLanguageRoute(input, "parseAsPlannedChangeOp", language);
 }
 
+/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsReadingEntry<Language extends SupportedLanguage>(
 	input: unknown,
 	language: Language,
@@ -549,6 +558,7 @@ export function parseAsReadingEntry<Language extends SupportedLanguage>(
 	return parseLanguageRoute(input, "parseAsReadingEntry", language);
 }
 
+/** Rejects cyclic Morphological Trees and nesting beyond 128 as `ParsingError`. */
 export function parseAsReadingPatchOp<Language extends SupportedLanguage>(
 	input: unknown,
 	language: Language,

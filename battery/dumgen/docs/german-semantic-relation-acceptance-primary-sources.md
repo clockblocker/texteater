@@ -7,7 +7,6 @@ This is an agent-owned proposal for a **hidden, human-gated acceptance reservati
 The freshness audit compared source identities, target identities, marked contexts, and contamination keys against:
 
 - `src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/retained-cases.ts`;
-- `docs/german-semantic-relation-difficult-examples.md`;
 - `docs/german-semantic-relation-primary-sources.md`;
 - the 50-case development/acceptance collection used by #192.
 

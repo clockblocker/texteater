@@ -181,6 +181,11 @@ function buildAdditionalIndicesOutputCodec(
 
 type AdditionalOutput = z.output<typeof additionalIndicesOutputSchema>;
 
+/**
+ * The selected compact representation for the canonical target oracle. It
+ * sends only the clicked candidate plus compact additional-member indices,
+ * then reconstructs and validates ordered original Segment membership.
+ */
 export const additionalIndicesAdapter = {
 	materialize(goldenCase) {
 		const input = projectClassificationInput(goldenCase.input).input;

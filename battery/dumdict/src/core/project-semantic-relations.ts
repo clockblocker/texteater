@@ -35,7 +35,10 @@ export type SemanticRelationProjection<L extends SupportedLanguage> =
 			provenance: "direct" | "inferred";
 	  };
 
-/** Computes the complete deterministic read view from direct Reading Knowledge. */
+/**
+ * Computes the deterministic direct and inferred read view over the supplied
+ * current dictionary inventory. The projection is not persistence input.
+ */
 export function projectSemanticRelations<L extends SupportedLanguage>(
 	input: ProjectSemanticRelationsInput<L>,
 ): SemanticRelationProjection<L>[] {

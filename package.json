@@ -11,10 +11,10 @@
 	],
 	"scripts": {
 		"benchmark:dum-entrypoints": "bun tooling/dum-entrypoint-rss/benchmark.ts",
-		"build": "bun tooling/manifest-policy.ts repository && bun tooling/run-workspaces.ts build",
+		"build": "bun tooling/manifest-policy.ts repository && turbo run build",
 		"check": "bun tooling/run-workspaces.ts check --if-present",
 		"check:docs": "bun tooling/documentation-integrity.ts",
-		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" bun run --cwd app/tf-demo dev",
+		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev --filter=@texteater/tf-demo",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",
 		"test": "bun test ./tooling && bun tooling/run-workspaces.ts test",
@@ -33,6 +33,7 @@
 		"knip": "^6.29.0",
 		"node": "24.19.0",
 		"oxc-parser": "^0.140.0",
+		"turbo": "2.10.12",
 		"typescript": "^7.0.2"
 	}
 }

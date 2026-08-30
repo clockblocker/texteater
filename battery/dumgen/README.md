@@ -102,9 +102,6 @@ with canonical semantic cases also own a route-local Golden Corpus.
 system-prompt modules; `bun run check:system-prompts` checks them without
 modifying the workspace.
 
-See the [Dumgen documentation index](./docs/persistent/README.md) for the
-current prompt-chain contract and the durable authoring rules behind it.
-
 ## Scope
 
 - Runtime: `Node >= 24`

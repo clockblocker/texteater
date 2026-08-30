@@ -43,5 +43,3 @@ export type OccurrenceAttestationSource = Omit<
 	entity: Attestation<SupportedLanguage>;
 	sentenceMarkdown: string;
 };
-
-export type LogbookFileKind = "classifier" | "reviewer" | "summary";

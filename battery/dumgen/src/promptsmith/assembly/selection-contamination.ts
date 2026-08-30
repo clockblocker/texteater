@@ -8,6 +8,7 @@ export type ContaminationEntry = {
 	readonly contaminationKeys: readonly string[];
 };
 
+/** Rejects semantic overlap between two selections from the same corpus. */
 export function assertCaseSelectionsUncontaminated(args: {
 	readonly route: string;
 	readonly demonstrations: CaseSelection;

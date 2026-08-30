@@ -27,6 +27,11 @@ import type {
 	DumgenOperationalValidationRouteOutput,
 } from "./validation-routes.js";
 
+/**
+ * Lightweight parsers return canonical output, including normalization and
+ * transforms, or this shared error for caller-controlled invalid input.
+ * Language coordinates are authoritative and narrow the success type.
+ */
 export { ParsingError };
 
 type Parsed<Output> = Output | ParsingError<Output>;
@@ -141,6 +146,7 @@ export function parseAsKnowledgeGenerationInput(
 		`parseAsKnowledgeGenerationInput:${language}` as const,
 	);
 }
+/** Rejects cyclic Morphological Trees as `ParsingError`. */
 export function parseAsKnowledgeGenerationResult(
 	input: unknown,
 ): Parsed<KnowledgeGenerationResult> {

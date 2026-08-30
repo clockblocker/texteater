@@ -55,6 +55,7 @@ const FIXTURE_CARD_ORDER = [
 	"attestation",
 ] as const satisfies readonly FixtureNoteKind[];
 
+/** Creates the deterministic, valid three-Pane fixture used by workspace demos. */
 export function createSheetWorkspaceFixture(): SheetWorkspace {
 	return {
 		centralPaneId: "central",

@@ -74,7 +74,7 @@ type RetainedCase = Readonly<{
 
 const sources = {
 	contract:
-		"battery/dumrel/docs/german-semantic-relation-judgment-contract.md",
+		"battery/dumrel/docs/reference/german-semantic-relation-judgment-contract.md",
 	primary: "battery/dumgen/docs/german-semantic-relation-primary-sources.md",
 	acceptance:
 		"battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",

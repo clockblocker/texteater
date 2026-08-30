@@ -89,7 +89,7 @@ describe("Prompt Assembly", () => {
 
 	test("renders optional explanations as guidance outside the ideal output", () => {
 		const prompt = assembleSystemPrompt(intakePromptSource);
-		const explanation = "Revolt, not leave bed. New.";
+		const explanation = "Revolt. Auf adds upward structure. New.";
 		const readingPrompt =
 			PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
 
@@ -117,7 +117,7 @@ describe("Prompt Assembly", () => {
 				.update(targetPrompt.systemPrompt)
 				.digest("hex"),
 		).toBe(
-			"05f0d33f5e2a0b747c060af123dff18434482cc5052a8365a674488713345f49",
+			"59936f1db393da8296389d52a694edce54ce934b4f1c4dd691f7dfb88fbaa0ef",
 		);
 		expect(targetPrompt.systemPrompt).toContain("markedSentence");
 		expect(targetPrompt.systemPrompt).toContain("<participial_boundary>");

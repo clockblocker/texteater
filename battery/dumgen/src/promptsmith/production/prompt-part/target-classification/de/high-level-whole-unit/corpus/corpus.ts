@@ -15,6 +15,13 @@ import { targetStimulusFingerprint } from "./fingerprints";
 import { canonicalInputSchema, canonicalOutputSchema } from "./schemas";
 import { assertCanonicalTargetClassificationCase } from "./validators";
 
+/**
+ * The representation-neutral oracle for German high-level target membership.
+ * Collections describe the linguistic boundary exercised by each case; only
+ * explicit selections assign demonstration or evaluation roles. Inputs that
+ * share a semantic stimulus use the route fingerprint and contamination keys
+ * to stay on one side of an experiment boundary.
+ */
 export const corpus = defineGoldenCorpus({
 	route: "target-classification/de/high-level-whole-unit",
 	inputSchema: canonicalInputSchema,

@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 export function listMarkdownFiles(dir: string): string[] {
@@ -53,11 +53,5 @@ export function removeEmptyDirectories(dir: string): void {
 		if (readdirSync(entryPath).length === 0) {
 			rmSync(entryPath, { recursive: true });
 		}
-	}
-}
-
-export function ensureTextFile(path: string, text: string): void {
-	if (!existsSync(path)) {
-		writeFileSync(path, text);
 	}
 }

@@ -44,6 +44,9 @@ const perfect = sentence(["Sie", "hat", "laut", "gelacht"]);
 const future = sentence(["Sie", "wird", "morgen", "lachen"]);
 const passive = sentence(["Sie", "wird", "von", "allen", "gelobt"]);
 const modal = sentence(["Sie", "muss", "jetzt", "schlafen"]);
+const ellipticalModal = sentence(["Sie", "kann", "das"]);
+const lexicalWerden = sentence(["Sie", "wird", "Ärztin"]);
+const auxiliaryParticiple = sentence(["Das", "wäre", "schön", "gewesen"]);
 const copula = sentence(["Sie", "ist", "sehr", "müde"]);
 const supportVerbCombination = sentence([
 	"Der",
@@ -694,6 +697,27 @@ const cases = {
 		"Lexeme",
 		"VERB",
 	),
+	"target-de-boundary-modal-main-predicate-click-kann": resolved(
+		ellipticalModal,
+		2,
+		[2],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-boundary-lexical-werden-click-wird": resolved(
+		lexicalWerden,
+		2,
+		[2],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-boundary-auxiliary-participle-click-gewesen": resolved(
+		auxiliaryParticiple,
+		6,
+		[6],
+		"Lexeme",
+		"AUX",
+	),
 	"target-de-boundary-copula-click-ist": resolved(
 		copula,
 		2,
@@ -1174,6 +1198,24 @@ function boundaryEvidence(caseId: string): string {
 		return evidence(
 			IDS.participialBoundary,
 			"TIGER assigns adjectivally used Partizip I forms to ADJA or ADJD. Dumgen therefore routes attributive lachende and adverbial lachend as singleton Lexeme/ADJ targets.",
+		);
+	}
+	if (caseId.includes("auxiliary-participle")) {
+		return evidence(
+			udPartOfSpeech("AUX"),
+			"gewesen realizes the auxiliary Lemma sein, so current German policy routes the occurrence as a singleton Lexeme/AUX rather than as the adjective schön or a lexical VERB.",
+		);
+	}
+	if (caseId.includes("modal-main-predicate")) {
+		return evidence(
+			IDS.modalVerb,
+			"No overt infinitive is present, and kann is the clause's main predicate. Current German policy therefore routes this occurrence as a singleton Lexeme/VERB.",
+		);
+	}
+	if (caseId.includes("lexical-werden")) {
+		return evidence(
+			udPartOfSpeech("VERB"),
+			"wird carries its own change-of-state meaning instead of marking another verbal form, so current German policy routes it as a singleton Lexeme/VERB.",
 		);
 	}
 	if (caseId.includes("diagnostic-idiom-oel")) {

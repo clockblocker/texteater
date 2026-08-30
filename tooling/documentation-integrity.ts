@@ -1,26 +1,56 @@
 import { readdir, readFile, stat } from "node:fs/promises";
-import { dirname, extname, join, relative, resolve } from "node:path";
+import { basename, dirname, extname, join, relative, resolve } from "node:path";
 
 import { findRepositoryRoot } from "./lib/workspaces";
+
+export type DocumentationRule =
+	| "adr-structure"
+	| "allowed-path"
+	| "baseline-drift"
+	| "broken-anchor"
+	| "broken-link"
+	| "context-map-structure"
+	| "context-structure"
+	| "coordination-file"
+	| "empty-scaffolding"
+	| "goal-removed"
+	| "protected-file-change"
+	| "protected-reference-placement"
+	| "scoped-count"
+	| "vision-placement";
 
 export type DocumentationIssue = {
 	detail: string;
 	file: string;
-	kind:
-		| "broken-anchor"
-		| "broken-link"
-		| "generated-stage-drift"
-		| "index-coverage"
-		| "lifecycle-metadata"
-		| "mirror-drift";
+	kind: DocumentationRule;
 	line?: number;
 	severity: "advisory" | "error";
 };
 
-export type DocumentationIndex = {
-	index: string;
-	roots: readonly string[];
+export type DocumentationBaseline = {
+	commit: string;
+	count: number;
+	files: string[];
+	policyIssue: number;
 };
+
+export type DocumentationCensus = {
+	baseline: DocumentationBaseline;
+	created: string[];
+	current: string[];
+	removed: string[];
+	retained: string[];
+};
+
+type MarkdownLink = {
+	line: number;
+	target: string;
+};
+
+const baselinePath = join(
+	import.meta.dir,
+	"developer-documentation-baseline.json",
+);
 
 const excludedDirectoryNames = new Set([
 	".astro",
@@ -33,46 +63,33 @@ const excludedDirectoryNames = new Set([
 	"repos-for-refrence",
 ]);
 
-const documentationIndexes = [
-	{
-		index: "battery/dumgen/docs/persistent/README.md",
-		roots: ["battery/dumgen/docs/persistent"],
-	},
-	{
-		index: "battery/dumgen/docs/research/README.md",
-		roots: ["battery/dumgen/docs/research"],
-	},
-	{
-		index: "battery/dumgen/docs/prototypes/README.md",
-		roots: ["battery/dumgen/docs/prototypes"],
-	},
-	{
-		index: "battery/dumdict/docs/v1-architecture/README.md",
-		roots: ["battery/dumdict/docs/v1-architecture"],
-	},
-	{
-		index: "app/tf-demo/docs/README.md",
-		roots: ["app/tf-demo/docs"],
-	},
-] as const satisfies readonly DocumentationIndex[];
+const coordinationTokens = new Set([
+	"backlog",
+	"backlogs",
+	"logbook",
+	"logbooks",
+	"plan",
+	"plans",
+	"queue",
+	"queues",
+	"unresolved",
+	"wip",
+]);
 
-const lifecycleDocuments = [
-	"app/dumling-docs/plans/doc-cite-ud-route-overhaul.md",
-	"app/tf-demo/docs/design/wip-vision.md",
-	"app/tf-demo/docs/research/card-demo-implementation-rubric.md",
-	"app/tf-demo/docs/research/dnd-kit-vs-pragmatic-card-sheet.md",
-	"app/tf-demo/docs/research/sheet-workspace-dnd-candidates.md",
-	"app/tf-demo/docs/research/sheet-workspace-implementation-evidence.md",
-	"battery/dumgen/docs/research/attestation-migration.md",
-	"battery/dumgen/docs/research/german-high-level-target-attestation-footprint.md",
-	"battery/dumgen/docs/research/issue-91-german-grammatical-resolution-migration-matrix.md",
-	"battery/dumgen/docs/research/issue-93-suspended-compound-reconstruction.md",
-] as const;
+const retainedEvidenceCompanionPaths = new Set([
+	"battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",
+	"battery/dumgen/docs/german-semantic-relation-corpus-report.md",
+	"battery/dumgen/docs/german-semantic-relation-primary-sources.md",
+	"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
+	"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
+	"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
+	"battery/dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
+	"battery/dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
+]);
 
-type MarkdownLink = {
-	line: number;
-	target: string;
-};
+function normalizeRepositoryPath(path: string): string {
+	return path.replaceAll("\\", "/").replace(/^\.\//u, "");
+}
 
 async function pathExists(path: string): Promise<boolean> {
 	try {
@@ -103,6 +120,124 @@ async function markdownFilesUnder(root: string): Promise<string[]> {
 
 	await walk(root);
 	return files.toSorted();
+}
+
+function isPackageConsumerDocument(path: string): boolean {
+	return (
+		/^battery\/[^/]+\/README\.md$/u.test(path) ||
+		/^(?:app|battery)\/[^/]+\/generate-readme\//u.test(path)
+	);
+}
+
+function isProducedArtifact(path: string): boolean {
+	return (
+		path.startsWith("docs/benchmarks/") ||
+		path.startsWith("app/dumling-docs/public/") ||
+		path.startsWith("app/dumling-docs/src/generated/") ||
+		path.startsWith("app/dumling-docs/dist/") ||
+		path.startsWith("battery/dumling/resources/") ||
+		path.startsWith("battery/dumgen/docs/learning/") ||
+		path.startsWith("battery/dumgen/.laboratory/sessions/") ||
+		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
+			path,
+		) ||
+		/^battery\/dumgen\/src\/promptsmith\/.*\/corpus\//u.test(path)
+	);
+}
+
+/** The path-only portion of the developer-documentation boundary accepted in #307. */
+export function isDeveloperDocumentationPath(candidate: string): boolean {
+	const path = normalizeRepositoryPath(candidate);
+	return (
+		path.endsWith(".md") &&
+		![...path.split("/")].some((part) =>
+			excludedDirectoryNames.has(part),
+		) &&
+		!isPackageConsumerDocument(path) &&
+		!isProducedArtifact(path)
+	);
+}
+
+export async function developerDocumentationFiles(
+	repositoryRoot: string,
+): Promise<string[]> {
+	return (await markdownFilesUnder(repositoryRoot))
+		.map((path) => normalizeRepositoryPath(relative(repositoryRoot, path)))
+		.filter(isDeveloperDocumentationPath)
+		.toSorted();
+}
+
+export function isProtectedDeveloperDocument(candidate: string): boolean {
+	const path = normalizeRepositoryPath(candidate);
+	return (
+		basename(path) === "VISION.md" ||
+		/^(?:docs|(?:app|battery)\/[^/]+\/docs)\/reference\/human-owned\/.+\.md$/u.test(
+			path,
+		)
+	);
+}
+
+export function isAllowedDeveloperDocumentationPath(
+	candidate: string,
+): boolean {
+	const path = normalizeRepositoryPath(candidate);
+	return (
+		retainedEvidenceCompanionPaths.has(path) ||
+		path === "README.md" ||
+		/^app\/[^/]+\/README\.md$/u.test(path) ||
+		path === "AGENTS.md" ||
+		path === "CLAUDE.md" ||
+		path === "CONTEXT-MAP.md" ||
+		path === "VISION.md" ||
+		/^(?:app|battery)\/[^/]+\/(?:AGENTS|CLAUDE|CONTEXT|VISION)\.md$/u.test(
+			path,
+		) ||
+		/^(?:\.agents|(?:app|battery)\/[^/]+\/\.agents)\/skills\/.+\.md$/u.test(
+			path,
+		) ||
+		/^(?:app|battery)\/[^/]+\/convex\/_generated\/ai\/guidelines\.md$/u.test(
+			path,
+		) ||
+		/^(?:docs|(?:app|battery)\/[^/]+\/docs)\/adr\/\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/u.test(
+			path,
+		) ||
+		/^(?:docs|(?:app|battery)\/[^/]+\/docs)\/(?:reference|runbooks)\/.+\.md$/u.test(
+			path,
+		)
+	);
+}
+
+function isAgentInstructionPath(candidate: string): boolean {
+	const path = normalizeRepositoryPath(candidate);
+	return (
+		/^(?:(?:app|battery)\/[^/]+\/)?(?:AGENTS|CLAUDE)\.md$/u.test(path) ||
+		/^(?:\.agents|(?:app|battery)\/[^/]+\/\.agents)\/skills\/.+\.md$/u.test(
+			path,
+		) ||
+		/^(?:app|battery)\/[^/]+\/convex\/_generated\/ai\/guidelines\.md$/u.test(
+			path,
+		)
+	);
+}
+
+export async function loadDocumentationBaseline(): Promise<DocumentationBaseline> {
+	return JSON.parse(await readFile(baselinePath, "utf8"));
+}
+
+export async function createDocumentationCensus(
+	repositoryRoot: string,
+): Promise<DocumentationCensus> {
+	const baseline = await loadDocumentationBaseline();
+	const current = await developerDocumentationFiles(repositoryRoot);
+	const baselineFiles = new Set(baseline.files);
+	const currentFiles = new Set(current);
+	return {
+		baseline,
+		created: current.filter((path) => !baselineFiles.has(path)),
+		current,
+		removed: baseline.files.filter((path) => !currentFiles.has(path)),
+		retained: baseline.files.filter((path) => currentFiles.has(path)),
+	};
 }
 
 export function markdownLinks(text: string): MarkdownLink[] {
@@ -227,22 +362,21 @@ function splitTarget(target: string): { fragment?: string; path: string } {
 	};
 }
 
-function linkBaseForSource(sourcePath: string): string {
-	return sourcePath.endsWith("/generate-readme/README.template.md")
-		? resolve(dirname(sourcePath), "..")
-		: dirname(sourcePath);
-}
-
 export async function auditMarkdownLinks(
 	repositoryRoot: string,
 	files?: readonly string[],
 ): Promise<DocumentationIssue[]> {
 	const issues: DocumentationIssue[] = [];
 	const anchorCache = new Map<string, Set<string>>();
-	const filesToAudit = files ?? (await markdownFilesUnder(repositoryRoot));
+	const relativeFiles =
+		files ?? (await developerDocumentationFiles(repositoryRoot));
 
-	for (const sourcePath of filesToAudit) {
+	for (const relativeSource of relativeFiles) {
+		const sourcePath = resolve(repositoryRoot, relativeSource);
 		const text = await readFile(sourcePath, "utf8");
+		const severity = isProtectedDeveloperDocument(relativeSource)
+			? "advisory"
+			: "error";
 		for (const link of markdownLinks(text)) {
 			const target = cleanLinkTarget(link.target);
 			if (isExternalOrSiteLink(target)) continue;
@@ -250,14 +384,14 @@ export async function auditMarkdownLinks(
 			const targetPath =
 				parts.path.length === 0
 					? sourcePath
-					: resolve(linkBaseForSource(sourcePath), parts.path);
+					: resolve(dirname(sourcePath), parts.path);
 			if (!(await pathExists(targetPath))) {
 				issues.push({
 					detail: `target does not exist: ${link.target}`,
-					file: relative(repositoryRoot, sourcePath),
+					file: normalizeRepositoryPath(relativeSource),
 					kind: "broken-link",
 					line: link.line,
-					severity: "advisory",
+					severity,
 				});
 				continue;
 			}
@@ -282,10 +416,10 @@ export async function auditMarkdownLinks(
 			if (!anchors.has(fragment)) {
 				issues.push({
 					detail: `anchor does not exist: #${parts.fragment}`,
-					file: relative(repositoryRoot, sourcePath),
+					file: normalizeRepositoryPath(relativeSource),
 					kind: "broken-anchor",
 					line: link.line,
-					severity: "advisory",
+					severity,
 				});
 			}
 		}
@@ -294,63 +428,41 @@ export async function auditMarkdownLinks(
 	return issues;
 }
 
-async function resolvedMarkdownTargets(
-	indexPath: string,
-): Promise<Set<string>> {
-	const targets = new Set<string>();
-	for (const link of markdownLinks(await readFile(indexPath, "utf8"))) {
-		const target = cleanLinkTarget(link.target);
-		if (isExternalOrSiteLink(target)) continue;
-		const path = splitTarget(target).path;
-		if (path.length > 0) targets.add(resolve(dirname(indexPath), path));
-	}
-	return targets;
-}
-
-export async function auditIndexCoverage(
-	repositoryRoot: string,
-	indexes: readonly DocumentationIndex[],
-): Promise<DocumentationIssue[]> {
+export function auditBaseline(
+	baseline: DocumentationBaseline,
+): DocumentationIssue[] {
 	const issues: DocumentationIssue[] = [];
-
-	for (const index of indexes) {
-		const indexPath = join(repositoryRoot, index.index);
-		const targets = await resolvedMarkdownTargets(indexPath);
-		for (const root of index.roots) {
-			for (const documentPath of await markdownFilesUnder(
-				join(repositoryRoot, root),
-			)) {
-				if (documentPath === indexPath || targets.has(documentPath))
-					continue;
-				issues.push({
-					detail: `document is not linked from ${index.index}`,
-					file: relative(repositoryRoot, documentPath),
-					kind: "index-coverage",
-					severity: "error",
-				});
-			}
-		}
+	const sortedFiles = baseline.files.toSorted();
+	if (baseline.count !== baseline.files.length) {
+		issues.push({
+			detail: `recorded count ${baseline.count} does not match ${baseline.files.length} listed files`,
+			file: "tooling/developer-documentation-baseline.json",
+			kind: "baseline-drift",
+			severity: "error",
+		});
 	}
-
-	return issues;
-}
-
-async function auditLifecycleMetadata(
-	repositoryRoot: string,
-): Promise<DocumentationIssue[]> {
-	const issues: DocumentationIssue[] = [];
-	for (const document of lifecycleDocuments) {
-		const firstScreen = (
-			await readFile(join(repositoryRoot, document), "utf8")
-		)
-			.split("\n")
-			.slice(0, 14)
-			.join("\n");
-		if (!/\b(?:Lifecycle|Status):/u.test(firstScreen)) {
+	if (new Set(baseline.files).size !== baseline.files.length) {
+		issues.push({
+			detail: "baseline file list contains duplicates",
+			file: "tooling/developer-documentation-baseline.json",
+			kind: "baseline-drift",
+			severity: "error",
+		});
+	}
+	if (!baseline.files.every((path, index) => path === sortedFiles[index])) {
+		issues.push({
+			detail: "baseline file list must be sorted",
+			file: "tooling/developer-documentation-baseline.json",
+			kind: "baseline-drift",
+			severity: "error",
+		});
+	}
+	for (const file of baseline.files) {
+		if (!isDeveloperDocumentationPath(file)) {
 			issues.push({
-				detail: "explicit lifecycle metadata is missing from the first screen",
-				file: document,
-				kind: "lifecycle-metadata",
+				detail: "listed file is outside the #307 developer-documentation boundary",
+				file,
+				kind: "baseline-drift",
 				severity: "error",
 			});
 		}
@@ -358,70 +470,100 @@ async function auditLifecycleMetadata(
 	return issues;
 }
 
-async function auditTfDemoAgentMirror(
-	repositoryRoot: string,
-): Promise<DocumentationIssue[]> {
-	const agents = "app/tf-demo/AGENTS.md";
-	const claude = "app/tf-demo/CLAUDE.md";
-	if (
-		(await readFile(join(repositoryRoot, agents), "utf8")) ===
-		(await readFile(join(repositoryRoot, claude), "utf8"))
-	) {
-		return [];
+export function auditAllowedPaths(
+	files: readonly string[],
+): DocumentationIssue[] {
+	return files.flatMap((file) =>
+		isAllowedDeveloperDocumentationPath(file)
+			? []
+			: [
+					{
+						detail: "developer documentation must use an agent-instruction, Context, ADR, reference, runbook, protected Vision, or root maintainer-README path",
+						file,
+						kind: "allowed-path" as const,
+						severity: "error" as const,
+					},
+				],
+	);
+}
+
+export function auditGoalsAndVisions(
+	files: readonly string[],
+): DocumentationIssue[] {
+	const issues: DocumentationIssue[] = [];
+	for (const file of files) {
+		if (basename(file) === "GOAL.md") {
+			issues.push({
+				detail: "GOAL.md was removed by the #307 human-owned-material policy",
+				file,
+				kind: "goal-removed",
+				severity: "error",
+			});
+		}
+		if (
+			basename(file) === "VISION.md" &&
+			file !== "VISION.md" &&
+			!/^(?:app|battery)\/[^/]+\/VISION\.md$/u.test(file)
+		) {
+			issues.push({
+				detail: "VISION.md is allowed only at the repository, app, or battery root",
+				file,
+				kind: "vision-placement",
+				severity: "error",
+			});
+		}
+		if (
+			file.includes("human-owned") &&
+			!/^(?:docs|(?:app|battery)\/[^/]+\/docs)\/reference\/human-owned\/.+\.md$/u.test(
+				file,
+			)
+		) {
+			issues.push({
+				detail: "human-owned reference belongs under docs/reference/human-owned/ in its owning scope",
+				file,
+				kind: "protected-reference-placement",
+				severity: "error",
+			});
+		}
 	}
+	return issues;
+}
+
+export function auditScopedCount(
+	census: DocumentationCensus,
+): DocumentationIssue[] {
+	if (census.current.length < census.baseline.count) return [];
 	return [
 		{
-			detail: `${agents} and ${claude} must remain byte-identical`,
-			file: agents,
-			kind: "mirror-drift",
+			detail: `current scoped count ${census.current.length} must be below the ${census.baseline.count}-file baseline; human review still decides whether the reduction is drastic`,
+			file: "tooling/developer-documentation-baseline.json",
+			kind: "scoped-count",
 			severity: "error",
 		},
 	];
 }
 
-async function markdownByRelativePath(
-	root: string,
-): Promise<Map<string, string>> {
-	return new Map(
-		(await markdownFilesUnder(root)).map((path) => [
-			relative(root, path),
-			path,
-		]),
-	);
+function pathTokens(path: string): string[] {
+	return normalizeRepositoryPath(path)
+		.toLowerCase()
+		.split(/[/_.-]+/u)
+		.filter((token) => token.length > 0);
 }
 
-async function auditDumlingDocsStages(
-	repositoryRoot: string,
-): Promise<DocumentationIssue[]> {
-	const publicRoot = join(repositoryRoot, "app/dumling-docs/public");
-	const distRoot = join(repositoryRoot, "app/dumling-docs/dist");
-	if (!(await pathExists(distRoot))) {
-		return [
-			{
-				detail: "dist is absent; run the Dumling Docs build to compare publication Markdown",
-				file: "app/dumling-docs/dist",
-				kind: "generated-stage-drift",
-				severity: "advisory",
-			},
-		];
-	}
-
-	const publicFiles = await markdownByRelativePath(publicRoot);
-	const distFiles = await markdownByRelativePath(distRoot);
+export function auditCoordinationFiles(
+	files: readonly string[],
+): DocumentationIssue[] {
 	const issues: DocumentationIssue[] = [];
-	for (const path of new Set([...publicFiles.keys(), ...distFiles.keys()])) {
-		const publicPath = publicFiles.get(path);
-		const distPath = distFiles.get(path);
-		if (
-			publicPath === undefined ||
-			distPath === undefined ||
-			(await readFile(publicPath, "utf8")) !==
-				(await readFile(distPath, "utf8"))
-		) {
+	for (const file of files) {
+		if (isAgentInstructionPath(file)) continue;
+		const token = pathTokens(file).find((part) =>
+			coordinationTokens.has(part),
+		);
+		if (token !== undefined) {
 			issues.push({
-				detail: "public and dist Markdown differ; rebuild Dumling Docs",
-				file: `app/dumling-docs/${path}`,
-				kind: "generated-stage-drift",
+				detail: `coordination token "${token}" belongs in GitHub, not a repository document path`,
+				file,
+				kind: "coordination-file",
 				severity: "error",
 			});
 		}
@@ -429,45 +571,475 @@ async function auditDumlingDocsStages(
 	return issues;
 }
 
-export async function auditDocumentationIntegrity(
+function lineNumber(text: string, offset: number): number {
+	return text.slice(0, offset).split("\n").length;
+}
+
+export function contextStructureIssues(
+	file: string,
+	text: string,
+): DocumentationIssue[] {
+	const issues: DocumentationIssue[] = [];
+	const lines = text.split("\n");
+	const languageHeading = lines.indexOf("## Language");
+	const headings = lines
+		.map((line, index) => ({ index, line }))
+		.filter(({ line }) => /^#{1,6}\s/u.test(line));
+	const firstContent = lines.findIndex((line) => line.trim().length > 0);
+	if (firstContent === -1 || !/^# [^#].+/u.test(lines[firstContent] ?? "")) {
+		issues.push({
+			detail: "Context must start with one level-one title",
+			file,
+			kind: "context-structure",
+			line: Math.max(firstContent + 1, 1),
+			severity: "error",
+		});
+	}
+	if (languageHeading === -1) {
+		issues.push({
+			detail: "Context must contain one ## Language section",
+			file,
+			kind: "context-structure",
+			severity: "error",
+		});
+		return issues;
+	}
+	const description = lines
+		.slice(firstContent + 1, languageHeading)
+		.join("\n")
+		.trim();
+	if (description.length === 0) {
+		issues.push({
+			detail: "Context title must be followed by a short description",
+			file,
+			kind: "context-structure",
+			line: languageHeading + 1,
+			severity: "error",
+		});
+	}
+	for (const heading of headings) {
+		if (
+			heading.index !== firstContent &&
+			heading.index !== languageHeading &&
+			!/^### [^#].+/u.test(heading.line)
+		) {
+			issues.push({
+				detail: "Context may contain only its title, ## Language, and optional level-three term groups",
+				file,
+				kind: "context-structure",
+				line: heading.index + 1,
+				severity: "error",
+			});
+		}
+	}
+	const termMatches = [...text.matchAll(/^\*\*[^*\n]+\*\*:\s*$/gmu)].filter(
+		(match) => (match.index ?? 0) > text.indexOf("## Language"),
+	);
+	if (termMatches.length === 0) {
+		issues.push({
+			detail: "Context Language section must contain at least one **Term**: entry",
+			file,
+			kind: "context-structure",
+			line: languageHeading + 1,
+			severity: "error",
+		});
+	}
+	for (const match of text.matchAll(/^_Avoid_(?!:)/gmu)) {
+		issues.push({
+			detail: "Context alternatives must use the _Avoid_: label",
+			file,
+			kind: "context-structure",
+			line: lineNumber(text, match.index ?? 0),
+			severity: "error",
+		});
+	}
+	return issues;
+}
+
+async function auditContexts(
 	repositoryRoot: string,
+	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
+	const issues: DocumentationIssue[] = [];
+	for (const file of files.filter(
+		(path) => basename(path) === "CONTEXT.md",
+	)) {
+		issues.push(
+			...contextStructureIssues(
+				file,
+				await readFile(join(repositoryRoot, file), "utf8"),
+			),
+		);
+	}
+	return issues;
+}
+
+export function contextMapStructureIssues(text: string): DocumentationIssue[] {
+	const file = "CONTEXT-MAP.md";
+	const headings = text.split("\n").filter((line) => /^#{1,6}\s/u.test(line));
+	if (
+		headings.length === 3 &&
+		headings[0] === "# Context Map" &&
+		headings[1] === "## Contexts" &&
+		headings[2] === "## Relationships"
+	) {
+		return [];
+	}
 	return [
-		...(await auditTfDemoAgentMirror(repositoryRoot)),
-		...(await auditIndexCoverage(repositoryRoot, documentationIndexes)),
-		...(await auditLifecycleMetadata(repositoryRoot)),
-		...(await auditDumlingDocsStages(repositoryRoot)),
-		...(await auditMarkdownLinks(repositoryRoot)),
+		{
+			detail: "Context Map headings must be # Context Map, ## Contexts, then ## Relationships",
+			file,
+			kind: "context-map-structure",
+			severity: "error",
+		},
 	];
 }
 
-function formatIssue(issue: DocumentationIssue): string {
-	return `${issue.file}${issue.line === undefined ? "" : `:${issue.line}`}: ${issue.detail}`;
+async function auditContextMap(
+	repositoryRoot: string,
+	files: readonly string[],
+): Promise<DocumentationIssue[]> {
+	if (!files.includes("CONTEXT-MAP.md")) {
+		return [
+			{
+				detail: "multi-context repository requires a root CONTEXT-MAP.md",
+				file: "CONTEXT-MAP.md",
+				kind: "context-map-structure",
+				severity: "error",
+			},
+		];
+	}
+	const text = await readFile(join(repositoryRoot, "CONTEXT-MAP.md"), "utf8");
+	const issues = contextMapStructureIssues(text);
+	const targets = new Set(
+		markdownLinks(text)
+			.map(({ target }) => cleanLinkTarget(target))
+			.filter((target) => target.endsWith("/CONTEXT.md"))
+			.map((target) => normalizeRepositoryPath(target)),
+	);
+	for (const context of files.filter(
+		(path) => basename(path) === "CONTEXT.md",
+	)) {
+		if (!targets.has(`./${context}`) && !targets.has(context)) {
+			issues.push({
+				detail: "Context is not listed in root CONTEXT-MAP.md",
+				file: context,
+				kind: "context-map-structure",
+				severity: "error",
+			});
+		}
+	}
+	return issues;
+}
+
+function stripFrontmatter(text: string): {
+	body: string;
+	frontmatter?: string;
+} {
+	if (!text.startsWith("---\n")) return { body: text };
+	const end = text.indexOf("\n---\n", 4);
+	if (end === -1) return { body: text, frontmatter: "" };
+	return {
+		body: text.slice(end + 5),
+		frontmatter: text.slice(4, end),
+	};
+}
+
+export function adrStructureIssues(
+	file: string,
+	text: string,
+): DocumentationIssue[] {
+	const issues: DocumentationIssue[] = [];
+	const { body, frontmatter } = stripFrontmatter(text);
+	if (
+		frontmatter !== undefined &&
+		!/^status: (?:proposed|accepted|deprecated|superseded by ADR-\d{4})$/u.test(
+			frontmatter.trim(),
+		)
+	) {
+		issues.push({
+			detail: "ADR frontmatter may contain only a supported status from ADR-FORMAT.md",
+			file,
+			kind: "adr-structure",
+			line: 1,
+			severity: "error",
+		});
+	}
+	const lines = body.split("\n");
+	const firstContent = lines.findIndex((line) => line.trim().length > 0);
+	if (firstContent === -1 || !/^# [^#].+/u.test(lines[firstContent] ?? "")) {
+		issues.push({
+			detail: "ADR must start with one level-one decision title",
+			file,
+			kind: "adr-structure",
+			severity: "error",
+		});
+		return issues;
+	}
+	const headingIndexes = lines
+		.map((line, index) => ({ index, line }))
+		.filter(({ line }) => /^#{1,6}\s/u.test(line));
+	for (const heading of headingIndexes.slice(1)) {
+		if (
+			heading.line !== "## Considered Options" &&
+			heading.line !== "## Consequences"
+		) {
+			issues.push({
+				detail: "ADR optional sections are limited to ## Considered Options and ## Consequences",
+				file,
+				kind: "adr-structure",
+				line: heading.index + 1,
+				severity: "error",
+			});
+		}
+	}
+	const firstSection = headingIndexes[1]?.index ?? lines.length;
+	if (
+		lines
+			.slice(firstContent + 1, firstSection)
+			.join("\n")
+			.trim().length === 0
+	) {
+		issues.push({
+			detail: "ADR title must be followed by the decision and its reason",
+			file,
+			kind: "adr-structure",
+			severity: "error",
+		});
+	}
+	return issues;
+}
+
+export async function auditAdrs(
+	repositoryRoot: string,
+	files: readonly string[],
+): Promise<DocumentationIssue[]> {
+	const issues: DocumentationIssue[] = [];
+	const adrFiles = files.filter(
+		(path) => path.includes("/docs/adr/") || path.startsWith("docs/adr/"),
+	);
+	const byDirectory = new Map<string, string[]>();
+	for (const file of adrFiles) {
+		const directory = dirname(file);
+		const entries = byDirectory.get(directory) ?? [];
+		entries.push(file);
+		byDirectory.set(directory, entries);
+		issues.push(
+			...adrStructureIssues(
+				file,
+				await readFile(join(repositoryRoot, file), "utf8"),
+			),
+		);
+	}
+	for (const [directory, entries] of byDirectory) {
+		const numbers = entries
+			.map((file) => Number.parseInt(basename(file).slice(0, 4), 10))
+			.filter(Number.isFinite)
+			.toSorted((left, right) => left - right);
+		for (const [index, number] of numbers.entries()) {
+			if (number !== index + 1) {
+				issues.push({
+					detail: `ADR numbering in ${directory} must be contiguous from 0001`,
+					file:
+						entries.find((file) =>
+							basename(file).startsWith(
+								String(number).padStart(4, "0"),
+							),
+						) ?? directory,
+					kind: "adr-structure",
+					severity: "error",
+				});
+				break;
+			}
+		}
+	}
+	return issues;
+}
+
+function contentWithoutScaffolding(text: string): string {
+	return stripFrontmatter(text)
+		.body.replaceAll(/^#{1,6}\s.*$/gmu, "")
+		.replaceAll(/<!--.*?-->/gsu, "")
+		.trim();
+}
+
+export function isEmptyScaffoldingContent(text: string): boolean {
+	const content = contentWithoutScaffolding(text);
+	return (
+		content.length === 0 ||
+		/^(?:tbd|todo|coming soon|placeholder)[.!]?$/iu.test(content)
+	);
+}
+
+export async function auditEmptyScaffolding(
+	repositoryRoot: string,
+	files: readonly string[],
+): Promise<DocumentationIssue[]> {
+	const issues: DocumentationIssue[] = [];
+	for (const file of files) {
+		if (
+			isEmptyScaffoldingContent(
+				await readFile(join(repositoryRoot, file), "utf8"),
+			)
+		) {
+			issues.push({
+				detail: "developer document is empty or placeholder scaffolding",
+				file,
+				kind: "empty-scaffolding",
+				severity: "error",
+			});
+		}
+	}
+	const scopes = new Set([
+		"docs",
+		...files.flatMap((file) => {
+			const match = file.match(/^((?:app|battery)\/[^/]+)\//u)?.[1];
+			return match === undefined ? [] : [join(match, "docs")];
+		}),
+	]);
+	for (const scope of scopes) {
+		for (const category of ["adr", "reference", "runbooks"]) {
+			const directory = join(repositoryRoot, scope, category);
+			if (!(await pathExists(directory))) continue;
+			const entries = await readdir(directory);
+			if (entries.length === 0) {
+				issues.push({
+					detail: "documentation category directory is empty scaffolding",
+					file: normalizeRepositoryPath(
+						relative(repositoryRoot, directory),
+					),
+					kind: "empty-scaffolding",
+					severity: "error",
+				});
+			}
+		}
+	}
+	return issues;
+}
+
+export function auditProtectedChanges(
+	changedFiles: readonly string[],
+): DocumentationIssue[] {
+	return [...new Set(changedFiles.map(normalizeRepositoryPath))]
+		.filter(isProtectedDeveloperDocument)
+		.toSorted()
+		.map((file) => ({
+			detail: "protected document changed; reviewer must verify explicit approval",
+			file,
+			kind: "protected-file-change",
+			severity: "advisory",
+		}));
+}
+
+async function gitOutput(
+	repositoryRoot: string,
+	args: string[],
+): Promise<string> {
+	const process = Bun.spawn(["git", ...args], {
+		cwd: repositoryRoot,
+		stderr: "pipe",
+		stdout: "pipe",
+	});
+	const output = await new Response(process.stdout).text();
+	if ((await process.exited) !== 0) return "";
+	return output;
+}
+
+async function changedRepositoryFiles(
+	repositoryRoot: string,
+): Promise<string[]> {
+	const configuredBase =
+		process.env.DOCUMENTATION_BASE_REF ??
+		(process.env.GITHUB_BASE_REF === undefined
+			? undefined
+			: `origin/${process.env.GITHUB_BASE_REF}`);
+	const outputs = await Promise.all([
+		configuredBase === undefined
+			? Promise.resolve("")
+			: gitOutput(repositoryRoot, [
+					"diff",
+					"--name-only",
+					"--diff-filter=ACDMRTUXB",
+					"--no-renames",
+					`${configuredBase}...HEAD`,
+				]),
+		gitOutput(repositoryRoot, [
+			"diff",
+			"--name-only",
+			"--diff-filter=ACDMRTUXB",
+			"--no-renames",
+			"HEAD",
+		]),
+		gitOutput(repositoryRoot, [
+			"ls-files",
+			"--others",
+			"--exclude-standard",
+		]),
+	]);
+	return outputs
+		.flatMap((output) => output.split("\n"))
+		.filter((path) => path.length > 0);
+}
+
+export async function auditDocumentationIntegrity(
+	repositoryRoot: string,
+): Promise<DocumentationIssue[]> {
+	const census = await createDocumentationCensus(repositoryRoot);
+	return [
+		...auditBaseline(census.baseline),
+		...auditScopedCount(census),
+		...auditAllowedPaths(census.current),
+		...auditGoalsAndVisions(census.current),
+		...auditCoordinationFiles(census.current),
+		...(await auditContexts(repositoryRoot, census.current)),
+		...(await auditContextMap(repositoryRoot, census.current)),
+		...(await auditAdrs(repositoryRoot, census.current)),
+		...(await auditEmptyScaffolding(repositoryRoot, census.current)),
+		...(await auditMarkdownLinks(repositoryRoot, census.current)),
+		...auditProtectedChanges(await changedRepositoryFiles(repositoryRoot)),
+	];
+}
+
+export function formatDocumentationIssue(issue: DocumentationIssue): string {
+	return `${issue.file}${issue.line === undefined ? "" : `:${issue.line}`}: [${issue.kind}] ${issue.detail}`;
+}
+
+function printCensus(census: DocumentationCensus): void {
+	console.log(
+		`Developer documentation census: ${census.baseline.count} baseline files at ${census.baseline.commit}; ${census.current.length} current files (${census.retained.length} retained, ${census.removed.length} removed, ${census.created.length} created).`,
+	);
+	if (!process.argv.includes("--report")) return;
+	for (const [disposition, files] of [
+		["retained", census.retained],
+		["removed", census.removed],
+		["created", census.created],
+	] as const) {
+		console.log(`${disposition}:`);
+		for (const file of files) console.log(`- ${file}`);
+	}
 }
 
 if (import.meta.main) {
 	const repositoryRoot = await findRepositoryRoot(process.cwd());
+	const census = await createDocumentationCensus(repositoryRoot);
 	const issues = await auditDocumentationIntegrity(repositoryRoot);
 	const errors = issues.filter(({ severity }) => severity === "error");
 	const advisories = issues.filter(({ severity }) => severity === "advisory");
 
+	printCensus(census);
 	if (advisories.length > 0) {
-		console.warn(
-			`Documentation link report (${advisories.length} advisory issue${advisories.length === 1 ? "" : "s"}; not a CI gate pending historical-link policy):`,
-		);
-		for (const issue of advisories.slice(0, 40)) {
-			console.warn(`- ${formatIssue(issue)}`);
-		}
-		if (advisories.length > 40) {
-			console.warn(`- ... ${advisories.length - 40} more`);
+		console.warn("Documentation review advisories:");
+		for (const issue of advisories) {
+			console.warn(`- ${formatDocumentationIssue(issue)}`);
 		}
 	}
-
 	if (errors.length === 0) {
-		console.log("Documentation integrity gates passed.");
+		console.log("Developer-documentation policy gates passed.");
 	} else {
-		console.error("Documentation integrity gates failed:");
-		for (const issue of errors) console.error(`- ${formatIssue(issue)}`);
+		console.error("Developer-documentation policy gates failed:");
+		for (const issue of errors) {
+			console.error(`- ${formatDocumentationIssue(issue)}`);
+		}
 		process.exitCode = 1;
 	}
 }

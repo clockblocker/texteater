@@ -1,8 +1,7 @@
-# THROWAWAY: German relation prompt iteration laboratory
+# German relation prompt iteration laboratory
 
-Question: which bounded revisions of the existing combined atomic German
-Knowledge prompt produce the most conservative, stable relation proposals under
-the frozen `german-relation-evaluation-v1` gate?
+This prototype compares bounded revisions of the combined German Knowledge
+prompt under the frozen `german-relation-evaluation-v1` gate.
 
 This is the corrected LOGIC prototype for
 [texteater#192](https://github.com/clockblocker/texteater/issues/192). It obeys
@@ -51,6 +50,6 @@ ceiling before every call, uses no retries, and checkpoints every attempt under
 `runs/<timestamp>/results.json`.
 
 The earlier
-[`german-relation-topology-lab`](../german-relation-topology-lab/README.md)
-artifact is retained as evidence of a rejected experiment design. It cannot
-support a #193 candidate or publication decision.
+[topology result](../german-relation-topology-lab/runs/2026-08-20T08-32-05-075Z/results.json)
+is retained as evidence of a rejected experiment design. It cannot support a
+#193 candidate or publication decision.

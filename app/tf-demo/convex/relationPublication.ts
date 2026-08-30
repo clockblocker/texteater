@@ -52,6 +52,10 @@ function findControl(ctx: QueryCtx | MutationCtx) {
 		.unique();
 }
 
+/**
+ * Combines the compiled reviewed allowlist with the mutable server rollback
+ * control. Callers receive copied arrays so they cannot mutate policy state.
+ */
 export async function loadRelationPublicationAuthorization(
 	ctx: QueryCtx | MutationCtx,
 ) {
@@ -115,7 +119,10 @@ function sameFingerprints(
 	);
 }
 
-/** Rechecked in the same transaction that would create canonical edges. */
+/**
+ * Rechecks artifact identity, all five fingerprints, qualified kinds, and the
+ * rollback control in the transaction that would create canonical edges.
+ */
 export async function relationPublicationAllowedAtCommit(
 	ctx: MutationCtx,
 	run: RelationPublicationRun,

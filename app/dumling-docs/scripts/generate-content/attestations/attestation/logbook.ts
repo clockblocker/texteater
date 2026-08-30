@@ -1,22 +1,12 @@
-import {
-	existsSync,
-	mkdirSync,
-	readdirSync,
-	readFileSync,
-	rmSync,
-} from "node:fs";
+import { existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { getLanguageApi } from "dumling";
 import type { SupportedLanguage } from "dumling/types";
-import { ensureTextFile } from "../../shared/fs";
 import {
 	classificationLogbookDir,
 	sourceAttestationsDir,
 } from "../../shared/paths";
-import type {
-	LogbookFileKind,
-	OccurrenceAttestationSource,
-} from "../../shared/types";
+import type { OccurrenceAttestationSource } from "../../shared/types";
 import { attestationSlugForSource } from "../entity/attestation-slug";
 import { attestationSemanticSourcePath } from "./semantic-source-path";
 
@@ -57,75 +47,6 @@ export function sentenceMarkdownCsvValue(sentenceMarkdown: string): string {
 	return sentenceMarkdown.replaceAll(/\s*[\r\n]+\s*/gu, " ");
 }
 
-export function defaultLogbookText(kind: LogbookFileKind): string {
-	if (kind === "classifier") {
-		return "### Classifier Notes\n\n-\n\n### Open Questions\n\n-\n";
-	}
-	if (kind === "reviewer") {
-		return "### Reviewer Notes\n\n-\n\n### Open Questions\n\n-\n";
-	}
-	return "### Common Mistakes\n\n-\n\n### Locked-In Rules\n\n-\n";
-}
-
-export function requiredLogbookSections(kind: LogbookFileKind): string[] {
-	if (kind === "classifier") {
-		return ["Classifier Notes", "Open Questions"];
-	}
-	if (kind === "reviewer") {
-		return ["Reviewer Notes", "Open Questions"];
-	}
-	return ["Common Mistakes", "Locked-In Rules"];
-}
-
-export function validateLogbookFile(path: string, kind: LogbookFileKind): void {
-	const text = readFileSync(path, "utf8");
-	const expectedSections = requiredLogbookSections(kind);
-	const sectionMatches: RegExpExecArray[] = [];
-
-	for (const section of expectedSections) {
-		const escapedSection = section.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-		const matcher = new RegExp(`^#{1,6} ${escapedSection}$`, "gmu");
-		const previousMatchIndex =
-			sectionMatches[sectionMatches.length - 1]?.index ?? -1;
-		matcher.lastIndex = previousMatchIndex + 1;
-		const match = matcher.exec(text);
-
-		if (match?.index === undefined) {
-			throw new Error(
-				`${path} must contain these sections in order: ${expectedSections.map((expectedSection) => `"${expectedSection}"`).join(", ")}.`,
-			);
-		}
-
-		sectionMatches.push(match);
-	}
-
-	for (let index = 0; index < sectionMatches.length; index += 1) {
-		const start = sectionMatches[index]?.index;
-		if (start === undefined) continue;
-		const headingLine = sectionMatches[index]?.[0] ?? "";
-		const bodyStart = start + headingLine.length;
-		const bodyEnd =
-			index + 1 < sectionMatches.length
-				? (sectionMatches[index + 1]?.index ?? text.length)
-				: text.length;
-		const body = text.slice(bodyStart, bodyEnd).trim();
-
-		if (body.length === 0) {
-			throw new Error(
-				`${path} section "${expectedSections[index]}" must not be empty; empty sections must contain exactly "-".`,
-			);
-		}
-		if (body === "-") {
-			continue;
-		}
-		if (!/\S/u.test(body)) {
-			throw new Error(
-				`${path} section "${expectedSections[index]}" must contain text or exactly "-".`,
-			);
-		}
-	}
-}
-
 function legacyClassificationLogbookDir(language: SupportedLanguage): string {
 	return join(sourceAttestationsDir, language, "classification-logbook");
 }
@@ -148,21 +69,6 @@ function assertNoLegacyClassificationLogbookContent(): void {
 
 export function prepareAttestationLogbooks(): void {
 	assertNoLegacyClassificationLogbookContent();
-
-	for (const language of ["de", "en", "he"] satisfies SupportedLanguage[]) {
-		const logbookDir = activeClassificationLogbookDir(language);
-		const reviewerNotesPath = join(logbookDir, "reviewer-notes.md");
-		const summaryPath = join(logbookDir, "summary.md");
-
-		mkdirSync(logbookDir, { recursive: true });
-
-		rmSync(join(logbookDir, "classifier-notes.md"), { force: true });
-
-		ensureTextFile(reviewerNotesPath, defaultLogbookText("reviewer"));
-		ensureTextFile(summaryPath, defaultLogbookText("summary"));
-		validateLogbookFile(reviewerNotesPath, "reviewer");
-		validateLogbookFile(summaryPath, "summary");
-	}
 }
 
 export function attestationLogbookCsvOutputs(

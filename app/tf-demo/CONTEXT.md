@@ -1,239 +1,149 @@
 # tf-demo Context
 
-tf-demo is one shared product probe over the Texteater packages. It has one
-universal linguistic graph and demo dictionary; anonymous Visitors contribute
-encounter history but do not partition linguistic identity or Knowledge.
+tf-demo presents one shared linguistic graph and demo dictionary. Anonymous
+Visitors contribute encounter history but do not partition linguistic identity
+or Knowledge.
 
 ## Language
 
-### Workspace presentation
-
 **Sheet**:
-A placed, expanded workspace presentation of one Text or Note. Sheets at the
-same Pane form an ordered Sheet Stack; a Sheet adds no identity to its subject,
-and multiple Sheets may present the same subject.
+A placed, expanded presentation of one Text or Note in a Pane's ordered Sheet
+Stack. It adds no identity to its subject.
 _Avoid_: Layer, expanded Card, View
 
 **Card**:
-An independent transient presentation of one Text or Note, shown in a Card
-Layer or during a Sheet Move. A Card never belongs to a Sheet Stack,
-constitutes valid placed workspace state, or carries lock, Collapse, placement,
-or Sheet Stack algebra.
-_Avoid_: collapsed Sheet, Note Card, unplaced Sheet
+A transient presentation of one Text or Note in a Card Layer or Sheet Move. It
+never belongs to a Sheet Stack or carries Sheet placement and lock semantics.
+_Avoid_: collapsed Sheet, unplaced Sheet
 
 **Card Layer**:
-A Pane-local transient presentation layer containing independent Cards. Each
-Pane may host at most one Card Layer, and several Panes may host Card Layers at
-the same time. A Card Layer is not part of its Pane's Sheet Stack.
-_Avoid_: Card Stack, modal overlay, Sheet layer
+A Pane-local transient layer of independent Cards, separate from the Pane's
+Sheet Stack. Each Pane has at most one.
+_Avoid_: Card Stack, modal overlay
 
 **Card Tail**:
-The subject-owned compact presentation exposed at the bottom of an occluded
-Card. It is a drag handle for that Card and does not reorder Cards when
-activated. Notes own their Tail presentation; default Note-kind placeholders
-are used until proper Tail presentations exist.
-_Avoid_: Sheet tab, stack tab, reorder handle
+A subject-owned compact presentation at the bottom of an occluded Card. It is
+the Card's drag handle, not a tab or reorder handle.
 
 **Workspace Presentation**:
-The content-independent contract that tells a Text or Note only whether it is
-presented as `Card` or `Sheet`. Subject content receives no workspace
-dimensions or linguistic layout data and responds to its CSS container width.
-_Avoid_: Card dimensions, Sheet renderer mode
+The content-independent `Card | Sheet` contract passed to a Text or Note.
+Subject content receives no workspace dimensions.
 
 **Sheet Stack**:
-The ordered Sheets placed at one Pane. Collapsing Sheets reveals lower Sheets
-or that Pane's base; only the top Sheet may move.
-_Avoid_: Card Stack, Layer Stack
+The ordered Sheets placed in one Pane. Only the top Sheet may move; Collapse
+reveals a lower Sheet or the Pane base.
 
 **Pane**:
-One workspace position that holds one Sheet Stack. The central Pane has the
-Navigation Anchor as its base; incidental Panes have an empty base. Each Pane
-may contain at most one Locked Sheet.
-_Avoid_: side region, docking region, panel
+A workspace position containing one Sheet Stack and at most one Locked Sheet.
+The central Pane uses the Navigation Anchor as its base.
+_Avoid_: panel, docking region
 
 **Active Pane**:
-The one Pane to which pane-scoped workspace operations apply. Activity is
-workspace state that follows pointer interaction, keyboard focus, or a
-successful Sheet Move into that Pane.
-_Avoid_: focused Pane, selected Pane
+The Pane to which pane-scoped commands apply. Pointer interaction, keyboard
+focus, or a successful Sheet Move may make it active.
 
 **Navigation Anchor**:
-The non-collapsible base of the central Pane, revealed when its Sheet Stack is
-empty. The Library is its current presentation, not a synonym for the anchor.
-_Avoid_: Home Pane, Navigator Pane
+The non-collapsible base of the central Pane. The Library is its current
+presentation, not a synonym.
 
 **Locked Sheet**:
-A Sheet carrying visible, explicitly controllable protection from Collapse.
-Every Sheet is eligible, the first Sheet placed into an empty Pane locks
-automatically, and its lock follows it during a Sheet Move unless the
-destination already has a Locked Sheet.
-_Avoid_: locked Text, pinned Note, locked Pane
+A Sheet protected from Collapse. Its lock is visible, controllable, and unique
+within its Pane.
+_Avoid_: pinned Note, locked Pane
 
 **Lock Transfer**:
-The explicit Pane-scoped operation that changes which Sheet carries its one
-lock. Locking an ordinary Sheet unlocks the previously Locked Sheet; unlocking
-the Locked Sheet leaves that Pane without a lock.
-_Avoid_: second lock, lock copy
+The operation that moves a Pane's lock to another Sheet. Unlocking may leave
+the Pane without a Locked Sheet.
 
 **Collapse**:
-Removal of one or more Sheets from a Sheet Stack, revealing what is beneath.
-Collapse is distinct from moving a Sheet, does not turn it into a Card, and
-cannot remove a Locked Sheet.
-_Avoid_: close Card, move
+Removal of one or more Sheets from a stack without removing a Locked Sheet. It
+does not create a Card or move a Sheet.
 
 **Explicit Sheet Removal**:
-Deliberate removal of one identified Sheet. It may remove a Locked Sheet and
-never promotes a remaining Sheet to carry the departed lock.
-_Avoid_: Collapse, unlock
+Removal of one identified Sheet, including a Locked Sheet, without promoting a
+replacement lock.
 
 **Sheet Opening**:
-Placement of a new Sheet according to its interaction origin. The Navigation
-Anchor opens onto the central Pane, Sheet-local activation pushes onto that
-Sheet's Pane, and dragging chooses a destination Pane explicitly.
-_Avoid_: route navigation, global open
+Placement of a new Sheet based on interaction origin: central from the
+Navigation Anchor, local from a Sheet, or explicit from a drag destination.
 
 **Sheet Move**:
 Relocation of the top Sheet between Panes, represented transiently as a Card.
-Only a valid drop commits the move by removing the source's top Sheet and
-pushing it onto the destination; the moved subject and its linguistic identity
-remain unchanged, and the source never promotes a replacement Locked Sheet.
-_Avoid_: Collapse, copy
-
-### Linguistic and application domain
+Only a valid drop changes placed workspace state.
 
 **Occurrence Attestation**:
-A durable tf-demo record for one resolved high-level occurrence in one
-Sentence. Every member Segment shares it; its application-owned database ID
-distinguishes value-equal occurrences but never enters the public Dumling
-Attestation value.
-_Avoid_: Resolved Segment Context, Visitor Context, clicked context,
-grammatical resolution record
+tf-demo's durable record for one resolved high-level occurrence in one
+Sentence. Its database ID is application identity and is absent from the public
+Dumling Attestation value.
 
 **Attestation Membership**:
-The exclusive association of one Segment with at most one Occurrence
-Attestation, carrying that member's `Standard | Typo` orthography evidence.
-The ordered memberships of an occurrence reconstruct its Dumling Attestation
-members.
-_Avoid_: clicked-index context, target alias
+The exclusive link from one Segment to at most one Occurrence Attestation. It
+carries member orthography; ordered memberships reconstruct Attestation members.
 
 **Shared Demo Dictionary**:
-The one universal set of Lemmas, Surfaces, Readings, and Knowledge presented by
-tf-demo. The package-level learner scope of a Dumdict Reading is the whole demo,
-not an anonymous Visitor.
-_Avoid_: Visitor Dictionary, personal dictionary
+The universal tf-demo set of Lemmas, Surfaces, Readings, and Knowledge. Visitor
+identity never scopes its records.
 
 **Fixed Member Loading**:
-The idempotent application setup operation that reconciles package-owned fixed
-Lemmas, Readings, Reading Knowledge, and direct Grammatical Relation claims
-into the Shared Demo Dictionary through their ordinary records and identities.
+Idempotent reconciliation of package-owned fixed linguistic values into the
+Shared Demo Dictionary through ordinary application records.
 
 **Catalog Growth Signal**:
-A durable application-owned aggregate of equivalent Catalog Misses used to
-prioritize additions to package-owned Fixed Catalogs. It is operational
-diagnostic evidence, not linguistic identity or Visitor history.
+An application-owned aggregate of equivalent Catalog Misses. It is diagnostic
+evidence, not linguistic identity or Visitor history.
 
 **Semantic Relation Edge**:
-One normalized direct Reading-owned claim whose endpoint mode is either Lemma
-or exact Reading. Resolved direct and inferred views preserve that endpoint
-mode and provenance. Only direct claims are durable. A missing or ambiguous
-generated Lemma target is retained as a pending Unit Shadow and produces no
-inferred view.
+A normalized direct Reading-owned claim targeting either a Lemma or exact
+Reading. Only direct claims persist; missing targets remain pending Unit Shadows.
 
 **Grammatical Relation Edge**:
-One normalized direct Case Counterpart, Person Counterpart, or Number
-Counterpart claim. tf-demo stores its homogeneous endpoints and projects the
-symmetric reverse without Semantic Relation settings, propagation, closure, or
-substitution. Exact Reading targets open the exact Unit Reading Note.
+A direct Case, Person, or Number Counterpart claim with homogeneous endpoints.
+tf-demo projects its symmetric reverse without Semantic Relation inference.
 
 **Unit Reading**:
-A Reading whose Lemma Family is Lexeme, Phraseme, or Morpheme. This tf-demo
-grouping adds no linguistic identity beyond the underlying Reading.
+A Reading whose Lemma family is Lexeme, Phraseme, or Morpheme. The grouping adds
+no identity.
 
 **Unit Reading Note**:
-The primary learner-facing note for one Unit Reading, combining its Knowledge
-and navigable links with its Lemma and source Occurrence Attestations. The three
-Families shape the note's contents without creating three different note kinds.
-_Avoid_: Lexeme Note, Phraseme Note, Morpheme Note
+The learner-facing Note for one Unit Reading, combining its Knowledge, Lemma,
+and source Occurrence Attestations.
 
 **Source Context**:
-A learner-facing projection of one Occurrence Attestation inside its originating
-Sentence and Text. A Unit Reading Note accumulates one Source Context per source
-occurrence. Each Source Context links back to the Text location and highlights
-all member Segments of that occurrence; its return locator adds no linguistic
-identity.
-_Avoid_: Context, clicked context, Reading identity evidence
+A projection of one Occurrence Attestation inside its source Sentence and Text.
+Its return locator and highlighting add no linguistic identity.
+_Avoid_: clicked context, Reading identity evidence
 
 **Route Note**:
-An optional learner-facing projection of one Occurrence Attestation, Surface,
-or Lemma used to traverse the resolution route into and around Unit Reading
-Notes. It adds no linguistic identity to the projected value or record.
-_Avoid_: Travel Note
+An optional projection of an Attestation, Surface, or Lemma used to traverse
+the resolution route. It adds no identity.
 
 **Shadow Note**:
-A learner-facing frontier projection of one Unit Shadow together with the
-pending relations and structures that refer to it. It neither turns the Unit
-Shadow into a provisional Reading nor owns the aggregated references.
-_Avoid_: unresolved Reading Note, provisional Unit Reading Note
+A projection of one Unit Shadow and the pending references to it. It does not
+turn that Shadow into a provisional Reading.
 
 **Visitor**:
-A stable anonymous interaction identity. A Visitor owns only Visitor Encounter
-history; it never participates in Text, Sentence, Segment, Grammatical
-Resolution, Lemma, Reading, relation, or Knowledge identity.
+A stable anonymous interaction identity that owns only Visitor Encounter
+history.
 _Avoid_: Learner, User, account
 
 **Segment Selection**:
-One ephemeral Visitor interaction with a Segment. It either presents the
-already available canonical resolution route or starts one operational
+An ephemeral Visitor command that presents a stored route or starts one
 Resolution Session.
-_Avoid_: Click record, Resolution, Occurrence Attestation
+_Avoid_: Click record, Resolution
 
 **Resolution Step Note**:
-A transient learner-facing projection of the Attestation, Surface, Lemma, or
-Reading reached by one active Resolution Session. It adds only session-scoped
-step identity and converges to the canonical Note subject after commit.
-_Avoid_: provisional Route Note, fake Note, progress screen
+A transient projection reached by one Resolution Session. After commit it
+converges to the canonical Note subject.
 
 **Visitor Encounter**:
 The single durable association of one Visitor with one Segment after its first
-selection. Later selections reuse it; a committed Occurrence Attestation may
-replace its initially absent result.
-_Avoid_: Click, interaction event, Visitor Resolution
+selection. Later selections reuse it.
 
 **Membership Conflict**:
-A proposed occurrence whose member Segments overlap a committed Occurrence
-Attestation without matching all and only that occurrence's members. It is a
-rejected save, not a second analysis or a reason to change either occurrence.
+A rejected occurrence proposal that overlaps a committed Occurrence
+Attestation without matching all and only its members.
 
 **Analysis Stripping**:
-The explicit removal of derived linguistic analysis for one Text while
-preserving that Text and its Sentences as source material. It is the only
-operation, apart from full demo reset, that ends Occurrence Attestations and
-their memberships.
-
-## Generated Semantic Relation containment
-
-tf-demo production Knowledge generation deliberately requests only the
-applicable transcription, German definition, and English translation leaves.
-It omits Semantic Relations, and its server publication boundary discards any
-unexpected model-generated Semantic Relation change or Pending Semantic
-Relation before Dumdict can plan canonical edges or relation propagation.
-
-This containment does not change Dumrel applicability, Dumgen's development
-and laboratory relation routes, existing relation data, or manual relation
-authoring. It may be removed only by the explicit promotion ticket
-`texteater#194` under the relation-quality map `texteater#187`.
-
-## Text-scoped analysis stripping
-
-A Text and its Sentences are preserved source material. Stripping analysis
-removes the Sentences' Segments, their Attestation Memberships and Occurrence
-Attestations, and every Visitor Encounter on those Segments or occurrences. It
-never removes the Text or Sentence records.
-
-When stripping leaves a Reading with no surviving Occurrence Attestation, the
-Shared Demo Dictionary also removes that Reading, its Reading Knowledge, and
-its source-owned relation edges. Incoming relation edges remain valid when a
-target Reading disappears because their endpoint is its Lemma; they are removed
-only when that Lemma itself is removed. When no other surviving record uses
-them, stripping also removes the Lemma and Surfaces. Readings used by another
-Text remain shared.
+Removal of derived analysis for one Text while preserving the Text and its
+Sentences. Apart from full reset, it is the only operation that ends Occurrence
+Attestations and memberships.

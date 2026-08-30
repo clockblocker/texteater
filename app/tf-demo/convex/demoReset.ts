@@ -852,6 +852,7 @@ export const clearLemmaDataBatch = internalMutation({
 	},
 });
 
+/** Bounded full reset of every tf-demo table, processed in mutation batches. */
 export const resetDemoData = internalAction({
 	args: {},
 	returns: v.object({ deleted: v.number() }),
@@ -890,6 +891,11 @@ export const clearSharedData = action({
 	},
 });
 
+/**
+ * Removes one Text's derived graph while preserving the Text and Sentences.
+ * Shared Readings, Lemmas, and Surfaces survive when another occurrence still
+ * uses them; source-owned Knowledge and relation data are pruned with orphans.
+ */
 export const stripTextAnalysis = action({
 	args: { textId: v.id("texts") },
 	returns: v.object({

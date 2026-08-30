@@ -45,7 +45,7 @@ export const phrasemes = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: { decision: "New", emojiDescription: "🐺🗣️🤝" },
 			explanation:
-				"The complete marked idiom means conforming to the group despite disagreement; the compact sequence preserves its stable social structure. New.",
+				"Follow the group despite disagreement. Whole idiom. New.",
 		},
 		"reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy": {
 			input: {

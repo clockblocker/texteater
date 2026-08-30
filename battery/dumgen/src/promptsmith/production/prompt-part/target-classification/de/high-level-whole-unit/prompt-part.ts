@@ -42,7 +42,7 @@ Choose exactly one reachable route:
 <verbal_units>
 Treat these as one Lexeme/VERB when they realize one verb: separable pieces; lexical verb plus perfect, future, or passive auxiliaries; verb plus a lexically governed preposition; inherently reflexive verb plus its required reflexive pronoun.
 
-Keep these separate: meaning-bearing modal AUX plus infinitive; copula AUX plus predicate; optional or contextual reflexive objects; ordinary arguments, objects, complements, adjuncts, modifiers, and inserted words.
+Keep these separate: meaning-bearing modal AUX plus overt infinitive; copula AUX plus predicate; optional or contextual reflexive objects; ordinary arguments, objects, complements, adjuncts, modifiers, and inserted words. A finite modal with an overt infinitive is singleton AUX, while a modal used as the clause's main predicate without an overt infinitive is singleton VERB. Lexical change-of-state werden is singleton VERB; only future- or passive-marking werden joins the lexical verb's VERB target.
 
 For a possible governed preposition, first ask whether this verb lexically selects that exact preposition in this meaning. If yes, verb and preposition are one Lexeme/VERB. A click on either fixed member selects the same verb target. Include the other member's i only; the marked member is already implicit. Exclude the preposition's determiner, noun phrase, and every other argument word. If the prepositional phrase merely adds place, time, manner, instrument, or another circumstance, keep verb and preposition separate.
 </verbal_units>
@@ -125,7 +125,7 @@ Build a separable inherently reflexive verb conjunctively. After excluding every
 const participialBoundary = `<participial_boundary>
 Partizip I and Partizip II are forms, not automatic routes. Decide whether the occurrence is verbal or adjectival in context before collecting members.
 
-Adjectivally used participles are Lexeme/ADJ; substantivized participles are Lexeme/NOUN. Productive perfect and passive Partizip II belong to the Lexeme/VERB complex. Under the conservative TIGER boundary, productive sein-state-passives remain verbal, while established property readings are separate ADJ predicates with a separate AUX copula.
+Adjectivally used participles are Lexeme/ADJ; substantivized participles are Lexeme/NOUN; participles of auxiliary Lemmas are Lexeme/AUX. Productive perfect and passive Partizip II belong to the Lexeme/VERB complex. For sein plus Partizip II, test whether an active or werden-passive paraphrase preserves the contextual meaning and verbal participants. If it does, keep the productive state passive verbal; otherwise route an established or idiomatic property reading as a separate ADJ predicate with a separate AUX copula.
 
 Make this construction decision independently of the click. A click on any member of a verbal complex selects the complete VERB target; in an adjectival predicate, a copula click selects AUX and a participle click selects ADJ.
 </participial_boundary>`;

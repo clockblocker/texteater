@@ -6,6 +6,10 @@ import type {
 import { getGoldenCorpusState, tryGetSelectionState } from "./golden-corpus";
 import { getLocalDemonstrationState } from "./local-demonstrations";
 
+/**
+ * Validates and freezes one Prompt Source. A corpus selection must come from
+ * the source's own corpus; local demonstrations must share its schema objects.
+ */
 export function definePromptSource<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,

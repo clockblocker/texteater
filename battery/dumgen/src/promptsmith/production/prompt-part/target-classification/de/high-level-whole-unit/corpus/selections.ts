@@ -136,6 +136,9 @@ const frozenEvaluationCandidates = corpus.select([
 	"target-de-boundary-participle-one-adverbial-lachend",
 	"target-de-boundary-modal-click-muss",
 	"target-de-boundary-modal-click-schlafen",
+	"target-de-boundary-modal-main-predicate-click-kann",
+	"target-de-boundary-lexical-werden-click-wird",
+	"target-de-boundary-auxiliary-participle-click-gewesen",
 	"target-de-boundary-copula-click-ist",
 	"target-de-boundary-copula-click-muede",
 	"target-de-boundary-collocation-click-trifft",
@@ -179,7 +182,7 @@ if (
 	);
 }
 
-/** The historical 94 cases plus four ADR 0007 participle-boundary probes. */
+/** The historical 94 cases plus current participle and verb-route probes. */
 const evaluationSelection = frozenEvaluationCandidates.difference(
 	productionDemonstrationSelection,
 );

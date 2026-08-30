@@ -14,6 +14,11 @@ import {
 import { getLocalDemonstrationState } from "./local-demonstrations";
 import { assertEntriesUncontaminated } from "./selection-contamination";
 
+/**
+ * Binds a Prompt Source to an evaluation from its canonical corpus. Definition
+ * fails before a provider call if demonstrations and evaluation contaminate
+ * each other by ID, input fingerprint, route fingerprint, or contamination key.
+ */
 export function defineExperiment<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,

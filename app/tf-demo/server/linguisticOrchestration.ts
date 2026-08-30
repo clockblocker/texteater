@@ -216,6 +216,14 @@ export type ResolveSegmentResult =
 			>;
 	  };
 
+/**
+ * Durable boundary for the linguistic workflow.
+ *
+ * The implementation must make the first valid resolved occurrence atomic:
+ * canonical dictionary records, exclusive Segment memberships, the occurrence
+ * Attestation, and the Visitor Encounter commit together. Replays and late
+ * competing results return the committed occurrence instead of duplicating it.
+ */
 export type OrchestrationPersistence = {
 	persistSubmittedText(input: {
 		readonly submissionKey: string;
@@ -282,9 +290,9 @@ export type ResolutionCheckpoints = {
 export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
 
 /**
- * Composes package-owned behavior while leaving every durable write behind the
- * persistence port. The Convex action adapter is the production port; tests can
- * use a small in-memory port without changing the linguistic workflow.
+ * Composes Dumgen resolution and Dumdict planning behind one persistence port.
+ * Convex supplies the production port; tests can use an in-memory port without
+ * changing workflow or conflict semantics.
  */
 export function createTfDemoOrchestrator(options: {
 	readonly dumgen: Dumgen;
@@ -585,6 +593,7 @@ export function surfaceIdentityKey(surface: Surface<"de">): string {
 	return makeSurfaceId("de", surface);
 }
 
+/** Stable key for Dumling Reading equality: Lemma identity plus emoji meaning. */
 export function readingIdentityKey(reading: Reading<"de">): string {
 	return readingFingerprint(reading);
 }

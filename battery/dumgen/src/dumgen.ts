@@ -68,12 +68,25 @@ export type DumgenOptions = DumgenInstrumentationOptions &
 	);
 
 export type Dumgen = {
+	/**
+	 * Resolves a bounded, non-empty batch in one Intake model call and then
+	 * segments each accepted German or Hebrew sentence deterministically.
+	 */
 	segment(sourceSentences: readonly string[]): Promise<SegmentationResult>;
 	readonly resolve: {
+		/**
+		 * Resolves one clicked segment into grammar and click-independent
+		 * Attestation data. `NotImplemented` names a valid disabled route;
+		 * `Unresolved` means no defensible target survived the chain.
+		 */
 		grammatical<L extends GrammaticalResolutionLanguage>(
 			language: L,
 			input: GrammaticalInput<L>,
 		): Promise<GrammaticalResult<L>>;
+		/**
+		 * Classifies one use of an already fixed Lemma as reuse of an exact
+		 * existing Emoji Description or as a new learner-facing Reading.
+		 */
 		reading<L extends ReadingResolutionLanguage>(
 			language: L,
 			input: ReadingInput<L>,

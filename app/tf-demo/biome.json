@@ -14,7 +14,8 @@
 			"!!test-results",
 			"!!convex/_generated",
 			"!!convex/model/compiledRelationVerdict.ts",
-			"!!convex/tsconfig.json"
+			"!!convex/tsconfig.json",
+			"!!skills-lock.json"
 		]
 	}
 }

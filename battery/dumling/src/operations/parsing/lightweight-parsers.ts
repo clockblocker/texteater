@@ -33,10 +33,18 @@ import {
 	surfaceValidationRoute,
 } from "./validation-routes.js";
 
+/**
+ * Lightweight parsers return canonical output, including normalization and
+ * transforms, or this shared error for caller-controlled invalid input.
+ */
 export { ParsingError };
 
 type Parsed<Output> = Output | ParsingError<Output>;
 
+/**
+ * Parses the exact Lemma route named by the coordinates. A mismatch returns a
+ * `ParsingError` at the mismatching field.
+ */
 export function parseAsLemma<
 	const L extends SupportedLanguage,
 	const F extends LemmaFamilyFor<L>,
@@ -54,6 +62,10 @@ export function parseAsLemma<
 	) as Parsed<Lemma<L, F, K>>;
 }
 
+/**
+ * Parses the exact Surface route named by the coordinates. A mismatch returns
+ * a `ParsingError` at the mismatching field.
+ */
 export function parseAsSurface<
 	const L extends SupportedLanguage,
 	const SK extends SurfaceKindFor<L>,
@@ -73,6 +85,10 @@ export function parseAsSurface<
 	) as Parsed<Surface<L, SK, F, K>>;
 }
 
+/**
+ * Parses the exact Attestation route named by the coordinates. A mismatch
+ * returns a `ParsingError` at the mismatching field.
+ */
 export function parseAsAttestation<
 	const L extends SupportedLanguage,
 	const SK extends SurfaceKindFor<L>,
@@ -97,6 +113,10 @@ export function parseAsAttestation<
 	) as Parsed<Attestation<L, SK, F, K>>;
 }
 
+/**
+ * Parses the exact Reading route named by the coordinates. A mismatch returns
+ * a `ParsingError` at the mismatching field.
+ */
 export function parseAsReading<
 	const L extends SupportedLanguage,
 	const F extends LemmaFamilyFor<L>,

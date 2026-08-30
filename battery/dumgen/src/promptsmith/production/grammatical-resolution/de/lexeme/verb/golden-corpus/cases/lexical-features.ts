@@ -177,6 +177,20 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				tense: "Pres",
 			}),
 		},
+		"grammar-de-verb-elliptical-modal-kann": {
+			input: {
+				markedContext: "Sie <TARGET>kann</TARGET> das.",
+				members: ["kann"],
+			},
+			idealOutput: finite(["kann"], "können", {
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+			}),
+			explanation:
+				"No overt infinitive. kann is the clause's main predicate and remains VERB.",
+		},
 		"grammar-de-verb-full-werden": {
 			input: {
 				markedContext: "Sie <TARGET>wird</TARGET> Ärztin.",

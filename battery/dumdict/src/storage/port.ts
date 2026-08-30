@@ -13,6 +13,13 @@ import type {
 	StoredReadingsSlice,
 } from "./slices";
 
+/**
+ * Host persistence boundary for Dumdict workflows.
+ *
+ * @remarks Reads return the requested operation slice with its store revision.
+ * `commitChanges` must apply every ordered direct change atomically or report a
+ * conflict; adapters do not infer relation views or resolve Unit Shadows.
+ */
 export type DumdictStoragePort<L extends SupportedLanguage> = {
 	findStoredReadings(
 		request: FindStoredReadingsStorageRequest<L>,

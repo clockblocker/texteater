@@ -85,8 +85,7 @@ const schluesselStorytelling = defineGoldenCaseGroup({
 			decision: "Reuse",
 			emojiDescription: "🔑",
 		},
-		explanation:
-			"Conventional access-to-a-solution metaphor. The key concept still fits. Reuse.",
+		explanation: "Same access concept. Reuse.",
 	},
 } as const satisfies GoldenCaseRegistry<
 	typeof inputSchema,
@@ -116,7 +115,7 @@ const mausStorytelling = defineGoldenCaseGroup({
 			decision: "New",
 			emojiDescription: "🖱️",
 		},
-		explanation: "Computer device, not the animal. New.",
+		explanation: "Computer device, not animal. New.",
 	},
 	"reading-de-noun-maus-computer-reuse": {
 		input: {
@@ -194,17 +193,6 @@ const absatzStorytelling = defineGoldenCaseGroup({
 	typeof outputSchema
 >);
 
-/**
- * NOUN emoji-picking rules:
- * - Name the stable noun concept, not its scene, referent, or inflection.
- * - Prefer one conventional emoji for a simple noun Reading.
- * - Split unrelated homonyms and lexicalized uses when reuse would materially
- *   mislead a beginner.
- * - Reuse across contextual variants and transparent conventional metaphor
- *   when the same broad label remains recognizable.
- *
- * Related: `battery/dumgen/docs/persistent/human-owned-and-verified/emoji-description-authoring.md`
- */
 export const nouns = defineGoldenCaseCollection(import.meta.url, {
 	groups: {
 		bankStorytelling,

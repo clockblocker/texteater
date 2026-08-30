@@ -60,16 +60,6 @@ const ueberStorytelling = defineGoldenCaseGroup({
 	typeof outputSchema
 >);
 
-/**
- * ADP emoji-picking rules:
- * - Name relation, not complement or scene.
- * - Within a lemma, reuse one emoji for the same broad relation across domains.
- * - Different lemmas may use the same emoji independently.
- * - Clear stable relation gets semantic emoji; material change gets new emoji.
- * - No clear standalone relation: use generic connector 🔗.
- *
- * Related: `battery/dumgen/docs/persistent/human-owned-and-verified/prompting-philosophie.md`
- */
 export const adpositions = defineGoldenCaseCollection(import.meta.url, {
 	groups: {
 		ueberStorytelling,

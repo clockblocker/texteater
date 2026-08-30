@@ -77,6 +77,12 @@ function parsePresentedAsAttestation<
 	) as Parsed<Attestation<L, SK, F, K>>;
 }
 
+/**
+ * Parses canonical or totalized presentation entities into canonical values.
+ * Only recognized null presentation fields collapse; unknown fields and
+ * non-null inapplicable features return `ParsingError`. Route coordinates are
+ * authoritative.
+ */
 export const parseAs = {
 	surface: parsePresentedAsSurface,
 	lemma: parsePresentedAsLemma,

@@ -62,6 +62,11 @@ import "./card-sheet-workspace.css";
 const DEFAULT_NAVIGATION_ANCHOR = <DefaultNavigationAnchor />;
 const NESTED_DROP_ZONE_COLLISION_PRIORITY = 4;
 
+/**
+ * Subject renderers for the content-independent workspace shell. Presentation
+ * is limited to `Card | Sheet`; workspace dimensions and linguistic layout do
+ * not cross this boundary.
+ */
 export type CardSheetWorkspaceProps = {
 	readonly renderSubject: (
 		subject: WorkspaceSubject,

@@ -4,6 +4,7 @@ import { NotesStudyPlayground } from "@/playground/notes-study/notes-study-playg
 import { SegmentTextPlayground } from "@/playground/segment-text/segment-text-playground";
 import { SheetWorkspacePlayground } from "@/playground/sheet-workspace/sheet-workspace-playground";
 
+/** A deterministic, application-independent UI fixture with a stable route ID. */
 export type PlaygroundExperiment = {
 	readonly id: string;
 	readonly title: string;
@@ -12,6 +13,7 @@ export type PlaygroundExperiment = {
 	readonly component: ComponentType;
 };
 
+/** Registry for `/playground/:id`; experiments must not require Convex state. */
 export const PLAYGROUND_EXPERIMENTS = [
 	{
 		id: "sheet-workspace",

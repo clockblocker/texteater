@@ -23,6 +23,7 @@ export type LocalDemonstrationState = {
 
 const localDemonstrationStates = new WeakMap<object, LocalDemonstrationState>();
 
+/** Parses, freezes, and preserves the order of route-local demonstrations. */
 export function defineLocalDemonstrations<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,

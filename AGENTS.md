@@ -1,24 +1,11 @@
-## Agent skills
+## Repository work
 
-### Issue tracker
+- For GitHub issues, PRDs, labels, or Wayfinder work, read
+  `docs/reference/issue-tracker.md`.
+- Before exploring or changing domain language or decisions, read
+  `docs/reference/domain-documentation.md`.
+- Before creating, moving, retaining, or deleting developer documentation,
+  read `docs/reference/developer-documentation.md`.
 
-Issues and PRDs live in GitHub Issues for `clockblocker/texteater`. See `docs/agents/issue-tracker.md`.
-
-Use `gh api`. `gh issue view` is deprecated.
-
-### Triage labels
-
-Use the default five-role triage vocabulary. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Use the multi-context domain-documentation layout. See `docs/agents/domain.md`.
-
-### Documentation inventory
-
-Before adding, moving, pruning, or reconciling repository documentation, read
-`docs/agents/documentation-inventory.md`.
-
-### Important
-
-Do NOT EDIT `**/GOAL.md` or `**/VISION.md` unless explicitly asted for.
+`VISION.md` files are human-owned. Create, edit, move, rename, or delete one
+only when the user explicitly names that file and operation.

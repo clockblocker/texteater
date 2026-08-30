@@ -4,7 +4,7 @@ status: superseded by ADR-0006
 
 # Reject analysis metadata in structured Knowledge
 
-This agent-authored decision incorrectly promoted prompt-time operation, role,
-source-alignment, realization, alternative-analysis, and default-selection
-metadata into durable Dumrel Knowledge without a human domain decision. It is
-superseded by ADR-0006; none of those labels belong to the accepted contract.
+This decision proposed durable prompt-time roles, alignment, and alternative
+analysis metadata in structured Knowledge. ADR-0006 replaced it with
+pointer-only structures because execution metadata is not linguistic
+Knowledge.

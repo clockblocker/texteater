@@ -78,6 +78,13 @@ export type DumdictMutationOptions<L extends SupportedLanguage> = {
 	readonly applyPlan?: ApplyDumdictPlan<L>;
 };
 
+/**
+ * Language-bound dictionary workflows over a host-provided storage port.
+ *
+ * @remarks Mutations validate an operation-shaped storage slice, plan direct
+ * changes with preconditions, and apply the complete plan atomically. Passing
+ * `applyPlan` lets a host compose that plan with its own transaction.
+ */
 export type DumdictService<L extends SupportedLanguage> = {
 	findStoredReadings(
 		request: FindStoredReadingsRequest<L>,
@@ -108,10 +115,16 @@ export type DumdictService<L extends SupportedLanguage> = {
 		options?: DumdictMutationOptions<L>,
 	): Promise<MutationResult<L>>;
 
+	/** Inspects pending targets and candidate Lemmas without resolving them. */
 	getInfoForRelationsCleanup(
 		request: GetInfoForRelationsCleanupRequest<L>,
 	): Promise<GetInfoForRelationsCleanupResult<L>>;
 
+	/**
+	 * Retries exact pending locators against the current inventory. A Unit Shadow
+	 * resolves only when exactly one Lemma matches; zero or multiple matches stay
+	 * pending.
+	 */
 	cleanupRelations(
 		request: CleanupRelationsRequest<L>,
 		options?: DumdictMutationOptions<L>,

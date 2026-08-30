@@ -68,6 +68,11 @@ export type Section1Error =
 			message: string;
 	  }>;
 
+/**
+ * One ordered decision per submitted Source Sentence, or one batch-level
+ * validation or Intake failure. Accepted decisions contain deterministic
+ * Segmentation of the stitched text.
+ */
 export type SegmentationResult =
 	| Readonly<{ ok: true; value: readonly SegmentationDecision[] }>
 	| Readonly<{ ok: false; error: Section1Error }>;
@@ -76,6 +81,11 @@ export type GrammaticalRoute<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
 > = L extends "de" ? GermanGrammaticalRoute : never;
 
+/**
+ * The post-click grammatical outcome. A resolved result separates the
+ * click-independent Attestation from interaction indices; route availability,
+ * catalog misses, and failed resolution remain distinct outcomes.
+ */
 export type GrammaticalResult<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
 > =
@@ -100,12 +110,17 @@ export type GrammaticalInteraction = Readonly<{
 	memberSegmentIndices: readonly [number, ...number[]];
 }>;
 
+/** A Segmented Sentence and the index of its clicked `ResolvableText` Segment. */
 export type GrammaticalInput<L extends GrammaticalResolutionLanguage> =
 	Readonly<{
 		sentence: SegmentedSentence<L>;
 		clickedSegmentIndex: number;
 	}>;
 
+/**
+ * The marked use of an already resolved Lemma plus immutable learner history.
+ * Reading Resolution never revises the supplied Lemma.
+ */
 export type ReadingInput<
 	L extends ReadingResolutionLanguage = ReadingResolutionLanguage,
 > = {
@@ -119,6 +134,7 @@ export type ReadingResolutionSuccess = {
 	readonly emojiDescription: string;
 };
 
+/** Reuse of one exact existing description, a novel description, or a closed-catalog miss. */
 export type ReadingResolution = ReadingResolutionSuccess | ReadingCatalogMiss;
 
 export type {

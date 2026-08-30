@@ -126,9 +126,6 @@ The version-1 serialized shape is a hard break. Old unversioned,
 Reading-targeted relation data must be reset or rewritten by the host; Dumdict
 does not expose a compatibility migration.
 
-See the [v1 architecture index](./docs/v1-architecture/README.md) for the
-current UI, storage, internal-layer, relation-cleanup, and testing contracts.
-
 ## Scope
 
 - Languages: `en`, `de`, `he`

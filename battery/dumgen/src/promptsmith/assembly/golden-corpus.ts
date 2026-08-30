@@ -70,6 +70,7 @@ const goldenCaseCollectionStates = new WeakMap<
 const corpusStates = new WeakMap<object, CorpusState>();
 const selectionStates = new WeakMap<object, SelectionState>();
 
+/** Defines a named composition group without assigning a consumer role. */
 export function defineGoldenCaseGroup<
 	const Cases extends Readonly<Record<string, object>>,
 >(cases: Cases): GoldenCaseGroup<Cases> {
@@ -78,6 +79,7 @@ export function defineGoldenCaseGroup<
 	return group;
 }
 
+/** Defines one semantic case collection and records its source provenance. */
 export function defineGoldenCaseCollection<
 	const Groups extends GoldenCaseGroupRegistry = Record<never, never>,
 	const Cases extends Readonly<Record<string, object>> = Record<never, never>,
@@ -108,6 +110,10 @@ export function defineGoldenCaseCollection<
 	return collection;
 }
 
+/**
+ * Builds and freezes a route's Golden Corpus. Construction parses every case,
+ * rejects duplicate exact inputs, resolves groups, and preserves explicit IDs.
+ */
 export function defineGoldenCorpus<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,

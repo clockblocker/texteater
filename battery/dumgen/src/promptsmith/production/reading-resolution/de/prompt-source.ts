@@ -2,9 +2,7 @@ import { definePromptSource } from "../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-/**
- * Follows the `battery/dumgen/docs/persistent/human-owned-and-verified/prompting-philosophie.md`
- */
+/** Follows `battery/dumgen/docs/reference/human-owned/prompting-philosophy.md`. */
 const body = `We are helping a language learner distinguish meanings that are useful to distinguish.
 
 The supplied *lemma* is already resolved and fixed. Do not revise it.
@@ -21,10 +19,18 @@ this lemma:
 An emojiDescription contains only one to four Unicode RGI emoji graphemes.
 Never include the lemma, a gloss, or explanatory text.
 
+The lemma remains visible to the learner. The emoji only needs to distinguish
+that lemma's learner-facing Readings; it does not need to identify the lemma by
+itself.
+
 Describe only meaning that stays stable across attestations. Omit scenery,
 participants, tense, and other incidental details from the marked context.
 Prefer one conventional emoji by default. Use multiple emoji only when they
 preserve stable, useful lexical structure that one emoji cannot.
+
+Transparent prefixes, particles, or compound members may receive consistent
+emoji components when they add useful stable structure. Never illustrate
+opaque or fossilized components mechanically.
 
 We follow a "do not split semantic pennies" policy:
 

@@ -1,13 +1,13 @@
 {
 	"formatVersion": "german-relation-human-gate-candidate-v1",
-	"candidateId": "09e18df9462b6f11e52c75fe4e903c2fcf3dc3c0d6ee472a6093f3017e120036",
+	"candidateId": "0c96a51e29ff13725fb082278007ba8c1f3c3428829b76813ac4a46676eedd42",
 	"state": "development-gate-failed",
 	"artifacts": [
 		{
 			"issue": 189,
 			"role": "judgment-contract",
-			"path": "battery/dumrel/docs/german-semantic-relation-judgment-contract.md",
-			"sha256": "7b7174d8f187b44d79eb7d9b575bee11c8e7d03fb303a50737c9fa6e60de429b"
+			"path": "battery/dumrel/docs/reference/german-semantic-relation-judgment-contract.md",
+			"sha256": "9826899a563c5068d2fe5d555af1a1ac5a263c7ac9bdbfca1c303039e72e83af"
 		},
 		{
 			"issue": 190,
@@ -19,13 +19,13 @@
 			"issue": 190,
 			"role": "adjudicated-development-corpus",
 			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/retained-cases.ts",
-			"sha256": "f1c69f4f4a1effac57466e1e995846553370014565b4dbec4c4624bf2d0fc80c"
+			"sha256": "55c49f29739aa19bba4a7fccfa8350af970e2389ee4e5014b3a1e8f6d8ac00dc"
 		},
 		{
 			"issue": 190,
 			"role": "acceptance-primary-source-reservation",
 			"path": "battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",
-			"sha256": "40793f7aad8578e962d3cc693a25f1a1436755d6d2ca7628ef8877f00f00cee6"
+			"sha256": "498b885339741c3aab271841fa3ac1546dcc813640d6d50952185315e2289b9c"
 		},
 		{
 			"issue": 191,

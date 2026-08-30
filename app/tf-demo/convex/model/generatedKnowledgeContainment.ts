@@ -92,6 +92,13 @@ function sameFingerprints(
 	);
 }
 
+/**
+ * Derives the generated-relation allowlist from a signed reviewed artifact.
+ *
+ * Publication fails closed unless prompt, schema, evaluator, model, and policy
+ * fingerprints match the compiled candidate and every relation verdict is
+ * unique. Invalid or unsigned artifacts therefore qualify no relation kinds.
+ */
 export function effectiveRelationPublicationPolicy(
 	artifact: ReviewedRelationVerdictArtifact | null = REVIEWED_RELATION_VERDICT,
 ): EffectiveRelationPublicationPolicy {
@@ -167,8 +174,9 @@ export function requestedRelationKinds(request: {
 }
 
 /**
- * Keep every unreviewed proposal outside Dumdict. Rollback is passed as an
- * empty qualifiedKinds list; base Knowledge changes remain publishable.
+ * Removes generated Semantic Relation changes and pending proposals unless
+ * their relation kind is qualified. Non-relation Knowledge changes remain
+ * publishable, including while rollback supplies an empty allowlist.
  */
 export function generatedKnowledgeAllowedForPublication<
 	TChange,

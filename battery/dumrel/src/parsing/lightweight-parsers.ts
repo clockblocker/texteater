@@ -15,6 +15,10 @@ import type {
 	DumrelValidationRouteOutput,
 } from "./validation-routes.js";
 
+/**
+ * Lightweight parsers return canonical output, including normalization and
+ * transforms, or this shared error for caller-controlled invalid input.
+ */
 export { ParsingError };
 
 type Parsed<Output> = Output | ParsingError<Output>;

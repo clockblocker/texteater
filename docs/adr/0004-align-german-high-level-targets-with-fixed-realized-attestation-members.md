@@ -1,21 +1,12 @@
 ---
 status: accepted
-extends: 0003-attestation-supersedes-selection-and-owns-realization-coverage.md
-partially-supersedes:
-  - "texteater#74"
-  - "texteater#76"
 ---
 
 # Align German high-level targets with fixed realized Attestation members
 
-German High-Level Target Classification is a public Dumgen action whose Analysis Target is an ordered, click-invariant group of clickable `ResolvableText` Segments, not a Dumling entity. Every realized fixed component of that target becomes exactly one positionally aligned Attestation member: the target index, source Segment text, marked-context `TARGET` pair, member orthography, and Attestation member all describe the same occurrence position. German fixed components include governed prepositions, inherently reflexive pronouns, separable members, and the auxiliaries of perfect, future, and passive complexes. Modal auxiliaries with lexical verbs, copulas with predicates, free arguments, contextual reflexives, adjuncts, and modifiers remain separate high-level units. `Lexeme/PUNCT` remains a Dumling Lemma kind but is unreachable through this clicked action because punctuation is not `ResolvableText`.
-
-High-level grouping preserves the possibility of a later Component Drilldown for an AUX, preposition, pronoun, or separable member, but does not itself supply that resolution boundary. Component Drilldown is not implemented. Until #250 settles its topology, an inherently reflexive member of a lexically reflexive verb is outside the system as an independently resolved PRON occurrence: it remains verb-owned realized material in the enclosing VERB Attestation and produces no separate PRON Attestation, Surface, Lemma selection, Reading selection, or learner note. Contextual reflexive arguments that form their own PRON Analysis Targets are unaffected. The resolved Surface and Lemma of the high-level target belong to the route-owning lexical head or whole Phraseme. `normalizedSurface` is the one-space, source-order projection of exactly the target members, including repeated same-text members at distinct positions, while `canonicalForm` continues to name the Lemma and need not concatenate occurrence members. VERB Surface features remain the morphology of the lexical head: perfect and passive participles stay participial, future infinitives stay infinitival, and finite auxiliary features are not copied onto the head. `Full` means all realized entity-owned material is present; absent free complements or adjuncts do not make an Attestation `Partial`, while omitting an overt fixed target member is invalid rather than Partial.
-
-Middle-like `sich` follows the same verbal boundary: in `Die Schrift liest sich leicht`, the enclosing VERB Lemma has Core Feature `lexicallyReflexive=Yes`, and `sich` remains a verb-owned realized member. Free-ish personal/reflexive, pertinence-dative, and beneficiary-dative occurrences remain separate PRON Analysis Targets. Thus `Sie begrüßen sich`, `Ich dusche mich`, `Ich wasche mir die Hände`, and `Ich kaufe mir etwas` resolve the pronoun independently to its promoted exact-form Lemma; occurrence-level `reflex=Yes` records subject coreference. In `Sie begrüßen sich`, reciprocity is a contextual expansion of free `sich`, not a reciprocal PRON identity: the occurrence retains the one `pronType=Prs` Lemma and Reading.
-
-The private Grammatical Resolution projection returns `normalizedMembers`, not the public scalar. Each entry aligns by position with one target, marked-context, orthography, and Attestation member. A shared validator enforces cardinality, source order, Standard-member identity under Unicode normalization and licensed casing, and canonical internal spacing; Dumgen then joins the entries with one space to construct `normalizedSurface`. Typo repair remains an authored route-prompt judgment, so this seam does not introduce an edit-distance spelling policy or collapse licensed variants.
-
-German `Lexeme/NOUN` has one narrow route-owned exception for an official trailing Ergänzungsstrich. In a binary `und | oder` coordination, one singleton member ending in U+002D, U+2010, or U+2011 may replace that final character with a non-empty literal terminal substring of the visible right conjunct when a distinct non-empty right first constituent remains. For example, `Kinder-` in `Kinder- und Jugendbücher` normalizes to `Kinderbücher`. Cardinality and source order do not change, the attested member remains `Kinder-`, and no other dash-like code point, route, context-free fragment, or invented suffix is licensed.
-
-This intentionally changes Surface identity whenever the expanded target changes `normalizedSurface`; Lemma and Reading identity algorithms remain unchanged. It extends ADR 0003's generic Attestation topology. It supersedes #74 only where that decision excluded an overt governed preposition itself, and supersedes #76's private-only Analysis Target boundary; their generic Attestation decisions remain in force.
+A German High-Level Analysis Target is a click-invariant ordered group of
+`ResolvableText` Segments. Every fixed realized component becomes one
+positionally aligned Attestation member, and `normalizedSurface` is their
+one-space source-order projection. Free arguments, modifiers, and contextual
+reflexives remain separate targets. This alignment keeps clicks on any fixed
+member consistent without turning the Analysis Target into a Dumling entity.

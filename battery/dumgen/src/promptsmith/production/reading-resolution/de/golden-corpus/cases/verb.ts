@@ -45,7 +45,7 @@ export const verbs = defineGoldenCaseCollection(import.meta.url, {
 				decision: "New",
 				emojiDescription: "✊⬆️",
 			},
-			explanation: "Revolt, not leave bed. New.",
+			explanation: "Revolt. Auf adds upward structure. New.",
 		},
 		"reading-de-aufstehen-morning-six": {
 			input: {
@@ -55,8 +55,7 @@ export const verbs = defineGoldenCaseCollection(import.meta.url, {
 				existingEmojiDescriptions: [],
 			},
 			idealOutput: { decision: "New", emojiDescription: "🛏️⬆️" },
-			explanation:
-				"Ordinary getting out of bed; the two emoji preserve stable lexical structure.",
+			explanation: "Get out of bed. Auf adds upward structure. New.",
 		},
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,

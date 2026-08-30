@@ -143,6 +143,12 @@ export type ParsingIssue =
 	| TooSmallIssue
 	| UnrecognizedKeysIssue;
 
+/**
+ * An ordered canonical validation failure returned by lightweight parsers.
+ *
+ * Caller-controlled invalid input is returned as this error rather than thrown.
+ * Corrupt generated artifacts or package-owned registrations may still throw.
+ */
 export class ParsingError<_Output = unknown> extends Error {
 	override readonly name = "ParsingError";
 
