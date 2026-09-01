@@ -3,15 +3,29 @@ import type { input, output, ZodType } from "zod";
 export type PromptInputSchema = ZodType;
 export type PromptOutputSchema = ZodType;
 
+/** One cited source and the exact claim it supports for a Golden Case. */
+type GoldenCaseSourceBase = {
+	readonly title: string;
+	readonly supports: string;
+};
+
+export type GoldenCaseSource = GoldenCaseSourceBase &
+	(
+		| { readonly url: string; readonly path?: never }
+		| { readonly path: string; readonly url?: never }
+	);
+
 /**
  * One schema-bound semantic reference case. The containing registry key is its
- * stable ID; `explanation` is short authoring guidance, not expected output.
- * Contamination keys join distinct inputs that exercise the same stimulus.
+ * stable ID. `explanation` is short authoring guidance, and `sources` records
+ * optional evidence; neither is expected output. Contamination keys join
+ * distinct inputs that exercise the same stimulus.
  */
 export type GoldenCase<Input, Output> = {
 	readonly input: Input;
 	readonly idealOutput: Output;
 	readonly explanation?: string;
+	readonly sources?: readonly GoldenCaseSource[];
 	readonly contaminationKeys?: readonly string[];
 };
 

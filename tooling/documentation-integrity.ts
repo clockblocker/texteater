@@ -77,9 +77,6 @@ const coordinationTokens = new Set([
 ]);
 
 const retainedEvidenceCompanionPaths = new Set([
-	"battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",
-	"battery/dumgen/docs/german-semantic-relation-corpus-report.md",
-	"battery/dumgen/docs/german-semantic-relation-primary-sources.md",
 	"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
 	"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
 	"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",

@@ -8,10 +8,16 @@ import {
 	type RequestableRelation,
 	requestableRelationSchema,
 } from "../../../src/knowledge-generation/relations";
-import { stableJson } from "../../../src/promptsmith/assembly";
+import {
+	type GoldenCaseSource,
+	stableJson,
+} from "../../../src/promptsmith/assembly";
 import { analyzeCombinedGermanKnowledgeCase } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
 import type { GermanRelationEvaluationReport } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
-import { relationCorpusAdjudications } from "../../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
+import {
+	corpus,
+	relationCorpusAdjudications,
+} from "../../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
 import {
 	createLabPlan,
 	PROMPT_REVISIONS,
@@ -127,6 +133,7 @@ type ReviewObservation = Readonly<{
 	expected: RelationTargets | null;
 	acceptableAlternatives: readonly (RelationTargets | null)[];
 	rationale: string;
+	sources: readonly GoldenCaseSource[];
 	harmfulTargets: readonly Readonly<{
 		relation: RequestableRelation;
 		target: RelationTargets[number];
@@ -215,6 +222,7 @@ export async function loadFrozenReview() {
 			);
 			const adjudication =
 				relationCorpusAdjudications.byCaseId[attempt.caseId];
+			const sources = corpus.cases[attempt.caseId]?.sources ?? [];
 			const decisionEligible =
 				attempt.repetition <= candidateReport.decisionRepetitions;
 			if (attempt.error !== undefined) {
@@ -232,6 +240,7 @@ export async function loadFrozenReview() {
 					acceptableAlternatives:
 						adjudication?.acceptableTargetSets?.[relation] ?? [],
 					rationale: adjudication?.rationale ?? "",
+					sources,
 					harmfulTargets:
 						adjudication?.harmfulTargets.filter(
 							(item) => item.relation === relation,
@@ -284,6 +293,7 @@ export async function loadFrozenReview() {
 							adjudication?.acceptableTargetSets?.[relation] ??
 							[],
 						rationale: adjudication?.rationale ?? "",
+						sources,
 						harmfulTargets:
 							adjudication?.harmfulTargets.filter(
 								(item) => item.relation === relation,
@@ -441,7 +451,8 @@ const candidateReport=review.candidateReport.semanticReport; for(const kind of k
 const final=review.candidateReport;operations.innerHTML='<p>Stop triggered after repetition <strong>'+final.stopRuleTriggeredAfterRepetition+'</strong>, but <strong>'+final.postStopAttemptCount+'</strong> additional calls were retained. Stop enforcement: <span class="fail">'+(final.stopEnforcementPass?'PASS':'FAIL')+'</span>. Decision metrics exclude the post-stop repetition; the raw regression remains visible below.</p><p>'+final.errorCount+' schema/execution errors · '+final.refusalCount+' refusals · '+final.incompleteCount+' incomplete responses.</p>';
 for(const kind of kinds)relationFilter.add(new Option(kind,kind)); for(const s of [...new Set(review.observations.map(x=>x.status))])statusFilter.add(new Option(s,s));
 function target(v){if(v===null)return '<span class="muted">null</span>';return v.map(x=>'<span class="target">'+esc(x.canonicalForm)+' · '+x.family+'/'+x.kind+'</span>').join('<br>')}
-function render(){const rows=review.observations.filter(x=>(!relationFilter.value||x.relation===relationFilter.value)&&(!statusFilter.value||x.status===statusFilter.value)&&(!caseFilter.value||x.caseId.includes(caseFilter.value))&&(!evidenceFilter.value||(evidenceFilter.value==='decision'?x.decisionEligible:!x.decisionEligible)));count.textContent=rows.length+' review observations';observations.innerHTML=rows.map(x=>'<details><summary><span class="badge">'+x.status+'</span> '+x.caseId+' · '+x.relation+' · repetition '+x.repetition+(x.decisionEligible?'':' · POST-STOP REGRESSION')+'</summary><table><tr><th>Emitted</th><td>'+target(x.actual)+'</td></tr><tr><th>Expected</th><td>'+target(x.expected)+'</td></tr><tr><th>Harmful if emitted</th><td>'+((x.harmfulTargets||[]).map(h=>target([h.target])+' — '+esc(h.reason)).join('<br>')||'<span class="muted">none declared</span>')+'</td></tr></table><p>'+esc(x.rationale)+'</p><pre>'+esc(JSON.stringify(x.metrics||x.error||{},null,2))+'</pre></details>').join('')}; for(const el of [relationFilter,statusFilter,evidenceFilter,caseFilter])el.addEventListener('input',render);render();
+function source(s){const locator=s.url?'<a href="'+esc(s.url)+'" target="_blank" rel="noreferrer">'+esc(s.url)+'</a>':'<code>'+esc(s.path)+'</code>';return '<li><strong>'+esc(s.title)+'</strong>: '+esc(s.supports)+'<br>'+locator+'</li>'}
+function render(){const rows=review.observations.filter(x=>(!relationFilter.value||x.relation===relationFilter.value)&&(!statusFilter.value||x.status===statusFilter.value)&&(!caseFilter.value||x.caseId.includes(caseFilter.value))&&(!evidenceFilter.value||(evidenceFilter.value==='decision'?x.decisionEligible:!x.decisionEligible)));count.textContent=rows.length+' review observations';observations.innerHTML=rows.map(x=>'<details><summary><span class="badge">'+x.status+'</span> '+x.caseId+' · '+x.relation+' · repetition '+x.repetition+(x.decisionEligible?'':' · POST-STOP REGRESSION')+'</summary><table><tr><th>Emitted</th><td>'+target(x.actual)+'</td></tr><tr><th>Expected</th><td>'+target(x.expected)+'</td></tr><tr><th>Harmful if emitted</th><td>'+((x.harmfulTargets||[]).map(h=>target([h.target])+' — '+esc(h.reason)).join('<br>')||'<span class="muted">none declared</span>')+'</td></tr></table><p>'+esc(x.rationale)+'</p>'+(x.sources.length?'<h4>Sources</h4><ul>'+x.sources.map(source).join('')+'</ul>':'')+'<pre>'+esc(JSON.stringify(x.metrics||x.error||{},null,2))+'</pre></details>').join('')}; for(const el of [relationFilter,statusFilter,evidenceFilter,caseFilter])el.addEventListener('input',render);render();
 recommended.innerHTML=kinds.map(kind=>'<span class="badge">'+kind+': do-not-generate</span>').join(' ');
 function pct(n){return (100*n).toFixed(1)+'%'} function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 </script></body></html>`;

@@ -9,6 +9,7 @@ import {
 	defineGoldenCorpus,
 	defineLocalDemonstrations,
 	definePromptSource,
+	type GoldenCaseSource,
 } from "../../src/promptsmith/assembly";
 import { productionSystemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
 
@@ -19,6 +20,7 @@ type Case = {
 	readonly input: { readonly text: string };
 	readonly idealOutput: { readonly value: string };
 	readonly explanation?: string;
+	readonly sources?: readonly GoldenCaseSource[];
 	readonly contaminationKeys?: readonly string[];
 };
 
@@ -145,6 +147,78 @@ describe("Golden Corpus", () => {
 				},
 			}),
 		).toThrow(/empty explanation/);
+		expect(() =>
+			corpus({
+				invalid: {
+					input: { text: "source" },
+					idealOutput: { value: "x" },
+					sources: [
+						{
+							title: " ",
+							url: "https://example.com/source",
+							supports: "claim",
+						},
+					],
+				},
+			}),
+		).toThrow(/incomplete source metadata/);
+		expect(() =>
+			corpus({
+				invalid: {
+					input: { text: "source-url" },
+					idealOutput: { value: "x" },
+					sources: [
+						{
+							title: "Source",
+							url: "example.com/source",
+							supports: "claim",
+						},
+					],
+				},
+			}),
+		).toThrow(/invalid source URL/);
+		const sourced = corpus({
+			sourced: {
+				input: { text: "sourced" },
+				idealOutput: { value: "x" },
+				sources: [
+					{
+						title: " Source ",
+						url: " https://example.com/source ",
+						supports: " Claim. ",
+					},
+				],
+			},
+		});
+		expect(sourced.cases.sourced?.sources).toEqual([
+			{
+				title: "Source",
+				url: "https://example.com/source",
+				supports: "Claim.",
+			},
+		]);
+		expect(Object.isFrozen(sourced.cases.sourced?.sources)).toBe(true);
+		expect(Object.isFrozen(sourced.cases.sourced?.sources?.[0])).toBe(true);
+		const policySourced = corpus({
+			policy: {
+				input: { text: "policy-source" },
+				idealOutput: { value: "x" },
+				sources: [
+					{
+						title: " Relation policy ",
+						path: " battery/dumrel/CONTEXT.md ",
+						supports: " Defines the relation. ",
+					},
+				],
+			},
+		});
+		expect(policySourced.cases.policy?.sources).toEqual([
+			{
+				title: "Relation policy",
+				path: "battery/dumrel/CONTEXT.md",
+				supports: "Defines the relation.",
+			},
+		]);
 		expect(() =>
 			corpus({
 				" ": { input: { text: "id" }, idealOutput: { value: "x" } },

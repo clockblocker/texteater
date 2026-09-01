@@ -51,7 +51,7 @@ export const untouchedAcceptanceReservation = Object.freeze({
 	revealedCaseCount: 0,
 	reservedCaseCount: corpus.collections.acceptance.ids.length,
 	selectionCommitmentSha256:
-		"56fd828f15f74f45a481e34597e6d752c6652056e5679fa794e07a05c6da2d93",
+		"2e34dcd79f43300d2f85284a82246fb18fde76417b7bc41388b9894a6f4bf14b",
 	selection: corpus.collections.acceptance,
 	gate: "At least one human must approve the untouched reservation before its cases are materialized into an acceptance plan or sent to a provider.",
 });

@@ -9,6 +9,7 @@ import type {
 	GoldenCaseGroup,
 	GoldenCaseGroupRegistry,
 	GoldenCaseRegistry,
+	GoldenCaseSource,
 	GoldenCorpus,
 	ParsedGoldenCase,
 	PromptInputSchema,
@@ -163,6 +164,7 @@ export function defineGoldenCorpus<
 		if (explanation !== undefined && explanation.length === 0) {
 			throw new Error(`${location} has an empty explanation.`);
 		}
+		const sources = normalizeSources(location, goldenCase.sources);
 		const contaminationKeys = normalizeContaminationKeys(
 			location,
 			goldenCase.contaminationKeys,
@@ -189,6 +191,7 @@ export function defineGoldenCorpus<
 			input: parsedInput.data,
 			idealOutput: parsedOutput.data,
 			...(explanation === undefined ? {} : { explanation }),
+			...(sources.length === 0 ? {} : { sources }),
 			...(contaminationKeys.length === 0 ? {} : { contaminationKeys }),
 		}) as ParsedGoldenCase<InputSchema, OutputSchema>;
 		parsedEntries.set(id, {
@@ -542,6 +545,67 @@ function assertNonEmpty(value: string, label: string): void {
 	if (value.trim().length === 0) {
 		throw new Error(`${label} must not be empty.`);
 	}
+}
+
+function normalizeSources(
+	location: string,
+	sources: readonly GoldenCaseSource[] | undefined,
+): readonly GoldenCaseSource[] {
+	const normalized = (sources ?? []).map((source, index) => {
+		const title = source.title.trim();
+		const supports = source.supports.trim();
+		const url = source.url?.trim();
+		const path = source.path?.trim();
+		if (
+			title.length === 0 ||
+			supports.length === 0 ||
+			(url === undefined) === (path === undefined) ||
+			url === "" ||
+			path === ""
+		) {
+			throw new Error(
+				`${location} has incomplete source metadata at index ${index}.`,
+			);
+		}
+		if (url !== undefined) {
+			let parsedUrl: URL;
+			try {
+				parsedUrl = new URL(url);
+			} catch {
+				throw new Error(
+					`${location} has an invalid source URL at index ${index}.`,
+				);
+			}
+			if (
+				parsedUrl.protocol !== "https:" &&
+				parsedUrl.protocol !== "http:"
+			) {
+				throw new Error(
+					`${location} has a non-HTTP source URL at index ${index}.`,
+				);
+			}
+		}
+		return url === undefined
+			? ({
+					title,
+					path: path as string,
+					supports,
+				} satisfies GoldenCaseSource)
+			: ({ title, url, supports } satisfies GoldenCaseSource);
+	});
+	const seen = new Set<string>();
+	for (const source of normalized) {
+		const locator = source.url ?? source.path;
+		if (locator === undefined)
+			throw new Error(
+				`${location} has source metadata without a locator.`,
+			);
+		if (seen.has(locator)) {
+			throw new Error(`${location} repeats source "${locator}".`);
+		}
+		seen.add(locator);
+	}
+	return normalized;
 }
 
 function deepFreeze<T>(value: T): T {

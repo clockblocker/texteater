@@ -9,9 +9,14 @@ type Unit = {
 	readonly memberCount: number;
 };
 
-type PinnedUnit = {
+type SelectedUnit = {
 	readonly unitId: string;
-	readonly originSegmentId: string;
+	readonly segmentId: string;
+};
+
+type InteractionTarget = {
+	readonly unitId: string;
+	readonly segmentId: string;
 };
 
 type TextPart =
@@ -276,46 +281,53 @@ const PASSAGE: readonly PassageBlock[] = [
 ] as const;
 
 export function SegmentTextPlayground() {
-	const [hoveredUnitId, setHoveredUnitId] = useState<string | null>(null);
-	const [focusedUnitId, setFocusedUnitId] = useState<string | null>(null);
-	const [pinnedUnits, setPinnedUnits] = useState<readonly PinnedUnit[]>([]);
-	const [transientOriginSegmentId, setTransientOriginSegmentId] = useState<
-		string | null
-	>(null);
-	const lastPinnedUnit = pinnedUnits.at(-1) ?? null;
-	const inspectedUnitId =
-		hoveredUnitId ?? focusedUnitId ?? lastPinnedUnit?.unitId ?? null;
-	const inspectedOriginSegmentId =
-		hoveredUnitId || focusedUnitId
-			? transientOriginSegmentId
-			: (lastPinnedUnit?.originSegmentId ?? null);
-	const inspectedUnit = resolveUnit(
-		inspectedUnitId,
-		inspectedOriginSegmentId,
+	const [hoveredTarget, setHoveredTarget] =
+		useState<InteractionTarget | null>(null);
+	const [focusedTarget, setFocusedTarget] =
+		useState<InteractionTarget | null>(null);
+	const [selectedUnits, setSelectedUnits] = useState<readonly SelectedUnit[]>(
+		[],
 	);
-	const highlightedUnitIds = new Set(pinnedUnits.map(({ unitId }) => unitId));
-	if (hoveredUnitId) highlightedUnitIds.add(hoveredUnitId);
-	if (focusedUnitId) highlightedUnitIds.add(focusedUnitId);
-	const originSegmentIds = new Set(
-		pinnedUnits.map(({ originSegmentId }) => originSegmentId),
-	);
-	if (hoveredUnitId || focusedUnitId) {
-		if (transientOriginSegmentId) {
-			originSegmentIds.add(transientOriginSegmentId);
-		}
+	const [encounteredSegmentIds, setEncounteredSegmentIds] = useState<
+		ReadonlySet<string>
+	>(new Set());
+	const currentSelection = selectedUnits.at(-1) ?? null;
+	const knownUnitIds = new Set(selectedUnits.map(({ unitId }) => unitId));
+	const previewTarget = hoveredTarget ?? focusedTarget;
+	const inspectedTarget = previewTarget ?? currentSelection;
+	const inspectedUnitIsKnown = inspectedTarget
+		? knownUnitIds.has(inspectedTarget.unitId)
+		: false;
+	const inspectedUnit = inspectedTarget
+		? resolveUnit(inspectedTarget.unitId, inspectedTarget.segmentId)
+		: null;
+	const inspectedSegmentStatus = inspectedTarget
+		? encounteredSegmentIds.has(inspectedTarget.segmentId)
+			? "Encountered"
+			: inspectedUnitIsKnown
+				? "Known member"
+				: "Unseen"
+		: null;
+	const inspectorEyebrow = previewTarget
+		? inspectedUnitIsKnown
+			? "Previewing known unit"
+			: "Previewing segment"
+		: currentSelection
+			? "Current selection"
+			: "No selection";
+
+	function previewUnit(unitId: string, segmentId: string) {
+		setHoveredTarget({ unitId, segmentId });
 	}
 
-	function activateUnit(unitId: string, segmentId: string) {
-		setHoveredUnitId(unitId);
-		setTransientOriginSegmentId(segmentId);
-	}
-
-	function pinUnit(unitId: string, segmentId: string) {
-		setPinnedUnits((current) => [
+	function selectUnit(unitId: string, segmentId: string) {
+		setSelectedUnits((current) => [
 			...current.filter((unit) => unit.unitId !== unitId),
-			{ unitId, originSegmentId: segmentId },
+			{ unitId, segmentId },
 		]);
-		setTransientOriginSegmentId(segmentId);
+		setEncounteredSegmentIds((current) => new Set([...current, segmentId]));
+		setHoveredTarget(null);
+		setFocusedTarget(null);
 	}
 
 	return (
@@ -326,8 +338,17 @@ export function SegmentTextPlayground() {
 					<strong>Segments in continuous reading</strong>
 				</div>
 				<p className="segment-study__mode" aria-live="polite">
-					<span aria-hidden="true" />
-					Memory ink · {pinnedUnits.length} kept
+					<span
+						className="segment-study__preview-key"
+						aria-hidden="true"
+					/>
+					Amber previews
+					<i aria-hidden="true" />
+					<span
+						className="segment-study__memory-key"
+						aria-hidden="true"
+					/>
+					Blue remembers · {encounteredSegmentIds.size} encountered
 				</p>
 			</header>
 
@@ -342,7 +363,7 @@ export function SegmentTextPlayground() {
 							<strong>1.1 Sams Ankunft</strong>
 						</nav>
 						<span className="segment-reader__hint">
-							Hover a word · click to keep the unit visible
+							Hover to inspect · click to resolve and remember
 						</span>
 					</header>
 
@@ -354,16 +375,17 @@ export function SegmentTextPlayground() {
 							<PassageBlockView
 								key={block.id}
 								block={block}
-								highlightedUnitIds={highlightedUnitIds}
-								originSegmentIds={originSegmentIds}
-								onActivateUnit={activateUnit}
-								onBlurUnit={() => setFocusedUnitId(null)}
+								currentSelection={currentSelection}
+								encounteredSegmentIds={encounteredSegmentIds}
+								knownUnitIds={knownUnitIds}
+								previewTarget={previewTarget}
+								onBlurUnit={() => setFocusedTarget(null)}
 								onFocusUnit={(unitId, segmentId) => {
-									setFocusedUnitId(unitId);
-									setTransientOriginSegmentId(segmentId);
+									setFocusedTarget({ unitId, segmentId });
 								}}
-								onLeaveUnit={() => setHoveredUnitId(null)}
-								onPinUnit={pinUnit}
+								onLeaveUnit={() => setHoveredTarget(null)}
+								onPreviewUnit={previewUnit}
+								onSelectUnit={selectUnit}
 							/>
 						))}
 					</article>
@@ -372,38 +394,61 @@ export function SegmentTextPlayground() {
 				<aside className="unit-inspector" aria-live="polite">
 					<div className="unit-inspector__rule" aria-hidden="true" />
 					<p className="unit-inspector__eyebrow">
-						{inspectedUnit?.memberCount === 1
-							? "Selected segment"
-							: "Resolved together"}
+						{inspectorEyebrow}
 					</p>
 					{inspectedUnit ? (
 						<>
-							<h2>{inspectedUnit.reading}</h2>
-							<p>{inspectedUnit.label}</p>
-							<div className="unit-inspector__count">
-								<strong>{inspectedUnit.memberCount}</strong>
-								<span>
-									{inspectedUnit.memberCount === 1
-										? "segment"
-										: "segments"}
-									<br />
-									one unit
-								</span>
-							</div>
+							<h2>
+								{inspectedUnitIsKnown
+									? inspectedUnit.reading
+									: segmentText(
+											inspectedTarget?.segmentId ?? null,
+										)}
+							</h2>
+							<p>
+								{inspectedUnitIsKnown
+									? inspectedUnit.label
+									: "Its unit is not known yet"}
+							</p>
+							<dl className="unit-inspector__facts">
+								<div>
+									<dt>Direct segment</dt>
+									<dd
+										data-segment-status={
+											inspectedSegmentStatus
+										}
+									>
+										{inspectedSegmentStatus}
+									</dd>
+								</div>
+								<div>
+									<dt>Resolved unit</dt>
+									<dd>
+										{inspectedUnitIsKnown
+											? `${inspectedUnit.memberCount} ${
+													inspectedUnit.memberCount ===
+													1
+														? "member"
+														: "members"
+												}`
+											: "Unknown until click"}
+									</dd>
+								</div>
+							</dl>
 						</>
 					) : (
 						<>
 							<h2>Read first</h2>
 							<p>
-								Segment boundaries appear only when you ask for
-								them.
+								Hover previews one Segment. Clicking reveals its
+								resolved unit.
 							</p>
 						</>
 					)}
 					<p className="unit-inspector__note">
-						Clicking keeps every member of a resolved unit
-						highlighted. Kept units accumulate until you reset the
-						fixture.
+						Amber follows your attention. Blue stays after a click.
+						A heavier blue notch marks the exact Segment you
+						encountered.
 					</p>
 				</aside>
 			</div>
@@ -413,32 +458,49 @@ export function SegmentTextPlayground() {
 
 function PassageBlockView({
 	block,
-	highlightedUnitIds,
-	originSegmentIds,
-	onActivateUnit,
+	currentSelection,
+	encounteredSegmentIds,
+	knownUnitIds,
+	previewTarget,
 	onFocusUnit,
 	onBlurUnit,
 	onLeaveUnit,
-	onPinUnit,
+	onPreviewUnit,
+	onSelectUnit,
 }: {
 	readonly block: PassageBlock;
-	readonly highlightedUnitIds: ReadonlySet<string>;
-	readonly originSegmentIds: ReadonlySet<string>;
-	readonly onActivateUnit: (unitId: string, segmentId: string) => void;
+	readonly currentSelection: SelectedUnit | null;
+	readonly encounteredSegmentIds: ReadonlySet<string>;
+	readonly knownUnitIds: ReadonlySet<string>;
+	readonly previewTarget: InteractionTarget | null;
 	readonly onFocusUnit: (unitId: string, segmentId: string) => void;
 	readonly onBlurUnit: () => void;
 	readonly onLeaveUnit: () => void;
-	readonly onPinUnit: (unitId: string, segmentId: string) => void;
+	readonly onPreviewUnit: (unitId: string, segmentId: string) => void;
+	readonly onSelectUnit: (unitId: string, segmentId: string) => void;
 }) {
+	const previewUnitIsKnown = previewTarget
+		? knownUnitIds.has(previewTarget.unitId)
+		: false;
 	const content = block.parts.map((part) => {
 		if (part.kind === "space") {
+			const bridgeIsKnown =
+				part.bridgeUnitId !== undefined &&
+				knownUnitIds.has(part.bridgeUnitId);
 			return (
 				<span
 					key={part.id}
 					className="segment-bridge"
-					data-unit-active={
+					data-known={bridgeIsKnown || undefined}
+					data-current={
 						(part.bridgeUnitId !== undefined &&
-							highlightedUnitIds.has(part.bridgeUnitId)) ||
+							currentSelection?.unitId === part.bridgeUnitId) ||
+						undefined
+					}
+					data-preview={
+						(part.bridgeUnitId !== undefined &&
+							previewUnitIsKnown &&
+							previewTarget?.unitId === part.bridgeUnitId) ||
 						undefined
 					}
 					aria-hidden="true"
@@ -449,8 +511,27 @@ function PassageBlockView({
 		}
 
 		const unit = resolveUnit(part.unitId, part.id);
-		const accessibleDescription =
-			unit?.memberCount === 1
+		const unitIsKnown = knownUnitIds.has(part.unitId);
+		const previewRole =
+			previewTarget?.segmentId === part.id
+				? "origin"
+				: previewUnitIsKnown && previewTarget?.unitId === part.unitId
+					? "member"
+					: undefined;
+		const currentRole =
+			currentSelection?.unitId === part.unitId
+				? currentSelection.segmentId === part.id
+					? "origin"
+					: "member"
+				: undefined;
+		const knowledge = encounteredSegmentIds.has(part.id)
+			? "encountered"
+			: unitIsKnown
+				? "known-member"
+				: undefined;
+		const accessibleDescription = !unitIsKnown
+			? `${part.text}, click to resolve`
+			: unit?.memberCount === 1
 				? `${part.text}, single segment`
 				: `${part.text}, part of ${unit?.reading ?? "one resolved unit"}`;
 
@@ -459,15 +540,14 @@ function PassageBlockView({
 				key={part.id}
 				type="button"
 				className="text-segment"
-				data-unit-active={
-					highlightedUnitIds.has(part.unitId) || undefined
-				}
-				data-origin={originSegmentIds.has(part.id) || undefined}
+				data-preview-role={previewRole}
+				data-current-role={currentRole}
+				data-knowledge={knowledge}
 				aria-label={accessibleDescription}
 				onBlur={onBlurUnit}
-				onClick={() => onPinUnit(part.unitId, part.id)}
+				onClick={() => onSelectUnit(part.unitId, part.id)}
 				onFocus={() => onFocusUnit(part.unitId, part.id)}
-				onMouseEnter={() => onActivateUnit(part.unitId, part.id)}
+				onMouseEnter={() => onPreviewUnit(part.unitId, part.id)}
 				onMouseLeave={onLeaveUnit}
 			>
 				{part.text}
@@ -542,4 +622,12 @@ function resolveUnit(
 				memberCount: 1,
 			}
 		: null;
+}
+
+function segmentText(segmentId: string | null): string {
+	if (!segmentId) return "";
+	const segment = PASSAGE.flatMap((block) => block.parts).find(
+		(part) => part.kind === "segment" && part.id === segmentId,
+	);
+	return segment?.kind === "segment" ? segment.text : "";
 }

@@ -1,10 +1,9 @@
 # German Relation Semantics human gate
 
 This surface is the human inspection point for issue #193. It binds the review
-to the frozen judgment contract, corpus reservation, semantic evaluator,
-thresholds, six cumulative combined-prompt revisions, model policy, and the
-retained #192 result. It never calls a provider or writes a verdict merely by
-being opened.
+to the Golden Corpus, corpus reservation, semantic evaluator, thresholds, six
+cumulative combined-prompt revisions, model policy, and the retained #192
+result. It never calls a provider or writes a verdict merely by being opened.
 
 From `battery/dumgen`, run:
 
@@ -15,9 +14,9 @@ bun run review:german-relation-human-gate
 The command verifies every frozen SHA-256 fingerprint, starts a loopback-only
 review server, and opens it in the default browser. The page shows all six
 prompt revisions, every target emitted by the final revision, every material
-omission, every execution error, and the per-kind semantic metrics. It also
-keeps the 50 post-stop calls visible as an operational regression while
-excluding them from the decision metrics.
+omission, every execution error, each Golden Case's structured sources, and the
+per-kind semantic metrics. It also keeps the 50 post-stop calls visible as an
+operational regression while excluding them from the decision metrics.
 
 ## State machine
 

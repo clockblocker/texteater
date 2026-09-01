@@ -6,6 +6,7 @@ export type {
 	ExperimentEvaluation,
 	GoldenCase,
 	GoldenCaseRegistry,
+	GoldenCaseSource,
 	PromptInputSchema,
 	PromptOutputSchema,
 	PromptRepresentationAdapter,

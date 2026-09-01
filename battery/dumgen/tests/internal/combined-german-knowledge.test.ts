@@ -736,6 +736,11 @@ describe("combined German Knowledge evaluation corpus", () => {
 		for (const [caseId, entry] of Object.entries(corpus.cases)) {
 			expect(entry.explanation?.length).toBeGreaterThan(0);
 			expect(entry.contaminationKeys?.length).toBeGreaterThan(0);
+			for (const source of entry.sources ?? []) {
+				expect(source.title.length).toBeGreaterThan(0);
+				expect(source.supports.length).toBeGreaterThan(0);
+				expect("url" in source || "path" in source).toBe(true);
+			}
 			const adjudication = relationCorpusAdjudications.byCaseId[caseId];
 			expect(adjudication).toBeDefined();
 			for (const mode of adjudication?.failureModes ?? [])
@@ -807,10 +812,26 @@ describe("combined German Knowledge evaluation corpus", () => {
 		).toHaveLength(14);
 		expect(
 			developmentAdjudications.filter(
-				(adjudication) =>
-					adjudication?.authority === "contract-reviewer",
+				(adjudication) => adjudication?.authority === "human-accepted",
 			),
 		).toHaveLength(36);
+		expect(
+			corpus.collections.development.cases.filter(
+				(entry) => (entry.sources?.length ?? 0) > 0,
+			).length,
+		).toBeGreaterThan(0);
+		expect(
+			corpus.all().cases.flatMap((entry) => entry.sources ?? []),
+		).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					path: "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+				}),
+				expect.objectContaining({ path: "battery/dumrel/CONTEXT.md" }),
+			]),
+		);
+		for (const entry of corpus.collections.acceptance.cases)
+			expect(entry.sources?.length).toBeGreaterThan(0);
 		expect(
 			developmentAdjudications.reduce(
 				(count, adjudication) =>

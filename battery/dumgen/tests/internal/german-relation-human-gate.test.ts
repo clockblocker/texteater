@@ -99,7 +99,7 @@ describe("German Relation Semantics human gate", () => {
 			maximumSpendNanoUsd: 108_635_100,
 			maximumSpendUsd: "0.108635100",
 			selectionCommitmentSha256:
-				"56fd828f15f74f45a481e34597e6d752c6652056e5679fa794e07a05c6da2d93",
+				"2e34dcd79f43300d2f85284a82246fb18fde76417b7bc41388b9894a6f4bf14b",
 		});
 		expect(stableJson(preflight)).not.toContain("Streichholz");
 		expect(

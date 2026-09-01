@@ -23,7 +23,10 @@ The complete human-authored definition of one executable prompt route: its model
 
 **Golden Case**:
 
-A canonical semantic case with an input, ideal output, optional explanation, and optional contamination keys. Its stable ID is the key in its Golden Corpus.
+A canonical semantic case with an input, ideal output, optional explanation,
+optional structured sources, and optional contamination keys. A source names
+the claim it supports and cites either a web URL or repository path. The
+case's stable ID is its key in the Golden Corpus.
 
 **Golden Corpus**:
 

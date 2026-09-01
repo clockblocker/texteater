@@ -9,7 +9,10 @@ import {
 	type RequestableRelation,
 	requestableRelationSchema,
 } from "../../../../../../knowledge-generation/relations";
-import type { GoldenCaseRegistry } from "../../../../../assembly";
+import type {
+	GoldenCaseRegistry,
+	GoldenCaseSource,
+} from "../../../../../assembly";
 
 type Target = LexicalUnitShadow<"de">;
 type FailureMode =
@@ -23,13 +26,12 @@ type FailureMode =
 	| "register"
 	| "multi-member"
 	| "self-relation";
-type Authority = "primary-source" | "contract-reviewer";
+type Authority = "primary-source" | "human-accepted";
 
 export type RelationCorpusAdjudication = Readonly<{
 	rationale: string;
 	failureModes: readonly FailureMode[];
 	authority: Authority;
-	evidenceRefs: readonly string[];
 	acceptableTargetSets?: Readonly<
 		Partial<
 			Record<RequestableRelation, readonly (readonly Target[] | null)[]>
@@ -58,7 +60,7 @@ type Seed = Readonly<{
 	failureModes: readonly FailureMode[];
 	contaminationKey: string;
 	authority?: Authority;
-	evidenceRefs?: readonly string[];
+	sources?: readonly GoldenCaseSource[];
 	acceptableTargetSets?: RelationCorpusAdjudication["acceptableTargetSets"];
 	harmfulTargets?: RelationCorpusAdjudication["harmfulTargets"];
 	inverseJudgments?: RelationCorpusAdjudication["inverseJudgments"];
@@ -72,13 +74,244 @@ type RetainedCase = Readonly<{
 	adjudication: RelationCorpusAdjudication;
 }>;
 
-const sources = {
-	contract:
-		"battery/dumrel/docs/reference/german-semantic-relation-judgment-contract.md",
-	primary: "battery/dumgen/docs/german-semantic-relation-primary-sources.md",
-	acceptance:
-		"battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",
-} as const;
+type SourceReference =
+	| { readonly title: string; readonly url: string; readonly path?: never }
+	| { readonly title: string; readonly path: string; readonly url?: never };
+
+const references = {
+	dumlingReadings: {
+		title: "Dumling generated docs source: Linguistics",
+		path: "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+	},
+	dumrelRelations: {
+		title: "Dumrel settled Semantic Relation policy",
+		path: "battery/dumrel/CONTEXT.md",
+	},
+	idsHomonymy: {
+		title: "IDS Grammis: Homonymie",
+		url: "https://grammis.ids-mannheim.de/terminologie/510",
+	},
+	idsConverse: {
+		title: "IDS Grammis: konvers",
+		url: "https://grammis.ids-mannheim.de/terminologie/1005",
+	},
+	idsConverseRelations: {
+		title: "IDS Grammis: converse relations",
+		url: "https://grammis.ids-mannheim.de/systematische-grammatik/2130",
+	},
+	dudenPfote: {
+		title: "Duden: Pfote",
+		url: "https://www.duden.de/rechtschreibung/Pfote",
+	},
+	dudenTatze: {
+		title: "Duden: Tatze",
+		url: "https://www.duden.de/rechtschreibung/Tatze",
+	},
+	dudenHubschrauber: {
+		title: "Duden: Hubschrauber synonyms",
+		url: "https://www.duden.de/synonyme/Hubschrauber",
+	},
+	dudenPudel: {
+		title: "Duden: Pudel",
+		url: "https://www.duden.de/rechtschreibung/Pudel",
+	},
+	berlinConstitution: {
+		title: "Constitution of Berlin, Article 1",
+		url: "https://www.berlin.de/rbmskzl/politik/senat/verfassung/verfassung-von-berlin-abschnitt-i-die-grundlagen-41549.php",
+	},
+	berlinEconomicLocation: {
+		title: "Berlin economic location",
+		url: "https://www.berlin.de/wirtschaft/wirtschaftsstandort/",
+	},
+	dudenSprinten: {
+		title: "Duden: sprinten",
+		url: "https://www.duden.de/rechtschreibung/sprinten",
+	},
+	dudenBank: {
+		title: "Duden: Bank",
+		url: "https://www.duden.de/rechtschreibung/Bank_Geldinstitut",
+	},
+	dudenKreditinstitut: {
+		title: "Duden: Kreditinstitut",
+		url: "https://www.duden.de/rechtschreibung/Kreditinstitut",
+	},
+	creditAct: {
+		title: "Kreditwesengesetz § 1",
+		url: "https://www.gesetze-im-internet.de/kredwg/BJNR008810961.html",
+	},
+	dudenSitzbank: {
+		title: "Duden: Sitzbank",
+		url: "https://www.duden.de/rechtschreibung/Sitzbank",
+	},
+	dudenSchloss: {
+		title: "Duden: Schloss",
+		url: "https://www.duden.de/rechtschreibung/Schloss",
+	},
+	dudenIntelligent: {
+		title: "Duden: intelligent",
+		url: "https://www.duden.de/rechtschreibung/intelligent",
+	},
+	dudenKlug: {
+		title: "Duden: klug",
+		url: "https://www.duden.de/rechtschreibung/klug",
+	},
+	dudenGras: {
+		title: "Duden: Gras",
+		url: "https://www.duden.de/rechtschreibung/Gras",
+	},
+	dudenFoehre: {
+		title: "Duden: Föhre",
+		url: "https://www.duden.de/rechtschreibung/Foehre",
+	},
+	dudenKaufen: {
+		title: "Duden: kaufen",
+		url: "https://www.duden.de/rechtschreibung/kaufen",
+	},
+	dudenVerkaufen: {
+		title: "Duden: verkaufen",
+		url: "https://www.duden.de/rechtschreibung/verkaufen",
+	},
+	dudenOeffnen: {
+		title: "Duden: öffnen",
+		url: "https://www.duden.de/rechtschreibung/oeffnen",
+	},
+	dudenSchliessen: {
+		title: "Duden: schließen",
+		url: "https://www.duden.de/rechtschreibung/schlieszen",
+	},
+	dudenFahrrad: {
+		title: "Duden: Fahrrad",
+		url: "https://www.duden.de/rechtschreibung/Fahrrad",
+	},
+	dudenRad: {
+		title: "Duden: Rad",
+		url: "https://www.duden.de/rechtschreibung/Rad_Fahrrad",
+	},
+	dudenBlutplasma: {
+		title: "Duden: Blutplasma",
+		url: "https://www.duden.de/rechtschreibung/Blutplasma",
+	},
+	kreuzbergDistrictData: {
+		title: "Friedrichshain-Kreuzberg district data",
+		url: "https://www.berlin.de/ba-friedrichshain-kreuzberg/politik-und-verwaltung/service-und-organisationseinheiten/bezirkliche-planung-und-koordinierung/sozialraumorientierte-planungskoordination/daten/",
+	},
+	berlinKreuzberg: {
+		title: "Berlin.de: Kreuzberg",
+		url: "https://www.berlin.de/special/stadtteile/kreuzberg/881280-5170818-wohnlagen-infrastruktur.html",
+	},
+	dudenBisweilen: {
+		title: "Duden: bisweilen",
+		url: "https://www.duden.de/rechtschreibung/bisweilen",
+	},
+	dudenManchmal: {
+		title: "Duden: manchmal",
+		url: "https://www.duden.de/rechtschreibung/manchmal",
+	},
+	dudenStreichholz: {
+		title: "Duden: Streichholz",
+		url: "https://www.duden.de/rechtschreibung/Streichholz",
+	},
+	dudenZuendstaebchen: {
+		title: "Duden: Zündstäbchen",
+		url: "https://www.duden.de/rechtschreibung/Zuendstaebchen",
+	},
+	dudenZuendholz: {
+		title: "Duden: Zündholz",
+		url: "https://www.duden.de/rechtschreibung/Zuendholz",
+	},
+	dudenApfelsine: {
+		title: "Duden: Apfelsine",
+		url: "https://www.duden.de/rechtschreibung/Apfelsine",
+	},
+	dudenSynonymDictionarySample: {
+		title: "Duden: Das Synonymwörterbuch, sample",
+		url: "https://shop.duden.de/media/af/fa/e3/1687342120/Leseprobe_9783411912766_Duden_%E2%80%93_Das_Synonymw%C3%B6rterbuch.pdf",
+	},
+	dudenSemmel: {
+		title: "Duden: Semmel",
+		url: "https://www.duden.de/rechtschreibung/Semmel",
+	},
+	dudenBroetchen: {
+		title: "Duden: Brötchen",
+		url: "https://www.duden.de/rechtschreibung/Broetchen",
+	},
+	dudenGeige: {
+		title: "Duden: Geige",
+		url: "https://www.duden.de/rechtschreibung/Geige",
+	},
+	dudenBratsche: {
+		title: "Duden: Bratsche",
+		url: "https://www.duden.de/rechtschreibung/Bratsche",
+	},
+	dudenLebendig: {
+		title: "Duden: lebendig",
+		url: "https://www.duden.de/rechtschreibung/lebendig",
+	},
+	dudenTot: {
+		title: "Duden: tot",
+		url: "https://www.duden.de/rechtschreibung/tot",
+	},
+	dudenNass: {
+		title: "Duden: nass",
+		url: "https://www.duden.de/rechtschreibung/nass",
+	},
+	dudenTrocken: {
+		title: "Duden: trocken",
+		url: "https://www.duden.de/rechtschreibung/trocken",
+	},
+	dudenErben: {
+		title: "Duden: erben",
+		url: "https://www.duden.de/rechtschreibung/erben",
+	},
+	dudenVererben: {
+		title: "Duden: vererben",
+		url: "https://www.duden.de/rechtschreibung/vererben",
+	},
+	dudenVerbEssay: {
+		title: "Duden: Das Wunder des Verbs",
+		url: "https://cdn.duden.de/public_files/2018-11/Konrad-Duden-Preis_Fabricius_Hansen_Das_Wunder_des_Verbs_2004.pdf",
+	},
+	dudenGeben: {
+		title: "Duden: geben",
+		url: "https://www.duden.de/rechtschreibung/geben",
+	},
+	dudenBekommen: {
+		title: "Duden: bekommen",
+		url: "https://www.duden.de/rechtschreibung/bekommen",
+	},
+	dudenAmsel: {
+		title: "Duden: Amsel",
+		url: "https://www.duden.de/rechtschreibung/Amsel",
+	},
+	dudenDrossel: {
+		title: "Duden: Drossel",
+		url: "https://www.duden.de/rechtschreibung/Drossel_Singvogel",
+	},
+	dudenZylinderkopf: {
+		title: "Duden: Zylinderkopf",
+		url: "https://www.duden.de/rechtschreibung/Zylinderkopf",
+	},
+	dudenZylinder: {
+		title: "Duden: Zylinder",
+		url: "https://www.duden.de/rechtschreibung/Zylinder",
+	},
+	dudenZeh: {
+		title: "Duden: Zeh",
+		url: "https://www.duden.de/rechtschreibung/Zeh",
+	},
+	dudenFuss: {
+		title: "Duden: Fuß",
+		url: "https://www.duden.de/rechtschreibung/Fusz",
+	},
+	dudenKapitell: {
+		title: "Duden: Kapitell",
+		url: "https://www.duden.de/rechtschreibung/Kapitell",
+	},
+	dudenSaeule: {
+		title: "Duden: Säule",
+		url: "https://www.duden.de/rechtschreibung/Saeule_Pfeiler",
+	},
+} as const satisfies Record<string, SourceReference>;
 
 const adjectiveCore = {
 	abbr: null,
@@ -135,7 +368,20 @@ const demonstrations = defineCases({
 		failureModes: ["positive", "null", "wrong-kind"],
 		contaminationKey: "relation-de-pfote-paw",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.primary],
+		sources: [
+			cite(
+				references.dudenPfote,
+				"Defines Pfote as the foot of various mammals and supports an animal bearer.",
+			),
+			cite(
+				references.dudenTatze,
+				"Restricts Tatze to larger predators, supporting Near Synonym rather than exact Synonym.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Separates broader-category Hypernym from whole-bearing Holonym.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -169,8 +415,17 @@ const demonstrations = defineCases({
 			"Mieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.",
 		failureModes: ["positive", "negative", "wrong-kind"],
 		contaminationKey: "relation-de-mieten-rent",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.contract, sources.primary],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.idsConverse,
+				"Defines converses as the same relation viewed through exchanged arguments.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Defines Near Antonym as the project category for conventional lexical contrast that is not strict opposition.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"antonym",
@@ -193,8 +448,17 @@ const basic = defineCases({
 			"Primary lexicography cross-lists Helikopter and supports the shared aircraft Reading; exact-synonym status is an explicit reviewer adjudication, while Luftfahrzeug is the useful category.",
 		failureModes: ["positive", "null"],
 		contaminationKey: "relation-de-hubschrauber-aircraft",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.primary],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.dudenHubschrauber,
+				"Lists Helikopter as a synonym of Hubschrauber.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Defines exact Synonymy; assigning that stricter project category remains human-accepted.",
+			),
+		],
 	},
 	"relation-basic-02-sichtbar": {
 		context: "Der Fleck ist deutlich <TARGET>sichtbar</TARGET>.",
@@ -204,7 +468,6 @@ const basic = defineCases({
 			"Sichtbar and unsichtbar form a conventional complementary opposition; shared morphology is not the evidence for the relation.",
 		failureModes: ["positive"],
 		contaminationKey: "relation-de-sichtbar-visibility",
-		evidenceRefs: [sources.contract],
 	},
 	"relation-basic-03-pudel": {
 		context: "Der <TARGET>Pudel</TARGET> wartet vor der Tür.",
@@ -215,7 +478,13 @@ const basic = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "relation-de-pudel-dog",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(references.dudenPudel, "Defines Pudel as a dog."),
+			cite(
+				references.dumrelRelations,
+				"Defines Hypernym as the direct narrower-to-broader relation.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -238,7 +507,20 @@ const basic = defineCases({
 		failureModes: ["positive", "polysemy"],
 		contaminationKey: "relation-de-berlin",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.berlinConstitution,
+				"States that Berlin is both a German Land and a city.",
+			),
+			cite(
+				references.berlinEconomicLocation,
+				"Identifies Berlin as Germany's largest city.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Allows one Lemma to participate in several Readings, keeping the city and Land meanings separate.",
+			),
+		],
 		inverseJudgments: [
 			inv(
 				"hyponym",
@@ -256,7 +538,12 @@ const basic = defineCases({
 		failureModes: ["positive"],
 		contaminationKey: "relation-de-sprinten-run",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenSprinten,
+				"Defines sprinten as covering a short distance at highest speed and colloquially as running fast.",
+			),
+		],
 	},
 } satisfies Record<string, Seed>);
 
@@ -271,8 +558,25 @@ const adversarial = defineCases({
 			"Only the financial Reading is fixed. Duden treats Kreditinstitut as synonymous here, so it is not also a Hypernym; seating vocabulary belongs to another Reading.",
 		failureModes: ["polysemy", "negative", "self-relation"],
 		contaminationKey: "relation-de-bank",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.primary],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.dudenBank,
+				"Defines the financial Bank Reading through money and credit business.",
+			),
+			cite(
+				references.dudenKreditinstitut,
+				"Lists Bank as a synonym of Kreditinstitut, making Hypernymy contested.",
+			),
+			cite(
+				references.creditAct,
+				"Defines Kreditinstitut as a legal category without settling the lexical relation label.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Keeps the financial and seating meanings as separate semantic Readings.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -302,7 +606,24 @@ const adversarial = defineCases({
 			"The furniture Reading admits the more explicit Sitzbank as a Near Synonym and Sitzmöbel as category; financial vocabulary would leak across Readings.",
 		failureModes: ["polysemy", "negative"],
 		contaminationKey: "relation-de-bank",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenSitzbank,
+				"Documents the furniture Reading represented by Sitzbank.",
+			),
+			cite(
+				references.dudenBank,
+				"Documents the separate financial Bank Reading excluded here.",
+			),
+			cite(
+				references.idsHomonymy,
+				"Uses Bank as an example of homonymy between financial institution and seating.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Makes the Reading, rather than spelling alone, the semantic identity under judgment.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -320,7 +641,20 @@ const adversarial = defineCases({
 		failureModes: ["polysemy", "negative"],
 		contaminationKey: "relation-de-schloss",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenSchloss,
+				"Documents both the building and locking-device senses of Schloss.",
+			),
+			cite(
+				references.idsHomonymy,
+				"Uses the Schloss sense split as an example of homonymy.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Requires semantic judgments to stay on the selected Reading.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"holonym",
@@ -338,7 +672,20 @@ const adversarial = defineCases({
 		failureModes: ["polysemy", "wrong-kind"],
 		contaminationKey: "relation-de-schloss",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenSchloss,
+				"Documents the locking-device sense separately from the building sense.",
+			),
+			cite(
+				references.idsHomonymy,
+				"Uses the Schloss sense split as an example of homonymy.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Requires semantic judgments to stay on the selected Reading.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -361,7 +708,20 @@ const adversarial = defineCases({
 		failureModes: ["polysemy", "negative"],
 		contaminationKey: "relation-de-klug-sensible",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenKlug,
+				"Documents sensible or appropriate and intellectual Readings of klug.",
+			),
+			cite(
+				references.dudenIntelligent,
+				"Defines intelligent through possession or display of intelligence.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Allows distinct semantic Readings to share one grammatical Lemma.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -381,6 +741,12 @@ const adversarial = defineCases({
 			"The physical-strength Reading supports kräftig and the scalar opposite schwach; heftig belongs to the intensity Reading found in starker Regen.",
 		failureModes: ["polysemy", "wrong-kind"],
 		contaminationKey: "relation-de-stark-physical",
+		sources: [
+			cite(
+				references.dumlingReadings,
+				"Allows the physical-strength and intensity meanings to remain distinct Readings of one Lemma.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"nearSynonym",
@@ -398,7 +764,16 @@ const adversarial = defineCases({
 		failureModes: ["register", "multi-member", "negative"],
 		contaminationKey: "relation-de-ins-gras-beissen",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenGras,
+				"Defines the complete phrase ins Gras beißen as sterben and marks it salopp.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Distinguishes exact Synonymy from non-substitutive Near Synonymy.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -419,7 +794,20 @@ const adversarial = defineCases({
 		failureModes: ["register", "polysemy"],
 		contaminationKey: "relation-de-foehre-pine",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenFoehre,
+				"Defines Föhre through Kiefer and marks it regional or Austrian.",
+			),
+			cite(
+				references.idsHomonymy,
+				"Documents the pine and jaw homonymy of Kiefer.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Keeps the pine Reading separate from the jaw Reading.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -439,8 +827,25 @@ const adversarial = defineCases({
 			"Primary definitions support reversed transaction viewpoints; Near Antonym is the project mapping, and erwerben is the broader acquisition action.",
 		failureModes: ["negative", "wrong-kind"],
 		contaminationKey: "relation-de-kaufen-buy",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.primary, sources.contract],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.dudenKaufen,
+				"Defines kaufen as acquiring something against payment.",
+			),
+			cite(
+				references.dudenVerkaufen,
+				"Defines verkaufen as transferring property to someone for payment.",
+			),
+			cite(
+				references.idsConverseRelations,
+				"Supports analysis of one relation through reversed participant perspectives.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Supplies the human-accepted Near Antonym category for that converse structure.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"antonym",
@@ -458,7 +863,16 @@ const adversarial = defineCases({
 		failureModes: ["positive"],
 		contaminationKey: "relation-de-oeffnen-open",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenOeffnen,
+				"Lists schließen as an antonym of öffnen.",
+			),
+			cite(
+				references.dudenSchliessen,
+				"Lists öffnen as an antonym of schließen.",
+			),
+		],
 	},
 	"relation-adv-11-warm": {
 		context: "Die Suppe ist noch <TARGET>warm</TARGET>.",
@@ -481,11 +895,16 @@ const adversarial = defineCases({
 		reading: noun("Hund", "🐕", "Masc"),
 		accepted: { hypernym: [t("Raubtier", "Lexeme", "NOUN")] },
 		rationale:
-			"Katze is only a contextual foil and co-hyponym, not a lexical opposite; the null is a contract judgment, not an inference from dictionary silence.",
+			"Katze is only a contextual foil and co-hyponym, not a lexical opposite; the human-accepted null is not an inference from dictionary silence.",
 		failureModes: ["negative", "wrong-kind"],
 		contaminationKey: "relation-de-hund-animal",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.contract, sources.primary],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.dumrelRelations,
+				"Requires Near Antonym to be a conventional lexical contrast; incidental co-hyponyms do not qualify.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"nearAntonym",
@@ -502,6 +921,12 @@ const adversarial = defineCases({
 			"Kraftfahrzeug is a category; Rad is a part and Garage a contingent location, so taxonomy and part-whole must not be confused.",
 		failureModes: ["wrong-kind", "null"],
 		contaminationKey: "relation-de-auto-car",
+		sources: [
+			cite(
+				references.dumrelRelations,
+				"Separates broader-category Hypernym from part-to-whole Holonym.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -534,7 +959,20 @@ const adversarial = defineCases({
 		failureModes: ["polysemy", "wrong-kind"],
 		contaminationKey: "relation-de-rad-wheel",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenFahrrad,
+				"Defines Fahrrad as a two-wheeled vehicle.",
+			),
+			cite(
+				references.dudenRad,
+				"Documents both the wheel-part and colloquial bicycle senses of Rad.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Keeps those Rad meanings as distinct semantic Readings.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -555,7 +993,16 @@ const adversarial = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "relation-de-blutplasma",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenBlutplasma,
+				"Defines Blutplasma as the liquid component of Blut.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Separates broader-category Hypernym from part-to-whole Holonym.",
+			),
+		],
 		inverseJudgments: [
 			inv(
 				"meronym",
@@ -576,7 +1023,20 @@ const adversarial = defineCases({
 		failureModes: ["polysemy", "wrong-kind"],
 		contaminationKey: "relation-de-berlin",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.berlinConstitution,
+				"States that Berlin is a German Land and a city.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Allows the Land and city meanings to remain distinct Readings of one Lemma.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Defines administrative member-to-whole direction as Holonym.",
+			),
+		],
 		inverseJudgments: [
 			inv(
 				"meronym",
@@ -597,22 +1057,30 @@ const adversarial = defineCases({
 		failureModes: ["positive"],
 		contaminationKey: "relation-de-kreuzberg",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.kreuzbergDistrictData,
+				"Identifies Kreuzberg as an Ortsteil in the Friedrichshain-Kreuzberg district.",
+			),
+			cite(
+				references.berlinKreuzberg,
+				"Identifies Kreuzberg as a Berlin Stadtteil.",
+			),
+		],
 	},
 	"relation-adv-18-johann-trivial": {
 		context: "<TARGET>Johann</TARGET> wartet draußen.",
 		reading: properNoun("Johann", "👤", "Masc"),
 		rationale:
-			"The project rejects the trivial category Person for ordinary personal names, and the encounter supplies no stable whole; these are contract nulls, not dictionary-silence claims.",
+			"The project rejects the trivial category Person for ordinary personal names, and the encounter supplies no stable whole; these are human-accepted nulls, not dictionary-silence claims.",
 		failureModes: ["null", "negative"],
 		contaminationKey: "relation-de-johann-person",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.contract, sources.primary],
+		authority: "human-accepted",
 		harmfulTargets: [
 			h(
 				"hypernym",
 				t("Person", "Lexeme", "NOUN"),
-				"The contract explicitly rejects trivial personal-name categories.",
+				"The human-accepted case rejects trivial personal-name categories.",
 			),
 			h(
 				"holonym",
@@ -698,8 +1166,21 @@ const adversarial = defineCases({
 			"Primary lexicography supports the shared occasional-frequency meaning; the elevated/literary distribution is reviewer-adjudicated as a Near-Synonym restriction.",
 		failureModes: ["register", "negative"],
 		contaminationKey: "relation-de-manchmal-sometimes",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.primary],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.dudenManchmal,
+				"Lists bisweilen for the occasional-frequency meaning of manchmal.",
+			),
+			cite(
+				references.dudenBisweilen,
+				"Defines bisweilen through occasional-frequency expressions.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Supplies Near Synonym for the human-accepted register restriction.",
+			),
+		],
 	},
 	"relation-adv-25-muessen": {
 		context: "Wir <TARGET>müssen</TARGET> jetzt gehen.",
@@ -718,7 +1199,7 @@ const adversarial = defineCases({
 			"Und and oder are conventionally paired coordination choices but not strict logical complements in ordinary German; CCONJ does not request Near Synonym.",
 		failureModes: ["negative", "omission"],
 		contaminationKey: "relation-de-und-coordination",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 		harmfulTargets: [
 			h(
 				"antonym",
@@ -735,7 +1216,7 @@ const adversarial = defineCases({
 			"Jeder and kein conventionally contrast universal and zero quantity but are not logical complements because intermediate quantities exist.",
 		failureModes: ["negative", "wrong-kind"],
 		contaminationKey: "relation-de-jeder-every",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 	},
 	"relation-adv-28-ja": {
 		context: "<TARGET>Ja</TARGET>, ich komme mit.",
@@ -758,7 +1239,7 @@ const adversarial = defineCases({
 			"No distinct exact-equivalent Lemma is adjudicated; the source Lemma and inflected Surfaces are forbidden, so the sole requested Synonym is null.",
 		failureModes: ["null", "self-relation"],
 		contaminationKey: "relation-de-zwei-number",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -817,10 +1298,10 @@ const adversarial = defineCases({
 		context: "Es gilt: <TARGET>Der Weg ist das Ziel</TARGET>.",
 		reading: phraseme("Der Weg ist das Ziel", "Aphorism", "🛤️"),
 		rationale:
-			"No adjudicated expression preserves this aphorism's proposition and stance; the null follows contract review, not dictionary silence, and thematic travel words are associations.",
+			"No adjudicated expression preserves this aphorism's proposition and stance; the human-accepted null does not rely on dictionary silence, and thematic travel words are associations.",
 		failureModes: ["null", "multi-member"],
 		contaminationKey: "relation-de-weg-ist-ziel",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 	},
 	"relation-adv-35-in-betracht-ziehen": {
 		context: "Wir müssen den Einwand <TARGET>in Betracht ziehen</TARGET>.",
@@ -833,7 +1314,7 @@ const adversarial = defineCases({
 			"Berücksichtigen preserves the consideration proposition; bedenken adds reflective-concern nuance. The complete Collocation, not its member words, owns both judgments.",
 		failureModes: ["multi-member", "wrong-family", "omission"],
 		contaminationKey: "relation-de-in-betracht-ziehen",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 	},
 	"relation-adv-36-auf-jeden-fall": {
 		context: "Das ist <TARGET>auf jeden Fall</TARGET> richtig.",
@@ -854,7 +1335,7 @@ const adversarial = defineCases({
 			"Related proverbs about early action make different propositions; conservative nulls prevent a miscellaneous related-saying bucket.",
 		failureModes: ["null", "multi-member", "negative"],
 		contaminationKey: "relation-de-morgenstund",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 		harmfulTargets: [
 			h(
 				"nearSynonym",
@@ -875,7 +1356,7 @@ const adversarial = defineCases({
 			"A fixed multi-word proper name remains one Lexeme/PROPN; it is an instance of Staat and geographically part of Nordamerika, never a Phraseme.",
 		failureModes: ["multi-member", "wrong-family"],
 		contaminationKey: "relation-de-vereinigte-staaten",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 	},
 	"relation-adv-39-eilen-multiword-target": {
 		context: "Wir müssen uns <TARGET>eilen</TARGET>.",
@@ -937,7 +1418,7 @@ const adversarial = defineCases({
 			"Anfangen is adjudicated as equivalent here; starten is event-type/register restricted. Einsetzen is recorded as a bounded alternative target set.",
 		failureModes: ["omission", "register"],
 		contaminationKey: "relation-de-beginnen-start",
-		authority: "contract-reviewer",
+		authority: "human-accepted",
 		acceptableTargetSets: { synonym: [[t("einsetzen", "Lexeme", "VERB")]] },
 	},
 	"relation-adv-43-selbstbezug": {
@@ -948,8 +1429,17 @@ const adversarial = defineCases({
 			"Primary lexicography supports Bank as the distinct target Lemma; Kreditinstitut itself remains forbidden even if another Reading is imagined.",
 		failureModes: ["self-relation", "positive"],
 		contaminationKey: "relation-de-kreditinstitut",
-		authority: "contract-reviewer",
-		evidenceRefs: [sources.primary],
+		authority: "human-accepted",
+		sources: [
+			cite(
+				references.dudenKreditinstitut,
+				"Lists Bank as a synonym of Kreditinstitut.",
+			),
+			cite(
+				references.dudenBank,
+				"Documents the financial Bank Reading used as the distinct target Lemma.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -988,7 +1478,20 @@ const adversarial = defineCases({
 		failureModes: ["negative", "wrong-kind", "omission"],
 		contaminationKey: "relation-de-fahrrad-bicycle",
 		authority: "primary-source",
-		evidenceRefs: [sources.primary],
+		sources: [
+			cite(
+				references.dudenFahrrad,
+				"Defines Fahrrad as a two-wheeled vehicle, supporting Zweirad as the useful category.",
+			),
+			cite(
+				references.dudenRad,
+				"Documents Rad as a vehicle part and as a separate colloquial bicycle Reading.",
+			),
+			cite(
+				references.dumlingReadings,
+				"Keeps the part and bicycle meanings of Rad in separate Readings.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -1029,7 +1532,20 @@ const acceptance = defineCases({
 		failureModes: ["positive", "register"],
 		contaminationKey: "acceptance-reservation-de-streichholz-candle-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenStreichholz,
+				"Lists Zündstäbchen as a synonym of Streichholz.",
+			),
+			cite(
+				references.dudenZuendstaebchen,
+				"Reciprocally points to Streichholz without a usage label.",
+			),
+			cite(
+				references.dudenZuendholz,
+				"Marks Zündholz as technical or regional, excluding unrestricted exact Synonymy.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -1048,7 +1564,20 @@ const acceptance = defineCases({
 		failureModes: ["null", "register"],
 		contaminationKey: "acceptance-reservation-de-apfelsine-breakfast-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenApfelsine,
+				"Equates the fruit sense with Orange.",
+			),
+			cite(
+				references.dudenSynonymDictionarySample,
+				"Documents regional and collocational restrictions between Apfelsine and Orange.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Requires exact semantic equivalence for Synonym.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"synonym",
@@ -1068,7 +1597,16 @@ const acceptance = defineCases({
 		failureModes: ["positive", "register"],
 		contaminationKey: "acceptance-reservation-de-semmel-munich-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenSemmel,
+				"Defines Semmel as Brötchen and marks Austrian or Bavarian distribution.",
+			),
+			cite(
+				references.dudenBroetchen,
+				"Provides the unrestricted counterpart for the shared bread-roll meaning.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"nearSynonym",
@@ -1087,7 +1625,16 @@ const acceptance = defineCases({
 		failureModes: ["null", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-geige-concert-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenGeige,
+				"Defines Geige as the violin-family instrument selected by the context.",
+			),
+			cite(
+				references.dudenBratsche,
+				"Defines Bratsche as a distinct larger instrument tuned a fifth lower.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"nearSynonym",
@@ -1106,7 +1653,16 @@ const acceptance = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-lebendig-beetle-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenLebendig,
+				"Documents the biological alive Reading of lebendig.",
+			),
+			cite(
+				references.dudenTot,
+				"Documents the complementary biological state tot.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"antonym",
@@ -1126,7 +1682,13 @@ const acceptance = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-nass-raincoat-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(references.dudenNass, "Documents nass as soaked with liquid."),
+			cite(
+				references.dudenTrocken,
+				"Documents trocken as the conventional moisture-scale opposite.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"antonym",
@@ -1145,7 +1707,24 @@ const acceptance = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-erben-house-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenErben,
+				"Defines erben from the recipient perspective of inheritance.",
+			),
+			cite(
+				references.dudenVererben,
+				"Defines vererben from the bequeather perspective of the same event.",
+			),
+			cite(
+				references.dudenVerbEssay,
+				"Analyzes the exchanged participant perspectives of erben and vererben.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Supplies Near Antonym for the human-accepted converse mapping.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"nearAntonym",
@@ -1165,7 +1744,24 @@ const acceptance = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-geben-gift-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenGeben,
+				"Defines geben from the transferor perspective.",
+			),
+			cite(
+				references.dudenBekommen,
+				"Defines bekommen from the recipient perspective.",
+			),
+			cite(
+				references.idsConverse,
+				"Defines converse predicates through exchanged argument assignment.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Supplies Near Antonym for the human-accepted converse mapping.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"nearAntonym",
@@ -1185,7 +1781,17 @@ const acceptance = defineCases({
 		failureModes: ["positive", "omission"],
 		contaminationKey: "acceptance-reservation-de-amsel-garden-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(references.dudenAmsel, "Defines Amsel as a Drossel."),
+			cite(
+				references.dudenDrossel,
+				"Defines the directly evidenced broader Drossel category.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Defines Hypernym as the direct narrower-to-broader relation.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -1209,7 +1815,20 @@ const acceptance = defineCases({
 		failureModes: ["null", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-zylinderkopf-engine-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenZylinderkopf,
+				"Defines Zylinderkopf as the upper closing component of a Zylinder.",
+			),
+			cite(
+				references.dudenZylinder,
+				"Documents Zylinder as the technical whole rather than a broader category.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Separates broader-category Hypernym from part-to-whole Holonym.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"hypernym",
@@ -1229,7 +1848,17 @@ const acceptance = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-zeh-barefoot-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(references.dudenZeh, "Defines Zeh as a member of the Fuß."),
+			cite(
+				references.dudenFuss,
+				"Documents Fuß as the immediate anatomical whole.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Defines the direct part-to-whole direction as Holonym.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"holonym",
@@ -1249,7 +1878,20 @@ const acceptance = defineCases({
 		failureModes: ["positive", "wrong-kind"],
 		contaminationKey: "acceptance-reservation-de-kapitell-column-2026",
 		authority: "primary-source",
-		evidenceRefs: [sources.contract, sources.acceptance],
+		sources: [
+			cite(
+				references.dudenKapitell,
+				"Defines Kapitell as the upper termination of a column or pillar.",
+			),
+			cite(
+				references.dudenSaeule,
+				"Documents Säule as the immediate architectural whole.",
+			),
+			cite(
+				references.dumrelRelations,
+				"Defines the direct part-to-whole direction as Holonym.",
+			),
+		],
 		harmfulTargets: [
 			h(
 				"holonym",
@@ -1315,15 +1957,13 @@ function retainedCase(seed: Seed): RetainedCase {
 			},
 			idealOutput: { semanticRelations },
 			explanation: seed.rationale,
+			...(seed.sources === undefined ? {} : { sources: seed.sources }),
 			contaminationKeys: [seed.contaminationKey],
 		},
 		adjudication: Object.freeze({
 			rationale: seed.rationale,
 			failureModes: Object.freeze([...seed.failureModes]),
-			authority: seed.authority ?? "contract-reviewer",
-			evidenceRefs: Object.freeze(
-				seed.evidenceRefs ?? [sources.contract],
-			),
+			authority: seed.authority ?? "human-accepted",
 			...(seed.acceptableTargetSets === undefined
 				? {}
 				: { acceptableTargetSets: seed.acceptableTargetSets }),
@@ -1357,6 +1997,12 @@ function goldenCases<
 
 function h(relation: RequestableRelation, target: Target, reason: string) {
 	return { relation, target, reason } as const;
+}
+
+function cite(reference: SourceReference, supports: string): GoldenCaseSource {
+	return reference.url === undefined
+		? { title: reference.title, path: reference.path, supports }
+		: { title: reference.title, url: reference.url, supports };
 }
 
 function inv(

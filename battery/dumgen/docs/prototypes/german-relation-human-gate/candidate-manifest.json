@@ -1,31 +1,19 @@
 {
 	"formatVersion": "german-relation-human-gate-candidate-v1",
-	"candidateId": "0c96a51e29ff13725fb082278007ba8c1f3c3428829b76813ac4a46676eedd42",
+	"candidateId": "6dda3bc83541dab92479deb0cf129b7f4defd5fb2a718f70dc011d0ff3d6b0f9",
 	"state": "development-gate-failed",
 	"artifacts": [
-		{
-			"issue": 189,
-			"role": "judgment-contract",
-			"path": "battery/dumrel/docs/reference/german-semantic-relation-judgment-contract.md",
-			"sha256": "9826899a563c5068d2fe5d555af1a1ac5a263c7ac9bdbfca1c303039e72e83af"
-		},
 		{
 			"issue": 190,
 			"role": "corpus-reservation",
 			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus.ts",
-			"sha256": "204a1dfc7f27c78ddca3bf3984e69360b21ee796d960a5e5079d9214e90a37e8"
+			"sha256": "026e8c7dede8dc0e4838d085b9f08dee4370565518b7e4dd53347de1f95b9ec4"
 		},
 		{
 			"issue": 190,
 			"role": "adjudicated-development-corpus",
 			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/retained-cases.ts",
-			"sha256": "55c49f29739aa19bba4a7fccfa8350af970e2389ee4e5014b3a1e8f6d8ac00dc"
-		},
-		{
-			"issue": 190,
-			"role": "acceptance-primary-source-reservation",
-			"path": "battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",
-			"sha256": "498b885339741c3aab271841fa3ac1546dcc813640d6d50952185315e2289b9c"
+			"sha256": "a2b83e69969600a3b2711e3f304c1d1cadead7555b4f7a143f241413a5d0981e"
 		},
 		{
 			"issue": 191,
@@ -85,7 +73,7 @@
 			"issue": 193,
 			"role": "human-review-development-gate",
 			"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/review.ts",
-			"sha256": "72b7c12f949b3eab6262948d3368562a13827615a5b5e2263ef44063c4218119"
+			"sha256": "5a547a6ca2e4031de735b99281fb7b5aa41f7c2a0ac77acae6940c18eebdb09b"
 		}
 	],
 	"candidate": {
@@ -100,7 +88,7 @@
 		"approvedByHuman": false,
 		"revealedCaseCount": 0,
 		"reservedCaseCount": 12,
-		"selectionCommitmentSha256": "56fd828f15f74f45a481e34597e6d752c6652056e5679fa794e07a05c6da2d93"
+		"selectionCommitmentSha256": "2e34dcd79f43300d2f85284a82246fb18fde76417b7bc41388b9894a6f4bf14b"
 	},
 	"executionFailurePolicy": {
 		"retries": 0,
