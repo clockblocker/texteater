@@ -4,8 +4,9 @@
 	--segment-ink: #d7d9de;
 	--segment-ink-strong: #f0f1f3;
 	--segment-muted: #9096a0;
-	--segment-unknown: #74a2d1;
-	--segment-known: #9cc6ed;
+	--segment-unknown: #5d89c7;
+	--segment-known: #7aaef7;
+	--segment-known-hover: #a8ccf5;
 	--segment-rule: #343941;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr);
@@ -176,40 +177,16 @@
 }
 
 .text-segment {
-	--segment-fill: transparent;
-	--segment-line: transparent;
-	position: relative;
-	z-index: 0;
 	appearance: none;
 	border: 0;
-	border-radius: 0.15em;
 	padding: 0;
-	background: var(--segment-fill);
+	background: transparent;
 	color: inherit;
 	font: inherit;
 	letter-spacing: inherit;
 	line-height: inherit;
 	cursor: pointer;
-	transition:
-		color 150ms ease,
-		background-color 150ms ease,
-		box-shadow 150ms ease,
-		text-shadow 150ms ease;
-}
-
-.text-segment::after {
-	position: absolute;
-	z-index: -1;
-	right: 0;
-	bottom: -0.01em;
-	left: 0;
-	height: 0.1em;
-	border-radius: 0.08em;
-	background: var(--segment-line);
-	content: "";
-	transition:
-		height 150ms ease,
-		background-color 150ms ease;
+	transition: color 150ms ease;
 }
 
 .text-segment:focus-visible {
@@ -217,65 +194,20 @@
 	outline-offset: 3px;
 }
 
-.segment-bridge {
-	position: relative;
-	z-index: 0;
-	transition: box-shadow 150ms ease;
-}
-
 /* Muted blue has one job: the destination of this Segment is not known. */
-.text-segment[data-state="unknown-preview"] {
-	--segment-fill: rgb(116 162 209 / 9%);
-	--segment-line: rgb(116 162 209 / 68%);
-	color: var(--segment-unknown);
-}
-
+.text-segment[data-state="unknown-preview"],
 .text-segment[data-state="resolving"] {
-	--segment-fill: rgb(116 162 209 / 13%);
-	--segment-line: var(--segment-unknown);
 	color: var(--segment-unknown);
-	text-shadow: 0 0 1rem rgb(116 162 209 / 26%);
-	animation: segment-resolving 720ms ease-in-out infinite alternate;
 }
 
 /* Once a unit is known, every member receives exactly the same treatment. */
 .text-segment[data-state="known-preview"] {
-	--segment-fill: rgb(156 198 237 / 10%);
-	--segment-line: rgb(156 198 237 / 88%);
-	color: var(--segment-known);
+	color: var(--segment-known-hover);
 }
 
-.text-segment[data-state="selected"] {
-	--segment-fill: rgb(156 198 237 / 12%);
-	--segment-line: rgb(156 198 237 / 96%);
-	color: var(--segment-known);
-	text-shadow: 0 0 1.1rem rgb(156 198 237 / 14%);
-}
-
+.text-segment[data-state="selected"],
 .text-segment[data-state="retained"] {
-	--segment-line: rgb(156 198 237 / 46%);
 	color: var(--segment-known);
-}
-
-.segment-bridge[data-state="known-preview"] {
-	box-shadow: inset 0 -0.09em 0 rgb(156 198 237 / 88%);
-}
-
-.segment-bridge[data-state="selected"] {
-	box-shadow: inset 0 -0.09em 0 rgb(156 198 237 / 96%);
-}
-
-.segment-bridge[data-state="retained"] {
-	box-shadow: inset 0 -0.08em 0 rgb(156 198 237 / 46%);
-}
-
-@keyframes segment-resolving {
-	from {
-		background-color: rgb(116 162 209 / 8%);
-	}
-	to {
-		background-color: rgb(116 162 209 / 18%);
-	}
 }
 
 @media (max-width: 1080px) {

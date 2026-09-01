@@ -35,11 +35,11 @@ export const PLAYGROUND_EXPERIMENTS = [
 	},
 	{
 		id: "notes-study",
-		title: "Reading note cards",
+		title: "Reading note card",
 		description:
-			"Compare three visual systems for a German reading note as a full Sheet and a purpose-built Card.",
+			"Study the Midnight index treatment for a German reading note as a full Sheet and a purpose-built Card.",
 		instructions:
-			"Pull from the top or bottom edge of any Sheet to lift its Card and inspect the transformation.",
+			"Pull from the top or bottom edge of the Sheet to lift its Card and inspect the transformation.",
 		component: NotesStudyPlayground,
 	},
 ] as const satisfies readonly PlaygroundExperiment[];

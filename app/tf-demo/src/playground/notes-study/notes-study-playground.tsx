@@ -1,8 +1,4 @@
-import {
-	ExternalLinkIcon,
-	GripHorizontalIcon,
-	Volume2Icon,
-} from "lucide-react";
+import { ExternalLinkIcon, Volume2Icon } from "lucide-react";
 import {
 	type CSSProperties,
 	type ReactNode,
@@ -14,13 +10,6 @@ import { createPortal } from "react-dom";
 import "./notes-study-playground.css";
 
 type DragEdge = "top" | "bottom";
-type VariantId = "midnight" | "catalog" | "field";
-
-type NoteVariant = {
-	readonly id: VariantId;
-	readonly title: string;
-	readonly description: string;
-};
 
 type CardDrag = {
 	readonly edge: DragEdge;
@@ -29,40 +18,31 @@ type CardDrag = {
 	readonly y: number;
 };
 
-const VARIANTS: readonly NoteVariant[] = [
-	{
-		id: "midnight",
-		title: "Midnight index",
-		description:
-			"A low-light memory surface led by the definition and one vivid source line.",
-	},
-	{
-		id: "catalog",
-		title: "Catalog leaf",
-		description:
-			"An archival reference system that compresses the reading into a scan-ready index card.",
-	},
-	{
-		id: "field",
-		title: "Field folio",
-		description:
-			"A working note that gives the learner’s own association the most valuable space.",
-	},
-] as const;
+type SheetAffordanceProps = {
+	readonly edge: DragEdge;
+	readonly onPointerDown: (
+		event: ReactPointerEvent<HTMLButtonElement>,
+		edge: DragEdge,
+	) => void;
+	readonly onPointerMove: (
+		event: ReactPointerEvent<HTMLButtonElement>,
+	) => void;
+	readonly onPointerEnd: (
+		event: ReactPointerEvent<HTMLButtonElement>,
+	) => void;
+};
 
 export function NotesStudyPlayground() {
 	return (
 		<div className="notes-study">
 			<div className="notes-study__variants">
-				{VARIANTS.map((variant) => (
-					<NotePrototype key={variant.id} variant={variant} />
-				))}
+				<NotePrototype />
 			</div>
 		</div>
 	);
 }
 
-function NotePrototype({ variant }: { readonly variant: NoteVariant }) {
+function NotePrototype() {
 	const [drag, setDrag] = useState<CardDrag | null>(null);
 
 	function beginDrag(
@@ -102,24 +82,24 @@ function NotePrototype({ variant }: { readonly variant: NoteVariant }) {
 
 	return (
 		<section
-			className={`notes-prototype notes-prototype--${variant.id}`}
-			aria-labelledby={`${variant.id}-prototype-title`}
+			className="notes-prototype notes-prototype--midnight"
+			aria-labelledby="midnight-prototype-title"
 		>
 			<header className="notes-prototype__header">
 				<div>
 					<span className="notes-prototype__kind">
-						Sheet / {variant.id}
+						Sheet / midnight
 					</span>
 					<div>
-						<h3 id={`${variant.id}-prototype-title`}>
-							{variant.title}
-						</h3>
-						<p>{variant.description}</p>
+						<h3 id="midnight-prototype-title">Midnight index</h3>
+						<p>
+							A low-light memory surface led by the definition and
+							one vivid source line.
+						</p>
 					</div>
 				</div>
 				<p className="notes-prototype__instruction">
-					<GripHorizontalIcon aria-hidden="true" />
-					Pull from either edge to lift a card
+					Drag a Sheet edge to lift its Card
 				</p>
 			</header>
 
@@ -129,7 +109,7 @@ function NotePrototype({ variant }: { readonly variant: NoteVariant }) {
 			>
 				<div
 					className="notes-prototype__sheet"
-					data-note-sheet={variant.id}
+					data-note-sheet="midnight"
 				>
 					<SheetDragSurface
 						edge="top"
@@ -138,7 +118,7 @@ function NotePrototype({ variant }: { readonly variant: NoteVariant }) {
 						onPointerEnd={finishDrag}
 					/>
 					<div className="lexical-note">
-						<NoteArticle variantId={variant.id} />
+						<NoteArticle />
 					</div>
 					<SheetDragSurface
 						edge="bottom"
@@ -154,11 +134,11 @@ function NotePrototype({ variant }: { readonly variant: NoteVariant }) {
 						<div
 							aria-hidden="true"
 							className="notes-prototype__card-drag-layer"
-							data-card-preview={variant.id}
+							data-card-preview="midnight"
 							data-drag-edge={drag.edge}
 							style={dragStyle}
 						>
-							<NoteCard variantId={variant.id} />
+							<MidnightCard />
 						</div>,
 						document.body,
 					)
@@ -172,41 +152,25 @@ function SheetDragSurface({
 	onPointerDown,
 	onPointerMove,
 	onPointerEnd,
-}: {
-	readonly edge: DragEdge;
-	readonly onPointerDown: (
-		event: ReactPointerEvent<HTMLButtonElement>,
-		edge: DragEdge,
-	) => void;
-	readonly onPointerMove: (
-		event: ReactPointerEvent<HTMLButtonElement>,
-	) => void;
-	readonly onPointerEnd: (
-		event: ReactPointerEvent<HTMLButtonElement>,
-	) => void;
-}) {
+}: SheetAffordanceProps) {
 	return (
 		<button
 			type="button"
-			className="notes-prototype__sheet-handle"
+			className="notes-prototype__sheet-handle sheet-edge-lift"
 			data-sheet-drag-edge={edge}
 			aria-label={`Lift Sheet as Card from ${edge} edge`}
+			onLostPointerCapture={onPointerEnd}
+			onPointerCancel={onPointerEnd}
 			onPointerDown={(event) => onPointerDown(event, edge)}
 			onPointerMove={onPointerMove}
 			onPointerUp={onPointerEnd}
-			onPointerCancel={onPointerEnd}
-			onLostPointerCapture={onPointerEnd}
 		>
-			<GripHorizontalIcon aria-hidden="true" />
-			<span>{edge === "top" ? "Lift card" : "Pull card"}</span>
+			<span className="sheet-edge-lift__rule" aria-hidden="true">
+				<i />
+				<em>{edge === "top" ? "Lift" : "Pull"}</em>
+			</span>
 		</button>
 	);
-}
-
-function NoteCard({ variantId }: { readonly variantId: VariantId }) {
-	if (variantId === "catalog") return <CatalogCard />;
-	if (variantId === "field") return <FieldCard />;
-	return <MidnightCard />;
 }
 
 function MidnightCard() {
@@ -214,7 +178,7 @@ function MidnightCard() {
 		<article className="note-card note-card--midnight">
 			<header className="note-card__word-row">
 				<div>
-					<p>German · noun · feminine</p>
+					<p>Deutsch · Substantiv · feminin</p>
 					<h4>die Dämmerung</h4>
 				</div>
 				<button
@@ -241,64 +205,8 @@ function MidnightCard() {
 	);
 }
 
-function CatalogCard() {
-	return (
-		<article className="note-card note-card--catalog">
-			<div className="catalog-card__rail" aria-hidden="true">
-				DE · N · 041
-			</div>
-			<header>
-				<span>noun / feminine</span>
-				<h4>Dämmerung</h4>
-				<p>twilight; dusk</p>
-			</header>
-			<dl>
-				<div>
-					<dt>Plural</dt>
-					<dd>Dämmerungen</dd>
-				</div>
-				<div>
-					<dt>Built from</dt>
-					<dd>dämmern + -ung</dd>
-				</div>
-			</dl>
-			<blockquote>noch vor der Dämmerung auf den Rückweg</blockquote>
-			<footer>
-				<span>TAGESZEIT</span>
-				<span>ABLEITUNG</span>
-			</footer>
-		</article>
-	);
-}
-
-function FieldCard() {
-	return (
-		<article className="note-card note-card--field">
-			<header>
-				<span className="field-card__initial">D</span>
-				<div>
-					<p>field note · German</p>
-					<h4>die Dämmerung</h4>
-				</div>
-				<span className="field-card__translation">twilight</span>
-			</header>
-			<section>
-				<p>Your note</p>
-				<strong>
-					“The blue hour on the walk home—light is leaving, but it
-					isn’t dark yet.”
-				</strong>
-			</section>
-			<blockquote>
-				Wir machten uns noch vor der Dämmerung auf den Rückweg.
-			</blockquote>
-			<footer>Abendlicht · Zwielicht · Sonnenuntergang</footer>
-		</article>
-	);
-}
-
-function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
-	const noteId = `${variantId}-note`;
+function NoteArticle() {
+	const noteId = "midnight-note";
 
 	return (
 		<article
@@ -315,7 +223,7 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 						<LinkedWord nounGender="feminine">Dämmerung</LinkedWord>
 						<span>
 							, die{" "}
-							<LinkedWord nounGender="feminine">
+							<LinkedWord nounGender="feminine" number="plural">
 								Dämmerungen
 							</LinkedWord>
 						</span>
@@ -346,7 +254,7 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					aria-labelledby={`${noteId}-contexts`}
 				>
 					<SectionLabel id={`${noteId}-contexts`}>
-						In context
+						Im Kontext
 					</SectionLabel>
 					<div className="source-contexts">
 						<blockquote>
@@ -374,7 +282,7 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					aria-labelledby={`${noteId}-writing`}
 				>
 					<SectionLabel id={`${noteId}-writing`}>
-						Your note
+						Deine Notiz
 					</SectionLabel>
 					<label
 						className="note-writing"
@@ -395,7 +303,7 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					aria-labelledby={`${noteId}-relations`}
 				>
 					<SectionLabel id={`${noteId}-relations`}>
-						Relations
+						Beziehungen
 					</SectionLabel>
 					<ul className="relation-list">
 						<li>
@@ -442,17 +350,17 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					aria-labelledby={`${noteId}-building`}
 				>
 					<SectionLabel id={`${noteId}-building`}>
-						Word building
+						Wortbildung
 					</SectionLabel>
 					<p className="word-seam">
-						<LinkedWord>Dämmer</LinkedWord>
+						<LinkedWord wordKind="verb-stem">Dämmer</LinkedWord>
 						<b aria-hidden="true">|</b>
-						<LinkedWord>ung</LinkedWord>
+						<LinkedWord suffixGender="feminine">ung</LinkedWord>
 					</p>
 					<p>
-						<LinkedWord>dämmern</LinkedWord>{" "}
+						<LinkedWord wordKind="verb">dämmern</LinkedWord>{" "}
 						<span aria-hidden="true">+</span>{" "}
-						<LinkedWord>-ung</LinkedWord>
+						<LinkedWord suffixGender="feminine">-ung</LinkedWord>
 					</p>
 				</section>
 
@@ -461,16 +369,20 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					aria-labelledby={`${noteId}-translation`}
 				>
 					<SectionLabel id={`${noteId}-translation`}>
-						English
+						Übersetzung
 					</SectionLabel>
-					<p>twilight; dusk</p>
+					<p>
+						twilight; dusk
+						<br />
+						закат;
+					</p>
 				</section>
 
 				<section
 					className="note-section note-section--forms"
 					aria-labelledby={`${noteId}-forms`}
 				>
-					<SectionLabel id={`${noteId}-forms`}>Forms</SectionLabel>
+					<SectionLabel id={`${noteId}-forms`}>Formen</SectionLabel>
 					<dl>
 						<div>
 							<dt>N</dt>
@@ -480,7 +392,10 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 									Dämmerung
 								</LinkedWord>
 								, die{" "}
-								<LinkedWord nounGender="feminine">
+								<LinkedWord
+									nounGender="feminine"
+									number="plural"
+								>
 									Dämmerungen
 								</LinkedWord>
 							</dd>
@@ -493,7 +408,10 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 									Dämmerung
 								</LinkedWord>
 								, die{" "}
-								<LinkedWord nounGender="feminine">
+								<LinkedWord
+									nounGender="feminine"
+									number="plural"
+								>
 									Dämmerungen
 								</LinkedWord>
 							</dd>
@@ -506,7 +424,10 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 									Dämmerung
 								</LinkedWord>
 								, der{" "}
-								<LinkedWord nounGender="feminine">
+								<LinkedWord
+									nounGender="feminine"
+									number="plural"
+								>
 									Dämmerungen
 								</LinkedWord>
 							</dd>
@@ -519,7 +440,10 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 									Dämmerung
 								</LinkedWord>
 								, den{" "}
-								<LinkedWord nounGender="feminine">
+								<LinkedWord
+									nounGender="feminine"
+									number="plural"
+								>
 									Dämmerungen
 								</LinkedWord>
 							</dd>
@@ -554,18 +478,34 @@ function SectionLabel({
 function LinkedWord({
 	children,
 	nounGender,
+	number,
+	suffixGender,
+	wordKind,
 }: {
 	readonly children: string;
 	readonly nounGender?: "feminine" | "neuter" | "masculine";
+	readonly number?: "plural";
+	readonly suffixGender?: "feminine";
+	readonly wordKind?: "verb" | "verb-stem";
 }) {
+	const description = [
+		wordKind === "verb-stem" ? "verb stem" : wordKind,
+		suffixGender ? `${suffixGender} noun-forming suffix` : undefined,
+		nounGender ? `${nounGender} noun` : undefined,
+		number,
+	]
+		.filter(Boolean)
+		.join(", ");
+
 	return (
 		<button
 			type="button"
 			className="linked-word"
 			data-noun-gender={nounGender}
-			aria-label={
-				nounGender ? `${children}, ${nounGender} noun` : undefined
-			}
+			data-number={number}
+			data-suffix-gender={suffixGender}
+			data-word-kind={wordKind}
+			aria-label={description ? `${children}, ${description}` : undefined}
 		>
 			{children}
 		</button>

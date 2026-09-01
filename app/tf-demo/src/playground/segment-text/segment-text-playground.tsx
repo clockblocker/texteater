@@ -450,22 +450,8 @@ function PassageBlockView({
 	const selectedUnitIds = new Set(selectedUnits.map(({ unitId }) => unitId));
 	const content = block.parts.map((part) => {
 		if (part.kind === "space") {
-			const bridgeState = part.bridgeUnitId
-				? displayStateForUnit({
-						currentSelection,
-						previewTarget,
-						previewUnitIsKnown,
-						selectedUnitIds,
-						unitId: part.bridgeUnitId,
-					})
-				: undefined;
 			return (
-				<span
-					key={part.id}
-					className="segment-bridge"
-					data-state={bridgeState}
-					aria-hidden="true"
-				>
+				<span key={part.id} aria-hidden="true">
 					{part.text}
 				</span>
 			);

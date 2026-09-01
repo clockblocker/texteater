@@ -74,12 +74,6 @@
 	text-transform: uppercase;
 }
 
-.notes-prototype__instruction svg {
-	width: 1rem;
-	height: 1rem;
-	color: #7698ff;
-}
-
 .notes-prototype__sheet-handle:focus-visible,
 .lexical-note button:focus-visible,
 .lexical-note textarea:focus-visible {
@@ -110,24 +104,16 @@
 	position: absolute;
 	z-index: 5;
 	left: 0;
-	display: grid;
 	width: 100%;
-	height: 4rem;
-	place-content: start center;
-	justify-items: center;
-	gap: 0.12rem;
+	height: 3.25rem;
 	border: 0;
 	border-radius: 0;
-	padding-top: 0.55rem;
-	background: linear-gradient(
-		to bottom,
-		rgb(5 10 17 / 74%),
-		rgb(5 10 17 / 34%) 38%,
-		transparent
-	);
-	color: rgb(224 233 247 / 64%);
+	padding: 0;
+	background: transparent;
+	color: #9fb9e8;
 	cursor: grab;
 	touch-action: none;
+	transition: opacity 140ms ease;
 	user-select: none;
 }
 
@@ -137,40 +123,103 @@
 
 .notes-prototype__sheet-handle[data-sheet-drag-edge="bottom"] {
 	bottom: 0;
-	place-content: end center;
-	padding-top: 0;
-	padding-bottom: 0.55rem;
-	background: linear-gradient(
-		to top,
-		rgb(5 10 17 / 74%),
-		rgb(5 10 17 / 34%) 38%,
-		transparent
-	);
 }
 
 .notes-prototype__sheet-handle:active {
 	cursor: grabbing;
 }
 
-.notes-prototype__sheet-handle svg {
-	width: 1.25rem;
-	height: 1.25rem;
-	filter: drop-shadow(0 0.2rem 0.45rem rgb(0 0 0 / 70%));
+/* The Sheet rule is the handle. Its registration notch resolves into an
+   instruction only when the Visitor shows intent. */
+.sheet-edge-lift__rule {
+	position: absolute;
+	top: 0;
+	right: 1.35rem;
+	left: 1.35rem;
+	height: 1px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		#435064 18%,
+		#435064 82%,
+		transparent
+	);
+	transition:
+		background 160ms ease,
+		box-shadow 160ms ease;
 }
 
-.notes-prototype__sheet-handle span {
+[data-sheet-drag-edge="bottom"] .sheet-edge-lift__rule {
+	top: auto;
+	bottom: 0;
+}
+
+.sheet-edge-lift__rule i {
+	position: absolute;
+	top: -0.2rem;
+	left: 50%;
+	width: 0.42rem;
+	height: 0.42rem;
+	border: 1px solid #66748a;
+	background: #1c2128;
+	transform: translateX(-50%) rotate(45deg);
+	transition:
+		border-color 160ms ease,
+		box-shadow 160ms ease;
+}
+
+[data-sheet-drag-edge="bottom"] .sheet-edge-lift__rule i {
+	top: auto;
+	bottom: -0.2rem;
+}
+
+.sheet-edge-lift__rule em {
+	position: absolute;
+	top: 0.5rem;
+	left: 50%;
+	padding: 0.15rem 0.35rem;
+	background: #1c2128;
+	color: #91a2bb;
 	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-	font-size: 0.54rem;
+	font-size: 0.5rem;
+	font-style: normal;
 	font-weight: 700;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
+	letter-spacing: 0.13em;
 	opacity: 0;
-	transition: opacity 140ms ease;
+	text-transform: uppercase;
+	transform: translate(-50%, -0.15rem);
+	transition:
+		opacity 140ms ease,
+		transform 140ms ease;
 }
 
-.notes-prototype__sheet-handle:hover span,
-.notes-prototype__sheet-handle:focus-visible span {
+[data-sheet-drag-edge="bottom"] .sheet-edge-lift__rule em {
+	top: auto;
+	bottom: 0.5rem;
+}
+
+.sheet-edge-lift:hover .sheet-edge-lift__rule,
+.sheet-edge-lift:focus-visible .sheet-edge-lift__rule {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		#669ef3 28%,
+		#669ef3 72%,
+		transparent
+	);
+	box-shadow: 0 0 0.8rem rgb(102 158 243 / 18%);
+}
+
+.sheet-edge-lift:hover .sheet-edge-lift__rule i,
+.sheet-edge-lift:focus-visible .sheet-edge-lift__rule i {
+	border-color: #8eb4f0;
+	box-shadow: 0 0 0 0.2rem rgb(102 158 243 / 10%);
+}
+
+.sheet-edge-lift:hover .sheet-edge-lift__rule em,
+.sheet-edge-lift:focus-visible .sheet-edge-lift__rule em {
 	opacity: 1;
+	transform: translate(-50%, 0);
 }
 
 .lexical-note {
@@ -180,9 +229,11 @@
 	--note-soft: #a3aab4;
 	--note-muted: #7c8591;
 	--note-link: #7dacfa;
+	--note-verb: #8eb4f0;
 	--note-noun-feminine: #e69a9d;
 	--note-noun-neuter: #a3c39f;
 	--note-noun-masculine: #aab2d8;
+	--note-number-plural: #e6d79a;
 	--note-accent: #ffc071;
 	--note-rule: #383e47;
 	--note-context-rule: #669ef3;
@@ -266,6 +317,19 @@
 
 .linked-word[data-noun-gender="masculine"] {
 	color: var(--note-noun-masculine);
+}
+
+.linked-word[data-word-kind="verb"],
+.linked-word[data-word-kind="verb-stem"] {
+	color: var(--note-verb);
+}
+
+.linked-word[data-suffix-gender="feminine"] {
+	color: var(--note-noun-feminine);
+}
+
+.linked-word[data-number="plural"] {
+	color: var(--note-number-plural);
 }
 
 .linked-word:hover {
@@ -694,6 +758,10 @@
 	scale: 0.988;
 }
 
+.notes-prototype__stage[data-dragging="true"] .notes-prototype__sheet-handle {
+	opacity: 0.12;
+}
+
 /* A dragged Sheet is re-authored as a Card, not merely scaled down. */
 .notes-prototype__card-drag-layer {
 	position: fixed;
@@ -813,7 +881,7 @@
 .midnight-card__meaning::before {
 	grid-column: 1 / -1;
 	color: var(--note-muted);
-	content: "English";
+	content: "Übersetzung";
 	font-family: var(--note-section-font);
 	font-size: 0.62rem;
 	font-weight: 700;
@@ -1145,7 +1213,10 @@
 @media (prefers-reduced-motion: reduce) {
 	.notes-study .notes-prototype__stage .lexical-note,
 	.notes-prototype__card-drag-layer,
-	.notes-prototype__sheet-handle span {
+	.notes-prototype__sheet-handle,
+	.sheet-edge-lift__rule,
+	.sheet-edge-lift__rule i,
+	.sheet-edge-lift__rule em {
 		animation: none;
 		transition: none;
 	}
