@@ -175,6 +175,26 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	expect(rootOverflow).toBeLessThanOrEqual(1);
 
 	const midnight = page.locator(".notes-prototype--midnight");
+	const ipaBox = await midnight.locator(".lexical-note__ipa").boundingBox();
+	if (!ipaBox) throw new Error("Missing IPA geometry.");
+	const ipaRight = ipaBox.x + ipaBox.width;
+	for (const headingName of [
+		"Im Kontext",
+		"Beziehungen",
+		"Wortbildung",
+		"Übersetzung",
+		"Formen",
+	]) {
+		const headingTextBox = await midnight
+			.getByRole("heading", { name: headingName })
+			.locator("span")
+			.boundingBox();
+		if (!headingTextBox)
+			throw new Error(`Missing ${headingName} text geometry.`);
+		expect(
+			Math.abs(headingTextBox.x + headingTextBox.width - ipaRight),
+		).toBeLessThan(1);
+	}
 	await expect(
 		midnight.getByRole("heading", { name: "Deine Notiz" }),
 	).toHaveCount(0);
@@ -207,6 +227,38 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 			midnight.locator(`[data-noun-gender="${gender}"]`).first(),
 		).toHaveCSS("color", color);
 	}
+	const sourceContexts = midnight.locator(".source-contexts blockquote");
+	const contextBars = midnight.locator(".source-context__bar");
+	await expect(contextBars.nth(0)).toHaveCSS(
+		"background-color",
+		"rgb(56, 62, 71)",
+	);
+	await expect(contextBars.nth(1)).toHaveCSS(
+		"background-color",
+		"rgb(56, 62, 71)",
+	);
+	await contextBars.nth(0).hover();
+	await expect(contextBars.nth(0)).toHaveCSS(
+		"background-color",
+		"rgb(230, 154, 157)",
+	);
+	await expect(contextBars.nth(1)).toHaveCSS(
+		"background-color",
+		"rgb(56, 62, 71)",
+	);
+	const attestedWord = sourceContexts
+		.nth(0)
+		.getByRole("button", { name: "Dämmerung, feminine noun" });
+	await attestedWord.hover();
+	await expect(attestedWord).toHaveCSS("text-decoration-line", "none");
+	await expect(contextBars.nth(0)).toHaveCSS(
+		"background-color",
+		"rgb(230, 154, 157)",
+	);
+	await expect(contextBars.nth(1)).toHaveCSS(
+		"background-color",
+		"rgb(56, 62, 71)",
+	);
 
 	await expect(midnight.locator('[data-number="plural"]').first()).toHaveCSS(
 		"color",

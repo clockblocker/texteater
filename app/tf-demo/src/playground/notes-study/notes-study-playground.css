@@ -237,6 +237,7 @@
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1.5rem;
+	padding-right: 0.8rem;
 }
 
 .lexical-note__lemma {
@@ -347,7 +348,6 @@
 .note-section__label {
 	display: flex;
 	align-items: center;
-	gap: 0.8rem;
 	margin: 0 0 0.85rem;
 	color: var(--note-muted);
 	font-family: var(--note-section-font);
@@ -359,9 +359,18 @@
 
 .note-section__label::before,
 .note-section__label::after {
-	flex: 1 1 auto;
 	border-top: 1px dashed var(--note-rule);
 	content: "";
+}
+
+.note-section__label::before {
+	flex: 1 1 auto;
+	margin-right: 0.4rem;
+}
+
+.note-section__label::after {
+	flex: 0 0 0.4rem;
+	margin-left: 0.4rem;
 }
 
 .note-section--writing::before {
@@ -377,12 +386,75 @@
 }
 
 .source-contexts blockquote {
+	position: relative;
 	margin: 0;
 	padding: 0.2rem 0 0.2rem clamp(1rem, 2.5vw, 2.5rem);
-	border-left: 3px solid var(--note-context-rule);
 	font-weight: 430;
 	letter-spacing: -0.012em;
 	line-height: 1.55;
+}
+
+.source-contexts .linked-word:hover {
+	text-decoration: none;
+}
+
+.source-context__bar {
+	position: absolute;
+	top: 0.2rem;
+	bottom: 0.2rem;
+	left: 0;
+	width: 3px;
+	background: var(--note-rule);
+	transition: background-color 140ms ease;
+}
+
+.source-context__bar::after {
+	position: absolute;
+	inset: -0.45rem;
+	content: "";
+}
+
+.source-context__bar:hover,
+.source-contexts
+	blockquote:has(.linked-word:is(:hover, :focus-visible))
+	.source-context__bar {
+	background-color: var(--note-link);
+}
+
+.source-context__bar[data-noun-gender="feminine"]:hover,
+.source-contexts
+	blockquote:has(
+		.linked-word[data-noun-gender="feminine"]:is(:hover, :focus-visible)
+	)
+	.source-context__bar {
+	background-color: var(--note-noun-feminine);
+}
+
+.source-context__bar[data-noun-gender="neuter"]:hover,
+.source-contexts
+	blockquote:has(
+		.linked-word[data-noun-gender="neuter"]:is(:hover, :focus-visible)
+	)
+	.source-context__bar {
+	background-color: var(--note-noun-neuter);
+}
+
+.source-context__bar[data-noun-gender="masculine"]:hover,
+.source-contexts
+	blockquote:has(
+		.linked-word[data-noun-gender="masculine"]:is(:hover, :focus-visible)
+	)
+	.source-context__bar {
+	background-color: var(--note-noun-masculine);
+}
+
+.source-context__bar[data-number="plural"]:hover,
+.source-contexts
+	blockquote:has(
+		.linked-word[data-number="plural"]:is(:hover, :focus-visible)
+	)
+	.source-context__bar {
+	background-color: var(--note-number-plural);
 }
 
 .note-writing textarea {

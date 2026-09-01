@@ -239,6 +239,11 @@ function NoteArticle() {
 					</SectionLabel>
 					<div className="source-contexts">
 						<blockquote>
+							<span
+								aria-hidden="true"
+								className="source-context__bar"
+								data-noun-gender="feminine"
+							/>
 							Die{" "}
 							<LinkedWord nounGender="feminine">
 								Dämmerung
@@ -248,6 +253,11 @@ function NoteArticle() {
 							an.
 						</blockquote>
 						<blockquote>
+							<span
+								aria-hidden="true"
+								className="source-context__bar"
+								data-noun-gender="feminine"
+							/>
 							Wir machten uns noch vor der{" "}
 							<LinkedWord nounGender="feminine">
 								Dämmerung
@@ -439,7 +449,7 @@ function SectionLabel({
 }) {
 	return (
 		<h5 id={id} className="note-section__label">
-			{children}
+			<span>{children}</span>
 		</h5>
 	);
 }
