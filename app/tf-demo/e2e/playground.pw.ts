@@ -175,6 +175,29 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	expect(rootOverflow).toBeLessThanOrEqual(1);
 
 	const midnight = page.locator(".notes-prototype--midnight");
+	await expect(
+		midnight.getByRole("heading", { name: "Deine Notiz" }),
+	).toHaveCount(0);
+	const noteEditor = midnight.getByPlaceholder("...");
+	await expect(noteEditor).toBeVisible();
+	await expect(noteEditor).toHaveCSS("min-height", "44px");
+	await expect(noteEditor).toHaveCSS("resize", "none");
+	const emptyEditorBox = await noteEditor.boundingBox();
+	if (!emptyEditorBox) throw new Error("Missing note editor geometry.");
+	await noteEditor.focus();
+	await expect(noteEditor).toHaveCSS("min-height", "44px");
+	await expect(noteEditor).toHaveCSS("outline-width", "1px");
+	await expect(noteEditor).toHaveCSS("outline-color", "rgb(98, 107, 119)");
+	await noteEditor.fill("one\ntwo\nthree\nfour");
+	const expandedEditorBox = await noteEditor.boundingBox();
+	if (!expandedEditorBox)
+		throw new Error("Missing expanded editor geometry.");
+	expect(expandedEditorBox.height).toBeGreaterThan(emptyEditorBox.height);
+	await noteEditor.fill("");
+	const shrunkenEditorBox = await noteEditor.boundingBox();
+	if (!shrunkenEditorBox)
+		throw new Error("Missing shrunken editor geometry.");
+	expect(shrunkenEditorBox.height).toBeLessThan(expandedEditorBox.height);
 	for (const [gender, color] of Object.entries({
 		feminine: "rgb(230, 154, 157)",
 		neuter: "rgb(163, 195, 159)",

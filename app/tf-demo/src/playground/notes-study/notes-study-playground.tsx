@@ -1,4 +1,3 @@
-import { ExternalLinkIcon, Volume2Icon } from "lucide-react";
 import {
 	type CSSProperties,
 	type ReactNode,
@@ -31,6 +30,12 @@ type SheetAffordanceProps = {
 		event: ReactPointerEvent<HTMLButtonElement>,
 	) => void;
 };
+
+function fitNoteEditorToContent(editor: HTMLTextAreaElement | null) {
+	if (!editor) return;
+	editor.style.height = "0";
+	editor.style.height = `${editor.scrollHeight}px`;
+}
 
 export function NotesStudyPlayground() {
 	return (
@@ -167,7 +172,6 @@ function SheetDragSurface({
 		>
 			<span className="sheet-edge-lift__rule" aria-hidden="true">
 				<i />
-				<em>{edge === "top" ? "Lift" : "Pull"}</em>
 			</span>
 		</button>
 	);
@@ -181,13 +185,6 @@ function MidnightCard() {
 					<p>Deutsch · Substantiv · feminin</p>
 					<h4>die Dämmerung</h4>
 				</div>
-				<button
-					type="button"
-					tabIndex={-1}
-					aria-label="Play pronunciation"
-				>
-					<Volume2Icon aria-hidden="true" />
-				</button>
 			</header>
 			<div className="midnight-card__meaning">
 				<span>twilight</span>
@@ -228,24 +225,8 @@ function NoteArticle() {
 							</LinkedWord>
 						</span>
 					</h4>
-					<button
-						type="button"
-						className="lexical-note__sound"
-						aria-label="Play pronunciation"
-					>
-						<Volume2Icon aria-hidden="true" />
-					</button>
 				</div>
-				<div className="lexical-note__meta">
-					<span>/ˈdɛmərʊŋ/</span>
-					<span>N · f</span>
-					<button
-						type="button"
-						aria-label="Open this note in a new sheet"
-					>
-						<ExternalLinkIcon aria-hidden="true" />
-					</button>
-				</div>
+				<span className="lexical-note__ipa">/ˈdɛmərʊŋ/</span>
 			</header>
 
 			<div className="lexical-note__layout">
@@ -279,11 +260,8 @@ function NoteArticle() {
 
 				<section
 					className="note-section note-section--writing"
-					aria-labelledby={`${noteId}-writing`}
+					aria-label="Deine Notiz"
 				>
-					<SectionLabel id={`${noteId}-writing`}>
-						Deine Notiz
-					</SectionLabel>
 					<label
 						className="note-writing"
 						htmlFor={`${noteId}-textarea`}
@@ -293,7 +271,11 @@ function NoteArticle() {
 						</span>
 						<textarea
 							id={`${noteId}-textarea`}
-							placeholder="Write a phrase, memory, or distinction…"
+							placeholder="..."
+							ref={fitNoteEditorToContent}
+							onInput={(event) =>
+								fitNoteEditorToContent(event.currentTarget)
+							}
 						/>
 					</label>
 				</section>
@@ -378,85 +360,72 @@ function NoteArticle() {
 					</p>
 				</section>
 
-				<section
-					className="note-section note-section--forms"
-					aria-labelledby={`${noteId}-forms`}
-				>
-					<SectionLabel id={`${noteId}-forms`}>Formen</SectionLabel>
-					<dl>
-						<div>
-							<dt>N</dt>
-							<dd>
-								die{" "}
-								<LinkedWord nounGender="feminine">
-									Dämmerung
-								</LinkedWord>
-								, die{" "}
-								<LinkedWord
-									nounGender="feminine"
-									number="plural"
-								>
-									Dämmerungen
-								</LinkedWord>
-							</dd>
-						</div>
-						<div>
-							<dt>A</dt>
-							<dd>
-								die{" "}
-								<LinkedWord nounGender="feminine">
-									Dämmerung
-								</LinkedWord>
-								, die{" "}
-								<LinkedWord
-									nounGender="feminine"
-									number="plural"
-								>
-									Dämmerungen
-								</LinkedWord>
-							</dd>
-						</div>
-						<div>
-							<dt>G</dt>
-							<dd>
-								der{" "}
-								<LinkedWord nounGender="feminine">
-									Dämmerung
-								</LinkedWord>
-								, der{" "}
-								<LinkedWord
-									nounGender="feminine"
-									number="plural"
-								>
-									Dämmerungen
-								</LinkedWord>
-							</dd>
-						</div>
-						<div>
-							<dt>D</dt>
-							<dd>
-								der{" "}
-								<LinkedWord nounGender="feminine">
-									Dämmerung
-								</LinkedWord>
-								, den{" "}
-								<LinkedWord
-									nounGender="feminine"
-									number="plural"
-								>
-									Dämmerungen
-								</LinkedWord>
-							</dd>
-						</div>
-					</dl>
-				</section>
+				<footer className="lexical-note__footer">
+					<span>#Nomen</span>
+					<span>#Feminin</span>
+				</footer>
 			</div>
 
-			<footer className="lexical-note__footer">
-				<span>#Tageszeit</span>
-				<span>#Ableitung</span>
-				<span>#Abstraktum</span>
-			</footer>
+			<section
+				className="note-section note-section--forms"
+				aria-labelledby={`${noteId}-forms`}
+			>
+				<SectionLabel id={`${noteId}-forms`}>Formen</SectionLabel>
+				<dl>
+					<div>
+						<dt>N</dt>
+						<dd>
+							die{" "}
+							<LinkedWord nounGender="feminine">
+								Dämmerung
+							</LinkedWord>
+							, die{" "}
+							<LinkedWord nounGender="feminine" number="plural">
+								Dämmerungen
+							</LinkedWord>
+						</dd>
+					</div>
+					<div>
+						<dt>A</dt>
+						<dd>
+							die{" "}
+							<LinkedWord nounGender="feminine">
+								Dämmerung
+							</LinkedWord>
+							, die{" "}
+							<LinkedWord nounGender="feminine" number="plural">
+								Dämmerungen
+							</LinkedWord>
+						</dd>
+					</div>
+					<div>
+						<dt>G</dt>
+						<dd>
+							der{" "}
+							<LinkedWord nounGender="feminine">
+								Dämmerung
+							</LinkedWord>
+							, der{" "}
+							<LinkedWord nounGender="feminine" number="plural">
+								Dämmerungen
+							</LinkedWord>
+						</dd>
+					</div>
+					<div>
+						<dt>D</dt>
+						<dd>
+							der{" "}
+							<LinkedWord nounGender="feminine">
+								Dämmerung
+							</LinkedWord>
+							, den{" "}
+							<LinkedWord nounGender="feminine" number="plural">
+								Dämmerungen
+							</LinkedWord>
+						</dd>
+					</div>
+				</dl>
+			</section>
 		</article>
 	);
 }

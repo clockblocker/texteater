@@ -75,8 +75,7 @@
 }
 
 .notes-prototype__sheet-handle:focus-visible,
-.lexical-note button:focus-visible,
-.lexical-note textarea:focus-visible {
+.lexical-note button:focus-visible {
 	outline: 2px solid #4f7cff;
 	outline-offset: 2px;
 }
@@ -129,8 +128,7 @@
 	cursor: grabbing;
 }
 
-/* The Sheet rule is the handle. Its registration notch resolves into an
-   instruction only when the Visitor shows intent. */
+/* The Sheet rule and its registration notch form the drag affordance. */
 .sheet-edge-lift__rule {
 	position: absolute;
 	top: 0;
@@ -173,31 +171,6 @@
 	bottom: -0.2rem;
 }
 
-.sheet-edge-lift__rule em {
-	position: absolute;
-	top: 0.5rem;
-	left: 50%;
-	padding: 0.15rem 0.35rem;
-	background: #1c2128;
-	color: #91a2bb;
-	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-	font-size: 0.5rem;
-	font-style: normal;
-	font-weight: 700;
-	letter-spacing: 0.13em;
-	opacity: 0;
-	text-transform: uppercase;
-	transform: translate(-50%, -0.15rem);
-	transition:
-		opacity 140ms ease,
-		transform 140ms ease;
-}
-
-[data-sheet-drag-edge="bottom"] .sheet-edge-lift__rule em {
-	top: auto;
-	bottom: 0.5rem;
-}
-
 .sheet-edge-lift:hover .sheet-edge-lift__rule,
 .sheet-edge-lift:focus-visible .sheet-edge-lift__rule {
 	background: linear-gradient(
@@ -214,12 +187,6 @@
 .sheet-edge-lift:focus-visible .sheet-edge-lift__rule i {
 	border-color: #8eb4f0;
 	box-shadow: 0 0 0 0.2rem rgb(102 158 243 / 10%);
-}
-
-.sheet-edge-lift:hover .sheet-edge-lift__rule em,
-.sheet-edge-lift:focus-visible .sheet-edge-lift__rule em {
-	opacity: 1;
-	transform: translate(-50%, 0);
 }
 
 .lexical-note {
@@ -270,8 +237,6 @@
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1.5rem;
-	padding-bottom: 1.2rem;
-	border-bottom: 1px dashed var(--note-rule);
 }
 
 .lexical-note__lemma {
@@ -338,37 +303,11 @@
 	text-underline-offset: 0.16em;
 }
 
-.lexical-note__sound,
-.lexical-note__meta button {
-	appearance: none;
-	border: 0;
-	padding: 0.1rem;
-	background: transparent;
-	color: var(--note-link);
-	cursor: pointer;
-}
-
-.lexical-note .lexical-note__sound svg,
-.lexical-note .lexical-note__meta svg {
-	display: block;
-	width: 1rem;
-	height: 1rem;
-}
-
-.lexical-note__meta {
-	display: flex;
+.lexical-note__ipa {
 	flex: 0 0 auto;
-	align-items: center;
-	gap: 0.55rem;
 	padding-top: 0.25rem;
 	color: var(--note-muted);
 	font-style: italic;
-}
-
-.lexical-note__meta span + span::before {
-	margin-right: 0.55rem;
-	color: var(--note-rule);
-	content: "/";
 }
 
 .lexical-note__layout {
@@ -379,8 +318,7 @@
 
 .note-section {
 	min-width: 0;
-	padding: 1.3rem 0;
-	border-bottom: 1px dashed var(--note-rule);
+	padding: 1.3rem 0 0;
 }
 
 .note-section--contexts,
@@ -407,6 +345,9 @@
 }
 
 .note-section__label {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
 	margin: 0 0 0.85rem;
 	color: var(--note-muted);
 	font-family: var(--note-section-font);
@@ -416,36 +357,41 @@
 	text-transform: uppercase;
 }
 
+.note-section__label::before,
+.note-section__label::after {
+	flex: 1 1 auto;
+	border-top: 1px dashed var(--note-rule);
+	content: "";
+}
+
+.note-section--writing::before {
+	display: block;
+	margin-bottom: 0.85rem;
+	border-top: 1px dashed var(--note-rule);
+	content: "";
+}
+
 .source-contexts {
 	display: grid;
 	gap: 1.25rem;
 }
 
 .source-contexts blockquote {
-	position: relative;
 	margin: 0;
-	padding: 0.2rem 2.5rem 0.2rem clamp(1rem, 2.5vw, 2.5rem);
+	padding: 0.2rem 0 0.2rem clamp(1rem, 2.5vw, 2.5rem);
 	border-left: 3px solid var(--note-context-rule);
 	font-weight: 430;
 	letter-spacing: -0.012em;
 	line-height: 1.55;
 }
 
-.source-contexts blockquote::after {
-	position: absolute;
-	top: 50%;
-	right: 0.35rem;
-	color: var(--note-rule);
-	content: "↗";
-	transform: translateY(-50%);
-}
-
 .note-writing textarea {
 	display: block;
 	box-sizing: border-box;
 	width: 100%;
-	min-height: 6.5rem;
-	resize: vertical;
+	min-height: 2.75rem;
+	resize: none;
+	overflow-y: hidden;
 	border: 0;
 	padding: 0.25rem 0.5rem;
 	background: transparent;
@@ -457,6 +403,11 @@
 .note-writing textarea::placeholder {
 	color: var(--note-muted);
 	font-style: italic;
+}
+
+.note-writing textarea:focus-visible {
+	outline: 1px solid #626b77;
+	outline-offset: 0;
 }
 
 .relation-list {
@@ -518,7 +469,14 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.45rem;
-	padding-top: 1.25rem;
+	padding: 1.25rem 0 0;
+}
+
+.lexical-note__footer::before {
+	flex: 0 0 100%;
+	margin-bottom: 0.4rem;
+	border-top: 1px dashed var(--note-rule);
+	content: "";
 }
 
 .lexical-note .lexical-note__footer span {
@@ -816,22 +774,6 @@
 	margin: 0;
 }
 
-.note-card button {
-	display: grid;
-	width: 2rem;
-	height: 2rem;
-	place-items: center;
-	border: 0;
-	border-radius: 50%;
-	background: transparent;
-	color: inherit;
-}
-
-.note-card button svg {
-	width: 1rem;
-	height: 1rem;
-}
-
 .note-card--midnight {
 	box-shadow: 0 1.3rem 2.5rem rgb(0 0 0 / 24%);
 }
@@ -863,10 +805,6 @@
 	font-weight: 570;
 	letter-spacing: -0.025em;
 	line-height: 1.25;
-}
-
-.note-card__word-row button {
-	color: var(--note-link);
 }
 
 .midnight-card__meaning {
@@ -1197,7 +1135,7 @@
 		gap: 0.75rem;
 	}
 
-	.lexical-note__meta {
+	.lexical-note__ipa {
 		align-self: flex-end;
 	}
 
@@ -1215,8 +1153,7 @@
 	.notes-prototype__card-drag-layer,
 	.notes-prototype__sheet-handle,
 	.sheet-edge-lift__rule,
-	.sheet-edge-lift__rule i,
-	.sheet-edge-lift__rule em {
+	.sheet-edge-lift__rule i {
 		animation: none;
 		transition: none;
 	}
