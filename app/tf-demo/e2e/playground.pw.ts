@@ -69,7 +69,7 @@ test("a deck card dragged onto a pane lands as a settled sheet", async ({
 	await expect(deck.locator("[data-card-id]")).toHaveCount(3);
 });
 
-test("the segment text study links split members of one resolved unit", async ({
+test("the segment text study compares pre-resolved and on-demand units", async ({
 	page,
 }) => {
 	await page.goto("/playground/segment-text");
@@ -77,51 +77,70 @@ test("the segment text study links split members of one resolved unit", async ({
 	await expect(
 		page.getByRole("heading", { name: "Segments in continuous text" }),
 	).toBeVisible();
-	const clickedMember = page.getByRole("button", {
+	const preResolved = page.locator('[data-resolution-model="pre-resolved"]');
+	const onDemand = page.locator('[data-resolution-model="on-demand"]');
+	await expect(page.locator(".resolution-model__header")).toHaveCount(0);
+	await expect(page.locator(".resolution-model__inspector")).toHaveCount(0);
+
+	const knownMember = preResolved.getByRole("button", {
+		name: "an, part of anrufen",
+	});
+	await knownMember.hover();
+	await expect(
+		preResolved.locator('.text-segment[data-state="known-preview"]'),
+	).toHaveCount(2);
+
+	const unknownMember = onDemand.getByRole("button", {
 		name: "an, click to resolve",
 	});
-	await clickedMember.hover();
+	await unknownMember.hover();
 	await expect(
-		page.locator('.text-segment[data-preview-role="origin"]'),
+		onDemand.locator('.text-segment[data-state="unknown-preview"]'),
 	).toHaveCount(1);
 	await expect(
-		page.locator('.text-segment[data-preview-role="member"]'),
+		onDemand.locator('.text-segment[data-state="known-preview"]'),
 	).toHaveCount(0);
 
-	await clickedMember.click();
-	await page.getByRole("button", { name: "rufe, part of anrufen" }).hover();
+	await unknownMember.click();
 	await expect(
-		page.locator('.text-segment[data-preview-role="member"]'),
+		onDemand.locator('.text-segment[data-state="resolving"]'),
 	).toHaveCount(1);
-	await page
+	await expect(
+		onDemand.locator('.text-segment[data-state="selected"]'),
+	).toHaveCount(2);
+
+	await onDemand
+		.getByRole("button", { name: "rufe, part of anrufen" })
+		.hover();
+	const previewedUnit = onDemand.locator(
+		'.text-segment[data-state="known-preview"]',
+	);
+	await expect(previewedUnit).toHaveCount(2);
+	await page.waitForTimeout(200);
+	for (const member of await previewedUnit.all()) {
+		await expect(member).toHaveCSS("color", "rgb(156, 198, 237)");
+		await expect(member).toHaveCSS(
+			"background-color",
+			"rgba(156, 198, 237, 0.1)",
+		);
+	}
+
+	await onDemand
 		.getByRole("button", { name: "zurück., click to resolve" })
 		.click();
-	await page.locator(".segment-study__toolbar").hover();
 	await expect(
-		page.locator('.text-segment[data-knowledge="encountered"]'),
+		onDemand.locator('.text-segment[data-state="selected"]'),
 	).toHaveCount(2);
 	await expect(
-		page.locator('.text-segment[data-knowledge="known-member"]'),
+		onDemand.locator('.text-segment[data-state="retained"]'),
 	).toHaveCount(2);
+	await expect(onDemand.locator(".text-segment[data-known]")).toHaveCount(4);
 	await expect(
-		page.getByRole("button", { name: "rufe, part of anrufen" }),
-	).toHaveAttribute("data-knowledge", "known-member");
-	await expect(
-		page.getByRole("button", {
-			name: "schreibe, part of zurückschreiben",
-		}),
-	).toHaveAttribute("data-knowledge", "known-member");
-	await expect(
-		page
-			.locator('[data-passage-block="call-and-write"]')
-			.getByRole("button", { name: "Sam, click to resolve" }),
-	).not.toHaveAttribute("data-knowledge");
-
-	await expect(page.getByText(/2 encountered/)).toBeVisible();
+		preResolved.locator(".text-segment:not([data-known])"),
+	).toHaveCount(0);
 
 	await page.getByRole("button", { name: "Reset fixture" }).click();
-	await expect(page.locator(".text-segment[data-knowledge]")).toHaveCount(0);
-	await expect(page.getByText(/0 encountered/)).toBeVisible();
+	await expect(onDemand.locator(".text-segment[data-known]")).toHaveCount(0);
 });
 
 test("each reading note Sheet lifts into its own purpose-built Card", async ({

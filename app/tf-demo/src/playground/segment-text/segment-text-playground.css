@@ -4,10 +4,8 @@
 	--segment-ink: #d7d9de;
 	--segment-ink-strong: #f0f1f3;
 	--segment-muted: #9096a0;
-	--segment-memory: #74a2d1;
-	--segment-memory-bright: #9cc6ed;
-	--segment-preview: #e2b665;
-	--segment-preview-bright: #f0ca7c;
+	--segment-unknown: #74a2d1;
+	--segment-known: #9cc6ed;
 	--segment-rule: #343941;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr);
@@ -34,11 +32,11 @@
 	gap: 0.08rem;
 }
 
-.segment-study__title span,
-.unit-inspector__eyebrow {
+.segment-study__title span {
+	margin: 0;
 	color: var(--segment-muted);
 	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-	font-size: 0.65rem;
+	font-size: 0.62rem;
 	font-weight: 650;
 	letter-spacing: 0.11em;
 	text-transform: uppercase;
@@ -50,71 +48,77 @@
 	font-weight: 580;
 }
 
-.text-segment:focus-visible {
-	outline: 2px solid var(--segment-memory);
-	outline-offset: 3px;
-}
-
-.segment-study__mode {
+.segment-study__legend {
 	display: flex;
 	align-items: center;
 	gap: 0.55rem;
 	margin: 0;
 	color: var(--segment-muted);
 	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-	font-size: 0.64rem;
-	letter-spacing: 0.02em;
+	font-size: 0.62rem;
 }
 
-.segment-study__mode span {
+.segment-study__legend span {
 	width: 0.45rem;
 	height: 0.45rem;
 	border-radius: 50%;
 }
 
-.segment-study__mode i {
+.segment-study__legend span[data-legend="unknown"] {
+	background: var(--segment-unknown);
+	box-shadow: 0 0 0 0.2rem rgb(116 162 209 / 12%);
+}
+
+.segment-study__legend span[data-legend="known"] {
+	background: var(--segment-known);
+	box-shadow: 0 0 0 0.2rem rgb(156 198 237 / 13%);
+}
+
+.segment-study__legend i {
 	width: 1px;
 	height: 0.85rem;
 	margin-inline: 0.15rem;
 	background: var(--segment-rule);
 }
 
-.segment-study__mode .segment-study__preview-key {
-	background: var(--segment-preview);
-	box-shadow: 0 0 0 0.2rem rgb(226 182 101 / 11%);
-}
-
-.segment-study__mode .segment-study__memory-key {
-	background: var(--segment-memory);
-	box-shadow: 0 0 0 0.2rem rgb(116 162 209 / 13%);
-}
-
-.segment-study__body {
+.segment-study__models {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) clamp(13rem, 20vw, 18rem);
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	min-height: 0;
+}
+
+.resolution-model {
+	display: grid;
+	grid-template-rows: minmax(0, 1fr);
+	min-width: 0;
+	min-height: 0;
+}
+
+.resolution-model + .resolution-model {
+	border-left: 1px solid var(--segment-rule);
+}
+
+.resolution-model__reader {
 	min-height: 0;
 	overflow: auto;
-}
-
-.segment-reader {
-	min-width: 0;
-	padding: 1.25rem clamp(1.5rem, 5vw, 5.5rem) 5rem;
+	padding: 1.2rem clamp(1.25rem, 3vw, 2.5rem) 4rem;
+	scrollbar-color: var(--segment-rule) transparent;
 }
 
 .segment-reader__header {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
-	gap: 2rem;
-	max-width: 57rem;
-	margin: 0 auto clamp(2.5rem, 6vh, 4.75rem);
+	gap: 1.25rem;
+	max-width: 43rem;
+	margin: 0 auto 2.5rem;
 	color: var(--segment-muted);
-	font-size: 0.72rem;
+	font-size: 0.66rem;
 }
 
 .segment-reader__header nav {
 	display: flex;
-	gap: 0.55rem;
+	gap: 0.45rem;
 	align-items: center;
 }
 
@@ -130,14 +134,15 @@
 
 .segment-reader__hint {
 	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-	font-size: 0.62rem;
-	letter-spacing: 0.02em;
+	font-size: 0.56rem;
+	letter-spacing: 0.01em;
+	text-align: right;
 }
 
 .segment-reader__passage {
-	max-width: 57rem;
+	max-width: 43rem;
 	margin: 0 auto;
-	font-size: clamp(1.15rem, 1.45vw, 1.48rem);
+	font-size: clamp(1.02rem, 1.2vw, 1.24rem);
 	font-weight: 430;
 	letter-spacing: -0.015em;
 	line-height: 1.52;
@@ -148,7 +153,7 @@
 }
 
 .passage-block + .passage-block {
-	margin-top: 2.15rem;
+	margin-top: 1.8rem;
 }
 
 .passage-block--dialogue h2 {
@@ -171,27 +176,25 @@
 }
 
 .text-segment {
-	--segment-attention-fill: transparent;
-	--segment-attention-line: transparent;
-	--segment-history-line: transparent;
-	--segment-history-notch: transparent;
+	--segment-fill: transparent;
+	--segment-line: transparent;
 	position: relative;
 	z-index: 0;
 	appearance: none;
 	border: 0;
 	border-radius: 0.15em;
 	padding: 0;
-	background: var(--segment-attention-fill);
+	background: var(--segment-fill);
 	color: inherit;
 	font: inherit;
 	letter-spacing: inherit;
 	line-height: inherit;
 	cursor: pointer;
 	transition:
-		color 140ms ease,
-		background-color 140ms ease,
-		box-shadow 140ms ease,
-		text-shadow 140ms ease;
+		color 150ms ease,
+		background-color 150ms ease,
+		box-shadow 150ms ease,
+		text-shadow 150ms ease;
 }
 
 .text-segment::after {
@@ -200,247 +203,131 @@
 	right: 0;
 	bottom: -0.01em;
 	left: 0;
-	height: 0.13em;
-	background:
-		linear-gradient(var(--segment-history-notch) 0 0) right bottom / 0.24em
-		0.13em no-repeat,
-		linear-gradient(var(--segment-attention-line) 0 0) left bottom / 100%
-		0.08em no-repeat,
-		linear-gradient(var(--segment-history-line) 0 0) left bottom / 100%
-		0.05em no-repeat;
+	height: 0.1em;
 	border-radius: 0.08em;
+	background: var(--segment-line);
 	content: "";
-	transition: background 140ms ease;
+	transition:
+		height 150ms ease,
+		background-color 150ms ease;
+}
+
+.text-segment:focus-visible {
+	outline: 2px solid var(--segment-known);
+	outline-offset: 3px;
 }
 
 .segment-bridge {
 	position: relative;
 	z-index: 0;
-	transition:
-		background-color 140ms ease,
-		box-shadow 140ms ease;
+	transition: box-shadow 150ms ease;
 }
 
-/* A thin blue baseline means the unit is known. The heavier notch records
-   that this exact Segment, rather than only one of its members, was clicked. */
-.text-segment[data-knowledge="known-member"] {
-	--segment-history-line: rgb(116 162 209 / 26%);
+/* Muted blue has one job: the destination of this Segment is not known. */
+.text-segment[data-state="unknown-preview"] {
+	--segment-fill: rgb(116 162 209 / 9%);
+	--segment-line: rgb(116 162 209 / 68%);
+	color: var(--segment-unknown);
 }
 
-.text-segment[data-knowledge="encountered"] {
-	--segment-history-line: rgb(116 162 209 / 46%);
-	--segment-history-notch: rgb(156 198 237 / 88%);
+.text-segment[data-state="resolving"] {
+	--segment-fill: rgb(116 162 209 / 13%);
+	--segment-line: var(--segment-unknown);
+	color: var(--segment-unknown);
+	text-shadow: 0 0 1rem rgb(116 162 209 / 26%);
+	animation: segment-resolving 720ms ease-in-out infinite alternate;
 }
 
-.text-segment[data-current-role="member"] {
-	--segment-attention-line: rgb(116 162 209 / 72%);
-	color: var(--segment-memory);
+/* Once a unit is known, every member receives exactly the same treatment. */
+.text-segment[data-state="known-preview"] {
+	--segment-fill: rgb(156 198 237 / 10%);
+	--segment-line: rgb(156 198 237 / 88%);
+	color: var(--segment-known);
 }
 
-.text-segment[data-current-role="origin"] {
-	--segment-attention-fill: rgb(116 162 209 / 10%);
-	--segment-attention-line: rgb(156 198 237 / 94%);
-	color: var(--segment-memory-bright);
-	text-shadow: 0 0 1.1rem rgb(156 198 237 / 15%);
+.text-segment[data-state="selected"] {
+	--segment-fill: rgb(156 198 237 / 12%);
+	--segment-line: rgb(156 198 237 / 96%);
+	color: var(--segment-known);
+	text-shadow: 0 0 1.1rem rgb(156 198 237 / 14%);
 }
 
-.text-segment[data-preview-role="member"] {
-	--segment-attention-line: rgb(226 182 101 / 55%);
-	color: var(--segment-preview);
+.text-segment[data-state="retained"] {
+	--segment-line: rgb(156 198 237 / 46%);
+	color: var(--segment-known);
 }
 
-.text-segment[data-preview-role="origin"] {
-	--segment-attention-fill: rgb(226 182 101 / 11%);
-	--segment-attention-line: rgb(240 202 124 / 94%);
-	color: var(--segment-preview-bright);
-	text-shadow: 0 0 1.1rem rgb(226 182 101 / 14%);
+.segment-bridge[data-state="known-preview"] {
+	box-shadow: inset 0 -0.09em 0 rgb(156 198 237 / 88%);
 }
 
-.segment-bridge[data-known="true"] {
-	box-shadow: inset 0 -0.05em 0 rgb(116 162 209 / 26%);
+.segment-bridge[data-state="selected"] {
+	box-shadow: inset 0 -0.09em 0 rgb(156 198 237 / 96%);
 }
 
-.segment-bridge[data-current="true"] {
-	box-shadow: inset 0 -0.08em 0 rgb(116 162 209 / 72%);
+.segment-bridge[data-state="retained"] {
+	box-shadow: inset 0 -0.08em 0 rgb(156 198 237 / 46%);
 }
 
-.segment-bridge[data-preview="true"] {
-	box-shadow: inset 0 -0.08em 0 rgb(226 182 101 / 55%);
+@keyframes segment-resolving {
+	from {
+		background-color: rgb(116 162 209 / 8%);
+	}
+	to {
+		background-color: rgb(116 162 209 / 18%);
+	}
 }
 
-.unit-inspector {
-	position: sticky;
-	top: 0;
-	align-self: start;
-	height: max-content;
-	padding: clamp(4.25rem, 11vh, 7.5rem) 2rem 2rem;
-	border-left: 1px solid var(--segment-rule);
-	background: rgb(21 24 28 / 72%);
-}
+@media (max-width: 1080px) {
+	.segment-study {
+		overflow: auto;
+	}
 
-.unit-inspector__rule {
-	width: 2rem;
-	height: 2px;
-	margin-bottom: 1.15rem;
-	background: var(--segment-memory);
-}
-
-.unit-inspector__eyebrow {
-	margin: 0 0 0.8rem;
-	color: var(--segment-memory);
-}
-
-.unit-inspector h2 {
-	margin: 0;
-	color: var(--segment-ink-strong);
-	font-size: clamp(1.45rem, 2.25vw, 2.1rem);
-	font-weight: 560;
-	letter-spacing: -0.045em;
-	line-height: 1;
-}
-
-.unit-inspector h2 + p {
-	margin: 0.7rem 0 0;
-	color: var(--segment-muted);
-	font-size: 0.8rem;
-	line-height: 1.5;
-}
-
-.unit-inspector__facts {
-	display: grid;
-	gap: 0.7rem;
-	margin-top: 2rem;
-}
-
-.unit-inspector__facts div {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
-	gap: 1rem;
-	padding-bottom: 0.65rem;
-	border-bottom: 1px solid rgb(52 57 65 / 72%);
-}
-
-.unit-inspector__facts dt,
-.unit-inspector__facts dd {
-	margin: 0;
-	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-	font-size: 0.62rem;
-	line-height: 1.35;
-}
-
-.unit-inspector__facts dt {
-	color: var(--segment-muted);
-	text-transform: uppercase;
-}
-
-.unit-inspector__facts dd {
-	color: #c9cdd3;
-	text-align: right;
-}
-
-.unit-inspector__facts dd[data-segment-status="Encountered"] {
-	color: var(--segment-memory-bright);
-}
-
-.unit-inspector__facts dd[data-segment-status="Unseen"] {
-	color: var(--segment-preview);
-}
-
-.unit-inspector__note {
-	margin: 3rem 0 0;
-	padding-top: 1rem;
-	border-top: 1px solid var(--segment-rule);
-	color: var(--segment-muted);
-	font-size: 0.7rem;
-	line-height: 1.55;
-}
-
-@media (max-width: 860px) {
-	.segment-study__body {
+	.segment-study__models {
 		grid-template-columns: 1fr;
+		overflow: visible;
 	}
 
-	.segment-reader {
-		padding-inline: clamp(1.25rem, 7vw, 3.5rem);
-	}
-
-	.unit-inspector {
-		position: static;
-		display: grid;
-		grid-template-columns: auto minmax(0, 1fr) auto;
-		gap: 0 1rem;
-		align-items: center;
-		min-height: 0;
-		padding: 1.25rem clamp(1.25rem, 7vw, 3.5rem);
+	.resolution-model + .resolution-model {
 		border-top: 1px solid var(--segment-rule);
 		border-left: 0;
 	}
 
-	.unit-inspector__rule,
-	.unit-inspector__note {
-		display: none;
-	}
-
-	.unit-inspector__eyebrow,
-	.unit-inspector h2 + p,
-	.unit-inspector__facts {
-		grid-column: 2;
-	}
-
-	.unit-inspector__eyebrow {
-		margin-bottom: 0.35rem;
-	}
-
-	.unit-inspector h2 {
-		grid-column: 2;
-		font-size: 1.4rem;
-	}
-
-	.unit-inspector h2 + p {
-		margin-top: 0.35rem;
-	}
-
-	.unit-inspector__facts {
-		grid-column: 3;
-		grid-row: 1 / span 3;
-		margin-top: 0;
-	}
-
-	.unit-inspector__facts div {
-		grid-template-columns: 1fr;
-		gap: 0.2rem;
-	}
-
-	.unit-inspector__facts dd {
-		text-align: left;
+	.resolution-model__reader {
+		max-height: 58svh;
 	}
 }
 
 @media (max-width: 640px) {
-	.segment-study__toolbar {
-		align-items: flex-start;
-		flex-direction: column;
-		gap: 0.45rem;
-	}
-
+	.segment-study__toolbar,
 	.segment-reader__header {
 		align-items: flex-start;
 		flex-direction: column;
-		gap: 0.65rem;
-		margin-bottom: 2.75rem;
+	}
+
+	.segment-study__toolbar {
+		gap: 0.55rem;
+	}
+
+	.segment-study__legend {
+		font-size: 0.56rem;
+	}
+
+	.segment-reader__header {
+		gap: 0.55rem;
+		margin-bottom: 2rem;
+	}
+
+	.segment-reader__hint {
+		text-align: left;
 	}
 
 	.segment-reader__passage {
-		font-size: 1.1rem;
+		font-size: 1.04rem;
 	}
 
 	.passage-block + .passage-block {
-		margin-top: 1.7rem;
-	}
-
-	.segment-study__mode .segment-study__preview-key,
-	.segment-study__mode .segment-study__memory-key {
-		display: none;
+		margin-top: 1.55rem;
 	}
 }
 
@@ -450,5 +337,7 @@
 	.segment-study *::after {
 		scroll-behavior: auto;
 		transition-duration: 0.01ms;
+		animation-duration: 0.01ms;
+		animation-iteration-count: 1;
 	}
 }
