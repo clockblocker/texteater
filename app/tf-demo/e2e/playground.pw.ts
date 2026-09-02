@@ -169,13 +169,40 @@ test("the segment text study compares pre-resolved and on-demand units", async (
 	await expect(onDemand.locator(".text-segment[data-known]")).toHaveCount(0);
 });
 
-test("the Midnight reading note Sheet lifts into its purpose-built Card", async ({
+test("the notes study lists every German Unit Reading route", async ({
 	page,
 }) => {
 	await page.goto("/playground/notes-study");
 
 	await expect(
-		page.getByRole("heading", { name: "Reading note card" }),
+		page.getByRole("heading", { name: "Every note has a shelf." }),
+	).toBeVisible();
+	await expect(page.locator(".note-shelf")).toHaveCount(3);
+	await expect(page.locator(".note-shelf li")).toHaveCount(33);
+	await expect(
+		page.locator('.note-shelf[aria-labelledby="note-shelf-Lexeme"] li'),
+	).toHaveCount(17);
+	await expect(
+		page.locator('.note-shelf[aria-labelledby="note-shelf-Phraseme"] li'),
+	).toHaveCount(5);
+	await expect(
+		page.locator('.note-shelf[aria-labelledby="note-shelf-Morpheme"] li'),
+	).toHaveCount(11);
+
+	await page.locator('a[href="/playground/notes-study/Daemmerung"]').click();
+	await expect(page).toHaveURL(/\/playground\/notes-study\/Daemmerung$/);
+	await expect(
+		page.locator('[data-note-fixture="Daemmerung"]'),
+	).toBeVisible();
+});
+
+test("the Midnight reading note Sheet lifts into its purpose-built Card", async ({
+	page,
+}) => {
+	await page.goto("/playground/notes-study/Daemmerung");
+
+	await expect(
+		page.getByRole("heading", { name: "German Reading notes" }),
 	).toBeVisible();
 	await expect(page.locator(".notes-prototype")).toHaveCount(1);
 	await expect(page.locator(".note-view-toggle")).toHaveCount(0);
@@ -216,6 +243,7 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	const synonymRelationMark = midnight.locator(
 		'[data-relation="synonym"] .relation-mark',
 	);
+	await expect(midnight.locator(".relation-list > div")).toHaveCount(8);
 	await synonymRelationMark.hover();
 	const relationTooltip = page.locator('[data-slot="tooltip-content"]');
 	await expect(relationTooltip).toBeVisible();
@@ -243,14 +271,41 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	if (!shrunkenEditorBox)
 		throw new Error("Missing shrunken editor geometry.");
 	expect(shrunkenEditorBox.height).toBeLessThan(expandedEditorBox.height);
-	for (const [gender, color] of Object.entries({
-		feminine: "rgb(230, 154, 157)",
-		neuter: "rgb(163, 195, 159)",
-		masculine: "rgb(170, 178, 216)",
-	})) {
-		await expect(
-			midnight.locator(`[data-noun-gender="${gender}"]`).first(),
-		).toHaveCSS("color", color);
+	const notePalette = await midnight
+		.locator(".lexical-note")
+		.evaluate((note) => {
+			const view = note.ownerDocument.defaultView;
+			if (!view) throw new Error("Missing Reading Note window.");
+			const styles = view.getComputedStyle(note);
+			return {
+				feminine: styles
+					.getPropertyValue("--note-noun-feminine")
+					.trim(),
+				neuter: styles.getPropertyValue("--note-noun-neuter").trim(),
+				masculine: styles
+					.getPropertyValue("--note-noun-masculine")
+					.trim(),
+			};
+		});
+	expect(notePalette).toEqual({
+		feminine: "#e69a9d",
+		neuter: "#a3c39f",
+		masculine: "#aab2d8",
+	});
+	const shadowWords = midnight.locator(
+		".relation-list .linked-word[data-shadow-note]",
+	);
+	await expect(shadowWords).toHaveCount(5);
+	expect(await shadowWords.allTextContents()).toEqual([
+		"Zwielicht",
+		"Sonnenuntergang",
+		"Tageslicht",
+		"Lichtzustand",
+		"Tageslauf",
+	]);
+	for (const shadowWord of await shadowWords.all()) {
+		await expect(shadowWord).toHaveCSS("color", "rgb(154, 167, 186)");
+		await expect(shadowWord).toHaveAttribute("aria-label", /Unit Shadow/);
 	}
 	const sourceContexts = midnight.locator(".source-contexts blockquote");
 	const contextBars = midnight.locator(".source-context__bar");
@@ -262,7 +317,22 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 		"background-color",
 		"rgb(56, 62, 71)",
 	);
-	await contextBars.nth(0).hover();
+	const firstContextBox = await sourceContexts.nth(0).boundingBox();
+	const firstContextGutter = await sourceContexts
+		.nth(0)
+		.evaluate((context) => {
+			const view = context.ownerDocument.defaultView;
+			if (!view) throw new Error("Missing Source Context window.");
+			return Number.parseFloat(
+				view.getComputedStyle(context).paddingLeft,
+			);
+		});
+	if (!firstContextBox) throw new Error("Missing Source Context geometry.");
+	const contextGutterPoint = {
+		x: firstContextBox.x + firstContextGutter - 4,
+		y: firstContextBox.y + firstContextBox.height / 2,
+	};
+	await page.mouse.move(contextGutterPoint.x, contextGutterPoint.y);
 	await expect(contextBars.nth(0)).toHaveCSS(
 		"background-color",
 		"rgb(230, 154, 157)",
@@ -270,6 +340,18 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	await expect(contextBars.nth(1)).toHaveCSS(
 		"background-color",
 		"rgb(56, 62, 71)",
+	);
+	await contextBars.nth(0).evaluate((bar) => {
+		bar.addEventListener(
+			"click",
+			() => bar.setAttribute("data-gutter-clicked", "true"),
+			{ once: true },
+		);
+	});
+	await page.mouse.click(contextGutterPoint.x, contextGutterPoint.y);
+	await expect(contextBars.nth(0)).toHaveAttribute(
+		"data-gutter-clicked",
+		"true",
 	);
 	const attestedWord = sourceContexts
 		.nth(0)
@@ -327,6 +409,66 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	await expect(preview).toContainText(
 		"Die Dämmerung legte sich langsam über den See",
 	);
+	await expect(preview.locator(".relation-list > div")).toHaveCount(8);
+	await expect(preview.locator(".note-section__label")).toHaveCount(0);
+	await expect(preview.locator("[data-card-drag-surface]")).toHaveCount(2);
+	const cardShadowWords = preview.locator(".linked-word[data-shadow-note]");
+	await expect(cardShadowWords).toHaveCount(5);
+	for (const shadowWord of await cardShadowWords.all()) {
+		await expect(shadowWord).toHaveCSS("color", "rgb(154, 167, 186)");
+	}
+	await expect(preview).toContainText("Dämmer|ung");
+	const cardTags = preview.locator(".lexical-note__footer span");
+	await expect(cardTags.nth(0)).toHaveText("#Nomen");
+	await expect(cardTags.nth(1)).toHaveText("#Feminin");
+	expect(
+		await preview.locator("button, a, textarea").count(),
+	).toBeGreaterThan(0);
+	await expect(preview).toHaveAttribute("inert", "");
+	await expect(preview).toHaveCSS("pointer-events", "none");
+	await expect(preview.locator(".lexical-note")).toHaveCSS(
+		"overflow-y",
+		"hidden",
+	);
+	const previewCardPresentation = await preview.evaluate((card) => {
+		const view = card.ownerDocument.defaultView;
+		const cardView = card.querySelector(".note-card-view");
+		const note = card.querySelector(".lexical-note");
+		const article = card.querySelector(".lexical-note__article");
+		const section = card.querySelector(".note-section");
+		const contexts = card.querySelector(".source-contexts");
+		const context = contexts?.querySelector("blockquote");
+		const layout = card.querySelector(".lexical-note__layout");
+		const dividedSection = card.querySelector(".note-section--relations");
+		if (
+			!view ||
+			!cardView ||
+			!note ||
+			!article ||
+			!section ||
+			!contexts ||
+			!context ||
+			!layout ||
+			!dividedSection
+		) {
+			throw new Error("Missing drag Card presentation.");
+		}
+		const bounds = cardView.getBoundingClientRect();
+		return {
+			content: article.textContent,
+			width: Number(bounds.width.toFixed(1)),
+			height: Number(bounds.height.toFixed(1)),
+			fontSize: view.getComputedStyle(note).fontSize,
+			layout: view.getComputedStyle(layout).display,
+			outerPadding: view.getComputedStyle(article).paddingTop,
+			sectionGap: view.getComputedStyle(section).paddingTop,
+			contextGap: view.getComputedStyle(contexts).gap,
+			contextGutter: view.getComputedStyle(context).paddingLeft,
+			cardEdgePadding: view.getComputedStyle(cardView).paddingTop,
+			sectionDivider: view.getComputedStyle(dividedSection, "::before")
+				.borderTopStyle,
+		};
+	});
 	await expect(midnight.locator(".notes-prototype__stage")).toHaveAttribute(
 		"data-dragging",
 		"true",
@@ -334,4 +476,125 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	await expect(handle).toHaveCSS("opacity", "0.12");
 	await page.mouse.up();
 	await expect(preview).toHaveCount(0);
+	await expect(midnight.locator('[data-placed-card="midnight"]')).toHaveCount(
+		0,
+	);
+
+	const cardLayer = midnight.locator('[data-card-layer-surface="midnight"]');
+	await expect(cardLayer).toContainText("Drop Card here");
+	const cardLayerBox = await cardLayer.boundingBox();
+	const secondHandleBox = await handle.boundingBox();
+	if (!cardLayerBox || !secondHandleBox) {
+		throw new Error("Missing Card Layer drop geometry.");
+	}
+	await page.mouse.move(
+		secondHandleBox.x + secondHandleBox.width / 2,
+		secondHandleBox.y + 12,
+	);
+	await page.mouse.down();
+	await page.mouse.move(
+		cardLayerBox.x + cardLayerBox.width / 2,
+		cardLayerBox.y + Math.min(150, cardLayerBox.height / 2),
+		{ steps: 8 },
+	);
+	await expect(cardLayer).toHaveAttribute("data-drag-over", "true");
+	await expect(preview).toBeVisible();
+	await page.mouse.up();
+
+	const placedCard = midnight.locator('[data-placed-card="midnight"]');
+	await expect(preview).toHaveCount(0);
+	await expect(placedCard).toBeVisible();
+	await expect(cardLayer).toHaveAttribute("data-occupied", "true");
+	await expect(cardLayer).toContainText("Card retained");
+	await expect(placedCard.locator(".relation-list > div")).toHaveCount(8);
+	await expect(placedCard.locator(".note-section__label")).toHaveCount(0);
+	await expect(placedCard.locator("[data-card-drag-surface]")).toHaveCount(2);
+	await expect(
+		placedCard.locator(".note-section:not(.note-section--contexts)"),
+	).toHaveCount(5);
+	await expect(placedCard.locator(".lexical-note")).toHaveCSS(
+		"font-size",
+		"15.2px",
+	);
+	await expect(placedCard.locator(".lexical-note")).toHaveCSS(
+		"overflow-y",
+		"auto",
+	);
+	const placedCardDensity = await placedCard.evaluate((card) => {
+		const view = card.ownerDocument.defaultView;
+		if (!view) throw new Error("Missing settled Card window.");
+		const note = card.querySelector(".lexical-note");
+		const article = card.querySelector(".lexical-note__article");
+		const section = card.querySelector(".note-section");
+		const contexts = card.querySelector(".source-contexts");
+		const context = contexts?.querySelector("blockquote");
+		const layout = card.querySelector(".lexical-note__layout");
+		const dividedSection = card.querySelector(".note-section--relations");
+		const cardView = card.closest(".note-card-view");
+		if (!note || !article || !section || !contexts || !context || !layout) {
+			throw new Error("Missing settled Card content.");
+		}
+		if (!dividedSection || !cardView) {
+			throw new Error("Missing settled Card presentation.");
+		}
+		const bounds = cardView.getBoundingClientRect();
+		return {
+			isScrollable: note.scrollHeight > note.clientHeight,
+			content: article.textContent,
+			width: Number(bounds.width.toFixed(1)),
+			height: Number(bounds.height.toFixed(1)),
+			fontSize: view.getComputedStyle(note).fontSize,
+			layout: view.getComputedStyle(layout).display,
+			outerPadding: Number.parseFloat(
+				view.getComputedStyle(article).paddingTop,
+			),
+			sectionGap: Number.parseFloat(
+				view.getComputedStyle(section).paddingTop,
+			),
+			contextGap: Number.parseFloat(view.getComputedStyle(contexts).gap),
+			contextGutter: Number.parseFloat(
+				view.getComputedStyle(context).paddingLeft,
+			),
+			cardEdgePadding: view.getComputedStyle(cardView).paddingTop,
+			scrollbarWidth: view.getComputedStyle(note).scrollbarWidth,
+			sectionDivider: view.getComputedStyle(dividedSection, "::before")
+				.borderTopStyle,
+		};
+	});
+	expect({
+		content: placedCardDensity.content,
+		width: placedCardDensity.width,
+		height: placedCardDensity.height,
+		fontSize: placedCardDensity.fontSize,
+		layout: placedCardDensity.layout,
+		outerPadding: `${placedCardDensity.outerPadding}px`,
+		sectionGap: `${placedCardDensity.sectionGap}px`,
+		contextGap: `${placedCardDensity.contextGap}px`,
+		contextGutter: `${placedCardDensity.contextGutter}px`,
+		cardEdgePadding: placedCardDensity.cardEdgePadding,
+		sectionDivider: placedCardDensity.sectionDivider,
+	}).toEqual(previewCardPresentation);
+	expect(placedCardDensity).toEqual({
+		isScrollable: true,
+		content: previewCardPresentation.content,
+		width: previewCardPresentation.width,
+		height: previewCardPresentation.height,
+		fontSize: "15.2px",
+		layout: "block",
+		outerPadding: 14.4,
+		sectionGap: 11.2,
+		contextGap: 11.2,
+		contextGutter: 12,
+		cardEdgePadding: "24px",
+		scrollbarWidth: "thin",
+		sectionDivider: "dashed",
+	});
+	await expect(
+		placedCard
+			.getByRole("button", { name: "Dämmerung, feminine noun" })
+			.first(),
+	).toBeVisible();
+
+	await page.getByRole("button", { name: "Reset fixture" }).click();
+	await expect(page.locator('[data-placed-card="midnight"]')).toHaveCount(0);
 });

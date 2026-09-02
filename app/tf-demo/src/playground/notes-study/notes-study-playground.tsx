@@ -1,8 +1,10 @@
-import type { DirectSemanticRelation } from "dumrel";
+import type { SemanticRelation } from "dumrel";
+import { ArrowUpRightIcon } from "lucide-react";
 import {
 	type CSSProperties,
 	type ReactNode,
 	type PointerEvent as ReactPointerEvent,
+	useRef,
 	useState,
 } from "react";
 import { createPortal } from "react-dom";
@@ -12,6 +14,14 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { playgroundExperimentHref } from "@/playground/playground-route";
+import { NOTE_STUDY_FIXTURES } from "./fixtures";
+import type {
+	NoteStudyFixture,
+	NoteStudyLine,
+	NoteStudyToken,
+	NoteStudyTone,
+} from "./note-study-fixture";
 import "./notes-study-playground.css";
 
 type DragEdge = "top" | "bottom";
@@ -21,6 +31,7 @@ type CardDrag = {
 	readonly pointerId: number;
 	readonly x: number;
 	readonly y: number;
+	readonly overCardLayer: boolean;
 };
 
 type SheetAffordanceProps = {
@@ -34,8 +45,11 @@ type SheetAffordanceProps = {
 	) => void;
 	readonly onPointerEnd: (
 		event: ReactPointerEvent<HTMLButtonElement>,
+		placeCard: boolean,
 	) => void;
 };
+
+const FAMILY_ORDER = ["Lexeme", "Phraseme", "Morpheme"] as const;
 
 function fitNoteEditorToContent(editor: HTMLTextAreaElement | null) {
 	if (!editor) return;
@@ -43,18 +57,130 @@ function fitNoteEditorToContent(editor: HTMLTextAreaElement | null) {
 	editor.style.height = `${editor.scrollHeight}px`;
 }
 
-export function NotesStudyPlayground() {
-	return (
+export function NotesStudyPlayground({
+	detailId,
+}: {
+	readonly detailId?: string;
+}) {
+	if (!detailId) return <NotesStudyIndex />;
+
+	const fixture = NOTE_STUDY_FIXTURES.find(({ slug }) => slug === detailId);
+	return fixture ? (
 		<div className="notes-study">
 			<div className="notes-study__variants">
-				<NotePrototype />
+				<NotePrototype fixture={fixture} />
 			</div>
+		</div>
+	) : (
+		<MissingNote detailId={detailId} />
+	);
+}
+
+function NotesStudyIndex() {
+	return (
+		<div className="notes-study notes-study--index">
+			<header className="notes-study-index__hero">
+				<div>
+					<p className="notes-study-index__eyebrow">
+						German Unit Readings
+					</p>
+					<h2>Every note has a shelf.</h2>
+				</div>
+				<p>
+					Thirty-three deterministic Reading notes cover every German
+					Family/Kind route. Open one to inspect the same
+					Sheet-to-Card transformation used by Dämmerung.
+				</p>
+			</header>
+
+			<nav
+				className="notes-study-index__shelves"
+				aria-label="German notes"
+			>
+				{FAMILY_ORDER.map((family) => {
+					const fixtures = NOTE_STUDY_FIXTURES.filter(
+						(fixture) => fixture.family === family,
+					);
+					return (
+						<section
+							className="note-shelf"
+							key={family}
+							aria-labelledby={`note-shelf-${family}`}
+						>
+							<header>
+								<h3
+									className="note-shelf__title"
+									id={`note-shelf-${family}`}
+								>
+									{family}
+								</h3>
+								<span className="note-shelf__count">
+									{String(fixtures.length).padStart(2, "0")}
+								</span>
+							</header>
+							<ol>
+								{fixtures.map((fixture) => (
+									<li key={fixture.slug}>
+										<a
+											href={playgroundExperimentHref(
+												"notes-study",
+												fixture.slug,
+											)}
+										>
+											<span className="note-shelf__kind">
+												{fixture.kind}
+											</span>
+											<span className="note-shelf__reading">
+												<i aria-hidden="true">
+													{fixture.emoji}
+												</i>
+												<strong>
+													{fixture.titleText}
+												</strong>
+												<small>
+													{fixture.definition}
+												</small>
+											</span>
+											<ArrowUpRightIcon aria-hidden="true" />
+										</a>
+									</li>
+								))}
+							</ol>
+						</section>
+					);
+				})}
+			</nav>
 		</div>
 	);
 }
 
-function NotePrototype() {
+function MissingNote({ detailId }: { readonly detailId: string }) {
+	return (
+		<div className="notes-study notes-study--missing">
+			<p className="notes-study-index__eyebrow">Unknown Reading note</p>
+			<h2>No note is filed as “{detailId}”.</h2>
+			<a href={playgroundExperimentHref("notes-study")}>
+				Open the note list
+			</a>
+		</div>
+	);
+}
+
+function NotePrototype({ fixture }: { readonly fixture: NoteStudyFixture }) {
 	const [drag, setDrag] = useState<CardDrag | null>(null);
+	const [cardPlaced, setCardPlaced] = useState(false);
+	const cardLayerRef = useRef<HTMLElement>(null);
+
+	function isOverCardLayer(x: number, y: number) {
+		const bounds = cardLayerRef.current?.getBoundingClientRect();
+		return Boolean(
+			bounds &&
+				x >= bounds.left &&
+				x <= bounds.right &&
+				y >= bounds.top &&
+				y <= bounds.bottom,
+		);
+	}
 
 	function beginDrag(
 		event: ReactPointerEvent<HTMLButtonElement>,
@@ -67,21 +193,35 @@ function NotePrototype() {
 			pointerId: event.pointerId,
 			x: event.clientX,
 			y: event.clientY,
+			overCardLayer: false,
 		});
 	}
 
 	function moveDrag(event: ReactPointerEvent<HTMLButtonElement>) {
 		setDrag((current) =>
 			current?.pointerId === event.pointerId
-				? { ...current, x: event.clientX, y: event.clientY }
+				? {
+						...current,
+						x: event.clientX,
+						y: event.clientY,
+						overCardLayer: isOverCardLayer(
+							event.clientX,
+							event.clientY,
+						),
+					}
 				: current,
 		);
 	}
 
-	function finishDrag(event: ReactPointerEvent<HTMLButtonElement>) {
-		setDrag((current) =>
-			current?.pointerId === event.pointerId ? null : current,
-		);
+	function finishDrag(
+		event: ReactPointerEvent<HTMLButtonElement>,
+		placeCard: boolean,
+	) {
+		if (drag?.pointerId !== event.pointerId) return;
+		if (placeCard && isOverCardLayer(event.clientX, event.clientY)) {
+			setCardPlaced(true);
+		}
+		setDrag(null);
 	}
 
 	const dragStyle = drag
@@ -90,23 +230,22 @@ function NotePrototype() {
 				"--drag-y": `${drag.y}px`,
 			} as CSSProperties)
 		: undefined;
+	const noteId = `midnight-${fixture.slug}`;
 
 	return (
 		<section
 			className="notes-prototype notes-prototype--midnight"
 			aria-labelledby="midnight-prototype-title"
+			data-note-fixture={fixture.slug}
 		>
 			<header className="notes-prototype__header">
 				<div>
 					<span className="notes-prototype__kind">
-						Sheet / midnight
+						{fixture.family} / {fixture.kind}
 					</span>
 					<div>
 						<h3 id="midnight-prototype-title">Midnight index</h3>
-						<p>
-							A low-light memory surface led by the definition and
-							one vivid source line.
-						</p>
+						<p>{fixture.summary}</p>
 					</div>
 				</div>
 				<p className="notes-prototype__instruction">
@@ -129,7 +268,7 @@ function NotePrototype() {
 						onPointerEnd={finishDrag}
 					/>
 					<div className="lexical-note">
-						<NoteArticle />
+						<NoteArticle fixture={fixture} noteId={noteId} />
 					</div>
 					<SheetDragSurface
 						edge="bottom"
@@ -138,6 +277,42 @@ function NotePrototype() {
 						onPointerEnd={finishDrag}
 					/>
 				</div>
+				<aside
+					ref={cardLayerRef}
+					className="notes-prototype__card-layer"
+					data-card-layer-surface="midnight"
+					data-drag-over={drag?.overCardLayer ? "true" : undefined}
+					data-occupied={cardPlaced ? "true" : undefined}
+					aria-label="Card Layer"
+				>
+					<header className="card-layer__header">
+						<span>Card Layer</span>
+						<span aria-live="polite">
+							{cardPlaced ? "Card retained" : "Drop Card here"}
+						</span>
+					</header>
+					<div className="card-layer__surface">
+						{cardPlaced ? (
+							<div
+								className="card-layer__placed-card note-card-view"
+								data-placed-card="midnight"
+							>
+								<FixtureCard
+									fixture={fixture}
+									noteId={`${noteId}-card`}
+								/>
+							</div>
+						) : (
+							<div
+								className="card-layer__empty"
+								aria-hidden="true"
+							>
+								<i />
+								<span>Drop Card</span>
+							</div>
+						)}
+					</div>
+				</aside>
 			</div>
 
 			{drag
@@ -147,9 +322,15 @@ function NotePrototype() {
 							className="notes-prototype__card-drag-layer"
 							data-card-preview="midnight"
 							data-drag-edge={drag.edge}
+							inert
 							style={dragStyle}
 						>
-							<MidnightCard />
+							<div className="note-card-view">
+								<FixtureCard
+									fixture={fixture}
+									noteId={`${noteId}-preview`}
+								/>
+							</div>
 						</div>,
 						document.body,
 					)
@@ -170,11 +351,11 @@ function SheetDragSurface({
 			className="notes-prototype__sheet-handle sheet-edge-lift"
 			data-sheet-drag-edge={edge}
 			aria-label={`Lift Sheet as Card from ${edge} edge`}
-			onLostPointerCapture={onPointerEnd}
-			onPointerCancel={onPointerEnd}
+			onLostPointerCapture={(event) => onPointerEnd(event, false)}
+			onPointerCancel={(event) => onPointerEnd(event, false)}
 			onPointerDown={(event) => onPointerDown(event, edge)}
 			onPointerMove={onPointerMove}
-			onPointerUp={onPointerEnd}
+			onPointerUp={(event) => onPointerEnd(event, true)}
 		>
 			<span className="sheet-edge-lift__rule" aria-hidden="true">
 				<i />
@@ -183,34 +364,45 @@ function SheetDragSurface({
 	);
 }
 
-function MidnightCard() {
+function FixtureCard({
+	fixture,
+	noteId,
+}: {
+	readonly fixture: NoteStudyFixture;
+	readonly noteId: string;
+}) {
 	return (
-		<article className="note-card note-card--midnight">
-			<header className="note-card__word-row">
-				<div>
-					<p>Deutsch · Substantiv · feminin</p>
-					<h4>die Dämmerung</h4>
-				</div>
-			</header>
-			<div className="midnight-card__meaning">
-				<span>twilight</span>
-				<small>/ˈdɛmərʊŋ/</small>
+		<>
+			<span
+				aria-hidden="true"
+				className="note-card-view__drag-surface"
+				data-card-drag-surface="top"
+			/>
+			<div className="lexical-note">
+				<NoteArticle
+					fixture={fixture}
+					noteId={noteId}
+					showSectionTitles={false}
+				/>
 			</div>
-			<blockquote>
-				Die <b>Dämmerung</b> legte sich langsam über den See, und am
-				Ufer gingen die ersten Lichter an.
-			</blockquote>
-			<footer>
-				<span>≈ Abendlicht</span>
-				<span>≠ Tageslicht</span>
-			</footer>
-		</article>
+			<span
+				aria-hidden="true"
+				className="note-card-view__drag-surface"
+				data-card-drag-surface="bottom"
+			/>
+		</>
 	);
 }
 
-function NoteArticle() {
-	const noteId = "midnight-note";
-
+function NoteArticle({
+	fixture,
+	noteId,
+	showSectionTitles = true,
+}: {
+	readonly fixture: NoteStudyFixture;
+	readonly noteId: string;
+	readonly showSectionTitles?: boolean;
+}) {
 	return (
 		<article
 			className="lexical-note__article"
@@ -219,67 +411,46 @@ function NoteArticle() {
 			<header className="lexical-note__title-row">
 				<div className="lexical-note__lemma">
 					<span className="lexical-note__emoji" aria-hidden="true">
-						🌒
+						{fixture.emoji}
 					</span>
 					<h4 id={`${noteId}-title`}>
-						die{" "}
-						<LinkedWord nounGender="feminine">Dämmerung</LinkedWord>
-						<span>
-							, die{" "}
-							<LinkedWord nounGender="feminine" number="plural">
-								Dämmerungen
-							</LinkedWord>
-						</span>
+						<RichLine line={fixture.title} />
 					</h4>
 				</div>
-				<a
-					className="lexical-note__ipa"
-					href="https://youglish.com/pronounce/D%C3%A4mmerung/german"
-					target="_blank"
-					rel="noreferrer"
-				>
-					/ˈdɛmərʊŋ/
-				</a>
+				{fixture.ipa ? (
+					fixture.pronunciationHref ? (
+						<a
+							className="lexical-note__ipa"
+							href={fixture.pronunciationHref}
+							target="_blank"
+							rel="noreferrer"
+						>
+							{fixture.ipa}
+						</a>
+					) : (
+						<span className="lexical-note__ipa">{fixture.ipa}</span>
+					)
+				) : null}
 			</header>
 
 			<div className="lexical-note__layout">
-				<section
-					className="note-section note-section--contexts"
-					aria-labelledby={`${noteId}-contexts`}
+				<NoteSection
+					className="note-section--contexts"
+					label="Im Kontext"
+					noteId={noteId}
+					showTitle={showSectionTitles}
 				>
-					<SectionLabel id={`${noteId}-contexts`}>
-						Im Kontext
-					</SectionLabel>
 					<div className="source-contexts">
-						<blockquote>
-							<span
-								aria-hidden="true"
-								className="source-context__bar"
-								data-noun-gender="feminine"
-							/>
-							Die{" "}
-							<LinkedWord nounGender="feminine">
-								Dämmerung
-							</LinkedWord>{" "}
-							legte sich langsam über den See, und am
-							gegenüberliegenden Ufer gingen die ersten Lichter
-							an.
-						</blockquote>
-						<blockquote>
-							<span
-								aria-hidden="true"
-								className="source-context__bar"
-								data-noun-gender="feminine"
-							/>
-							Wir machten uns noch vor der{" "}
-							<LinkedWord nounGender="feminine">
-								Dämmerung
-							</LinkedWord>{" "}
-							auf den Rückweg, damit wir den schmalen Pfad
-							erkennen konnten.
-						</blockquote>
+						{fixture.contexts.map((context, index) => (
+							<blockquote
+								key={`${fixture.slug}-context-${index}`}
+							>
+								<ContextBar tone={fixture.contextTone} />
+								<RichLine line={context} />
+							</blockquote>
+						))}
 					</div>
-				</section>
+				</NoteSection>
 
 				<section
 					className="note-section note-section--writing"
@@ -290,7 +461,7 @@ function NoteArticle() {
 						htmlFor={`${noteId}-textarea`}
 					>
 						<span className="sr-only">
-							Write a personal note about Dämmerung
+							Write a personal note about {fixture.titleText}
 						</span>
 						<textarea
 							id={`${noteId}-textarea`}
@@ -303,176 +474,137 @@ function NoteArticle() {
 					</label>
 				</section>
 
-				<section
-					className="note-section note-section--relations"
-					aria-labelledby={`${noteId}-relations`}
-				>
-					<SectionLabel id={`${noteId}-relations`}>
-						Beziehungen
-					</SectionLabel>
-					<dl className="relation-list">
-						<RelationRow
-							relation="synonym"
-							mark="="
-							label="Synonym"
-						>
-							<span>
-								<LinkedWord nounGender="neuter">
-									Zwielicht
-								</LinkedWord>
-							</span>
-						</RelationRow>
-						<RelationRow
-							relation="nearSynonym"
-							mark="≈"
-							label="Nahes Synonym"
-						>
-							<span>
-								<LinkedWord nounGender="neuter">
-									Abendlicht
-								</LinkedWord>
-								,{" "}
-								<LinkedWord nounGender="masculine">
-									Sonnenuntergang
-								</LinkedWord>
-							</span>
-						</RelationRow>
-						<RelationRow
-							relation="nearAntonym"
-							mark="≉"
-							label="Nahes Antonym"
-						>
-							<span>
-								<LinkedWord nounGender="neuter">
-									Tageslicht
-								</LinkedWord>
-								,{" "}
-								<LinkedWord nounGender="feminine">
-									Dunkelheit
-								</LinkedWord>
-							</span>
-						</RelationRow>
-						<RelationRow
-							relation="hypernym"
-							mark="↑"
-							label="Oberbegriff"
-						>
-							<LinkedWord nounGender="masculine">
-								Lichtzustand
-							</LinkedWord>
-						</RelationRow>
-						<RelationRow
-							relation="holonym"
-							mark="⊂"
-							label="Teil von"
-						>
-							<LinkedWord nounGender="masculine">
-								Tageslauf
-							</LinkedWord>
-						</RelationRow>
-					</dl>
-				</section>
+				{fixture.relations ? (
+					<NoteSection
+						className="note-section--relations"
+						label="Beziehungen"
+						noteId={noteId}
+						showTitle={showSectionTitles}
+					>
+						<dl className="relation-list">
+							{fixture.relations.map((relation) => (
+								<RelationRow
+									key={relation.relation}
+									{...relation}
+								>
+									<RichLine line={relation.content} />
+								</RelationRow>
+							))}
+						</dl>
+					</NoteSection>
+				) : null}
 
-				<section
-					className="note-section note-section--word-building"
-					aria-labelledby={`${noteId}-building`}
-				>
-					<SectionLabel id={`${noteId}-building`}>
-						Wortbildung
-					</SectionLabel>
-					<p className="word-seam">
-						<LinkedWord wordKind="verb-stem">Dämmer</LinkedWord>
-						<b aria-hidden="true">|</b>
-						<LinkedWord suffixGender="feminine">ung</LinkedWord>
-					</p>
-					<p>
-						<LinkedWord wordKind="verb">dämmern</LinkedWord>{" "}
-						<span aria-hidden="true">+</span>{" "}
-						<LinkedWord suffixGender="feminine">-ung</LinkedWord>
-					</p>
-				</section>
+				{fixture.formation ? (
+					<NoteSection
+						className="note-section--word-building"
+						label="Wortbildung"
+						noteId={noteId}
+						showTitle={showSectionTitles}
+					>
+						{fixture.formation.map((line, index) => (
+							<p
+								className={
+									index === 0 ? "word-seam" : undefined
+								}
+								key={`${fixture.slug}-formation-${index}`}
+							>
+								<RichLine line={line} />
+							</p>
+						))}
+					</NoteSection>
+				) : null}
 
-				<section
-					className="note-section note-section--translation"
-					aria-labelledby={`${noteId}-translation`}
+				<NoteSection
+					className="note-section--translation"
+					label="Übersetzung"
+					noteId={noteId}
+					showTitle={showSectionTitles}
 				>
-					<SectionLabel id={`${noteId}-translation`}>
-						Übersetzung
-					</SectionLabel>
 					<p>
-						twilight; dusk
-						<br />
-						закат;
+						{fixture.translations.map((translation, index) => (
+							<span key={`${fixture.slug}-translation-${index}`}>
+								{index > 0 ? <br /> : null}
+								{translation}
+							</span>
+						))}
 					</p>
-				</section>
+				</NoteSection>
 
 				<footer className="lexical-note__footer">
-					<span>#Nomen</span>
-					<span data-noun-gender="feminine">#Feminin</span>
+					{fixture.tags.map((tag) => (
+						<span {...toneDataAttributes(tag.tone)} key={tag.text}>
+							{tag.text}
+						</span>
+					))}
 				</footer>
 			</div>
 
-			<section
-				className="note-section note-section--forms"
-				aria-labelledby={`${noteId}-forms`}
-			>
-				<SectionLabel id={`${noteId}-forms`}>Formen</SectionLabel>
-				<dl>
-					<div>
-						<dt>N</dt>
-						<dd>
-							die{" "}
-							<LinkedWord nounGender="feminine">
-								Dämmerung
-							</LinkedWord>
-							, die{" "}
-							<LinkedWord nounGender="feminine" number="plural">
-								Dämmerungen
-							</LinkedWord>
-						</dd>
-					</div>
-					<div>
-						<dt>A</dt>
-						<dd>
-							die{" "}
-							<LinkedWord nounGender="feminine">
-								Dämmerung
-							</LinkedWord>
-							, die{" "}
-							<LinkedWord nounGender="feminine" number="plural">
-								Dämmerungen
-							</LinkedWord>
-						</dd>
-					</div>
-					<div>
-						<dt>G</dt>
-						<dd>
-							der{" "}
-							<LinkedWord nounGender="feminine">
-								Dämmerung
-							</LinkedWord>
-							, der{" "}
-							<LinkedWord nounGender="feminine" number="plural">
-								Dämmerungen
-							</LinkedWord>
-						</dd>
-					</div>
-					<div>
-						<dt>D</dt>
-						<dd>
-							der{" "}
-							<LinkedWord nounGender="feminine">
-								Dämmerung
-							</LinkedWord>
-							, den{" "}
-							<LinkedWord nounGender="feminine" number="plural">
-								Dämmerungen
-							</LinkedWord>
-						</dd>
-					</div>
-				</dl>
-			</section>
+			{fixture.forms ? (
+				<NoteSection
+					className="note-section--forms"
+					label="Formen"
+					noteId={noteId}
+					showTitle={showSectionTitles}
+				>
+					<dl>
+						{fixture.forms.map((form) => (
+							<div key={form.label}>
+								<dt>{form.label}</dt>
+								<dd>
+									<RichLine line={form.content} />
+								</dd>
+							</div>
+						))}
+					</dl>
+				</NoteSection>
+			) : null}
 		</article>
+	);
+}
+
+function NoteSection({
+	children,
+	className,
+	label,
+	noteId,
+	showTitle,
+}: {
+	readonly children: ReactNode;
+	readonly className: string;
+	readonly label: string;
+	readonly noteId: string;
+	readonly showTitle: boolean;
+}) {
+	const id = `${noteId}-${label.toLocaleLowerCase("de").replace(/\s/g, "-")}`;
+	return (
+		<section
+			className={`note-section ${className}`}
+			aria-label={showTitle ? undefined : label}
+			aria-labelledby={showTitle ? id : undefined}
+		>
+			{showTitle ? <SectionLabel id={id}>{label}</SectionLabel> : null}
+			{children}
+		</section>
+	);
+}
+
+function ContextBar({ tone }: { readonly tone?: NoteStudyTone }) {
+	return (
+		<span
+			aria-hidden="true"
+			className="source-context__bar"
+			{...toneDataAttributes(tone)}
+		/>
+	);
+}
+
+function RichLine({ line }: { readonly line: NoteStudyLine }) {
+	return line.map((part, index) =>
+		typeof part === "string" ? (
+			part
+		) : (
+			<LinkedWord key={`${part.text}-${index}`} token={part} />
+		),
 	);
 }
 
@@ -490,41 +622,45 @@ function SectionLabel({
 	);
 }
 
-function LinkedWord({
-	children,
-	nounGender,
-	number,
-	suffixGender,
-	wordKind,
-}: {
-	readonly children: string;
-	readonly nounGender?: "feminine" | "neuter" | "masculine";
-	readonly number?: "plural";
-	readonly suffixGender?: "feminine";
-	readonly wordKind?: "verb" | "verb-stem";
-}) {
-	const description = [
-		wordKind === "verb-stem" ? "verb stem" : wordKind,
-		suffixGender ? `${suffixGender} noun-forming suffix` : undefined,
-		nounGender ? `${nounGender} noun` : undefined,
-		number,
-	]
-		.filter(Boolean)
-		.join(", ");
-
+function LinkedWord({ token }: { readonly token: NoteStudyToken }) {
+	const description =
+		token.description ??
+		(token.tone === "shadow"
+			? "Unit Shadow"
+			: token.tone === "feminine"
+				? "feminine noun"
+				: token.tone === "masculine"
+					? "masculine noun"
+					: token.tone === "neuter"
+						? "neuter noun"
+						: token.tone === "plural"
+							? "plural"
+							: "Reading reference");
+	const accessibleName = description.startsWith(`${token.text},`)
+		? description
+		: `${token.text}, ${description}`;
 	return (
 		<button
 			type="button"
 			className="linked-word"
-			data-noun-gender={nounGender}
-			data-number={number}
-			data-suffix-gender={suffixGender}
-			data-word-kind={wordKind}
-			aria-label={description ? `${children}, ${description}` : undefined}
+			{...toneDataAttributes(token.tone)}
+			aria-label={accessibleName}
 		>
-			{children}
+			{token.text}
 		</button>
 	);
+}
+
+function toneDataAttributes(tone?: NoteStudyTone) {
+	return {
+		"data-noun-gender":
+			tone === "feminine" || tone === "masculine" || tone === "neuter"
+				? tone
+				: undefined,
+		"data-number": tone === "plural" ? "plural" : undefined,
+		"data-shadow-note": tone === "shadow" ? "" : undefined,
+		"data-unit-reference": tone === "reference" ? "" : undefined,
+	};
 }
 
 function RelationRow({
@@ -536,7 +672,7 @@ function RelationRow({
 	readonly children: ReactNode;
 	readonly label: string;
 	readonly mark: string;
-	readonly relation: DirectSemanticRelation;
+	readonly relation: SemanticRelation;
 }) {
 	return (
 		<div data-relation={relation}>

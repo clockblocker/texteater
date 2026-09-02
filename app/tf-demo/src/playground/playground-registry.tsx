@@ -10,7 +10,8 @@ export type PlaygroundExperiment = {
 	readonly title: string;
 	readonly description: string;
 	readonly instructions: string;
-	readonly component: ComponentType;
+	readonly component: ComponentType<{ readonly detailId?: string }>;
+	readonly supportsDetails?: boolean;
 };
 
 /** Registry for `/playground/:id`; experiments must not require Convex state. */
@@ -35,12 +36,13 @@ export const PLAYGROUND_EXPERIMENTS = [
 	},
 	{
 		id: "notes-study",
-		title: "Reading note card",
+		title: "German Reading notes",
 		description:
-			"Study the Midnight index treatment for a German reading note as a full Sheet and a purpose-built Card.",
+			"Browse one Midnight-index note for every German Unit Reading Family/Kind route, then inspect it as a full Sheet and purpose-built Card.",
 		instructions:
-			"Pull from the top or bottom edge of the Sheet to lift its Card and inspect the transformation.",
+			"Choose a Reading note, then pull from either Sheet edge to inspect its Card transformation.",
 		component: NotesStudyPlayground,
+		supportsDetails: true,
 	},
 ] as const satisfies readonly PlaygroundExperiment[];
 

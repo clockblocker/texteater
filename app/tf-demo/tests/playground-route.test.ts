@@ -20,7 +20,7 @@ describe("playground routes", () => {
 		});
 	});
 
-	test("builds encoded, single-segment experiment URLs", () => {
+	test("builds encoded experiment and detail URLs", () => {
 		expect(playgroundExperimentHref("layout study")).toBe(
 			"/playground/layout%20study",
 		);
@@ -30,7 +30,19 @@ describe("playground routes", () => {
 			kind: "Experiment",
 			experimentId: "layout study",
 		});
-		expect(playgroundRouteFromPathname("/playground/one/two")).toBeNull();
+		expect(playgroundExperimentHref("notes-study", "Daemmerung")).toBe(
+			"/playground/notes-study/Daemmerung",
+		);
+		expect(
+			playgroundRouteFromPathname("/playground/notes-study/Daemmerung"),
+		).toEqual({
+			kind: "Experiment",
+			experimentId: "notes-study",
+			detailId: "Daemmerung",
+		});
+		expect(
+			playgroundRouteFromPathname("/playground/one/two/three"),
+		).toBeNull();
 	});
 
 	test("registers stable, unique experiment IDs", () => {

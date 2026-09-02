@@ -33,7 +33,10 @@ export function PlaygroundApp({ route }: { readonly route: PlaygroundRoute }) {
 	return route.kind === "Index" ? (
 		<PlaygroundIndex />
 	) : (
-		<ExperimentRoute experimentId={route.experimentId} />
+		<ExperimentRoute
+			experimentId={route.experimentId}
+			detailId={route.detailId}
+		/>
 	);
 }
 
@@ -104,13 +107,31 @@ function PlaygroundIndex() {
 	);
 }
 
-function ExperimentRoute({ experimentId }: { readonly experimentId: string }) {
+function ExperimentRoute({
+	detailId,
+	experimentId,
+}: {
+	readonly detailId?: string;
+	readonly experimentId: string;
+}) {
 	const experiment = findPlaygroundExperiment(experimentId);
 	const [revision, setRevision] = useState(0);
 
-	if (!experiment) return <MissingExperiment experimentId={experimentId} />;
+	if (!experiment || (detailId && !experiment.supportsDetails)) {
+		return (
+			<MissingExperiment
+				experimentId={
+					detailId ? `${experimentId}/${detailId}` : experimentId
+				}
+			/>
+		);
+	}
 
 	const Experiment = experiment.component;
+	const backHref = detailId
+		? playgroundExperimentHref(experimentId)
+		: PLAYGROUND_PATH;
+	const canReset = !experiment.supportsDetails || Boolean(detailId);
 	return (
 		<main className="playground-specimen">
 			<nav
@@ -118,22 +139,27 @@ function ExperimentRoute({ experimentId }: { readonly experimentId: string }) {
 				aria-label="Experiment controls"
 			>
 				<h1 className="sr-only">{experiment.title}</h1>
-				<a href={PLAYGROUND_PATH} aria-label="Back to registry">
+				<a
+					href={backHref}
+					aria-label={detailId ? "Back to notes" : "Back to registry"}
+				>
 					<ArrowLeftIcon aria-hidden="true" />
 				</a>
-				<button
-					type="button"
-					aria-label="Reset fixture"
-					onClick={() => setRevision((value) => value + 1)}
-				>
-					<RotateCcwIcon aria-hidden="true" />
-				</button>
+				{canReset ? (
+					<button
+						type="button"
+						aria-label="Reset fixture"
+						onClick={() => setRevision((value) => value + 1)}
+					>
+						<RotateCcwIcon aria-hidden="true" />
+					</button>
+				) : null}
 			</nav>
 			<section
 				className="playground-specimen__stage"
 				aria-label={`${experiment.title} experiment`}
 			>
-				<Experiment key={revision} />
+				<Experiment key={revision} detailId={detailId} />
 			</section>
 		</main>
 	);

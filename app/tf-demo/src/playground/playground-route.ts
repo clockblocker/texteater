@@ -2,7 +2,11 @@ export const PLAYGROUND_PATH = "/playground";
 
 export type PlaygroundRoute =
 	| { readonly kind: "Index" }
-	| { readonly kind: "Experiment"; readonly experimentId: string };
+	| {
+			readonly kind: "Experiment";
+			readonly experimentId: string;
+			readonly detailId?: string;
+	  };
 
 export function playgroundRouteFromPathname(
 	pathname: string,
@@ -12,21 +16,43 @@ export function playgroundRouteFromPathname(
 	}
 	if (!pathname.startsWith(`${PLAYGROUND_PATH}/`)) return null;
 
-	const encodedId = pathname
+	const encodedPath = pathname
 		.slice(PLAYGROUND_PATH.length + 1)
 		.replace(/\/$/, "");
-	if (encodedId === "" || encodedId.includes("/")) return null;
+	const encodedParts = encodedPath.split("/");
+	if (
+		encodedPath === "" ||
+		encodedParts.length > 2 ||
+		encodedParts.some((part) => part === "")
+	) {
+		return null;
+	}
 
 	try {
-		const experimentId = decodeURIComponent(encodedId);
+		const [encodedExperimentId, encodedDetailId] = encodedParts;
+		if (!encodedExperimentId) return null;
+		const experimentId = decodeURIComponent(encodedExperimentId);
+		const detailId = encodedDetailId
+			? decodeURIComponent(encodedDetailId)
+			: undefined;
 		return experimentId === ""
 			? null
-			: { kind: "Experiment", experimentId };
+			: {
+					kind: "Experiment",
+					experimentId,
+					...(detailId ? { detailId } : {}),
+				};
 	} catch {
 		return null;
 	}
 }
 
-export function playgroundExperimentHref(experimentId: string): string {
-	return `${PLAYGROUND_PATH}/${encodeURIComponent(experimentId)}`;
+export function playgroundExperimentHref(
+	experimentId: string,
+	detailId?: string,
+): string {
+	const experimentHref = `${PLAYGROUND_PATH}/${encodeURIComponent(experimentId)}`;
+	return detailId
+		? `${experimentHref}/${encodeURIComponent(detailId)}`
+		: experimentHref;
 }
