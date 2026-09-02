@@ -213,10 +213,9 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 			Math.abs(headingTextBox.x + headingTextBox.width - ipaRight),
 		).toBeLessThan(1);
 	}
-	const synonymRelationMark = midnight.getByRole("button", {
-		name: "Synonym",
-		exact: true,
-	});
+	const synonymRelationMark = midnight.locator(
+		'[data-relation="synonym"] .relation-mark',
+	);
 	await synonymRelationMark.hover();
 	const relationTooltip = page.locator('[data-slot="tooltip-content"]');
 	await expect(relationTooltip).toBeVisible();

@@ -7,7 +7,6 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import { Button } from "@/components/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
@@ -545,16 +544,14 @@ function RelationRow({
 				<Tooltip>
 					<TooltipTrigger
 						render={
-							<Button
-								type="button"
-								variant="ghost"
-								size="icon-xs"
-								className="cursor-help"
+							<span
+								className="relation-mark"
+								role="img"
+								aria-label={label}
 							/>
 						}
 					>
 						{mark}
-						<span className="sr-only">{label}</span>
 					</TooltipTrigger>
 					<TooltipContent>
 						<p>{label}</p>
