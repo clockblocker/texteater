@@ -9,6 +9,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import { finishSegmentResolution } from "./model/segmentResolutionState";
 
 const BATCH_SIZE = 400;
 const CLEANUP_DELETE_BUDGET = BATCH_SIZE - 1;
@@ -150,7 +151,16 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) await ctx.db.delete(row._id);
+				for (const row of rows) {
+					if (row.lifecycle?.state === "Active") {
+						await finishSegmentResolution(
+							ctx,
+							row.segmentId,
+							"PermanentFailure",
+						);
+					}
+					await ctx.db.delete(row._id);
+				}
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -328,6 +338,13 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 				.take(BATCH_SIZE);
 			if (sessions.length > 0) {
 				for (const session of sessions) {
+					if (session.lifecycle?.state === "Active") {
+						await finishSegmentResolution(
+							ctx,
+							session.segmentId,
+							"PermanentFailure",
+						);
+					}
 					await ctx.db.delete(session._id);
 				}
 				return { deleted: sessions.length, hasMore: true };

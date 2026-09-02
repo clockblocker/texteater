@@ -10,8 +10,9 @@ export type SentenceSegmentView = {
 	readonly index: number;
 	readonly kind: SegmentKind;
 	readonly text: string;
-	readonly isClicked: boolean;
-	readonly isResolutionMember: boolean;
+	readonly attestationId?: Id<"attestations">;
+	readonly encountered: boolean;
+	readonly resolutionState?: "Active" | "Unresolved" | "PermanentFailure";
 };
 
 export type SentenceView = {

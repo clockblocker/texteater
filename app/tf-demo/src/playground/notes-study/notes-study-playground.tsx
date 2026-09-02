@@ -1,3 +1,4 @@
+import type { DirectSemanticRelation } from "dumrel";
 import {
 	type CSSProperties,
 	type ReactNode,
@@ -6,6 +7,12 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { Button } from "@/components/ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import "./notes-study-playground.css";
 
 type DragEdge = "top" | "bottom";
@@ -226,7 +233,14 @@ function NoteArticle() {
 						</span>
 					</h4>
 				</div>
-				<span className="lexical-note__ipa">/ˈdɛmərʊŋ/</span>
+				<a
+					className="lexical-note__ipa"
+					href="https://youglish.com/pronounce/D%C3%A4mmerung/german"
+					target="_blank"
+					rel="noreferrer"
+				>
+					/ˈdɛmərʊŋ/
+				</a>
 			</header>
 
 			<div className="lexical-note__layout">
@@ -297,21 +311,23 @@ function NoteArticle() {
 					<SectionLabel id={`${noteId}-relations`}>
 						Beziehungen
 					</SectionLabel>
-					<ul className="relation-list">
-						<li>
-							<RelationMark>=</RelationMark>
+					<dl className="relation-list">
+						<RelationRow
+							relation="synonym"
+							mark="="
+							label="Synonym"
+						>
 							<span>
 								<LinkedWord nounGender="neuter">
 									Zwielicht
 								</LinkedWord>
-								,{" "}
-								<LinkedWord nounGender="feminine">
-									Abenddämmerung
-								</LinkedWord>
 							</span>
-						</li>
-						<li>
-							<RelationMark>≈</RelationMark>
+						</RelationRow>
+						<RelationRow
+							relation="nearSynonym"
+							mark="≈"
+							label="Nahes Synonym"
+						>
 							<span>
 								<LinkedWord nounGender="neuter">
 									Abendlicht
@@ -321,20 +337,41 @@ function NoteArticle() {
 									Sonnenuntergang
 								</LinkedWord>
 							</span>
-						</li>
-						<li>
-							<RelationMark>≠</RelationMark>
+						</RelationRow>
+						<RelationRow
+							relation="nearAntonym"
+							mark="≉"
+							label="Nahes Antonym"
+						>
 							<span>
-								<LinkedWord nounGender="feminine">
-									Dunkelheit
-								</LinkedWord>
-								,{" "}
 								<LinkedWord nounGender="neuter">
 									Tageslicht
 								</LinkedWord>
+								,{" "}
+								<LinkedWord nounGender="feminine">
+									Dunkelheit
+								</LinkedWord>
 							</span>
-						</li>
-					</ul>
+						</RelationRow>
+						<RelationRow
+							relation="hypernym"
+							mark="↑"
+							label="Oberbegriff"
+						>
+							<LinkedWord nounGender="masculine">
+								Lichtzustand
+							</LinkedWord>
+						</RelationRow>
+						<RelationRow
+							relation="holonym"
+							mark="⊂"
+							label="Teil von"
+						>
+							<LinkedWord nounGender="masculine">
+								Tageslauf
+							</LinkedWord>
+						</RelationRow>
+					</dl>
 				</section>
 
 				<section
@@ -372,7 +409,7 @@ function NoteArticle() {
 
 				<footer className="lexical-note__footer">
 					<span>#Nomen</span>
-					<span>#Feminin</span>
+					<span data-noun-gender="feminine">#Feminin</span>
 				</footer>
 			</div>
 
@@ -491,10 +528,40 @@ function LinkedWord({
 	);
 }
 
-function RelationMark({ children }: { readonly children: ReactNode }) {
+function RelationRow({
+	children,
+	label,
+	mark,
+	relation,
+}: {
+	readonly children: ReactNode;
+	readonly label: string;
+	readonly mark: string;
+	readonly relation: DirectSemanticRelation;
+}) {
 	return (
-		<span className="relation-mark" aria-hidden="true">
-			{children}
-		</span>
+		<div data-relation={relation}>
+			<dt>
+				<Tooltip>
+					<TooltipTrigger
+						render={
+							<Button
+								type="button"
+								variant="ghost"
+								size="icon-xs"
+								className="cursor-help"
+							/>
+						}
+					>
+						{mark}
+						<span className="sr-only">{label}</span>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>{label}</p>
+					</TooltipContent>
+				</Tooltip>
+			</dt>
+			<dd>{children}</dd>
+		</div>
 	);
 }

@@ -34,6 +34,15 @@ export const grammaticalLanguageValidator = v.literal(
 
 export const segmentKindValidator = literalUnion(segmentKindValues);
 
+export const segmentResolutionStateValidator = v.union(
+	v.object({
+		kind: v.literal("Active"),
+		activeSessionCount: v.number(),
+	}),
+	v.object({ kind: v.literal("Unresolved") }),
+	v.object({ kind: v.literal("PermanentFailure") }),
+);
+
 export const segmentInputValidator = v.object({
 	kind: segmentKindValidator,
 	text: v.string(),

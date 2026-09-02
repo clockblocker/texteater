@@ -23,6 +23,7 @@ import type * as fixedMembers from "../fixedMembers.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
 import type * as knowledgeSettings from "../knowledgeSettings.js";
+import type * as migrations from "../migrations.js";
 import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_compiledRelationVerdict from "../model/compiledRelationVerdict.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
@@ -31,6 +32,7 @@ import type * as model_occurrenceAttestations from "../model/occurrenceAttestati
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
+import type * as model_segmentResolutionState from "../model/segmentResolutionState.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorClicks from "../model/visitorClicks.js";
@@ -80,6 +82,7 @@ declare const fullApi: ApiFromModules<{
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
   knowledgeSettings: typeof knowledgeSettings;
+  migrations: typeof migrations;
   "model/canonicalJson": typeof model_canonicalJson;
   "model/compiledRelationVerdict": typeof model_compiledRelationVerdict;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
@@ -88,6 +91,7 @@ declare const fullApi: ApiFromModules<{
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;
   "model/resolutionSessions": typeof model_resolutionSessions;
+  "model/segmentResolutionState": typeof model_segmentResolutionState;
   "model/shadows": typeof model_shadows;
   "model/validators": typeof model_validators;
   "model/visitorClicks": typeof model_visitorClicks;
@@ -142,4 +146,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  migrations: import("@convex-dev/migrations/_generated/component.js").ComponentApi<"migrations">;
+};

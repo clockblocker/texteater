@@ -142,7 +142,6 @@ function FixtureTextPresentation() {
 	return (
 		<TextPresentation
 			focus={{ kind: "None" }}
-			isResolving={false}
 			onSegmentClick={selectSegment}
 			selectedSegmentKey={null}
 			sentences={FIXTURE_SENTENCES}
@@ -424,8 +423,7 @@ function fixtureSentence(
 			index,
 			kind,
 			text,
-			isClicked: false,
-			isResolutionMember: false,
+			encountered: false,
 		})),
 	} as SentenceView;
 }

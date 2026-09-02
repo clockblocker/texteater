@@ -141,7 +141,10 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 				</Card>
 
 				{target.textId ? (
-					<TextDataControls textId={target.textId} />
+					<TextDataControls
+						textId={target.textId}
+						visitorId={visitorId}
+					/>
 				) : (
 					<DataControls />
 				)}
@@ -225,9 +228,15 @@ function ThemeSettings() {
 	);
 }
 
-function TextDataControls({ textId }: { textId: string }) {
+function TextDataControls({
+	textId,
+	visitorId,
+}: {
+	textId: string;
+	visitorId: string;
+}) {
 	const textQuery = useQuery({
-		...convexQuery(api.textViews.get, { textId }),
+		...convexQuery(api.textViews.get, { textId, visitorId }),
 		gcTime: 10_000,
 	});
 

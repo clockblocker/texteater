@@ -54,6 +54,7 @@ export function UnitReadingNoteView({
 	const noteQuery = useQuery({
 		...convexQuery(api.readingNotes.get, {
 			readingId: target.readingId,
+			visitorId,
 		}),
 		gcTime: 10_000,
 	});
@@ -129,11 +130,12 @@ function ReadingNoteContainer({
 		async (cursor: string): Promise<ReadingNoteData | null> => {
 			const next = await convex.query(api.readingNotes.get, {
 				readingId: note.target.readingId,
+				visitorId,
 				contextCursor: cursor,
 			});
 			return next?.kind === "UnitReadingNote" ? next : null;
 		},
-		[convex, note.target.readingId],
+		[convex, note.target.readingId, visitorId],
 	);
 	const pagination = usePaginatedNoteLoading(note, loadSourceContextPage);
 

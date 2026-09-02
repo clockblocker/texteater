@@ -110,7 +110,9 @@ and source Occurrence Attestations.
 
 **Source Context**:
 A projection of one Occurrence Attestation inside its source Sentence and Text.
-Its return locator and highlighting add no linguistic identity.
+Its return locator and highlighting add no linguistic identity. A Unit Reading
+Note includes it only when the current Visitor has encountered one of the
+occurrence's member Segments.
 _Avoid_: clicked context, Reading identity evidence
 
 **Route Note**:
@@ -131,13 +133,20 @@ An ephemeral Visitor command that presents a stored route or starts one
 Resolution Session.
 _Avoid_: Click record, Resolution
 
+**Segment Resolution State**:
+The shared current outcome for an unattested Segment: `Active`, `Unresolved`,
+or `PermanentFailure`. A Visitor sees it only after encountering that Segment.
+Committed Attestation Membership replaces and clears it.
+_Avoid_: Visitor status, Attestation state
+
 **Resolution Step Note**:
 A transient projection reached by one Resolution Session. After commit it
 converges to the canonical Note subject.
 
 **Visitor Encounter**:
 The single durable association of one Visitor with one Segment after its first
-selection. Later selections reuse it.
+selection, carrying its Text and Sentence locator. Later selections reuse it;
+an occurrence is encountered when any of its member Segments was encountered.
 
 **Membership Conflict**:
 A rejected occurrence proposal that overlaps a committed Occurrence

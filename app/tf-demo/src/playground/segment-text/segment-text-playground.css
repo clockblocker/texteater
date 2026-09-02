@@ -6,7 +6,6 @@
 	--segment-muted: #9096a0;
 	--segment-unknown: #5d89c7;
 	--segment-known: #7aaef7;
-	--segment-known-hover: #a8ccf5;
 	--segment-rule: #343941;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr);
@@ -200,11 +199,17 @@
 	color: var(--segment-unknown);
 }
 
-/* Once a unit is known, every member receives exactly the same treatment. */
+/* Hover is expressed by an underline; known color does not change. */
+.text-segment[data-state="unknown-preview"],
+.text-segment[data-state="resolving"],
 .text-segment[data-state="known-preview"] {
-	color: var(--segment-known-hover);
+	text-decoration-line: underline;
+	text-decoration-color: currentColor;
+	text-decoration-thickness: 0.11em;
+	text-underline-offset: 0.18em;
 }
 
+.text-segment[data-state="known-preview"],
 .text-segment[data-state="selected"],
 .text-segment[data-state="retained"] {
 	color: var(--segment-known);

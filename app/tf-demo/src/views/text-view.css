@@ -1,0 +1,140 @@
+.text-reader {
+	--text-reader-coal: #1b1e23;
+	--text-reader-ink: #d7d9de;
+	--text-reader-muted: #9096a0;
+	--text-reader-unknown: #5d89c7;
+	--text-reader-known: #7aaef7;
+	--text-reader-unresolved: #c7a467;
+	--text-reader-failed: #db7777;
+	flex: 1 1 auto;
+	width: 100%;
+	min-height: 100%;
+	background: var(--text-reader-coal);
+	color: var(--text-reader-ink);
+	font-family: "Geist Variable", sans-serif;
+}
+
+.text-reader__body {
+	width: 100%;
+	padding: clamp(2rem, 7cqw, 4.5rem) clamp(1.25rem, 7cqw, 4rem) 5rem;
+}
+
+.text-reader__passage,
+.text-reader__status {
+	max-width: 43rem;
+	margin-inline: auto;
+}
+
+.text-reader__passage {
+	font-size: clamp(1.02rem, 3.3cqw, 1.24rem);
+	font-weight: 430;
+	letter-spacing: -0.015em;
+	line-height: 1.52;
+}
+
+.text-reader__sentence {
+	margin: 0;
+}
+
+.text-reader__sentence + .text-reader__sentence {
+	margin-top: 1.8rem;
+}
+
+.text-reader__segment {
+	appearance: none;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	letter-spacing: inherit;
+	line-height: inherit;
+	cursor: pointer;
+	transition: color 150ms ease;
+}
+
+.text-reader__segment:disabled {
+	cursor: wait;
+}
+
+.text-reader__segment:focus-visible {
+	outline: 2px solid var(--text-reader-known);
+	outline-offset: 3px;
+}
+
+.text-reader__segment[data-state="unknown-preview"],
+.text-reader__segment[data-state="resolving"] {
+	color: var(--text-reader-unknown);
+}
+
+.text-reader__segment[data-state="unresolved"],
+.text-reader__segment[data-state="unresolved-preview"] {
+	color: var(--text-reader-unresolved);
+}
+
+.text-reader__segment[data-state="failed"],
+.text-reader__segment[data-state="failed-preview"] {
+	color: var(--text-reader-failed);
+}
+
+.text-reader__segment[data-state="known-preview"],
+.text-reader__segment[data-state="selected"],
+.text-reader__segment[data-state="retained"] {
+	color: var(--text-reader-known);
+}
+
+.text-reader__segment[data-state="unknown-preview"],
+.text-reader__segment[data-state="resolving"],
+.text-reader__segment[data-state="unresolved-preview"],
+.text-reader__segment[data-state="failed-preview"],
+.text-reader__segment[data-state="known-preview"] {
+	text-decoration-line: underline;
+	text-decoration-color: currentColor;
+	text-decoration-thickness: 0.11em;
+	text-underline-offset: 0.18em;
+}
+
+.text-reader__segment[data-source-context-member="true"],
+.text-reader__plain-segment[data-source-context-member="true"] {
+	background: color-mix(in srgb, var(--workspace-highlight) 25%, transparent);
+}
+
+.text-reader__status {
+	margin-top: 2rem;
+	color: var(--text-reader-muted);
+	font-size: 0.8rem;
+	line-height: 1.45;
+}
+
+.text-reader__status--error {
+	color: var(--text-reader-failed);
+}
+
+.text-reader--loading {
+	padding: clamp(2rem, 7cqw, 4.5rem) clamp(1.25rem, 7cqw, 4rem);
+}
+
+@container (max-width: 28rem) {
+	.text-reader__body {
+		padding-top: 2rem;
+	}
+
+	.text-reader__passage {
+		font-size: 1.04rem;
+	}
+
+	.text-reader__sentence + .text-reader__sentence {
+		margin-top: 1.55rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.text-reader *,
+	.text-reader *::before,
+	.text-reader *::after {
+		scroll-behavior: auto;
+		transition-duration: 0.01ms;
+		animation-duration: 0.01ms;
+		animation-iteration-count: 1;
+	}
+}

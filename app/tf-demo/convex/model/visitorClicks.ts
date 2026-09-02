@@ -24,6 +24,8 @@ export async function ensureVisitorEncounter(
 	input: {
 		requestId: string;
 		visitorId: string;
+		textId: Id<"texts">;
+		sentenceId: Id<"sentences">;
 		segmentId: Id<"segments">;
 		attestationId?: Id<"attestations">;
 	},
@@ -39,10 +41,15 @@ export async function ensureVisitorEncounter(
 				"Visitor Encounter refers to a different committed Attestation.",
 			);
 		}
-		if (input.attestationId && !existing.attestationId) {
-			await ctx.db.patch(existing._id, {
-				attestationId: input.attestationId,
-			});
+		const patch = {
+			...(existing.textId ? {} : { textId: input.textId }),
+			...(existing.sentenceId ? {} : { sentenceId: input.sentenceId }),
+			...(input.attestationId && !existing.attestationId
+				? { attestationId: input.attestationId }
+				: {}),
+		};
+		if (Object.keys(patch).length > 0) {
+			await ctx.db.patch(existing._id, patch);
 		}
 		return { clickId: existing._id, created: false as const };
 	}
@@ -50,6 +57,8 @@ export async function ensureVisitorEncounter(
 	const clickId = await ctx.db.insert("visitorClicks", {
 		requestId: input.requestId,
 		visitorId: input.visitorId,
+		textId: input.textId,
+		sentenceId: input.sentenceId,
 		segmentId: input.segmentId,
 		...(input.attestationId ? { attestationId: input.attestationId } : {}),
 		clickedAt: Date.now(),

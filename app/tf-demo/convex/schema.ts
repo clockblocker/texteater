@@ -28,6 +28,7 @@ import {
 	resolvedGrammaticalValidator,
 	safeGenerationFailureValidator,
 	segmentKindValidator,
+	segmentResolutionStateValidator,
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "./model/validators";
@@ -54,6 +55,7 @@ export default defineSchema({
 		index: v.number(),
 		kind: segmentKindValidator,
 		text: v.string(),
+		resolutionState: v.optional(segmentResolutionStateValidator),
 		attestationMembership: v.optional(
 			v.object({
 				attestationId: v.id("attestations"),
@@ -375,6 +377,8 @@ export default defineSchema({
 	visitorClicks: defineTable({
 		requestId: v.string(),
 		visitorId: v.string(),
+		textId: v.optional(v.id("texts")),
+		sentenceId: v.optional(v.id("sentences")),
 		segmentId: v.id("segments"),
 		attestationId: v.optional(v.id("attestations")),
 		clickedAt: v.number(),

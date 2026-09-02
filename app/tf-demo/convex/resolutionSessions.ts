@@ -20,6 +20,10 @@ import {
 	settleUnresolved,
 } from "./model/resolutionSessions";
 import {
+	beginSegmentResolution,
+	finishSegmentResolution,
+} from "./model/segmentResolutionState";
+import {
 	readingValueValidator,
 	resolutionActivityValidator,
 	resolutionGenerationEventValidator,
@@ -153,6 +157,8 @@ export const selectSegment = mutation({
 			await ensureVisitorEncounter(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
+				textId: sentence.textId,
+				sentenceId: sentence._id,
 				segmentId: segment._id,
 				attestationId,
 			});
@@ -185,6 +191,14 @@ export const selectSegment = mutation({
 
 		const now = Date.now();
 		const runToken = crypto.randomUUID();
+		await ensureVisitorEncounter(ctx, {
+			requestId: args.requestId,
+			visitorId: args.visitorId,
+			textId: sentence.textId,
+			sentenceId: sentence._id,
+			segmentId: segment._id,
+		});
+		await beginSegmentResolution(ctx, segment._id);
 		await ctx.db.insert("resolutionSessions", {
 			requestId: args.requestId,
 			visitorId: args.visitorId,
@@ -268,6 +282,9 @@ export const retryResolution = mutation({
 
 		const now = Date.now();
 		const runToken = crypto.randomUUID();
+		if (!(await beginSegmentResolution(ctx, session.segmentId))) {
+			return { retried: false };
+		}
 		await ctx.db.patch(session._id, {
 			runToken,
 			runNumber: 1,
@@ -595,6 +612,11 @@ export const recordRunFailure = internalMutation({
 				nextRetryAt: undefined,
 				updatedAt: now,
 			});
+			await finishSegmentResolution(
+				ctx,
+				session.segmentId,
+				"PermanentFailure",
+			);
 			return { scheduled: false };
 		}
 
@@ -802,6 +824,13 @@ export const cleanup = mutation({
 					if (!row.readingId || !(await ctx.db.get(row.readingId))) {
 						continue;
 					}
+				}
+				if (row.lifecycle.state === "Active") {
+					await finishSegmentResolution(
+						ctx,
+						row.segmentId,
+						"PermanentFailure",
+					);
 				}
 				await ctx.db.delete(row._id);
 				deleted += 1;

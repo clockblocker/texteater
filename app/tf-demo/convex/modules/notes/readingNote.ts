@@ -14,6 +14,7 @@ import {
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
+import { findVisitorEncounter } from "../../model/visitorClicks";
 import {
 	pendingRelationProjectionValidator,
 	projectPendingRelations,
@@ -184,6 +185,7 @@ export type SourceContextProjection<
 export async function loadUnitReadingNote(
 	ctx: QueryCtx,
 	readingIdValue: string,
+	visitorId: string,
 	contextCursor?: string,
 ) {
 	const readingId = ctx.db.normalizeId("readings", readingIdValue);
@@ -217,7 +219,7 @@ export async function loadUnitReadingNote(
 			)
 			.take(MAX_PENDING_RELATIONS_PER_READING_NOTE + 1),
 		loadStructuralReferencesForReading(ctx, reading.readingKey),
-		loadSourceContextPage(ctx, reading._id, contextCursor),
+		loadSourceContextPage(ctx, reading._id, visitorId, contextCursor),
 		ctx.db
 			.query("knowledgeGenerationAttempts")
 			.withIndex("by_owner_reading_key_and_updated_at", (q) =>
@@ -278,6 +280,7 @@ export async function loadUnitReadingNote(
 export async function loadSourceContextPage(
 	ctx: QueryCtx,
 	readingId: Id<"readings">,
+	visitorId: string,
 	contextCursor?: string,
 ) {
 	const result = await ctx.db
@@ -290,7 +293,7 @@ export async function loadSourceContextPage(
 		});
 	const projected = await Promise.all(
 		result.page.map((attestation) =>
-			projectSourceContext(ctx, attestation._id),
+			projectSourceContext(ctx, attestation._id, visitorId),
 		),
 	);
 	const seen = new Set<Id<"attestations">>();
@@ -405,9 +408,16 @@ async function loadStructuralReferencesForReading(
 async function projectSourceContext(
 	ctx: QueryCtx,
 	attestationId: Id<"attestations">,
+	visitorId: string,
 ): Promise<SourceContextProjection<Id<"attestations">, Id<"texts">> | null> {
 	const members = await loadCompleteOccurrenceMembers(ctx, attestationId);
 	if (!members) return null;
+	const encounters = await Promise.all(
+		members.memberSegmentIds.map((segmentId) =>
+			findVisitorEncounter(ctx, { visitorId, segmentId }),
+		),
+	);
+	if (!encounters.some(Boolean)) return null;
 	const sentence = await ctx.db.get(members.sentenceId);
 	if (!sentence) return null;
 	const text = await ctx.db.get(sentence.textId);

@@ -14,10 +14,12 @@ import { get as getTextView, loadTextFocus } from "../convex/textViews";
 
 const getReadingNoteHandler = queryHandler<{
 	readingId: string;
+	visitorId: string;
 	contextCursor?: string;
 }>(getReadingNote);
 const getTextViewHandler = queryHandler<{
 	textId: string;
+	visitorId: string;
 	focusAttestationId?: string;
 }>(getTextView);
 
@@ -218,6 +220,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 
 	const note = (await getReadingNoteHandler(ctx, {
 		readingId: "reading-1",
+		visitorId: "visitor-1",
 	})) as {
 		kind: string;
 		reading: { lemma: { coreFeatures: unknown } };
@@ -312,7 +315,7 @@ test("note and text queries expose target-specific interfaces", () => {
 	expect(textArgs).not.toContain('"target"');
 	expect(noteArgs).toContain('"readingId"');
 	expect(noteArgs).toContain('"contextCursor"');
-	expect(noteArgs).not.toContain('"visitorId"');
+	expect(noteArgs).toContain('"visitorId"');
 	expect(noteArgs).not.toContain('"value":"RouteNote"');
 	expect(noteArgs).not.toContain('"value":"ShadowNote"');
 	expect(noteReturns).toContain('"tableName":"readings"');
@@ -323,6 +326,132 @@ test("note and text queries expose target-specific interfaces", () => {
 	expect(textReturns).toContain('"value":"None"');
 	expect(textReturns).toContain('"value":"Missing"');
 	expect(textReturns).toContain('"value":"Occurrence"');
+});
+
+test("Text projection shares current truth through Visitor Encounter history", async () => {
+	const sentence = {
+		_id: "sentence-1",
+		textId: "text-1",
+		position: 0,
+		language: "de",
+		stitchedText: "rufe fehl an aktiv",
+	};
+	const segments = [
+		{
+			_id: "segment-rufe",
+			sentenceId: sentence._id,
+			index: 0,
+			kind: "ResolvableText",
+			text: "rufe",
+			attestationMembership: {
+				attestationId: "attestation-1",
+				orthography: "Exact",
+			},
+		},
+		{
+			_id: "segment-failed",
+			sentenceId: sentence._id,
+			index: 1,
+			kind: "ResolvableText",
+			text: "fehl",
+			resolutionState: { kind: "PermanentFailure" },
+		},
+		{
+			_id: "segment-an",
+			sentenceId: sentence._id,
+			index: 2,
+			kind: "ResolvableText",
+			text: "an",
+			attestationMembership: {
+				attestationId: "attestation-1",
+				orthography: "Exact",
+			},
+		},
+		{
+			_id: "segment-active-for-other-visitor",
+			sentenceId: sentence._id,
+			index: 3,
+			kind: "ResolvableText",
+			text: "aktiv",
+			resolutionState: { kind: "Active", activeSessionCount: 1 },
+		},
+	];
+	const encounteredSegmentIds = new Set(["segment-an", "segment-failed"]);
+	const ctx = {
+		db: {
+			normalizeId(_table: string, id: string) {
+				return id;
+			},
+			async get(id: string) {
+				return id === "text-1"
+					? {
+							_id: "text-1",
+							_creationTime: 1,
+							sourceText: sentence.stitchedText,
+						}
+					: null;
+			},
+			query(table: string) {
+				const indexed: Record<string, string> = {};
+				const builder = {
+					withIndex(_name: string, range: (q: unknown) => unknown) {
+						const q = {
+							eq(field: string, value: string) {
+								indexed[field] = value;
+								return q;
+							},
+						};
+						range(q);
+						return builder;
+					},
+					async take() {
+						if (table === "sentences") return [sentence];
+						if (table === "segments") return segments;
+						if (
+							table === "visitorClicks" &&
+							encounteredSegmentIds.has(indexed.segmentId ?? "")
+						) {
+							return [{ _id: `encounter-${indexed.segmentId}` }];
+						}
+						return [];
+					},
+				};
+				return builder;
+			},
+		},
+	};
+
+	const result = (await getTextViewHandler(ctx, {
+		textId: "text-1",
+		visitorId: "visitor-1",
+	})) as {
+		sentences: {
+			segments: {
+				text: string;
+				encountered: boolean;
+				resolutionState?: string;
+			}[];
+		}[];
+	};
+	const projected = Object.fromEntries(
+		(result.sentences[0]?.segments ?? []).map((segment) => [
+			segment.text,
+			segment,
+		]),
+	);
+
+	expect(projected.rufe?.encountered).toBe(true);
+	expect(projected.an?.encountered).toBe(true);
+	expect(projected.fehl).toMatchObject({
+		encountered: true,
+		resolutionState: "PermanentFailure",
+	});
+	expect(projected.aktiv).toEqual({
+		index: 3,
+		kind: "ResolvableText",
+		text: "aktiv",
+		encountered: false,
+	});
 });
 
 test("only learner-facing Unit families can open Unit Reading Notes", () => {
@@ -349,11 +478,13 @@ test("malformed routed IDs return not-found without reading documents", async ()
 	expect(
 		await getReadingNoteHandler(ctx, {
 			readingId: "malformed id",
+			visitorId: "visitor-1",
 		}),
 	).toBeNull();
 	expect(
 		await getTextViewHandler(ctx, {
 			textId: "malformed id",
+			visitorId: "visitor-1",
 		}),
 	).toBeNull();
 	expect(documentReads).toBe(0);
@@ -376,11 +507,13 @@ test("deleted routed records return the same defined not-found result", async ()
 	expect(
 		await getReadingNoteHandler(ctx, {
 			readingId: "deleted-reading",
+			visitorId: "visitor-1",
 		}),
 	).toBeNull();
 	expect(
 		await getTextViewHandler(ctx, {
 			textId: "deleted-text",
+			visitorId: "visitor-1",
 		}),
 	).toBeNull();
 	expect(documentReads).toBe(2);
@@ -431,6 +564,7 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	const first = await loadSourceContextPage(
 		fixture.ctx as never,
 		"reading_shared" as never,
+		"visitor-1",
 	);
 	expect(first.page.map(({ attestationId }) => attestationId)).toEqual([
 		"attestation_new_b",
@@ -452,6 +586,7 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	const continuation = await loadSourceContextPage(
 		fixture.ctx as never,
 		"reading_shared" as never,
+		"visitor-1",
 		"cursor_1",
 	);
 	expect(continuation.page.map(({ attestationId }) => attestationId)).toEqual(
@@ -461,6 +596,51 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		cursor: "cursor_1",
 		numItems: 6,
 	});
+});
+
+test("Source Contexts include only occurrences encountered by this Visitor", async () => {
+	const fixture = presentationFixture({
+		pages: {
+			start: ["attestation_seen", "attestation_other_visitor"],
+		},
+		segmentsByAttestation: {
+			attestation_seen: [
+				{ sentenceId: "sentence_seen", index: 1 },
+				{ sentenceId: "sentence_seen", index: 4 },
+			],
+			attestation_other_visitor: [
+				{ sentenceId: "sentence_other", index: 2 },
+			],
+		},
+		documents: {
+			sentence_seen: {
+				_id: "sentence_seen",
+				textId: "text_seen",
+				position: 0,
+				stitchedText: "The encountered occurrence.",
+			},
+			sentence_other: {
+				_id: "sentence_other",
+				textId: "text_other",
+				position: 0,
+				stitchedText: "Someone else's occurrence.",
+			},
+			text_seen: { _id: "text_seen" },
+			text_other: { _id: "text_other" },
+		},
+		encounteredSegmentIds: new Set(["attestation_seen:segment:1"]),
+	});
+
+	const result = await loadSourceContextPage(
+		fixture.ctx as never,
+		"reading_shared" as never,
+		"visitor-1",
+	);
+
+	expect(result.page.map(({ attestationId }) => attestationId)).toEqual([
+		"attestation_seen",
+	]);
+	expect(result.page[0]?.memberSegmentIndices).toEqual([1, 4]);
 });
 
 test("focused occurrence validates Text ownership and never substitutes stale coordinates", async () => {
@@ -529,6 +709,7 @@ function presentationFixture({
 	segmentsByAttestation = {},
 	documents = {},
 	malformedIds = new Set<string>(),
+	encounteredSegmentIds,
 }: {
 	pages?: Record<string, string[]>;
 	segmentsByAttestation?: Record<
@@ -537,6 +718,7 @@ function presentationFixture({
 	>;
 	documents?: Record<string, Record<string, unknown>>;
 	malformedIds?: Set<string>;
+	encounteredSegmentIds?: ReadonlySet<string>;
 }) {
 	const orders: string[] = [];
 	const paginations: { cursor: string | null; numItems: number }[] = [];
@@ -583,9 +765,21 @@ function presentationFixture({
 						};
 					},
 					async take() {
-						return table === "segments"
-							? (segmentsByAttestation[indexedValue] ?? [])
-							: [];
+						if (table === "segments") {
+							return (
+								segmentsByAttestation[indexedValue] ?? []
+							).map((segment, index) => ({
+								_id: `${indexedValue}:segment:${index}`,
+								...segment,
+							}));
+						}
+						if (table === "visitorClicks") {
+							return !encounteredSegmentIds ||
+								encounteredSegmentIds.has(indexedValue)
+								? [{ _id: `encounter:${indexedValue}` }]
+								: [];
+						}
+						return [];
 					},
 				};
 				return builder;

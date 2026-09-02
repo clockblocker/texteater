@@ -19,10 +19,22 @@ test("the playground registry launches and resets an isolated experiment", async
 	await expect(page).toHaveURL(/\/playground\/sheet-workspace$/);
 	await expect(page.locator("[data-workspace-pane]")).toHaveCount(3);
 
-	await page
+	const centralReader = page
 		.locator('[data-workspace-pane="central"]')
-		.getByRole("button", { name: "Morgen" })
-		.click();
+		.locator(".text-reader");
+	await expect(centralReader).toHaveCSS(
+		"background-color",
+		"rgb(27, 30, 35)",
+	);
+	const morgen = centralReader.getByRole("button", { name: "Morgen" });
+	await morgen.hover();
+	await expect(
+		centralReader.locator(
+			'.text-reader__segment[data-state="unknown-preview"]',
+		),
+	).toHaveCount(1);
+	await expect(morgen).toHaveCSS("color", "rgb(93, 137, 199)");
+	await morgen.click();
 	await expect(
 		page.locator('[data-card-layer="central"] [data-card-id]'),
 	).toHaveCount(4);
@@ -89,6 +101,8 @@ test("the segment text study compares pre-resolved and on-demand units", async (
 	await expect(
 		preResolved.locator('.text-segment[data-state="known-preview"]'),
 	).toHaveCount(2);
+	await expect(knownMember).toHaveCSS("color", "rgb(122, 174, 247)");
+	await expect(knownMember).toHaveCSS("text-decoration-line", "underline");
 
 	const unknownMember = onDemand.getByRole("button", {
 		name: "an, click to resolve",
@@ -98,6 +112,7 @@ test("the segment text study compares pre-resolved and on-demand units", async (
 		onDemand.locator('.text-segment[data-state="unknown-preview"]'),
 	).toHaveCount(1);
 	await expect(unknownMember).toHaveCSS("color", "rgb(93, 137, 199)");
+	await expect(unknownMember).toHaveCSS("text-decoration-line", "underline");
 	await expect(
 		onDemand.locator('.text-segment[data-state="known-preview"]'),
 	).toHaveCount(0);
@@ -119,7 +134,8 @@ test("the segment text study compares pre-resolved and on-demand units", async (
 	await expect(previewedUnit).toHaveCount(2);
 	await page.waitForTimeout(200);
 	for (const member of await previewedUnit.all()) {
-		await expect(member).toHaveCSS("color", "rgb(168, 204, 245)");
+		await expect(member).toHaveCSS("color", "rgb(122, 174, 247)");
+		await expect(member).toHaveCSS("text-decoration-line", "underline");
 		await expect(member).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
 		await expect(member).toHaveCSS("box-shadow", "none");
 	}
@@ -137,11 +153,13 @@ test("the segment text study compares pre-resolved and on-demand units", async (
 		name: "rufe, part of anrufen",
 	});
 	await expect(retainedMember).toHaveCSS("color", "rgb(122, 174, 247)");
+	await expect(retainedMember).toHaveCSS("text-decoration-line", "none");
 	await retainedMember.hover();
 	await expect(
 		onDemand.locator('.text-segment[data-state="known-preview"]'),
 	).toHaveCount(2);
-	await expect(retainedMember).toHaveCSS("color", "rgb(168, 204, 245)");
+	await expect(retainedMember).toHaveCSS("color", "rgb(122, 174, 247)");
+	await expect(retainedMember).toHaveCSS("text-decoration-line", "underline");
 	await expect(onDemand.locator(".text-segment[data-known]")).toHaveCount(4);
 	await expect(
 		preResolved.locator(".text-segment:not([data-known])"),
@@ -195,6 +213,14 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 			Math.abs(headingTextBox.x + headingTextBox.width - ipaRight),
 		).toBeLessThan(1);
 	}
+	const synonymRelationMark = midnight.getByRole("button", {
+		name: "Synonym",
+		exact: true,
+	});
+	await synonymRelationMark.hover();
+	const relationTooltip = page.locator('[data-slot="tooltip-content"]');
+	await expect(relationTooltip).toBeVisible();
+	await expect(relationTooltip).toHaveText("Synonym");
 	await expect(
 		midnight.getByRole("heading", { name: "Deine Notiz" }),
 	).toHaveCount(0);

@@ -1194,9 +1194,14 @@ describe("Resolution Session", () => {
 		>(stripTextAnalysisGraphBatch)({ db: stripDb }, { textId: "text-1" });
 		expect(stripped).toEqual({ deleted: 1, hasMore: true });
 		expect(stripDb.rows("resolutionSessions")).toEqual([]);
-		expect(stripDb.rows("segments")).toHaveLength(1);
+		expect(stripDb.rows("segments")).toEqual([
+			expect.objectContaining({
+				resolutionState: { kind: "PermanentFailure" },
+			}),
+		]);
 
 		const visitorDb = new SessionDb({
+			...sourceSeed(),
 			resolutionSessions: [seededSession],
 			visitorClicks: [
 				{
@@ -1228,6 +1233,11 @@ describe("Resolution Session", () => {
 		}
 		expect(visitorDb.rows("resolutionSessions")).toEqual([]);
 		expect(visitorDb.rows("visitorClicks")).toEqual([]);
+		expect(visitorDb.rows("segments")).toEqual([
+			expect.objectContaining({
+				resolutionState: { kind: "PermanentFailure" },
+			}),
+		]);
 
 		const resetDb = new SessionDb({
 			...sourceSeed(),

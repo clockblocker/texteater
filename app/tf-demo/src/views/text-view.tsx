@@ -15,11 +15,27 @@ import {
 	actuateSourceContextFocus,
 	isFocusedOccurrenceMember,
 } from "@/lib/source-context-focus";
-import { cn } from "@/lib/utils";
 import { NotFoundView } from "@/views/not-found-view";
 import { segmentSelectionDeckCards } from "@/views/segment-selection-deck";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import "./text-view.css";
+
+type InteractionTarget = {
+	readonly segmentKey: string;
+	readonly attestationId?: string;
+};
+
+type SegmentDisplayState =
+	| "unknown-preview"
+	| "resolving"
+	| "unresolved"
+	| "unresolved-preview"
+	| "failed"
+	| "failed-preview"
+	| "known-preview"
+	| "selected"
+	| "retained";
 
 export function TextView({ target }: { target: TextTarget }) {
 	const { presentCards } = useWorkspaceInteraction();
@@ -36,6 +52,7 @@ export function TextView({ target }: { target: TextTarget }) {
 	const textQuery = useQuery({
 		...convexQuery(api.textViews.get, {
 			textId: target.textId,
+			visitorId,
 			...(target.focusAttestationId
 				? { focusAttestationId: target.focusAttestationId }
 				: {}),
@@ -54,11 +71,6 @@ export function TextView({ target }: { target: TextTarget }) {
 		textDetail?.sentences.map((sentence) => ({
 			...sentence,
 			sourceText: textDetail.sourceText,
-			segments: sentence.segments.map((segment) => ({
-				...segment,
-				isClicked: false,
-				isResolutionMember: false,
-			})),
 		})) ?? [];
 	const error =
 		interactionError ??
@@ -92,6 +104,7 @@ export function TextView({ target }: { target: TextTarget }) {
 				anchor: anchorElement,
 			});
 		} catch (cause) {
+			setSelectedSegmentKey(null);
 			setInteractionError(
 				mutationMessage(cause) ?? "Segment resolution failed.",
 			);
@@ -112,7 +125,6 @@ export function TextView({ target }: { target: TextTarget }) {
 		<TextPresentation
 			error={error}
 			focus={textDetail.focus}
-			isResolving={selectSegment.isPending}
 			notice={notice}
 			onSegmentClick={handleSegmentSelection}
 			selectedSegmentKey={selectedSegmentKey}
@@ -124,7 +136,6 @@ export function TextView({ target }: { target: TextTarget }) {
 export function TextPresentation({
 	sentences,
 	focus,
-	isResolving,
 	selectedSegmentKey,
 	onSegmentClick,
 	notice = null,
@@ -139,7 +150,6 @@ export function TextPresentation({
 				readonly sentenceId: string;
 				readonly memberSegmentIndices: readonly number[];
 		  };
-	readonly isResolving: boolean;
 	readonly selectedSegmentKey: string | null;
 	readonly onSegmentClick: (
 		sentence: SentenceView,
@@ -151,33 +161,32 @@ export function TextPresentation({
 	readonly error?: string | null;
 }) {
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
+		<div className="text-reader">
+			<div className="text-reader__body">
 				<SentenceList
 					sentences={sentences}
 					focus={focus}
-					isResolving={isResolving}
 					selectedSegmentKey={selectedSegmentKey}
 					onSegmentClick={onSegmentClick}
 				/>
 
 				{focus.kind === "Missing" ? (
-					<p className="text-sm text-muted-foreground" role="status">
+					<p className="text-reader__status" role="status">
 						This Source Context is no longer available. The Text is
 						still open, and no new resolution was started.
 					</p>
 				) : null}
 
 				{notice ? (
-					<p
-						className="text-sm text-muted-foreground"
-						aria-live="polite"
-					>
+					<p className="text-reader__status" aria-live="polite">
 						{notice}
 					</p>
 				) : null}
 				{error ? (
-					<p className="text-sm text-destructive" role="alert">
+					<p
+						className="text-reader__status text-reader__status--error"
+						role="alert"
+					>
 						{error}
 					</p>
 				) : null}
@@ -189,7 +198,6 @@ export function TextPresentation({
 export function SentenceList({
 	sentences,
 	focus,
-	isResolving,
 	selectedSegmentKey,
 	onSegmentClick,
 }: {
@@ -202,7 +210,6 @@ export function SentenceList({
 				readonly sentenceId: string;
 				readonly memberSegmentIndices: readonly number[];
 		  };
-	isResolving: boolean;
 	selectedSegmentKey: string | null;
 	onSegmentClick: (
 		sentence: SentenceView,
@@ -213,10 +220,23 @@ export function SentenceList({
 }) {
 	const sentenceElements = useRef(new Map<string, HTMLParagraphElement>());
 	const segmentElements = useRef(new Map<string, HTMLElement>());
+	const [hoveredTarget, setHoveredTarget] =
+		useState<InteractionTarget | null>(null);
+	const [focusedTarget, setFocusedTarget] =
+		useState<InteractionTarget | null>(null);
+	const previewTarget = hoveredTarget ?? focusedTarget;
 	const focusKey =
 		focus.kind === "Occurrence"
 			? `${focus.attestationId}:${focus.sentenceId}:${focus.memberSegmentIndices.join(",")}`
 			: focus.kind;
+	const selectedSegment = sentences
+		.flatMap((sentence) =>
+			sentence.segments.map((segment) => ({
+				segment,
+				key: segmentKey(sentence.sentenceId, segment.index),
+			})),
+		)
+		.find(({ key }) => key === selectedSegmentKey)?.segment;
 
 	useEffect(() => {
 		if (focus.kind !== "Occurrence") return;
@@ -239,11 +259,11 @@ export function SentenceList({
 	}, [focusKey]);
 
 	return (
-		<article className="flex flex-col gap-5" aria-label="Text">
+		<article className="text-reader__passage" aria-label="Text">
 			{sentences.map((sentence) => (
 				<p
 					key={sentence.sentenceId}
-					className="text-xl leading-loose sm:text-2xl"
+					className="text-reader__sentence"
 					ref={(element) => {
 						if (element) {
 							sentenceElements.current.set(
@@ -266,28 +286,34 @@ export function SentenceList({
 							sentence.sentenceId,
 							segment.index,
 						);
-						const isSelected =
-							segment.isClicked ||
-							selectedSegmentKey ===
-								segmentKey(sentence.sentenceId, segment.index);
+						const key = segmentKey(
+							sentence.sentenceId,
+							segment.index,
+						);
+						const isPreviewed = previewTarget?.attestationId
+							? segment.attestationId ===
+								previewTarget.attestationId
+							: previewTarget?.segmentKey === key;
+						const isSelected = selectedSegment?.attestationId
+							? segment.attestationId ===
+								selectedSegment.attestationId
+							: selectedSegmentKey === key;
+						const displayState = displayStateForSegment(
+							segment,
+							isPreviewed,
+							isSelected,
+						);
 
 						return segment.kind === "ResolvableText" ? (
 							<button
 								key={segment.index}
 								type="button"
-								className={cn(
-									"-mx-0.5 cursor-pointer appearance-none rounded-sm border-0 bg-transparent px-0.5 py-0 align-baseline text-inherit transition-colors [font:inherit] leading-[1.35] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 aria-pressed:bg-primary aria-pressed:text-primary-foreground disabled:pointer-events-none",
-									isSourceContextMember &&
-										"bg-workspace-highlight/25",
-								)}
+								className="text-reader__segment"
+								data-state={displayState}
 								data-source-context-member={
 									isSourceContextMember || undefined
 								}
 								ref={(element) => {
-									const key = segmentKey(
-										sentence.sentenceId,
-										segment.index,
-									);
 									if (element) {
 										segmentElements.current.set(
 											key,
@@ -298,9 +324,35 @@ export function SentenceList({
 									}
 								}}
 								disabled={
-									isResolving || sentence.language !== "de"
+									sentence.language !== "de" ||
+									segment.resolutionState === "Active"
 								}
 								aria-pressed={isSelected}
+								aria-label={segmentAccessibleLabel(segment)}
+								onBlur={() => setFocusedTarget(null)}
+								onFocus={() =>
+									setFocusedTarget({
+										segmentKey: key,
+										...(segment.attestationId
+											? {
+													attestationId:
+														segment.attestationId,
+												}
+											: {}),
+									})
+								}
+								onMouseEnter={() =>
+									setHoveredTarget({
+										segmentKey: key,
+										...(segment.attestationId
+											? {
+													attestationId:
+														segment.attestationId,
+												}
+											: {}),
+									})
+								}
+								onMouseLeave={() => setHoveredTarget(null)}
 								onClick={(event) =>
 									void onSegmentClick(
 										sentence,
@@ -315,10 +367,7 @@ export function SentenceList({
 						) : (
 							<span
 								key={segment.index}
-								className={cn(
-									isSourceContextMember &&
-										"bg-workspace-highlight/25",
-								)}
+								className="text-reader__plain-segment"
 								data-source-context-member={
 									isSourceContextMember || undefined
 								}
@@ -349,7 +398,7 @@ export function SentenceList({
 
 function TextViewSkeleton() {
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="text-reader text-reader--loading">
 			<div
 				className="mx-auto w-full max-w-5xl"
 				role="status"
@@ -367,4 +416,49 @@ function mutationMessage(error: unknown): string | null {
 
 function segmentKey(sentenceId: string, segmentIndex: number): string {
 	return `${sentenceId}:${segmentIndex}`;
+}
+
+function displayStateForSegment(
+	segment: SentenceView["segments"][number],
+	isPreviewed: boolean,
+	isSelected: boolean,
+): SegmentDisplayState | undefined {
+	if (isPreviewed && segment.attestationId) return "known-preview";
+	if (isPreviewed) {
+		switch (segment.resolutionState) {
+			case "Active":
+				return "resolving";
+			case "Unresolved":
+				return "unresolved-preview";
+			case "PermanentFailure":
+				return "failed-preview";
+			default:
+				return "unknown-preview";
+		}
+	}
+	if (segment.resolutionState === "Active") return "resolving";
+	if (segment.resolutionState === "Unresolved") return "unresolved";
+	if (segment.resolutionState === "PermanentFailure") return "failed";
+	if (isSelected) return segment.attestationId ? "selected" : "resolving";
+	return segment.encountered && segment.attestationId
+		? "retained"
+		: undefined;
+}
+
+function segmentAccessibleLabel(
+	segment: SentenceView["segments"][number],
+): string {
+	if (segment.attestationId) {
+		return `${segment.text}, part of a known occurrence`;
+	}
+	switch (segment.resolutionState) {
+		case "Active":
+			return `${segment.text}, resolution in progress`;
+		case "Unresolved":
+			return `${segment.text}, unresolved, click to try again`;
+		case "PermanentFailure":
+			return `${segment.text}, resolution failed, click to try again`;
+		default:
+			return `${segment.text}, click to resolve`;
+	}
 }

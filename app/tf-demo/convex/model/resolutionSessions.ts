@@ -2,6 +2,7 @@ import { type Infer, v } from "convex/values";
 
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+import { finishSegmentResolution } from "./segmentResolutionState";
 
 export {
 	projectResolutionGrammar,
@@ -284,7 +285,10 @@ export async function requireActiveResolutionSession(
 
 export async function settleComplete(
 	ctx: MutationCtx,
-	session: ResolutionLifecycleSource & { _id: Id<"resolutionSessions"> },
+	session: ResolutionLifecycleSource & {
+		_id: Id<"resolutionSessions">;
+		segmentId: Id<"segments">;
+	},
 	result: {
 		readingId: Id<"readings">;
 		attestationId: Id<"attestations">;
@@ -308,11 +312,18 @@ export async function settleComplete(
 		nextRetryAt: undefined,
 		updatedAt: Date.now(),
 	});
+	const segment = await ctx.db.get(session.segmentId);
+	if (segment?.resolutionState) {
+		await ctx.db.patch(session.segmentId, { resolutionState: undefined });
+	}
 }
 
 export async function settleUnresolved(
 	ctx: MutationCtx,
-	session: ResolutionLifecycleSource & { _id: Id<"resolutionSessions"> },
+	session: ResolutionLifecycleSource & {
+		_id: Id<"resolutionSessions">;
+		segmentId: Id<"segments">;
+	},
 ): Promise<void> {
 	const progress = session.lifecycle.progress;
 	await ctx.db.patch(session._id, {
@@ -320,11 +331,15 @@ export async function settleUnresolved(
 		failureMessage: undefined,
 		updatedAt: Date.now(),
 	});
+	await finishSegmentResolution(ctx, session.segmentId, "Unresolved");
 }
 
 export async function settleFailed(
 	ctx: MutationCtx,
-	session: ResolutionLifecycleSource & { _id: Id<"resolutionSessions"> },
+	session: ResolutionLifecycleSource & {
+		_id: Id<"resolutionSessions">;
+		segmentId: Id<"segments">;
+	},
 	message: string,
 	failureCode: "CatalogMiss" | "Internal" = "Internal",
 	diagnosticId: string = crypto.randomUUID(),
@@ -341,6 +356,7 @@ export async function settleFailed(
 		failureMessage: safeFailureMessage(message),
 		updatedAt: Date.now(),
 	});
+	await finishSegmentResolution(ctx, session.segmentId, "PermanentFailure");
 	return diagnosticId;
 }
 

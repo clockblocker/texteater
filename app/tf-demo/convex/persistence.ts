@@ -172,6 +172,8 @@ async function recordClickAgainstCommittedAttestation(
 	input: {
 		requestId: string;
 		visitorId: string;
+		textId: Id<"texts">;
+		sentenceId: Id<"sentences">;
 		segmentId: Id<"segments">;
 		clickedSegmentIndex: number;
 		attestationId: Id<"attestations">;
@@ -358,7 +360,7 @@ export const persistUnresolvedClick = internalMutation({
 			args,
 			args.sessionGuard,
 		);
-		const { segment } = await requireClickableSegment(
+		const { sentence, segment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
 			args.clickedSegmentIndex,
@@ -384,6 +386,7 @@ export const persistUnresolvedClick = internalMutation({
 		if (committedAttestationId) {
 			const result = await recordClickAgainstCommittedAttestation(ctx, {
 				...args,
+				textId: sentence.textId,
 				segmentId: segment._id,
 				attestationId: committedAttestationId,
 			});
@@ -393,6 +396,8 @@ export const persistUnresolvedClick = internalMutation({
 		const { clickId } = await ensureVisitorEncounter(ctx, {
 			requestId: args.requestId,
 			visitorId: args.visitorId,
+			textId: sentence.textId,
+			sentenceId: sentence._id,
 			segmentId: segment._id,
 		});
 		if (session) await settleUnresolved(ctx, session);
@@ -421,7 +426,7 @@ export const persistReusedResolvedClick = internalMutation({
 			args,
 			args.sessionGuard,
 		);
-		const { segment } = await requireClickableSegment(
+		const { sentence, segment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
 			args.clickedSegmentIndex,
@@ -473,6 +478,8 @@ export const persistReusedResolvedClick = internalMutation({
 		const { clickId } = await ensureVisitorEncounter(ctx, {
 			requestId: args.requestId,
 			visitorId: args.visitorId,
+			textId: sentence.textId,
+			sentenceId: sentence._id,
 			segmentId: segment._id,
 			attestationId: args.attestationId,
 		});
@@ -523,11 +530,12 @@ export const persistResolvedClick = internalMutation({
 			args.sessionGuard,
 		);
 		assertNonEmpty(args.readingKey, "readingKey");
-		const { segment: clickedSegment } = await requireClickableSegment(
-			ctx,
-			args.sentenceId,
-			args.clickedSegmentIndex,
-		);
+		const { sentence, segment: clickedSegment } =
+			await requireClickableSegment(
+				ctx,
+				args.sentenceId,
+				args.clickedSegmentIndex,
+			);
 		const existingClick = await findClickByRequestId(ctx, args.requestId);
 		if (existingClick) {
 			assertMatchingRetry(existingClick, {
@@ -535,42 +543,49 @@ export const persistResolvedClick = internalMutation({
 				segmentId: clickedSegment._id,
 			});
 			if (!existingClick.attestationId) {
-				throw new Error(
-					"requestId already records an unresolved click.",
+				// Segment Selection creates the Visitor Encounter before its
+				// Resolution Session runs. Only that active session may advance it.
+				if (!session) {
+					throw new Error(
+						"requestId already records an unresolved click.",
+					);
+				}
+			} else {
+				const { value: occurrence } =
+					await reconstructReusableAttestation(
+						ctx,
+						existingClick.attestationId,
+						args.clickedSegmentIndex,
+					);
+				const existingAttestation = await ctx.db.get(
+					existingClick.attestationId,
 				);
+				if (!existingAttestation)
+					throw new Error("Attestation does not exist.");
+				const result = {
+					status: "Reused" as const,
+					clickId: existingClick._id,
+					readingId: existingAttestation.readingId,
+					attestationId: existingClick.attestationId,
+					deduplicated: true,
+					occurrence,
+				};
+				await settleResolvedSession(ctx, session, result);
+				await scheduleKnowledgeGeneration(ctx, {
+					attemptKey: args.requestId,
+					visitorId: args.visitorId,
+					readingId: result.readingId,
+					attestationId: result.attestationId,
+				});
+				return result;
 			}
-			const { value: occurrence } = await reconstructReusableAttestation(
-				ctx,
-				existingClick.attestationId,
-				args.clickedSegmentIndex,
-			);
-			const existingAttestation = await ctx.db.get(
-				existingClick.attestationId,
-			);
-			if (!existingAttestation)
-				throw new Error("Attestation does not exist.");
-			const result = {
-				status: "Reused" as const,
-				clickId: existingClick._id,
-				readingId: existingAttestation.readingId,
-				attestationId: existingClick.attestationId,
-				deduplicated: true,
-				occurrence,
-			};
-			await settleResolvedSession(ctx, session, result);
-			await scheduleKnowledgeGeneration(ctx, {
-				attemptKey: args.requestId,
-				visitorId: args.visitorId,
-				readingId: result.readingId,
-				attestationId: result.attestationId,
-			});
-			return result;
 		}
 		const committedAttestationId =
 			clickedSegment.attestationMembership?.attestationId;
 		if (committedAttestationId) {
 			const result = await recordClickAgainstCommittedAttestation(ctx, {
 				...args,
+				textId: sentence.textId,
 				segmentId: clickedSegment._id,
 				attestationId: committedAttestationId,
 			});
@@ -741,6 +756,7 @@ export const persistResolvedClick = internalMutation({
 			if (!attested)
 				throw new Error("Missing Attestation member evidence.");
 			await ctx.db.patch(member._id, {
+				resolutionState: undefined,
 				attestationMembership: {
 					attestationId,
 					orthography: attested.orthography,
@@ -750,6 +766,8 @@ export const persistResolvedClick = internalMutation({
 		const { clickId } = await ensureVisitorEncounter(ctx, {
 			requestId: args.requestId,
 			visitorId: args.visitorId,
+			textId: sentence.textId,
+			sentenceId: sentence._id,
 			segmentId: clickedSegment._id,
 			attestationId,
 		});

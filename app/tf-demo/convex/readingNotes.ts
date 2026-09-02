@@ -9,9 +9,10 @@ import {
 export const get = query({
 	args: {
 		readingId: v.string(),
+		visitorId: v.string(),
 		contextCursor: v.optional(v.string()),
 	},
 	returns: v.union(v.null(), readingNoteValidator),
-	handler: async (ctx, { readingId, contextCursor }) =>
-		loadUnitReadingNote(ctx, readingId, contextCursor),
+	handler: async (ctx, { readingId, visitorId, contextCursor }) =>
+		loadUnitReadingNote(ctx, readingId, visitorId, contextCursor),
 });

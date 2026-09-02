@@ -112,6 +112,7 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 });
 
 test("stores occurrence membership and a minimal resolved Click", async () => {
+	const textId = "text-1";
 	const sentenceId = "sentence-1";
 	const segmentId = "segment-1";
 	const lemmaId = "lemma-1";
@@ -155,7 +156,11 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		lemmas: { _id: lemmaId, lemmaKey: lemmaIdentityKey(lemma) },
 	};
 	const documents: Record<string, unknown> = {
-		[sentenceId]: { _id: sentenceId, segmentedSentenceId: "segmented-1" },
+		[sentenceId]: {
+			_id: sentenceId,
+			textId,
+			segmentedSentenceId: "segmented-1",
+		},
 		[lemmaId]: {
 			...rows.lemmas,
 			language: "de",
@@ -273,6 +278,8 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 	expect(insertedClick).toEqual({
 		requestId: "request-1",
 		visitorId: "visitor-1",
+		textId,
+		sentenceId,
 		segmentId,
 		attestationId: "attestation-1",
 		clickedAt: expect.any(Number),
