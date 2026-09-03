@@ -856,15 +856,21 @@
 }
 
 .note-section--forms dl,
-.note-section--forms div {
+.note-section--forms dl > div {
 	margin: 0;
 }
 
-.note-section--forms div {
+.note-section--forms dl {
 	display: grid;
-	grid-template-columns: 1.25rem minmax(0, 1fr);
-	gap: 0.35rem;
+	grid-template-columns: max-content minmax(0, 1fr);
+	column-gap: 0.35rem;
 	line-height: 1.55;
+}
+
+.note-section--forms dl > div {
+	display: grid;
+	grid-column: 1 / -1;
+	grid-template-columns: subgrid;
 }
 
 .note-section--forms dt {

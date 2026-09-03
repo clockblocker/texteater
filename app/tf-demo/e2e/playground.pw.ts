@@ -196,6 +196,42 @@ test("the notes study lists every German Unit Reading route", async ({
 	).toBeVisible();
 });
 
+test("verb form labels do not overlap their values", async ({ page }) => {
+	await page.setViewportSize({ width: 820, height: 586 });
+	await page.goto("/playground/notes-study/Anrufen");
+
+	const formRows = page
+		.locator('[data-note-fixture="Anrufen"]')
+		.locator(".note-section--forms dl > div");
+	await expect(formRows).toHaveCount(5);
+	await page.evaluate(() => {
+		const browser = globalThis as unknown as {
+			readonly document: {
+				readonly fonts: { readonly ready: PromiseLike<unknown> };
+			};
+		};
+		return browser.document.fonts.ready;
+	});
+
+	const collisions = await formRows.evaluateAll((rows) =>
+		rows.flatMap((row) => {
+			const label = row.querySelector("dt");
+			const value = row.querySelector("dd");
+			if (!label || !value) return [];
+
+			const labelRange = label.ownerDocument.createRange();
+			labelRange.selectNodeContents(label);
+			const overlap =
+				labelRange.getBoundingClientRect().right -
+				value.getBoundingClientRect().left;
+			return overlap > 0
+				? [{ label: label.textContent?.trim(), overlap }]
+				: [];
+		}),
+	);
+	expect(collisions).toEqual([]);
+});
+
 test("the Midnight reading note Sheet lifts into its purpose-built Card", async ({
 	page,
 }) => {
