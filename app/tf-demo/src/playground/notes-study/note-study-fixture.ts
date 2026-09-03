@@ -40,6 +40,15 @@ export type NoteStudyForm = {
 	readonly content: NoteStudyLine;
 };
 
+export type NoteStudyFormTable = {
+	readonly rowLabel: string;
+	readonly columnLabels: readonly string[];
+	readonly rows: readonly {
+		readonly label: string;
+		readonly cells: readonly NoteStudyLine[];
+	}[];
+};
+
 type NoteStudyFixtureContent = {
 	readonly slug: string;
 	readonly emoji: string;
@@ -53,8 +62,11 @@ type NoteStudyFixtureContent = {
 	readonly definition: string;
 	readonly relations?: readonly NoteStudyRelation[];
 	readonly formation?: readonly NoteStudyLine[];
+	readonly structure?: readonly NoteStudyLine[];
 	readonly translations: readonly string[];
+	readonly translatedExplanations?: readonly string[];
 	readonly forms?: readonly NoteStudyForm[];
+	readonly formTable?: NoteStudyFormTable;
 	readonly tags: readonly NoteStudyToken[];
 };
 

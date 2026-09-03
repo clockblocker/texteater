@@ -67,7 +67,7 @@ export const phrasemeFixtures = [
 				],
 			},
 		],
-		formation: [
+		structure: [
 			[
 				"Illustrative Strukturprobe (nicht produktiv): ",
 				noteToken("Der Weg", "masculine", "maskuline Nominalgruppe"),
@@ -77,22 +77,7 @@ export const phrasemeFixtures = [
 				noteToken("das Ziel", "neuter", "neutrale Nominalgruppe"),
 			],
 		],
-		translations: [
-			"English: The journey is the destination.",
-			"Русский: Путь — это цель.",
-		],
-		forms: [
-			{
-				label: "Festform",
-				content: [
-					noteToken(
-						"Der Weg ist das Ziel",
-						"reference",
-						"unveränderlicher Aphorismus",
-					),
-				],
-			},
-		],
+		translations: ["The journey is the destination.", "Путь — это цель."],
 		tags: [
 			noteToken("#Phraseme", "reference", "Familie"),
 			noteToken("#Aphorismus", "reference", "Art"),
@@ -181,7 +166,7 @@ export const phrasemeFixtures = [
 				],
 			},
 		],
-		formation: [
+		structure: [
 			[
 				noteToken(
 					"eine Entscheidung",
@@ -201,10 +186,7 @@ export const phrasemeFixtures = [
 				".",
 			],
 		],
-		translations: [
-			"English: to make a decision",
-			"Русский: принять решение",
-		],
+		translations: ["to make a decision", "принять решение"],
 		forms: [
 			{
 				label: "Infinitiv",
@@ -318,7 +300,7 @@ export const phrasemeFixtures = [
 				],
 			},
 		],
-		formation: [
+		structure: [
 			[
 				"Illustrative Strukturprobe (nicht produktiv): ",
 				noteToken("wie", "reference", "einleitendes Adverb"),
@@ -331,20 +313,8 @@ export const phrasemeFixtures = [
 			],
 		],
 		translations: [
-			"English: Be that as it may; anyway.",
-			"Русский: Как бы то ни было; в любом случае.",
-		],
-		forms: [
-			{
-				label: "Festform",
-				content: [
-					noteToken(
-						"Wie dem auch sei",
-						"reference",
-						"unveränderliche Diskursformel",
-					),
-				],
-			},
+			"Be that as it may; anyway.",
+			"Как бы то ни было; в любом случае.",
 		],
 		tags: [
 			noteToken("#Phraseme", "reference", "Familie"),
@@ -427,7 +397,7 @@ export const phrasemeFixtures = [
 				],
 			},
 		],
-		formation: [
+		structure: [
 			[
 				"Fester idiomatischer Kern: ",
 				noteToken("Tomaten", "plural", "festes Nomen im Plural"),
@@ -442,8 +412,12 @@ export const phrasemeFixtures = [
 			],
 		],
 		translations: [
-			"English: to be blind to the obvious",
-			"Русский: не видеть очевидного; словно глаза не видят",
+			"to have tomatoes on one’s eyes",
+			"иметь помидоры на глазах",
+		],
+		translatedExplanations: [
+			"to be blind to the obvious",
+			"не видеть очевидного; словно глаза не видят",
 		],
 		forms: [
 			{
@@ -576,7 +550,7 @@ export const phrasemeFixtures = [
 				],
 			},
 		],
-		formation: [
+		structure: [
 			[
 				"Illustrative Strukturprobe (nicht produktiv): ",
 				noteToken(
@@ -593,20 +567,8 @@ export const phrasemeFixtures = [
 			],
 		],
 		translations: [
-			"English: The early bird catches the worm.",
-			"Русский: Кто рано встаёт, тому Бог подаёт.",
-		],
-		forms: [
-			{
-				label: "Festform",
-				content: [
-					noteToken(
-						"Morgenstund hat Gold im Mund",
-						"reference",
-						"unveränderliches Sprichwort",
-					),
-				],
-			},
+			"The early bird catches the worm.",
+			"Кто рано встаёт, тому Бог подаёт.",
 		],
 		tags: [
 			noteToken("#Phraseme", "reference", "Familie"),

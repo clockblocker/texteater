@@ -47,16 +47,6 @@ export const morphemeFixtures = [
 			"past-participle circumfix for many weak verbs",
 			"циркумфикс причастия II многих слабых глаголов",
 		],
-		forms: [
-			{
-				label: "Infinitiv",
-				content: [noteToken("lernen")],
-			},
-			{
-				label: "Partizip II",
-				content: [noteToken("gelernt")],
-			},
-		],
 		tags: [noteToken("#Morphem"), noteToken("#PartizipII")],
 	},
 	{
@@ -101,16 +91,6 @@ export const morphemeFixtures = [
 			"’s; unstressed clitic form of it",
 			"’s; безударная клитическая форма es",
 		],
-		forms: [
-			{
-				label: "Vollform",
-				content: [noteToken("es")],
-			},
-			{
-				label: "Klitisch",
-				content: [noteToken("’s")],
-			},
-		],
 		tags: [noteToken("#Morphem"), noteToken("#Klitikon")],
 	},
 	{
@@ -147,16 +127,6 @@ export const morphemeFixtures = [
 			],
 		],
 		translations: ["RED; reduplication schema", "RED; схема редупликации"],
-		forms: [
-			{
-				label: "Schema",
-				content: [noteToken("X–X")],
-			},
-			{
-				label: "Belegtyp",
-				content: [noteToken("Klein-Klein"), " (lexikalisiert)"],
-			},
-		],
 		tags: [
 			noteToken("#Morphem"),
 			noteToken("#Schema"),
@@ -197,16 +167,6 @@ export const morphemeFixtures = [
 		translations: [
 			"-n-; artificial infix schema probe",
 			"-n-; искусственная схема инфикса",
-		],
-		forms: [
-			{
-				label: "Schema",
-				content: [noteToken("A-n-B")],
-			},
-			{
-				label: "Status",
-				content: ["im Deutschen nicht produktiv"],
-			},
 		],
 		tags: [
 			noteToken("#Morphem"),
@@ -256,16 +216,6 @@ export const morphemeFixtures = [
 			"linking -s- in compounds",
 			"соединительный -s- в сложных словах",
 		],
-		forms: [
-			{
-				label: "Nach Geburt",
-				content: [noteToken("Geburts-")],
-			},
-			{
-				label: "Nach Arbeit",
-				content: [noteToken("Arbeits-")],
-			},
-		],
 		tags: [noteToken("#Morphem"), noteToken("#Komposition")],
 	},
 	{
@@ -309,16 +259,6 @@ export const morphemeFixtures = [
 		translations: [
 			"un-; not, opposite or absence of",
 			"не-, без-; отрицание, противоположность или отсутствие",
-		],
-		forms: [
-			{
-				label: "Adjektiv",
-				content: [noteToken("ungeduldig")],
-			},
-			{
-				label: "Nomen",
-				content: [noteToken("Unruhe")],
-			},
 		],
 		tags: [noteToken("#Morphem"), noteToken("#Präfix")],
 	},
@@ -364,24 +304,6 @@ export const morphemeFixtures = [
 			"drive, travel or ride (root)",
 			"ехать, ездить (корень)",
 		],
-		forms: [
-			{
-				label: "Präsensstamm",
-				content: [noteToken("fahr-")],
-			},
-			{
-				label: "3. Person Präsens",
-				content: [noteToken("fährt")],
-			},
-			{
-				label: "Präteritum",
-				content: [noteToken("fuhr")],
-			},
-			{
-				label: "Partizip II",
-				content: [noteToken("gefahren")],
-			},
-		],
 		tags: [noteToken("#Morphem"), noteToken("#Wurzel")],
 	},
 	{
@@ -421,24 +343,7 @@ export const morphemeFixtures = [
 				noteToken("Dämmerung", "feminine"),
 			],
 		],
-		translations: [
-			"-ing, -tion; suffix forming mostly feminine nouns",
-			"-ние, -ция; суффикс, образующий преимущественно существительные женского рода",
-		],
-		forms: [
-			{
-				label: "Ableitung",
-				content: [
-					noteToken("dämmern"),
-					" → ",
-					noteToken("Dämmerung", "feminine"),
-				],
-			},
-			{
-				label: "Plural",
-				content: ["die ", noteToken("Dämmerungen", "plural")],
-			},
-		],
+		translations: ["-ing, -tion;", "-ние, -ция;"],
 		tags: [
 			noteToken("#Morphem"),
 			noteToken("#Suffix"),
@@ -488,16 +393,6 @@ export const morphemeFixtures = [
 			"-work; word-forming element for an organized whole",
 			"-werk; словообразовательный элемент со значением упорядоченного целого",
 		],
-		forms: [
-			{
-				label: "Regelsammlung",
-				content: [noteToken("das Regelwerk", "neuter")],
-			},
-			{
-				label: "Kartensammlung",
-				content: [noteToken("das Kartenwerk", "neuter")],
-			},
-		],
 		tags: [
 			noteToken("#Morphem"),
 			noteToken("#Suffixoid"),
@@ -543,26 +438,6 @@ export const morphemeFixtures = [
 			"tone or stress mark; notation schema probe",
 			"знак тона или ударения; схема для проверки обозначения",
 		],
-		forms: [
-			{
-				label: "Trennbar",
-				content: [
-					noteToken("úmfahren"),
-					" „",
-					noteToken("umstoßen"),
-					"“",
-				],
-			},
-			{
-				label: "Untrennbar",
-				content: [
-					noteToken("umfáhren"),
-					" „",
-					noteToken("außen herumfahren"),
-					"“",
-				],
-			},
-		],
 		tags: [
 			noteToken("#Morphem"),
 			noteToken("#Schema"),
@@ -606,16 +481,6 @@ export const morphemeFixtures = [
 		translations: [
 			"C₁aC₂; transfix schema probe",
 			"C₁aC₂; схема для проверки трансфикса",
-		],
-		forms: [
-			{
-				label: "Gerüst",
-				content: [noteToken("C₁–C₂")],
-			},
-			{
-				label: "Probe",
-				content: [noteToken("C₁aC₂")],
-			},
 		],
 		tags: [
 			noteToken("#Morphem"),

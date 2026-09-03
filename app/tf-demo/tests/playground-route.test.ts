@@ -40,6 +40,16 @@ describe("playground routes", () => {
 			experimentId: "notes-study",
 			detailId: "Daemmerung",
 		});
+		expect(playgroundExperimentHref("notes-study", "%")).toBe(
+			"/playground/notes-study/%25",
+		);
+		expect(
+			playgroundRouteFromPathname("/playground/notes-study/%25"),
+		).toEqual({
+			kind: "Experiment",
+			experimentId: "notes-study",
+			detailId: "%",
+		});
 		expect(
 			playgroundRouteFromPathname("/playground/one/two/three"),
 		).toBeNull();

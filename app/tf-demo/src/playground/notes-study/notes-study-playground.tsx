@@ -87,8 +87,8 @@ function NotesStudyIndex() {
 					<h2>Every note has a shelf.</h2>
 				</div>
 				<p>
-					Thirty-three deterministic Reading notes cover every German
-					Family/Kind route. Open one to inspect the same
+					Thirty-two deterministic Reading notes cover the German
+					Family/Kind routes under study. Open one to inspect the same
 					Sheet-to-Card transformation used by Dämmerung.
 				</p>
 			</header>
@@ -514,6 +514,21 @@ function NoteArticle({
 					</NoteSection>
 				) : null}
 
+				{fixture.structure ? (
+					<NoteSection
+						className="note-section--word-building"
+						label="Struktur"
+						noteId={noteId}
+						showTitle={showSectionTitles}
+					>
+						{fixture.structure.map((line, index) => (
+							<p key={`${fixture.slug}-structure-${index}`}>
+								<RichLine line={line} />
+							</p>
+						))}
+					</NoteSection>
+				) : null}
+
 				<NoteSection
 					className="note-section--translation"
 					label="Übersetzung"
@@ -530,6 +545,28 @@ function NoteArticle({
 					</p>
 				</NoteSection>
 
+				{fixture.translatedExplanations ? (
+					<NoteSection
+						className="note-section--translation note-section--translated-explanation"
+						label="Sinngemäß"
+						noteId={noteId}
+						showTitle={showSectionTitles}
+					>
+						<p>
+							{fixture.translatedExplanations.map(
+								(explanation, index) => (
+									<span
+										key={`${fixture.slug}-translated-explanation-${index}`}
+									>
+										{index > 0 ? <br /> : null}
+										{explanation}
+									</span>
+								),
+							)}
+						</p>
+					</NoteSection>
+				) : null}
+
 				<footer className="lexical-note__footer">
 					{fixture.tags.map((tag) => (
 						<span {...toneDataAttributes(tag.tone)} key={tag.text}>
@@ -539,23 +576,63 @@ function NoteArticle({
 				</footer>
 			</div>
 
-			{fixture.forms ? (
+			{fixture.forms || fixture.formTable ? (
 				<NoteSection
 					className="note-section--forms"
 					label="Formen"
 					noteId={noteId}
 					showTitle={showSectionTitles}
 				>
-					<dl>
-						{fixture.forms.map((form) => (
-							<div key={form.label}>
-								<dt>{form.label}</dt>
-								<dd>
-									<RichLine line={form.content} />
-								</dd>
-							</div>
-						))}
-					</dl>
+					{fixture.formTable ? (
+						<div className="form-table-scroll">
+							<table className="form-table">
+								<thead>
+									<tr>
+										<th
+											className="form-table__corner"
+											scope="col"
+										>
+											<span className="sr-only">
+												{fixture.formTable.rowLabel}
+											</span>
+										</th>
+										{fixture.formTable.columnLabels.map(
+											(label) => (
+												<th key={label} scope="col">
+													{label}
+												</th>
+											),
+										)}
+									</tr>
+								</thead>
+								<tbody>
+									{fixture.formTable.rows.map((row) => (
+										<tr key={row.label}>
+											<th scope="row">{row.label}</th>
+											{row.cells.map((cell, index) => (
+												<td
+													key={`${fixture.slug}-${row.label}-${fixture.formTable?.columnLabels[index]}`}
+												>
+													<RichLine line={cell} />
+												</td>
+											))}
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+					) : (
+						<dl>
+							{fixture.forms?.map((form) => (
+								<div key={form.label}>
+									<dt>{form.label}</dt>
+									<dd>
+										<RichLine line={form.content} />
+									</dd>
+								</div>
+							))}
+						</dl>
+					)}
 				</NoteSection>
 			) : null}
 		</article>

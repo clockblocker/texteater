@@ -196,6 +196,71 @@ test("the notes study lists every German Unit Reading route", async ({
 	).toBeVisible();
 });
 
+test("note sections follow the Reading instead of a fixed template", async ({
+	page,
+}) => {
+	await page.goto("/playground/notes-study/Trotz");
+	await expect(page.locator('[data-note-fixture="Trotz"]')).toBeVisible();
+	await expect(
+		page.getByRole("heading", { name: "Wortbildung" }),
+	).toHaveCount(0);
+	await expect(page.getByRole("heading", { name: "Formen" })).toHaveCount(0);
+
+	await page.goto("/playground/notes-study/Eine-Entscheidung-treffen");
+	await expect(page.getByRole("heading", { name: "Struktur" })).toBeVisible();
+	await expect(page.getByRole("heading", { name: "Formen" })).toBeVisible();
+	await expect(
+		page.getByRole("heading", { name: "Wortbildung" }),
+	).toHaveCount(0);
+
+	await page.goto("/playground/notes-study/Ge-t");
+	await expect(
+		page.getByRole("heading", { name: "Wortbildung" }),
+	).toBeVisible();
+	await expect(page.getByRole("heading", { name: "Formen" })).toHaveCount(0);
+});
+
+test("literal and explanatory translations are separate and unlabeled", async ({
+	page,
+}) => {
+	await page.goto("/playground/notes-study/Tomaten-auf-den-Augen-haben");
+
+	const note = page.locator(
+		'[data-note-fixture="Tomaten-auf-den-Augen-haben"]',
+	);
+	await expect(
+		note.getByRole("heading", { name: "Übersetzung" }),
+	).toBeVisible();
+	await expect(
+		note.getByText("to have tomatoes on one’s eyes"),
+	).toBeVisible();
+	await expect(note.getByText("иметь помидоры на глазах")).toBeVisible();
+	await expect(
+		note.getByRole("heading", { name: "Sinngemäß" }),
+	).toBeVisible();
+	await expect(note.getByText("to be blind to the obvious")).toBeVisible();
+	await expect(
+		note.getByText("не видеть очевидного; словно глаза не видят"),
+	).toBeVisible();
+	await expect(note.getByText(/^(English|Русский):\s/)).toHaveCount(0);
+});
+
+test("declension forms name their case and gender columns", async ({
+	page,
+}) => {
+	await page.goto("/playground/notes-study/Dieser");
+
+	const forms = page
+		.locator('[data-note-fixture="Dieser"]')
+		.getByRole("region", { name: "Formen" });
+	for (const name of ["Kasus", "Maskulin", "Feminin", "Neuter", "Plural"]) {
+		await expect(forms.getByRole("columnheader", { name })).toBeVisible();
+	}
+	for (const name of ["N", "A", "G", "D"]) {
+		await expect(forms.getByRole("rowheader", { name })).toBeVisible();
+	}
+});
+
 test("verb form labels do not overlap their values", async ({ page }) => {
 	await page.setViewportSize({ width: 820, height: 586 });
 	await page.goto("/playground/notes-study/Anrufen");

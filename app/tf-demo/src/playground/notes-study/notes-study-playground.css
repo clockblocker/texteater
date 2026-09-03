@@ -881,6 +881,55 @@
 	margin: 0;
 }
 
+.form-table-scroll {
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+}
+
+.form-table {
+	width: 100%;
+	min-width: 32rem;
+	border-collapse: collapse;
+	table-layout: fixed;
+	line-height: 1.35;
+}
+
+.form-table th,
+.form-table td {
+	padding: 0.45rem 0.5rem;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.form-table th {
+	color: var(--note-muted);
+	font-weight: 400;
+}
+
+.form-table thead th {
+	padding-top: 0;
+	padding-bottom: 0.85rem;
+	font-size: 0.9rem;
+	font-weight: 470;
+	white-space: nowrap;
+}
+
+.form-table th:first-child {
+	width: 3.25rem;
+	padding-left: 0;
+}
+
+.form-table tbody th {
+	font-size: 1.05rem;
+	font-weight: 470;
+}
+
+.form-table tbody td {
+	font-size: 1.12rem;
+	font-weight: 570;
+	letter-spacing: -0.015em;
+}
+
 .lexical-note__footer {
 	display: flex;
 	flex-wrap: wrap;

@@ -43,22 +43,9 @@ export const lexemePZFixtures = [
 				content: [noteToken("nein", "reference", "Antwortpartikel")],
 			},
 		],
-		formation: [
-			[
-				"Schema-Probe: ",
-				noteToken("doch", "reference", "Partikel"),
-				" → unverändert; Partikeln werden nicht flektiert",
-			],
-		],
 		translations: [
 			"after all; yes (contradicting a negative)",
 			"ведь; же; всё-таки; напротив",
-		],
-		forms: [
-			{
-				label: "Form",
-				content: [noteToken("doch", "reference", "unveränderlich")],
-			},
 		],
 		tags: [noteToken("#Partikel"), noteToken("#Unveränderlich")],
 	},
@@ -122,45 +109,12 @@ export const lexemePZFixtures = [
 		],
 		formation: [
 			[
-				noteToken(
-					"ein",
-					"reference",
-					"historischer erster Bestandteil",
-				),
-				" + ",
-				noteToken(
-					"ander",
-					"reference",
-					"historischer zweiter Bestandteil",
-				),
-				" → ",
-				noteToken("einander", "reference", "lexikalisierte Gesamtform"),
-			],
-			[
-				"Die Bildung ist heute nicht produktiv; ",
-				noteToken("einander", "reference", "Pronomen"),
-				" wird als feste Einheit gelernt.",
+				noteToken("ein", "reference", "erster Bestandteil"),
+				" | ",
+				noteToken("ander", "reference", "zweiter Bestandteil"),
 			],
 		],
 		translations: ["each other; one another", "друг друга; друг другу"],
-		forms: [
-			{
-				label: "A",
-				content: [
-					"Sie begrüßen ",
-					noteToken("einander", "reference", "Akkusativ"),
-					".",
-				],
-			},
-			{
-				label: "D",
-				content: [
-					"Sie helfen ",
-					noteToken("einander", "reference", "Dativ"),
-					".",
-				],
-			},
-		],
 		tags: [noteToken("#Pronomen"), noteToken("#Reziprok")],
 	},
 	{
@@ -213,13 +167,6 @@ export const lexemePZFixtures = [
 				content: [noteToken("Deutschland", "reference", "Ganzes")],
 			},
 		],
-		formation: [
-			[
-				"Schema-Probe: Eigenname → ",
-				noteToken("Berlin", "reference", "feste Namensform"),
-				"; keine produktive Ableitung",
-			],
-		],
 		translations: ["Berlin", "Берлин"],
 		forms: [
 			{
@@ -241,77 +188,6 @@ export const lexemePZFixtures = [
 		tags: [
 			noteToken("#Eigenname"),
 			noteToken("#Neutrum", "neuter", "grammatisches Genus"),
-		],
-	},
-	{
-		slug: "Gedankenstrich",
-		family: "Lexeme",
-		kind: "PUNCT",
-		emoji: "➖",
-		title: [
-			"der ",
-			noteToken("Gedankenstrich", "masculine", "maskulines Satzzeichen"),
-			", die ",
-			noteToken("Gedankenstriche", "plural", "Plural"),
-		],
-		titleText: "der Gedankenstrich, die Gedankenstriche",
-		ipa: "/ɡəˈdaŋkn̩ˌʃtʁɪç/",
-		pronunciationHref:
-			"https://youglish.com/pronounce/Gedankenstrich/german",
-		summary:
-			"Markiert einen Einschub oder deutlichen gedanklichen Wechsel.",
-		contexts: [
-			[
-				"Vor dem überraschenden Nachtrag setzte die Lektorin einen ",
-				noteToken("Gedankenstrich", "masculine", "Akkusativ Singular"),
-				".",
-			],
-			[
-				"In „Ich komme später ",
-				noteToken("–", "reference", "Gedankenstrich"),
-				" vielleicht erst morgen“ markiert der ",
-				noteToken("Gedankenstrich", "masculine", "Nominativ Singular"),
-				" eine deutliche Unterbrechung.",
-			],
-		],
-		contextTone: "masculine",
-		definition:
-			"Satzzeichen (–), das einen Einschub, einen Nachtrag oder einen deutlichen Wechsel im Satz markiert.",
-		formation: [
-			[
-				noteToken("Gedanke", "masculine", "maskulines Nomen"),
-				" + ",
-				noteToken("-n-", "reference", "Fugenelement"),
-				" + ",
-				noteToken("Strich", "masculine", "maskulines Nomen"),
-				" → ",
-				noteToken("Gedankenstrich", "masculine", "Kompositum"),
-			],
-		],
-		translations: ["dash; em dash", "тире"],
-		forms: [
-			{
-				label: "Zeichen",
-				content: [noteToken("–", "reference", "Gedankenstrich")],
-			},
-			{
-				label: "Sg.",
-				content: [
-					"der ",
-					noteToken("Gedankenstrich", "masculine", "Singular"),
-				],
-			},
-			{
-				label: "Pl.",
-				content: [
-					"die ",
-					noteToken("Gedankenstriche", "plural", "Plural"),
-				],
-			},
-		],
-		tags: [
-			noteToken("#Interpunktion"),
-			noteToken("#Maskulin", "masculine", "grammatisches Genus"),
 		],
 	},
 	{
@@ -369,60 +245,36 @@ export const lexemePZFixtures = [
 		],
 		formation: [
 			[
-				noteToken("ob", "reference", "historischer Bestandteil"),
-				" + ",
-				noteToken("wohl", "reference", "historischer Bestandteil"),
-				" → ",
-				noteToken("obwohl", "reference", "lexikalisierte Subjunktion"),
-			],
-			[
-				"Das Muster ist im heutigen Deutsch nicht produktiv; ",
-				noteToken("obwohl", "reference", "Subjunktion"),
-				" wird als feste Einheit gebraucht.",
+				noteToken("ob", "reference", "erster Bestandteil"),
+				" | ",
+				noteToken("wohl", "reference", "zweiter Bestandteil"),
 			],
 		],
 		translations: ["although; even though", "хотя; несмотря на то что"],
-		forms: [
-			{
-				label: "Form",
-				content: [noteToken("obwohl", "reference", "unveränderlich")],
-			},
-		],
 		tags: [noteToken("#Subjunktion"), noteToken("#Konzessiv")],
 	},
 	{
-		slug: "Prozentzeichen",
+		slug: "%",
 		family: "Lexeme",
 		kind: "SYM",
 		emoji: "💯",
-		title: [
-			"das ",
-			noteToken("Prozentzeichen", "neuter", "neutrales Symbolwort"),
-			", die ",
-			noteToken("Prozentzeichen", "plural", "Plural"),
-		],
-		titleText: "das Prozentzeichen, die Prozentzeichen",
-		ipa: "/pʁoˈtsɛntˌtsaɪ̯çn̩/",
-		pronunciationHref:
-			"https://youglish.com/pronounce/Prozentzeichen/german",
+		title: [noteToken("%", "reference", "Prozentzeichen")],
+		titleText: "%",
+		ipa: "/pʁoˈtsɛnt/",
+		pronunciationHref: "https://youglish.com/pronounce/Prozent/german",
 		summary: "Kennzeichnet einen Anteil von hundert.",
 		contexts: [
 			[
-				"Im Bericht steht das ",
-				noteToken("Prozentzeichen", "neuter", "Nominativ Singular"),
-				" in der Angabe „12 ",
+				"Die Mehrwertsteuer beträgt 19 ",
 				noteToken("%", "reference", "Prozentzeichen"),
-				"“.",
-			],
-			[
-				"Die Software ersetzte das Wort „",
-				noteToken("Prozent", "neuter", "neutrales Nomen"),
-				"“ automatisch durch das ",
-				noteToken("Prozentzeichen", "neuter", "Akkusativ Singular"),
 				".",
 			],
+			[
+				"Auf alle Artikel gibt es heute 20 ",
+				noteToken("%", "reference", "Prozentzeichen"),
+				" Rabatt.",
+			],
 		],
-		contextTone: "neuter",
 		definition:
 			"Symbol %, das einen Anteil von hundert bezeichnet; im deutschen Schriftsatz steht es bei Zahlen gewöhnlich mit Abstand.",
 		relations: [
@@ -433,6 +285,12 @@ export const lexemePZFixtures = [
 				content: [
 					noteToken(
 						"Prozentsymbol",
+						"reference",
+						"gleichbedeutendes Symbolwort",
+					),
+					", ",
+					noteToken(
+						"Prozentzeichen",
 						"reference",
 						"gleichbedeutendes Symbolwort",
 					),
@@ -451,37 +309,8 @@ export const lexemePZFixtures = [
 				],
 			},
 		],
-		formation: [
-			[
-				noteToken("Prozent", "neuter", "neutrales Nomen"),
-				" + ",
-				noteToken("Zeichen", "neuter", "neutrales Nomen"),
-				" → ",
-				noteToken("Prozentzeichen", "neuter", "Kompositum"),
-			],
-		],
 		translations: ["percent sign", "знак процента"],
-		forms: [
-			{
-				label: "Zeichen",
-				content: [noteToken("%", "reference", "Prozentzeichen")],
-			},
-			{
-				label: "Schreibweise",
-				content: ["12", noteToken(" %", "reference", "mit Abstand")],
-			},
-			{
-				label: "Pl.",
-				content: [
-					"die ",
-					noteToken("Prozentzeichen", "plural", "Plural"),
-				],
-			},
-		],
-		tags: [
-			noteToken("#Symbol"),
-			noteToken("#Neutrum", "neuter", "grammatisches Genus"),
-		],
+		tags: [noteToken("#Symbol")],
 	},
 	{
 		slug: "Anrufen",
@@ -565,11 +394,9 @@ export const lexemePZFixtures = [
 		],
 		formation: [
 			[
-				noteToken("an-", "reference", "trennbares Präverb"),
-				" + ",
+				noteToken("an", "reference", "trennbares Präverb"),
+				" | ",
 				noteToken("rufen", "reference", "starkes Verb"),
-				" → ",
-				noteToken("anrufen", "reference", "Präverbfügung"),
 			],
 		],
 		translations: ["to call; to phone", "звонить; позвонить"],
@@ -641,26 +468,7 @@ export const lexemePZFixtures = [
 		],
 		definition:
 			"Fremdsprachiger Platzhaltertoken aus „Lorem ipsum“ ohne eigenständige deutsche Wortbedeutung; die X-Route hat kein produktives Formenschema.",
-		formation: [
-			[
-				"Schema-Probe: ",
-				noteToken(
-					"Lorem ipsum",
-					"reference",
-					"lateinischer Platzhaltertext",
-				),
-				" → ",
-				noteToken("Lorem", "reference", "isolierter X-Token"),
-				"; keine produktive Wortbildung",
-			],
-		],
 		translations: ["lorem (placeholder word)", "lorem (слово-заполнитель)"],
-		forms: [
-			{
-				label: "Belegform",
-				content: [noteToken("Lorem", "reference", "unverändert")],
-			},
-		],
 		tags: [noteToken("#Sonstiges"), noteToken("#Platzhalter")],
 	},
 ] as const satisfies readonly NoteStudyFixture[];

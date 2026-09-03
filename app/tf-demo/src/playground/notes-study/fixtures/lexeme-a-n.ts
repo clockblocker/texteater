@@ -59,11 +59,6 @@ export const lexemeANFixtures = [
 		],
 		formation: [
 			[
-				noteToken("Ruhe", "reference", "Ruhe, noun"),
-				" + ",
-				noteToken("-ig", "reference", "-ig, adjective-forming suffix"),
-			],
-			[
 				noteToken("ruh", "reference", "ruh, stem of Ruhe"),
 				" | ",
 				noteToken("ig", "reference", "ig, adjective-forming suffix"),
@@ -140,30 +135,7 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		formation: [
-			[
-				"Schema-Probe (keine produktive Wortbildung): ",
-				noteToken("trotz", "reference", "trotz, preposition"),
-				" + Genitivgruppe",
-			],
-		],
 		translations: ["despite; in spite of", "несмотря на; вопреки"],
-		forms: [
-			{
-				label: "Standard",
-				content: [
-					noteToken("trotz", "reference", "trotz, preposition"),
-					" + Genitiv",
-				],
-			},
-			{
-				label: "Umgangssprache",
-				content: [
-					noteToken("trotz", "reference", "trotz, preposition"),
-					" + Dativ",
-				],
-			},
-		],
 		tags: [noteToken("#Präposition"), noteToken("#Genitiv")],
 	},
 	{
@@ -208,14 +180,6 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		formation: [
-			[
-				"Historische Schema-Probe (nicht produktiv): ",
-				noteToken("denn", "reference", "denn, adverbial source form"),
-				" + ",
-				noteToken("noch", "reference", "noch, adverb"),
-			],
-		],
 		translations: ["nevertheless; nonetheless", "тем не менее; всё же"],
 		tags: [noteToken("#Adverb"), noteToken("#Konnektor")],
 	},
@@ -251,24 +215,6 @@ export const lexemeANFixtures = [
 		],
 		definition:
 			"Bildet das Perfekt besonders bei Verben der Bewegung und Zustandsänderung; seine Flexion ist suppletiv und folgt keinem produktiven Wortbildungsmuster.",
-		formation: [
-			[
-				"Flexionsprobe (suppletiv, keine Wortbildung): ",
-				noteToken("sein", "reference", "sein, infinitive"),
-				" → ",
-				noteToken(
-					"bin",
-					"reference",
-					"bin, first-person singular present",
-				),
-				" / ",
-				noteToken(
-					"war",
-					"reference",
-					"war, first-person singular preterite",
-				),
-			],
-		],
 		translations: ["to be; auxiliary be", "быть; вспомогательный глагол"],
 		forms: [
 			{
@@ -368,17 +314,6 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		formation: [
-			[
-				"Schema-Probe (keine produktive Wortbildung): Satz 1 + ",
-				noteToken(
-					"aber",
-					"reference",
-					"aber, coordinating conjunction",
-				),
-				" + Satz 2",
-			],
-		],
 		translations: ["but", "но; однако"],
 		tags: [noteToken("#Konjunktion"), noteToken("#Koordinierend")],
 	},
@@ -441,68 +376,67 @@ export const lexemeANFixtures = [
 				],
 			},
 		],
-		formation: [
-			[
-				noteToken("dies-", "reference", "dies-, demonstrative stem"),
-				" + ",
-				noteToken(
-					"-er",
-					"masculine",
-					"-er, masculine nominative ending",
-				),
-			],
-		],
 		translations: ["this; this one", "этот"],
-		forms: [
-			{
-				label: "N",
-				content: [
-					noteToken("dieser", "masculine", "masculine nominative"),
-					", ",
-					noteToken("diese", "feminine", "feminine nominative"),
-					", ",
-					noteToken("dieses", "neuter", "neuter nominative"),
-					", ",
-					noteToken("diese", "plural", "plural nominative"),
-				],
-			},
-			{
-				label: "A",
-				content: [
-					noteToken("diesen", "masculine", "masculine accusative"),
-					", ",
-					noteToken("diese", "feminine", "feminine accusative"),
-					", ",
-					noteToken("dieses", "neuter", "neuter accusative"),
-					", ",
-					noteToken("diese", "plural", "plural accusative"),
-				],
-			},
-			{
-				label: "G",
-				content: [
-					noteToken("dieses", "masculine", "masculine genitive"),
-					", ",
-					noteToken("dieser", "feminine", "feminine genitive"),
-					", ",
-					noteToken("dieses", "neuter", "neuter genitive"),
-					", ",
-					noteToken("dieser", "plural", "plural genitive"),
-				],
-			},
-			{
-				label: "D",
-				content: [
-					noteToken("diesem", "masculine", "masculine dative"),
-					", ",
-					noteToken("dieser", "feminine", "feminine dative"),
-					", ",
-					noteToken("diesem", "neuter", "neuter dative"),
-					", ",
-					noteToken("diesen", "plural", "plural dative"),
-				],
-			},
-		],
+		formTable: {
+			rowLabel: "Kasus",
+			columnLabels: ["Maskulin", "Feminin", "Neuter", "Plural"],
+			rows: [
+				{
+					label: "N",
+					cells: [
+						[
+							noteToken(
+								"dieser",
+								"masculine",
+								"masculine nominative",
+							),
+						],
+						[noteToken("diese", "feminine", "feminine nominative")],
+						[noteToken("dieses", "neuter", "neuter nominative")],
+						[noteToken("diese", "plural", "plural nominative")],
+					],
+				},
+				{
+					label: "A",
+					cells: [
+						[
+							noteToken(
+								"diesen",
+								"masculine",
+								"masculine accusative",
+							),
+						],
+						[noteToken("diese", "feminine", "feminine accusative")],
+						[noteToken("dieses", "neuter", "neuter accusative")],
+						[noteToken("diese", "plural", "plural accusative")],
+					],
+				},
+				{
+					label: "G",
+					cells: [
+						[
+							noteToken(
+								"dieses",
+								"masculine",
+								"masculine genitive",
+							),
+						],
+						[noteToken("dieser", "feminine", "feminine genitive")],
+						[noteToken("dieses", "neuter", "neuter genitive")],
+						[noteToken("dieser", "plural", "plural genitive")],
+					],
+				},
+				{
+					label: "D",
+					cells: [
+						[noteToken("diesem", "masculine", "masculine dative")],
+						[noteToken("dieser", "feminine", "feminine dative")],
+						[noteToken("diesem", "neuter", "neuter dative")],
+						[noteToken("diesen", "plural", "plural dative")],
+					],
+				},
+			],
+		},
 		tags: [noteToken("#Determinierer"), noteToken("#Demonstrativ")],
 	},
 	{
@@ -539,13 +473,6 @@ export const lexemeANFixtures = [
 					noteToken("oje", "reference", "oje, interjection"),
 				],
 			},
-		],
-		formation: [
-			[
-				"Gebrauchsprobe (keine produktive Wortbildung): ",
-				noteToken("ach", "reference", "ach, interjection"),
-				" + Intonation",
-			],
 		],
 		translations: ["oh; ah; alas", "ах; ох"],
 		tags: [noteToken("#Interjektion"), noteToken("#Ausruf")],
@@ -704,20 +631,11 @@ export const lexemeANFixtures = [
 		formation: [
 			[
 				noteToken("Dämmer", "reference", "Dämmer, verb stem"),
-				"|",
+				" | ",
 				noteToken(
 					"ung",
 					"feminine",
 					"ung, feminine noun-forming suffix",
-				),
-			],
-			[
-				noteToken("dämmern", "reference", "dämmern, verb"),
-				" + ",
-				noteToken(
-					"-ung",
-					"feminine",
-					"-ung, feminine noun-forming suffix",
 				),
 			],
 		],
@@ -834,23 +752,6 @@ export const lexemeANFixtures = [
 					),
 				],
 			},
-		],
-		formation: [
-			[
-				noteToken("drei", "reference", "drei, cardinal numeral"),
-				" + ",
-				noteToken(
-					"-fach",
-					"reference",
-					"-fach, multiplicative suffixoid",
-				),
-				" → ",
-				noteToken(
-					"dreifach",
-					"reference",
-					"dreifach, multiplicative adjective",
-				),
-			],
 		],
 		translations: ["three", "три"],
 		tags: [noteToken("#Numerale"), noteToken("#Kardinalzahl")],
