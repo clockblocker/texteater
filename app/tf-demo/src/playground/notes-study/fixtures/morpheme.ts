@@ -2,7 +2,7 @@ import { type NoteStudyFixture, noteToken } from "../note-study-fixture";
 
 export const morphemeFixtures = [
 	{
-		slug: "Ge-t",
+		presentationKey: "Ge-t",
 		family: "Morpheme",
 		kind: "Circumfix",
 		emoji: "🧲",
@@ -50,7 +50,7 @@ export const morphemeFixtures = [
 		tags: [noteToken("#Morphem"), noteToken("#PartizipII")],
 	},
 	{
-		slug: "Clitic-s",
+		presentationKey: "Clitic-s",
 		family: "Morpheme",
 		kind: "Clitic",
 		emoji: "🔗",
@@ -94,7 +94,7 @@ export const morphemeFixtures = [
 		tags: [noteToken("#Morphem"), noteToken("#Klitikon")],
 	},
 	{
-		slug: "Fugen-s",
+		presentationKey: "Fugen-s",
 		family: "Morpheme",
 		kind: "Interfix",
 		emoji: "🌉",
@@ -138,7 +138,7 @@ export const morphemeFixtures = [
 		tags: [noteToken("#Morphem"), noteToken("#Komposition")],
 	},
 	{
-		slug: "Un",
+		presentationKey: "Un",
 		family: "Morpheme",
 		kind: "Prefix",
 		emoji: "🚫",
@@ -182,7 +182,7 @@ export const morphemeFixtures = [
 		tags: [noteToken("#Morphem"), noteToken("#Präfix")],
 	},
 	{
-		slug: "Fahr",
+		presentationKey: "Fahr",
 		family: "Morpheme",
 		kind: "Root",
 		emoji: "🚲",
@@ -226,7 +226,7 @@ export const morphemeFixtures = [
 		tags: [noteToken("#Morphem"), noteToken("#Wurzel")],
 	},
 	{
-		slug: "Ung",
+		presentationKey: "Ung",
 		family: "Morpheme",
 		kind: "Suffix",
 		emoji: "🌒",
@@ -270,7 +270,7 @@ export const morphemeFixtures = [
 		],
 	},
 	{
-		slug: "Werk",
+		presentationKey: "Werk",
 		family: "Morpheme",
 		kind: "Suffixoid",
 		emoji: "🛠️",

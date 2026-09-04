@@ -1,16 +1,8 @@
+import type { LemmaRoute } from "dumling";
 import type { SemanticRelation } from "dumrel";
-import type { DE_READING_BLOCKS_BY_FAMILY_KIND } from "../../../shared/reading-block-layout";
 
-type GermanUnitReadingCatalog = typeof DE_READING_BLOCKS_BY_FAMILY_KIND;
-
-export type NoteStudyFamily = keyof GermanUnitReadingCatalog;
-
-type NoteStudyRoute = {
-	[Family in NoteStudyFamily]: {
-		readonly family: Family;
-		readonly kind: keyof GermanUnitReadingCatalog[Family];
-	};
-}[NoteStudyFamily];
+type NoteStudyRoute = Omit<LemmaRoute<"de">, "language">;
+export type NoteStudyFamily = NoteStudyRoute["family"];
 
 export type NoteStudyTone =
 	| "reference"
@@ -51,7 +43,8 @@ export type NoteStudyFormTable = {
 };
 
 type NoteStudyFixtureContent = {
-	readonly slug: string;
+	/** Presentation lookup key only. Reading identity comes from Dumling. */
+	readonly presentationKey: string;
 	readonly emoji: string;
 	readonly title: NoteStudyLine;
 	readonly titleText: string;

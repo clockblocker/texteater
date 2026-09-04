@@ -13,7 +13,10 @@ import type {
 	KnowledgeSettings,
 	ReadingReference,
 } from "./types.js";
-import { semanticRelationValues } from "./vocabulary.js";
+import {
+	semanticRelationValues,
+	translationLanguageValues,
+} from "./vocabulary.js";
 
 export { DEFAULT_KNOWLEDGE_SETTINGS } from "./settings.js";
 
@@ -58,7 +61,9 @@ export function intersectKnowledgeRequestMask(
 	const result: {
 		transcription?: null;
 		definition?: null;
-		translations?: { en: null };
+		translations?: Partial<
+			Record<(typeof translationLanguageValues)[number], null>
+		>;
 		morphologicalTree?: null;
 		lexicalBreakdown?: null;
 		semanticRelations?: Partial<
@@ -72,12 +77,19 @@ export function intersectKnowledgeRequestMask(
 	if (parsedMask.definition === null && parsedSettings.definition) {
 		result.definition = null;
 	}
-	if (
-		parsedMask.translations?.en === null &&
-		parsedSettings.translations.en
-	) {
-		result.translations = { en: null };
+	const translations: Partial<
+		Record<(typeof translationLanguageValues)[number], null>
+	> = {};
+	for (const language of translationLanguageValues) {
+		if (
+			parsedMask.translations?.[language] === null &&
+			parsedSettings.translations[language]
+		) {
+			translations[language] = null;
+		}
 	}
+	if (Object.keys(translations).length > 0)
+		result.translations = translations;
 	if (
 		parsedMask.morphologicalTree === null &&
 		parsedSettings.morphologicalTree

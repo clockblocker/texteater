@@ -1,8 +1,7 @@
 import { ArrowLeftIcon, ArrowUpRightIcon, RotateCcwIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
-import { ThemeProvider } from "@/components/theme-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { AppProvider } from "@/components/app-provider";
 import {
 	findPlaygroundExperiment,
 	PLAYGROUND_EXPERIMENTS,
@@ -19,14 +18,7 @@ export function PlaygroundProviders({
 }: {
 	readonly children: ReactNode;
 }) {
-	return (
-		<ThemeProvider
-			defaultTheme="dark"
-			storageKey="tf-demo-playground-theme"
-		>
-			<TooltipProvider>{children}</TooltipProvider>
-		</ThemeProvider>
-	);
+	return <AppProvider>{children}</AppProvider>;
 }
 
 export function PlaygroundApp({ route }: { readonly route: PlaygroundRoute }) {

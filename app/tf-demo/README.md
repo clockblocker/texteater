@@ -25,8 +25,13 @@ bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
 Load the package-owned fixed inventory with `bun run load:fixed-members`. The
 operation is idempotent and reports conflicting ordinary Reading Entry content.
 
+Load the local Notes Study user and its normalized Dumling/Dumrel graph with
+`bun run load:notes-study`. This explicit playground seed is idempotent and is
+never loaded by a deployment automatically.
+
 The application uses `/` as its canonical workspace URL. Deterministic UI
-fixtures are available under `/playground` without initializing Convex.
+fixtures are available under `/playground`; Notes Study reads from the selected
+local Convex deployment while keeping its extra presentation metadata in code.
 
 ## Reset and validate
 

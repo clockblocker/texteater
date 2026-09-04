@@ -5,7 +5,7 @@ import type { KnowledgeSettings } from "./types.js";
 export const DEFAULT_KNOWLEDGE_SETTINGS: KnowledgeSettings = deepFreeze({
 	transcription: true,
 	definition: true,
-	translations: { en: true },
+	translations: { en: true, ru: true },
 	morphologicalTree: true,
 	lexicalBreakdown: true,
 	semanticRelations: {

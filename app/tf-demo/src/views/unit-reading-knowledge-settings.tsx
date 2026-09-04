@@ -3,6 +3,7 @@ import {
 	type KnowledgeSettings,
 	type SemanticRelation,
 	semanticRelationValues,
+	type TranslationLanguage,
 } from "dumrel";
 import { useEffect, useState } from "react";
 
@@ -71,7 +72,7 @@ export function KnowledgeSettingsForm({
 type KnowledgeSettingPath =
 	| "transcription"
 	| "definition"
-	| "translations.en"
+	| `translations.${TranslationLanguage}`
 	| "morphologicalTree"
 	| "lexicalBreakdown"
 	| `semanticRelations.${SemanticRelation}`;
@@ -83,6 +84,7 @@ const KNOWLEDGE_SETTING_LABELS: ReadonlyArray<{
 	{ path: "transcription", label: "Transcription" },
 	{ path: "definition", label: "Definition" },
 	{ path: "translations.en", label: "English translations" },
+	{ path: "translations.ru", label: "Russian translations" },
 	{ path: "morphologicalTree", label: "Morphological tree" },
 	{ path: "lexicalBreakdown", label: "Lexical breakdown" },
 	...semanticRelationValues.map((relation) => ({
@@ -139,8 +141,14 @@ export function withKnowledgeSetting(
 	if (path === "transcription" || path === "definition") {
 		return { ...settings, [path]: enabled };
 	}
-	if (path === "translations.en") {
-		return { ...settings, translations: { en: enabled } };
+	if (path.startsWith("translations.")) {
+		const language = path.slice(
+			"translations.".length,
+		) as TranslationLanguage;
+		return {
+			...settings,
+			translations: { ...settings.translations, [language]: enabled },
+		};
 	}
 	if (path === "morphologicalTree" || path === "lexicalBreakdown") {
 		return { ...settings, [path]: enabled };
@@ -161,7 +169,12 @@ function knowledgeSettingValue(
 	settings: KnowledgeSettings,
 	path: KnowledgeSettingPath,
 ): boolean {
-	if (path === "translations.en") return settings.translations.en;
+	if (path.startsWith("translations.")) {
+		const language = path.slice(
+			"translations.".length,
+		) as TranslationLanguage;
+		return settings.translations[language];
+	}
 	if (path.startsWith("semanticRelations.")) {
 		const relation = path.slice(
 			"semanticRelations.".length,

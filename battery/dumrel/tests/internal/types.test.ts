@@ -8,6 +8,7 @@ import type {
 	MorphemeReadingReference,
 	MorphologicalTree,
 	ReadingKnowledge,
+	TranslationLanguage,
 } from "../../src/types";
 import {
 	constructionReading,
@@ -51,7 +52,7 @@ const breakdown: LexicalBreakdown = [nounShadow, verbShadow];
 const settings: KnowledgeSettings = {
 	transcription: true,
 	definition: true,
-	translations: { en: true },
+	translations: { en: true, ru: true },
 	morphologicalTree: true,
 	lexicalBreakdown: true,
 	semanticRelations: {
@@ -148,16 +149,19 @@ void invalidConstructionTree;
 // @ts-expect-error Lemma Knowledge was removed; Knowledge is Reading-only.
 type RemovedLemmaKnowledge = PublicTypes.LemmaKnowledge;
 
-const germanReadingKnowledge: ReadingKnowledge<"de"> = {
-	translations: { de: ["Haus"] },
+const russianReadingKnowledge: ReadingKnowledge<TranslationLanguage> = {
+	translations: { ru: ["дом"] },
 };
-const bilingualReadingKnowledge = applyKnowledgeChange(germanReadingKnowledge, {
-	kind: "Correct",
-	aspect: "translations",
-	language: "en",
-	value: ["house"],
-});
-bilingualReadingKnowledge.translations?.de satisfies
+const bilingualReadingKnowledge = applyKnowledgeChange(
+	russianReadingKnowledge,
+	{
+		kind: "Correct",
+		aspect: "translations",
+		language: "en",
+		value: ["house"],
+	},
+);
+bilingualReadingKnowledge.translations?.ru satisfies
 	| [string, ...string[]]
 	| undefined;
 bilingualReadingKnowledge.translations?.en satisfies
@@ -169,7 +173,7 @@ const englishReadingKnowledge = applyKnowledgeChange(
 	{
 		kind: "Retract",
 		aspect: "translations",
-		language: "de",
+		language: "ru",
 	},
 );
 englishReadingKnowledge.translations?.en satisfies

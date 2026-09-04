@@ -79,7 +79,7 @@ test("renders the four visible defaults in weighted order with workspace command
 		knowledge: {
 			...base.knowledge,
 			definition: "This remains intentionally invisible.",
-			translations: { en: ["bank"] },
+			translations: { en: ["bank"], ru: ["банк"] },
 		},
 		relations: [
 			{
@@ -139,7 +139,7 @@ test("applies visitor Knowledge Settings in React without reshaping NoteData", (
 		...base,
 		knowledge: {
 			...base.knowledge,
-			translations: { en: ["bank"] },
+			translations: { en: ["bank"], ru: ["банк"] },
 		},
 		relations: [
 			{
@@ -159,7 +159,7 @@ test("applies visitor Knowledge Settings in React without reshaping NoteData", (
 		knowledgeSettings: {
 			...defaults.knowledgeSettings,
 			transcription: false,
-			translations: { en: false },
+			translations: { en: false, ru: true },
 			semanticRelations: {
 				...defaults.knowledgeSettings.semanticRelations,
 				synonym: false,
@@ -172,6 +172,7 @@ test("applies visitor Knowledge Settings in React without reshaping NoteData", (
 	expect(note.relations).toHaveLength(1);
 	expect(markup).not.toContain("/baŋk/");
 	expect(markup).not.toContain("en: bank");
+	expect(markup).toContain("ru: банк");
 	expect(markup).not.toContain("Semantic relations");
 });
 

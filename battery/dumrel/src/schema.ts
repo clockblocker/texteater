@@ -95,7 +95,7 @@ const semanticRelationRequestSchema = z
 	});
 
 const translationRequestSchema = z
-	.strictObject({ en: z.null().optional() })
+	.strictObject({ en: z.null().optional(), ru: z.null().optional() })
 	.refine(hasTranslationSelection, {
 		message: "A Translation request must select at least one language.",
 	});
@@ -104,7 +104,7 @@ const translationRequestSchema = z
 export const knowledgeSettingsSchema = z.strictObject({
 	transcription: z.boolean(),
 	definition: z.boolean(),
-	translations: z.strictObject({ en: z.boolean() }),
+	translations: z.strictObject({ en: z.boolean(), ru: z.boolean() }),
 	morphologicalTree: z.boolean(),
 	lexicalBreakdown: z.boolean(),
 	semanticRelations: semanticRelationSettingsSchema,
@@ -374,10 +374,10 @@ export const pendingSemanticRelationSchema = z.strictObject({
 	target: unitShadowSchema,
 });
 
-const languageBucketsSchema = z.record(
-	normalizedNonEmptyStringSchema,
-	nonEmptyStringsSchema,
-);
+const languageBucketsSchema = z.strictObject({
+	en: nonEmptyStringsSchema.optional(),
+	ru: nonEmptyStringsSchema.optional(),
+});
 
 export const readingKnowledgeSchema: z.ZodType<ReadingKnowledge> =
 	z.strictObject({

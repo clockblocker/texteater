@@ -16,6 +16,7 @@
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"load:fixed-members": "CONVEX_AGENT_MODE=anonymous convex run fixedMembers:load",
+		"load:notes-study": "CONVEX_AGENT_MODE=anonymous convex run notesStudyFixtures:load",
 		"preview": "vite preview",
 		"reset": "CONVEX_AGENT_MODE=anonymous convex run demoReset:resetDemoData",
 		"test": "bun ../../tooling/run-package-tests.ts",

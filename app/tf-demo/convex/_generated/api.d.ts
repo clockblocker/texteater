@@ -46,6 +46,7 @@ import type * as modules_notes_routeNotes from "../modules/notes/routeNotes.js";
 import type * as modules_notes_shadowNote from "../modules/notes/shadowNote.js";
 import type * as modules_notes_unitReadingFamilies from "../modules/notes/unitReadingFamilies.js";
 import type * as modules_text_submission from "../modules/text/submission.js";
+import type * as notesStudyFixtures from "../notesStudyFixtures.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
 import type * as pronounFixedPopulationMigration from "../pronounFixedPopulationMigration.js";
@@ -105,6 +106,7 @@ declare const fullApi: ApiFromModules<{
   "modules/notes/shadowNote": typeof modules_notes_shadowNote;
   "modules/notes/unitReadingFamilies": typeof modules_notes_unitReadingFamilies;
   "modules/text/submission": typeof modules_text_submission;
+  notesStudyFixtures: typeof notesStudyFixtures;
   orchestration: typeof orchestration;
   persistence: typeof persistence;
   pronounFixedPopulationMigration: typeof pronounFixedPopulationMigration;

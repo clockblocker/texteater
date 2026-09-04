@@ -77,6 +77,7 @@ export type {
 	SemanticRelationGraphReading,
 	SemanticRelations,
 	SemanticRelationTargetKind,
+	TranslationLanguage,
 	UnitShadow,
 } from "./types.js";
 export {
@@ -84,4 +85,5 @@ export {
 	grammaticalRelationValues,
 	grammaticalSeriesAxisValues,
 	semanticRelationValues,
+	translationLanguageValues,
 } from "./vocabulary.js";

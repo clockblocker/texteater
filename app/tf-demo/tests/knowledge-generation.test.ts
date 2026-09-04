@@ -910,6 +910,7 @@ test("Knowledge settings default enabled and persist independently per visitor",
 	>(updateKnowledgeSettings);
 	const defaults = defaultKnowledgeSettings();
 	expect(defaults.semanticRelations.nearAntonym).toBe(true);
+	expect(defaults.translations).toEqual({ en: true, ru: true });
 	expect(await getSettings({ db }, { visitorId: "visitor-1" })).toEqual(
 		defaults,
 	);
@@ -926,6 +927,14 @@ test("Knowledge settings default enabled and persist independently per visitor",
 	expect(await getSettings({ db }, { visitorId: "visitor-2" })).toEqual(
 		defaults,
 	);
+	await db.insert("knowledgeSettings", {
+		visitorId: "visitor-legacy",
+		settings: { ...defaults, translations: { en: false } },
+		updatedAt: 1,
+	});
+	expect(
+		await getSettings({ db }, { visitorId: "visitor-legacy" }),
+	).toMatchObject({ translations: { en: false, ru: true } });
 	expect(
 		generationRequestFor(
 			{

@@ -30,15 +30,17 @@ describe("playground routes", () => {
 			kind: "Experiment",
 			experimentId: "layout study",
 		});
-		expect(playgroundExperimentHref("notes-study", "Daemmerung")).toBe(
-			"/playground/notes-study/Daemmerung",
-		);
 		expect(
-			playgroundRouteFromPathname("/playground/notes-study/Daemmerung"),
+			playgroundExperimentHref("notes-study", "Daemmerung/reading/🌒"),
+		).toBe("/playground/notes-study/Daemmerung/reading/%F0%9F%8C%92");
+		expect(
+			playgroundRouteFromPathname(
+				"/playground/notes-study/Daemmerung/reading/%F0%9F%8C%92",
+			),
 		).toEqual({
 			kind: "Experiment",
 			experimentId: "notes-study",
-			detailId: "Daemmerung",
+			detailId: "Daemmerung/reading/🌒",
 		});
 		expect(playgroundExperimentHref("notes-study", "%")).toBe(
 			"/playground/notes-study/%25",
@@ -52,7 +54,11 @@ describe("playground routes", () => {
 		});
 		expect(
 			playgroundRouteFromPathname("/playground/one/two/three"),
-		).toBeNull();
+		).toEqual({
+			kind: "Experiment",
+			experimentId: "one",
+			detailId: "two/three",
+		});
 	});
 
 	test("registers stable, unique experiment IDs", () => {

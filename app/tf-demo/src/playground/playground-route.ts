@@ -20,21 +20,18 @@ export function playgroundRouteFromPathname(
 		.slice(PLAYGROUND_PATH.length + 1)
 		.replace(/\/$/, "");
 	const encodedParts = encodedPath.split("/");
-	if (
-		encodedPath === "" ||
-		encodedParts.length > 2 ||
-		encodedParts.some((part) => part === "")
-	) {
+	if (encodedPath === "" || encodedParts.some((part) => part === "")) {
 		return null;
 	}
 
 	try {
-		const [encodedExperimentId, encodedDetailId] = encodedParts;
+		const [encodedExperimentId, ...encodedDetailParts] = encodedParts;
 		if (!encodedExperimentId) return null;
 		const experimentId = decodeURIComponent(encodedExperimentId);
-		const detailId = encodedDetailId
-			? decodeURIComponent(encodedDetailId)
-			: undefined;
+		const detailId =
+			encodedDetailParts.length > 0
+				? encodedDetailParts.map(decodeURIComponent).join("/")
+				: undefined;
 		return experimentId === ""
 			? null
 			: {
@@ -53,6 +50,6 @@ export function playgroundExperimentHref(
 ): string {
 	const experimentHref = `${PLAYGROUND_PATH}/${encodeURIComponent(experimentId)}`;
 	return detailId
-		? `${experimentHref}/${encodeURIComponent(detailId)}`
+		? `${experimentHref}/${detailId.split("/").map(encodeURIComponent).join("/")}`
 		: experimentHref;
 }

@@ -1,3 +1,4 @@
+import { useQuery } from "convex/react";
 import type { SemanticRelation } from "dumrel";
 import { ArrowUpRightIcon } from "lucide-react";
 import {
@@ -15,13 +16,14 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { playgroundExperimentHref } from "@/playground/playground-route";
-import { NOTE_STUDY_FIXTURES } from "./fixtures";
+import { api } from "../../../convex/_generated/api";
 import type {
 	NoteStudyFixture,
 	NoteStudyLine,
 	NoteStudyToken,
 	NoteStudyTone,
 } from "./note-study-fixture";
+import { NOTE_STUDY_PRESENTATION_BY_READING_KEY } from "./note-study-presentation";
 import "./notes-study-playground.css";
 
 type DragEdge = "top" | "bottom";
@@ -51,6 +53,9 @@ type SheetAffordanceProps = {
 
 const FAMILY_ORDER = ["Lexeme", "Phraseme", "Morpheme"] as const;
 
+const lineText = (line: NoteStudyLine) =>
+	line.map((part) => (typeof part === "string" ? part : part.text)).join("");
+
 function fitNoteEditorToContent(editor: HTMLTextAreaElement | null) {
 	if (!editor) return;
 	editor.style.height = "0";
@@ -63,8 +68,45 @@ export function NotesStudyPlayground({
 	readonly detailId?: string;
 }) {
 	if (!detailId) return <NotesStudyIndex />;
+	return <NotesStudyDetail detailId={detailId} />;
+}
 
-	const fixture = NOTE_STUDY_FIXTURES.find(({ slug }) => slug === detailId);
+function NotesStudyDetail({ detailId }: { readonly detailId: string }) {
+	const note = useQuery(api.notesStudyFixtures.get, { path: detailId });
+	if (note === undefined) return <LoadingNotesStudy />;
+	const presentation = note
+		? NOTE_STUDY_PRESENTATION_BY_READING_KEY.get(note.reading.ownerKey)
+		: undefined;
+	const fixture =
+		note && presentation
+			? ({
+					...presentation,
+					presentationKey: detailId,
+					family: note.reading.lemma.family,
+					kind: note.reading.lemma.kind,
+					emoji: note.reading.emojiDescription,
+					title: presentation.title,
+					titleText: note.reading.lemma.canonicalForm,
+					...(note.knowledge.transcription
+						? { ipa: `/${note.knowledge.transcription}/` }
+						: {}),
+					contexts: note.sourceContexts.page.map(
+						({ sentenceSnippet }) =>
+							presentation.contextLines.find(
+								(line) => lineText(line) === sentenceSnippet,
+							) ?? [sentenceSnippet],
+					),
+					definition: note.knowledge.definition ?? "",
+					relations:
+						note.relations.length + note.pendingRelations.length > 0
+							? presentation.relationLines
+							: undefined,
+					translations: [
+						...(note.knowledge.translations?.en ?? []),
+						...(note.knowledge.translations?.ru ?? []),
+					],
+				} as NoteStudyFixture)
+			: undefined;
 	return fixture ? (
 		<div className="notes-study">
 			<div className="notes-study__variants">
@@ -76,7 +118,20 @@ export function NotesStudyPlayground({
 	);
 }
 
+function LoadingNotesStudy() {
+	return (
+		<div className="notes-study notes-study--missing" aria-live="polite">
+			<p className="notes-study-index__eyebrow">
+				Loading local fixture data
+			</p>
+			<h2>Opening the Reading note…</h2>
+		</div>
+	);
+}
+
 function NotesStudyIndex() {
+	const fixtures = useQuery(api.notesStudyFixtures.list);
+	if (fixtures === undefined) return <LoadingNotesStudy />;
 	return (
 		<div className="notes-study notes-study--index">
 			<header className="notes-study-index__hero">
@@ -87,7 +142,7 @@ function NotesStudyIndex() {
 					<h2>Every note has a shelf.</h2>
 				</div>
 				<p>
-					Thirty-two deterministic Reading notes cover the German
+					Twenty-eight deterministic Reading notes cover the German
 					Family/Kind routes under study. Open one to inspect the same
 					Sheet-to-Card transformation used by Dämmerung.
 				</p>
@@ -98,7 +153,7 @@ function NotesStudyIndex() {
 				aria-label="German notes"
 			>
 				{FAMILY_ORDER.map((family) => {
-					const fixtures = NOTE_STUDY_FIXTURES.filter(
+					const familyFixtures = fixtures.filter(
 						(fixture) => fixture.family === family,
 					);
 					return (
@@ -115,16 +170,19 @@ function NotesStudyIndex() {
 									{family}
 								</h3>
 								<span className="note-shelf__count">
-									{String(fixtures.length).padStart(2, "0")}
+									{String(familyFixtures.length).padStart(
+										2,
+										"0",
+									)}
 								</span>
 							</header>
 							<ol>
-								{fixtures.map((fixture) => (
-									<li key={fixture.slug}>
+								{familyFixtures.map((fixture) => (
+									<li key={fixture.path}>
 										<a
 											href={playgroundExperimentHref(
 												"notes-study",
-												fixture.slug,
+												fixture.path,
 											)}
 										>
 											<span className="note-shelf__kind">
@@ -132,13 +190,17 @@ function NotesStudyIndex() {
 											</span>
 											<span className="note-shelf__reading">
 												<i aria-hidden="true">
-													{fixture.emoji}
+													{fixture.emojiDescription}
 												</i>
 												<strong>
-													{fixture.titleText}
+													{fixture.canonicalForm}
 												</strong>
 												<small>
-													{fixture.definition}
+													{
+														NOTE_STUDY_PRESENTATION_BY_READING_KEY.get(
+															fixture.readingKey,
+														)?.summary
+													}
 												</small>
 											</span>
 											<ArrowUpRightIcon aria-hidden="true" />
@@ -230,13 +292,13 @@ function NotePrototype({ fixture }: { readonly fixture: NoteStudyFixture }) {
 				"--drag-y": `${drag.y}px`,
 			} as CSSProperties)
 		: undefined;
-	const noteId = `midnight-${fixture.slug}`;
+	const noteId = `midnight-${fixture.presentationKey}`;
 
 	return (
 		<section
 			className="notes-prototype notes-prototype--midnight"
 			aria-labelledby="midnight-prototype-title"
-			data-note-fixture={fixture.slug}
+			data-note-fixture={fixture.presentationKey}
 		>
 			<header className="notes-prototype__header">
 				<div>
@@ -405,7 +467,7 @@ function NoteArticle({
 }) {
 	const linkedWordHref = playgroundExperimentHref(
 		"notes-study",
-		fixture.slug,
+		fixture.presentationKey,
 	);
 
 	return (
@@ -448,7 +510,7 @@ function NoteArticle({
 					<div className="source-contexts">
 						{fixture.contexts.map((context, index) => (
 							<blockquote
-								key={`${fixture.slug}-context-${index}`}
+								key={`${fixture.presentationKey}-context-${index}`}
 							>
 								<ContextBar tone={fixture.contextTone} />
 								<span className="source-context__content">
@@ -519,7 +581,7 @@ function NoteArticle({
 								className={
 									index === 0 ? "word-seam" : undefined
 								}
-								key={`${fixture.slug}-formation-${index}`}
+								key={`${fixture.presentationKey}-formation-${index}`}
 							>
 								<RichLine href={linkedWordHref} line={line} />
 							</p>
@@ -535,7 +597,9 @@ function NoteArticle({
 						showTitle={showSectionTitles}
 					>
 						{fixture.structure.map((line, index) => (
-							<p key={`${fixture.slug}-structure-${index}`}>
+							<p
+								key={`${fixture.presentationKey}-structure-${index}`}
+							>
 								<RichLine href={linkedWordHref} line={line} />
 							</p>
 						))}
@@ -550,7 +614,9 @@ function NoteArticle({
 				>
 					<p>
 						{fixture.translations.map((translation, index) => (
-							<span key={`${fixture.slug}-translation-${index}`}>
+							<span
+								key={`${fixture.presentationKey}-translation-${index}`}
+							>
 								{index > 0 ? <br /> : null}
 								{translation}
 							</span>
@@ -569,7 +635,7 @@ function NoteArticle({
 							{fixture.translatedExplanations.map(
 								(explanation, index) => (
 									<span
-										key={`${fixture.slug}-translated-explanation-${index}`}
+										key={`${fixture.presentationKey}-translated-explanation-${index}`}
 									>
 										{index > 0 ? <br /> : null}
 										{explanation}
@@ -624,7 +690,7 @@ function NoteArticle({
 											<th scope="row">{row.label}</th>
 											{row.cells.map((cell, index) => (
 												<td
-													key={`${fixture.slug}-${row.label}-${fixture.formTable?.columnLabels[index]}`}
+													key={`${fixture.presentationKey}-${row.label}-${fixture.formTable?.columnLabels[index]}`}
 												>
 													<RichLine
 														href={linkedWordHref}

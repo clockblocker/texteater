@@ -9,6 +9,9 @@ export const semanticRelationValues = [
 	"holonym",
 ] as const;
 
+/** Translation Target Languages supported by Dumrel's application settings. */
+export const translationLanguageValues = ["en", "ru"] as const;
+
 /** Relation kinds that may exist as durable direct claims. */
 export const directSemanticRelationValues = [
 	"synonym",

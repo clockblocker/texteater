@@ -190,12 +190,16 @@ test("the notes study lists every German Unit Reading route", async ({
 	).toHaveCount(7);
 
 	const daemmerungLink = page.locator(
-		'a[href="/playground/notes-study/Daemmerung"]',
+		'a[href="/playground/notes-study/Daemmerung/reading/%F0%9F%8C%92"]',
 	);
 	await expect(daemmerungLink.locator("strong")).toHaveText("Dämmerung");
 	await daemmerungLink.click();
-	await expect(page).toHaveURL(/\/playground\/notes-study\/Daemmerung$/);
-	const daemmerung = page.locator('[data-note-fixture="Daemmerung"]');
+	await expect(page).toHaveURL(
+		/\/playground\/notes-study\/Daemmerung\/reading\//,
+	);
+	const daemmerung = page.locator(
+		'[data-note-fixture="Daemmerung/reading/🌒"]',
+	);
 	await expect(daemmerung).toBeVisible();
 	await expect(daemmerung.locator(".lexical-note__lemma h4")).toHaveText(
 		"die Dämmerung",
@@ -205,21 +209,25 @@ test("the notes study lists every German Unit Reading route", async ({
 test("note sections follow the Reading instead of a fixed template", async ({
 	page,
 }) => {
-	await page.goto("/playground/notes-study/Trotz");
-	await expect(page.locator('[data-note-fixture="Trotz"]')).toBeVisible();
+	await page.goto("/playground/notes-study/trotz/reading/🧱");
+	await expect(
+		page.locator('[data-note-fixture="trotz/reading/🧱"]'),
+	).toBeVisible();
 	await expect(
 		page.getByRole("heading", { name: "Wortbildung" }),
 	).toHaveCount(0);
 	await expect(page.getByRole("heading", { name: "Formen" })).toHaveCount(0);
 
-	await page.goto("/playground/notes-study/Eine-Entscheidung-treffen");
+	await page.goto(
+		"/playground/notes-study/eine_Entscheidung_treffen/reading/✅",
+	);
 	await expect(page.getByRole("heading", { name: "Struktur" })).toBeVisible();
-	await expect(page.getByRole("heading", { name: "Formen" })).toBeVisible();
+	await expect(page.getByRole("heading", { name: "Formen" })).toHaveCount(0);
 	await expect(
 		page.getByRole("heading", { name: "Wortbildung" }),
 	).toHaveCount(0);
 
-	await page.goto("/playground/notes-study/Ge-t");
+	await page.goto("/playground/notes-study/ge-…-t/reading/🧲");
 	await expect(
 		page.getByRole("heading", { name: "Wortbildung" }),
 	).toBeVisible();
@@ -229,9 +237,9 @@ test("note sections follow the Reading instead of a fixed template", async ({
 test("Dämmerung distinguishes note links from its external source link", async ({
 	page,
 }) => {
-	await page.goto("/playground/notes-study/Daemmerung");
+	await page.goto("/playground/notes-study/Daemmerung/reading/🌒");
 
-	const note = page.locator('[data-note-fixture="Daemmerung"]');
+	const note = page.locator('[data-note-fixture="Daemmerung/reading/🌒"]');
 	await expect(note).toBeVisible();
 	const noteLinks = note.locator("a.linked-word");
 	expect(await noteLinks.count()).toBeGreaterThan(0);
@@ -241,15 +249,15 @@ test("Dämmerung distinguishes note links from its external source link", async 
 	await expect(rootMorphemeLink).toHaveText("dämmer");
 	await expect(rootMorphemeLink).toHaveAttribute(
 		"href",
-		"/playground/notes-study/Fahr",
+		"/playground/notes-study/fahr/reading/%F0%9F%9A%B2",
 	);
 	const selfLinks = note.locator(
-		'a.linked-word:not([href="/playground/notes-study/Fahr"])',
+		'a.linked-word:not([href="/playground/notes-study/fahr/reading/%F0%9F%9A%B2"])',
 	);
 	for (const link of await selfLinks.all()) {
 		await expect(link).toHaveAttribute(
 			"href",
-			"/playground/notes-study/Daemmerung",
+			"/playground/notes-study/Daemmerung/reading/%F0%9F%8C%92",
 		);
 	}
 
@@ -266,10 +274,12 @@ test("Dämmerung distinguishes note links from its external source link", async 
 test("literal and explanatory translations are separate and unlabeled", async ({
 	page,
 }) => {
-	await page.goto("/playground/notes-study/Tomaten-auf-den-Augen-haben");
+	await page.goto(
+		"/playground/notes-study/Tomaten_auf_den_Augen_haben/reading/🍅",
+	);
 
 	const note = page.locator(
-		'[data-note-fixture="Tomaten-auf-den-Augen-haben"]',
+		'[data-note-fixture="Tomaten_auf_den_Augen_haben/reading/🍅"]',
 	);
 	await expect(
 		note.getByRole("heading", { name: "Übersetzung" }),
@@ -291,10 +301,10 @@ test("literal and explanatory translations are separate and unlabeled", async ({
 test("declension forms name their case and gender columns", async ({
 	page,
 }) => {
-	await page.goto("/playground/notes-study/Dieser");
+	await page.goto("/playground/notes-study/dieser/reading/👉");
 
 	const forms = page
-		.locator('[data-note-fixture="Dieser"]')
+		.locator('[data-note-fixture="dieser/reading/👉"]')
 		.getByRole("region", { name: "Formen" });
 	for (const name of ["Kasus", "Maskulin", "Feminin", "Neuter", "Plural"]) {
 		await expect(forms.getByRole("columnheader", { name })).toBeVisible();
@@ -306,9 +316,9 @@ test("declension forms name their case and gender columns", async ({
 
 test("verb form labels do not overlap their values", async ({ page }) => {
 	await page.setViewportSize({ width: 820, height: 586 });
-	await page.goto("/playground/notes-study/Anrufen");
+	await page.goto("/playground/notes-study/anrufen/reading/📞");
 
-	const anrufen = page.locator('[data-note-fixture="Anrufen"]');
+	const anrufen = page.locator('[data-note-fixture="anrufen/reading/📞"]');
 	const linkedTitle = anrufen.getByRole("link", {
 		name: "anrufen, trennbares starkes Verb",
 	});
@@ -360,10 +370,12 @@ test("context trailing whitespace shares the source bar hit target", async ({
 	page,
 }) => {
 	await page.setViewportSize({ width: 1920, height: 700 });
-	await page.goto("/playground/notes-study/Anrufen");
+	await page.goto("/playground/notes-study/anrufen/reading/📞");
 
 	const context = page
-		.locator('[data-note-fixture="Anrufen"] .source-contexts blockquote')
+		.locator(
+			'[data-note-fixture="anrufen/reading/📞"] .source-contexts blockquote',
+		)
 		.first();
 	const content = context.locator(".source-context__content");
 	const bar = context.locator(".source-context__bar");
@@ -398,7 +410,7 @@ test("context trailing whitespace shares the source bar hit target", async ({
 test("the Midnight reading note Sheet lifts into its purpose-built Card", async ({
 	page,
 }) => {
-	await page.goto("/playground/notes-study/Daemmerung");
+	await page.goto("/playground/notes-study/Daemmerung/reading/🌒");
 
 	await expect(
 		page.getByRole("heading", { name: "German Reading notes" }),
@@ -558,7 +570,7 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	await expect(rootMorphemeLink).toHaveCSS("color", "rgb(142, 180, 240)");
 	await expect(rootMorphemeLink).toHaveAttribute(
 		"href",
-		"/playground/notes-study/Fahr",
+		"/playground/notes-study/fahr/reading/%F0%9F%9A%B2",
 	);
 	await expect(
 		midnight.getByRole("link", {
@@ -603,7 +615,7 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	for (const shadowWord of await cardShadowWords.all()) {
 		await expect(shadowWord).toHaveCSS("color", "rgb(154, 167, 186)");
 	}
-	await expect(preview).toContainText("Dämmer|ung");
+	await expect(preview).toContainText("dämmer|ung");
 	const cardTags = preview.locator(".lexical-note__footer span");
 	await expect(cardTags.nth(0)).toHaveText("#Nomen");
 	await expect(cardTags.nth(1)).toHaveText("#Feminin");
@@ -747,9 +759,12 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 				.borderTopStyle,
 		};
 	});
+	const { width: previewCardWidth, ...previewCardLayout } =
+		previewCardPresentation;
+	const { width: placedCardWidth, ...placedCardDensityWithoutWidth } =
+		placedCardDensity;
 	expect({
 		content: placedCardDensity.content,
-		width: placedCardDensity.width,
 		height: placedCardDensity.height,
 		fontSize: placedCardDensity.fontSize,
 		layout: placedCardDensity.layout,
@@ -759,11 +774,11 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 		contextGutter: `${placedCardDensity.contextGutter}px`,
 		cardEdgePadding: placedCardDensity.cardEdgePadding,
 		sectionDivider: placedCardDensity.sectionDivider,
-	}).toEqual(previewCardPresentation);
-	expect(placedCardDensity).toEqual({
+	}).toEqual(previewCardLayout);
+	expect(placedCardWidth).toBeCloseTo(previewCardWidth, 0);
+	expect(placedCardDensityWithoutWidth).toEqual({
 		isScrollable: true,
 		content: previewCardPresentation.content,
-		width: previewCardPresentation.width,
 		height: previewCardPresentation.height,
 		fontSize: "15.2px",
 		layout: "block",

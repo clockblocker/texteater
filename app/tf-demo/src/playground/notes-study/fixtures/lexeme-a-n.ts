@@ -2,7 +2,7 @@ import { type NoteStudyFixture, noteToken } from "../note-study-fixture";
 
 export const lexemeANFixtures = [
 	{
-		slug: "Ruhig",
+		presentationKey: "Ruhig",
 		family: "Lexeme",
 		kind: "ADJ",
 		emoji: "🤫",
@@ -87,7 +87,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Adjektiv"), noteToken("#Grundwortschatz")],
 	},
 	{
-		slug: "Trotz",
+		presentationKey: "Trotz",
 		family: "Lexeme",
 		kind: "ADP",
 		emoji: "🧱",
@@ -139,7 +139,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Präposition"), noteToken("#Genitiv")],
 	},
 	{
-		slug: "Dennoch",
+		presentationKey: "Dennoch",
 		family: "Lexeme",
 		kind: "ADV",
 		emoji: "↩️",
@@ -184,7 +184,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Adverb"), noteToken("#Konnektor")],
 	},
 	{
-		slug: "Sein",
+		presentationKey: "Sein",
 		family: "Lexeme",
 		kind: "AUX",
 		emoji: "🔗",
@@ -267,7 +267,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Hilfsverb"), noteToken("#Unregelmäßig")],
 	},
 	{
-		slug: "Aber",
+		presentationKey: "Aber",
 		family: "Lexeme",
 		kind: "CCONJ",
 		emoji: "↔️",
@@ -318,7 +318,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Konjunktion"), noteToken("#Koordinierend")],
 	},
 	{
-		slug: "Dieser",
+		presentationKey: "Dieser",
 		family: "Lexeme",
 		kind: "DET",
 		emoji: "👉",
@@ -440,7 +440,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Determinierer"), noteToken("#Demonstrativ")],
 	},
 	{
-		slug: "Ach",
+		presentationKey: "Ach",
 		family: "Lexeme",
 		kind: "INTJ",
 		emoji: "😮",
@@ -478,7 +478,7 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Interjektion"), noteToken("#Ausruf")],
 	},
 	{
-		slug: "Daemmerung",
+		presentationKey: "Daemmerung",
 		family: "Lexeme",
 		kind: "NOUN",
 		emoji: "🌒",
@@ -628,7 +628,7 @@ export const lexemeANFixtures = [
 					"dämmer",
 					"reference",
 					"dämmer, root morpheme",
-					"/playground/notes-study/Fahr",
+					"/playground/notes-study/fahr/reading/%F0%9F%9A%B2",
 				),
 				"|",
 				noteToken(
@@ -715,7 +715,7 @@ export const lexemeANFixtures = [
 		],
 	},
 	{
-		slug: "Drei",
+		presentationKey: "Drei",
 		family: "Lexeme",
 		kind: "NUM",
 		emoji: "3️⃣",

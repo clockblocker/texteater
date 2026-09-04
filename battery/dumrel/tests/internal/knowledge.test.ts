@@ -22,13 +22,18 @@ describe("Knowledge schemas", () => {
 			readingKnowledgeSchema.parse({
 				transcription: " haʊs ",
 				definition: " building ",
-				translations: { de: [" Haus "] },
+				translations: { en: [" house "], ru: [" дом "] },
 			}),
 		).toEqual({
 			transcription: "haʊs",
 			definition: "building",
-			translations: { de: ["Haus"] },
+			translations: { en: ["house"], ru: ["дом"] },
 		});
+		expect(
+			readingKnowledgeSchema.safeParse({
+				translations: { de: ["Haus"] },
+			}).success,
+		).toBe(false);
 	});
 
 	test("strict schema rejects the removed transcription shape", () => {

@@ -1,5 +1,9 @@
 import type { Reading } from "dumling/types";
-import { parseAsReadingKnowledge, type ReadingKnowledge } from "dumrel";
+import {
+	parseAsReadingKnowledge,
+	type ReadingKnowledge,
+	type TranslationLanguage,
+} from "dumrel";
 
 import {
 	parseGermanReading,
@@ -34,19 +38,19 @@ export function projectReadingValue(
 /** Validates stored identityless Knowledge without applying presentation policy. */
 export function projectReadingKnowledge(
 	value: unknown,
-): ReadingKnowledge<"en"> {
+): ReadingKnowledge<TranslationLanguage> {
 	const knowledge = unwrapOperationalParse<ReadingKnowledge>(
 		parseAsReadingKnowledge(value ?? {}),
 	);
 	if (
 		knowledge.translations &&
 		Object.keys(knowledge.translations).some(
-			(language) => language !== "en",
+			(language) => language !== "en" && language !== "ru",
 		)
 	) {
 		throw new Error(
-			"tf-demo Reading Knowledge only supports English translations.",
+			"tf-demo Reading Knowledge only supports English and Russian translations.",
 		);
 	}
-	return knowledge as ReadingKnowledge<"en">;
+	return knowledge as ReadingKnowledge<TranslationLanguage>;
 }

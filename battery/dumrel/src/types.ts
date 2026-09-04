@@ -10,9 +10,17 @@ import type {
 	grammaticalRelationValues,
 	grammaticalSeriesAxisValues,
 	semanticRelationValues,
+	translationLanguageValues,
 } from "./vocabulary.js";
 
 export type NonEmptyStrings = [string, ...string[]];
+
+type AtLeastOne<
+	Value,
+	Key extends keyof Value = keyof Value,
+> = Key extends keyof Value
+	? Required<Pick<Value, Key>> & Partial<Omit<Value, Key>>
+	: never;
 
 export type UnitShadow<
 	L extends SupportedLanguage = SupportedLanguage,
@@ -82,6 +90,7 @@ export type LexicalBreakdown<
 > = [LexicalShadow, LexicalShadow, ...LexicalShadow[]];
 
 export type SemanticRelation = (typeof semanticRelationValues)[number];
+export type TranslationLanguage = (typeof translationLanguageValues)[number];
 export type DirectSemanticRelation =
 	(typeof directSemanticRelationValues)[number];
 
@@ -167,7 +176,7 @@ export type GrammaticalRelationProjection<
 export type KnowledgeSettings = Readonly<{
 	transcription: boolean;
 	definition: boolean;
-	translations: Readonly<{ en: boolean }>;
+	translations: Readonly<Record<TranslationLanguage, boolean>>;
 	morphologicalTree: boolean;
 	lexicalBreakdown: boolean;
 	semanticRelations: Readonly<Record<SemanticRelation, boolean>>;
@@ -180,7 +189,7 @@ export type KnowledgeSettings = Readonly<{
 export type KnowledgeRequestMask = Readonly<{
 	transcription?: null;
 	definition?: null;
-	translations?: Readonly<{ en?: null }>;
+	translations?: Readonly<Partial<Record<TranslationLanguage, null>>>;
 	morphologicalTree?: null;
 	lexicalBreakdown?: null;
 	semanticRelations?: Readonly<Partial<Record<SemanticRelation, null>>>;
@@ -227,7 +236,7 @@ export type ReadingKnowledge<
 	definition?: string;
 	translations?: [TargetLang] extends [never]
 		? never
-		: Record<TargetLang, NonEmptyStrings>;
+		: AtLeastOne<Record<TargetLang, NonEmptyStrings>>;
 	morphologicalTree?: MorphologicalTree;
 	lexicalBreakdown?: LexicalBreakdown<LexicalShadow>;
 	semanticRelations?: SemanticRelations<Lemma, Reading>;

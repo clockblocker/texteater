@@ -2,7 +2,7 @@ import { type NoteStudyFixture, noteToken } from "../note-study-fixture";
 
 export const lexemePZFixtures = [
 	{
-		slug: "Doch",
+		presentationKey: "Doch",
 		family: "Lexeme",
 		kind: "PART",
 		emoji: "💬",
@@ -40,7 +40,7 @@ export const lexemePZFixtures = [
 		tags: [noteToken("#Antwortpartikel"), noteToken("#Unveränderlich")],
 	},
 	{
-		slug: "Einander",
+		presentationKey: "Einander",
 		family: "Lexeme",
 		kind: "PRON",
 		emoji: "🤝",
@@ -108,7 +108,7 @@ export const lexemePZFixtures = [
 		tags: [noteToken("#Pronomen"), noteToken("#Reziprok")],
 	},
 	{
-		slug: "Berlin",
+		presentationKey: "Berlin",
 		family: "Lexeme",
 		kind: "PROPN",
 		emoji: "🐻",
@@ -181,7 +181,7 @@ export const lexemePZFixtures = [
 		],
 	},
 	{
-		slug: "Obwohl",
+		presentationKey: "Obwohl",
 		family: "Lexeme",
 		kind: "SCONJ",
 		emoji: "↔️",
@@ -244,7 +244,7 @@ export const lexemePZFixtures = [
 		tags: [noteToken("#Subjunktion"), noteToken("#Konzessiv")],
 	},
 	{
-		slug: "%",
+		presentationKey: "%",
 		family: "Lexeme",
 		kind: "SYM",
 		emoji: "💯",
@@ -303,7 +303,7 @@ export const lexemePZFixtures = [
 		tags: [noteToken("#Symbol")],
 	},
 	{
-		slug: "Anrufen",
+		presentationKey: "Anrufen",
 		family: "Lexeme",
 		kind: "VERB",
 		emoji: "📞",
@@ -403,7 +403,7 @@ export const lexemePZFixtures = [
 		tags: [noteToken("#Verb"), noteToken("#Trennbar"), noteToken("#Stark")],
 	},
 	{
-		slug: "Lorem",
+		presentationKey: "Lorem",
 		family: "Lexeme",
 		kind: "X",
 		emoji: "🧩",

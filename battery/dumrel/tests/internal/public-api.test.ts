@@ -83,6 +83,7 @@ describe("public API allowlists", () => {
 				"projectGrammaticalRelations",
 				"propagateRelations",
 				"semanticRelationValues",
+				"translationLanguageValues",
 			].sort(),
 		);
 		expect(

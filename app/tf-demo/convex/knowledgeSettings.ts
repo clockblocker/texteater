@@ -19,11 +19,16 @@ export function defaultKnowledgeSettings(): KnowledgeSettings {
 }
 
 function cloneKnowledgeSettings(
-	settings: KnowledgeSettings,
+	settings: Omit<KnowledgeSettings, "translations"> & {
+		readonly translations: { readonly en: boolean; readonly ru?: boolean };
+	},
 ): KnowledgeSettings {
 	return {
 		...settings,
-		translations: { ...settings.translations },
+		translations: {
+			en: settings.translations.en,
+			ru: settings.translations.ru ?? true,
+		},
 		semanticRelations: { ...settings.semanticRelations },
 	};
 }

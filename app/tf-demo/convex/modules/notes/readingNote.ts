@@ -4,6 +4,7 @@ import type {
 	ProjectedSemanticRelations,
 	ReadingKnowledge,
 	ReadingReference,
+	TranslationLanguage,
 } from "dumrel";
 
 import type { Id } from "../../_generated/dataModel";
@@ -89,7 +90,12 @@ const structuralShadowProjectionValidator = v.object({
 const readingKnowledgeValidator = v.object({
 	transcription: v.optional(v.string()),
 	definition: v.optional(v.string()),
-	translations: v.optional(v.object({ en: v.array(v.string()) })),
+	translations: v.optional(
+		v.object({
+			en: v.optional(v.array(v.string())),
+			ru: v.optional(v.array(v.string())),
+		}),
+	),
 	morphologicalTree: v.optional(v.any()),
 	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
 	semanticRelations: v.optional(
@@ -338,12 +344,12 @@ function projectReadingIdentity(
 }
 
 function withResolvedSemanticRelations(
-	knowledge: ReadingKnowledge<"en">,
+	knowledge: ReadingKnowledge<TranslationLanguage>,
 	semanticRelations: ProjectedSemanticRelations<
 		LemmaReference,
 		ReadingReference
 	>,
-): Omit<ReadingKnowledge<"en">, "semanticRelations"> & {
+): Omit<ReadingKnowledge<TranslationLanguage>, "semanticRelations"> & {
 	semanticRelations?: ProjectedSemanticRelations<
 		LemmaReference,
 		ReadingReference

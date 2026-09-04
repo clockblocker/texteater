@@ -6,7 +6,6 @@ import {
 	catalogMissStageValidator,
 	directSemanticRelationValidator,
 	knowledgeGenerationAttemptStateValidator,
-	knowledgeSettingsValidator,
 	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
@@ -29,6 +28,7 @@ import {
 	safeGenerationFailureValidator,
 	segmentKindValidator,
 	segmentResolutionStateValidator,
+	storedKnowledgeSettingsValidator,
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "./model/validators";
@@ -344,7 +344,7 @@ export default defineSchema({
 
 	knowledgeSettings: defineTable({
 		visitorId: v.string(),
-		settings: knowledgeSettingsValidator,
+		settings: storedKnowledgeSettingsValidator,
 		updatedAt: v.number(),
 	}).index("by_visitor_id", ["visitorId"]),
 

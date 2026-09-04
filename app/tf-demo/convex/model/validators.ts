@@ -169,7 +169,7 @@ export const knowledgeGenerationAttemptStateValidator = v.union(
 export const knowledgeSettingsValidator = v.object({
 	transcription: v.boolean(),
 	definition: v.boolean(),
-	translations: v.object({ en: v.boolean() }),
+	translations: v.object({ en: v.boolean(), ru: v.boolean() }),
 	morphologicalTree: v.boolean(),
 	lexicalBreakdown: v.boolean(),
 	semanticRelations: v.object({
@@ -183,6 +183,15 @@ export const knowledgeSettingsValidator = v.object({
 		holonym: v.boolean(),
 	}),
 });
+
+/** Compatibility shape for settings written before Russian was configurable. */
+export const storedKnowledgeSettingsValidator =
+	knowledgeSettingsValidator.extend({
+		translations: v.object({
+			en: v.boolean(),
+			ru: v.optional(v.boolean()),
+		}),
+	});
 
 export const readingBlockKindValidator = literalUnion(
 	READING_BLOCK_KIND_VALUES,

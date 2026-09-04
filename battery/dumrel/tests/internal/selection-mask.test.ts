@@ -19,7 +19,7 @@ function expectDeepFrozen(value: unknown): void {
 const completeMask: KnowledgeRequestMask = {
 	transcription: null,
 	definition: null,
-	translations: { en: null },
+	translations: { en: null, ru: null },
 	morphologicalTree: null,
 	lexicalBreakdown: null,
 	semanticRelations: {
@@ -39,7 +39,7 @@ describe("Knowledge settings", () => {
 		expect(DEFAULT_KNOWLEDGE_SETTINGS).toEqual({
 			transcription: true,
 			definition: true,
-			translations: { en: true },
+			translations: { en: true, ru: true },
 			morphologicalTree: true,
 			lexicalBreakdown: true,
 			semanticRelations: {
@@ -125,7 +125,7 @@ describe("Knowledge request masks", () => {
 		const settings: KnowledgeSettings = {
 			...DEFAULT_KNOWLEDGE_SETTINGS,
 			definition: false,
-			translations: { en: false },
+			translations: { en: false, ru: false },
 			morphologicalTree: false,
 			semanticRelations: {
 				synonym: true,
@@ -149,7 +149,7 @@ describe("Knowledge request masks", () => {
 		const disabled: KnowledgeSettings = {
 			transcription: false,
 			definition: false,
-			translations: { en: false },
+			translations: { en: false, ru: false },
 			morphologicalTree: false,
 			lexicalBreakdown: false,
 			semanticRelations: {

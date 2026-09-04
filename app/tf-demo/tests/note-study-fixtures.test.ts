@@ -1,6 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import { supportedReadingRoutes } from "../shared/reading-block-layout";
 import { NOTE_STUDY_FIXTURES } from "../src/playground/notes-study/fixtures";
+import {
+	makeUrl,
+	NOTE_STUDY_DATABASE,
+	NOTE_STUDY_PENDING_RELATIONS,
+	NOTE_STUDY_RELATED_DATABASE,
+	NOTE_STUDY_RESOLVED_RELATIONS,
+} from "../src/playground/notes-study/note-study-dummy-database";
+import { NOTE_STUDY_PRESENTATION_BY_READING_KEY } from "../src/playground/notes-study/note-study-presentation";
 
 const routeKey = ({ family, kind }: { family: string; kind: string }) =>
 	`${family}/${kind}`;
@@ -14,6 +22,37 @@ const nonGermanReadingKinds = new Set([
 ]);
 
 describe("German note-study fixtures", () => {
+	test("normalizes identity, bilingual Knowledge, occurrences, and presentation", () => {
+		expect(NOTE_STUDY_DATABASE).toHaveLength(28);
+		expect(NOTE_STUDY_RELATED_DATABASE).toHaveLength(46);
+		expect(NOTE_STUDY_RESOLVED_RELATIONS).toHaveLength(46);
+		expect(NOTE_STUDY_PENDING_RELATIONS).toHaveLength(9);
+		expect(NOTE_STUDY_PRESENTATION_BY_READING_KEY.size).toBe(28);
+
+		for (const unit of NOTE_STUDY_DATABASE) {
+			expect(unit.reading.lemma.language).toBe("de");
+			expect(unit.reading.lemma.coreFeatures).toBeDefined();
+			expect(unit.knowledge.translations?.en?.length).toBeGreaterThan(0);
+			expect(unit.knowledge.translations?.ru?.length).toBeGreaterThan(0);
+			expect(unit.occurrences.length).toBeGreaterThan(0);
+			for (const occurrence of unit.occurrences) {
+				expect(occurrence.memberSegmentIndices.length).toBeGreaterThan(
+					0,
+				);
+				expect(occurrence.attestation.surface.lemma).toEqual(
+					unit.reading.lemma,
+				);
+			}
+		}
+
+		const daemmerung = NOTE_STUDY_DATABASE.find(
+			({ reading }) => reading.lemma.canonicalForm === "Dämmerung",
+		);
+		expect(daemmerung && makeUrl(daemmerung.reading)).toBe(
+			"Daemmerung/reading/🌒",
+		);
+	});
+
 	test("covers every studied German Unit Reading Family/Kind once", () => {
 		const expectedRoutes = supportedReadingRoutes("de")
 			.filter(({ kind }) => !nonGermanReadingKinds.has(kind))
@@ -26,14 +65,22 @@ describe("German note-study fixtures", () => {
 		expect(new Set(fixtureRoutes).size).toBe(fixtureRoutes.length);
 	});
 
-	test("keeps stable, unique note paths and the Dämmerung route", () => {
-		const slugs = NOTE_STUDY_FIXTURES.map(({ slug }) => slug);
-		expect(new Set(slugs).size).toBe(slugs.length);
+	test("keeps stable presentation keys and the Dämmerung route", () => {
+		const presentationKeys = NOTE_STUDY_FIXTURES.map(
+			({ presentationKey }) => presentationKey,
+		);
+		expect(new Set(presentationKeys).size).toBe(presentationKeys.length);
 		expect(
-			slugs.every((slug) => slug.length > 0 && !slug.includes("/")),
+			presentationKeys.every(
+				(presentationKey) =>
+					presentationKey.length > 0 &&
+					!presentationKey.includes("/"),
+			),
 		).toBe(true);
 		expect(
-			NOTE_STUDY_FIXTURES.find(({ slug }) => slug === "Daemmerung"),
+			NOTE_STUDY_FIXTURES.find(
+				({ presentationKey }) => presentationKey === "Daemmerung",
+			),
 		).toMatchObject({
 			family: "Lexeme",
 			kind: "NOUN",
@@ -44,7 +91,9 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("keeps Doch on its answer-particle Reading", () => {
-		const doch = NOTE_STUDY_FIXTURES.find(({ slug }) => slug === "Doch");
+		const doch = NOTE_STUDY_FIXTURES.find(
+			({ presentationKey }) => presentationKey === "Doch",
+		);
 
 		expect(doch).toMatchObject({
 			summary: "Widerspricht einer verneinten Aussage oder Frage.",
@@ -70,7 +119,9 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("models the percent symbol as the Reading", () => {
-		const percent = NOTE_STUDY_FIXTURES.find(({ slug }) => slug === "%");
+		const percent = NOTE_STUDY_FIXTURES.find(
+			({ presentationKey }) => presentationKey === "%",
+		);
 
 		expect(percent).toMatchObject({
 			family: "Lexeme",
@@ -100,7 +151,7 @@ describe("German note-study fixtures", () => {
 
 	test("keeps Anrufen relations to defensible Lemma targets", () => {
 		const anrufen = NOTE_STUDY_FIXTURES.find(
-			({ slug }) => slug === "Anrufen",
+			({ presentationKey }) => presentationKey === "Anrufen",
 		);
 
 		expect(anrufen).toMatchObject({
@@ -194,10 +245,12 @@ describe("German note-study fixtures", () => {
 
 	test("separates literal translations from translated explanations", () => {
 		const tomatoIdiom = NOTE_STUDY_FIXTURES.find(
-			({ slug }) => slug === "Tomaten-auf-den-Augen-haben",
+			({ presentationKey }) =>
+				presentationKey === "Tomaten-auf-den-Augen-haben",
 		);
 		const morningProverb = NOTE_STUDY_FIXTURES.find(
-			({ slug }) => slug === "Morgenstund-hat-Gold-im-Mund",
+			({ presentationKey }) =>
+				presentationKey === "Morgenstund-hat-Gold-im-Mund",
 		);
 
 		expect(tomatoIdiom).toMatchObject({

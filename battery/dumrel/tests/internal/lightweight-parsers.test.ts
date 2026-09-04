@@ -22,7 +22,7 @@ describe("Dumrel lightweight parsers", () => {
 				input: {
 					transcription: true,
 					definition: true,
-					translations: { en: true },
+					translations: { en: true, ru: true },
 					morphologicalTree: false,
 					lexicalBreakdown: false,
 					semanticRelations: {

@@ -2,7 +2,7 @@ import { type NoteStudyFixture, noteToken } from "../note-study-fixture";
 
 export const phrasemeFixtures = [
 	{
-		slug: "Der-Weg-ist-das-Ziel",
+		presentationKey: "Der-Weg-ist-das-Ziel",
 		family: "Phraseme",
 		kind: "Aphorism",
 		emoji: "🧭",
@@ -74,7 +74,7 @@ export const phrasemeFixtures = [
 		],
 	},
 	{
-		slug: "Eine-Entscheidung-treffen",
+		presentationKey: "Eine-Entscheidung-treffen",
 		family: "Phraseme",
 		kind: "Collocation",
 		emoji: "✅",
@@ -165,7 +165,7 @@ export const phrasemeFixtures = [
 		],
 	},
 	{
-		slug: "Wie-dem-auch-sei",
+		presentationKey: "Wie-dem-auch-sei",
 		family: "Phraseme",
 		kind: "DiscourseFormula",
 		emoji: "↪️",
@@ -240,7 +240,7 @@ export const phrasemeFixtures = [
 		],
 	},
 	{
-		slug: "Tomaten-auf-den-Augen-haben",
+		presentationKey: "Tomaten-auf-den-Augen-haben",
 		family: "Phraseme",
 		kind: "Idiom",
 		emoji: "🍅",
@@ -322,7 +322,7 @@ export const phrasemeFixtures = [
 		],
 	},
 	{
-		slug: "Morgenstund-hat-Gold-im-Mund",
+		presentationKey: "Morgenstund-hat-Gold-im-Mund",
 		family: "Phraseme",
 		kind: "Proverb",
 		emoji: "🌅",
