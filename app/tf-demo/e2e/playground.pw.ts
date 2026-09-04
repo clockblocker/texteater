@@ -178,22 +178,28 @@ test("the notes study lists every German Unit Reading route", async ({
 		page.getByRole("heading", { name: "Every note has a shelf." }),
 	).toBeVisible();
 	await expect(page.locator(".note-shelf")).toHaveCount(3);
-	await expect(page.locator(".note-shelf li")).toHaveCount(33);
+	await expect(page.locator(".note-shelf li")).toHaveCount(28);
 	await expect(
 		page.locator('.note-shelf[aria-labelledby="note-shelf-Lexeme"] li'),
-	).toHaveCount(17);
+	).toHaveCount(16);
 	await expect(
 		page.locator('.note-shelf[aria-labelledby="note-shelf-Phraseme"] li'),
 	).toHaveCount(5);
 	await expect(
 		page.locator('.note-shelf[aria-labelledby="note-shelf-Morpheme"] li'),
-	).toHaveCount(11);
+	).toHaveCount(7);
 
-	await page.locator('a[href="/playground/notes-study/Daemmerung"]').click();
+	const daemmerungLink = page.locator(
+		'a[href="/playground/notes-study/Daemmerung"]',
+	);
+	await expect(daemmerungLink.locator("strong")).toHaveText("Dämmerung");
+	await daemmerungLink.click();
 	await expect(page).toHaveURL(/\/playground\/notes-study\/Daemmerung$/);
-	await expect(
-		page.locator('[data-note-fixture="Daemmerung"]'),
-	).toBeVisible();
+	const daemmerung = page.locator('[data-note-fixture="Daemmerung"]');
+	await expect(daemmerung).toBeVisible();
+	await expect(daemmerung.locator(".lexical-note__lemma h4")).toHaveText(
+		"die Dämmerung",
+	);
 });
 
 test("note sections follow the Reading instead of a fixed template", async ({
@@ -218,6 +224,43 @@ test("note sections follow the Reading instead of a fixed template", async ({
 		page.getByRole("heading", { name: "Wortbildung" }),
 	).toBeVisible();
 	await expect(page.getByRole("heading", { name: "Formen" })).toHaveCount(0);
+});
+
+test("Dämmerung distinguishes note links from its external source link", async ({
+	page,
+}) => {
+	await page.goto("/playground/notes-study/Daemmerung");
+
+	const note = page.locator('[data-note-fixture="Daemmerung"]');
+	await expect(note).toBeVisible();
+	const noteLinks = note.locator("a.linked-word");
+	expect(await noteLinks.count()).toBeGreaterThan(0);
+	const rootMorphemeLink = note.getByRole("link", {
+		name: "dämmer, root morpheme",
+	});
+	await expect(rootMorphemeLink).toHaveText("dämmer");
+	await expect(rootMorphemeLink).toHaveAttribute(
+		"href",
+		"/playground/notes-study/Fahr",
+	);
+	const selfLinks = note.locator(
+		'a.linked-word:not([href="/playground/notes-study/Fahr"])',
+	);
+	for (const link of await selfLinks.all()) {
+		await expect(link).toHaveAttribute(
+			"href",
+			"/playground/notes-study/Daemmerung",
+		);
+	}
+
+	const externalSourceLink = note.locator("a.external-source-link");
+	await expect(externalSourceLink).toHaveCount(1);
+	await expect(externalSourceLink).toHaveClass(/lexical-note__ipa/);
+	await expect(externalSourceLink).not.toHaveClass(/linked-word/);
+	await expect(externalSourceLink).toHaveAttribute(
+		"href",
+		"https://youglish.com/pronounce/D%C3%A4mmerung/german",
+	);
 });
 
 test("literal and explanatory translations are separate and unlabeled", async ({
@@ -265,9 +308,25 @@ test("verb form labels do not overlap their values", async ({ page }) => {
 	await page.setViewportSize({ width: 820, height: 586 });
 	await page.goto("/playground/notes-study/Anrufen");
 
-	const formRows = page
-		.locator('[data-note-fixture="Anrufen"]')
-		.locator(".note-section--forms dl > div");
+	const anrufen = page.locator('[data-note-fixture="Anrufen"]');
+	const linkedTitle = anrufen.getByRole("link", {
+		name: "anrufen, trennbares starkes Verb",
+	});
+	await expect(
+		anrufen.locator(".lexical-note__lemma .linked-word"),
+	).toHaveCount(1);
+	await expect(linkedTitle).toHaveText("anrufen");
+	await linkedTitle.hover({ position: { x: 2, y: 2 } });
+	await expect(linkedTitle).toHaveCSS("text-decoration-line", "underline");
+	const linkedTitleBox = await linkedTitle.boundingBox();
+	if (!linkedTitleBox) throw new Error("Missing linked title geometry.");
+	await page.mouse.move(
+		linkedTitleBox.x + linkedTitleBox.width - 2,
+		linkedTitleBox.y + linkedTitleBox.height / 2,
+	);
+	await expect(linkedTitle).toHaveCSS("text-decoration-line", "underline");
+
+	const formRows = anrufen.locator(".note-section--forms dl > div");
 	await expect(formRows).toHaveCount(5);
 	await page.evaluate(() => {
 		const browser = globalThis as unknown as {
@@ -295,6 +354,45 @@ test("verb form labels do not overlap their values", async ({ page }) => {
 		}),
 	);
 	expect(collisions).toEqual([]);
+});
+
+test("context trailing whitespace shares the source bar hit target", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1920, height: 700 });
+	await page.goto("/playground/notes-study/Anrufen");
+
+	const context = page
+		.locator('[data-note-fixture="Anrufen"] .source-contexts blockquote')
+		.first();
+	const content = context.locator(".source-context__content");
+	const bar = context.locator(".source-context__bar");
+	const [contextBox, contentBox] = await Promise.all([
+		context.boundingBox(),
+		content.boundingBox(),
+	]);
+	if (!contextBox || !contentBox)
+		throw new Error("Missing Source Context geometry.");
+
+	const contentRight = contentBox.x + contentBox.width;
+	const contextRight = contextBox.x + contextBox.width;
+	expect(contextRight - contentRight).toBeGreaterThan(8);
+	const trailingSpacePoint = {
+		x: contentRight + (contextRight - contentRight) / 2,
+		y: contextBox.y + contextBox.height / 2,
+	};
+
+	await page.mouse.move(trailingSpacePoint.x, trailingSpacePoint.y);
+	await expect(bar).toHaveCSS("color", "rgb(142, 180, 240)");
+	await bar.evaluate((element) => {
+		element.addEventListener(
+			"click",
+			() => element.setAttribute("data-trailing-space-clicked", "true"),
+			{ once: true },
+		);
+	});
+	await page.mouse.click(trailingSpacePoint.x, trailingSpacePoint.y);
+	await expect(bar).toHaveAttribute("data-trailing-space-clicked", "true");
 });
 
 test("the Midnight reading note Sheet lifts into its purpose-built Card", async ({
@@ -410,14 +508,8 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	}
 	const sourceContexts = midnight.locator(".source-contexts blockquote");
 	const contextBars = midnight.locator(".source-context__bar");
-	await expect(contextBars.nth(0)).toHaveCSS(
-		"background-color",
-		"rgb(56, 62, 71)",
-	);
-	await expect(contextBars.nth(1)).toHaveCSS(
-		"background-color",
-		"rgb(56, 62, 71)",
-	);
+	await expect(contextBars.nth(0)).toHaveCSS("color", "rgb(56, 62, 71)");
+	await expect(contextBars.nth(1)).toHaveCSS("color", "rgb(56, 62, 71)");
 	const firstContextBox = await sourceContexts.nth(0).boundingBox();
 	const firstContextGutter = await sourceContexts
 		.nth(0)
@@ -434,14 +526,8 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 		y: firstContextBox.y + firstContextBox.height / 2,
 	};
 	await page.mouse.move(contextGutterPoint.x, contextGutterPoint.y);
-	await expect(contextBars.nth(0)).toHaveCSS(
-		"background-color",
-		"rgb(230, 154, 157)",
-	);
-	await expect(contextBars.nth(1)).toHaveCSS(
-		"background-color",
-		"rgb(56, 62, 71)",
-	);
+	await expect(contextBars.nth(0)).toHaveCSS("color", "rgb(230, 154, 157)");
+	await expect(contextBars.nth(1)).toHaveCSS("color", "rgb(56, 62, 71)");
 	await contextBars.nth(0).evaluate((bar) => {
 		bar.addEventListener(
 			"click",
@@ -456,27 +542,26 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	);
 	const attestedWord = sourceContexts
 		.nth(0)
-		.getByRole("button", { name: "Dämmerung, feminine noun" });
+		.getByRole("link", { name: "Dämmerung, feminine noun" });
 	await attestedWord.hover();
 	await expect(attestedWord).toHaveCSS("text-decoration-line", "none");
-	await expect(contextBars.nth(0)).toHaveCSS(
-		"background-color",
-		"rgb(230, 154, 157)",
-	);
-	await expect(contextBars.nth(1)).toHaveCSS(
-		"background-color",
-		"rgb(56, 62, 71)",
-	);
+	await expect(contextBars.nth(0)).toHaveCSS("color", "rgb(230, 154, 157)");
+	await expect(contextBars.nth(1)).toHaveCSS("color", "rgb(56, 62, 71)");
 
 	await expect(midnight.locator('[data-number="plural"]').first()).toHaveCSS(
 		"color",
 		"rgb(230, 215, 154)",
 	);
+	const rootMorphemeLink = midnight.getByRole("link", {
+		name: "dämmer, root morpheme",
+	});
+	await expect(rootMorphemeLink).toHaveCSS("color", "rgb(142, 180, 240)");
+	await expect(rootMorphemeLink).toHaveAttribute(
+		"href",
+		"/playground/notes-study/Fahr",
+	);
 	await expect(
-		midnight.getByRole("button", { name: "Dämmer, verb stem" }),
-	).toHaveCSS("color", "rgb(142, 180, 240)");
-	await expect(
-		midnight.getByRole("button", {
+		midnight.getByRole("link", {
 			name: "ung, feminine noun-forming suffix",
 			exact: true,
 		}),
@@ -692,7 +777,7 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 	});
 	await expect(
 		placedCard
-			.getByRole("button", { name: "Dämmerung, feminine noun" })
+			.getByRole("link", { name: "Dämmerung, feminine noun" })
 			.first(),
 	).toBeVisible();
 

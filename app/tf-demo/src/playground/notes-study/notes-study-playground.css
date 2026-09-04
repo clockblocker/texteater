@@ -263,6 +263,7 @@
 
 .notes-prototype__sheet-handle:focus-visible,
 .lexical-note button:focus-visible,
+.linked-word:focus-visible,
 .lexical-note__ipa:focus-visible {
 	outline: 2px solid #4f7cff;
 	outline-offset: 2px;
@@ -567,6 +568,7 @@
 	color: var(--note-link);
 	cursor: pointer;
 	text-align: inherit;
+	text-decoration: none;
 }
 
 .linked-word[data-noun-gender="feminine"] {
@@ -712,15 +714,30 @@
 	text-decoration: none;
 }
 
+.source-context__content {
+	position: relative;
+	z-index: 1;
+}
+
 .source-context__bar {
 	position: absolute;
 	top: 0.2rem;
+	right: 0;
 	bottom: 0.2rem;
 	left: 0;
-	width: 3px;
-	background: var(--note-rule);
+	color: var(--note-rule);
 	cursor: pointer;
-	transition: background-color 140ms ease;
+	transition: color 140ms ease;
+}
+
+.source-context__bar::before {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 3px;
+	background: currentColor;
+	content: "";
 }
 
 .source-context__bar::after {
@@ -736,7 +753,7 @@
 .source-contexts
 	blockquote:has(.linked-word:is(:hover, :focus-visible))
 	.source-context__bar {
-	background-color: var(--note-link);
+	color: var(--note-link);
 }
 
 .source-context__bar[data-noun-gender="feminine"]:hover,
@@ -745,7 +762,7 @@
 		.linked-word[data-noun-gender="feminine"]:is(:hover, :focus-visible)
 	)
 	.source-context__bar {
-	background-color: var(--note-noun-feminine);
+	color: var(--note-noun-feminine);
 }
 
 .source-context__bar[data-noun-gender="neuter"]:hover,
@@ -754,7 +771,7 @@
 		.linked-word[data-noun-gender="neuter"]:is(:hover, :focus-visible)
 	)
 	.source-context__bar {
-	background-color: var(--note-noun-neuter);
+	color: var(--note-noun-neuter);
 }
 
 .source-context__bar[data-noun-gender="masculine"]:hover,
@@ -763,7 +780,7 @@
 		.linked-word[data-noun-gender="masculine"]:is(:hover, :focus-visible)
 	)
 	.source-context__bar {
-	background-color: var(--note-noun-masculine);
+	color: var(--note-noun-masculine);
 }
 
 .source-context__bar[data-number="plural"]:hover,
@@ -772,7 +789,7 @@
 		.linked-word[data-number="plural"]:is(:hover, :focus-visible)
 	)
 	.source-context__bar {
-	background-color: var(--note-number-plural);
+	color: var(--note-number-plural);
 }
 
 .note-writing textarea {

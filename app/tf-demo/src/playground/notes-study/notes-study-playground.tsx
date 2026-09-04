@@ -403,6 +403,11 @@ function NoteArticle({
 	readonly noteId: string;
 	readonly showSectionTitles?: boolean;
 }) {
+	const linkedWordHref = playgroundExperimentHref(
+		"notes-study",
+		fixture.slug,
+	);
+
 	return (
 		<article
 			className="lexical-note__article"
@@ -414,13 +419,13 @@ function NoteArticle({
 						{fixture.emoji}
 					</span>
 					<h4 id={`${noteId}-title`}>
-						<RichLine line={fixture.title} />
+						<RichLine href={linkedWordHref} line={fixture.title} />
 					</h4>
 				</div>
 				{fixture.ipa ? (
 					fixture.pronunciationHref ? (
 						<a
-							className="lexical-note__ipa"
+							className="external-source-link lexical-note__ipa"
 							href={fixture.pronunciationHref}
 							target="_blank"
 							rel="noreferrer"
@@ -446,7 +451,12 @@ function NoteArticle({
 								key={`${fixture.slug}-context-${index}`}
 							>
 								<ContextBar tone={fixture.contextTone} />
-								<RichLine line={context} />
+								<span className="source-context__content">
+									<RichLine
+										href={linkedWordHref}
+										line={context}
+									/>
+								</span>
 							</blockquote>
 						))}
 					</div>
@@ -487,7 +497,10 @@ function NoteArticle({
 									key={relation.relation}
 									{...relation}
 								>
-									<RichLine line={relation.content} />
+									<RichLine
+										href={linkedWordHref}
+										line={relation.content}
+									/>
 								</RelationRow>
 							))}
 						</dl>
@@ -508,7 +521,7 @@ function NoteArticle({
 								}
 								key={`${fixture.slug}-formation-${index}`}
 							>
-								<RichLine line={line} />
+								<RichLine href={linkedWordHref} line={line} />
 							</p>
 						))}
 					</NoteSection>
@@ -523,7 +536,7 @@ function NoteArticle({
 					>
 						{fixture.structure.map((line, index) => (
 							<p key={`${fixture.slug}-structure-${index}`}>
-								<RichLine line={line} />
+								<RichLine href={linkedWordHref} line={line} />
 							</p>
 						))}
 					</NoteSection>
@@ -613,7 +626,10 @@ function NoteArticle({
 												<td
 													key={`${fixture.slug}-${row.label}-${fixture.formTable?.columnLabels[index]}`}
 												>
-													<RichLine line={cell} />
+													<RichLine
+														href={linkedWordHref}
+														line={cell}
+													/>
 												</td>
 											))}
 										</tr>
@@ -627,7 +643,10 @@ function NoteArticle({
 								<div key={form.label}>
 									<dt>{form.label}</dt>
 									<dd>
-										<RichLine line={form.content} />
+										<RichLine
+											href={linkedWordHref}
+											line={form.content}
+										/>
 									</dd>
 								</div>
 							))}
@@ -675,12 +694,22 @@ function ContextBar({ tone }: { readonly tone?: NoteStudyTone }) {
 	);
 }
 
-function RichLine({ line }: { readonly line: NoteStudyLine }) {
+function RichLine({
+	href,
+	line,
+}: {
+	readonly href: string;
+	readonly line: NoteStudyLine;
+}) {
 	return line.map((part, index) =>
 		typeof part === "string" ? (
 			part
 		) : (
-			<LinkedWord key={`${part.text}-${index}`} token={part} />
+			<LinkedWord
+				href={part.href ?? href}
+				key={`${part.text}-${index}`}
+				token={part}
+			/>
 		),
 	);
 }
@@ -699,7 +728,13 @@ function SectionLabel({
 	);
 }
 
-function LinkedWord({ token }: { readonly token: NoteStudyToken }) {
+function LinkedWord({
+	href,
+	token,
+}: {
+	readonly href: string;
+	readonly token: NoteStudyToken;
+}) {
 	const description =
 		token.description ??
 		(token.tone === "shadow"
@@ -717,14 +752,14 @@ function LinkedWord({ token }: { readonly token: NoteStudyToken }) {
 		? description
 		: `${token.text}, ${description}`;
 	return (
-		<button
-			type="button"
+		<a
 			className="linked-word"
+			href={href}
 			{...toneDataAttributes(token.tone)}
 			aria-label={accessibleName}
 		>
 			{token.text}
-		</button>
+		</a>
 	);
 }
 

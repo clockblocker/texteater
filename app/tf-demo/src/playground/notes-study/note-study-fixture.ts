@@ -24,6 +24,7 @@ export type NoteStudyToken = {
 	readonly text: string;
 	readonly tone?: NoteStudyTone;
 	readonly description?: string;
+	readonly href?: string;
 };
 
 export type NoteStudyLine = readonly (string | NoteStudyToken)[];
@@ -76,4 +77,5 @@ export const noteToken = (
 	text: string,
 	tone: NoteStudyTone = "reference",
 	description?: string,
-): NoteStudyToken => ({ text, tone, description });
+	href?: string,
+): NoteStudyToken => ({ text, tone, description, href });

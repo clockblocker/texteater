@@ -110,7 +110,7 @@ export const lexemePZFixtures = [
 		formation: [
 			[
 				noteToken("ein", "reference", "erster Bestandteil"),
-				" | ",
+				"|",
 				noteToken("ander", "reference", "zweiter Bestandteil"),
 			],
 		],
@@ -246,7 +246,7 @@ export const lexemePZFixtures = [
 		formation: [
 			[
 				noteToken("ob", "reference", "erster Bestandteil"),
-				" | ",
+				"|",
 				noteToken("wohl", "reference", "zweiter Bestandteil"),
 			],
 		],
@@ -342,18 +342,6 @@ export const lexemePZFixtures = [
 			"Mit jemandem telefonisch Kontakt aufnehmen; das starke Verb ist trennbar und verlangt häufig ein Akkusativobjekt.",
 		relations: [
 			{
-				relation: "synonym",
-				label: "Synonym",
-				mark: "=",
-				content: [
-					noteToken(
-						"telefonisch kontaktieren",
-						"reference",
-						"gleichbedeutende Umschreibung",
-					),
-				],
-			},
-			{
 				relation: "nearSynonym",
 				label: "Nahes Synonym",
 				mark: "≈",
@@ -362,24 +350,6 @@ export const lexemePZFixtures = [
 						"durchklingeln",
 						"reference",
 						"umgangssprachliches Verb",
-					),
-					", ",
-					noteToken(
-						"sich melden",
-						"reference",
-						"perspektivisch verwandt",
-					),
-				],
-			},
-			{
-				relation: "nearAntonym",
-				label: "Nahes Antonym",
-				mark: "≉",
-				content: [
-					noteToken(
-						"auflegen",
-						"reference",
-						"Telefongespräch beenden",
 					),
 				],
 			},
@@ -395,7 +365,7 @@ export const lexemePZFixtures = [
 		formation: [
 			[
 				noteToken("an", "reference", "trennbares Präverb"),
-				" | ",
+				"|",
 				noteToken("rufen", "reference", "starkes Verb"),
 			],
 		],

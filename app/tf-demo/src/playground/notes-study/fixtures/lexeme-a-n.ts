@@ -60,7 +60,7 @@ export const lexemeANFixtures = [
 		formation: [
 			[
 				noteToken("ruh", "reference", "ruh, stem of Ruhe"),
-				" | ",
+				"|",
 				noteToken("ig", "reference", "ig, adjective-forming suffix"),
 			],
 		],
@@ -485,14 +485,8 @@ export const lexemeANFixtures = [
 		title: [
 			"die ",
 			noteToken("Dämmerung", "feminine", "Dämmerung, feminine noun"),
-			", die ",
-			noteToken(
-				"Dämmerungen",
-				"plural",
-				"Dämmerungen, feminine noun, plural",
-			),
 		],
-		titleText: "die Dämmerung, die Dämmerungen",
+		titleText: "Dämmerung",
 		ipa: "/ˈdɛmərʊŋ/",
 		pronunciationHref:
 			"https://youglish.com/pronounce/D%C3%A4mmerung/german",
@@ -630,8 +624,13 @@ export const lexemeANFixtures = [
 		],
 		formation: [
 			[
-				noteToken("Dämmer", "reference", "Dämmer, verb stem"),
-				" | ",
+				noteToken(
+					"dämmer",
+					"reference",
+					"dämmer, root morpheme",
+					"/playground/notes-study/Fahr",
+				),
+				"|",
 				noteToken(
 					"ung",
 					"feminine",

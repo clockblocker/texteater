@@ -5,15 +5,23 @@ import { NOTE_STUDY_FIXTURES } from "../src/playground/notes-study/fixtures";
 const routeKey = ({ family, kind }: { family: string; kind: string }) =>
 	`${family}/${kind}`;
 
+const nonGermanReadingKinds = new Set([
+	"Duplifix",
+	"Infix",
+	"PUNCT",
+	"ToneMarking",
+	"Transfix",
+]);
+
 describe("German note-study fixtures", () => {
 	test("covers every studied German Unit Reading Family/Kind once", () => {
 		const expectedRoutes = supportedReadingRoutes("de")
-			.filter(({ kind }) => kind !== "PUNCT")
+			.filter(({ kind }) => !nonGermanReadingKinds.has(kind))
 			.map(routeKey)
 			.sort();
 		const fixtureRoutes = NOTE_STUDY_FIXTURES.map(routeKey).sort();
 
-		expect(NOTE_STUDY_FIXTURES).toHaveLength(32);
+		expect(NOTE_STUDY_FIXTURES).toHaveLength(28);
 		expect(fixtureRoutes).toEqual(expectedRoutes);
 		expect(new Set(fixtureRoutes).size).toBe(fixtureRoutes.length);
 	});
@@ -26,7 +34,12 @@ describe("German note-study fixtures", () => {
 		).toBe(true);
 		expect(
 			NOTE_STUDY_FIXTURES.find(({ slug }) => slug === "Daemmerung"),
-		).toMatchObject({ family: "Lexeme", kind: "NOUN" });
+		).toMatchObject({
+			family: "Lexeme",
+			kind: "NOUN",
+			title: ["die ", { text: "Dämmerung", tone: "feminine" }],
+			titleText: "Dämmerung",
+		});
 	});
 
 	test("models the percent symbol as the Reading", () => {
@@ -58,6 +71,33 @@ describe("German note-study fixtures", () => {
 		).toEqual(["Prozentsymbol", "Prozentzeichen"]);
 	});
 
+	test("keeps Anrufen relations to defensible Lemma targets", () => {
+		const anrufen = NOTE_STUDY_FIXTURES.find(
+			({ slug }) => slug === "Anrufen",
+		);
+
+		expect(anrufen).toMatchObject({
+			title: [
+				{
+					text: "anrufen",
+					description: "trennbares starkes Verb",
+				},
+			],
+			titleText: "anrufen",
+		});
+		expect(
+			anrufen?.relations?.map(({ relation, content }) => ({
+				relation,
+				targets: content
+					.filter((part) => typeof part !== "string")
+					.map(({ text }) => text),
+			})),
+		).toEqual([
+			{ relation: "nearSynonym", targets: ["durchklingeln"] },
+			{ relation: "hypernym", targets: ["kontaktieren"] },
+		]);
+	});
+
 	test("keeps optional learning sections semantically scoped", () => {
 		const routesWith = (section: "formation" | "structure") =>
 			NOTE_STUDY_FIXTURES.filter((fixture) => fixture[section])
@@ -78,15 +118,11 @@ describe("German note-study fixtures", () => {
 				"Lexeme/VERB",
 				"Morpheme/Circumfix",
 				"Morpheme/Clitic",
-				"Morpheme/Duplifix",
-				"Morpheme/Infix",
 				"Morpheme/Interfix",
 				"Morpheme/Prefix",
 				"Morpheme/Root",
 				"Morpheme/Suffix",
 				"Morpheme/Suffixoid",
-				"Morpheme/ToneMarking",
-				"Morpheme/Transfix",
 			].sort(),
 		);
 
