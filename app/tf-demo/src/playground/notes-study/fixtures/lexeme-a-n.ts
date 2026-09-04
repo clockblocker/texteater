@@ -638,7 +638,7 @@ export const lexemeANFixtures = [
 				),
 			],
 		],
-		translations: ["twilight; dusk", "закат;"],
+		translations: ["twilight; dusk", "сумерки"],
 		forms: [
 			{
 				label: "N",

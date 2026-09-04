@@ -6,11 +6,11 @@ export const lexemePZFixtures = [
 		family: "Lexeme",
 		kind: "PART",
 		emoji: "💬",
-		title: [noteToken("doch", "reference", "unveränderliche Partikel")],
+		title: [noteToken("doch", "reference", "Antwortpartikel")],
 		titleText: "doch",
 		ipa: "/dɔx/",
 		pronunciationHref: "https://youglish.com/pronounce/doch/german",
-		summary: "Widerspricht oder erinnert an eine gemeinsame Erwartung.",
+		summary: "Widerspricht einer verneinten Aussage oder Frage.",
 		contexts: [
 			[
 				"„Kommst du nicht mit?“ — „",
@@ -18,24 +18,14 @@ export const lexemePZFixtures = [
 				", ich bin gleich fertig.“",
 			],
 			[
-				"Du weißt ",
-				noteToken("doch", "reference", "Abtönungspartikel"),
-				", dass die Bibliothek montags geschlossen ist.",
+				"„Du hast die E-Mail nicht gelesen.“ — „",
+				noteToken("Doch", "reference", "Antwortpartikel"),
+				", ich habe sie gestern beantwortet.“",
 			],
 		],
 		definition:
-			"Unveränderliche Partikel, die einer Verneinung widerspricht oder an eine gemeinsame Erwartung erinnert.",
+			"Antwortpartikel, mit der man einer verneinten Aussage widerspricht oder eine verneinte Frage bejaht.",
 		relations: [
-			{
-				relation: "nearSynonym",
-				label: "Nahes Synonym",
-				mark: "≈",
-				content: [
-					noteToken("ja", "reference", "Abtönungspartikel"),
-					", ",
-					noteToken("eben", "reference", "Abtönungspartikel"),
-				],
-			},
 			{
 				relation: "antonym",
 				label: "Antonym",
@@ -44,10 +34,10 @@ export const lexemePZFixtures = [
 			},
 		],
 		translations: [
-			"after all; yes (contradicting a negative)",
-			"ведь; же; всё-таки; напротив",
+			"yes (contradicting a negative)",
+			"напротив; как раз да",
 		],
-		tags: [noteToken("#Partikel"), noteToken("#Unveränderlich")],
+		tags: [noteToken("#Antwortpartikel"), noteToken("#Unveränderlich")],
 	},
 	{
 		slug: "Einander",

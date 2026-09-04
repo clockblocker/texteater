@@ -39,7 +39,34 @@ describe("German note-study fixtures", () => {
 			kind: "NOUN",
 			title: ["die ", { text: "Dämmerung", tone: "feminine" }],
 			titleText: "Dämmerung",
+			translations: ["twilight; dusk", "сумерки"],
 		});
+	});
+
+	test("keeps Doch on its answer-particle Reading", () => {
+		const doch = NOTE_STUDY_FIXTURES.find(({ slug }) => slug === "Doch");
+
+		expect(doch).toMatchObject({
+			summary: "Widerspricht einer verneinten Aussage oder Frage.",
+			relations: [
+				{
+					relation: "antonym",
+					content: [{ text: "nein", description: "Antwortpartikel" }],
+				},
+			],
+			translations: [
+				"yes (contradicting a negative)",
+				"напротив; как раз да",
+			],
+		});
+		expect(
+			doch?.contexts.flatMap((context) =>
+				context.filter((part) => typeof part !== "string"),
+			),
+		).toEqual([
+			{ text: "Doch", tone: "reference", description: "Antwortpartikel" },
+			{ text: "Doch", tone: "reference", description: "Antwortpartikel" },
+		]);
 	});
 
 	test("models the percent symbol as the Reading", () => {
@@ -132,7 +159,7 @@ describe("German note-study fixtures", () => {
 			const formation = fixture.formation[0]
 				?.map((part) => (typeof part === "string" ? part : part.text))
 				.join("");
-			expect(formation).toContain(" | ");
+			expect(formation).toContain("|");
 			expect(formation).not.toMatch(/[+→]/);
 		}
 		expect(routesWith("structure")).toEqual(
@@ -152,8 +179,6 @@ describe("German note-study fixtures", () => {
 				"Lexeme/NOUN",
 				"Lexeme/PROPN",
 				"Lexeme/VERB",
-				"Phraseme/Collocation",
-				"Phraseme/Idiom",
 			].sort(),
 		);
 
@@ -171,6 +196,9 @@ describe("German note-study fixtures", () => {
 		const tomatoIdiom = NOTE_STUDY_FIXTURES.find(
 			({ slug }) => slug === "Tomaten-auf-den-Augen-haben",
 		);
+		const morningProverb = NOTE_STUDY_FIXTURES.find(
+			({ slug }) => slug === "Morgenstund-hat-Gold-im-Mund",
+		);
 
 		expect(tomatoIdiom).toMatchObject({
 			translations: [
@@ -180,6 +208,16 @@ describe("German note-study fixtures", () => {
 			translatedExplanations: [
 				"to be blind to the obvious",
 				"не видеть очевидного; словно глаза не видят",
+			],
+		});
+		expect(morningProverb).toMatchObject({
+			translations: [
+				"The morning hour has gold in its mouth.",
+				"Утренний час — с золотом во рту.",
+			],
+			translatedExplanations: [
+				"The early bird catches the worm.",
+				"Кто рано встаёт, тому Бог подаёт.",
 			],
 		});
 

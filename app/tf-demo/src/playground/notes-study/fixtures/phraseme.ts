@@ -6,13 +6,7 @@ export const phrasemeFixtures = [
 		family: "Phraseme",
 		kind: "Aphorism",
 		emoji: "🧭",
-		title: [
-			noteToken("Der Weg", "masculine", "maskuline Nominalgruppe"),
-			" ",
-			noteToken("ist", "reference", "Kopulaverb"),
-			" ",
-			noteToken("das Ziel", "neuter", "neutrale Nominalgruppe"),
-		],
+		title: [noteToken("Der Weg ist das Ziel", "reference", "Aphorismus")],
 		titleText: "Der Weg ist das Ziel",
 		summary: "Leitsatz über den Wert des Weges zum Ziel.",
 		contexts: [
@@ -58,23 +52,18 @@ export const phrasemeFixtures = [
 					),
 				],
 			},
-			{
-				relation: "hypernym",
-				label: "Oberbegriff",
-				mark: "↑",
-				content: [
-					noteToken("Lebensweisheit", "feminine", "feminines Nomen"),
-				],
-			},
 		],
 		structure: [
 			[
-				"Illustrative Strukturprobe (nicht produktiv): ",
-				noteToken("Der Weg", "masculine", "maskuline Nominalgruppe"),
-				" + ",
+				noteToken("Der", "reference", "bestimmter Artikel"),
+				" ",
+				noteToken("Weg", "masculine", "maskulines Nomen"),
+				" ",
 				noteToken("ist", "reference", "Kopulaverb"),
-				" + ",
-				noteToken("das Ziel", "neuter", "neutrale Nominalgruppe"),
+				" ",
+				noteToken("das", "reference", "bestimmter Artikel"),
+				" ",
+				noteToken("Ziel", "neuter", "neutrales Nomen"),
 			],
 		],
 		translations: ["The journey is the destination.", "Путь — это цель."],
@@ -90,13 +79,7 @@ export const phrasemeFixtures = [
 		kind: "Collocation",
 		emoji: "✅",
 		title: [
-			noteToken(
-				"eine Entscheidung",
-				"feminine",
-				"Akkusativobjekt mit femininem Nomen",
-			),
-			" ",
-			noteToken("treffen", "reference", "Verb"),
+			noteToken("eine Entscheidung treffen", "reference", "Kollokation"),
 		],
 		titleText: "eine Entscheidung treffen",
 		summary: "Übliche Verbindung für das Festlegen einer Wahl.",
@@ -168,74 +151,17 @@ export const phrasemeFixtures = [
 		],
 		structure: [
 			[
-				noteToken(
-					"eine Entscheidung",
-					"feminine",
-					"fest gewähltes Akkusativobjekt",
-				),
-				" + ",
+				noteToken("eine", "feminine", "unbestimmter Artikel"),
+				" ",
+				noteToken("Entscheidung", "feminine", "Akkusativobjekt"),
+				" ",
 				noteToken("treffen", "reference", "regulär flektierbares Verb"),
-			],
-			[
-				"Die Grammatik ist produktiv, die Wortwahl jedoch gebunden: gewöhnlich nicht ",
-				noteToken(
-					"eine Entscheidung machen",
-					"reference",
-					"unübliche Kombination",
-				),
-				".",
 			],
 		],
 		translations: ["to make a decision", "принять решение"],
-		forms: [
-			{
-				label: "Infinitiv",
-				content: [
-					noteToken(
-						"eine Entscheidung treffen",
-						"reference",
-						"Infinitiv",
-					),
-				],
-			},
-			{
-				label: "Präsens",
-				content: [
-					"ich ",
-					noteToken(
-						"treffe eine Entscheidung",
-						"reference",
-						"1. Person Singular Präsens",
-					),
-				],
-			},
-			{
-				label: "Präteritum",
-				content: [
-					"ich ",
-					noteToken(
-						"traf eine Entscheidung",
-						"reference",
-						"1. Person Singular Präteritum",
-					),
-				],
-			},
-			{
-				label: "Perfekt",
-				content: [
-					"ich ",
-					noteToken(
-						"habe eine Entscheidung getroffen",
-						"reference",
-						"1. Person Singular Perfekt",
-					),
-				],
-			},
-		],
 		tags: [
 			noteToken("#Phraseme", "reference", "Familie"),
 			noteToken("#Kollokation", "reference", "Art"),
-			noteToken("#Verbalflexion", "reference", "Formen"),
 		],
 	},
 	{
@@ -291,24 +217,15 @@ export const phrasemeFixtures = [
 					),
 				],
 			},
-			{
-				relation: "hypernym",
-				label: "Oberbegriff",
-				mark: "↑",
-				content: [
-					noteToken("Gesprächsformel", "feminine", "feminines Nomen"),
-				],
-			},
 		],
 		structure: [
 			[
-				"Illustrative Strukturprobe (nicht produktiv): ",
 				noteToken("wie", "reference", "einleitendes Adverb"),
-				" + ",
+				" ",
 				noteToken("dem", "reference", "Pronomen im Dativ"),
-				" + ",
+				" ",
 				noteToken("auch", "reference", "Partikel"),
-				" + ",
+				" ",
 				noteToken("sei", "reference", "Konjunktiv I von sein"),
 			],
 		],
@@ -327,15 +244,7 @@ export const phrasemeFixtures = [
 		family: "Phraseme",
 		kind: "Idiom",
 		emoji: "🍅",
-		title: [
-			noteToken("Tomaten", "plural", "Nomen im Plural"),
-			" ",
-			noteToken("auf den", "reference", "feste Präposition mit Artikel"),
-			" ",
-			noteToken("Augen", "plural", "Nomen im Plural"),
-			" ",
-			noteToken("haben", "reference", "flektierbares Verb"),
-		],
+		title: [noteToken("Tomaten auf den Augen haben", "reference", "Idiom")],
 		titleText: "Tomaten auf den Augen haben",
 		summary:
 			"Etwas deutlich Sichtbares oder Offensichtliches nicht bemerken.",
@@ -384,30 +293,17 @@ export const phrasemeFixtures = [
 					noteToken("den Durchblick haben", "reference", "Idiom"),
 				],
 			},
-			{
-				relation: "hypernym",
-				label: "Oberbegriff",
-				mark: "↑",
-				content: [
-					noteToken(
-						"etwas übersehen",
-						"reference",
-						"Verb mit Akkusativobjekt",
-					),
-				],
-			},
 		],
 		structure: [
 			[
-				"Fester idiomatischer Kern: ",
 				noteToken("Tomaten", "plural", "festes Nomen im Plural"),
-				" + ",
-				noteToken(
-					"auf den Augen",
-					"plural",
-					"feste Präpositionalgruppe mit pluralischem Nomen",
-				),
-				" + ",
+				" ",
+				noteToken("auf", "reference", "Präposition"),
+				" ",
+				noteToken("den", "reference", "bestimmter Artikel"),
+				" ",
+				noteToken("Augen", "plural", "Nomen im Plural"),
+				" ",
 				noteToken("haben", "reference", "regulär flektierbares Verb"),
 			],
 		],
@@ -418,51 +314,6 @@ export const phrasemeFixtures = [
 		translatedExplanations: [
 			"to be blind to the obvious",
 			"не видеть очевидного; словно глаза не видят",
-		],
-		forms: [
-			{
-				label: "Infinitiv",
-				content: [
-					noteToken(
-						"Tomaten auf den Augen haben",
-						"reference",
-						"Infinitiv",
-					),
-				],
-			},
-			{
-				label: "Präsens",
-				content: [
-					"ich ",
-					noteToken(
-						"habe Tomaten auf den Augen",
-						"reference",
-						"1. Person Singular Präsens",
-					),
-				],
-			},
-			{
-				label: "Präteritum",
-				content: [
-					"ich ",
-					noteToken(
-						"hatte Tomaten auf den Augen",
-						"reference",
-						"1. Person Singular Präteritum",
-					),
-				],
-			},
-			{
-				label: "Perfekt",
-				content: [
-					"ich ",
-					noteToken(
-						"habe Tomaten auf den Augen gehabt",
-						"reference",
-						"1. Person Singular Perfekt",
-					),
-				],
-			},
 		],
 		tags: [
 			noteToken("#Phraseme", "reference", "Familie"),
@@ -477,19 +328,9 @@ export const phrasemeFixtures = [
 		emoji: "🌅",
 		title: [
 			noteToken(
-				"Morgenstund",
-				"feminine",
-				"feminines Nomen, dichterische Kurzform",
-			),
-			" ",
-			noteToken("hat", "reference", "Verb"),
-			" ",
-			noteToken("Gold", "neuter", "neutrales Nomen"),
-			" ",
-			noteToken(
-				"im Mund",
-				"masculine",
-				"Präpositionalgruppe mit maskulinem Nomen",
+				"Morgenstund hat Gold im Mund",
+				"reference",
+				"Sprichwort",
 			),
 		],
 		titleText: "Morgenstund hat Gold im Mund",
@@ -541,32 +382,29 @@ export const phrasemeFixtures = [
 					),
 				],
 			},
-			{
-				relation: "hypernym",
-				label: "Oberbegriff",
-				mark: "↑",
-				content: [
-					noteToken("Lebensweisheit", "feminine", "feminines Nomen"),
-				],
-			},
 		],
 		structure: [
 			[
-				"Illustrative Strukturprobe (nicht produktiv): ",
 				noteToken(
 					"Morgenstund",
 					"feminine",
 					"dichterische Kurzform von Morgenstunde",
 				),
-				" + ",
+				" ",
 				noteToken("hat", "reference", "Verb"),
-				" + ",
+				" ",
 				noteToken("Gold", "neuter", "Akkusativobjekt"),
-				" + ",
-				noteToken("im Mund", "masculine", "lokale Ergänzung"),
+				" ",
+				noteToken("im", "reference", "Präposition mit Artikel"),
+				" ",
+				noteToken("Mund", "masculine", "maskulines Nomen"),
 			],
 		],
 		translations: [
+			"The morning hour has gold in its mouth.",
+			"Утренний час — с золотом во рту.",
+		],
+		translatedExplanations: [
 			"The early bird catches the worm.",
 			"Кто рано встаёт, тому Бог подаёт.",
 		],
