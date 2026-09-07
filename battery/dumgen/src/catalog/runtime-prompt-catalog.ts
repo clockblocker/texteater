@@ -558,9 +558,6 @@ export const RUNTIME_PROMPT_CATALOG = Object.freeze({
 		readingResolution: Object.freeze({
 			de: promptEntry("laboratory.readingResolution.de"),
 		}),
-		unitShadowClassification: promptEntry(
-			"laboratory.unitShadowClassification",
-		),
 	}),
 });
 

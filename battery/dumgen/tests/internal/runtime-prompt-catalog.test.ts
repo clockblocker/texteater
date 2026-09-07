@@ -270,7 +270,7 @@ describe("generated operational runtime prompt catalog", () => {
 		).toBe(1);
 	});
 
-	test("preserves the exact 26 canonical prompt paths, text, and generation parameters", () => {
+	test("preserves the exact 25 canonical prompt paths, text, and generation parameters", () => {
 		const authored = [
 			...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
 			[
@@ -289,7 +289,7 @@ describe("generated operational runtime prompt catalog", () => {
 		expect(runtime.map(([path]) => path)).toEqual(
 			authored.map(([path]) => path),
 		);
-		expect(runtime).toHaveLength(26);
+		expect(runtime).toHaveLength(25);
 		for (const [index, [path, authoredEntry]] of authored.entries()) {
 			const runtimeEntry = runtime[index]?.[1];
 			expect(runtimeEntry, path).toBeDefined();
@@ -544,7 +544,7 @@ describe("generated operational runtime prompt catalog", () => {
 				expect(prompt[role], `${artifact.path}:${role}`).toBeDefined();
 			}
 		}
-		expect(dispatchCount).toBe(51);
+		expect(dispatchCount).toBe(50);
 		expect(() =>
 			runtimePromptDispatch(
 				"unknown:project-output",
@@ -641,7 +641,7 @@ describe("generated operational runtime prompt catalog", () => {
 		});
 	});
 
-	test("keeps all 78 generated parser roots differentially bound", async () => {
+	test("keeps all 75 generated parser roots differentially bound", async () => {
 		const representatives = await canonicalPromptRepresentatives();
 		const authored = [
 			...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
@@ -770,7 +770,7 @@ describe("generated operational runtime prompt catalog", () => {
 					}
 			}
 		}
-		expect(roots).toBe(78);
+		expect(roots).toBe(75);
 		expect([...executedOperations].toSorted()).toEqual(
 			[
 				...loadEncodedRuntimePromptValidation().requiredOperations,
@@ -901,10 +901,6 @@ function operationMutationFixture(name: string): unknown {
 			decision: "Resolved",
 			target: null,
 		};
-	if (name.includes("unitShadowClassification#output@$.target"))
-		return { family: "Unknown", kind: "Unknown" };
-	if (name.includes("unitShadowClassification#output@$"))
-		return { decision: "Resolved", target: null };
 	if (name.includes("knowledge.de.combined#output@$.semanticRelations"))
 		return {
 			canonicalForm: "Bank",

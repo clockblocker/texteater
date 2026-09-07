@@ -125,7 +125,7 @@ export const runtimePromptArtifactRecipe = defineCodegen({
 	},
 	build: ({ authoring }) => {
 		const records = collectRuntimePromptArtifacts();
-		if (records.length !== 26)
+		if (records.length !== 25)
 			throw new Error(
 				`Expected 26 canonical Dumgen prompts, received ${String(records.length)}.`,
 			);

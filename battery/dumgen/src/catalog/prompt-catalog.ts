@@ -7,7 +7,6 @@ import {
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/production/generated-system-prompt/intake";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/production/generated-system-prompt/reading-resolution/de";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
-import { systemPrompt as unitShadowClassificationSystemPrompt } from "../promptsmith/production/generated-system-prompt/unit-shadow-classification";
 import {
 	inputSchema as intakeInputSchema,
 	outputSchema as intakeOutputSchema,
@@ -23,11 +22,6 @@ import {
 	inputSchema as readingModelInputSchema,
 	outputSchema as readingOutputSchema,
 } from "../promptsmith/production/reading-resolution/de/schemas";
-import {
-	inputSchema as unitShadowClassificationInputSchema,
-	outputSchema as unitShadowClassificationOutputSchema,
-} from "../promptsmith/production/unit-shadow-classification/schemas";
-import { assertSupportedUnitShadowClassification } from "../schema/unit-shadow-classification";
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
@@ -103,21 +97,6 @@ const readingPrompt = {
 	ReadingResolution
 >;
 
-const unitShadowClassificationPrompt = {
-	systemPrompt: unitShadowClassificationSystemPrompt,
-	inputSchema: unitShadowClassificationInputSchema,
-	outputSchema: unitShadowClassificationOutputSchema,
-	outputPostcondition: {
-		assert(input, generated) {
-			assertSupportedUnitShadowClassification(input, generated);
-		},
-	},
-	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 128 },
-} satisfies Prompt<
-	typeof unitShadowClassificationInputSchema,
-	typeof unitShadowClassificationOutputSchema
->;
-
 function promptEntry<Definition extends Prompt>(
 	prompt: Definition,
 ): PromptCatalogEntry<Definition> {
@@ -161,9 +140,6 @@ export type LaboratoryPromptCatalog = {
 		readonly readingResolution: {
 			readonly de: PromptCatalogEntry<typeof readingPrompt>;
 		};
-		readonly unitShadowClassification: PromptCatalogEntry<
-			typeof unitShadowClassificationPrompt
-		>;
 	};
 };
 
@@ -175,6 +151,5 @@ export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 		},
 		grammaticalResolution: { de: grammaticalResolutionCatalog },
 		readingResolution: { de: promptEntry(readingPrompt) },
-		unitShadowClassification: promptEntry(unitShadowClassificationPrompt),
 	},
 };

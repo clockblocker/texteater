@@ -34,7 +34,6 @@ import {
 	promptSource as productionTargetPromptSource,
 } from "../production/prompt-part/target-classification/de/high-level-whole-unit";
 import { promptSource as readingPromptSource } from "../production/reading-resolution/de/prompt-source";
-import { promptSource as unitShadowClassificationPromptSource } from "../production/unit-shadow-classification/prompt-source";
 import { selectedCaseSourcePaths } from "./golden-corpus";
 import type { SystemPromptRecipe } from "./system-prompt-codegen";
 import { defineSystemPromptCodegen } from "./system-prompt-codegen";
@@ -62,7 +61,6 @@ const productionCodegen = defineSystemPromptCodegen({
 		productionTargetPromptSource,
 		intakePromptSource,
 		readingPromptSource,
-		unitShadowClassificationPromptSource,
 		combinedGermanKnowledgePromptSource,
 		morphologicalSegmentationPromptSource,
 		morphologicalResolutionPromptSource,

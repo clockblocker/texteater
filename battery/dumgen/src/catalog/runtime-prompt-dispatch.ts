@@ -1,4 +1,3 @@
-import { encodedDumgenValidationArtifacts } from "../generated/validation-artifacts.js";
 import {
 	type DeGrammaticalResolutionModelOutput,
 	projectDeGrammaticalResolution,
@@ -57,8 +56,6 @@ export function runtimePromptDispatch(
 			).canonicalize(
 				output as GermanHighLevelTargetClassificationModelOutput,
 			);
-	if (id === "laboratory.unitShadowClassification:output-postcondition")
-		return Object.freeze({ assert: assertSupportedClassification });
 	if (
 		id.startsWith("laboratory.grammaticalResolution.de.") &&
 		id.endsWith(":project-input")
@@ -103,25 +100,4 @@ function projectGrammaticalResolution(
 		realizationCoverage: projection.realizationCoverage,
 		surface,
 	};
-}
-
-function assertSupportedClassification(
-	rawInput: unknown,
-	rawOutput: unknown,
-): void {
-	const input = rawInput as { language: string };
-	const output = rawOutput as {
-		decision: string;
-		target: { family: string; kind: string } | null;
-	};
-	if (output.decision === "Unresolved") return;
-	if (output.target === null)
-		throw new Error("Resolved Unit Shadow classification has no target.");
-	const route = `${input.language}/${output.target.family}/${output.target.kind}`;
-	if (
-		!encodedDumgenValidationArtifacts.supportedUnitShadowRoutes
-			.split("\n")
-			.includes(route)
-	)
-		throw new Error(`${route} is not a supported Dumling Lemma route.`);
 }

@@ -7,7 +7,6 @@ import {
 	type ValidationOperations,
 } from "common-utils";
 import { loadEncodedRuntimePromptData } from "../generated/runtime-prompt-artifacts.js";
-import { encodedDumgenValidationArtifacts } from "../generated/validation-artifacts.js";
 import { dumgenValidationOperations } from "../parsing/validation-operations.js";
 
 export type RuntimePromptSchema<Output = unknown, Input = Output> = Readonly<{
@@ -350,16 +349,6 @@ function constructOperation(
 	if (name.includes("targetClassification.de.highLevelWholeUnit#output@$"))
 		return resolvedTargetShapeOperation;
 	if (
-		name ===
-		"dumgen.prompt.contextual.laboratory.unitShadowClassification#output@$.target<inner>"
-	)
-		return supportedClassificationRouteOperation;
-	if (
-		name ===
-		"dumgen.prompt.contextual.laboratory.unitShadowClassification#output@$"
-	)
-		return classifiedTargetShapeOperation;
-	if (
 		name.startsWith(
 			"dumgen.prompt.contextual.knowledge.de.combined#output@",
 		)
@@ -696,31 +685,6 @@ const resolvedTargetShapeOperation = shapePairOperation(
 		);
 	},
 );
-
-const classifiedTargetShapeOperation = shapePairOperation(
-	"Resolved requires a Family/Kind target; Unresolved requires target null.",
-	(value) => {
-		const output = value as { decision: string; target: unknown };
-		return (output.decision === "Resolved") === (output.target !== null);
-	},
-);
-
-let supportedRoutes: ReadonlySet<string> | undefined;
-const supportedClassificationRouteOperation: ValidationOperation = (value) => {
-	const target = value as { family: string; kind: string };
-	supportedRoutes ??= new Set(
-		encodedDumgenValidationArtifacts.supportedUnitShadowRoutes
-			.split("\n")
-			.map((route) => route.split("/").slice(1).join("/")),
-	);
-	const route = `${target.family}/${target.kind}`;
-	return supportedRoutes.has(route)
-		? { value }
-		: {
-				issues: [customIssue(`${route} is not a Dumling Lemma route.`)],
-				value,
-			};
-};
 
 function shapePairOperation(
 	message: string,
