@@ -271,6 +271,74 @@ test("Dämmerung distinguishes note links from its external source link", async 
 	);
 });
 
+test("note links navigate without replacing the playground document", async ({
+	page,
+}) => {
+	await page.goto("/playground/notes-study/Daemmerung/reading/🌒");
+
+	const note = page.locator('[data-note-fixture="Daemmerung/reading/🌒"]');
+	await expect(note).toBeVisible();
+	await page.locator("html").evaluate((element) => {
+		element.dataset.playgroundDocument = "retained";
+	});
+
+	await note.getByRole("link", { name: "dämmer, root morpheme" }).click();
+
+	await expect(page).toHaveURL(
+		"/playground/notes-study/fahr/reading/%F0%9F%9A%B2",
+	);
+	await expect(
+		page.locator('[data-note-fixture="fahr/reading/🚲"]'),
+	).toBeVisible();
+	await expect(page.locator("html")).toHaveAttribute(
+		"data-playground-document",
+		"retained",
+	);
+
+	await page.goBack();
+	await expect(page).toHaveURL(
+		"/playground/notes-study/Daemmerung/reading/%F0%9F%8C%92",
+	);
+	await expect(note).toBeVisible();
+	await expect(page.locator("html")).toHaveAttribute(
+		"data-playground-document",
+		"retained",
+	);
+
+	await page.goForward();
+	await expect(page).toHaveURL(
+		"/playground/notes-study/fahr/reading/%F0%9F%9A%B2",
+	);
+	await expect(
+		page.locator('[data-note-fixture="fahr/reading/🚲"]'),
+	).toBeVisible();
+	await expect(page.locator("html")).toHaveAttribute(
+		"data-playground-document",
+		"retained",
+	);
+});
+
+test("self note links do not reload the current reading", async ({ page }) => {
+	await page.goto("/playground/notes-study/ruhig/reading/🤫");
+
+	const note = page.locator('[data-note-fixture="ruhig/reading/🤫"]');
+	await expect(note).toBeVisible();
+	await page.locator("html").evaluate((element) => {
+		element.dataset.playgroundDocument = "retained";
+	});
+
+	await note.getByRole("link", { name: "unruhig, adjective" }).click();
+
+	await expect(page).toHaveURL(
+		"/playground/notes-study/ruhig/reading/%F0%9F%A4%AB",
+	);
+	await expect(note).toBeVisible();
+	await expect(page.locator("html")).toHaveAttribute(
+		"data-playground-document",
+		"retained",
+	);
+});
+
 test("literal and explanatory translations are separate and unlabeled", async ({
 	page,
 }) => {

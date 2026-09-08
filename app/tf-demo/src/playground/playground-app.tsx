@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, ArrowUpRightIcon, RotateCcwIcon } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { AppProvider } from "@/components/app-provider";
 import {
@@ -10,6 +10,7 @@ import {
 	PLAYGROUND_PATH,
 	type PlaygroundRoute,
 	playgroundExperimentHref,
+	playgroundRouteFromPathname,
 } from "@/playground/playground-route";
 import "./playground.css";
 
@@ -21,11 +22,69 @@ export function PlaygroundProviders({
 	return <AppProvider>{children}</AppProvider>;
 }
 
-export function PlaygroundApp({ route }: { readonly route: PlaygroundRoute }) {
+export function PlaygroundApp({
+	route: initialRoute,
+}: {
+	readonly route: PlaygroundRoute;
+}) {
+	const [route, setRoute] = useState(initialRoute);
+
+	useEffect(() => {
+		const handleClick = (event: MouseEvent) => {
+			if (
+				event.defaultPrevented ||
+				event.button !== 0 ||
+				event.metaKey ||
+				event.ctrlKey ||
+				event.shiftKey ||
+				event.altKey ||
+				!(event.target instanceof Element)
+			) {
+				return;
+			}
+
+			const link = event.target.closest("a[href]");
+			if (
+				!(link instanceof HTMLAnchorElement) ||
+				(link.target !== "" && link.target !== "_self") ||
+				link.hasAttribute("download") ||
+				link.relList.contains("external")
+			) {
+				return;
+			}
+
+			const destination = new URL(link.href, window.location.href);
+			const nextRoute = playgroundRouteFromPathname(destination.pathname);
+			if (destination.origin !== window.location.origin || !nextRoute) {
+				return;
+			}
+
+			event.preventDefault();
+			if (destination.href === window.location.href) return;
+
+			window.history.pushState(null, "", destination.href);
+			setRoute(nextRoute);
+		};
+		const handlePopState = () => {
+			const nextRoute = playgroundRouteFromPathname(
+				window.location.pathname,
+			);
+			if (nextRoute) setRoute(nextRoute);
+		};
+
+		document.addEventListener("click", handleClick);
+		window.addEventListener("popstate", handlePopState);
+		return () => {
+			document.removeEventListener("click", handleClick);
+			window.removeEventListener("popstate", handlePopState);
+		};
+	}, []);
+
 	return route.kind === "Index" ? (
 		<PlaygroundIndex />
 	) : (
 		<ExperimentRoute
+			key={route.experimentId}
 			experimentId={route.experimentId}
 			detailId={route.detailId}
 		/>
@@ -151,7 +210,10 @@ function ExperimentRoute({
 				className="playground-specimen__stage"
 				aria-label={`${experiment.title} experiment`}
 			>
-				<Experiment key={revision} detailId={detailId} />
+				<Experiment
+					key={`${detailId ?? "index"}:${revision}`}
+					detailId={detailId}
+				/>
 			</section>
 		</main>
 	);
