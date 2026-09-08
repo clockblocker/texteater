@@ -1,20 +1,25 @@
 import type { Reading } from "dumling/types";
-import { defaultKnowledgeRequestMask, type LexicalUnitShadow } from "dumrel";
+import { defaultKnowledgeRequestMask } from "dumrel";
 
 import {
 	germanKnowledgeAnalysisSchema,
 	germanKnowledgeGenerationInputSchema,
-} from "../../../../../../knowledge-generation/de/schemas";
+} from "../../../../knowledge-generation/de/schemas";
 import {
 	type RequestableRelation,
 	requestableRelationSchema,
-} from "../../../../../../knowledge-generation/relations";
-import type {
-	GoldenCaseRegistry,
-	GoldenCaseSource,
-} from "../../../../../assembly";
+} from "../../../../knowledge-generation/relations";
+import type { GoldenCaseRegistry, GoldenCaseSource } from "../../../assembly";
 
-type Target = LexicalUnitShadow<"de">;
+/**
+ * One kind-only relation target. The `family` argument of `t` documents the
+ * Family the target used to carry before ADR-0020 moved the Family to the
+ * source Reading; the same-Family filter now derives it at projection time.
+ */
+type Target = Readonly<{
+	readonly canonicalForm: string;
+	readonly kind: string;
+}>;
 type FailureMode =
 	| "positive"
 	| "negative"
@@ -86,6 +91,10 @@ const references = {
 	dumrelRelations: {
 		title: "Dumrel settled Semantic Relation policy",
 		path: "battery/dumrel/CONTEXT.md",
+	},
+	dumrelFamilyAdr: {
+		title: "ADR-0020: Keep Semantic Relations inside one Family",
+		path: "docs/adr/0020-keep-semantic-relations-inside-one-family.md",
 	},
 	idsHomonymy: {
 		title: "IDS Grammis: Homonymie",
@@ -434,6 +443,60 @@ const demonstrations = defineCases({
 			),
 		],
 	},
+	"relation-demo-zeit-ist-geld": {
+		context: "Wir müssen höflich bleiben: <TARGET>Zeit ist Geld</TARGET>.",
+		reading: phraseme("Zeit ist Geld", "Aphorism", "⏳"),
+		rationale:
+			"No same-Family expression preserves this aphorism's proposition and stance; money-themed sayings are thematic associations, and the demo teaches the conservative null under the same-Family rule.",
+		failureModes: ["null", "multi-member", "negative"],
+		contaminationKey: "relation-de-zeit-ist-geld",
+		authority: "human-accepted",
+		harmfulTargets: [
+			h(
+				"nearSynonym",
+				t("Geld allein macht nicht glücklich", "Phraseme", "Aphorism"),
+				"Shared money topic, but a materially different proposition and stance.",
+			),
+		],
+	},
+	"knowledge-demo-morpheme-suffix-heit": {
+		context: "Die Schön<TARGET>heit</TARGET> der Landschaft.",
+		reading: {
+			lemma: {
+				language: "de",
+				canonicalForm: "-heit",
+				family: "Morpheme",
+				kind: "Suffix",
+				coreFeatures: {},
+			},
+			emojiDescription: "📦",
+		},
+		requestedRelations: [],
+		rationale:
+			"The thin Morpheme route owns base leaves only: one definition and one English literal for the bound suffix; it never requests Semantic Relations.",
+		failureModes: ["positive"],
+		contaminationKey: "knowledge-de-morpheme-heit",
+		authority: "primary-source",
+	},
+	"knowledge-demo-construction-fusion-ans": {
+		context: "Er schwamm <TARGET>ans</TARGET> Ufer.",
+		reading: {
+			lemma: {
+				language: "de",
+				canonicalForm: "ans",
+				family: "Construction",
+				kind: "Fusion",
+				coreFeatures: {},
+			},
+			emojiDescription: "🌊",
+		},
+		requestedRelations: [],
+		rationale:
+			"The thin Construction route owns base leaves only: one definition and one English literal for the fused an + das form; it never requests Semantic Relations.",
+		failureModes: ["positive"],
+		contaminationKey: "knowledge-de-construction-ans",
+		authority: "primary-source",
+	},
 } satisfies Record<string, Seed>);
 
 const basic = defineCases({
@@ -758,10 +821,9 @@ const adversarial = defineCases({
 	"relation-adv-07-ins-gras-beissen": {
 		context: "Der Tyrann <TARGET>biss endlich ins Gras</TARGET>.",
 		reading: phraseme("ins Gras beißen", "Idiom", "☠️"),
-		accepted: { nearSynonym: [t("sterben", "Lexeme", "VERB")] },
 		rationale:
-			"Primary lexicography defines the whole idiom as sterben but marks it salopp; that sourced register difference blocks exact Synonymy.",
-		failureModes: ["register", "multi-member", "negative"],
+			"Primary lexicography explains the idiom through the Lexeme sterben, but ADR-0020 forbids that cross-Family target. Without a sourced same-Family equivalent, the relation stays null.",
+		failureModes: ["register", "multi-member", "negative", "wrong-family"],
 		contaminationKey: "relation-de-ins-gras-beissen",
 		authority: "primary-source",
 		sources: [
@@ -773,12 +835,16 @@ const adversarial = defineCases({
 				references.dumrelRelations,
 				"Distinguishes exact Synonymy from non-substitutive Near Synonymy.",
 			),
+			cite(
+				references.dumrelFamilyAdr,
+				"Keeps direct Semantic Relations inside the source Family.",
+			),
 		],
 		harmfulTargets: [
 			h(
-				"synonym",
+				"nearSynonym",
 				t("sterben", "Lexeme", "VERB"),
-				"The neutral Lexeme erases the sourced salopp register.",
+				"The lexical paraphrase crosses from the source Phraseme Family into Lexeme.",
 			),
 		],
 	},
@@ -1306,25 +1372,33 @@ const adversarial = defineCases({
 	"relation-adv-35-in-betracht-ziehen": {
 		context: "Wir müssen den Einwand <TARGET>in Betracht ziehen</TARGET>.",
 		reading: phraseme("in Betracht ziehen", "Collocation", "🤔"),
-		accepted: {
-			synonym: [t("berücksichtigen", "Lexeme", "VERB")],
-			nearSynonym: [t("bedenken", "Lexeme", "VERB")],
-		},
+		// ADR-0020: the former Lexeme/VERB targets berücksichtigen and
+		// bedenken leave the Collocation Family inventory; the same-Family
+		// filter removes them and both leaves become null.
 		rationale:
-			"Berücksichtigen preserves the consideration proposition; bedenken adds reflective-concern nuance. The complete Collocation, not its member words, owns both judgments.",
-		failureModes: ["multi-member", "wrong-family", "omission"],
+			"The Lexeme paraphrases berücksichtigen and bedenken leave the Collocation Family inventory, so no same-Family target is adjudicated; the complete Collocation still owns the judgments and the Lexeme contrast pair is covered by the erwägen case.",
+		failureModes: ["multi-member", "wrong-family", "omission", "null"],
 		contaminationKey: "relation-de-in-betracht-ziehen",
 		authority: "human-accepted",
+		harmfulTargets: [
+			h(
+				"synonym",
+				t("berücksichtigen", "Lexeme", "VERB"),
+				"The Lexeme paraphrase leaves the Collocation Family.",
+			),
+		],
 	},
 	"relation-adv-36-auf-jeden-fall": {
 		context: "Das ist <TARGET>auf jeden Fall</TARGET> richtig.",
 		reading: phraseme("auf jeden Fall", "DiscourseFormula", "✅"),
+		// ADR-0020: the former Lexeme/ADV target definitiv leaves the
+		// DiscourseFormula Family inventory; only the same-Family antonym
+		// survives the filter.
 		accepted: {
-			nearSynonym: [t("definitiv", "Lexeme", "ADV")],
 			antonym: [t("auf keinen Fall", "Phraseme", "DiscourseFormula")],
 		},
 		rationale:
-			"Definitiv shares emphatic certainty with a discourse-role restriction, while auf keinen Fall is the conventional complete-phraseme opposition.",
+			"Auf keinen Fall is the conventional complete-phraseme opposition; the former Lexeme adverb definitiv leaves the DiscourseFormula Family inventory and is dropped by the same-Family filter.",
 		failureModes: ["multi-member", "wrong-family", "positive"],
 		contaminationKey: "relation-de-auf-jeden-fall",
 	},
@@ -1361,13 +1435,19 @@ const adversarial = defineCases({
 	"relation-adv-39-eilen-multiword-target": {
 		context: "Wir müssen uns <TARGET>eilen</TARGET>.",
 		reading: verb("eilen", "⏱️"),
-		accepted: {
-			nearSynonym: [t("sich beeilen", "Phraseme", "Collocation")],
-		},
+		// ADR-0020: the former Phraseme/Collocation paraphrase sich beeilen
+		// leaves the Lexeme Family inventory, so the leaf becomes null.
 		rationale:
-			"Sich beeilen is a complete multi-member near-paraphrase with reflexive framing; no broader action is forced merely to fill the requested Hypernym leaf.",
-		failureModes: ["multi-member", "wrong-family"],
+			"Sich beeilen is a complete multi-member near-paraphrase, but it is a Phraseme and therefore outside the Lexeme Family inventory; no same-Family near paraphrase is adjudicated and no broader action is forced merely to fill the requested Hypernym leaf.",
+		failureModes: ["multi-member", "wrong-family", "null"],
 		contaminationKey: "relation-de-eilen-hurry",
+		harmfulTargets: [
+			h(
+				"nearSynonym",
+				t("sich beeilen", "Phraseme", "Collocation"),
+				"The multi-member paraphrase is a Phraseme, outside the Lexeme Family.",
+			),
+		],
 	},
 	"relation-adv-40-gluecklich-family": {
 		context: "Sie ist heute sehr <TARGET>glücklich</TARGET>.",
@@ -1381,6 +1461,9 @@ const adversarial = defineCases({
 		failureModes: ["wrong-family", "wrong-kind"],
 		contaminationKey: "relation-de-gluecklich-happy",
 		harmfulTargets: [
+			// The kind token "Fusion" is a valid string, but it belongs to the
+			// Construction Family inventory, so the same-Family filter removes
+			// this proposal before it can reach the result.
 			h(
 				"nearSynonym",
 				t("in Hochstimmung sein", "Construction", "Fusion"),
@@ -1514,6 +1597,65 @@ const adversarial = defineCases({
 				"meronym",
 				t("Rad", "Lexeme", "NOUN"),
 				"Fahrrad → wheel-sense Rad is the inverse-only part judgment.",
+			),
+		],
+	},
+	"relation-adv-46-waehrend-adposition": {
+		context: "<TARGET>Während</TARGET> der Pause lernten wir.",
+		reading: lexeme("während", "ADP", adpositionCore, "⏳"),
+		accepted: { nearSynonym: [t("innerhalb", "Lexeme", "ADP")] },
+		rationale:
+			"Salvaged from the retired unit-shadow homograph pair: the adpositional Reading locates the event inside a nominal time span, which innerhalb shares; its spatial anchoring keeps the pair Near rather than exact Synonym and must not pull the subordinator's relations across the homograph.",
+		failureModes: ["positive", "polysemy", "wrong-kind"],
+		contaminationKey: "relation-de-waehrend-adposition",
+		authority: "primary-source",
+		harmfulTargets: [
+			h(
+				"synonym",
+				t("innerhalb", "Lexeme", "ADP"),
+				"The spatial anchoring of innerhalb blocks unrestricted substitution.",
+			),
+			h(
+				"nearSynonym",
+				t("solange", "Lexeme", "SCONJ"),
+				"The subordinator homograph belongs to the clause-linking Reading.",
+			),
+		],
+	},
+	"relation-adv-47-waehrend-subordinator": {
+		context: "<TARGET>Während</TARGET> wir aßen, kam Ben an.",
+		reading: lexeme("während", "SCONJ", conjunctionCore, "⏳"),
+		accepted: { nearSynonym: [t("solange", "Lexeme", "SCONJ")] },
+		rationale:
+			"Salvaged homograph counterpart: the subordinator Reading links finite clauses, which solange shares; solange adds a duration-profile restriction, and the adpositional Reading of während must not leak into this judgment.",
+		failureModes: ["positive", "polysemy", "register"],
+		contaminationKey: "relation-de-waehrend-subordinator",
+		authority: "primary-source",
+		harmfulTargets: [
+			h(
+				"synonym",
+				t("solange", "Lexeme", "SCONJ"),
+				"The duration-profile restriction blocks exact equivalence.",
+			),
+		],
+	},
+	"relation-adv-48-erwaegen": {
+		context: "Wir <TARGET>erwägen</TARGET> einen Umzug.",
+		reading: verb("erwägen", "⚖️"),
+		accepted: { nearSynonym: [t("abwägen", "Lexeme", "VERB")] },
+		rationale:
+			"Salvaged contrast pair with in Betracht ziehen: abwägen shares the deliberation proposition with a weighing nuance, so it is Near Synonym; the complete Collocation in Betracht ziehen is a Phraseme and therefore outside the Lexeme Family inventory.",
+		failureModes: ["positive", "wrong-family", "multi-member"],
+		contaminationKey: "relation-de-erwaegen-consider",
+		authority: "human-accepted",
+		harmfulTargets: [
+			// The kind token "Collocation" is a valid string, but it belongs to
+			// the Phraseme Family inventory, so the same-Family filter removes
+			// this proposal.
+			h(
+				"synonym",
+				t("in Betracht ziehen", "Phraseme", "Collocation"),
+				"The complete Collocation is a Phraseme, outside the Lexeme Family.",
 			),
 		],
 	},
@@ -1902,6 +2044,16 @@ const acceptance = defineCases({
 	},
 } satisfies Record<string, Seed>);
 
+export type RetainedRelationCase = RetainedCase;
+
+/** Shared seed registry; per-Family corpora partition these by source Family. */
+export const retainedRegistries = Object.freeze({
+	demonstrations,
+	basic,
+	adversarial,
+	acceptance,
+});
+
 export const demonstrationCases = goldenCases(demonstrations);
 export const basicCases = goldenCases(basic);
 export const adversarialCases = goldenCases(adversarial);
@@ -1944,18 +2096,24 @@ function retainedCase(seed: Seed): RetainedCase {
 			seed.accepted?.[relation] ?? null,
 		]),
 	) as Record<RequestableRelation, readonly Target[] | null>;
+	// Thin Morpheme/Construction routes request no relations at all, so the
+	// sparse request and the ideal output both omit the leaf entirely.
+	const relationRequest =
+		requested.length > 0
+			? {
+					semanticRelations: Object.fromEntries(
+						requested.map((relation) => [relation, null]),
+					),
+				}
+			: {};
 	return {
 		goldenCase: {
 			input: {
 				markedContext: seed.context,
 				reading: seed.reading,
-				request: {
-					semanticRelations: Object.fromEntries(
-						requested.map((relation) => [relation, null]),
-					),
-				},
+				request: relationRequest,
 			},
-			idealOutput: { semanticRelations },
+			idealOutput: requested.length > 0 ? { semanticRelations } : {},
 			explanation: seed.rationale,
 			...(seed.sources === undefined ? {} : { sources: seed.sources }),
 			contaminationKeys: [seed.contaminationKey],
@@ -2013,8 +2171,8 @@ function inv(
 	return { relation, target, rationale } as const;
 }
 
-function t(canonicalForm: string, family: string, kind: string): Target {
-	return { language: "de", canonicalForm, family, kind } as Target;
+function t(canonicalForm: string, _family: string, kind: string): Target {
+	return { canonicalForm, kind };
 }
 
 function noun(

@@ -1,6 +1,6 @@
 import type { LemmaRoute, Reading } from "dumling/types";
 import type { AiSdk } from "../ai-sdk/ai-sdk";
-import { runtimeCombinedGermanKnowledgePrompt } from "../catalog/runtime-prompt-catalog";
+import { knowledgeGenerationPromptCatalog } from "../catalog/knowledge-generation-prompts";
 import {
 	buildGeneratorCatalog,
 	type ModelExchange,
@@ -17,11 +17,17 @@ import type {
 	KnowledgeGenerationLanguage,
 	KnowledgeGenerationResult,
 } from "../types";
+import {
+	type GermanKnowledgeFamily,
+	germanKnowledgeFamilies,
+} from "./de/families";
 import { createGermanKnowledgeGeneration } from "./de/runtime";
 
 const KNOWLEDGE_PROMPT_CATALOG = {
 	laboratory: {
-		knowledge: { de: { combined: runtimeCombinedGermanKnowledgePrompt } },
+		knowledge: {
+			de: knowledgeGenerationPromptCatalog,
+		},
 	},
 } as const;
 
@@ -37,15 +43,36 @@ export type KnowledgeDumgen = {
 export function createKnowledgeDumgen(options: {
 	readonly sdk: AiSdk;
 	readonly onModelExchange?: (exchange: ModelExchange) => void;
+	readonly onDiagnostic?: (diagnostic: unknown) => void;
 }): KnowledgeDumgen {
 	const generators = buildGeneratorCatalog(
 		KNOWLEDGE_PROMPT_CATALOG,
 		options.sdk,
-		{ onModelExchange: options.onModelExchange },
+		{
+			onModelExchange: options.onModelExchange,
+			onDiagnostic: options.onDiagnostic,
+		},
 	);
-	const generateGermanKnowledge = createGermanKnowledgeGeneration(
-		generators.laboratory.knowledge.de.combined,
-	);
+	const knowledgeGenerators = generators.laboratory.knowledge.de;
+
+	async function generateGermanKnowledge(
+		validated: KnowledgeGenerationInput<"de">,
+	): Promise<KnowledgeGenerationResult> {
+		const family = validated.reading.lemma.family;
+		const generate = knowledgeGenerators[family as GermanKnowledgeFamily];
+		if (generate === undefined) {
+			throw new DumgenError(
+				"invalid-input",
+				"Knowledge generation is not configured for this Family.",
+				{
+					cause: new TypeError(
+						`Unsupported Knowledge Family: ${family}. Expected ${germanKnowledgeFamilies.join(" | ")}.`,
+					),
+				},
+			);
+		}
+		return createGermanKnowledgeGeneration(generate)(validated);
+	}
 
 	async function knowledge(
 		language: KnowledgeGenerationLanguage,

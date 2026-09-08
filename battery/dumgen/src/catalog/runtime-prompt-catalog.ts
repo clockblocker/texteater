@@ -4,6 +4,10 @@ import {
 	type RuntimePromptPath,
 } from "../generated/runtime-prompt-artifacts.js";
 import type { IntakeBatch } from "../intake/contracts.js";
+import {
+	type GermanKnowledgeFamily,
+	germanKnowledgeFamilies,
+} from "../knowledge-generation/de/families.js";
 import type { GeneratedKnowledgeUpdate } from "../knowledge-generation/de/projection.js";
 import { projectGermanKnowledgeUpdate } from "../knowledge-generation/de/projection.js";
 import type {
@@ -18,10 +22,14 @@ import type {
 	SegmentKind,
 	Unresolved,
 } from "../types.js";
-import type { Prompt, PromptCatalogEntry } from "./prompt-definition.js";
+import type {
+	Prompt,
+	PromptCatalogEntry,
+	PromptProjectionContext,
+} from "./prompt-definition.js";
 import { runtimePromptDispatch } from "./runtime-prompt-dispatch.js";
 import {
-	createRuntimeCombinedKnowledgeModelOutputSchema,
+	createRuntimeGermanKnowledgeModelOutputSchema,
 	createRuntimePromptSchema,
 	type RuntimePromptSchema,
 } from "./runtime-prompt-validation.js";
@@ -36,7 +44,11 @@ type RuntimePrompt = Readonly<{
 	}>;
 	outputSchema: RuntimePromptSchema | null;
 	projectInput?(input: unknown): unknown;
-	projectOutput?(input: unknown, output: unknown): unknown;
+	projectOutput?(
+		input: unknown,
+		output: unknown,
+		context?: PromptProjectionContext,
+	): unknown;
 	systemPrompt: string;
 }>;
 
@@ -60,7 +72,11 @@ type RuntimeProjectedPrompt<Input, ModelOutput, Result> = Prompt<
 	Result,
 	RuntimePromptSchema<unknown>
 > & {
-	projectOutput(input: Input, output: ModelOutput): Result;
+	projectOutput(
+		input: Input,
+		output: ModelOutput,
+		context?: PromptProjectionContext,
+	): Result;
 };
 
 type RuntimeDirectPrompt<Input, Output> = Prompt<
@@ -70,7 +86,7 @@ type RuntimeDirectPrompt<Input, Output> = Prompt<
 	RuntimePromptSchema<unknown>
 >;
 
-type RuntimeCombinedGermanKnowledgePrompt = Omit<
+type RuntimeGermanKnowledgePrompt = Omit<
 	RuntimeProjectedPrompt<
 		GermanKnowledgeGenerationInput,
 		GermanKnowledgeAnalysis,
@@ -106,8 +122,8 @@ type RuntimePromptForPath<Path extends RuntimePromptPath> =
 							OpenReadingModelInput,
 							Readonly<{ emojiDescription: string }>
 						>
-					: Path extends "knowledge.de.combined"
-						? RuntimeCombinedGermanKnowledgePrompt
+					: Path extends `knowledge.de.${GermanKnowledgeFamily}`
+						? RuntimeGermanKnowledgePrompt
 						: RuntimeDirectPrompt<unknown, unknown>;
 
 type RuntimePromptArtifact = Readonly<{
@@ -328,7 +344,7 @@ function promptEntry<const Path extends RuntimePromptPath>(
 					);
 		return outputSchema;
 	};
-	const isCombinedKnowledge = path === "knowledge.de.combined";
+	const isKnowledge = path.startsWith("knowledge.de.");
 	const hasDispatch = (bit: number) => (location.dispatchMask & bit) !== 0;
 	const outputJsonSchema = () => loadOutputSchema()?.toJSONSchema();
 	const entry: RuntimePromptEntry = Object.freeze({
@@ -363,17 +379,19 @@ function promptEntry<const Path extends RuntimePromptPath>(
 						projectOutput(
 							input: unknown,
 							output: unknown,
+							context?: PromptProjectionContext,
 						): unknown {
 							const id = loadArtifact().dispatch.projectOutput;
 							assertDispatchId(id);
-							if (isCombinedKnowledge) {
-								assertDispatchId(
-									id,
-									"knowledge.de.combined:project-output",
-								);
+							if (isKnowledge) {
+								assertDispatchId(id, `${path}:project-output`);
 								return projectGermanKnowledgeUpdate(
 									input as GermanKnowledgeGenerationInput,
 									output as GermanKnowledgeAnalysis,
+									{
+										onFilteredRelationTarget:
+											context?.reportDiagnostic,
+									},
 								);
 							}
 							return (
@@ -396,17 +414,17 @@ function promptEntry<const Path extends RuntimePromptPath>(
 								const id =
 									loadArtifact().dispatch.outputPostcondition;
 								assertDispatchId(id);
-								if (isCombinedKnowledge) {
+								if (isKnowledge) {
 									assertDispatchId(
 										id,
-										"knowledge.de.combined:output-postcondition",
+										`${path}:output-postcondition`,
 									);
 									const schema = loadOutputSchema();
 									if (schema === null)
 										throw new TypeError(
-											"Combined Knowledge output schema is missing.",
+											"Knowledge output schema is missing.",
 										);
-									createRuntimeCombinedKnowledgeModelOutputSchema(
+									createRuntimeGermanKnowledgeModelOutputSchema(
 										input,
 										schema,
 									).parse(output);
@@ -433,16 +451,13 @@ function promptEntry<const Path extends RuntimePromptPath>(
 						modelOutputSchemaFor(input: unknown) {
 							const id =
 								loadArtifact().dispatch.modelOutputSchemaFor;
-							assertDispatchId(
-								id,
-								"knowledge.de.combined:model-output-schema",
-							);
+							assertDispatchId(id, `${path}:model-output-schema`);
 							const schema = loadOutputSchema();
 							if (schema === null)
 								throw new TypeError(
-									"Combined Knowledge output schema is missing.",
+									"Knowledge output schema is missing.",
 								);
-							return createRuntimeCombinedKnowledgeModelOutputSchema(
+							return createRuntimeGermanKnowledgeModelOutputSchema(
 								input,
 								schema,
 							);
@@ -561,6 +576,41 @@ export const RUNTIME_PROMPT_CATALOG = Object.freeze({
 	}),
 });
 
-export const runtimeCombinedGermanKnowledgePrompt: PromptCatalogEntry<
-	RuntimePromptForPath<"knowledge.de.combined">
-> = promptEntry("knowledge.de.combined");
+function runtimeKnowledgePromptEntry(
+	family: GermanKnowledgeFamily,
+): PromptCatalogEntry<
+	RuntimePromptForPath<`knowledge.de.${GermanKnowledgeFamily}`>
+> {
+	return promptEntry(`knowledge.de.${family}` as never) as never;
+}
+
+export const RUNTIME_KNOWLEDGE_PROMPT_CATALOG: Readonly<
+	Record<
+		GermanKnowledgeFamily,
+		PromptCatalogEntry<
+			RuntimePromptForPath<`knowledge.de.${GermanKnowledgeFamily}`>
+		>
+	>
+> = Object.freeze(
+	Object.fromEntries(
+		germanKnowledgeFamilies.map((family) => [
+			family,
+			runtimeKnowledgePromptEntry(family),
+		]),
+	) as Readonly<
+		Record<
+			GermanKnowledgeFamily,
+			PromptCatalogEntry<
+				RuntimePromptForPath<`knowledge.de.${GermanKnowledgeFamily}`>
+			>
+		>
+	>,
+);
+
+export function runtimeGermanKnowledgePromptForFamily(
+	family: GermanKnowledgeFamily,
+): PromptCatalogEntry<
+	RuntimePromptForPath<`knowledge.de.${GermanKnowledgeFamily}`>
+> {
+	return RUNTIME_KNOWLEDGE_PROMPT_CATALOG[family];
+}

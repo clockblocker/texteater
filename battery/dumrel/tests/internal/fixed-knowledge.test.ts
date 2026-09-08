@@ -11,6 +11,7 @@ import {
 	DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
 	fixedKnowledgeFor,
 } from "../../src/fixed";
+import { validateAuthoredFixedKnowledge } from "../../src/fixed-knowledge-validation";
 import {
 	ParsingError,
 	parseAsReadingKnowledge,
@@ -625,5 +626,40 @@ describe("fixed German Knowledge", () => {
 			decision: "Miss",
 			reason: "MemberNotCatalogued",
 		});
+	});
+
+	test("rejects an authored relation target outside the source Family", () => {
+		expect(() =>
+			validateAuthoredFixedKnowledge(
+				{
+					lemma: {
+						language: "de",
+						canonicalForm: "sterben",
+						family: "Lexeme",
+						kind: "VERB",
+						coreFeatures: {
+							hasGovPrep: null,
+							hasSepPrefix: null,
+							lexicallyReflexive: null,
+							verbType: null,
+						},
+					},
+					emojiDescription: "☠️",
+				},
+				{
+					semanticRelations: {
+						synonym: [
+							{
+								language: "de",
+								canonicalForm: "ins Gras beißen",
+								family: "Phraseme",
+								kind: "Idiom",
+								coreFeatures: {},
+							},
+						],
+					},
+				} as never,
+			),
+		).toThrow("A relation target must use the Lexeme Family");
 	});
 });

@@ -124,7 +124,7 @@ export function createRuntimePromptSchema<Output = unknown>(
 	});
 }
 
-export function createRuntimeCombinedKnowledgeModelOutputSchema(
+export function createRuntimeGermanKnowledgeModelOutputSchema(
 	input: unknown,
 	baseSchema: RuntimePromptSchema,
 ): RuntimePromptSchema {
@@ -349,13 +349,30 @@ function constructOperation(
 	if (name.includes("targetClassification.de.highLevelWholeUnit#output@$"))
 		return resolvedTargetShapeOperation;
 	if (
-		name.startsWith(
-			"dumgen.prompt.contextual.knowledge.de.combined#output@",
-		)
-	)
-		return dumgenValidationOperations[
-			"dumgen.transitive.unit-shadow.supported-route"
-		];
+		name.startsWith("dumgen.prompt.custom.knowledge.de.") &&
+		name.endsWith("#input@$")
+	) {
+		const family = name.slice(
+			"dumgen.prompt.custom.knowledge.de.".length,
+			name.length - "#input@$".length,
+		);
+		return (value) => ({
+			issues:
+				(
+					value as {
+						reading?: { lemma?: { family?: string } };
+					} | null
+				)?.reading?.lemma?.family === family
+					? []
+					: [
+							customIssue(
+								`The knowledge.de.${family} route requires a ${family} Reading.`,
+								["reading", "lemma", "family"],
+							),
+						],
+			value,
+		});
+	}
 
 	const delegated = delegatedOperationName(name);
 	if (delegated !== undefined) {
@@ -403,16 +420,10 @@ function delegatedOperationName(name: string): string | undefined {
 			"dumgen.knowledge-reading.de",
 		"dumgen.prompt.custom.isLexicalUnitShadow":
 			"dumgen.transitive.custom.isLexicalUnitShadow",
-		"dumgen.prompt.custom.knowledge.de.combined#output@$.semanticRelations<inner><value><inner>[]":
-			"dumgen.relation-target.de",
 		"dumgen.prompt.overwrite.dumrelNormalizeNfc":
 			"dumgen.transitive.overwrite.dumrelNormalizeNfc",
 		"dumgen.prompt.overwrite.dumrelTrimString":
 			"dumgen.transitive.overwrite.dumrelTrimString",
-		"dumgen.prompt.overwrite.knowledge.de.combined#output@$.definition<inner><inner>":
-			"dumgen.transitive.overwrite.trimString",
-		"dumgen.prompt.overwrite.knowledge.de.combined#output@$.definition<inner><inner>.2":
-			"dumgen.transitive.overwrite.normalizeNfc",
 		"dumgen.prompt.overwrite.normalizeNfc":
 			"dumgen.transitive.overwrite.normalizeNfc",
 		"dumgen.prompt.overwrite.normalizeNfc.2":

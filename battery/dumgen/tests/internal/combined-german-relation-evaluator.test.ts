@@ -1,25 +1,36 @@
 import { describe, expect, test } from "bun:test";
-import type { LexicalUnitShadow } from "dumrel";
-
-import type { GermanKnowledgeAnalysis } from "../../src/knowledge-generation/de/schemas";
+import type {
+	GermanKnowledgeAnalysis,
+	GermanKnowledgeRelationTarget,
+} from "../../src/knowledge-generation/de/schemas";
 import {
 	analyzeCombinedGermanKnowledgeCase,
 	evaluateCombinedGermanKnowledge,
-} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
+} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator";
 import {
 	createGermanRelationEvaluationReport,
 	GERMAN_RELATION_GATE_THRESHOLDS,
 	type GermanRelationEvaluationRun,
 	germanRelationEvaluationReportSchema,
 	MINIMUM_STABILITY_RUNS,
-} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
-import { corpus } from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
+} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
+import { corpus as lexemeCorpus } from "../../src/promptsmith/production/knowledge-analysis/de/lexeme/golden-corpus/corpus";
+import { corpus as phrasemeCorpus } from "../../src/promptsmith/production/knowledge-analysis/de/phraseme/golden-corpus/corpus";
 
-type CorpusEntry = (typeof corpus.collections.development.cases)[number];
+type CorpusEntry =
+	| (typeof lexemeCorpus.collections.development.cases)[number]
+	| (typeof phrasemeCorpus.collections.development.cases)[number];
+
+function corpusForCase(caseId: string) {
+	return caseId in lexemeCorpus.cases ? lexemeCorpus : phrasemeCorpus;
+}
 
 describe("combined German relation case evaluator", () => {
 	test("accepts every retained ideal while keeping exact equality diagnostic-only", () => {
-		for (const caseId of corpus.collections.development.ids) {
+		for (const caseId of [
+			...lexemeCorpus.collections.development.ids,
+			...phrasemeCorpus.collections.development.ids,
+		]) {
 			const entry = requiredCase(caseId);
 			const analysis = analyze(caseId, entry, entry.idealOutput);
 			expect(analysis).toMatchObject({
@@ -229,12 +240,15 @@ describe("German relation evaluation report", () => {
 				idealRun("round-3"),
 			],
 		});
+		const developmentCaseCount =
+			lexemeCorpus.collections.development.ids.length +
+			phrasemeCorpus.collections.development.ids.length;
 		expect(report).toMatchObject({
 			formatVersion: "german-relation-evaluation-v1",
 			runCount: MINIMUM_STABILITY_RUNS,
-			caseObservationCount: 150,
-			contractPassCount: 150,
-			exactDiagnosticPassCount: 150,
+			caseObservationCount: developmentCaseCount * 3,
+			contractPassCount: developmentCaseCount * 3,
+			exactDiagnosticPassCount: developmentCaseCount * 3,
 			structuralFailureCount: 0,
 			unclassifiedMissCount: 0,
 			overallGatePass: true,
@@ -387,7 +401,7 @@ function analyze(
 function withRelation(
 	entry: CorpusEntry,
 	relation: keyof NonNullable<GermanKnowledgeAnalysis["semanticRelations"]>,
-	value: readonly LexicalUnitShadow<"de">[] | null,
+	value: readonly GermanKnowledgeRelationTarget[] | null,
 ): GermanKnowledgeAnalysis {
 	return {
 		...entry.idealOutput,
@@ -417,7 +431,10 @@ function loose(
 function idealRun(runId: string): GermanRelationEvaluationRun {
 	return {
 		runId,
-		cases: corpus.collections.development.ids.map((caseId) => {
+		cases: [
+			...lexemeCorpus.collections.development.ids,
+			...phrasemeCorpus.collections.development.ids,
+		].map((caseId) => {
 			const entry = requiredCase(caseId);
 			return {
 				caseId,
@@ -430,21 +447,17 @@ function idealRun(runId: string): GermanRelationEvaluationRun {
 }
 
 function requiredCase(caseId: string): CorpusEntry {
-	const entry = corpus.cases[caseId];
+	const entry = corpusForCase(caseId).cases[caseId];
 	if (entry === undefined)
 		throw new Error(`Missing retained case ${caseId}.`);
 	return entry;
 }
 
-function shadow(
-	canonicalForm: string,
-	family: string,
-	kind: string,
-): LexicalUnitShadow<"de"> {
+function shadow(canonicalForm: string, _family: string, kind: string) {
+	// Kind-only targets: the family argument is retained for call-site parity
+	// but ignored, mirroring the projection-time Family injection.
 	return {
-		language: "de",
 		canonicalForm,
-		family,
 		kind,
-	} as LexicalUnitShadow<"de">;
+	};
 }

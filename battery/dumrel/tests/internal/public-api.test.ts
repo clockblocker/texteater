@@ -35,6 +35,7 @@ const schemaExports = [
 	"pendingSemanticRelationSchema",
 	"readingKnowledgeSchema",
 	"readingReferenceSchema",
+	"relationTargetWithinFamilySchema",
 	"semanticRelationGraphReadingSchema",
 	"semanticRelationGraphSchema",
 	"semanticRelationRetractKnowledgeChangeSchema",

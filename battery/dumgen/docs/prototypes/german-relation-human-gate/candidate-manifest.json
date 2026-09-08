@@ -1,61 +1,61 @@
 {
 	"formatVersion": "german-relation-human-gate-candidate-v1",
-	"candidateId": "660b97d76b64648b498da0f48c61847feb638e7fd737dc1f5766deab1cd12838",
+	"candidateId": "79363a952face460001aff403d87457494b44cb650566a10ab79cfa393a7c247",
 	"state": "development-gate-failed",
 	"artifacts": [
 		{
 			"issue": 190,
 			"role": "corpus-reservation",
-			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus.ts",
-			"sha256": "026e8c7dede8dc0e4838d085b9f08dee4370565518b7e4dd53347de1f95b9ec4"
+			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/acceptance-reservation.ts",
+			"sha256": "b2568dae264844944f8f66478766beac9f27ca27979272f9f33ebdfdd8c121d1"
 		},
 		{
 			"issue": 190,
 			"role": "adjudicated-development-corpus",
-			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/retained-cases.ts",
-			"sha256": "a2b83e69969600a3b2711e3f304c1d1cadead7555b4f7a143f241413a5d0981e"
+			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/retained-cases.ts",
+			"sha256": "a6d43fd1fc1a05f795bc21d7ca26fb529594c8339170cc8ea5e99ab690045a78"
 		},
 		{
 			"issue": 191,
 			"role": "semantic-evaluator",
-			"path": "battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator.ts",
-			"sha256": "d5c95861ab17b90a7975a220d3483eefe0af850d708dbd3c92b59400d9825533"
+			"path": "battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts",
+			"sha256": "fdd2c95c575a1764918df1943c89b7a0ed3f29cac3c1e7dd35e0c7c4d7532f82"
 		},
 		{
 			"issue": 191,
 			"role": "thresholds-and-report",
-			"path": "battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report.ts",
-			"sha256": "18fafb6505d76e213b58881e07f52141f2d7b650f2062e1c2565a63a59daa20b"
+			"path": "battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report.ts",
+			"sha256": "78b90297da2f86c81d3480c1db68b38524e5f47541efc3dc689532e0bab29ed7"
 		},
 		{
 			"issue": 192,
 			"role": "candidate-policy",
 			"path": "battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/logic.ts",
-			"sha256": "f1d7eebba7bc1374c8c8f0bdc8fe49fe7b5d6515d945b96157b74d4676736dc5"
+			"sha256": "e411821b03992797c8dddae175727b03f7b97b29ddc405076632ac07e1709720"
 		},
 		{
 			"issue": 192,
 			"role": "retained-runner",
 			"path": "battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/run.ts",
-			"sha256": "6141960a2cb6c49a590f4681e940195b4342f4bfc8dbb9998135aa2f9f150237"
+			"sha256": "fb42e47f52210735bde550911a69b563d777ef1a04685537f97b0be04e1d3cd6"
 		},
 		{
 			"issue": 192,
 			"role": "prompt-source",
-			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/prompt-source.ts",
-			"sha256": "412b6db56ae94ea3b0ab83feee0917099bac29de105fc18ace0223581e45c0db"
+			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts",
+			"sha256": "0896648f922dcb122a3d7f3956126a9b30d2964bdf04a187503bc8526980628a"
 		},
 		{
 			"issue": 192,
 			"role": "generated-system-prompt",
-			"path": "battery/dumgen/src/promptsmith/production/generated-system-prompt/knowledge-analysis/de/combined.ts",
-			"sha256": "ea45336898d7a174696436817762f0e42bc16bd09f929ad79e23fea29359d99e"
+			"path": "battery/dumgen/src/promptsmith/production/generated-system-prompt/knowledge-analysis/de/lexeme.ts",
+			"sha256": "ecdeb5b1814cc48c73d1b98d8b2cb98a59802746ba299c6c30a2776ff240df89"
 		},
 		{
 			"issue": 192,
 			"role": "model-facing-schema",
 			"path": "battery/dumgen/src/knowledge-generation/de/schemas.ts",
-			"sha256": "6c776f496dcf13b69fcb7ecba8fb496b35f75bb15e0a0f79a032afb07f8a59c1"
+			"sha256": "3562a451015bb9c16ae65e45792e5f5897ab4c118cbc7c76340ad38b11e7968d"
 		},
 		{
 			"issue": 192,
@@ -73,7 +73,7 @@
 			"issue": 193,
 			"role": "human-review-development-gate",
 			"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/review.ts",
-			"sha256": "5a547a6ca2e4031de735b99281fb7b5aa41f7c2a0ac77acae6940c18eebdb09b"
+			"sha256": "e2abea1d9c27f18c1fcd0e542d08531a10f1d4b8cb76d68c10c617f45af3a058"
 		}
 	],
 	"candidate": {
@@ -88,7 +88,7 @@
 		"approvedByHuman": false,
 		"revealedCaseCount": 0,
 		"reservedCaseCount": 12,
-		"selectionCommitmentSha256": "2e34dcd79f43300d2f85284a82246fb18fde76417b7bc41388b9894a6f4bf14b"
+		"selectionCommitmentSha256": "8c7c1e11452139dd7b7b971b386b18a5d740bb8380e28caaca8dd7b82a7dc787"
 	},
 	"executionFailurePolicy": {
 		"retries": 0,

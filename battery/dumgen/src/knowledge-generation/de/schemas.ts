@@ -1,10 +1,11 @@
-import { createHash } from "node:crypto";
-import type { LexicalUnitShadow } from "dumrel";
-import { lexicalUnitShadowSchema } from "dumrel/schema";
 import { type ZodType, z } from "zod";
 
 import { knowledgeGenerationInputSchema } from "../../schemas/public-schemas";
 import { requestableRelationSchema } from "../relations";
+import {
+	type GermanKnowledgeFamily,
+	isRelationBearingKnowledgeFamily,
+} from "./families";
 import type {
 	GermanKnowledgeAnalysis,
 	GermanKnowledgeGenerationInput,
@@ -12,89 +13,108 @@ import type {
 
 export type {
 	GermanKnowledgeAnalysis,
+	GermanKnowledgeFamily,
 	GermanKnowledgeGenerationInput,
 	GermanKnowledgeGenerationRequest,
+	GermanKnowledgeRelationTarget,
 } from "./runtime-schema";
+
+// Named normalization hooks keep the generated runtime-prompt operation
+// inventory stable: the codegen derives operation names from function names.
+function trimString(value: string): string {
+	return value.trim();
+}
+function normalizeNfc(value: string): string {
+	return value.normalize("NFC");
+}
 
 const normalizedCandidateSchema = z
 	.string()
-	.trim()
+	.overwrite(trimString)
 	.min(1)
-	.overwrite((value) => value.normalize("NFC"));
+	.overwrite(normalizeNfc);
 
-const germanLexicalUnitShadowSchema = lexicalUnitShadowSchema.refine(
-	(shadow) => shadow.language === "de",
-	{
-		path: ["language"],
-		message: "German Knowledge relations must target German Unit Shadows.",
-	},
-) as ZodType<LexicalUnitShadow<"de">>;
-
-type SchemaInternals = ZodType & {
-	readonly _zod: {
-		readonly def: {
-			readonly in?: ZodType;
-			readonly out?: SchemaInternals;
-			readonly transform?: (value: unknown) => unknown;
-			readonly type: string;
-		};
-	};
-};
-
-function stripExactDumrelIdentityBinding<Output>(
-	schema: ZodType<Output>,
-	binding: Readonly<{
-		fingerprint: string;
-		name: string;
-		version: 1;
-	}>,
-): ZodType<Output> {
-	const definition = (schema as SchemaInternals)._zod.def;
-	const transform = definition.out?._zod.def.transform;
-	if (
-		definition.type !== "pipe" ||
-		definition.out?._zod.def.type !== "transform" ||
-		definition.in === undefined ||
-		transform === undefined ||
-		transform.name !== binding.name ||
-		binding.version !== 1 ||
-		createHash("sha256").update(String(transform)).digest("hex") !==
-			binding.fingerprint
-	)
-		throw new TypeError(
-			`Dumrel provider identity binding drifted: ${binding.name}.`,
-		);
-	return definition.in as ZodType<Output>;
-}
-
-const providerLexicalUnitShadowBaseSchema = stripExactDumrelIdentityBinding(
-	stripExactDumrelIdentityBinding(lexicalUnitShadowSchema, {
-		fingerprint:
-			"3e049fe1f7f12c89a24fd88e7b823c3f5068464e358da183dd9d8e8b9050c7f5",
-		name: "bindLexicalUnitShadow",
-		version: 1,
-	}),
-	{
-		fingerprint:
-			"6db10bbb770dfa5af2b3fef9209496c3906d01c53a63db424747f1498643bf37",
-		name: "bindSupportedUnitShadow",
-		version: 1,
-	},
-);
-
-const providerLexicalUnitShadowSchema =
-	providerLexicalUnitShadowBaseSchema.refine(
-		(shadow) => shadow.language === "de",
-		{
-			path: ["language"],
-			message:
-				"German Knowledge relations must target German Unit Shadows.",
-		},
-	);
+/**
+ * One kind-only relation target. The model never proposes a Family; the
+ * source Reading's Family is injected before same-Family validation.
+ */
+const germanRelationTargetSchema = z.strictObject({
+	canonicalForm: normalizedCandidateSchema,
+	kind: normalizedCandidateSchema,
+});
 
 export const germanKnowledgeGenerationInputSchema =
 	knowledgeGenerationInputSchema;
 
+const inputSchemasByFamily = new Map<
+	GermanKnowledgeFamily,
+	ZodType<GermanKnowledgeGenerationInput>
+>();
+const outputSchemasByFamily = new Map<
+	GermanKnowledgeFamily,
+	ZodType<GermanKnowledgeAnalysis>
+>();
+
+/**
+ * The per-route Knowledge input contract. Family dispatch is deterministic,
+ * so each route's schema also pins the Reading's Family.
+ */
+export function germanKnowledgeGenerationInputSchemaForFamily(
+	family: GermanKnowledgeFamily,
+): ZodType<GermanKnowledgeGenerationInput> {
+	let schema = inputSchemasByFamily.get(family);
+	if (schema === undefined) {
+		schema = germanKnowledgeGenerationInputSchema.refine(
+			(value) => value.reading.lemma.family === family,
+			{
+				path: ["reading", "lemma", "family"],
+				message: `The knowledge.de.${family} route requires a ${family} Reading.`,
+			},
+		) as unknown as ZodType<GermanKnowledgeGenerationInput>;
+		inputSchemasByFamily.set(family, schema);
+	}
+	return schema;
+}
+
+/**
+ * The per-route analysis contract. Lexeme and Phraseme routes own relation
+ * leaves; Morpheme and Construction routes own base leaves only, matching
+ * their applicability masks.
+ */
+export function germanKnowledgeAnalysisSchemaForFamily(
+	family: GermanKnowledgeFamily,
+): ZodType<GermanKnowledgeAnalysis> {
+	let schema = outputSchemasByFamily.get(family);
+	if (schema === undefined) {
+		schema = z.strictObject({
+			transcription: normalizedCandidateSchema.nullable().optional(),
+			definition: normalizedCandidateSchema.nullable().optional(),
+			translations: z
+				.strictObject({
+					en: normalizedCandidateSchema.nullable().optional(),
+				})
+				.optional(),
+			...(isRelationBearingKnowledgeFamily(family)
+				? {
+						semanticRelations: z
+							.partialRecord(
+								requestableRelationSchema,
+								z
+									.array(germanRelationTargetSchema)
+									.min(1)
+									.max(5)
+									.nullable(),
+							)
+							.optional(),
+					}
+				: {}),
+		}) as unknown as ZodType<GermanKnowledgeAnalysis>;
+		outputSchemasByFamily.set(family, schema);
+	}
+	return schema;
+}
+
+/** Family-agnostic analysis shape for authoring-side consumers. */
 export const germanKnowledgeAnalysisSchema = z.strictObject({
 	transcription: normalizedCandidateSchema.nullable().optional(),
 	definition: normalizedCandidateSchema.nullable().optional(),
@@ -104,7 +124,7 @@ export const germanKnowledgeAnalysisSchema = z.strictObject({
 	semanticRelations: z
 		.partialRecord(
 			requestableRelationSchema,
-			z.array(germanLexicalUnitShadowSchema).min(1).max(5).nullable(),
+			z.array(germanRelationTargetSchema).min(1).max(5).nullable(),
 		)
 		.optional(),
 }) as ZodType<GermanKnowledgeAnalysis>;
@@ -112,6 +132,7 @@ export const germanKnowledgeAnalysisSchema = z.strictObject({
 /**
  * Builds the exact strict Structured Outputs schema for one sparse request.
  * Every selected leaf is required and nullable; no unselected property exists.
+ * Targets are kind-only; same-Family filtering happens after the exchange.
  */
 export function modelOutputSchemaForGermanKnowledge(
 	rawInput: GermanKnowledgeGenerationInput,
@@ -131,12 +152,15 @@ export function modelOutputSchemaForGermanKnowledge(
 			en: normalizedCandidateSchema.nullable(),
 		});
 	}
-	if (request.semanticRelations !== undefined) {
+	if (
+		request.semanticRelations !== undefined &&
+		isRelationBearingKnowledgeFamily(input.reading.lemma.family)
+	) {
 		const relationShape: Record<string, ZodType> = {};
 		for (const relation of requestableRelationSchema.options) {
 			if (relation in request.semanticRelations) {
 				relationShape[relation] = z
-					.array(providerLexicalUnitShadowSchema)
+					.array(germanRelationTargetSchema)
 					.min(1)
 					.max(5)
 					.nullable();

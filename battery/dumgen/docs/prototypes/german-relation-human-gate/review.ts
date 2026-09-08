@@ -12,12 +12,12 @@ import {
 	type GoldenCaseSource,
 	stableJson,
 } from "../../../src/promptsmith/assembly";
-import { analyzeCombinedGermanKnowledgeCase } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
-import type { GermanRelationEvaluationReport } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
+import { analyzeCombinedGermanKnowledgeCase } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator";
+import type { GermanRelationEvaluationReport } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
 import {
-	corpus,
 	relationCorpusAdjudications,
-} from "../../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
+	retainedRelationCase,
+} from "../../../src/promptsmith/production/knowledge-analysis/de/retained-relation-corpora";
 import {
 	createLabPlan,
 	PROMPT_REVISIONS,
@@ -222,7 +222,7 @@ export async function loadFrozenReview() {
 			);
 			const adjudication =
 				relationCorpusAdjudications.byCaseId[attempt.caseId];
-			const sources = corpus.cases[attempt.caseId]?.sources ?? [];
+			const sources = retainedRelationCase(attempt.caseId)?.sources ?? [];
 			const decisionEligible =
 				attempt.repetition <= candidateReport.decisionRepetitions;
 			if (attempt.error !== undefined) {

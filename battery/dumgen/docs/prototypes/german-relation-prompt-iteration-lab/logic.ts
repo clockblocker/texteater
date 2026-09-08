@@ -23,9 +23,14 @@ import {
 import {
 	GERMAN_RELATION_GATE_THRESHOLDS,
 	MINIMUM_STABILITY_RUNS,
-} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
-import { corpus } from "../../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
-import { promptSource } from "../../../src/promptsmith/production/knowledge-analysis/de/combined/prompt-source";
+} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
+import { promptSource as lexemePromptSource } from "../../../src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source";
+import {
+	retainedRelationAcceptanceHas,
+	retainedRelationCase,
+	retainedRelationDevelopmentHas,
+	retainedRelationDevelopmentIds,
+} from "../../../src/promptsmith/production/knowledge-analysis/de/retained-relation-corpora";
 
 export const LAB_QUESTION =
 	"Which bounded revisions of the existing combined atomic German Knowledge prompt produce the most conservative relation proposals under the frozen semantic gate?";
@@ -137,7 +142,7 @@ Do not compensate for uncertainty with a related but weaker relation kind.
 	},
 ] as const;
 
-const BASE_SYSTEM_PROMPT = assembleSystemPrompt(promptSource);
+const BASE_SYSTEM_PROMPT = assembleSystemPrompt(lexemePromptSource);
 
 export type PromptRevision = Readonly<{
 	number: number;
@@ -210,7 +215,7 @@ export type LabPlan = Readonly<{
 }>;
 
 export function createLabPlan(): LabPlan {
-	const developmentCaseIds = [...corpus.collections.development.ids];
+	const developmentCaseIds = [...retainedRelationDevelopmentIds()];
 	const calls = PROMPT_REVISIONS.flatMap((revision) =>
 		Array.from(
 			{ length: revision.repetitions },
@@ -282,12 +287,12 @@ export function createLabPlan(): LabPlan {
 		promptFingerprintsDistinctPass:
 			new Set(fingerprints).size === fingerprints.length,
 		developmentSelectionOnlyPass:
-			developmentCaseIds.length === 50 &&
+			developmentCaseIds.length === 53 &&
 			developmentCaseIds.every((caseId) =>
-				corpus.collections.development.has(caseId),
+				retainedRelationDevelopmentHas(caseId),
 			),
 		acceptanceSelectionExcludedPass: developmentCaseIds.every(
-			(caseId) => !corpus.collections.acceptance.has(caseId),
+			(caseId) => !retainedRelationAcceptanceHas(caseId),
 		),
 		combinedAtomicCallPass: calls.every(combinedAtomicCallPass),
 		allDirectKindsCoveredPass: requestableRelationSchema.options.every(
@@ -377,7 +382,7 @@ function createCallPlan(args: {
 	repetition: number;
 	caseId: string;
 }): LabCallPlan {
-	const goldenCase = corpus.cases[args.caseId];
+	const goldenCase = retainedRelationCase(args.caseId);
 	if (goldenCase === undefined)
 		throw new Error(`Missing retained development case ${args.caseId}.`);
 	const evaluationInput = germanKnowledgeGenerationInputSchema.parse(
@@ -520,7 +525,8 @@ function deepFreeze<Value>(value: Value): Value {
 	if (
 		value !== null &&
 		typeof value === "object" &&
-		!Object.isFrozen(value)
+		!Object.isFrozen(value) &&
+		(value as { _zod?: unknown })._zod === undefined
 	) {
 		for (const nested of Object.values(value)) deepFreeze(nested);
 		Object.freeze(value);

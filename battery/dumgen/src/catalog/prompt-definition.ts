@@ -35,6 +35,10 @@ type PromptGenerationParams = {
 	readonly model: string;
 };
 
+export type PromptProjectionContext = Readonly<{
+	reportDiagnostic(diagnostic: unknown): void;
+}>;
+
 type GeneratedOutput<OutputSchema extends PromptSchema | null> =
 	OutputSchema extends PromptSchema
 		? PromptSchemaOutput<OutputSchema>
@@ -68,6 +72,7 @@ export type Prompt<
 	projectOutput?(
 		input: PromptSchemaOutput<InputSchema>,
 		generated: GeneratedOutput<OutputSchema>,
+		context?: PromptProjectionContext,
 	): Result;
 	readonly generationParams: PromptGenerationParams;
 };

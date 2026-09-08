@@ -1,3 +1,4 @@
+import type { LexicalUnitShadow } from "dumrel";
 import {
 	parseAsKnowledgeGenerationResult,
 	unwrapDumgenParse,
@@ -5,9 +6,15 @@ import {
 import { parseRuntimePromptSchema } from "../../parsing/runtime-prompt-schemas";
 import { requestableRelationValues } from "../../vocabulary";
 import type { KnowledgeGenerationSuccess } from "../contracts";
+import {
+	type GermanKnowledgeFamily,
+	germanFamilySupportsRelationTargetKind,
+	germanKnowledgeFamilies,
+} from "./families";
 import type {
 	GermanKnowledgeAnalysis,
 	GermanKnowledgeGenerationInput,
+	GermanKnowledgeRelationTarget,
 } from "./runtime-schema";
 
 export type GeneratedKnowledgeUpdate = KnowledgeGenerationSuccess;
@@ -20,19 +27,51 @@ export const EMPTY_GENERATED_KNOWLEDGE_UPDATE: GeneratedKnowledgeUpdate =
 		}),
 	);
 
+/** One proposed target dropped by the injected same-Family validation. */
+export type FilteredRelationTargetInfo = Readonly<{
+	relation: (typeof requestableRelationValues)[number];
+	kind: string;
+	canonicalForm: string;
+	sourceFamily: GermanKnowledgeFamily;
+	reason: "KindNotInSourceFamilyInventory";
+}>;
+
+export type GermanKnowledgeProjectionOptions = Readonly<{
+	readonly onFilteredRelationTarget?: (
+		info: FilteredRelationTargetInfo,
+	) => void;
+}>;
+
+function knowledgeFamilyOf(
+	input: GermanKnowledgeGenerationInput,
+): GermanKnowledgeFamily | undefined {
+	const family = input.reading.lemma.family;
+	return germanKnowledgeFamilies.includes(family as GermanKnowledgeFamily)
+		? (family as GermanKnowledgeFamily)
+		: undefined;
+}
+
 /** Pure conversion from one validated private analysis to Dumrel DTOs. */
 export function projectGermanKnowledgeUpdate(
 	rawInput: GermanKnowledgeGenerationInput,
 	rawAnalysis: GermanKnowledgeAnalysis,
+	options?: GermanKnowledgeProjectionOptions,
 ): GeneratedKnowledgeUpdate {
+	const family = knowledgeFamilyOf(rawInput);
+	if (family === undefined) {
+		throw new TypeError(
+			`German Knowledge projection requires a ${germanKnowledgeFamilies.join(" | ")} Family.`,
+		);
+	}
 	const input = parseRuntimePromptSchema<GermanKnowledgeGenerationInput>(
-		"knowledge.de.combined#input",
+		`knowledge.de.${family}#input`,
 		rawInput,
 	);
-	const analysis = parseRuntimePromptSchema<GermanKnowledgeAnalysis>(
-		"knowledge.de.combined#output",
+	const parsedAnalysis = parseRuntimePromptSchema<GermanKnowledgeAnalysis>(
+		`knowledge.de.${family}#output`,
 		rawAnalysis,
 	);
+	const analysis = normalizeRelationTargets(parsedAnalysis, family, options);
 	assertAnalysisMirrorsRequest(input, analysis);
 
 	const changes: Array<Readonly<Record<string, unknown>>> = [];
@@ -68,12 +107,7 @@ export function projectGermanKnowledgeUpdate(
 	const pendingRelations: Array<
 		Readonly<{
 			relation: (typeof requestableRelationValues)[number];
-			target: Readonly<{
-				canonicalForm: string;
-				family: string;
-				kind: string;
-				language: string;
-			}>;
+			target: LexicalUnitShadow<"de">;
 		}>
 	> = [];
 	const relationByTarget = new Map<
@@ -83,27 +117,16 @@ export function projectGermanKnowledgeUpdate(
 	for (const relation of requestableRelationValues) {
 		const targets = analysis.semanticRelations?.[relation];
 		if (targets === undefined || targets === null) continue;
-		const uniqueTargets = new Map<
-			string,
-			{
-				canonicalForm: string;
-				family: string;
-				kind: string;
-				language: string;
-			}
-		>();
+		const uniqueTargets = new Map<string, LexicalUnitShadow<"de">>();
 		for (const rawTarget of targets) {
-			const parsed = {
-				relation,
-				target: rawTarget,
-			};
-			const target = parsed.target;
-			if (isOwnerTarget(input, target)) {
+			const injected = injectFamily(rawTarget, family);
+			if (injected === undefined) continue;
+			if (isOwnerTarget(input, injected)) {
 				throw new Error(
 					"A Semantic Relation cannot target its source Reading.",
 				);
 			}
-			uniqueTargets.set(targetKey(target), target);
+			uniqueTargets.set(targetKey(injected), injected);
 		}
 		for (const target of [...uniqueTargets.values()].sort(compareTargets)) {
 			const key = targetKey(target);
@@ -140,6 +163,74 @@ export function projectGermanKnowledgeUpdate(
 	return parseGeneratedKnowledgeUpdate(
 		parseAsKnowledgeGenerationResult({ changes, pendingRelations }),
 	);
+}
+
+/**
+ * Injects the source Family into one kind-only proposal and applies the
+ * same-Family validation. A target that would leave the Family's route
+ * inventory is dropped (and recorded by the caller), never thrown.
+ */
+function injectFamily(
+	target: GermanKnowledgeRelationTarget,
+	family: GermanKnowledgeFamily,
+): LexicalUnitShadow<"de"> | undefined {
+	const full = {
+		language: "de" as const,
+		canonicalForm: target.canonicalForm,
+		family,
+		kind: target.kind,
+	};
+	return germanFamilySupportsRelationTargetKind(family, target.kind)
+		? (full as LexicalUnitShadow<"de">)
+		: undefined;
+}
+
+/** Filters relation targets and preserves requested leaves as nullable values. */
+export function normalizeRelationTargets(
+	analysis: GermanKnowledgeAnalysis,
+	family: GermanKnowledgeFamily,
+	options?: GermanKnowledgeProjectionOptions,
+): GermanKnowledgeAnalysis {
+	if (analysis.semanticRelations === undefined) return analysis;
+	const semanticRelations: Record<
+		string,
+		readonly GermanKnowledgeRelationTarget[] | null
+	> = {};
+	for (const [relation, targets] of Object.entries(
+		analysis.semanticRelations,
+	)) {
+		if (targets === null) {
+			semanticRelations[relation] = null;
+			continue;
+		}
+		const retained = targets.filter((target) => {
+			if (germanFamilySupportsRelationTargetKind(family, target.kind)) {
+				return true;
+			}
+			notifyFilteredRelationTarget(options, {
+				relation:
+					relation as (typeof requestableRelationValues)[number],
+				kind: target.kind,
+				canonicalForm: target.canonicalForm,
+				sourceFamily: family,
+				reason: "KindNotInSourceFamilyInventory",
+			});
+			return false;
+		});
+		semanticRelations[relation] = retained.length === 0 ? null : retained;
+	}
+	return { ...analysis, semanticRelations };
+}
+
+function notifyFilteredRelationTarget(
+	options: GermanKnowledgeProjectionOptions | undefined,
+	info: FilteredRelationTargetInfo,
+): void {
+	try {
+		options?.onFilteredRelationTarget?.(info);
+	} catch {
+		// Diagnostics cannot affect projection.
+	}
 }
 
 function parseGeneratedKnowledgeUpdate(
@@ -194,12 +285,7 @@ function sameMembers(left: string[], right: string[]): boolean {
 	);
 }
 
-function targetKey(target: {
-	readonly language: string;
-	readonly family: string;
-	readonly kind: string;
-	readonly canonicalForm: string;
-}): string {
+function targetKey(target: LexicalUnitShadow<"de">): string {
 	return JSON.stringify([
 		target.language,
 		target.family,
@@ -209,18 +295,8 @@ function targetKey(target: {
 }
 
 function compareTargets(
-	left: {
-		canonicalForm: string;
-		family: string;
-		kind: string;
-		language: string;
-	},
-	right: {
-		canonicalForm: string;
-		family: string;
-		kind: string;
-		language: string;
-	},
+	left: LexicalUnitShadow<"de">,
+	right: LexicalUnitShadow<"de">,
 ): number {
 	const leftKey = targetKey(left);
 	const rightKey = targetKey(right);
@@ -231,12 +307,7 @@ function compareTargets(
 
 function isOwnerTarget(
 	input: GermanKnowledgeGenerationInput,
-	target: {
-		canonicalForm: string;
-		family: string;
-		kind: string;
-		language: string;
-	},
+	target: LexicalUnitShadow<"de">,
 ): boolean {
 	const owner = input.reading.lemma;
 	return (

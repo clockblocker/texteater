@@ -1,2 +1,2 @@
-export { combinedGermanKnowledgePrompt } from "./catalog/combined-german-knowledge-prompt";
+export { knowledgeGenerationPromptCatalog as germanKnowledgePrompts } from "./catalog/knowledge-generation-prompts";
 export { PROMPT_CATALOG } from "./catalog/prompt-catalog";

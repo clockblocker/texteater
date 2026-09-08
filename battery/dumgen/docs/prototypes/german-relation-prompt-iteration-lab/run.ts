@@ -21,11 +21,11 @@ import { stableJson } from "../../../src/promptsmith/assembly";
 import {
 	analyzeCombinedGermanKnowledgeCase,
 	type CombinedGermanKnowledgeCaseAnalysis,
-} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
+} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator";
 import {
 	createGermanRelationEvaluationReport,
 	type GermanRelationEvaluationRun,
-} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
+} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
 import {
 	actualCostNanoUsd,
 	createLabPlan,

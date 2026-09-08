@@ -17,9 +17,9 @@ export type CombinedGermanKnowledgeGenerator = (
 	input: GermanKnowledgeGenerationInput,
 ) => Promise<GeneratedKnowledgeUpdate>;
 
-/** Validates and executes the German combined Knowledge generation workflow. */
+/** Validates and executes one per-Family German Knowledge generation route. */
 export function createGermanKnowledgeGeneration(
-	generateCombined: CombinedGermanKnowledgeGenerator,
+	generateForFamily: CombinedGermanKnowledgeGenerator,
 ) {
 	return async function generateGermanKnowledge(
 		rawInput: GermanKnowledgeGenerationInput,
@@ -41,7 +41,7 @@ export function createGermanKnowledgeGeneration(
 			return EMPTY_GENERATED_KNOWLEDGE_UPDATE;
 		}
 
-		const generated = await generateCombined(input);
+		const generated = await generateForFamily(input);
 		try {
 			const parsed = unwrapDumgenParse(
 				parseAsKnowledgeGenerationResult(generated),
@@ -52,7 +52,7 @@ export function createGermanKnowledgeGeneration(
 		} catch (cause) {
 			throw new DumgenError(
 				"invalid-output",
-				"Combined Knowledge generation produced an invalid update.",
+				"German Knowledge generation produced an invalid update.",
 				{ cause },
 			);
 		}

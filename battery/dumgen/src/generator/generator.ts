@@ -45,6 +45,7 @@ export type ModelExchange =
 
 export type GeneratorCatalogOptions = {
 	readonly onModelExchange?: (exchange: ModelExchange) => void;
+	readonly onDiagnostic?: (diagnostic: unknown) => void;
 };
 
 type ResultOf<Definition extends AnyPrompt> = Definition extends {
@@ -124,6 +125,15 @@ function makeGenerator<Definition extends AnyPrompt>(
 	options: GeneratorCatalogOptions,
 	path: readonly string[],
 ): GeneratorFor<Definition> {
+	const projectionContext = Object.freeze({
+		reportDiagnostic(diagnostic: unknown): void {
+			try {
+				options.onDiagnostic?.(structuredClone(diagnostic));
+			} catch {
+				// Diagnostics cannot affect generation.
+			}
+		},
+	});
 	return (async (rawInput: PromptSchemaInput<Definition["inputSchema"]>) => {
 		let parsedInput: PromptSchemaOutput<Definition["inputSchema"]>;
 		try {
@@ -211,7 +221,11 @@ function makeGenerator<Definition extends AnyPrompt>(
 		if (modelOutputSchema === null || prompt.outputSchema === null) {
 			try {
 				const result = prompt.projectOutput
-					? prompt.projectOutput(parsedInput, generated as string)
+					? prompt.projectOutput(
+							parsedInput,
+							generated as string,
+							projectionContext,
+						)
 					: generated;
 				notifyModelExchange(options, {
 					phase: "accepted",
@@ -245,7 +259,11 @@ function makeGenerator<Definition extends AnyPrompt>(
 			parsedOutput = prompt.outputSchema.parse(generated);
 			prompt.outputPostcondition?.assert(parsedInput, parsedOutput);
 			const result = prompt.projectOutput
-				? prompt.projectOutput(parsedInput, parsedOutput)
+				? prompt.projectOutput(
+						parsedInput,
+						parsedOutput,
+						projectionContext,
+					)
 				: parsedOutput;
 			notifyModelExchange(options, {
 				phase: "accepted",

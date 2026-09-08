@@ -12,7 +12,7 @@ import {
 	lexicalUnitShadowSchema,
 } from "dumrel/schema";
 import { z } from "zod";
-import { combinedGermanKnowledgePrompt } from "../src/catalog/combined-german-knowledge-prompt.js";
+import { knowledgeGenerationPromptCatalog } from "../src/catalog/knowledge-generation-prompts.js";
 import { PROMPT_CATALOG } from "../src/catalog/prompt-catalog.js";
 
 type AuthoringPrompt = Readonly<{
@@ -106,7 +106,6 @@ export const runtimePromptArtifactRecipe = defineCodegen({
 				"promptsmith/production/intake/schemas.ts",
 				"promptsmith/production/prompt-part/target-classification/**/schemas.ts",
 				"promptsmith/production/reading-resolution/**/schemas.ts",
-				"promptsmith/production/unit-shadow-classification/schemas.ts",
 			],
 			recursive: true,
 		},
@@ -125,9 +124,9 @@ export const runtimePromptArtifactRecipe = defineCodegen({
 	},
 	build: ({ authoring }) => {
 		const records = collectRuntimePromptArtifacts();
-		if (records.length !== 25)
+		if (records.length !== 28)
 			throw new Error(
-				`Expected 26 canonical Dumgen prompts, received ${String(records.length)}.`,
+				`Expected 28 canonical Dumgen prompts, received ${String(records.length)}.`,
 			);
 		const schemas = collectRuntimePromptSchemas();
 		const operations = collectPromptValidationOperations(schemas);
@@ -248,10 +247,11 @@ function authoringPromptEntries(): Array<
 		...promptEntries(
 			PROMPT_CATALOG as unknown as Readonly<Record<string, unknown>>,
 		),
-		[
-			"knowledge.de.combined",
-			combinedGermanKnowledgePrompt as unknown as AuthoringPromptEntry,
-		] as const,
+		...Object.entries(
+			knowledgeGenerationPromptCatalog as unknown as Readonly<
+				Record<string, AuthoringPromptEntry>
+			>,
+		).map(([family, entry]) => [`knowledge.de.${family}`, entry] as const),
 	];
 }
 

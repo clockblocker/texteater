@@ -7,12 +7,12 @@ import {
 	jsonSchemaForRuntimePrompt,
 	runtimePromptArtifactRecipe,
 } from "../../codegen/runtime-prompt-artifacts";
-import { combinedGermanKnowledgePrompt } from "../../src/catalog/combined-german-knowledge-prompt";
+import { knowledgeGenerationPromptCatalog } from "../../src/catalog/knowledge-generation-prompts";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import {
 	decodeRuntimePromptArtifact,
+	RUNTIME_KNOWLEDGE_PROMPT_CATALOG,
 	RUNTIME_PROMPT_CATALOG,
-	runtimeCombinedGermanKnowledgePrompt,
 	runtimePromptMaterializationCount,
 } from "../../src/catalog/runtime-prompt-catalog";
 import { runtimePromptDispatch } from "../../src/catalog/runtime-prompt-dispatch";
@@ -27,28 +27,8 @@ import {
 	loadEncodedRuntimePromptData,
 	type RuntimePromptPath,
 } from "../../src/generated/runtime-prompt-artifacts";
-import { encodedDumgenValidationArtifacts } from "../../src/generated/validation-artifacts";
 import { corpus as deDeterminerCorpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/determiner/golden-corpus/corpus";
 import { productionDemonstrationSelection } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
-
-type CatalogNode = Readonly<Record<string, unknown>>;
-
-function promptEntries(
-	node: CatalogNode,
-	path: readonly string[] = [],
-): Array<readonly [string, CatalogNode]> {
-	if (
-		(node as { readonly meta?: { readonly kind?: unknown } }).meta?.kind ===
-		"prompt"
-	) {
-		return [[path.join("."), node]];
-	}
-	return Object.entries(node).flatMap(([key, child]) =>
-		child !== null && typeof child === "object"
-			? promptEntries(child as CatalogNode, [...path, key])
-			: [],
-	);
-}
 
 type PromptRepresentativeCase = Readonly<{
 	input: unknown;
@@ -68,15 +48,37 @@ type PromptSource = Readonly<{
 	route: string;
 }>;
 
+type CatalogNode = Readonly<Record<string, unknown>>;
+
+const KNOWLEDGE_PROMPT_ENTRIES = Object.entries(
+	knowledgeGenerationPromptCatalog,
+).map(([family, entry]) => [`knowledge.de.${family}`, entry] as const);
+
+function promptEntries(
+	node: CatalogNode,
+	path: readonly string[] = [],
+): Array<readonly [string, CatalogNode]> {
+	if (
+		(node as { readonly meta?: { readonly kind?: unknown } }).meta?.kind ===
+		"prompt"
+	) {
+		return [[path.join("."), node]];
+	}
+	return Object.entries(node).flatMap(([key, child]) =>
+		child !== null && typeof child === "object"
+			? promptEntries(child as CatalogNode, [...path, key])
+			: [],
+	);
+}
+
 async function canonicalPromptRepresentatives(): Promise<
 	Readonly<Record<RuntimePromptPath, PromptRepresentative>>
 > {
 	const authored = [
 		...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
-		[
-			"knowledge.de.combined",
-			combinedGermanKnowledgePrompt as unknown as CatalogNode,
-		] as const,
+		...KNOWLEDGE_PROMPT_ENTRIES.map(
+			([path, entry]) => [path, entry as unknown as CatalogNode] as const,
+		),
 	];
 	const representatives = new Map<string, PromptRepresentative>();
 	const glob = new Bun.Glob("src/promptsmith/production/**/prompt-source.ts");
@@ -126,30 +128,55 @@ async function canonicalPromptRepresentatives(): Promise<
 				};
 			},
 		);
-		if (path === "knowledge.de.combined") {
+		if (path.startsWith("knowledge.de.")) {
 			const base = cases[0];
 			if (base === undefined || base.input === null)
 				throw new Error(
-					"Combined Knowledge representative is missing.",
+					`Knowledge representative for ${path} is missing.`,
 				);
+			const relationBearing =
+				path === "knowledge.de.Lexeme" ||
+				path === "knowledge.de.Phraseme";
 			const input = {
 				...(base.input as Record<string, unknown>),
-				request: {
-					definition: null,
-					semanticRelations: { synonym: null },
-					transcription: null,
-					translations: { en: null },
-				},
+				request: relationBearing
+					? {
+							definition: null,
+							semanticRelations: { synonym: null },
+							transcription: null,
+							translations: { en: null },
+						}
+					: {
+							definition: null,
+							transcription: null,
+							translations: { en: null },
+						},
 			};
 			cases.push({
 				input,
 				modelInput: input,
-				output: {
-					definition: "  cafe\u0301  ",
-					semanticRelations: { synonym: null },
-					transcription: "  haʊs  ",
-					translations: { en: "  cafe\u0301  " },
-				},
+				output: relationBearing
+					? {
+							definition: "  cafe\u0301  ",
+							semanticRelations: {
+								synonym: [
+									{
+										canonicalForm: "  cafe\u0301  ",
+										kind:
+											path === "knowledge.de.Lexeme"
+												? " NOUN "
+												: " Idiom ",
+									},
+								],
+							},
+							transcription: "  haʊs  ",
+							translations: { en: "  cafe\u0301  " },
+						}
+					: {
+							definition: "  cafe\u0301  ",
+							transcription: "  haʊs  ",
+							translations: { en: "  cafe\u0301  " },
+						},
 			});
 		}
 		if (path === "laboratory.grammaticalResolution.de.Lexeme.DET") {
@@ -270,26 +297,29 @@ describe("generated operational runtime prompt catalog", () => {
 		).toBe(1);
 	});
 
-	test("preserves the exact 25 canonical prompt paths, text, and generation parameters", () => {
+	test("preserves the exact 28 canonical prompt paths, text, and generation parameters", () => {
 		const authored = [
 			...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
-			[
-				"knowledge.de.combined",
-				combinedGermanKnowledgePrompt as unknown as CatalogNode,
-			] as const,
+			...KNOWLEDGE_PROMPT_ENTRIES.map(
+				([path, entry]) =>
+					[path, entry as unknown as CatalogNode] as const,
+			),
 		];
 		const runtime = [
 			...promptEntries(RUNTIME_PROMPT_CATALOG as unknown as CatalogNode),
-			[
-				"knowledge.de.combined",
-				runtimeCombinedGermanKnowledgePrompt as unknown as CatalogNode,
-			] as const,
+			...Object.entries(RUNTIME_KNOWLEDGE_PROMPT_CATALOG).map(
+				([family, entry]) =>
+					[
+						`knowledge.de.${family}`,
+						entry as unknown as CatalogNode,
+					] as const,
+			),
 		];
 
 		expect(runtime.map(([path]) => path)).toEqual(
 			authored.map(([path]) => path),
 		);
-		expect(runtime).toHaveLength(25);
+		expect(runtime).toHaveLength(28);
 		for (const [index, [path, authoredEntry]] of authored.entries()) {
 			const runtimeEntry = runtime[index]?.[1];
 			expect(runtimeEntry, path).toBeDefined();
@@ -392,33 +422,25 @@ describe("generated operational runtime prompt catalog", () => {
 		);
 	});
 
-	test("preserves canonical Unit Shadow normalization without serializing identity binds", () => {
-		expect(
-			encodedDumgenValidationArtifacts.operationSignatures[
-				"dumgen.transitive.transform.bindSupportedUnitShadow"
-			],
-		).toEqual({ version: 1 });
-		expect(
-			encodedDumgenValidationArtifacts.operationSignatures[
-				"dumgen.transitive.transform.bindLexicalUnitShadow"
-			],
-		).toEqual({ version: 1 });
+	test("normalizes kind-only relation targets without serializing transforms", () => {
 		const raw = {
 			semanticRelations: {
 				synonym: [
 					{
-						language: "de",
 						canonicalForm: "  Ba\u0308nk  ",
-						family: " Lexeme ",
 						kind: " NOUN ",
 					},
 				],
 			},
 		};
 		const authored =
-			combinedGermanKnowledgePrompt.prompt.outputSchema.parse(raw);
+			knowledgeGenerationPromptCatalog.Lexeme.prompt.outputSchema.parse(
+				raw,
+			);
 		const generated =
-			runtimeCombinedGermanKnowledgePrompt.prompt.outputSchema.parse(raw);
+			RUNTIME_KNOWLEDGE_PROMPT_CATALOG.Lexeme.prompt.outputSchema.parse(
+				raw,
+			);
 		expect(generated).toEqual(authored);
 
 		function bindSupportedUnitShadow(value: unknown): unknown {
@@ -431,16 +453,9 @@ describe("generated operational runtime prompt catalog", () => {
 			),
 		).toThrow();
 		expect(authored.semanticRelations?.synonym?.[0]).toEqual({
-			language: "de",
 			canonicalForm: "Bänk",
-			family: "Lexeme",
 			kind: "NOUN",
 		});
-		expect(() =>
-			z.toJSONSchema(combinedGermanKnowledgePrompt.prompt.outputSchema, {
-				target: "draft-7",
-			}),
-		).toThrow("Transforms cannot be represented in JSON Schema");
 	});
 
 	test("ships the exact provider-ready JSON Schemas without loading Zod at runtime", () => {
@@ -471,7 +486,7 @@ describe("generated operational runtime prompt catalog", () => {
 		);
 	});
 
-	test("builds the exact sparse combined-Knowledge model schema from the request", () => {
+	test("builds the exact sparse Knowledge model schema from the request", () => {
 		const input = {
 			markedContext: "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
 			reading: {
@@ -490,15 +505,17 @@ describe("generated operational runtime prompt catalog", () => {
 			},
 		};
 		const authored =
-			combinedGermanKnowledgePrompt.prompt.modelOutputSchemaFor(
-				combinedGermanKnowledgePrompt.prompt.inputSchema.parse(input),
+			knowledgeGenerationPromptCatalog.Lexeme.prompt.modelOutputSchemaFor(
+				knowledgeGenerationPromptCatalog.Lexeme.prompt.inputSchema.parse(
+					input,
+				),
 			);
 		const runtimeInput =
-			runtimeCombinedGermanKnowledgePrompt.prompt.inputSchema.parse(
+			RUNTIME_KNOWLEDGE_PROMPT_CATALOG.Lexeme.prompt.inputSchema.parse(
 				input,
 			);
 		const runtime =
-			runtimeCombinedGermanKnowledgePrompt.prompt.modelOutputSchemaFor?.(
+			RUNTIME_KNOWLEDGE_PROMPT_CATALOG.Lexeme.prompt.modelOutputSchemaFor?.(
 				runtimeInput,
 			);
 		const valid = {
@@ -523,13 +540,16 @@ describe("generated operational runtime prompt catalog", () => {
 		);
 	});
 
-	test("attaches the combined Knowledge projector and every exact named dispatch", () => {
+	test("attaches the per-Family Knowledge projector and every exact named dispatch", () => {
 		const runtimeByPath = new Map([
 			...promptEntries(RUNTIME_PROMPT_CATALOG as unknown as CatalogNode),
-			[
-				"knowledge.de.combined",
-				runtimeCombinedGermanKnowledgePrompt as unknown as CatalogNode,
-			] as const,
+			...Object.entries(RUNTIME_KNOWLEDGE_PROMPT_CATALOG).map(
+				([family, entry]) =>
+					[
+						`knowledge.de.${family}`,
+						entry as unknown as CatalogNode,
+					] as const,
+			),
 		]);
 		let dispatchCount = 0;
 		for (const [path] of runtimeByPath) {
@@ -544,7 +564,7 @@ describe("generated operational runtime prompt catalog", () => {
 				expect(prompt[role], `${artifact.path}:${role}`).toBeDefined();
 			}
 		}
-		expect(dispatchCount).toBe(50);
+		expect(dispatchCount).toBe(59);
 		expect(() =>
 			runtimePromptDispatch(
 				"unknown:project-output",
@@ -569,24 +589,28 @@ describe("generated operational runtime prompt catalog", () => {
 		};
 		const analysis = { definition: "Geldinstitut." };
 		const authoredInput =
-			combinedGermanKnowledgePrompt.prompt.inputSchema.parse(input);
+			knowledgeGenerationPromptCatalog.Lexeme.prompt.inputSchema.parse(
+				input,
+			);
 		const runtimeInput =
-			runtimeCombinedGermanKnowledgePrompt.prompt.inputSchema.parse(
+			RUNTIME_KNOWLEDGE_PROMPT_CATALOG.Lexeme.prompt.inputSchema.parse(
 				input,
 			);
 		const authoredAnalysis =
-			combinedGermanKnowledgePrompt.prompt.outputSchema.parse(analysis);
+			knowledgeGenerationPromptCatalog.Lexeme.prompt.outputSchema.parse(
+				analysis,
+			);
 		const runtimeAnalysis =
-			runtimeCombinedGermanKnowledgePrompt.prompt.outputSchema?.parse(
+			RUNTIME_KNOWLEDGE_PROMPT_CATALOG.Lexeme.prompt.outputSchema?.parse(
 				analysis,
 			);
 		expect(
-			runtimeCombinedGermanKnowledgePrompt.prompt.projectOutput?.(
+			RUNTIME_KNOWLEDGE_PROMPT_CATALOG.Lexeme.prompt.projectOutput?.(
 				runtimeInput,
 				runtimeAnalysis,
 			),
 		).toEqual(
-			combinedGermanKnowledgePrompt.prompt.projectOutput?.(
+			knowledgeGenerationPromptCatalog.Lexeme.prompt.projectOutput?.(
 				authoredInput,
 				authoredAnalysis,
 			),
@@ -641,21 +665,24 @@ describe("generated operational runtime prompt catalog", () => {
 		});
 	});
 
-	test("keeps all 75 generated parser roots differentially bound", async () => {
+	test("keeps all 84 generated parser roots differentially bound", async () => {
 		const representatives = await canonicalPromptRepresentatives();
 		const authored = [
 			...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
-			[
-				"knowledge.de.combined",
-				combinedGermanKnowledgePrompt as unknown as CatalogNode,
-			] as const,
+			...KNOWLEDGE_PROMPT_ENTRIES.map(
+				([path, entry]) =>
+					[path, entry as unknown as CatalogNode] as const,
+			),
 		];
 		const runtime = new Map([
 			...promptEntries(RUNTIME_PROMPT_CATALOG as unknown as CatalogNode),
-			[
-				"knowledge.de.combined",
-				runtimeCombinedGermanKnowledgePrompt as unknown as CatalogNode,
-			] as const,
+			...Object.entries(RUNTIME_KNOWLEDGE_PROMPT_CATALOG).map(
+				([family, entry]) =>
+					[
+						`knowledge.de.${family}`,
+						entry as unknown as CatalogNode,
+					] as const,
+			),
 		]);
 		const executedOperations = new Set<string>();
 		const trackingOperations = new Proxy(
@@ -770,7 +797,7 @@ describe("generated operational runtime prompt catalog", () => {
 					}
 			}
 		}
-		expect(roots).toBe(75);
+		expect(roots).toBe(84);
 		expect([...executedOperations].toSorted()).toEqual(
 			[
 				...loadEncodedRuntimePromptValidation().requiredOperations,
@@ -793,10 +820,10 @@ describe("generated operational runtime prompt catalog", () => {
 			executed.add(name);
 		}
 		expect(encodedRuntimePromptValidation.requiredOperations).toContain(
-			"dumgen.prompt.transform.bindSupportedUnitShadow",
+			"dumgen.prompt.transform.bindGermanKnowledgeReading",
 		);
 		expect(encodedRuntimePromptValidation.requiredOperations).toContain(
-			"dumgen.prompt.transform.bindLexicalUnitShadow",
+			"dumgen.prompt.custom.knowledge.de.Lexeme#input@$",
 		);
 		expect([...executed].toSorted()).toEqual(
 			[...encodedRuntimePromptValidation.requiredOperations].toSorted(),
@@ -901,13 +928,22 @@ function operationMutationFixture(name: string): unknown {
 			decision: "Resolved",
 			target: null,
 		};
-	if (name.includes("knowledge.de.combined#output@$.semanticRelations"))
+	if (
+		name.startsWith("dumgen.prompt.custom.knowledge.de.") &&
+		name.endsWith("#input@$")
+	) {
+		const family = name.slice(
+			"dumgen.prompt.custom.knowledge.de.".length,
+			name.length - "#input@$".length,
+		);
 		return {
-			canonicalForm: "Bank",
-			family: "Unknown",
-			kind: "Unknown",
-			language: "en",
+			reading: {
+				lemma: {
+					family: family === "Lexeme" ? "Phraseme" : "Lexeme",
+				},
+			},
 		};
+	}
 	if (name.includes("hasDistinctPair")) return ["same", "same"];
 	if (name.includes("hasMarked")) return {};
 	if (name.includes("hasEnglishTranslationSelection")) return {};
@@ -923,6 +959,7 @@ function operationMutationFixture(name: string): unknown {
 	if (name.includes("normalizeReadingLemma"))
 		return { canonicalForm: "  cafe\u0301  " };
 	if (name.includes("bind")) return {};
+	if (name.includes("overwrite.trimString")) return "  value  ";
 	if (
 		name.includes("normalizeNfc") ||
 		name.includes("NormalizeNfc") ||

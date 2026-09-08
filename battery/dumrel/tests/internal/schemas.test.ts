@@ -13,6 +13,7 @@ import {
 	morphologicalTreeSchema,
 	pendingSemanticRelationSchema,
 	readingReferenceSchema,
+	relationTargetWithinFamilySchema,
 	semanticRelationGraphSchema,
 	semanticRelationSchema,
 	unitShadowSchema,
@@ -105,6 +106,32 @@ describe("concrete Dumling-backed schemas", () => {
 				kind: "DiscourseFormula",
 			}).success,
 		).toBe(false);
+	});
+
+	test("applies the same-Family rule through the relation-target factory", () => {
+		const lexemeSchema = relationTargetWithinFamilySchema("Lexeme");
+		expect(lexemeSchema.parse(nounShadow)).toEqual(nounShadow);
+		expect(
+			lexemeSchema.safeParse({
+				language: "de",
+				canonicalForm: "auf jeden Fall",
+				family: "Phraseme",
+				kind: "DiscourseFormula",
+			}).success,
+		).toBe(false);
+		expect(
+			lexemeSchema.safeParse({ ...nounShadow, kind: "Nonsense" }).success,
+		).toBe(false);
+		const phrasemeSchema = relationTargetWithinFamilySchema("Phraseme");
+		expect(
+			phrasemeSchema.safeParse({
+				language: "de",
+				canonicalForm: "auf jeden Fall",
+				family: "Phraseme",
+				kind: "DiscourseFormula",
+			}).success,
+		).toBe(true);
+		expect(phrasemeSchema.safeParse(nounShadow).success).toBe(false);
 	});
 });
 

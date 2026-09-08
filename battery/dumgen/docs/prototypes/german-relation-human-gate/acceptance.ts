@@ -19,12 +19,13 @@ import {
 	assembleSystemPrompt,
 	stableJson,
 } from "../../../src/promptsmith/assembly";
-import { createGermanRelationEvaluationReport } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
+import { createGermanRelationEvaluationReport } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
+import { untouchedAcceptanceReservation } from "../../../src/promptsmith/production/knowledge-analysis/de/lexeme/golden-corpus/corpus";
+import { promptSource as combinedPromptSource } from "../../../src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source";
 import {
-	corpus,
-	untouchedAcceptanceReservation,
-} from "../../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
-import { promptSource as combinedPromptSource } from "../../../src/promptsmith/production/knowledge-analysis/de/combined/prompt-source";
+	retainedRelationAcceptanceHas,
+	retainedRelationCase,
+} from "../../../src/promptsmith/production/knowledge-analysis/de/retained-relation-corpora";
 import {
 	actualCostNanoUsd,
 	canonicalizeRelationOutput,
@@ -269,8 +270,8 @@ export function materializeAcceptanceCasePlan(
 		throw new Error(
 			`Acceptance topology is frozen to ${ACCEPTANCE_TOPOLOGY}.`,
 		);
-	const goldenCase = corpus.cases[caseId];
-	if (goldenCase === undefined || !corpus.collections.acceptance.has(caseId))
+	const goldenCase = retainedRelationCase(caseId);
+	if (goldenCase === undefined || !retainedRelationAcceptanceHas(caseId))
 		throw new Error(`Case ${caseId} is outside the sealed reservation.`);
 	const sourceInput = germanKnowledgeGenerationInputSchema.parse(
 		goldenCase.input,

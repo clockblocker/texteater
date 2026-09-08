@@ -64,6 +64,7 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"pendingSemanticRelationSchema",
 		"readingKnowledgeSchema",
 		"readingReferenceSchema",
+		"relationTargetWithinFamilySchema",
 		"semanticRelationGraphReadingSchema",
 		"semanticRelationGraphSchema",
 		"semanticRelationRetractKnowledgeChangeSchema",

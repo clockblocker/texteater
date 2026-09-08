@@ -3,11 +3,11 @@ import { z } from "zod";
 import type {
 	GermanKnowledgeAnalysis,
 	GermanKnowledgeGenerationInput,
-} from "../../../../../../knowledge-generation/de/schemas";
+} from "../../../../../knowledge-generation/de/schemas";
 import {
 	type RequestableRelation,
 	requestableRelationSchema,
-} from "../../../../../../knowledge-generation/relations";
+} from "../../../../../knowledge-generation/relations";
 import {
 	analyzeCombinedGermanKnowledgeCase,
 	type CombinedGermanKnowledgeCaseAnalysis,

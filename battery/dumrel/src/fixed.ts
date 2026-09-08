@@ -6,6 +6,7 @@ import {
 	fixedMembersFor,
 } from "dumling/fixed";
 import type { Lemma, Reading } from "dumling/types";
+import { validateAuthoredFixedKnowledge } from "./fixed-knowledge-validation.js";
 import type {
 	LexemeUnitShadow,
 	ReadingKnowledge,
@@ -163,7 +164,10 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 			coverage: isPromotedSeinPeer(auxReading.lemma)
 				? DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE
 				: DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
-			knowledge: authoredAuxKnowledgeFor(auxReading),
+			knowledge: validateAuthoredFixedKnowledge(
+				auxReading,
+				authoredAuxKnowledgeFor(auxReading),
+			),
 		});
 	}
 	if (catalogued.lemma.kind === "PRON") {
@@ -180,7 +184,10 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 							)
 						? DE_LEXEME_PRON_JEDWEDER_FIXED_KNOWLEDGE_COVERAGE
 						: DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
-			knowledge: authoredPronounKnowledgeFor(pronounReading),
+			knowledge: validateAuthoredFixedKnowledge(
+				pronounReading,
+				authoredPronounKnowledgeFor(pronounReading),
+			),
 		});
 	}
 	if (catalogued.lemma.kind !== "DET") return MEMBER_NOT_CATALOGUED;
@@ -191,7 +198,10 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 		coverage: isPromotedDefiniteArticle(detReading.lemma)
 			? DE_LEXEME_DET_V1_ARTICLE_FIXED_KNOWLEDGE_COVERAGE
 			: DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
-		knowledge: authoredDetKnowledgeFor(detReading),
+		knowledge: validateAuthoredFixedKnowledge(
+			detReading,
+			authoredDetKnowledgeFor(detReading),
+		),
 	});
 }
 

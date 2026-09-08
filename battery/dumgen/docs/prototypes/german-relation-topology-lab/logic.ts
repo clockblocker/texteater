@@ -25,9 +25,12 @@ import {
 import {
 	GERMAN_RELATION_GATE_THRESHOLDS,
 	MINIMUM_STABILITY_RUNS,
-} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
-import { corpus } from "../../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
-import { promptSource as combinedPromptSource } from "../../../src/promptsmith/production/knowledge-analysis/de/combined/prompt-source";
+} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
+import { promptSource as combinedPromptSource } from "../../../src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source";
+import {
+	retainedRelationCase,
+	retainedRelationDevelopmentIds,
+} from "../../../src/promptsmith/production/knowledge-analysis/de/retained-relation-corpora";
 
 export const LAB_QUESTION =
 	"Which combined/dedicated and batching/grouping prompt topology yields conservative, stable, precision-first German relation proposals under the frozen semantic evaluator?";
@@ -190,7 +193,7 @@ export function createLabPlan(): LabPlan {
 		calls,
 		({ maximumCostNanoUsd }) => maximumCostNanoUsd,
 	);
-	const developmentIds = new Set(corpus.collections.development.ids);
+	const developmentIds = new Set(retainedRelationDevelopmentIds());
 	const coveredRelations = new Set(
 		cases.flatMap(({ calls }) =>
 			calls.flatMap(({ relations }) => relations),
@@ -372,7 +375,7 @@ function createCasePlan(
 	topology: LabTopology,
 	caseId: string,
 ): LabCasePlan {
-	const goldenCase = corpus.cases[caseId];
+	const goldenCase = retainedRelationCase(caseId);
 	if (goldenCase === undefined)
 		throw new Error(`Missing retained development case ${caseId}.`);
 	const input = germanKnowledgeGenerationInputSchema.parse(goldenCase.input);
@@ -538,7 +541,7 @@ function callShapePass(call: LabCallPlan): boolean {
 		call.request.store !== false
 	)
 		return false;
-	const goldenCase = corpus.cases[call.caseId];
+	const goldenCase = retainedRelationCase(call.caseId);
 	if (goldenCase === undefined) return false;
 	const idealRelations = goldenCase.idealOutput.semanticRelations ?? {};
 	const candidate = call.topology.startsWith("current-combined")
@@ -585,7 +588,8 @@ function deepFreeze<Value>(value: Value): Value {
 	if (
 		value !== null &&
 		typeof value === "object" &&
-		!Object.isFrozen(value)
+		!Object.isFrozen(value) &&
+		(value as { _zod?: unknown })._zod === undefined
 	) {
 		for (const nested of Object.values(value)) deepFreeze(nested);
 		Object.freeze(value);

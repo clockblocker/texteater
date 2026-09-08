@@ -13,19 +13,19 @@ import {
 	isEmptyGermanKnowledgeRequest,
 } from "../../src/knowledge-generation/de/schemas";
 import { stableJson } from "../../src/promptsmith/assembly";
-import { combinedGermanKnowledgeAcceptanceExperiment } from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluation-suite";
 import type {
 	RelationKindConfusion,
 	RelationLeafEvaluation,
-} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
-import { untouchedAcceptanceReservation } from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
+} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator";
+import { lexemeGermanKnowledgeAcceptanceExperiment } from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/lexeme/evaluation-suite";
+import { untouchedAcceptanceReservation } from "../../src/promptsmith/production/knowledge-analysis/de/lexeme/golden-corpus/corpus";
 
 describe("German Relation Semantics human gate", () => {
 	test("keeps the frozen evaluation seam explicitly consumed", () => {
 		const emptyRequest = {} satisfies GermanKnowledgeGenerationRequest;
 		expect(isEmptyGermanKnowledgeRequest(emptyRequest)).toBe(true);
 		expect(
-			combinedGermanKnowledgeAcceptanceExperiment.evaluation.ids,
+			lexemeGermanKnowledgeAcceptanceExperiment.evaluation.ids,
 		).toHaveLength(12);
 		function preserveFrozenEvaluationTypes(
 			_confusion: RelationKindConfusion,
@@ -67,7 +67,10 @@ describe("German Relation Semantics human gate", () => {
 		).toBe(true);
 		const requested = reservation.selection.cases.map(
 			({ input }) =>
-				Object.keys(input.request.semanticRelations ?? {})[0],
+				Object.keys(
+					(input as { request: { semanticRelations?: object } })
+						.request.semanticRelations ?? {},
+				)[0],
 		);
 		expect(
 			Object.fromEntries(
@@ -99,7 +102,7 @@ describe("German Relation Semantics human gate", () => {
 			maximumSpendNanoUsd: 108_635_100,
 			maximumSpendUsd: "0.108635100",
 			selectionCommitmentSha256:
-				"2e34dcd79f43300d2f85284a82246fb18fde76417b7bc41388b9894a6f4bf14b",
+				"8c7c1e11452139dd7b7b971b386b18a5d740bb8380e28caaca8dd7b82a7dc787",
 		});
 		expect(stableJson(preflight)).not.toContain("Streichholz");
 		expect(

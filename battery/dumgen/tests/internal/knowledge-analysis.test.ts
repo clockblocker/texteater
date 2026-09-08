@@ -268,7 +268,7 @@ describe("Knowledge analysis Prompt Sources", () => {
 			{
 				markedContext: "Das <TARGET>Café</TARGET> öffnet früh.",
 				sourceReading,
-				targetLanguage: "fr" as const,
+				targetLanguage: "ru" as const,
 				existingTranslations: ["cafe\u0301"],
 			},
 			{ decision: "Covered", existingIndex: 0 },
@@ -276,12 +276,12 @@ describe("Knowledge analysis Prompt Sources", () => {
 		expect(covered).toEqual({
 			kind: "Contribute",
 			aspect: "translations",
-			language: "fr",
+			language: "ru",
 			value: ["café"],
 		});
 		expect(
-			applyKnowledgeChange({ translations: { fr: ["café"] } }, covered),
-		).toEqual({ translations: { fr: ["café"] } });
+			applyKnowledgeChange({ translations: { ru: ["café"] } }, covered),
+		).toEqual({ translations: { ru: ["café"] } });
 
 		const added = projectTranslationChange(
 			{

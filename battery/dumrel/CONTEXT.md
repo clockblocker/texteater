@@ -84,8 +84,8 @@ preserving fixed coordinates.
 
 **Semantic Relation**:
 A direct typed connection owned by one exact source Reading. Its targets are
-all Lemmas or all exact Readings.
-_Avoid_: Lexical Relation
+all Lemmas or all exact Readings, and always share the source's Family.
+_Avoid_: Lexical Relation, cross-Family relation
 
 **Lemma Target Mode**:
 The default Semantic Relation mode, in which direct relation buckets target

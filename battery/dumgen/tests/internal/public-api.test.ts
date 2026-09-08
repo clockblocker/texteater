@@ -75,7 +75,7 @@ describe("public API allowlists", () => {
 	test("the explicit model-authoring subpath owns the canonical Zod catalogs", () => {
 		expect(Object.keys(modelAuthoring).sort()).toEqual([
 			"PROMPT_CATALOG",
-			"combinedGermanKnowledgePrompt",
+			"germanKnowledgePrompts",
 		]);
 	});
 });

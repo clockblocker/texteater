@@ -259,6 +259,28 @@ export const lexicalUnitShadowSchema: z.ZodType<LexicalUnitShadow> =
 		.transform(bindSupportedUnitShadow)
 		.transform(bindLexicalUnitShadow);
 
+/**
+ * Family-aware relation-target validation for one injected source Family.
+ * The supported-route check lives in the shared Unit Shadow object schema
+ * (Dumling registry); this factory adds the same-Family rule of ADR-0020 on
+ * top of the lexical Unit Shadow contract.
+ */
+export function relationTargetWithinFamilySchema<const Family extends string>(
+	family: Family,
+): z.ZodType<LexicalUnitShadow> {
+	return unitShadowObjectSchema
+		.refine((shadow) => shadow.family === family, {
+			path: ["family"],
+			message: `A relation target must use the ${family} Family.`,
+		})
+		.refine(isLexicalUnitShadow, {
+			path: ["family"],
+			message: "A lexical Unit Shadow must be a Lexeme or Phraseme.",
+		})
+		.transform(bindSupportedUnitShadow)
+		.transform(bindLexicalUnitShadow);
+}
+
 export const lexemeUnitShadowSchema: z.ZodType<LexemeUnitShadow> =
 	unitShadowObjectSchema
 		.refine(isLexemeUnitShadow, {

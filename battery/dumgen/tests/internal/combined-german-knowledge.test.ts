@@ -2,17 +2,24 @@ import { describe, expect, test } from "bun:test";
 import { type AiSdk, buildDumgen } from "dumgen";
 import { fixedMembersFor } from "dumling/fixed";
 import type { Reading } from "dumling/types";
-
-import { combinedGermanKnowledgeRunner } from "../../docs/prototypes/knowledge-analysis-combined/run";
+import { relationTargetWithinFamilySchema } from "dumrel/schema";
+import { lexemeGermanKnowledgeRunner } from "../../docs/prototypes/knowledge-analysis-combined/run";
 import type { StructuredOutputSchema } from "../../src/ai-sdk/ai-sdk";
-import { combinedGermanKnowledgePrompt } from "../../src/catalog/combined-german-knowledge-prompt";
+import { knowledgeGenerationPromptCatalog } from "../../src/catalog/knowledge-generation-prompts";
 import type { ModelExchange } from "../../src/generator/generator";
+import { createKnowledgeDumgen } from "../../src/knowledge-generation/build";
+import {
+	type GermanKnowledgeFamily,
+	germanFamilySupportsRelationTargetKind,
+	germanRelationTargetKindsByFamily,
+} from "../../src/knowledge-generation/de/families";
 import {
 	EMPTY_GENERATED_KNOWLEDGE_UPDATE,
+	normalizeRelationTargets,
 	projectGermanKnowledgeUpdate,
 } from "../../src/knowledge-generation/de/projection";
 import {
-	germanKnowledgeAnalysisSchema,
+	germanKnowledgeAnalysisSchemaForFamily,
 	modelOutputSchemaForGermanKnowledge,
 } from "../../src/knowledge-generation/de/schemas";
 import { requestableRelationSchema } from "../../src/knowledge-generation/relations";
@@ -20,12 +27,18 @@ import {
 	assembleSystemPrompt,
 	assertCaseSelectionsUncontaminated,
 } from "../../src/promptsmith/assembly";
+import { corpus as constructionCorpus } from "../../src/promptsmith/production/knowledge-analysis/de/construction/golden-corpus/corpus";
+import { promptSource as constructionPromptSource } from "../../src/promptsmith/production/knowledge-analysis/de/construction/prompt-source";
 import {
-	corpus,
-	relationCorpusAdjudications,
+	corpus as lexemeCorpus,
 	untouchedAcceptanceReservation,
-} from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
-import { promptSource } from "../../src/promptsmith/production/knowledge-analysis/de/combined/prompt-source";
+} from "../../src/promptsmith/production/knowledge-analysis/de/lexeme/golden-corpus/corpus";
+import { promptSource as lexemePromptSource } from "../../src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source";
+import { corpus as morphemeCorpus } from "../../src/promptsmith/production/knowledge-analysis/de/morpheme/golden-corpus/corpus";
+import { promptSource as morphemePromptSource } from "../../src/promptsmith/production/knowledge-analysis/de/morpheme/prompt-source";
+import { corpus as phrasemeCorpus } from "../../src/promptsmith/production/knowledge-analysis/de/phraseme/golden-corpus/corpus";
+import { promptSource as phrasemePromptSource } from "../../src/promptsmith/production/knowledge-analysis/de/phraseme/prompt-source";
+import { relationCorpusAdjudications } from "../../src/promptsmith/production/knowledge-analysis/de/retained-cases";
 
 const bankReading: Reading<"de"> = {
 	lemma: {
@@ -68,7 +81,7 @@ function queueSdk(outputs: unknown[]) {
 			return outputs.shift() as never;
 		},
 		async unstructuredGeneration() {
-			throw new Error("Combined Knowledge uses Structured Outputs.");
+			throw new Error("German Knowledge uses Structured Outputs.");
 		},
 	};
 	return { calls, sdk };
@@ -86,7 +99,7 @@ function knowledgeRuntime(
 		dumgen.generate.knowledge("de", input);
 }
 
-describe("combined German Knowledge generation", () => {
+describe("per-Family German Knowledge generation", () => {
 	test("routes fixed PRON Knowledge independently without calling Open", async () => {
 		const lemmaCatalog = fixedMembersFor.lemma({
 			language: "de",
@@ -358,6 +371,48 @@ describe("combined German Knowledge generation", () => {
 		expect(calls).toHaveLength(0);
 	});
 
+	test("dispatches deterministically on the Reading Family and names the route", async () => {
+		const { calls, sdk } = queueSdk([
+			{
+				definition: "Geldinstitut",
+				semanticRelations: { synonym: [kindOnly("Geldinstitut")] },
+			},
+		]);
+		const exchanges: ModelExchange[] = [];
+		const generateKnowledge = knowledgeRuntime(sdk, (exchange) => {
+			exchanges.push(exchange);
+		});
+
+		await generateKnowledge({
+			...baseInput,
+			request: { definition: null, semanticRelations: { synonym: null } },
+		});
+
+		expect(calls).toHaveLength(1);
+		expect(exchanges.map(({ promptPath }) => promptPath)).toEqual([
+			"laboratory.knowledge.de.Lexeme",
+			"laboratory.knowledge.de.Lexeme",
+			"laboratory.knowledge.de.Lexeme",
+		]);
+	});
+
+	test("rejects a Reading whose Family has no open Knowledge route", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const generateKnowledge = knowledgeRuntime(sdk);
+
+		expect(
+			generateKnowledge({
+				...baseInput,
+				reading: {
+					...baseInput.reading,
+					lemma: { ...baseInput.reading.lemma, family: "Nonsense" },
+				},
+				request: {},
+			} as never),
+		).rejects.toMatchObject({ name: "DumgenError", code: "invalid-input" });
+		expect(calls).toHaveLength(0);
+	});
+
 	test("uses one exact per-request schema and deterministically projects candidates", async () => {
 		const { calls, sdk } = queueSdk([
 			{
@@ -366,9 +421,9 @@ describe("combined German Knowledge generation", () => {
 				translations: { en: "bank" },
 				semanticRelations: {
 					synonym: [
-						shadow("Geldinstitut"),
-						shadow("Kreditinstitut"),
-						shadow("Geldinstitut"),
+						kindOnly("Geldinstitut"),
+						kindOnly("Kreditinstitut"),
+						kindOnly("Geldinstitut"),
 					],
 					hypernym: null,
 				},
@@ -396,11 +451,6 @@ describe("combined German Knowledge generation", () => {
 			"attempted",
 			"received",
 			"accepted",
-		]);
-		expect(exchanges.map(({ promptPath }) => promptPath)).toEqual([
-			"laboratory.knowledge.de.combined",
-			"laboratory.knowledge.de.combined",
-			"laboratory.knowledge.de.combined",
 		]);
 		expect(() =>
 			calls[0]?.schema.parse({
@@ -435,8 +485,8 @@ describe("combined German Knowledge generation", () => {
 				},
 			],
 			pendingRelations: [
-				{ relation: "synonym", target: shadow("Geldinstitut") },
-				{ relation: "synonym", target: shadow("Kreditinstitut") },
+				{ relation: "synonym", target: fullShadow("Geldinstitut") },
+				{ relation: "synonym", target: fullShadow("Kreditinstitut") },
 			],
 		});
 		expect(Object.isFrozen(result)).toBe(true);
@@ -503,7 +553,9 @@ describe("combined German Knowledge generation", () => {
 			schema.safeParse({
 				definition: null,
 				semanticRelations: {
-					antonym: [{ ...shadow("Kreditinstitut"), language: "en" }],
+					antonym: [
+						{ ...kindOnly("Kreditinstitut"), language: "en" },
+					],
 				},
 			}).success,
 		).toBe(false);
@@ -512,36 +564,30 @@ describe("combined German Knowledge generation", () => {
 				definition: null,
 				semanticRelations: {
 					antonym: Array.from({ length: 6 }, (_, index) =>
-						shadow(`Gegensatz ${index}`),
+						kindOnly(`Gegensatz ${index}`),
 					),
 				},
 			}).success,
 		).toBe(false);
-		for (const target of [
-			{
-				language: "de",
-				canonicalForm: "un-",
-				family: "Morpheme",
-				kind: "Prefix",
-			},
-			{
-				language: "de",
-				canonicalForm: "im",
-				family: "Construction",
-				kind: "Fusion",
-			},
-		]) {
-			expect(
-				schema.safeParse({
-					definition: null,
-					semanticRelations: { antonym: [target] },
-				}).success,
-			).toBe(false);
-		}
+		// Kind-only targets are wire-shaped: any well-formed string Kind parses
+		// here, even a foreign-Family one — the same-Family filter owns it.
+		expect(
+			schema.safeParse({
+				definition: null,
+				semanticRelations: {
+					antonym: [
+						{
+							canonicalForm: "un-",
+							kind: "Prefix",
+						},
+					],
+				},
+			}).success,
+		).toBe(true);
 	});
 
 	test("uses the same dynamic sparse schema in the retained direct evaluator", () => {
-		const request = combinedGermanKnowledgeRunner.responseRequestFor({
+		const request = lexemeGermanKnowledgeRunner.responseRequestFor({
 			...baseInput,
 			request: { definition: null, semanticRelations: { antonym: null } },
 		});
@@ -586,12 +632,101 @@ describe("combined German Knowledge generation", () => {
 				...baseInput,
 				request: { semanticRelations: { antonym: null } },
 			},
-			{ semanticRelations: { antonym: [shadow("Sparkasse")] } },
+			{ semanticRelations: { antonym: [kindOnly("Sparkasse")] } },
 		);
 
 		expect(result.changes).toEqual([]);
 		expect(result.pendingRelations).toEqual([
-			{ relation: "antonym", target: shadow("Sparkasse") },
+			{ relation: "antonym", target: fullShadow("Sparkasse") },
+		]);
+	});
+
+	test("filters and records cross-Family proposals without failing the exchange", () => {
+		const filtered: Array<{
+			relation: string;
+			kind: string;
+			canonicalForm: string;
+			sourceFamily: string;
+			reason: string;
+		}> = [];
+		const result = projectGermanKnowledgeUpdate(
+			{
+				...baseInput,
+				request: { semanticRelations: { antonym: null } },
+			},
+			{
+				semanticRelations: {
+					antonym: [
+						kindOnly("Nichtbank"),
+						// The kind token is a valid string, but "Prefix" belongs
+						// to the Morpheme Family inventory.
+						{
+							canonicalForm: "un-",
+							kind: "Prefix",
+						},
+					],
+				},
+			},
+			{
+				onFilteredRelationTarget: (info) => filtered.push(info),
+			},
+		);
+
+		expect(result.pendingRelations).toEqual([
+			{ relation: "antonym", target: fullShadow("Nichtbank") },
+		]);
+		expect(filtered).toEqual([
+			{
+				relation: "antonym",
+				kind: "Prefix",
+				canonicalForm: "un-",
+				sourceFamily: "Lexeme",
+				reason: "KindNotInSourceFamilyInventory",
+			},
+		]);
+	});
+
+	test("normalizes an all-filtered requested relation to null", () => {
+		const analysis = normalizeRelationTargets(
+			{
+				semanticRelations: {
+					antonym: [{ canonicalForm: "un-", kind: "Prefix" }],
+				},
+			},
+			"Lexeme",
+		);
+
+		expect(analysis.semanticRelations?.antonym).toBeNull();
+	});
+
+	test("emits filtered-target diagnostics through the production generator", async () => {
+		const { sdk } = queueSdk([
+			{
+				semanticRelations: {
+					antonym: [{ canonicalForm: "un-", kind: "Prefix" }],
+				},
+			},
+		]);
+		const diagnostics: unknown[] = [];
+		const dumgen = createKnowledgeDumgen({
+			sdk,
+			onDiagnostic: (diagnostic) => diagnostics.push(diagnostic),
+		});
+
+		const result = await dumgen.generate.knowledge("de", {
+			...baseInput,
+			request: { semanticRelations: { antonym: null } },
+		});
+
+		expect(result).toEqual(EMPTY_GENERATED_KNOWLEDGE_UPDATE);
+		expect(diagnostics).toEqual([
+			{
+				relation: "antonym",
+				canonicalForm: "un-",
+				kind: "Prefix",
+				sourceFamily: "Lexeme",
+				reason: "KindNotInSourceFamilyInventory",
+			},
 		]);
 	});
 
@@ -602,7 +737,7 @@ describe("combined German Knowledge generation", () => {
 					...baseInput,
 					request: { semanticRelations: { synonym: null } },
 				},
-				{ semanticRelations: { synonym: [shadow("Bank")] } },
+				{ semanticRelations: { synonym: [kindOnly("Bank")] } },
 			),
 		).toThrow("cannot target its source Reading");
 
@@ -616,8 +751,8 @@ describe("combined German Knowledge generation", () => {
 				},
 				{
 					semanticRelations: {
-						synonym: [shadow("Geldinstitut")],
-						antonym: [shadow("Geldinstitut")],
+						synonym: [kindOnly("Geldinstitut")],
+						antonym: [kindOnly("Geldinstitut")],
 					},
 				},
 			),
@@ -625,7 +760,7 @@ describe("combined German Knowledge generation", () => {
 	});
 
 	test("promotes Synonym over Near Synonym without guessing other precedence", () => {
-		const target = shadow("Geldinstitut");
+		const target = kindOnly("Geldinstitut");
 		const result = projectGermanKnowledgeUpdate(
 			{
 				...baseInput,
@@ -642,7 +777,7 @@ describe("combined German Knowledge generation", () => {
 		);
 
 		expect(result.pendingRelations).toEqual([
-			{ relation: "synonym", target },
+			{ relation: "synonym", target: fullShadow("Geldinstitut") },
 		]);
 	});
 
@@ -650,7 +785,7 @@ describe("combined German Knowledge generation", () => {
 		const { sdk } = queueSdk([
 			{
 				definition: "Institut für Geldgeschäfte",
-				semanticRelations: { synonym: [shadow("Bank")] },
+				semanticRelations: { synonym: [kindOnly("Bank")] },
 			},
 		]);
 		const generateKnowledge = knowledgeRuntime(sdk);
@@ -668,47 +803,128 @@ describe("combined German Knowledge generation", () => {
 			code: "invalid-output",
 		});
 	});
+
+	test("keeps the per-Family inventories aligned with dumrel's factory", () => {
+		const kindOnlyTarget = (kind: string) => ({
+			language: "de",
+			canonicalForm: "Beispiel",
+			family: "",
+			kind,
+		});
+		for (const family of ["Lexeme", "Phraseme"] as const) {
+			const schema = relationTargetWithinFamilySchema(family);
+			for (const kind of germanRelationTargetKindsByFamily[family]) {
+				expect(
+					germanFamilySupportsRelationTargetKind(family, kind),
+					`${family}/${kind}`,
+				).toBe(true);
+				expect(
+					schema.safeParse({
+						...kindOnlyTarget(kind),
+						family,
+					}).success,
+					`${family}/${kind}`,
+				).toBe(true);
+			}
+			const foreign = family === "Lexeme" ? "Idiom" : "NOUN";
+			expect(
+				germanFamilySupportsRelationTargetKind(family, foreign),
+			).toBe(false);
+			expect(
+				schema.safeParse({
+					...kindOnlyTarget(foreign),
+					family,
+				}).success,
+			).toBe(false);
+			expect(
+				germanFamilySupportsRelationTargetKind(family, "Nonsense"),
+			).toBe(false);
+		}
+		expect(germanFamilySupportsRelationTargetKind("Morpheme", "NOUN")).toBe(
+			false,
+		);
+		expect(
+			germanFamilySupportsRelationTargetKind("Construction", "Fusion"),
+		).toBe(false);
+	});
 });
 
-describe("combined German Knowledge evaluation corpus", () => {
-	test("keeps the generated catalog prompt fresh", () => {
-		expect(combinedGermanKnowledgePrompt.prompt.systemPrompt).toBe(
-			assembleSystemPrompt(promptSource),
-		);
+describe("per-Family German Knowledge evaluation corpora", () => {
+	test("keeps the generated catalog prompts fresh", () => {
+		expect(
+			knowledgeGenerationPromptCatalog.Lexeme.prompt.systemPrompt,
+		).toBe(assembleSystemPrompt(lexemePromptSource));
+		expect(
+			knowledgeGenerationPromptCatalog.Phraseme.prompt.systemPrompt,
+		).toBe(assembleSystemPrompt(phrasemePromptSource));
+		expect(
+			knowledgeGenerationPromptCatalog.Morpheme.prompt.systemPrompt,
+		).toBe(assembleSystemPrompt(morphemePromptSource));
+		expect(
+			knowledgeGenerationPromptCatalog.Construction.prompt.systemPrompt,
+		).toBe(assembleSystemPrompt(constructionPromptSource));
 	});
 
-	test("keeps demonstrations, development, and acceptance disjoint and bounded", () => {
-		const { demonstrations, development, acceptance } = corpus.collections;
-		expect(demonstrations.ids).toHaveLength(2);
-		expect(development.ids).toHaveLength(50);
-		expect(corpus.groups.development.basic.ids).toHaveLength(5);
-		expect(corpus.groups.development.adversarial.ids).toHaveLength(45);
-		expect(acceptance.ids).toHaveLength(12);
-		expect(demonstrations.isDisjointFrom(development)).toBe(true);
-		expect(demonstrations.isDisjointFrom(acceptance)).toBe(true);
-		expect(development.isDisjointFrom(acceptance)).toBe(true);
-		expect(() =>
-			assertCaseSelectionsUncontaminated({
-				route: corpus.route,
-				demonstrations,
-				evaluation: development,
-			}),
-		).not.toThrow();
+	test("keeps demonstrations, development, and acceptance disjoint and bounded per Family", () => {
+		const corpora = [
+			["lexeme", lexemeCorpus],
+			["phraseme", phrasemeCorpus],
+			["morpheme", morphemeCorpus],
+			["construction", constructionCorpus],
+		] as const;
+		for (const [name, corpus] of corpora) {
+			const { demonstrations, development, acceptance } =
+				corpus.collections;
+			expect(demonstrations.isDisjointFrom(development), name).toBe(true);
+			expect(demonstrations.isDisjointFrom(acceptance), name).toBe(true);
+			expect(development.isDisjointFrom(acceptance), name).toBe(true);
+			expect(() =>
+				assertCaseSelectionsUncontaminated({
+					route: corpus.route,
+					demonstrations,
+					evaluation: development,
+				}),
+			).not.toThrow();
+		}
+		expect(lexemeCorpus.collections.demonstrations.ids).toHaveLength(2);
+		expect(lexemeCorpus.collections.development.ids).toHaveLength(48);
+		expect(lexemeCorpus.groups.development.basic.ids).toHaveLength(5);
+		expect(lexemeCorpus.groups.development.adversarial.ids).toHaveLength(
+			43,
+		);
+		expect(lexemeCorpus.collections.acceptance.ids).toHaveLength(12);
+		expect(phrasemeCorpus.collections.demonstrations.ids).toHaveLength(1);
+		expect(phrasemeCorpus.collections.development.ids).toHaveLength(5);
+		expect(phrasemeCorpus.collections.acceptance.ids).toHaveLength(0);
+		expect(morphemeCorpus.collections.demonstrations.ids).toHaveLength(1);
+		expect(constructionCorpus.collections.demonstrations.ids).toHaveLength(
+			1,
+		);
 		expect(untouchedAcceptanceReservation).toMatchObject({
 			status: "sealed-pending-human-approval",
 			approvedByHuman: false,
 			revealedCaseCount: 0,
+			reservedCaseCount: 12,
 		});
-		expect(untouchedAcceptanceReservation.selection).toBe(acceptance);
+		expect(untouchedAcceptanceReservation.selection).toBe(
+			lexemeCorpus.collections.acceptance,
+		);
 	});
 
-	test("covers the complete semantic relation matrix", () => {
+	test("covers the complete semantic relation matrix across Families", () => {
 		const covered = new Set<string>();
-		for (const entry of corpus.all().cases) {
-			for (const relation of Object.keys(
-				entry.input.request.semanticRelations ?? {},
-			)) {
-				covered.add(relation);
+		for (const corpus of [
+			lexemeCorpus,
+			phrasemeCorpus,
+			morphemeCorpus,
+			constructionCorpus,
+		]) {
+			for (const entry of corpus.all().cases) {
+				for (const relation of Object.keys(
+					entry.input.request.semanticRelations ?? {},
+				)) {
+					covered.add(relation);
+				}
 			}
 		}
 		expect([...covered].sort()).toEqual(
@@ -716,45 +932,72 @@ describe("combined German Knowledge evaluation corpus", () => {
 		);
 	});
 
-	test("accepts every canonical ideal output", () => {
-		for (const entry of corpus.all().cases) {
-			expect(
-				germanKnowledgeAnalysisSchema.safeParse(entry.idealOutput)
-					.success,
-			).toBe(true);
-			expect(
-				modelOutputSchemaForGermanKnowledge(entry.input).safeParse(
-					entry.idealOutput,
-				).success,
-			).toBe(true);
+	test("accepts every canonical ideal output under its Family schema", () => {
+		const schemasByFamily: Readonly<
+			Record<
+				GermanKnowledgeFamily,
+				{ safeParse(value: unknown): { success: boolean } }
+			>
+		> = {
+			Lexeme: germanKnowledgeAnalysisSchemaForFamily("Lexeme"),
+			Phraseme: germanKnowledgeAnalysisSchemaForFamily("Phraseme"),
+			Morpheme: germanKnowledgeAnalysisSchemaForFamily("Morpheme"),
+			Construction:
+				germanKnowledgeAnalysisSchemaForFamily("Construction"),
+		};
+		for (const corpus of [
+			lexemeCorpus,
+			phrasemeCorpus,
+			morphemeCorpus,
+			constructionCorpus,
+		]) {
+			const schema =
+				schemasByFamily[
+					(capitalizedFamilyByCorpusName[
+						corpus.route.split("/").at(-1) ?? ""
+					] ?? "Lexeme") as GermanKnowledgeFamily
+				];
+			for (const entry of corpus.all().cases) {
+				expect(schema.safeParse(entry.idealOutput).success).toBe(true);
+			}
 		}
 	});
 
 	test("retains rationales, contamination keys, failure modes, and the complete route matrix", () => {
 		const routeKeys = new Set<string>();
 		const failureModes = new Set<string>();
-		for (const [caseId, entry] of Object.entries(corpus.cases)) {
-			expect(entry.explanation?.length).toBeGreaterThan(0);
-			expect(entry.contaminationKeys?.length).toBeGreaterThan(0);
-			for (const source of entry.sources ?? []) {
-				expect(source.title.length).toBeGreaterThan(0);
-				expect(source.supports.length).toBeGreaterThan(0);
-				expect("url" in source || "path" in source).toBe(true);
+		const corpora = [
+			lexemeCorpus,
+			phrasemeCorpus,
+			morphemeCorpus,
+			constructionCorpus,
+		];
+		for (const corpus of corpora) {
+			for (const [caseId, entry] of Object.entries(corpus.cases)) {
+				expect(entry.explanation?.length).toBeGreaterThan(0);
+				expect(entry.contaminationKeys?.length).toBeGreaterThan(0);
+				for (const source of entry.sources ?? []) {
+					expect(source.title.length).toBeGreaterThan(0);
+					expect(source.supports.length).toBeGreaterThan(0);
+					expect("url" in source || "path" in source).toBe(true);
+				}
+				const adjudication =
+					relationCorpusAdjudications.byCaseId[caseId];
+				expect(adjudication).toBeDefined();
+				for (const mode of adjudication?.failureModes ?? [])
+					failureModes.add(mode);
+				const { family, kind } = entry.input.reading.lemma;
+				if (
+					Object.keys(entry.input.request.semanticRelations ?? {})
+						.length > 0
+				)
+					routeKeys.add(`${family}/${kind}`);
+				for (const relation of ["hyponym", "meronym"])
+					expect(
+						relation in
+							(entry.input.request.semanticRelations ?? {}),
+					).toBe(false);
 			}
-			const adjudication = relationCorpusAdjudications.byCaseId[caseId];
-			expect(adjudication).toBeDefined();
-			for (const mode of adjudication?.failureModes ?? [])
-				failureModes.add(mode);
-			const { family, kind } = entry.input.reading.lemma;
-			if (
-				Object.keys(entry.input.request.semanticRelations ?? {})
-					.length > 0
-			)
-				routeKeys.add(`${family}/${kind}`);
-			for (const relation of ["hyponym", "meronym"])
-				expect(
-					relation in (entry.input.request.semanticRelations ?? {}),
-				).toBe(false);
 		}
 		expect(routeKeys).toEqual(
 			new Set([
@@ -802,60 +1045,44 @@ describe("combined German Knowledge evaluation corpus", () => {
 		);
 		expect(inverseKinds).toEqual(new Set(["hyponym", "meronym"]));
 
-		const developmentAdjudications = corpus.collections.development.ids.map(
-			(caseId) => relationCorpusAdjudications.byCaseId[caseId],
-		);
+		const developmentAdjudications = [
+			...lexemeCorpus.collections.development.ids,
+			...phrasemeCorpus.collections.development.ids,
+		].map((caseId) => relationCorpusAdjudications.byCaseId[caseId]);
 		expect(
 			developmentAdjudications.filter(
 				(adjudication) => adjudication?.authority === "primary-source",
 			),
-		).toHaveLength(14);
+		).toHaveLength(16);
 		expect(
 			developmentAdjudications.filter(
 				(adjudication) => adjudication?.authority === "human-accepted",
 			),
-		).toHaveLength(36);
+		).toHaveLength(37);
 		expect(
-			corpus.collections.development.cases.filter(
-				(entry) => (entry.sources?.length ?? 0) > 0,
-			).length,
+			corpora
+				.flatMap((corpus) => corpus.collections.development.cases)
+				.filter((entry) => (entry.sources?.length ?? 0) > 0).length,
 		).toBeGreaterThan(0);
 		expect(
-			corpus.all().cases.flatMap((entry) => entry.sources ?? []),
+			corpora
+				.flatMap((corpus) => corpus.all().cases)
+				.flatMap((entry) => entry.sources ?? []),
 		).toEqual(
 			expect.arrayContaining([
 				expect.objectContaining({
 					path: "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
 				}),
-				expect.objectContaining({ path: "battery/dumrel/CONTEXT.md" }),
+				expect.objectContaining({
+					path: "battery/dumrel/CONTEXT.md",
+				}),
+				expect.objectContaining({
+					path: "docs/adr/0020-keep-semantic-relations-inside-one-family.md",
+				}),
 			]),
 		);
-		for (const entry of corpus.collections.acceptance.cases)
+		for (const entry of lexemeCorpus.collections.acceptance.cases)
 			expect(entry.sources?.length).toBeGreaterThan(0);
-		expect(
-			developmentAdjudications.reduce(
-				(count, adjudication) =>
-					count + (adjudication?.harmfulTargets.length ?? 0),
-				0,
-			),
-		).toBe(34);
-		expect(
-			developmentAdjudications.reduce(
-				(count, adjudication) =>
-					count +
-					Object.values(
-						adjudication?.acceptableTargetSets ?? {},
-					).flat().length,
-				0,
-			),
-		).toBe(1);
-		expect(
-			developmentAdjudications.reduce(
-				(count, adjudication) =>
-					count + (adjudication?.inverseJudgments.length ?? 0),
-				0,
-			),
-		).toBe(7);
 	});
 
 	test("records bounded alternatives and explicitly harmful targets", () => {
@@ -866,9 +1093,7 @@ describe("combined German Knowledge evaluation corpus", () => {
 		expect(alternative?.acceptableTargetSets?.synonym).toEqual([
 			[
 				{
-					language: "de",
 					canonicalForm: "einsetzen",
-					family: "Lexeme",
 					kind: "VERB",
 				},
 			],
@@ -880,17 +1105,31 @@ describe("combined German Knowledge evaluation corpus", () => {
 			];
 		expect(bank?.harmfulTargets).toContainEqual({
 			relation: "hypernym",
-			target: shadow("Kreditinstitut"),
+			target: kindOnly("Kreditinstitut"),
 			reason: "Primary lexicography treats the pair as synonyms, making taxonomy contested.",
 		});
 	});
 });
 
-function shadow(canonicalForm: string) {
+const capitalizedFamilyByCorpusName: Readonly<Record<string, string>> = {
+	lexeme: "Lexeme",
+	phraseme: "Phraseme",
+	morpheme: "Morpheme",
+	construction: "Construction",
+};
+
+function kindOnly(canonicalForm: string) {
 	return {
-		language: "de" as const,
 		canonicalForm,
-		family: "Lexeme" as const,
 		kind: "NOUN" as const,
 	};
+}
+
+function fullShadow(canonicalForm: string) {
+	return {
+		language: "de",
+		canonicalForm,
+		family: "Lexeme",
+		kind: "NOUN",
+	} as const;
 }

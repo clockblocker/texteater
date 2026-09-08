@@ -1,24 +1,32 @@
-import type { LexicalUnitShadow } from "dumrel";
-
+import {
+	germanRelationTargetKindsByFamily,
+	isRelationBearingKnowledgeFamily,
+} from "../../../../../knowledge-generation/de/families";
+import type { GermanKnowledgeRelationTarget } from "../../../../../knowledge-generation/de/runtime-schema";
 import {
 	assertGermanKnowledgeAnalysisMirrorsRequest,
 	type GermanKnowledgeAnalysis,
 	type GermanKnowledgeGenerationInput,
 	type germanKnowledgeAnalysisSchema,
 	type germanKnowledgeGenerationInputSchema,
-} from "../../../../../../knowledge-generation/de/schemas";
+} from "../../../../../knowledge-generation/de/schemas";
 import {
 	type RequestableRelation,
 	requestableRelationSchema,
-} from "../../../../../../knowledge-generation/relations";
-import type { ExperimentEvaluation } from "../../../../../assembly";
-import { stableJson } from "../../../../../assembly";
+} from "../../../../../knowledge-generation/relations";
+import type { ExperimentEvaluation } from "../../../../assembly";
+import { stableJson } from "../../../../assembly";
 import {
 	type RelationCorpusAdjudication,
 	relationCorpusAdjudications,
-} from "../../../../../production/knowledge-analysis/de/combined/golden-corpus/retained-cases";
+} from "../../../../production/knowledge-analysis/de/retained-cases";
 
-type Target = LexicalUnitShadow<"de">;
+/**
+ * One kind-only target under evaluation. The source Reading's Family is
+ * injected before comparison, mirroring the projection-time same-Family
+ * filter (ADR-0020).
+ */
+type Target = GermanKnowledgeRelationTarget;
 
 export type RelationKindConfusion = Readonly<{
 	target: Target;
@@ -139,6 +147,7 @@ export function analyzeCombinedGermanKnowledgeCase(args: {
 		actual: args.output.semanticRelations,
 		expected: args.idealOutput.semanticRelations,
 		adjudication,
+		family: args.input.reading.lemma.family,
 	});
 	const leaves = Object.values(relations);
 	const relationSemanticPass = leaves.every(
@@ -199,6 +208,7 @@ function analyzeRelations(args: {
 	readonly actual: GermanKnowledgeAnalysis["semanticRelations"];
 	readonly expected: GermanKnowledgeAnalysis["semanticRelations"];
 	readonly adjudication: RelationCorpusAdjudication;
+	readonly family: string;
 }): Readonly<Partial<Record<RequestableRelation, RelationLeafEvaluation>>> {
 	const result: Partial<Record<RequestableRelation, RelationLeafEvaluation>> =
 		{};
@@ -218,6 +228,7 @@ function analyzeRelationLeaf(args: {
 	readonly actual: GermanKnowledgeAnalysis["semanticRelations"];
 	readonly expected: GermanKnowledgeAnalysis["semanticRelations"];
 	readonly adjudication: RelationCorpusAdjudication;
+	readonly family: string;
 }): RelationLeafEvaluation {
 	const actualValue = args.actual?.[args.relation];
 	const expectedValue = args.expected?.[args.relation];
@@ -243,6 +254,15 @@ function analyzeRelationLeaf(args: {
 	const confusions: RelationKindConfusion[] = [];
 
 	for (const target of actualTargets) {
+		if (
+			!isRelationBearingKnowledgeFamily(args.family) ||
+			!germanRelationTargetKindsByFamily[args.family].includes(
+				target.kind,
+			)
+		) {
+			wrongFamilyCount += 1;
+			continue;
+		}
 		if (requiredKeys.has(targetKey(target))) {
 			truePositiveCount += 1;
 			continue;
@@ -280,14 +300,10 @@ function analyzeRelationLeaf(args: {
 
 		const sameCanonical = allAcceptedByRelation[args.relation]?.find(
 			(expectedTarget) =>
-				expectedTarget.language === target.language &&
 				expectedTarget.canonicalForm === target.canonicalForm,
 		);
 		if (sameCanonical !== undefined) {
-			if (sameCanonical.family !== target.family) {
-				wrongFamilyCount += 1;
-				classified = true;
-			} else if (sameCanonical.kind !== target.kind) {
+			if (sameCanonical.kind !== target.kind) {
 				wrongKindCount += 1;
 				classified = true;
 			}
@@ -402,7 +418,10 @@ function relationValueSignature(
 }
 
 function targetKey(target: Target): string {
-	return stableJson(target);
+	return stableJson({
+		canonicalForm: target.canonicalForm,
+		kind: target.kind,
+	});
 }
 
 function booleanDiagnostics(

@@ -1,8 +1,11 @@
 import { parseRuntimePromptRoot } from "../catalog/runtime-prompt-validation.js";
+import type { GermanKnowledgeFamily } from "../knowledge-generation/de/families";
 
-export type RuntimePromptSchemaRoot =
-	| "knowledge.de.combined#input"
-	| "knowledge.de.combined#output";
+export type KnowledgeRuntimeSchemaRoot =
+	| `knowledge.de.${GermanKnowledgeFamily}#input`
+	| `knowledge.de.${GermanKnowledgeFamily}#output`;
+
+export type RuntimePromptSchemaRoot = KnowledgeRuntimeSchemaRoot;
 
 /** Lean lower-layer parser seam for operational prompt projections. */
 export function parseRuntimePromptSchema<Output = unknown>(
