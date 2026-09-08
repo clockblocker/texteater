@@ -1,0 +1,1367 @@
+{
+  "generatedAt": "deterministic-fixture",
+  "scenarios": [
+    {
+      "name": "success-zero-candidate",
+      "outcome": "succeeded",
+      "result": {
+        "analysis": {
+          "source": "Haus",
+          "route": {
+            "language": "de",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "prompt": "zero-candidate"
+          },
+          "reading": "Haus",
+          "emoji": "🏠"
+        },
+        "committedRevision": 2
+      },
+      "assertions": {
+        "one Effect external entrypoint completed": true,
+        "all recorded events have Effect trace/span correlation": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "prompt": "zero-candidate",
+                "candidateCount": 0
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "validation",
+            "event": "raw-received",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "raw": "{\"reading\":\"Haus\",\"emoji\":\"🏠\"}"
+              }
+            }
+          },
+          {
+            "stage": "projection",
+            "event": "accepted",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "analysis": {
+                  "source": "Haus",
+                  "route": {
+                    "language": "de",
+                    "family": "Lexeme",
+                    "kind": "NOUN",
+                    "prompt": "zero-candidate"
+                  },
+                  "reading": "Haus",
+                  "emoji": "🏠"
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "snapshot",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "dictionary.prepare",
+            "event": "prepared",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "plan": {
+                  "baseRevision": 1,
+                  "changes": [
+                    {
+                      "op": "create-reading",
+                      "reading": "Haus",
+                      "emoji": "🏠"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.commit",
+            "event": "committed",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "revision": 2
+              }
+            }
+          },
+          {
+            "stage": "pipeline",
+            "event": "succeeded",
+            "detail": {
+              "correlation": {
+                "traceId": "17de7cb562216fbe9e4bcae9788abdc2",
+                "spanId": "d0ca0e88c31ebde7"
+              },
+              "value": {
+                "committedRevision": 2
+              }
+            }
+          }
+        ],
+        "diagnostics": []
+      }
+    },
+    {
+      "name": "shared-three-request-retry",
+      "outcome": "succeeded",
+      "result": {
+        "analysis": {
+          "source": "Haus",
+          "route": {
+            "language": "de",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "prompt": "zero-candidate"
+          },
+          "reading": "Haus",
+          "emoji": "🏠"
+        },
+        "committedRevision": 2
+      },
+      "assertions": {
+        "one Effect external entrypoint completed": true,
+        "all recorded events have Effect trace/span correlation": true,
+        "three actual requests share the generation budget": true,
+        "recovered provider failures remain visible": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "prompt": "zero-candidate",
+                "candidateCount": 0
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "attempt": 2,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "attempt": 3,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "validation",
+            "event": "raw-received",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "raw": "{\"reading\":\"Haus\",\"emoji\":\"🏠\"}"
+              }
+            }
+          },
+          {
+            "stage": "projection",
+            "event": "accepted",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "analysis": {
+                  "source": "Haus",
+                  "route": {
+                    "language": "de",
+                    "family": "Lexeme",
+                    "kind": "NOUN",
+                    "prompt": "zero-candidate"
+                  },
+                  "reading": "Haus",
+                  "emoji": "🏠"
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "snapshot",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "dictionary.prepare",
+            "event": "prepared",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "plan": {
+                  "baseRevision": 1,
+                  "changes": [
+                    {
+                      "op": "create-reading",
+                      "reading": "Haus",
+                      "emoji": "🏠"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.commit",
+            "event": "committed",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "revision": 2
+              }
+            }
+          },
+          {
+            "stage": "pipeline",
+            "event": "succeeded",
+            "detail": {
+              "correlation": {
+                "traceId": "5d6f51b3da9b87a698cb1c4c04b28af3",
+                "spanId": "8eb4dfa04dadd660"
+              },
+              "value": {
+                "committedRevision": 2
+              }
+            }
+          }
+        ],
+        "diagnostics": [
+          "recording failed at generation/retry-scheduled: DataCloneError: The object can not be cloned.",
+          "recording failed at generation/retry-scheduled: DataCloneError: The object can not be cloned."
+        ]
+      }
+    },
+    {
+      "name": "invalid-model-output-is-not-retried",
+      "outcome": "failed",
+      "failure": "Error: {\"_tag\":\"InvalidModelOutput\",\"raw\":\"{not-json\",\"message\":\"invalid JSON\"}\n    at dum.pipeline (/private/tmp/texteater-effect-prototype/battery/dumgen/prototype-effect/src/pipeline.ts:429:17)",
+      "assertions": {
+        "failure stops dependent commit": true,
+        "one malformed response made one request": true,
+        "raw invalid output was recorded before validation": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "dfa1242963fd5403784dd0a3b0b4e1f1",
+                "spanId": "aeaeb6f91b09ac55"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "dfa1242963fd5403784dd0a3b0b4e1f1",
+                "spanId": "aeaeb6f91b09ac55"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "dfa1242963fd5403784dd0a3b0b4e1f1",
+                "spanId": "aeaeb6f91b09ac55"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "dfa1242963fd5403784dd0a3b0b4e1f1",
+                "spanId": "aeaeb6f91b09ac55"
+              },
+              "value": {
+                "prompt": "zero-candidate",
+                "candidateCount": 0
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "dfa1242963fd5403784dd0a3b0b4e1f1",
+                "spanId": "aeaeb6f91b09ac55"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "validation",
+            "event": "raw-received",
+            "detail": {
+              "correlation": {
+                "traceId": "dfa1242963fd5403784dd0a3b0b4e1f1",
+                "spanId": "aeaeb6f91b09ac55"
+              },
+              "value": {
+                "raw": "{not-json"
+              }
+            }
+          }
+        ],
+        "diagnostics": []
+      }
+    },
+    {
+      "name": "revision-conflict-reprepares-without-regeneration",
+      "outcome": "succeeded",
+      "result": {
+        "analysis": {
+          "source": "Haus",
+          "route": {
+            "language": "de",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "prompt": "zero-candidate"
+          },
+          "reading": "Haus",
+          "emoji": "🏠"
+        },
+        "committedRevision": 3
+      },
+      "assertions": {
+        "one Effect external entrypoint completed": true,
+        "all recorded events have Effect trace/span correlation": true,
+        "model result was reused": true,
+        "dictionary was reread and reprepared": true,
+        "revision conflict is explicit in trace": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "prompt": "zero-candidate",
+                "candidateCount": 0
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "validation",
+            "event": "raw-received",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "raw": "{\"reading\":\"Haus\",\"emoji\":\"🏠\"}"
+              }
+            }
+          },
+          {
+            "stage": "projection",
+            "event": "accepted",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "analysis": {
+                  "source": "Haus",
+                  "route": {
+                    "language": "de",
+                    "family": "Lexeme",
+                    "kind": "NOUN",
+                    "prompt": "zero-candidate"
+                  },
+                  "reading": "Haus",
+                  "emoji": "🏠"
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "snapshot",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "dictionary.prepare",
+            "event": "prepared",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "plan": {
+                  "baseRevision": 1,
+                  "changes": [
+                    {
+                      "op": "create-reading",
+                      "reading": "Haus",
+                      "emoji": "🏠"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.commit",
+            "event": "reprepare",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "reason": "revision-conflict",
+                "remainingConflictRetries": 1
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "snapshot",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "revision": 2,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "dictionary.prepare",
+            "event": "prepared",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "plan": {
+                  "baseRevision": 2,
+                  "changes": [
+                    {
+                      "op": "create-reading",
+                      "reading": "Haus",
+                      "emoji": "🏠"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.commit",
+            "event": "committed",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "revision": 3
+              }
+            }
+          },
+          {
+            "stage": "pipeline",
+            "event": "succeeded",
+            "detail": {
+              "correlation": {
+                "traceId": "61c8513c931cf4300134b16371773330",
+                "spanId": "674f66a6b35ce701"
+              },
+              "value": {
+                "committedRevision": 3
+              }
+            }
+          }
+        ],
+        "diagnostics": [
+          "recording failed at dictionary.commit/conflict: DataCloneError: The object can not be cloned."
+        ]
+      }
+    },
+    {
+      "name": "recorder-failure-is-nonfatal",
+      "outcome": "succeeded",
+      "result": {
+        "analysis": {
+          "source": "Haus",
+          "route": {
+            "language": "de",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "prompt": "zero-candidate"
+          },
+          "reading": "Haus",
+          "emoji": "🏠"
+        },
+        "committedRevision": 2
+      },
+      "assertions": {
+        "one Effect external entrypoint completed": true,
+        "all recorded events have Effect trace/span correlation": true,
+        "recording failure does not alter domain success": true,
+        "fallback diagnostic is visible": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "1295ea6691afae464ab8e3d20e4080da",
+                "spanId": "eb1664bc2aa338b4"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "1295ea6691afae464ab8e3d20e4080da",
+                "spanId": "eb1664bc2aa338b4"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          }
+        ],
+        "diagnostics": [
+          "recording failed at dictionary.read/candidates: Error: recorder sink unavailable",
+          "recording failed at routing/prompt-selected: Error: recorder sink unavailable",
+          "recording failed at generation/attempt-started: Error: recorder sink unavailable",
+          "recording failed at validation/raw-received: Error: recorder sink unavailable",
+          "recording failed at projection/accepted: Error: recorder sink unavailable",
+          "recording failed at dictionary.read/snapshot: Error: recorder sink unavailable",
+          "recording failed at dictionary.prepare/prepared: Error: recorder sink unavailable",
+          "recording failed at dictionary.commit/committed: Error: recorder sink unavailable",
+          "recording failed at pipeline/succeeded: Error: recorder sink unavailable"
+        ]
+      }
+    },
+    {
+      "name": "interruption-before-response-headers",
+      "outcome": "interrupted",
+      "failure": "All fibers interrupted without errors.",
+      "assertions": {
+        "AbortSignal reached fake request": true,
+        "no dictionary commit after interruption": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "8480852830f9e0f0d1f4d25837a22cf0",
+                "spanId": "51a238d90f0e944b"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "8480852830f9e0f0d1f4d25837a22cf0",
+                "spanId": "51a238d90f0e944b"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "8480852830f9e0f0d1f4d25837a22cf0",
+                "spanId": "51a238d90f0e944b"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "8480852830f9e0f0d1f4d25837a22cf0",
+                "spanId": "51a238d90f0e944b"
+              },
+              "value": {
+                "prompt": "zero-candidate",
+                "candidateCount": 0
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "8480852830f9e0f0d1f4d25837a22cf0",
+                "spanId": "51a238d90f0e944b"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "gaps": [
+        "This scenario interrupts before response headers; it does not exercise commit-unknown reconciliation."
+      ]
+    },
+    {
+      "name": "interruption-during-response-body",
+      "outcome": "interrupted",
+      "failure": "All fibers interrupted without errors.",
+      "assertions": {
+        "body consumption received AbortSignal": true,
+        "no retry after body interruption": true,
+        "no dictionary commit after body interruption": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "748e41ee25e076d2ba1a4705bd347f12",
+                "spanId": "95e32872cf5cf9f2"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "748e41ee25e076d2ba1a4705bd347f12",
+                "spanId": "95e32872cf5cf9f2"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "748e41ee25e076d2ba1a4705bd347f12",
+                "spanId": "95e32872cf5cf9f2"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": []
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "748e41ee25e076d2ba1a4705bd347f12",
+                "spanId": "95e32872cf5cf9f2"
+              },
+              "value": {
+                "prompt": "zero-candidate",
+                "candidateCount": 0
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "748e41ee25e076d2ba1a4705bd347f12",
+                "spanId": "95e32872cf5cf9f2"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "zero-candidate"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "gaps": [
+        "This scenario interrupts body consumption only; commit-unknown reconciliation remains outside the prototype."
+      ]
+    },
+    {
+      "name": "no-op-plan-still-reaches-commit-boundary",
+      "outcome": "succeeded",
+      "result": {
+        "analysis": {
+          "source": "Haus",
+          "route": {
+            "language": "de",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "prompt": "compare-candidates"
+          },
+          "reading": "Haus",
+          "emoji": "🏠"
+        },
+        "committedRevision": 2
+      },
+      "assertions": {
+        "one Effect external entrypoint completed": true,
+        "all recorded events have Effect trace/span correlation": true,
+        "zero-change plan was prepared": true,
+        "commit boundary still ran": true
+      },
+      "trace": {
+        "events": [
+          {
+            "stage": "pipeline",
+            "event": "started",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "source": "Haus"
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "selected",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "source": "Haus",
+                "language": "de",
+                "family": "Lexeme",
+                "kind": "NOUN"
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "candidates",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": [
+                  "Haus"
+                ]
+              }
+            }
+          },
+          {
+            "stage": "routing",
+            "event": "prompt-selected",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "prompt": "compare-candidates",
+                "candidateCount": 1
+              }
+            }
+          },
+          {
+            "stage": "generation",
+            "event": "attempt-started",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "attempt": 1,
+                "request": {
+                  "model": "fake-gpt",
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "compare-candidates"
+                    },
+                    {
+                      "role": "user",
+                      "content": "Haus"
+                    }
+                  ],
+                  "response_format": {
+                    "type": "json_object"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "stage": "validation",
+            "event": "raw-received",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "raw": "{\"reading\":\"Haus\",\"emoji\":\"🏠\"}"
+              }
+            }
+          },
+          {
+            "stage": "projection",
+            "event": "accepted",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "analysis": {
+                  "source": "Haus",
+                  "route": {
+                    "language": "de",
+                    "family": "Lexeme",
+                    "kind": "NOUN",
+                    "prompt": "compare-candidates"
+                  },
+                  "reading": "Haus",
+                  "emoji": "🏠"
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.read",
+            "event": "snapshot",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "revision": 1,
+                "candidates": [
+                  "Haus"
+                ]
+              }
+            }
+          },
+          {
+            "stage": "dictionary.prepare",
+            "event": "prepared",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "plan": {
+                  "baseRevision": 1,
+                  "changes": []
+                }
+              }
+            }
+          },
+          {
+            "stage": "dictionary.commit",
+            "event": "committed",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "revision": 2
+              }
+            }
+          },
+          {
+            "stage": "pipeline",
+            "event": "succeeded",
+            "detail": {
+              "correlation": {
+                "traceId": "a0a16a06b334dc175628cda480424401",
+                "spanId": "be47ef2752aef638"
+              },
+              "value": {
+                "committedRevision": 2
+              }
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "gaps": [
+        "The prototype does not include a host occurrence write; it only demonstrates that an empty dictionary plan does not skip the commit boundary."
+      ]
+    }
+  ],
+  "gaps": [
+    "The dictionary snapshot/plan are serializable immutable stand-ins, not Dumdict's production plan parser or storage adapter.",
+    "No semantic-precondition failure and no uncertain commit reconciliation adapter are implemented.",
+    "There are no injected routing, dictionary-read, or preparation failure adapters in this small prototype; those expected failure paths are not claimed as exercised.",
+    "The retry trace includes its three attempt spans but not a separate recovered-failure event; this is a tracing-prototype omission.",
+    "No token-exhaustion recovery, deadline/Retry-After, payload artifact files, or exporter flush measurement is implemented.",
+    "The representative route uses Haus as de/Lexeme/NOUN and validates the projected Reading through Dumling's package parser; it is not a complete Dumgen grammatical-resolution flow."
+  ]
+}

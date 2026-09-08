@@ -1,0 +1,70 @@
+{
+	"environment": {
+		"arch": "arm64",
+		"bunVersion": "1.3.14",
+		"nodeVersion": "24.19.0",
+		"platform": "darwin"
+	},
+	"contract": {
+		"baseline": "empty imported Bun TypeScript module",
+		"processesPerMeasurement": 5,
+		"statistic": "median max-RSS delta"
+	},
+	"baseline": {
+		"medianBytes": 30834688,
+		"samplesBytes": [30605312, 30834688, 30883840, 30752768, 30851072]
+	},
+	"scenarios": {
+		"effect-barrel": {
+			"deltaBytes": 57638912,
+			"deltaMiB": 54.969,
+			"medianBytes": 88473600,
+			"samplesBytes": [88473600, 86343680, 89227264, 86949888, 90046464]
+		},
+		"effect-narrow": {
+			"deltaBytes": 33636352,
+			"deltaMiB": 32.078,
+			"medianBytes": 64471040,
+			"samplesBytes": [63733760, 63242240, 66125824, 65961984, 64471040]
+		},
+		"prototype-import": {
+			"deltaBytes": 61177856,
+			"deltaMiB": 58.344,
+			"medianBytes": 92012544,
+			"samplesBytes": [89849856, 92209152, 92635136, 89538560, 92012544]
+		},
+		"prototype-operation": {
+			"deltaBytes": 66125824,
+			"deltaMiB": 63.063,
+			"medianBytes": 96960512,
+			"samplesBytes": [96960512, 94306304, 99745792, 95977472, 100483072]
+		},
+		"minimal-bundled-import": {
+			"deltaBytes": 10764288,
+			"deltaMiB": 10.266,
+			"medianBytes": 41598976,
+			"samplesBytes": [41598976, 41648128, 41451520, 41615360, 41582592]
+		},
+		"minimal-bundled-operation": {
+			"deltaBytes": 11075584,
+			"deltaMiB": 10.563,
+			"medianBytes": 41910272,
+			"samplesBytes": [42008576, 41943040, 41811968, 41828352, 41910272]
+		}
+	},
+	"bundleArtifacts": {
+		"minimalEffectBytes": 445949,
+		"prototypePipelineBytes": 770430
+	},
+	"installedPackageFootprint": {
+		"effectDirectoryKiB": 33532,
+		"effectFileBytes": 27163807,
+		"fastCheckDirectoryKiB": 4212,
+		"pureRandDirectoryKiB": 320
+	},
+	"limits": {
+		"importMiBExclusive": 5,
+		"operationMiBInclusive": 5.3
+	},
+	"scope": "Effect 3.22.1 core and the deterministic fake-adapter prototype only; tracing/exporter integrations are excluded. The narrow and barrel import cases use Effect's published ESM files; the prototype cases load its import-safe source module, whose package resolves Effect as an external dependency. The bundled cases are a separate tree-shaking experiment, not the repository's current --packages=external build topology."
+}
