@@ -7,3 +7,5 @@ The runtime source and unit tests in `lib/` are copied from upstream commit [`f9
 Build output is written to `dist/`; the package root preserves the upstream `Group`, `Panel`, `Separator`, hooks, and type exports.
 
 Biome excludes the imported `lib/` tree and copied Vitest setup so upstream style and import order remain comparable during future updates. Put locally authored extensions outside `lib/`.
+
+The local `react-resizable-panels/workspace` entry point supplies the Card/Sheet state model and controlled React renderer. Import `react-resizable-panels/workspace.css` for its presentation styles. The playground in tf-demo exercises this API; terminology lives in [CONTEXT.md](./CONTEXT.md).

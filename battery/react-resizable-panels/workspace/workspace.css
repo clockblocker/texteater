@@ -1,0 +1,249 @@
+/* Generic layering and geometry. Product content supplies its own typography. */
+.workspace {
+	--workspace-card-radius: 0.7rem;
+	--workspace-card-step: 28px;
+	--workspace-card-tail-height: calc(
+		var(--workspace-card-step) +
+		var(--workspace-card-radius)
+	);
+	position: relative;
+	height: 100%;
+	min-height: 0;
+	overflow: auto;
+	background: #141920;
+	color: #e2e5e9;
+	font:
+		0.85rem "Geist Variable",
+		sans-serif;
+}
+.workspace button {
+	cursor: pointer;
+}
+.workspace__canvas,
+.workspace__group {
+	height: 100%;
+	min-height: 0;
+}
+.workspace__pane {
+	position: relative;
+	height: 100%;
+	min-width: 0;
+	min-height: 0;
+	background: #1c2128;
+}
+.workspace__content {
+	position: relative;
+	height: 100%;
+	overflow: auto;
+}
+.workspace__sheet {
+	position: absolute;
+	inset: 0;
+	height: 100%;
+	min-height: 100%;
+	background: var(--note-bg, #1c2128);
+}
+.workspace__sheet > * {
+	min-height: 100%;
+}
+.workspace__sheet[data-covered="true"] {
+	visibility: hidden;
+}
+/* A fine exposed edge makes a covered Sheet legible without shrinking its content. */
+.workspace__sheet[data-sheet-underlay="true"] {
+	box-shadow: inset 0 -0.35rem 0 #435064;
+}
+.workspace__sheet[data-sheet-underlay="true"]::after {
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 0.35rem;
+	content: "";
+	background: #435064;
+	pointer-events: none;
+}
+.workspace__separator {
+	z-index: 4;
+	background: #435064;
+}
+.workspace__separator:hover,
+.workspace__separator:focus-visible {
+	background: #8eb4f0;
+}
+.workspace__lift {
+	position: absolute;
+	z-index: 5;
+	left: 0;
+	width: 100%;
+	height: 2.8rem;
+	border: 0;
+	background: transparent;
+	touch-action: none;
+	cursor: grab;
+}
+.workspace__lift[data-edge="top"] {
+	top: 0;
+}
+.workspace__lift[data-edge="bottom"] {
+	bottom: 0;
+}
+.workspace__lift span {
+	position: absolute;
+	top: 0;
+	inset-inline: 1.25rem;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, #657994, transparent);
+}
+.workspace__lift[data-edge="bottom"] span {
+	top: auto;
+	bottom: 0;
+}
+.workspace__lift span::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: -3px;
+	width: 6px;
+	height: 6px;
+	transform: rotate(45deg);
+	background: #1c2128;
+	border: 1px solid #8eb4f0;
+}
+.workspace__lift:hover span {
+	background: #8eb4f0;
+}
+.workspace__pane-actions {
+	position: absolute;
+	top: 0.4rem;
+	right: 0.5rem;
+	z-index: 6;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: #8e9bae;
+	font-size: 0.65rem;
+}
+.workspace__pane-actions button {
+	width: 1.8rem;
+	height: 1.8rem;
+	border: 1px solid #435064;
+	border-radius: 50%;
+	background: #141920;
+	color: #e2e5e9;
+	font-size: 1rem;
+}
+.workspace__cards {
+	position: absolute;
+	top: 7rem;
+	left: 50%;
+	z-index: 8;
+	width: min(90%, 25.775rem);
+	height: min(75%, 34rem);
+	transform: translateX(-50%);
+	pointer-events: none;
+}
+.workspace__cards[data-return-target="true"] {
+	outline: 2px solid #8eb4f0;
+	outline-offset: 0.35rem;
+	border-radius: var(--workspace-card-radius, 0.7rem);
+}
+.workspace__close-cards {
+	position: absolute;
+	top: -2.3rem;
+	right: 0;
+	border: 1px solid #435064;
+	border-radius: 5px;
+	padding: 0.4rem 0.65rem;
+	background: #1c2128;
+	color: #b8c8e1;
+	font-size: 0.7rem;
+	pointer-events: auto;
+}
+.workspace__card {
+	position: absolute;
+	right: 0;
+	left: 0;
+	overflow: hidden;
+	border: 1px solid #56657a;
+	border-radius: var(--workspace-card-radius);
+	padding-block: 1.5rem var(--workspace-card-tail-height);
+	background: #1c2128;
+	box-shadow: 0 1rem 2rem #0005;
+	pointer-events: auto;
+}
+.workspace__card-content {
+	height: 100%;
+	overflow: auto;
+}
+.workspace__card > .workspace__lift span {
+	background: none;
+}
+.workspace__card > .workspace__lift span::after {
+	top: 3px;
+	transform: translateX(-50%) rotate(45deg);
+	background: transparent;
+	border: 0;
+	border-right: 1px solid #56657a;
+	border-bottom: 1px solid #56657a;
+}
+.workspace__card > .workspace__lift:hover span::after {
+	border-color: #8eb4f0;
+}
+.workspace__card-tail {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: var(--workspace-card-tail-height);
+	padding-top: var(--workspace-card-radius);
+	border: 0;
+	border-top: 1px solid #383e47;
+	background: #1c2128;
+	color: #a3aab4;
+	font-size: 0.7rem;
+	touch-action: none;
+	cursor: grab;
+}
+.workspace__drop {
+	position: absolute;
+	z-index: 15;
+	inset: 0;
+	border: 2px solid #8eb4f0;
+	background: #4f8ae547;
+	pointer-events: none;
+}
+.workspace__drop[data-edge="left"] {
+	right: 50%;
+}
+.workspace__drop[data-edge="right"] {
+	left: 50%;
+}
+.workspace__drop[data-edge="top"] {
+	bottom: 50%;
+}
+.workspace__drop[data-edge="bottom"] {
+	top: 50%;
+}
+.workspace__drag {
+	position: fixed;
+	z-index: 100;
+	width: min(25.775rem, calc(100vw - 3rem));
+	height: min(34rem, 70vh);
+	overflow: hidden;
+	border: 1px solid #657994;
+	border-radius: var(--workspace-card-radius, 0.7rem);
+	padding-block: 1.5rem;
+	background: #1c2128;
+	box-shadow: 0 1.75rem 2.8rem #0007;
+	pointer-events: none;
+	transform: translate(-50%, -1.15rem);
+}
+.workspace__drag[data-anchor="bottom"] {
+	transform: translate(-50%, calc(-100% + 1.15rem));
+}
+.workspace button:focus-visible {
+	outline: 2px solid #8eb4f0;
+	outline-offset: -2px;
+}

@@ -11,5 +11,11 @@
 			"@testing-library/jest-dom/vitest"
 		]
 	},
-	"include": ["lib", "vitest.config.ts", "vitest.d.ts", "vitest.setup.ts"]
+	"include": [
+		"lib",
+		"vitest.config.ts",
+		"vitest.d.ts",
+		"vitest.setup.ts",
+		"workspace"
+	]
 }

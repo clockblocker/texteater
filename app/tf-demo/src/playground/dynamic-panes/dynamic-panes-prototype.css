@@ -1,243 +1,126 @@
-/* THROWAWAY styling for the dynamic Pane state experiment. */
 .dynamic-panes-prototype {
+	display: flex;
 	height: 100%;
 	min-height: 0;
-	display: flex;
-	flex-direction: column;
 	background: #141920;
 	color: #e2e5e9;
 	font:
 		0.85rem "Geist Variable",
 		sans-serif;
 }
-.dynamic-panes-prototype button {
+.dynamic-panes-prototype > .workspace {
+	flex: 1;
+	min-width: 0;
+}
+.dynamic-panes-prototype .workspace__sheet > * {
+	min-height: 100%;
+}
+.dynamic-panes-prototype .workspace__sheet .text-reader,
+.dynamic-panes-prototype .workspace__sheet .reading-note-container {
+	min-height: 100%;
+}
+.dynamic-panes-prototype .workspace__sheet .text-reader__body,
+.dynamic-panes-prototype .workspace__sheet .reading-note__article,
+.dynamic-panes-prototype .workspace__sheet .reading-note-layout-toolbar {
+	width: 100%;
+	max-width: 48rem;
+	margin-inline: auto;
+	padding-inline: 2.5rem;
+}
+.dynamic-panes-prototype .workspace__sheet .text-reader__body {
+	padding-top: 5rem;
+}
+.dynamic-panes-prototype .text-reader__passage,
+.workspace__drag .text-reader__passage {
+	font-size: 1.125rem;
+}
+.workspace-state-inspector {
+	flex: 0 0 22rem;
+	max-width: 80vw;
+	padding: 1rem 1rem 5rem;
+	overflow: auto;
+	border-left: 1px solid #383e47;
+	background: #161b22;
+}
+.workspace-state-inspector header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.workspace-state-inspector h2 {
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+.workspace-state-inspector button {
+	width: 2rem;
+	height: 2rem;
+	border: 1px solid #435064;
+	border-radius: 0.4rem;
 	cursor: pointer;
 }
-.dynamic-panes__empty button,
-.dynamic-panes__close-cards {
-	border: 1px solid #435064;
-	border-radius: 5px;
-	padding: 0.4rem 0.65rem;
-	color: #b8c8e1;
-	background: #1c2128;
-	white-space: nowrap;
+.workspace-state-inspector__current {
+	color: #8eb4f0;
+	margin: 0.8rem 0 0;
 }
-.dynamic-panes__workspace {
-	position: relative;
-	flex: 1;
-	min-height: 0;
-	overflow: hidden;
-}
-.dynamic-panes__pane {
-	position: relative;
-	height: 100%;
-	min-width: 0;
-	min-height: 0;
-	background: #1c2128;
-}
-.dynamic-panes__pane[data-active="true"] {
-	box-shadow: inset 0 0 0 1px #669ef3;
-}
-.dynamic-panes__content {
-	height: 100%;
-	overflow: auto;
-	container-type: inline-size;
-}
-.dynamic-panes__sheet {
-	min-height: 100%;
-}
-.dynamic-panes__sheet[data-lifting="true"] {
-	opacity: 0.12;
-}
-.dynamic-panes__sheet .text-reader {
-	min-height: 100%;
-	padding-top: 4rem;
-}
-.dynamic-panes__separator {
-	z-index: 4;
-	background: #435064;
-}
-.dynamic-panes__separator:hover,
-.dynamic-panes__separator:focus-visible {
-	background: #8eb4f0;
-}
-.dynamic-panes__lift {
-	position: absolute;
-	z-index: 5;
-	left: 0;
+.workspace-state-inspector svg {
 	width: 100%;
-	height: 2.8rem;
-	background: transparent;
-	border: 0;
-	cursor: grab !important;
-	touch-action: none;
+	color: #56657a;
 }
-.dynamic-panes__lift[data-edge="top"] {
-	top: 0;
+.workspace-state-inspector svg > path {
+	stroke: currentColor;
+	stroke-width: 1.2;
 }
-.dynamic-panes__lift[data-edge="bottom"] {
-	bottom: 0;
+.workspace-state-inspector svg > path[data-current="true"] {
+	color: #8eb4f0;
+	stroke-width: 2;
 }
-.dynamic-panes__lift span {
-	position: absolute;
-	top: 0;
-	inset-inline: 1.25rem;
-	height: 1px;
-	background: linear-gradient(90deg, transparent, #657994, transparent);
+.workspace-state-inspector svg > path[data-cancel="true"] {
+	stroke-dasharray: 4 3;
 }
-.dynamic-panes__lift[data-edge="bottom"] span {
-	top: auto;
-	bottom: 0;
+.workspace-state-inspector rect {
+	fill: #1c2128;
+	stroke: #435064;
 }
-.dynamic-panes__lift span::after {
-	content: "";
-	position: absolute;
-	left: 50%;
-	top: -3px;
-	width: 6px;
-	height: 6px;
-	transform: rotate(45deg);
-	background: #1c2128;
-	border: 1px solid #8eb4f0;
+.workspace-state-inspector g[data-current="true"] rect {
+	fill: #23344b;
+	stroke: #8eb4f0;
+	stroke-width: 2;
 }
-.dynamic-panes__lift:hover span {
-	background: #8eb4f0;
+.workspace-state-inspector text {
+	fill: #e2e5e9;
+	font-size: 12px;
 }
-.dynamic-panes__pane-actions {
-	position: absolute;
-	top: 0.4rem;
-	right: 0.5rem;
-	z-index: 6;
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
-	color: #8e9bae;
+.workspace-state-inspector__arrows {
+	display: grid;
+	gap: 0.65rem;
+	list-style: none;
+	padding: 0;
+}
+.workspace-state-inspector__arrows li {
+	display: grid;
+	gap: 0.15rem;
+	color: #8c95a1;
+}
+.workspace-state-inspector__arrows li[data-current="true"] {
+	color: #8eb4f0;
+}
+.workspace-state-inspector small {
 	font-size: 0.65rem;
 }
-.dynamic-panes__pane-actions button {
-	width: 1.8rem;
-	height: 1.8rem;
-	border-radius: 50%;
-	border: 1px solid #435064;
-	background: #141920;
-	color: #e2e5e9;
-	font-size: 1rem;
-}
-.dynamic-panes__cards {
-	position: absolute;
-	top: 7rem;
-	left: 50%;
-	width: min(90%, 25.775rem);
-	height: min(75%, 34rem);
-	transform: translateX(-50%);
-	z-index: 8;
-	pointer-events: none;
-}
-.dynamic-panes__close-cards {
-	position: absolute;
-	top: -2.3rem;
-	right: 0;
-	pointer-events: auto;
-	font-size: 0.7rem;
-}
-.dynamic-panes__card {
-	position: absolute;
-	left: 0;
-	right: 0;
-	border: 1px solid #56657a;
-	border-radius: 0.7rem;
-	padding-block: 1.5rem 2rem;
-	background: #1c2128;
-	box-shadow: 0 1rem 2rem #0005;
-	overflow: hidden;
-	pointer-events: auto;
-}
-.dynamic-panes__card-content {
-	height: 100%;
-	overflow: auto;
-}
-.dynamic-panes__card-tail {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	height: 2rem;
-	width: 100%;
-	border: 0;
+.workspace-state-inspector details {
+	margin-top: 1rem;
 	border-top: 1px solid #383e47;
-	background: #1c2128;
-	color: #a3aab4;
-	font-size: 0.7rem;
-	cursor: grab !important;
-	touch-action: none;
+	padding-top: 0.75rem;
+	font-size: 0.75rem;
 }
-.dynamic-panes__drop {
-	position: absolute;
-	z-index: 15;
-	inset: 0;
-	display: grid;
-	place-items: center;
-	background: #4f8ae547;
-	border: 2px solid #8eb4f0;
-	pointer-events: none;
+.workspace-state-inspector summary {
+	cursor: pointer;
 }
-.dynamic-panes__drop[data-edge="left"] {
-	right: 50%;
+.workspace-state-inspector details ol {
+	padding-left: 1rem;
 }
-.dynamic-panes__drop[data-edge="right"] {
-	left: 50%;
-}
-.dynamic-panes__drop[data-edge="top"] {
-	bottom: 50%;
-}
-.dynamic-panes__drop[data-edge="bottom"] {
-	top: 50%;
-}
-.dynamic-panes__drop span {
-	background: #162333;
-	color: #d6e6ff;
-	border: 1px solid #8eb4f0;
-	border-radius: 5px;
-	padding: 0.5rem;
-}
-.dynamic-panes__drag {
-	position: fixed;
-	z-index: 100;
-	width: min(25.775rem, calc(100vw - 3rem));
-	height: min(34rem, 70vh);
-	padding-block: 1.5rem;
-	border: 1px solid #657994;
-	border-radius: 0.7rem;
-	overflow: hidden;
-	background: #1c2128;
-	box-shadow: 0 1.75rem 2.8rem #0007;
-	pointer-events: none;
-	transform: translate(-50%, -1.15rem);
-}
-.dynamic-panes__drag[data-edge="bottom"] {
-	transform: translate(-50%, calc(-100% + 1.15rem));
-}
-.dynamic-panes__drag .text-reader {
-	height: 100%;
-}
-.dynamic-panes__empty {
-	display: grid;
-	justify-content: center;
-	align-content: center;
-	height: 100%;
-	gap: 1rem;
-	color: #a3aab4;
-}
-.dynamic-panes__state {
-	width: 100%;
-	max-height: 55vh;
+.workspace-state-inspector pre {
+	font-size: 0.65rem;
 	overflow: auto;
-	padding: 1rem;
-	background: #090d13f5;
-	border: 1px solid #657994;
-	color: #b8c8e1;
-	font-size: 0.7rem;
-}
-.dynamic-panes-prototype button:focus-visible {
-	outline: 2px solid #8eb4f0;
-	outline-offset: -2px;
+	margin-top: 0.5rem;
 }

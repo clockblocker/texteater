@@ -4,72 +4,45 @@ tf-demo presents one shared linguistic graph and demo dictionary. Anonymous
 Visitors contribute encounter history but do not partition linguistic identity
 or Knowledge.
 
-## Language
+## Workspace
 
-**Sheet**:
-A placed, expanded presentation of one Text or Note in a Pane's ordered Sheet
-Stack. It adds no identity to its subject.
-_Avoid_: Layer, expanded Card, View
+The [react-resizable-panels workspace context](../../battery/react-resizable-panels/CONTEXT.md)
+defines Presentation, Card, Sheet, Pane, Card Layer, Sheet Stack, Lift, Expand,
+Collapse, Move, Close, and cancellation. Use it for new workspace work.
 
-**Card**:
-A transient presentation of one Text or Note in a Card Layer or Sheet Move. It
-never belongs to a Sheet Stack or carries Sheet placement and lock semantics.
-_Avoid_: collapsed Sheet, unplaced Sheet
-
-**Card Layer**:
-A Pane-local transient layer of independent Cards, separate from the Pane's
-Sheet Stack. Each Pane has at most one.
-_Avoid_: Card Stack, modal overlay
-
-**Card Tail**:
-A subject-owned compact presentation at the bottom of an occluded Card. It is
-the Card's drag handle, not a tab or reorder handle.
-
-**Workspace Presentation**:
-The content-independent `Card | Sheet` contract passed to a Text or Note.
-Subject content receives no workspace dimensions.
-
-**Sheet Stack**:
-The ordered Sheets placed in one Pane. Only the top Sheet may move; Collapse
-reveals a lower Sheet or the Pane base.
-
-**Pane**:
-A workspace position containing one Sheet Stack and at most one Locked Sheet.
-The central Pane uses the Navigation Anchor as its base.
-_Avoid_: panel, docking region
-
-**Active Pane**:
-The Pane to which pane-scoped commands apply. Pointer interaction, keyboard
-focus, or a successful Sheet Move may make it active.
+tf-demo's production workspace predates that model. The terms below describe
+only its existing Navigation Anchor implementation until the battery model
+replaces it.
 
 **Navigation Anchor**:
 The non-collapsible base of the central Pane. The Library is its current
 presentation, not a synonym.
 
 **Locked Sheet**:
-A Sheet protected from Collapse. Its lock is visible, controllable, and unique
-within its Pane.
-_Avoid_: pinned Note, locked Pane
+The legacy implementation's unique, visible Pane lock. It protects one Sheet
+from legacy Collapse.
 
 **Lock Transfer**:
-The operation that moves a Pane's lock to another Sheet. Unlocking may leave
-the Pane without a Locked Sheet.
+The legacy operation that moves a Pane's lock to another Sheet. Unlocking may
+leave the Pane without a Locked Sheet.
 
 **Collapse**:
-Removal of one or more Sheets from a stack without removing a Locked Sheet. It
+The legacy removal of one or more Sheets without removing a Locked Sheet. It
 does not create a Card or move a Sheet.
 
 **Explicit Sheet Removal**:
-Removal of one identified Sheet, including a Locked Sheet, without promoting a
-replacement lock.
+The legacy removal of one identified Sheet, including a Locked Sheet, without
+promoting a replacement lock.
 
 **Sheet Opening**:
-Placement of a new Sheet based on interaction origin: central from the
-Navigation Anchor, local from a Sheet, or explicit from a drag destination.
+The legacy placement of a new Sheet: central from the Navigation Anchor, local
+from a Sheet, or explicit from a drag destination.
 
 **Sheet Move**:
-Relocation of the top Sheet between Panes, represented transiently as a Card.
-Only a valid drop changes placed workspace state.
+The legacy relocation of the top Sheet between Panes, represented transiently
+as a Card. Only a valid drop changes placed workspace state.
+
+## Language
 
 **Occurrence Attestation**:
 tf-demo's durable record for one resolved high-level occurrence in one

@@ -1,0 +1,12 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"noEmit": false,
+		"outDir": "./dist/workspace",
+		"rootDir": "./workspace"
+	},
+	"include": ["workspace/**/*.ts", "workspace/**/*.tsx"],
+	"exclude": ["workspace/**/*.test.ts", "workspace/**/*.test.tsx"]
+}

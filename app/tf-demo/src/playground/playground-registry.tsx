@@ -20,9 +20,9 @@ export const PLAYGROUND_EXPERIMENTS = [
 		id: "dynamic-panes",
 		title: "Dynamic Panes without tabs",
 		description:
-			"Throwaway experiment: create nested splits by docking Cards and Sheets, then reclaim empty Panes.",
+			"Explore retained Card Layers, Sheet expansion, gesture cancellation, and nested Pane splits.",
 		instructions:
-			"Select a word to open Cards. Lift a Card or Sheet to an edge to split, or inside a Pane to place a Sheet. State stays in memory.",
+			"Select a word to open Cards. Lift into a Pane to expand, back into the Card Layer to return, or to an edge to split. Escape cancels. Open the cog to show the state machine.",
 		component: DynamicPanesPrototype,
 	},
 	{
