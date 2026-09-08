@@ -1,3 +1,10 @@
+/* Reserve horizontal trackpad gestures while a workspace is mounted.
+   Chrome needs containment at the viewport, including gestures over handles
+   and momentum after the target Sheet has collapsed. */
+html:has(.workspace),
+body:has(.workspace) {
+	overscroll-behavior-x: none;
+}
 /* Generic layering and geometry. Product content supplies its own typography. */
 .workspace {
 	--workspace-card-radius: 0.7rem;

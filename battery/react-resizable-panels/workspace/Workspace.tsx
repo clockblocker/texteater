@@ -22,6 +22,7 @@ import {
 	type WorkspaceLayout,
 	type WorkspacePresentation,
 	type WorkspaceState,
+	workspaceReducer,
 } from "./model";
 
 /** The narrowest useful canvas for a Sheet and its Card counterpart. */
@@ -132,6 +133,19 @@ function destinationAt(
  * Sheet form remounts its content. Keep any content state outside the renderer,
  * keyed by `presentationId`, when it must survive that form change or a move.
  */
+
+function paneComposition<S>(snapshot: WorkspaceState<S>, paneId: string) {
+	return JSON.stringify({
+		sheets: snapshot.panes[paneId]?.presentationIds,
+		layers: selectCardLayersForPane(snapshot, paneId).map((layer) => ({
+			...layer,
+			forms: layer.memberIds.map(
+				(id) => snapshot.presentations[id]?.form,
+			),
+		})),
+	});
+}
+
 export function Workspace<S>({
 	state,
 	dispatch,
@@ -157,8 +171,133 @@ export function Workspace<S>({
 	const selectedRevealAnchorsRef = useRef(new Map<string, HTMLElement>());
 	const [liftAnchor, setLiftAnchor] = useState<"top" | "bottom">("top");
 	const [destination, setDestination] = useState<Destination | null>(null);
+	const backSwipeRef = useRef({
+		time: 0,
+		distance: 0,
+		id: "",
+		consumed: false,
+	});
+	const forwardSwipeRef = useRef<{
+		id: string;
+		paneId: string;
+		composition: string;
+	} | null>(null);
 	const layout = selectLayout(state);
 	const lifted = selectLiftedPresentation(state);
+
+	useEffect(() => {
+		const element = root.current;
+		if (!element) return;
+		const forward = forwardSwipeRef.current;
+		if (
+			forward &&
+			(state.gesture ||
+				paneComposition(state, forward.paneId) !== forward.composition)
+		)
+			forwardSwipeRef.current = null;
+		function onWheel(event: WheelEvent) {
+			const swipe = backSwipeRef.current;
+			if (event.timeStamp - swipe.time > 250) {
+				swipe.distance = 0;
+				swipe.id = "";
+				swipe.consumed = false;
+			}
+			swipe.time = event.timeStamp;
+			if (
+				event.ctrlKey ||
+				state.gesture ||
+				Math.abs(event.deltaX) <= Math.abs(event.deltaY)
+			)
+				return;
+			if (swipe.consumed) {
+				event.preventDefault();
+				return;
+			}
+			if (!(event.target instanceof Element)) {
+				swipe.distance = 0;
+				return;
+			}
+			const pane = event.target.closest<HTMLElement>(
+				"[data-workspace-pane]",
+			);
+			const paneId = pane?.dataset.workspacePane;
+			if (!pane || !paneId) return;
+			const restoring = event.deltaX > 0;
+			const forward = forwardSwipeRef.current;
+			const sheet =
+				event.target.closest<HTMLElement>(".workspace__sheet");
+			const id = restoring ? forward?.id : sheet?.dataset.presentationId;
+			const presentation = id ? state.presentations[id] : undefined;
+			if (
+				!presentation ||
+				presentation.locked ||
+				!presentation.layerId ||
+				!state.layers[presentation.layerId]
+			)
+				return;
+			if (restoring) {
+				if (
+					!forward ||
+					forward.paneId !== paneId ||
+					presentation.form !== "Card"
+				)
+					return;
+			} else if (!sheet || sheet.dataset.covered) return;
+			// Leave horizontally scrollable content in control of its own gesture.
+			for (
+				let node: Element | null = event.target;
+				node;
+				node = node.parentElement
+			) {
+				if (
+					node.scrollWidth > node.clientWidth &&
+					/auto|scroll/.test(getComputedStyle(node).overflowX)
+				)
+					return;
+				if (node === pane) break;
+			}
+			event.preventDefault();
+			const gestureKey =
+				presentation.id + (restoring ? ":forward" : ":back");
+			if (swipe.id !== gestureKey) swipe.distance = 0;
+			swipe.id = gestureKey;
+			swipe.distance +=
+				Math.abs(event.deltaX) *
+				(event.deltaMode === 1
+					? 16
+					: event.deltaMode === 2
+						? pane.clientWidth
+						: 1);
+			if (swipe.distance >= 80) {
+				swipe.consumed = true;
+				if (restoring) {
+					forwardSwipeRef.current = null;
+					dispatch({ type: "Lift", presentationId: presentation.id });
+					dispatch({ type: "Expand", paneId });
+				} else {
+					const command: WorkspaceCommand<S> = {
+						type: "Collapse",
+						presentationId: presentation.id,
+					};
+					const collapsed = workspaceReducer(state, command);
+					forwardSwipeRef.current =
+						collapsed === state
+							? null
+							: {
+									id: presentation.id,
+									paneId,
+									composition: paneComposition(
+										collapsed,
+										paneId,
+									),
+								};
+					dispatch(command);
+				}
+			}
+		}
+		element.addEventListener("wheel", onWheel, { passive: false });
+		return () => element.removeEventListener("wheel", onWheel);
+	}, [state, dispatch]);
 
 	function suppressPostGestureClick() {
 		suppressNextClickRef.current = true;

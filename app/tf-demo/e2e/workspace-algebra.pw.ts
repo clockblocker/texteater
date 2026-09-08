@@ -495,3 +495,85 @@ test("bodies and every deck footer toggle the same presentation", async ({
 		await expect(page.locator(".workspace__sheet")).toHaveCount(1);
 	}
 });
+
+test("back swipe returns a Sheet to its deck without treating vertical scroll as back", async ({
+	page,
+}) => {
+	await page.goto("/playground/dynamic-panes");
+	await openCards(page);
+	await page
+		.locator(".workspace__card")
+		.first()
+		.dblclick({ position: { x: 80, y: 300 } });
+	const sheet = page.locator(".workspace__sheet").last();
+	await sheet.hover({ position: { x: 80, y: 350 } });
+	await page.mouse.wheel(-10, 120);
+	await expect(page.locator(".workspace__sheet")).toHaveCount(2);
+	await page.mouse.wheel(-100, 0);
+	await expect(page.locator(".workspace__sheet")).toHaveCount(1);
+	await expect(page.locator('[data-presentation-form="Card"]')).toHaveCount(
+		4,
+	);
+	// Momentum cannot collapse another presentation or close the restored deck.
+	await page.mouse.wheel(-150, 0);
+	await expect(page.locator("[data-card-layer]")).toHaveCount(1);
+});
+
+test("forward swipe restores the last back swipe until the deck changes", async ({
+	page,
+}) => {
+	await page.goto("/playground/dynamic-panes");
+	await openCards(page);
+	const id = await page
+		.locator(".workspace__card")
+		.first()
+		.getAttribute("data-presentation-id");
+	await page
+		.locator(".workspace__card")
+		.first()
+		.dblclick({ position: { x: 80, y: 300 } });
+	await page
+		.locator(".workspace__sheet")
+		.last()
+		.hover({ position: { x: 80, y: 350 } });
+	await page.mouse.wheel(-100, 0);
+	await expect(page.locator(".workspace__sheet")).toHaveCount(1);
+	// Separate physical gestures by the momentum quiet period.
+	await page.waitForTimeout(300);
+	await page.mouse.wheel(100, 0);
+	await expect(
+		page.locator(
+			`[data-presentation-id="${id}"][data-presentation-form="Sheet"]`,
+		),
+	).toBeVisible();
+	await page.waitForTimeout(300);
+	await page.mouse.wheel(-100, 0);
+	await expect(page.locator(".workspace__sheet")).toHaveCount(1);
+	await page.keyboard.press("Escape");
+	await openCards(page);
+	await page.waitForTimeout(300);
+	await page
+		.locator(".workspace__sheet")
+		.hover({ position: { x: 10, y: 350 } });
+	await page.mouse.wheel(100, 0);
+	await expect(page.locator(".workspace__sheet")).toHaveCount(1);
+});
+
+test("workspace reserves horizontal overscroll at the browser root", async ({
+	page,
+}) => {
+	await page.goto("/playground/dynamic-panes");
+	await expect(page.locator("html")).toHaveCSS(
+		"overscroll-behavior-x",
+		"none",
+	);
+	await expect(page.locator("body")).toHaveCSS(
+		"overscroll-behavior-x",
+		"none",
+	);
+	await page.goto("/playground");
+	await expect(page.locator("html")).toHaveCSS(
+		"overscroll-behavior-x",
+		"auto",
+	);
+});
