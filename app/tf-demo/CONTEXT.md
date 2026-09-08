@@ -4,45 +4,26 @@ tf-demo presents one shared linguistic graph and demo dictionary. Anonymous
 Visitors contribute encounter history but do not partition linguistic identity
 or Knowledge.
 
-## Workspace
+## Language
 
 The [react-resizable-panels workspace context](../../battery/react-resizable-panels/CONTEXT.md)
 defines Presentation, Card, Sheet, Pane, Card Layer, Sheet Stack, Lift, Expand,
-Collapse, Move, Close, and cancellation. Use it for new workspace work.
+Collapse, Move, Close, and cancellation. tf-demo uses that model in production.
 
-tf-demo's production workspace predates that model. The terms below describe
-only its existing Navigation Anchor implementation until the battery model
-replaces it.
+**Library Sheet**:
+The initial Locked Sheet containing the Library.
 
-**Navigation Anchor**:
-The non-collapsible base of the central Pane. The Library is its current
-presentation, not a synonym.
+**Text Sheet**:
+A Locked Sheet containing a Text Subject.
 
-**Locked Sheet**:
-The legacy implementation's unique, visible Pane lock. It protects one Sheet
-from legacy Collapse.
+**Note Presentation**:
+A Route, Unit Reading, Shadow, Resolution, or Resolution Step Subject in Card
+or Sheet form.
 
-**Lock Transfer**:
-The legacy operation that moves a Pane's lock to another Sheet. Unlocking may
-leave the Pane without a Locked Sheet.
-
-**Collapse**:
-The legacy removal of one or more Sheets without removing a Locked Sheet. It
-does not create a Card or move a Sheet.
-
-**Explicit Sheet Removal**:
-The legacy removal of one identified Sheet, including a Locked Sheet, without
-promoting a replacement lock.
-
-**Sheet Opening**:
-The legacy placement of a new Sheet: central from the Navigation Anchor, local
-from a Sheet, or explicit from a drag destination.
-
-**Sheet Move**:
-The legacy relocation of the top Sheet between Panes, represented transiently
-as a Card. Only a valid drop changes placed workspace state.
-
-## Language
+**Workspace Persistence**:
+The placed Sheet composition and the Card Layer membership needed to return an
+expanded Note are durable browser state. Resting Card Layers and active
+gestures are transient.
 
 **Occurrence Attestation**:
 tf-demo's durable record for one resolved high-level occurrence in one

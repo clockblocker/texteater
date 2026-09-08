@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef, useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import {
 	createWorkspace,
 	getWorkspaceStateLabel,
@@ -17,6 +17,7 @@ import {
 	type WorkspaceSubject,
 	workspaceSubjectFor,
 } from "@/workspace/sheet-workspace";
+import { useWorkspaceSentenceReveal } from "@/workspace/useWorkspaceSentenceReveal";
 import {
 	PASSIVE_WORKSPACE_INTERACTION,
 	WorkspaceInteractionProvider,
@@ -26,6 +27,7 @@ import {
 	WorkspaceStateInspector,
 } from "./workspace-state-inspector";
 import "./dynamic-panes-prototype.css";
+import "@/workspace/workspace-reading-layout.css";
 
 type StudyState = {
 	workspace: WorkspaceState<WorkspaceSubject>;
@@ -73,38 +75,26 @@ export function DynamicPanesPrototype() {
 	const [showState, setShowState] = useState(false);
 	const [longText, setLongText] = useState(true);
 	const root = useRef<HTMLDivElement>(null);
-	const pendingSentence = useRef<{
-		anchor: HTMLElement;
-		presentationId: string;
-	} | null>(null);
-	useLayoutEffect(() => {
-		const pending = pendingSentence.current;
-		if (!pending || workspace.gesture) return;
-		pendingSentence.current = null;
-		const layer = Object.values(workspace.layers).find(
-			(layer) => layer.originPresentationId === pending.presentationId,
-		);
-		const deck =
-			layer &&
-			root.current?.querySelector<HTMLElement>(
-				`[data-card-layer="${layer.id}"]`,
+	const queueSentenceReveal = useWorkspaceSentenceReveal({
+		root,
+		state: workspace,
+		isReady: (state) => !state.gesture,
+		findDeck: (workspaceRoot, pending, state) => {
+			const layer = Object.values(state.layers).find(
+				(layer) =>
+					layer.originPresentationId === pending.presentationId,
 			);
-		const sheet = pending.anchor.closest<HTMLElement>(".workspace__sheet");
-		const sentence = pending.anchor.closest<HTMLElement>(
-			".text-reader__sentence",
-		);
-		if (!deck || !sheet || !sentence?.isConnected) return;
-		const lineHeight = parseFloat(getComputedStyle(sentence).lineHeight);
-		const excess =
-			sentence.getBoundingClientRect().bottom -
-			(deck.getBoundingClientRect().top - lineHeight * 0.5);
-		// Prioritize the sentence ending if the whole sentence cannot fit above the deck.
-		if (excess > 0) sheet.scrollTop += excess;
-	}, [workspace]);
+			return layer
+				? workspaceRoot.querySelector<HTMLElement>(
+						`[data-card-layer="${layer.id}"]`,
+					)
+				: null;
+		},
+	});
 	return (
 		<div
 			ref={root}
-			className="dynamic-panes-prototype"
+			className="dynamic-panes-prototype workspace-reading-layout"
 			data-show-state={showState}
 		>
 			<PlaygroundControls>
@@ -137,10 +127,10 @@ export function DynamicPanesPrototype() {
 								const anchor = options?.anchor;
 								if (anchor instanceof HTMLElement) {
 									context.selectAnchor(anchor);
-									pendingSentence.current = {
+									queueSentenceReveal(
 										anchor,
-										presentationId: context.presentationId,
-									};
+										context.presentationId,
+									);
 								}
 								dispatch({
 									type: "OpenLayer",

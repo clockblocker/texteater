@@ -134,6 +134,21 @@ export function WorkspaceProvider({
 	);
 }
 
+/** Shares shell navigation with either workspace renderer. */
+export function WorkspaceControllerProvider({
+	controller,
+	children,
+}: {
+	readonly controller: WorkspaceController;
+	readonly children: ReactNode;
+}) {
+	return (
+		<WorkspaceControllerContext.Provider value={controller}>
+			{children}
+		</WorkspaceControllerContext.Provider>
+	);
+}
+
 export function WorkspaceInteractionProvider({
 	interaction,
 	children,

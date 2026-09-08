@@ -16,33 +16,22 @@ import { SettingsView } from "@/views/settings-view";
 import { ShadowNoteView } from "@/views/shadow-note-view";
 import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
-import { CardSheetWorkspace } from "@/workspace/card-sheet-workspace";
+import {
+	ApplicationWorkspace,
+	ApplicationWorkspaceProvider,
+} from "@/workspace/application-workspace";
 import type {
-	SheetWorkspace,
 	WorkspacePresentation,
 	WorkspaceSubject,
 } from "@/workspace/sheet-workspace";
-import {
-	useWorkspaceController,
-	WorkspaceProvider,
-} from "@/workspace/workspace-controller";
+import { useWorkspaceController } from "@/workspace/workspace-controller";
 import "@/workspace/application-workspace.css";
-
-const INITIAL_WORKSPACE: SheetWorkspace = {
-	centralPaneId: "central",
-	activePaneId: "central",
-	panes: [
-		{ id: "west", sheets: [] },
-		{ id: "central", sheets: [] },
-		{ id: "east", sheets: [] },
-	],
-};
 
 export function App() {
 	return (
-		<WorkspaceProvider initialWorkspace={INITIAL_WORKSPACE}>
+		<ApplicationWorkspaceProvider>
 			<ApplicationShell />
-		</WorkspaceProvider>
+		</ApplicationWorkspaceProvider>
 	);
 }
 
@@ -78,9 +67,9 @@ function ApplicationShell() {
 						aria-label="Workspace"
 						className="application-workspace"
 					>
-						<CardSheetWorkspace
-							navigationAnchor={<LibraryView />}
-							renderCardTail={renderCardTail}
+						<ApplicationWorkspace
+							renderLibrary={() => <LibraryView />}
+							labelSubject={renderCardTail}
 							renderSubject={renderApplicationSubject}
 						/>
 					</section>

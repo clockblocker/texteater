@@ -1,0 +1,71 @@
+/* Shared reading geometry for workspaces that place a Card Layer over Sheets. */
+.workspace-reading-layout {
+	--study-text-size: 1.125rem;
+	--study-line-height: calc(var(--study-text-size) * 1.52);
+	--study-reading-top: 5rem;
+	--study-deck-top: calc(
+		var(--study-reading-top) +
+		3 *
+		var(--study-line-height)
+	);
+	display: flex;
+	height: 100%;
+	min-height: 0;
+	background: #141920;
+	color: #e2e5e9;
+	font:
+		0.85rem "Geist Variable",
+		sans-serif;
+}
+
+.workspace-reading-layout > .workspace {
+	flex: 1;
+	min-width: 0;
+}
+
+.workspace-reading-layout .workspace__sheet > * {
+	min-height: 100%;
+}
+
+.workspace-reading-layout .workspace__sheet .text-reader,
+.workspace-reading-layout .workspace__sheet .reading-note-container {
+	min-height: 100%;
+}
+
+/* Keep text and Reading notes on one shared, legible Sheet column. */
+.workspace-reading-layout .workspace__sheet .text-reader__body,
+.workspace-reading-layout .workspace__sheet .reading-note__article,
+.workspace-reading-layout .workspace__sheet .reading-note-layout-toolbar {
+	width: 100%;
+	max-width: 48rem;
+	margin-inline: auto;
+	padding-inline: 2.5rem;
+}
+
+/* Route, Shadow, and Resolution notes retain their own surfaces and padding. */
+.workspace-reading-layout .application-workspace__note > * > * {
+	max-width: 48rem;
+}
+
+.workspace-reading-layout .workspace__sheet .text-reader__body {
+	padding-top: var(--study-reading-top);
+	/* Enough trailing space to reveal even the final sentence above the deck. */
+	padding-bottom: max(
+		5rem,
+		calc(100cqh - var(--study-deck-top) + var(--study-line-height) * 0.5)
+	);
+}
+
+.workspace-reading-layout .text-reader__passage,
+.workspace__drag .text-reader__passage {
+	font-size: var(--study-text-size, 1.125rem);
+	line-height: var(--study-line-height, 1.52);
+}
+
+/* Align the Card's inner column, accounting for its padding and border. */
+.workspace-reading-layout .workspace__cards {
+	top: var(--study-deck-top);
+	height: min(calc(100% - var(--study-deck-top) - 12px), 34rem);
+	left: calc(max(0px, 50% - 24rem) + 2.5rem - 0.9rem - 1px);
+	transform: none;
+}

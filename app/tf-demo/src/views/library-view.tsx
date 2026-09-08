@@ -154,7 +154,7 @@ export function LibraryView() {
 					render={
 						<Button
 							size="icon-lg"
-							className="absolute right-4 bottom-6 size-14 rounded-full shadow-lg sm:right-6"
+							className="absolute right-4 bottom-6 z-10 size-14 rounded-full shadow-lg sm:right-6"
 						/>
 					}
 				>
