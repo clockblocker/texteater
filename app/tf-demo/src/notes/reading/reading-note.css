@@ -1,0 +1,248 @@
+.reading-note-container,
+.reading-note {
+	--note-bg: #1c2128;
+	--note-ink: #e2e5e9;
+	--note-soft: #a3aab4;
+	--note-muted: #8c95a1;
+	--note-link: #8eb4f0;
+	--note-rule: #383e47;
+	background: var(--note-bg);
+	color: var(--note-ink);
+	font-family: "Geist Variable", sans-serif;
+	font-size: 0.95rem;
+	min-width: 0;
+}
+.reading-note-container {
+	position: relative;
+}
+.reading-note {
+	min-height: 100%;
+}
+.reading-note ::selection {
+	background: #9cc6ed;
+	color: #111824;
+}
+.reading-note__article {
+	padding: 3.5rem clamp(1.2rem, 4cqi, 2.5rem);
+}
+.reading-note-container .reading-note__article {
+	padding-top: 1rem;
+}
+.reading-note-layout-toolbar {
+	padding: 3.5rem 1.2rem 0;
+}
+.reading-note-layout-toolbar button {
+	color: var(--note-soft);
+	background: transparent;
+	border-color: var(--note-rule);
+}
+.reading-note__title-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem 1.5rem;
+}
+.reading-note .reading-note__header h1 {
+	margin: 0;
+	color: var(--note-link);
+	font-size: 1rem;
+	font-weight: 570;
+	letter-spacing: -0.025em;
+	line-height: 1.4;
+	overflow-wrap: anywhere;
+}
+.reading-note .reading-note__header h1[data-gender="Fem"] {
+	color: #e69a9d;
+}
+.reading-note .reading-note__header h1[data-gender="Neut"] {
+	color: #a3c39f;
+}
+.reading-note .reading-note__header h1[data-gender="Masc"] {
+	color: #aab2d8;
+}
+.reading-note__emoji {
+	color: var(--note-ink);
+}
+.reading-note__ipa {
+	color: var(--note-muted);
+	font-style: italic;
+	font-size: 0.85rem;
+	overflow-wrap: anywhere;
+}
+.reading-note__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem 0.65rem;
+	margin-top: 0.65rem;
+	color: var(--note-soft);
+	font-size: 0.7rem;
+}
+.reading-note__section {
+	padding-top: 1.3rem;
+	min-width: 0;
+}
+.reading-note__section-label {
+	display: flex;
+	align-items: center;
+	margin: 0 0 0.85rem;
+	color: var(--note-muted);
+	font:
+		700 0.62rem ui-monospace,
+		"SFMono-Regular",
+		Consolas,
+		monospace;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.reading-note__section-label::before,
+.reading-note__section-label::after {
+	border-top: 1px dashed var(--note-rule);
+	content: "";
+}
+.reading-note__section-label::before {
+	flex: 1;
+	margin-right: 0.4rem;
+}
+.reading-note__section-label::after {
+	flex: 0 0 0.4rem;
+	margin-left: 0.4rem;
+}
+.reading-note__context-list {
+	display: grid;
+	gap: 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.reading-note__context {
+	display: block;
+	width: 100%;
+	border: 0;
+	border-left: 3px solid var(--note-rule);
+	padding: 0.2rem 0 0.2rem clamp(1rem, 2.5cqi, 2.5rem);
+	background: transparent;
+	color: inherit;
+	text-align: left;
+	font: inherit;
+	font-weight: 430;
+	letter-spacing: -0.012em;
+	line-height: 1.55;
+	cursor: pointer;
+	transition: border-color 140ms ease;
+}
+.reading-note__context:hover,
+.reading-note__context:focus-visible {
+	border-color: var(--note-link);
+}
+.reading-note__relation-list {
+	display: grid;
+	gap: 0.55rem;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.reading-note__relation-list + .reading-note__relation-list {
+	margin-top: 0.55rem;
+}
+.reading-note__relation-list button {
+	color: var(--note-link);
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+.reading-note__relation-list button:hover {
+	text-decoration: underline;
+	text-underline-offset: 0.16em;
+}
+.reading-note__relation-list svg {
+	display: inline;
+	width: 0.85em;
+	height: 0.85em;
+	margin-right: 0.3em;
+}
+.reading-note__definition::before {
+	display: block;
+	margin-bottom: 0.85rem;
+	border-top: 1px dashed var(--note-rule);
+	content: "";
+}
+.reading-note__definition textarea {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 2.75rem;
+	resize: none;
+	overflow: hidden;
+	border: 0;
+	border-radius: 0;
+	padding: 0.25rem 0.5rem;
+	background: transparent;
+	color: var(--note-ink);
+	font: inherit;
+	line-height: 1.6;
+}
+.reading-note__definition textarea::placeholder {
+	color: var(--note-muted);
+	font-style: italic;
+}
+.reading-note__definition [role="alert"] {
+	color: #e69a9d;
+}
+.reading-note__definition [role="status"] {
+	color: var(--note-muted);
+	font-size: 0.75rem;
+}
+.reading-note :is(button, textarea):focus-visible {
+	outline: 1px solid #8eb4f0;
+	outline-offset: 2px;
+}
+.reading-note[data-note-presentation="Card"] .reading-note__article {
+	padding: 0.9rem;
+}
+.reading-note-container[data-note-presentation="Card"]
+	.reading-note-layout-toolbar {
+	padding: 0.5rem 0.9rem 0;
+}
+.reading-note[data-note-presentation="Card"] .reading-note__section {
+	padding-top: 0.7rem;
+}
+.reading-note[data-note-presentation="Card"] .reading-note__section-label {
+	display: none;
+}
+.reading-note[data-note-presentation="Card"]
+	.reading-note__section:not(.reading-note__contexts)::before {
+	display: block;
+	margin-bottom: 0.55rem;
+	border-top: 1px dashed var(--note-rule);
+	content: "";
+}
+.reading-note[data-note-presentation="Card"] .reading-note__context-list {
+	gap: 0.7rem;
+}
+.reading-note[data-note-presentation="Card"] .reading-note__context {
+	padding-left: 0.75rem;
+}
+@media (prefers-reduced-motion: reduce) {
+	.reading-note__context {
+		transition: none;
+	}
+}
+
+.reading-note__tags {
+	border-top: 1px dashed var(--note-rule);
+	padding-top: 0.85rem;
+	margin-top: 1.25rem;
+}
+.reading-note[data-note-presentation="Card"] .reading-note__tags {
+	margin-top: 0.7rem;
+}
+
+.reading-note__relation-mark {
+	display: inline-block;
+	min-width: 1rem;
+	margin-right: 0.75rem;
+	color: var(--note-soft);
+	font-family: ui-monospace, monospace;
+	text-align: center;
+}

@@ -30,6 +30,7 @@ type ConcreteReadingNoteData<
 };
 
 export type ReadingNotePresentationCapabilities = {
+	readonly presentation?: "Card" | "Sheet";
 	readonly blockLayout: ReadingBlockLayout;
 	readonly knowledgeSettings: KnowledgeSettings;
 	readonly sourceContexts: {

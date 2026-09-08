@@ -47,7 +47,9 @@ export type UnitReadingNote = ReadingNoteData;
 
 export function UnitReadingNoteView({
 	target,
+	presentation = "Sheet",
 }: {
+	presentation?: "Card" | "Sheet";
 	target: UnitReadingNoteTarget;
 }) {
 	const visitorId = useAnonymousVisitorId();
@@ -87,6 +89,7 @@ export function UnitReadingNoteView({
 		<ReadingNoteContainer
 			key={noteQuery.data.target.readingId}
 			visitorId={visitorId}
+			presentation={presentation}
 			note={noteQuery.data}
 			knowledgeSettings={settingsQuery.data}
 			route={route}
@@ -95,11 +98,13 @@ export function UnitReadingNoteView({
 }
 
 function ReadingNoteContainer({
+	presentation,
 	visitorId,
 	note,
 	knowledgeSettings,
 	route,
 }: {
+	presentation: "Card" | "Sheet";
 	visitorId: string;
 	note: ReadingNoteData;
 	knowledgeSettings: KnowledgeSettings;
@@ -153,6 +158,7 @@ function ReadingNoteContainer({
 	}
 
 	const capabilities: ReadingNotePresentationCapabilities = {
+		presentation,
 		blockLayout: {
 			order: layoutQuery.data.order,
 			hidden: new Set(layoutQuery.data.hidden),
@@ -177,13 +183,12 @@ function ReadingNoteContainer({
 
 	return (
 		<Dialog>
-			<div className="flex flex-1 flex-col bg-background">
-				<div className="border-b bg-muted/20 px-4 py-2 sm:px-6">
-					<div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3">
-						<p className="min-w-0 truncate text-xs text-muted-foreground">
-							Reading layout · German · {route.family} ·{" "}
-							{route.kind}
-						</p>
+			<div
+				className="reading-note-container"
+				data-note-presentation={presentation}
+			>
+				<div className="reading-note-layout-toolbar">
+					<div className="flex items-center justify-end gap-3">
 						<DialogTrigger
 							render={<Button variant="outline" size="sm" />}
 						>

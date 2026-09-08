@@ -88,7 +88,7 @@ export function createSheetWorkspaceFixture(): SheetWorkspace {
 
 export const renderFixtureSubject: CardSheetWorkspaceProps["renderSubject"] = (
 	subject,
-	_presentation,
+	presentation,
 ) => {
 	if (subject.kind === "Text") {
 		return <FixtureTextPresentation />;
@@ -97,7 +97,7 @@ export const renderFixtureSubject: CardSheetWorkspaceProps["renderSubject"] = (
 	if (!source) return <p>Unknown Note fixture.</p>;
 	const note = fixtureNote(source);
 	return note.kind === "UnitReadingNote"
-		? renderNote(note, readingCapabilities(note))
+		? renderNote(note, { ...readingCapabilities(note), presentation })
 		: renderNote(note, routeCapabilities());
 };
 

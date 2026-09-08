@@ -1,42 +1,88 @@
-import { Badge } from "@/components/ui/badge";
-import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
+import { type ReactNode, useId } from "react";
+import type {
+	ReadingNoteDefaultRenderer,
+	ReadingNotePresentationCapabilities,
+} from "../../reading-note-render-context";
 
 export const renderDefaultReadingHeader = (({ note, capabilities }) => (
-	<section
-		aria-labelledby="reading-note-title"
-		className="flex flex-col gap-3"
-	>
-		<div className="flex flex-wrap items-baseline gap-2">
-			<h1
-				id="reading-note-title"
-				className="text-2xl font-semibold tracking-tight sm:text-3xl"
-			>
-				{note.reading.emojiDescription}{" "}
-				{note.reading.lemma.canonicalForm}
-			</h1>
-			{capabilities.knowledgeSettings.transcription &&
-			note.knowledge.transcription ? (
-				<span className="text-lg text-muted-foreground">
-					/{note.knowledge.transcription}/
-				</span>
-			) : null}
-			<Badge variant="secondary">{note.reading.lemma.language}</Badge>
-			<Badge variant="outline">{note.reading.lemma.family}</Badge>
-			<Badge variant="outline">{note.reading.lemma.kind}</Badge>
-		</div>
-		{Object.keys(note.reading.lemma.coreFeatures).length > 0 ? (
-			<div className="flex flex-wrap gap-2">
-				{Object.entries(note.reading.lemma.coreFeatures).flatMap(
-					([name, value]) =>
-						value === null
-							? []
-							: [
-									<Badge key={name} variant="outline">
-										{name}: {String(value)}
-									</Badge>,
-								],
-				)}
-			</div>
-		) : null}
-	</section>
+	<ReadingHeader note={note} capabilities={capabilities} />
 )) satisfies ReadingNoteDefaultRenderer;
+
+export function ReadingHeader({
+	note,
+	capabilities,
+	title,
+}: {
+	note: {
+		reading: {
+			emojiDescription: string;
+			lemma: {
+				canonicalForm: string;
+				language: string;
+				family: string;
+				kind: string;
+				coreFeatures: Readonly<Record<string, unknown>>;
+			};
+		};
+		knowledge: { transcription?: string | null };
+	};
+	capabilities: ReadingNotePresentationCapabilities;
+	title?: ReactNode;
+}) {
+	const id = useId();
+	const { lemma } = note.reading;
+	return (
+		<header className="reading-note__header">
+			<div className="reading-note__title-row">
+				<h1
+					id={id}
+					data-reading-title=""
+					data-gender={
+						typeof lemma.coreFeatures.gender === "string"
+							? lemma.coreFeatures.gender
+							: undefined
+					}
+				>
+					<span className="reading-note__emoji">
+						{note.reading.emojiDescription}{" "}
+					</span>
+					{title ?? lemma.canonicalForm}
+				</h1>
+				{capabilities.knowledgeSettings.transcription &&
+				note.knowledge.transcription ? (
+					<span className="reading-note__ipa">
+						/{note.knowledge.transcription}/
+					</span>
+				) : null}
+			</div>
+		</header>
+	);
+}
+
+export function ReadingMetadata({
+	lemma,
+}: {
+	lemma: {
+		language: string;
+		family: string;
+		kind: string;
+		coreFeatures: Readonly<Record<string, unknown>>;
+	};
+}) {
+	return (
+		<footer className="reading-note__tags">
+			<span>{lemma.language}</span>
+			<span>{lemma.family}</span>
+			<span>{lemma.kind}</span>
+			{Object.entries(lemma.coreFeatures).flatMap(([name, value]) =>
+				value == null
+					? []
+					: [
+							<span key={name}>
+								{name}: {String(value)}
+							</span>,
+						],
+			)}
+		</footer>
+	);
+}

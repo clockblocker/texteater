@@ -206,56 +206,69 @@
 .card-sheet-workspace__sheet-handle {
 	position: absolute;
 	left: 0;
-	display: grid;
-	align-items: start;
-	justify-items: center;
 	width: 100%;
-	height: calc(var(--spacing) * 18);
-	padding-top: calc(var(--spacing) * 3);
+	height: 3.25rem;
 	border: 0;
 	border-radius: 0;
-	color: color-mix(in srgb, var(--workspace-ink-soft) 62%, transparent);
-	background: linear-gradient(
-		180deg,
-		color-mix(in srgb, var(--workspace-scrim) 94%, transparent) 0%,
-		color-mix(in srgb, var(--workspace-scrim) 82%, transparent) 18%,
-		color-mix(in srgb, var(--workspace-scrim) 60%, transparent) 38%,
-		color-mix(in srgb, var(--workspace-scrim) 34%, transparent) 59%,
-		color-mix(in srgb, var(--workspace-scrim) 13%, transparent) 78%,
-		transparent 100%
-	);
-	box-shadow: inset 0 1px rgb(255 255 255 / 9%);
+	padding: 0;
+	background: transparent;
 	cursor: grab;
 	pointer-events: auto;
 	touch-action: none;
 	user-select: none;
 }
-
-.card-sheet-workspace__sheet-handle svg {
-	width: calc(var(--spacing) * 5);
-	height: calc(var(--spacing) * 5);
-	filter: drop-shadow(0 0.2rem 0.5rem rgb(0 0 0 / 50%));
-}
-
 .card-sheet-workspace__sheet-handle[data-sheet-handle="top"] {
 	top: 0;
 }
-
 .card-sheet-workspace__sheet-handle[data-sheet-handle="bottom"] {
 	bottom: 0;
-	align-items: end;
-	padding-top: 0;
-	padding-bottom: calc(var(--spacing) * 3);
+}
+.card-sheet-workspace__edge-rule {
+	position: absolute;
+	top: 0;
+	inset-inline: 1.35rem;
+	height: 1px;
 	background: linear-gradient(
-		0deg,
-		color-mix(in srgb, var(--workspace-scrim) 94%, transparent) 0%,
-		color-mix(in srgb, var(--workspace-scrim) 82%, transparent) 18%,
-		color-mix(in srgb, var(--workspace-scrim) 60%, transparent) 38%,
-		color-mix(in srgb, var(--workspace-scrim) 34%, transparent) 59%,
-		color-mix(in srgb, var(--workspace-scrim) 13%, transparent) 78%,
-		transparent 100%
+		90deg,
+		transparent,
+		#435064 18%,
+		#435064 82%,
+		transparent
 	);
-	box-shadow: inset 0 -1px rgb(255 255 255 / 9%);
+}
+[data-sheet-handle="bottom"] .card-sheet-workspace__edge-rule {
+	top: auto;
+	bottom: 0;
+}
+.card-sheet-workspace__edge-rule i {
+	position: absolute;
+	top: -0.2rem;
+	left: 50%;
+	width: 0.42rem;
+	height: 0.42rem;
+	border: 1px solid #66748a;
+	background: #1c2128;
+	transform: translateX(-50%) rotate(45deg);
+}
+[data-sheet-handle="bottom"] .card-sheet-workspace__edge-rule i {
+	top: auto;
+	bottom: -0.2rem;
+}
+.card-sheet-workspace__sheet-handle:is(:hover, :focus-visible)
+	.card-sheet-workspace__edge-rule {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		#669ef3 28%,
+		#669ef3 72%,
+		transparent
+	);
+	box-shadow: 0 0 0.8rem rgb(102 158 243 / 18%);
+}
+.card-sheet-workspace__sheet-handle:is(:hover, :focus-visible)
+	.card-sheet-workspace__edge-rule
+	i {
+	border-color: #8eb4f0;
 }
 
 .card-sheet-workspace__sheet-handle:active {
@@ -570,24 +583,24 @@
 
 .card-sheet-workspace__drag-overlay > .card-sheet-workspace__sheet-move-card {
 	position: absolute;
-	top: calc(var(--spacing) * 2);
+	top: 1.15rem;
 	left: 50%;
-	width: min(calc(100% - 2rem), 38rem);
-	height: min(calc(100% - 1rem), 17rem);
-	translate: -50% 0;
+	width: min(25.775rem, calc(100vw - 3.125rem));
+	height: clamp(24.5625rem, calc(70svh - 4.4375rem), 34.5625rem);
+	translate: -50% -1.15rem;
+	padding-block: 1.5rem;
+	background: #1c2128;
+	border-radius: 0.7rem;
 	animation: workspace-sheet-become-card 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-
 .card-sheet-workspace__drag-overlay
 	> .card-sheet-workspace__sheet-move-card[data-sheet-drag-edge="bottom"] {
-	top: auto;
-	bottom: calc(var(--spacing) * 2);
+	translate: -50% calc(-100% + 1.15rem);
 }
-
 @keyframes workspace-sheet-become-card {
 	from {
-		width: 100%;
-		height: 100%;
+		width: min(80vw, 70rem);
+		opacity: 0.3;
 		border-radius: 0;
 	}
 }

@@ -68,7 +68,7 @@ test("keeps app navigation outside the Note composition while modeled defaults s
 	expect(renderReadingBlockPlan(context, plan)).toHaveLength(1);
 });
 
-test("renders the four visible defaults in weighted order with workspace commands", () => {
+test("renders populated defaults in weighted order with workspace commands", () => {
 	const base = readingNoteFixture({
 		canonicalForm: "Bank",
 		transcription: "baŋk",
@@ -78,7 +78,7 @@ test("renders the four visible defaults in weighted order with workspace command
 		...base,
 		knowledge: {
 			...base.knowledge,
-			definition: "This remains intentionally invisible.",
+			definition: "A financial institution.",
 			translations: { en: ["bank"], ru: ["банк"] },
 		},
 		relations: [
@@ -113,16 +113,17 @@ test("renders the four visible defaults in weighted order with workspace command
 	};
 	const markup = renderPublicReadingNote(note);
 
-	expect(markup.indexOf('id="reading-note-title"')).toBeLessThan(
-		markup.indexOf('id="source-contexts"'),
+	expect(markup.indexOf('data-reading-title=""')).toBeLessThan(
+		markup.indexOf('aria-label="Source Contexts"'),
 	);
-	expect(markup.indexOf('id="source-contexts"')).toBeLessThan(
+	expect(markup.indexOf('aria-label="Source Contexts"')).toBeLessThan(
 		markup.indexOf('aria-label="Semantic relations"'),
 	);
 	expect(markup.indexOf('aria-label="Semantic relations"')).toBeLessThan(
-		markup.indexOf('id="translations"'),
+		markup.indexOf('aria-label="Translations"'),
 	);
-	expect(markup).toContain("🏦 Bank");
+	expect(markup).toContain("🏦 ");
+	expect(markup).toContain("Bank</h1>");
 	expect(markup).toContain("/baŋk/");
 	expect(markup).toContain("gender: Fem");
 	expect(markup.match(/<button type="button"/g)).toHaveLength(3);
@@ -130,7 +131,7 @@ test("renders the four visible defaults in weighted order with workspace command
 	expect(markup).toContain("relation to Unit Shadow Sparkasse");
 	expect(markup).not.toContain("unresolved Reading");
 	expect(markup).toContain("en: bank");
-	expect(markup).not.toContain("This remains intentionally invisible.");
+	expect(markup).toContain("A financial institution.");
 });
 
 test("applies visitor Knowledge Settings in React without reshaping NoteData", () => {
@@ -270,7 +271,7 @@ test("renders the specialized German verb Header through the public Reading rend
 	expect(separable).toContain(
 		'auf<span class="text-muted-foreground">|</span>passen',
 	);
-	expect(separable).toContain(">auf</span>");
+	expect(separable).toContain("hasGovPrep: auf</span>");
 });
 
 test("German verb Header treats governed prepositions and separable prefixes independently", () => {
@@ -297,7 +298,7 @@ test("German verb Header treats governed prepositions and separable prefixes ind
 	expect(prepositionOnly).not.toContain(
 		'<span class="text-muted-foreground">|</span>',
 	);
-	expect(prepositionOnly).toContain(">auf</span>");
+	expect(prepositionOnly).toContain("hasGovPrep: auf</span>");
 });
 
 test("isolates an invoked renderer failure without hiding successful siblings", () => {
@@ -551,3 +552,36 @@ function sourceContext(attestationId: string, sentenceSnippet: string) {
 		},
 	};
 }
+
+test("Definition respects Knowledge Settings and block visibility in both presentations", () => {
+	const base = readingNoteFixture();
+	const note = {
+		...base,
+		knowledge: { ...base.knowledge, definition: "A saved definition." },
+	};
+	const defaults = createDefaultReadingNoteCapabilities(note);
+	for (const presentation of ["Card", "Sheet"] as const) {
+		const capabilities = { ...defaults, presentation };
+		const visible = renderPublicReadingNote(note, capabilities);
+		expect(visible).toContain(`data-note-presentation="${presentation}"`);
+		expect(visible).toContain("A saved definition.");
+		expect(
+			renderPublicReadingNote(note, {
+				...capabilities,
+				knowledgeSettings: {
+					...defaults.knowledgeSettings,
+					definition: false,
+				},
+			}),
+		).not.toContain("A saved definition.");
+		expect(
+			renderPublicReadingNote(note, {
+				...capabilities,
+				blockLayout: {
+					...defaults.blockLayout,
+					hidden: new Set(["Definition"]),
+				},
+			}),
+		).not.toContain("A saved definition.");
+	}
+});

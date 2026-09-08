@@ -1,39 +1,21 @@
 import type { ReactNode } from "react";
-
-import { Badge } from "@/components/ui/badge";
 import type { ReadingNoteBlockRenderer } from "../../../../../reading-note-render-context";
+import { ReadingHeader } from "../../../../../renderers/default/header-renderer";
 
 export const renderHeaderDeLexemeVerb = (({ note, capabilities }) => {
-	const { hasGovPrep, hasSepPrefix, lexicallyReflexive } =
+	const { hasSepPrefix, lexicallyReflexive } =
 		note.reading.lemma.coreFeatures;
 
 	return (
-		<section aria-labelledby="reading-note-title">
-			<div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-				<h1
-					id="reading-note-title"
-					className="flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl"
-				>
-					<span>{note.reading.emojiDescription}</span>
-					<span>
-						{verbCanonicalForm(
-							note.reading.lemma.canonicalForm,
-							lexicallyReflexive === "Yes",
-							hasSepPrefix,
-						)}
-					</span>
-				</h1>
-				{hasGovPrep ? (
-					<Badge variant="secondary">{hasGovPrep}</Badge>
-				) : null}
-				{capabilities.knowledgeSettings.transcription &&
-				note.knowledge.transcription ? (
-					<span className="text-lg text-muted-foreground">
-						/{note.knowledge.transcription}/
-					</span>
-				) : null}
-			</div>
-		</section>
+		<ReadingHeader
+			note={note}
+			capabilities={capabilities}
+			title={verbCanonicalForm(
+				note.reading.lemma.canonicalForm,
+				lexicallyReflexive === "Yes",
+				hasSepPrefix,
+			)}
+		/>
 	);
 }) satisfies ReadingNoteBlockRenderer<"de", "Lexeme", "VERB">;
 

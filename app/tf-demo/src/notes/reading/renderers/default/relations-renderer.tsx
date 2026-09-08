@@ -1,6 +1,6 @@
+import type { SemanticRelation } from "dumrel";
 import { LockIcon } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
 
 export const renderDefaultReadingRelations = (({ note, capabilities }) => {
@@ -22,10 +22,14 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 	}
 
 	return (
-		<div className="space-y-2">
+		<section
+			className="reading-note__section reading-note__relations"
+			aria-label="Relations"
+		>
+			<h2 className="reading-note__section-label">Relations</h2>
 			{relations.length > 0 || pendingRelations.length > 0 ? (
 				<ul
-					className="flex flex-wrap gap-2"
+					className="reading-note__relation-list"
 					aria-label="Semantic relations"
 				>
 					{relations.map((relation) => (
@@ -43,10 +47,12 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 								}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
-								<Badge variant="outline">
-									{relation.relation}:{" "}
+								<span>
+									<RelationMark
+										relation={relation.relation}
+									/>{" "}
 									{relation.targetCanonicalForm}
-								</Badge>
+								</span>
 							</button>
 						</li>
 					))}
@@ -57,19 +63,19 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 								onClick={() =>
 									capabilities.follow(relation.target)
 								}
+								aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
 								className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
-								<Badge
-									variant="outline"
-									aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
-								>
+								<span>
 									<LockIcon
 										data-icon="inline-start"
 										aria-hidden="true"
 									/>
-									{relation.relation}:{" "}
+									<RelationMark
+										relation={relation.relation}
+									/>{" "}
 									{relation.targetCanonicalForm}
-								</Badge>
+								</span>
 							</button>
 						</li>
 					))}
@@ -77,7 +83,7 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 			) : null}
 			{grammaticalRelations.length > 0 ? (
 				<ul
-					className="flex flex-wrap gap-2"
+					className="reading-note__relation-list"
 					aria-label="Grammatical relations"
 				>
 					{grammaticalRelations.map((relation) => (
@@ -91,15 +97,43 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 								}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
-								<Badge variant="secondary">
-									{relation.relation}:{" "}
+								<span>
+									<RelationMark
+										relation={relation.relation}
+									/>{" "}
 									{relation.targetCanonicalForm}
-								</Badge>
+								</span>
 							</button>
 						</li>
 					))}
 				</ul>
 			) : null}
-		</div>
+		</section>
 	);
 }) satisfies ReadingNoteDefaultRenderer;
+
+const RELATION_MARKS: Record<SemanticRelation, string> = {
+	synonym: "=",
+	nearSynonym: "≈",
+	antonym: "≠",
+	nearAntonym: "≉",
+	hypernym: "↑",
+	hyponym: "↓",
+	holonym: "⊂",
+	meronym: "⊃",
+};
+function RelationMark({ relation }: { relation: string }) {
+	const mark = Object.hasOwn(RELATION_MARKS, relation)
+		? RELATION_MARKS[relation as SemanticRelation]
+		: relation;
+	return (
+		<span
+			className="reading-note__relation-mark"
+			role="img"
+			aria-label={relation}
+			title={relation}
+		>
+			{mark}
+		</span>
+	);
+}

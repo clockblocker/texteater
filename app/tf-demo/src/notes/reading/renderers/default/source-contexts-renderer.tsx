@@ -14,14 +14,12 @@ export const renderDefaultReadingSourceContexts = (({ capabilities }) => {
 
 	return (
 		<section
-			className="flex flex-col gap-3"
-			aria-labelledby="source-contexts"
+			className="reading-note__section reading-note__contexts"
+			aria-label="Source Contexts"
 		>
-			<h2 id="source-contexts" className="text-sm font-medium">
-				Source Contexts
-			</h2>
+			<h2 className="reading-note__section-label">Source Contexts</h2>
 			{sourceContexts.items.length > 0 ? (
-				<ul className="grid gap-2">
+				<ul className="reading-note__context-list">
 					{sourceContexts.items.map((sourceContext) => (
 						<li key={sourceContext.attestationId}>
 							<button
@@ -29,11 +27,9 @@ export const renderDefaultReadingSourceContexts = (({ capabilities }) => {
 								onClick={() =>
 									capabilities.follow(sourceContext.target)
 								}
-								className="block w-full rounded-lg border bg-card px-4 py-3 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+								className="reading-note__context"
 							>
-								<p className="text-sm leading-relaxed">
-									{sourceContext.sentenceSnippet}
-								</p>
+								<span>{sourceContext.sentenceSnippet}</span>
 							</button>
 						</li>
 					))}

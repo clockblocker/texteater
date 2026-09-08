@@ -5,12 +5,7 @@ import {
 	useDraggable,
 	useDroppable,
 } from "@dnd-kit/react";
-import {
-	GripHorizontalIcon,
-	LockIcon,
-	LockOpenIcon,
-	XIcon,
-} from "lucide-react";
+import { LockIcon, LockOpenIcon, XIcon } from "lucide-react";
 import {
 	Fragment,
 	type ReactNode,
@@ -139,6 +134,15 @@ export function CardSheetWorkspace({
 								overlay.geometry.kind === "SheetMove" &&
 									"card-sheet-workspace__sheet-move-card",
 							)}
+							style={
+								overlay.geometry.kind === "SheetMove" &&
+								interaction.pickup
+									? {
+											left: interaction.pickup.x,
+											top: interaction.pickup.y,
+										}
+									: undefined
+							}
 							sheetDragEdge={
 								overlay.geometry.kind === "SheetMove"
 									? overlay.geometry.edge
@@ -603,7 +607,12 @@ function SheetHandle({
 			ref={dragRef}
 			type="button"
 		>
-			<GripHorizontalIcon />
+			<span
+				className="card-sheet-workspace__edge-rule"
+				aria-hidden="true"
+			>
+				<i />
+			</span>
 		</button>
 	);
 }
@@ -705,6 +714,19 @@ function LayerCardView({
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
 			...PASSIVE_WORKSPACE_INTERACTION,
+			follow: (target) => {
+				dispatch({
+					type: "Command",
+					command: {
+						type: "OpenSheet",
+						sheet: {
+							instanceId: createWorkspaceSheetId(),
+							subject: workspaceSubjectFor(target),
+						},
+						origin: { kind: "Placement", paneId: layer.paneId },
+					},
+				});
+			},
 			presentCards: (cards) => {
 				dispatch({
 					type: "OpenCardLayer",
@@ -746,7 +768,10 @@ function LayerCardView({
 				} as React.CSSProperties
 			}
 		>
-			<div className="card-sheet-workspace__card-content">
+			<div
+				className="card-sheet-workspace__card-content"
+				inert={!foremost}
+			>
 				<SubjectCard
 					interaction={interaction}
 					renderSubject={renderSubject}
@@ -773,12 +798,14 @@ function SubjectCard({
 	renderSubject,
 	className,
 	sheetDragEdge,
+	style,
 	interaction = PASSIVE_WORKSPACE_INTERACTION,
 }: {
 	readonly subject: WorkspaceSubject;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly className?: string;
 	readonly sheetDragEdge?: "top" | "bottom";
+	readonly style?: React.CSSProperties;
 	readonly interaction?: WorkspaceInteraction;
 }) {
 	return (
@@ -789,7 +816,8 @@ function SubjectCard({
 				data-subject-kind={subject.kind}
 				data-subject-presentation="Card"
 				data-sheet-drag-edge={sheetDragEdge}
-				inert
+				style={style}
+				inert={interaction === PASSIVE_WORKSPACE_INTERACTION}
 			>
 				{renderSubject(subject, "Card")}
 			</div>

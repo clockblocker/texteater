@@ -92,7 +92,7 @@ function ApplicationShell() {
 
 function renderApplicationSubject(
 	subject: WorkspaceSubject,
-	_presentation: WorkspacePresentation,
+	presentation: WorkspacePresentation,
 ) {
 	const { target } = subject;
 	switch (target.kind) {
@@ -105,7 +105,11 @@ function renderApplicationSubject(
 			);
 		case "UnitReadingNote":
 			return (
-				<UnitReadingNoteView key={target.readingId} target={target} />
+				<UnitReadingNoteView
+					key={target.readingId}
+					target={target}
+					presentation={presentation}
+				/>
 			);
 		case "RouteNote":
 			return (

@@ -116,6 +116,7 @@ type DropAnimationContext = {
 
 export type WorkspacePresentationInteraction = {
 	readonly projection: WorkspaceDragProjection;
+	readonly pickup: { readonly x: number; readonly y: number } | null;
 	readonly settlingSheetId: string | null;
 	readonly dragEvents: {
 		readonly onDragStart: (event: DragStartEvent) => void;
@@ -134,6 +135,7 @@ export function useWorkspacePresentationInteraction(
 	const [dragSession, setDragSession] = useState<WorkspaceDragSession | null>(
 		null,
 	);
+	const [pickup, setPickup] = useState<{ x: number; y: number } | null>(null);
 	const [settlingSheetId, setSettlingSheetId] = useState<string | null>(null);
 	const flightPlanRef = useRef<WorkspaceDropFlightPlan>(
 		RETURN_TO_SOURCE_PLAN,
@@ -194,6 +196,13 @@ export function useWorkspacePresentationInteraction(
 
 	const onDragStart = useCallback(({ operation }: DragStartEvent) => {
 		const source = normalizeDragSource(operation.source?.data);
+		const event = operation.activatorEvent;
+		const rect = operation.source?.element?.getBoundingClientRect();
+		setPickup(
+			source?.kind === "Sheet" && event instanceof PointerEvent && rect
+				? { x: event.clientX - rect.left, y: event.clientY - rect.top }
+				: null,
+		);
 		flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
 		landingRef.current = null;
 		setDragSession(source ? { source, target: null } : null);
@@ -268,6 +277,7 @@ export function useWorkspacePresentationInteraction(
 
 	return {
 		projection,
+		pickup,
 		settlingSheetId,
 		dragEvents: { onDragStart, onDragOver, onDragEnd },
 		dropAnimation,

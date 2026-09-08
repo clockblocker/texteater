@@ -285,7 +285,8 @@ test("the reusable interface renders actual Text and Note modules with presentat
 	);
 	expect(presentations).toEqual(["Sheet"]);
 	expect(markup).toContain('aria-label="Reading note"');
-	expect(markup).toContain("<span>🔒</span><span>schließen</span>");
+	expect(markup).toContain("🔒 ");
+	expect(markup).toContain("schließen</h1>");
 	expect(markup).toContain("to close");
 	expect(markup).not.toContain("sheet-workspace-fixture");
 	expect(markup).not.toContain("workspaceWidth");

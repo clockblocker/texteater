@@ -1,5 +1,5 @@
+import "./reading-note.css";
 import type { ReactElement } from "react";
-
 import type { TargetLanguage } from "../target-language";
 import { ReadingNoteBlockErrorBoundary, renderErrorBlock } from "./error-block";
 import type { ReadingBlockPlan } from "./reading-block-plan";
@@ -8,6 +8,7 @@ import type {
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
+import { ReadingMetadata } from "./renderers/default/header-renderer";
 
 export function renderReadingNoteComposition<
 	L extends TargetLanguage,
@@ -18,15 +19,21 @@ export function renderReadingNoteComposition<
 	plan: ReadingBlockPlan<L, F, K>,
 ): ReactElement {
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-				<article
-					className="flex flex-col gap-5"
-					aria-label="Reading note"
-				>
-					{renderReadingBlockPlan(context, plan)}
-				</article>
-			</div>
+		<div
+			className="reading-note"
+			data-note-presentation={
+				context.capabilities.presentation ?? "Sheet"
+			}
+		>
+			<article
+				className="reading-note__article"
+				aria-label="Reading note"
+			>
+				{renderReadingBlockPlan(context, plan)}
+				{plan.some(({ blockKind }) => blockKind === "Header") ? (
+					<ReadingMetadata lemma={context.note.reading.lemma} />
+				) : null}
+			</article>
 		</div>
 	);
 }
