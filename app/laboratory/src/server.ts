@@ -1,6 +1,14 @@
-import { AsyncLocalStorage } from "node:async_hooks";
+import {
+	type DumTraceEvent,
+	type DumTraceSink,
+	withTraceRecorder,
+} from "common-utils/workflow";
 import type { DumgenModelExchange, DumgenSection1Trace } from "dumgen";
 import { buildDumgen } from "dumgen";
+import { buildOpenAiFetchModelGenerator } from "dumgen/openai-fetch";
+import * as Cause from "effect/Cause";
+import * as Effect from "effect/Effect";
+import * as Runtime from "effect/Runtime";
 import { GermanClassificationResolver } from "./classification";
 import {
 	attemptedPromptPaths,
@@ -21,17 +29,46 @@ import type {
 	SegmentedSentence,
 } from "./shared/contract";
 
-const modelExchangeContext = new AsyncLocalStorage<DumgenModelExchange[]>();
-const section1TraceContext = new AsyncLocalStorage<DumgenSection1Trace[]>();
 function buildLaboratoryDumgen() {
 	return buildDumgen({
-		onModelExchange(exchange) {
-			modelExchangeContext.getStore()?.push(exchange);
-		},
-		onSection1Trace(trace) {
-			section1TraceContext.getStore()?.push(trace);
-		},
+		modelGenerator: buildOpenAiFetchModelGenerator({
+			apiKey: process.env.OPENAI_API_KEY,
+		}),
 	});
+}
+function recorder(
+	events: DumTraceEvent[],
+	exchanges: DumgenModelExchange[],
+	section1: DumgenSection1Trace[] = [],
+): DumTraceSink {
+	const artifacts = new Map<string, unknown>();
+	return {
+		record: (event) =>
+			Effect.sync(() => {
+				events.push(event);
+				if (event.event === "artifact") {
+					const artifact = event.payload as {
+						artifactId: string;
+						value: unknown;
+					};
+					artifacts.set(artifact.artifactId, artifact.value);
+					return;
+				}
+				const link = event.payload as
+					| { artifactId?: string }
+					| undefined;
+				const payload = link?.artifactId
+					? artifacts.get(link.artifactId)
+					: event.payload;
+				if (event.event === "model.exchange")
+					exchanges.push(payload as DumgenModelExchange);
+				if (event.event === "section1")
+					section1.push(payload as DumgenSection1Trace);
+			}),
+		diagnostic: (message, cause) => {
+			console.error(message, cause);
+		},
+	};
 }
 
 const generate = buildLaboratoryDumgen();
@@ -49,6 +86,8 @@ type ApplicationResult = {
 };
 
 function errorResult(error: unknown): ApplicationResult {
+	if (Runtime.isFiberFailure(error))
+		error = Cause.squash(error[Runtime.FiberFailureCauseId]);
 	const message =
 		error instanceof Error ? error.message : "Generation failed.";
 	const details = describeErrors(error).map(
@@ -56,8 +95,11 @@ function errorResult(error: unknown): ApplicationResult {
 	);
 	return {
 		status:
-			error instanceof LaboratorySegmentationError &&
-			error.section1Error.code === "InvalidInput"
+			(error instanceof LaboratorySegmentationError &&
+				error.section1Error.code === "InvalidInput") ||
+			(error instanceof Error &&
+				"code" in error &&
+				error.code === "invalid-input")
 				? 400
 				: 502,
 		body: { error: message, details },
@@ -130,6 +172,7 @@ const server = Bun.serve({
 				const trace: Partial<SegmentationResponse["stages"]> = {};
 				const promptNames: string[] = [];
 				const modelExchanges: DumgenModelExchange[] = [];
+				const traceEvents: DumTraceEvent[] = [];
 				const section1Traces: DumgenSection1Trace[] = [];
 				let applicationResult: ApplicationResult | null = null;
 				let errors: LoggedError[] = [];
@@ -153,18 +196,21 @@ const server = Bun.serve({
 						});
 					}
 
-					const body = await segmentForLaboratory(
-						generate,
-						input.text,
-						modelExchanges,
-						section1Traces,
-						(operation) =>
-							modelExchangeContext.run(modelExchanges, () =>
-								section1TraceContext.run(
-									section1Traces,
-									operation,
-								),
+					const body = await Effect.runPromise(
+						withTraceRecorder(
+							segmentForLaboratory(
+								generate,
+								input.text,
+								modelExchanges,
+								section1Traces,
 							),
+							recorder(
+								traceEvents,
+								modelExchanges,
+								section1Traces,
+							),
+						),
+						{ signal: request.signal },
 					);
 					promptNames.push(...body.generation.prompts);
 					Object.assign(trace, body.stages);
@@ -194,7 +240,7 @@ const server = Bun.serve({
 						sessionId,
 						operation: "segmentation-chain",
 						requestInput,
-						trace,
+						trace: { stages: trace, events: traceEvents },
 						promptNames: attemptedPromptPaths(modelExchanges),
 						modelExchanges,
 						applicationResult,
@@ -212,6 +258,7 @@ const server = Bun.serve({
 				let requestInput: unknown = null;
 				let result: ClickResolutionResponse | null = null;
 				const modelExchanges: DumgenModelExchange[] = [];
+				const traceEvents: DumTraceEvent[] = [];
 				const attemptedPrompts: string[] = [];
 				let applicationResult: ApplicationResult | null = null;
 				let errors: LoggedError[] = [];
@@ -278,15 +325,17 @@ const server = Bun.serve({
 							status: 400,
 						});
 					}
-					result = await modelExchangeContext.run(
-						modelExchanges,
-						() =>
+					result = await Effect.runPromise(
+						withTraceRecorder(
 							resolver.resolve(
 								sentence,
 								input.clickedSegmentIndex,
 								modelExchanges,
 								attemptedPrompts,
 							),
+							recorder(traceEvents, modelExchanges),
+						),
+						{ signal: request.signal },
 					);
 					if (sessionId !== currentSessionId) {
 						throw new Error(
@@ -307,7 +356,10 @@ const server = Bun.serve({
 						sessionId,
 						operation: "click-resolution",
 						requestInput,
-						trace: result?.stages ?? {},
+						trace: {
+							stages: result?.stages ?? {},
+							events: traceEvents,
+						},
 						promptNames:
 							result?.generation.prompts ??
 							(attemptedPrompts.length > 0

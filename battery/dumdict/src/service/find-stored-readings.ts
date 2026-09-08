@@ -1,18 +1,36 @@
+import { traceStage } from "common-utils/workflow";
 import type { SupportedLanguage } from "dumling/types";
+import * as Effect from "effect/Effect";
 import { lookupStoredReadings } from "../core/lookup";
 import type {
+	DumdictInvalidInput,
 	FindStoredReadingsRequest,
 	FindStoredReadingsResult,
 } from "../public";
-import { assertLanguageMatches } from "./language-guard";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export async function findStoredReadings<L extends SupportedLanguage>(
+export function findStoredReadings<L extends SupportedLanguage>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: FindStoredReadingsRequest<L>,
-): Promise<FindStoredReadingsResult<L>> {
-	assertLanguageMatches(options.language, request.lemma.language);
-	const slice = await options.storage.findStoredReadings(request);
-	options.sliceValidation.storedReadings(slice, request.lemma);
-	return lookupStoredReadings(slice);
+): Effect.Effect<
+	FindStoredReadingsResult<L>,
+	DumdictInvalidInput | import("../public").DumdictStorageFailure
+> {
+	if (request.lemma.language !== options.language)
+		return Effect.fail({
+			_tag: "DumdictInvalidInput",
+			expectedLanguage: options.language,
+			actualLanguage: request.lemma.language,
+			message: `Expected dumdict language ${options.language}, got ${request.lemma.language}`,
+		});
+	return traceStage(
+		"dumdict.findStoredReadings",
+		options.storage.findStoredReadings(request).pipe(
+			Effect.map((slice) => {
+				options.sliceValidation.storedReadings(slice, request.lemma);
+				return lookupStoredReadings(slice);
+			}),
+		),
+		request,
+	);
 }

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { createDumdictService, type DumdictStoragePort } from "dumdict";
 import { readingFingerprint } from "dumling";
+import * as Effect from "effect/Effect";
 import {
 	clearVisitorDataBatch,
 	resetDemoDataBatch,
@@ -225,52 +226,58 @@ describe("tf-demo post-reset contract", () => {
 			prefixedFahrenReading,
 		] as const) {
 			expect(
-				await dictionary.addNewNote({
-					draft: { reading, note: emptyNote },
-				}),
+				await Effect.runPromise(
+					dictionary.addNewNote({
+						draft: { reading, note: emptyNote },
+					}),
+				),
 			).toMatchObject({ status: "applied" });
 		}
 
 		expect(
-			await dictionary.addNewNote({
-				draft: {
-					reading: laufenReading,
-					note: emptyNote,
-					relations: [
-						{
-							relation: "hypernym",
-							target: { kind: "existing", lemma: gehenLemma },
-						},
-						{
-							target: {
-								kind: "pending",
-								pending: {
-									relation: "antonym",
-									target: {
-										language: "de",
-										canonicalForm: "fahren",
-										family: "Lexeme",
-										kind: "VERB",
+			await Effect.runPromise(
+				dictionary.addNewNote({
+					draft: {
+						reading: laufenReading,
+						note: emptyNote,
+						relations: [
+							{
+								relation: "hypernym",
+								target: { kind: "existing", lemma: gehenLemma },
+							},
+							{
+								target: {
+									kind: "pending",
+									pending: {
+										relation: "antonym",
+										target: {
+											language: "de",
+											canonicalForm: "fahren",
+											family: "Lexeme",
+											kind: "VERB",
+										},
 									},
 								},
 							},
-						},
-					],
-				},
-			}),
+						],
+					},
+				}),
+			),
 		).toMatchObject({ status: "applied" });
 		expect(
-			await dictionary.applyGeneratedKnowledge({
-				reading: laufenReading,
-				changes: [
-					{
-						kind: "Contribute",
-						aspect: "definition",
-						value: "sich laufend fortbewegen",
-					},
-				],
-				pendingRelations: [],
-			}),
+			await Effect.runPromise(
+				dictionary.applyGeneratedKnowledge({
+					reading: laufenReading,
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "definition",
+							value: "sich laufend fortbewegen",
+						},
+					],
+					pendingRelations: [],
+				}),
+			),
 		).toMatchObject({ status: "applied" });
 
 		const sourceReadingId = db

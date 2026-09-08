@@ -1,12 +1,57 @@
+import { AiSdkGenerationError } from "dumgen";
+import * as Cause from "effect/Cause";
+import * as Exit from "effect/Exit";
+import * as Option from "effect/Option";
+
+async function runTest<A, E>(effect: Effect.Effect<A, E>): Promise<A> {
+	const exit = await Effect.runPromiseExit(effect);
+	if (Exit.isSuccess(exit)) return exit.value;
+	const failure = Cause.failureOption(exit.cause);
+	throw Option.isSome(failure) ? failure.value : Cause.squash(exit.cause);
+}
+
+import { type DumTraceSink, withTraceRecorder } from "common-utils/workflow";
+import type { Dumgen } from "dumgen";
+import * as Effect from "effect/Effect";
+
+function observe(
+	dumgen: Dumgen,
+	record: (exchange: DumgenModelExchange) => void,
+): Dumgen {
+	const sink: DumTraceSink = {
+		record: (event) =>
+			Effect.sync(() => {
+				if (event.event === "model.exchange")
+					record(event.payload as DumgenModelExchange);
+			}),
+		diagnostic: () => {},
+		inlinePayloadBytes: 1000000,
+	};
+	return {
+		segment: (input) => withTraceRecorder(dumgen.segment(input), sink),
+		resolve: {
+			grammatical: (language, input) =>
+				withTraceRecorder(
+					dumgen.resolve.grammatical(language, input),
+					sink,
+				),
+			reading: (language, input) =>
+				withTraceRecorder(
+					dumgen.resolve.reading(language, input),
+					sink,
+				),
+		},
+	};
+}
+
 import { describe, expect, test } from "bun:test";
 import {
-	type AiSdk,
 	buildDumgen,
 	type DumgenModelExchange,
+	type ModelGenerator,
 	type SegmentedSentence,
 } from "dumgen";
 import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
-
 import { DUMGEN_GENERATION_MODEL } from "../../src/ai-sdk/model-policy";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "../../src/catalog/laboratory/de-authored-grammatical-resolution-prompts";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
@@ -17,12 +62,12 @@ import {
 	DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES,
 } from "../../src/schema/de-grammatical-resolution-inventory";
 
-type CatalogEntry = { readonly prompt: Prompt };
-
+type CatalogEntry = {
+	readonly prompt: Prompt;
+};
 function routeKey(route: { readonly family: string; readonly kind: string }) {
 	return `${route.family}/${route.kind}`;
 }
-
 function sentence(): SegmentedSentence<"de"> {
 	return {
 		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
@@ -34,7 +79,6 @@ function sentence(): SegmentedSentence<"de"> {
 		],
 	};
 }
-
 function singleSegmentSentence(text: string): SegmentedSentence<"de"> {
 	return {
 		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
@@ -42,20 +86,24 @@ function singleSegmentSentence(text: string): SegmentedSentence<"de"> {
 		segments: [{ text, kind: "ResolvableText" }],
 	};
 }
-
 function queueSdk(outputs: readonly unknown[]) {
 	const pending = [...outputs];
-	const sdk: AiSdk = {
-		async structuredGeneration() {
-			return pending.shift() as never;
+	const sdk: ModelGenerator = {
+		structuredGeneration() {
+			return Effect.sync(() => {
+				return pending.shift() as never;
+			});
 		},
-		async unstructuredGeneration() {
-			throw new Error("not used");
+		unstructuredGeneration() {
+			return Effect.gen(function* () {
+				return yield* Effect.fail(
+					new AiSdkGenerationError("provider-error", "not used"),
+				);
+			});
 		},
 	};
 	return { pending, sdk };
 }
-
 describe("German Grammatical Resolution inventory", () => {
 	test("partitions every Dumling German route into enabled or explicit NotImplemented", () => {
 		const dumlingRoutes = Object.entries(
@@ -66,7 +114,6 @@ describe("German Grammatical Resolution inventory", () => {
 		const enabled = DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES.map(routeKey);
 		const notImplemented =
 			DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES.map(routeKey);
-
 		expect(enabled).toHaveLength(21);
 		expect([...new Set([...enabled, ...notImplemented])].sort()).toEqual(
 			[...new Set(dumlingRoutes)].sort(),
@@ -78,7 +125,6 @@ describe("German Grammatical Resolution inventory", () => {
 			notImplemented.filter((key) => key.startsWith("Morpheme/")),
 		).toHaveLength(11);
 	});
-
 	test("catalogs every enabled route with its authored schema, generated prompt, and Luna policy", () => {
 		const catalog = PROMPT_CATALOG.laboratory.grammaticalResolution
 			.de as unknown as Record<string, Record<string, CatalogEntry>>;
@@ -87,7 +133,6 @@ describe("German Grammatical Resolution inventory", () => {
 				string,
 				Record<string, Prompt>
 			>;
-
 		for (const {
 			family,
 			kind,
@@ -102,7 +147,6 @@ describe("German Grammatical Resolution inventory", () => {
 				DUMGEN_GENERATION_MODEL,
 			);
 		}
-
 		expect(catalog.Lexeme?.PUNCT).toBeUndefined();
 		expect(catalog.Phraseme?.Collocation).toBeUndefined();
 		for (const family of Object.values(catalog)) {
@@ -119,7 +163,6 @@ describe("German Grammatical Resolution inventory", () => {
 			Object.keys(PROMPT_CATALOG.laboratory.readingResolution),
 		).toEqual(["de"]);
 	});
-
 	test("dispatches every target-reachable route uniformly through its exact catalog leaf", async () => {
 		const targetReachableRoutes =
 			DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES.filter(
@@ -135,7 +178,6 @@ describe("German Grammatical Resolution inventory", () => {
 			family: "Phraseme",
 			kind: "Collocation",
 		});
-
 		for (const route of targetReachableRoutes) {
 			const multipleMembers =
 				route.family === "Phraseme" ||
@@ -153,16 +195,19 @@ describe("German Grammatical Resolution inventory", () => {
 				grammarOutput,
 			]);
 			const exchanges: DumgenModelExchange[] = [];
-			const operation = buildDumgen({
-				sdk,
-				onModelExchange(exchange) {
-					exchanges.push(exchange);
-				},
-			}).resolve.grammatical("de", {
-				sentence: sentence(),
-				clickedSegmentIndex: 0,
-			});
-
+			const operation = runTest(
+				observe(
+					buildDumgen({
+						modelGenerator: sdk,
+					}),
+					(exchange) => {
+						exchanges.push(exchange);
+					},
+				).resolve.grammatical("de", {
+					sentence: sentence(),
+					clickedSegmentIndex: 0,
+				}),
+			);
 			await expect(operation).rejects.toMatchObject({
 				name: "DumgenError",
 				code: "invalid-output",
@@ -178,7 +223,6 @@ describe("German Grammatical Resolution inventory", () => {
 			]);
 		}
 	});
-
 	test("constructs a linked Attestation through a newly enabled Construction route", async () => {
 		const { pending, sdk } = queueSdk([
 			{
@@ -199,12 +243,14 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			},
 		]);
-
-		const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-			sentence: singleSegmentSentence("im"),
-			clickedSegmentIndex: 0,
-		});
-
+		const result = await runTest(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).resolve.grammatical("de", {
+				sentence: singleSegmentSentence("im"),
+				clickedSegmentIndex: 0,
+			}),
+		);
 		expect(result).toMatchObject({
 			decision: "Resolved",
 			language: "de",
@@ -228,7 +274,6 @@ describe("German Grammatical Resolution inventory", () => {
 		});
 		expect(pending).toHaveLength(0);
 	});
-
 	test("fixed-field codecs reconstruct route identity and linked canonical entities", () => {
 		const cconjPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme.CCONJ;
@@ -252,7 +297,6 @@ describe("German Grammatical Resolution inventory", () => {
 			},
 			cconjGenerated,
 		);
-
 		expect(cconj).toMatchObject({
 			memberOrthographies: ["Standard", "Standard"],
 			normalizedMembers: ["entweder", "oder"],
@@ -268,7 +312,6 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			},
 		});
-
 		const sconjPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme.SCONJ;
 		const sconj = sconjPrompt.projectOutput(
@@ -287,7 +330,6 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			}),
 		);
-
 		expect(sconj).toMatchObject({
 			memberOrthographies: ["Standard", "Standard"],
 			normalizedMembers: ["um", "zu"],
@@ -301,7 +343,6 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			},
 		});
-
 		const advPrompt = DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme.ADV;
 		const adv = advPrompt.projectOutput(
 			{
@@ -327,7 +368,6 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			}),
 		);
-
 		expect(adv).toMatchObject({
 			memberOrthographies: ["Standard", "Standard"],
 			normalizedMembers: ["einerseits", "andererseits"],
@@ -340,7 +380,6 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			},
 		});
-
 		const fusionPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Construction.Fusion;
 		const fusionGenerated = fusionPrompt.outputSchema.parse({
@@ -356,7 +395,6 @@ describe("German Grammatical Resolution inventory", () => {
 			{ markedContext: "<TARGET>im</TARGET>", members: ["im"] },
 			fusionGenerated,
 		);
-
 		expect(fusion).toMatchObject({
 			surface: {
 				language: "de",
@@ -369,7 +407,6 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			},
 		});
-
 		const proverbPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Phraseme.Proverb;
 		const proverbGenerated = proverbPrompt.outputSchema.parse({
@@ -397,7 +434,6 @@ describe("German Grammatical Resolution inventory", () => {
 			},
 			proverbGenerated,
 		);
-
 		expect(proverb).toMatchObject({
 			surface: {
 				language: "de",

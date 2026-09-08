@@ -1,52 +1,65 @@
+import { traceStage } from "common-utils/workflow";
 import type { SupportedLanguage } from "dumling/types";
+import * as Effect from "effect/Effect";
 import { sameLemma } from "../core/identity";
 import { planAddNewNote } from "../core/plan-mutation";
 import type {
 	AddNewNoteRequest,
-	DumdictMutationOptions,
+	DumdictInvalidInput,
+	DumdictPreparationFailure,
 	MutationResult,
+	PreparedMutation,
 } from "../public";
-import { applyPlan } from "./apply-plan";
-import { assertLanguageMatches } from "./language-guard";
+import { commitPrepared, prepared } from "./effect-mutation";
 import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export async function addNewNote<L extends SupportedLanguage>(
+export function prepareAddNewNote<L extends SupportedLanguage>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: AddNewNoteRequest<L>,
-	mutationOptions?: DumdictMutationOptions<L>,
-): Promise<MutationResult<L>> {
-	assertLanguageMatches(
-		options.language,
-		request.draft.reading.lemma.language,
-	);
-	for (const ownedSurface of request.draft.ownedSurfaces ?? []) {
-		assertLanguageMatches(options.language, ownedSurface.surface.language);
-		assertLanguageMatches(
-			options.language,
-			ownedSurface.surface.lemma.language,
-		);
+): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
+	const language = request.draft.reading.lemma.language;
+	if (language !== options.language)
+		return Effect.fail({
+			_tag: "DumdictInvalidInput",
+			expectedLanguage: options.language,
+			actualLanguage: language,
+			message: "Draft Reading language does not match the dictionary.",
+		} satisfies DumdictInvalidInput);
+	for (const owned of request.draft.ownedSurfaces ?? []) {
 		if (
-			!sameLemma(ownedSurface.surface.lemma, request.draft.reading.lemma)
-		) {
-			return {
-				status: "rejected",
-				code: "invalidDraft",
+			owned.surface.language !== options.language ||
+			owned.surface.lemma.language !== options.language ||
+			!sameLemma(owned.surface.lemma, request.draft.reading.lemma)
+		)
+			return Effect.fail({
+				_tag: "DumdictInvalidInput",
 				message:
-					"Owned Surfaces must belong to the draft Reading's Lemma.",
-			};
-		}
+					"Owned Surfaces must belong to the draft Reading's Lemma and dictionary language.",
+			} satisfies DumdictInvalidInput);
 	}
-
-	const slice = await loadReadingEntryContext(options, {
-		intent: "addNewNote",
+	return traceStage(
+		"dumdict.prepareAddNewNote",
+		loadReadingEntryContext(options, {
+			intent: "addNewNote",
+			request,
+		}).pipe(
+			Effect.flatMap((slice) =>
+				prepared(options, planAddNewNote(slice, request)),
+			),
+		),
 		request,
-	});
+	);
+}
 
-	const plan = planAddNewNote(slice, request);
-	if (plan.status === "rejected") {
-		return plan;
-	}
-
-	return applyPlan(options, plan, mutationOptions);
+export function addNewNote<L extends SupportedLanguage>(
+	options: DumdictServiceRuntimeOptions<L>,
+	request: AddNewNoteRequest<L>,
+): Effect.Effect<
+	MutationResult<L>,
+	DumdictPreparationFailure | import("../public").DumdictCommitFailure
+> {
+	return prepareAddNewNote(options, request).pipe(
+		Effect.flatMap((value) => commitPrepared(options, value)),
+	);
 }

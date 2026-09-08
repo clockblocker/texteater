@@ -14,7 +14,12 @@
 			"import": "./dist/index.js",
 			"default": "./dist/index.js"
 		},
-		"./package.json": "./package.json"
+		"./package.json": "./package.json",
+		"./workflow": {
+			"types": "./dist/workflow.d.ts",
+			"import": "./dist/workflow.js",
+			"default": "./dist/workflow.js"
+		}
 	},
 	"files": [
 		"dist",
@@ -30,7 +35,7 @@
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types && bun run build:contract",
 		"build:contract": "bun run tests/published-build-contract.ts",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/workflow.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
@@ -50,5 +55,8 @@
 		"knip": "^6.29.0",
 		"typescript": "^7.0.2",
 		"zod": "^4.4.0"
+	},
+	"dependencies": {
+		"effect": "3.22.1"
 	}
 }

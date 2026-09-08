@@ -1,4 +1,6 @@
-import type { AiSdk } from "../ai-sdk/ai-sdk";
+import { recordTrace, traceStage } from "common-utils/workflow";
+import * as Effect from "effect/Effect";
+import type { ModelGenerator } from "../ai-sdk/ai-sdk";
 import { AiSdkGenerationError } from "../ai-sdk/ai-sdk-generation-error";
 import type {
 	Prompt,
@@ -16,16 +18,13 @@ type AnyPrompt = Prompt<
 	unknown,
 	PromptSchema
 >;
-
 type ModelExchangeAttempt = {
 	readonly promptPath: string;
 	readonly modelInput: unknown;
 };
-
 type ModelExchangeResult = ModelExchangeAttempt & {
 	readonly modelOutput: unknown;
 };
-
 export type ModelExchange =
 	| (ModelExchangeAttempt & { readonly phase: "attempted" })
 	| (ModelExchangeResult & { readonly phase: "received" })
@@ -42,12 +41,6 @@ export type ModelExchange =
 				readonly message: string;
 			};
 	  });
-
-export type GeneratorCatalogOptions = {
-	readonly onModelExchange?: (exchange: ModelExchange) => void;
-	readonly onDiagnostic?: (diagnostic: unknown) => void;
-};
-
 type ResultOf<Definition extends AnyPrompt> = Definition extends {
 	readonly projectOutput: (...args: never[]) => infer Result;
 }
@@ -55,11 +48,9 @@ type ResultOf<Definition extends AnyPrompt> = Definition extends {
 	: Definition["outputSchema"] extends PromptSchema
 		? PromptSchemaOutput<Definition["outputSchema"]>
 		: string;
-
 type GeneratorFor<Definition extends AnyPrompt> = (
 	input: PromptSchemaInput<Definition["inputSchema"]>,
-) => Promise<ResultOf<Definition>>;
-
+) => Effect.Effect<ResultOf<Definition>, DumgenError>;
 export type GeneratorCatalog<Catalog> =
 	Catalog extends PromptCatalogEntry<infer Definition>
 		? GeneratorFor<Definition>
@@ -73,37 +64,30 @@ export type GeneratorCatalog<Catalog> =
 
 export function buildGeneratorCatalog<const Catalog extends PromptTree>(
 	catalog: Catalog,
-	sdk: AiSdk,
-	options: GeneratorCatalogOptions = {},
+	modelGenerator: ModelGenerator,
 ): GeneratorCatalog<Catalog> {
 	return transformNode(
 		catalog,
-		sdk,
-		options,
+		modelGenerator,
 		[],
 	) as GeneratorCatalog<Catalog>;
 }
-
 function transformNode(
 	node: PromptTree | PromptCatalogEntry<AnyPrompt>,
-	sdk: AiSdk,
-	options: GeneratorCatalogOptions,
+	modelGenerator: ModelGenerator,
 	path: readonly string[],
 ): unknown {
-	if (isPromptCatalogEntry(node)) {
-		return makeGenerator(node.prompt, sdk, options, path);
-	}
-
+	if (isPromptCatalogEntry(node))
+		return makeGenerator(node.prompt, modelGenerator, path);
 	return Object.freeze(
 		Object.fromEntries(
 			Object.entries(node).map(([key, child]) => [
 				key,
-				transformNode(child, sdk, options, [...path, key]),
+				transformNode(child, modelGenerator, [...path, key]),
 			]),
 		),
 	);
 }
-
 function isPromptCatalogEntry(
 	value: PromptTree | PromptCatalogEntry<AnyPrompt>,
 ): value is PromptCatalogEntry<AnyPrompt> {
@@ -111,7 +95,6 @@ function isPromptCatalogEntry(
 		readonly meta?: { readonly kind?: unknown };
 		readonly prompt?: unknown;
 	};
-
 	return (
 		candidate.meta?.kind === "prompt" &&
 		typeof candidate.prompt === "object" &&
@@ -121,274 +104,262 @@ function isPromptCatalogEntry(
 
 function makeGenerator<Definition extends AnyPrompt>(
 	prompt: Definition,
-	sdk: AiSdk,
-	options: GeneratorCatalogOptions,
+	modelGenerator: ModelGenerator,
 	path: readonly string[],
 ): GeneratorFor<Definition> {
-	const projectionContext = Object.freeze({
-		reportDiagnostic(diagnostic: unknown): void {
-			try {
-				options.onDiagnostic?.(structuredClone(diagnostic));
-			} catch {
-				// Diagnostics cannot affect generation.
-			}
-		},
-	});
-	return (async (rawInput: PromptSchemaInput<Definition["inputSchema"]>) => {
-		let parsedInput: PromptSchemaOutput<Definition["inputSchema"]>;
-		try {
-			parsedInput = prompt.inputSchema.parse(
-				rawInput,
-			) as PromptSchemaOutput<Definition["inputSchema"]>;
-		} catch (cause) {
-			throw new DumgenError(
+	const promptPath = path.join(".");
+	return (rawInput) => {
+		const diagnostics: unknown[] = [];
+		const projectionContext = Object.freeze({
+			reportDiagnostic(diagnostic: unknown): void {
+				diagnostics.push(diagnostic);
+			},
+		});
+		return traceStage(
+			"model.generation",
+			Effect.gen(function* () {
+				const parsedInput = yield* parseInput(prompt, rawInput);
+				const modelInput = yield* projectModelInput(
+					prompt,
+					parsedInput,
+				);
+				const modelOutputSchema = yield* selectModelOutputSchema(
+					prompt,
+					parsedInput,
+				);
+				const serializedInput = serializeInput(modelInput);
+				const params = {
+					...prompt.generationParams,
+					systemPrompt: prompt.systemPrompt,
+				};
+				yield* modelExchange({
+					phase: "attempted",
+					promptPath,
+					modelInput,
+				});
+				const generated = yield* (
+					modelOutputSchema === null
+						? modelGenerator.unstructuredGeneration(
+								serializedInput,
+								params,
+							)
+						: modelGenerator.structuredGeneration(
+								serializedInput,
+								modelOutputSchema,
+								params,
+							)
+				).pipe(
+					Effect.mapError(
+						(cause) =>
+							new DumgenError(
+								cause instanceof AiSdkGenerationError
+									? cause.reason
+									: "provider-error",
+								"The language-model provider could not complete the generation.",
+								{
+									cause,
+									...(cause instanceof AiSdkGenerationError
+										? { generationFailure: cause.failure }
+										: {}),
+								},
+							),
+					),
+				);
+				yield* modelExchange({
+					phase: "received",
+					promptPath,
+					modelInput,
+					modelOutput: generated,
+				});
+				return yield* validateOutput(
+					prompt,
+					parsedInput,
+					modelOutputSchema,
+					generated,
+					projectionContext,
+					modelInput,
+					promptPath,
+				);
+			}).pipe(
+				Effect.ensuring(
+					Effect.suspend(() =>
+						Effect.forEach(
+							diagnostics,
+							(diagnostic) =>
+								recordTrace("model.diagnostic", {
+									promptPath,
+									diagnostic,
+								}),
+							{ discard: true },
+						),
+					),
+				),
+			),
+			rawInput,
+		);
+	};
+
+	function modelExchange(exchange: ModelExchange): Effect.Effect<void> {
+		const normalized = normalizeExchange(exchange);
+		return recordTrace("model.exchange", normalized);
+	}
+}
+function parseInput<Definition extends AnyPrompt>(
+	prompt: Definition,
+	rawInput: PromptSchemaInput<Definition["inputSchema"]>,
+) {
+	return Effect.try({
+		try: () =>
+			prompt.inputSchema.parse(rawInput) as PromptSchemaOutput<
+				Definition["inputSchema"]
+			>,
+		catch: (cause) =>
+			new DumgenError(
 				"invalid-input",
 				"The generator input does not match its prompt schema.",
 				{ cause },
-			);
-		}
-
-		let modelInput: unknown;
-		try {
-			const projectedInput =
-				prompt.projectInput?.(parsedInput) ?? parsedInput;
-			modelInput = (prompt.modelInputSchema ?? prompt.inputSchema).parse(
-				projectedInput,
-			);
-		} catch (cause) {
-			throw new DumgenError(
+			),
+	});
+}
+function projectModelInput<Definition extends AnyPrompt>(
+	prompt: Definition,
+	parsedInput: PromptSchemaOutput<Definition["inputSchema"]>,
+) {
+	return Effect.try({
+		try: () =>
+			(prompt.modelInputSchema ?? prompt.inputSchema).parse(
+				prompt.projectInput?.(parsedInput) ?? parsedInput,
+			),
+		catch: (cause) =>
+			new DumgenError(
 				"invalid-input",
 				"The projected model input does not match its prompt schema.",
 				{ cause },
-			);
-		}
-		const serializedInput = serializeInput(modelInput);
-		const params = {
-			...prompt.generationParams,
-			systemPrompt: prompt.systemPrompt,
-		};
-		let modelOutputSchema: PromptSchema | null;
-		try {
-			modelOutputSchema =
-				prompt.outputSchema === null
-					? null
-					: (prompt.modelOutputSchemaFor?.(parsedInput) ??
-						prompt.outputSchema);
-		} catch (cause) {
-			throw new DumgenError(
+			),
+	});
+}
+function selectModelOutputSchema<Definition extends AnyPrompt>(
+	prompt: Definition,
+	parsedInput: PromptSchemaOutput<Definition["inputSchema"]>,
+) {
+	return Effect.try({
+		try: () =>
+			prompt.outputSchema === null
+				? null
+				: (prompt.modelOutputSchemaFor?.(parsedInput) ??
+					prompt.outputSchema),
+		catch: (cause) =>
+			new DumgenError(
 				"invalid-input",
 				"The generator input cannot produce a valid model output schema.",
 				{ cause },
-			);
-		}
-		notifyModelExchange(options, {
-			phase: "attempted",
-			promptPath: path.join("."),
-			modelInput,
-		});
-
-		let generated: unknown;
-		try {
-			generated =
-				modelOutputSchema === null
-					? await sdk.unstructuredGeneration(serializedInput, params)
-					: await sdk.structuredGeneration(
-							serializedInput,
-							modelOutputSchema,
-							params,
-						);
-		} catch (cause) {
-			throw new DumgenError(
-				cause instanceof AiSdkGenerationError
-					? cause.reason
-					: "provider-error",
-				"The language-model provider could not complete the generation.",
-				{
-					cause,
-					...(cause instanceof AiSdkGenerationError
-						? { generationFailure: cause.failure }
-						: {}),
-				},
-			);
-		}
-		notifyModelExchange(options, {
-			phase: "received",
-			promptPath: path.join("."),
-			modelInput,
-			modelOutput: generated,
-		});
-
-		if (modelOutputSchema === null || prompt.outputSchema === null) {
-			try {
-				const result = prompt.projectOutput
-					? prompt.projectOutput(
-							parsedInput,
-							generated as string,
-							projectionContext,
-						)
-					: generated;
-				notifyModelExchange(options, {
-					phase: "accepted",
-					promptPath: path.join("."),
-					modelInput,
-					modelOutput: generated,
-					validatedModelOutput: generated,
-					result,
-				});
-				return result;
-			} catch (cause) {
-				notifyRejectedModelExchange(
-					options,
-					path,
-					modelInput,
-					generated,
-					generated,
-					cause,
-				);
-				throw new DumgenError(
-					"invalid-output",
-					"The generated output does not match its prompt schema.",
-					{ cause },
-				);
-			}
-		}
-
-		let parsedOutput: unknown;
-		try {
-			modelOutputSchema.parse(generated);
-			parsedOutput = prompt.outputSchema.parse(generated);
-			prompt.outputPostcondition?.assert(parsedInput, parsedOutput);
+			),
+	});
+}
+function validateOutput<Definition extends AnyPrompt>(
+	prompt: Definition,
+	parsedInput: PromptSchemaOutput<Definition["inputSchema"]>,
+	modelOutputSchema: PromptSchema | null,
+	generated: unknown,
+	projectionContext: {
+		readonly reportDiagnostic: (diagnostic: unknown) => void;
+	},
+	modelInput: unknown,
+	promptPath: string,
+): Effect.Effect<ResultOf<Definition>, DumgenError> {
+	return Effect.try({
+		try: () => {
+			const parsedOutput =
+				modelOutputSchema === null || prompt.outputSchema === null
+					? generated
+					: (() => {
+							modelOutputSchema.parse(generated);
+							const parsed = prompt.outputSchema.parse(generated);
+							prompt.outputPostcondition?.assert(
+								parsedInput,
+								parsed,
+							);
+							return parsed;
+						})();
 			const result = prompt.projectOutput
 				? prompt.projectOutput(
 						parsedInput,
-						parsedOutput,
+						parsedOutput as never,
 						projectionContext,
 					)
 				: parsedOutput;
-			notifyModelExchange(options, {
-				phase: "accepted",
-				promptPath: path.join("."),
-				modelInput,
-				modelOutput: generated,
-				validatedModelOutput: parsedOutput,
-				result,
-			});
-			return result;
-		} catch (cause) {
-			notifyRejectedModelExchange(
-				options,
-				path,
-				modelInput,
-				generated,
-				parsedOutput,
-				cause,
-			);
-			throw new DumgenError(
+			return { parsedOutput, result: result as ResultOf<Definition> };
+		},
+		catch: (cause) =>
+			new DumgenError(
 				"invalid-output",
 				"The generated output does not match its prompt schema.",
 				{ cause },
-			);
-		}
-	}) as GeneratorFor<Definition>;
+			),
+	}).pipe(
+		Effect.tap(({ parsedOutput, result }) =>
+			recordTrace(
+				"model.exchange",
+				normalizeExchange({
+					phase: "accepted",
+					promptPath,
+					modelInput,
+					modelOutput: generated,
+					validatedModelOutput: parsedOutput,
+					result,
+				}),
+			),
+		),
+		Effect.map(({ result }) => result),
+	);
 }
-
-function notifyRejectedModelExchange(
-	options: GeneratorCatalogOptions,
-	path: readonly string[],
-	modelInput: unknown,
-	modelOutput: unknown,
-	validatedModelOutput: unknown,
-	cause: unknown,
-): void {
-	notifyModelExchange(options, {
-		phase: "rejected",
-		promptPath: path.join("."),
-		modelInput,
-		modelOutput,
-		...(validatedModelOutput === undefined
-			? undefined
-			: { validatedModelOutput }),
-		validationError: describeError(cause),
-	});
-}
-
-function notifyModelExchange(
-	options: GeneratorCatalogOptions,
-	exchange: ModelExchange,
-): void {
-	try {
-		options.onModelExchange?.({
-			...exchange,
-			modelInput: normalizeForSerialization(exchange.modelInput),
-			...(exchange.phase === "attempted"
-				? undefined
-				: {
-						modelOutput: normalizeForSerialization(
-							exchange.modelOutput,
+function normalizeExchange(exchange: ModelExchange): ModelExchange {
+	return {
+		...exchange,
+		modelInput: normalizeForSerialization(exchange.modelInput),
+		...(exchange.phase === "attempted"
+			? {}
+			: { modelOutput: normalizeForSerialization(exchange.modelOutput) }),
+		...(exchange.phase === "accepted"
+			? {
+					validatedModelOutput: normalizeForSerialization(
+						exchange.validatedModelOutput,
+					),
+					result: normalizeForSerialization(exchange.result),
+				}
+			: exchange.phase === "rejected" &&
+					exchange.validatedModelOutput !== undefined
+				? {
+						validatedModelOutput: normalizeForSerialization(
+							exchange.validatedModelOutput,
 						),
-					}),
-			...(exchange.phase === "attempted" || exchange.phase === "received"
-				? undefined
-				: exchange.phase === "accepted"
-					? {
-							validatedModelOutput: normalizeForSerialization(
-								exchange.validatedModelOutput,
-							),
-							result: normalizeForSerialization(exchange.result),
-						}
-					: exchange.validatedModelOutput === undefined
-						? undefined
-						: {
-								validatedModelOutput: normalizeForSerialization(
-									exchange.validatedModelOutput,
-								),
-							}),
-		});
-	} catch {
-		// Instrumentation must never change generation behavior or mask its error.
-	}
+					}
+				: {}),
+	} as ModelExchange;
 }
-
-function describeError(cause: unknown): { name: string; message: string } {
-	if (cause instanceof Error) {
-		return { name: cause.name, message: cause.message };
-	}
-	return { name: "Error", message: String(cause) };
-}
-
 function serializeInput(value: unknown): string {
 	return JSON.stringify(normalizeForSerialization(value));
 }
-
 function normalizeForSerialization(value: unknown): unknown {
 	if (value === undefined) return { __dumgenUndefined: true };
-	if (value === null) return null;
-
 	if (
+		value === null ||
 		typeof value === "string" ||
 		typeof value === "number" ||
 		typeof value === "boolean"
-	) {
+	)
 		return value;
-	}
-
 	if (typeof value === "bigint") return value.toString();
 	if (value instanceof Date) return value.toISOString();
-
-	if (Array.isArray(value)) {
-		return value.map(normalizeForSerialization);
-	}
-
-	if (typeof value === "object") {
+	if (Array.isArray(value)) return value.map(normalizeForSerialization);
+	if (typeof value === "object")
 		return Object.fromEntries(
 			Object.entries(value)
 				.sort(([left], [right]) => left.localeCompare(right))
-				.map(([key, nestedValue]) => [
+				.map(([key, nested]) => [
 					key,
-					normalizeForSerialization(nestedValue),
+					normalizeForSerialization(nested),
 				]),
 		);
-	}
-
 	return String(value);
 }

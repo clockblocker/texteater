@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import {
 	projectSemanticRelations,
 	type Reading,
@@ -33,15 +34,19 @@ function swimNote(reading: Reading<"en">): SerializedDictionaryNote<"en"> {
 async function cleanupFirstPending(
 	dict: ReturnType<typeof getBootedUpDumdict<"en">>["dict"],
 ) {
-	const info = await dict.getInfoForRelationsCleanup({
-		canonicalForm: "swim",
-	});
+	const info = await Effect.runPromise(
+		dict.getInfoForRelationsCleanup({
+			canonicalForm: "swim",
+		}),
+	);
 	const locator = info.pendingRelations[0]?.locator;
 	if (!locator) throw new Error("Expected pending relation.");
-	return dict.cleanupRelations({
-		baseRevision: info.revision,
-		resolutions: [{ locator }],
-	});
+	return Effect.runPromise(
+		dict.cleanupRelations({
+			baseRevision: info.revision,
+			resolutions: [{ locator }],
+		}),
+	);
 }
 
 describe("relations cleanup", () => {
@@ -152,9 +157,10 @@ describe("relations cleanup", () => {
 			...englishSwimDraft,
 			reading: { ...englishSwimReading, emojiDescription: "🌊" },
 		};
-		expect((await dict.addNewNote({ draft: sibling })).status).toBe(
-			"applied",
-		);
+		expect(
+			(await Effect.runPromise(dict.addNewNote({ draft: sibling })))
+				.status,
+		).toBe("applied");
 		const notes = storage.loadAll();
 		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
 		expect(

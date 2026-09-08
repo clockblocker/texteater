@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
 	allFixedLemmaCatalogs,
+	allFixedReadingCatalogs,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
@@ -662,4 +663,18 @@ describe("fixed German Knowledge", () => {
 			),
 		).toThrow("A relation target must use the Lexeme Family");
 	});
+});
+
+test("all authored fixed Knowledge satisfies canonical and same-family validation", () => {
+	for (const catalog of allFixedReadingCatalogs())
+		for (const reading of catalog.members) {
+			const found = fixedKnowledgeFor(reading);
+			if (found.decision !== "Found") continue;
+			expect(parseAsReadingKnowledge(found.knowledge)).not.toBeInstanceOf(
+				ParsingError,
+			);
+			expect(
+				validateAuthoredFixedKnowledge(reading, found.knowledge),
+			).toBe(found.knowledge);
+		}
 });

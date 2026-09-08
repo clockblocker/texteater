@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import type {
-	Dumgen,
 	GrammaticalInput,
 	GrammaticalResult,
 	KnowledgeGenerationInput,
@@ -11,6 +10,7 @@ import type {
 	SegmentedSentence,
 	SegmentedSentenceId,
 } from "dumgen";
+import type { KnowledgeDumgen } from "dumgen/knowledge-runtime";
 import {
 	grammaticalInputSchema,
 	grammaticalInteractionSchema,
@@ -78,7 +78,7 @@ type _RequestableRelationComesFromSchema = Expect<
 type _EnglishKnowledgeInputIsRejected = KnowledgeGenerationInput<"en">;
 
 function assertKnowledgeLanguageIsTyped(
-	dumgen: Dumgen,
+	dumgen: KnowledgeDumgen,
 	input: KnowledgeGenerationInput<"de">,
 ) {
 	void dumgen.generate.knowledge("de", input);

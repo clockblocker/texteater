@@ -6,6 +6,7 @@ import type { ReadingKnowledgeCatalogMiss } from "dumgen";
 import type { KnowledgeDumgen } from "dumgen/knowledge-runtime";
 import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
 import type { Reading } from "dumling/types";
+import * as Effect from "effect/Effect";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
 import {
@@ -68,11 +69,15 @@ function getKnowledgeDumgen(): Promise<KnowledgeDumgen> {
 	dumgenPromise ??= Promise.all([
 		import("dumgen/knowledge-runtime"),
 		import("dumgen/openai-fetch"),
-	]).then(([{ buildKnowledgeDumgenRuntime }, { buildOpenAiFetchSdk }]) =>
-		buildKnowledgeDumgenRuntime({
-			runtimePromptData: encodedRuntimePromptData,
-			sdk: buildOpenAiFetchSdk(),
-		}),
+	]).then(
+		([
+			{ buildKnowledgeDumgenRuntime },
+			{ buildOpenAiFetchModelGenerator },
+		]) =>
+			buildKnowledgeDumgenRuntime({
+				runtimePromptData: encodedRuntimePromptData,
+				modelGenerator: buildOpenAiFetchModelGenerator(),
+			}),
 	);
 	return dumgenPromise;
 }
@@ -129,13 +134,19 @@ export const runKnowledgeGeneration = internalAction({
 				artifactPath: authorization.artifactPath,
 				fingerprints: authorization.fingerprints,
 			};
-			const generated = await (
-				await getKnowledgeDumgen()
-			).generate.knowledge("de", {
-				markedContext: input.markedContext,
-				reading,
-				request,
-			});
+			const generated = await Effect.runPromise(
+				(await getKnowledgeDumgen()).generate
+					.knowledge("de", {
+						markedContext: input.markedContext,
+						reading,
+						request,
+					})
+					.pipe(
+						Effect.catchTag("DumgenDomainFailure", ({ result }) =>
+							Effect.succeed(result),
+						),
+					),
+			);
 			if ("decision" in generated) {
 				generationCompleted = true;
 				await ctx.runMutation(recordKnowledgeCatalogMiss, {

@@ -5,6 +5,7 @@ import {
 	type IntakeBatch,
 } from "../intake/contracts";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/production/generated-system-prompt/intake";
+import { systemPrompt as readingGenerationSystemPrompt } from "../promptsmith/production/generated-system-prompt/reading-generation/de";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/production/generated-system-prompt/reading-resolution/de";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import {
@@ -18,6 +19,10 @@ import {
 	modelInputSchema as targetModelInputSchema,
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
+import {
+	inputSchema as readingGenerationInputSchema,
+	outputSchema as readingGenerationOutputSchema,
+} from "../promptsmith/production/reading-generation/de/schemas";
 import {
 	inputSchema as readingModelInputSchema,
 	outputSchema as readingOutputSchema,
@@ -97,6 +102,16 @@ const readingPrompt = {
 	ReadingResolution
 >;
 
+const readingGenerationPrompt = {
+	systemPrompt: readingGenerationSystemPrompt,
+	inputSchema: readingGenerationInputSchema,
+	outputSchema: readingGenerationOutputSchema,
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 192 },
+} satisfies Prompt<
+	typeof readingGenerationInputSchema,
+	typeof readingGenerationOutputSchema
+>;
+
 function promptEntry<Definition extends Prompt>(
 	prompt: Definition,
 ): PromptCatalogEntry<Definition> {
@@ -137,6 +152,9 @@ export type LaboratoryPromptCatalog = {
 		readonly grammaticalResolution: {
 			readonly de: typeof grammaticalResolutionCatalog;
 		};
+		readonly readingGeneration: {
+			readonly de: PromptCatalogEntry<typeof readingGenerationPrompt>;
+		};
 		readonly readingResolution: {
 			readonly de: PromptCatalogEntry<typeof readingPrompt>;
 		};
@@ -151,5 +169,6 @@ export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 		},
 		grammaticalResolution: { de: grammaticalResolutionCatalog },
 		readingResolution: { de: promptEntry(readingPrompt) },
+		readingGeneration: { de: promptEntry(readingGenerationPrompt) },
 	},
 };

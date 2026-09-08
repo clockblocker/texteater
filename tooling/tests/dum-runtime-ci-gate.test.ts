@@ -471,6 +471,40 @@ describe("operational RSS CI contract", () => {
 		).toBe(false);
 	});
 
+	test("Effect workflows report RSS without weakening heavyweight or schema isolation", () => {
+		const policy = RSS_ENTRYPOINT_POLICIES.dumgen;
+		expect(policy.status).toBe("effect-workflow");
+
+		const measuredWorkflow = {
+			importOnlyDeltaBytes: 32 * 1024 * 1024,
+			importPlusOperationDeltaBytes: 32 * 1024 * 1024,
+		};
+		expect(
+			evaluateEntrypointRss(policy, {
+				...measuredWorkflow,
+				reachability: {
+					heavyweightDependencies: [],
+					schemaEntrypoints: [],
+				},
+			}),
+		).toMatchObject({ passed: true, status: "effect-workflow" });
+
+		for (const reachability of [
+			{ heavyweightDependencies: ["zod"], schemaEntrypoints: [] },
+			{
+				heavyweightDependencies: [],
+				schemaEntrypoints: ["dumgen/schema"],
+			},
+		]) {
+			expect(
+				evaluateEntrypointRss(policy, {
+					...measuredWorkflow,
+					reachability,
+				}).passed,
+			).toBe(false);
+		}
+	});
+
 	test("reports absolute, empty-baseline, and delta RSS without conflating them", () => {
 		const report = formatRssGateReport({
 			baselineMedianBytes: 30 * 1024 * 1024,

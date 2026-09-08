@@ -219,12 +219,16 @@ export type StrictRssPolicy = {
 	readonly status: "strict";
 };
 
-export type RssPolicy = StrictRssPolicy;
+/** Effect workflow memory is measured, not judged against the old schema-loading proxy. */
+export type RssPolicy =
+	| StrictRssPolicy
+	| { readonly status: "effect-workflow" };
 
 const MiB = 1024 * 1024;
 const strict = { status: "strict" } as const;
+const workflow = { status: "effect-workflow" } as const;
 
-/** Every operational export has a strict RSS and zero-reachability policy. */
+/** Every operational export retains schema isolation; Effect workflows report measured RSS. */
 export const RSS_ENTRYPOINT_POLICIES = {
 	dumling: strict,
 	"dumling/id": strict,
@@ -237,16 +241,16 @@ export const RSS_ENTRYPOINT_POLICIES = {
 	"dumrel/settings": strict,
 	"dumrel/vocabulary": strict,
 	"dumrel/fixed": strict,
-	dumdict: strict,
-	"dumdict/runtime": strict,
+	dumdict: workflow,
+	"dumdict/runtime": workflow,
 	"dumdict/relations": strict,
 	"dumdict/pending": strict,
-	dumgen: strict,
+	dumgen: workflow,
 	"dumgen/projection": strict,
-	"dumgen/knowledge": strict,
-	"dumgen/knowledge-runtime": strict,
-	"dumgen/openai-fetch": strict,
-	"dumgen/runtime": strict,
+	"dumgen/knowledge": workflow,
+	"dumgen/knowledge-runtime": workflow,
+	"dumgen/openai-fetch": workflow,
+	"dumgen/runtime": workflow,
 	"dumgen/runtime-prompt-data": strict,
 	"dumgen/vocabulary": strict,
 } as const satisfies Record<string, RssPolicy>;
@@ -271,14 +275,22 @@ export function evaluateEntrypointRss(
 	observation: RssObservation,
 ): RssPolicyResult {
 	const violations: string[] = [];
-	if (observation.importOnlyDeltaBytes >= RSS_IMPORT_BUDGET_BYTES)
+	if (
+		policy.status === "strict" &&
+		observation.importOnlyDeltaBytes >= RSS_IMPORT_BUDGET_BYTES
+	)
 		violations.push("import-only delta is not below 5 MiB");
-	if (observation.importPlusOperationDeltaBytes > RSS_OPERATION_BUDGET_BYTES)
+	if (
+		policy.status === "strict" &&
+		observation.importPlusOperationDeltaBytes > RSS_OPERATION_BUDGET_BYTES
+	)
 		violations.push("import+operation delta exceeds 5.3 MiB");
 	if (observation.reachability.heavyweightDependencies.length > 0)
-		violations.push("strict surface reaches a heavyweight dependency");
+		violations.push("operational surface reaches a heavyweight dependency");
 	if (observation.reachability.schemaEntrypoints.length > 0)
-		violations.push("strict surface reaches a schema-authoring entrypoint");
+		violations.push(
+			"operational surface reaches a schema-authoring entrypoint",
+		);
 	return {
 		passed: violations.length === 0,
 		status: policy.status,

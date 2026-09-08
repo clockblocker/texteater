@@ -1,10 +1,11 @@
 import type {
 	Dumgen,
+	DumgenError,
 	DumgenModelExchange,
 	GrammaticalResult,
 	ReadingResolution,
 } from "dumgen";
-
+import * as Effect from "effect/Effect";
 import type {
 	AnalysisTarget,
 	ClassificationStageName,
@@ -15,31 +16,27 @@ import type {
 	Reading,
 	ResolutionDiagnostic,
 } from "./shared/contract";
-
 export const targetClassificationPrompt =
 	"laboratory.targetClassification.de.highLevelWholeUnit" as const;
-
 export const grammaticalResolutionPrompt = (target: AnalysisTarget): string =>
 	`laboratory.grammaticalResolution.de.${target.family}.${target.kind}`;
-
+export const readingGenerationPrompt =
+	"laboratory.readingGeneration.de" as const;
 export const readingResolutionPrompt =
 	"laboratory.readingResolution.de" as const;
-
 export type GermanClassificationTrace = Partial<
 	Record<ClassificationStageName, ClassificationStageResult>
 >;
-
 export type DumgenFactory = () => Dumgen;
-
 export function createGermanClassificationTrace(): GermanClassificationTrace {
 	return {};
 }
-
 type ResolvedGrammaticalResult = Extract<
 	GrammaticalResult<"de">,
-	{ decision: "Resolved" }
+	{
+		decision: "Resolved";
+	}
 >;
-
 type GrammaticalUnit = {
 	target: AnalysisTarget;
 	markedContext: string;
@@ -47,22 +44,22 @@ type GrammaticalUnit = {
 	interaction: ResolvedGrammaticalResult["interaction"];
 	stages: GermanClassificationTrace;
 };
-
 type ResolvedUnit = Omit<GrammaticalUnit, "markedContext"> & {
 	reading: Reading;
 	diagnostics: ResolutionDiagnostic[];
 };
-
 type AcceptedExchange = Extract<
 	DumgenModelExchange,
-	{ readonly phase: "accepted" }
+	{
+		readonly phase: "accepted";
+	}
 >;
-
 type AttemptedExchange = Extract<
 	DumgenModelExchange,
-	{ readonly phase: "attempted" }
+	{
+		readonly phase: "attempted";
+	}
 >;
-
 function acceptedExchange(
 	modelExchanges: readonly DumgenModelExchange[],
 	prompt: string,
@@ -75,7 +72,6 @@ function acceptedExchange(
 				exchange.phase === "accepted" && exchange.promptPath === prompt,
 		);
 }
-
 function stage(
 	prompt: string,
 	modelExchanges: readonly DumgenModelExchange[],
@@ -95,7 +91,6 @@ function stage(
 		result: exchange.result,
 	};
 }
-
 function promptsFromExchanges(
 	modelExchanges: readonly DumgenModelExchange[],
 	startIndex: number,
@@ -108,7 +103,6 @@ function promptsFromExchanges(
 		)
 		.map(({ promptPath }) => promptPath);
 }
-
 function targetFromExchange(
 	modelExchanges: readonly DumgenModelExchange[],
 	startIndex: number,
@@ -141,9 +135,13 @@ function targetFromExchange(
 		memberSegmentIndices: output.memberSegmentIndices,
 	} as AnalysisTarget;
 }
-
 function targetFromResolved(
-	result: Extract<GrammaticalResult<"de">, { decision: "Resolved" }>,
+	result: Extract<
+		GrammaticalResult<"de">,
+		{
+			decision: "Resolved";
+		}
+	>,
 ): AnalysisTarget {
 	return {
 		family: result.attestation.surface.lemma.family,
@@ -151,7 +149,6 @@ function targetFromResolved(
 		memberSegmentIndices: result.interaction.memberSegmentIndices,
 	} as AnalysisTarget;
 }
-
 function cachedStages(
 	stages: GermanClassificationTrace,
 ): GermanClassificationTrace {
@@ -162,7 +159,6 @@ function cachedStages(
 		]),
 	) as GermanClassificationTrace;
 }
-
 function stableJson(value: unknown): string {
 	if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
 	if (value !== null && typeof value === "object") {
@@ -175,130 +171,206 @@ function stableJson(value: unknown): string {
 	}
 	return JSON.stringify(value);
 }
-
 export class GermanClassificationResolver {
 	#dumgen: Dumgen;
 	readonly #createDumgen: DumgenFactory;
 	readonly #unitsByMember = new Map<string, ResolvedUnit>();
 	readonly #grammaticalUnitsByMember = new Map<string, GrammaticalUnit>();
 	readonly #emojiDescriptionsByLemma = new Map<string, string[]>();
-
 	constructor(createDumgen: DumgenFactory) {
 		this.#createDumgen = createDumgen;
 		this.#dumgen = createDumgen();
 	}
-
 	clear(): void {
 		this.#dumgen = this.#createDumgen();
 		this.#unitsByMember.clear();
 		this.#grammaticalUnitsByMember.clear();
 		this.#emojiDescriptionsByLemma.clear();
 	}
-
-	async resolve(
+	resolve(
 		sentence: GermanSegmentedSentence,
 		clickedSegmentIndex: number,
 		modelExchanges: readonly DumgenModelExchange[] = [],
 		attemptedPrompts: string[] = [],
-	): Promise<ClickResolutionResponse> {
-		const cacheKey = this.#cacheKey(sentence.id, clickedSegmentIndex);
-		const cached = this.#unitsByMember.get(cacheKey);
-		if (cached) {
-			return this.#resolvedResponse(
-				clickedSegmentIndex,
-				cached,
-				"member-hit",
-				[],
-			);
-		}
-
-		const exchangeStart = modelExchanges.length;
-		let grammaticalUnit = this.#grammaticalUnitsByMember.get(cacheKey);
-		let stages: GermanClassificationTrace;
-		if (grammaticalUnit) {
-			stages = cachedStages(grammaticalUnit.stages);
-			grammaticalUnit = {
-				...grammaticalUnit,
-				interaction: {
-					...grammaticalUnit.interaction,
+	): Effect.Effect<ClickResolutionResponse, DumgenError> {
+		return Effect.gen(this, function* () {
+			const cacheKey = this.#cacheKey(sentence.id, clickedSegmentIndex);
+			const cached = this.#unitsByMember.get(cacheKey);
+			if (cached) {
+				return this.#resolvedResponse(
 					clickedSegmentIndex,
-				},
-				stages,
-			};
-		} else {
-			let grammatical: GrammaticalResult<"de">;
-			try {
-				grammatical = await this.#dumgen.resolve.grammatical("de", {
-					sentence,
-					clickedSegmentIndex,
-				});
-			} catch (error) {
-				attemptedPrompts.push(
-					...promptsFromExchanges(modelExchanges, exchangeStart),
-				);
-				throw error;
-			}
-			if (
-				grammatical.decision === "Resolved" &&
-				(grammatical.interaction.segmentedSentenceId !== sentence.id ||
-					grammatical.interaction.clickedSegmentIndex !==
-						clickedSegmentIndex)
-			) {
-				throw new Error(
-					"Dumgen returned a fresh Attestation for a different clicked member or Segmented Sentence.",
+					cached,
+					"member-hit",
+					[],
 				);
 			}
-
-			stages = createGermanClassificationTrace();
-			const target =
-				grammatical.decision === "Resolved"
-					? targetFromResolved(grammatical)
-					: targetFromExchange(modelExchanges, exchangeStart);
-			stages.target = stage(
-				targetClassificationPrompt,
-				modelExchanges,
-				exchangeStart,
-			);
-
-			if (grammatical.decision === "NotImplemented") {
-				if (!target) {
+			const exchangeStart = modelExchanges.length;
+			let grammaticalUnit = this.#grammaticalUnitsByMember.get(cacheKey);
+			let stages: GermanClassificationTrace;
+			if (grammaticalUnit) {
+				stages = cachedStages(grammaticalUnit.stages);
+				grammaticalUnit = {
+					...grammaticalUnit,
+					interaction: {
+						...grammaticalUnit.interaction,
+						clickedSegmentIndex,
+					},
+					stages,
+				};
+			} else {
+				const grammatical: GrammaticalResult<"de"> =
+					yield* this.#dumgen.resolve
+						.grammatical("de", { sentence, clickedSegmentIndex })
+						.pipe(
+							Effect.catchTag("DumgenDomainFailure", (failure) =>
+								Effect.succeed(failure.result),
+							),
+							Effect.tapError(() =>
+								Effect.sync(() => {
+									attemptedPrompts.push(
+										...promptsFromExchanges(
+											modelExchanges,
+											exchangeStart,
+										),
+									);
+								}),
+							),
+						);
+				if (
+					grammatical.decision === "Resolved" &&
+					(grammatical.interaction.segmentedSentenceId !==
+						sentence.id ||
+						grammatical.interaction.clickedSegmentIndex !==
+							clickedSegmentIndex)
+				) {
 					throw new Error(
-						"NotImplemented requires an observable Analysis Target.",
+						"Dumgen returned a fresh Attestation for a different clicked member or Segmented Sentence.",
 					);
 				}
-				const prompts = promptsFromExchanges(
+				stages = createGermanClassificationTrace();
+				const target =
+					grammatical.decision === "Resolved"
+						? targetFromResolved(grammatical)
+						: targetFromExchange(modelExchanges, exchangeStart);
+				stages.target = stage(
+					targetClassificationPrompt,
 					modelExchanges,
 					exchangeStart,
 				);
-				attemptedPrompts.push(...prompts);
-				return {
-					decision: "NotImplemented",
-					stage: "GrammaticalResolution",
-					language: grammatical.language,
-					family: grammatical.route.family,
-					kind: grammatical.route.kind,
-					target,
-					stages,
-					diagnostics: [
-						{
-							stage: "grammatical",
-							kind: "ResolutionRouteNotImplemented",
-							message: `GrammaticalResolution is not enabled for de/${grammatical.route.family}/${grammatical.route.kind}.`,
+				if (grammatical.decision === "NotImplemented") {
+					if (!target) {
+						throw new Error(
+							"NotImplemented requires an observable Analysis Target.",
+						);
+					}
+					const prompts = promptsFromExchanges(
+						modelExchanges,
+						exchangeStart,
+					);
+					attemptedPrompts.push(...prompts);
+					return {
+						decision: "NotImplemented",
+						stage: "GrammaticalResolution",
+						language: grammatical.language,
+						family: grammatical.route.family,
+						kind: grammatical.route.kind,
+						target,
+						stages,
+						diagnostics: [
+							{
+								stage: "grammatical",
+								kind: "ResolutionRouteNotImplemented",
+								message: `GrammaticalResolution is not enabled for de/${grammatical.route.family}/${grammatical.route.kind}.`,
+							},
+						],
+						generation: {
+							model: "gpt-5.6-luna",
+							prompts,
+							cache: "miss",
+							modelCalls: prompts.length,
 						},
-					],
-					generation: {
-						model: "gpt-5.6-luna",
-						prompts,
-						cache: "miss",
-						modelCalls: prompts.length,
-					},
-				};
-			}
-
-			if (grammatical.decision === "CatalogMiss") {
+					};
+				}
+				if (grammatical.decision === "CatalogMiss") {
+					if (!target) {
+						throw new Error(
+							"A Lemma CatalogMiss requires an observable Analysis Target.",
+						);
+					}
+					stages.grammatical = stage(
+						grammaticalResolutionPrompt(target),
+						modelExchanges,
+						exchangeStart,
+					);
+					const prompts = promptsFromExchanges(
+						modelExchanges,
+						exchangeStart,
+					);
+					attemptedPrompts.push(...prompts);
+					return {
+						decision: "CatalogMiss",
+						stage: grammatical.stage,
+						reason: grammatical.reason,
+						language: grammatical.language,
+						family: grammatical.route.family,
+						kind: grammatical.route.kind,
+						target,
+						candidate: grammatical.candidate,
+						stages,
+						diagnostics: [
+							{
+								stage: "grammatical",
+								kind: "CatalogMiss",
+								message: `The promoted de/${grammatical.route.family}/${grammatical.route.kind} route has no fixed Lemma for this candidate.`,
+							},
+						],
+						generation: {
+							model: "gpt-5.6-luna",
+							prompts,
+							cache: "miss",
+							modelCalls: prompts.length,
+						},
+					};
+				}
+				if (grammatical.decision === "Unresolved") {
+					const grammaticalPrompt = target
+						? grammaticalResolutionPrompt(target)
+						: undefined;
+					if (grammaticalPrompt) {
+						stages.grammatical = stage(
+							grammaticalPrompt,
+							modelExchanges,
+							exchangeStart,
+						);
+					}
+					const prompts = promptsFromExchanges(
+						modelExchanges,
+						exchangeStart,
+					);
+					attemptedPrompts.push(...prompts);
+					const failedStage = target ? "grammatical" : "target";
+					return {
+						decision: "Unresolved",
+						...(target ? { target } : undefined),
+						stages,
+						diagnostics: [
+							{
+								stage: failedStage,
+								kind: "Unresolved",
+								message: `${failedStage === "target" ? "Target Classification" : "Grammatical Resolution"} returned Unresolved for clickable ResolvableText.`,
+							},
+						],
+						generation: {
+							model: "gpt-5.6-luna",
+							prompts,
+							cache: "miss",
+							modelCalls: prompts.length,
+						},
+					};
+				}
 				if (!target) {
 					throw new Error(
-						"A Lemma CatalogMiss requires an observable Analysis Target.",
+						"Resolved grammar requires an Analysis Target.",
 					);
 				}
 				stages.grammatical = stage(
@@ -306,6 +378,57 @@ export class GermanClassificationResolver {
 					modelExchanges,
 					exchangeStart,
 				);
+				grammaticalUnit = {
+					target,
+					markedContext: grammatical.markedContext,
+					attestation: grammatical.attestation,
+					interaction: grammatical.interaction,
+					stages,
+				};
+				for (const memberIndex of target.memberSegmentIndices) {
+					this.#grammaticalUnitsByMember.set(
+						this.#cacheKey(sentence.id, memberIndex),
+						grammaticalUnit,
+					);
+				}
+			}
+			const { target } = grammaticalUnit;
+			const lemma = grammaticalUnit.attestation.surface.lemma;
+			const lemmaKey = stableJson(lemma);
+			const existingEmojiDescriptions = [
+				...(this.#emojiDescriptionsByLemma.get(lemmaKey) ?? []),
+			];
+			const readingPrompt =
+				existingEmojiDescriptions.length === 0
+					? readingGenerationPrompt
+					: readingResolutionPrompt;
+			const reading: ReadingResolution = yield* this.#dumgen.resolve
+				.reading("de", {
+					markedContext: grammaticalUnit.markedContext,
+					lemma,
+					existingEmojiDescriptions,
+				})
+				.pipe(
+					Effect.catchTag("DumgenDomainFailure", (failure) =>
+						Effect.succeed(failure.result),
+					),
+					Effect.tapError(() =>
+						Effect.sync(() => {
+							attemptedPrompts.push(
+								...promptsFromExchanges(
+									modelExchanges,
+									exchangeStart,
+								),
+							);
+						}),
+					),
+				);
+			stages.reading = stage(
+				readingPrompt,
+				modelExchanges,
+				exchangeStart,
+			);
+			if (reading.decision === "CatalogMiss") {
 				const prompts = promptsFromExchanges(
 					modelExchanges,
 					exchangeStart,
@@ -313,19 +436,19 @@ export class GermanClassificationResolver {
 				attemptedPrompts.push(...prompts);
 				return {
 					decision: "CatalogMiss",
-					stage: grammatical.stage,
-					reason: grammatical.reason,
-					language: grammatical.language,
-					family: grammatical.route.family,
-					kind: grammatical.route.kind,
+					stage: reading.stage,
+					reason: reading.reason,
+					language: reading.language,
+					family: reading.route.family,
+					kind: reading.route.kind,
 					target,
-					candidate: grammatical.candidate,
+					candidate: reading.candidate,
 					stages,
 					diagnostics: [
 						{
-							stage: "grammatical",
+							stage: "reading",
 							kind: "CatalogMiss",
-							message: `The promoted de/${grammatical.route.family}/${grammatical.route.kind} route has no fixed Lemma for this candidate.`,
+							message: `The promoted de/${reading.route.family}/${reading.route.kind} route has no fixed Reading for this candidate.`,
 						},
 					],
 					generation: {
@@ -336,175 +459,62 @@ export class GermanClassificationResolver {
 					},
 				};
 			}
-
-			if (grammatical.decision === "Unresolved") {
-				const grammaticalPrompt = target
-					? grammaticalResolutionPrompt(target)
-					: undefined;
-				if (grammaticalPrompt) {
-					stages.grammatical = stage(
-						grammaticalPrompt,
-						modelExchanges,
-						exchangeStart,
-					);
-				}
-				const prompts = promptsFromExchanges(
-					modelExchanges,
-					exchangeStart,
-				);
-				attemptedPrompts.push(...prompts);
-				const failedStage = target ? "grammatical" : "target";
-				return {
-					decision: "Unresolved",
-					...(target ? { target } : undefined),
-					stages,
-					diagnostics: [
-						{
-							stage: failedStage,
-							kind: "Unresolved",
-							message: `${failedStage === "target" ? "Target Classification" : "Grammatical Resolution"} returned Unresolved for clickable ResolvableText.`,
-						},
-					],
-					generation: {
-						model: "gpt-5.6-luna",
-						prompts,
-						cache: "miss",
-						modelCalls: prompts.length,
-					},
-				};
-			}
-			if (!target) {
-				throw new Error(
-					"Resolved grammar requires an Analysis Target.",
-				);
-			}
-
-			stages.grammatical = stage(
-				grammaticalResolutionPrompt(target),
+			const diagnostics: ResolutionDiagnostic[] = [];
+			const readingExchange = acceptedExchange(
 				modelExchanges,
+				readingPrompt,
 				exchangeStart,
 			);
-			grammaticalUnit = {
+			const advisoryDecision = (
+				readingExchange?.result as
+					| {
+							decision?: unknown;
+					  }
+					| undefined
+			)?.decision;
+			if (
+				(advisoryDecision === "Reuse" || advisoryDecision === "New") &&
+				advisoryDecision !== reading.decision
+			) {
+				diagnostics.push({
+					stage: "reading",
+					kind: "DecisionMismatch",
+					message: `Model advised ${advisoryDecision}, but exact Emoji Description membership requires ${reading.decision}.`,
+				});
+			}
+			if (reading.decision === "New") {
+				this.#emojiDescriptionsByLemma.set(lemmaKey, [
+					...existingEmojiDescriptions,
+					reading.emojiDescription,
+				]);
+			}
+			const resolvedUnit: ResolvedUnit = {
 				target,
-				markedContext: grammatical.markedContext,
-				attestation: grammatical.attestation,
-				interaction: grammatical.interaction,
+				attestation: grammaticalUnit.attestation,
+				interaction: grammaticalUnit.interaction,
+				reading: {
+					lemma,
+					emojiDescription: reading.emojiDescription,
+				} as Reading,
 				stages,
+				diagnostics,
 			};
 			for (const memberIndex of target.memberSegmentIndices) {
-				this.#grammaticalUnitsByMember.set(
+				this.#unitsByMember.set(
 					this.#cacheKey(sentence.id, memberIndex),
-					grammaticalUnit,
+					resolvedUnit,
 				);
 			}
-		}
-
-		const { target } = grammaticalUnit;
-		const lemma = grammaticalUnit.attestation.surface.lemma;
-		const lemmaKey = stableJson(lemma);
-		const existingEmojiDescriptions = [
-			...(this.#emojiDescriptionsByLemma.get(lemmaKey) ?? []),
-		];
-		let reading: ReadingResolution;
-		try {
-			reading = await this.#dumgen.resolve.reading("de", {
-				markedContext: grammaticalUnit.markedContext,
-				lemma,
-				existingEmojiDescriptions,
-			});
-		} catch (error) {
-			attemptedPrompts.push(
-				...promptsFromExchanges(modelExchanges, exchangeStart),
-			);
-			throw error;
-		}
-		stages.reading = stage(
-			readingResolutionPrompt,
-			modelExchanges,
-			exchangeStart,
-		);
-		if (reading.decision === "CatalogMiss") {
 			const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
 			attemptedPrompts.push(...prompts);
-			return {
-				decision: "CatalogMiss",
-				stage: reading.stage,
-				reason: reading.reason,
-				language: reading.language,
-				family: reading.route.family,
-				kind: reading.route.kind,
-				target,
-				candidate: reading.candidate,
-				stages,
-				diagnostics: [
-					{
-						stage: "reading",
-						kind: "CatalogMiss",
-						message: `The promoted de/${reading.route.family}/${reading.route.kind} route has no fixed Reading for this candidate.`,
-					},
-				],
-				generation: {
-					model: "gpt-5.6-luna",
-					prompts,
-					cache: "miss",
-					modelCalls: prompts.length,
-				},
-			};
-		}
-
-		const diagnostics: ResolutionDiagnostic[] = [];
-		const readingExchange = acceptedExchange(
-			modelExchanges,
-			readingResolutionPrompt,
-			exchangeStart,
-		);
-		const advisoryDecision = (
-			readingExchange?.result as { decision?: unknown } | undefined
-		)?.decision;
-		if (
-			(advisoryDecision === "Reuse" || advisoryDecision === "New") &&
-			advisoryDecision !== reading.decision
-		) {
-			diagnostics.push({
-				stage: "reading",
-				kind: "DecisionMismatch",
-				message: `Model advised ${advisoryDecision}, but exact Emoji Description membership requires ${reading.decision}.`,
-			});
-		}
-		if (reading.decision === "New") {
-			this.#emojiDescriptionsByLemma.set(lemmaKey, [
-				...existingEmojiDescriptions,
-				reading.emojiDescription,
-			]);
-		}
-
-		const resolvedUnit: ResolvedUnit = {
-			target,
-			attestation: grammaticalUnit.attestation,
-			interaction: grammaticalUnit.interaction,
-			reading: {
-				lemma,
-				emojiDescription: reading.emojiDescription,
-			} as Reading,
-			stages,
-			diagnostics,
-		};
-		for (const memberIndex of target.memberSegmentIndices) {
-			this.#unitsByMember.set(
-				this.#cacheKey(sentence.id, memberIndex),
+			return this.#resolvedResponse(
+				clickedSegmentIndex,
 				resolvedUnit,
+				"miss",
+				prompts,
 			);
-		}
-		const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
-		attemptedPrompts.push(...prompts);
-		return this.#resolvedResponse(
-			clickedSegmentIndex,
-			resolvedUnit,
-			"miss",
-			prompts,
-		);
+		});
 	}
-
 	#resolvedResponse(
 		clickedSegmentIndex: number,
 		unit: ResolvedUnit,
@@ -546,26 +556,28 @@ export class GermanClassificationResolver {
 			},
 		};
 	}
-
 	#cacheKey(sentenceId: string, segmentIndex: number): string {
 		return `${sentenceId}:${segmentIndex}`;
 	}
 }
-
-export async function classifyGermanSegment(
+export function classifyGermanSegment(
 	createDumgen: DumgenFactory,
 	sentence: GermanSegmentedSentence,
 	clickedSegmentIndex: number,
 	trace?: GermanClassificationTrace,
 	modelExchanges: readonly DumgenModelExchange[] = [],
 	attemptedPrompts: string[] = [],
-): Promise<ClickResolutionResponse> {
-	const result = await new GermanClassificationResolver(createDumgen).resolve(
-		sentence,
-		clickedSegmentIndex,
-		modelExchanges,
-		attemptedPrompts,
-	);
-	if (trace) Object.assign(trace, result.stages);
-	return result;
+): Effect.Effect<ClickResolutionResponse, DumgenError> {
+	return Effect.gen(function* () {
+		const result = yield* new GermanClassificationResolver(
+			createDumgen,
+		).resolve(
+			sentence,
+			clickedSegmentIndex,
+			modelExchanges,
+			attemptedPrompts,
+		);
+		if (trace) Object.assign(trace, result.stages);
+		return result;
+	});
 }

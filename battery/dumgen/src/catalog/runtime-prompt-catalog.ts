@@ -117,14 +117,22 @@ type RuntimePromptForPath<Path extends RuntimePromptPath> =
 						unknown,
 						GrammaticalResolution
 					>
-				: Path extends "laboratory.readingResolution.de"
+				: Path extends "laboratory.readingGeneration.de"
 					? RuntimeDirectPrompt<
-							OpenReadingModelInput,
+							Omit<
+								OpenReadingModelInput,
+								"existingEmojiDescriptions"
+							>,
 							Readonly<{ emojiDescription: string }>
 						>
-					: Path extends `knowledge.de.${GermanKnowledgeFamily}`
-						? RuntimeGermanKnowledgePrompt
-						: RuntimeDirectPrompt<unknown, unknown>;
+					: Path extends "laboratory.readingResolution.de"
+						? RuntimeDirectPrompt<
+								OpenReadingModelInput,
+								Readonly<{ emojiDescription: string }>
+							>
+						: Path extends `knowledge.de.${GermanKnowledgeFamily}`
+							? RuntimeGermanKnowledgePrompt
+							: RuntimeDirectPrompt<unknown, unknown>;
 
 type RuntimePromptArtifact = Readonly<{
 	dispatch: Readonly<{
@@ -572,6 +580,9 @@ export const RUNTIME_PROMPT_CATALOG = Object.freeze({
 		}),
 		readingResolution: Object.freeze({
 			de: promptEntry("laboratory.readingResolution.de"),
+		}),
+		readingGeneration: Object.freeze({
+			de: promptEntry("laboratory.readingGeneration.de"),
 		}),
 	}),
 });

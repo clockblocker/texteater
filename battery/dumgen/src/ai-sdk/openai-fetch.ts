@@ -1,5 +1,7 @@
+import { recordTrace } from "common-utils/workflow";
+import * as Effect from "effect/Effect";
 import type {
-	AiSdk,
+	ModelGenerator,
 	StructuredOutputSchema,
 	StructuredSchemaOutput,
 } from "./ai-sdk";
@@ -27,47 +29,37 @@ type Fetch = (
 	input: string | URL | Request,
 	init?: RequestInit,
 ) => Promise<Response>;
-
 type OpenAiResponse = ResponseFailureMetadata & {
 	readonly output?: readonly unknown[];
 };
-
 type OpenAiResponseResult = {
 	readonly attempts: number;
 	readonly providerRequestId?: string;
 	readonly response: OpenAiResponse;
 };
-
 type JsonSchemaOverrideContext = {
 	readonly jsonSchema: Record<string, unknown>;
 	readonly zodSchema: {
 		readonly _zod: { readonly def: { readonly type?: string } };
 	};
 };
-
 const MAX_LOCAL_RETRY_DELAY_MS = 60_000;
 
-export type BuildOpenAiFetchSdkOptions = {
-	/** Defaults to OPENAI_API_KEY. */
+export type BuildOpenAiFetchModelGeneratorOptions = {
 	readonly apiKey?: string;
 	readonly baseUrl?: string;
 	readonly fetch?: Fetch;
 	readonly maxOutputTokens?: number;
 	readonly maxTransportAttempts?: number;
 	readonly model?: string;
-	readonly onGenerationEvent?: (event: GenerationEvent) => void;
 	readonly random?: () => number;
-	readonly sleep?: (delayMs: number) => Promise<void>;
+	readonly sleep?: (delayMs: number) => Effect.Effect<void>;
 };
 
-/**
- * Creates a small OpenAI Responses adapter for constrained server runtimes.
- *
- * Unlike the default adapter, this transport does not load the OpenAI SDK.
- */
-export function buildOpenAiFetchSdk(
-	options: BuildOpenAiFetchSdkOptions = {},
-): AiSdk {
+/** A cancellable, retrying OpenAI Responses transport. */
+export function buildOpenAiFetchModelGenerator(
+	options: BuildOpenAiFetchModelGeneratorOptions = {},
+): ModelGenerator {
 	const defaultMaxOutputTokens =
 		options.maxOutputTokens ?? DEFAULT_MAX_OUTPUT_TOKENS;
 	validateMaxOutputTokens(defaultMaxOutputTokens);
@@ -77,243 +69,286 @@ export function buildOpenAiFetchSdk(
 		!Number.isSafeInteger(maxTransportAttempts) ||
 		maxTransportAttempts < 1 ||
 		maxTransportAttempts > 10
-	) {
+	)
 		throw new TypeError(
 			"maxTransportAttempts must be a safe integer between 1 and 10.",
 		);
-	}
 	const random = options.random ?? Math.random;
-	const sleep = options.sleep ?? defaultSleep;
 	const endpoint = `${(options.baseUrl ?? "https://api.openai.com/v1").replace(/\/$/, "")}/responses`;
+	const event = (value: GenerationEvent) =>
+		recordTrace("model.generation.event", value);
+	const scheduleRetry = (attempt: number, retryAfterMs?: number) => {
+		const delayMs = retryDelayMs(attempt, retryAfterMs, random);
+		return event({
+			kind: "RetryScheduled",
+			attempt: attempt + 1,
+			delayMs,
+		}).pipe(
+			Effect.zipRight(options.sleep?.(delayMs) ?? Effect.sleep(delayMs)),
+		);
+	};
 
-	async function request(body: unknown): Promise<OpenAiResponseResult> {
-		const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
-		if (!apiKey) {
-			throw new AiSdkGenerationError(
-				"provider-error",
-				"OPENAI_API_KEY is not configured.",
-				{
-					failure: createGenerationFailure({
-						attempts: 0,
-						category: "RequestRejected",
-					}),
-				},
-			);
-		}
-		const model = modelFromBody(body);
-		for (let attempt = 1; attempt <= maxTransportAttempts; attempt += 1) {
-			options.onGenerationEvent?.({
-				kind: "AttemptStarted",
-				attempt,
-				model,
-			});
-			const startedAt = Date.now();
-			let response: Response;
-			try {
-				response = await fetch(endpoint, {
-					body: JSON.stringify(body),
-					headers: {
-						Authorization: `Bearer ${apiKey}`,
-						"Content-Type": "application/json",
-					},
-					method: "POST",
-				});
-			} catch {
-				const failure = createGenerationFailure({
-					attempts: attempt,
-					category: "Network",
-				});
-				options.onGenerationEvent?.({
-					kind: "AttemptFailed",
-					failure,
-				});
-				if (attempt === maxTransportAttempts) {
-					throw generationError(failure);
-				}
-				await scheduleRetry(attempt, undefined);
-				continue;
-			}
-
-			const providerRequestId = extractProviderRequestId(
-				response.headers,
-			);
-			if (!response.ok) {
-				const providerCode = await extractProviderCode(response);
-				const retryAfterMs = parseRetryAfterMs(
-					response.headers.get("retry-after") ?? undefined,
-				);
-				const failure = classifyHttpFailure({
-					attempts: attempt,
-					providerCode,
-					providerRequestId,
-					retryAfterMs,
-					status: response.status,
-				});
-				options.onGenerationEvent?.({
-					kind: "AttemptFailed",
-					failure,
-				});
-				if (
-					!failure.retryable ||
-					attempt === maxTransportAttempts ||
-					(retryAfterMs !== undefined &&
-						retryAfterMs > MAX_LOCAL_RETRY_DELAY_MS)
+	const request = (
+		body: unknown,
+		firstAttempt = 1,
+		lastAttempt = maxTransportAttempts,
+	): Effect.Effect<OpenAiResponseResult, AiSdkGenerationError> =>
+		Effect.suspend(() => {
+			const activeRequests = new Set<AbortController>();
+			return Effect.gen(function* () {
+				const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
+				if (!apiKey)
+					return yield* Effect.fail(
+						new AiSdkGenerationError(
+							"provider-error",
+							"OPENAI_API_KEY is not configured.",
+							{
+								failure: createGenerationFailure({
+									attempts: 0,
+									category: "RequestRejected",
+								}),
+							},
+						),
+					);
+				const model = modelFromBody(body);
+				for (
+					let attempt = firstAttempt;
+					attempt <= lastAttempt;
+					attempt += 1
 				) {
-					throw generationError(failure);
+					yield* event({ kind: "AttemptStarted", attempt, model });
+					const startedAt = Date.now();
+					const controller = new AbortController();
+					activeRequests.add(controller);
+					const responseResult = yield* Effect.tryPromise({
+						try: () =>
+							fetch(endpoint, {
+								body: JSON.stringify(body),
+								headers: {
+									Authorization: `Bearer ${apiKey}`,
+									"Content-Type": "application/json",
+								},
+								method: "POST",
+								signal: controller.signal,
+							}),
+						catch: () =>
+							new AiSdkGenerationError(
+								"provider-error",
+								"OpenAI request failed.",
+								{
+									failure: createGenerationFailure({
+										attempts: attempt,
+										category: "Network",
+									}),
+								},
+							),
+					}).pipe(Effect.either);
+					if (responseResult._tag === "Left") {
+						activeRequests.delete(controller);
+						yield* event({
+							kind: "AttemptFailed",
+							failure: responseResult.left.failure,
+						});
+						if (attempt === lastAttempt)
+							return yield* Effect.fail(responseResult.left);
+						yield* scheduleRetry(attempt);
+						continue;
+					}
+					const response = responseResult.right;
+					const providerRequestId = extractProviderRequestId(
+						response.headers,
+					);
+					if (!response.ok) {
+						const providerCode = yield* Effect.promise(() =>
+							extractProviderCode(response),
+						);
+						const retryAfterMs = parseRetryAfterMs(
+							response.headers.get("retry-after") ?? undefined,
+						);
+						const failure = classifyHttpFailure({
+							attempts: attempt,
+							providerCode,
+							providerRequestId,
+							retryAfterMs,
+							status: response.status,
+						});
+						yield* event({ kind: "AttemptFailed", failure });
+						activeRequests.delete(controller);
+						if (
+							!failure.retryable ||
+							attempt === lastAttempt ||
+							(retryAfterMs !== undefined &&
+								retryAfterMs > MAX_LOCAL_RETRY_DELAY_MS)
+						)
+							return yield* Effect.fail(generationError(failure));
+						yield* scheduleRetry(attempt, retryAfterMs);
+						continue;
+					}
+					const parsedResult = yield* Effect.tryPromise({
+						try: () => response.json() as Promise<OpenAiResponse>,
+						catch: () =>
+							new AiSdkGenerationError(
+								"provider-error",
+								"OpenAI returned invalid JSON.",
+								{
+									failure: createGenerationFailure({
+										attempts: attempt,
+										category: "InvalidOutput",
+										...(providerRequestId
+											? { providerRequestId }
+											: {}),
+									}),
+								},
+							),
+					}).pipe(Effect.either);
+					if (parsedResult._tag === "Left") {
+						activeRequests.delete(controller);
+						yield* event({
+							kind: "AttemptFailed",
+							failure: parsedResult.left.failure,
+						});
+						return yield* Effect.fail(parsedResult.left);
+					}
+					activeRequests.delete(controller);
+					yield* event({
+						kind: "Succeeded",
+						attempt,
+						latencyMs: Date.now() - startedAt,
+						...(providerRequestId ? { providerRequestId } : {}),
+					});
+					return {
+						attempts: attempt,
+						providerRequestId,
+						response: parsedResult.right,
+					};
 				}
-				await scheduleRetry(attempt, retryAfterMs);
-				continue;
-			}
-
-			let parsed: OpenAiResponse;
-			try {
-				parsed = (await response.json()) as OpenAiResponse;
-			} catch {
-				const failure = createGenerationFailure({
-					attempts: attempt,
-					category: "InvalidOutput",
-					providerRequestId,
-					status: response.status,
-				});
-				options.onGenerationEvent?.({
-					kind: "AttemptFailed",
-					failure,
-				});
-				throw generationError(failure);
-			}
-			options.onGenerationEvent?.({
-				kind: "Succeeded",
-				attempt,
-				latencyMs: Date.now() - startedAt,
-				...(providerRequestId ? { providerRequestId } : {}),
-			});
-			return {
-				attempts: attempt,
-				providerRequestId,
-				response: parsed,
-			};
-		}
-		throw new Error("OpenAI transport retry loop exhausted.");
-
-		async function scheduleRetry(
-			attempt: number,
-			retryAfterMs: number | undefined,
-		): Promise<void> {
-			const delayMs = retryDelayMs(attempt, retryAfterMs, random);
-			options.onGenerationEvent?.({
-				kind: "RetryScheduled",
-				attempt: attempt + 1,
-				delayMs,
-			});
-			await sleep(delayMs);
-		}
-	}
+				return yield* Effect.dieMessage(
+					"OpenAI transport retry loop exhausted.",
+				);
+			}).pipe(
+				Effect.onInterrupt(() =>
+					Effect.sync(() => {
+						for (const controller of activeRequests)
+							controller.abort();
+						activeRequests.clear();
+					}),
+				),
+			);
+		});
 
 	return Object.freeze({
-		async structuredGeneration<OutputSchema extends StructuredOutputSchema>(
+		structuredGeneration<OutputSchema extends StructuredOutputSchema>(
 			input: string,
 			outputSchema: OutputSchema,
 			params: GenerationParams = {},
-		): Promise<StructuredSchemaOutput<OutputSchema>> {
-			let maxOutputTokens =
-				params.maxOutputTokens ?? defaultMaxOutputTokens;
-			for (let attempt = 0; attempt < 2; attempt += 1) {
-				const result = await request({
-					...(await createCommonRequest({
+		) {
+			return Effect.gen(function* () {
+				let maxOutputTokens =
+					params.maxOutputTokens ?? defaultMaxOutputTokens;
+				let nextAttempt = 1;
+				for (;;) {
+					const requestBody = yield* createCommonRequest({
 						defaultMaxOutputTokens,
 						defaultModel: options.model,
 						input,
 						params: { ...params, maxOutputTokens },
-					})),
-					text: {
-						format: {
-							name: RESPONSE_SCHEMA_NAME,
-							schema: outputSchema.toJSONSchema({
-								target: "draft-7",
-								override: ({
-									zodSchema,
-									jsonSchema,
-								}: JsonSchemaOverrideContext) => {
-									const definition = zodSchema._zod.def;
-									if (
-										definition.type === "union" &&
-										"discriminator" in definition &&
-										Array.isArray(jsonSchema.oneOf)
-									) {
-										jsonSchema.anyOf = jsonSchema.oneOf;
-										delete jsonSchema.oneOf;
-									}
+					});
+					const result = yield* request(
+						{
+							...requestBody,
+							text: {
+								format: {
+									name: RESPONSE_SCHEMA_NAME,
+									schema: outputSchema.toJSONSchema({
+										target: "draft-7",
+										override: ({
+											zodSchema,
+											jsonSchema,
+										}: JsonSchemaOverrideContext) => {
+											const definition =
+												zodSchema._zod.def;
+											if (
+												definition.type === "union" &&
+												"discriminator" in definition &&
+												Array.isArray(jsonSchema.oneOf)
+											) {
+												jsonSchema.anyOf =
+													jsonSchema.oneOf;
+												delete jsonSchema.oneOf;
+											}
+										},
+									}),
+									strict: true,
+									type: "json_schema",
 								},
-							}),
-							strict: true,
-							type: "json_schema",
+								verbosity: "low",
+							},
 						},
-						verbosity: "low",
-					},
-				});
-
-				if (
-					attempt === 0 &&
-					exhaustedOutputTokenBudget(result.response)
-				) {
-					maxOutputTokens = Math.max(
-						STRUCTURED_OUTPUT_RETRY_MIN_TOKENS,
-						maxOutputTokens * 2,
+						nextAttempt,
+						maxTransportAttempts,
 					);
-					validateMaxOutputTokens(maxOutputTokens);
-					continue;
+					nextAttempt = result.attempts + 1;
+					if (
+						nextAttempt <= maxTransportAttempts &&
+						exhaustedOutputTokenBudget(result.response)
+					) {
+						maxOutputTokens = Math.max(
+							STRUCTURED_OUTPUT_RETRY_MIN_TOKENS,
+							maxOutputTokens * 2,
+						);
+						validateMaxOutputTokens(maxOutputTokens);
+						continue;
+					}
+					return yield* parseStructured(result, outputSchema);
 				}
-				assertResponseCompletedWithMetadata(result);
-				const text = extractOutputText(result.response.output);
-				if (!text) throw responseError(result);
-				try {
-					return outputSchema.parse(
-						JSON.parse(text),
-					) as StructuredSchemaOutput<OutputSchema>;
-				} catch {
-					throw invalidOutputError(result);
-				}
-			}
-			throw new Error("Structured generation retry loop exhausted.");
+			});
 		},
-
-		async unstructuredGeneration(
-			input: string,
-			params: GenerationParams = {},
-		): Promise<string> {
-			const result = await request(
-				await createCommonRequest({
+		unstructuredGeneration(input: string, params: GenerationParams = {}) {
+			return Effect.gen(function* () {
+				const requestBody = yield* createCommonRequest({
 					defaultMaxOutputTokens,
 					defaultModel: options.model,
 					input,
 					params,
-				}),
-			);
-			assertResponseCompletedWithMetadata(result);
-			const text = extractOutputText(result.response.output);
-			if (!text) throw responseError(result);
-			return text;
+				});
+				const result = yield* request(requestBody);
+				try {
+					assertResponseCompleted(result.response);
+				} catch {
+					return yield* Effect.fail(responseError(result));
+				}
+				const text = extractOutputText(result.response.output);
+				return text ? text : yield* Effect.fail(responseError(result));
+			});
 		},
 	});
 }
 
-function assertResponseCompletedWithMetadata(
+function parseStructured<OutputSchema extends StructuredOutputSchema>(
 	result: OpenAiResponseResult,
-): void {
+	schema: OutputSchema,
+): Effect.Effect<StructuredSchemaOutput<OutputSchema>, AiSdkGenerationError> {
 	try {
 		assertResponseCompleted(result.response);
+		const text = extractOutputText(result.response.output);
+		if (!text) return Effect.fail(responseError(result));
+		return Effect.try({
+			try: () =>
+				schema.parse(
+					JSON.parse(text),
+				) as StructuredSchemaOutput<OutputSchema>,
+			catch: () => invalidOutputError(result),
+		});
 	} catch {
-		throw responseError(result);
+		return Effect.fail(responseError(result));
 	}
 }
-
 function responseError(result: OpenAiResponseResult): AiSdkGenerationError {
 	return createResponseError(result.response, {
 		attempts: result.attempts,
 		providerRequestId: result.providerRequestId,
 	});
 }
-
 function invalidOutputError(
 	result: OpenAiResponseResult,
 ): AiSdkGenerationError {
@@ -331,7 +366,6 @@ function invalidOutputError(
 		},
 	);
 }
-
 function classifyHttpFailure(input: {
 	readonly attempts: number;
 	readonly providerCode?: string;
@@ -339,15 +373,14 @@ function classifyHttpFailure(input: {
 	readonly retryAfterMs?: number;
 	readonly status: number;
 }): GenerationFailure {
-	const category =
-		input.status === 429
-			? "RateLimited"
-			: input.status >= 500
-				? "ProviderUnavailable"
-				: "RequestRejected";
 	return createGenerationFailure({
 		attempts: input.attempts,
-		category,
+		category:
+			input.status === 429
+				? "RateLimited"
+				: input.status >= 500
+					? "ProviderUnavailable"
+					: "RequestRejected",
 		...(input.providerCode ? { providerCode: input.providerCode } : {}),
 		...(input.providerRequestId
 			? { providerRequestId: input.providerRequestId }
@@ -358,7 +391,6 @@ function classifyHttpFailure(input: {
 		status: input.status,
 	});
 }
-
 function generationError(failure: GenerationFailure): AiSdkGenerationError {
 	return new AiSdkGenerationError(
 		"provider-error",
@@ -366,19 +398,18 @@ function generationError(failure: GenerationFailure): AiSdkGenerationError {
 		{ failure },
 	);
 }
-
 async function extractProviderCode(
 	response: Response,
 ): Promise<string | undefined> {
 	try {
 		const body = (await response.json()) as unknown;
-		if (!isRecord(body) || !isRecord(body.error)) return undefined;
-		return safeMetadataString(body.error.code);
+		return isRecord(body) && isRecord(body.error)
+			? safeMetadataString(body.error.code)
+			: undefined;
 	} catch {
 		return undefined;
 	}
 }
-
 function extractProviderRequestId(headers: Headers): string | undefined {
 	for (const name of ["x-request-id", "request-id", "openai-request-id"]) {
 		const value = safeMetadataString(headers.get(name));
@@ -386,23 +417,22 @@ function extractProviderRequestId(headers: Headers): string | undefined {
 	}
 	return undefined;
 }
-
 function safeMetadataString(value: unknown): string | undefined {
 	return typeof value === "string" && value.length > 0 && value.length <= 200
 		? value
 		: undefined;
 }
-
 function retryDelayMs(
 	attempt: number,
 	retryAfterMs: number | undefined,
 	random: () => number,
 ): number {
 	if (retryAfterMs !== undefined) return retryAfterMs;
-	const exponentialMs = Math.min(8_000, 250 * 2 ** (attempt - 1));
-	return Math.round(exponentialMs * (1 + Math.max(0, Math.min(1, random()))));
+	return Math.round(
+		Math.min(8_000, 250 * 2 ** (attempt - 1)) *
+			(1 + Math.max(0, Math.min(1, random()))),
+	);
 }
-
 function parseRetryAfterMs(value: string | undefined): number | undefined {
 	if (!value) return undefined;
 	const seconds = Number(value);
@@ -411,20 +441,13 @@ function parseRetryAfterMs(value: string | undefined): number | undefined {
 		return Number.isSafeInteger(milliseconds) ? milliseconds : undefined;
 	}
 	const date = Date.parse(value);
-	if (!Number.isFinite(date)) return undefined;
-	return Math.max(0, date - Date.now());
+	return Number.isFinite(date) ? Math.max(0, date - Date.now()) : undefined;
 }
-
 function modelFromBody(body: unknown): string {
 	return isRecord(body) && typeof body.model === "string"
 		? body.model
 		: "unknown";
 }
-
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null;
-}
-
-function defaultSleep(delayMs: number): Promise<void> {
-	return new Promise((resolve) => setTimeout(resolve, delayMs));
 }

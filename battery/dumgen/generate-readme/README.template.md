@@ -11,13 +11,17 @@ click resolution, and German Reading enrichment:
 
 - the OpenAI Responses API
 - automatic prompt caching for repeated prompt prefixes
-- Zod-backed input and output validation
+- lightweight runtime validation generated from Zod authoring schemas
 - validated Dumgen and Dumling domain results
 
 The `dumgen` root and operational subpaths do not export Zod schemas.
 Schema-authoring and model-integration callers may explicitly import the broad
 DTO schemas from `dumgen/schema`; application validation should use Dumgen's
 lightweight parser interfaces instead.
+
+Workflows return Effect 3 values with typed failures. Construct resolution and
+Knowledge independently from one injected `ModelGenerator`, or use their
+Context services and Layers. Execute the composed program at the host boundary.
 
 Example usage:
 

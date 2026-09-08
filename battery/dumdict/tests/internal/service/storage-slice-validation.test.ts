@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { DumdictReadingDraft } from "../../../src";
 import {
 	validateReadingEntryContext,
@@ -52,8 +53,8 @@ describe("storage slice validation", () => {
 
 	test("the lightweight runtime rejects malformed decoded storage before planning", async () => {
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredReadings() {
-				return {
+			findStoredReadings() {
+				return Effect.succeed({
 					revision,
 					candidates: [
 						{
@@ -61,16 +62,16 @@ describe("storage slice validation", () => {
 							lemma: { lemma: englishWalkLemma },
 						},
 					],
-				};
+				});
 			},
-			async loadReadingForPatch() {
-				throw new Error("Unexpected storage call");
+			loadReadingForPatch() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async loadReadingEntryContext() {
-				throw new Error("Unexpected storage call");
+			loadReadingEntryContext() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async commitChanges() {
-				throw new Error("Unexpected storage call");
+			commitChanges() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
 		});
 		const service = createDumdictService({
@@ -79,28 +80,28 @@ describe("storage slice validation", () => {
 		});
 
 		await expect(
-			service.findStoredReadings({ lemma: englishRunLemma }),
-		).rejects.toThrow(
-			"stored Reading candidate does not match the requested Lemma identity",
-		);
+			Effect.runPromise(
+				service.findStoredReadings({ lemma: englishRunLemma }),
+			),
+		).rejects.toThrow("stored Reading candidate does not match");
 	});
 
 	test("the lightweight runtime validates storage commit responses", async () => {
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredReadings() {
-				throw new Error("Unexpected storage call");
+			findStoredReadings() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async loadReadingForPatch() {
-				return {
+			loadReadingForPatch() {
+				return Effect.succeed({
 					revision,
 					reading: englishWalkReadingEntry(),
-				};
+				});
 			},
-			async loadReadingEntryContext() {
-				throw new Error("Unexpected storage call");
+			loadReadingEntryContext() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async commitChanges() {
-				return { status: "committed" } as never;
+			commitChanges() {
+				return Effect.succeed({ status: "committed" } as never);
 			},
 		});
 		const service = createDumdictService({
@@ -109,11 +110,13 @@ describe("storage slice validation", () => {
 		});
 
 		await expect(
-			service.addAttestation({
-				reading: englishWalkReading,
-				attestation: "We walk after dinner.",
-			}),
-		).rejects.toThrow();
+			Effect.runPromise(
+				service.addAttestation({
+					reading: englishWalkReading,
+					attestation: "We walk after dinner.",
+				}),
+			),
+		).rejects.toThrow("nextRevision");
 	});
 
 	test("rejects a candidate that does not match the requested Lemma identity", () => {

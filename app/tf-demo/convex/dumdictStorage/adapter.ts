@@ -8,6 +8,7 @@ import {
 	type RelationsCleanupInfoSlice,
 	type StoredReadingsSlice,
 } from "dumdict/runtime";
+import * as Effect from "effect/Effect";
 
 import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import { readingIdentityKey as publicReadingIdentityKey } from "../../server/linguisticOrchestration";
@@ -16,18 +17,28 @@ import type { ActionCtx } from "../_generated/server";
 import { pendingLocatorIndexKey } from "../model/dumdictPendingIndexes";
 import { dictionaryPlanResult } from "./dictionaryPlan";
 
+type DumdictStorageFailure = Readonly<{
+	_tag: "DumdictStorageFailure";
+	operation: string;
+	cause: unknown;
+}>;
+
 /** Production Convex adapter for the Shared Demo Dictionary storage seam. */
 export function createConvexDumdictStorage(
 	ctx: ActionCtx,
 ): DumdictStoragePort<"de"> {
 	return {
-		async findStoredReadings({ lemma }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.findDumdictStoredReadings,
-				{ lemmaKey: lemmaIdentityKey(lemma) },
-			) as unknown as Promise<StoredReadingsSlice<"de">>;
+		findStoredReadings({ lemma }) {
+			return storageEffect(
+				"findStoredReadings",
+				() =>
+					ctx.runQuery(
+						internal.dumdictStorage.findDumdictStoredReadings,
+						{ lemmaKey: lemmaIdentityKey(lemma) },
+					) as unknown as Promise<StoredReadingsSlice<"de">>,
+			);
 		},
-		async loadReadingEntryContext(request) {
+		loadReadingEntryContext(request) {
 			const readingKey = publicReadingIdentityKey(request.reading);
 			const args = (() => {
 				switch (request.intent) {
@@ -89,40 +100,73 @@ export function createConvexDumdictStorage(
 						};
 				}
 			})();
-			return ctx.runQuery(
-				internal.dumdictStorage.loadDumdictReadingEntryContext,
-				{ request: args },
-			) as unknown as Promise<ReadingEntryContext<"de">>;
-		},
-		async loadReadingForPatch({ reading }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.loadDumdictReadingForPatch,
-				{ readingKey: publicReadingIdentityKey(reading) },
-			) as Promise<ReadingPatchSlice<"de">>;
-		},
-		async commitChanges({ baseRevision, changes }) {
-			return ctx.runMutation(
-				internal.dumdictStorage.commitDumdictChanges,
-				dictionaryPlanResult({ baseRevision, changes }),
+			return storageEffect(
+				"loadReadingEntryContext",
+				() =>
+					ctx.runQuery(
+						internal.dumdictStorage.loadDumdictReadingEntryContext,
+						{ request: args },
+					) as unknown as Promise<ReadingEntryContext<"de">>,
 			);
 		},
-		async getInfoForRelationsCleanup({ canonicalForm }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.getDumdictRelationsCleanupInfo,
-				{ canonicalForm },
-			) as unknown as Promise<RelationsCleanupInfoSlice<"de">>;
+		loadReadingForPatch({ reading }) {
+			return storageEffect(
+				"loadReadingForPatch",
+				() =>
+					ctx.runQuery(
+						internal.dumdictStorage.loadDumdictReadingForPatch,
+						{ readingKey: publicReadingIdentityKey(reading) },
+					) as Promise<ReadingPatchSlice<"de">>,
+			);
 		},
-		async loadCleanupRelationsContext({ resolutions }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
-				{
-					locatorKeys: resolutions.map(({ locator }) =>
-						pendingLocatorIdentityKey(locator),
-					),
-				},
-			) as unknown as Promise<CleanupRelationsSlice<"de">>;
+		commitChanges({ baseRevision, changes }) {
+			return storageEffect("commitChanges", () =>
+				ctx.runMutation(
+					internal.dumdictStorage.commitDumdictChanges,
+					dictionaryPlanResult({ baseRevision, changes }),
+				),
+			);
+		},
+		getInfoForRelationsCleanup({ canonicalForm }) {
+			return storageEffect(
+				"getInfoForRelationsCleanup",
+				() =>
+					ctx.runQuery(
+						internal.dumdictStorage.getDumdictRelationsCleanupInfo,
+						{ canonicalForm },
+					) as unknown as Promise<RelationsCleanupInfoSlice<"de">>,
+			);
+		},
+		loadCleanupRelationsContext({ resolutions }) {
+			return storageEffect(
+				"loadCleanupRelationsContext",
+				() =>
+					ctx.runQuery(
+						internal.dumdictStorage
+							.loadDumdictCleanupRelationsContext,
+						{
+							locatorKeys: resolutions.map(({ locator }) =>
+								pendingLocatorIdentityKey(locator),
+							),
+						},
+					) as unknown as Promise<CleanupRelationsSlice<"de">>,
+			);
 		},
 	};
+}
+
+function storageEffect<Value>(
+	operation: string,
+	operationEffect: () => Promise<Value>,
+): Effect.Effect<Value, DumdictStorageFailure> {
+	return Effect.tryPromise({
+		try: operationEffect,
+		catch: (cause): DumdictStorageFailure => ({
+			_tag: "DumdictStorageFailure",
+			operation,
+			cause,
+		}),
+	});
 }
 
 function pendingLocatorIdentityKey(

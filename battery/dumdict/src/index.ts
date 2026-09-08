@@ -23,4 +23,5 @@ export {
 	type SemanticRelationProjection,
 } from "./relations";
 export { createDumdictService } from "./service/create-dumdict-service";
+export { createDumdictLayer } from "./service/layer";
 export type * from "./storage";

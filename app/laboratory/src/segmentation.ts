@@ -1,10 +1,11 @@
 import type {
 	Dumgen,
+	DumgenError,
 	DumgenModelExchange,
 	DumgenSection1Trace,
 	Section1Error,
-	SegmentationResult,
 } from "dumgen";
+import * as Effect from "effect/Effect";
 
 import type { SegmentationResponse } from "./shared/contract";
 
@@ -15,10 +16,6 @@ type AcceptedExchange = Extract<
 	DumgenModelExchange,
 	{ readonly phase: "accepted" }
 >;
-
-type OperationRunner = <Result>(
-	operation: () => Promise<Result>,
-) => Promise<Result>;
 
 export class LaboratorySegmentationError extends Error {
 	readonly section1Error: Section1Error;
@@ -60,55 +57,55 @@ export function attemptedPromptPaths(
 		.map(({ promptPath }) => promptPath);
 }
 
-export async function segmentForLaboratory(
+export function segmentForLaboratory(
 	dumgen: Pick<Dumgen, "segment">,
 	text: string,
 	modelExchanges: DumgenModelExchange[],
 	section1Traces: DumgenSection1Trace[] = [],
-	run: OperationRunner = (operation) => operation(),
-): Promise<SegmentationResponse> {
-	const result: SegmentationResult = await run(() => dumgen.segment([text]));
-	if (!result.ok) throw new LaboratorySegmentationError(result.error);
-	const prompts = attemptedPromptPaths(modelExchanges);
-	const intake = acceptedStage(intakePrompt, modelExchanges);
-	const decision = result.value[0];
-	if (!decision)
-		throw new Error("Dumgen returned no decision for the lab item.");
+): Effect.Effect<SegmentationResponse, DumgenError> {
+	return Effect.gen(function* () {
+		const decisions = yield* dumgen.segment([text]);
+		const prompts = attemptedPromptPaths(modelExchanges);
+		const intake = acceptedStage(intakePrompt, modelExchanges);
+		const decision = decisions[0];
+		if (!decision)
+			throw new Error("Dumgen returned no decision for the lab item.");
 
-	if (decision.decision !== "Accepted") {
+		if (decision.decision !== "Accepted") {
+			return {
+				decision: decision.decision,
+				sentence: null,
+				stages: { intake },
+				generation: { model, prompts },
+			};
+		}
+		const segmentation = section1Traces.find(
+			(trace) =>
+				trace.phase === "source-segmentation" && trace.itemIndex === 0,
+		);
+		if (segmentation?.phase !== "source-segmentation") {
+			throw new Error(
+				"No deterministic Source Segmentation trace was captured.",
+			);
+		}
+
 		return {
-			decision: decision.decision,
-			sentence: null,
-			stages: { intake },
+			decision: "Accepted",
+			sentence: decision.sentence,
+			stages: {
+				intake,
+				segmentation: {
+					prompt: `source-segmentation.${segmentation.language}`,
+					traceOrigin: "deterministic",
+					input: { stitchedText: segmentation.stitchedText },
+					output: {
+						segments: segmentation.segments,
+						rules: segmentation.rules,
+					},
+					result: decision.sentence,
+				},
+			},
 			generation: { model, prompts },
 		};
-	}
-	const segmentation = section1Traces.find(
-		(trace) =>
-			trace.phase === "source-segmentation" && trace.itemIndex === 0,
-	);
-	if (segmentation?.phase !== "source-segmentation") {
-		throw new Error(
-			"No deterministic Source Segmentation trace was captured.",
-		);
-	}
-
-	return {
-		decision: "Accepted",
-		sentence: decision.sentence,
-		stages: {
-			intake,
-			segmentation: {
-				prompt: `source-segmentation.${segmentation.language}`,
-				traceOrigin: "deterministic",
-				input: { stitchedText: segmentation.stitchedText },
-				output: {
-					segments: segmentation.segments,
-					rules: segmentation.rules,
-				},
-				result: decision.sentence,
-			},
-		},
-		generation: { model, prompts },
-	};
+	});
 }

@@ -68,12 +68,12 @@ function assert(condition: unknown, message: string): asserts condition {
 
 function noNetworkSdk() {
 	return {
-		async structuredGeneration() {
+		structuredGeneration() {
 			throw new Error(
 				"RSS representative operation must not call a model.",
 			);
 		},
-		async unstructuredGeneration() {
+		unstructuredGeneration() {
 			throw new Error(
 				"RSS representative operation must not call a model.",
 			);
@@ -314,7 +314,9 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 	},
 	"dumgen.build"(publicModule) {
 		const buildDumgen = exportedFunction(publicModule, "buildDumgen");
-		const dumgen = buildDumgen({ sdk: noNetworkSdk() } as never) as {
+		const dumgen = buildDumgen({
+			modelGenerator: noNetworkSdk(),
+		} as never) as {
 			segment?: unknown;
 		};
 		assert(
@@ -343,7 +345,7 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"buildKnowledgeDumgen",
 		);
 		const dumgen = buildKnowledgeDumgen({
-			sdk: noNetworkSdk(),
+			modelGenerator: noNetworkSdk(),
 		} as never) as {
 			generate?: unknown;
 		};
@@ -358,7 +360,7 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"buildKnowledgeDumgenRuntime",
 		);
 		const dumgen = buildKnowledgeDumgenRuntime({
-			sdk: noNetworkSdk(),
+			modelGenerator: noNetworkSdk(),
 		} as never) as {
 			generate?: unknown;
 		};
@@ -368,11 +370,11 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 		);
 	},
 	async "dumgen.openai-fetch"(publicModule) {
-		const buildOpenAiFetchSdk = exportedFunction(
+		const buildOpenAiFetchModelGenerator = exportedFunction(
 			publicModule,
-			"buildOpenAiFetchSdk",
+			"buildOpenAiFetchModelGenerator",
 		);
-		const sdk = buildOpenAiFetchSdk({
+		const sdk = buildOpenAiFetchModelGenerator({
 			apiKey: "rss-audit",
 			fetch: async () =>
 				Response.json({
@@ -385,10 +387,14 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 					status: "completed",
 				}),
 		} as never) as {
-			unstructuredGeneration(input: string): Promise<string>;
+			unstructuredGeneration(
+				input: string,
+			): import("effect/Effect").Effect<string, unknown>;
 		};
 		assert(
-			(await sdk.unstructuredGeneration("rss audit")) === "ok",
+			(await (
+				await import("effect/Effect")
+			).runPromise(sdk.unstructuredGeneration("rss audit"))) === "ok",
 			"Dumgen fetch adapter must complete a representative response.",
 		);
 	},
@@ -398,12 +404,7 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"buildDumgenRuntime",
 		);
 		const dumgen = buildDumgenRuntime({
-			generateKnowledge: async () => {
-				throw new Error(
-					"RSS representative operation must not call a model.",
-				);
-			},
-			sdk: noNetworkSdk(),
+			modelGenerator: noNetworkSdk(),
 		} as never) as { resolve?: unknown };
 		assert(
 			typeof dumgen.resolve === "object",

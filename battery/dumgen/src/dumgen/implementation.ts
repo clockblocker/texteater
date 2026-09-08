@@ -1,5 +1,6 @@
+import { recordTrace } from "common-utils/workflow";
 import type { Attestation, Lemma, Reading } from "dumling/types";
-
+import * as Effect from "effect/Effect";
 import type { RUNTIME_PROMPT_CATALOG } from "../catalog/runtime-prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
@@ -26,9 +27,6 @@ import type {
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
 	GrammaticalRoute,
-	KnowledgeGenerationInput,
-	KnowledgeGenerationLanguage,
-	KnowledgeGenerationResult,
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
@@ -41,31 +39,23 @@ import type {
 
 type DumgenGenerators = GeneratorCatalog<typeof RUNTIME_PROMPT_CATALOG>;
 export type DumgenSection1Trace = IntakeTrace | SourceSegmentationTrace;
-type DumgenImplementationOptions = Readonly<{
-	readonly onSection1Trace?: (trace: DumgenSection1Trace) => void;
-	readonly generateKnowledge: (
-		language: KnowledgeGenerationLanguage,
-		input: KnowledgeGenerationInput<"de">,
-	) => Promise<KnowledgeGenerationResult>;
-}>;
 type GrammaticalGenerator = (input: {
 	readonly markedContext: string;
 	readonly members: string[];
-}) => Promise<GrammaticalResolution>;
+}) => Effect.Effect<GrammaticalResolution, DumgenError>;
 type GrammaticalRouteKey<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
 	Route = GrammaticalRoute<L>,
 > =
 	Route extends GrammaticalRoute<L>
-		? Route extends { readonly family: string; readonly kind: string }
+		? Route extends {
+				readonly family: string;
+				readonly kind: string;
+			}
 			? `${L}/${Route["family"]}/${Route["kind"]}`
 			: never
 		: never;
-
-export function createDumgenImplementation(
-	generators: DumgenGenerators,
-	options: DumgenImplementationOptions,
-) {
+export function createDumgenImplementation(generators: DumgenGenerators) {
 	const targetClassificationRoutes = Object.freeze({
 		de: generators.laboratory.targetClassification.de.highLevelWholeUnit,
 	});
@@ -122,380 +112,371 @@ export function createDumgenImplementation(
 		SegmentedSentence<"de">,
 		Map<number, CachedGrammaticalResolution>
 	>();
-
-	async function segment(
+	function segment(
 		sourceSentences: readonly string[],
-	): Promise<SegmentationResult> {
-		const inputError = validateSegmentationInput(sourceSentences);
-		if (inputError) {
-			return unwrapDumgenParse(
-				parseAsSegmentationResult({
-					ok: false,
-					error: inputError,
-				}),
-			);
-		}
-
-		let intake: Awaited<ReturnType<typeof generators.laboratory.intake>>;
-		try {
-			intake = await generators.laboratory.intake({
+	): Effect.Effect<SegmentationResult, DumgenError> {
+		return Effect.gen(function* () {
+			const inputError = validateSegmentationInput(sourceSentences);
+			if (inputError) {
+				return unwrapDumgenParse(
+					parseAsSegmentationResult({
+						ok: false,
+						error: inputError,
+					}),
+				);
+			}
+			const intake = yield* generators.laboratory.intake({
 				items: sourceSentences.map((sourceText, index) => ({
 					id: `item-${index}`,
 					sourceText,
 				})),
 			});
-		} catch (cause) {
-			const error =
-				cause instanceof DumgenError
-					? cause
-					: new DumgenError("provider-error", "Intake failed.", {
-							cause,
-						});
-			return unwrapDumgenParse(
-				parseAsSegmentationResult({
-					ok: false,
-					error: {
-						code: "IntakeFailure",
-						reason: error.code,
-						message: error.message,
-					},
-				}),
-			);
-		}
-
-		notifySection1(options, {
-			phase: "intake",
-			items: intake.items,
-		});
-		const decisions: SegmentationDecision[] = [];
-		for (
-			let itemIndex = 0;
-			itemIndex < intake.items.length;
-			itemIndex += 1
-		) {
-			const item = intake.items[itemIndex];
-			if (!item) {
-				throw invalidOutput("Validated Intake item is missing.");
-			}
-			if (item.decision !== "Accepted") {
-				decisions.push(Object.freeze({ decision: item.decision }));
-				continue;
-			}
-			if (!item.language) {
-				throw invalidOutput("Accepted Intake item has no language.");
-			}
-
-			const source = segmentSource(item.language, item.stitchedText);
-			notifySection1(options, {
-				phase: "source-segmentation",
-				itemIndex,
-				language: item.language,
-				stitchedText: item.stitchedText,
-				segments: source.segments,
-				rules: Object.freeze(source.trace.map(({ rule }) => rule)),
+			yield* recordTrace("section1", {
+				phase: "intake",
+				items: intake.items,
 			});
-			if (item.language === "de") {
-				const sentence = Object.freeze({
-					id: crypto.randomUUID() as SegmentedSentenceId,
-					language: "de",
+			const decisions: SegmentationDecision[] = [];
+			for (
+				let itemIndex = 0;
+				itemIndex < intake.items.length;
+				itemIndex += 1
+			) {
+				const item = intake.items[itemIndex];
+				if (!item) {
+					throw invalidOutput("Validated Intake item is missing.");
+				}
+				if (item.decision !== "Accepted") {
+					decisions.push(Object.freeze({ decision: item.decision }));
+					continue;
+				}
+				if (!item.language) {
+					throw invalidOutput(
+						"Accepted Intake item has no language.",
+					);
+				}
+				const source = segmentSource(item.language, item.stitchedText);
+				yield* recordTrace("section1", {
+					phase: "source-segmentation",
+					itemIndex,
+					language: item.language,
+					stitchedText: item.stitchedText,
 					segments: source.segments,
-				}) satisfies SegmentedSentence<"de">;
-				decisions.push(
-					Object.freeze({
-						decision: "Accepted",
+					rules: Object.freeze(source.trace.map(({ rule }) => rule)),
+				});
+				if (item.language === "de") {
+					const sentence = Object.freeze({
+						id: crypto.randomUUID() as SegmentedSentenceId,
 						language: "de",
-						sentence,
-					}),
-				);
-			} else {
-				const sentence = Object.freeze({
-					id: crypto.randomUUID() as SegmentedSentenceId,
-					language: "he",
-					segments: source.segments,
-				}) satisfies SegmentedSentence<"he">;
-				decisions.push(
-					Object.freeze({
-						decision: "Accepted",
+						segments: source.segments,
+					}) satisfies SegmentedSentence<"de">;
+					decisions.push(
+						Object.freeze({
+							decision: "Accepted",
+							language: "de",
+							sentence,
+						}),
+					);
+				} else {
+					const sentence = Object.freeze({
+						id: crypto.randomUUID() as SegmentedSentenceId,
 						language: "he",
-						sentence,
-					}),
-				);
+						segments: source.segments,
+					}) satisfies SegmentedSentence<"he">;
+					decisions.push(
+						Object.freeze({
+							decision: "Accepted",
+							language: "he",
+							sentence,
+						}),
+					);
+				}
 			}
-		}
-
-		return unwrapDumgenParse(
-			parseAsSegmentationResult({ ok: true, value: decisions }),
-		);
+			return unwrapDumgenParse(
+				parseAsSegmentationResult({ ok: true, value: decisions }),
+			);
+		});
 	}
-
-	async function grammatical<L extends GrammaticalResolutionLanguage>(
+	function grammatical<L extends GrammaticalResolutionLanguage>(
 		language: L,
 		input: GrammaticalInput<L>,
-	): Promise<GrammaticalResult<L>> {
-		assertGrammaticalInput(language, input);
-		const { sentence, clickedSegmentIndex } = input;
-		const germanSentence = sentence as SegmentedSentence<"de">;
-		const cached = resolvedGrammarBySentence
-			.get(germanSentence)
-			?.get(clickedSegmentIndex);
-		if (cached) {
-			return parseGrammaticalResult({
+	): Effect.Effect<GrammaticalResult<L>, DumgenError> {
+		return Effect.gen(function* () {
+			assertGrammaticalInput(language, input);
+			const { sentence, clickedSegmentIndex } = input;
+			const germanSentence = sentence as SegmentedSentence<"de">;
+			const cached = resolvedGrammarBySentence
+				.get(germanSentence)
+				?.get(clickedSegmentIndex);
+			if (cached) {
+				return parseGrammaticalResult({
+					decision: "Resolved",
+					language,
+					markedContext: cached.markedContext,
+					attestation: cached.attestation,
+					interaction: constructInteraction(
+						germanSentence,
+						clickedSegmentIndex,
+						cached.target,
+					),
+				});
+			}
+			const targetClassifier = targetClassificationRoutes[language];
+			if (!targetClassifier) {
+				throw invalidInput(
+					`Grammatical Resolution is not enabled for language ${language}.`,
+				);
+			}
+			const target = yield* targetClassifier({
+				clickedSegmentIndex,
+				segments: sentence.segments.map(({ kind, text }) => ({
+					kind,
+					text,
+				})),
+			});
+			if ("decision" in target) {
+				return parseGrammaticalResult({
+					decision: "Unresolved",
+					language,
+				});
+			}
+			assertTarget(sentence, clickedSegmentIndex, target);
+			const routeKey =
+				`${language}/${target.family}/${target.kind}` as const;
+			const grammar =
+				enabledGrammaticalRoutes[routeKey as GrammaticalRouteKey];
+			if (!grammar) {
+				return parseGrammaticalResult({
+					decision: "NotImplemented",
+					language,
+					route: Object.freeze({
+						family: target.family,
+						kind: target.kind,
+					}),
+				});
+			}
+			const grammarInput = projectGrammaticalResolutionInput({
+				segments: sentence.segments,
+				memberSegmentIndices: target.memberSegmentIndices as readonly [
+					number,
+					...number[],
+				],
+			});
+			const route = lemmaRouteFor(target);
+			const { isClosedRouteFor } = yield* Effect.promise(
+				() => import("dumling"),
+			);
+			const resolutionOrMiss = yield* dispatchProduction<
+				| GrammaticalResolution
+				| Extract<
+						GrammaticalResult<"de">,
+						{
+							decision: "CatalogMiss";
+						}
+				  >
+			>({
+				closed: isClosedRouteFor.lemma(route),
+				runOpen: () =>
+					Effect.gen(function* () {
+						const candidate = yield* generateGrammaticalCandidate(
+							grammar,
+							grammarInput,
+							target,
+						);
+						const { fixedPopulationFor } = yield* Effect.promise(
+							() => import("dumling/fixed"),
+						);
+						const fixedLemma = fixedPopulationFor
+							.lemma(route)
+							?.members.find((member) =>
+								sameLemma(member, candidate.surface.lemma),
+							);
+						return fixedLemma
+							? withFixedLemma(candidate, fixedLemma)
+							: candidate;
+					}),
+				runClosed: () =>
+					Effect.gen(function* () {
+						const { fixedMembersFor } = yield* Effect.promise(
+							() => import("dumling/fixed"),
+						);
+						const candidate = yield* generateGrammaticalCandidate(
+							grammar,
+							grammarInput,
+							target,
+						);
+						const catalog = fixedMembersFor.lemma(route);
+						if (!catalog) {
+							return Object.freeze({
+								decision: "CatalogMiss",
+								reason: "InventoryNotLoaded",
+								language: "de",
+								route: routeFor(target),
+								stage: "Lemma",
+								candidate: candidate.surface.lemma,
+							});
+						}
+						const fixedLemma = catalog.members.find((member) =>
+							sameLemma(member, candidate.surface.lemma),
+						);
+						if (!fixedLemma) {
+							return Object.freeze({
+								decision: "CatalogMiss",
+								reason: "MemberNotCatalogued",
+								language: "de",
+								route: routeFor(target),
+								stage: "Lemma",
+								candidate: candidate.surface.lemma,
+							});
+						}
+						return withFixedLemma(candidate, fixedLemma);
+					}),
+			});
+			if ("decision" in resolutionOrMiss) {
+				return parseGrammaticalResult(
+					resolutionOrMiss,
+				) as GrammaticalResult<L>;
+			}
+			const resolution = resolutionOrMiss;
+			const attestation = constructAttestation(
+				germanSentence,
+				target,
+				resolution,
+			);
+			if (attestation.surface.language !== language) {
+				throw invalidOutput(
+					"Grammatical Resolution returned an Attestation in another language.",
+				);
+			}
+			const result = parseGrammaticalResult<L>({
 				decision: "Resolved",
 				language,
-				markedContext: cached.markedContext,
-				attestation: cached.attestation,
+				markedContext: grammarInput.markedContext,
+				attestation,
 				interaction: constructInteraction(
 					germanSentence,
 					clickedSegmentIndex,
-					cached.target,
+					target,
 				),
 			});
-		}
-		const targetClassifier = targetClassificationRoutes[language];
-		if (!targetClassifier) {
-			throw invalidInput(
-				`Grammatical Resolution is not enabled for language ${language}.`,
-			);
-		}
-
-		const target = await targetClassifier({
-			clickedSegmentIndex,
-			segments: sentence.segments.map(({ kind, text }) => ({
-				kind,
-				text,
-			})),
-		});
-		if ("decision" in target) {
-			return parseGrammaticalResult({
-				decision: "Unresolved",
-				language,
-			});
-		}
-		assertTarget(sentence, clickedSegmentIndex, target);
-
-		const routeKey = `${language}/${target.family}/${target.kind}` as const;
-		const grammar =
-			enabledGrammaticalRoutes[routeKey as GrammaticalRouteKey];
-		if (!grammar) {
-			return parseGrammaticalResult({
-				decision: "NotImplemented",
-				language,
-				route: Object.freeze({
-					family: target.family,
-					kind: target.kind,
-				}),
-			});
-		}
-
-		const grammarInput = projectGrammaticalResolutionInput({
-			segments: sentence.segments,
-			memberSegmentIndices: target.memberSegmentIndices as readonly [
-				number,
-				...number[],
-			],
-		});
-		const route = lemmaRouteFor(target);
-		const { isClosedRouteFor } = await import("dumling");
-		const resolutionOrMiss = await dispatchProduction<
-			| GrammaticalResolution
-			| Extract<GrammaticalResult<"de">, { decision: "CatalogMiss" }>
-		>({
-			closed: isClosedRouteFor.lemma(route),
-			runOpen: async () => {
-				const candidate = await generateGrammaticalCandidate(
-					grammar,
-					grammarInput,
-					target,
-				);
-				const { fixedPopulationFor } = await import("dumling/fixed");
-				const fixedLemma = fixedPopulationFor
-					.lemma(route)
-					?.members.find((member) =>
-						sameLemma(member, candidate.surface.lemma),
-					);
-				return fixedLemma
-					? withFixedLemma(candidate, fixedLemma)
-					: candidate;
-			},
-			runClosed: async () => {
-				const { fixedMembersFor } = await import("dumling/fixed");
-				const candidate = await generateGrammaticalCandidate(
-					grammar,
-					grammarInput,
-					target,
-				);
-				const catalog = fixedMembersFor.lemma(route);
-				if (!catalog) {
-					return Object.freeze({
-						decision: "CatalogMiss",
-						reason: "InventoryNotLoaded",
-						language: "de",
-						route: routeFor(target),
-						stage: "Lemma",
-						candidate: candidate.surface.lemma,
-					});
-				}
-				const fixedLemma = catalog.members.find((member) =>
-					sameLemma(member, candidate.surface.lemma),
-				);
-				if (!fixedLemma) {
-					return Object.freeze({
-						decision: "CatalogMiss",
-						reason: "MemberNotCatalogued",
-						language: "de",
-						route: routeFor(target),
-						stage: "Lemma",
-						candidate: candidate.surface.lemma,
-					});
-				}
-				return withFixedLemma(candidate, fixedLemma);
-			},
-		});
-		if ("decision" in resolutionOrMiss) {
-			return parseGrammaticalResult(
-				resolutionOrMiss,
-			) as GrammaticalResult<L>;
-		}
-		const resolution = resolutionOrMiss;
-
-		const attestation = constructAttestation(
-			germanSentence,
-			target,
-			resolution,
-		);
-		if (attestation.surface.language !== language) {
-			throw invalidOutput(
-				"Grammatical Resolution returned an Attestation in another language.",
-			);
-		}
-		const result = parseGrammaticalResult<L>({
-			decision: "Resolved",
-			language,
-			markedContext: grammarInput.markedContext,
-			attestation,
-			interaction: constructInteraction(
-				germanSentence,
-				clickedSegmentIndex,
+			const cachedResolution = Object.freeze({
 				target,
-			),
+				attestation,
+				markedContext: grammarInput.markedContext,
+			});
+			const cachedByMember =
+				resolvedGrammarBySentence.get(germanSentence) ??
+				new Map<number, CachedGrammaticalResolution>();
+			for (const memberIndex of target.memberSegmentIndices) {
+				cachedByMember.set(memberIndex, cachedResolution);
+			}
+			resolvedGrammarBySentence.set(germanSentence, cachedByMember);
+			return result;
 		});
-
-		const cachedResolution = Object.freeze({
-			target,
-			attestation,
-			markedContext: grammarInput.markedContext,
-		});
-		const cachedByMember =
-			resolvedGrammarBySentence.get(germanSentence) ??
-			new Map<number, CachedGrammaticalResolution>();
-		for (const memberIndex of target.memberSegmentIndices) {
-			cachedByMember.set(memberIndex, cachedResolution);
-		}
-		resolvedGrammarBySentence.set(germanSentence, cachedByMember);
-
-		return result;
 	}
-
-	async function reading<L extends ReadingResolutionLanguage>(
+	function reading<L extends ReadingResolutionLanguage>(
 		language: L,
 		input: ReadingInput<L>,
-	): Promise<ReadingResolution> {
-		if (language !== "de" || !readingRoutes[language]) {
-			throw invalidInput(
-				`Reading Resolution is not enabled for language ${language}.`,
-			);
-		}
-		if (
-			typeof input !== "object" ||
-			input === null ||
-			typeof input.markedContext !== "string" ||
-			input.markedContext.length === 0 ||
-			typeof input.lemma !== "object" ||
-			input.lemma === null ||
-			input.lemma.language !== "de" ||
-			typeof input.lemma.canonicalForm !== "string" ||
-			input.lemma.canonicalForm.length === 0 ||
-			!Array.isArray(input.existingEmojiDescriptions)
-		) {
-			throw invalidInput("Reading Resolution input is invalid.");
-		}
-
-		const germanInput = input as unknown as ReadingInput<"de">;
-		const route = lemmaRouteFor(germanInput.lemma);
-		const { isClosedRouteFor } = await import("dumling");
-		const runOpen = async (): Promise<ReadingResolution> => {
-			const { fixedPopulationFor } = await import("dumling/fixed");
-			const fixed = fixedPopulationFor.reading(germanInput.lemma);
-			if (fixed?.members.length === 1) {
-				return readingSuccess(
-					fixed.members[0] as Reading<"de">,
-					germanInput.existingEmojiDescriptions,
+	): Effect.Effect<ReadingResolution, DumgenError> {
+		return Effect.gen(function* () {
+			if (language !== "de" || !readingRoutes[language]) {
+				throw invalidInput(
+					`Reading Resolution is not enabled for language ${language}.`,
 				);
 			}
-			const candidate = await generateReadingCandidate(
-				readingRoutes.de,
-				germanInput,
+			if (
+				typeof input !== "object" ||
+				input === null ||
+				typeof input.markedContext !== "string" ||
+				input.markedContext.length === 0 ||
+				typeof input.lemma !== "object" ||
+				input.lemma === null ||
+				input.lemma.language !== "de" ||
+				typeof input.lemma.canonicalForm !== "string" ||
+				input.lemma.canonicalForm.length === 0 ||
+				!Array.isArray(input.existingEmojiDescriptions)
+			) {
+				throw invalidInput("Reading Resolution input is invalid.");
+			}
+			const germanInput = input as unknown as ReadingInput<"de">;
+			const route = lemmaRouteFor(germanInput.lemma);
+			const { isClosedRouteFor } = yield* Effect.promise(
+				() => import("dumling"),
 			);
-			return readingSuccess(
-				candidate,
-				germanInput.existingEmojiDescriptions,
-			);
-		};
-		return dispatchProduction<ReadingResolution>({
-			closed: isClosedRouteFor.reading(route),
-			runOpen,
-			runClosed: async () => {
-				const { fixedMembersFor } = await import("dumling/fixed");
-				const catalog = fixedMembersFor.reading(germanInput.lemma);
-				if (catalog?.members.length === 1) {
+			const runOpen = (): Effect.Effect<ReadingResolution, DumgenError> =>
+				Effect.gen(function* () {
+					const { fixedPopulationFor } = yield* Effect.promise(
+						() => import("dumling/fixed"),
+					);
+					const fixed = fixedPopulationFor.reading(germanInput.lemma);
+					if (fixed?.members.length === 1) {
+						return readingSuccess(
+							fixed.members[0] as Reading<"de">,
+							germanInput.existingEmojiDescriptions,
+						);
+					}
+					const candidate = yield* generateReadingCandidate(
+						readingRoutes.de,
+						generators.laboratory.readingGeneration.de,
+						germanInput,
+					);
 					return readingSuccess(
-						catalog.members[0] as Reading<"de">,
+						candidate,
 						germanInput.existingEmojiDescriptions,
 					);
-				}
-				const candidate = await generateReadingCandidate(
-					readingRoutes.de,
-					germanInput,
-				);
-				if (!catalog) {
-					return catalogMissForReading(
-						"InventoryNotLoaded",
-						germanInput.lemma,
-						candidate,
-					);
-				}
-				const fixedReading = catalog.members.find(
-					(member) =>
-						member.emojiDescription === candidate.emojiDescription,
-				);
-				return fixedReading
-					? readingSuccess(
-							fixedReading as Reading<"de">,
-							germanInput.existingEmojiDescriptions,
-						)
-					: catalogMissForReading(
-							"MemberNotCatalogued",
-							germanInput.lemma,
-							candidate,
+				});
+			return yield* dispatchProduction<ReadingResolution>({
+				closed: isClosedRouteFor.reading(route),
+				runOpen,
+				runClosed: () =>
+					Effect.gen(function* () {
+						const { fixedMembersFor } = yield* Effect.promise(
+							() => import("dumling/fixed"),
 						);
-			},
+						const catalog = fixedMembersFor.reading(
+							germanInput.lemma,
+						);
+						if (catalog?.members.length === 1) {
+							return readingSuccess(
+								catalog.members[0] as Reading<"de">,
+								germanInput.existingEmojiDescriptions,
+							);
+						}
+						const candidate = yield* generateReadingCandidate(
+							readingRoutes.de,
+							generators.laboratory.readingGeneration.de,
+							germanInput,
+						);
+						if (!catalog) {
+							return catalogMissForReading(
+								"InventoryNotLoaded",
+								germanInput.lemma,
+								candidate,
+							);
+						}
+						const fixedReading = catalog.members.find(
+							(member) =>
+								member.emojiDescription ===
+								candidate.emojiDescription,
+						);
+						return fixedReading
+							? readingSuccess(
+									fixedReading as Reading<"de">,
+									germanInput.existingEmojiDescriptions,
+								)
+							: catalogMissForReading(
+									"MemberNotCatalogued",
+									germanInput.lemma,
+									candidate,
+								);
+					}),
+			});
 		});
 	}
-
-	async function knowledge(
-		language: KnowledgeGenerationLanguage,
-		input: KnowledgeGenerationInput<"de">,
-	): Promise<KnowledgeGenerationResult> {
-		return options.generateKnowledge(language, input);
-	}
-
 	return Object.freeze({
 		segment,
 		resolve: Object.freeze({ grammatical, reading }),
-		generate: Object.freeze({ knowledge }),
 	});
 }
-
 function withFixedLemma(
 	candidate: GrammaticalResolution,
 	fixedLemma: Lemma,
@@ -508,45 +489,61 @@ function withFixedLemma(
 		}),
 	}) as GrammaticalResolution;
 }
-
 type CachedGrammaticalResolution = {
 	readonly target: AnalysisTarget;
 	readonly attestation: Attestation<"de">;
 	readonly markedContext: string;
 };
-
-async function generateGrammaticalCandidate(
+function generateGrammaticalCandidate(
 	grammar: GrammaticalGenerator,
 	input: GrammaticalResolutionInput,
 	target: AnalysisTarget,
-): Promise<GrammaticalResolution> {
-	const resolution = await grammar({
-		markedContext: input.markedContext,
-		members: [...input.members],
+): Effect.Effect<GrammaticalResolution, DumgenError> {
+	return Effect.gen(function* () {
+		const resolution = yield* grammar({
+			markedContext: input.markedContext,
+			members: [...input.members],
+		});
+		assertGrammaticalResolution(target, resolution);
+		return resolution;
 	});
-	assertGrammaticalResolution(target, resolution);
-	return resolution;
 }
-
-async function generateReadingCandidate(
+function generateReadingCandidate(
 	generate: (input: {
 		readonly markedContext: string;
 		readonly lemma: string;
 		readonly existingEmojiDescriptions: readonly string[];
-	}) => Promise<Readonly<{ emojiDescription: string }>>,
+	}) => Effect.Effect<
+		Readonly<{
+			emojiDescription: string;
+		}>,
+		DumgenError
+	>,
+	generateNew: (input: {
+		readonly markedContext: string;
+		readonly lemma: string;
+	}) => Effect.Effect<Readonly<{ emojiDescription: string }>, DumgenError>,
 	input: ReadingInput<"de">,
-): Promise<Reading<"de">> {
-	const generated = await generate({
-		markedContext: input.markedContext,
-		lemma: input.lemma.canonicalForm,
-		existingEmojiDescriptions: [...input.existingEmojiDescriptions],
-	});
-	return Object.freeze({
-		lemma: input.lemma,
-		emojiDescription: generated.emojiDescription,
+): Effect.Effect<Reading<"de">, DumgenError> {
+	return Effect.gen(function* () {
+		const generated = yield* input.existingEmojiDescriptions.length === 0
+			? generateNew({
+					markedContext: input.markedContext,
+					lemma: input.lemma.canonicalForm,
+				})
+			: generate({
+					markedContext: input.markedContext,
+					lemma: input.lemma.canonicalForm,
+					existingEmojiDescriptions: [
+						...input.existingEmojiDescriptions,
+					],
+				});
+		return Object.freeze({
+			lemma: input.lemma,
+			emojiDescription: generated.emojiDescription,
+		});
 	});
 }
-
 function readingSuccess(
 	reading: Reading<"de">,
 	existingEmojiDescriptions: readonly string[],
@@ -558,7 +555,6 @@ function readingSuccess(
 		emojiDescription: reading.emojiDescription,
 	});
 }
-
 function catalogMissForReading(
 	reason: "MemberNotCatalogued" | "InventoryNotLoaded",
 	lemma: Lemma<"de">,
@@ -573,7 +569,6 @@ function catalogMissForReading(
 		candidate,
 	});
 }
-
 function sameLemma(left: Lemma, right: Lemma): boolean {
 	if (
 		left.language !== right.language ||
@@ -600,7 +595,6 @@ function sameLemma(left: Lemma, right: Lemma): boolean {
 			: leftValue === rightValue;
 	});
 }
-
 function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 	language: L,
 	input: GrammaticalInput<L>,
@@ -614,7 +608,6 @@ function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 		);
 	}
 }
-
 function parseGrammaticalResult<L extends GrammaticalResolutionLanguage>(
 	value: object,
 ): GrammaticalResult<L>;
@@ -622,7 +615,6 @@ function parseGrammaticalResult(value: object): GrammaticalResult<"de"> {
 	assertValidGermanGrammaticalResult(value);
 	return Object.freeze(value);
 }
-
 function assertValidGermanGrammaticalResult(
 	value: object,
 ): asserts value is GrammaticalResult<"de"> {
@@ -633,7 +625,6 @@ function assertValidGermanGrammaticalResult(
 			parsed,
 		);
 }
-
 function assertTarget(
 	sentence: SegmentedSentence<"de">,
 	clickedSegmentIndex: number,
@@ -646,7 +637,6 @@ function assertTarget(
 	) {
 		throw invalidOutput("Target Classification returned an invalid route.");
 	}
-
 	for (
 		let position = 0;
 		position < target.memberSegmentIndices.length;
@@ -666,7 +656,6 @@ function assertTarget(
 		}
 	}
 }
-
 function assertGrammaticalResolution(
 	target: AnalysisTarget,
 	resolution: GrammaticalResolution,
@@ -690,7 +679,6 @@ function assertGrammaticalResolution(
 		);
 	}
 }
-
 function constructAttestation(
 	sentence: SegmentedSentence<"de">,
 	target: AnalysisTarget,
@@ -704,7 +692,6 @@ function constructAttestation(
 		realizationCoverage: resolution.realizationCoverage,
 		surface: resolution.surface,
 	};
-
 	const parsed = parseAsGermanAttestation(value);
 	if (parsed instanceof ParsingError) {
 		throw invalidOutput(
@@ -714,7 +701,6 @@ function constructAttestation(
 	}
 	return parsed;
 }
-
 function constructInteraction(
 	sentence: SegmentedSentence<"de">,
 	clickedSegmentIndex: number,
@@ -728,7 +714,6 @@ function constructInteraction(
 		]) as readonly [number, ...number[]],
 	});
 }
-
 function validateSegmentationInput(
 	value: readonly string[],
 ): Section1Error | undefined {
@@ -775,22 +760,9 @@ function validateSegmentationInput(
 	}
 	return undefined;
 }
-
-function notifySection1(
-	options: DumgenImplementationOptions,
-	trace: DumgenSection1Trace,
-): void {
-	try {
-		options.onSection1Trace?.(structuredClone(trace));
-	} catch {
-		// Instrumentation is diagnostic-only and cannot affect the operation.
-	}
-}
-
 function invalidInput(message: string): DumgenError {
 	return new DumgenError("invalid-input", message);
 }
-
 function invalidOutput(message: string, cause?: unknown): DumgenError {
 	return new DumgenError(
 		"invalid-output",

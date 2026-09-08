@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import {
 	createDumdictService,
 	englishRunReading,
@@ -6,6 +7,7 @@ import {
 	englishWalkReading,
 	englishWalkReadingEntry,
 	enSerializedNotes,
+	failure,
 	getBootedUpDumdict,
 	type StoreRevision,
 	withUnusedCleanupStorageMethods,
@@ -15,10 +17,12 @@ describe("configured service", () => {
 	test("addAttestation appends an attestation to an existing Reading", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 
-		const result = await dict.addAttestation({
-			reading: englishWalkReading,
-			attestation: "I walk every morning.",
-		});
+		const result = await Effect.runPromise(
+			dict.addAttestation({
+				reading: englishWalkReading,
+				attestation: "I walk every morning.",
+			}),
+		);
 
 		expect(result.status).toBe("applied");
 		expect(storage.loadAll()[0]?.readingEntries[0]?.attestations).toContain(
@@ -29,13 +33,15 @@ describe("configured service", () => {
 	test("addAttestation reports a missing Reading cleanly", async () => {
 		const { dict } = getBootedUpDumdict("en", enSerializedNotes);
 
-		const result = await dict.addAttestation({
-			reading: englishRunReading,
-			attestation: "They run every day.",
-		});
+		const result = await failure(
+			dict.addAttestation({
+				reading: englishRunReading,
+				attestation: "They run every day.",
+			}),
+		);
 
 		expect(result).toMatchObject({
-			status: "rejected",
+			_tag: "DumdictRejection",
 			code: "readingMissing",
 		});
 	});
@@ -43,30 +49,32 @@ describe("configured service", () => {
 	test("addAttestation rejects patch slices for a different Reading", async () => {
 		let commitCalls = 0;
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredReadings() {
-				throw new Error("Unexpected storage call");
+			findStoredReadings() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async loadReadingForPatch() {
-				return {
+			loadReadingForPatch() {
+				return Effect.succeed({
 					revision: "patch-1" as StoreRevision,
 					reading: englishWalkReadingEntry(),
-				};
+				});
 			},
-			async loadReadingEntryContext() {
-				throw new Error("Unexpected storage call");
+			loadReadingEntryContext() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async commitChanges() {
+			commitChanges() {
 				commitCalls += 1;
-				throw new Error("Unexpected storage call");
+				return Effect.die(new Error("Unexpected storage call"));
 			},
 		});
 		const dict = createDumdictService({ language: "en", storage });
 
 		await expect(
-			dict.addAttestation({
-				reading: englishRunReading,
-				attestation: "They run every day.",
-			}),
+			Effect.runPromise(
+				dict.addAttestation({
+					reading: englishRunReading,
+					attestation: "They run every day.",
+				}),
+			),
 		).rejects.toThrow("reading patch slice");
 		expect(commitCalls).toBe(0);
 	});
@@ -74,8 +82,8 @@ describe("configured service", () => {
 	test("addAttestation reloads patch context instead of using stale lookup revision", async () => {
 		let committedBaseRevision: StoreRevision | undefined;
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredReadings() {
-				return {
+			findStoredReadings() {
+				return Effect.succeed({
 					revision: "lookup-1" as StoreRevision,
 					candidates: [
 						{
@@ -83,34 +91,38 @@ describe("configured service", () => {
 							lemma: { lemma: englishWalkLemma },
 						},
 					],
-				};
+				});
 			},
-			async loadReadingForPatch() {
-				return {
+			loadReadingForPatch() {
+				return Effect.succeed({
 					revision: "patch-2" as StoreRevision,
 					reading: englishWalkReadingEntry(),
-				};
+				});
 			},
-			async loadReadingEntryContext() {
-				throw new Error("Unexpected storage call");
+			loadReadingEntryContext() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async commitChanges(request) {
+			commitChanges(request) {
 				committedBaseRevision = request.baseRevision;
-				return {
+				return Effect.succeed({
 					status: "committed",
 					nextRevision: "patch-3" as StoreRevision,
-				};
+				});
 			},
 		});
 		const dict = createDumdictService({ language: "en", storage });
 
-		await dict.findStoredReadings({
-			lemma: englishWalkLemma,
-		});
-		const result = await dict.addAttestation({
-			reading: englishWalkReading,
-			attestation: "We walk after dinner.",
-		});
+		await Effect.runPromise(
+			dict.findStoredReadings({
+				lemma: englishWalkLemma,
+			}),
+		);
+		const result = await Effect.runPromise(
+			dict.addAttestation({
+				reading: englishWalkReading,
+				attestation: "We walk after dinner.",
+			}),
+		);
 
 		expect(result.status).toBe("applied");
 		if (result.status !== "applied") {
@@ -122,36 +134,37 @@ describe("configured service", () => {
 
 	test("addAttestation surfaces storage conflicts as mutation results", async () => {
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredReadings() {
-				throw new Error("Unexpected storage call");
+			findStoredReadings() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async loadReadingForPatch() {
-				return {
+			loadReadingForPatch() {
+				return Effect.succeed({
 					revision: "patch-1" as StoreRevision,
 					reading: englishWalkReadingEntry(),
-				};
+				});
 			},
-			async loadReadingEntryContext() {
-				throw new Error("Unexpected storage call");
+			loadReadingEntryContext() {
+				return Effect.die(new Error("Unexpected storage call"));
 			},
-			async commitChanges() {
-				return {
+			commitChanges() {
+				return Effect.succeed({
 					status: "conflict",
 					code: "revisionConflict",
 					latestRevision: "patch-2" as StoreRevision,
-				};
+				});
 			},
 		});
 		const dict = createDumdictService({ language: "en", storage });
 
-		const result = await dict.addAttestation({
-			reading: englishWalkReading,
-			attestation: "We walk after dinner.",
-		});
+		const result = await failure(
+			dict.addAttestation({
+				reading: englishWalkReading,
+				attestation: "We walk after dinner.",
+			}),
+		);
 
 		expect(result).toMatchObject({
-			status: "conflict",
-			code: "revisionConflict",
+			_tag: "DumdictRevisionConflict",
 			baseRevision: "patch-1",
 			latestRevision: "patch-2",
 		});

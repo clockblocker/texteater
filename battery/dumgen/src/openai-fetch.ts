@@ -4,6 +4,6 @@ export type {
 	GenerationFailureCategory,
 } from "./ai-sdk/model-generation";
 export {
-	type BuildOpenAiFetchSdkOptions,
-	buildOpenAiFetchSdk,
+	type BuildOpenAiFetchModelGeneratorOptions,
+	buildOpenAiFetchModelGenerator,
 } from "./ai-sdk/openai-fetch";

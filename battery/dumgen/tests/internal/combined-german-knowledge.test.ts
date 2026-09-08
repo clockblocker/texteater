@@ -1,10 +1,17 @@
 import { describe, expect, test } from "bun:test";
-import { type AiSdk, buildDumgen } from "dumgen";
+import { type DumTraceSink, withTraceRecorder } from "common-utils/workflow";
 import { fixedMembersFor } from "dumling/fixed";
 import type { Reading } from "dumling/types";
 import { relationTargetWithinFamilySchema } from "dumrel/schema";
+import * as Cause from "effect/Cause";
+import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
+import * as Option from "effect/Option";
 import { lexemeGermanKnowledgeRunner } from "../../docs/prototypes/knowledge-analysis-combined/run";
-import type { StructuredOutputSchema } from "../../src/ai-sdk/ai-sdk";
+import type {
+	ModelGenerator,
+	StructuredOutputSchema,
+} from "../../src/ai-sdk/ai-sdk";
 import { knowledgeGenerationPromptCatalog } from "../../src/catalog/knowledge-generation-prompts";
 import type { ModelExchange } from "../../src/generator/generator";
 import { createKnowledgeDumgen } from "../../src/knowledge-generation/build";
@@ -23,6 +30,7 @@ import {
 	modelOutputSchemaForGermanKnowledge,
 } from "../../src/knowledge-generation/de/schemas";
 import { requestableRelationSchema } from "../../src/knowledge-generation/relations";
+import { buildKnowledgeDumgenRuntime } from "../../src/knowledge-runtime";
 import {
 	assembleSystemPrompt,
 	assertCaseSelectionsUncontaminated,
@@ -73,30 +81,83 @@ function queueSdk(outputs: unknown[]) {
 		schema: StructuredOutputSchema;
 		params: unknown;
 	}> = [];
-	const sdk: AiSdk = {
-		async structuredGeneration(input, schema, params) {
+	const sdk: ModelGenerator = {
+		structuredGeneration(input, schema, params) {
 			if (!isStructuredOutputSchema(schema))
-				throw new Error("Expected a structural output schema fixture.");
-			calls.push({ input, schema, params });
-			return outputs.shift() as never;
+				return Effect.dieMessage(
+					"Expected a structural output schema fixture.",
+				);
+			return Effect.sync(() => {
+				calls.push({ input, schema, params });
+				return outputs.shift() as never;
+			});
 		},
-		async unstructuredGeneration() {
-			throw new Error("German Knowledge uses Structured Outputs.");
+		unstructuredGeneration() {
+			return Effect.dieMessage(
+				"German Knowledge uses Structured Outputs.",
+			);
 		},
 	};
 	return { calls, sdk };
 }
 
+async function runTest<A, E>(effect: Effect.Effect<A, E>): Promise<A> {
+	const exit = await Effect.runPromiseExit(effect);
+	if (Exit.isSuccess(exit)) return exit.value;
+	const failure = Cause.failureOption(exit.cause);
+	throw Option.isSome(failure) ? failure.value : Cause.squash(exit.cause);
+}
+
+async function runKnowledge<A, E>(
+	effect: Effect.Effect<A, E>,
+): Promise<
+	| A
+	| (E extends {
+			readonly _tag: "DumgenDomainFailure";
+			readonly result: infer Result;
+	  }
+			? Result
+			: never)
+> {
+	const outcome = await Effect.runPromise(Effect.either(effect));
+	if (outcome._tag === "Right") return outcome.right;
+	if (
+		typeof outcome.left === "object" &&
+		outcome.left !== null &&
+		"_tag" in outcome.left &&
+		outcome.left._tag === "DumgenDomainFailure" &&
+		"result" in outcome.left
+	)
+		return outcome.left.result as
+			| A
+			| (E extends {
+					readonly _tag: "DumgenDomainFailure";
+					readonly result: infer Result;
+			  }
+					? Result
+					: never);
+	throw outcome.left;
+}
+
 function knowledgeRuntime(
-	sdk: AiSdk,
+	modelGenerator: ModelGenerator,
 	onModelExchange?: (exchange: ModelExchange) => void,
 ) {
-	const dumgen = buildDumgen({
-		sdk,
-		onModelExchange,
-	});
-	return (input: Parameters<typeof dumgen.generate.knowledge>[1]) =>
-		dumgen.generate.knowledge("de", input);
+	const dumgen = buildKnowledgeDumgenRuntime({ modelGenerator });
+	return (input: Parameters<typeof dumgen.generate.knowledge>[1]) => {
+		const effect = dumgen.generate.knowledge("de", input);
+		if (!onModelExchange) return runKnowledge(effect);
+		const sink: DumTraceSink = {
+			record: (event) =>
+				Effect.sync(() => {
+					if (event.event === "model.exchange")
+						onModelExchange(event.payload as ModelExchange);
+				}),
+			diagnostic: () => {},
+			inlinePayloadBytes: 1_000_000,
+		};
+		return runKnowledge(withTraceRecorder(effect, sink));
+	};
 }
 
 describe("per-Family German Knowledge generation", () => {
@@ -338,14 +399,16 @@ describe("per-Family German Knowledge generation", () => {
 
 	test("rejects unconfigured languages before an adapter call", async () => {
 		const { calls, sdk } = queueSdk([]);
-		const dumgen = buildDumgen({ sdk });
+		const dumgen = buildKnowledgeDumgenRuntime({ modelGenerator: sdk });
 
 		for (const language of ["en", "he"]) {
 			expect(
-				dumgen.generate.knowledge(language as never, {
-					...baseInput,
-					request: {},
-				}),
+				runTest(
+					dumgen.generate.knowledge(language as never, {
+						...baseInput,
+						request: {},
+					}),
+				),
 			).rejects.toMatchObject({
 				name: "DumgenError",
 				code: "invalid-input",
@@ -708,15 +771,29 @@ describe("per-Family German Knowledge generation", () => {
 			},
 		]);
 		const diagnostics: unknown[] = [];
-		const dumgen = createKnowledgeDumgen({
-			sdk,
-			onDiagnostic: (diagnostic) => diagnostics.push(diagnostic),
-		});
+		const dumgen = createKnowledgeDumgen({ modelGenerator: sdk });
+		const sink: DumTraceSink = {
+			record: (event) =>
+				Effect.sync(() => {
+					if (event.event === "model.diagnostic")
+						diagnostics.push(
+							(event.payload as { readonly diagnostic: unknown })
+								.diagnostic,
+						);
+				}),
+			diagnostic: () => {},
+			inlinePayloadBytes: 1_000_000,
+		};
 
-		const result = await dumgen.generate.knowledge("de", {
-			...baseInput,
-			request: { semanticRelations: { antonym: null } },
-		});
+		const result = await runTest(
+			withTraceRecorder(
+				dumgen.generate.knowledge("de", {
+					...baseInput,
+					request: { semanticRelations: { antonym: null } },
+				}),
+				sink,
+			),
+		);
 
 		expect(result).toEqual(EMPTY_GENERATED_KNOWLEDGE_UPDATE);
 		expect(diagnostics).toEqual([

@@ -190,13 +190,13 @@ test("runtime fingerprints stay bound to the frozen candidate sources", async ()
 			)
 			.digest("hex");
 	expect(RELATION_PUBLICATION_FINGERPRINTS.prompt).toBe(
-		`sha256:${await sha256("../../../battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/prompt-source.ts")}`,
+		`sha256:${await sha256("../../../battery/dumgen/src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts")}`,
 	);
 	expect(RELATION_PUBLICATION_FINGERPRINTS.schema).toBe(
 		`sha256:${await sha256("../../../battery/dumgen/src/knowledge-generation/de/schemas.ts")}`,
 	);
 	expect(RELATION_PUBLICATION_FINGERPRINTS.evaluator).toBe(
-		`sha256:${await sha256("../../../battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator.ts")}`,
+		`sha256:${await sha256("../../../battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts")}`,
 	);
 	const modelPolicy = await Bun.file(
 		new URL(

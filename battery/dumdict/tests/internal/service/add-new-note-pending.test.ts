@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import {
 	englishRunDraft,
 	englishSwimDraft,
@@ -14,27 +15,29 @@ describe("pending lifecycle", () => {
 			"en",
 			enSerializedNotesWithPendingSwimRelation,
 		);
-		const result = await dict.addNewNote({
-			draft: {
-				...englishRunDraft,
-				relations: [
-					{
-						target: {
-							kind: "pending",
-							pending: {
-								relation: "nearSynonym",
-								target: {
-									language: "en",
-									canonicalForm: "swim",
-									family: "Lexeme",
-									kind: "VERB",
+		const result = await Effect.runPromise(
+			dict.addNewNote({
+				draft: {
+					...englishRunDraft,
+					relations: [
+						{
+							target: {
+								kind: "pending",
+								pending: {
+									relation: "nearSynonym",
+									target: {
+										language: "en",
+										canonicalForm: "swim",
+										family: "Lexeme",
+										kind: "VERB",
+									},
 								},
 							},
 						},
-					},
-				],
-			},
-		});
+					],
+				},
+			}),
+		);
 		expect(result.status).toBe("applied");
 		expect(
 			storage
@@ -49,7 +52,11 @@ describe("pending lifecycle", () => {
 			enSerializedNotesWithPendingSwimRelation,
 		);
 		expect(
-			(await dict.addNewNote({ draft: englishSwimDraft })).status,
+			(
+				await Effect.runPromise(
+					dict.addNewNote({ draft: englishSwimDraft }),
+				)
+			).status,
 		).toBe("applied");
 		const notes = storage.loadAll();
 		expect(

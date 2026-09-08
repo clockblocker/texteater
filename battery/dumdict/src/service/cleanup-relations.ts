@@ -1,29 +1,24 @@
+import { traceStage } from "common-utils/workflow";
 import type { SupportedLanguage } from "dumling/types";
 import { semanticRelationValues } from "dumrel/relations";
+import * as Effect from "effect/Effect";
 import { pendingSemanticRelationLocatorKey } from "../core/pending";
 import { planCleanupRelations } from "../core/plan-mutation";
 import type {
 	CleanupRelationsRequest,
-	DumdictMutationOptions,
+	DumdictPreparationFailure,
+	DumdictRevisionConflict,
+	DumdictSemanticPreconditionFailure,
 	MutationResult,
+	PreparedMutation,
 } from "../public";
-import { applyPlan } from "./apply-plan";
+import { commitPrepared, prepared } from "./effect-mutation";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export async function cleanupRelations<L extends SupportedLanguage>(
+export function prepareCleanupRelations<L extends SupportedLanguage>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: CleanupRelationsRequest<L>,
-	mutationOptions?: DumdictMutationOptions<L>,
-): Promise<MutationResult<L>> {
-	if (request.resolutions.length === 0) {
-		return {
-			status: "applied",
-			baseRevision: request.baseRevision,
-			nextRevision: request.baseRevision,
-			affected: {},
-			summary: { message: "No relations cleaned up." },
-		};
-	}
+): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
 	const keys = request.resolutions.map(({ locator }) =>
 		pendingSemanticRelationLocatorKey(locator),
 	);
@@ -33,49 +28,62 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 			({ locator }) => !semanticRelationValues.includes(locator.relation),
 		)
 	) {
-		return {
-			status: "rejected",
+		return Effect.fail({
+			_tag: "DumdictRejection",
 			code: "invalidRequest",
 			message: "Cleanup resolution is invalid or duplicated.",
-		};
+		});
 	}
-
-	const slice = await options.storage.loadCleanupRelationsContext({
-		resolutions: request.resolutions,
-	});
-	options.sliceValidation.cleanupRelations(slice);
-	if (slice.revision !== request.baseRevision) {
-		return {
-			status: "conflict",
-			code: "revisionConflict",
-			baseRevision: request.baseRevision,
-			latestRevision: slice.revision,
-			message: "Cleanup workset is stale.",
-		};
-	}
-
-	const pendingKeys = new Set(
-		slice.pendingRelations.map(({ locator }) =>
-			pendingSemanticRelationLocatorKey(locator),
-		),
-	);
-	for (const resolution of request.resolutions) {
-		if (
-			!pendingKeys.has(
-				pendingSemanticRelationLocatorKey(resolution.locator),
+	return traceStage(
+		"dumdict.prepareCleanupRelations",
+		Effect.gen(function* () {
+			const slice = yield* options.storage.loadCleanupRelationsContext({
+				resolutions: request.resolutions,
+			});
+			options.sliceValidation.cleanupRelations(slice);
+			if (slice.revision !== request.baseRevision)
+				yield* Effect.fail({
+					_tag: "DumdictRevisionConflict",
+					baseRevision: request.baseRevision,
+					latestRevision: slice.revision,
+					message: "Cleanup workset is stale.",
+				} satisfies DumdictRevisionConflict);
+			const pendingKeys = new Set(
+				slice.pendingRelations.map(({ locator }) =>
+					pendingSemanticRelationLocatorKey(locator),
+				),
+			);
+			if (
+				request.resolutions.some(
+					({ locator }) =>
+						!pendingKeys.has(
+							pendingSemanticRelationLocatorKey(locator),
+						),
+				)
 			)
-		) {
-			return {
-				status: "conflict",
-				code: "semanticPreconditionFailed",
-				baseRevision: request.baseRevision,
-				latestRevision: slice.revision,
-				message: "Cleanup pending relation no longer exists.",
-			};
-		}
-	}
+				yield* Effect.fail({
+					_tag: "DumdictSemanticPreconditionFailure",
+					baseRevision: request.baseRevision,
+					latestRevision: slice.revision,
+					message: "Cleanup pending relation no longer exists.",
+				} satisfies DumdictSemanticPreconditionFailure);
+			return yield* prepared(
+				options,
+				planCleanupRelations(slice, request),
+			);
+		}),
+		request,
+	);
+}
 
-	const plan = planCleanupRelations(slice, request);
-	if (plan.status === "rejected") return plan;
-	return applyPlan(options, plan, mutationOptions);
+export function cleanupRelations<L extends SupportedLanguage>(
+	options: DumdictServiceRuntimeOptions<L>,
+	request: CleanupRelationsRequest<L>,
+): Effect.Effect<
+	MutationResult<L>,
+	DumdictPreparationFailure | import("../public").DumdictCommitFailure
+> {
+	return prepareCleanupRelations(options, request).pipe(
+		Effect.flatMap((value) => commitPrepared(options, value)),
+	);
 }

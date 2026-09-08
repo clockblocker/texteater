@@ -1,14 +1,28 @@
+import { type DumTraceSink, withTraceRecorder } from "common-utils/workflow";
+import * as Effect from "effect/Effect";
+
+function capture(exchanges: DumgenModelExchange[]): DumTraceSink {
+	return {
+		record: (event) =>
+			Effect.sync(() => {
+				if (event.event === "model.exchange")
+					exchanges.push(event.payload as DumgenModelExchange);
+			}),
+		diagnostic: () => {},
+		inlinePayloadBytes: 1000000,
+	};
+}
+
 import { describe, expect, test } from "bun:test";
 import {
-	type AiSdk,
+	AiSdkGenerationError,
 	buildDumgen,
 	type Dumgen,
 	type DumgenModelExchange,
+	type ModelGenerator,
 } from "dumgen";
-
 import {
 	GermanClassificationResolver,
-	readingResolutionPrompt,
 	targetClassificationPrompt,
 } from "../src/classification";
 import type { SegmentedSentence } from "../src/shared/contract";
@@ -26,19 +40,16 @@ function sentence(
 		segments: parts,
 	};
 }
-
 const multiMemberSentence = sentence("sentence-1", [
 	{ kind: "ResolvableText", text: "Bnak" },
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "Bank" },
 ]);
-
 const targetOutput = {
 	decision: "Resolved",
 	target: { family: "Lexeme", kind: "NOUN" },
 	additionalMemberIndices: [1],
 } as const;
-
 const grammarOutput = {
 	memberOrthographies: ["Typo", "Standard"],
 	normalizedMembers: ["Bank", "Bank"],
@@ -53,27 +64,38 @@ const grammarOutput = {
 		coreFeatures: { gender: "Fem", hyph: null },
 	},
 } as const;
-
 function harness(outputs: Array<unknown | Error>) {
 	const calls: string[] = [];
 	const modelExchanges: DumgenModelExchange[] = [];
-	const sdk: AiSdk = {
-		async structuredGeneration(input) {
-			calls.push(input);
-			const output = outputs.shift();
-			if (output instanceof Error) throw output;
-			return output as never;
+	const sdk: ModelGenerator = {
+		structuredGeneration(input) {
+			return Effect.gen(function* () {
+				calls.push(input);
+				const output = outputs.shift();
+				if (output instanceof Error)
+					return yield* Effect.fail(
+						new AiSdkGenerationError(
+							"provider-error",
+							output.message,
+						),
+					);
+				return (
+					typeof output === "object" &&
+					output !== null &&
+					"emojiDescription" in output &&
+					!input.includes("existingEmojiDescriptions")
+						? { emojiDescription: output.emojiDescription }
+						: output
+				) as never;
+			});
 		},
-		async unstructuredGeneration() {
-			throw new Error("not used");
+		unstructuredGeneration() {
+			return Effect.die(new Error("not used"));
 		},
 	};
 	const createDumgen = () =>
 		buildDumgen({
-			sdk,
-			onModelExchange(exchange) {
-				modelExchanges.push(exchange);
-			},
+			modelGenerator: sdk,
 		});
 	return {
 		calls,
@@ -82,7 +104,6 @@ function harness(outputs: Array<unknown | Error>) {
 		resolver: new GermanClassificationResolver(createDumgen),
 	};
 }
-
 describe("German classification through the Dumgen module", () => {
 	test("composes grammatical and reading operations while deriving rich traces from instrumentation", async () => {
 		const testHarness = harness([
@@ -90,13 +111,16 @@ describe("German classification through the Dumgen module", () => {
 			grammarOutput,
 			{ decision: "New", emojiDescription: "🏦" },
 		]);
-
-		const result = await testHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
+		const result = await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					multiMemberSentence,
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
-
 		expect(result.decision).toBe("Resolved");
 		if (result.decision !== "Resolved") return;
 		expect(result.generation).toEqual({
@@ -104,7 +128,7 @@ describe("German classification through the Dumgen module", () => {
 			prompts: [
 				targetClassificationPrompt,
 				"laboratory.grammaticalResolution.de.Lexeme.NOUN",
-				readingResolutionPrompt,
+				"laboratory.readingGeneration.de",
 			],
 			cache: "miss",
 			modelCalls: 3,
@@ -158,29 +182,36 @@ describe("German classification through the Dumgen module", () => {
 		expect(result.stages.reading?.input).toEqual({
 			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
 			lemma: "Bank",
-			existingEmojiDescriptions: [],
 		});
 		expect(testHarness.modelExchanges).toHaveLength(9);
 	});
-
 	test("indexes one click-independent Attestation by every member without model calls", async () => {
 		const testHarness = harness([
 			targetOutput,
 			grammarOutput,
 			{ decision: "New", emojiDescription: "🏦" },
 		]);
-		const first = await testHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
+		const first = await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					multiMemberSentence,
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
 		testHarness.modelExchanges.length = 0;
-		const second = await testHarness.resolver.resolve(
-			multiMemberSentence,
-			2,
-			testHarness.modelExchanges,
+		const second = await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					multiMemberSentence,
+					2,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
-
 		expect(testHarness.calls).toHaveLength(3);
 		expect(first.decision).toBe("Resolved");
 		expect(second.decision).toBe("Resolved");
@@ -201,7 +232,6 @@ describe("German classification through the Dumgen module", () => {
 		});
 		expect(second.entity.attestation).toEqual(first.entity.attestation);
 	});
-
 	test("rejects fresh Dumgen results correlated to a different click", async () => {
 		const testHarness = harness([targetOutput, grammarOutput]);
 		const resolver = new GermanClassificationResolver(() => {
@@ -210,34 +240,39 @@ describe("German classification through the Dumgen module", () => {
 				...dumgen,
 				resolve: {
 					...dumgen.resolve,
-					async grammatical(language, input) {
-						const result = await dumgen.resolve.grammatical(
-							language,
-							input,
-						);
-						return result.decision === "Resolved"
-							? {
-									...result,
-									interaction: {
-										...result.interaction,
-										clickedSegmentIndex: 2,
-									},
-								}
-							: result;
+					grammatical(language, input) {
+						return Effect.gen(function* () {
+							const result = yield* dumgen.resolve.grammatical(
+								language,
+								input,
+							);
+							return result.decision === "Resolved"
+								? {
+										...result,
+										interaction: {
+											...result.interaction,
+											clickedSegmentIndex: 2,
+										},
+									}
+								: result;
+						});
 					},
 				},
 			} as Dumgen;
 		});
-
 		await expect(
-			resolver.resolve(
-				multiMemberSentence,
-				0,
-				testHarness.modelExchanges,
+			Effect.runPromise(
+				withTraceRecorder(
+					resolver.resolve(
+						multiMemberSentence,
+						0,
+						testHarness.modelExchanges,
+					),
+					capture(testHarness.modelExchanges),
+				),
 			),
 		).rejects.toThrow("different clicked member");
 	});
-
 	test("surfaces Target Unresolved and rejects legacy Grammatical Unresolved", async () => {
 		const targetHarness = harness([
 			{
@@ -246,43 +281,55 @@ describe("German classification through the Dumgen module", () => {
 				additionalMemberIndices: null,
 			},
 		]);
-		const targetResult = await targetHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			targetHarness.modelExchanges,
+		const targetResult = await Effect.runPromise(
+			withTraceRecorder(
+				targetHarness.resolver.resolve(
+					multiMemberSentence,
+					0,
+					targetHarness.modelExchanges,
+				),
+				capture(targetHarness.modelExchanges),
+			),
 		);
 		expect(targetResult).toMatchObject({
 			decision: "Unresolved",
 			diagnostics: [{ stage: "target", kind: "Unresolved" }],
 			generation: { modelCalls: 1 },
 		});
-
 		const grammarHarness = harness([
 			targetOutput,
 			{ decision: "Unresolved", resolution: null },
 		]);
 		await expect(
-			grammarHarness.resolver.resolve(
-				multiMemberSentence,
-				0,
-				grammarHarness.modelExchanges,
+			Effect.runPromise(
+				withTraceRecorder(
+					grammarHarness.resolver.resolve(
+						multiMemberSentence,
+						0,
+						grammarHarness.modelExchanges,
+					),
+					capture(grammarHarness.modelExchanges),
+				),
 			),
 		).rejects.toThrow("does not match its prompt schema");
 	});
-
 	test("retains observed attempted routes when the grammatical provider fails", async () => {
 		const testHarness = harness([
 			targetOutput,
 			new Error("provider unavailable"),
 		]);
 		const attemptedPrompts: string[] = [];
-
 		await expect(
-			testHarness.resolver.resolve(
-				multiMemberSentence,
-				0,
-				testHarness.modelExchanges,
-				attemptedPrompts,
+			Effect.runPromise(
+				withTraceRecorder(
+					testHarness.resolver.resolve(
+						multiMemberSentence,
+						0,
+						testHarness.modelExchanges,
+						attemptedPrompts,
+					),
+					capture(testHarness.modelExchanges),
+				),
 			),
 		).rejects.toThrow("language-model provider");
 		expect(attemptedPrompts).toEqual([
@@ -291,7 +338,6 @@ describe("German classification through the Dumgen module", () => {
 		]);
 		expect(testHarness.modelExchanges).toHaveLength(4);
 	});
-
 	test("retains every observed attempted route when the reading provider fails", async () => {
 		const testHarness = harness([
 			targetOutput,
@@ -299,23 +345,26 @@ describe("German classification through the Dumgen module", () => {
 			new Error("reading provider unavailable"),
 		]);
 		const attemptedPrompts: string[] = [];
-
 		await expect(
-			testHarness.resolver.resolve(
-				multiMemberSentence,
-				0,
-				testHarness.modelExchanges,
-				attemptedPrompts,
+			Effect.runPromise(
+				withTraceRecorder(
+					testHarness.resolver.resolve(
+						multiMemberSentence,
+						0,
+						testHarness.modelExchanges,
+						attemptedPrompts,
+					),
+					capture(testHarness.modelExchanges),
+				),
 			),
 		).rejects.toThrow("language-model provider");
 		expect(attemptedPrompts).toEqual([
 			targetClassificationPrompt,
 			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
-			readingResolutionPrompt,
+			"laboratory.readingGeneration.de",
 		]);
 		expect(testHarness.modelExchanges).toHaveLength(7);
 	});
-
 	test("retries only Reading after a provider failure without losing cached grammar traces", async () => {
 		const testHarness = harness([
 			targetOutput,
@@ -323,22 +372,29 @@ describe("German classification through the Dumgen module", () => {
 			new Error("reading provider unavailable"),
 			{ decision: "New", emojiDescription: "🏦" },
 		]);
-
 		await expect(
-			testHarness.resolver.resolve(
-				multiMemberSentence,
-				0,
-				testHarness.modelExchanges,
+			Effect.runPromise(
+				withTraceRecorder(
+					testHarness.resolver.resolve(
+						multiMemberSentence,
+						0,
+						testHarness.modelExchanges,
+					),
+					capture(testHarness.modelExchanges),
+				),
 			),
 		).rejects.toThrow("language-model provider");
 		testHarness.modelExchanges.length = 0;
-
-		const retry = await testHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
+		const retry = await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					multiMemberSentence,
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
-
 		expect(retry).toMatchObject({
 			decision: "Resolved",
 			stages: {
@@ -347,14 +403,13 @@ describe("German classification through the Dumgen module", () => {
 				reading: { traceOrigin: "generated" },
 			},
 			generation: {
-				prompts: [readingResolutionPrompt],
+				prompts: ["laboratory.readingGeneration.de"],
 				cache: "miss",
 				modelCalls: 1,
 			},
 		});
 		expect(testHarness.calls).toHaveLength(4);
 	});
-
 	test("uses exact Emoji Description membership and reports model disagreement", async () => {
 		const testHarness = harness([
 			targetOutput,
@@ -364,21 +419,30 @@ describe("German classification through the Dumgen module", () => {
 			grammarOutput,
 			{ decision: "New", emojiDescription: "🏦" },
 		]);
-		await testHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
+		await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					multiMemberSentence,
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
 		testHarness.modelExchanges.length = 0;
-		const second = await testHarness.resolver.resolve(
-			{
-				...multiMemberSentence,
-				id: "sentence-2" as SegmentedSentence["id"],
-			},
-			0,
-			testHarness.modelExchanges,
+		const second = await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					{
+						...multiMemberSentence,
+						id: "sentence-2" as SegmentedSentence["id"],
+					},
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
-
 		expect(second.decision).toBe("Resolved");
 		if (second.decision !== "Resolved") return;
 		expect(second.stages.reading?.input).toMatchObject({
@@ -393,7 +457,6 @@ describe("German classification through the Dumgen module", () => {
 			},
 		]);
 	});
-
 	test("keeps resolved-unit caches isolated between views", async () => {
 		const testHarness = harness([
 			targetOutput,
@@ -406,18 +469,26 @@ describe("German classification through the Dumgen module", () => {
 		const otherView = new GermanClassificationResolver(
 			testHarness.createDumgen,
 		);
-
-		const first = await testHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
+		const first = await Effect.runPromise(
+			withTraceRecorder(
+				testHarness.resolver.resolve(
+					multiMemberSentence,
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
-		const second = await otherView.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
+		const second = await Effect.runPromise(
+			withTraceRecorder(
+				otherView.resolve(
+					multiMemberSentence,
+					0,
+					testHarness.modelExchanges,
+				),
+				capture(testHarness.modelExchanges),
+			),
 		);
-
 		expect(first).toMatchObject({
 			decision: "Resolved",
 			generation: { cache: "miss", modelCalls: 3 },

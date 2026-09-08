@@ -106,6 +106,7 @@ export const runtimePromptArtifactRecipe = defineCodegen({
 				"promptsmith/production/intake/schemas.ts",
 				"promptsmith/production/prompt-part/target-classification/**/schemas.ts",
 				"promptsmith/production/reading-resolution/**/schemas.ts",
+				"promptsmith/production/reading-generation/**/schemas.ts",
 			],
 			recursive: true,
 		},
@@ -124,9 +125,9 @@ export const runtimePromptArtifactRecipe = defineCodegen({
 	},
 	build: ({ authoring }) => {
 		const records = collectRuntimePromptArtifacts();
-		if (records.length !== 28)
+		if (records.length !== 29)
 			throw new Error(
-				`Expected 28 canonical Dumgen prompts, received ${String(records.length)}.`,
+				`Expected 29 canonical Dumgen prompts, received ${String(records.length)}.`,
 			);
 		const schemas = collectRuntimePromptSchemas();
 		const operations = collectPromptValidationOperations(schemas);

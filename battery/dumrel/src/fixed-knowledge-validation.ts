@@ -1,5 +1,8 @@
 import type { Lemma, Reading } from "dumling/types";
-import { relationTargetWithinFamilySchema } from "./schema.js";
+import {
+	ParsingError,
+	parseAsLexicalUnitShadow,
+} from "./parsing/lightweight-parsers.js";
 import type { LexemeUnitShadow, ReadingKnowledge } from "./types.js";
 
 type AuthoredReadingKnowledge = ReadingKnowledge<
@@ -15,7 +18,6 @@ export function validateAuthoredFixedKnowledge<
 >(source: Reading, knowledge: Knowledge): Knowledge {
 	const relations = knowledge.semanticRelations;
 	if (relations === undefined) return knowledge;
-	const targetSchema = relationTargetWithinFamilySchema(source.lemma.family);
 	const targetKind = relations.targetKind ?? "lemma";
 	for (const [relation, targets] of Object.entries(relations)) {
 		if (relation === "targetKind" || targets === undefined) continue;
@@ -24,12 +26,21 @@ export function validateAuthoredFixedKnowledge<
 				targetKind === "reading"
 					? (target as Reading).lemma
 					: (target as Lemma);
-			targetSchema.parse({
+			const parsed = parseAsLexicalUnitShadow({
 				language: lemma.language,
 				canonicalForm: lemma.canonicalForm,
 				family: lemma.family,
 				kind: lemma.kind,
 			});
+			if (parsed instanceof ParsingError) throw parsed;
+			if (parsed.family !== source.lemma.family)
+				throw new ParsingError([
+					{
+						code: "custom",
+						path: ["family"],
+						message: `A relation target must use the ${source.lemma.family} Family.`,
+					},
+				]);
 		}
 	}
 	return knowledge;

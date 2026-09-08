@@ -36,6 +36,7 @@ import {
 	productionDemonstrationSelection,
 	promptSource as productionTargetPromptSource,
 } from "../production/prompt-part/target-classification/de/high-level-whole-unit";
+import { promptSource as readingGenerationPromptSource } from "../production/reading-generation/de/prompt-source";
 import { promptSource as readingPromptSource } from "../production/reading-resolution/de/prompt-source";
 import { selectedCaseSourcePaths } from "./golden-corpus";
 import type { SystemPromptRecipe } from "./system-prompt-codegen";
@@ -67,6 +68,7 @@ const productionCodegen = defineSystemPromptCodegen({
 		productionTargetPromptSource,
 		intakePromptSource,
 		readingPromptSource,
+		readingGenerationPromptSource,
 		lexemeKnowledgePromptSource,
 		phrasemeKnowledgePromptSource,
 		morphemeKnowledgePromptSource,

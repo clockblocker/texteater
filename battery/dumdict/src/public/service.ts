@@ -4,6 +4,7 @@ import type {
 	PendingSemanticRelation,
 	UnitShadow,
 } from "dumrel/types";
+import type * as Effect from "effect/Effect";
 import type {
 	DumdictReadingDraft,
 	OwnedSurfaceDraft,
@@ -12,11 +13,14 @@ import type {
 	ReadingEntry,
 	StoreRevision,
 } from "../dto";
-import type { CommitChangesResult, DumdictPlan } from "../storage/commit";
 import type {
+	DumdictCommitFailure,
+	DumdictInvalidInput,
+	DumdictRejection,
 	FindStoredReadingsResult,
 	GetInfoForRelationsCleanupResult,
 	MutationResult,
+	PreparedMutation,
 } from "./results";
 
 export type FindStoredReadingsRequest<L extends SupportedLanguage> = {
@@ -66,67 +70,98 @@ export type CleanupRelationsRequest<L extends SupportedLanguage> = {
 	resolutions: CleanupRelationResolution<L>[];
 };
 
-export type ApplyDumdictPlan<L extends SupportedLanguage> = (
-	plan: DumdictPlan<L>,
-) => Promise<CommitChangesResult>;
-
-export type DumdictMutationOptions<L extends SupportedLanguage> = {
-	/**
-	 * Applies Dumdict's validated plan. Hosts may override the storage port's
-	 * default commit to compose dictionary and host writes in one transaction.
-	 */
-	readonly applyPlan?: ApplyDumdictPlan<L>;
-};
+export type DumdictPreparationFailure =
+	| DumdictInvalidInput
+	| DumdictRejection
+	| import("./results").DumdictStorageFailure
+	| import("./results").DumdictRevisionConflict
+	| import("./results").DumdictSemanticPreconditionFailure;
 
 /**
  * Language-bound dictionary workflows over a host-provided storage port.
  *
  * @remarks Mutations validate an operation-shaped storage slice, plan direct
- * changes with preconditions, and apply the complete plan atomically. Passing
- * `applyPlan` lets a host compose that plan with its own transaction.
+ * changes with preconditions, and commit the complete plan atomically through
+ * the configured storage port. `prepare` exposes the immutable plan for host
+ * inspection before a separate host-owned atomic commit.
  */
 export type DumdictService<L extends SupportedLanguage> = {
-	findStoredReadings(
+	findStoredReadings: (
 		request: FindStoredReadingsRequest<L>,
-	): Promise<FindStoredReadingsResult<L>>;
+	) => Effect.Effect<
+		FindStoredReadingsResult<L>,
+		DumdictInvalidInput | import("./results").DumdictStorageFailure
+	>;
 
-	addAttestation(
+	prepare: {
+		addAttestation: (
+			request: AddAttestationRequest<L>,
+		) => Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure>;
+		addNewNote: (
+			request: AddNewNoteRequest<L>,
+		) => Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure>;
+		ensureOwnedSurface: (
+			request: EnsureOwnedSurfaceRequest<L>,
+		) => Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure>;
+		ensureReadingEntry: (
+			request: EnsureReadingEntryRequest<L>,
+		) => Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure>;
+		applyGeneratedKnowledge: (
+			request: ApplyGeneratedKnowledgeRequest<L>,
+		) => Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure>;
+		cleanupRelations: (
+			request: CleanupRelationsRequest<L>,
+		) => Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure>;
+	};
+
+	addAttestation: (
 		request: AddAttestationRequest<L>,
-		options?: DumdictMutationOptions<L>,
-	): Promise<MutationResult<L>>;
-
-	addNewNote(
+	) => Effect.Effect<
+		MutationResult<L>,
+		DumdictPreparationFailure | DumdictCommitFailure
+	>;
+	addNewNote: (
 		request: AddNewNoteRequest<L>,
-		options?: DumdictMutationOptions<L>,
-	): Promise<MutationResult<L>>;
-
-	ensureOwnedSurface(
+	) => Effect.Effect<
+		MutationResult<L>,
+		DumdictPreparationFailure | DumdictCommitFailure
+	>;
+	ensureOwnedSurface: (
 		request: EnsureOwnedSurfaceRequest<L>,
-		options?: DumdictMutationOptions<L>,
-	): Promise<MutationResult<L>>;
-
-	ensureReadingEntry(
+	) => Effect.Effect<
+		MutationResult<L>,
+		DumdictPreparationFailure | DumdictCommitFailure
+	>;
+	ensureReadingEntry: (
 		request: EnsureReadingEntryRequest<L>,
-		options?: DumdictMutationOptions<L>,
-	): Promise<MutationResult<L>>;
-
-	applyGeneratedKnowledge(
+	) => Effect.Effect<
+		MutationResult<L>,
+		DumdictPreparationFailure | DumdictCommitFailure
+	>;
+	applyGeneratedKnowledge: (
 		request: ApplyGeneratedKnowledgeRequest<L>,
-		options?: DumdictMutationOptions<L>,
-	): Promise<MutationResult<L>>;
+	) => Effect.Effect<
+		MutationResult<L>,
+		DumdictPreparationFailure | DumdictCommitFailure
+	>;
 
 	/** Inspects pending targets and candidate Lemmas without resolving them. */
-	getInfoForRelationsCleanup(
+	getInfoForRelationsCleanup: (
 		request: GetInfoForRelationsCleanupRequest<L>,
-	): Promise<GetInfoForRelationsCleanupResult<L>>;
+	) => Effect.Effect<
+		GetInfoForRelationsCleanupResult<L>,
+		DumdictInvalidInput | import("./results").DumdictStorageFailure
+	>;
 
 	/**
 	 * Retries exact pending locators against the current inventory. A Unit Shadow
 	 * resolves only when exactly one Lemma matches; zero or multiple matches stay
 	 * pending.
 	 */
-	cleanupRelations(
+	cleanupRelations: (
 		request: CleanupRelationsRequest<L>,
-		options?: DumdictMutationOptions<L>,
-	): Promise<MutationResult<L>>;
+	) => Effect.Effect<
+		MutationResult<L>,
+		DumdictPreparationFailure | DumdictCommitFailure
+	>;
 };

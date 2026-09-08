@@ -6,6 +6,7 @@ import {
 } from "dumling/fixed";
 import type { Lemma, Reading } from "dumling/types";
 import { fixedKnowledgeFor } from "dumrel/fixed";
+import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../../src";
 import { createDumdictService } from "../../../src";
 import { createInMemoryTestStorage } from "../../../src/testing/in-memory-storage";
@@ -14,6 +15,7 @@ import {
 	germanGehenLemma,
 	germanGehenReading,
 } from "../../fixtures/de-notes";
+import { failure } from "./helpers";
 
 const germanRennenLemma = {
 	...germanGehenLemma,
@@ -95,19 +97,21 @@ describe("applyGeneratedKnowledge", () => {
 		const synonyms = (fixed.knowledge.semanticRelations.synonym ??
 			[]) as Reading<"de">[];
 		const { service, storage } = serviceFor(notes);
-		const result = await service.applyGeneratedKnowledge({
-			reading: source,
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "semanticRelations",
-					relation: "synonym",
-					targetKind: "reading",
-					value: synonyms,
-				},
-			],
-			pendingRelations: [],
-		});
+		const result = await Effect.runPromise(
+			service.applyGeneratedKnowledge({
+				reading: source,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						targetKind: "reading",
+						value: synonyms,
+					},
+				],
+				pendingRelations: [],
+			}),
+		);
 
 		expect(result.status).toBe("applied");
 		expect(
@@ -121,55 +125,59 @@ describe("applyGeneratedKnowledge", () => {
 
 	test("rejects an unreviewed generated Reading-targeted relation", async () => {
 		const { service } = serviceFor();
-		const result = await service.applyGeneratedKnowledge({
-			reading: germanGehenReading,
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "semanticRelations",
-					relation: "synonym",
-					targetKind: "reading",
-					value: [germanRennenReading],
-				},
-			],
-			pendingRelations: [],
-		});
+		const result = await failure(
+			service.applyGeneratedKnowledge({
+				reading: germanGehenReading,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						targetKind: "reading",
+						value: [germanRennenReading],
+					},
+				],
+				pendingRelations: [],
+			}),
+		);
 
 		expect(result).toMatchObject({
-			status: "rejected",
+			_tag: "DumdictRejection",
 			code: "invalidRequest",
 		});
 	});
 
 	test("applies base changes and preserves an unresolved relation in one commit", async () => {
 		const { service, storage } = serviceFor();
-		const result = await service.applyGeneratedKnowledge({
-			reading: germanGehenReading,
-			changes: [
-				{
-					kind: "Contribute",
-					aspect: "transcription",
-					value: "ˈɡeːən",
-				},
-				{
-					kind: "Contribute",
-					aspect: "translations",
-					language: "en",
-					value: ["go"],
-				},
-			],
-			pendingRelations: [
-				{
-					relation: "synonym",
-					target: {
-						language: "de",
-						canonicalForm: "spazieren",
-						family: "Lexeme",
-						kind: "VERB",
+		const result = await Effect.runPromise(
+			service.applyGeneratedKnowledge({
+				reading: germanGehenReading,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "transcription",
+						value: "ˈɡeːən",
 					},
-				},
-			],
-		});
+					{
+						kind: "Contribute",
+						aspect: "translations",
+						language: "en",
+						value: ["go"],
+					},
+				],
+				pendingRelations: [
+					{
+						relation: "synonym",
+						target: {
+							language: "de",
+							canonicalForm: "spazieren",
+							family: "Lexeme",
+							kind: "VERB",
+						},
+					},
+				],
+			}),
+		);
 
 		expect(result.status).toBe("applied");
 		const [stored] = storage.loadAll();
@@ -200,21 +208,23 @@ describe("applyGeneratedKnowledge", () => {
 			pendingRelations: [],
 		});
 		const { service, storage } = serviceFor(notes);
-		const result = await service.applyGeneratedKnowledge({
-			reading: germanGehenReading,
-			changes: [],
-			pendingRelations: [
-				{
-					relation: "synonym",
-					target: {
-						language: "de",
-						canonicalForm: "rennen",
-						family: "Lexeme",
-						kind: "VERB",
+		const result = await Effect.runPromise(
+			service.applyGeneratedKnowledge({
+				reading: germanGehenReading,
+				changes: [],
+				pendingRelations: [
+					{
+						relation: "synonym",
+						target: {
+							language: "de",
+							canonicalForm: "rennen",
+							family: "Lexeme",
+							kind: "VERB",
+						},
 					},
-				},
-			],
-		});
+				],
+			}),
+		);
 
 		expect(result.status).toBe("applied");
 		const stored = storage.loadAll();
@@ -232,24 +242,28 @@ describe("applyGeneratedKnowledge", () => {
 	test("treats an empty generated batch as a valid no-op plan", async () => {
 		const { service, storage } = serviceFor();
 		const before = storage.loadAll();
-		const result = await service.applyGeneratedKnowledge({
-			reading: germanGehenReading,
-			changes: [],
-			pendingRelations: [],
-		});
+		const result = await Effect.runPromise(
+			service.applyGeneratedKnowledge({
+				reading: germanGehenReading,
+				changes: [],
+				pendingRelations: [],
+			}),
+		);
 		expect(result).toMatchObject({ status: "applied" });
 		expect(storage.loadAll()).toEqual(before);
 	});
 
 	test("rejects generated Knowledge for a missing Reading", async () => {
 		const { service } = serviceFor([]);
-		const result = await service.applyGeneratedKnowledge({
-			reading: germanGehenReading,
-			changes: [],
-			pendingRelations: [],
-		});
+		const result = await failure(
+			service.applyGeneratedKnowledge({
+				reading: germanGehenReading,
+				changes: [],
+				pendingRelations: [],
+			}),
+		);
 		expect(result).toMatchObject({
-			status: "rejected",
+			_tag: "DumdictRejection",
 			code: "readingMissing",
 		});
 	});

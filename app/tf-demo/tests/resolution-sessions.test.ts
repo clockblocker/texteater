@@ -1468,7 +1468,7 @@ describe("Resolution Session", () => {
 		expect(mutationArgs.at(-1)).toMatchObject({
 			diagnosticId: expect.any(String),
 			errorFingerprint: expect.stringContaining("fnv1a-"),
-			errorName: "TypeError",
+			errorName: "UnknownException",
 			generationEvents: [],
 			guard: {
 				requestId: "request-1",

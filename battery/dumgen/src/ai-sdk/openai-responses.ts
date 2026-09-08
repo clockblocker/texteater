@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import * as Effect from "effect/Effect";
 import { AiSdkGenerationError } from "./ai-sdk-generation-error";
 import {
 	createGenerationFailure,
@@ -24,7 +26,7 @@ export type ResponseFailureMetadata = {
 	readonly status?: string;
 };
 
-export async function createCommonRequest(args: {
+export function createCommonRequest(args: {
 	readonly defaultMaxOutputTokens?: number;
 	readonly defaultModel?: string;
 	readonly input: string;
@@ -44,18 +46,18 @@ export async function createCommonRequest(args: {
 			]
 		: args.input;
 
-	return {
+	return Effect.sync(() => ({
 		model:
 			args.params.model ?? args.defaultModel ?? DUMGEN_GENERATION_MODEL,
 		input,
 		max_output_tokens: maxOutputTokens,
 		...(systemPrompt
-			? { prompt_cache_key: await hashString(systemPrompt) }
+			? { prompt_cache_key: hashString(systemPrompt) }
 			: undefined),
 		reasoning: { effort: DUMGEN_REASONING_EFFORT },
 		store: false,
 		text: { verbosity: "low" as const },
-	};
+	}));
 }
 
 export function validateMaxOutputTokens(maxOutputTokens: number): void {
@@ -160,14 +162,8 @@ export function extractOutputText(
 	return text.length > 0 ? text.join("") : undefined;
 }
 
-async function hashString(value: string): Promise<string> {
-	const digest = await crypto.subtle.digest(
-		"SHA-256",
-		new TextEncoder().encode(value),
-	);
-	return Array.from(new Uint8Array(digest), (byte) =>
-		byte.toString(16).padStart(2, "0"),
-	).join("");
+function hashString(value: string): string {
+	return createHash("sha256").update(value).digest("hex");
 }
 
 function findRefusal(

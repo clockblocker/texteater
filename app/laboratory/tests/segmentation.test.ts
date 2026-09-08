@@ -5,11 +5,9 @@ import type {
 	DumgenSection1Trace,
 	SegmentedSentence,
 } from "dumgen";
-
-import {
-	LaboratorySegmentationError,
-	segmentForLaboratory,
-} from "../src/segmentation";
+import { DumgenError } from "dumgen";
+import * as Effect from "effect/Effect";
+import { segmentForLaboratory } from "../src/segmentation";
 
 const sentence: SegmentedSentence<"de"> = {
 	id: "segmentation-test" as SegmentedSentence<"de">["id"],
@@ -20,7 +18,6 @@ const sentence: SegmentedSentence<"de"> = {
 		{ kind: "ResolvableText", text: "Bank" },
 	],
 };
-
 function accepted(
 	promptPath: string,
 	modelInput: unknown,
@@ -36,7 +33,6 @@ function accepted(
 		result,
 	};
 }
-
 describe("Laboratory segmentation adapter", () => {
 	test("calls Dumgen.segment and derives prompt traces from instrumentation", async () => {
 		const calls: string[] = [];
@@ -92,22 +88,16 @@ describe("Laboratory segmentation adapter", () => {
 			},
 		];
 		const dumgen: Pick<Dumgen, "segment"> = {
-			async segment(sourceSentences) {
-				calls.push(...sourceSentences);
-				return {
-					ok: true,
-					value: [{ decision: "Accepted", language: "de", sentence }],
-				};
+			segment(sourceSentences) {
+				return Effect.sync(() => {
+					calls.push(...sourceSentences);
+					return [{ decision: "Accepted", language: "de", sentence }];
+				});
 			},
 		};
-
-		const response = await segmentForLaboratory(
-			dumgen,
-			"Die Bank",
-			exchanges,
-			traces,
+		const response = await Effect.runPromise(
+			segmentForLaboratory(dumgen, "Die Bank", exchanges, traces),
 		);
-
 		expect(calls).toEqual(["Die Bank"]);
 		expect(response).toMatchObject({
 			decision: "Accepted",
@@ -123,7 +113,6 @@ describe("Laboratory segmentation adapter", () => {
 			result: sentence,
 		});
 	});
-
 	test("preserves an unavailable Intake result without a segmentation stage", async () => {
 		const exchanges: DumgenModelExchange[] = [
 			{
@@ -161,20 +150,15 @@ describe("Laboratory segmentation adapter", () => {
 			),
 		];
 		const dumgen: Pick<Dumgen, "segment"> = {
-			async segment() {
-				return {
-					ok: true,
-					value: [{ decision: "UnsupportedLanguage" }],
-				};
+			segment() {
+				return Effect.sync(() => {
+					return [{ decision: "UnsupportedLanguage" }];
+				});
 			},
 		};
-
-		const response = await segmentForLaboratory(
-			dumgen,
-			"Bonjour",
-			exchanges,
+		const response = await Effect.runPromise(
+			segmentForLaboratory(dumgen, "Bonjour", exchanges),
 		);
-
 		expect(response).toEqual({
 			decision: "UnsupportedLanguage",
 			sentence: null,
@@ -213,25 +197,17 @@ describe("Laboratory segmentation adapter", () => {
 			},
 		});
 	});
-
 	test("preserves typed preflight failures without requiring a model trace", async () => {
+		const failure = new DumgenError(
+			"invalid-input",
+			"Input exceeds the production boundary.",
+		);
 		const dumgen: Pick<Dumgen, "segment"> = {
-			async segment() {
-				return {
-					ok: false,
-					error: {
-						code: "InvalidInput",
-						message: "Input exceeds the production boundary.",
-					},
-				};
-			},
+			segment: () => Effect.fail(failure),
 		};
-
-		await expect(
-			segmentForLaboratory(dumgen, "too long", []),
-		).rejects.toMatchObject({
-			name: LaboratorySegmentationError.name,
-			section1Error: { code: "InvalidInput" },
-		});
+		const result = await Effect.runPromise(
+			Effect.either(segmentForLaboratory(dumgen, "too long", [])),
+		);
+		expect(result).toMatchObject({ _tag: "Left", left: failure });
 	});
 });

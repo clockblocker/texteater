@@ -1,6 +1,8 @@
 import type { Reading } from "dumling/types";
 import type { FixedKnowledgeLookup } from "dumrel/fixed";
 import type { DirectSemanticRelation, ReadingKnowledge } from "dumrel/types";
+import * as Effect from "effect/Effect";
+import { DumgenError } from "../generator/generator-error";
 import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationResult,
@@ -13,11 +15,32 @@ import {
 } from "../parsing/lightweight-parsers";
 import { routeFor } from "./contracts";
 
-export async function generateFixedKnowledge(
+export function generateFixedKnowledge(
 	input: KnowledgeGenerationInput<"de">,
-): Promise<KnowledgeGenerationResult> {
-	const { fixedKnowledgeFor } = await import("dumrel/fixed");
-	const lookup = fixedKnowledgeFor(input.reading as unknown as Reading);
+): Effect.Effect<KnowledgeGenerationResult, DumgenError> {
+	return Effect.promise(() => import("dumrel/fixed")).pipe(
+		Effect.flatMap(({ fixedKnowledgeFor }) =>
+			Effect.try({
+				try: () =>
+					generateFixedKnowledgeFromLookup(
+						input,
+						fixedKnowledgeFor(input.reading as unknown as Reading),
+					),
+				catch: (cause) =>
+					new DumgenError(
+						"invalid-output",
+						"Fixed Knowledge could not be projected.",
+						{ cause },
+					),
+			}),
+		),
+	);
+}
+
+function generateFixedKnowledgeFromLookup(
+	input: KnowledgeGenerationInput<"de">,
+	lookup: FixedKnowledgeLookup,
+): KnowledgeGenerationResult {
 	if (lookup.decision === "Miss") {
 		return Object.freeze({
 			decision: "CatalogMiss",

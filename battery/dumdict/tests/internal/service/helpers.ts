@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import {
 	createDumdictService,
 	DumdictLanguageMismatchError,
@@ -76,6 +77,15 @@ export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
 	return structuredClone(reading);
 };
 
+/** Runs a typed failing Effect and returns its expected failure value. */
+export async function failure<E>(
+	effect: Effect.Effect<unknown, E>,
+): Promise<E> {
+	const result = await Effect.runPromise(Effect.either(effect));
+	if (result._tag === "Left") return result.left;
+	throw new Error("Expected the Effect to fail.");
+}
+
 export function withUnusedCleanupStorageMethods<
 	L extends import("../../../src").SupportedLanguage,
 >(
@@ -86,11 +96,11 @@ export function withUnusedCleanupStorageMethods<
 ): DumdictStoragePort<L> {
 	return {
 		...storage,
-		async getInfoForRelationsCleanup() {
-			throw new Error("Unexpected storage call");
+		getInfoForRelationsCleanup() {
+			return Effect.die("Unexpected storage call");
 		},
-		async loadCleanupRelationsContext() {
-			throw new Error("Unexpected storage call");
+		loadCleanupRelationsContext() {
+			return Effect.die("Unexpected storage call");
 		},
 	};
 }
@@ -98,18 +108,18 @@ export function withUnusedCleanupStorageMethods<
 export const storageRejectingReadingEntryContext = () => {
 	let loadReadingEntryContextCalls = 0;
 	const storage = withUnusedCleanupStorageMethods({
-		async findStoredReadings() {
-			throw new Error("Unexpected storage call");
+		findStoredReadings() {
+			return Effect.die("Unexpected storage call");
 		},
-		async loadReadingForPatch() {
-			throw new Error("Unexpected storage call");
+		loadReadingForPatch() {
+			return Effect.die("Unexpected storage call");
 		},
-		async loadReadingEntryContext() {
+		loadReadingEntryContext() {
 			loadReadingEntryContextCalls += 1;
-			throw new Error("Unexpected storage call");
+			return Effect.die("Unexpected storage call");
 		},
-		async commitChanges() {
-			throw new Error("Unexpected storage call");
+		commitChanges() {
+			return Effect.die("Unexpected storage call");
 		},
 	});
 

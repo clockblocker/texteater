@@ -5,8 +5,9 @@ import {
 	type DumdictStoragePort,
 	type StoreRevision,
 } from "dumdict";
-import { type AiSdk, buildDumgen, type Dumgen } from "dumgen";
+import { buildDumgen, type Dumgen, type ModelGenerator } from "dumgen";
 import { readingFingerprint } from "dumling";
+import * as Effect from "effect/Effect";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	applyValidatedReadingKnowledgeChange,
@@ -22,16 +23,16 @@ import {
 
 const revision = "revision-0" as StoreRevision;
 
-function queueSdk(outputs: unknown[]): AiSdk {
+function queueModelGenerator(outputs: unknown[]): ModelGenerator {
 	return {
-		async structuredGeneration() {
+		structuredGeneration() {
 			const output = outputs.shift();
 			if (output === undefined)
-				throw new Error("No queued model output.");
-			return output as never;
+				return Effect.die("No queued model output.");
+			return Effect.succeed(output as never);
 		},
-		async unstructuredGeneration() {
-			throw new Error("Unexpected unstructured generation.");
+		unstructuredGeneration() {
+			return Effect.die("Unexpected unstructured generation.");
 		},
 	};
 }
@@ -39,13 +40,13 @@ function queueSdk(outputs: unknown[]): AiSdk {
 function createPlanningStorage() {
 	const commits: CommitChangesRequest<"de">[] = [];
 	const storage: DumdictStoragePort<"de"> = {
-		async findStoredReadings() {
-			return { revision, candidates: [] };
+		findStoredReadings() {
+			return Effect.succeed({ revision, candidates: [] });
 		},
-		async loadReadingEntryContext(request) {
+		loadReadingEntryContext(request) {
 			switch (request.intent) {
 				case "addNewNote":
-					return {
+					return Effect.succeed({
 						intent: request.intent,
 						revision,
 						existingOwnedSurfaces: [],
@@ -54,40 +55,40 @@ function createPlanningStorage() {
 						pendingRelationsMatchingProposedLemma: [],
 						relationLemmas: [],
 						relationReadings: [],
-					};
+					});
 				case "applyGeneratedKnowledge":
-					return {
+					return Effect.succeed({
 						intent: request.intent,
 						revision,
 						exactPendingRelations: [],
 						relationLemmas: [],
 						relationReadings: [],
-					};
+					});
 				case "ensureOwnedSurface":
-					return {
+					return Effect.succeed({
 						intent: request.intent,
 						revision,
 						existingOwnedSurfaces: [],
-					};
+					});
 				case "ensureReadingEntry":
-					return { intent: request.intent, revision };
+					return Effect.succeed({ intent: request.intent, revision });
 			}
 		},
-		async commitChanges(request) {
+		commitChanges(request) {
 			commits.push(request);
-			return {
+			return Effect.succeed({
 				status: "committed",
 				nextRevision: "revision-1" as StoreRevision,
-			};
+			});
 		},
-		async loadReadingForPatch() {
-			throw new Error("Unexpected Reading patch.");
+		loadReadingForPatch() {
+			return Effect.die("Unexpected Reading patch.");
 		},
-		async getInfoForRelationsCleanup() {
-			throw new Error("Unexpected relation cleanup lookup.");
+		getInfoForRelationsCleanup() {
+			return Effect.die("Unexpected relation cleanup lookup.");
 		},
-		async loadCleanupRelationsContext() {
-			throw new Error("Unexpected relation cleanup load.");
+		loadCleanupRelationsContext() {
+			return Effect.die("Unexpected relation cleanup load.");
 		},
 	};
 	return { commits, storage };
@@ -127,10 +128,12 @@ test("rejects text limits before invoking Dumgen", async () => {
 	];
 	for (const [index, input] of inputs.entries()) {
 		await expect(
-			orchestrator.submitText({
-				submissionKey: `over-limit-${index}`,
-				sourceText: input.sourceText,
-			}),
+			Effect.runPromise(
+				orchestrator.submitText({
+					submissionKey: `over-limit-${index}`,
+					sourceText: input.sourceText,
+				}),
+			),
 		).rejects.toThrow(input.message);
 	}
 	expect(segmentCalls).toBe(0);
@@ -230,14 +233,16 @@ test("a durable retry resumes Reading from its Grammar checkpoint", async () => 
 		},
 	});
 
-	const result = await orchestrator.resolveSegment(
-		{
-			requestId: "request-1",
-			visitorId: "visitor-1",
-			sentenceId: "sentence-1",
-			clickedSegmentIndex: 2,
-		},
-		{ grammatical },
+	const result = await Effect.runPromise(
+		orchestrator.resolveSegment(
+			{
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				sentenceId: "sentence-1",
+				clickedSegmentIndex: 2,
+			},
+			{ grammatical },
+		),
 	);
 
 	expect(grammaticalCalls).toBe(0);
@@ -322,7 +327,7 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 		},
 	};
 	const dumgen = buildDumgen({
-		sdk: queueSdk([
+		modelGenerator: queueModelGenerator([
 			{
 				language: "de",
 				items: [
@@ -353,7 +358,7 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 					coreFeatures: { gender: "Fem", hyph: null },
 				},
 			},
-			{ decision: "New", emojiDescription: "🏦" },
+			{ emojiDescription: "🏦" },
 		]),
 	});
 	const orchestrator = createTfDemoOrchestrator({
@@ -362,18 +367,22 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 		persistence,
 	});
 
-	const submission = await orchestrator.submitText({
-		submissionKey: "submission-1",
-		sourceText: "Die Banken.",
-	});
-	const resolution = await orchestrator.resolveSegment({
-		requestId: "request-1",
-		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 2,
-	});
+	const submission = await Effect.runPromise(
+		orchestrator.submitText({
+			submissionKey: "submission-1",
+			sourceText: "Die Banken.",
+		}),
+	);
+	const resolution = await Effect.runPromise(
+		orchestrator.resolveSegment({
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 2,
+		}),
+	);
 
-	expect(submission.ok).toBe(true);
+	expect(submission.decisions).toHaveLength(1);
 	expect(submitted?.sentences[0]?.segments).toEqual([
 		{ kind: "ResolvableText", text: "Die" },
 		{ kind: "Whitespace", text: " " },
@@ -494,20 +503,14 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 			async addNewNote() {
 				throw new Error("An existing Reading must not be recreated.");
 			},
-			async ensureOwnedSurface(_request, options) {
-				if (!options?.applyPlan)
-					throw new Error("Expected host plan capture.");
-				await options.applyPlan({
-					baseRevision: revision,
-					changes: [],
-				});
-				return {
-					status: "applied",
-					baseRevision: revision,
-					nextRevision: revision,
-					affected: {},
-					summary: { message: "Already stored." },
-				};
+			prepare: {
+				ensureOwnedSurface() {
+					return Effect.succeed({
+						plan: { baseRevision: revision, changes: [] },
+						affected: {},
+						summary: { message: "Already stored." },
+					});
+				},
 			},
 			async getInfoForRelationsCleanup() {
 				throw new Error("Unexpected cleanup.");
@@ -579,18 +582,22 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 		},
 	});
 
-	const result = await orchestrator.resolveSegment({
-		requestId: "request-repeat",
-		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 2,
-	});
-	await orchestrator.resolveSegment({
-		requestId: "request-repeat-again",
-		visitorId: "visitor-2",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 2,
-	});
+	const result = await Effect.runPromise(
+		orchestrator.resolveSegment({
+			requestId: "request-repeat",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 2,
+		}),
+	);
+	await Effect.runPromise(
+		orchestrator.resolveSegment({
+			requestId: "request-repeat-again",
+			visitorId: "visitor-2",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 2,
+		}),
+	);
 
 	expect(result.dictionaryPlan.changes).toEqual([]);
 	expect(persisted).toBe(true);
@@ -751,18 +758,22 @@ for (const order of [
 			},
 		});
 
-		const first = await orchestrator.resolveSegment({
-			requestId: "request-1",
-			visitorId: "visitor-1",
-			sentenceId: "sentence-1",
-			clickedSegmentIndex: order[0],
-		});
-		const second = await orchestrator.resolveSegment({
-			requestId: "request-2",
-			visitorId: "visitor-2",
-			sentenceId: "sentence-1",
-			clickedSegmentIndex: order[1],
-		});
+		const first = await Effect.runPromise(
+			orchestrator.resolveSegment({
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				sentenceId: "sentence-1",
+				clickedSegmentIndex: order[0],
+			}),
+		);
+		const second = await Effect.runPromise(
+			orchestrator.resolveSegment({
+				requestId: "request-2",
+				visitorId: "visitor-2",
+				sentenceId: "sentence-1",
+				clickedSegmentIndex: order[1],
+			}),
+		);
 
 		expect(grammaticalCalls).toBe(1);
 		expect(readingCalls).toBe(1);
@@ -824,12 +835,14 @@ test("replays a recorded unresolved Click without invoking Dumgen or dictionary 
 		},
 	});
 
-	const result = await orchestrator.resolveSegment({
-		requestId: "request-1",
-		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 0,
-	});
+	const result = await Effect.runPromise(
+		orchestrator.resolveSegment({
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 0,
+		}),
+	);
 
 	expect(result).toEqual({
 		grammatical: { decision: "Unresolved", language: "de" },
@@ -894,12 +907,14 @@ test("persists a fresh unresolved Click with a discriminated result", async () =
 		},
 	});
 
-	const result = await orchestrator.resolveSegment({
-		requestId: "request-1",
-		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 0,
-	});
+	const result = await Effect.runPromise(
+		orchestrator.resolveSegment({
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 0,
+		}),
+	);
 
 	expect(result).toEqual({
 		grammatical: { decision: "Unresolved", language: "de" },
@@ -1005,12 +1020,14 @@ test("an unresolved model result yields to membership committed during model wor
 		},
 	});
 
-	const result = await orchestrator.resolveSegment({
-		requestId: "request-1",
-		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 2,
-	});
+	const result = await Effect.runPromise(
+		orchestrator.resolveSegment({
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 2,
+		}),
+	);
 
 	expect(result).toMatchObject({
 		grammatical: { decision: "Resolved" },

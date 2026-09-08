@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
 
 import type { Reading } from "dumling/types";
+import * as Effect from "effect/Effect";
 import {
 	type Lemma,
 	type LemmaRecord,
@@ -94,9 +95,9 @@ const serializedWalk = {
 // README_BLOCK:service-lookup:start
 const { dict: lookupDict } = getBootedUpDumdict("en", [serializedWalk]);
 
-const walkReadings = await lookupDict.findStoredReadings({
+const walkReadings = await Effect.runPromise(lookupDict.findStoredReadings({
 	lemma: walkLemma,
-});
+}));
 
 const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
 // README_BLOCK:service-lookup:end
@@ -104,7 +105,7 @@ const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
 // README_BLOCK:quickstart-walk:start
 const { dict, storage } = getBootedUpDumdict("en", [serializedWalk]);
 
-const addRunResult = await dict.addNewNote({
+const addRunResult = await Effect.runPromise(dict.addNewNote({
 	draft: {
 		reading: runReading,
 		note: {
@@ -113,7 +114,7 @@ const addRunResult = await dict.addNewNote({
 			notes: "Core fast-motion sense.",
 		},
 	},
-});
+}));
 
 const storedRunReading = storage
 	.loadAll()

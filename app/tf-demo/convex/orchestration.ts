@@ -2,17 +2,17 @@
 
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { type Infer, v } from "convex/values";
-import type { ApplyGeneratedKnowledgeRequest, DumdictPlan } from "dumdict";
+import type { ApplyGeneratedKnowledgeRequest } from "dumdict";
 import { createDumdictService } from "dumdict/runtime";
 import {
 	type Dumgen,
-	type GenerationEvent,
 	type GrammaticalResult,
 	parseAsGrammaticalResult,
 } from "dumgen";
 import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
 import { type KnowledgeChange, parseAsKnowledgeChange } from "dumrel";
 import { directSemanticRelationValues } from "dumrel/vocabulary";
+import * as Effect from "effect/Effect";
 import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
@@ -105,41 +105,32 @@ const recordRelationPublicationFailure = makeFunctionReference<
 	null
 >;
 
-function createLazyDumgen(
-	onGenerationEvent?: (event: GenerationEvent) => void,
-): Dumgen {
+function createLazyDumgen(): Dumgen {
 	let dumgenPromise: Promise<Dumgen> | undefined;
 	const getDumgen = () => {
 		dumgenPromise ??= Promise.all([
 			import("dumgen/openai-fetch"),
 			import("dumgen/runtime"),
-		]).then(([{ buildOpenAiFetchSdk }, { buildDumgenRuntime }]) =>
-			buildDumgenRuntime({
-				runtimePromptData: encodedRuntimePromptData,
-				sdk: buildOpenAiFetchSdk({ onGenerationEvent }),
-				async generateKnowledge() {
-					throw new Error(
-						"Knowledge generation runs in its dedicated Convex action.",
-					);
-				},
-			}),
+		]).then(
+			([{ buildOpenAiFetchModelGenerator }, { buildDumgenRuntime }]) =>
+				buildDumgenRuntime({
+					runtimePromptData: encodedRuntimePromptData,
+					modelGenerator: buildOpenAiFetchModelGenerator(),
+				}),
 		);
 		return dumgenPromise;
 	};
+	const run = <Value, Failure>(
+		operation: (dumgen: Dumgen) => Effect.Effect<Value, Failure>,
+	): Effect.Effect<Value, Failure> =>
+		Effect.promise(getDumgen).pipe(Effect.flatMap(operation));
 	return {
-		segment: async (sentences) => (await getDumgen()).segment(sentences),
+		segment: (sentences) => run((dumgen) => dumgen.segment(sentences)),
 		resolve: {
-			grammatical: async (language, input) =>
-				(await getDumgen()).resolve.grammatical(language, input),
-			reading: async (language, input) =>
-				(await getDumgen()).resolve.reading(language, input),
-		},
-		generate: {
-			knowledge: async () => {
-				throw new Error(
-					"Knowledge generation runs in its dedicated Convex action.",
-				);
-			},
+			grammatical: (language, input) =>
+				run((dumgen) => dumgen.resolve.grammatical(language, input)),
+			reading: (language, input) =>
+				run((dumgen) => dumgen.resolve.reading(language, input)),
 		},
 	};
 }
@@ -437,13 +428,9 @@ export const submitText = action({
 	},
 	returns: submitTextResultValidator,
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
-		const result = await orchestratorFor(ctx).submitText(args);
-		if (!result.ok) {
-			return {
-				status: "Rejected",
-				message: result.error.message,
-			};
-		}
+		const result = await Effect.runPromise(
+			orchestratorFor(ctx).submitText(args),
+		);
 		return {
 			status: "Accepted",
 			textId: convexId<"texts">(result.persisted.textId),
@@ -461,10 +448,12 @@ export const resolveSegment = action({
 	returns: resolveSegmentResultValidator,
 	handler: async (ctx, args): Promise<ResolveSegmentActionResult> =>
 		resolveSegmentActionResult(
-			await orchestratorFor(ctx).resolveSegment({
-				...args,
-				sentenceId: args.sentenceId,
-			}),
+			await Effect.runPromise(
+				orchestratorFor(ctx).resolveSegment({
+					...args,
+					sentenceId: args.sentenceId,
+				}),
+			),
 		),
 });
 
@@ -476,17 +465,17 @@ export const runResolutionSession = internalAction({
 	},
 	returns: v.null(),
 	handler: async (ctx, guard): Promise<null> => {
-		await executeResolutionSession({
-			identity: guard,
-			lifecycle: createConvexResolutionSessionLifecycle(ctx, guard),
-			resolve: (selection, checkpoints, observer, onGenerationEvent) =>
-				orchestratorFor(
-					ctx,
-					guard,
-					observer,
-					onGenerationEvent,
-				).resolveSegment(selection, checkpoints),
-		});
+		await Effect.runPromise(
+			executeResolutionSession({
+				identity: guard,
+				lifecycle: createConvexResolutionSessionLifecycle(ctx, guard),
+				resolve: (selection, checkpoints, observer) =>
+					orchestratorFor(ctx, guard, observer).resolveSegment(
+						selection,
+						checkpoints,
+					),
+			}),
+		);
 		return null;
 	},
 });
@@ -656,12 +645,9 @@ function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard?: ResolutionSessionGuard,
 	observer?: ResolutionProgressObserver,
-	onGenerationEvent?: (event: GenerationEvent) => void,
 ) {
 	return createTfDemoOrchestrator({
-		dumgen: onGenerationEvent
-			? createLazyDumgen(onGenerationEvent)
-			: lazyDumgen,
+		dumgen: lazyDumgen,
 		dictionary: createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
@@ -787,25 +773,13 @@ export const applyGeneratedKnowledgePlan = internalAction({
 				index < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
 				index += 1
 			) {
-				let capturedPlan: DumdictPlan<"de"> | undefined;
-				const planned = await createDumdictService({
-					language: "de",
-					storage: createConvexDumdictStorage(ctx),
-				}).applyGeneratedKnowledge(request, {
-					applyPlan: async (plan) => {
-						capturedPlan = plan;
-						return {
-							status: "committed",
-							nextRevision: plan.baseRevision,
-						};
-					},
-				});
-				if (planned.status === "rejected") {
-					throw new Error("Generated Knowledge was rejected.");
-				}
-				if (!capturedPlan)
-					throw new Error("Dumdict did not produce a plan.");
-				const fullPlan = dictionaryPlanResult(capturedPlan);
+				const prepared = await Effect.runPromise(
+					createDumdictService({
+						language: "de",
+						storage: createConvexDumdictStorage(ctx),
+					}).prepare.applyGeneratedKnowledge(request),
+				);
+				const fullPlan = dictionaryPlanResult(prepared.plan);
 				const committed = await ctx.runMutation(
 					internal.knowledgeGeneration.commitGenerated,
 					{
@@ -963,18 +937,27 @@ export const cleanupPendingRelation = action({
 				"The pending Shadow reference is malformed and cannot be changed.",
 			);
 		}
-		const result = await createDumdictService({
-			language: "de",
-			storage: createConvexDumdictStorage(ctx),
-		}).cleanupRelations({
-			baseRevision: args.baseRevision,
-			resolutions: [
-				{
-					locator: pendingLocator,
-				},
-			],
-		});
-		if (result.status === "applied") {
+		const result = await Effect.runPromise(
+			createDumdictService({
+				language: "de",
+				storage: createConvexDumdictStorage(ctx),
+			})
+				.cleanupRelations({
+					baseRevision: args.baseRevision,
+					resolutions: [
+						{
+							locator: pendingLocator,
+						},
+					],
+				})
+				.pipe(
+					Effect.match({
+						onFailure: (error) => error,
+						onSuccess: (value) => value,
+					}),
+				),
+		);
+		if ("status" in result && result.status === "applied") {
 			return {
 				status: "applied",
 				baseRevision: result.baseRevision,
@@ -982,19 +965,28 @@ export const cleanupPendingRelation = action({
 				message: result.summary.message,
 			};
 		}
-		if (result.status === "conflict") {
+		if (
+			"_tag" in result &&
+			(result._tag === "DumdictRevisionConflict" ||
+				result._tag === "DumdictSemanticPreconditionFailure")
+		) {
 			return {
 				status: "conflict",
-				code: result.code,
+				code:
+					result._tag === "DumdictRevisionConflict"
+						? "revisionConflict"
+						: "semanticPreconditionFailed",
 				baseRevision: result.baseRevision,
 				latestRevision: result.latestRevision ?? selection.revision,
 				message: result.message ?? "Shadow cleanup conflicted.",
 			};
 		}
-		return {
-			status: "rejected",
-			code: result.code,
-			message: result.message ?? "Shadow cleanup was rejected.",
-		};
+		if ("_tag" in result && result._tag === "DumdictRejection")
+			return {
+				status: "rejected",
+				code: result.code,
+				message: result.message ?? "Shadow cleanup was rejected.",
+			};
+		throw new Error("Shadow cleanup storage failed.");
 	},
 });

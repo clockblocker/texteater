@@ -37,10 +37,12 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		(task) => task.taskId === "@texteater/tf-demo#dev",
 	);
 	expect(dev?.dependencies.toSorted()).toEqual([
+		"common-utils#build",
 		"dumdict#build",
 		"dumgen#build",
 		"dumling#build",
 		"dumrel#build",
+		"react-resizable-panels#build",
 	]);
 	expect(plan.tasks.map((task) => task.taskId).toSorted()).toEqual([
 		"@texteater/tf-demo#dev",
@@ -51,5 +53,6 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumgen#build",
 		"dumling#build",
 		"dumrel#build",
+		"react-resizable-panels#build",
 	]);
 });

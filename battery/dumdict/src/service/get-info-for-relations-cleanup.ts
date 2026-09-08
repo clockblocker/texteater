@@ -1,23 +1,38 @@
+import { traceStage } from "common-utils/workflow";
 import type { SupportedLanguage } from "dumling/types";
+import * as Effect from "effect/Effect";
 import { lookupRelationsCleanupInfo } from "../core/lookup";
 import type {
+	DumdictInvalidInput,
 	GetInfoForRelationsCleanupRequest,
 	GetInfoForRelationsCleanupResult,
 } from "../public";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export async function getInfoForRelationsCleanup<L extends SupportedLanguage>(
+export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
-): Promise<GetInfoForRelationsCleanupResult<L>> {
+): Effect.Effect<
+	GetInfoForRelationsCleanupResult<L>,
+	DumdictInvalidInput | import("../public").DumdictStorageFailure
+> {
 	const canonicalForm = request.canonicalForm.trim().normalize("NFC");
-	if (!canonicalForm) {
-		throw new Error("canonicalForm is required.");
-	}
-
-	const slice = await options.storage.getInfoForRelationsCleanup({
-		canonicalForm,
-	});
-	options.sliceValidation.relationsCleanupInfo(slice, canonicalForm);
-	return lookupRelationsCleanupInfo(slice);
+	if (!canonicalForm)
+		return Effect.fail({
+			_tag: "DumdictInvalidInput",
+			message: "canonicalForm is required.",
+		});
+	return traceStage(
+		"dumdict.getInfoForRelationsCleanup",
+		options.storage.getInfoForRelationsCleanup({ canonicalForm }).pipe(
+			Effect.map((slice) => {
+				options.sliceValidation.relationsCleanupInfo(
+					slice,
+					canonicalForm,
+				);
+				return lookupRelationsCleanupInfo(slice);
+			}),
+		),
+		{ canonicalForm },
+	);
 }

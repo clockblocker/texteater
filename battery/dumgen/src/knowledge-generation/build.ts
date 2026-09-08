@@ -1,10 +1,9 @@
 import type { LemmaRoute, Reading } from "dumling/types";
-import type { AiSdk } from "../ai-sdk/ai-sdk";
-import { knowledgeGenerationPromptCatalog } from "../catalog/knowledge-generation-prompts";
-import {
-	buildGeneratorCatalog,
-	type ModelExchange,
-} from "../generator/generator";
+import * as Effect from "effect/Effect";
+import type { ModelGenerator } from "../ai-sdk/ai-sdk";
+import { RUNTIME_KNOWLEDGE_PROMPT_CATALOG } from "../catalog/runtime-prompt-catalog";
+import type { DumgenDomainFailure } from "../dumgen";
+import { buildGeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
 import {
 	parseAsKnowledgeGenerationInput,
@@ -24,104 +23,134 @@ import {
 import { createGermanKnowledgeGeneration } from "./de/runtime";
 
 const KNOWLEDGE_PROMPT_CATALOG = {
-	laboratory: {
-		knowledge: {
-			de: knowledgeGenerationPromptCatalog,
-		},
-	},
+	laboratory: { knowledge: { de: RUNTIME_KNOWLEDGE_PROMPT_CATALOG } },
 } as const;
+type KnowledgeFailure =
+	| DumgenError
+	| DumgenDomainFailure<
+			Extract<
+				KnowledgeGenerationResult,
+				{ readonly decision: "CatalogMiss" }
+			>
+	  >;
 
 export type KnowledgeDumgen = {
 	readonly generate: {
 		knowledge(
 			language: KnowledgeGenerationLanguage,
 			input: KnowledgeGenerationInput<"de">,
-		): Promise<KnowledgeGenerationResult>;
+		): Effect.Effect<
+			Exclude<
+				KnowledgeGenerationResult,
+				{ readonly decision: "CatalogMiss" }
+			>,
+			KnowledgeFailure
+		>;
 	};
 };
 
 export function createKnowledgeDumgen(options: {
-	readonly sdk: AiSdk;
-	readonly onModelExchange?: (exchange: ModelExchange) => void;
-	readonly onDiagnostic?: (diagnostic: unknown) => void;
+	readonly modelGenerator: ModelGenerator;
 }): KnowledgeDumgen {
 	const generators = buildGeneratorCatalog(
 		KNOWLEDGE_PROMPT_CATALOG,
-		options.sdk,
-		{
-			onModelExchange: options.onModelExchange,
-			onDiagnostic: options.onDiagnostic,
-		},
+		options.modelGenerator,
 	);
 	const knowledgeGenerators = generators.laboratory.knowledge.de;
-
-	async function generateGermanKnowledge(
+	const generateGermanKnowledge = (
 		validated: KnowledgeGenerationInput<"de">,
-	): Promise<KnowledgeGenerationResult> {
+	): Effect.Effect<KnowledgeGenerationResult, DumgenError> => {
 		const family = validated.reading.lemma.family;
 		const generate = knowledgeGenerators[family as GermanKnowledgeFamily];
-		if (generate === undefined) {
-			throw new DumgenError(
-				"invalid-input",
-				"Knowledge generation is not configured for this Family.",
-				{
-					cause: new TypeError(
-						`Unsupported Knowledge Family: ${family}. Expected ${germanKnowledgeFamilies.join(" | ")}.`,
-					),
-				},
+		if (generate === undefined)
+			return Effect.fail(
+				new DumgenError(
+					"invalid-input",
+					"Knowledge generation is not configured for this Family.",
+					{
+						cause: new TypeError(
+							`Unsupported Knowledge Family: ${family}. Expected ${germanKnowledgeFamilies.join(" | ")}.`,
+						),
+					},
+				),
 			);
-		}
 		return createGermanKnowledgeGeneration(generate)(validated);
-	}
-
-	async function knowledge(
+	};
+	const knowledge = (
 		language: KnowledgeGenerationLanguage,
 		input: KnowledgeGenerationInput<"de">,
-	): Promise<KnowledgeGenerationResult> {
-		if (language !== "de") {
-			throw new DumgenError(
-				"invalid-input",
-				"Knowledge generation is not configured for this language.",
-				{
-					cause: new TypeError(
-						`Unsupported Knowledge language: ${String(language)}.`,
+	): Effect.Effect<KnowledgeGenerationResult, DumgenError> =>
+		Effect.gen(function* () {
+			if (language !== "de")
+				return yield* Effect.fail(
+					new DumgenError(
+						"invalid-input",
+						"Knowledge generation is not configured for this language.",
+						{
+							cause: new TypeError(
+								`Unsupported Knowledge language: ${String(language)}.`,
+							),
+						},
 					),
-				},
+				);
+			const validated = yield* Effect.try({
+				try: () =>
+					unwrapDumgenParse(
+						parseAsKnowledgeGenerationInput(input, "de"),
+					),
+				catch: (cause) =>
+					new DumgenError(
+						"invalid-input",
+						"German Knowledge generation input is invalid.",
+						{ cause },
+					),
+			});
+			const route = {
+				language: validated.reading.lemma.language,
+				family: validated.reading.lemma.family,
+				kind: validated.reading.lemma.kind,
+			} as LemmaRoute;
+			const { isClosedRouteFor } = yield* Effect.promise(
+				() => import("dumling"),
 			);
-		}
-		let validated: KnowledgeGenerationInput<"de">;
-		try {
-			validated = unwrapDumgenParse(
-				parseAsKnowledgeGenerationInput(input, "de"),
+			const { fixedKnowledgeFor } = yield* Effect.promise(
+				() => import("dumrel/fixed"),
 			);
-		} catch (cause) {
-			throw new DumgenError(
-				"invalid-input",
-				"German Knowledge generation input is invalid.",
-				{ cause },
-			);
-		}
-		const route = {
-			language: validated.reading.lemma.language,
-			family: validated.reading.lemma.family,
-			kind: validated.reading.lemma.kind,
-		} as LemmaRoute;
-		const { isClosedRouteFor } = await import("dumling");
-		const { fixedKnowledgeFor } = await import("dumrel/fixed");
-		if (
-			fixedKnowledgeFor(validated.reading as unknown as Reading)
-				.decision === "Found"
-		) {
-			return generateFixedKnowledge(validated);
-		}
-		return dispatchProduction({
-			closed: isClosedRouteFor.reading(route),
-			runClosed: async () => generateFixedKnowledge(validated),
-			runOpen: async () => generateGermanKnowledge(validated),
+			if (
+				fixedKnowledgeFor(validated.reading as unknown as Reading)
+					.decision === "Found"
+			)
+				return yield* generateFixedKnowledge(validated);
+			return yield* dispatchProduction({
+				closed: isClosedRouteFor.reading(route),
+				runClosed: () => generateFixedKnowledge(validated),
+				runOpen: () => generateGermanKnowledge(validated),
+			});
 		});
-	}
-
+	const completeKnowledge: KnowledgeDumgen["generate"]["knowledge"] = (
+		language,
+		input,
+	) =>
+		knowledge(language, input).pipe(
+			Effect.flatMap((result) => {
+				if ("decision" in result && result.decision === "CatalogMiss") {
+					return Effect.fail({
+						_tag: "DumgenDomainFailure" as const,
+						result: result as Extract<
+							KnowledgeGenerationResult,
+							{ readonly decision: "CatalogMiss" }
+						>,
+					});
+				}
+				return Effect.succeed(
+					result as Exclude<
+						KnowledgeGenerationResult,
+						{ readonly decision: "CatalogMiss" }
+					>,
+				);
+			}),
+		);
 	return Object.freeze({
-		generate: Object.freeze({ knowledge }),
+		generate: Object.freeze({ knowledge: completeKnowledge }),
 	});
 }

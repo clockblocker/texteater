@@ -1,29 +1,25 @@
-import { buildAiSdk } from "./ai-sdk/ai-sdk";
-import { runtimeGermanKnowledgePromptForFamily } from "./catalog/runtime-prompt-catalog";
-import type { ModelExchange } from "./generator/generator";
+import type { ModelGenerator } from "./ai-sdk/ai-sdk";
+import {
+	RUNTIME_KNOWLEDGE_PROMPT_CATALOG,
+	runtimeGermanKnowledgePromptForFamily,
+} from "./catalog/runtime-prompt-catalog";
 import {
 	createKnowledgeDumgen,
 	type KnowledgeDumgen,
 } from "./knowledge-generation/build";
 
 export type KnowledgeDumgenOptions = {
-	readonly apiKey?: string;
-	readonly sdk?: import("./ai-sdk/ai-sdk").AiSdk;
-	readonly onModelExchange?: (exchange: ModelExchange) => void;
+	readonly modelGenerator: ModelGenerator;
 };
 
 export function buildKnowledgeDumgen(
-	options: KnowledgeDumgenOptions = {},
+	options: KnowledgeDumgenOptions,
 ): KnowledgeDumgen {
-	const sdk = options.sdk ?? buildAiSdk({ apiKey: options.apiKey });
-	return createKnowledgeDumgen({
-		sdk,
-		onModelExchange: options.onModelExchange,
-	});
+	return createKnowledgeDumgen(options);
 }
 
-export { knowledgeGenerationPromptCatalog as germanKnowledgeGenerationPrompts } from "./catalog/knowledge-generation-prompts";
 export type { KnowledgeDumgen };
 export {
+	RUNTIME_KNOWLEDGE_PROMPT_CATALOG as germanKnowledgeGenerationPrompts,
 	runtimeGermanKnowledgePromptForFamily as germanKnowledgePromptForFamily,
 };

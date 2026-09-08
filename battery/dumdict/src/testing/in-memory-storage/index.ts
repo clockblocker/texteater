@@ -1,4 +1,5 @@
 import type { SupportedLanguage } from "dumling/types";
+import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../dto";
 import type {
 	CommitChangesRequest,
@@ -29,37 +30,29 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 	const readingEntryContextReads: ReadingEntryContextRead[] = [];
 
 	return {
-		async findStoredReadings(request: FindStoredReadingsStorageRequest<L>) {
-			return findStoredReadings(state, request);
-		},
+		findStoredReadings: (request: FindStoredReadingsStorageRequest<L>) =>
+			Effect.succeed(findStoredReadings(state, request)),
 
-		async getInfoForRelationsCleanup(
+		getInfoForRelationsCleanup: (
 			request: GetInfoForRelationsCleanupStorageRequest<L>,
-		) {
-			return getInfoForRelationsCleanup(state, request);
-		},
+		) => Effect.succeed(getInfoForRelationsCleanup(state, request)),
 
-		async loadReadingForPatch(request: LoadReadingForPatchRequest<L>) {
-			return loadReadingForPatch(state, request);
-		},
+		loadReadingForPatch: (request: LoadReadingForPatchRequest<L>) =>
+			Effect.succeed(loadReadingForPatch(state, request)),
 
-		async loadReadingEntryContext(
-			request: LoadReadingEntryContextRequest<L>,
-		) {
-			return loadReadingEntryContext(state, request, (read) =>
-				readingEntryContextReads.push(read),
-			);
-		},
+		loadReadingEntryContext: (request: LoadReadingEntryContextRequest<L>) =>
+			Effect.succeed(
+				loadReadingEntryContext(state, request, (read) =>
+					readingEntryContextReads.push(read),
+				),
+			),
 
-		async loadCleanupRelationsContext(
+		loadCleanupRelationsContext: (
 			request: LoadCleanupRelationsContextRequest<L>,
-		) {
-			return loadCleanupRelationsContext(state, request);
-		},
+		) => Effect.succeed(loadCleanupRelationsContext(state, request)),
 
-		async commitChanges(request: CommitChangesRequest<L>) {
-			return commitChanges(state, request);
-		},
+		commitChanges: (request: CommitChangesRequest<L>) =>
+			Effect.succeed(commitChanges(state, request)),
 
 		loadAll() {
 			return structuredClone(

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { Surface } from "dumling/types";
+import * as Effect from "effect/Effect";
 import { createFullSliceValidation } from "../../../src/service/full-slice-validation";
 import { loadReadingEntryContext } from "../../../src/service/load-reading-entry-context";
 import { createInMemoryTestStorage } from "../../../src/testing/in-memory-storage";
@@ -27,7 +28,7 @@ describe("Reading Entry context load", () => {
 		const requests: unknown[] = [];
 		const storage = {
 			...delegate,
-			async loadReadingEntryContext(
+			loadReadingEntryContext(
 				request: Parameters<typeof delegate.loadReadingEntryContext>[0],
 			) {
 				requests.push(request);
@@ -35,16 +36,18 @@ describe("Reading Entry context load", () => {
 			},
 		};
 
-		const result = await loadReadingEntryContext(
-			{
-				language: "en",
-				storage,
-				sliceValidation: createFullSliceValidation("en"),
-			},
-			{
-				intent: "ensureReadingEntry",
-				request: { entry: englishWalkReadingEntry() },
-			},
+		const result = await Effect.runPromise(
+			loadReadingEntryContext(
+				{
+					language: "en",
+					storage,
+					sliceValidation: createFullSliceValidation("en"),
+				},
+				{
+					intent: "ensureReadingEntry",
+					request: { entry: englishWalkReadingEntry() },
+				},
+			),
 		);
 
 		expect(requests).toEqual([
@@ -58,54 +61,58 @@ describe("Reading Entry context load", () => {
 		const delegate = createInMemoryTestStorage("en", enSerializedNotes);
 		const storage = {
 			...delegate,
-			async loadReadingEntryContext() {
-				return {
+			loadReadingEntryContext() {
+				return Effect.succeed({
 					intent: "ensureOwnedSurface",
 					revision: "mem-1",
 					existingOwnedSurfaces: [],
-				} as never;
+				} as never);
 			},
 		};
 
 		await expect(
-			loadReadingEntryContext(
-				{
-					language: "en",
-					storage,
-					sliceValidation: createFullSliceValidation("en"),
-				},
-				{
-					intent: "ensureReadingEntry",
-					request: { entry: englishWalkReadingEntry() },
-				},
+			Effect.runPromise(
+				loadReadingEntryContext(
+					{
+						language: "en",
+						storage,
+						sliceValidation: createFullSliceValidation("en"),
+					},
+					{
+						intent: "ensureReadingEntry",
+						request: { entry: englishWalkReadingEntry() },
+					},
+				),
 			),
-		).rejects.toThrow(
-			"Reading Entry context intent does not match the request",
-		);
+		).rejects.toThrow("Reading Entry context intent does not match");
 	});
 
 	test("identity-only intents do not read relation inventory or pending records", async () => {
 		const readingEntry = getBootedUpDumdict("en", enSerializedNotes);
-		await readingEntry.dict.ensureReadingEntry({
-			entry: englishWalkReadingEntry(),
-		});
+		await Effect.runPromise(
+			readingEntry.dict.ensureReadingEntry({
+				entry: englishWalkReadingEntry(),
+			}),
+		);
 		expect(readingEntry.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
 		]);
 
 		const ownedSurface = getBootedUpDumdict("en", enSerializedNotes);
-		await ownedSurface.dict.ensureOwnedSurface({
-			reading: englishWalkReading,
-			ownedSurface: {
-				surface: walkSurface,
-				note: {
-					attestedTranslations: [],
-					attestations: [],
-					notes: "",
+		await Effect.runPromise(
+			ownedSurface.dict.ensureOwnedSurface({
+				reading: englishWalkReading,
+				ownedSurface: {
+					surface: walkSurface,
+					note: {
+						attestedTranslations: [],
+						attestations: [],
+						notes: "",
+					},
 				},
-			},
-		});
+			}),
+		);
 		expect(ownedSurface.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
@@ -115,7 +122,9 @@ describe("Reading Entry context load", () => {
 
 	test("relation-aware intents retain exact pending and relation inventory reads", async () => {
 		const add = getBootedUpDumdict("en");
-		await add.dict.addNewNote({ draft: englishRunDraft });
+		await Effect.runPromise(
+			add.dict.addNewNote({ draft: englishRunDraft }),
+		);
 		expect(add.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
@@ -128,11 +137,13 @@ describe("Reading Entry context load", () => {
 		]);
 
 		const generated = getBootedUpDumdict("en", enSerializedNotes);
-		await generated.dict.applyGeneratedKnowledge({
-			reading: englishWalkReading,
-			changes: [],
-			pendingRelations: [],
-		});
+		await Effect.runPromise(
+			generated.dict.applyGeneratedKnowledge({
+				reading: englishWalkReading,
+				changes: [],
+				pendingRelations: [],
+			}),
+		);
 		expect(generated.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"exactPendingRelations",

@@ -1,4 +1,6 @@
+import { withTraceRecorder } from "common-utils/workflow";
 import type { GenerationEvent, GenerationFailure } from "dumgen";
+import * as Effect from "effect/Effect";
 import type {
 	ResolutionCheckpoints,
 	ResolutionProgressObserver,
@@ -94,8 +96,7 @@ export type ResolutionSessionLinguisticPort = (
 	selection: ResolveSegmentInput,
 	checkpoints: ResolutionCheckpoints,
 	observer: ResolutionProgressObserver,
-	onGenerationEvent: (event: GenerationEvent) => void,
-) => Promise<ResolveSegmentResult>;
+) => Effect.Effect<ResolveSegmentResult, unknown, never>;
 
 type ResolutionExecutionDiagnostics = {
 	readonly info: (message: string) => void;
@@ -115,111 +116,130 @@ export type ResolutionSessionExecution = {
  * module owns progress ordering, checkpoint resume, settlement, diagnostics,
  * and success/failure recording.
  */
-export async function executeResolutionSession({
+export function executeResolutionSession({
 	identity,
 	lifecycle,
 	resolve,
 	diagnostics = console,
 	createDiagnosticId = () => crypto.randomUUID(),
-}: ResolutionSessionExecution): Promise<void> {
+}: ResolutionSessionExecution) {
 	let phase: ResolutionRunPhase = "Route";
 	const generationEvents: ResolutionGenerationEvent[] = [];
-	const onGenerationEvent = (event: GenerationEvent) => {
-		const projected = projectResolutionGenerationEvent(event, {
-			...identity,
-			phase,
-		});
-		if (generationEvents.length < 64) generationEvents.push(projected);
-		diagnostics.info(
-			JSON.stringify({
-				event: "ResolutionGeneration",
-				generation: projected,
-			}),
-		);
-	};
-	const observer: ResolutionProgressObserver = {
-		async grammarAvailable({ grammatical }) {
-			await lifecycle.advance({
-				progress: "GrammarAvailable",
-				grammatical,
+	return Effect.gen(function* () {
+		const onGenerationEvent = (event: GenerationEvent) => {
+			const projected = projectResolutionGenerationEvent(event, {
+				...identity,
+				phase,
 			});
-			phase = "Reading";
-		},
-		async readingAvailable({ reading, readingResolution }) {
-			await lifecycle.advance({
-				progress: "ReadingAvailable",
-				reading,
-				readingResolution,
-			});
-			phase = "Commit";
-		},
-		async committing() {
-			phase = "Commit";
-			await lifecycle.advance({ progress: "Committing" });
-		},
-	};
+			if (generationEvents.length < 64) generationEvents.push(projected);
+			diagnostics.info(
+				JSON.stringify({
+					event: "ResolutionGeneration",
+					generation: projected,
+				}),
+			);
+		};
+		const observer: ResolutionProgressObserver = {
+			async grammarAvailable({ grammatical }) {
+				await lifecycle.advance({
+					progress: "GrammarAvailable",
+					grammatical,
+				});
+				phase = "Reading";
+			},
+			async readingAvailable({ reading, readingResolution }) {
+				await lifecycle.advance({
+					progress: "ReadingAvailable",
+					reading,
+					readingResolution,
+				});
+				phase = "Commit";
+			},
+			async committing() {
+				phase = "Commit";
+				await lifecycle.advance({ progress: "Committing" });
+			},
+		};
 
-	try {
-		const input = await lifecycle.begin();
+		const input = yield* Effect.tryPromise(() => lifecycle.begin());
 		if (!input) return;
-		await lifecycle.advance({ progress: "RouteAvailable" });
+		yield* Effect.tryPromise(() =>
+			lifecycle.advance({ progress: "RouteAvailable" }),
+		);
 		phase = input.checkpoints.reading
 			? "Commit"
 			: input.checkpoints.grammatical
 				? "Reading"
 				: "Grammar";
-		const result = await resolve(
-			input.selection,
-			input.checkpoints,
-			observer,
-			onGenerationEvent,
+		const result = yield* withTraceRecorder(
+			resolve(input.selection, input.checkpoints, observer),
+			{
+				record: (trace) =>
+					Effect.sync(() => {
+						if (trace.event === "model.generation.event")
+							onGenerationEvent(trace.payload as GenerationEvent);
+					}),
+				diagnostic: diagnostics.error,
+			},
 		);
 		if ("catalogMiss" in result) {
-			await lifecycle.settle({
-				kind: "CatalogMiss",
-				miss: result.catalogMiss,
-			});
-			await lifecycle.record({
-				kind: "Succeeded",
-				phase,
-				generationEvents,
-			});
+			yield* Effect.tryPromise(() =>
+				lifecycle.settle({
+					kind: "CatalogMiss",
+					miss: result.catalogMiss,
+				}),
+			);
+			yield* Effect.tryPromise(() =>
+				lifecycle.record({
+					kind: "Succeeded",
+					phase,
+					generationEvents,
+				}),
+			);
 			return;
 		}
 		if ("deduplicated" in result && result.deduplicated) {
-			if (result.persisted.status === "Resolved") {
-				await lifecycle.settle({
-					kind: "Complete",
-					readingId: result.persisted.readingId,
-					attestationId: result.persisted.occurrence.attestationId,
-					grammar: projectResolutionGrammar(
-						result.persisted.occurrence.grammatical,
-					),
-					reading: projectResolutionReading(
-						result.persisted.occurrence.reading,
-					),
-				});
+			const persisted = result.persisted;
+			if (persisted.status === "Resolved") {
+				yield* Effect.tryPromise(() =>
+					lifecycle.settle({
+						kind: "Complete",
+						readingId: persisted.readingId,
+						attestationId: persisted.occurrence.attestationId,
+						grammar: projectResolutionGrammar(
+							persisted.occurrence.grammatical,
+						),
+						reading: projectResolutionReading(
+							persisted.occurrence.reading,
+						),
+					}),
+				);
 			} else {
-				await lifecycle.settle({ kind: "Unresolved" });
+				yield* Effect.tryPromise(() =>
+					lifecycle.settle({ kind: "Unresolved" }),
+				);
 			}
 		}
-		await lifecycle.record({
-			kind: "Succeeded",
-			phase,
-			generationEvents,
-		});
-	} catch (error) {
-		const classified = classifyResolutionFailure(error);
-		const diagnosticId = createDiagnosticId();
-		try {
+		yield* Effect.tryPromise(() =>
+			lifecycle.record({
+				kind: "Succeeded",
+				phase,
+				generationEvents,
+			}),
+		);
+	}).pipe(
+		Effect.catchAll((error) => {
+			const classified = classifyResolutionFailure(error);
+			const diagnosticId = createDiagnosticId();
 			if (classified.kind === "Generation") {
-				await lifecycle.record({
-					kind: "GenerationFailed",
-					phase,
-					failure: classified.failure,
-					generationEvents,
-				});
-				return;
+				return Effect.tryPromise(() =>
+					lifecycle.record({
+						kind: "GenerationFailed",
+						phase,
+						failure: classified.failure,
+						generationEvents,
+					}),
+				);
 			}
 			diagnostics.error(
 				JSON.stringify({
@@ -231,25 +251,31 @@ export async function executeResolutionSession({
 					errorFingerprint: classified.errorFingerprint,
 				}),
 			);
-			await lifecycle.record({
-				kind: "InternalFailed",
-				phase,
-				diagnosticId,
-				errorName: classified.errorName,
-				errorFingerprint: classified.errorFingerprint,
-				generationEvents,
-			});
-		} catch (recordingError) {
-			const recordingFailure = classifyResolutionFailure(recordingError);
-			diagnostics.error(
-				JSON.stringify({
-					event: "ResolutionFailureRecordingFailed",
-					...identity,
+			return Effect.tryPromise(() =>
+				lifecycle.record({
+					kind: "InternalFailed",
 					phase,
 					diagnosticId,
-					recordingFailure,
+					errorName: classified.errorName,
+					errorFingerprint: classified.errorFingerprint,
+					generationEvents,
 				}),
+			).pipe(
+				Effect.catchAll((recordingError) =>
+					Effect.sync(() => {
+						diagnostics.error(
+							JSON.stringify({
+								event: "ResolutionFailureRecordingFailed",
+								...identity,
+								phase,
+								diagnosticId,
+								recordingFailure:
+									classifyResolutionFailure(recordingError),
+							}),
+						);
+					}),
+				),
 			);
-		}
-	}
+		}),
+	);
 }

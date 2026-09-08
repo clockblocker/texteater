@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import {
 	createDumdictService,
-	DumdictLanguageMismatchError,
 	englishRunLemma,
 	englishSwimCitationSurface,
 	englishSwimDraft,
+	failure,
 	germanGehenLemma,
 	germanGehenReading,
 	storageRejectingReadingEntryContext,
@@ -15,21 +15,33 @@ describe("language guards", () => {
 		const { storage } = storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 
-		await expect(
-			dict.findStoredReadings({ lemma: germanGehenLemma } as never),
-		).rejects.toThrow(DumdictLanguageMismatchError);
+		expect(
+			await failure(
+				dict.findStoredReadings({ lemma: germanGehenLemma } as never),
+			),
+		).toMatchObject({
+			_tag: "DumdictInvalidInput",
+			expectedLanguage: "en",
+			actualLanguage: "de",
+		});
 	});
 
 	test("addAttestation rejects a requested Reading language mismatch", async () => {
 		const { storage } = storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 
-		await expect(
-			dict.addAttestation({
-				reading: germanGehenReading,
-				attestation: "Wir gehen.",
-			} as never),
-		).rejects.toThrow(DumdictLanguageMismatchError);
+		expect(
+			await failure(
+				dict.addAttestation({
+					reading: germanGehenReading,
+					attestation: "Wir gehen.",
+				} as never),
+			),
+		).toMatchObject({
+			_tag: "DumdictInvalidInput",
+			expectedLanguage: "en",
+			actualLanguage: "de",
+		});
 	});
 
 	test("addNewNote rejects a draft Lemma language mismatch", async () => {
@@ -37,17 +49,23 @@ describe("language guards", () => {
 			storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 
-		await expect(
-			dict.addNewNote({
-				draft: {
-					...englishSwimDraft,
-					reading: {
-						...englishSwimDraft.reading,
-						lemma: germanGehenLemma,
+		expect(
+			await failure(
+				dict.addNewNote({
+					draft: {
+						...englishSwimDraft,
+						reading: {
+							...englishSwimDraft.reading,
+							lemma: germanGehenLemma,
+						},
 					},
-				},
-			} as never),
-		).rejects.toThrow(DumdictLanguageMismatchError);
+				} as never),
+			),
+		).toMatchObject({
+			_tag: "DumdictInvalidInput",
+			expectedLanguage: "en",
+			actualLanguage: "de",
+		});
 		expect(getLoadReadingEntryContextCalls()).toBe(0);
 	});
 
@@ -55,28 +73,29 @@ describe("language guards", () => {
 		const { storage, getLoadReadingEntryContextCalls } =
 			storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
-		const result = await dict.addNewNote({
-			draft: {
-				...englishSwimDraft,
-				ownedSurfaces: [
-					{
-						surface: {
-							...englishSwimCitationSurface,
-							lemma: englishRunLemma,
+		const result = await failure(
+			dict.addNewNote({
+				draft: {
+					...englishSwimDraft,
+					ownedSurfaces: [
+						{
+							surface: {
+								...englishSwimCitationSurface,
+								lemma: englishRunLemma,
+							},
+							note: {
+								attestedTranslations: ["swim"],
+								attestations: ["They swim every morning."],
+								notes: "Wrong owner.",
+							},
 						},
-						note: {
-							attestedTranslations: ["swim"],
-							attestations: ["They swim every morning."],
-							notes: "Wrong owner.",
-						},
-					},
-				],
-			},
-		});
+					],
+				},
+			}),
+		);
 
 		expect(result).toMatchObject({
-			status: "rejected",
-			code: "invalidDraft",
+			_tag: "DumdictInvalidInput",
 		});
 		expect(getLoadReadingEntryContextCalls()).toBe(0);
 	});

@@ -25,6 +25,8 @@ import {
 	parseAsKnowledgeChange,
 	type ReadingKnowledge,
 } from "dumrel";
+import type { UnknownException } from "effect/Cause";
+import * as Effect from "effect/Effect";
 
 import { lemmaIdentityKey } from "./linguisticIdentity";
 import {
@@ -300,257 +302,291 @@ export function createTfDemoOrchestrator(options: {
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
 }) {
-	async function submitText(input: SubmitTextInput) {
-		assertNonEmpty(input.submissionKey, "submissionKey");
-		assertNonEmpty(input.sourceText, "sourceText");
+	function submitText(input: SubmitTextInput) {
+		return Effect.gen(function* () {
+			assertNonEmpty(input.submissionKey, "submissionKey");
+			assertNonEmpty(input.sourceText, "sourceText");
 
-		const sourceSentences = splitInSentences(input.sourceText);
-		assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
-		const segmentation = await options.dumgen.segment(sourceSentences);
-		if (!segmentation.ok) return segmentation;
+			const sourceSentences = splitInSentences(input.sourceText);
+			assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
+			const segmentation = yield* effectFrom(
+				options.dumgen.segment(sourceSentences),
+			);
 
-		const sentences = segmentation.value.flatMap(
-			(decision, position): SubmittedSentence[] =>
-				decision.decision === "Accepted"
-					? [
-							{
-								segmentedSentenceId: decision.sentence.id,
-								position,
-								language: decision.language,
-								stitchedText: decision.sentence.segments
-									.map(({ text }) => text)
-									.join(""),
-								segments: decision.sentence.segments,
-							},
-						]
-					: [],
-		);
-		const persisted = await options.persistence.persistSubmittedText({
-			submissionKey: input.submissionKey,
-			sourceText: input.sourceText,
-			sentences,
+			const sentences = segmentation.flatMap(
+				(decision, position): SubmittedSentence[] =>
+					decision.decision === "Accepted"
+						? [
+								{
+									segmentedSentenceId: decision.sentence.id,
+									position,
+									language: decision.language,
+									stitchedText: decision.sentence.segments
+										.map(({ text }) => text)
+										.join(""),
+									segments: decision.sentence.segments,
+								},
+							]
+						: [],
+			);
+			const persisted = yield* Effect.tryPromise(() =>
+				options.persistence.persistSubmittedText({
+					submissionKey: input.submissionKey,
+					sourceText: input.sourceText,
+					sentences,
+				}),
+			);
+
+			return { decisions: segmentation, persisted };
 		});
-
-		return { ...segmentation, persisted };
 	}
 
-	async function resolveSegment(
+	function resolveSegment(
 		input: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
-	): Promise<ResolveSegmentResult> {
-		assertNonEmpty(input.requestId, "requestId");
-		assertNonEmpty(input.visitorId, "visitorId");
-		assertNonEmpty(input.sentenceId, "sentenceId");
-		if (!Number.isSafeInteger(input.clickedSegmentIndex)) {
-			throw new TypeError("clickedSegmentIndex must be a safe integer.");
-		}
-		const recorded = await options.persistence.findRecordedClick(input);
-		if (recorded) {
-			return recorded.status === "Resolved"
-				? {
-						grammatical: recorded.occurrence.grammatical,
-						reading: recorded.occurrence.reading,
-						reused: true as const,
-						deduplicated: true as const,
-						persisted: recorded,
-					}
-				: {
-						grammatical: {
-							decision: "Unresolved" as const,
-							language: "de" as const,
-						},
-						deduplicated: true as const,
-						persisted: recorded,
-					};
-		}
-		const reusable = await options.persistence.findAttestation({
-			sentenceId: input.sentenceId,
-			clickedSegmentIndex: input.clickedSegmentIndex,
-		});
-		if (reusable) {
-			const persisted =
-				await options.persistence.persistReusedResolvedClick({
-					...input,
-					attestationId: reusable.attestationId,
-				});
-			return {
-				grammatical: reusable.grammatical,
-				reading: reusable.reading,
-				reused: true as const,
-				persisted,
-			};
-		}
-
-		const grammatical = checkpoints.grammatical
-			? checkpoints.grammatical
-			: await resolveGrammatical(input);
-
-		if (grammatical.decision === "CatalogMiss") {
-			return { catalogMiss: grammatical };
-		}
-		if (grammatical.decision !== "Resolved") {
-			const persisted =
-				await options.persistence.persistUnresolvedClick(input);
-			if (persisted.status === "Reused") {
+	) {
+		return Effect.gen(function* () {
+			assertNonEmpty(input.requestId, "requestId");
+			assertNonEmpty(input.visitorId, "visitorId");
+			assertNonEmpty(input.sentenceId, "sentenceId");
+			if (!Number.isSafeInteger(input.clickedSegmentIndex)) {
+				throw new TypeError(
+					"clickedSegmentIndex must be a safe integer.",
+				);
+			}
+			const recorded = yield* Effect.tryPromise(() =>
+				options.persistence.findRecordedClick(input),
+			);
+			if (recorded) {
+				return recorded.status === "Resolved"
+					? {
+							grammatical: recorded.occurrence.grammatical,
+							reading: recorded.occurrence.reading,
+							reused: true as const,
+							deduplicated: true as const,
+							persisted: recorded,
+						}
+					: {
+							grammatical: {
+								decision: "Unresolved" as const,
+								language: "de" as const,
+							},
+							deduplicated: true as const,
+							persisted: recorded,
+						};
+			}
+			const reusable = yield* Effect.tryPromise(() =>
+				options.persistence.findAttestation({
+					sentenceId: input.sentenceId,
+					clickedSegmentIndex: input.clickedSegmentIndex,
+				}),
+			);
+			if (reusable) {
+				const persisted = yield* Effect.tryPromise(() =>
+					options.persistence.persistReusedResolvedClick({
+						...input,
+						attestationId: reusable.attestationId,
+					}),
+				);
 				return {
-					grammatical: persisted.occurrence.grammatical,
-					reading: persisted.occurrence.reading,
+					grammatical: reusable.grammatical,
+					reading: reusable.reading,
 					reused: true as const,
 					persisted,
 				};
 			}
-			return { grammatical, persisted };
-		}
-		if (!checkpoints.grammatical) {
-			await options.observer?.grammarAvailable({ grammatical });
-		}
 
-		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
-		const lemmaKey = lemmaIdentityKey(lemma);
-		const readingResolution = checkpoints.reading
-			? checkpoints.reading.resolution
-			: await resolveReading(grammatical, lemma);
-		if (readingResolution.decision === "CatalogMiss") {
-			return { catalogMiss: readingResolution };
-		}
-		const reading = checkpoints.reading
-			? parseGermanReading(checkpoints.reading.reading)
-			: parseGermanReading({
-					lemma,
-					emojiDescription: readingResolution.emojiDescription,
-				});
-		if (
-			lemmaIdentityKey(reading.lemma) !== lemmaKey ||
-			reading.emojiDescription !== readingResolution.emojiDescription
-		) {
-			throw new Error("The Reading checkpoint does not match Grammar.");
-		}
-		if (!checkpoints.reading) {
-			await options.observer?.readingAvailable({
-				reading,
-				readingResolution,
-			});
-		}
-		let dictionaryPlan: DumdictPlan<"de"> | undefined;
-		const applyPlan = async (plan: DumdictPlan<"de">) => {
-			if (dictionaryPlan) {
-				throw new Error(
-					"Dumdict produced more than one plan for one click.",
+			const grammatical = checkpoints.grammatical
+				? checkpoints.grammatical
+				: yield* resolveGrammatical(input);
+
+			if (grammatical.decision === "CatalogMiss") {
+				return { catalogMiss: grammatical };
+			}
+			if (grammatical.decision !== "Resolved") {
+				const persisted = yield* Effect.tryPromise(() =>
+					options.persistence.persistUnresolvedClick(input),
+				);
+				if (persisted.status === "Reused") {
+					return {
+						grammatical: persisted.occurrence.grammatical,
+						reading: persisted.occurrence.reading,
+						reused: true as const,
+						persisted,
+					};
+				}
+				return { grammatical, persisted };
+			}
+			if (!checkpoints.grammatical) {
+				yield* Effect.tryPromise(
+					() =>
+						options.observer?.grammarAvailable({ grammatical }) ??
+						Promise.resolve(),
 				);
 			}
-			dictionaryPlan = plan;
-			return {
-				status: "committed" as const,
-				nextRevision: plan.baseRevision,
-			};
-		};
-		const dictionaryPlanning =
-			readingResolution.decision === "Reuse"
-				? await options.dictionary.ensureOwnedSurface(
-						{
-							reading,
-							ownedSurface: {
-								surface: grammatical.attestation.surface,
-								note: emptyNote(),
-							},
-						},
-						{ applyPlan },
-					)
-				: await options.dictionary.addNewNote(
-						{
-							draft: {
-								reading,
-								note: emptyNote(),
-								ownedSurfaces: [
-									{
-										surface:
-											grammatical.attestation.surface,
-										note: emptyNote(),
-									},
-								],
-							},
-						},
-						{ applyPlan },
-					);
-		assertDumdictMutationApplied(dictionaryPlanning);
-		if (!dictionaryPlan) {
-			throw new Error(
-				"Dumdict did not provide a plan for the resolved click.",
-			);
-		}
 
-		const surfaceKey = surfaceIdentityKey(grammatical.attestation.surface);
-		const readingKey = readingIdentityKey(reading);
-		await options.observer?.committing();
-		const persisted = await options.persistence.persistResolvedClick({
-			...input,
-			occurrence: {
-				memberSegmentIndices:
-					grammatical.interaction.memberSegmentIndices,
-				attestation: grammatical.attestation,
-				surfaceKey,
-				lemmaKey,
-			},
-			reading,
-			readingKey,
-			dictionaryPlan,
-		});
-		if (
-			persisted.status === "MembershipConflict" ||
-			persisted.status === "DictionaryConflict"
-		) {
+			const lemma = parseGermanLemma(
+				grammatical.attestation.surface.lemma,
+			);
+			const lemmaKey = lemmaIdentityKey(lemma);
+			const readingResolution = checkpoints.reading
+				? checkpoints.reading.resolution
+				: yield* resolveReading(grammatical, lemma);
+			if (readingResolution.decision === "CatalogMiss") {
+				return { catalogMiss: readingResolution };
+			}
+			const reading = checkpoints.reading
+				? parseGermanReading(checkpoints.reading.reading)
+				: parseGermanReading({
+						lemma,
+						emojiDescription: readingResolution.emojiDescription,
+					});
+			if (
+				lemmaIdentityKey(reading.lemma) !== lemmaKey ||
+				reading.emojiDescription !== readingResolution.emojiDescription
+			) {
+				throw new Error(
+					"The Reading checkpoint does not match Grammar.",
+				);
+			}
+			if (!checkpoints.reading) {
+				yield* Effect.tryPromise(
+					() =>
+						options.observer?.readingAvailable({
+							reading,
+							readingResolution,
+						}) ?? Promise.resolve(),
+				);
+			}
+			const prepared = yield* readingResolution.decision === "Reuse"
+				? options.dictionary.prepare.ensureOwnedSurface({
+						reading,
+						ownedSurface: {
+							surface: grammatical.attestation.surface,
+							note: emptyNote(),
+						},
+					})
+				: options.dictionary.prepare.addNewNote({
+						draft: {
+							reading,
+							note: emptyNote(),
+							ownedSurfaces: [
+								{
+									surface: grammatical.attestation.surface,
+									note: emptyNote(),
+								},
+							],
+						},
+					});
+			const dictionaryPlan = prepared.plan;
+
+			const surfaceKey = surfaceIdentityKey(
+				grammatical.attestation.surface,
+			);
+			const readingKey = readingIdentityKey(reading);
+			yield* Effect.tryPromise(
+				() => options.observer?.committing() ?? Promise.resolve(),
+			);
+			const persisted = yield* Effect.tryPromise(() =>
+				options.persistence.persistResolvedClick({
+					...input,
+					occurrence: {
+						memberSegmentIndices:
+							grammatical.interaction.memberSegmentIndices,
+						attestation: grammatical.attestation,
+						surfaceKey,
+						lemmaKey,
+					},
+					reading,
+					readingKey,
+					dictionaryPlan,
+				}),
+			);
+			if (
+				persisted.status === "MembershipConflict" ||
+				persisted.status === "DictionaryConflict"
+			) {
+				return {
+					grammatical,
+					readingResolution,
+					reading,
+					dictionaryPlan,
+					persisted,
+				};
+			}
+
 			return {
-				grammatical,
+				grammatical: persisted.occurrence.grammatical,
 				readingResolution,
-				reading,
+				reading: persisted.occurrence.reading,
 				dictionaryPlan,
+				reused: persisted.status === "Reused",
 				persisted,
 			};
-		}
 
-		return {
-			grammatical: persisted.occurrence.grammatical,
-			readingResolution,
-			reading: persisted.occurrence.reading,
-			dictionaryPlan,
-			reused: persisted.status === "Reused",
-			persisted,
-		};
-
-		async function resolveGrammatical(
-			request: ResolveSegmentInput,
-		): Promise<GrammaticalResult<"de">> {
-			const stored = await options.persistence.getSentenceForResolution({
-				sentenceId: request.sentenceId,
-			});
-			if (!stored) {
-				throw new Error("The requested sentence does not exist.");
+			function resolveGrammatical(request: ResolveSegmentInput) {
+				return Effect.gen(function* () {
+					const stored = yield* Effect.tryPromise(() =>
+						options.persistence.getSentenceForResolution({
+							sentenceId: request.sentenceId,
+						}),
+					);
+					if (!stored) {
+						throw new Error(
+							"The requested sentence does not exist.",
+						);
+					}
+					const sentence = parseGermanSentence(stored);
+					return yield* effectFrom(
+						options.dumgen.resolve.grammatical("de", {
+							sentence,
+							clickedSegmentIndex: request.clickedSegmentIndex,
+						}),
+					).pipe(
+						Effect.catchTag("DumgenDomainFailure", ({ result }) =>
+							Effect.succeed(result),
+						),
+					);
+				});
 			}
-			const sentence = parseGermanSentence(stored);
-			return options.dumgen.resolve.grammatical("de", {
-				sentence,
-				clickedSegmentIndex: request.clickedSegmentIndex,
-			});
-		}
 
-		async function resolveReading(
-			resolved: ResolvedGrammatical,
-			resolvedLemma: Lemma<"de">,
-		) {
-			const storedReadings = await options.dictionary.findStoredReadings({
-				lemma: resolvedLemma,
-			});
-			return options.dumgen.resolve.reading("de", {
-				markedContext: resolved.markedContext,
-				lemma: resolvedLemma,
-				existingEmojiDescriptions: storedReadings.candidates.map(
-					({ reading }) => reading.emojiDescription,
-				),
-			});
-		}
+			function resolveReading(
+				resolved: ResolvedGrammatical,
+				resolvedLemma: Lemma<"de">,
+			) {
+				return Effect.gen(function* () {
+					const storedReadings = yield* effectFrom(
+						options.dictionary.findStoredReadings({
+							lemma: resolvedLemma,
+						}),
+					);
+					return yield* effectFrom(
+						options.dumgen.resolve.reading("de", {
+							markedContext: resolved.markedContext,
+							lemma: resolvedLemma,
+							existingEmojiDescriptions:
+								storedReadings.candidates.map(
+									({ reading }) => reading.emojiDescription,
+								),
+						}),
+					).pipe(
+						Effect.catchTag("DumgenDomainFailure", ({ result }) =>
+							Effect.succeed(result),
+						),
+					);
+				});
+			}
+		});
 	}
 
 	return Object.freeze({ submitText, resolveSegment });
+}
+
+/** Transitional test-port boundary; production Dumgen and Dumdict return Effects. */
+function effectFrom<Value, Error>(
+	value: Effect.Effect<Value, Error> | Promise<Value>,
+): Effect.Effect<Value, Error | UnknownException> {
+	return Effect.isEffect(value) ? value : Effect.tryPromise(() => value);
 }
 
 export function applyValidatedReadingKnowledgeChange(input: {
@@ -649,18 +685,6 @@ function emptyNote() {
 		attestations: [] as string[],
 		notes: "",
 	};
-}
-
-function assertDumdictMutationApplied(result: {
-	readonly status: string;
-	readonly code?: string;
-	readonly message?: string;
-	readonly baseRevision?: StoreRevision;
-}): void {
-	if (result.status === "applied") return;
-	throw new Error(
-		`Dumdict mutation ${result.status}${result.code ? ` (${result.code})` : ""}${result.message ? `: ${result.message}` : ""}`,
-	);
 }
 
 function assertNonEmpty(value: string, field: string): void {

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import {
 	englishSwimLemma,
 	englishWalkReading,
@@ -10,43 +11,45 @@ import {
 describe("in-memory storage", () => {
 	test("does not publish a partially created Lemma after a failed precondition", async () => {
 		const { storage } = getBootedUpDumdict("en", enSerializedNotes);
-		const result = await storage.commitChanges({
-			baseRevision: "mem-1" as StoreRevision,
-			changes: [
-				{
-					type: "createLemma",
-					record: {
-						lemma: englishSwimLemma,
-					},
-					preconditions: [
-						{
-							kind: "revisionMatches",
-							revision: "mem-1" as StoreRevision,
-						},
-						{
-							kind: "lemmaMissing",
+		const result = await Effect.runPromise(
+			storage.commitChanges({
+				baseRevision: "mem-1" as StoreRevision,
+				changes: [
+					{
+						type: "createLemma",
+						record: {
 							lemma: englishSwimLemma,
 						},
-					],
-				},
-				{
-					type: "patchReading",
-					reading: englishWalkReading,
-					ops: [
-						{
-							kind: "addAttestation",
-							value: "Already attested",
-						},
-					],
-					preconditions: [
-						{
-							kind: "readingMissing",
-							reading: englishWalkReading,
-						},
-					],
-				},
-			],
-		});
+						preconditions: [
+							{
+								kind: "revisionMatches",
+								revision: "mem-1" as StoreRevision,
+							},
+							{
+								kind: "lemmaMissing",
+								lemma: englishSwimLemma,
+							},
+						],
+					},
+					{
+						type: "patchReading",
+						reading: englishWalkReading,
+						ops: [
+							{
+								kind: "addAttestation",
+								value: "Already attested",
+							},
+						],
+						preconditions: [
+							{
+								kind: "readingMissing",
+								reading: englishWalkReading,
+							},
+						],
+					},
+				],
+			}),
+		);
 
 		expect(result).toMatchObject({
 			status: "conflict",
@@ -84,14 +87,18 @@ describe("in-memory storage", () => {
 				},
 			],
 		};
-		const first = await storage.commitChanges({
-			baseRevision: "mem-1" as StoreRevision,
-			changes: [change],
-		});
-		const stale = await storage.commitChanges({
-			baseRevision: "mem-1" as StoreRevision,
-			changes: [change],
-		});
+		const first = await Effect.runPromise(
+			storage.commitChanges({
+				baseRevision: "mem-1" as StoreRevision,
+				changes: [change],
+			}),
+		);
+		const stale = await Effect.runPromise(
+			storage.commitChanges({
+				baseRevision: "mem-1" as StoreRevision,
+				changes: [change],
+			}),
+		);
 
 		expect(first.status).toBe("committed");
 		expect(stale).toMatchObject({

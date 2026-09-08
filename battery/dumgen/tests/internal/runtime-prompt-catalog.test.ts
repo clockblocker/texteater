@@ -297,7 +297,7 @@ describe("generated operational runtime prompt catalog", () => {
 		).toBe(1);
 	});
 
-	test("preserves the exact 28 canonical prompt paths, text, and generation parameters", () => {
+	test("preserves the exact 29 canonical prompt paths, text, and generation parameters", () => {
 		const authored = [
 			...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
 			...KNOWLEDGE_PROMPT_ENTRIES.map(
@@ -319,7 +319,7 @@ describe("generated operational runtime prompt catalog", () => {
 		expect(runtime.map(([path]) => path)).toEqual(
 			authored.map(([path]) => path),
 		);
-		expect(runtime).toHaveLength(28);
+		expect(runtime).toHaveLength(29);
 		for (const [index, [path, authoredEntry]] of authored.entries()) {
 			const runtimeEntry = runtime[index]?.[1];
 			expect(runtimeEntry, path).toBeDefined();
@@ -665,7 +665,7 @@ describe("generated operational runtime prompt catalog", () => {
 		});
 	});
 
-	test("keeps all 84 generated parser roots differentially bound", async () => {
+	test("keeps all 87 generated parser roots differentially bound", async () => {
 		const representatives = await canonicalPromptRepresentatives();
 		const authored = [
 			...promptEntries(PROMPT_CATALOG as unknown as CatalogNode),
@@ -797,7 +797,7 @@ describe("generated operational runtime prompt catalog", () => {
 					}
 			}
 		}
-		expect(roots).toBe(84);
+		expect(roots).toBe(87);
 		expect([...executedOperations].toSorted()).toEqual(
 			[
 				...loadEncodedRuntimePromptValidation().requiredOperations,

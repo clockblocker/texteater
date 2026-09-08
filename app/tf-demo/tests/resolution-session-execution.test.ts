@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 
 import {
 	executeResolutionSession,
@@ -34,30 +35,33 @@ describe("Resolution Session execution", () => {
 			},
 		};
 
-		await executeResolutionSession({
-			identity,
-			lifecycle,
-			resolve: async (input) => {
-				expect(input).toEqual(selection);
-				return {
-					grammatical: grammaticalInput(),
-					reading: readingInput(),
-					reused: true,
-					deduplicated: true,
-					persisted: {
-						status: "Resolved",
-						clickId: "click-1",
-						readingId: "reading-1",
-						occurrence: {
-							attestationId: "attestation-1",
+		await Effect.runPromise(
+			executeResolutionSession({
+				identity,
+				lifecycle,
+				resolve: (input) =>
+					Effect.tryPromise(async () => {
+						expect(input).toEqual(selection);
+						return {
 							grammatical: grammaticalInput(),
 							reading: readingInput(),
-						},
-					},
-				};
-			},
-			diagnostics: { info: () => {}, error: () => {} },
-		});
+							reused: true,
+							deduplicated: true,
+							persisted: {
+								status: "Resolved",
+								clickId: "click-1",
+								readingId: "reading-1",
+								occurrence: {
+									attestationId: "attestation-1",
+									grammatical: grammaticalInput(),
+									reading: readingInput(),
+								},
+							},
+						};
+					}),
+				diagnostics: { info: () => {}, error: () => {} },
+			}),
+		);
 
 		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
 		expect(settlements).toEqual([
@@ -79,26 +83,29 @@ describe("Resolution Session execution", () => {
 	test("an invalidated guard stops before linguistic work or lifecycle writes", async () => {
 		let resolved = false;
 		let wrote = false;
-		await executeResolutionSession({
-			identity,
-			lifecycle: {
-				begin: async () => null,
-				advance: async () => {
-					wrote = true;
+		await Effect.runPromise(
+			executeResolutionSession({
+				identity,
+				lifecycle: {
+					begin: async () => null,
+					advance: async () => {
+						wrote = true;
+					},
+					settle: async () => {
+						wrote = true;
+					},
+					record: async () => {
+						wrote = true;
+					},
 				},
-				settle: async () => {
-					wrote = true;
-				},
-				record: async () => {
-					wrote = true;
-				},
-			},
-			resolve: async () => {
-				resolved = true;
-				throw new Error("must not run");
-			},
-			diagnostics: { info: () => {}, error: () => {} },
-		});
+				resolve: () =>
+					Effect.tryPromise(async () => {
+						resolved = true;
+						throw new Error("must not run");
+					}),
+				diagnostics: { info: () => {}, error: () => {} },
+			}),
+		);
 
 		expect(resolved).toBe(false);
 		expect(wrote).toBe(false);
@@ -107,25 +114,26 @@ describe("Resolution Session execution", () => {
 	test("unexpected failures are fingerprinted and recorded without their message", async () => {
 		const records: ResolutionSessionRunRecord[] = [];
 		const errors: string[] = [];
-		await executeResolutionSession({
-			identity,
-			lifecycle: {
-				begin: async () => ({ selection, checkpoints: {} }),
-				advance: async () => {},
-				settle: async () => {},
-				record: async (record) => {
-					records.push(record);
+		await Effect.runPromise(
+			executeResolutionSession({
+				identity,
+				lifecycle: {
+					begin: async () => ({ selection, checkpoints: {} }),
+					advance: async () => {},
+					settle: async () => {},
+					record: async (record) => {
+						records.push(record);
+					},
 				},
-			},
-			resolve: async () => {
-				throw new TypeError("secret checkpoint payload");
-			},
-			diagnostics: {
-				info: () => {},
-				error: (message) => errors.push(message),
-			},
-			createDiagnosticId: () => "diagnostic-1",
-		});
+				resolve: () =>
+					Effect.fail(new TypeError("secret checkpoint payload")),
+				diagnostics: {
+					info: () => {},
+					error: (message) => errors.push(message),
+				},
+				createDiagnosticId: () => "diagnostic-1",
+			}),
+		);
 
 		expect(records).toEqual([
 			expect.objectContaining({

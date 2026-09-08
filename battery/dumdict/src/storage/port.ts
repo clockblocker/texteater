@@ -1,4 +1,6 @@
 import type { SupportedLanguage } from "dumling/types";
+import type * as Effect from "effect/Effect";
+import type { DumdictStorageFailure } from "../public/results";
 import type { CommitChangesRequest, CommitChangesResult } from "./commit";
 import type {
 	CleanupRelationsSlice,
@@ -23,27 +25,27 @@ import type {
 export type DumdictStoragePort<L extends SupportedLanguage> = {
 	findStoredReadings(
 		request: FindStoredReadingsStorageRequest<L>,
-	): Promise<StoredReadingsSlice<L>>;
+	): Effect.Effect<StoredReadingsSlice<L>, DumdictStorageFailure>;
 
 	getInfoForRelationsCleanup(
 		request: GetInfoForRelationsCleanupStorageRequest<L>,
-	): Promise<RelationsCleanupInfoSlice<L>>;
+	): Effect.Effect<RelationsCleanupInfoSlice<L>, DumdictStorageFailure>;
 
 	loadReadingForPatch(
 		request: LoadReadingForPatchRequest<L>,
-	): Promise<ReadingPatchSlice<L>>;
+	): Effect.Effect<ReadingPatchSlice<L>, DumdictStorageFailure>;
 
 	loadReadingEntryContext(
 		request: LoadReadingEntryContextRequest<L>,
-	): Promise<ReadingEntryContext<L>>;
+	): Effect.Effect<ReadingEntryContext<L>, DumdictStorageFailure>;
 
 	loadCleanupRelationsContext(
 		request: LoadCleanupRelationsContextRequest<L>,
-	): Promise<CleanupRelationsSlice<L>>;
+	): Effect.Effect<CleanupRelationsSlice<L>, DumdictStorageFailure>;
 
-	commitChanges(
+	commitChanges: (
 		request: CommitChangesRequest<L>,
-	): Promise<CommitChangesResult>;
+	) => Effect.Effect<CommitChangesResult, DumdictStorageFailure>;
 };
 
 export type DumdictServiceConfig<L extends SupportedLanguage> = {

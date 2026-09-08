@@ -1,4 +1,6 @@
-import { buildOpenAiFetchSdk } from "./openai-fetch";
+import * as Context from "effect/Context";
+import type { Effect } from "effect/Effect";
+import type { AiSdkGenerationError } from "./ai-sdk-generation-error";
 
 export {
 	AiSdkGenerationError,
@@ -19,19 +21,26 @@ type GenerationParams = {
 	readonly systemPrompt?: string;
 };
 
-export type AiSdk = {
+/** The provider boundary for structured and unstructured model generation. */
+export type ModelGenerator = {
 	readonly structuredGeneration: <
 		OutputSchema extends StructuredOutputSchema,
 	>(
 		input: string,
 		outputSchema: OutputSchema,
 		params?: GenerationParams,
-	) => Promise<StructuredSchemaOutput<OutputSchema>>;
+	) => Effect<StructuredSchemaOutput<OutputSchema>, AiSdkGenerationError>;
 	readonly unstructuredGeneration: (
 		input: string,
 		params?: GenerationParams,
-	) => Promise<string>;
+	) => Effect<string, AiSdkGenerationError>;
 };
+
+/** The injected model boundary shared by Dumgen and Knowledge runtime layers. */
+export class ModelGeneratorService extends Context.Tag("dumgen/ModelGenerator")<
+	ModelGeneratorService,
+	ModelGenerator
+>() {}
 
 export interface StructuredOutputSchema<Output = unknown> {
 	parse(input: unknown): Output;
@@ -40,14 +49,3 @@ export interface StructuredOutputSchema<Output = unknown> {
 
 export type StructuredSchemaOutput<Schema extends StructuredOutputSchema> =
 	ReturnType<Schema["parse"]>;
-
-type BuildAiSdkOptions = {
-	/**
-	 * Defaults to OPENAI_API_KEY through the lean Responses fetch adapter.
-	 */
-	readonly apiKey?: string;
-};
-
-export function buildAiSdk(options: BuildAiSdkOptions = {}): AiSdk {
-	return buildOpenAiFetchSdk(options);
-}

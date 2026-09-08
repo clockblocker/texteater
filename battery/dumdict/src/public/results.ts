@@ -41,29 +41,59 @@ export type GetInfoForRelationsCleanupResult<L extends SupportedLanguage> = {
 	diagnostics?: DumdictDiagnostic[];
 };
 
-export type MutationResult<L extends SupportedLanguage> =
-	| {
-			status: "applied";
-			baseRevision: StoreRevision;
-			nextRevision: StoreRevision;
-			affected: AffectedDictionaryEntities<L>;
-			summary: MutationSummary;
-			diagnostics?: DumdictDiagnostic[];
-	  }
-	| {
-			status: "conflict";
-			code: MutationConflictCode;
-			baseRevision: StoreRevision;
-			latestRevision?: StoreRevision;
-			message?: string;
-			diagnostics?: DumdictDiagnostic[];
-	  }
-	| {
-			status: "rejected";
-			code: MutationRejectedCode;
-			message?: string;
-			diagnostics?: DumdictDiagnostic[];
-	  };
+export type MutationResult<L extends SupportedLanguage> = {
+	status: "applied";
+	baseRevision: StoreRevision;
+	nextRevision: StoreRevision;
+	affected: AffectedDictionaryEntities<L>;
+	summary: MutationSummary;
+	diagnostics?: readonly DumdictDiagnostic[];
+};
+
+export type PreparedMutation<L extends SupportedLanguage> = Readonly<{
+	plan: import("../storage").DumdictPlan<L>;
+	affected: AffectedDictionaryEntities<L>;
+	summary: MutationSummary;
+	diagnostics?: readonly DumdictDiagnostic[];
+}>;
+
+export type DumdictInvalidInput = Readonly<{
+	_tag: "DumdictInvalidInput";
+	expectedLanguage?: SupportedLanguage;
+	actualLanguage?: SupportedLanguage;
+	message: string;
+}>;
+
+export type DumdictRejection = Readonly<{
+	_tag: "DumdictRejection";
+	code: MutationRejectedCode;
+	message?: string;
+}>;
+
+export type DumdictRevisionConflict = Readonly<{
+	_tag: "DumdictRevisionConflict";
+	baseRevision: StoreRevision;
+	latestRevision?: StoreRevision;
+	message?: string;
+}>;
+
+export type DumdictSemanticPreconditionFailure = Readonly<{
+	_tag: "DumdictSemanticPreconditionFailure";
+	baseRevision: StoreRevision;
+	latestRevision?: StoreRevision;
+	message?: string;
+}>;
+
+export type DumdictStorageFailure = Readonly<{
+	_tag: "DumdictStorageFailure";
+	operation: string;
+	cause: unknown;
+}>;
+
+export type DumdictCommitFailure =
+	| DumdictRevisionConflict
+	| DumdictSemanticPreconditionFailure
+	| DumdictStorageFailure;
 
 export type MutationConflictCode =
 	| "revisionConflict"

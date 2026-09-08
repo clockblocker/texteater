@@ -101,7 +101,7 @@ describe("Reading Knowledge Changes", () => {
 				{
 					kind: "Contribute",
 					aspect: "translations",
-					language: `lang-${seed}`,
+					language: "en",
 					value: [decomposed, decomposed],
 				},
 			] as const satisfies readonly KnowledgeChange[];

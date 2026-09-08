@@ -37,8 +37,10 @@ describe("public API allowlists", () => {
 			[
 				"AiSdkGenerationError",
 				"DumgenError",
+				"DumgenService",
+				"DumgenLive",
 				"ParsingError",
-				"buildAiSdk",
+				"ModelGeneratorService",
 				"buildDumgen",
 				"parseAsGrammaticalInput",
 				"parseAsGrammaticalInteraction",

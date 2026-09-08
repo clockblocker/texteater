@@ -1,18 +1,16 @@
-import type { AiSdk } from "./ai-sdk/ai-sdk";
+import type { Effect } from "effect/Effect";
+import type { ModelGenerator } from "./ai-sdk/ai-sdk";
 import { createDumgen } from "./dumgen/build";
 import type { DumgenSection1Trace } from "./dumgen/implementation";
 import type { ModelExchange } from "./generator/generator";
+import type { DumgenError } from "./generator/generator-error";
 import type {
 	GrammaticalInput,
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
-	KnowledgeGenerationInput,
-	KnowledgeGenerationLanguage,
-	KnowledgeGenerationResult,
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
-	SegmentationResult,
 } from "./types";
 
 export {
@@ -52,27 +50,19 @@ export type {
 
 export type DumgenModelExchange = ModelExchange;
 export type { DumgenSection1Trace };
-export type DumgenModelExchangeObserver = (
-	exchange: DumgenModelExchange,
-) => void;
-
-type DumgenInstrumentationOptions = {
-	readonly onModelExchange?: DumgenModelExchangeObserver;
-	readonly onSection1Trace?: (trace: DumgenSection1Trace) => void;
+export type DumgenOptions = {
+	readonly modelGenerator: ModelGenerator;
+	readonly runtimePromptData?: string;
 };
-
-export type DumgenOptions = DumgenInstrumentationOptions &
-	(
-		| { readonly apiKey?: string; readonly sdk?: never }
-		| { readonly sdk: AiSdk; readonly apiKey?: never }
-	);
 
 export type Dumgen = {
 	/**
 	 * Resolves a bounded, non-empty batch in one Intake model call and then
 	 * segments each accepted German or Hebrew sentence deterministically.
 	 */
-	segment(sourceSentences: readonly string[]): Promise<SegmentationResult>;
+	segment(
+		sourceSentences: readonly string[],
+	): Effect<readonly import("./types").SegmentationDecision[], DumgenError>;
 	readonly resolve: {
 		/**
 		 * Resolves one clicked segment into grammar and click-independent
@@ -82,7 +72,10 @@ export type Dumgen = {
 		grammatical<L extends GrammaticalResolutionLanguage>(
 			language: L,
 			input: GrammaticalInput<L>,
-		): Promise<GrammaticalResult<L>>;
+		): Effect<
+			Extract<GrammaticalResult<L>, { readonly decision: "Resolved" }>,
+			DumgenExpectedFailure<GrammaticalResult<L>>
+		>;
 		/**
 		 * Classifies one use of an already fixed Lemma as reuse of an exact
 		 * existing Emoji Description or as a new learner-facing Reading.
@@ -90,16 +83,34 @@ export type Dumgen = {
 		reading<L extends ReadingResolutionLanguage>(
 			language: L,
 			input: ReadingInput<L>,
-		): Promise<ReadingResolution>;
-	};
-	readonly generate: {
-		knowledge(
-			language: KnowledgeGenerationLanguage,
-			input: KnowledgeGenerationInput<"de">,
-		): Promise<KnowledgeGenerationResult>;
+		): Effect<
+			Extract<ReadingResolution, { readonly decision: "Reuse" | "New" }>,
+			DumgenExpectedFailure<ReadingResolution>
+		>;
 	};
 };
 
-export function buildDumgen(options: DumgenOptions = {}): Dumgen {
+/** Expected workflow failures retain their code and original cause. */
+export type DumgenDomainFailure<Result> = Readonly<{
+	readonly _tag: "DumgenDomainFailure";
+	readonly result: Result;
+}>;
+
+/** Provider and parser failures retain DumgenError's code and original cause. */
+export type DumgenExpectedFailure<Result> =
+	| DumgenError
+	| DumgenDomainFailure<
+			Extract<
+				Result,
+				{
+					readonly decision:
+						| "Unresolved"
+						| "NotImplemented"
+						| "CatalogMiss";
+				}
+			>
+	  >;
+
+export function buildDumgen(options: DumgenOptions): Dumgen {
 	return createDumgen(options);
 }

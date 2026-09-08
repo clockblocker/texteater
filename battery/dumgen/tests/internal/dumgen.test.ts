@@ -1,16 +1,60 @@
+import * as Cause from "effect/Cause";
+import * as Exit from "effect/Exit";
+import * as Option from "effect/Option";
+
+async function runTest<A, E>(effect: Effect.Effect<A, E>): Promise<A> {
+	const exit = await Effect.runPromiseExit(effect);
+	if (Exit.isSuccess(exit)) return exit.value;
+	const failure = Cause.failureOption(exit.cause);
+	throw Option.isSome(failure) ? failure.value : Cause.squash(exit.cause);
+}
+
+import { type DumTraceSink, withTraceRecorder } from "common-utils/workflow";
+import type { Dumgen } from "dumgen";
+import * as Effect from "effect/Effect";
+
+function observe(
+	dumgen: Dumgen,
+	record: (exchange: DumgenModelExchange) => void,
+): Dumgen {
+	const sink: DumTraceSink = {
+		record: (event) =>
+			Effect.sync(() => {
+				if (event.event === "model.exchange")
+					record(event.payload as DumgenModelExchange);
+			}),
+		diagnostic: () => {},
+		inlinePayloadBytes: 1000000,
+	};
+	return {
+		segment: (input) => withTraceRecorder(dumgen.segment(input), sink),
+		resolve: {
+			grammatical: (language, input) =>
+				withTraceRecorder(
+					dumgen.resolve.grammatical(language, input),
+					sink,
+				),
+			reading: (language, input) =>
+				withTraceRecorder(
+					dumgen.resolve.reading(language, input),
+					sink,
+				),
+		},
+	};
+}
+
 import { describe, expect, spyOn, test } from "bun:test";
 import {
-	type AiSdk,
 	AiSdkGenerationError,
 	buildDumgen,
 	DumgenError,
 	type DumgenModelExchange,
 	type DumgenOptions,
+	type ModelGenerator,
 	type SegmentedSentence,
 } from "dumgen";
 import { fixedMembersFor } from "dumling/fixed";
 import { z } from "zod";
-
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import type { PromptTree } from "../../src/catalog/prompt-definition";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
@@ -31,14 +75,12 @@ const modelGrammar = {
 		coreFeatures: { gender: "Fem", hyph: null },
 	},
 } as const;
-
 const bankLemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "NOUN",
 	...modelGrammar.lemma,
 } as const;
-
 const detCatalog = fixedMembersFor.lemma({
 	language: "de",
 	family: "Lexeme",
@@ -49,7 +91,6 @@ const derLemma = detCatalog.members.find(
 	(lemma) => lemma.canonicalForm === "der",
 );
 if (!derLemma) throw new Error("Expected fixed der Lemma.");
-
 const auxCatalog = fixedMembersFor.lemma({
 	language: "de",
 	family: "Lexeme",
@@ -60,7 +101,6 @@ const istLemma = auxCatalog.members.find(
 	(lemma) => lemma.canonicalForm === "ist",
 );
 if (!istLemma) throw new Error("Expected fixed ist Lemma.");
-
 const pronounCatalog = fixedMembersFor.lemma({
 	language: "de",
 	family: "Lexeme",
@@ -72,7 +112,6 @@ const michLemma = pronounCatalog.members.find(
 		lemma.canonicalForm === "mich" && lemma.coreFeatures.person === "1",
 );
 if (!michLemma) throw new Error("Expected fixed mich Lemma.");
-
 function sentence(
 	parts: Array<{
 		kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
@@ -85,38 +124,43 @@ function sentence(
 		segments: parts,
 	};
 }
-
 function queueSdk(outputs: unknown[]) {
-	const calls: Array<{ input: string; params: unknown; schema: unknown }> =
-		[];
-	const sdk: AiSdk = {
-		async structuredGeneration(input, schema, params) {
-			calls.push({ input, params, schema });
-			return outputs.shift() as never;
+	const calls: Array<{
+		input: string;
+		params: unknown;
+		schema: unknown;
+	}> = [];
+	const sdk: ModelGenerator = {
+		structuredGeneration(input, schema, params) {
+			return Effect.sync(() => {
+				calls.push({ input, params, schema });
+				return outputs.shift() as never;
+			});
 		},
-		async unstructuredGeneration() {
-			throw new Error("not used");
+		unstructuredGeneration() {
+			return Effect.gen(function* () {
+				return yield* Effect.fail(
+					new AiSdkGenerationError("provider-error", "not used"),
+				);
+			});
 		},
 	};
 	return { calls, sdk };
 }
-
 describe("Dumgen module interface", () => {
 	test("exposes exactly the deep public operations", () => {
 		const { sdk } = queueSdk([]);
-		const dumgen = buildDumgen({ sdk });
-
-		expect(Object.keys(dumgen)).toEqual(["segment", "resolve", "generate"]);
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
+		});
+		expect(Object.keys(dumgen)).toEqual(["segment", "resolve"]);
 		expect(Object.keys(dumgen.resolve)).toEqual(["grammatical", "reading"]);
-		expect(Object.keys(dumgen.generate)).toEqual(["knowledge"]);
 		expect("laboratory" in dumgen).toBe(false);
 		expect("promptCatalog" in dumgen).toBe(false);
 		expect("de" in dumgen.resolve).toBe(false);
 		expect(Object.isFrozen(dumgen)).toBe(true);
 		expect(Object.isFrozen(dumgen.resolve)).toBe(true);
-		expect(Object.isFrozen(dumgen.generate)).toBe(true);
 	});
-
 	test("segments an ordered German/Hebrew batch after one Intake call", async () => {
 		const { calls, sdk } = queueSdk([
 			{
@@ -138,37 +182,34 @@ describe("Dumgen module interface", () => {
 			},
 		]);
 		const exchanges: DumgenModelExchange[] = [];
-		const dumgen = buildDumgen({
-			sdk,
-			onModelExchange(exchange) {
+		const dumgen = observe(
+			buildDumgen({
+				modelGenerator: sdk,
+			}),
+			(exchange) => {
 				exchanges.push(exchange);
 			},
-		});
-
-		const result = await dumgen.segment(["Die Banken", "%%%"]);
-
-		expect(result).toMatchObject({
-			ok: true,
-			value: [
-				{
-					decision: "Accepted",
+		);
+		const result = await runTest(dumgen.segment(["Die Banken", "%%%"]));
+		expect(result).toMatchObject([
+			{
+				decision: "Accepted",
+				language: "de",
+				sentence: {
 					language: "de",
-					sentence: {
-						language: "de",
-						segments: [
-							{ kind: "ResolvableText", text: "Die" },
-							{ kind: "Whitespace", text: " " },
-							{ kind: "ResolvableText", text: "Banken" },
-						],
-					},
+					segments: [
+						{ kind: "ResolvableText", text: "Die" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "Banken" },
+					],
 				},
-				{ decision: "Unintelligible" },
-			],
-		});
-		if (!result.ok || result.value[0]?.decision !== "Accepted") return;
-		expect(typeof result.value[0].sentence.id).toBe("string");
-		expect(Object.isFrozen(result.value[0].sentence)).toBe(true);
-		expect(Object.isFrozen(result.value[0].sentence.segments)).toBe(true);
+			},
+			{ decision: "Unintelligible" },
+		]);
+		if (result[0]?.decision !== "Accepted") return;
+		expect(typeof result[0].sentence.id).toBe("string");
+		expect(Object.isFrozen(result[0].sentence)).toBe(true);
+		expect(Object.isFrozen(result[0].sentence.segments)).toBe(true);
 		expect(calls).toHaveLength(1);
 		expect(
 			exchanges
@@ -176,7 +217,6 @@ describe("Dumgen module interface", () => {
 				.map(({ promptPath }) => promptPath),
 		).toEqual(["laboratory.intake"]);
 	});
-
 	test("returns rejected Intake decisions in place", async () => {
 		const { calls, sdk } = queueSdk([
 			{
@@ -192,49 +232,61 @@ describe("Dumgen module interface", () => {
 			},
 		]);
 		await expect(
-			buildDumgen({ sdk }).segment(["Bonjour"]),
-		).resolves.toEqual({
-			ok: true,
-			value: [{ decision: "UnsupportedLanguage" }],
-		});
+			runTest(
+				buildDumgen({
+					modelGenerator: sdk,
+				}).segment(["Bonjour"]),
+			),
+		).resolves.toEqual([{ decision: "UnsupportedLanguage" }]);
 		expect(calls).toHaveLength(1);
 	});
-
 	test("rejects invalid batches before a model call", async () => {
 		const { calls, sdk } = queueSdk([]);
-		await expect(buildDumgen({ sdk }).segment([])).resolves.toMatchObject({
-			ok: false,
-			error: { code: "InvalidInput" },
-		});
+		await expect(
+			runTest(
+				buildDumgen({
+					modelGenerator: sdk,
+				}).segment([]),
+			),
+		).rejects.toMatchObject({ code: "invalid-input" });
 		expect(calls).toHaveLength(0);
 	});
-
 	test("returns a typed Intake failure", async () => {
 		const promptPaths: string[] = [];
-		const sdk: AiSdk = {
-			async structuredGeneration() {
-				throw new Error("intake provider unavailable");
+		const sdk: ModelGenerator = {
+			structuredGeneration() {
+				return Effect.gen(function* () {
+					return yield* Effect.fail(
+						new AiSdkGenerationError(
+							"provider-error",
+							"intake provider unavailable",
+						),
+					);
+				});
 			},
-			async unstructuredGeneration() {
-				throw new Error("not used");
+			unstructuredGeneration() {
+				return Effect.gen(function* () {
+					return yield* Effect.fail(
+						new AiSdkGenerationError("provider-error", "not used"),
+					);
+				});
 			},
 		};
-		const dumgen = buildDumgen({
-			sdk,
-			onModelExchange(exchange) {
+		const dumgen = observe(
+			buildDumgen({
+				modelGenerator: sdk,
+			}),
+			(exchange) => {
 				if (exchange.phase === "attempted") {
 					promptPaths.push(exchange.promptPath);
 				}
 			},
-		});
-
-		await expect(dumgen.segment(["Die Bank"])).resolves.toMatchObject({
-			ok: false,
-			error: { code: "IntakeFailure", reason: "provider-error" },
-		});
+		);
+		await expect(
+			runTest(dumgen.segment(["Die Bank"])),
+		).rejects.toMatchObject({ code: "provider-error" });
 		expect(promptPaths).toEqual(["laboratory.intake"]);
 	});
-
 	test("segments Hebrew with surface evidence and defers ambiguous morphology", async () => {
 		const { calls, sdk } = queueSdk([
 			{
@@ -249,45 +301,43 @@ describe("Dumgen module interface", () => {
 				],
 			},
 		]);
-
-		const result = await buildDumgen({ sdk }).segment(["בַּבַּיִת בבית"]);
-
-		expect(result).toMatchObject({
-			ok: true,
-			value: [
-				{
-					decision: "Accepted",
-					language: "he",
-					sentence: {
-						segments: [
-							{ kind: "ResolvableText", text: "בַּ" },
-							{ kind: "ResolvableText", text: "בַּיִת" },
-							{ kind: "Whitespace", text: " " },
-							{ kind: "ResolvableText", text: "בבית" },
-						],
-					},
+		const result = await runTest(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).segment(["בַּבַּיִת בבית"]),
+		);
+		expect(result).toMatchObject([
+			{
+				decision: "Accepted",
+				language: "he",
+				sentence: {
+					segments: [
+						{ kind: "ResolvableText", text: "בַּ" },
+						{ kind: "ResolvableText", text: "בַּיִת" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "בבית" },
+					],
 				},
-			],
-		});
+			},
+		]);
 		expect(calls).toHaveLength(1);
 	});
-
 	test("enforces measured Intake boundaries without a model call", async () => {
 		const { calls, sdk } = queueSdk([]);
-		const dumgen = buildDumgen({ sdk });
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
+		});
 		for (const input of [
 			Array.from({ length: 10 }, () => "Hallo"),
 			["a".repeat(206)],
 			[Array.from({ length: 35 }, () => "Wort").join(" ")],
 		]) {
-			await expect(dumgen.segment(input)).resolves.toMatchObject({
-				ok: false,
-				error: { code: "InvalidInput" },
+			await expect(runTest(dumgen.segment(input))).rejects.toMatchObject({
+				code: "invalid-input",
 			});
 		}
 		expect(calls).toHaveLength(0);
 	});
-
 	test("rejects Intake boundary contamination and non-whitespace edits", async () => {
 		for (const output of [
 			{
@@ -327,15 +377,15 @@ describe("Dumgen module interface", () => {
 		]) {
 			const { sdk } = queueSdk([output]);
 			await expect(
-				buildDumgen({ sdk }).segment(["Hallo", "Die Bank"]),
-			).resolves.toMatchObject({
-				ok: false,
-				error: { code: "IntakeFailure", reason: "invalid-output" },
-			});
+				runTest(
+					buildDumgen({
+						modelGenerator: sdk,
+					}).segment(["Hallo", "Die Bank"]),
+				),
+			).rejects.toMatchObject({ code: "invalid-output" });
 		}
 	});
 });
-
 describe("grammatical resolution", () => {
 	test("parses fresh, cached, and unresolved public results through the lightweight boundary", async () => {
 		const parse = spyOn(lightweightParsers, "parseAsGrammaticalResult");
@@ -364,17 +414,21 @@ describe("grammatical resolution", () => {
 					},
 				},
 			]);
-			const dumgen = buildDumgen({ sdk: resolved.sdk });
-
-			await dumgen.resolve.grammatical("de", {
-				sentence: source,
-				clickedSegmentIndex: 0,
+			const dumgen = buildDumgen({
+				modelGenerator: resolved.sdk,
 			});
-			await dumgen.resolve.grammatical("de", {
-				sentence: source,
-				clickedSegmentIndex: 2,
-			});
-
+			await runTest(
+				dumgen.resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 0,
+				}),
+			);
+			await runTest(
+				dumgen.resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 2,
+				}),
+			);
 			const unresolved = queueSdk([
 				{
 					decision: "Unresolved",
@@ -382,22 +436,21 @@ describe("grammatical resolution", () => {
 					additionalMemberIndices: null,
 				},
 			]);
-			await buildDumgen({ sdk: unresolved.sdk }).resolve.grammatical(
-				"de",
-				{
+			await runDomain(
+				buildDumgen({
+					modelGenerator: unresolved.sdk,
+				}).resolve.grammatical("de", {
 					sentence: sentence([
 						{ kind: "ResolvableText", text: "Bank" },
 					]),
 					clickedSegmentIndex: 0,
-				},
+				}),
 			);
-
 			expect(parse).toHaveBeenCalledTimes(3);
 		} finally {
 			parse.mockRestore();
 		}
 	});
-
 	test("reports lightweight public-result rejection as invalid output", async () => {
 		const parse = spyOn(
 			lightweightParsers,
@@ -419,14 +472,17 @@ describe("grammatical resolution", () => {
 					additionalMemberIndices: null,
 				},
 			]);
-
 			await expect(
-				buildDumgen({ sdk: unresolved.sdk }).resolve.grammatical("de", {
-					sentence: sentence([
-						{ kind: "ResolvableText", text: "Bank" },
-					]),
-					clickedSegmentIndex: 0,
-				}),
+				runTest(
+					buildDumgen({
+						modelGenerator: unresolved.sdk,
+					}).resolve.grammatical("de", {
+						sentence: sentence([
+							{ kind: "ResolvableText", text: "Bank" },
+						]),
+						clickedSegmentIndex: 0,
+					}),
+				),
 			).rejects.toMatchObject({
 				code: "invalid-output",
 				message:
@@ -436,7 +492,6 @@ describe("grammatical resolution", () => {
 			parse.mockRestore();
 		}
 	});
-
 	test("returns an Attestation with Dumgen-owned interaction context", async () => {
 		const { calls, sdk } = queueSdk([
 			{
@@ -450,21 +505,23 @@ describe("grammatical resolution", () => {
 			modelGrammar,
 		]);
 		const exchanges: DumgenModelExchange[] = [];
-		const dumgen = buildDumgen({
-			sdk,
-			onModelExchange: (exchange) => exchanges.push(exchange),
-		});
+		const dumgen = observe(
+			buildDumgen({
+				modelGenerator: sdk,
+			}),
+			(exchange) => exchanges.push(exchange),
+		);
 		const bankSentence = sentence([
 			{ kind: "ResolvableText", text: "Die" },
 			{ kind: "Whitespace", text: " " },
 			{ kind: "ResolvableText", text: "Banken" },
 		]);
-
-		const result = await dumgen.resolve.grammatical("de", {
-			sentence: bankSentence,
-			clickedSegmentIndex: 2,
-		});
-
+		const result = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: bankSentence,
+				clickedSegmentIndex: 2,
+			}),
+		);
 		expect(result).toMatchObject({
 			decision: "Resolved",
 			language: "de",
@@ -547,7 +604,6 @@ describe("grammatical resolution", () => {
 			},
 		});
 	});
-
 	test("keeps projected instrumentation diagnostic-only", async () => {
 		const { sdk } = queueSdk([
 			{
@@ -561,29 +617,33 @@ describe("grammatical resolution", () => {
 			modelGrammar,
 		]);
 		const source = sentence([{ kind: "ResolvableText", text: "Banken" }]);
-		const dumgen = buildDumgen({
-			sdk,
-			onModelExchange(exchange) {
+		const dumgen = observe(
+			buildDumgen({
+				modelGenerator: sdk,
+			}),
+			(exchange) => {
 				if (
 					exchange.phase === "accepted" &&
 					exchange.promptPath ===
 						"laboratory.grammaticalResolution.de.Lexeme.NOUN"
 				) {
 					const diagnostic = exchange.result as {
-						lemma?: { canonicalForm?: string };
+						lemma?: {
+							canonicalForm?: string;
+						};
 					};
 					if (diagnostic.lemma) {
 						diagnostic.lemma.canonicalForm = "mutated trace";
 					}
 				}
 			},
-		});
-
-		const result = await dumgen.resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 0,
-		});
-
+		);
+		const result = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
+			}),
+		);
 		expect(result).toMatchObject({
 			decision: "Resolved",
 			attestation: {
@@ -591,7 +651,6 @@ describe("grammatical resolution", () => {
 			},
 		});
 	});
-
 	test("escapes literal source markers and marks every target member", async () => {
 		const { calls, sdk } = queueSdk([
 			{
@@ -615,12 +674,14 @@ describe("grammatical resolution", () => {
 			{ kind: "Whitespace", text: " " },
 			{ kind: "ResolvableText", text: "auf&" },
 		]);
-
-		const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 0,
-		});
-
+		const result = await runTest(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
+			}),
+		);
 		expect(calls[1]?.input).toBe(
 			'{"markedContext":"<TARGET>sage</TARGET> &lt;TARGET&gt; <TARGET>auf&amp;</TARGET>","members":["sage","auf&"]}',
 		);
@@ -632,7 +693,6 @@ describe("grammatical resolution", () => {
 			},
 		});
 	});
-
 	test("keeps target Unresolved public before Grammatical Resolution", async () => {
 		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
 		const targetUnresolved = queueSdk([
@@ -643,22 +703,26 @@ describe("grammatical resolution", () => {
 			},
 		]);
 		await expect(
-			buildDumgen({ sdk: targetUnresolved.sdk }).resolve.grammatical(
-				"de",
-				{ sentence: source, clickedSegmentIndex: 0 },
+			runDomain(
+				buildDumgen({
+					modelGenerator: targetUnresolved.sdk,
+				}).resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 0,
+				}),
 			),
 		).resolves.toEqual({ decision: "Unresolved", language: "de" });
 		expect(targetUnresolved.calls).toHaveLength(1);
 	});
-
 	test("validates sentence language, aggregate, and click before dispatch", async () => {
 		const { calls, sdk } = queueSdk([]);
-		const dumgen = buildDumgen({ sdk });
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
+		});
 		const source = sentence([
 			{ kind: "ResolvableText", text: "Bank" },
 			{ kind: "Whitespace", text: " " },
 		]);
-
 		for (const invalid of [
 			{ sentence: { ...source, language: "en" }, clickedSegmentIndex: 0 },
 			{ sentence: source, clickedSegmentIndex: -1 },
@@ -666,12 +730,11 @@ describe("grammatical resolution", () => {
 			{ sentence: source, clickedSegmentIndex: 9 },
 		]) {
 			await expect(
-				dumgen.resolve.grammatical("de", invalid as never),
+				runTest(dumgen.resolve.grammatical("de", invalid as never)),
 			).rejects.toMatchObject({ code: "invalid-input" });
 		}
 		expect(calls).toHaveLength(0);
 	});
-
 	test("rejects invalid target membership and orthography counts", async () => {
 		const source = sentence([
 			{ kind: "ResolvableText", text: "Die" },
@@ -689,13 +752,16 @@ describe("grammatical resolution", () => {
 			},
 		]);
 		await expect(
-			buildDumgen({ sdk: invalidTarget.sdk }).resolve.grammatical("de", {
-				sentence: source,
-				clickedSegmentIndex: 0,
-			}),
+			runTest(
+				buildDumgen({
+					modelGenerator: invalidTarget.sdk,
+				}).resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 0,
+				}),
+			),
 		).rejects.toMatchObject({ code: "invalid-output" });
 		expect(invalidTarget.calls).toHaveLength(1);
-
 		const invalidCount = queueSdk([
 			{
 				decision: "Resolved",
@@ -708,13 +774,16 @@ describe("grammatical resolution", () => {
 			modelGrammar,
 		]);
 		await expect(
-			buildDumgen({ sdk: invalidCount.sdk }).resolve.grammatical("de", {
-				sentence: source,
-				clickedSegmentIndex: 0,
-			}),
+			runTest(
+				buildDumgen({
+					modelGenerator: invalidCount.sdk,
+				}).resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 0,
+				}),
+			),
 		).rejects.toMatchObject({ code: "invalid-output" });
 		expect(invalidCount.calls).toHaveLength(2);
-
 		const invalidNormalization = queueSdk([
 			{
 				decision: "Resolved",
@@ -730,14 +799,17 @@ describe("grammatical resolution", () => {
 			},
 		]);
 		await expect(
-			buildDumgen({ sdk: invalidNormalization.sdk }).resolve.grammatical(
-				"de",
-				{ sentence: source, clickedSegmentIndex: 0 },
+			runTest(
+				buildDumgen({
+					modelGenerator: invalidNormalization.sdk,
+				}).resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 0,
+				}),
 			),
 		).rejects.toMatchObject({ code: "invalid-output" });
 		expect(invalidNormalization.calls).toHaveLength(2);
 	});
-
 	test("keeps repeated fixed members positionally aligned and click-invariant", async () => {
 		const source = sentence([
 			{ kind: "ResolvableText", text: "Pass" },
@@ -784,20 +856,27 @@ describe("grammatical resolution", () => {
 				},
 			},
 		]);
-		const dumgen = buildDumgen({ sdk });
-		const first = await dumgen.resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 0,
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
 		});
-		const governedClick = await dumgen.resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 2,
-		});
-		const prefixClick = await dumgen.resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 6,
-		});
-
+		const first = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
+			}),
+		);
+		const governedClick = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 2,
+			}),
+		);
+		const prefixClick = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 6,
+			}),
+		);
 		expect(calls).toHaveLength(2);
 		expect(first).toMatchObject({
 			decision: "Resolved",
@@ -830,7 +909,6 @@ describe("grammatical resolution", () => {
 		]);
 		expect(prefixClick.interaction.memberSegmentIndices).toEqual([0, 2, 6]);
 	});
-
 	test("reuses a resolved unit for another member within one instance", async () => {
 		const source = sentence([
 			{ kind: "ResolvableText", text: "Bnak" },
@@ -859,17 +937,21 @@ describe("grammatical resolution", () => {
 				},
 			},
 		]);
-		const dumgen = buildDumgen({ sdk });
-
-		const first = await dumgen.resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 0,
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
 		});
-		const second = await dumgen.resolve.grammatical("de", {
-			sentence: source,
-			clickedSegmentIndex: 2,
-		});
-
+		const first = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
+			}),
+		);
+		const second = await runTest(
+			dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 2,
+			}),
+		);
 		expect(calls).toHaveLength(2);
 		expect(first).toMatchObject({
 			decision: "Resolved",
@@ -913,7 +995,6 @@ describe("grammatical resolution", () => {
 			);
 		}
 	});
-
 	test("rejects generated grammatical route fields instead of accepting drift", async () => {
 		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
 		const drifting = queueSdk([
@@ -935,17 +1016,19 @@ describe("grammatical resolution", () => {
 				},
 			},
 		]);
-
 		await expect(
-			buildDumgen({ sdk: drifting.sdk }).resolve.grammatical("de", {
-				sentence: source,
-				clickedSegmentIndex: 0,
-			}),
+			runTest(
+				buildDumgen({
+					modelGenerator: drifting.sdk,
+				}).resolve.grammatical("de", {
+					sentence: source,
+					clickedSegmentIndex: 0,
+				}),
+			),
 		).rejects.toMatchObject({ code: "invalid-output" });
 		expect(drifting.calls).toHaveLength(2);
 	});
 });
-
 test("Closed grammar returns a terminal safe miss for an uncatalogued Lemma", async () => {
 	const source = sentence([{ kind: "ResolvableText", text: "le" }]);
 	const { calls, sdk } = queueSdk([
@@ -968,12 +1051,14 @@ test("Closed grammar returns a terminal safe miss for an uncatalogued Lemma", as
 			},
 		},
 	]);
-
-	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-		sentence: source,
-		clickedSegmentIndex: 0,
-	});
-
+	const result = await runDomain(
+		buildDumgen({
+			modelGenerator: sdk,
+		}).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		}),
+	);
 	expect(result).toMatchObject({
 		decision: "CatalogMiss",
 		reason: "MemberNotCatalogued",
@@ -985,7 +1070,6 @@ test("Closed grammar returns a terminal safe miss for an uncatalogued Lemma", as
 	expect(calls).toHaveLength(2);
 	expect(JSON.stringify(result)).not.toContain("markedContext");
 });
-
 test("Closed AUX grammar preserves a promoted sein-peer Lemma", async () => {
 	const source = sentence([{ kind: "ResolvableText", text: "ist" }]);
 	const { calls, sdk } = queueSdk([
@@ -1016,19 +1100,20 @@ test("Closed AUX grammar preserves a promoted sein-peer Lemma", async () => {
 			},
 		},
 	]);
-
-	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-		sentence: source,
-		clickedSegmentIndex: 0,
-	});
-
+	const result = await runTest(
+		buildDumgen({
+			modelGenerator: sdk,
+		}).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		}),
+	);
 	expect(result).toMatchObject({
 		decision: "Resolved",
 		attestation: { surface: { lemma: istLemma } },
 	});
 	expect(calls).toHaveLength(2);
 });
-
 test("Open PRON grammar canonicalizes a fixed-population hit", async () => {
 	const source = sentence([{ kind: "ResolvableText", text: "mich" }]);
 	const { calls, sdk } = queueSdk([
@@ -1057,18 +1142,20 @@ test("Open PRON grammar canonicalizes a fixed-population hit", async () => {
 			},
 		},
 	]);
-	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-		sentence: source,
-		clickedSegmentIndex: 0,
-	});
-
+	const result = await runTest(
+		buildDumgen({
+			modelGenerator: sdk,
+		}).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		}),
+	);
 	expect(result).toMatchObject({
 		decision: "Resolved",
 		attestation: { surface: { lemma: michLemma } },
 	});
 	expect(calls).toHaveLength(2);
 });
-
 test("Open PRON grammar selects the exact formal addressee-number identity", async () => {
 	const formalPlural = pronounCatalog.members.find(
 		({ canonicalForm, coreFeatures }) =>
@@ -1104,19 +1191,20 @@ test("Open PRON grammar selects the exact formal addressee-number identity", asy
 			},
 		},
 	]);
-
-	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-		sentence: source,
-		clickedSegmentIndex: 0,
-	});
-
+	const result = await runTest(
+		buildDumgen({
+			modelGenerator: sdk,
+		}).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		}),
+	);
 	expect(result).toMatchObject({
 		decision: "Resolved",
 		attestation: { surface: { lemma: formalPlural } },
 	});
 	expect(calls).toHaveLength(2);
 });
-
 test("Open PRON grammar does not guess formal addressee number", async () => {
 	const formalPlural = pronounCatalog.members.find(
 		({ canonicalForm, coreFeatures }) =>
@@ -1159,12 +1247,14 @@ test("Open PRON grammar does not guess formal addressee number", async () => {
 			},
 		},
 	]);
-
-	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-		sentence: source,
-		clickedSegmentIndex: 0,
-	});
-
+	const result = await runTest(
+		buildDumgen({
+			modelGenerator: sdk,
+		}).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		}),
+	);
 	expect(result).toMatchObject({
 		decision: "Resolved",
 		attestation: { surface: { lemma: openLemma } },
@@ -1172,7 +1262,6 @@ test("Open PRON grammar does not guess formal addressee number", async () => {
 	expect(result).not.toHaveProperty("reason", "MemberNotCatalogued");
 	expect(calls).toHaveLength(2);
 });
-
 test("Open PRON grammar keeps an unmatched productive candidate ordinary", async () => {
 	const source = sentence([{ kind: "ResolvableText", text: "derselbige" }]);
 	const productiveLemma = {
@@ -1206,11 +1295,14 @@ test("Open PRON grammar keeps an unmatched productive candidate ordinary", async
 			},
 		},
 	]);
-	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-		sentence: source,
-		clickedSegmentIndex: 0,
-	});
-
+	const result = await runTest(
+		buildDumgen({
+			modelGenerator: sdk,
+		}).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		}),
+	);
 	expect(result).toMatchObject({
 		decision: "Resolved",
 		attestation: { surface: { lemma: productiveLemma } },
@@ -1218,7 +1310,6 @@ test("Open PRON grammar keeps an unmatched productive candidate ordinary", async
 	expect(result).not.toHaveProperty("reason", "MemberNotCatalogued");
 	expect(calls).toHaveLength(2);
 });
-
 describe("reading resolution", () => {
 	test("selects the fixed nichts Reading without an Open call", async () => {
 		const lemma = pronounCatalog.members.find(
@@ -1228,16 +1319,18 @@ describe("reading resolution", () => {
 		);
 		if (!lemma) throw new Error("Expected fixed nichts Lemma.");
 		const { calls, sdk } = queueSdk([]);
-		const result = await buildDumgen({ sdk }).resolve.reading("de", {
-			markedContext: "Ich sehe <TARGET>nix</TARGET>.",
-			lemma,
-			existingEmojiDescriptions: [],
-		});
-
+		const result = await runTest(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).resolve.reading("de", {
+				markedContext: "Ich sehe <TARGET>nix</TARGET>.",
+				lemma,
+				existingEmojiDescriptions: [],
+			}),
+		);
 		expect(result).toEqual({ decision: "New", emojiDescription: "🚫" });
 		expect(calls).toHaveLength(0);
 	});
-
 	test("selects each fixed interrogative Reading without an Open call", async () => {
 		for (const canonicalForm of ["wer", "wen", "wem", "wessen"] as const) {
 			const lemma = pronounCatalog.members.find(
@@ -1248,12 +1341,15 @@ describe("reading resolution", () => {
 			if (!lemma)
 				throw new Error(`Expected fixed ${canonicalForm} Lemma.`);
 			const { calls, sdk } = queueSdk([]);
-			const result = await buildDumgen({ sdk }).resolve.reading("de", {
-				markedContext: `<TARGET>${canonicalForm}</TARGET>?`,
-				lemma,
-				existingEmojiDescriptions: [],
-			});
-
+			const result = await runTest(
+				buildDumgen({
+					modelGenerator: sdk,
+				}).resolve.reading("de", {
+					markedContext: `<TARGET>${canonicalForm}</TARGET>?`,
+					lemma,
+					existingEmojiDescriptions: [],
+				}),
+			);
 			expect(result).toEqual({
 				decision: "New",
 				emojiDescription: "❓",
@@ -1261,42 +1357,46 @@ describe("reading resolution", () => {
 			expect(calls).toHaveLength(0);
 		}
 	});
-
 	test("selects a fixed PRON Reading without an Open call", async () => {
 		const { calls, sdk } = queueSdk([]);
-		const result = await buildDumgen({ sdk }).resolve.reading("de", {
-			markedContext: "Er sieht <TARGET>mich</TARGET>.",
-			lemma: michLemma,
-			existingEmojiDescriptions: [],
-		});
-
+		const result = await runTest(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).resolve.reading("de", {
+				markedContext: "Er sieht <TARGET>mich</TARGET>.",
+				lemma: michLemma,
+				existingEmojiDescriptions: [],
+			}),
+		);
 		expect(result).toEqual({ decision: "New", emojiDescription: "👤" });
 		expect(calls).toHaveLength(0);
 	});
-
 	test("selects the fixed Reading deterministically without an Open call", async () => {
 		const { calls, sdk } = queueSdk([]);
-		const result = await buildDumgen({ sdk }).resolve.reading("de", {
-			markedContext: "<TARGET>der</TARGET> Mann",
-			lemma: derLemma,
-			existingEmojiDescriptions: [],
-		});
-
+		const result = await runTest(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).resolve.reading("de", {
+				markedContext: "<TARGET>der</TARGET> Mann",
+				lemma: derLemma,
+				existingEmojiDescriptions: [],
+			}),
+		);
 		expect(result).toEqual({ decision: "New", emojiDescription: "👉" });
 		expect(calls).toHaveLength(0);
 	});
-
 	test("returns a terminal safe miss for an uncatalogued Closed Lemma", async () => {
-		const { calls, sdk } = queueSdk([
-			{ decision: "New", emojiDescription: "🇫🇷" },
-		]);
+		const { calls, sdk } = queueSdk([{ emojiDescription: "🇫🇷" }]);
 		const foreignLemma = { ...derLemma, canonicalForm: "le" };
-		const result = await buildDumgen({ sdk }).resolve.reading("de", {
-			markedContext: "<TARGET>le</TARGET> code",
-			lemma: foreignLemma,
-			existingEmojiDescriptions: [],
-		});
-
+		const result = await runDomain(
+			buildDumgen({
+				modelGenerator: sdk,
+			}).resolve.reading("de", {
+				markedContext: "<TARGET>le</TARGET> code",
+				lemma: foreignLemma,
+				existingEmojiDescriptions: [],
+			}),
+		);
 		expect(result).toEqual({
 			decision: "CatalogMiss",
 			reason: "MemberNotCatalogued",
@@ -1308,28 +1408,32 @@ describe("reading resolution", () => {
 		expect(calls).toHaveLength(1);
 		expect(JSON.stringify(result)).not.toContain("markedContext");
 	});
-
 	test("passes only the minimal input and makes membership authoritative", async () => {
 		const { calls, sdk } = queueSdk([
 			{ decision: "New", emojiDescription: "🏦" },
-			{ decision: "Reuse", emojiDescription: "📚" },
+			{ emojiDescription: "📚" },
 		]);
-		const dumgen = buildDumgen({ sdk });
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
+		});
 		await expect(
-			dumgen.resolve.reading("de", {
-				markedContext: "Die <TARGET>Bank</TARGET>.",
-				lemma: bankLemma,
-				existingEmojiDescriptions: ["🏦"],
-			}),
+			runTest(
+				dumgen.resolve.reading("de", {
+					markedContext: "Die <TARGET>Bank</TARGET>.",
+					lemma: bankLemma,
+					existingEmojiDescriptions: ["🏦"],
+				}),
+			),
 		).resolves.toEqual({ decision: "Reuse", emojiDescription: "🏦" });
 		await expect(
-			dumgen.resolve.reading("de", {
-				markedContext: "Die <TARGET>Bibliothek</TARGET>.",
-				lemma: { ...bankLemma, canonicalForm: "Bibliothek" },
-				existingEmojiDescriptions: [],
-			}),
+			runTest(
+				dumgen.resolve.reading("de", {
+					markedContext: "Die <TARGET>Bibliothek</TARGET>.",
+					lemma: { ...bankLemma, canonicalForm: "Bibliothek" },
+					existingEmojiDescriptions: [],
+				}),
+			),
 		).resolves.toEqual({ decision: "New", emojiDescription: "📚" });
-
 		expect(JSON.parse(calls[0]?.input ?? "{}")).toEqual({
 			markedContext: "Die <TARGET>Bank</TARGET>.",
 			lemma: "Bank",
@@ -1338,10 +1442,11 @@ describe("reading resolution", () => {
 		expect(calls[0]?.input).not.toContain("canonicalForm");
 		expect(calls[0]?.input).not.toContain("coreFeatures");
 	});
-
 	test("validates its language and minimal input before dispatch", async () => {
 		const { calls, sdk } = queueSdk([]);
-		const dumgen = buildDumgen({ sdk });
+		const dumgen = buildDumgen({
+			modelGenerator: sdk,
+		});
 		for (const input of [
 			{
 				markedContext: "",
@@ -1355,48 +1460,60 @@ describe("reading resolution", () => {
 			},
 		]) {
 			await expect(
-				dumgen.resolve.reading("de", input),
+				runTest(dumgen.resolve.reading("de", input)),
 			).rejects.toMatchObject({ code: "invalid-input" });
 		}
 		expect(calls).toHaveLength(0);
 	});
 });
-
 test("preserves typed provider failures and isolates instrumentation", async () => {
 	for (const reason of [
 		"refusal",
 		"max-output-tokens",
 		"content-filter",
 	] as const) {
-		const dumgen = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					throw new AiSdkGenerationError(reason, reason);
+		const dumgen = observe(
+			buildDumgen({
+				modelGenerator: {
+					structuredGeneration() {
+						return Effect.gen(function* () {
+							return yield* Effect.fail(
+								new AiSdkGenerationError(reason, reason),
+							);
+						});
+					},
+					unstructuredGeneration() {
+						return Effect.gen(function* () {
+							return yield* Effect.fail(
+								new AiSdkGenerationError(reason, reason),
+							);
+						});
+					},
 				},
-				async unstructuredGeneration() {
-					throw new AiSdkGenerationError(reason, reason);
-				},
-			},
-			onModelExchange() {
+			}),
+			() => {
 				throw new Error("observer failure");
 			},
-		});
-		await expect(dumgen.segment(["Hallo"])).resolves.toMatchObject({
-			ok: false,
-			error: { code: "IntakeFailure", reason },
+		);
+		await expect(runTest(dumgen.segment(["Hallo"]))).rejects.toMatchObject({
+			code: reason,
 		});
 	}
 });
-
-test("accepts either an API key or an SDK, never both", () => {
+test("requires explicit provider construction", () => {
 	const { sdk } = queueSdk([]);
-	// @ts-expect-error The API key and injected SDK are exclusive.
-	const invalidOptions: DumgenOptions = { apiKey: "secret", sdk };
+	const invalidOptions: DumgenOptions = {
+		// @ts-expect-error Provider credentials belong to the adapter.
+		apiKey: "secret",
+		modelGenerator: sdk,
+	};
 	expect(invalidOptions).toBeDefined();
-	expect(buildDumgen({ sdk })).toBeDefined();
-	expect(buildDumgen({ apiKey: "secret" })).toBeDefined();
+	expect(
+		buildDumgen({
+			modelGenerator: sdk,
+		}),
+	).toBeDefined();
 });
-
 test("keeps the complete prompt catalog internal for authoring tests", () => {
 	const grammatical = PROMPT_CATALOG.laboratory.grammaticalResolution.de;
 	const grammaticalPrompts = Object.values(grammatical).flatMap((family) =>
@@ -1406,14 +1523,19 @@ test("keeps the complete prompt catalog internal for authoring tests", () => {
 	expect(new Set(grammaticalPrompts).size).toBe(21);
 	expect(GERMAN_HIGH_LEVEL_ROUTES.Lexeme).toContain("NOUN");
 });
-
 test("null output schemas create unstructured string generators", async () => {
-	const sdk: AiSdk = {
-		async structuredGeneration() {
-			throw new Error("not used");
+	const sdk: ModelGenerator = {
+		structuredGeneration() {
+			return Effect.gen(function* () {
+				return yield* Effect.fail(
+					new AiSdkGenerationError("provider-error", "not used"),
+				);
+			});
 		},
-		async unstructuredGeneration() {
-			return "raw model text";
+		unstructuredGeneration() {
+			return Effect.sync(() => {
+				return "raw model text";
+			});
 		},
 	};
 	const rawPrompt = {
@@ -1425,13 +1547,11 @@ test("null output schemas create unstructured string generators", async () => {
 	const catalog = {
 		laboratory: { raw: { meta: { kind: "prompt" }, prompt: rawPrompt } },
 	} as const satisfies PromptTree;
-
 	const generate = buildGeneratorCatalog(catalog, sdk);
-	const result: string = await generate.laboratory.raw("  input  ");
+	const result: string = await runTest(generate.laboratory.raw("  input  "));
 	expect(result).toBe("raw model text");
 	expect(DumgenError).toBeFunction();
 });
-
 test("the generator preserves classified provider failure metadata", async () => {
 	const failure = {
 		attempts: 3,
@@ -1441,16 +1561,24 @@ test("the generator preserves classified provider failure metadata", async () =>
 		retryable: true,
 		status: 500,
 	} as const;
-	const sdk: AiSdk = {
-		async structuredGeneration() {
-			throw new Error("not used");
+	const sdk: ModelGenerator = {
+		structuredGeneration() {
+			return Effect.gen(function* () {
+				return yield* Effect.fail(
+					new AiSdkGenerationError("provider-error", "not used"),
+				);
+			});
 		},
-		async unstructuredGeneration() {
-			throw new AiSdkGenerationError(
-				"provider-error",
-				"provider unavailable",
-				{ failure },
-			);
+		unstructuredGeneration() {
+			return Effect.gen(function* () {
+				return yield* Effect.fail(
+					new AiSdkGenerationError(
+						"provider-error",
+						"provider unavailable",
+						{ failure },
+					),
+				);
+			});
 		},
 	};
 	const rawPrompt = {
@@ -1467,12 +1595,33 @@ test("the generator preserves classified provider failure metadata", async () =>
 			},
 		},
 	} as const satisfies PromptTree;
-
 	await expect(
-		buildGeneratorCatalog(catalog, sdk).laboratory.raw("input"),
+		runTest(buildGeneratorCatalog(catalog, sdk).laboratory.raw("input")),
 	).rejects.toMatchObject({
 		name: "DumgenError",
 		code: "provider-error",
 		generationFailure: failure,
 	});
 });
+async function runDomain<A, E>(
+	program: Effect.Effect<A, E>,
+): Promise<
+	| A
+	| (E extends {
+			readonly _tag: "DumgenDomainFailure";
+			readonly result: infer D;
+	  }
+			? D
+			: never)
+> {
+	const outcome = await Effect.runPromise(Effect.either(program));
+	if (outcome._tag === "Right") return outcome.right;
+	expect(outcome.left).toMatchObject({ _tag: "DumgenDomainFailure" });
+	if (
+		typeof outcome.left === "object" &&
+		outcome.left !== null &&
+		"result" in outcome.left
+	)
+		return outcome.left.result as never;
+	throw outcome.left;
+}

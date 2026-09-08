@@ -2,9 +2,10 @@ import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { runCodegen } from "codegen";
 import type { Lemma, Surface } from "dumling/types";
+import * as Effect from "effect/Effect";
 import { zodTextFormat } from "openai/helpers/zod";
 
-import type { AiSdk } from "../../src/ai-sdk/ai-sdk";
+import type { ModelGenerator } from "../../src/ai-sdk/ai-sdk";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
 import { assertIntakeBatch } from "../../src/intake/contracts";
@@ -465,20 +466,22 @@ test("Intake preserves batch order, stitching, and one language context", async 
 			],
 		},
 	];
-	const sdk: AiSdk = {
-		async structuredGeneration() {
-			return outputs.shift() as never;
+	const sdk: ModelGenerator = {
+		structuredGeneration() {
+			return Effect.succeed(outputs.shift() as never);
 		},
-		async unstructuredGeneration() {
-			throw new Error("not used");
+		unstructuredGeneration() {
+			return Effect.dieMessage("not used");
 		},
 	};
 	const generate = buildGeneratorCatalog(PROMPT_CATALOG, sdk);
 
 	expect(
-		await generate.laboratory.intake({
-			items: [{ id: "item-0", sourceText: "Das H au s" }],
-		}),
+		await Effect.runPromise(
+			generate.laboratory.intake({
+				items: [{ id: "item-0", sourceText: "Das H au s" }],
+			}),
+		),
 	).toEqual({
 		language: "de",
 		items: [

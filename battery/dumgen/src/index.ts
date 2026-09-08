@@ -1,12 +1,12 @@
 export {
-	type AiSdk,
 	AiSdkGenerationError,
-	buildAiSdk,
 	type GenerationEvent,
 	type GenerationFailure,
 	type GenerationFailureCategory,
 	type GenerationFailureInput,
 	type GenerationFailureReason,
+	type ModelGenerator,
+	ModelGeneratorService,
 	type RetryableGenerationFailureCategory,
 	type TerminalGenerationFailureCategory,
 } from "./ai-sdk/ai-sdk";
@@ -15,10 +15,11 @@ export {
 	type CatalogMissBase,
 	type CatalogMissReason,
 	type Dumgen,
+	type DumgenDomainFailure,
 	DumgenError,
 	type DumgenErrorCode,
+	type DumgenExpectedFailure,
 	type DumgenModelExchange,
-	type DumgenModelExchangeObserver,
 	type DumgenOptions,
 	type DumgenSection1Trace,
 	type EnabledSegmentationLanguage,
@@ -64,3 +65,7 @@ export {
 	parseAsSegmentedSentence,
 	parseAsSegmentedSentenceId,
 } from "./parsing/lightweight-parsers.js";
+export {
+	DumgenLive,
+	DumgenService,
+} from "./runtime";

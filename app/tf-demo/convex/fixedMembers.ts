@@ -7,6 +7,7 @@ import { createDumdictService } from "dumdict/runtime";
 import { readingFingerprint } from "dumling/reading";
 import type { Lemma } from "dumling/types";
 import type { GrammaticalRelationClaim } from "dumrel/types";
+import * as Effect from "effect/Effect";
 import { assembleFixedInventory } from "../server/fixedMemberAssembly";
 import { action } from "./_generated/server";
 import { createConvexDumdictStorage } from "./dumdictActionStorage";
@@ -86,34 +87,14 @@ export const load = action({
 		for (const entry of entries) {
 			let settled = false;
 			for (let attempt = 0; attempt < MAX_COMMIT_ATTEMPTS; attempt += 1) {
-				let capturedPlan: DumdictPlan<"de"> | undefined;
-				const planned = await createDumdictService({
-					language: "de",
-					storage: createConvexDumdictStorage(ctx),
-				}).ensureReadingEntry(
-					{ entry },
-					{
-						applyPlan: async (plan) => {
-							capturedPlan = plan;
-							return {
-								status: "committed",
-								nextRevision: plan.baseRevision,
-							};
-						},
-					},
+				const prepared = await Effect.runPromise(
+					createDumdictService({
+						language: "de",
+						storage: createConvexDumdictStorage(ctx),
+					}).prepare.ensureReadingEntry({ entry }),
 				);
-				if (planned.status === "rejected") {
-					throw new Error(
-						`Fixed member was rejected: ${planned.code}.`,
-					);
-				}
-				if (!capturedPlan) {
-					throw new Error(
-						"Dumdict did not produce a fixed-member plan.",
-					);
-				}
 				const committed = await ctx.runMutation(commitFixedMember, {
-					plan: capturedPlan,
+					plan: prepared.plan,
 					readingKey: readingFingerprint(entry.reading),
 					expectedEntry: entry,
 				});

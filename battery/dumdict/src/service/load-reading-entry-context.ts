@@ -1,4 +1,5 @@
 import type { SupportedLanguage } from "dumling/types";
+import * as Effect from "effect/Effect";
 import type {
 	AddNewNoteRequest,
 	ApplyGeneratedKnowledgeRequest,
@@ -65,15 +66,21 @@ function storageRequestFor<L extends SupportedLanguage>(
 	}
 }
 
-export async function loadReadingEntryContext<
+export function loadReadingEntryContext<
 	L extends SupportedLanguage,
 	Load extends ReadingEntryContextLoad<L>,
 >(
 	options: DumdictServiceRuntimeOptions<L>,
 	load: Load,
-): Promise<ContextFor<L, Load>> {
+): Effect.Effect<
+	ContextFor<L, Load>,
+	import("../public").DumdictStorageFailure
+> {
 	const request = storageRequestFor(load);
-	const context = await options.storage.loadReadingEntryContext(request);
-	options.sliceValidation.readingEntryContext(context, request);
-	return context as ContextFor<L, Load>;
+	return options.storage.loadReadingEntryContext(request).pipe(
+		Effect.map((context) => {
+			options.sliceValidation.readingEntryContext(context, request);
+			return context as ContextFor<L, Load>;
+		}),
+	);
 }

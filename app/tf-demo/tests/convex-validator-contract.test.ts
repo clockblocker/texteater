@@ -257,21 +257,23 @@ test("the Convex runtime can inject Dumgen prompt data without package-relative 
 					{ encodedRuntimePromptData },
 					{ buildKnowledgeDumgenRuntime },
 					{ buildDumgenRuntime },
+					Effect,
 				] = await Promise.all([
 					import("dumgen/runtime-prompt-data"),
 					import("dumgen/knowledge-runtime"),
 					import("dumgen/runtime"),
+					import("effect/Effect"),
 				]);
-				const sdk = {
-					async structuredGeneration() { throw new Error("provider reached"); },
-					async unstructuredGeneration() { throw new Error("provider reached"); },
+				const modelGenerator = {
+					structuredGeneration() { return Effect.fail({ code: "provider-error" }); },
+					unstructuredGeneration() { return Effect.fail({ code: "provider-error" }); },
 				};
 				const knowledgeDumgen = buildKnowledgeDumgenRuntime({
 					runtimePromptData: encodedRuntimePromptData,
-					sdk,
+					modelGenerator,
 				});
-				try {
-					await knowledgeDumgen.generate.knowledge("de", {
+				const knowledgeResult = await Effect.runPromiseExit(
+					knowledgeDumgen.generate.knowledge("de", {
 						markedContext: "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
 						reading: {
 							lemma: {
@@ -284,18 +286,18 @@ test("the Convex runtime can inject Dumgen prompt data without package-relative 
 							emojiDescription: "🏦",
 						},
 						request: { definition: null },
-					});
-					throw new Error("knowledge provider was not reached");
-				} catch (error) {
-					if (error?.code !== "provider-error") throw error;
+					}),
+				);
+				if (knowledgeResult._tag !== "Failure") {
+					throw new Error(JSON.stringify(knowledgeResult));
 				}
 				const dumgen = buildDumgenRuntime({
 					runtimePromptData: encodedRuntimePromptData,
-					sdk,
+					modelGenerator,
 					async generateKnowledge() { throw new Error("unexpected knowledge generation"); },
 				});
-				const result = await dumgen.segment(["Die Banken sind geöffnet."]);
-				if (result.ok || result.error.reason !== "provider-error") {
+				const result = await Effect.runPromiseExit(dumgen.segment(["Die Banken sind geöffnet."]));
+				if (result._tag !== "Failure") {
 					throw new Error(JSON.stringify(result));
 				}
 			`,

@@ -95,6 +95,7 @@
 		"dumdict": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
+		"effect": "3.22.1",
 		"emoji-regex": "^10.6.0",
 		"openai": "^7.0.0",
 		"zod": "^4.4.0"

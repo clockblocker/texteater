@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import { projectSemanticRelations } from "../../../src";
 import {
 	derivePendingEntryId,
@@ -9,6 +10,7 @@ import {
 	englishSwimReading,
 	englishWalkLemma,
 	enSerializedNotes,
+	failure,
 	germanGehenReading,
 	getBootedUpDumdict,
 } from "./helpers";
@@ -32,48 +34,52 @@ describe("configured service relation writes", () => {
 	test("rejects a direct same-Lemma relation", async () => {
 		const direct = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
-			await direct.dict.addNewNote({
-				draft: {
-					...englishSwimDraft,
-					relations: [
-						{
-							relation: "nearSynonym",
-							target: {
-								kind: "existing",
-								lemma: englishSwimLemma,
+			await failure(
+				direct.dict.addNewNote({
+					draft: {
+						...englishSwimDraft,
+						relations: [
+							{
+								relation: "nearSynonym",
+								target: {
+									kind: "existing",
+									lemma: englishSwimLemma,
+								},
 							},
-						},
-					],
-				},
-			}),
-		).toMatchObject({ status: "rejected", code: "selfRelation" });
+						],
+					},
+				}),
+			),
+		).toMatchObject({ _tag: "DumdictRejection", code: "selfRelation" });
 	});
 
 	test("rejects a same-Lemma Unit Shadow once it resolves", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
-			await dict.addNewNote({
-				draft: {
-					...englishSwimDraft,
-					relations: [
-						{
-							target: {
-								kind: "pending",
-								pending: {
-									relation: "nearSynonym",
-									target: {
-										language: "en",
-										canonicalForm: "swim",
-										family: "Lexeme",
-										kind: "VERB",
+			await failure(
+				dict.addNewNote({
+					draft: {
+						...englishSwimDraft,
+						relations: [
+							{
+								target: {
+									kind: "pending",
+									pending: {
+										relation: "nearSynonym",
+										target: {
+											language: "en",
+											canonicalForm: "swim",
+											family: "Lexeme",
+											kind: "VERB",
+										},
 									},
 								},
 							},
-						},
-					],
-				},
-			}),
-		).toMatchObject({ status: "rejected", code: "selfRelation" });
+						],
+					},
+				}),
+			),
+		).toMatchObject({ _tag: "DumdictRejection", code: "selfRelation" });
 		expect(
 			storage
 				.loadAll()
@@ -83,20 +89,22 @@ describe("configured service relation writes", () => {
 
 	test("stores only forward Reading Knowledge and infers the symmetric view", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
-		const result = await dict.addNewNote({
-			draft: {
-				...englishSwimDraft,
-				relations: [
-					{
-						relation: "nearSynonym",
-						target: {
-							kind: "existing",
-							lemma: englishWalkLemma,
+		const result = await Effect.runPromise(
+			dict.addNewNote({
+				draft: {
+					...englishSwimDraft,
+					relations: [
+						{
+							relation: "nearSynonym",
+							target: {
+								kind: "existing",
+								lemma: englishWalkLemma,
+							},
 						},
-					},
-				],
-			},
-		});
+					],
+				},
+			}),
+		);
 		const readings = storage
 			.loadAll()
 			.flatMap(({ readingEntries }) => readingEntries);
@@ -126,27 +134,29 @@ describe("configured service relation writes", () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
 			(
-				await dict.addNewNote({
-					draft: {
-						...englishRunDraft,
-						relations: [
-							{
-								target: {
-									kind: "pending",
-									pending: {
-										relation: "antonym",
-										target: {
-											language: "en",
-											canonicalForm: "walk",
-											family: "Lexeme",
-											kind: "VERB",
+				await Effect.runPromise(
+					dict.addNewNote({
+						draft: {
+							...englishRunDraft,
+							relations: [
+								{
+									target: {
+										kind: "pending",
+										pending: {
+											relation: "antonym",
+											target: {
+												language: "en",
+												canonicalForm: "walk",
+												family: "Lexeme",
+												kind: "VERB",
+											},
 										},
 									},
 								},
-							},
-						],
-					},
-				})
+							],
+						},
+					}),
+				)
 			).status,
 		).toBe("applied");
 		const notes = storage.loadAll();
@@ -167,24 +177,55 @@ describe("configured service relation writes", () => {
 	test("rejects cross-language direct and pending endpoints", async () => {
 		const direct = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
-			await direct.dict.addNewNote({
-				draft: {
-					...englishSwimDraft,
-					relations: [
-						{
-							relation: "synonym",
-							target: {
-								kind: "existing",
-								lemma: germanGehenReading.lemma,
+			await failure(
+				direct.dict.addNewNote({
+					draft: {
+						...englishSwimDraft,
+						relations: [
+							{
+								relation: "synonym",
+								target: {
+									kind: "existing",
+									lemma: germanGehenReading.lemma,
+								},
 							},
-						},
-					] as never,
-				},
-			}),
-		).toMatchObject({ status: "rejected", code: "invalidDraft" });
+						] as never,
+					},
+				}),
+			),
+		).toMatchObject({ _tag: "DumdictRejection", code: "invalidDraft" });
 		const pending = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
-			await pending.dict.addNewNote({
+			await failure(
+				pending.dict.addNewNote({
+					draft: {
+						...englishSwimDraft,
+						relations: [
+							{
+								target: {
+									kind: "pending",
+									pending: {
+										relation: "synonym",
+										target: {
+											language: "de",
+											canonicalForm: "schwimmen",
+											family: "Lexeme",
+											kind: "VERB",
+										},
+									},
+								},
+							},
+						] as never,
+					},
+				}),
+			),
+		).toMatchObject({ _tag: "DumdictRejection", code: "invalidDraft" });
+	});
+
+	test("schema-normalizes a pending Unit Shadow before persistence", async () => {
+		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
+		await Effect.runPromise(
+			dict.addNewNote({
 				draft: {
 					...englishSwimDraft,
 					relations: [
@@ -192,45 +233,20 @@ describe("configured service relation writes", () => {
 							target: {
 								kind: "pending",
 								pending: {
-									relation: "synonym",
+									relation: "nearSynonym",
 									target: {
-										language: "de",
-										canonicalForm: "schwimmen",
+										language: "en",
+										canonicalForm: "  walk fast  ",
 										family: "Lexeme",
 										kind: "VERB",
 									},
 								},
 							},
 						},
-					] as never,
+					],
 				},
 			}),
-		).toMatchObject({ status: "rejected", code: "invalidDraft" });
-	});
-
-	test("schema-normalizes a pending Unit Shadow before persistence", async () => {
-		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
-		await dict.addNewNote({
-			draft: {
-				...englishSwimDraft,
-				relations: [
-					{
-						target: {
-							kind: "pending",
-							pending: {
-								relation: "nearSynonym",
-								target: {
-									language: "en",
-									canonicalForm: "  walk fast  ",
-									family: "Lexeme",
-									kind: "VERB",
-								},
-							},
-						},
-					},
-				],
-			},
-		});
+		);
 		const record = storage
 			.loadAll()
 			.flatMap(({ pendingRelations }) => pendingRelations)[0];
@@ -239,12 +255,14 @@ describe("configured service relation writes", () => {
 
 	test("stores and deduplicates exact Pending Semantic Relations", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
-		const result = await dict.addNewNote({
-			draft: {
-				...englishSwimDraft,
-				relations: [pendingWalkFast, pendingWalkFast],
-			},
-		});
+		const result = await Effect.runPromise(
+			dict.addNewNote({
+				draft: {
+					...englishSwimDraft,
+					relations: [pendingWalkFast, pendingWalkFast],
+				},
+			}),
+		);
 		const records = storage
 			.loadAll()
 			.flatMap(({ pendingRelations }) => pendingRelations);
@@ -274,12 +292,14 @@ describe("configured service relation writes", () => {
 		};
 		expect(
 			(
-				await dict.addNewNote({
-					draft: {
-						...englishSwimDraft,
-						ownedSurfaces: [owned, owned],
-					},
-				})
+				await Effect.runPromise(
+					dict.addNewNote({
+						draft: {
+							...englishSwimDraft,
+							ownedSurfaces: [owned, owned],
+						},
+					}),
+				)
 			).status,
 		).toBe("applied");
 		expect(

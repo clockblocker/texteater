@@ -23,15 +23,22 @@ A `dumdict` service is bound to one language and one storage adapter:
 const dict = createDumdictService({ language: "en", storage });
 ```
 
-The runtime service has seven UI-facing operations:
+The runtime service exposes Effect workflows:
 
 - `findStoredReadings`: return learner Readings for an exact structural Lemma
 - `addAttestation`: append evidence to an existing Reading
 - `addNewNote`: store a Lemma and a new learner Reading
 - `applyGeneratedKnowledge`: atomically plan generated Knowledge Changes and pending relations for an existing Reading
+- `ensureReadingEntry`: create or verify an ordinary Reading entry
 - `ensureOwnedSurface`: attach a newly encountered Surface to an existing Reading's Lemma
 - `getInfoForRelationsCleanup`: inspect unresolved relation targets
 - `cleanupRelations`: retry unresolved targets through deterministic Lemma resolution
+
+Each mutation also has a `prepare` variant that returns an immutable plan
+without writing. The host can commit that plan together with related writes
+in one transaction; standalone methods prepare and commit through storage.
+`createDumdictLayer(language)` exposes language-bound service and storage tags
+for Layer construction.
 
 The surrounding application owns the workflow around those calls. In the normal
 flow, the user clicks a text segment, the UI resolves its Surface and Lemma
@@ -114,9 +121,9 @@ Service reads return learner Reading candidates:
 ```ts
 const { dict: lookupDict } = getBootedUpDumdict("en", [serializedWalk]);
 
-const walkReadings = await lookupDict.findStoredReadings({
+const walkReadings = await Effect.runPromise(lookupDict.findStoredReadings({
 	lemma: walkLemma,
-});
+}));
 
 const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
 ```
@@ -140,7 +147,7 @@ Minimal usage with the in-memory testing storage:
 ```ts
 const { dict, storage } = getBootedUpDumdict("en", [serializedWalk]);
 
-const addRunResult = await dict.addNewNote({
+const addRunResult = await Effect.runPromise(dict.addNewNote({
 	draft: {
 		reading: runReading,
 		note: {
@@ -149,7 +156,7 @@ const addRunResult = await dict.addNewNote({
 			notes: "Core fast-motion sense.",
 		},
 	},
-});
+}));
 
 const storedRunReading = storage
 	.loadAll()
