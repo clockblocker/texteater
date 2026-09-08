@@ -22,7 +22,7 @@ export const PLAYGROUND_EXPERIMENTS = [
 		description:
 			"Explore retained Card Layers, Sheet expansion, gesture cancellation, and nested Pane splits.",
 		instructions:
-			"Select a word to open Cards. Lift into a Pane to expand, back into the Card Layer to return, or to an edge to split. Escape cancels. Open the cog to show the state machine.",
+			"Select a word to open Cards. Lift into a Pane to expand, back into the Card Layer to return, or to an edge to split. Click outside Cards to dismiss. Escape cancels a lift or dismisses Cards at rest. Open the cog for the state machine and long-text fixture.",
 		component: DynamicPanesPrototype,
 	},
 	{

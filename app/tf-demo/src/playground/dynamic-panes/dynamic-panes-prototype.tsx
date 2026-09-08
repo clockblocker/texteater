@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useLayoutEffect, useReducer, useRef, useState } from "react";
 import {
 	createWorkspace,
 	getWorkspaceStateLabel,
@@ -71,9 +71,51 @@ export function DynamicPanesPrototype() {
 		}),
 	);
 	const [showState, setShowState] = useState(false);
+	const [longText, setLongText] = useState(true);
+	const root = useRef<HTMLDivElement>(null);
+	const pendingSentence = useRef<{
+		anchor: HTMLElement;
+		presentationId: string;
+	} | null>(null);
+	useLayoutEffect(() => {
+		const pending = pendingSentence.current;
+		if (!pending || workspace.gesture) return;
+		pendingSentence.current = null;
+		const layer = Object.values(workspace.layers).find(
+			(layer) => layer.originPresentationId === pending.presentationId,
+		);
+		const deck =
+			layer &&
+			root.current?.querySelector<HTMLElement>(
+				`[data-card-layer="${layer.id}"]`,
+			);
+		const sheet = pending.anchor.closest<HTMLElement>(".workspace__sheet");
+		const sentence = pending.anchor.closest<HTMLElement>(
+			".text-reader__sentence",
+		);
+		if (!deck || !sheet || !sentence?.isConnected) return;
+		const lineHeight = parseFloat(getComputedStyle(sentence).lineHeight);
+		const excess =
+			sentence.getBoundingClientRect().bottom -
+			(deck.getBoundingClientRect().top - lineHeight * 0.5);
+		// Prioritize the sentence ending if the whole sentence cannot fit above the deck.
+		if (excess > 0) sheet.scrollTop += excess;
+	}, [workspace]);
 	return (
-		<div className="dynamic-panes-prototype" data-show-state={showState}>
+		<div
+			ref={root}
+			className="dynamic-panes-prototype"
+			data-show-state={showState}
+		>
 			<PlaygroundControls>
+				<label>
+					<input
+						type="checkbox"
+						checked={longText}
+						onChange={(event) => setLongText(event.target.checked)}
+					/>{" "}
+					Long reading fixture
+				</label>
 				<button
 					type="button"
 					className="dynamic-panes__state-toggle"
@@ -91,7 +133,15 @@ export function DynamicPanesPrototype() {
 					<WorkspaceInteractionProvider
 						interaction={{
 							...PASSIVE_WORKSPACE_INTERACTION,
-							presentCards: (candidates) =>
+							presentCards: (candidates, options) => {
+								const anchor = options?.anchor;
+								if (anchor instanceof HTMLElement) {
+									context.selectAnchor(anchor);
+									pendingSentence.current = {
+										anchor,
+										presentationId: context.presentationId,
+									};
+								}
 								dispatch({
 									type: "OpenLayer",
 									originPresentationId:
@@ -99,10 +149,15 @@ export function DynamicPanesPrototype() {
 									subjects: candidates.map((candidate) =>
 										workspaceSubjectFor(candidate.target),
 									),
-								}),
+								});
+							},
 						}}
 					>
-						{renderFixtureSubject(subject, context.presentation)}
+						{renderFixtureSubject(
+							subject,
+							context.presentation,
+							longText,
+						)}
 					</WorkspaceInteractionProvider>
 				)}
 			/>

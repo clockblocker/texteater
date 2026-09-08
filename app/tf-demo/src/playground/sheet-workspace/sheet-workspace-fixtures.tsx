@@ -44,6 +44,40 @@ const FIXTURE_SENTENCES = [
 		["ResolvableText", "geschlossen"],
 		["Punctuation", "."],
 	]),
+	...[
+		"Am Fluss beginnt ein ruhiger Weg.",
+		"Eine Frau wartet vor dem alten Haus.",
+		"Über den Dächern ziehen dunkle Wolken vorbei.",
+		"Im Garten spielt ein Kind mit einem Ball.",
+		"Der Zug kommt heute etwas später an.",
+		"Auf dem Markt kaufen wir frisches Brot.",
+		"Neben der Brücke steht ein kleines Café.",
+		"Ein Mann liest dort jeden Tag die Zeitung.",
+		"Nach dem Regen riecht die Luft nach Erde.",
+		"Wir gehen langsam durch die leeren Straßen.",
+		"Hinter dem Bahnhof beginnt der Wald.",
+		"Zwischen den Bäumen scheint die Sonne.",
+		"Am Abend kehren alle nach Hause zurück.",
+		"In der Küche wartet eine warme Suppe.",
+		"Später hören wir draußen die letzten Vögel.",
+		"Dann wird es still in der kleinen Stadt.",
+	].map((text, index) =>
+		fixtureSentence(
+			index + 2,
+			text,
+			(text.match(/\s+|[\p{L}]+|[^\s\p{L}]/gu) ?? []).map(
+				(part) =>
+					[
+						/^\s+$/.test(part)
+							? "Whitespace"
+							: /\p{L}/u.test(part)
+								? "ResolvableText"
+								: "Punctuation",
+						part,
+					] as const,
+			),
+		),
+	),
 ] as const;
 
 type FixtureNoteKind = "reading" | "lemma" | "surface" | "attestation";
@@ -86,12 +120,13 @@ export function createSheetWorkspaceFixture(): SheetWorkspace {
 	};
 }
 
-export const renderFixtureSubject: CardSheetWorkspaceProps["renderSubject"] = (
-	subject,
-	presentation,
+export const renderFixtureSubject = (
+	subject: Parameters<CardSheetWorkspaceProps["renderSubject"]>[0],
+	presentation: Parameters<CardSheetWorkspaceProps["renderSubject"]>[1],
+	longText = false,
 ) => {
 	if (subject.kind === "Text") {
-		return <FixtureTextPresentation />;
+		return <FixtureTextPresentation longText={longText} />;
 	}
 	const source = fixtureNoteSource(fixtureSubjectId(subject));
 	if (!source) return <p>Unknown Note fixture.</p>;
@@ -112,7 +147,7 @@ export const renderFixtureCardTail: CardSheetWorkspaceProps["renderCardTail"] =
 		);
 	};
 
-function FixtureTextPresentation() {
+function FixtureTextPresentation({ longText }: { longText: boolean }) {
 	const { presentCards } = useWorkspaceInteraction();
 	const selectSegment = useCallback(
 		async (
@@ -144,7 +179,9 @@ function FixtureTextPresentation() {
 			focus={{ kind: "None" }}
 			onSegmentClick={selectSegment}
 			selectedSegmentKey={null}
-			sentences={FIXTURE_SENTENCES}
+			sentences={
+				longText ? FIXTURE_SENTENCES : FIXTURE_SENTENCES.slice(0, 2)
+			}
 		/>
 	);
 }

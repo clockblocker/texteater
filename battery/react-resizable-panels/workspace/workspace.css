@@ -1,6 +1,7 @@
 /* Generic layering and geometry. Product content supplies its own typography. */
 .workspace {
 	--workspace-card-radius: 0.7rem;
+	--workspace-resize-clearance: 12px;
 	--workspace-card-step: 28px;
 	--workspace-card-tail-height: calc(
 		var(--workspace-card-step) +
@@ -25,6 +26,7 @@
 	min-height: 0;
 }
 .workspace__pane {
+	container-type: size;
 	position: relative;
 	height: 100%;
 	min-width: 0;
@@ -32,11 +34,14 @@
 	background: #1c2128;
 }
 .workspace__content {
-	position: relative;
-	height: 100%;
-	overflow: auto;
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
 }
 .workspace__sheet {
+	overflow: auto;
+	overscroll-behavior: contain;
+	scroll-padding-block: 3rem;
 	position: absolute;
 	inset: 0;
 	height: 100%;
@@ -87,7 +92,7 @@
 	top: 0;
 }
 .workspace__lift[data-edge="bottom"] {
-	bottom: 0;
+	bottom: var(--workspace-resize-clearance);
 }
 .workspace__lift span {
 	position: absolute;
@@ -136,30 +141,23 @@
 }
 .workspace__cards {
 	position: absolute;
-	top: 7rem;
+	top: 20%;
 	left: 50%;
 	z-index: 8;
 	width: min(90%, 25.775rem);
-	height: min(75%, 34rem);
+	height: min(calc(80% - 12px), 34rem);
 	transform: translateX(-50%);
 	pointer-events: none;
 }
-.workspace__cards[data-return-target="true"] {
-	outline: 2px solid #8eb4f0;
-	outline-offset: 0.35rem;
-	border-radius: var(--workspace-card-radius, 0.7rem);
-}
-.workspace__close-cards {
+.workspace__return-zone {
 	position: absolute;
-	top: -2.3rem;
-	right: 0;
-	border: 1px solid #435064;
-	border-radius: 5px;
-	padding: 0.4rem 0.65rem;
-	background: #1c2128;
-	color: #b8c8e1;
-	font-size: 0.7rem;
-	pointer-events: auto;
+	inset: -12px;
+	border: 2px solid transparent;
+	border-radius: calc(var(--workspace-card-radius) + 12px);
+	pointer-events: none;
+}
+.workspace__cards[data-return-target="true"] > .workspace__return-zone {
+	border-color: #8eb4f0;
 }
 .workspace__card {
 	position: absolute;
@@ -220,9 +218,6 @@
 .workspace__drop[data-edge="right"] {
 	left: 50%;
 }
-.workspace__drop[data-edge="top"] {
-	bottom: 50%;
-}
 .workspace__drop[data-edge="bottom"] {
 	top: 50%;
 }
@@ -246,4 +241,62 @@
 .workspace button:focus-visible {
 	outline: 2px solid #8eb4f0;
 	outline-offset: -2px;
+}
+
+.workspace__lift span {
+	opacity: 0.35;
+}
+.workspace__lift:hover span,
+.workspace__lift:focus-visible span {
+	opacity: 1;
+}
+.workspace__card-tail:hover,
+.workspace__card-tail:focus-visible {
+	background: #283342;
+	color: #d7e8ff;
+}
+@media (pointer: coarse) {
+	.workspace {
+		--workspace-resize-clearance: 22px;
+		--workspace-card-step: 44px;
+	}
+}
+
+[data-workspace-selected="true"] {
+	text-decoration: underline;
+	text-decoration-color: #8eb4f0;
+	text-underline-offset: 0.2em;
+}
+.workspace__drop-label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 0.4rem 0.7rem;
+	border-radius: 0.35rem;
+	background: #172335;
+	color: #d7e8ff;
+	white-space: nowrap;
+}
+.workspace__edge-hint {
+	position: absolute;
+	z-index: 14;
+	pointer-events: none;
+	background: #8eb4f010;
+	border: 1px solid #8eb4f050;
+	color: #a5bddf;
+	display: grid;
+	place-items: center;
+}
+.workspace__edge-hint[data-edge="left"] {
+	inset: 0 auto 0 0;
+	width: 24px;
+}
+.workspace__edge-hint[data-edge="right"] {
+	inset: 0 0 0 auto;
+	width: 24px;
+}
+.workspace__edge-hint[data-edge="bottom"] {
+	inset: auto 24px 0;
+	height: 24px;
 }
