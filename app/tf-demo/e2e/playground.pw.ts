@@ -39,6 +39,7 @@ test("the playground registry launches and resets an isolated experiment", async
 		page.locator('[data-card-layer="central"] [data-card-id]'),
 	).toHaveCount(4);
 
+	await page.getByRole("button", { name: "Playground controls" }).click();
 	await page.getByRole("button", { name: "Reset fixture" }).click();
 	await expect(page.locator("[data-card-layer]")).toHaveCount(0);
 });
@@ -165,6 +166,7 @@ test("the segment text study compares pre-resolved and on-demand units", async (
 		preResolved.locator(".text-segment:not([data-known])"),
 	).toHaveCount(0);
 
+	await page.getByRole("button", { name: "Playground controls" }).click();
 	await page.getByRole("button", { name: "Reset fixture" }).click();
 	await expect(onDemand.locator(".text-segment[data-known]")).toHaveCount(0);
 });
@@ -864,6 +866,7 @@ test("the Midnight reading note Sheet lifts into its purpose-built Card", async 
 			.first(),
 	).toBeVisible();
 
+	await page.getByRole("button", { name: "Playground controls" }).click();
 	await page.getByRole("button", { name: "Reset fixture" }).click();
 	await expect(page.locator('[data-placed-card="midnight"]')).toHaveCount(0);
 });

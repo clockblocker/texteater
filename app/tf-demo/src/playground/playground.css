@@ -251,38 +251,82 @@
 	overflow: hidden;
 }
 
-.playground-specimen__controls {
-	position: absolute;
-	top: 50%;
-	right: 0.75rem;
-	z-index: 20;
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-	transform: translateY(-50%);
-}
-
-.playground-specimen__controls a,
-.playground-specimen__controls button {
+.playground-specimen__cog {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 1.25rem;
+	z-index: 30;
 	display: grid;
-	width: 2rem;
-	height: 2rem;
 	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
 	border: 1px solid var(--playground-rule);
-	padding: 0;
-	background: color-mix(in srgb, var(--playground-paper) 82%, transparent);
+	border-radius: 50%;
+	background: var(--playground-paper);
 	color: var(--playground-ink);
 	box-shadow: 0 0.35rem 1.2rem rgb(0 0 0 / 24%);
-	backdrop-filter: blur(0.6rem);
 	cursor: pointer;
-	opacity: 0.62;
+}
+.playground-specimen__cog svg {
+	width: 1.2rem;
+	height: 1.2rem;
+}
+.playground-specimen__cog:hover {
+	background: var(--playground-rule);
+}
+.playground-specimen__cog:focus-visible {
+	outline: 2px solid var(--playground-cobalt);
+	outline-offset: 3px;
+}
+.playground-controls-positioner {
+	z-index: 40;
+}
+.playground-controls-popover {
+	display: grid;
+	gap: 0.5rem;
+	width: 15rem;
+	max-width: calc(100vw - 2.5rem);
+	max-height: var(--available-height);
+	overflow-y: auto;
+	padding: 0.5rem;
+	border: 1px solid var(--playground-rule);
+	border-radius: 0.75rem;
+	background: var(--playground-paper);
+	color: var(--playground-ink);
+	box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 24%);
+}
+.dynamic-panes__state-toggle {
+	width: 100%;
 }
 
+.playground-specimen__controls {
+	display: grid;
+	gap: 0.5rem;
+}
+.playground-specimen__controls a,
+.playground-specimen__controls button,
+.dynamic-panes__state-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 2.5rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--playground-rule);
+	border-radius: 0.4rem;
+	color: inherit;
+	background: transparent;
+	cursor: pointer;
+}
 .playground-specimen__controls a:hover,
 .playground-specimen__controls button:hover,
-.playground-specimen__controls a:focus-visible,
-.playground-specimen__controls button:focus-visible {
-	opacity: 1;
+.dynamic-panes__state-toggle:hover {
+	background: var(--playground-rule);
+}
+.playground-controls-popover__extra:empty {
+	display: none;
+}
+.playground-controls-popover__extra {
+	min-width: 0;
 }
 
 .playground-specimen__stage,

@@ -12,6 +12,7 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { PlaygroundControls } from "@/playground/playground-controls";
 import {
 	FIXTURE_TEXT_SUBJECT,
 	renderFixtureSubject,
@@ -498,36 +499,28 @@ export function DynamicPanesPrototype() {
 	}
 	return (
 		<div className="dynamic-panes-prototype">
-			<header className="dynamic-panes__toolbar">
-				<div>
-					<strong>Dynamic Panes · prototype</strong>
-					<p>
-						Can Cards create nested splits without tabs? Select a
-						word, then lift a Card to an edge.
-					</p>
-				</div>
+			<PlaygroundControls>
 				<button
 					type="button"
+					className="dynamic-panes__state-toggle"
+					aria-expanded={showState}
 					onClick={() => setShowState((value) => !value)}
 				>
 					{showState ? "Hide" : "Show"} state
 				</button>
-			</header>
+				{showState ? (
+					<pre className="dynamic-panes__state">
+						{JSON.stringify(
+							{ tree, active, layers, sizes, drag, message },
+							null,
+							2,
+						)}
+					</pre>
+				) : null}
+			</PlaygroundControls>
 			<div ref={root} className="dynamic-panes__workspace">
 				{renderTree(tree)}
 			</div>
-			<footer className="dynamic-panes__status" role="status">
-				{message}
-			</footer>
-			{showState ? (
-				<pre className="dynamic-panes__state">
-					{JSON.stringify(
-						{ tree, active, layers, sizes, drag },
-						null,
-						2,
-					)}
-				</pre>
-			) : null}
 			{drag
 				? createPortal(
 						<div

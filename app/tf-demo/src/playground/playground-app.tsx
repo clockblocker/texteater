@@ -1,6 +1,11 @@
-import { ArrowLeftIcon, ArrowUpRightIcon, RotateCcwIcon } from "lucide-react";
+import { Popover } from "@base-ui/react/popover";
+import {
+	ArrowLeftIcon,
+	ArrowUpRightIcon,
+	RotateCcwIcon,
+	SettingsIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
-
 import { AppProvider } from "@/components/app-provider";
 import {
 	findPlaygroundExperiment,
@@ -12,6 +17,7 @@ import {
 	playgroundExperimentHref,
 	playgroundRouteFromPathname,
 } from "@/playground/playground-route";
+import { PlaygroundControlsContext } from "./playground-controls";
 import "./playground.css";
 
 export function PlaygroundProviders({
@@ -167,6 +173,9 @@ function ExperimentRoute({
 }) {
 	const experiment = findPlaygroundExperiment(experimentId);
 	const [revision, setRevision] = useState(0);
+	const [controlsOpen, setControlsOpen] = useState(false);
+	const [controlsContainer, setControlsContainer] =
+		useState<HTMLDivElement | null>(null);
 
 	if (!experiment || (detailId && !experiment.supportsDetails)) {
 		return (
@@ -185,36 +194,74 @@ function ExperimentRoute({
 	const canReset = !experiment.supportsDetails || Boolean(detailId);
 	return (
 		<main className="playground-specimen">
-			<nav
-				className="playground-specimen__controls"
-				aria-label="Experiment controls"
+			<h1 className="sr-only">{experiment.title}</h1>
+			<Popover.Root
+				open={controlsOpen}
+				onOpenChange={setControlsOpen}
+				modal={false}
 			>
-				<h1 className="sr-only">{experiment.title}</h1>
-				<a
-					href={backHref}
-					aria-label={detailId ? "Back to notes" : "Back to registry"}
+				<Popover.Trigger
+					className="playground-specimen__cog"
+					aria-label="Playground controls"
 				>
-					<ArrowLeftIcon aria-hidden="true" />
-				</a>
-				{canReset ? (
-					<button
-						type="button"
-						aria-label="Reset fixture"
-						onClick={() => setRevision((value) => value + 1)}
+					<SettingsIcon aria-hidden="true" />
+				</Popover.Trigger>
+				<Popover.Portal>
+					<Popover.Positioner
+						side="top"
+						align="end"
+						sideOffset={10}
+						className="playground-controls-positioner"
 					>
-						<RotateCcwIcon aria-hidden="true" />
-					</button>
-				) : null}
-			</nav>
-			<section
-				className="playground-specimen__stage"
-				aria-label={`${experiment.title} experiment`}
-			>
-				<Experiment
-					key={`${detailId ?? "index"}:${revision}`}
-					detailId={detailId}
-				/>
-			</section>
+						<Popover.Popup className="playground-controls-popover">
+							<Popover.Title className="sr-only">
+								Playground controls
+							</Popover.Title>
+							<nav
+								className="playground-specimen__controls"
+								aria-label="Experiment controls"
+							>
+								<a
+									href={backHref}
+									onClick={() => setControlsOpen(false)}
+								>
+									<ArrowLeftIcon aria-hidden="true" />
+									{detailId
+										? "Back to notes"
+										: "Back to registry"}
+								</a>
+								{canReset ? (
+									<button
+										type="button"
+										onClick={() => {
+											setRevision((value) => value + 1);
+											setControlsOpen(false);
+										}}
+									>
+										<RotateCcwIcon aria-hidden="true" />{" "}
+										Reset fixture
+									</button>
+								) : null}
+							</nav>
+							<div
+								ref={setControlsContainer}
+								className="playground-controls-popover__extra"
+							/>
+						</Popover.Popup>
+					</Popover.Positioner>
+				</Popover.Portal>
+			</Popover.Root>
+			<PlaygroundControlsContext.Provider value={controlsContainer}>
+				<section
+					className="playground-specimen__stage"
+					aria-label={`${experiment.title} experiment`}
+				>
+					<Experiment
+						key={`${detailId ?? "index"}:${revision}`}
+						detailId={detailId}
+					/>
+				</section>
+			</PlaygroundControlsContext.Provider>
 		</main>
 	);
 }
