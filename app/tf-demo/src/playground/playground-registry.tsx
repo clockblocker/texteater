@@ -1,8 +1,8 @@
 import type { ComponentType } from "react";
-
 import { NotesStudyPlayground } from "@/playground/notes-study/notes-study-playground";
 import { SegmentTextPlayground } from "@/playground/segment-text/segment-text-playground";
 import { SheetWorkspacePlayground } from "@/playground/sheet-workspace/sheet-workspace-playground";
+import { DynamicPanesPrototype } from "./dynamic-panes/dynamic-panes-prototype";
 
 /** A focused UI experiment with a stable route ID. */
 export type PlaygroundExperiment = {
@@ -16,6 +16,15 @@ export type PlaygroundExperiment = {
 
 /** Registry for `/playground/:id`; experiments may use the local demo deployment. */
 export const PLAYGROUND_EXPERIMENTS = [
+	{
+		id: "dynamic-panes",
+		title: "Dynamic Panes without tabs",
+		description:
+			"Throwaway experiment: create nested splits by docking Cards and Sheets, then reclaim empty Panes.",
+		instructions:
+			"Select a word to open Cards. Lift a Card or Sheet to an edge to split, or inside a Pane to place a Sheet. State stays in memory.",
+		component: DynamicPanesPrototype,
+	},
 	{
 		id: "sheet-workspace",
 		title: "Card and Sheet workspace",

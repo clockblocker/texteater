@@ -1,0 +1,15 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"noUncheckedIndexedAccess": false,
+		"types": [
+			"node",
+			"bun-types",
+			"@testing-library/jest-dom",
+			"@testing-library/jest-dom/vitest"
+		]
+	},
+	"include": ["lib", "vitest.config.ts", "vitest.d.ts", "vitest.setup.ts"]
+}

@@ -7,6 +7,7 @@ export default defineConfig({
 		alias: {
 			"@": new URL("./src", import.meta.url).pathname,
 		},
+		dedupe: ["react", "react-dom"],
 	},
 	build: {
 		outDir: "dist/client",
