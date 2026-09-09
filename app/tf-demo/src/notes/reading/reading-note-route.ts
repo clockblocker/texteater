@@ -40,8 +40,12 @@ export type ReadingNoteRoute = {
 	[Language in TargetLanguage]: ReadingNoteRouteFor<Language>;
 }[TargetLanguage];
 
-/** Narrows the widened Convex route once, before applicability or dispatch. */
-export function narrowReadingNoteRoute(
+/**
+ * Derives and validates the widened Convex route before applicability or
+ * dispatch. Route derivation needs only Note data, not a future
+ * `ResolvedOccurrenceFor` aggregate.
+ */
+export function readingNoteRouteFor(
 	note: AnyReadingNoteData,
 ): ReadingNoteRoute | null {
 	const lemma = note.reading.lemma;

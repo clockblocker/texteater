@@ -9,8 +9,8 @@ import {
 	type ReadingNoteRenderContext,
 } from "./reading-note-render-context";
 import {
-	narrowReadingNoteRoute,
 	type ReadingNoteRouteKey,
+	readingNoteRouteFor,
 	type UnitReadingFamilyFor,
 	type UnitReadingKindFor,
 } from "./reading-note-route";
@@ -35,13 +35,14 @@ export type {
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
+export { readingNoteRouteFor } from "./reading-note-route";
 
 export function renderReadingNote(
 	note: AnyReadingNoteData,
 	capabilities?: ReadingNotePresentationCapabilities,
 ): ReactElement {
 	try {
-		const route = narrowReadingNoteRoute(note);
+		const route = readingNoteRouteFor(note);
 		if (!route) {
 			return renderErrorNote(
 				`Unsupported Reading route: ${routeDescription(note)}.`,
@@ -76,7 +77,7 @@ function createRenderContext<
 	route: ReadingNoteRouteKey<L, F, K>,
 	capabilities: ReadingNotePresentationCapabilities,
 ): ReadingNoteRenderContext<L, F, K> {
-	// `narrowReadingNoteRoute` validated these exact coordinates against the
+	// `readingNoteRouteFor` validated these exact coordinates against the
 	// exhaustive language map immediately before this helper is called.
 	return {
 		noteData: note,

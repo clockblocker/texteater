@@ -11,7 +11,7 @@ import type {
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
-import { narrowReadingNoteRoute } from "./reading-note-route";
+import { readingNoteRouteFor } from "./reading-note-route";
 import { availableBlocksFor } from "./system-block-catalog";
 
 type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
@@ -80,7 +80,7 @@ export type ReadingNoteDefaultRenderer = <
 export function createDefaultReadingNoteCapabilities(
 	note: AnyReadingNoteData,
 ): ReadingNotePresentationCapabilities {
-	const route = narrowReadingNoteRoute(note);
+	const route = readingNoteRouteFor(note);
 	if (!route) {
 		const lemma = note.reading.lemma;
 		throw new Error(

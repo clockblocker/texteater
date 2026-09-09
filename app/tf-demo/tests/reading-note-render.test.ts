@@ -13,26 +13,26 @@ import {
 } from "../src/notes/reading";
 import { ReadingNoteBlockErrorBoundary } from "../src/notes/reading/error-block";
 import { createDefaultReadingNoteCapabilities } from "../src/notes/reading/reading-note-render-context";
-import { narrowReadingNoteRoute } from "../src/notes/reading/reading-note-route";
+import { readingNoteRouteFor } from "../src/notes/reading/reading-note-route";
 import { renderReadingBlockPlan } from "../src/notes/reading/render-reading-note";
 import { rendererFor } from "../src/notes/reading/system-block-catalog";
 import { readingDefinitionMutationArgs } from "../src/views/unit-reading-note-view";
 
 test("narrows each valid Reading route once and rejects unsupported coordinates", () => {
 	const note = readingNoteFixture();
-	expect(narrowReadingNoteRoute(note)).toEqual({
+	expect(readingNoteRouteFor(note)).toEqual({
 		targetLanguage: "de",
 		family: "Lexeme",
 		kind: "NOUN",
 	});
 	expect(
-		narrowReadingNoteRoute(readingNoteFixture({ language: "en" })),
+		readingNoteRouteFor(readingNoteFixture({ language: "en" })),
 	).toBeNull();
 	expect(
-		narrowReadingNoteRoute(readingNoteFixture({ family: "Construction" })),
+		readingNoteRouteFor(readingNoteFixture({ family: "Construction" })),
 	).toBeNull();
 	expect(
-		narrowReadingNoteRoute(readingNoteFixture({ kind: "Unknown" })),
+		readingNoteRouteFor(readingNoteFixture({ kind: "Unknown" })),
 	).toBeNull();
 });
 

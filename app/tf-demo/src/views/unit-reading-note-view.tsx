@@ -31,17 +31,15 @@ import {
 } from "@/lib/reading-definition";
 import { renderNote } from "@/notes";
 import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
-import type {
-	AnyReadingNoteData,
-	ReadingNotePresentationCapabilities,
+import {
+	type AnyReadingNoteData,
+	type ReadingNotePresentationCapabilities,
+	readingNoteRouteFor,
 } from "@/notes/reading";
 import { NotFoundView } from "@/views/not-found-view";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
-import {
-	availableReadingBlocksForRoute,
-	type ReadingBlockRoute,
-} from "../../shared/reading-block-layout";
+import type { ReadingBlockRoute } from "../../shared/reading-block-layout";
 
 export type UnitReadingNote = AnyReadingNoteData;
 
@@ -70,7 +68,7 @@ export function UnitReadingNoteView({
 	}
 	const route =
 		noteQuery.data?.kind === "UnitReadingNote"
-			? readingBlockRoute(noteQuery.data)
+			? readingNoteRouteFor(noteQuery.data)
 			: null;
 	if (
 		noteQuery.data?.kind !== "UnitReadingNote" ||
@@ -278,17 +276,6 @@ function ReadingLayoutLoadFailure({ error }: { error: unknown }) {
 			</div>
 		</div>
 	);
-}
-
-function readingBlockRoute(note: AnyReadingNoteData): ReadingBlockRoute | null {
-	const lemma = note.reading.lemma;
-	if (lemma.language !== "de") return null;
-	const route: ReadingBlockRoute = {
-		targetLanguage: "de",
-		family: lemma.family,
-		kind: lemma.kind,
-	};
-	return availableReadingBlocksForRoute(route) ? route : null;
 }
 
 function mutationMessage(error: unknown): string {

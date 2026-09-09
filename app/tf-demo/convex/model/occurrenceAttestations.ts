@@ -91,7 +91,11 @@ export async function loadCompleteOccurrenceMembers(
 	};
 }
 
-/** Loads and validates every record needed to reconstruct one occurrence. */
+/**
+ * Loads and validates every record needed to reconstruct one occurrence.
+ * Keep this aggregate inferred until callers converge on a stable subset that
+ * earns an explicit `ResolvedOccurrenceFor` interface.
+ */
 export async function loadOccurrenceAttestation(
 	ctx: ServerCtx,
 	attestationId: Id<"attestations">,
