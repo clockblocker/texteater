@@ -2,8 +2,10 @@ import { LoaderCircleIcon } from "lucide-react";
 
 import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
 
-export const renderDefaultReadingSourceContexts = (({ capabilities }) => {
-	const { sourceContexts } = capabilities;
+export const renderDefaultReadingSourceContexts = (({
+	PresentationCapabilities,
+}) => {
+	const { sourceContexts } = PresentationCapabilities;
 	if (
 		sourceContexts.items.length === 0 &&
 		!sourceContexts.hasMore &&
@@ -25,7 +27,9 @@ export const renderDefaultReadingSourceContexts = (({ capabilities }) => {
 							<button
 								type="button"
 								onClick={() =>
-									capabilities.follow(sourceContext.target)
+									PresentationCapabilities.follow(
+										sourceContext.target,
+									)
 								}
 								className="reading-note__context"
 							>

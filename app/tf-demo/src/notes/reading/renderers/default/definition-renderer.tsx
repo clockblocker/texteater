@@ -5,16 +5,22 @@ import type {
 	ReadingNotePresentationCapabilities,
 } from "../../reading-note-render-context";
 
-export const renderReadingDefinition = (({ note, capabilities }) => {
-	if (!capabilities.knowledgeSettings.definition) return null;
-	if (!note.knowledge.definition && !capabilities.definition.save)
+export const renderReadingDefinition = (({
+	noteData,
+	PresentationCapabilities,
+}) => {
+	if (!PresentationCapabilities.knowledgeSettings.definition) return null;
+	if (
+		!noteData.knowledge.definition &&
+		!PresentationCapabilities.definition.save
+	)
 		return null;
 	return (
 		<DefinitionEditor
-			key={note.reading.ownerKey}
-			value={note.knowledge.definition ?? ""}
-			title={note.reading.lemma.canonicalForm}
-			capability={capabilities.definition}
+			key={noteData.reading.ownerKey}
+			value={noteData.knowledge.definition ?? ""}
+			title={noteData.reading.lemma.canonicalForm}
+			capability={PresentationCapabilities.definition}
 		/>
 	);
 }) satisfies ReadingNoteDefaultRenderer;

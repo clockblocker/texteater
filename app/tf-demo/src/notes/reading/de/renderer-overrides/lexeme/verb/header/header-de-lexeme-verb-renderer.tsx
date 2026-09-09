@@ -2,16 +2,19 @@ import type { ReactNode } from "react";
 import type { ReadingNoteBlockRenderer } from "../../../../../reading-note-render-context";
 import { ReadingHeader } from "../../../../../renderers/default/header-renderer";
 
-export const renderHeaderDeLexemeVerb = (({ note, capabilities }) => {
+export const renderHeaderDeLexemeVerb = (({
+	noteData,
+	PresentationCapabilities,
+}) => {
 	const { hasSepPrefix, lexicallyReflexive } =
-		note.reading.lemma.coreFeatures;
+		noteData.reading.lemma.coreFeatures;
 
 	return (
 		<ReadingHeader
-			note={note}
-			capabilities={capabilities}
+			note={noteData}
+			capabilities={PresentationCapabilities}
 			title={verbCanonicalForm(
-				note.reading.lemma.canonicalForm,
+				noteData.reading.lemma.canonicalForm,
 				lexicallyReflexive === "Yes",
 				hasSepPrefix,
 			)}

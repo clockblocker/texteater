@@ -56,9 +56,9 @@ export type ReadingNoteRenderContext<
 	F extends UnitReadingFamilyFor<L>
 		? K extends UnitReadingKindFor<L, F>
 			? {
-					readonly note: ConcreteReadingNoteData<L, F, K>;
-					readonly route: ReadingNoteRouteKey<L, F, K>;
-					readonly capabilities: ReadingNotePresentationCapabilities;
+					readonly noteData: ConcreteReadingNoteData<L, F, K>;
+					readonly RouteKey: ReadingNoteRouteKey<L, F, K>;
+					readonly PresentationCapabilities: ReadingNotePresentationCapabilities;
 				}
 			: never
 		: never;

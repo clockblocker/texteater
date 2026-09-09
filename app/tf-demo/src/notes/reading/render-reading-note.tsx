@@ -22,7 +22,7 @@ export function renderReadingNoteComposition<
 		<div
 			className="reading-note"
 			data-note-presentation={
-				context.capabilities.presentation ?? "Sheet"
+				context.PresentationCapabilities.presentation ?? "Sheet"
 			}
 		>
 			<article
@@ -31,7 +31,7 @@ export function renderReadingNoteComposition<
 			>
 				{renderReadingBlockPlan(context, plan)}
 				{plan.some(({ blockKind }) => blockKind === "Header") ? (
-					<ReadingMetadata lemma={context.note.reading.lemma} />
+					<ReadingMetadata lemma={context.noteData.reading.lemma} />
 				) : null}
 			</article>
 		</div>
@@ -57,7 +57,7 @@ export function renderReadingBlockPlan<
 
 		return [
 			<ReadingNoteBlockErrorBoundary
-				key={`${context.note.reading.ownerKey}:${blockKind}`}
+				key={`${context.noteData.reading.ownerKey}:${blockKind}`}
 				blockKind={blockKind}
 				resetToken={context}
 			>

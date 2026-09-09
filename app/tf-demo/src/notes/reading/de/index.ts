@@ -14,8 +14,8 @@ export function renderGermanReadingNote<
 	K extends UnitReadingKindFor<"de", F>,
 >(context: ReadingNoteRenderContext<"de", F, K>): ReactElement {
 	const plan = resolveReadingBlockPlan(
-		context.route,
-		context.capabilities.blockLayout,
+		context.RouteKey,
+		context.PresentationCapabilities.blockLayout,
 	);
 	return renderReadingNoteComposition(context, plan);
 }

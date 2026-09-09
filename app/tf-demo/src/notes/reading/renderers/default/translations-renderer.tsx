@@ -2,13 +2,18 @@ import { translationLanguageValues } from "dumrel";
 
 import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
 
-export const renderDefaultReadingTranslations = (({ note, capabilities }) => {
+export const renderDefaultReadingTranslations = (({
+	noteData,
+	PresentationCapabilities,
+}) => {
 	const translations = translationLanguageValues.flatMap((language) =>
-		capabilities.knowledgeSettings.translations[language]
-			? (note.knowledge.translations?.[language] ?? []).map((value) => ({
-					language,
-					value,
-				}))
+		PresentationCapabilities.knowledgeSettings.translations[language]
+			? (noteData.knowledge.translations?.[language] ?? []).map(
+					(value) => ({
+						language,
+						value,
+					}),
+				)
 			: [],
 	);
 	if (translations.length === 0) return null;

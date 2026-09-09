@@ -25,12 +25,14 @@ const verbHeader: ReadingNoteBlockRenderer<"de", "Lexeme", "VERB"> = (
 	context,
 ) => {
 	context satisfies ReadingNoteRenderContext<"de", "Lexeme", "VERB">;
-	context.note.reading satisfies Reading<"de", "Lexeme", "VERB">;
-	context.note.reading.lemma.coreFeatures.hasGovPrep satisfies string | null;
-	context.note.reading.lemma.coreFeatures.hasSepPrefix satisfies
+	context.noteData.reading satisfies Reading<"de", "Lexeme", "VERB">;
+	context.noteData.reading.lemma.coreFeatures.hasGovPrep satisfies
 		| string
 		| null;
-	context.note.reading.lemma.coreFeatures.lexicallyReflexive satisfies
+	context.noteData.reading.lemma.coreFeatures.hasSepPrefix satisfies
+		| string
+		| null;
+	context.noteData.reading.lemma.coreFeatures.lexicallyReflexive satisfies
 		| "Yes"
 		| null;
 	return null;
@@ -59,9 +61,9 @@ declare const nounContext: ReadingNoteRenderContext<"de", "Lexeme", "NOUN">;
 const mismatchedVerbContext: ReadingNoteRenderContext<"de", "Lexeme", "VERB"> =
 	{
 		// @ts-expect-error A NOUN-refined Note cannot be paired with a VERB route.
-		note: nounContext.note,
-		route: { targetLanguage: "de", family: "Lexeme", kind: "VERB" },
-		capabilities: nounContext.capabilities,
+		noteData: nounContext.noteData,
+		RouteKey: { targetLanguage: "de", family: "Lexeme", kind: "VERB" },
+		PresentationCapabilities: nounContext.PresentationCapabilities,
 	};
 void mismatchedVerbContext;
 

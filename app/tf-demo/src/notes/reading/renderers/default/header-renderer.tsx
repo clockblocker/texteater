@@ -4,8 +4,11 @@ import type {
 	ReadingNotePresentationCapabilities,
 } from "../../reading-note-render-context";
 
-export const renderDefaultReadingHeader = (({ note, capabilities }) => (
-	<ReadingHeader note={note} capabilities={capabilities} />
+export const renderDefaultReadingHeader = (({
+	noteData,
+	PresentationCapabilities,
+}) => (
+	<ReadingHeader note={noteData} capabilities={PresentationCapabilities} />
 )) satisfies ReadingNoteDefaultRenderer;
 
 export function ReadingHeader({

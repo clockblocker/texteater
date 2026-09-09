@@ -3,16 +3,23 @@ import { LockIcon } from "lucide-react";
 
 import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
 
-export const renderDefaultReadingRelations = (({ note, capabilities }) => {
-	const relations = note.relations.filter(
+export const renderDefaultReadingRelations = (({
+	noteData,
+	PresentationCapabilities,
+}) => {
+	const relations = noteData.relations.filter(
 		({ relation }) =>
-			capabilities.knowledgeSettings.semanticRelations[relation],
+			PresentationCapabilities.knowledgeSettings.semanticRelations[
+				relation
+			],
 	);
-	const pendingRelations = note.pendingRelations.filter(
+	const pendingRelations = noteData.pendingRelations.filter(
 		({ relation }) =>
-			capabilities.knowledgeSettings.semanticRelations[relation],
+			PresentationCapabilities.knowledgeSettings.semanticRelations[
+				relation
+			],
 	);
-	const grammaticalRelations = note.grammaticalRelations ?? [];
+	const grammaticalRelations = noteData.grammaticalRelations ?? [];
 	if (
 		relations.length === 0 &&
 		pendingRelations.length === 0 &&
@@ -43,7 +50,9 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 							<button
 								type="button"
 								onClick={() =>
-									capabilities.follow(relation.target)
+									PresentationCapabilities.follow(
+										relation.target,
+									)
 								}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
@@ -61,7 +70,9 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 							<button
 								type="button"
 								onClick={() =>
-									capabilities.follow(relation.target)
+									PresentationCapabilities.follow(
+										relation.target,
+									)
 								}
 								aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
 								className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
@@ -93,7 +104,9 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 							<button
 								type="button"
 								onClick={() =>
-									capabilities.follow(relation.target)
+									PresentationCapabilities.follow(
+										relation.target,
+									)
 								}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>

@@ -4,8 +4,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { renderNote } from "../src/notes";
 import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 import {
-	type ReadingBlockPlan,
 	type AnyReadingNoteData,
+	type ReadingBlockPlan,
 	type ReadingNotePresentationCapabilities,
 	type ReadingNoteRenderContext,
 	renderReadingNote,
@@ -55,8 +55,8 @@ test("keeps app navigation outside the Note composition while modeled defaults s
 
 	const context = renderContext();
 	const plan = resolveReadingBlockPlan(
-		context.route,
-		context.capabilities.blockLayout,
+		context.RouteKey,
+		context.PresentationCapabilities.blockLayout,
 	);
 	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
 		"Header",
@@ -201,7 +201,7 @@ test("renders Source Context pagination loading and failure state from capabilit
 
 test("resolves configured order and keeps the German VERB Header specialization sparse", () => {
 	const context = renderContext();
-	const plan = resolveReadingBlockPlan(context.route, {
+	const plan = resolveReadingBlockPlan(context.RouteKey, {
 		order: [
 			"Translations",
 			"Relations",
@@ -225,10 +225,10 @@ test("resolves configured order and keeps the German VERB Header specialization 
 		"SourceContexts",
 	]);
 	expect(rendererFor(verbRoute, "Header")).not.toBe(
-		rendererFor(context.route, "Header"),
+		rendererFor(context.RouteKey, "Header"),
 	);
 	expect(rendererFor(verbRoute, "Relations")).toBe(
-		rendererFor(context.route, "Relations"),
+		rendererFor(context.RouteKey, "Relations"),
 	);
 });
 
@@ -462,9 +462,9 @@ function renderContext(
 	const note = readingNoteFixture(route);
 	const kind = route.kind ?? "NOUN";
 	return {
-		note,
-		route: { targetLanguage: "de", family: "Lexeme", kind },
-		capabilities: createDefaultReadingNoteCapabilities(note),
+		noteData: note,
+		RouteKey: { targetLanguage: "de", family: "Lexeme", kind },
+		PresentationCapabilities: createDefaultReadingNoteCapabilities(note),
 	};
 }
 

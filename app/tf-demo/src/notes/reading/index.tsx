@@ -78,7 +78,11 @@ function createRenderContext<
 ): ReadingNoteRenderContext<L, F, K> {
 	// `narrowReadingNoteRoute` validated these exact coordinates against the
 	// exhaustive language map immediately before this helper is called.
-	return { note, route, capabilities } as ReadingNoteRenderContext<L, F, K>;
+	return {
+		noteData: note,
+		RouteKey: route,
+		PresentationCapabilities: capabilities,
+	} as ReadingNoteRenderContext<L, F, K>;
 }
 
 function renderUnconfiguredTargetLanguage(language: never): ReactElement {
