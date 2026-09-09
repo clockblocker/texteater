@@ -14,11 +14,6 @@ export { relationCorpusAdjudications };
  * historical relation experiments planned their calls over the union of the
  * Lexeme and Phraseme development selections; case identities are stable.
  */
-export const relationRetainedCorpora = Object.freeze({
-	lexeme: lexemeCorpus,
-	phraseme: phrasemeCorpus,
-});
-
 export function retainedRelationDevelopmentIds(): readonly string[] {
 	return [
 		...lexemeCorpus.collections.development.ids,

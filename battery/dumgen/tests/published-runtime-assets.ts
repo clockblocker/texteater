@@ -45,8 +45,21 @@ try {
 	mkdirSync(nodeModules, { recursive: true });
 	renameSync(join(temporaryRoot, "package"), join(nodeModules, "dumgen"));
 	assertOperationalDeclarationClosure(join(nodeModules, "dumgen", "dist"));
-	for (const dependency of ["common-utils", "dumdict", "dumling", "dumrel"]) {
-		const source = join(packageRoot, "node_modules", dependency);
+	for (const dependency of [
+		"common-utils",
+		"dumdict",
+		"dumling",
+		"dumrel",
+		"effect",
+	]) {
+		const packageLocalSource = join(
+			packageRoot,
+			"node_modules",
+			dependency,
+		);
+		const source = existsSync(packageLocalSource)
+			? packageLocalSource
+			: resolve(packageRoot, "../..", "node_modules", dependency);
 		if (!existsSync(source))
 			throw new Error(
 				`Missing workspace dependency for smoke test: ${dependency}.`,
@@ -63,10 +76,10 @@ try {
 		smokeScript,
 		[
 			'import { ParsingError, parseAsSegment } from "dumgen";',
-			'import { combinedGermanKnowledgePrompt } from "dumgen/knowledge";',
+			'import { germanKnowledgePromptForFamily } from "dumgen/knowledge";',
 			'const parsed = parseAsSegment({ kind: "Whitespace", text: " " });',
 			'if (parsed instanceof ParsingError) throw new Error("Published parser failed.");',
-			'if (combinedGermanKnowledgePrompt.prompt.systemPrompt.length === 0) throw new Error("Published prompt failed.");',
+			'if (germanKnowledgePromptForFamily("Lexeme").prompt.systemPrompt.length === 0) throw new Error("Published prompt failed.");',
 		].join("\n"),
 	);
 	for (const executable of ["bun", "node"])

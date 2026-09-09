@@ -1,7 +1,7 @@
 import { parseRuntimePromptRoot } from "../catalog/runtime-prompt-validation.js";
 import type { GermanKnowledgeFamily } from "../knowledge-generation/de/families";
 
-export type KnowledgeRuntimeSchemaRoot =
+type KnowledgeRuntimeSchemaRoot =
 	| `knowledge.de.${GermanKnowledgeFamily}#input`
 	| `knowledge.de.${GermanKnowledgeFamily}#output`;
 

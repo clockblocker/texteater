@@ -64,7 +64,7 @@ export const canonicalInputSchema = z
 
 const memberSegmentIndices = z.array(z.number().int().nonnegative()).min(1);
 
-export const canonicalTargetSchema = z.discriminatedUnion("family", [
+const canonicalTargetSchema = z.discriminatedUnion("family", [
 	z.strictObject({
 		family: z.literal("Lexeme"),
 		kind: z.enum(GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Lexeme),

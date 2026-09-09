@@ -7,8 +7,6 @@ import {
 	defineGoldenCaseCollection,
 	defineGoldenCorpus,
 } from "../../../../../assembly";
-import { sealUntouchedAcceptanceReservation } from "../../acceptance-reservation";
-import { relationCorpusAdjudications } from "../../retained-cases";
 import {
 	goldenCasesFor,
 	retainedCasesForFamily,
@@ -46,8 +44,3 @@ assertCaseSelectionsUncontaminated({
 	),
 	evaluation: corpus.collections.acceptance,
 });
-
-export const untouchedAcceptanceReservation =
-	sealUntouchedAcceptanceReservation(corpus.collections.acceptance);
-
-export { relationCorpusAdjudications };

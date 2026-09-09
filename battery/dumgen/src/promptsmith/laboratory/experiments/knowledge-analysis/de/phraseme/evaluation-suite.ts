@@ -8,9 +8,3 @@ export const phrasemeGermanKnowledgeDevelopmentExperiment = defineExperiment({
 	evaluation: corpus.collections.development,
 	evaluator: evaluateCombinedGermanKnowledge,
 });
-
-export const phrasemeGermanKnowledgeAcceptanceExperiment = defineExperiment({
-	promptSource,
-	evaluation: corpus.collections.acceptance,
-	evaluator: evaluateCombinedGermanKnowledge,
-});

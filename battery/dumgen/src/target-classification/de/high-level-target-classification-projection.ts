@@ -4,7 +4,7 @@ import type {
 } from "../../schema/german-high-level-routes.js";
 import type { Segment, Unresolved } from "../../types.js";
 
-export type GermanHighLevelTargetClassificationRoute = {
+type GermanHighLevelTargetClassificationRoute = {
 	readonly [Family in GermanReachableHighLevelFamily]: {
 		readonly family: Family;
 		readonly kind: Exclude<

@@ -42,7 +42,7 @@ export type GenerationFailureInput = GenerationFailureMetadata & {
 	readonly retryable?: boolean;
 };
 
-export function generationFailureCategoryIsRetryable(
+function generationFailureCategoryIsRetryable(
 	category: GenerationFailureCategory,
 ): category is RetryableGenerationFailureCategory {
 	return (

@@ -16,11 +16,11 @@ import OpenAI from "openai";
 
 import type { GermanKnowledgeAnalysis } from "../../../src/knowledge-generation/de/schemas";
 import { stableJson } from "../../../src/promptsmith/assembly";
+import { analyzeCombinedGermanKnowledgeCase } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator";
 import {
 	createGermanRelationEvaluationReport,
 	type GermanRelationEvaluationRun,
-} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report";
-import { analyzeCombinedGermanKnowledgeCase } from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator";
+} from "../../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report";
 import {
 	actualCostNanoUsd,
 	canonicalizeRelationOutput,

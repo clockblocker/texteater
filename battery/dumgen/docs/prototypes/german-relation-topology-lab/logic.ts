@@ -32,14 +32,14 @@ import {
 	retainedRelationDevelopmentIds,
 } from "../../../src/promptsmith/production/knowledge-analysis/de/retained-relation-corpora";
 
-export const LAB_QUESTION =
+const LAB_QUESTION =
 	"Which combined/dedicated and batching/grouping prompt topology yields conservative, stable, precision-first German relation proposals under the frozen semantic evaluator?";
 
-export const LAB_MODEL = "gpt-5.6-luna" as const;
-export const LAB_REASONING_EFFORT = "none" as const;
-export const LAB_ITERATIONS = 6;
+const LAB_MODEL = "gpt-5.6-luna" as const;
+const LAB_REASONING_EFFORT = "none" as const;
+const LAB_ITERATIONS = 6;
 export const LAB_BUDGET_NANO_USD = 5_000_000_000;
-export const LONG_CONTEXT_THRESHOLD_TOKENS = 272_000;
+const LONG_CONTEXT_THRESHOLD_TOKENS = 272_000;
 export const INPUT_TOKEN_OVERHEAD_ALLOWANCE = 2_048;
 
 /**
@@ -65,7 +65,7 @@ export const LAB_TOPOLOGIES = [
 export type LabTopology = (typeof LAB_TOPOLOGIES)[number];
 
 /** Disclosed development cases only. No acceptance reservation is imported. */
-export const LAB_DEVELOPMENT_CASE_IDS = [
+const LAB_DEVELOPMENT_CASE_IDS = [
 	"relation-basic-01-hubschrauber",
 	"relation-basic-02-sichtbar",
 	"relation-adv-01-bank-finance",

@@ -9,7 +9,6 @@ import {
 	defineGoldenCorpus,
 } from "../../../../../assembly";
 import { sealUntouchedAcceptanceReservation } from "../../acceptance-reservation";
-import { relationCorpusAdjudications } from "../../retained-cases";
 import {
 	goldenCasesFor,
 	retainedCasesForFamily,
@@ -55,5 +54,3 @@ assertCaseSelectionsUncontaminated({
 
 export const untouchedAcceptanceReservation =
 	sealUntouchedAcceptanceReservation(corpus.collections.acceptance);
-
-export { relationCorpusAdjudications };

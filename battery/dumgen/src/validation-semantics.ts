@@ -100,7 +100,7 @@ export function knowledgeGenerationResultIssues(result: {
 	return issues;
 }
 
-export function bindKnowledgeGenerationResult(
+function bindKnowledgeGenerationResult(
 	result: unknown,
 ): KnowledgeGenerationSuccess {
 	return result as KnowledgeGenerationSuccess;
@@ -155,7 +155,7 @@ export function normalizeReadingLemma(value: unknown): unknown {
 		: value;
 }
 
-export function deepFreeze<Value>(value: Value): Value {
+function deepFreeze<Value>(value: Value): Value {
 	if (typeof value !== "object" || value === null) return value;
 	for (const child of Object.values(value)) deepFreeze(child);
 	return Object.isFrozen(value) ? value : Object.freeze(value);
