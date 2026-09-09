@@ -92,7 +92,7 @@ function renderApplicationSubject(
 					target={target}
 				/>
 			);
-		case "UnitReadingNote":
+		case "Reading":
 			return (
 				<UnitReadingNoteView
 					key={target.readingId}
@@ -100,14 +100,24 @@ function renderApplicationSubject(
 					presentation={presentation}
 				/>
 			);
-		case "RouteNote":
+		case "Lemma":
+		case "Surface":
+		case "Attestation":
 			return (
 				<RouteNoteView
-					key={`${target.routeKind}:${target.id}`}
+					key={noteTargetKey(target)}
 					target={target}
+					presentation={presentation}
+					activeAnalysisKey={
+						target.kind === "Surface"
+							? "presentationContext" in subject
+								? subject.presentationContext?.activeAnalysisKey
+								: undefined
+							: undefined
+					}
 				/>
 			);
-		case "ShadowNote":
+		case "Shadow":
 			return <ShadowNoteView key={target.shadowId} target={target} />;
 		case "Resolution":
 			return (
@@ -128,16 +138,36 @@ function renderCardTail(subject: WorkspaceSubject) {
 	switch (target.kind) {
 		case "Text":
 			return "Text";
-		case "UnitReadingNote":
+		case "Reading":
 			return "Reading";
-		case "RouteNote":
-			return target.routeKind;
-		case "ShadowNote":
+		case "Lemma":
+			return "Lemma";
+		case "Surface":
+			return "Surface";
+		case "Attestation":
+			return "Attestation";
+		case "Shadow":
 			return "Shadow";
 		case "Resolution":
 			return "Resolving";
 		case "ResolutionStep":
 			return target.stepKind;
+	}
+}
+
+function noteTargetKey(
+	target: Extract<
+		WorkspaceSubject["target"],
+		{ readonly kind: "Lemma" | "Surface" | "Attestation" }
+	>,
+): string {
+	switch (target.kind) {
+		case "Lemma":
+			return `Lemma:${target.lemmaId}`;
+		case "Surface":
+			return `Surface:${target.language}:${target.normalizedSurface}`;
+		case "Attestation":
+			return `Attestation:${target.attestationId}`;
 	}
 }
 

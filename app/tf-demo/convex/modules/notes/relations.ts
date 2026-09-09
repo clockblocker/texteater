@@ -50,12 +50,11 @@ export const relationProjectionValidator = v.object({
 	provenance: v.union(v.literal("direct"), v.literal("inferred")),
 	target: v.union(
 		v.object({
-			kind: v.literal("RouteNote"),
-			routeKind: v.literal("Lemma"),
-			id: v.id("lemmas"),
+			kind: v.literal("Lemma"),
+			lemmaId: v.id("lemmas"),
 		}),
 		v.object({
-			kind: v.literal("UnitReadingNote"),
+			kind: v.literal("Reading"),
 			readingId: v.id("readings"),
 		}),
 	),
@@ -70,7 +69,7 @@ export const grammaticalRelationProjectionValidator = v.object({
 	targetCanonicalForm: v.string(),
 	provenance: v.union(v.literal("direct"), v.literal("inferred")),
 	target: v.object({
-		kind: v.literal("UnitReadingNote"),
+		kind: v.literal("Reading"),
 		readingId: v.id("readings"),
 	}),
 });
@@ -80,7 +79,7 @@ export type GrammaticalRelationProjection<ReadingId extends string = string> = {
 	readonly targetCanonicalForm: string;
 	readonly provenance: "direct" | "inferred";
 	readonly target: {
-		readonly kind: "UnitReadingNote";
+		readonly kind: "Reading";
 		readonly readingId: ReadingId;
 	};
 };
@@ -112,11 +111,10 @@ export type RelationProjection<
 	readonly provenance: "direct" | "inferred";
 	readonly target:
 		| {
-				readonly kind: "RouteNote";
-				readonly routeKind: "Lemma";
-				readonly id: LemmaId;
+				readonly kind: "Lemma";
+				readonly lemmaId: LemmaId;
 		  }
-		| { readonly kind: "UnitReadingNote"; readonly readingId: ReadingId };
+		| { readonly kind: "Reading"; readonly readingId: ReadingId };
 };
 
 export function flattenDirectSemanticRelations(
@@ -187,9 +185,8 @@ export function projectResolvedRelationTargets<LemmaId extends string>(
 						{
 							...relation,
 							target: {
-								kind: "RouteNote",
-								routeKind: "Lemma",
-								id: lemmaId,
+								kind: "Lemma",
+								lemmaId,
 							},
 						},
 					]
@@ -608,7 +605,7 @@ export async function loadRelationProjections(
 					projection.targetReading.lemma.canonicalForm,
 				provenance: projection.provenance,
 				target: {
-					kind: "UnitReadingNote",
+					kind: "Reading",
 					readingId: targetDoc._id,
 				},
 			});
@@ -637,9 +634,8 @@ export async function loadRelationProjections(
 			targetCanonicalForm: targetDoc.canonicalForm,
 			provenance: projection.provenance,
 			target: {
-				kind: "RouteNote",
-				routeKind: "Lemma",
-				id: targetDoc._id,
+				kind: "Lemma",
+				lemmaId: targetDoc._id,
 			},
 		});
 		const bucket = knowledge[projection.relation];
@@ -706,7 +702,7 @@ export async function loadGrammaticalRelationProjections(
 			targetCanonicalForm: targetLemma.canonicalForm,
 			provenance: candidate.provenance,
 			target: {
-				kind: "UnitReadingNote",
+				kind: "Reading",
 				readingId: candidate.targetReadingId,
 			},
 		};

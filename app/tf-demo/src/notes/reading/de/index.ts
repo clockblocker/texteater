@@ -8,7 +8,7 @@ import type {
 } from "../reading-note-route";
 import { renderReadingNoteComposition } from "../render-reading-note";
 
-/** Deep German Unit Reading Note rendering seam. */
+/** Deep German Reading Note rendering seam. */
 export function renderGermanReadingNote<
 	F extends UnitReadingFamilyFor<"de">,
 	K extends UnitReadingKindFor<"de", F>,

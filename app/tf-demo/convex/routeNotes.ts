@@ -4,16 +4,24 @@ import { query } from "./_generated/server";
 import { loadRouteNote, routeNoteValidator } from "./modules/notes/routeNotes";
 
 export const get = query({
-	args: {
-		routeKind: v.union(
-			v.literal("Attestation"),
-			v.literal("Surface"),
-			v.literal("Lemma"),
-		),
-		id: v.string(),
-		contextCursor: v.optional(v.string()),
-	},
+	args: v.union(
+		v.object({
+			kind: v.literal("Attestation"),
+			attestationId: v.string(),
+			contextCursor: v.optional(v.string()),
+		}),
+		v.object({
+			kind: v.literal("Surface"),
+			language: v.literal("de"),
+			normalizedSurface: v.string(),
+			contextCursor: v.optional(v.string()),
+		}),
+		v.object({
+			kind: v.literal("Lemma"),
+			lemmaId: v.string(),
+			contextCursor: v.optional(v.string()),
+		}),
+	),
 	returns: v.union(v.null(), routeNoteValidator),
-	handler: async (ctx, { routeKind, id, contextCursor }) =>
-		loadRouteNote(ctx, { kind: "RouteNote", routeKind, id }, contextCursor),
+	handler: async (ctx, args) => loadRouteNote(ctx, args, args.contextCursor),
 });

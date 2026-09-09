@@ -87,28 +87,36 @@ const routeNoteHandler = (
 	}
 )._handler;
 
+type NoteTarget =
+	| { kind: "Attestation"; attestationId: string }
+	| { kind: "Surface"; language: "de"; normalizedSurface: string }
+	| { kind: "Lemma"; lemmaId: string };
+
 const routeNote = (
 	ctx: unknown,
 	{
 		target,
 		contextCursor,
 	}: {
-		target: { routeKind: "Attestation" | "Surface" | "Lemma"; id: string };
+		target: NoteTarget;
 		contextCursor?: string;
 	},
 ) =>
 	routeNoteHandler(ctx, {
-		routeKind: target.routeKind,
-		id: target.id,
+		...target,
 		...(contextCursor ? { contextCursor } : {}),
 	});
 
-test("Route Note IDs are strict across Attestation, Surface, and Lemma kinds", async () => {
+test("Note locators are strict across Attestation, Surface, and Lemma kinds", async () => {
 	const db = new RouteDb({});
 	for (const target of [
-		{ kind: "RouteNote", routeKind: "Attestation", id: "surface-1" },
-		{ kind: "RouteNote", routeKind: "Surface", id: "lemma-1" },
-		{ kind: "RouteNote", routeKind: "Lemma", id: "attestation-1" },
+		{ kind: "Attestation", attestationId: "surface-1" } as const,
+		{
+			kind: "Surface",
+			language: "de",
+			normalizedSurface: "missing",
+		} as const,
+		{ kind: "Lemma", lemmaId: "attestation-1" } as const,
 	]) {
 		expect(await routeNote({ db }, { target })).toBeNull();
 	}
@@ -182,9 +190,8 @@ test("Attestation Route Note preserves ordered members and reaches Surface and R
 		{ db },
 		{
 			target: {
-				kind: "RouteNote",
-				routeKind: "Attestation",
-				id: "attestation-1",
+				kind: "Attestation",
+				attestationId: "attestation-1",
 			},
 		},
 	)) as {
@@ -199,12 +206,12 @@ test("Attestation Route Note preserves ordered members and reaches Surface and R
 	]);
 	expect(note.source.memberSegmentIndices).toEqual([1, 3]);
 	expect(note.surfaceTarget).toEqual({
-		kind: "RouteNote",
-		routeKind: "Surface",
-		id: "surface-1",
+		kind: "Surface",
+		language: "de",
+		normalizedSurface: "steht auf",
 	});
 	expect(note.reading.target).toEqual({
-		kind: "UnitReadingNote",
+		kind: "Reading",
 		readingId: "reading-1",
 	});
 });
@@ -232,9 +239,8 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 		readings,
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-1",
+		kind: "Lemma",
+		lemmaId: "lemma-1",
 	});
 	const projectedReadings = pages.flatMap(
 		(page) => page.connections.readings,
@@ -277,9 +283,8 @@ test("jemand Lemma navigation infers all four persisted case Surfaces", async ()
 	});
 
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-jemand",
+		kind: "Lemma",
+		lemmaId: "lemma-jemand",
 	});
 	expect(
 		pages
@@ -318,9 +323,8 @@ test("niemand Lemma navigation infers all four persisted case Surfaces", async (
 	});
 
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-niemand",
+		kind: "Lemma",
+		lemmaId: "lemma-niemand",
 	});
 	expect(
 		pages
@@ -370,9 +374,8 @@ test("keiner Lemma navigation exposes all sixteen persisted Surface analyses", a
 		],
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-keiner",
+		kind: "Lemma",
+		lemmaId: "lemma-keiner",
 	});
 	expect(
 		pages
@@ -405,9 +408,8 @@ test("jedermann Lemma navigation exposes its four case Surfaces", async () => {
 		],
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-jedermann",
+		kind: "Lemma",
+		lemmaId: "lemma-jedermann",
 	});
 	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(4);
 	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
@@ -448,9 +450,8 @@ test("mancher Lemma navigation exposes all sixteen persisted analyses", async ()
 		],
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-mancher",
+		kind: "Lemma",
+		lemmaId: "lemma-mancher",
 	});
 	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(16);
 	expect(pages.flatMap((page) => page.connections.readings)).toHaveLength(1);
@@ -476,9 +477,8 @@ test("nichts Lemma navigation exposes canonical nichts and Variant nix Surfaces"
 	});
 
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-nichts",
+		kind: "Lemma",
+		lemmaId: "lemma-nichts",
 	});
 	expect(
 		pages
@@ -525,9 +525,8 @@ test("jeder Lemma navigation exposes all twelve syncretic Surface analyses", asy
 		],
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-jeder",
+		kind: "Lemma",
+		lemmaId: "lemma-jeder",
 	});
 	expect(
 		pages
@@ -579,9 +578,8 @@ test("jedweder Lemma navigation exposes its own twelve Surface analyses", async 
 		],
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-jedweder",
+		kind: "Lemma",
+		lemmaId: "lemma-jedweder",
 	});
 	expect(
 		pages
@@ -636,9 +634,8 @@ test("jeglicher Lemma navigation exposes all sixteen singular and plural Surface
 		],
 	});
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-jeglicher",
+		kind: "Lemma",
+		lemmaId: "lemma-jeglicher",
 	});
 	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(16);
 });
@@ -673,14 +670,12 @@ test("total Lemma navigation keeps singular and plural Surface paradigms separat
 	});
 
 	const allesPages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-alles",
+		kind: "Lemma",
+		lemmaId: "lemma-alles",
 	});
 	const allePages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-alle",
+		kind: "Lemma",
+		lemmaId: "lemma-alle",
 	});
 	expect(
 		allesPages
@@ -718,9 +713,8 @@ test("plural-only mehrere Lemma navigation exposes all four distinct Case Surfac
 	});
 
 	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: "lemma-mehrere",
+		kind: "Lemma",
+		lemmaId: "lemma-mehrere",
 	});
 	expect(
 		pages
@@ -737,94 +731,94 @@ test("plural-only mehrere Lemma navigation exposes all four distinct Case Surfac
 	]);
 });
 
-test("Surface pages expose every occurrence and 100 distinct exact same-written-form peers", async () => {
-	const attestations = Array.from({ length: 51 }, (_, index) => ({
-		_id: `attestation-${index}`,
-		surfaceId: "surface-0",
-		readingId: "reading-0",
-		realizationCoverage: "Full",
-	}));
-	const sentences = attestations.map((_, index) => ({
-		_id: `sentence-${index}`,
-		textId: "text-1",
-		position: index,
-		stitchedText: `Bank ${index}`,
-	}));
-	const segments = attestations.map((attestation, index) => ({
-		_id: `segment-${index}`,
-		sentenceId: `sentence-${index}`,
-		index: 0,
-		kind: "ResolvableText",
-		text: "Bank",
-		attestationMembership: {
-			attestationId: attestation._id,
-			orthography: "Standard",
-		},
-	}));
-	const peerLemmas = Array.from({ length: 100 }, (_, index) =>
-		lemma(`lemma-${index + 1}`, "de", "Bank", "Lexeme", `KIND-${index}`),
-	);
-	const peerSurfaces = peerLemmas.map((peer, index) =>
-		surface(`surface-${index + 1}`, peer._id, "de", "Bank"),
-	);
+test("Surface Note aggregates heterogeneous typed analyses of one written form", async () => {
 	const db = new RouteDb({
-		texts: [{ _id: "text-1", sourceText: "Bank" }],
-		sentences,
-		segments,
 		lemmas: [
-			lemma("lemma-0", "de", "Bank", "Lexeme", "NOUN"),
-			lemma("lemma-construction", "de", "Bank", "Construction", "CLAUSE"),
-			...peerLemmas,
-			lemma("lemma-foreign", "he", "Bank", "Lexeme", "NOUN"),
+			lemma("lemma-noun", "de", "Bank", "Lexeme", "NOUN"),
+			lemma("lemma-verb", "de", "banken", "Lexeme", "VERB"),
 		],
 		surfaces: [
-			surface("surface-0", "lemma-0", "de", "Bank"),
-			surface("surface-construction", "lemma-construction", "de", "Bank"),
-			...peerSurfaces,
-			surface("surface-foreign", "lemma-foreign", "he", "Bank"),
+			surface("surface-noun", "lemma-noun", "de", "Bank"),
+			surface("surface-verb", "lemma-verb", "de", "Bank"),
 		],
-		readings: [
-			{ _id: "reading-0", lemmaId: "lemma-0", emojiDescription: "🏦" },
-		],
-		attestations,
 	});
-	const firstPage = (await routeNote(
+	const note = (await routeNote(
 		{ db },
 		{
 			target: {
-				kind: "RouteNote",
-				routeKind: "Surface",
-				id: "surface-0",
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "Bank",
 			},
 		},
 	)) as {
-		presented: {
-			surfaceFeatures: unknown;
-			inflectionalFeatures: unknown;
-		};
+		kind: "Surface";
+		target: { kind: "Surface"; language: "de"; normalizedSurface: string };
+		analyses: Array<{
+			analysisKey: string;
+			surfaceId: string;
+			lemmaId: string;
+			presented: {
+				lemma: { family: string; kind: string; canonicalForm: string };
+				surfaceFeatures: unknown;
+				inflectionalFeatures: unknown;
+			};
+			lemmaTarget: { kind: "Lemma"; lemmaId: string };
+		}>;
 	};
-	expect(firstPage.presented.surfaceFeatures).toEqual({
-		historicalStatus: null,
+	expect(note.target).toEqual({
+		kind: "Surface",
+		language: "de",
+		normalizedSurface: "Bank",
 	});
-	expect(typeof firstPage.presented.inflectionalFeatures).toBe("object");
-	expect(firstPage.presented.inflectionalFeatures).not.toBeNull();
-	expect(
-		Object.keys(firstPage.presented.inflectionalFeatures as object),
-	).toEqual(presentedFeatureNames);
-	const pages = await exhaustRoutePages(db, {
-		kind: "RouteNote",
-		routeKind: "Surface",
-		id: "surface-0",
-	});
-	expect(pages.flatMap((page) => page.connections.occurrences)).toHaveLength(
-		51,
-	);
-	expect(
-		pages.flatMap((page) => page.connections.sameWrittenForm),
-	).toHaveLength(100);
+	expect(note.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
+		"surface-noun",
+		"surface-verb",
+	]);
+	expect(note.analyses.map(({ presented }) => presented.lemma.kind)).toEqual([
+		"NOUN",
+		"VERB",
+	]);
+	for (const analysis of note.analyses) {
+		expect(analysis.analysisKey).toBe(analysis.surfaceId);
+		expect(analysis.lemmaTarget).toEqual({
+			kind: "Lemma",
+			lemmaId: analysis.lemmaId,
+		});
+		expect(analysis.presented.surfaceFeatures).toEqual({
+			historicalStatus: null,
+		});
+		expect(
+			Object.keys(analysis.presented.inflectionalFeatures as object),
+		).toEqual(presentedFeatureNames);
+	}
 	expect(db.indexedQueries).toContain(
 		"surfaces.by_language_and_normalized_surface",
 	);
+});
+
+test("Surface Note rejects an aggregate beyond its explicit analysis bound", async () => {
+	const lemmas = Array.from({ length: 101 }, (_, index) =>
+		lemma(`lemma-${index}`, "de", `Bank-${index}`, "Lexeme", "NOUN"),
+	);
+	const db = new RouteDb({
+		lemmas,
+		surfaces: lemmas.map((entry, index) =>
+			surface(`surface-${index}`, entry._id, "de", "Bank"),
+		),
+	});
+	await expect(
+		routeNote(
+			{ db },
+			{
+				target: {
+					kind: "Surface",
+					language: "de",
+					normalizedSurface: "Bank",
+				},
+			},
+		),
+	).rejects.toThrow("A Surface Note supports at most 100 analyses.");
 });
 
 test("homographic demonstrative and relative Lemma navigation keeps exact Readings separate", async () => {
@@ -853,9 +847,8 @@ test("homographic demonstrative and relative Lemma navigation keeps exact Readin
 
 	for (const pronType of ["dem", "rel"] as const) {
 		const pages = await exhaustRoutePages(db, {
-			kind: "RouteNote",
-			routeKind: "Lemma",
-			id: `lemma-${pronType}-der`,
+			kind: "Lemma",
+			lemmaId: `lemma-${pronType}-der`,
 		});
 		expect(
 			pages
@@ -909,19 +902,22 @@ test("Construction records and derived links are consistently unavailable", asyn
 		],
 	});
 	for (const target of [
-		{ kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		{ kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
+		{ kind: "Lemma", lemmaId: "lemma-1" } as const,
 		{
-			kind: "RouteNote",
-			routeKind: "Attestation",
-			id: "attestation-1",
-		},
+			kind: "Surface",
+			language: "de",
+			normalizedSurface: "dass",
+		} as const,
+		{
+			kind: "Attestation",
+			attestationId: "attestation-1",
+		} as const,
 	]) {
 		expect(await routeNote({ db }, { target })).toBeNull();
 	}
 });
 
-async function exhaustRoutePages(db: RouteDb, target: Record<string, unknown>) {
+async function exhaustRoutePages(db: RouteDb, target: NoteTarget) {
 	const pages: CollectedRoutePage[] = [];
 	let cursor: string | undefined;
 	for (let pageNumber = 0; pageNumber < 30; pageNumber += 1) {

@@ -3,6 +3,7 @@ import { DEFAULT_KNOWLEDGE_SETTINGS, type KnowledgeSettings } from "dumrel";
 import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import { defaultNoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
 import type { TargetLanguage } from "../target-language";
 import type { ReadingBlockLayout } from "./reading-block-plan";
@@ -14,7 +15,7 @@ import type {
 import { readingNoteRouteFor } from "./reading-note-route";
 import { availableBlocksFor } from "./system-block-catalog";
 
-type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
+type AnyReadingNoteData = NoteDataFor<"Reading">;
 type SourceContext = AnyReadingNoteData["sourceContexts"]["page"][number];
 
 type ConcreteReadingNoteData<
@@ -89,10 +90,7 @@ export function createDefaultReadingNoteCapabilities(
 	}
 
 	return {
-		blockLayout: {
-			order: availableBlocksFor(route),
-			hidden: new Set(),
-		},
+		blockLayout: defaultNoteBlockLayout(availableBlocksFor(route)),
 		knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
 		sourceContexts: {
 			items: note.sourceContexts.page,

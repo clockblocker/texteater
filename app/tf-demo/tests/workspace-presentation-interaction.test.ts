@@ -17,7 +17,7 @@ import {
 const note: WorkspaceSubject = {
 	kind: "Note",
 	target: {
-		kind: "UnitReadingNote",
+		kind: "Reading",
 		readingId: "workspace-note:reading:1:6",
 	},
 };

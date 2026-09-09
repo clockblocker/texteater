@@ -1,11 +1,15 @@
 export type {
+	AttestationNoteTarget,
+	LemmaNoteTarget,
 	LibraryTarget,
 	NavigationTarget,
+	NoteTarget,
+	ReadingNoteTarget,
 	ResolutionTarget,
-	RouteNoteKind,
 	RouteNoteTarget,
 	SettingsTarget,
 	ShadowNoteTarget,
+	SurfaceNoteTarget,
 	TextTarget,
 	UnitReadingNoteTarget,
 } from "../../shared/navigation";

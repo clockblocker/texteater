@@ -477,7 +477,7 @@ describe("Shadow backfills and presentation", () => {
 
 		const note = (await handler(getShadowNote)(
 			{ db },
-			{ target: { kind: "ShadowNote", shadowId } },
+			{ target: { kind: "Shadow", shadowId } },
 		)) as Record<string, unknown> & {
 			references: {
 				continueCursor: string;
@@ -487,14 +487,14 @@ describe("Shadow backfills and presentation", () => {
 				}>;
 			};
 		};
-		expect(note.kind).toBe("ShadowNote");
+		expect(note.kind).toBe("Shadow");
 		expect(note.references.page).toHaveLength(1);
 		expect(note.references.page[0]?.pendingRelations).toHaveLength(1);
 		expect(note.references.page[0]?.structuralReferences).toHaveLength(0);
 		const structuralPage = (await handler(getShadowNote)(
 			{ db },
 			{
-				target: { kind: "ShadowNote", shadowId },
+				target: { kind: "Shadow", shadowId },
 				contextCursor: note.references.continueCursor,
 			},
 		)) as typeof note;
@@ -509,7 +509,7 @@ describe("Shadow backfills and presentation", () => {
 		expect(
 			await handler(getShadowNote)(
 				{ db },
-				{ target: { kind: "ShadowNote", shadowId } },
+				{ target: { kind: "Shadow", shadowId } },
 			),
 		).toBeNull();
 		expect(db.rows("shadows").some(({ _id }) => _id === shadowId)).toBe(
@@ -560,7 +560,7 @@ describe("Shadow backfills and presentation", () => {
 		}
 		const first = (await handler(getShadowNote)(
 			{ db },
-			{ target: { kind: "ShadowNote", shadowId } },
+			{ target: { kind: "Shadow", shadowId } },
 		)) as {
 			references: {
 				page: Array<{ pendingRelations: unknown[] }>;
@@ -573,7 +573,7 @@ describe("Shadow backfills and presentation", () => {
 		const second = (await handler(getShadowNote)(
 			{ db },
 			{
-				target: { kind: "ShadowNote", shadowId },
+				target: { kind: "Shadow", shadowId },
 				contextCursor: first.references.continueCursor,
 			},
 		)) as typeof first;
@@ -653,7 +653,7 @@ describe("Shadow backfills and presentation", () => {
 
 		const note = (await handler(getShadowNote)(
 			{ db },
-			{ target: { kind: "ShadowNote", shadowId } },
+			{ target: { kind: "Shadow", shadowId } },
 		)) as {
 			inspection: {
 				revision: string;
@@ -677,13 +677,13 @@ describe("Shadow backfills and presentation", () => {
 		await db.delete("dictionary-candidate-2");
 		const one = (await handler(getShadowNote)(
 			{ db },
-			{ target: { kind: "ShadowNote", shadowId } },
+			{ target: { kind: "Shadow", shadowId } },
 		)) as typeof note;
 		expect(one.inspection.candidates).toHaveLength(1);
 		await db.delete("dictionary-candidate-1");
 		const zero = (await handler(getShadowNote)(
 			{ db },
-			{ target: { kind: "ShadowNote", shadowId } },
+			{ target: { kind: "Shadow", shadowId } },
 		)) as typeof note;
 		expect(zero.inspection.candidates).toEqual([]);
 	});
@@ -750,7 +750,7 @@ describe("Shadow backfills and presentation", () => {
 		});
 		const note = (await handler(getShadowNote)(
 			{ db },
-			{ target: { kind: "ShadowNote", shadowId } },
+			{ target: { kind: "Shadow", shadowId } },
 		)) as { inspection: { candidates: unknown[] } };
 		expect(note.inspection.candidates).toEqual([]);
 	});

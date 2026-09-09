@@ -1,12 +1,15 @@
 import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { NoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
 
-export type ShadowNoteData = NoteDataFor<"ShadowNote">;
+export type ShadowNoteData = NoteDataFor<"Shadow">;
 export type ShadowNoteReferrer = ShadowNoteData["references"]["page"][number];
 
 export type ShadowNotePresentationCapabilities = {
+	readonly presentation?: "Card" | "Sheet";
+	readonly blockLayout?: NoteBlockLayout;
 	readonly references: {
 		readonly items: readonly ShadowNoteReferrer[];
 		readonly hasMore: boolean;

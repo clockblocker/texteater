@@ -230,7 +230,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 	};
 
 	expect(queriedTables).not.toContain("knowledgeSettings");
-	expect(note.kind).toBe("UnitReadingNote");
+	expect(note.kind).toBe("Reading");
 	expect(note.reading.lemma.coreFeatures).toEqual(sourceLemma.coreFeatures);
 	expect(note.knowledge).toMatchObject({
 		transcription: "aʊ̯fˌpasn̩",
@@ -287,18 +287,16 @@ test("projects stored semantic endpoints as Lemma Route Note targets", () => {
 			relation: "hypernym",
 			targetCanonicalForm: "Institut",
 			target: {
-				kind: "RouteNote",
-				routeKind: "Lemma",
-				id: "lemma_123",
+				kind: "Lemma",
+				lemmaId: "lemma_123",
 			},
 		},
 		{
 			relation: "antonym",
 			targetCanonicalForm: "Sparkasse",
 			target: {
-				kind: "RouteNote",
-				routeKind: "Lemma",
-				id: "lemma_456",
+				kind: "Lemma",
+				lemmaId: "lemma_456",
 			},
 		},
 	]);

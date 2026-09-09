@@ -27,7 +27,7 @@ export function renderReadingNoteComposition<
 		>
 			<article
 				className="reading-note__article"
-				aria-label="Reading note"
+				aria-label="Reading Note"
 			>
 				{renderReadingBlockPlan(context, plan)}
 				{plan.some(({ blockKind }) => blockKind === "Header") ? (

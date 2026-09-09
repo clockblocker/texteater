@@ -80,9 +80,8 @@ describe("live workspace session", () => {
 				subject: {
 					kind: "Note",
 					target: {
-						kind: "RouteNote",
-						routeKind: "Attestation",
-						id: "attestation-1",
+						kind: "Attestation",
+						attestationId: "attestation-1",
 					},
 				},
 			},
@@ -93,7 +92,7 @@ describe("live workspace session", () => {
 			locked: true,
 			subject: {
 				kind: "Note",
-				target: { kind: "RouteNote", id: "attestation-1" },
+				target: { kind: "Attestation", attestationId: "attestation-1" },
 			},
 		});
 	});
@@ -150,7 +149,7 @@ describe("live workspace session", () => {
 			},
 			subject: {
 				kind: "Note",
-				target: { kind: "UnitReadingNote", readingId: "reading-1" },
+				target: { kind: "Reading", readingId: "reading-1" },
 			},
 		});
 
@@ -159,7 +158,7 @@ describe("live workspace session", () => {
 			key: card.key,
 			subject: {
 				kind: "Note",
-				target: { kind: "UnitReadingNote", readingId: "reading-1" },
+				target: { kind: "Reading", readingId: "reading-1" },
 			},
 		});
 	});

@@ -1,9 +1,11 @@
 import type {
+	AttestationNoteTarget,
+	LemmaNoteTarget,
+	ReadingNoteTarget,
 	ResolutionTarget,
-	RouteNoteTarget,
 	ShadowNoteTarget,
+	SurfaceNoteTarget,
 	TextTarget,
-	UnitReadingNoteTarget,
 } from "../../shared/navigation";
 
 export type SheetInstanceId = string;
@@ -22,17 +24,37 @@ export type ResolutionStepTarget = {
 };
 
 export type WorkspaceNoteTarget =
-	| UnitReadingNoteTarget
-	| RouteNoteTarget
+	| ReadingNoteTarget
+	| LemmaNoteTarget
+	| SurfaceNoteTarget
+	| AttestationNoteTarget
 	| ShadowNoteTarget
 	| ResolutionTarget
 	| ResolutionStepTarget;
 
 export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
 
+export type SurfaceNotePresentationContext = {
+	/** Selects one of the aggregate Surface Note's analyses for this Presentation. */
+	readonly activeAnalysisKey: string;
+};
+
+type ContextualSurfaceNoteSubject = {
+	readonly kind: "Note";
+	readonly target: SurfaceNoteTarget;
+	readonly presentationContext?: SurfaceNotePresentationContext;
+};
+
+type ContextFreeNoteSubject = {
+	readonly kind: "Note";
+	readonly target: Exclude<WorkspaceNoteTarget, SurfaceNoteTarget>;
+	readonly presentationContext?: never;
+};
+
 export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly target: TextTarget }
-	| { readonly kind: "Note"; readonly target: WorkspaceNoteTarget };
+	| ContextualSurfaceNoteSubject
+	| ContextFreeNoteSubject;
 
 export type WorkspacePresentation = "Card" | "Sheet";
 
@@ -407,10 +429,30 @@ export function findSheet(
 	return undefined;
 }
 
-export function workspaceSubjectFor(target: WorkspaceTarget): WorkspaceSubject {
+export function workspaceSubjectFor(
+	target: SurfaceNoteTarget,
+	presentationContext?: SurfaceNotePresentationContext,
+): ContextualSurfaceNoteSubject;
+export function workspaceSubjectFor(
+	target: Exclude<WorkspaceTarget, SurfaceNoteTarget>,
+): Exclude<WorkspaceSubject, ContextualSurfaceNoteSubject>;
+export function workspaceSubjectFor(
+	target: WorkspaceTarget,
+	presentationContext?: SurfaceNotePresentationContext,
+): WorkspaceSubject;
+export function workspaceSubjectFor(
+	target: WorkspaceTarget,
+	presentationContext?: SurfaceNotePresentationContext,
+): WorkspaceSubject {
 	return target.kind === "Text"
 		? { kind: "Text", target }
-		: { kind: "Note", target };
+		: target.kind === "Surface"
+			? {
+					kind: "Note",
+					target,
+					...(presentationContext ? { presentationContext } : {}),
+				}
+			: { kind: "Note", target };
 }
 
 export function workspaceSubjectKey(subject: WorkspaceSubject): string {
@@ -418,12 +460,16 @@ export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 	switch (target.kind) {
 		case "Text":
 			return `Text:${target.textId}`;
-		case "UnitReadingNote":
-			return `UnitReadingNote:${target.readingId}`;
-		case "RouteNote":
-			return `RouteNote:${target.routeKind}:${target.id}`;
-		case "ShadowNote":
-			return `ShadowNote:${target.shadowId}`;
+		case "Reading":
+			return `Reading:${target.readingId}`;
+		case "Lemma":
+			return `Lemma:${target.lemmaId}`;
+		case "Surface":
+			return `Surface:${target.language}:${target.normalizedSurface}`;
+		case "Attestation":
+			return `Attestation:${target.attestationId}`;
+		case "Shadow":
+			return `Shadow:${target.shadowId}`;
 		case "Resolution":
 			return `Resolution:${target.requestId}`;
 		case "ResolutionStep":
@@ -438,32 +484,61 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 		return (
 			typeof target.textId === "string" &&
 			(target.focusAttestationId === undefined ||
-				typeof target.focusAttestationId === "string")
+				typeof target.focusAttestationId === "string") &&
+			value.presentationContext === undefined
 		);
 	}
 	if (value.kind !== "Note") return false;
 	switch (target.kind) {
-		case "UnitReadingNote":
-			return typeof target.readingId === "string";
-		case "RouteNote":
+		case "Reading":
 			return (
-				(target.routeKind === "Attestation" ||
-					target.routeKind === "Surface" ||
-					target.routeKind === "Lemma") &&
-				typeof target.id === "string"
+				typeof target.readingId === "string" &&
+				value.presentationContext === undefined
 			);
-		case "ShadowNote":
-			return typeof target.shadowId === "string";
+		case "Lemma":
+			return (
+				typeof target.lemmaId === "string" &&
+				value.presentationContext === undefined
+			);
+		case "Surface":
+			return (
+				target.language === "de" &&
+				typeof target.normalizedSurface === "string" &&
+				isSurfaceNotePresentationContext(value.presentationContext)
+			);
+		case "Attestation":
+			return (
+				typeof target.attestationId === "string" &&
+				value.presentationContext === undefined
+			);
+		case "Shadow":
+			return (
+				typeof target.shadowId === "string" &&
+				value.presentationContext === undefined
+			);
 		case "Resolution":
-			return typeof target.requestId === "string";
+			return (
+				typeof target.requestId === "string" &&
+				value.presentationContext === undefined
+			);
 		case "ResolutionStep":
 			return (
 				typeof target.requestId === "string" &&
-				isResolutionStepKind(target.stepKind)
+				isResolutionStepKind(target.stepKind) &&
+				value.presentationContext === undefined
 			);
 		default:
 			return false;
 	}
+}
+
+function isSurfaceNotePresentationContext(
+	value: unknown,
+): value is SurfaceNotePresentationContext | undefined {
+	return (
+		value === undefined ||
+		(isRecord(value) && typeof value.activeAnalysisKey === "string")
+	);
 }
 
 function isResolutionStepKind(value: unknown): value is ResolutionStepKind {
@@ -480,9 +555,23 @@ export function workspaceSubjectsEqual(
 	right: WorkspaceSubject,
 ): boolean {
 	if (workspaceSubjectKey(left) !== workspaceSubjectKey(right)) return false;
-	return left.target.kind !== "Text" || right.target.kind !== "Text"
-		? true
-		: left.target.focusAttestationId === right.target.focusAttestationId;
+	if (left.target.kind === "Text" && right.target.kind === "Text") {
+		return (
+			left.target.focusAttestationId === right.target.focusAttestationId
+		);
+	}
+	if (
+		left.kind === "Note" &&
+		right.kind === "Note" &&
+		left.target.kind === "Surface" &&
+		right.target.kind === "Surface"
+	) {
+		return (
+			left.presentationContext?.activeAnalysisKey ===
+			right.presentationContext?.activeAnalysisKey
+		);
+	}
+	return true;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

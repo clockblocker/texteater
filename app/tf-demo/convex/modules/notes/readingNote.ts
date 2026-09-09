@@ -82,7 +82,7 @@ const structuralShadowProjectionValidator = v.object({
 	path: v.string(),
 	descriptor: unitShadowProjectionValidator,
 	target: v.object({
-		kind: v.literal("ShadowNote"),
+		kind: v.literal("Shadow"),
 		shadowId: v.id("shadows"),
 	}),
 });
@@ -127,9 +127,9 @@ const readingKnowledgeValidator = v.object({
 });
 
 export const readingNoteValidator = v.object({
-	kind: v.literal("UnitReadingNote"),
+	kind: v.literal("Reading"),
 	target: v.object({
-		kind: v.literal("UnitReadingNote"),
+		kind: v.literal("Reading"),
 		readingId: v.id("readings"),
 	}),
 	reading: readingNoteReadingValidator,
@@ -236,7 +236,7 @@ export async function loadUnitReadingNote(
 	]);
 	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
 		throw new Error(
-			`A Unit Reading Note supports at most ${MAX_PENDING_RELATIONS_PER_READING_NOTE} pending Semantic Relations.`,
+			`A Reading Note supports at most ${MAX_PENDING_RELATIONS_PER_READING_NOTE} pending Semantic Relations.`,
 		);
 	}
 
@@ -257,9 +257,9 @@ export async function loadUnitReadingNote(
 					: "Idle";
 
 	return {
-		kind: "UnitReadingNote" as const,
+		kind: "Reading" as const,
 		target: {
-			kind: "UnitReadingNote" as const,
+			kind: "Reading" as const,
 			readingId: reading._id,
 		},
 		reading: projectReadingIdentity(reading, lemma),
@@ -372,7 +372,7 @@ async function loadStructuralReferencesForReading(
 		.take(MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE + 1);
 	if (rows.length > MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE) {
 		throw new Error(
-			`A Unit Reading Note supports at most ${MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE} structural Shadow references.`,
+			`A Reading Note supports at most ${MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE} structural Shadow references.`,
 		);
 	}
 	const shadows = await Promise.all(
@@ -400,7 +400,7 @@ async function loadStructuralReferencesForReading(
 					path: reference.path,
 					descriptor,
 					target: {
-						kind: "ShadowNote" as const,
+						kind: "Shadow" as const,
 						shadowId: shadow._id,
 					},
 				},

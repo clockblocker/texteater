@@ -13,6 +13,7 @@ import { MAXIMUM_DECK_SIZE } from "./card-layers";
 import {
 	findPane,
 	type SheetWorkspace,
+	type SurfaceNotePresentationContext,
 	type WorkspaceTarget,
 	workspaceSubjectFor,
 } from "./sheet-workspace";
@@ -31,6 +32,7 @@ import {
 export type WorkspaceCardTarget = {
 	readonly key: string;
 	readonly target: WorkspaceTarget;
+	readonly presentationContext?: SurfaceNotePresentationContext;
 };
 
 export type PresentCardsOptions = {
@@ -198,6 +200,6 @@ export function cardCandidatesFor(
 ): readonly CardCandidate[] {
 	return cards.slice(0, MAXIMUM_DECK_SIZE).map((card) => ({
 		key: card.key,
-		subject: workspaceSubjectFor(card.target),
+		subject: workspaceSubjectFor(card.target, card.presentationContext),
 	}));
 }

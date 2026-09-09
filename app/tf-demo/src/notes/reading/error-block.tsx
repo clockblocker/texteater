@@ -1,9 +1,9 @@
 import { Component, type ReactElement, type ReactNode } from "react";
 
-import type { NoteBlockKindFor } from "../note-block-kind";
+import type { NoteBlockKind } from "../note-block-kind";
 
 export function renderErrorBlock(
-	blockKind: NoteBlockKindFor<"UnitReadingNote">,
+	blockKind: NoteBlockKind,
 	cause: unknown,
 ): ReactElement {
 	const message =
@@ -24,7 +24,7 @@ export function renderErrorBlock(
 }
 
 type ReadingNoteBlockErrorBoundaryProps = {
-	readonly blockKind: NoteBlockKindFor<"UnitReadingNote">;
+	readonly blockKind: NoteBlockKind;
 	readonly resetToken: object;
 	readonly children: ReactNode;
 };

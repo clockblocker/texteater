@@ -3,15 +3,11 @@ import { v } from "convex/values";
 import {
 	assertReadingBlockOrder,
 	assertReadingBlockSupported,
-	availableReadingBlocksForRoute,
 	DEFAULT_DE_READING_LANGUAGE_LAYOUT,
-	defaultReadingBlockLayoutForRoute,
-	projectReadingLanguageLayoutOntoRoute,
 	type ReadingBlockKind,
 	type ReadingBlockRoute,
 	reconcileReadingBlockLayout,
 	type SerializedReadingBlockLayout,
-	supportedReadingRoutes,
 } from "../shared/reading-block-layout";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
@@ -23,6 +19,7 @@ import {
 
 type LayoutCtx = QueryCtx | MutationCtx;
 type TargetLanguage = ReadingBlockRoute["targetLanguage"];
+const MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE = 128;
 
 function assertVisitorId(visitorId: string): void {
 	if (visitorId.trim().length === 0 || visitorId.length > 200) {
@@ -31,21 +28,9 @@ function assertVisitorId(visitorId: string): void {
 }
 
 function availableLanguageBlocks(
-	targetLanguage: TargetLanguage,
+	_targetLanguage: TargetLanguage,
 ): readonly ReadingBlockKind[] {
-	const seen = new Set<ReadingBlockKind>();
-	const available: ReadingBlockKind[] = [];
-	for (const route of supportedReadingRoutes(targetLanguage)) {
-		for (const blockKind of availableReadingBlocksForRoute(route) ?? []) {
-			if (seen.has(blockKind)) continue;
-			seen.add(blockKind);
-			available.push(blockKind);
-		}
-	}
-	return reconcileReadingBlockLayout(
-		DEFAULT_DE_READING_LANGUAGE_LAYOUT,
-		available,
-	).order;
+	return DEFAULT_DE_READING_LANGUAGE_LAYOUT.order;
 }
 
 function cloneLayout(layout: SerializedReadingBlockLayout): {
@@ -62,18 +47,6 @@ function defaultLanguageLayout(
 		DEFAULT_DE_READING_LANGUAGE_LAYOUT,
 		availableLanguageBlocks(targetLanguage),
 	);
-}
-
-function assertSupportedRoute(
-	route: ReadingBlockRoute,
-): readonly ReadingBlockKind[] {
-	const available = availableReadingBlocksForRoute(route);
-	if (!available) {
-		throw new Error(
-			`Unsupported Reading route: ${route.targetLanguage}/${route.family}/${route.kind}.`,
-		);
-	}
-	return available;
 }
 
 function setBlockVisibility(
@@ -139,12 +112,11 @@ async function loadFamilyKindLayout(
 	ctx: LayoutCtx,
 	visitorId: string,
 	route: ReadingBlockRoute,
-): Promise<SerializedReadingBlockLayout | null> {
-	const available = assertSupportedRoute(route);
+): Promise<SerializedReadingBlockLayout> {
 	const stored = await findFamilyKindLayout(ctx, visitorId, route);
 	return stored
-		? reconcileReadingBlockLayout(stored, available)
-		: defaultReadingBlockLayoutForRoute(route);
+		? reconcileReadingBlockLayout(stored, stored.order)
+		: loadLanguageLayout(ctx, visitorId, route.targetLanguage);
 }
 
 async function loadFamilyKindLayoutForMutation(
@@ -152,15 +124,33 @@ async function loadFamilyKindLayoutForMutation(
 	visitorId: string,
 	route: ReadingBlockRoute,
 ): Promise<SerializedReadingBlockLayout> {
-	const available = assertSupportedRoute(route);
 	const stored = await findFamilyKindLayout(ctx, visitorId, route);
-	if (stored) return reconcileReadingBlockLayout(stored, available);
-	const languageLayout = await loadLanguageLayout(
-		ctx,
-		visitorId,
-		route.targetLanguage,
-	);
-	return projectReadingLanguageLayoutOntoRoute(languageLayout, route);
+	return stored
+		? reconcileReadingBlockLayout(stored, stored.order)
+		: loadLanguageLayout(ctx, visitorId, route.targetLanguage);
+}
+
+async function loadStoredFamilyKindLayouts(
+	ctx: MutationCtx,
+	visitorId: string,
+	targetLanguage: TargetLanguage,
+) {
+	const layouts = await ctx.db
+		.query("readingFamilyKindLayouts")
+		.withIndex(
+			"by_visitor_id_and_target_language_and_family_and_kind",
+			(q) =>
+				q
+					.eq("visitorId", visitorId)
+					.eq("targetLanguage", targetLanguage),
+		)
+		.take(MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE + 1);
+	if (layouts.length > MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE) {
+		throw new Error(
+			`A Visitor may keep at most ${MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE} Reading layouts per language.`,
+		);
+	}
+	return layouts;
 }
 
 async function storeLanguageLayout(
@@ -220,8 +210,6 @@ export const getFamilyKind = query({
 	handler: async (ctx, { visitorId, route }) => {
 		assertVisitorId(visitorId);
 		const layout = await loadFamilyKindLayout(ctx, visitorId, route);
-		if (!layout)
-			throw new Error("Supported Reading route has no default layout.");
 		return cloneLayout(layout);
 	},
 });
@@ -235,8 +223,7 @@ export const setLanguageBlockOrder = mutation({
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, targetLanguage, order }) => {
 		assertVisitorId(visitorId);
-		const available = availableLanguageBlocks(targetLanguage);
-		assertReadingBlockOrder(order, available);
+		assertReadingBlockOrder(order);
 		const currentLanguage = await loadLanguageLayout(
 			ctx,
 			visitorId,
@@ -254,23 +241,15 @@ export const setLanguageBlockOrder = mutation({
 			nextLanguage,
 			updatedAt,
 		);
-		for (const route of supportedReadingRoutes(targetLanguage)) {
-			const currentRoute = await loadFamilyKindLayoutForMutation(
-				ctx,
-				visitorId,
-				route,
-			);
-			const projected = projectReadingLanguageLayoutOntoRoute(
-				nextLanguage,
-				route,
-			);
-			await storeFamilyKindLayout(
-				ctx,
-				visitorId,
-				route,
-				{ order: projected.order, hidden: currentRoute.hidden },
+		for (const current of await loadStoredFamilyKindLayouts(
+			ctx,
+			visitorId,
+			targetLanguage,
+		)) {
+			await ctx.db.patch(current._id, {
+				order: [...nextLanguage.order],
 				updatedAt,
-			);
+			});
 		}
 		return cloneLayout(nextLanguage);
 	},
@@ -306,23 +285,16 @@ export const setLanguageBlockVisibility = mutation({
 			nextLanguage,
 			updatedAt,
 		);
-		for (const route of supportedReadingRoutes(targetLanguage)) {
-			const availableForRoute = assertSupportedRoute(route);
-			const currentRoute = await loadFamilyKindLayoutForMutation(
-				ctx,
-				visitorId,
-				route,
-			);
-			const nextRoute = availableForRoute.includes(blockKind)
-				? setBlockVisibility(currentRoute, blockKind, visible)
-				: currentRoute;
-			await storeFamilyKindLayout(
-				ctx,
-				visitorId,
-				route,
-				nextRoute,
+		for (const current of await loadStoredFamilyKindLayouts(
+			ctx,
+			visitorId,
+			targetLanguage,
+		)) {
+			const nextRoute = setBlockVisibility(current, blockKind, visible);
+			await ctx.db.patch(current._id, {
+				hidden: [...nextRoute.hidden],
 				updatedAt,
-			);
+			});
 		}
 		return cloneLayout(nextLanguage);
 	},
@@ -337,8 +309,7 @@ export const setFamilyKindBlockOrder = mutation({
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, route, order }) => {
 		assertVisitorId(visitorId);
-		const available = assertSupportedRoute(route);
-		assertReadingBlockOrder(order, available);
+		assertReadingBlockOrder(order);
 		const current = await loadFamilyKindLayoutForMutation(
 			ctx,
 			visitorId,
@@ -360,8 +331,7 @@ export const setFamilyKindBlockVisibility = mutation({
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, route, blockKind, visible }) => {
 		assertVisitorId(visitorId);
-		const available = assertSupportedRoute(route);
-		assertReadingBlockSupported(blockKind, available);
+		assertReadingBlockSupported(blockKind);
 		const current = await loadFamilyKindLayoutForMutation(
 			ctx,
 			visitorId,

@@ -211,7 +211,16 @@ function ApplicationPresentation({
 				dispatch({
 					type: "ReconcileCardLayer",
 					originPresentationId: presentationId,
-					candidates,
+					candidates: candidates.map((candidate) => ({
+						key: candidate.key,
+						target: candidate.target,
+						...(candidate.presentationContext
+							? {
+									presentationContext:
+										candidate.presentationContext,
+								}
+							: {}),
+					})),
 				});
 			},
 		}),
@@ -221,8 +230,7 @@ function ApplicationPresentation({
 		<WorkspaceInteractionProvider interaction={interaction}>
 			{subject.kind === "Library" ? (
 				renderLibrary()
-			) : subject.kind === "Note" &&
-				subject.target.kind !== "UnitReadingNote" ? (
+			) : subject.kind === "Note" && subject.target.kind !== "Reading" ? (
 				<div className="application-workspace__note">
 					{renderSubject(subject, context.presentation)}
 				</div>

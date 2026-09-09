@@ -124,12 +124,14 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 			kind: "Complete",
 			attestationId: "attestation-1" as never,
 			target: {
-				kind: "UnitReadingNote",
+				kind: "Reading",
 				readingId: "reading-1" as never,
 			},
 			canonical: {
 				readingId: "reading-1" as never,
 				lemmaId: "lemma-1" as never,
+				surfaceLanguage: "de",
+				normalizedSurface: "Banken",
 				surfaceId: "surface-1" as never,
 				attestationId: "attestation-1" as never,
 			},
@@ -137,15 +139,28 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 		updatedAt: 5,
 	});
 
-	expect(cards.map(({ target }) => target)).toEqual([
-		{ kind: "UnitReadingNote", readingId: "reading-1" },
-		{ kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		{ kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
+	expect(cards).toEqual([
+		expect.objectContaining({
+			target: { kind: "Reading", readingId: "reading-1" },
+		}),
+		expect.objectContaining({
+			target: { kind: "Lemma", lemmaId: "lemma-1" },
+		}),
 		{
-			kind: "RouteNote",
-			routeKind: "Attestation",
-			id: "attestation-1",
+			key: "request-1:Surface",
+			target: {
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "Banken",
+			},
+			presentationContext: { activeAnalysisKey: "surface-1" },
 		},
+		expect.objectContaining({
+			target: {
+				kind: "Attestation",
+				attestationId: "attestation-1",
+			},
+		}),
 	]);
 });
 
@@ -153,45 +168,44 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 	const canonical = {
 		readingId: "reading-1",
 		lemmaId: "lemma-1",
+		surfaceLanguage: "de" as const,
+		normalizedSurface: "Banken",
 		surfaceId: "surface-1",
 		attestationId: "attestation-1",
 	};
 	const cards = segmentSelectionDeckCards("request-available", {
 		kind: "Available",
-		target: { kind: "UnitReadingNote", readingId: "reading-1" },
+		target: { kind: "Reading", readingId: "reading-1" },
 		canonical,
 	});
 
 	expect(cards.map(({ target }) => target)).toEqual([
-		{ kind: "UnitReadingNote", readingId: "reading-1" },
-		{ kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		{ kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
-		{
-			kind: "RouteNote",
-			routeKind: "Attestation",
-			id: "attestation-1",
-		},
+		{ kind: "Reading", readingId: "reading-1" },
+		{ kind: "Lemma", lemmaId: "lemma-1" },
+		{ kind: "Surface", language: "de", normalizedSurface: "Banken" },
+		{ kind: "Attestation", attestationId: "attestation-1" },
 	]);
+	expect(cards[2]?.presentationContext).toEqual({
+		activeAnalysisKey: "surface-1",
+	});
 
 	const routeCards = segmentSelectionDeckCards("request-route", {
 		kind: "Available",
 		target: {
-			kind: "RouteNote",
-			routeKind: "Attestation",
-			id: "attestation-1",
+			kind: "Attestation",
+			attestationId: "attestation-1",
 		},
 		canonical,
 	});
 	expect(routeCards.map(({ target }) => target.kind)).toEqual([
-		"RouteNote",
-		"UnitReadingNote",
-		"RouteNote",
-		"RouteNote",
+		"Attestation",
+		"Reading",
+		"Lemma",
+		"Surface",
 	]);
 	expect(routeCards[0]?.target).toEqual({
-		kind: "RouteNote",
-		routeKind: "Attestation",
-		id: "attestation-1",
+		kind: "Attestation",
+		attestationId: "attestation-1",
 	});
 });
 
@@ -239,17 +253,15 @@ test("completion reconciliation preserves its canonical Route Note target", () =
 			kind: "Complete",
 			attestationId: "attestation-1" as never,
 			target: {
-				kind: "RouteNote",
-				routeKind: "Attestation",
-				id: "attestation-1" as never,
+				kind: "Attestation",
+				attestationId: "attestation-1" as never,
 			},
 		},
 		updatedAt: 1,
 	} as const;
 	expect(completionTarget(note)).toEqual({
-		kind: "RouteNote",
-		routeKind: "Attestation",
-		id: "attestation-1",
+		kind: "Attestation",
+		attestationId: "attestation-1",
 	});
 });
 

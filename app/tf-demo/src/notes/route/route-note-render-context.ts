@@ -1,11 +1,18 @@
 import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { NoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
 
-export type RouteNoteData = NoteDataFor<"RouteNote">;
+export type RouteNoteData =
+	| NoteDataFor<"Lemma">
+	| NoteDataFor<"Surface">
+	| NoteDataFor<"Attestation">;
 
 export type RouteNotePresentationCapabilities = {
+	readonly presentation?: "Card" | "Sheet";
+	readonly blockLayout?: NoteBlockLayout;
+	readonly activeAnalysisKey?: string;
 	readonly pagination: {
 		readonly hasMore: boolean;
 		readonly isLoading: boolean;

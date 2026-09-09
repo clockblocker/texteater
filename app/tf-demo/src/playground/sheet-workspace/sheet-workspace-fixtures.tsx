@@ -131,9 +131,17 @@ export const renderFixtureSubject = (
 	const source = fixtureNoteSource(fixtureSubjectId(subject));
 	if (!source) return <p>Unknown Note fixture.</p>;
 	const note = fixtureNote(source);
-	return note.kind === "UnitReadingNote"
-		? renderNote(note, { ...readingCapabilities(note), presentation })
-		: renderNote(note, routeCapabilities());
+	if (note.kind === "Reading") {
+		return renderNote(note, { ...readingCapabilities(note), presentation });
+	}
+	if (note.kind === "Surface") {
+		return renderNote(note, {
+			presentation,
+			follow: routeCapabilities().follow,
+		});
+	}
+	if (note.kind === "Lemma") return renderNote(note, routeCapabilities());
+	return renderNote(note, routeCapabilities());
 };
 
 export const renderFixtureCardTail: CardSheetWorkspaceProps["renderCardTail"] =
@@ -200,26 +208,31 @@ function fixtureTarget(
 	segmentIndex: number,
 ) {
 	const id = fixtureNoteId(kind, sentencePosition, segmentIndex);
-	return kind === "reading"
-		? ({ kind: "UnitReadingNote", readingId: id } as const)
-		: ({
-				kind: "RouteNote",
-				routeKind:
-					kind === "lemma"
-						? "Lemma"
-						: kind === "surface"
-							? "Surface"
-							: "Attestation",
-				id,
-			} as const);
+	if (kind === "reading") return { kind: "Reading", readingId: id } as const;
+	if (kind === "lemma") return { kind: "Lemma", lemmaId: id } as const;
+	if (kind === "surface") {
+		return {
+			kind: "Surface",
+			language: "de",
+			normalizedSurface: id,
+		} as const;
+	}
+	return { kind: "Attestation", attestationId: id } as const;
 }
 
 function fixtureSubjectId(subject: WorkspaceSubject): string {
-	if (subject.target.kind === "UnitReadingNote") {
-		return subject.target.readingId;
+	switch (subject.target.kind) {
+		case "Reading":
+			return subject.target.readingId;
+		case "Lemma":
+			return subject.target.lemmaId;
+		case "Surface":
+			return subject.target.normalizedSurface;
+		case "Attestation":
+			return subject.target.attestationId;
+		default:
+			return "";
 	}
-	if (subject.target.kind === "RouteNote") return subject.target.id;
-	return "";
 }
 
 function fixtureNoteSource(noteId: string) {
@@ -259,9 +272,9 @@ function fixtureNote(
 	const suffix = `${sentence.position}-${segmentIndex}`;
 	if (kind === "reading") {
 		return {
-			kind: "UnitReadingNote",
+			kind: "Reading",
 			target: {
-				kind: "UnitReadingNote",
+				kind: "Reading",
 				readingId: `reading-${suffix}` as never,
 			},
 			reading: {
@@ -297,12 +310,10 @@ function fixtureNote(
 	}
 	if (kind === "lemma") {
 		return {
-			kind: "RouteNote",
-			routeKind: "Lemma",
+			kind: "Lemma",
 			target: {
-				kind: "RouteNote",
-				routeKind: "Lemma",
-				id: `lemma-${suffix}`,
+				kind: "Lemma",
+				lemmaId: `lemma-${suffix}`,
 			},
 			presented: fixturePresentedLemma(lexeme),
 			connections: {
@@ -313,7 +324,7 @@ function fixtureNote(
 						canonicalForm: lexeme.canonicalForm,
 						family: "Lexeme",
 						kind: lexeme.kind,
-						target: routeTarget("Surface", `surface-${suffix}`),
+						target: surfaceTarget(normalized),
 					},
 				],
 				readings: [
@@ -321,7 +332,7 @@ function fixtureNote(
 						readingId: `reading-${suffix}`,
 						emojiDescription: lexeme.emojiDescription,
 						target: {
-							kind: "UnitReadingNote",
+							kind: "Reading",
 							readingId: `reading-${suffix}`,
 						},
 					},
@@ -334,44 +345,39 @@ function fixtureNote(
 	}
 	if (kind === "surface") {
 		return {
-			kind: "RouteNote",
-			routeKind: "Surface",
-			target: routeTarget("Surface", `surface-${suffix}`),
-			presented: fixturePresentedSurface(normalized, lexeme),
-			lemmaTarget: routeTarget("Lemma", `lemma-${suffix}`),
-			connections: {
-				occurrences: [
-					{
-						attestationId: `attestation-${suffix}`,
-						sentenceSnippet: sentence.stitchedText,
-						members: [written],
-						target: routeTarget(
-							"Attestation",
-							`attestation-${suffix}`,
-						),
+			kind: "Surface",
+			target: surfaceTarget(normalized),
+			analyses: [
+				{
+					analysisKey: `surface-${suffix}`,
+					surfaceId: `surface-${suffix}`,
+					lemmaId: `lemma-${suffix}`,
+					presented: fixturePresentedSurface(normalized, lexeme),
+					lemmaTarget: {
+						kind: "Lemma",
+						lemmaId: `lemma-${suffix}`,
 					},
-				],
-				sameWrittenForm: [],
-				continueCursor: "",
-				isDone: true,
-			},
+				},
+			],
 		} as unknown as RouteNoteData;
 	}
 	return {
-		kind: "RouteNote",
-		routeKind: "Attestation",
-		target: routeTarget("Attestation", `attestation-${suffix}`),
+		kind: "Attestation",
+		target: {
+			kind: "Attestation",
+			attestationId: `attestation-${suffix}`,
+		},
 		source: sourceContext(sentence, segmentIndex),
 		presented: {
 			members: [{ attested: written, orthography: "Standard" }],
 			realizationCoverage: "Full",
 			surface: fixturePresentedSurface(normalized, lexeme),
 		},
-		surfaceTarget: routeTarget("Surface", `surface-${suffix}`),
+		surfaceTarget: surfaceTarget(normalized),
 		reading: {
 			emojiDescription: lexeme.emojiDescription,
 			target: {
-				kind: "UnitReadingNote",
+				kind: "Reading",
 				readingId: `reading-${suffix}`,
 			},
 		},
@@ -427,11 +433,12 @@ function sourceContext(sentence: SentenceView, segmentIndex: number) {
 	};
 }
 
-function routeTarget(
-	routeKind: "Attestation" | "Surface" | "Lemma",
-	id: string,
-) {
-	return { kind: "RouteNote" as const, routeKind, id: id as never };
+function surfaceTarget(normalizedSurface: string) {
+	return {
+		kind: "Surface" as const,
+		language: "de" as const,
+		normalizedSurface,
+	};
 }
 
 function readingCapabilities(note: AnyReadingNoteData) {

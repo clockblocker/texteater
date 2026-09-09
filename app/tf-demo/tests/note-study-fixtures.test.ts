@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { supportedReadingRoutes } from "../shared/reading-block-layout";
+import { NOTE_BLOCK_RENDERER_REGISTRY } from "../src/notes";
 import { NOTE_STUDY_FIXTURES } from "../src/playground/notes-study/fixtures";
 import {
 	makeUrl,
@@ -54,7 +54,12 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("covers every studied German Unit Reading Family/Kind once", () => {
-		const expectedRoutes = supportedReadingRoutes("de")
+		const expectedRoutes = Object.entries(
+			NOTE_BLOCK_RENDERER_REGISTRY.de.Reading,
+		)
+			.flatMap(([family, kinds]) =>
+				Object.keys(kinds).map((kind) => ({ family, kind })),
+			)
 			.filter(({ kind }) => !nonGermanReadingKinds.has(kind))
 			.map(routeKey)
 			.sort();

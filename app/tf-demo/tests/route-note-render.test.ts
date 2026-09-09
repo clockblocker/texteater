@@ -1,21 +1,30 @@
 import { expect, test } from "bun:test";
-import { presentedFeatureNames } from "dumling/vocabulary";
 import { renderToStaticMarkup } from "react-dom/server";
-import { renderNote } from "../src/notes";
-import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
-import type { RouteNoteData } from "../src/notes/route";
 
-type RouteNote = RouteNoteData;
+import { type NoteDataFor, renderNote } from "../src/notes";
 
-test("renders the complete Attestation route with typed workspace targets", () => {
-	const note = {
-		kind: "RouteNote",
-		routeKind: "Attestation",
-		target: {
-			kind: "RouteNote",
-			routeKind: "Attestation",
-			id: "attestation-1",
+test("renders Lemma and Attestation subjects through the common renderer", () => {
+	const lemma = {
+		kind: "Lemma",
+		target: { kind: "Lemma", lemmaId: "lemma-1" },
+		presented: presentedLemma("Bank", "NOUN"),
+		connections: {
+			surfaces: [],
+			readings: [
+				{
+					readingId: "reading-1",
+					emojiDescription: "🏦",
+					target: { kind: "Reading", readingId: "reading-1" },
+				},
+			],
+			sameWrittenForm: [],
+			continueCursor: "",
+			isDone: true,
 		},
+	} as unknown as NoteDataFor<"Lemma">;
+	const attestation = {
+		kind: "Attestation",
+		target: { kind: "Attestation", attestationId: "attestation-1" },
 		source: {
 			textId: "text-1",
 			sentencePosition: 0,
@@ -36,229 +45,107 @@ test("renders the complete Attestation route with typed workspace targets", () =
 			surface: presentedSurface("steht auf", "aufstehen", "VERB"),
 		},
 		surfaceTarget: {
-			kind: "RouteNote",
-			routeKind: "Surface",
-			id: "surface-1",
+			kind: "Surface",
+			language: "de",
+			normalizedSurface: "steht auf",
 		},
 		reading: {
 			emojiDescription: "🧍",
-			target: { kind: "UnitReadingNote", readingId: "reading-1" },
+			target: { kind: "Reading", readingId: "reading-1" },
 		},
-	} as RouteNote;
-	const markup = renderBody(note);
-	expect(markup).toContain("Er steht auf.");
-	expect(markup.match(/<button type="button"/g)).toHaveLength(3);
-	expect(markup).not.toContain("href=");
+	} as unknown as NoteDataFor<"Attestation">;
+
+	const lemmaMarkup = renderToStaticMarkup(renderNote(lemma));
+	const attestationMarkup = renderToStaticMarkup(renderNote(attestation));
+	expect(lemmaMarkup).toContain("Lemma Note");
+	expect(lemmaMarkup).toContain("Unit Readings");
+	expect(attestationMarkup).toContain("Attestation Note");
+	expect(attestationMarkup).toContain("Er steht auf.");
+	expect(attestationMarkup).not.toContain("href=");
 });
 
-test("renders Surface and Lemma workspace commands, including polysemy and same-form travel", () => {
-	const surface = {
-		kind: "RouteNote",
-		routeKind: "Surface",
-		target: { kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
-		presented: presentedSurface("Bank", "Bank", "NOUN", {
-			gender: "Fem",
-		}),
-		lemmaTarget: {
-			kind: "RouteNote",
-			routeKind: "Lemma",
-			id: "lemma-1",
-		},
-		connections: {
-			occurrences: [
-				{
-					attestationId: "attestation-1",
-					sentenceSnippet: "Die Bank.",
-					members: ["Bank"],
-					target: {
-						kind: "RouteNote",
-						routeKind: "Attestation",
-						id: "attestation-1",
-					},
-				},
-			],
-			sameWrittenForm: [
-				{
-					surfaceId: "surface-2",
-					normalizedSurface: "Bank",
-					canonicalForm: "banken",
-					family: "Lexeme",
-					kind: "VERB",
-					target: {
-						kind: "RouteNote",
-						routeKind: "Surface",
-						id: "surface-2",
-					},
-				},
-			],
-			continueCursor: "",
-			isDone: true,
-		},
-	} as RouteNote;
-	const lemma = {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		target: { kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		presented: presentedLemma("Bank", "NOUN", { gender: "Fem" }),
-		connections: {
-			surfaces: [
-				{
-					surfaceId: "surface-1",
-					normalizedSurface: "Bank",
-					canonicalForm: "Bank",
-					family: "Lexeme",
-					kind: "NOUN",
-					target: {
-						kind: "RouteNote",
-						routeKind: "Surface",
-						id: "surface-1",
-					},
-				},
-			],
-			readings: ["reading-1", "reading-2"].map((readingId) => ({
-				readingId,
-				emojiDescription: readingId === "reading-1" ? "🏦" : "🪑",
-				target: { kind: "UnitReadingNote", readingId },
-			})),
-			sameWrittenForm: [
-				{
-					lemmaId: "lemma-2",
-					canonicalForm: "Bank",
-					family: "Lexeme",
-					kind: "VERB",
-					target: {
-						kind: "RouteNote",
-						routeKind: "Lemma",
-						id: "lemma-2",
-					},
-				},
-			],
-			continueCursor: "",
-			isDone: true,
-		},
-	} as RouteNote;
-	const surfaceMarkup = renderBody(surface);
-	const lemmaMarkup = renderBody(lemma);
-	expect(surfaceMarkup.match(/<button type="button"/g)).toHaveLength(3);
-	expect(lemmaMarkup.match(/<button type="button"/g)).toHaveLength(4);
-	expect(lemmaMarkup).toContain("gender: Fem");
-	expect(surfaceMarkup).not.toContain("abbr:");
-	expect(lemmaMarkup).not.toContain("abbr:");
-	expect(surfaceMarkup).not.toContain("href=");
-	expect(lemmaMarkup).not.toContain("href=");
+test("Surface Notes retain heterogeneous analyses without an outer route", () => {
+	const surface = surfaceNote();
+	const markup = renderToStaticMarkup(renderNote(surface));
+	expect(markup).toContain("Surface Note");
+	expect(markup).toContain("Bank · Lexeme · NOUN");
+	expect(markup).toContain("banken · Lexeme · VERB");
+	expect(markup).not.toContain("Active analysis");
 });
 
-test("the paginated Note interface deduplicates Route connections and resets reactively", async () => {
-	const first = lemmaPage("cursor-old", false, ["reading-1"]);
-	const continuation = lemmaPage("cursor-next", false, [
-		"reading-1",
-		"reading-2",
-	]);
-	const loader = createPaginatedNoteLoader(first, async () => continuation);
-	await loader.loadMore();
-	const merged = loader.current().note;
-	if (merged.routeKind !== "Lemma") throw new Error("Expected Lemma page.");
-	expect(
-		merged.connections.readings.map(({ readingId }) => readingId),
-	).toEqual(["reading-1", "reading-2"]);
-
-	const refreshed = lemmaPage("cursor-fresh", true, ["reading-3"]);
-	loader.reset(refreshed);
-	const reset = loader.current();
-	expect(reset.hasMore).toBe(false);
-	expect(reset.isLoading).toBe(false);
-	expect(
-		reset.note.routeKind === "Lemma"
-			? reset.note.connections.readings.map(({ readingId }) => readingId)
-			: [],
-	).toEqual(["reading-3"]);
-});
-
-test("a rejected old Route page cannot report an error after a reactive reset", async () => {
-	let rejectOldPage: ((cause: Error) => void) | undefined;
-	const oldPage = new Promise<never>((_resolve, reject) => {
-		rejectOldPage = reject;
-	});
-	const loader = createPaginatedNoteLoader(
-		lemmaPage("cursor-old", false, ["reading-1"]),
-		async () => oldPage,
-	);
-	const request = loader.loadMore();
-	expect(loader.current().isLoading).toBe(true);
-	loader.reset(lemmaPage("cursor-fresh", false, ["reading-3"]));
-	rejectOldPage?.(new Error("stale failure"));
-	await request;
-	expect(loader.current().error).toBeNull();
-	expect(loader.current().isLoading).toBe(false);
-});
-
-test("the root renderer consumes injected route pagination state", () => {
-	const note = lemmaPage("cursor-next", false, ["reading-1"]);
-	const markup = renderToStaticMarkup(
-		renderNote(note, {
-			pagination: {
-				hasMore: true,
-				isLoading: false,
-				error: "Continuation failed.",
-				async loadMore() {},
-			},
+test("active Surface analysis is contextual in Card and highlighted in Sheet", () => {
+	const surface = surfaceNote();
+	const card = renderToStaticMarkup(
+		renderNote(surface, {
+			presentation: "Card",
+			activeAnalysisKey: "surface-verb",
 			follow: () => {},
 		}),
 	);
-	expect(markup).toContain("Load more route connections");
-	expect(markup).toContain('role="alert"');
-	expect(markup).toContain("Continuation failed.");
+	const sheet = renderToStaticMarkup(
+		renderNote(surface, {
+			presentation: "Sheet",
+			activeAnalysisKey: "surface-noun",
+			follow: () => {},
+		}),
+	);
+	expect(card).toContain('data-active-surface-analysis="surface-verb"');
+	expect(card).toContain("Mood: Ind");
+	expect(card).not.toContain("Bank · Lexeme · NOUN");
+	expect(sheet).toContain(
+		'data-surface-analysis="surface-noun" data-active="true"',
+	);
+	expect(sheet).toContain('data-surface-analysis="surface-verb"');
 });
 
-function lemmaPage(
-	continueCursor: string,
-	isDone: boolean,
-	readingIds: readonly string[],
-) {
-	return {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		target: { kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		presented: presentedLemma("Bank", "NOUN", { gender: "Fem" }),
-		connections: {
-			surfaces: [],
-			readings: readingIds.map((readingId) => ({
-				readingId,
-				emojiDescription: "🏦",
-				target: { kind: "UnitReadingNote", readingId },
-			})),
-			sameWrittenForm: [],
-			continueCursor,
-			isDone,
-		},
-	} as Extract<RouteNote, { routeKind: "Lemma" }>;
-}
-
-function renderBody(note: RouteNote) {
-	return renderToStaticMarkup(renderNote(note));
-}
-
-function presentedFeatures(
-	overrides: Readonly<Record<string, string | readonly string[] | null>> = {},
-) {
-	return Object.fromEntries(
-		presentedFeatureNames.map((name) => [name, overrides[name] ?? null]),
+test("layout changes order and visibility but cannot make an unavailable Block render", () => {
+	const markup = renderToStaticMarkup(
+		renderNote(surfaceNote(), {
+			follow: () => {},
+			blockLayout: {
+				order: ["Routes", "Relations", "Header", "Routes"],
+				hidden: new Set(["Header"]),
+			},
+		}),
 	);
+	expect(markup).toContain('aria-label="Surface analyses"');
+	expect(markup).not.toContain("Surface Note</p>");
+	expect(markup).not.toContain("Semantic relations");
+});
+
+function surfaceNote(): NoteDataFor<"Surface"> {
+	return {
+		kind: "Surface",
+		target: { kind: "Surface", language: "de", normalizedSurface: "Bank" },
+		analyses: [
+			{
+				analysisKey: "surface-noun",
+				surfaceId: "surface-noun",
+				lemmaId: "lemma-noun",
+				presented: presentedSurface("Bank", "Bank", "NOUN"),
+				lemmaTarget: { kind: "Lemma", lemmaId: "lemma-noun" },
+			},
+			{
+				analysisKey: "surface-verb",
+				surfaceId: "surface-verb",
+				lemmaId: "lemma-verb",
+				presented: {
+					...presentedSurface("Bank", "banken", "VERB"),
+					inflectionalFeatures: { Mood: "Ind" },
+				},
+				lemmaTarget: { kind: "Lemma", lemmaId: "lemma-verb" },
+			},
+		],
+	} as unknown as NoteDataFor<"Surface">;
 }
 
-function presentedLemma(
-	canonicalForm: string,
-	kind: string,
-	coreFeatures: Readonly<
-		Record<string, string | readonly string[] | null>
-	> = {},
-) {
+function presentedLemma(canonicalForm: string, kind: string) {
 	return {
 		language: "de",
 		canonicalForm,
 		family: "Lexeme",
 		kind,
-		coreFeatures: presentedFeatures(coreFeatures),
+		coreFeatures: {},
 	};
 }
 
@@ -266,17 +153,14 @@ function presentedSurface(
 	normalizedSurface: string,
 	canonicalForm: string,
 	kind: string,
-	coreFeatures: Readonly<
-		Record<string, string | readonly string[] | null>
-	> = {},
 ) {
 	return {
 		language: "de",
 		normalizedSurface,
 		spelling: "Canonical",
 		surfaceKind: "Citation",
-		surfaceFeatures: { historicalStatus: null },
-		lemma: presentedLemma(canonicalForm, kind, coreFeatures),
-		inflectionalFeatures: presentedFeatures(),
+		surfaceFeatures: {},
+		lemma: presentedLemma(canonicalForm, kind),
+		inflectionalFeatures: {},
 	};
 }

@@ -177,12 +177,12 @@ export function DataControls({
 						/>
 						<FieldContent>
 							<FieldLabel htmlFor="open-route-notes">
-								Open Route Notes
+								Open resolution Notes
 							</FieldLabel>
 							<FieldDescription>
 								Start Segment selections at the Attestation
-								Route Note. Hold Alt/Option for one selection
-								without changing this setting.
+								Note. Hold Alt/Option for one selection without
+								changing this setting.
 							</FieldDescription>
 						</FieldContent>
 					</Field>

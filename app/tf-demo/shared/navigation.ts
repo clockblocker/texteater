@@ -13,23 +13,47 @@ export type TextTarget = {
 	readonly focusAttestationId?: string;
 };
 
-export type UnitReadingNoteTarget = {
-	readonly kind: "UnitReadingNote";
+export type ReadingNoteTarget = {
+	readonly kind: "Reading";
 	readonly readingId: string;
 };
 
-export type RouteNoteKind = "Attestation" | "Surface" | "Lemma";
+export type LemmaNoteTarget = {
+	readonly kind: "Lemma";
+	readonly lemmaId: string;
+};
 
-export type RouteNoteTarget = {
-	readonly kind: "RouteNote";
-	readonly routeKind: RouteNoteKind;
-	readonly id: string;
+export type SurfaceNoteTarget = {
+	readonly kind: "Surface";
+	readonly language: "de";
+	readonly normalizedSurface: string;
+};
+
+export type AttestationNoteTarget = {
+	readonly kind: "Attestation";
+	readonly attestationId: string;
 };
 
 export type ShadowNoteTarget = {
-	readonly kind: "ShadowNote";
+	readonly kind: "Shadow";
 	readonly shadowId: string;
 };
+
+export type NoteTarget =
+	| ReadingNoteTarget
+	| LemmaNoteTarget
+	| SurfaceNoteTarget
+	| AttestationNoteTarget
+	| ShadowNoteTarget;
+
+/** @deprecated Prefer the individual Note target types. */
+export type UnitReadingNoteTarget = ReadingNoteTarget;
+
+/** @deprecated Prefer LemmaNoteTarget, SurfaceNoteTarget, or AttestationNoteTarget. */
+export type RouteNoteTarget =
+	| LemmaNoteTarget
+	| SurfaceNoteTarget
+	| AttestationNoteTarget;
 
 export type ResolutionTarget = {
 	readonly kind: "Resolution";
@@ -40,7 +64,5 @@ export type NavigationTarget =
 	| LibraryTarget
 	| SettingsTarget
 	| TextTarget
-	| UnitReadingNoteTarget
-	| RouteNoteTarget
-	| ShadowNoteTarget
+	| NoteTarget
 	| ResolutionTarget;

@@ -1,9 +1,11 @@
 import { z } from "zod";
 
 export const noteKindSchema = z.enum([
-	"UnitReadingNote",
-	"RouteNote",
-	"ShadowNote",
+	"Reading",
+	"Lemma",
+	"Surface",
+	"Attestation",
+	"Shadow",
 ]);
 
 export type NoteKind = z.infer<typeof noteKindSchema>;

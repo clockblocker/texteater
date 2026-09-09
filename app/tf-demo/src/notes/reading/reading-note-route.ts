@@ -1,10 +1,9 @@
 import type { LemmaFamilyFor, LemmaKindFor } from "dumling/types";
-
+import { registeredNoteBlockMap } from "../note-block-renderer-registry-runtime";
 import type { NoteDataFor } from "../note-data";
 import { type TargetLanguage, targetLanguageSchema } from "../target-language";
-import { availableBlocksFor } from "./system-block-catalog";
 
-type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
+type AnyReadingNoteData = NoteDataFor<"Reading">;
 
 export type UnitReadingFamilyFor<L extends TargetLanguage> = Extract<
 	LemmaFamilyFor<L>,
@@ -21,7 +20,7 @@ export type ReadingNoteRouteKey<
 	F extends UnitReadingFamilyFor<L> = UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F> = UnitReadingKindFor<L, F>,
 > = {
-	readonly targetLanguage: L;
+	readonly language: L;
 	readonly family: F;
 	readonly kind: K;
 };
@@ -53,10 +52,18 @@ export function readingNoteRouteFor(
 	if (!language.success) return null;
 
 	const route = {
-		targetLanguage: language.data,
+		language: language.data,
 		family: lemma.family,
 		kind: lemma.kind,
 	};
-	if (availableBlocksFor(route) === null) return null;
+	if (
+		registeredNoteBlockMap(
+			route.language,
+			"Reading",
+			route.family,
+			route.kind,
+		) === null
+	)
+		return null;
 	return route as ReadingNoteRoute;
 }

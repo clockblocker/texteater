@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import type { UnitReadingNoteTarget } from "@/lib/navigation";
+import type { ReadingNoteTarget } from "@/lib/navigation";
 import {
 	normalizeReadingDefinition,
 	readingDefinitionChange,
@@ -48,7 +48,7 @@ export function UnitReadingNoteView({
 	presentation = "Sheet",
 }: {
 	presentation?: "Card" | "Sheet";
-	target: UnitReadingNoteTarget;
+	target: ReadingNoteTarget;
 }) {
 	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery({
@@ -67,18 +67,14 @@ export function UnitReadingNoteView({
 		return <ReadingNoteSkeleton />;
 	}
 	const route =
-		noteQuery.data?.kind === "UnitReadingNote"
+		noteQuery.data?.kind === "Reading"
 			? readingNoteRouteFor(noteQuery.data)
 			: null;
-	if (
-		noteQuery.data?.kind !== "UnitReadingNote" ||
-		!settingsQuery.data ||
-		!route
-	) {
+	if (noteQuery.data?.kind !== "Reading" || !settingsQuery.data || !route) {
 		return (
 			<NotFoundView
 				title="Reading note not found"
-				description="This Unit Reading Note does not exist, was removed, or its Reading is not a supported Unit family."
+				description="This Reading Note does not exist, was removed, or its Reading is not a supported Unit family."
 			/>
 		);
 	}
@@ -90,7 +86,11 @@ export function UnitReadingNoteView({
 			presentation={presentation}
 			note={noteQuery.data}
 			knowledgeSettings={settingsQuery.data}
-			route={route}
+			route={{
+				targetLanguage: route.language,
+				family: route.family,
+				kind: route.kind,
+			}}
 		/>
 	);
 }
@@ -136,7 +136,7 @@ function ReadingNoteContainer({
 				visitorId,
 				contextCursor: cursor,
 			});
-			return next?.kind === "UnitReadingNote" ? next : null;
+			return next?.kind === "Reading" ? next : null;
 		},
 		[convex, note.target.readingId, visitorId],
 	);

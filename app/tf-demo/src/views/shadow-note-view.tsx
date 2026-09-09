@@ -88,7 +88,7 @@ export function ShadowNoteView({ target }: { target: ShadowNoteTarget }) {
 		gcTime: 10_000,
 	});
 	if (noteQuery.isPending) return <ShadowNoteSkeleton />;
-	if (noteQuery.data?.kind !== "ShadowNote") {
+	if (noteQuery.data?.kind !== "Shadow") {
 		return (
 			<NotFoundView
 				title="Shadow note not found"
@@ -122,7 +122,7 @@ function ShadowNoteContainer({
 				shadowId: note.target.shadowId,
 				contextCursor: cursor,
 			});
-			return next?.kind === "ShadowNote" ? next : null;
+			return next?.kind === "Shadow" ? next : null;
 		},
 		[convex, note.target.shadowId],
 	);

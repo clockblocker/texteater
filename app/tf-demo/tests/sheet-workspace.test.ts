@@ -22,32 +22,31 @@ import {
 const reading = {
 	kind: "Note" as const,
 	target: {
-		kind: "UnitReadingNote" as const,
+		kind: "Reading" as const,
 		readingId: "workspace-note:reading:1:6",
 	},
 };
 const lemma = {
 	kind: "Note" as const,
 	target: {
-		kind: "RouteNote" as const,
-		routeKind: "Lemma" as const,
-		id: "workspace-note:lemma:1:6",
+		kind: "Lemma" as const,
+		lemmaId: "workspace-note:lemma:1:6",
 	},
 };
 const surface = {
 	kind: "Note" as const,
 	target: {
-		kind: "RouteNote" as const,
-		routeKind: "Surface" as const,
-		id: "workspace-note:surface:1:6",
+		kind: "Surface" as const,
+		language: "de" as const,
+		normalizedSurface: "Banken",
 	},
+	presentationContext: { activeAnalysisKey: "workspace-note:surface:1:6" },
 };
 const attestation = {
 	kind: "Note" as const,
 	target: {
-		kind: "RouteNote" as const,
-		routeKind: "Attestation" as const,
-		id: "workspace-note:attestation:1:6",
+		kind: "Attestation" as const,
+		attestationId: "workspace-note:attestation:1:6",
 	},
 };
 
@@ -284,7 +283,7 @@ test("the reusable interface renders actual Text and Note modules with presentat
 		createElement("div", {}, renderer(reading, "Sheet")),
 	);
 	expect(presentations).toEqual(["Sheet"]);
-	expect(markup).toContain('aria-label="Reading note"');
+	expect(markup).toContain('aria-label="Reading Note"');
 	expect(markup).toContain("🔒 ");
 	expect(markup).toContain("schließen</h1>");
 	expect(markup).toContain("to close");

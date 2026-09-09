@@ -1,8 +1,6 @@
-import {
-	reconcileReadingBlockLayout,
-	type ReadingBlockKind as SharedReadingBlockKind,
-} from "../../../shared/reading-block-layout";
-import type { NoteBlockKindFor } from "../note-block-kind";
+import type { NoteBlockKind } from "../note-block-kind";
+import { reconcileNoteBlockLayout } from "../note-block-layout";
+import { registeredNoteBlockMap } from "../note-block-renderer-registry-runtime";
 import type { TargetLanguage } from "../target-language";
 import type { ReadingNoteBlockRenderer } from "./reading-note-render-context";
 import type {
@@ -10,9 +8,8 @@ import type {
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
-import { availableBlocksFor, rendererFor } from "./system-block-catalog";
 
-export type ReadingBlockKind = NoteBlockKindFor<"UnitReadingNote">;
+export type ReadingBlockKind = Exclude<NoteBlockKind, "Routes">;
 
 export type ReadingBlockLayout = {
 	/** Includes visible and hidden Blocks so re-enabling preserves position. */
@@ -38,23 +35,30 @@ export function resolveReadingBlockPlan<
 	route: ReadingNoteRouteKey<L, F, K>,
 	layout: ReadingBlockLayout,
 ): ReadingBlockPlan<L, F, K> {
-	const available = availableBlocksFor(route);
-	const reconciled = reconcileReadingBlockLayout(
-		{
-			order: layout.order as readonly SharedReadingBlockKind[],
-			hidden: [...layout.hidden] as readonly SharedReadingBlockKind[],
-		},
-		available as readonly SharedReadingBlockKind[],
+	const registry = registeredNoteBlockMap(
+		route.language,
+		"Reading",
+		route.family,
+		route.kind,
 	);
+	if (!registry) {
+		throw new Error(
+			`Unsupported Reading route: ${route.language}/${route.family}/${route.kind}.`,
+		);
+	}
+	const available = Object.keys(registry) as ReadingBlockKind[];
+	const reconciled = reconcileNoteBlockLayout(layout, available);
 	const hidden = new Set(reconciled.hidden);
 
 	return reconciled.order.flatMap((blockKind) => {
 		if (hidden.has(blockKind)) return [];
 		const typedBlockKind = blockKind as ReadingBlockKind;
+		const renderer = registry[typedBlockKind];
+		if (!renderer) return [];
 		return [
 			{
 				blockKind: typedBlockKind,
-				renderer: rendererFor(route, typedBlockKind),
+				renderer: renderer as ReadingNoteBlockRenderer<L, F, K>,
 			},
 		];
 	});

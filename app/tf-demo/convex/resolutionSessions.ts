@@ -63,17 +63,18 @@ export const selectSegment = mutation({
 				readingId: v.id("readings"),
 				lemmaId: v.id("lemmas"),
 				surfaceId: v.id("surfaces"),
+				surfaceLanguage: v.literal("de"),
+				normalizedSurface: v.string(),
 				attestationId: v.id("attestations"),
 			}),
 			target: v.union(
 				v.object({
-					kind: v.literal("UnitReadingNote"),
+					kind: v.literal("Reading"),
 					readingId: v.id("readings"),
 				}),
 				v.object({
-					kind: v.literal("RouteNote"),
-					routeKind: v.literal("Attestation"),
-					id: v.id("attestations"),
+					kind: v.literal("Attestation"),
+					attestationId: v.id("attestations"),
 				}),
 			),
 		}),
@@ -154,6 +155,13 @@ export const selectSegment = mutation({
 			if (!attestation) throw new Error("Attestation does not exist.");
 			const reading = await ctx.db.get(attestation.readingId);
 			if (!reading) throw new Error("Reading does not exist.");
+			const surface = await ctx.db.get(attestation.surfaceId);
+			if (surface?.language !== "de") {
+				throw new Error("Surface does not exist or is unsupported.");
+			}
+			if (surface.lemmaId !== reading.lemmaId) {
+				throw new Error("Surface and Reading must share one Lemma.");
+			}
 			await ensureVisitorEncounter(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
@@ -173,17 +181,18 @@ export const selectSegment = mutation({
 				canonical: {
 					readingId: reading._id,
 					lemmaId: reading.lemmaId,
-					surfaceId: attestation.surfaceId,
+					surfaceId: surface._id,
+					surfaceLanguage: surface.language,
+					normalizedSurface: surface.normalizedSurface,
 					attestationId,
 				},
 				target: args.routeNoteRequested
 					? {
-							kind: "RouteNote" as const,
-							routeKind: "Attestation" as const,
-							id: attestationId,
+							kind: "Attestation" as const,
+							attestationId,
 						}
 					: {
-							kind: "UnitReadingNote" as const,
+							kind: "Reading" as const,
 							readingId: reading._id,
 						},
 			};

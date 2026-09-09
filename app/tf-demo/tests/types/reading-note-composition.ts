@@ -40,7 +40,7 @@ const verbHeader: ReadingNoteBlockRenderer<"de", "Lexeme", "VERB"> = (
 void verbHeader;
 
 const verbRoute = {
-	targetLanguage: "de",
+	language: "de",
 	family: "Lexeme",
 	kind: "VERB",
 } as const;
@@ -62,7 +62,7 @@ const mismatchedVerbContext: ReadingNoteRenderContext<"de", "Lexeme", "VERB"> =
 	{
 		// @ts-expect-error A NOUN-refined Note cannot be paired with a VERB route.
 		noteData: nounContext.noteData,
-		RouteKey: { targetLanguage: "de", family: "Lexeme", kind: "VERB" },
+		RouteKey: { language: "de", family: "Lexeme", kind: "VERB" },
 		PresentationCapabilities: nounContext.PresentationCapabilities,
 	};
 void mismatchedVerbContext;

@@ -21,7 +21,7 @@ import { readingDefinitionMutationArgs } from "../src/views/unit-reading-note-vi
 test("narrows each valid Reading route once and rejects unsupported coordinates", () => {
 	const note = readingNoteFixture();
 	expect(readingNoteRouteFor(note)).toEqual({
-		targetLanguage: "de",
+		language: "de",
 		family: "Lexeme",
 		kind: "NOUN",
 	});
@@ -42,7 +42,7 @@ test("dispatches malformed routes to an Error Note before Block rendering", () =
 	);
 	expect(markup).toContain("Reading Note unavailable");
 	expect(markup).toContain("Unsupported Reading route: de/Lexeme/Unknown.");
-	expect(markup).not.toContain('aria-label="Reading note"');
+	expect(markup).not.toContain('aria-label="Reading Note"');
 });
 
 test("keeps app navigation outside the Note composition while modeled defaults stay invisible", () => {
@@ -50,7 +50,7 @@ test("keeps app navigation outside the Note composition while modeled defaults s
 		renderReadingNote(readingNoteFixture()),
 	);
 	expect(markup).not.toContain('aria-label="Primary"');
-	expect(markup).toContain('aria-label="Reading note"');
+	expect(markup).toContain('aria-label="Reading Note"');
 	expect(markup).not.toContain("unavailable");
 
 	const context = renderContext();
@@ -86,9 +86,8 @@ test("renders populated defaults in weighted order with workspace commands", () 
 				relation: "synonym",
 				targetCanonicalForm: "Institut",
 				target: {
-					kind: "RouteNote",
-					routeKind: "Lemma",
-					id: "lemma-1" as never,
+					kind: "Lemma",
+					lemmaId: "lemma-1" as never,
 				},
 			},
 		],
@@ -100,7 +99,7 @@ test("renders populated defaults in weighted order with workspace commands", () 
 				targetFamily: "Lexeme",
 				targetKind: "NOUN",
 				target: {
-					kind: "ShadowNote",
+					kind: "Shadow",
 					shadowId: "shadow-1" as never,
 				},
 			},
@@ -147,9 +146,8 @@ test("applies visitor Knowledge Settings in React without reshaping NoteData", (
 				relation: "synonym",
 				targetCanonicalForm: "Institut",
 				target: {
-					kind: "RouteNote",
-					routeKind: "Lemma",
-					id: "lemma-1" as never,
+					kind: "Lemma",
+					lemmaId: "lemma-1" as never,
 				},
 			},
 		],
@@ -212,7 +210,7 @@ test("resolves configured order and keeps the German VERB Header specialization 
 		hidden: new Set(),
 	});
 	const verbRoute = {
-		targetLanguage: "de",
+		language: "de",
 		family: "Lexeme",
 		kind: "VERB",
 	} as const;
@@ -463,7 +461,7 @@ function renderContext(
 	const kind = route.kind ?? "NOUN";
 	return {
 		noteData: note,
-		RouteKey: { targetLanguage: "de", family: "Lexeme", kind },
+		RouteKey: { language: "de", family: "Lexeme", kind },
 		PresentationCapabilities: createDefaultReadingNoteCapabilities(note),
 	};
 }
@@ -490,8 +488,8 @@ function readingNoteFixture(
 ): AnyReadingNoteData {
 	const canonicalForm = route.canonicalForm ?? "Bank";
 	return {
-		kind: "UnitReadingNote",
-		target: { kind: "UnitReadingNote", readingId: "reading-1" as never },
+		kind: "Reading",
+		target: { kind: "Reading", readingId: "reading-1" as never },
 		reading: {
 			ownerKind: "Reading",
 			ownerKey: "reading-key",

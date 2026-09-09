@@ -17,8 +17,8 @@ The initial Locked Sheet containing the Library.
 A Locked Sheet containing a Text Subject.
 
 **Note Presentation**:
-A Route, Unit Reading, Shadow, Resolution, or Resolution Step Subject in Card
-or Sheet form.
+A Reading, Lemma, Surface, Attestation, Shadow, Resolution, or Resolution Step
+Subject in Card or Sheet form.
 
 **Workspace Persistence**:
 The placed Sheet composition and the Card Layer membership needed to return an
@@ -58,20 +58,32 @@ tf-demo projects its symmetric reverse without Semantic Relation inference.
 A Reading whose Lemma family is Lexeme, Phraseme, or Morpheme. The grouping adds
 no identity.
 
-**Unit Reading Note**:
+**Reading Note**:
 The learner-facing Note for one Unit Reading, combining its Knowledge, Lemma,
 and source Occurrence Attestations.
 
 **Source Context**:
 A projection of one Occurrence Attestation inside its source Sentence and Text.
-Its return locator and highlighting add no linguistic identity. A Unit Reading
+Its return locator and highlighting add no linguistic identity. A Reading
 Note includes it only when the current Visitor has encountered one of the
 occurrence's member Segments.
 _Avoid_: clicked context, Reading identity evidence
 
-**Route Note**:
-An optional projection of an Attestation, Surface, or Lemma used to traverse
-the resolution route. It adds no identity.
+**Lemma Note**:
+A projection of one Lemma and its Readings. It adds no identity beyond the
+Lemma and Reading records it presents.
+
+**Surface Note**:
+A projection of one normalized orthographic form in one language, aggregating
+its typed Lemma analyses without assigning the Note an outer Family or Kind.
+
+**Active Surface Analysis**:
+The analysis selected by the context that opened one Surface Note Presentation.
+It belongs to that Presentation, so another Presentation may select differently.
+
+**Attestation Note**:
+A learner-facing projection of one durable Occurrence Attestation that follows
+its resolved Reading route. It adds no identity.
 
 **Shadow Note**:
 A projection of one Unit Shadow and the pending references to it. It does not

@@ -35,7 +35,9 @@ import {
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "../convex/model/validators";
+import { readingNoteValidator } from "../convex/modules/notes/readingNote";
 import { routeNoteValidator } from "../convex/modules/notes/routeNotes";
+import { shadowNoteValidator } from "../convex/modules/notes/shadowNote";
 
 function fieldType(
 	validator: { json: unknown },
@@ -138,7 +140,7 @@ test("Presented Dumling validators cover the exact stable presentation branches"
 	);
 });
 
-test("each Route Note variant has one required Presented entity field", () => {
+test("Note validators expose five exact kinds and keep presented entities nested", () => {
 	const routeUnion = routeNoteValidator.json as {
 		type: string;
 		value: Array<{
@@ -154,6 +156,14 @@ test("each Route Note variant has one required Presented entity field", () => {
 	};
 	expect(routeUnion.type).toBe("union");
 	expect(routeUnion.value).toHaveLength(3);
+	expect(fieldType(readingNoteValidator, "kind")).toEqual({
+		type: "literal",
+		value: "Reading",
+	});
+	expect(fieldType(shadowNoteValidator, "kind")).toEqual({
+		type: "literal",
+		value: "Shadow",
+	});
 	const duplicatedEntityFields = {
 		Attestation: ["members", "realizationCoverage", "surface"],
 		Surface: [
@@ -173,13 +183,29 @@ test("each Route Note variant has one required Presented entity field", () => {
 			"coreFeatures",
 		],
 	} as const;
-	for (const variant of routeUnion.value) {
+	const variantsByKind = new Map(
+		routeUnion.value.map((variant) => [
+			variant.value.kind?.fieldType.value as string,
+			variant,
+		]),
+	);
+	expect([...variantsByKind.keys()]).toEqual([
+		"Attestation",
+		"Surface",
+		"Lemma",
+	]);
+	for (const [noteKind, variant] of variantsByKind) {
 		expect(variant.type).toBe("object");
-		expect(variant.value.presented?.optional).not.toBe(true);
-		expect(variant.value.presented?.fieldType.type).toBe("object");
-		const routeKind = variant.value.routeKind?.fieldType
-			.value as keyof typeof duplicatedEntityFields;
-		for (const field of duplicatedEntityFields[routeKind]) {
+		if (noteKind === "Surface") {
+			expect(variant.value.presented).toBeUndefined();
+			expect(variant.value.analyses?.fieldType.type).toBe("array");
+		} else {
+			expect(variant.value.presented?.optional).not.toBe(true);
+			expect(variant.value.presented?.fieldType.type).toBe("object");
+		}
+		for (const field of duplicatedEntityFields[
+			noteKind as keyof typeof duplicatedEntityFields
+		]) {
 			expect(variant.value[field]).toBeUndefined();
 		}
 	}

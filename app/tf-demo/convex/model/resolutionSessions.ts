@@ -116,18 +116,19 @@ export const resolutionNoteValidator = v.object({
 						readingId: v.id("readings"),
 						lemmaId: v.id("lemmas"),
 						surfaceId: v.id("surfaces"),
+						surfaceLanguage: v.literal("de"),
+						normalizedSurface: v.string(),
 						attestationId: v.id("attestations"),
 					}),
 				),
 				target: v.union(
 					v.object({
-						kind: v.literal("UnitReadingNote"),
+						kind: v.literal("Reading"),
 						readingId: v.id("readings"),
 					}),
 					v.object({
-						kind: v.literal("RouteNote"),
-						routeKind: v.literal("Attestation"),
-						id: v.id("attestations"),
+						kind: v.literal("Attestation"),
+						attestationId: v.id("attestations"),
 					}),
 				),
 			}),
@@ -206,12 +207,11 @@ export async function loadResolutionNote(
 						...(canonical ? { canonical } : {}),
 						target: session.routeNoteRequested
 							? {
-									kind: "RouteNote" as const,
-									routeKind: "Attestation" as const,
-									id: session.attestationId,
+									kind: "Attestation" as const,
+									attestationId: session.attestationId,
 								}
 							: {
-									kind: "UnitReadingNote" as const,
+									kind: "Reading" as const,
 									readingId: session.readingId,
 								},
 					},
@@ -245,10 +245,19 @@ async function loadCanonicalResolution(
 		ctx.db.get(attestationId),
 	]);
 	if (!reading || !attestation) return null;
+	const surface = await ctx.db.get(attestation.surfaceId);
+	if (
+		!surface ||
+		surface.lemmaId !== reading.lemmaId ||
+		surface.language !== "de"
+	)
+		return null;
 	return {
 		readingId,
 		lemmaId: reading.lemmaId,
-		surfaceId: attestation.surfaceId,
+		surfaceId: surface._id,
+		surfaceLanguage: surface.language,
+		normalizedSurface: surface.normalizedSurface,
 		attestationId,
 	};
 }

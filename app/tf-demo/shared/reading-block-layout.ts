@@ -21,60 +21,10 @@ export type SerializedReadingBlockLayout = {
 	readonly hidden: readonly ReadingBlockKind[];
 };
 
-const BASE_BLOCKS = [
-	"Header",
-	"SourceContexts",
-	"Definition",
-	"Translations",
-] as const satisfies readonly ReadingBlockKind[];
-
-const RELATIONAL_BLOCKS = [
-	...BASE_BLOCKS,
-	"Relations",
-] as const satisfies readonly ReadingBlockKind[];
-
-export const DE_READING_BLOCKS_BY_FAMILY_KIND = {
-	Lexeme: {
-		ADJ: RELATIONAL_BLOCKS,
-		ADP: RELATIONAL_BLOCKS,
-		ADV: RELATIONAL_BLOCKS,
-		AUX: RELATIONAL_BLOCKS,
-		CCONJ: RELATIONAL_BLOCKS,
-		DET: RELATIONAL_BLOCKS,
-		INTJ: RELATIONAL_BLOCKS,
-		NOUN: RELATIONAL_BLOCKS,
-		NUM: RELATIONAL_BLOCKS,
-		PART: RELATIONAL_BLOCKS,
-		PRON: RELATIONAL_BLOCKS,
-		PROPN: RELATIONAL_BLOCKS,
-		PUNCT: BASE_BLOCKS,
-		SCONJ: RELATIONAL_BLOCKS,
-		SYM: RELATIONAL_BLOCKS,
-		VERB: RELATIONAL_BLOCKS,
-		X: BASE_BLOCKS,
-	},
-	Phraseme: {
-		Aphorism: RELATIONAL_BLOCKS,
-		Collocation: RELATIONAL_BLOCKS,
-		DiscourseFormula: RELATIONAL_BLOCKS,
-		Idiom: RELATIONAL_BLOCKS,
-		Proverb: RELATIONAL_BLOCKS,
-	},
-	Morpheme: {
-		Circumfix: BASE_BLOCKS,
-		Clitic: BASE_BLOCKS,
-		Duplifix: BASE_BLOCKS,
-		Infix: BASE_BLOCKS,
-		Interfix: BASE_BLOCKS,
-		Prefix: BASE_BLOCKS,
-		Root: BASE_BLOCKS,
-		Suffix: BASE_BLOCKS,
-		Suffixoid: BASE_BLOCKS,
-		ToneMarking: BASE_BLOCKS,
-		Transfix: BASE_BLOCKS,
-	},
-} as const;
-
+/**
+ * Layout preferences contain presentation order and visibility only. The Note
+ * renderer registry decides which Blocks are available for a grammatical route.
+ */
 export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	order: [
 		"Header",
@@ -86,53 +36,9 @@ export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	hidden: [],
 } as const satisfies SerializedReadingBlockLayout;
 
-export function supportedReadingRoutes(
-	targetLanguage: "de",
-): readonly ReadingBlockRoute[] {
-	return Object.entries(DE_READING_BLOCKS_BY_FAMILY_KIND).flatMap(
-		([family, kinds]) =>
-			Object.keys(kinds).map((kind) => ({
-				targetLanguage,
-				family,
-				kind,
-			})),
-	);
-}
-
-export function availableReadingBlocksForRoute(
-	route: ReadingBlockRoute,
-): readonly ReadingBlockKind[] | null {
-	if (route.targetLanguage !== "de") return null;
-	const family = DE_READING_BLOCKS_BY_FAMILY_KIND[
-		route.family as keyof typeof DE_READING_BLOCKS_BY_FAMILY_KIND
-	] as Readonly<Record<string, readonly ReadingBlockKind[]>> | undefined;
-	return family?.[route.kind] ?? null;
-}
-
-export function defaultReadingBlockLayoutForRoute(
-	route: ReadingBlockRoute,
-): SerializedReadingBlockLayout | null {
-	const available = availableReadingBlocksForRoute(route);
-	if (!available) return null;
-	return projectReadingLanguageLayoutOntoRoute(
-		DEFAULT_DE_READING_LANGUAGE_LAYOUT,
-		route,
-	);
-}
-
-export function projectReadingLanguageLayoutOntoRoute(
-	layout: SerializedReadingBlockLayout,
-	route: ReadingBlockRoute,
-): SerializedReadingBlockLayout {
-	const available = availableReadingBlocksForRoute(route);
-	if (!available)
-		throw new Error(`Unsupported Reading route: ${routeKey(route)}.`);
-	return reconcileReadingBlockLayout(layout, available);
-}
-
 export function reconcileReadingBlockLayout(
 	layout: SerializedReadingBlockLayout,
-	available: readonly ReadingBlockKind[],
+	available: readonly ReadingBlockKind[] = DEFAULT_DE_READING_LANGUAGE_LAYOUT.order,
 ): SerializedReadingBlockLayout {
 	const supported = new Set(available);
 	const seen = new Set<ReadingBlockKind>();
@@ -152,7 +58,7 @@ export function reconcileReadingBlockLayout(
 		seen.add(blockKind);
 		order.push(blockKind);
 	}
-	const hidden = uniqueBlockKinds(layout.hidden).filter((blockKind) =>
+	const hidden = [...new Set(layout.hidden)].filter((blockKind) =>
 		supported.has(blockKind),
 	);
 	return { order, hidden };
@@ -160,26 +66,23 @@ export function reconcileReadingBlockLayout(
 
 export function assertReadingBlockOrder(
 	order: readonly ReadingBlockKind[],
-	available: readonly ReadingBlockKind[],
 ): void {
-	const reconciled = reconcileReadingBlockLayout(
-		{ order, hidden: [] },
-		available,
-	).order;
 	if (
-		order.length !== available.length ||
+		order.length === 0 ||
 		new Set(order).size !== order.length ||
-		reconciled.some((blockKind, index) => blockKind !== order[index])
+		order.some(
+			(blockKind) => !READING_BLOCK_KIND_VALUES.includes(blockKind),
+		)
 	) {
 		throw new Error(
-			"Reading Block order must contain every supported Block exactly once.",
+			"Reading Block order must contain configured Blocks at most once.",
 		);
 	}
 }
 
 export function assertReadingBlockSupported(
 	blockKind: ReadingBlockKind,
-	available: readonly ReadingBlockKind[],
+	available: readonly ReadingBlockKind[] = READING_BLOCK_KIND_VALUES,
 ): void {
 	if (!available.includes(blockKind)) {
 		throw new Error(`Unsupported Reading Block: ${blockKind}.`);
@@ -188,10 +91,4 @@ export function assertReadingBlockSupported(
 
 export function routeKey(route: ReadingBlockRoute): string {
 	return `${route.targetLanguage}/${route.family}/${route.kind}`;
-}
-
-function uniqueBlockKinds(
-	blockKinds: readonly ReadingBlockKind[],
-): ReadingBlockKind[] {
-	return [...new Set(blockKinds)];
 }

@@ -738,7 +738,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				{
 					relation: "synonym",
 					target: {
-						kind: "UnitReadingNote",
+						kind: "Reading",
 						readingId: target._id,
 					},
 				},

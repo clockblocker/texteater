@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import {
-	NOTE_BLOCK_KIND_FOR,
+	NOTE_BLOCK_RENDERER_REGISTRY,
 	type NoteBlockKind,
 	type NoteData,
 	noteBlockKindSchema,
@@ -15,9 +15,11 @@ import {
 
 test("shared Note and Block schemas expose the frozen vocabulary", () => {
 	expect(noteKindSchema.options).toEqual([
-		"UnitReadingNote",
-		"RouteNote",
-		"ShadowNote",
+		"Reading",
+		"Lemma",
+		"Surface",
+		"Attestation",
+		"Shadow",
 	]);
 	expect(noteBlockKindSchema.options).toEqual([
 		"Header",
@@ -30,12 +32,13 @@ test("shared Note and Block schemas expose the frozen vocabulary", () => {
 		"Routes",
 	]);
 	expect(targetLanguageSchema.options).toEqual(["de"]);
-	expect(NOTE_BLOCK_KIND_FOR.UnitReadingNote.options).not.toContain("Routes");
-	expect(NOTE_BLOCK_KIND_FOR.RouteNote.options).toEqual(["Header", "Routes"]);
-	expect(NOTE_BLOCK_KIND_FOR.ShadowNote.options).toEqual([
+	expect(Object.keys(NOTE_BLOCK_RENDERER_REGISTRY.de.Surface)).toEqual([
 		"Header",
-		"Relations",
+		"Routes",
 	]);
+	expect(
+		Object.keys(NOTE_BLOCK_RENDERER_REGISTRY.de.Shadow.Lexeme.NOUN),
+	).toEqual(["Header", "Relations"]);
 });
 
 test("Block ordering is independent from applicability and rejects ties", () => {
@@ -60,9 +63,11 @@ test("Block ordering is independent from applicability and rejects ties", () => 
 
 test("the root dispatch covers stable kinds and visibly rejects unknown kinds", () => {
 	const unavailableTitleFor = {
-		UnitReadingNote: "Reading Note unavailable",
-		RouteNote: "Route Note unavailable",
-		ShadowNote: "Shadow Note unavailable",
+		Reading: "Reading Note unavailable",
+		Lemma: "Lemma Note unavailable",
+		Surface: "Surface Note unavailable",
+		Attestation: "Attestation Note unavailable",
+		Shadow: "Shadow Note unavailable",
 	} as const;
 	for (const kind of noteKindSchema.options) {
 		const markup = renderToStaticMarkup(

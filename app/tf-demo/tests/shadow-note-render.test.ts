@@ -13,8 +13,8 @@ type ShadowNote = ShadowNoteData;
 
 function noteFixture(): ShadowNote {
 	return {
-		kind: "ShadowNote",
-		target: { kind: "ShadowNote", shadowId: "shadow-1" as never },
+		kind: "Shadow",
+		target: { kind: "Shadow", shadowId: "shadow-1" as never },
 		descriptor: {
 			language: "de",
 			canonicalForm: "Bank",
@@ -30,11 +30,7 @@ function noteFixture(): ShadowNote {
 					family: "Lexeme",
 					kind: "NOUN",
 					coreFeatures: [{ name: "nounClass", value: "place" }],
-					target: {
-						kind: "RouteNote",
-						routeKind: "Lemma",
-						id: "lemma-bank-a" as never,
-					},
+					target: { kind: "Lemma", lemmaId: "lemma-bank-a" as never },
 				},
 				{
 					lemmaId: "lemma-bank-b" as never,
@@ -42,11 +38,7 @@ function noteFixture(): ShadowNote {
 					family: "Lexeme",
 					kind: "NOUN",
 					coreFeatures: [{ name: "nounClass", value: "institution" }],
-					target: {
-						kind: "RouteNote",
-						routeKind: "Lemma",
-						id: "lemma-bank-b" as never,
-					},
+					target: { kind: "Lemma", lemmaId: "lemma-bank-b" as never },
 				},
 			],
 		},
@@ -58,7 +50,7 @@ function noteFixture(): ShadowNote {
 						canonicalForm: "laufen",
 						emojiDescription: "🏃",
 						target: {
-							kind: "UnitReadingNote",
+							kind: "Reading",
 							readingId: "reading-source" as never,
 						},
 					},

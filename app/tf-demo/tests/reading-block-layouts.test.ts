@@ -9,11 +9,8 @@ import {
 } from "../convex/readingBlockLayouts";
 import {
 	DEFAULT_DE_READING_LANGUAGE_LAYOUT,
-	defaultReadingBlockLayoutForRoute,
-	projectReadingLanguageLayoutOntoRoute,
 	type ReadingBlockKind,
 	type ReadingBlockRoute,
-	supportedReadingRoutes,
 } from "../shared/reading-block-layout";
 import {
 	IndexedTestDb,
@@ -68,12 +65,12 @@ describe("Reading Block layout persistence", () => {
 				visitorId: VISITOR_ID,
 				route: VERB_ROUTE,
 			}),
-		).toEqual(defaultReadingBlockLayoutForRoute(VERB_ROUTE));
+		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
 		expect(db.rows("readingLanguageLayouts")).toEqual([]);
 		expect(db.rows("readingFamilyKindLayouts")).toEqual([]);
 	});
 
-	test("language order materializes every route and broadcasts a projected order", async () => {
+	test("language order remains a fallback without materializing route availability", async () => {
 		const db = new IndexedTestDb();
 
 		expect(
@@ -85,21 +82,14 @@ describe("Reading Block layout persistence", () => {
 		).toEqual({ order: LANGUAGE_ORDER, hidden: [] });
 
 		expect(db.rows("readingLanguageLayouts")).toHaveLength(1);
-		expect(db.rows("readingFamilyKindLayouts")).toHaveLength(
-			supportedReadingRoutes("de").length,
-		);
+		expect(db.rows("readingFamilyKindLayouts")).toEqual([]);
 		for (const route of [VERB_ROUTE, IDIOM_ROUTE, PUNCT_ROUTE]) {
 			expect(
 				await runTestQuery(db, getFamilyKind, {
 					visitorId: VISITOR_ID,
 					route,
 				}),
-			).toEqual(
-				projectReadingLanguageLayoutOntoRoute(
-					{ order: LANGUAGE_ORDER, hidden: [] },
-					route,
-				),
-			);
+			).toEqual({ order: LANGUAGE_ORDER, hidden: [] });
 		}
 	});
 
@@ -181,7 +171,7 @@ describe("Reading Block layout persistence", () => {
 				visitorId: VISITOR_ID,
 				route: IDIOM_ROUTE,
 			}),
-		).toEqual(defaultReadingBlockLayoutForRoute(IDIOM_ROUTE));
+		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
 
 		await runTestMutation(db, setLanguageBlockOrder, {
 			visitorId: VISITOR_ID,
@@ -218,33 +208,31 @@ describe("Reading Block layout persistence", () => {
 		});
 	});
 
-	test("rejects unsupported routes, blocks, and partial orders transactionally", async () => {
+	test("rejects malformed order while route availability remains renderer-owned", async () => {
 		const db = new IndexedTestDb();
 
 		await expect(
 			runTestMutation(db, setFamilyKindBlockOrder, {
 				visitorId: VISITOR_ID,
 				route: VERB_ROUTE,
-				order: ["Header", "Definition"],
+				order: ["Header", "Definition", "Header"],
 			}),
 		).rejects.toThrow(
-			"Reading Block order must contain every supported Block exactly once.",
+			"Reading Block order must contain configured Blocks at most once.",
 		);
-		await expect(
-			runTestMutation(db, setFamilyKindBlockVisibility, {
-				visitorId: VISITOR_ID,
-				route: PUNCT_ROUTE,
-				blockKind: "Relations",
-				visible: false,
-			}),
-		).rejects.toThrow("Unsupported Reading Block: Relations.");
-		await expect(
-			runTestQuery(db, getFamilyKind, {
+		await runTestMutation(db, setFamilyKindBlockVisibility, {
+			visitorId: VISITOR_ID,
+			route: PUNCT_ROUTE,
+			blockKind: "Relations",
+			visible: false,
+		});
+		expect(
+			await runTestQuery(db, getFamilyKind, {
 				visitorId: VISITOR_ID,
 				route: { ...VERB_ROUTE, kind: "NOT_A_KIND" },
 			}),
-		).rejects.toThrow("Unsupported Reading route: de/Lexeme/NOT_A_KIND.");
+		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
 		expect(db.rows("readingLanguageLayouts")).toEqual([]);
-		expect(db.rows("readingFamilyKindLayouts")).toEqual([]);
+		expect(db.rows("readingFamilyKindLayouts")).toHaveLength(1);
 	});
 });

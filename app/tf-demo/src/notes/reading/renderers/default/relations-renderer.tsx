@@ -42,9 +42,9 @@ export const renderDefaultReadingRelations = (({
 					{relations.map((relation) => (
 						<li
 							key={`${relation.relation}:${
-								relation.target.kind === "UnitReadingNote"
+								relation.target.kind === "Reading"
 									? relation.target.readingId
-									: relation.target.id
+									: relation.target.lemmaId
 							}`}
 						>
 							<button

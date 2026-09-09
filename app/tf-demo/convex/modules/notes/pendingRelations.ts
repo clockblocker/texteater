@@ -14,7 +14,7 @@ export const pendingRelationProjectionValidator = v.object({
 	targetFamily: v.string(),
 	targetKind: v.string(),
 	target: v.object({
-		kind: v.literal("ShadowNote"),
+		kind: v.literal("Shadow"),
 		shadowId: v.id("shadows"),
 	}),
 });
@@ -26,7 +26,7 @@ export type PendingRelationProjection = {
 	readonly targetFamily: string;
 	readonly targetKind: string;
 	readonly target: {
-		readonly kind: "ShadowNote";
+		readonly kind: "Shadow";
 		readonly shadowId: Id<"shadows">;
 	};
 };
@@ -75,7 +75,7 @@ export function projectPendingRelations(
 						targetFamily,
 						targetKind,
 						target: {
-							kind: "ShadowNote" as const,
+							kind: "Shadow" as const,
 							shadowId,
 						},
 					},

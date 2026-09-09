@@ -30,9 +30,9 @@ const unitShadowProjectionValidator = v.object({
 });
 
 export const shadowNoteValidator = v.object({
-	kind: v.literal("ShadowNote"),
+	kind: v.literal("Shadow"),
 	target: v.object({
-		kind: v.literal("ShadowNote"),
+		kind: v.literal("Shadow"),
 		shadowId: v.id("shadows"),
 	}),
 	descriptor: unitShadowProjectionValidator,
@@ -46,9 +46,8 @@ export const shadowNoteValidator = v.object({
 				kind: v.string(),
 				coreFeatures: v.array(featureProjectionValidator),
 				target: v.object({
-					kind: v.literal("RouteNote"),
-					routeKind: v.literal("Lemma"),
-					id: v.id("lemmas"),
+					kind: v.literal("Lemma"),
+					lemmaId: v.id("lemmas"),
 				}),
 			}),
 		),
@@ -61,7 +60,7 @@ export const shadowNoteValidator = v.object({
 					canonicalForm: v.string(),
 					emojiDescription: v.string(),
 					target: v.object({
-						kind: v.literal("UnitReadingNote"),
+						kind: v.literal("Reading"),
 						readingId: v.id("readings"),
 					}),
 				}),
@@ -155,9 +154,8 @@ async function loadShadowInspection(
 		kind: string;
 		coreFeatures: { name: string; value: string }[];
 		target: {
-			kind: "RouteNote";
-			routeKind: "Lemma";
-			id: Id<"lemmas">;
+			kind: "Lemma";
+			lemmaId: Id<"lemmas">;
 		};
 	}[] = [];
 	for (const lemma of lemmas) {
@@ -173,9 +171,8 @@ async function loadShadowInspection(
 			kind: lemma.kind,
 			coreFeatures: projectFeaturesForPresentation(lemma.coreFeatures),
 			target: {
-				kind: "RouteNote",
-				routeKind: "Lemma",
-				id: lemma._id,
+				kind: "Lemma",
+				lemmaId: lemma._id,
 			},
 		});
 	}
@@ -314,7 +311,7 @@ export async function loadShadowNote(
 				canonicalForm: string;
 				emojiDescription: string;
 				target: {
-					kind: "UnitReadingNote";
+					kind: "Reading";
 					readingId: Id<"readings">;
 				};
 			};
@@ -340,7 +337,7 @@ export async function loadShadowNote(
 				canonicalForm: lemma.canonicalForm,
 				emojiDescription: reading.emojiDescription,
 				target: {
-					kind: "UnitReadingNote",
+					kind: "Reading",
 					readingId: reading._id,
 				},
 			},
@@ -413,8 +410,8 @@ export async function loadShadowNote(
 	}
 
 	return {
-		kind: "ShadowNote" as const,
-		target: { kind: "ShadowNote" as const, shadowId: shadow._id },
+		kind: "Shadow" as const,
+		target: { kind: "Shadow" as const, shadowId: shadow._id },
 		descriptor,
 		inspection: await loadShadowInspection(ctx, descriptor),
 		references: {

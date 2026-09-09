@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { defaultKnowledgeRequestMask } from "dumrel";
 
-import { supportedReadingRoutes } from "../shared/reading-block-layout";
+import { NOTE_BLOCK_RENDERER_REGISTRY } from "../src/notes";
 import { orderNoteBlockKinds } from "../src/notes/note-block-order";
 import {
 	type ReadingBlockLayout,
@@ -62,9 +62,7 @@ const universalBlocks = [
 
 describe("German Reading Block catalog", () => {
 	test("resolves a complete valid plan for all 33 Unit Reading routes", () => {
-		const routes = supportedReadingRoutes("de").map(
-			(route) => route as ReadingNoteRoute,
-		);
+		const routes = supportedRegistryRoutes();
 		expect(routes).toHaveLength(33);
 		expect(new Set(routes.map(({ family }) => family))).toEqual(
 			new Set(Object.keys(familyKinds)),
@@ -84,7 +82,7 @@ describe("German Reading Block catalog", () => {
 	});
 
 	test("keeps applicability behind the catalog interface", () => {
-		for (const route of supportedReadingRoutes("de")) {
+		for (const route of supportedRegistryRoutes()) {
 			const blocks = new Set(
 				availableBlocksFor(route as ReadingNoteRoute),
 			);
@@ -96,7 +94,7 @@ describe("German Reading Block catalog", () => {
 		}
 		expect(
 			availableBlocksFor({
-				targetLanguage: "de",
+				language: "de",
 				family: "Construction",
 				kind: "Clause",
 			}),
@@ -105,7 +103,7 @@ describe("German Reading Block catalog", () => {
 
 	test("reconciles duplicate, stale, unsupported, and missing layout entries", () => {
 		const route = {
-			targetLanguage: "de",
+			language: "de",
 			family: "Lexeme",
 			kind: "PUNCT",
 		} as const;
@@ -129,7 +127,7 @@ describe("German Reading Block catalog", () => {
 
 	test("retains a hidden Block's position when it is re-enabled", () => {
 		const route = {
-			targetLanguage: "de",
+			language: "de",
 			family: "Lexeme",
 			kind: "NOUN",
 		} as const;
@@ -159,7 +157,7 @@ describe("German Reading Block catalog", () => {
 		for (const [family, kinds] of Object.entries(familyKinds)) {
 			for (const kind of kinds) {
 				const route = {
-					targetLanguage: "de",
+					language: "de",
 					family,
 					kind,
 				} as ReadingNoteRoute;
@@ -219,4 +217,18 @@ function lemmaSchemaFor(family: string, kind: string): RuntimeLemmaSchema {
 	if (!schema)
 		throw new Error(`Missing Dumling schema for ${family}/${kind}.`);
 	return schema;
+}
+
+function supportedRegistryRoutes(): ReadingNoteRoute[] {
+	return Object.entries(NOTE_BLOCK_RENDERER_REGISTRY.de.Reading).flatMap(
+		([family, kinds]) =>
+			Object.keys(kinds).map(
+				(kind) =>
+					({
+						language: "de",
+						family,
+						kind,
+					}) as ReadingNoteRoute,
+			),
+	);
 }

@@ -15,7 +15,7 @@ import {
 	type UnitReadingKindFor,
 } from "./reading-note-route";
 
-export type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
+export type AnyReadingNoteData = NoteDataFor<"Reading">;
 
 export type {
 	ReadingBlockKind,
@@ -29,6 +29,7 @@ export type {
 	ReadingNotePresentationCapabilities,
 	ReadingNoteRenderContext,
 } from "./reading-note-render-context";
+export { createDefaultReadingNoteCapabilities } from "./reading-note-render-context";
 export type {
 	ReadingNoteRoute,
 	ReadingNoteRouteKey,
@@ -51,7 +52,7 @@ export function renderReadingNote(
 		}
 		const renderCapabilities =
 			capabilities ?? createDefaultReadingNoteCapabilities(note);
-		switch (route.targetLanguage) {
+		switch (route.language) {
 			case "de": {
 				const context = createRenderContext(
 					note,
@@ -61,7 +62,7 @@ export function renderReadingNote(
 				return renderGermanReadingNote(context);
 			}
 			default:
-				return renderUnconfiguredTargetLanguage(route.targetLanguage);
+				return renderUnconfiguredTargetLanguage(route.language);
 		}
 	} catch (cause) {
 		return renderErrorNote(cause, "Reading Note unavailable");

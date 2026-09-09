@@ -264,11 +264,13 @@ describe("Resolution Session", () => {
 			canonical: {
 				readingId: "reading-1",
 				lemmaId: "lemma-1",
+				surfaceLanguage: "de",
+				normalizedSurface: "Banken",
 				surfaceId: "surface-1",
 				attestationId: "attestation-1",
 			},
 			target: {
-				kind: "UnitReadingNote",
+				kind: "Reading",
 				readingId: "reading-1",
 			},
 		});
@@ -283,13 +285,14 @@ describe("Resolution Session", () => {
 			canonical: {
 				readingId: "reading-1",
 				lemmaId: "lemma-1",
+				surfaceLanguage: "de",
+				normalizedSurface: "Banken",
 				surfaceId: "surface-1",
 				attestationId: "attestation-1",
 			},
 			target: {
-				kind: "RouteNote",
-				routeKind: "Attestation",
-				id: "attestation-1",
+				kind: "Attestation",
+				attestationId: "attestation-1",
 			},
 		});
 		expect(db.rows("visitorClicks")).toHaveLength(1);
@@ -378,6 +381,14 @@ describe("Resolution Session", () => {
 			resolutionSessions: [{ _id: "session-1", ...common }],
 			readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
 			attestations: [{ _id: "attestation-1", surfaceId: "surface-1" }],
+			surfaces: [
+				{
+					_id: "surface-1",
+					lemmaId: "lemma-1",
+					language: "de",
+					normalizedSurface: "Banken",
+				},
+			],
 		});
 		const routeDb = new SessionDb({
 			resolutionSessions: [
@@ -385,6 +396,14 @@ describe("Resolution Session", () => {
 			],
 			readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
 			attestations: [{ _id: "attestation-1", surfaceId: "surface-1" }],
+			surfaces: [
+				{
+					_id: "surface-1",
+					lemmaId: "lemma-1",
+					language: "de",
+					normalizedSurface: "Banken",
+				},
+			],
 		});
 		expect(
 			(
@@ -395,10 +414,12 @@ describe("Resolution Session", () => {
 			)?.terminal,
 		).toMatchObject({
 			kind: "Complete",
-			target: { kind: "UnitReadingNote", readingId: "reading-1" },
+			target: { kind: "Reading", readingId: "reading-1" },
 			canonical: {
 				readingId: "reading-1",
 				lemmaId: "lemma-1",
+				surfaceLanguage: "de",
+				normalizedSurface: "Banken",
 				surfaceId: "surface-1",
 				attestationId: "attestation-1",
 			},
@@ -409,9 +430,8 @@ describe("Resolution Session", () => {
 		).toMatchObject({
 			kind: "Complete",
 			target: {
-				kind: "RouteNote",
-				routeKind: "Attestation",
-				id: "attestation-1",
+				kind: "Attestation",
+				attestationId: "attestation-1",
 			},
 		});
 	});

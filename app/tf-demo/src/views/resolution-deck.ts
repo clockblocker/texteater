@@ -8,6 +8,9 @@ import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
 export type CanonicalResolution = {
 	readonly readingId: string;
 	readonly lemmaId: string;
+	readonly surfaceLanguage: "de";
+	readonly normalizedSurface: string;
+	/** The analysis selected by this occurrence, not the aggregate Surface identity. */
 	readonly surfaceId: string;
 	readonly attestationId: string;
 };
@@ -65,9 +68,7 @@ function completedCards(
 	const { canonical } = terminal;
 	if (!canonical) {
 		const role =
-			terminal.target.kind === "UnitReadingNote"
-				? "Reading"
-				: "Attestation";
+			terminal.target.kind === "Reading" ? "Reading" : "Attestation";
 		const finalCard = canonicalCard(
 			note.target.requestId,
 			role,
@@ -93,25 +94,28 @@ export function canonicalResolutionDeckCards(
 	canonical: CanonicalResolution,
 ): readonly WorkspaceCardTarget[] {
 	const reading = canonicalCard(requestId, "Reading", {
-		kind: "UnitReadingNote",
+		kind: "Reading",
 		readingId: canonical.readingId,
 	});
 	const lemma = canonicalCard(requestId, "Lemma", {
-		kind: "RouteNote",
-		routeKind: "Lemma",
-		id: canonical.lemmaId,
+		kind: "Lemma",
+		lemmaId: canonical.lemmaId,
 	});
-	const surface = canonicalCard(requestId, "Surface", {
-		kind: "RouteNote",
-		routeKind: "Surface",
-		id: canonical.surfaceId,
-	});
+	const surface = canonicalCard(
+		requestId,
+		"Surface",
+		{
+			kind: "Surface",
+			language: canonical.surfaceLanguage,
+			normalizedSurface: canonical.normalizedSurface,
+		},
+		{ activeAnalysisKey: canonical.surfaceId },
+	);
 	const attestation = canonicalCard(requestId, "Attestation", {
-		kind: "RouteNote",
-		routeKind: "Attestation",
-		id: canonical.attestationId,
+		kind: "Attestation",
+		attestationId: canonical.attestationId,
 	});
-	return foregroundTarget.kind === "UnitReadingNote"
+	return foregroundTarget.kind === "Reading"
 		? [reading, lemma, surface, attestation]
 		: [attestation, reading, lemma, surface];
 }
@@ -137,6 +141,11 @@ function canonicalCard(
 	requestId: string,
 	role: ResolutionStepKind,
 	target: WorkspaceTarget,
+	presentationContext?: WorkspaceCardTarget["presentationContext"],
 ): WorkspaceCardTarget {
-	return { key: resolutionDeckCardKey(requestId, role), target };
+	return {
+		key: resolutionDeckCardKey(requestId, role),
+		target,
+		...(presentationContext ? { presentationContext } : {}),
+	};
 }

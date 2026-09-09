@@ -19,13 +19,11 @@ function renderRouteNoteBody(
 	note: RouteNoteData,
 	capabilities: RouteNotePresentationCapabilities,
 ) {
-	switch (note.routeKind) {
+	switch (note.kind) {
 		case "Attestation":
 			return (
 				<AttestationRouteNote note={note} capabilities={capabilities} />
 			);
-		case "Surface":
-			return <SurfaceRouteNote note={note} capabilities={capabilities} />;
 		case "Lemma":
 			return <LemmaRouteNote note={note} capabilities={capabilities} />;
 	}
@@ -70,14 +68,11 @@ function AttestationRouteNote({
 	note,
 	capabilities,
 }: {
-	note: Extract<RouteNoteData, { routeKind: "Attestation" }>;
+	note: Extract<RouteNoteData, { kind: "Attestation" }>;
 	capabilities: RouteNotePresentationCapabilities;
 }) {
 	return (
-		<article
-			className="flex flex-col gap-5"
-			aria-label="Attestation Route Note"
-		>
+		<article className="flex flex-col gap-5" aria-label="Attestation Note">
 			<RouteSection title="Source">
 				<RouteLink
 					target={note.source.target}
@@ -132,72 +127,15 @@ function AttestationRouteNote({
 	);
 }
 
-function SurfaceRouteNote({
-	note,
-	capabilities,
-}: {
-	note: Extract<RouteNoteData, { routeKind: "Surface" }>;
-	capabilities: RouteNotePresentationCapabilities;
-}) {
-	return (
-		<article
-			className="flex flex-col gap-5"
-			aria-label="Surface Route Note"
-		>
-			<div className="flex flex-wrap gap-2">
-				<Badge variant="secondary">{note.presented.language}</Badge>
-				<Badge variant="outline">{note.presented.spelling}</Badge>
-				<Badge variant="outline">{note.presented.surfaceKind}</Badge>
-			</div>
-			<FeatureList
-				featureSets={[
-					note.presented.surfaceFeatures,
-					note.presented.inflectionalFeatures,
-				]}
-			/>
-			<RouteSection title="Lemma">
-				<RouteLink
-					target={note.lemmaTarget}
-					capabilities={capabilities}
-				>
-					{note.presented.lemma.canonicalForm} ·{" "}
-					{note.presented.lemma.family} · {note.presented.lemma.kind}
-				</RouteLink>
-			</RouteSection>
-			<RouteSection title="Source occurrences">
-				<RouteGrid
-					items={note.connections.occurrences.map((occurrence) => ({
-						key: occurrence.attestationId,
-						target: occurrence.target,
-						label: occurrence.sentenceSnippet,
-						detail: occurrence.members.join(" · "),
-					}))}
-					empty="No surviving occurrences."
-					capabilities={capabilities}
-				/>
-			</RouteSection>
-			<RouteSection title="Same written form">
-				<RouteGrid
-					items={note.connections.sameWrittenForm.map(
-						surfaceRouteItem,
-					)}
-					empty="No distinct same-written-form Surfaces."
-					capabilities={capabilities}
-				/>
-			</RouteSection>
-		</article>
-	);
-}
-
 function LemmaRouteNote({
 	note,
 	capabilities,
 }: {
-	note: Extract<RouteNoteData, { routeKind: "Lemma" }>;
+	note: Extract<RouteNoteData, { kind: "Lemma" }>;
 	capabilities: RouteNotePresentationCapabilities;
 }) {
 	return (
-		<article className="flex flex-col gap-5" aria-label="Lemma Route Note">
+		<article className="flex flex-col gap-5" aria-label="Lemma Note">
 			<div className="flex flex-wrap gap-2">
 				<Badge variant="secondary">{note.presented.language}</Badge>
 				<Badge variant="outline">{note.presented.family}</Badge>
@@ -206,7 +144,12 @@ function LemmaRouteNote({
 			<FeatureList featureSets={[note.presented.coreFeatures]} />
 			<RouteSection title="Known Surfaces">
 				<RouteGrid
-					items={note.connections.surfaces.map(surfaceRouteItem)}
+					items={note.connections.surfaces.map((surface) => ({
+						key: surface.surfaceId,
+						target: surface.target,
+						label: surface.normalizedSurface,
+						detail: `${surface.canonicalForm} · ${surface.family} · ${surface.kind}`,
+					}))}
 					empty="No known Surfaces."
 					capabilities={capabilities}
 				/>
@@ -339,20 +282,4 @@ function FeatureList({
 			))}
 		</div>
 	);
-}
-
-function surfaceRouteItem(surface: {
-	surfaceId: string;
-	normalizedSurface: string;
-	canonicalForm: string;
-	family: string;
-	kind: string;
-	target: WorkspaceTarget;
-}) {
-	return {
-		key: surface.surfaceId,
-		target: surface.target,
-		label: surface.normalizedSurface,
-		detail: `${surface.canonicalForm} · ${surface.family} · ${surface.kind}`,
-	};
 }

@@ -1,13 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-
+import type { NoteDataFor } from "./note-data";
 import type { AnyReadingNoteData } from "./reading";
-import type { RouteNoteData } from "./route";
 import type { ShadowNoteData, ShadowNoteReferrer } from "./shadow";
 
-type PaginatedRouteNote = Extract<
-	RouteNoteData,
-	{ routeKind: "Surface" | "Lemma" }
->;
+type PaginatedRouteNote = NoteDataFor<"Lemma">;
 
 export type PaginatedNote =
 	| AnyReadingNoteData
@@ -154,13 +150,13 @@ function continuation(note: PaginatedNote): {
 	readonly cursor: string;
 	readonly isDone: boolean;
 } {
-	if (note.kind === "UnitReadingNote") {
+	if (note.kind === "Reading") {
 		return {
 			cursor: note.sourceContexts.continueCursor,
 			isDone: note.sourceContexts.isDone,
 		};
 	}
-	if (note.kind === "ShadowNote") {
+	if (note.kind === "Shadow") {
 		return {
 			cursor: note.references.continueCursor,
 			isDone: note.references.isDone,
@@ -174,34 +170,32 @@ function continuation(note: PaginatedNote): {
 
 function sameNote(current: PaginatedNote, next: PaginatedNote): boolean {
 	if (current.kind !== next.kind) return false;
-	if (current.kind === "UnitReadingNote") {
+	if (current.kind === "Reading") {
 		return (
-			next.kind === "UnitReadingNote" &&
+			next.kind === "Reading" &&
 			next.target.readingId === current.target.readingId
 		);
 	}
-	if (current.kind === "ShadowNote") {
+	if (current.kind === "Shadow") {
 		return (
-			next.kind === "ShadowNote" &&
+			next.kind === "Shadow" &&
 			next.target.shadowId === current.target.shadowId
 		);
 	}
 	return (
-		next.kind === "RouteNote" &&
-		next.routeKind === current.routeKind &&
-		next.target.id === current.target.id
+		next.kind === "Lemma" && next.target.lemmaId === current.target.lemmaId
 	);
 }
 
 function paginationSeedKey(note: PaginatedNote): string {
-	if (note.kind === "UnitReadingNote") {
+	if (note.kind === "Reading") {
 		return JSON.stringify([
 			note.sourceContexts.page.map(({ attestationId }) => attestationId),
 			note.sourceContexts.continueCursor,
 			note.sourceContexts.isDone,
 		]);
 	}
-	if (note.kind === "ShadowNote") {
+	if (note.kind === "Shadow") {
 		return JSON.stringify([
 			note.references.page,
 			note.references.continueCursor,
@@ -219,20 +213,13 @@ function rebaseNote<Note extends PaginatedNote>(
 	current: Note,
 	latest: Note,
 ): Note {
-	if (
-		current.kind === "UnitReadingNote" &&
-		latest.kind === "UnitReadingNote"
-	) {
+	if (current.kind === "Reading" && latest.kind === "Reading") {
 		return { ...latest, sourceContexts: current.sourceContexts } as Note;
 	}
-	if (current.kind === "ShadowNote" && latest.kind === "ShadowNote") {
+	if (current.kind === "Shadow" && latest.kind === "Shadow") {
 		return { ...latest, references: current.references } as Note;
 	}
-	if (
-		current.kind === "RouteNote" &&
-		latest.kind === "RouteNote" &&
-		current.routeKind === latest.routeKind
-	) {
+	if (current.kind === "Lemma" && latest.kind === "Lemma") {
 		return { ...latest, connections: current.connections } as Note;
 	}
 	throw new Error("Paginated Note refresh must describe the same subject.");
@@ -242,7 +229,7 @@ function mergeNotePages<Note extends PaginatedNote>(
 	current: Note,
 	next: Note,
 ): Note {
-	if (current.kind === "UnitReadingNote" && next.kind === "UnitReadingNote") {
+	if (current.kind === "Reading" && next.kind === "Reading") {
 		return {
 			...current,
 			sourceContexts: {
@@ -258,7 +245,7 @@ function mergeNotePages<Note extends PaginatedNote>(
 			},
 		} as Note;
 	}
-	if (current.kind === "ShadowNote" && next.kind === "ShadowNote") {
+	if (current.kind === "Shadow" && next.kind === "Shadow") {
 		return {
 			...current,
 			references: {
@@ -271,40 +258,7 @@ function mergeNotePages<Note extends PaginatedNote>(
 			},
 		} as Note;
 	}
-	if (
-		current.kind === "RouteNote" &&
-		next.kind === "RouteNote" &&
-		current.routeKind === "Surface" &&
-		next.routeKind === "Surface"
-	) {
-		return {
-			...current,
-			connections: {
-				occurrences: deduplicateBy(
-					[
-						...current.connections.occurrences,
-						...next.connections.occurrences,
-					],
-					(value) => value.attestationId,
-				),
-				sameWrittenForm: deduplicateBy(
-					[
-						...current.connections.sameWrittenForm,
-						...next.connections.sameWrittenForm,
-					],
-					(value) => value.surfaceId,
-				),
-				continueCursor: next.connections.continueCursor,
-				isDone: next.connections.isDone,
-			},
-		} as Note;
-	}
-	if (
-		current.kind === "RouteNote" &&
-		next.kind === "RouteNote" &&
-		current.routeKind === "Lemma" &&
-		next.routeKind === "Lemma"
-	) {
+	if (current.kind === "Lemma" && next.kind === "Lemma") {
 		return {
 			...current,
 			connections: {
@@ -376,9 +330,9 @@ function deduplicateBy<Value>(
 }
 
 function defaultFailureMessage(note: PaginatedNote): string {
-	return note.kind === "UnitReadingNote"
+	return note.kind === "Reading"
 		? "Source Contexts could not be loaded."
-		: note.kind === "ShadowNote"
+		: note.kind === "Shadow"
 			? "Shadow references could not be loaded."
 			: "Route connections could not be loaded.";
 }

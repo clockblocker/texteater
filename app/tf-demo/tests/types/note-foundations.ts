@@ -1,23 +1,23 @@
 import type { z } from "zod";
 
 import type {
-	NoteBlockKindFor,
+	NoteBlockRenderer,
+	NoteBlockRendererRegistry,
 	NoteData,
 	NoteDataFor,
 	NoteKind,
+	SurfaceAnalysisDescriptionRenderer,
+	SurfaceAnalysisDescriptionRendererRegistry,
+	SurfaceNotePresentationCapabilities,
 	TargetLanguage,
 } from "../../src/notes";
 import {
-	type NOTE_BLOCK_KIND_FOR,
-	type noteBlockKindSchema,
+	NOTE_BLOCK_RENDERER_REGISTRY,
 	type noteKindSchema,
 	renderNote,
 	targetLanguageSchema,
 } from "../../src/notes";
-import type {
-	RouteNoteData,
-	RouteNotePresentationCapabilities,
-} from "../../src/notes/route";
+import type { RouteNotePresentationCapabilities } from "../../src/notes/route";
 import type {
 	ShadowNoteData,
 	ShadowNotePresentationCapabilities,
@@ -34,46 +34,85 @@ type Assert<Condition extends true> = Condition;
 export type NoteKindsComeFromTheSchema = Assert<
 	Equal<NoteKind, z.infer<typeof noteKindSchema>>
 >;
-export type BlockKindsComeFromTheSchema = Assert<
-	Equal<keyof typeof NOTE_BLOCK_KIND_FOR, NoteKind>
->;
-export type NoteDataUsesEveryStableKind = Assert<
-	Equal<NoteData["kind"], NoteKind>
->;
+export type NoteDataUsesEveryKind = Assert<Equal<NoteData["kind"], NoteKind>>;
 export type ReadingDataIsIndexedFromTheOnlyDto = Assert<
 	Equal<
-		NoteDataFor<"UnitReadingNote">,
-		Extract<NoteData, { kind: "UnitReadingNote" }>
-	>
->;
-export type ReadingBlocksExcludeRoutes = Assert<
-	Equal<
-		NoteBlockKindFor<"UnitReadingNote">,
-		Exclude<z.infer<typeof noteBlockKindSchema>, "Routes">
+		NoteDataFor<"Reading">,
+		Extract<NoteData, { readonly kind: "Reading" }>
 	>
 >;
 
 const targetLanguage: TargetLanguage = "de";
 void targetLanguage;
-
 // @ts-expect-error Only app-configured target languages are accepted.
 const unconfiguredTargetLanguage: TargetLanguage = "en";
 void unconfiguredTargetLanguage;
 
-const readingBlock: NoteBlockKindFor<"UnitReadingNote"> = "SourceContexts";
-void readingBlock;
+NOTE_BLOCK_RENDERER_REGISTRY satisfies NoteBlockRendererRegistry;
+NOTE_BLOCK_RENDERER_REGISTRY.de satisfies NoteBlockRendererRegistry<"de">;
+NOTE_BLOCK_RENDERER_REGISTRY.de.Surface satisfies NoteBlockRendererRegistry<
+	"de",
+	"Surface"
+>;
+NOTE_BLOCK_RENDERER_REGISTRY.de.Reading.Lexeme?.VERB satisfies
+	| NoteBlockRendererRegistry<"de", "Reading", "Lexeme", "VERB">
+	| undefined;
 
-// @ts-expect-error Routes do not apply to Reading Notes.
-const readingRoutes: NoteBlockKindFor<"UnitReadingNote"> = "Routes";
-void readingRoutes;
+const nounLemmaRenderer: NoteBlockRenderer<"de", "Lemma", "Lexeme", "NOUN"> = (
+	context,
+) => {
+	context.noteData.kind satisfies "Lemma";
+	context.noteData.presented.kind satisfies "NOUN";
+	return null;
+};
 
-declare const routeNote: RouteNoteData;
-declare const routeCapabilities: RouteNotePresentationCapabilities;
+({
+	Lexeme: { NOUN: { Header: nounLemmaRenderer } },
+}) satisfies NoteBlockRendererRegistry<"de", "Lemma">;
+
+({
+	Lexeme: {
+		VERB: {
+			// @ts-expect-error A NOUN Lemma renderer cannot be registered for VERB.
+			Header: nounLemmaRenderer,
+		},
+	},
+}) satisfies NoteBlockRendererRegistry<"de", "Lemma">;
+
+({
+	// @ts-expect-error Surface Note slices are direct Block maps, not grammatical routes.
+	Lexeme: { NOUN: { Header: nounLemmaRenderer } },
+}) satisfies NoteBlockRendererRegistry<"de", "Surface">;
+
+const nounAnalysisDescription: SurfaceAnalysisDescriptionRenderer<
+	"de",
+	"Lexeme",
+	"NOUN"
+> = (analysis) => {
+	analysis.presented.lemma.kind satisfies "NOUN";
+	return null as never;
+};
+
+({
+	Lexeme: { NOUN: nounAnalysisDescription },
+}) satisfies SurfaceAnalysisDescriptionRendererRegistry<"de">;
+
+({
+	Lexeme: {
+		// @ts-expect-error A NOUN description cannot format VERB inflectional features.
+		VERB: nounAnalysisDescription,
+	},
+}) satisfies SurfaceAnalysisDescriptionRendererRegistry<"de">;
+
+declare const lemmaNote: NoteDataFor<"Lemma">;
+declare const lemmaCapabilities: RouteNotePresentationCapabilities;
+declare const surfaceNote: NoteDataFor<"Surface">;
+declare const surfaceCapabilities: SurfaceNotePresentationCapabilities;
 declare const shadowNote: ShadowNoteData;
 declare const shadowCapabilities: ShadowNotePresentationCapabilities;
-renderNote(routeNote, routeCapabilities);
+renderNote(lemmaNote, lemmaCapabilities);
+renderNote(surfaceNote, surfaceCapabilities);
 renderNote(shadowNote, shadowCapabilities);
-// @ts-expect-error Route Notes cannot receive Shadow Note capabilities.
-renderNote(routeNote, shadowCapabilities);
-
+// @ts-expect-error Lemma Notes cannot receive Shadow Note capabilities.
+renderNote(lemmaNote, shadowCapabilities);
 targetLanguageSchema satisfies z.ZodType<TargetLanguage>;

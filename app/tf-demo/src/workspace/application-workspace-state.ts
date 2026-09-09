@@ -7,6 +7,7 @@ import {
 } from "react-resizable-panels/workspace";
 
 import {
+	type SurfaceNotePresentationContext,
 	type WorkspaceSubject,
 	type WorkspaceTarget,
 	workspaceSubjectFor,
@@ -21,6 +22,7 @@ export type ApplicationWorkspaceSubject =
 export type ApplicationCardCandidate = {
 	readonly key: string;
 	readonly target: WorkspaceTarget;
+	readonly presentationContext?: SurfaceNotePresentationContext;
 };
 
 export type ApplicationWorkspaceSession = {
@@ -221,7 +223,10 @@ function reconcileCardLayer(
 	const memberIds: string[] = [];
 	for (const candidate of action.candidates) {
 		const currentId = currentIdsByKey.get(candidate.key);
-		const subject = workspaceSubjectFor(candidate.target);
+		const subject = workspaceSubjectFor(
+			candidate.target,
+			candidate.presentationContext,
+		);
 		if (currentId && presentations[currentId]) {
 			const presentation = presentations[currentId];
 			memberIds.push(currentId);

@@ -12,7 +12,7 @@ export const renderDefaultShadowNoteRelations = (({ note, capabilities }) => {
 	return (
 		<section className="flex flex-col gap-3" aria-labelledby="referrers">
 			<h2 id="referrers" className="text-sm font-medium">
-				Referring Unit Reading Notes
+				Referring Reading Notes
 			</h2>
 			<ShadowReferenceList
 				note={note}

@@ -62,7 +62,7 @@ test("stores one direct grammatical claim and projects its exact symmetric Readi
 			relation: claim.relation,
 			targetCanonicalForm: claim.target.lemma.canonicalForm,
 			provenance: "direct",
-			target: { kind: "UnitReadingNote", readingId: targetReadingId },
+			target: { kind: "Reading", readingId: targetReadingId },
 		},
 	]);
 	await expect(
@@ -75,7 +75,7 @@ test("stores one direct grammatical claim and projects its exact symmetric Readi
 			relation: claim.relation,
 			targetCanonicalForm: claim.source.lemma.canonicalForm,
 			provenance: "inferred",
-			target: { kind: "UnitReadingNote", readingId: sourceReadingId },
+			target: { kind: "Reading", readingId: sourceReadingId },
 		},
 	]);
 });
@@ -133,7 +133,7 @@ test("stores and projects the fixed total NumberCounterpart as an ordinary typed
 			relation: "NumberCounterpart",
 			targetCanonicalForm: claim.target.lemma.canonicalForm,
 			provenance: "direct",
-			target: { kind: "UnitReadingNote", readingId: targetReadingId },
+			target: { kind: "Reading", readingId: targetReadingId },
 		},
 	]);
 	await expect(
@@ -146,7 +146,7 @@ test("stores and projects the fixed total NumberCounterpart as an ordinary typed
 			relation: "NumberCounterpart",
 			targetCanonicalForm: claim.source.lemma.canonicalForm,
 			provenance: "inferred",
-			target: { kind: "UnitReadingNote", readingId: sourceReadingId },
+			target: { kind: "Reading", readingId: sourceReadingId },
 		},
 	]);
 });
@@ -237,7 +237,7 @@ test("stores one formal-address number edge per spelling and navigates both exac
 				targetCanonicalForm: claim.target.lemma.canonicalForm,
 				provenance: "direct",
 				target: {
-					kind: "UnitReadingNote",
+					kind: "Reading",
 					readingId: targetReadingId,
 				},
 			},
@@ -253,7 +253,7 @@ test("stores one formal-address number edge per spelling and navigates both exac
 				targetCanonicalForm: claim.source.lemma.canonicalForm,
 				provenance: "inferred",
 				target: {
-					kind: "UnitReadingNote",
+					kind: "Reading",
 					readingId: sourceReadingId,
 				},
 			},
@@ -330,7 +330,7 @@ test("persists and navigates exact der-population Case and Number endpoints", as
 				targetCanonicalForm: claim.target.lemma.canonicalForm,
 				provenance: "direct",
 				target: {
-					kind: "UnitReadingNote",
+					kind: "Reading",
 					readingId: targetReadingId,
 				},
 			},
@@ -346,7 +346,7 @@ test("persists and navigates exact der-population Case and Number endpoints", as
 				targetCanonicalForm: claim.source.lemma.canonicalForm,
 				provenance: "inferred",
 				target: {
-					kind: "UnitReadingNote",
+					kind: "Reading",
 					readingId: sourceReadingId,
 				},
 			},

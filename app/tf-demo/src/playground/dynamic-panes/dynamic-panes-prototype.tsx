@@ -55,11 +55,9 @@ function reduceStudy(
 function subjectLabel(subject: WorkspaceSubject) {
 	return subject.kind === "Text"
 		? "Source text"
-		: subject.target.kind === "UnitReadingNote"
+		: subject.target.kind === "Reading"
 			? "Reading"
-			: subject.target.kind === "RouteNote"
-				? subject.target.routeKind
-				: "Note";
+			: subject.target.kind;
 }
 
 /** Content adapter; the battery owns all placement and gesture behavior. */

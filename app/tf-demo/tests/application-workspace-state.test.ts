@@ -8,6 +8,7 @@ import {
 	createApplicationWorkspaceSession,
 	reduceApplicationWorkspaceSession,
 } from "../src/workspace/application-workspace-state";
+import { isWorkspaceSubject } from "../src/workspace/sheet-workspace";
 
 function memoryStorage(initial: Record<string, string> = {}) {
 	const values = new Map(Object.entries(initial));
@@ -19,6 +20,198 @@ function memoryStorage(initial: Record<string, string> = {}) {
 }
 
 describe("application workspace state", () => {
+	test("accepts active analysis context only on a valid Surface subject", () => {
+		expect(
+			isWorkspaceSubject({
+				kind: "Note",
+				target: {
+					kind: "Surface",
+					language: "de",
+					normalizedSurface: "Banken",
+				},
+				presentationContext: { activeAnalysisKey: "surface-1" },
+			}),
+		).toBe(true);
+		expect(
+			isWorkspaceSubject({
+				kind: "Note",
+				target: { kind: "Reading", readingId: "reading-1" },
+				presentationContext: { activeAnalysisKey: "surface-1" },
+			}),
+		).toBe(false);
+		expect(
+			isWorkspaceSubject({
+				kind: "Note",
+				target: {
+					kind: "Surface",
+					language: "de",
+					normalizedSurface: "Banken",
+				},
+				presentationContext: { activeAnalysisKey: 1 },
+			}),
+		).toBe(false);
+	});
+
+	test("keeps active Surface analyses presentation-specific through reconciliation and form changes", () => {
+		let session = createApplicationWorkspaceSession();
+		const originPresentationId = Object.keys(
+			session.workspace.presentations,
+		)[0];
+		if (!originPresentationId)
+			throw new Error("Expected Library Presentation.");
+		const surface = {
+			kind: "Surface" as const,
+			language: "de" as const,
+			normalizedSurface: "Banken",
+		};
+
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "ReconcileCardLayer",
+			originPresentationId,
+			candidates: [
+				{
+					key: "request-1:Surface",
+					target: surface,
+					presentationContext: {
+						activeAnalysisKey: "surface-bank-singular",
+					},
+				},
+				{
+					key: "request-2:Surface",
+					target: surface,
+					presentationContext: {
+						activeAnalysisKey: "surface-bank-plural",
+					},
+				},
+			],
+		});
+		const firstId = Object.entries(
+			session.candidateKeyByPresentationId,
+		).find(([, key]) => key === "request-1:Surface")?.[0];
+		const secondId = Object.entries(
+			session.candidateKeyByPresentationId,
+		).find(([, key]) => key === "request-2:Surface")?.[0];
+		if (!firstId || !secondId)
+			throw new Error("Expected independent Surface Presentations.");
+
+		expect(session.workspace.presentations[firstId]?.subject).toMatchObject(
+			{
+				target: surface,
+				presentationContext: {
+					activeAnalysisKey: "surface-bank-singular",
+				},
+			},
+		);
+		expect(
+			session.workspace.presentations[secondId]?.subject,
+		).toMatchObject({
+			target: surface,
+			presentationContext: {
+				activeAnalysisKey: "surface-bank-plural",
+			},
+		});
+
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Command",
+			command: { type: "Lift", presentationId: firstId },
+		});
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Command",
+			command: { type: "Expand", paneId: session.workspace.activePaneId },
+		});
+		expect(session.workspace.presentations[firstId]).toMatchObject({
+			form: "Sheet",
+			subject: {
+				presentationContext: {
+					activeAnalysisKey: "surface-bank-singular",
+				},
+			},
+		});
+		const storage = memoryStorage();
+		saveApplicationWorkspace(session, storage);
+		session = loadApplicationWorkspace(
+			createApplicationWorkspaceSession(),
+			storage,
+		);
+		expect(session.workspace.presentations[firstId]?.subject).toMatchObject(
+			{
+				presentationContext: {
+					activeAnalysisKey: "surface-bank-singular",
+				},
+			},
+		);
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Command",
+			command: { type: "Collapse", presentationId: firstId },
+		});
+		expect(session.workspace.presentations[firstId]).toMatchObject({
+			form: "Card",
+			subject: {
+				presentationContext: {
+					activeAnalysisKey: "surface-bank-singular",
+				},
+			},
+		});
+	});
+
+	test("updates an active Surface analysis in place and leaves independent follows unselected", () => {
+		let session = createApplicationWorkspaceSession();
+		const originPresentationId = Object.keys(
+			session.workspace.presentations,
+		)[0];
+		if (!originPresentationId)
+			throw new Error("Expected Library Presentation.");
+		const surface = {
+			kind: "Surface" as const,
+			language: "de" as const,
+			normalizedSurface: "Banken",
+		};
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "ReconcileCardLayer",
+			originPresentationId,
+			candidates: [
+				{
+					key: "request-1:Surface",
+					target: surface,
+					presentationContext: { activeAnalysisKey: "analysis-1" },
+				},
+			],
+		});
+		const presentationId = Object.keys(
+			session.candidateKeyByPresentationId,
+		)[0];
+		if (!presentationId) throw new Error("Expected a Surface Card.");
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "ReconcileCardLayer",
+			originPresentationId,
+			candidates: [
+				{
+					key: "request-1:Surface",
+					target: surface,
+					presentationContext: { activeAnalysisKey: "analysis-2" },
+				},
+			],
+		});
+		expect(
+			session.workspace.presentations[presentationId]?.subject,
+		).toMatchObject({
+			presentationContext: { activeAnalysisKey: "analysis-2" },
+		});
+
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			originPresentationId,
+			target: surface,
+		});
+		const followed = Object.values(session.workspace.presentations).find(
+			(presentation) =>
+				presentation.form === "Sheet" &&
+				presentation.subject.kind === "Note" &&
+				presentation.subject.target.kind === "Surface",
+		);
+		expect(followed?.subject).toEqual({ kind: "Note", target: surface });
+	});
+
 	test("starts with a locked Library base and locks followed Text Sheets", () => {
 		let session = createApplicationWorkspaceSession();
 		const libraryId = Object.keys(session.workspace.presentations)[0];
@@ -41,7 +234,7 @@ describe("application workspace state", () => {
 		expect(
 			reduceApplicationWorkspaceSession(session, {
 				type: "Follow",
-				target: { kind: "UnitReadingNote", readingId: "reading-1" },
+				target: { kind: "Reading", readingId: "reading-1" },
 				originPresentationId: libraryId,
 			}),
 		).toBe(session);
@@ -77,7 +270,7 @@ describe("application workspace state", () => {
 			candidates: [
 				{
 					key: "request-1:Reading",
-					target: { kind: "UnitReadingNote", readingId: "reading-1" },
+					target: { kind: "Reading", readingId: "reading-1" },
 				},
 			],
 		});
@@ -85,7 +278,7 @@ describe("application workspace state", () => {
 			id: cardId,
 			subject: {
 				kind: "Note",
-				target: { kind: "UnitReadingNote", readingId: "reading-1" },
+				target: { kind: "Reading", readingId: "reading-1" },
 			},
 		});
 		expect(
@@ -96,7 +289,7 @@ describe("application workspace state", () => {
 					{
 						key: "request-1:Reading",
 						target: {
-							kind: "UnitReadingNote",
+							kind: "Reading",
 							readingId: "reading-1",
 						},
 					},
@@ -118,7 +311,7 @@ describe("application workspace state", () => {
 			candidates: [
 				{
 					key: "reading",
-					target: { kind: "UnitReadingNote", readingId: "reading-1" },
+					target: { kind: "Reading", readingId: "reading-1" },
 				},
 			],
 		});
@@ -162,11 +355,11 @@ describe("application workspace state", () => {
 			candidates: [
 				{
 					key: "expanded",
-					target: { kind: "UnitReadingNote", readingId: "reading-1" },
+					target: { kind: "Reading", readingId: "reading-1" },
 				},
 				{
 					key: "resting",
-					target: { kind: "UnitReadingNote", readingId: "reading-2" },
+					target: { kind: "Reading", readingId: "reading-2" },
 				},
 			],
 		});
@@ -261,7 +454,7 @@ describe("application workspace state", () => {
 			candidates: [
 				{
 					key: "request-1:Reading",
-					target: { kind: "UnitReadingNote", readingId: "reading-1" },
+					target: { kind: "Reading", readingId: "reading-1" },
 				},
 			],
 		});
@@ -269,7 +462,7 @@ describe("application workspace state", () => {
 			id: memberId,
 			subject: {
 				kind: "Note",
-				target: { kind: "UnitReadingNote", readingId: "reading-1" },
+				target: { kind: "Reading", readingId: "reading-1" },
 			},
 		});
 	});
@@ -280,7 +473,7 @@ describe("application workspace state", () => {
 		if (!libraryId) throw new Error("Expected Library Presentation.");
 		session = reduceApplicationWorkspaceSession(session, {
 			type: "Follow",
-			target: { kind: "UnitReadingNote", readingId: "reading-1" },
+			target: { kind: "Reading", readingId: "reading-1" },
 			originPresentationId: libraryId,
 		});
 		const sheetId = Object.keys(session.workspace.presentations).find(
@@ -378,7 +571,7 @@ describe("application workspace state", () => {
 								subject: {
 									kind: "Note",
 									target: {
-										kind: "UnitReadingNote",
+										kind: "Reading",
 										readingId: "central",
 									},
 								},

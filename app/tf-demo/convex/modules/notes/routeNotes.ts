@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 
-import type { Doc, Id } from "../../_generated/dataModel";
+import type { Doc } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
 	lemmaValue,
@@ -17,23 +17,28 @@ import {
 } from "../../model/presentedDumling";
 import { isUnitReadingFamily } from "./unitReadingFamilies";
 
-const MAX_SEGMENTS_PER_SENTENCE = 512;
 const ROUTE_CONNECTION_PAGE_SIZE = 25;
+const MAX_SURFACE_ANALYSES = 100;
 
-export const routeNoteTargetValidator = v.object({
-	kind: v.literal("RouteNote"),
-	routeKind: v.union(
-		v.literal("Attestation"),
-		v.literal("Surface"),
-		v.literal("Lemma"),
-	),
-	id: v.string(),
+const attestationTargetValidator = v.object({
+	kind: v.literal("Attestation"),
+	attestationId: v.id("attestations"),
+});
+
+const lemmaTargetValidator = v.object({
+	kind: v.literal("Lemma"),
+	lemmaId: v.id("lemmas"),
+});
+
+const surfaceTargetValidator = v.object({
+	kind: v.literal("Surface"),
+	language: v.literal("de"),
+	normalizedSurface: v.string(),
 });
 
 const attestationRouteNoteValidator = v.object({
-	kind: v.literal("RouteNote"),
-	routeKind: v.literal("Attestation"),
-	target: routeNoteTargetValidator,
+	kind: v.literal("Attestation"),
+	target: attestationTargetValidator,
 	source: v.object({
 		textId: v.id("texts"),
 		sentencePosition: v.number(),
@@ -46,11 +51,11 @@ const attestationRouteNoteValidator = v.object({
 		}),
 	}),
 	presented: presentedAttestationValidator,
-	surfaceTarget: routeNoteTargetValidator,
+	surfaceTarget: surfaceTargetValidator,
 	reading: v.object({
 		emojiDescription: v.string(),
 		target: v.object({
-			kind: v.literal("UnitReadingNote"),
+			kind: v.literal("Reading"),
 			readingId: v.id("readings"),
 		}),
 	}),
@@ -62,28 +67,21 @@ const surfaceRouteConnectionValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
-	target: routeNoteTargetValidator,
+	target: surfaceTargetValidator,
 });
 
 const surfaceRouteNoteValidator = v.object({
-	kind: v.literal("RouteNote"),
-	routeKind: v.literal("Surface"),
-	target: routeNoteTargetValidator,
-	presented: presentedSurfaceValidator,
-	lemmaTarget: routeNoteTargetValidator,
-	connections: v.object({
-		occurrences: v.array(
-			v.object({
-				attestationId: v.id("attestations"),
-				sentenceSnippet: v.string(),
-				members: v.array(v.string()),
-				target: routeNoteTargetValidator,
-			}),
-		),
-		sameWrittenForm: v.array(surfaceRouteConnectionValidator),
-		continueCursor: v.string(),
-		isDone: v.boolean(),
-	}),
+	kind: v.literal("Surface"),
+	target: surfaceTargetValidator,
+	analyses: v.array(
+		v.object({
+			analysisKey: v.id("surfaces"),
+			surfaceId: v.id("surfaces"),
+			lemmaId: v.id("lemmas"),
+			presented: presentedSurfaceValidator,
+			lemmaTarget: lemmaTargetValidator,
+		}),
+	),
 });
 
 const lemmaRouteConnectionValidator = v.object({
@@ -91,13 +89,12 @@ const lemmaRouteConnectionValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
-	target: routeNoteTargetValidator,
+	target: lemmaTargetValidator,
 });
 
 const lemmaRouteNoteValidator = v.object({
-	kind: v.literal("RouteNote"),
-	routeKind: v.literal("Lemma"),
-	target: routeNoteTargetValidator,
+	kind: v.literal("Lemma"),
+	target: lemmaTargetValidator,
 	presented: presentedLemmaValidator,
 	connections: v.object({
 		surfaces: v.array(surfaceRouteConnectionValidator),
@@ -106,7 +103,7 @@ const lemmaRouteNoteValidator = v.object({
 				readingId: v.id("readings"),
 				emojiDescription: v.string(),
 				target: v.object({
-					kind: v.literal("UnitReadingNote"),
+					kind: v.literal("Reading"),
 					readingId: v.id("readings"),
 				}),
 			}),
@@ -123,24 +120,31 @@ export const routeNoteValidator = v.union(
 	lemmaRouteNoteValidator,
 );
 
-type RouteNoteTarget = {
-	readonly kind: "RouteNote";
-	readonly routeKind: "Attestation" | "Surface" | "Lemma";
-	readonly id: string;
-};
+type RouteNoteTarget =
+	| { readonly kind: "Attestation"; readonly attestationId: string }
+	| {
+			readonly kind: "Surface";
+			readonly language: "de";
+			readonly normalizedSurface: string;
+	  }
+	| { readonly kind: "Lemma"; readonly lemmaId: string };
 
 export async function loadRouteNote(
 	ctx: QueryCtx,
 	target: RouteNoteTarget,
 	contextCursor?: string,
 ) {
-	if (target.routeKind === "Attestation") {
-		return loadAttestationRouteNote(ctx, target.id);
+	if (target.kind === "Attestation") {
+		return loadAttestationRouteNote(ctx, target.attestationId);
 	}
-	if (target.routeKind === "Surface") {
-		return loadSurfaceRouteNote(ctx, target.id, contextCursor);
+	if (target.kind === "Surface") {
+		return loadSurfaceRouteNote(
+			ctx,
+			target.language,
+			target.normalizedSurface,
+		);
 	}
-	return loadLemmaRouteNote(ctx, target.id, contextCursor);
+	return loadLemmaRouteNote(ctx, target.lemmaId, contextCursor);
 }
 
 async function loadAttestationRouteNote(
@@ -153,8 +157,9 @@ async function loadAttestationRouteNote(
 	);
 	if (!attestationId) return null;
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
+	if (!occurrence) return null;
 	if (
-		!occurrence ||
+		occurrence.surface.language !== "de" ||
 		occurrence.surface.language !== occurrence.lemma.language ||
 		!isUnitReadingFamily(occurrence.lemma.family)
 	) {
@@ -163,12 +168,10 @@ async function loadAttestationRouteNote(
 	const text = await ctx.db.get(occurrence.sentence.textId);
 	if (!text) return null;
 	return {
-		kind: "RouteNote" as const,
-		routeKind: "Attestation" as const,
+		kind: "Attestation" as const,
 		target: {
-			kind: "RouteNote" as const,
-			routeKind: "Attestation" as const,
-			id: occurrence.attestation._id,
+			kind: "Attestation" as const,
+			attestationId: occurrence.attestation._id,
 		},
 		source: {
 			textId: text._id,
@@ -183,14 +186,14 @@ async function loadAttestationRouteNote(
 		},
 		presented: presentAttestation(occurrence.publicAttestation),
 		surfaceTarget: {
-			kind: "RouteNote" as const,
-			routeKind: "Surface" as const,
-			id: occurrence.surface._id,
+			kind: "Surface" as const,
+			language: "de" as const,
+			normalizedSurface: occurrence.surface.normalizedSurface,
 		},
 		reading: {
 			emojiDescription: occurrence.reading.emojiDescription,
 			target: {
-				kind: "UnitReadingNote" as const,
+				kind: "Reading" as const,
 				readingId: occurrence.reading._id,
 			},
 		},
@@ -199,134 +202,56 @@ async function loadAttestationRouteNote(
 
 async function loadSurfaceRouteNote(
 	ctx: QueryCtx,
-	surfaceIdValue: string,
-	contextCursor?: string,
+	language: "de",
+	normalizedSurface: string,
 ) {
-	const surfaceId = ctx.db.normalizeId("surfaces", surfaceIdValue);
-	if (!surfaceId) return null;
-	const surface = await ctx.db.get(surfaceId);
-	if (!surface) return null;
-	const lemma = await ctx.db.get(surface.lemmaId);
-	if (
-		!lemma ||
-		surface.language !== lemma.language ||
-		!isUnitReadingFamily(lemma.family)
-	) {
-		return null;
-	}
-
-	const firstOccurrence = await ctx.db
-		.query("attestations")
-		.withIndex("by_surface_id", (q) => q.eq("surfaceId", surface._id))
-		.take(1);
-	const cursor = parseRouteConnectionCursor(
-		contextCursor,
-		"Surface",
-		firstOccurrence.length > 0 ? "occurrences" : "sameWrittenForm",
-	);
-	let occurrences: Awaited<
-		ReturnType<typeof loadSurfaceOccurrenceConnection>
-	>[] = [];
-	let sameWritten: Doc<"surfaces">[] = [];
-	let continueCursor = "";
-	let isDone = false;
-	if (cursor.phase === "occurrences") {
-		const page = await ctx.db
-			.query("attestations")
-			.withIndex("by_surface_id", (q) => q.eq("surfaceId", surface._id))
-			.paginate({
-				cursor: cursor.cursor,
-				numItems: ROUTE_CONNECTION_PAGE_SIZE,
-			});
-		occurrences = await Promise.all(
-			page.page.map((attestation) =>
-				loadSurfaceOccurrenceConnection(ctx, attestation),
-			),
+	const surfaces = await ctx.db
+		.query("surfaces")
+		.withIndex("by_language_and_normalized_surface", (q) =>
+			q
+				.eq("language", language)
+				.eq("normalizedSurface", normalizedSurface),
+		)
+		.take(MAX_SURFACE_ANALYSES + 1);
+	if (surfaces.length === 0) return null;
+	if (surfaces.length > MAX_SURFACE_ANALYSES) {
+		throw new Error(
+			`A Surface Note supports at most ${MAX_SURFACE_ANALYSES} analyses.`,
 		);
-		if (!page.isDone) {
-			continueCursor = routeConnectionCursor(
-				"Surface",
-				"occurrences",
-				page.continueCursor,
-			);
-		} else {
-			continueCursor = routeConnectionCursor(
-				"Surface",
-				"sameWrittenForm",
-				null,
-			);
-		}
-	} else {
-		const page = await ctx.db
-			.query("surfaces")
-			.withIndex("by_language_and_normalized_surface", (q) =>
-				q
-					.eq("language", surface.language)
-					.eq("normalizedSurface", surface.normalizedSurface),
-			)
-			.paginate({
-				cursor: cursor.cursor,
-				numItems: ROUTE_CONNECTION_PAGE_SIZE,
-			});
-		sameWritten = page.page;
-		isDone = page.isDone;
-		continueCursor = page.isDone
-			? ""
-			: routeConnectionCursor(
-					"Surface",
-					"sameWrittenForm",
-					page.continueCursor,
-				);
 	}
-
-	const sameWrittenLemmas = await Promise.all(
-		sameWritten.map((candidate) => ctx.db.get(candidate.lemmaId)),
+	const lemmas = await Promise.all(
+		surfaces.map((surface) => ctx.db.get(surface.lemmaId)),
 	);
-	if (occurrences.some((occurrence) => occurrence === null)) return null;
-
+	const analyses = surfaces.flatMap((surface, index) => {
+		const lemma = lemmas[index];
+		if (
+			!lemma ||
+			surface.language !== language ||
+			lemma.language !== language ||
+			!isUnitReadingFamily(lemma.family)
+		) {
+			return [];
+		}
+		return [
+			{
+				analysisKey: surface._id,
+				surfaceId: surface._id,
+				lemmaId: lemma._id,
+				presented: presentSurface(surfaceValue(surface, lemma)),
+				lemmaTarget: { kind: "Lemma" as const, lemmaId: lemma._id },
+			},
+		];
+	});
+	if (analyses.length === 0) return null;
+	analyses.sort((left, right) =>
+		`${left.presented.lemma.family}\0${left.presented.lemma.kind}\0${left.presented.lemma.canonicalForm}\0${left.analysisKey}`.localeCompare(
+			`${right.presented.lemma.family}\0${right.presented.lemma.kind}\0${right.presented.lemma.canonicalForm}\0${right.analysisKey}`,
+		),
+	);
 	return {
-		kind: "RouteNote" as const,
-		routeKind: "Surface" as const,
-		target: {
-			kind: "RouteNote" as const,
-			routeKind: "Surface" as const,
-			id: surface._id,
-		},
-		presented: presentSurface(surfaceValue(surface, lemma)),
-		lemmaTarget: {
-			kind: "RouteNote" as const,
-			routeKind: "Lemma" as const,
-			id: lemma._id,
-		},
-		connections: {
-			occurrences: occurrences.filter(
-				(value): value is NonNullable<typeof value> => value !== null,
-			),
-			sameWrittenForm: sameWritten.flatMap((candidate, index) => {
-				const candidateLemma = sameWrittenLemmas[index];
-				return candidate._id !== surface._id &&
-					candidateLemma &&
-					candidate.language === candidateLemma.language &&
-					isUnitReadingFamily(candidateLemma.family)
-					? [
-							{
-								surfaceId: candidate._id,
-								normalizedSurface: candidate.normalizedSurface,
-								canonicalForm: candidateLemma.canonicalForm,
-								family: candidateLemma.family,
-								kind: candidateLemma.kind,
-								target: {
-									kind: "RouteNote" as const,
-									routeKind: "Surface" as const,
-									id: candidate._id,
-								},
-							},
-						]
-					: [];
-			}),
-			continueCursor,
-			isDone,
-		},
+		kind: "Surface" as const,
+		target: { kind: "Surface" as const, language, normalizedSurface },
+		analyses,
 	};
 }
 
@@ -437,17 +362,15 @@ async function loadLemmaRouteNote(
 	}
 
 	return {
-		kind: "RouteNote" as const,
-		routeKind: "Lemma" as const,
+		kind: "Lemma" as const,
 		target: {
-			kind: "RouteNote" as const,
-			routeKind: "Lemma" as const,
-			id: lemma._id,
+			kind: "Lemma" as const,
+			lemmaId: lemma._id,
 		},
 		presented: presentLemma(lemmaValue(lemma)),
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
-				surface.language === lemma.language
+				surface.language === "de" && lemma.language === "de"
 					? [
 							{
 								surfaceId: surface._id,
@@ -456,9 +379,10 @@ async function loadLemmaRouteNote(
 								family: lemma.family,
 								kind: lemma.kind,
 								target: {
-									kind: "RouteNote" as const,
-									routeKind: "Surface" as const,
-									id: surface._id,
+									kind: "Surface" as const,
+									language: "de" as const,
+									normalizedSurface:
+										surface.normalizedSurface,
 								},
 							},
 						]
@@ -468,7 +392,7 @@ async function loadLemmaRouteNote(
 				readingId: reading._id,
 				emojiDescription: reading.emojiDescription,
 				target: {
-					kind: "UnitReadingNote" as const,
+					kind: "Reading" as const,
 					readingId: reading._id,
 				},
 			})),
@@ -482,9 +406,8 @@ async function loadLemmaRouteNote(
 								family: candidate.family,
 								kind: candidate.kind,
 								target: {
-									kind: "RouteNote" as const,
-									routeKind: "Lemma" as const,
-									id: candidate._id,
+									kind: "Lemma" as const,
+									lemmaId: candidate._id,
 								},
 							},
 						]
@@ -496,52 +419,7 @@ async function loadLemmaRouteNote(
 	};
 }
 
-async function loadSurfaceOccurrenceConnection(
-	ctx: QueryCtx,
-	attestation: {
-		readonly _id: Id<"attestations">;
-		readonly surfaceId: Id<"surfaces">;
-	},
-) {
-	const members = await ctx.db
-		.query("segments")
-		.withIndex("by_attestation_id", (q) =>
-			q.eq("attestationMembership.attestationId", attestation._id),
-		)
-		.take(MAX_SEGMENTS_PER_SENTENCE + 1);
-	assertRouteBound(members, MAX_SEGMENTS_PER_SENTENCE, "Attestation members");
-	if (members.length === 0) return null;
-	const ordered = [...members].sort(
-		(left, right) => left.index - right.index,
-	);
-	const sentenceId = ordered[0]?.sentenceId;
-	if (
-		!sentenceId ||
-		ordered.some(
-			(member) =>
-				member.sentenceId !== sentenceId ||
-				member.kind !== "ResolvableText" ||
-				member.attestationMembership?.attestationId !== attestation._id,
-		)
-	) {
-		return null;
-	}
-	const sentence = await ctx.db.get(sentenceId);
-	if (!sentence) return null;
-	return {
-		attestationId: attestation._id,
-		sentenceSnippet: sentence.stitchedText,
-		members: ordered.map(({ text }) => text),
-		target: {
-			kind: "RouteNote" as const,
-			routeKind: "Attestation" as const,
-			id: attestation._id,
-		},
-	};
-}
-
 type RouteConnectionPhase = {
-	Surface: "occurrences" | "sameWrittenForm";
 	Lemma: "surfaces" | "readings" | "sameWrittenForm";
 };
 
@@ -557,12 +435,9 @@ function parseRouteConnectionCursor<Kind extends keyof RouteConnectionPhase>(
 	try {
 		const parsed = JSON.parse(value) as Record<string, unknown>;
 		const validPhase =
-			kind === "Surface"
-				? parsed.phase === "occurrences" ||
-					parsed.phase === "sameWrittenForm"
-				: parsed.phase === "surfaces" ||
-					parsed.phase === "readings" ||
-					parsed.phase === "sameWrittenForm";
+			parsed.phase === "surfaces" ||
+			parsed.phase === "readings" ||
+			parsed.phase === "sameWrittenForm";
 		if (
 			parsed.kind === kind &&
 			validPhase &&
@@ -576,7 +451,7 @@ function parseRouteConnectionCursor<Kind extends keyof RouteConnectionPhase>(
 	} catch {
 		// Fall through to one stable invalid-cursor error.
 	}
-	throw new Error("Invalid Route Note connection cursor.");
+	throw new Error("Invalid Lemma Note connection cursor.");
 }
 
 function routeConnectionCursor<Kind extends keyof RouteConnectionPhase>(
@@ -585,14 +460,4 @@ function routeConnectionCursor<Kind extends keyof RouteConnectionPhase>(
 	cursor: string | null,
 ): string {
 	return JSON.stringify({ kind, phase, cursor });
-}
-
-function assertRouteBound(
-	values: readonly unknown[],
-	maximum: number,
-	name: string,
-): void {
-	if (values.length > maximum) {
-		throw new Error(`A Route Note supports at most ${maximum} ${name}.`);
-	}
 }
