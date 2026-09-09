@@ -30,7 +30,6 @@ import type {
 
 export type {
 	FixedCatalog,
-	FixedCatalogCoverage,
 	FixedLemmaCatalog,
 } from "./fixed/catalog.js";
 export { FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1 } from "./fixed/de/lexeme/auxiliary.js";
@@ -123,7 +122,10 @@ export const fixedMembersFor: FixedMembersFor = Object.freeze({
 });
 
 /** Fixed-population lookup, independent of whole-route closure. */
-export const fixedPopulationFor = fixedMembersFor;
+export const fixedPopulationFor: FixedMembersFor = Object.freeze({
+	lemma: (route) => fixedMembersFor.lemma(route),
+	reading: (lemma) => fixedMembersFor.reading(lemma),
+});
 
 function sameRoute(left: LemmaRoute, right: LemmaRoute): boolean {
 	return (

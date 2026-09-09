@@ -8,7 +8,7 @@ import type {
 	SupportedLanguage,
 } from "../types/public-types.js";
 
-export type FixedCatalogCoverage = "Complete" | "Curated";
+type FixedCatalogCoverage = "Complete" | "Curated";
 
 export type FixedCatalog<T> = Readonly<{
 	/** Stable name for the reviewed perimeter to which coverage applies. */

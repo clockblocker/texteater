@@ -34,7 +34,7 @@ function totalizeFeatureSet(
 	return result as PresentedFeatureSet;
 }
 
-export function toPresentedLemma<
+function toPresentedLemma<
 	const L extends SupportedLanguage,
 	const F extends LemmaFamilyFor<L>,
 	const K extends LemmaKindFor<L, F>,
@@ -45,7 +45,7 @@ export function toPresentedLemma<
 	} as PresentedLemma<L, F, K>;
 }
 
-export function toPresentedSurface<
+function toPresentedSurface<
 	const L extends SupportedLanguage,
 	const SK extends SurfaceKindFor<L>,
 	const F extends LemmaFamilyForSurfaceKind<L, SK>,
@@ -71,7 +71,7 @@ export function toPresentedSurface<
 	} as PresentedSurface<L, SK, F, K>;
 }
 
-export function toPresentedAttestation<
+function toPresentedAttestation<
 	const L extends SupportedLanguage,
 	const SK extends SurfaceKindFor<L>,
 	const F extends LemmaFamilyForSurfaceKind<L, SK>,

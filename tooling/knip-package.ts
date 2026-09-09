@@ -6,6 +6,10 @@ const localConfigPath = join(packageDir, "knip.json");
 const localConfig = existsSync(localConfigPath)
 	? JSON.parse(readFileSync(localConfigPath, "utf8"))
 	: {};
+const {
+	ignoreDependencies: localIgnoreDependencies,
+	...knipConfig
+} = localConfig;
 const manifest = JSON.parse(
 	readFileSync(join(packageDir, "package.json"), "utf8"),
 );
@@ -22,9 +26,8 @@ const workspaceDependencies = dependencyFields.flatMap((field) =>
 );
 
 export default {
-	...localConfig,
-	ignoreDependencies: [
-		...(localConfig.ignoreDependencies ?? []),
+	...knipConfig,
+	ignoreDependencies: localIgnoreDependencies ?? [
 		...workspaceDependencies,
 		"@biomejs/biome",
 		"bun-types",
