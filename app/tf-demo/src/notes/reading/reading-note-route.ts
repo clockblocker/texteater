@@ -4,7 +4,7 @@ import type { NoteDataFor } from "../note-data";
 import { type TargetLanguage, targetLanguageSchema } from "../target-language";
 import { availableBlocksFor } from "./system-block-catalog";
 
-type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
+type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
 
 export type UnitReadingFamilyFor<L extends TargetLanguage> = Extract<
 	LemmaFamilyFor<L>,
@@ -42,7 +42,7 @@ export type ReadingNoteRoute = {
 
 /** Narrows the widened Convex route once, before applicability or dispatch. */
 export function narrowReadingNoteRoute(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 ): ReadingNoteRoute | null {
 	const lemma = note.reading.lemma;
 	const language = targetLanguageSchema.safeParse(lemma.language);

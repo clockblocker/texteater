@@ -14,18 +14,18 @@ import type {
 import { narrowReadingNoteRoute } from "./reading-note-route";
 import { availableBlocksFor } from "./system-block-catalog";
 
-type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
-type SourceContext = ReadingNoteData["sourceContexts"]["page"][number];
+type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
+type SourceContext = AnyReadingNoteData["sourceContexts"]["page"][number];
 
 type ConcreteReadingNoteData<
 	L extends TargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
-> = Omit<ReadingNoteData, "reading"> & {
+> = Omit<AnyReadingNoteData, "reading"> & {
 	readonly reading: Reading<L, F, K> &
-		Omit<ReadingNoteData["reading"], keyof Reading> & {
+		Omit<AnyReadingNoteData["reading"], keyof Reading> & {
 			readonly lemma: Reading<L, F, K>["lemma"] &
-				Omit<ReadingNoteData["reading"]["lemma"], keyof Lemma>;
+				Omit<AnyReadingNoteData["reading"]["lemma"], keyof Lemma>;
 		};
 };
 
@@ -78,7 +78,7 @@ export type ReadingNoteDefaultRenderer = <
 ) => ReactElement | null;
 
 export function createDefaultReadingNoteCapabilities(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 ): ReadingNotePresentationCapabilities {
 	const route = narrowReadingNoteRoute(note);
 	if (!route) {

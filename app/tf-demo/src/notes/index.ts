@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 import { renderErrorNote } from "./error-note";
 import type { NoteData } from "./note-data";
 import {
-	type ReadingNoteData,
+	type AnyReadingNoteData,
 	type ReadingNotePresentationCapabilities,
 	renderReadingNote,
 } from "./reading";
@@ -38,7 +38,7 @@ export type { TargetLanguage } from "./target-language";
 export { targetLanguageSchema } from "./target-language";
 
 export function renderNote(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 	capabilities?: ReadingNotePresentationCapabilities,
 ): ReactElement;
 export function renderNote(

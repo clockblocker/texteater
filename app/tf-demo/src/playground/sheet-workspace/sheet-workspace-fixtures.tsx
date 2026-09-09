@@ -3,7 +3,7 @@ import { useCallback } from "react";
 
 import type { SentenceView } from "@/lib/action-results";
 import { renderNote } from "@/notes";
-import type { ReadingNoteData } from "@/notes/reading";
+import type { AnyReadingNoteData } from "@/notes/reading";
 import { createDefaultReadingNoteCapabilities } from "@/notes/reading/reading-note-render-context";
 import type { RouteNoteData } from "@/notes/route";
 import { createDefaultRouteNoteCapabilities } from "@/notes/route/route-note-render-context";
@@ -251,7 +251,7 @@ function fixtureNoteSource(noteId: string) {
 
 function fixtureNote(
 	source: NonNullable<ReturnType<typeof fixtureNoteSource>>,
-): ReadingNoteData | RouteNoteData {
+): AnyReadingNoteData | RouteNoteData {
 	const { kind, sentence, segment, segmentIndex } = source;
 	const written = segment.text;
 	const normalized = written.toLocaleLowerCase("de");
@@ -293,7 +293,7 @@ function fixtureNote(
 				continueCursor: "",
 				isDone: true,
 			},
-		} as unknown as ReadingNoteData;
+		} as unknown as AnyReadingNoteData;
 	}
 	if (kind === "lemma") {
 		return {
@@ -434,7 +434,7 @@ function routeTarget(
 	return { kind: "RouteNote" as const, routeKind, id: id as never };
 }
 
-function readingCapabilities(note: ReadingNoteData) {
+function readingCapabilities(note: AnyReadingNoteData) {
 	return createDefaultReadingNoteCapabilities(note);
 }
 

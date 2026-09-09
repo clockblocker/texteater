@@ -5,7 +5,7 @@ import { renderNote } from "../src/notes";
 import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 import {
 	type ReadingBlockPlan,
-	type ReadingNoteData,
+	type AnyReadingNoteData,
 	type ReadingNotePresentationCapabilities,
 	type ReadingNoteRenderContext,
 	renderReadingNote,
@@ -74,7 +74,7 @@ test("renders populated defaults in weighted order with workspace commands", () 
 		transcription: "baŋk",
 		coreFeatures: { gender: "Fem" },
 	});
-	const note: ReadingNoteData = {
+	const note: AnyReadingNoteData = {
 		...base,
 		knowledge: {
 			...base.knowledge,
@@ -136,7 +136,7 @@ test("renders populated defaults in weighted order with workspace commands", () 
 
 test("applies visitor Knowledge Settings in React without reshaping NoteData", () => {
 	const base = readingNoteFixture({ transcription: "baŋk" });
-	const note: ReadingNoteData = {
+	const note: AnyReadingNoteData = {
 		...base,
 		knowledge: {
 			...base.knowledge,
@@ -442,7 +442,7 @@ test("preserves Definition mutation planning", () => {
 			value: "Neue Definition",
 		},
 	});
-	const defined: ReadingNoteData = {
+	const defined: AnyReadingNoteData = {
 		...absent,
 		knowledge: { ...absent.knowledge, definition: "Alt" },
 	};
@@ -469,7 +469,7 @@ function renderContext(
 }
 
 function renderPublicReadingNote(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 	capabilities?: ReadingNotePresentationCapabilities,
 ): string {
 	return renderToStaticMarkup(renderNote(note, capabilities));
@@ -487,7 +487,7 @@ type ReadingNoteFixtureOptions = Partial<{
 
 function readingNoteFixture(
 	route: ReadingNoteFixtureOptions = {},
-): ReadingNoteData {
+): AnyReadingNoteData {
 	const canonicalForm = route.canonicalForm ?? "Bank";
 	return {
 		kind: "UnitReadingNote",
@@ -518,7 +518,7 @@ function readingNoteFixture(
 		pendingRelations: [],
 		structuralReferences: [],
 		sourceContexts: { page: [], continueCursor: "", isDone: true },
-	} as unknown as ReadingNoteData;
+	} as unknown as AnyReadingNoteData;
 }
 
 function verbFeatures(

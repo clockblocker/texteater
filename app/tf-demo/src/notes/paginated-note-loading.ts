@@ -1,6 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-import type { ReadingNoteData } from "./reading";
+import type { AnyReadingNoteData } from "./reading";
 import type { RouteNoteData } from "./route";
 import type { ShadowNoteData, ShadowNoteReferrer } from "./shadow";
 
@@ -10,7 +10,7 @@ type PaginatedRouteNote = Extract<
 >;
 
 export type PaginatedNote =
-	| ReadingNoteData
+	| AnyReadingNoteData
 	| PaginatedRouteNote
 	| ShadowNoteData;
 

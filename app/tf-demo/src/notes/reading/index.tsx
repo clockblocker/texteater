@@ -15,7 +15,7 @@ import {
 	type UnitReadingKindFor,
 } from "./reading-note-route";
 
-export type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
+export type AnyReadingNoteData = NoteDataFor<"UnitReadingNote">;
 
 export type {
 	ReadingBlockKind,
@@ -37,7 +37,7 @@ export type {
 } from "./reading-note-route";
 
 export function renderReadingNote(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 	capabilities?: ReadingNotePresentationCapabilities,
 ): ReactElement {
 	try {
@@ -72,7 +72,7 @@ function createRenderContext<
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 	route: ReadingNoteRouteKey<L, F, K>,
 	capabilities: ReadingNotePresentationCapabilities,
 ): ReadingNoteRenderContext<L, F, K> {
@@ -88,7 +88,7 @@ function renderUnconfiguredTargetLanguage(language: never): ReactElement {
 	);
 }
 
-function routeDescription(note: ReadingNoteData): string {
+function routeDescription(note: AnyReadingNoteData): string {
 	const lemma = note.reading.lemma;
 	return [lemma?.language, lemma?.family, lemma?.kind]
 		.map((coordinate) =>

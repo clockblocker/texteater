@@ -32,7 +32,7 @@ import {
 import { renderNote } from "@/notes";
 import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
 import type {
-	ReadingNoteData,
+	AnyReadingNoteData,
 	ReadingNotePresentationCapabilities,
 } from "@/notes/reading";
 import { NotFoundView } from "@/views/not-found-view";
@@ -43,7 +43,7 @@ import {
 	type ReadingBlockRoute,
 } from "../../shared/reading-block-layout";
 
-export type UnitReadingNote = ReadingNoteData;
+export type UnitReadingNote = AnyReadingNoteData;
 
 export function UnitReadingNoteView({
 	target,
@@ -106,7 +106,7 @@ function ReadingNoteContainer({
 }: {
 	presentation: "Card" | "Sheet";
 	visitorId: string;
-	note: ReadingNoteData;
+	note: AnyReadingNoteData;
 	knowledgeSettings: KnowledgeSettings;
 	route: ReadingBlockRoute;
 }) {
@@ -132,7 +132,7 @@ function ReadingNoteContainer({
 		mutationFn: applyKnowledgeChangeAction,
 	});
 	const loadSourceContextPage = useCallback(
-		async (cursor: string): Promise<ReadingNoteData | null> => {
+		async (cursor: string): Promise<AnyReadingNoteData | null> => {
 			const next = await convex.query(api.readingNotes.get, {
 				readingId: note.target.readingId,
 				visitorId,
@@ -234,7 +234,7 @@ function ReadingNoteContainer({
 }
 
 export function readingDefinitionMutationArgs(
-	note: ReadingNoteData,
+	note: AnyReadingNoteData,
 	definition: string | null,
 	knowledgeChangeKey: string,
 ) {
@@ -280,7 +280,7 @@ function ReadingLayoutLoadFailure({ error }: { error: unknown }) {
 	);
 }
 
-function readingBlockRoute(note: ReadingNoteData): ReadingBlockRoute | null {
+function readingBlockRoute(note: AnyReadingNoteData): ReadingBlockRoute | null {
 	const lemma = note.reading.lemma;
 	if (lemma.language !== "de") return null;
 	const route: ReadingBlockRoute = {
