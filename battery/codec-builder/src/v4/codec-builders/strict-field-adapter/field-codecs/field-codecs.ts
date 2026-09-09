@@ -5,9 +5,8 @@ import {
 	dateAndNullishIsoString,
 	isoStringAndDate,
 	isoStringAndNullishDate,
-	nullableDateAndIsoString,
 	nullableDateAndNullishIsoString,
-	nullableIsoStringAndDate,
+	nullableIsoStringAndNullishDate,
 } from "./atoms/derived/date";
 import {
 	nullableNumberAndNumericString,
@@ -43,12 +42,12 @@ export const fieldCodecs = {
 	nullable: {
 		date: {
 			and: {
-				isoString: nullableDateAndIsoString,
+				isoString: nullableDateAndNullishIsoString,
 			},
 		},
 		isoString: {
 			and: {
-				date: nullableIsoStringAndDate,
+				date: nullableIsoStringAndNullishDate,
 			},
 		},
 		string: {

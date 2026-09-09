@@ -24,7 +24,6 @@ export const intAndNullishNumericString = toNonNullishWithDefault(
 	0,
 );
 
-export const nullableNumericStringAndNullishInt = nullableNumericStringAndInt;
 export const nullishIntAndNullableNumericString = z.invertCodec(
-	nullableNumericStringAndNullishInt,
+	nullableNumericStringAndInt,
 );

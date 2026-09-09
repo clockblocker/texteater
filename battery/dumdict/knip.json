@@ -1,9 +1,8 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
-		"codegen/generate-validation-artifacts.ts",
 		"src/dangerously-heavy-schema-tree.ts",
-		"src/index.ts",
+		"src/pending.ts",
 		"src/public-schema.ts",
 		"src/relations.ts",
 		"src/runtime.ts",
@@ -15,5 +14,6 @@
 		"generate-readme/**/*.ts",
 		"src/**/*.ts",
 		"tests/**/*.ts"
-	]
+	],
+	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
 }

@@ -4,9 +4,7 @@ import { numericStringAndNumber } from "../../src/v4/codec-builders/strict-field
 import { yesNoAndBoolean } from "../../src/v4/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/yes-no-and-boolean";
 import {
 	isoStringAndDate,
-	nullableDateAndIsoString,
 	nullableDateAndNullishIsoString,
-	nullableIsoStringAndDate,
 	nullableIsoStringAndNullishDate,
 } from "../../src/v4/codec-builders/strict-field-adapter/field-codecs/atoms/derived/date";
 import {
@@ -89,27 +87,25 @@ describe("nullableDateAndNullishIsoString", () => {
 	});
 });
 
-describe("nullableDateAndIsoString", () => {
+describe("nullable date codecs", () => {
 	test("maps nullish input to null and uses a nullable date output schema", () => {
-		expect(nullableDateAndIsoString.decode(undefined)).toBeNull();
-		expect(nullableDateAndIsoString.decode(null)).toBeNull();
-		expect(nullableDateAndIsoString.out.parse(null)).toBeNull();
-		expect(() => nullableDateAndIsoString.out.parse(undefined)).toThrow();
+		expect(nullableDateAndNullishIsoString.decode(undefined)).toBeNull();
+		expect(nullableDateAndNullishIsoString.decode(null)).toBeNull();
+		expect(nullableDateAndNullishIsoString.out.parse(null)).toBeNull();
+		expect(() =>
+			nullableDateAndNullishIsoString.out.parse(undefined),
+		).toThrow();
 	});
 
 	test("keeps the reverse date codec nullish-in and nullable-out", () => {
 		expect(nullableIsoStringAndNullishDate.in.parse(null)).toBeNull();
-		expect(nullableIsoStringAndDate.in.parse(null)).toBeNull();
 		expect(
 			nullableIsoStringAndNullishDate.in.parse(undefined),
 		).toBeUndefined();
-		expect(nullableIsoStringAndDate.in.parse(undefined)).toBeUndefined();
 		expect(nullableIsoStringAndNullishDate.out.parse(null)).toBeNull();
-		expect(nullableIsoStringAndDate.out.parse(null)).toBeNull();
 		expect(() =>
 			nullableIsoStringAndNullishDate.out.parse(undefined),
 		).toThrow();
-		expect(() => nullableIsoStringAndDate.out.parse(undefined)).toThrow();
 	});
 });
 

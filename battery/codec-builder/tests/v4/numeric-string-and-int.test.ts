@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
 	intAndNumericString,
-	nullableNumericStringAndNullishInt,
+	nullableNumericStringAndInt,
 	nullishIntAndNullableNumericString,
 	numericStringAndInt,
 } from "../../src/v4/codec-builders/strict-field-adapter/field-codecs/molecules/int-and-numeric-string";
@@ -23,10 +23,10 @@ describe("numericStringAndInt", () => {
 	});
 });
 
-describe("nullableNumericStringAndNullishInt", () => {
+describe("nullableNumericStringAndInt", () => {
 	test("keeps the nullable/nullish variant available", () => {
-		expect(nullableNumericStringAndNullishInt.decode(undefined)).toBeNull();
-		expect(nullableNumericStringAndNullishInt.decode(42)).toBe("42");
+		expect(nullableNumericStringAndInt.decode(undefined)).toBeNull();
+		expect(nullableNumericStringAndInt.decode(42)).toBe("42");
 		expect(nullishIntAndNullableNumericString.decode("42.9")).toBe(42);
 		expect(nullishIntAndNullableNumericString.encode(42)).toBe("42");
 	});

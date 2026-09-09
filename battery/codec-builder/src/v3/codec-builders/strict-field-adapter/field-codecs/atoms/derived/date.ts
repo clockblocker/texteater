@@ -33,8 +33,6 @@ export const nullableDateAndNullishIsoString = {
 	typeof nullableDateOutputSchema
 >;
 
-export const nullableDateAndIsoString = nullableDateAndNullishIsoString;
-
 export const isoStringAndDate = {
 	fromInput: (value: Date) => value.toISOString(),
 	fromOutput: (value: string) => new Date(value),
@@ -48,7 +46,6 @@ export const dateAndNullishIsoString = toNonNullishWithDefault(
 );
 
 export const nullableIsoStringAndNullishDate = toNullable(isoStringAndDate);
-export const nullableIsoStringAndDate = nullableIsoStringAndNullishDate;
 
 export const isoStringAndNullishDate = toNonNullishWithDefault(
 	nullableIsoStringAndNullishDate,

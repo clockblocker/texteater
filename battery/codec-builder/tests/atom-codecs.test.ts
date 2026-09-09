@@ -3,9 +3,7 @@ import { numericStringAndNumber } from "../src/v3/codec-builders/strict-field-ad
 import { yesNoAndBoolean } from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/yes-no-and-boolean";
 import {
 	isoStringAndDate,
-	nullableDateAndIsoString,
 	nullableDateAndNullishIsoString,
-	nullableIsoStringAndDate,
 	nullableIsoStringAndNullishDate,
 } from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/derived/date";
 import {
@@ -90,13 +88,15 @@ describe("nullableDateAndNullishIsoString", () => {
 	});
 });
 
-describe("nullableDateAndIsoString", () => {
+describe("nullable date codecs", () => {
 	test("maps nullish input to null and uses a nullable date output schema", () => {
-		expect(nullableDateAndIsoString.fromInput(undefined)).toBeNull();
-		expect(nullableDateAndIsoString.fromInput(null)).toBeNull();
-		expect(nullableDateAndIsoString.outputSchema.parse(null)).toBeNull();
+		expect(nullableDateAndNullishIsoString.fromInput(undefined)).toBeNull();
+		expect(nullableDateAndNullishIsoString.fromInput(null)).toBeNull();
+		expect(
+			nullableDateAndNullishIsoString.outputSchema.parse(null),
+		).toBeNull();
 		expect(() =>
-			nullableDateAndIsoString.outputSchema.parse(undefined),
+			nullableDateAndNullishIsoString.outputSchema.parse(undefined),
 		).toThrow();
 	});
 
@@ -104,22 +104,14 @@ describe("nullableDateAndIsoString", () => {
 		expect(
 			nullableIsoStringAndNullishDate.inputSchema.parse(null),
 		).toBeNull();
-		expect(nullableIsoStringAndDate.inputSchema.parse(null)).toBeNull();
 		expect(
 			nullableIsoStringAndNullishDate.inputSchema.parse(undefined),
 		).toBeUndefined();
 		expect(
-			nullableIsoStringAndDate.inputSchema.parse(undefined),
-		).toBeUndefined();
-		expect(
 			nullableIsoStringAndNullishDate.outputSchema.parse(null),
 		).toBeNull();
-		expect(nullableIsoStringAndDate.outputSchema.parse(null)).toBeNull();
 		expect(() =>
 			nullableIsoStringAndNullishDate.outputSchema.parse(undefined),
-		).toThrow();
-		expect(() =>
-			nullableIsoStringAndDate.outputSchema.parse(undefined),
 		).toThrow();
 	});
 });

@@ -6,5 +6,6 @@
 		"src/v4/index.ts",
 		"tests/**/*.ts"
 	],
-	"project": ["src/**/*.ts", "tests/**/*.ts"]
+	"project": ["src/**/*.ts", "tests/**/*.ts"],
+	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
 }

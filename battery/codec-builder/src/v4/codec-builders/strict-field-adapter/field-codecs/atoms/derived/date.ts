@@ -26,8 +26,6 @@ export const nullableDateAndNullishIsoString = z.codec(
 	},
 );
 
-export const nullableDateAndIsoString = nullableDateAndNullishIsoString;
-
 export const isoStringAndDate = z.codec(dateSchema, isoStringSchema, {
 	decode: (value) => value.toISOString(),
 	encode: (value) => new Date(value),
@@ -39,7 +37,6 @@ export const dateAndNullishIsoString = toNonNullishWithDefault(
 );
 
 export const nullableIsoStringAndNullishDate = toNullable(isoStringAndDate);
-export const nullableIsoStringAndDate = nullableIsoStringAndNullishDate;
 
 export const isoStringAndNullishDate = toNonNullishWithDefault(
 	nullableIsoStringAndNullishDate,
