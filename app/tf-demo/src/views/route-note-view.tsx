@@ -14,9 +14,11 @@ import type {
 import { NotFoundView } from "@/views/not-found-view";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export type RouteNote = RouteNoteData;
 type PaginatedRouteNote = Extract<RouteNote, { kind: "Lemma" }>;
+type PaginatedSurfaceNote = Extract<RouteNote, { kind: "Surface" }>;
 
 export function RouteNoteView({
 	target,
@@ -42,18 +44,61 @@ export function RouteNoteView({
 		);
 	}
 	if (noteQuery.data.kind === "Surface") {
-		const capabilities: SurfaceNotePresentationCapabilities = {
-			presentation,
-			activeAnalysisKey,
-			follow,
-		};
-		return renderNote(noteQuery.data, capabilities);
+		return (
+			<PaginatedSurfaceNote
+				initialNote={noteQuery.data}
+				presentation={presentation}
+				activeAnalysisKey={activeAnalysisKey}
+			/>
+		);
 	}
 	return noteQuery.data.kind === "Attestation" ? (
 		renderNote(noteQuery.data, routeNoteCapabilities(follow))
 	) : (
 		<PaginatedRouteNote initialNote={noteQuery.data} />
 	);
+}
+
+function PaginatedSurfaceNote({
+	initialNote,
+	presentation,
+	activeAnalysisKey,
+}: {
+	initialNote: PaginatedSurfaceNote;
+	presentation: "Card" | "Sheet";
+	activeAnalysisKey?: string;
+}) {
+	const { follow } = useWorkspaceInteraction();
+	const convex = useConvex();
+	const loadSurfacePage = useCallback(
+		async (cursor: string): Promise<PaginatedSurfaceNote | null> => {
+			const next = await convex.query(api.routeNotes.get, {
+				kind: "Surface",
+				language: initialNote.target.language,
+				normalizedSurface: initialNote.target.normalizedSurface,
+				contextCursor: cursor,
+			});
+			return next?.kind === "Surface" ? next : null;
+		},
+		[
+			convex,
+			initialNote.target.language,
+			initialNote.target.normalizedSurface,
+		],
+	);
+	const pagination = usePaginatedNoteLoading(initialNote, loadSurfacePage);
+	const capabilities: SurfaceNotePresentationCapabilities = {
+		presentation,
+		activeAnalysisKey,
+		pagination: {
+			hasMore: pagination.hasMore,
+			isLoading: pagination.isLoading,
+			error: pagination.error,
+			loadMore: pagination.hasMore ? pagination.loadMore : null,
+		},
+		follow,
+	};
+	return renderNote(pagination.note, capabilities);
 }
 
 function PaginatedRouteNote({
@@ -90,7 +135,10 @@ function PaginatedRouteNote({
 function routeNoteQueryArgs(target: RouteNoteTarget) {
 	switch (target.kind) {
 		case "Lemma":
-			return { kind: "Lemma" as const, lemmaId: target.lemmaId };
+			return {
+				kind: "Lemma" as const,
+				lemmaId: target.lemmaId as Id<"lemmas">,
+			};
 		case "Surface":
 			return {
 				kind: "Surface" as const,
@@ -100,7 +148,7 @@ function routeNoteQueryArgs(target: RouteNoteTarget) {
 		case "Attestation":
 			return {
 				kind: "Attestation" as const,
-				attestationId: target.attestationId,
+				attestationId: target.attestationId as Id<"attestations">,
 			};
 	}
 }

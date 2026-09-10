@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { type NoteDataFor, renderNote } from "../src/notes";
+import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 
 test("renders Lemma and Attestation subjects through the common renderer", () => {
 	const lemma = {
@@ -73,6 +74,28 @@ test("Surface Notes retain heterogeneous analyses without an outer route", () =>
 	expect(markup).not.toContain("Active analysis");
 });
 
+test("Surface Note pages merge every analysis without replacing the aggregate", async () => {
+	const first = {
+		...surfaceNote(),
+		analyses: surfaceNote().analyses.slice(0, 1),
+		continueCursor: "surface-page-2",
+		isDone: false,
+	};
+	const second = {
+		...surfaceNote(),
+		analyses: surfaceNote().analyses.slice(1),
+		continueCursor: "",
+		isDone: true,
+	};
+	const loader = createPaginatedNoteLoader(first, async (cursor) => {
+		expect(cursor).toBe("surface-page-2");
+		return second;
+	});
+	await loader.loadMore();
+	expect(loader.current().note.analyses).toHaveLength(2);
+	expect(loader.current().hasMore).toBe(false);
+});
+
 test("active Surface analysis is contextual in Card and highlighted in Sheet", () => {
 	const surface = surfaceNote();
 	const card = renderToStaticMarkup(
@@ -136,6 +159,8 @@ function surfaceNote(): NoteDataFor<"Surface"> {
 				lemmaTarget: { kind: "Lemma", lemmaId: "lemma-verb" },
 			},
 		],
+		continueCursor: "",
+		isDone: true,
 	} as unknown as NoteDataFor<"Surface">;
 }
 

@@ -7,7 +7,7 @@ export const get = query({
 	args: v.union(
 		v.object({
 			kind: v.literal("Attestation"),
-			attestationId: v.string(),
+			attestationId: v.id("attestations"),
 			contextCursor: v.optional(v.string()),
 		}),
 		v.object({
@@ -18,7 +18,7 @@ export const get = query({
 		}),
 		v.object({
 			kind: v.literal("Lemma"),
-			lemmaId: v.string(),
+			lemmaId: v.id("lemmas"),
 			contextCursor: v.optional(v.string()),
 		}),
 	),

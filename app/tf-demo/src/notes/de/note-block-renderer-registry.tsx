@@ -8,7 +8,7 @@ import type {
 	NoteFamilyFor,
 } from "../note-block-renderer-registry";
 import type { UnitReadingFamilyFor } from "../reading";
-import { renderHeaderDeLexemeVerb } from "../reading/de/renderer-overrides/lexeme/verb/header/header-de-lexeme-verb-renderer";
+import { DE_READING_NOTE_RENDERER_OVERRIDES } from "../reading/de/de-renderer-overrides";
 import {
 	renderDefaultReadingHeader,
 	renderDefaultReadingRelations,
@@ -57,7 +57,7 @@ export const DE_READING_NOTE_RENDERER_REGISTRY = {
 		SYM: READING_RELATIONAL_RENDERERS,
 		VERB: {
 			...READING_RELATIONAL_RENDERERS,
-			Header: renderHeaderDeLexemeVerb,
+			Header: DE_READING_NOTE_RENDERER_OVERRIDES.Lexeme.VERB.Header,
 		},
 		X: READING_BASE_RENDERERS,
 	},
@@ -130,73 +130,34 @@ const SHADOW_RENDERERS = {
 	Relations: adaptShadowRenderer(renderDefaultShadowNoteRelations),
 };
 
-function allGermanUnitRoutes<
-	N extends GrammaticalNoteKind,
-	R extends Partial<
-		Record<
-			import("../note-block-kind").NoteBlockKind,
-			GenericGrammaticalRenderer<N>
-		>
-	>,
->(renderers: R): NoteBlockRendererRegistry<"de", N> {
-	return {
-		Lexeme: {
-			ADJ: renderers,
-			ADP: renderers,
-			ADV: renderers,
-			AUX: renderers,
-			CCONJ: renderers,
-			DET: renderers,
-			INTJ: renderers,
-			NOUN: renderers,
-			NUM: renderers,
-			PART: renderers,
-			PRON: renderers,
-			PROPN: renderers,
-			PUNCT: renderers,
-			SCONJ: renderers,
-			SYM: renderers,
-			VERB: renderers,
-			X: renderers,
-		},
-		Phraseme: {
-			Aphorism: renderers,
-			Collocation: renderers,
-			DiscourseFormula: renderers,
-			Idiom: renderers,
-			Proverb: renderers,
-		},
-		Morpheme: {
-			Circumfix: renderers,
-			Clitic: renderers,
-			Duplifix: renderers,
-			Infix: renderers,
-			Interfix: renderers,
-			Prefix: renderers,
-			Root: renderers,
-			Suffix: renderers,
-			Suffixoid: renderers,
-			ToneMarking: renderers,
-			Transfix: renderers,
-		},
-	} as unknown as NoteBlockRendererRegistry<"de", N>;
+type GermanReadingRouteMap<R> = {
+	readonly [F in keyof typeof DE_READING_NOTE_RENDERER_REGISTRY]: {
+		readonly [K in keyof (typeof DE_READING_NOTE_RENDERER_REGISTRY)[F]]: R;
+	};
+};
+
+function mapGermanReadingRoutes<R>(renderers: R): GermanReadingRouteMap<R> {
+	return Object.fromEntries(
+		Object.entries(DE_READING_NOTE_RENDERER_REGISTRY).map(
+			([family, kinds]) => [
+				family,
+				Object.fromEntries(
+					Object.keys(kinds).map((kind) => [kind, renderers]),
+				),
+			],
+		),
+	) as GermanReadingRouteMap<R>;
 }
 
-export const DE_LEMMA_NOTE_RENDERER_REGISTRY = allGermanUnitRoutes<
-	"Lemma",
-	typeof LEMMA_RENDERERS
->(LEMMA_RENDERERS) satisfies NoteBlockRendererRegistry<"de", "Lemma">;
-export const DE_ATTESTATION_NOTE_RENDERER_REGISTRY = allGermanUnitRoutes<
-	"Attestation",
-	typeof ATTESTATION_RENDERERS
->(ATTESTATION_RENDERERS) satisfies NoteBlockRendererRegistry<
-	"de",
-	"Attestation"
->;
-export const DE_SHADOW_NOTE_RENDERER_REGISTRY = allGermanUnitRoutes<
-	"Shadow",
-	typeof SHADOW_RENDERERS
->(SHADOW_RENDERERS) satisfies NoteBlockRendererRegistry<"de", "Shadow">;
+export const DE_LEMMA_NOTE_RENDERER_REGISTRY = mapGermanReadingRoutes(
+	LEMMA_RENDERERS,
+) satisfies NoteBlockRendererRegistry<"de", "Lemma">;
+export const DE_ATTESTATION_NOTE_RENDERER_REGISTRY = mapGermanReadingRoutes(
+	ATTESTATION_RENDERERS,
+) satisfies NoteBlockRendererRegistry<"de", "Attestation">;
+export const DE_SHADOW_NOTE_RENDERER_REGISTRY = mapGermanReadingRoutes(
+	SHADOW_RENDERERS,
+) satisfies NoteBlockRendererRegistry<"de", "Shadow">;
 
 export const DE_SURFACE_NOTE_RENDERER_REGISTRY = {
 	Header: renderDefaultSurfaceNoteHeader,

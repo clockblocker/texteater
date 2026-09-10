@@ -120,7 +120,7 @@ test("Note locators are strict across Attestation, Surface, and Lemma kinds", as
 	]) {
 		expect(await routeNote({ db }, { target })).toBeNull();
 	}
-	expect(db.documentReads).toBe(0);
+	expect(db.documentReads).toBe(2);
 });
 
 test("Attestation Route Note preserves ordered members and reaches Surface and Reading", async () => {
@@ -797,7 +797,7 @@ test("Surface Note aggregates heterogeneous typed analyses of one written form",
 	);
 });
 
-test("Surface Note rejects an aggregate beyond its explicit analysis bound", async () => {
+test("Surface Note paginates every analysis beyond one query transaction", async () => {
 	const lemmas = Array.from({ length: 101 }, (_, index) =>
 		lemma(`lemma-${index}`, "de", `Bank-${index}`, "Lexeme", "NOUN"),
 	);
@@ -807,18 +807,31 @@ test("Surface Note rejects an aggregate beyond its explicit analysis bound", asy
 			surface(`surface-${index}`, entry._id, "de", "Bank"),
 		),
 	});
-	await expect(
-		routeNote(
-			{ db },
-			{
-				target: {
-					kind: "Surface",
-					language: "de",
-					normalizedSurface: "Bank",
-				},
-			},
+	const target = {
+		kind: "Surface",
+		language: "de",
+		normalizedSurface: "Bank",
+	} as const;
+	const first = (await routeNote({ db }, { target })) as {
+		analyses: Array<{ analysisKey: string }>;
+		continueCursor: string;
+		isDone: boolean;
+	};
+	const second = (await routeNote(
+		{ db },
+		{ target, contextCursor: first.continueCursor },
+	)) as typeof first;
+	expect(first.analyses).toHaveLength(100);
+	expect(first.isDone).toBe(false);
+	expect(second.analyses).toHaveLength(1);
+	expect(second.isDone).toBe(true);
+	expect(
+		new Set(
+			[...first.analyses, ...second.analyses].map(
+				({ analysisKey }) => analysisKey,
+			),
 		),
-	).rejects.toThrow("A Surface Note supports at most 100 analyses.");
+	).toEqual(new Set(lemmas.map((_, index) => `surface-${index}`)));
 });
 
 test("homographic demonstrative and relative Lemma navigation keeps exact Readings separate", async () => {

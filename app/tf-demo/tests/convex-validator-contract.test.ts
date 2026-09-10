@@ -38,6 +38,7 @@ import {
 import { readingNoteValidator } from "../convex/modules/notes/readingNote";
 import { routeNoteValidator } from "../convex/modules/notes/routeNotes";
 import { shadowNoteValidator } from "../convex/modules/notes/shadowNote";
+import { get as getRouteNote } from "../convex/routeNotes";
 
 function fieldType(
 	validator: { json: unknown },
@@ -209,6 +210,14 @@ test("Note validators expose five exact kinds and keep presented entities nested
 			expect(variant.value[field]).toBeUndefined();
 		}
 	}
+});
+
+test("Route Note query locators retain table-specific Convex IDs", () => {
+	const args = getRouteNote.exportArgs();
+	expect(args).toContain('"attestationId"');
+	expect(args).toContain('"tableName":"attestations"');
+	expect(args).toContain('"lemmaId"');
+	expect(args).toContain('"tableName":"lemmas"');
 });
 
 test("the persistence adapter does not load exhaustive domain schemas", async () => {

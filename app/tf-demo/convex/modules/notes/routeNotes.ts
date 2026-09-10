@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 
-import type { Doc } from "../../_generated/dataModel";
+import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
 	lemmaValue,
@@ -18,7 +18,7 @@ import {
 import { isUnitReadingFamily } from "./unitReadingFamilies";
 
 const ROUTE_CONNECTION_PAGE_SIZE = 25;
-const MAX_SURFACE_ANALYSES = 100;
+const SURFACE_ANALYSIS_PAGE_SIZE = 100;
 
 const attestationTargetValidator = v.object({
 	kind: v.literal("Attestation"),
@@ -34,6 +34,11 @@ const surfaceTargetValidator = v.object({
 	kind: v.literal("Surface"),
 	language: v.literal("de"),
 	normalizedSurface: v.string(),
+});
+
+const readingTargetValidator = v.object({
+	kind: v.literal("Reading"),
+	readingId: v.id("readings"),
 });
 
 const attestationRouteNoteValidator = v.object({
@@ -54,10 +59,7 @@ const attestationRouteNoteValidator = v.object({
 	surfaceTarget: surfaceTargetValidator,
 	reading: v.object({
 		emojiDescription: v.string(),
-		target: v.object({
-			kind: v.literal("Reading"),
-			readingId: v.id("readings"),
-		}),
+		target: readingTargetValidator,
 	}),
 });
 
@@ -82,6 +84,8 @@ const surfaceRouteNoteValidator = v.object({
 			lemmaTarget: lemmaTargetValidator,
 		}),
 	),
+	continueCursor: v.string(),
+	isDone: v.boolean(),
 });
 
 const lemmaRouteConnectionValidator = v.object({
@@ -102,10 +106,7 @@ const lemmaRouteNoteValidator = v.object({
 			v.object({
 				readingId: v.id("readings"),
 				emojiDescription: v.string(),
-				target: v.object({
-					kind: v.literal("Reading"),
-					readingId: v.id("readings"),
-				}),
+				target: readingTargetValidator,
 			}),
 		),
 		sameWrittenForm: v.array(lemmaRouteConnectionValidator),
@@ -121,13 +122,16 @@ export const routeNoteValidator = v.union(
 );
 
 type RouteNoteTarget =
-	| { readonly kind: "Attestation"; readonly attestationId: string }
+	| {
+			readonly kind: "Attestation";
+			readonly attestationId: Id<"attestations">;
+	  }
 	| {
 			readonly kind: "Surface";
 			readonly language: "de";
 			readonly normalizedSurface: string;
 	  }
-	| { readonly kind: "Lemma"; readonly lemmaId: string };
+	| { readonly kind: "Lemma"; readonly lemmaId: Id<"lemmas"> };
 
 export async function loadRouteNote(
 	ctx: QueryCtx,
@@ -142,6 +146,7 @@ export async function loadRouteNote(
 			ctx,
 			target.language,
 			target.normalizedSurface,
+			contextCursor,
 		);
 	}
 	return loadLemmaRouteNote(ctx, target.lemmaId, contextCursor);
@@ -149,13 +154,8 @@ export async function loadRouteNote(
 
 async function loadAttestationRouteNote(
 	ctx: QueryCtx,
-	attestationIdValue: string,
+	attestationId: Id<"attestations">,
 ) {
-	const attestationId = ctx.db.normalizeId(
-		"attestations",
-		attestationIdValue,
-	);
-	if (!attestationId) return null;
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
 	if (!occurrence) return null;
 	if (
@@ -204,21 +204,21 @@ async function loadSurfaceRouteNote(
 	ctx: QueryCtx,
 	language: "de",
 	normalizedSurface: string,
+	contextCursor?: string,
 ) {
-	const surfaces = await ctx.db
+	const page = await ctx.db
 		.query("surfaces")
 		.withIndex("by_language_and_normalized_surface", (q) =>
 			q
 				.eq("language", language)
 				.eq("normalizedSurface", normalizedSurface),
 		)
-		.take(MAX_SURFACE_ANALYSES + 1);
+		.paginate({
+			cursor: contextCursor ?? null,
+			numItems: SURFACE_ANALYSIS_PAGE_SIZE,
+		});
+	const surfaces = page.page;
 	if (surfaces.length === 0) return null;
-	if (surfaces.length > MAX_SURFACE_ANALYSES) {
-		throw new Error(
-			`A Surface Note supports at most ${MAX_SURFACE_ANALYSES} analyses.`,
-		);
-	}
 	const lemmas = await Promise.all(
 		surfaces.map((surface) => ctx.db.get(surface.lemmaId)),
 	);
@@ -252,16 +252,16 @@ async function loadSurfaceRouteNote(
 		kind: "Surface" as const,
 		target: { kind: "Surface" as const, language, normalizedSurface },
 		analyses,
+		continueCursor: page.continueCursor,
+		isDone: page.isDone,
 	};
 }
 
 async function loadLemmaRouteNote(
 	ctx: QueryCtx,
-	lemmaIdValue: string,
+	lemmaId: Id<"lemmas">,
 	contextCursor?: string,
 ) {
-	const lemmaId = ctx.db.normalizeId("lemmas", lemmaIdValue);
-	if (!lemmaId) return null;
 	const lemma = await ctx.db.get(lemmaId);
 	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
 

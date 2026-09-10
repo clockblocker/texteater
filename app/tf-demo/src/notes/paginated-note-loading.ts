@@ -3,7 +3,7 @@ import type { NoteDataFor } from "./note-data";
 import type { AnyReadingNoteData } from "./reading";
 import type { ShadowNoteData, ShadowNoteReferrer } from "./shadow";
 
-type PaginatedRouteNote = NoteDataFor<"Lemma">;
+type PaginatedRouteNote = NoteDataFor<"Lemma"> | NoteDataFor<"Surface">;
 
 export type PaginatedNote =
 	| AnyReadingNoteData
@@ -162,6 +162,12 @@ function continuation(note: PaginatedNote): {
 			isDone: note.references.isDone,
 		};
 	}
+	if (note.kind === "Surface") {
+		return {
+			cursor: note.continueCursor,
+			isDone: note.isDone,
+		};
+	}
 	return {
 		cursor: note.connections.continueCursor,
 		isDone: note.connections.isDone,
@@ -180,6 +186,13 @@ function sameNote(current: PaginatedNote, next: PaginatedNote): boolean {
 		return (
 			next.kind === "Shadow" &&
 			next.target.shadowId === current.target.shadowId
+		);
+	}
+	if (current.kind === "Surface") {
+		return (
+			next.kind === "Surface" &&
+			next.target.language === current.target.language &&
+			next.target.normalizedSurface === current.target.normalizedSurface
 		);
 	}
 	return (
@@ -202,6 +215,13 @@ function paginationSeedKey(note: PaginatedNote): string {
 			note.references.isDone,
 		]);
 	}
+	if (note.kind === "Surface") {
+		return JSON.stringify([
+			note.analyses.map(({ analysisKey }) => analysisKey),
+			note.continueCursor,
+			note.isDone,
+		]);
+	}
 	return JSON.stringify([
 		note.connections,
 		note.connections.continueCursor,
@@ -218,6 +238,14 @@ function rebaseNote<Note extends PaginatedNote>(
 	}
 	if (current.kind === "Shadow" && latest.kind === "Shadow") {
 		return { ...latest, references: current.references } as Note;
+	}
+	if (current.kind === "Surface" && latest.kind === "Surface") {
+		return {
+			...latest,
+			analyses: current.analyses,
+			continueCursor: current.continueCursor,
+			isDone: current.isDone,
+		} as Note;
 	}
 	if (current.kind === "Lemma" && latest.kind === "Lemma") {
 		return { ...latest, connections: current.connections } as Note;
@@ -256,6 +284,17 @@ function mergeNotePages<Note extends PaginatedNote>(
 				continueCursor: next.references.continueCursor,
 				isDone: next.references.isDone,
 			},
+		} as Note;
+	}
+	if (current.kind === "Surface" && next.kind === "Surface") {
+		return {
+			...current,
+			analyses: deduplicateBy(
+				[...current.analyses, ...next.analyses],
+				(value) => value.analysisKey,
+			),
+			continueCursor: next.continueCursor,
+			isDone: next.isDone,
 		} as Note;
 	}
 	if (current.kind === "Lemma" && next.kind === "Lemma") {
@@ -334,5 +373,7 @@ function defaultFailureMessage(note: PaginatedNote): string {
 		? "Source Contexts could not be loaded."
 		: note.kind === "Shadow"
 			? "Shadow references could not be loaded."
-			: "Route connections could not be loaded.";
+			: note.kind === "Surface"
+				? "Surface analyses could not be loaded."
+				: "Route connections could not be loaded.";
 }

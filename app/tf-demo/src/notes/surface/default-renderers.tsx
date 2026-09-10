@@ -1,4 +1,5 @@
 import type { LemmaKindFor } from "dumling/types";
+import { LoaderCircleIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { UnitReadingFamilyFor } from "../reading";
 import type {
@@ -36,17 +37,26 @@ export const renderDefaultSurfaceNoteRoutes = (({
 		(analysis) => analysis.analysisKey === activeKey,
 	);
 	if (presentation === "Card") {
-		return active ? (
-			<footer
-				className="rounded-xl border bg-card p-4"
-				data-active-surface-analysis={active.analysisKey}
-			>
-				<p className="text-xs font-medium text-muted-foreground">
-					Active analysis
-				</p>
-				{renderSurfaceAnalysisDescription(active)}
-			</footer>
-		) : null;
+		return (
+			<>
+				{active ? (
+					<footer
+						className="rounded-xl border bg-card p-4"
+						data-active-surface-analysis={active.analysisKey}
+					>
+						<p className="text-xs font-medium text-muted-foreground">
+							Active analysis
+						</p>
+						{renderSurfaceAnalysisDescription(active)}
+					</footer>
+				) : null}
+				{active ? null : (
+					<SurfaceAnalysisPagination
+						capabilities={PresentationCapabilities}
+					/>
+				)}
+			</>
+		);
 	}
 	return (
 		<section className="flex flex-col gap-3" aria-label="Surface analyses">
@@ -78,9 +88,50 @@ export const renderDefaultSurfaceNoteRoutes = (({
 					</article>
 				);
 			})}
+			<SurfaceAnalysisPagination
+				capabilities={PresentationCapabilities}
+			/>
 		</section>
 	);
 }) satisfies SurfaceNoteBlockRenderer<"de">;
+
+function SurfaceAnalysisPagination({
+	capabilities,
+}: {
+	capabilities: import("./surface-note-render-context").SurfaceNotePresentationCapabilities;
+}) {
+	const pagination = capabilities.pagination ?? {
+		hasMore: false,
+		isLoading: false,
+		error: null,
+		loadMore: null,
+	};
+	if (!pagination.hasMore && pagination.error === null) return null;
+	return (
+		<div className="flex flex-col gap-2">
+			{pagination.hasMore ? (
+				<button
+					type="button"
+					className="inline-flex w-fit items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
+					disabled={
+						pagination.isLoading || pagination.loadMore === null
+					}
+					onClick={() => void pagination.loadMore?.()}
+				>
+					{pagination.isLoading ? (
+						<LoaderCircleIcon className="size-4 animate-spin" />
+					) : null}
+					{pagination.isLoading ? "Loading…" : "Load more analyses"}
+				</button>
+			) : null}
+			{pagination.error ? (
+				<p className="text-sm text-destructive" role="alert">
+					{pagination.error}
+				</p>
+			) : null}
+		</div>
+	);
+}
 
 function renderSurfaceAnalysisDescription(analysis: SurfaceAnalysisFor<"de">) {
 	const familyRegistry = DE_SURFACE_ANALYSIS_DESCRIPTION_RENDERER_REGISTRY[

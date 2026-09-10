@@ -66,6 +66,12 @@ export type SurfaceNotePresentationCapabilities = {
 	readonly presentation?: "Card" | "Sheet";
 	readonly activeAnalysisKey?: string;
 	readonly blockLayout?: NoteBlockLayout;
+	readonly pagination?: {
+		readonly hasMore: boolean;
+		readonly isLoading: boolean;
+		readonly error: string | null;
+		readonly loadMore: (() => Promise<void>) | null;
+	};
 	readonly follow: (target: WorkspaceTarget) => void;
 };
 
@@ -93,5 +99,13 @@ export type SurfaceAnalysisDescriptionRendererRegistry<
 }>;
 
 export function createDefaultSurfaceNoteCapabilities(): SurfaceNotePresentationCapabilities {
-	return { follow: () => {} };
+	return {
+		pagination: {
+			hasMore: false,
+			isLoading: false,
+			error: null,
+			loadMore: null,
+		},
+		follow: () => {},
+	};
 }

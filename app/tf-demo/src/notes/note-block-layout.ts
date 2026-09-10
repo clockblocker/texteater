@@ -1,3 +1,4 @@
+import { reconcileSerializedBlockLayout } from "../../shared/note-block-layout";
 import type { NoteBlockKind } from "./note-block-kind";
 import { orderNoteBlockKinds } from "./note-block-order";
 
@@ -23,23 +24,13 @@ export function reconcileNoteBlockLayout(
 	layout: NoteBlockLayout,
 	available: readonly NoteBlockKind[],
 ): NoteBlockLayout {
-	const supported = new Set(available);
-	const seen = new Set<NoteBlockKind>();
-	const order: NoteBlockKind[] = [];
-	for (const blockKind of layout.order) {
-		if (!supported.has(blockKind) || seen.has(blockKind)) continue;
-		seen.add(blockKind);
-		order.push(blockKind);
-	}
-	for (const blockKind of orderNoteBlockKinds(supported)) {
-		if (seen.has(blockKind)) continue;
-		seen.add(blockKind);
-		order.push(blockKind);
-	}
+	const reconciled = reconcileSerializedBlockLayout(
+		{ order: layout.order, hidden: [...layout.hidden] },
+		available,
+		orderNoteBlockKinds(new Set(available)),
+	);
 	return {
-		order,
-		hidden: new Set(
-			[...layout.hidden].filter((blockKind) => supported.has(blockKind)),
-		),
+		order: reconciled.order,
+		hidden: new Set(reconciled.hidden),
 	};
 }

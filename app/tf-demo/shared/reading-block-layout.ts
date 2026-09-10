@@ -40,28 +40,11 @@ export function reconcileReadingBlockLayout(
 	layout: SerializedReadingBlockLayout,
 	available: readonly ReadingBlockKind[] = DEFAULT_DE_READING_LANGUAGE_LAYOUT.order,
 ): SerializedReadingBlockLayout {
-	const supported = new Set(available);
-	const seen = new Set<ReadingBlockKind>();
-	const order: ReadingBlockKind[] = [];
-	for (const blockKind of layout.order) {
-		if (!supported.has(blockKind) || seen.has(blockKind)) continue;
-		seen.add(blockKind);
-		order.push(blockKind);
-	}
-	for (const blockKind of DEFAULT_DE_READING_LANGUAGE_LAYOUT.order) {
-		if (!supported.has(blockKind) || seen.has(blockKind)) continue;
-		seen.add(blockKind);
-		order.push(blockKind);
-	}
-	for (const blockKind of available) {
-		if (seen.has(blockKind)) continue;
-		seen.add(blockKind);
-		order.push(blockKind);
-	}
-	const hidden = [...new Set(layout.hidden)].filter((blockKind) =>
-		supported.has(blockKind),
+	return reconcileSerializedBlockLayout(
+		layout,
+		available,
+		DEFAULT_DE_READING_LANGUAGE_LAYOUT.order,
 	);
-	return { order, hidden };
 }
 
 export function assertReadingBlockOrder(
@@ -92,3 +75,5 @@ export function assertReadingBlockSupported(
 export function routeKey(route: ReadingBlockRoute): string {
 	return `${route.targetLanguage}/${route.family}/${route.kind}`;
 }
+
+import { reconcileSerializedBlockLayout } from "./note-block-layout";
