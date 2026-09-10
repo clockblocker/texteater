@@ -218,7 +218,7 @@
         "dependency-cruiser": "^18.1.0",
         "esbuild": "^0.28.1",
         "knip": "^6.29.0",
-        "prinfer": "github:clockblocker/prinfer#bab9441",
+        "prinfer": "^2.0.0",
         "typescript": "^7.0.2",
       },
     },
@@ -1658,7 +1658,7 @@
 
     "pretty-ms": ["pretty-ms@9.3.0", "", { "dependencies": { "parse-ms": "^4.0.0" } }, "sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ=="],
 
-    "prinfer": ["prinfer@github:clockblocker/prinfer#bab9441", { "dependencies": { "@modelcontextprotocol/server": "^2.0.0", "@typescript/native": "npm:typescript@^7.0.2", "@typescript/typescript6": "^6.0.2", "zod": "^4.3.6" }, "bin": { "prinfer": "./dist/cli.js", "prinfer-mcp": "./dist/mcp.js" } }, "clockblocker-prinfer-bab9441", "sha512-CzUdS0BoPcJQc42v3FX8MSg2IXCWYazYNc+LqRWI1Fpv7zGv8TeqD38Hfz/UbH/I7NQ8jG2intwdmEbvkJtRlg=="],
+    "prinfer": ["prinfer@2.0.0", "", { "dependencies": { "@modelcontextprotocol/server": "^2.0.0", "@typescript/native": "npm:typescript@^7.0.2", "@typescript/typescript6": "^6.0.2", "zod": "^4.3.6" }, "bin": { "prinfer": "dist/cli.js", "prinfer-mcp": "dist/mcp.js" } }, "sha512-OwFlCueEwajqJ+d+3D5S7SJ54fX7le9CtDEQ1fWZnGjMENi0tpB1bA7QnGj7f2gYzE3MB7QVQBS1AczIOjDsEQ=="],
 
     "prismjs": ["prismjs@1.30.0", "", {}, "sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw=="],
 
