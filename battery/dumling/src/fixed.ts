@@ -18,10 +18,10 @@ import {
 	DE_LEXEME_PRON_PERSONAL_FIXED_READING_CATALOG,
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 } from "./fixed/de/lexeme/pronoun.js";
+import type { LemmaForRoute } from "./types/internal-types.js";
 import type {
 	Lemma,
 	LemmaFamilyFor,
-	LemmaForRoute,
 	LemmaKindFor,
 	LemmaRoute,
 	Reading,

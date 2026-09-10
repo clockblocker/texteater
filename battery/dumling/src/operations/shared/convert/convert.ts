@@ -1,6 +1,6 @@
+import type { AttestationOptionsFor } from "../../../types/internal-types.js";
 import type {
 	Attestation,
-	AttestationOptionsFor,
 	Lemma,
 	SupportedLanguage,
 	Surface,

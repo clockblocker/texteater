@@ -9,7 +9,7 @@ import type {
 	AbstractAttestation,
 	AbstractLemma,
 	AbstractSurface,
-} from "../../types/public-types.js";
+} from "../../types/internal-types.js";
 import {
 	buildAttestationSchema,
 	buildCitationSurfaceSchema,

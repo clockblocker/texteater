@@ -1,8 +1,5 @@
-import type {
-	Reading,
-	ReadingFingerprint,
-	SupportedLanguage,
-} from "../types/public-types.js";
+import type { ReadingFingerprint } from "../types/internal-types.js";
+import type { Reading, SupportedLanguage } from "../types/public-types.js";
 
 function stableValue(value: unknown): unknown {
 	if (Array.isArray(value)) return value.map(stableValue);

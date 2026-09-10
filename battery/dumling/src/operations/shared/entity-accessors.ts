@@ -1,9 +1,9 @@
+import type { SurfaceKind } from "../../types/internal-types.js";
 import type {
 	Attestation,
 	Lemma,
 	SupportedLanguage,
 	Surface,
-	SurfaceKind,
 } from "../../types/public-types.js";
 
 type EntityValue<L extends SupportedLanguage> =

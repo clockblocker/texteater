@@ -1,14 +1,17 @@
 import type { Descriptor } from "../types/descriptor.js";
 import type {
-	Attestation,
 	AttestationOptionsFor,
-	CoreFeaturesFor,
 	DumlingBase64Url,
-	DumlingCsv,
 	DumlingDescriptorCsv,
+	LemmaFamily,
+	SurfaceKind,
+} from "../types/internal-types.js";
+import type {
+	Attestation,
+	CoreFeaturesFor,
+	DumlingCsv,
 	EntityValue,
 	Lemma,
-	LemmaFamily,
 	LemmaFamilyFor,
 	LemmaFamilyForSurfaceKind,
 	LemmaIdentity,
@@ -16,7 +19,6 @@ import type {
 	SupportedLanguage,
 	Surface,
 	SurfaceIdentity,
-	SurfaceKind,
 	SurfaceKindFor,
 } from "../types/public-types.js";
 

@@ -10,10 +10,10 @@ import type {
 	AbstractLemma,
 	AbstractLemmaKindFor,
 	AbstractSurface,
-	EntityKind,
 	LemmaFamily as LemmaFamilyType,
 	SurfaceKind as SurfaceKindType,
-} from "../types/public-types.js";
+} from "../types/internal-types.js";
+import type { EntityKind } from "../types/public-types.js";
 import { abstractRuntimeSchemas } from "./abstract/registry.js";
 
 type AbstractLemmaDescriptor = {

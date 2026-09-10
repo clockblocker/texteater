@@ -8,23 +8,25 @@ import {
 } from "../../src";
 import { abstractSchemas, schemasFor } from "../../src/schema";
 import type {
-	AbstractAttestation,
-	AbstractLemma,
 	Attestation,
-	AttestationOptionsFor,
-	Descriptor,
-	DumlingBase64Url,
 	DumlingCsv,
-	EntityForKind,
-	FeatureValue,
 	Lemma,
 	PresentedAttestation,
 	PresentedLemma,
 	PresentedSurface,
 	Reading,
-	ReadingFingerprint,
 	Surface,
 } from "../../src/types";
+import type { Descriptor } from "../../src/types/descriptor";
+import type {
+	AbstractAttestation,
+	AbstractLemma,
+	AttestationOptionsFor,
+	DumlingBase64Url,
+	EntityForKind,
+	FeatureValue,
+	ReadingFingerprint,
+} from "../../src/types/internal-types";
 
 const lemma = dumling.de.create.lemma({
 	canonicalForm: "See",

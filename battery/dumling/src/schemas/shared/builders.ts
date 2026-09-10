@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry.js";
+import type { AttestationMember } from "../../types/internal-types.js";
 import type {
-	AttestationMember,
 	CoreFeaturesFor,
 	InflectionalFeaturesFor,
 	LemmaFamilyFor,

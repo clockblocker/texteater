@@ -1,3 +1,31 @@
-export type * from "./operations/api-shape.js";
-export type * from "./types/descriptor.js";
-export type * from "./types/public-types.js";
+export type {
+	ApiResult,
+	DumlingApi,
+	IdDecodeSuccess,
+	LanguageApi,
+	ParseError,
+} from "./operations/api-shape.js";
+export type {
+	Attestation,
+	CoreFeaturesFor,
+	DumlingCsv,
+	EntityKind,
+	EntityValue,
+	InflectionalFeaturesFor,
+	Language,
+	Lemma,
+	LemmaFamilyFor,
+	LemmaFamilyForSurfaceKind,
+	LemmaIdentity,
+	LemmaKindFor,
+	LemmaRoute,
+	PresentedAttestation,
+	PresentedFeatureSet,
+	PresentedLemma,
+	PresentedSurface,
+	Reading,
+	SupportedLanguage,
+	Surface,
+	SurfaceIdentity,
+	SurfaceKindFor,
+} from "./types/public-types.js";

@@ -1,10 +1,10 @@
+import type { LemmaKindForSurfaceKind } from "../../types/internal-types.js";
 import type {
 	Attestation,
 	Lemma,
 	LemmaFamilyFor,
 	LemmaFamilyForSurfaceKind,
 	LemmaKindFor,
-	LemmaKindForSurfaceKind,
 	Reading,
 	SupportedLanguage,
 	Surface,

@@ -1,7 +1,7 @@
+import type { LemmaForRoute } from "../types/internal-types.js";
 import type {
 	Lemma,
 	LemmaFamilyFor,
-	LemmaForRoute,
 	LemmaKindFor,
 	LemmaRoute,
 	Reading,

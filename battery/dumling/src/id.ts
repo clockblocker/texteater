@@ -8,7 +8,5 @@ export { buildIdOperations } from "./operations/shared/id/id.js";
 export { buildLanguageApiFromParseOperations } from "./operations/shared/language-api.js";
 export { supportedLanguages } from "./operations/shared/language-inventory.js";
 export { canonicalizeNullableProperties } from "./operations/shared/parse/canonicalize-nullable.js";
-export type {
-	Reading,
-	ReadingFingerprint,
-} from "./types/public-types.js";
+export type { ReadingFingerprint } from "./types/internal-types.js";
+export type { Reading } from "./types/public-types.js";

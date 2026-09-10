@@ -1,7 +1,5 @@
-import type {
-	SupportedLanguage,
-	SurfaceKind,
-} from "../../../../types/public-types.js";
+import type { SurfaceKind } from "../../../../types/internal-types.js";
+import type { SupportedLanguage } from "../../../../types/public-types.js";
 
 type TokenMap<T extends string> = Record<T, string>;
 

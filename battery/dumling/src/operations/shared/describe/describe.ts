@@ -1,6 +1,6 @@
+import type { DumlingDescriptorCsv } from "../../../types/internal-types.js";
 import type {
 	Attestation,
-	DumlingDescriptorCsv,
 	Lemma,
 	SupportedLanguage,
 	Surface,

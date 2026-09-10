@@ -62,8 +62,6 @@ import {
 } from "dumling";
 import type {
 	Attestation as PackageAttestation,
-	DumlingDescriptorCsv as PackageDumlingDescriptorCsv,
-	FeatureValue as PackageFeatureValue,
 	Lemma as PackageLemma,
 	Reading as PackageReading,
 	Surface as PackageSurface,
@@ -105,13 +103,6 @@ const attestation: PackageAttestation<"de", "Citation", "Lexeme", "NOUN"> =
 const descriptor = packageDumling.de.describe.as.attestation(attestation);
 const descriptorCsv = packageDumling.de.describe.asCsv.attestation(attestation);
 const extractedLemma = packageDumling.de.extract.lemma(attestation);
-const gender: PackageFeatureValue<
-	"de",
-	"core",
-	"Lexeme",
-	"NOUN",
-	"gender"
-> = "Masc";
 
 const parsed = packageDumling.de.parse.attestation(attestation);
 if (!parsed.success) {
@@ -125,9 +116,8 @@ if (!decoded.success) {
 }
 
 descriptor.surfaceKind satisfies "Citation";
-descriptorCsv satisfies PackageDumlingDescriptorCsv<"de", "Attestation">;
+descriptorCsv satisfies string;
 extractedLemma satisfies PackageLemma<"de">;
-gender satisfies "Masc";
 
 decoded.data.surfaceIdentity.normalizedSurface satisfies string;
 readingIdentity satisfies string;

@@ -1,6 +1,5 @@
 import { describe, expect, it } from "bun:test";
 import { dumling } from "../../src";
-import type { AttestationOptionsFor } from "../../src/types";
 import {
 	englishWalkCitationAttestation,
 	englishWalkCitationSurface,
@@ -9,6 +8,10 @@ import {
 	germanHausCitationSurface,
 	hebrewKatvuStandardFullAttestation,
 } from "../helpers";
+
+type AttestationConversionOptions = Parameters<
+	typeof dumling.en.convert.surface.toAttestation
+>[1];
 
 describe("operations", () => {
 	it("extracts the exact Lemma from surfaces and attestations", () => {
@@ -31,7 +34,7 @@ describe("operations", () => {
 		const attestationOptions = {
 			members: [{ attested: "Walk", orthography: "Standard" }],
 			realizationCoverage: "Full",
-		} satisfies AttestationOptionsFor;
+		} as const;
 		expect(
 			dumling.en.convert.surface.toAttestation(
 				englishWalkInflectionSurface,
@@ -69,7 +72,7 @@ describe("operations", () => {
 				{
 					members: [],
 					realizationCoverage: "Full",
-				} as unknown as AttestationOptionsFor,
+				} as unknown as AttestationConversionOptions,
 			),
 		).toThrow("Attestation members must be non-empty");
 	});
@@ -81,7 +84,7 @@ describe("operations", () => {
 				{
 					members: [{ attested: "walked", orthography: "Standard" }],
 					realizationCoverage: "Bogus",
-				} as unknown as AttestationOptionsFor,
+				} as unknown as AttestationConversionOptions,
 			),
 		).toThrow();
 	});

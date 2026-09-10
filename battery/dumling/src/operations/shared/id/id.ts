@@ -1,5 +1,5 @@
+import type { DumlingBase64Url } from "../../../types/internal-types.js";
 import type {
-	DumlingBase64Url,
 	DumlingCsv,
 	Lemma,
 	SupportedLanguage,

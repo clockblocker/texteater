@@ -1,4 +1,5 @@
-import type { Attestation, AttestationMember, Lemma } from "../../src/types.js";
+import type { AttestationMember } from "../../src/types/internal-types.js";
+import type { Attestation, Lemma } from "../../src/types.js";
 
 type Assert<T extends true> = T;
 type Equal<Left, Right> =
