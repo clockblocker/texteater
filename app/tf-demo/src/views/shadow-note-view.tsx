@@ -7,16 +7,15 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ShadowNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
-import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
-import type {
-	ShadowNoteData,
-	ShadowNotePresentationCapabilities,
-} from "@/notes/shadow";
 import { NotFoundView } from "@/views/not-found-view";
+import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
-export type ShadowNote = ShadowNoteData;
+export type ShadowNote = Extract<
+	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
+	{ readonly kind: "Shadow" }
+>;
 type ShadowCleanupResult = FunctionReturnType<
 	typeof api.orchestration.cleanupPendingRelation
 >;
@@ -181,7 +180,7 @@ function ShadowNoteContainer({
 		}
 	}
 
-	const capabilities: ShadowNotePresentationCapabilities = {
+	const capabilities = {
 		references: {
 			items: pagination.note.references.page,
 			hasMore: pagination.hasMore,
@@ -197,7 +196,7 @@ function ShadowNoteContainer({
 		},
 		follow,
 	};
-	return renderNote(pagination.note, capabilities);
+	return renderNote({ noteData: pagination.note, capabilities });
 }
 
 function ShadowNoteSkeleton() {

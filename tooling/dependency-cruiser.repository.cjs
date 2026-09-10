@@ -43,16 +43,32 @@ module.exports = {
 			to: { path: "^app/tf-demo/convex/dumdictStorage/" },
 		},
 		{
-			name: "tf-demo-german-reading-renderer-overrides-are-private",
+			name: "tf-demo-notes-hide-their-internals",
 			comment:
-				"Private German Reading renderer leaves may only be imported by the auditable German override index.",
+				"Outside code, including tests, may use only the Notes root interface.",
+			severity: "error",
+			from: { pathNot: "^app/tf-demo/src/notes/" },
+			to: { path: "^app/tf-demo/src/notes/(?!index\\.ts$)" },
+		},
+		{
+			name: "tf-demo-notes-universal-does-not-import-languages",
+			comment:
+				"Universal Note rendering must not depend on a language module.",
+			severity: "error",
+			from: { path: "^app/tf-demo/src/notes/universal/" },
+			to: { path: "^app/tf-demo/src/notes/de/" },
+		},
+		{
+			name: "tf-demo-german-renderer-overrides-are-private",
+			comment:
+				"Private German renderer leaves may only be imported by the auditable German registry.",
 			severity: "error",
 			from: {
 				pathNot:
-					"^app/tf-demo/src/notes/reading/de/de-renderer-overrides\\.tsx$",
+					"^app/tf-demo/src/notes/de/registry\\.ts$",
 			},
 			to: {
-				path: "^app/tf-demo/src/notes/reading/de/renderer-overrides/",
+				path: "^app/tf-demo/src/notes/de/block-renderer-overrides/",
 			},
 		},
 		{

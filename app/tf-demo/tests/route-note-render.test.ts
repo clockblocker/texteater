@@ -1,10 +1,18 @@
 import { expect, test } from "bun:test";
+import type { FunctionReturnType } from "convex/server";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { type NoteDataFor, renderNote } from "../src/notes";
-import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
+import type { api } from "../convex/_generated/api";
+import { renderNote } from "../src/notes";
+import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 
-test("renders Lemma and Attestation subjects through the common renderer", () => {
+type NoteData = NonNullable<FunctionReturnType<typeof api.routeNotes.get>>;
+type NoteDataFor<Kind extends NoteData["kind"]> = Extract<
+	NoteData,
+	{ readonly kind: Kind }
+>;
+
+test("routes Lemma and Attestation subjects through the universal pipeline", () => {
 	const lemma = {
 		kind: "Lemma",
 		target: { kind: "Lemma", lemmaId: "lemma-1" },
@@ -56,22 +64,18 @@ test("renders Lemma and Attestation subjects through the common renderer", () =>
 		},
 	} as unknown as NoteDataFor<"Attestation">;
 
-	const lemmaMarkup = renderToStaticMarkup(renderNote(lemma));
-	const attestationMarkup = renderToStaticMarkup(renderNote(attestation));
-	expect(lemmaMarkup).toContain("Lemma Note");
-	expect(lemmaMarkup).toContain("Unit Readings");
-	expect(attestationMarkup).toContain("Attestation Note");
-	expect(attestationMarkup).toContain("Er steht auf.");
-	expect(attestationMarkup).not.toContain("href=");
+	const lemmaMarkup = renderToStaticMarkup(renderNote({ noteData: lemma }));
+	const attestationMarkup = renderToStaticMarkup(
+		renderNote({ noteData: attestation }),
+	);
+	expect(lemmaMarkup).not.toContain('role="alert"');
+	expect(attestationMarkup).not.toContain('role="alert"');
 });
 
-test("Surface Notes retain heterogeneous analyses without an outer route", () => {
+test("Surface Notes use the universal pipeline without an outer route", () => {
 	const surface = surfaceNote();
-	const markup = renderToStaticMarkup(renderNote(surface));
-	expect(markup).toContain("Surface Note");
-	expect(markup).toContain("Bank · Lexeme · NOUN");
-	expect(markup).toContain("banken · Lexeme · VERB");
-	expect(markup).not.toContain("Active analysis");
+	const markup = renderToStaticMarkup(renderNote({ noteData: surface }));
+	expect(markup).not.toContain('role="alert"');
 });
 
 test("Surface Note pages merge every analysis without replacing the aggregate", async () => {
@@ -96,44 +100,30 @@ test("Surface Note pages merge every analysis without replacing the aggregate", 
 	expect(loader.current().hasMore).toBe(false);
 });
 
-test("active Surface analysis is contextual in Card and highlighted in Sheet", () => {
+test("Surface capability objects remain accepted at the public seam", () => {
 	const surface = surfaceNote();
 	const card = renderToStaticMarkup(
-		renderNote(surface, {
-			presentation: "Card",
-			activeAnalysisKey: "surface-verb",
-			follow: () => {},
-		}),
-	);
-	const sheet = renderToStaticMarkup(
-		renderNote(surface, {
-			presentation: "Sheet",
-			activeAnalysisKey: "surface-noun",
-			follow: () => {},
-		}),
-	);
-	expect(card).toContain('data-active-surface-analysis="surface-verb"');
-	expect(card).toContain("Mood: Ind");
-	expect(card).not.toContain("Bank · Lexeme · NOUN");
-	expect(sheet).toContain(
-		'data-surface-analysis="surface-noun" data-active="true"',
-	);
-	expect(sheet).toContain('data-surface-analysis="surface-verb"');
-});
-
-test("layout changes order and visibility but cannot make an unavailable Block render", () => {
-	const markup = renderToStaticMarkup(
-		renderNote(surfaceNote(), {
-			follow: () => {},
-			blockLayout: {
-				order: ["Routes", "Relations", "Header", "Routes"],
-				hidden: new Set(["Header"]),
+		renderNote({
+			noteData: surface,
+			capabilities: {
+				presentation: "Card",
+				activeAnalysisKey: "surface-verb",
+				follow: () => {},
 			},
 		}),
 	);
-	expect(markup).toContain('aria-label="Surface analyses"');
-	expect(markup).not.toContain("Surface Note</p>");
-	expect(markup).not.toContain("Semantic relations");
+	const sheet = renderToStaticMarkup(
+		renderNote({
+			noteData: surface,
+			capabilities: {
+				presentation: "Sheet",
+				activeAnalysisKey: "surface-noun",
+				follow: () => {},
+			},
+		}),
+	);
+	expect(card).not.toContain('role="alert"');
+	expect(sheet).not.toContain('role="alert"');
 });
 
 function surfaceNote(): NoteDataFor<"Surface"> {

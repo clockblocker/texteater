@@ -1,3 +1,7 @@
+/**
+ * @layoutdormant Retained for #408 direct-manipulation persistence. Remove this
+ * Knip suppression when that interaction consumes the layout algebra.
+ */
 export const READING_BLOCK_KIND_VALUES = [
 	"Header",
 	"SourceContexts",
@@ -8,14 +12,17 @@ export const READING_BLOCK_KIND_VALUES = [
 	"LexicalBreakdown",
 ] as const;
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export type ReadingBlockKind = (typeof READING_BLOCK_KIND_VALUES)[number];
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export type ReadingBlockRoute = {
 	readonly targetLanguage: SupportedTargetLanguage;
 	readonly family: string;
 	readonly kind: string;
 };
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export type SerializedReadingBlockLayout = {
 	readonly order: readonly ReadingBlockKind[];
 	readonly hidden: readonly ReadingBlockKind[];
@@ -25,6 +32,7 @@ export type SerializedReadingBlockLayout = {
  * Layout preferences contain presentation order and visibility only. The Note
  * renderer registry decides which Blocks are available for a grammatical route.
  */
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	order: [
 		"Header",
@@ -36,6 +44,7 @@ export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	hidden: [],
 } as const satisfies SerializedReadingBlockLayout;
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export function reconcileReadingBlockLayout(
 	layout: SerializedReadingBlockLayout,
 	available: readonly ReadingBlockKind[] = DEFAULT_DE_READING_LANGUAGE_LAYOUT.order,
@@ -47,6 +56,7 @@ export function reconcileReadingBlockLayout(
 	);
 }
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export function assertReadingBlockOrder(
 	order: readonly ReadingBlockKind[],
 ): void {
@@ -63,6 +73,7 @@ export function assertReadingBlockOrder(
 	}
 }
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export function assertReadingBlockSupported(
 	blockKind: ReadingBlockKind,
 	available: readonly ReadingBlockKind[] = READING_BLOCK_KIND_VALUES,
@@ -72,6 +83,7 @@ export function assertReadingBlockSupported(
 	}
 }
 
+/** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */
 export function routeKey(route: ReadingBlockRoute): string {
 	return `${route.targetLanguage}/${route.family}/${route.kind}`;
 }

@@ -1,4 +1,5 @@
 {
 	"entry": ["src/notes/index.ts"],
-	"ignoreDependencies": []
+	"ignoreDependencies": [],
+	"tags": ["-layoutdormant"]
 }

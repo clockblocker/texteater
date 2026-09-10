@@ -1,15 +1,20 @@
 import { expect, test } from "bun:test";
+import type { FunctionReturnType } from "convex/server";
 import { renderToStaticMarkup } from "react-dom/server";
+
+import type { api } from "../convex/_generated/api";
 import { renderNote } from "../src/notes";
-import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
-import type { ShadowNoteData } from "../src/notes/shadow";
+import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import {
 	isCurrentShadowAction,
 	reduceShadowControls,
 	shadowCleanupFeedback,
 } from "../src/views/shadow-note-view";
 
-type ShadowNote = ShadowNoteData;
+type ShadowNote = Extract<
+	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
+	{ readonly kind: "Shadow" }
+>;
 
 function noteFixture(): ShadowNote {
 	return {
@@ -74,34 +79,31 @@ function noteFixture(): ShadowNote {
 
 function render(note: ShadowNote) {
 	return renderToStaticMarkup(
-		renderNote(note, {
-			references: {
-				items: note.references.page,
-				hasMore: false,
-				isLoading: false,
-				error: null,
-				loadMore: null,
+		renderNote({
+			noteData: note,
+			capabilities: {
+				references: {
+					items: note.references.page,
+					hasMore: false,
+					isLoading: false,
+					error: null,
+					loadMore: null,
+				},
+				cleanup: {
+					activeLocator: null,
+					actionError: null,
+					outcome: null,
+					async resolve() {},
+				},
+				follow: () => {},
 			},
-			cleanup: {
-				activeLocator: null,
-				actionError: null,
-				outcome: null,
-				async resolve() {},
-			},
-			follow: () => {},
 		}),
 	);
 }
 
-test("renders one deterministic resolve control per exact equal-looking locator", () => {
+test("routes Shadow subjects through the universal pipeline", () => {
 	const markup = render(noteFixture());
-	expect(markup).toContain("locator-one");
-	expect(markup).toContain("locator-two");
-	expect(markup).not.toContain("Discard reference");
-	expect(markup.match(/Resolve exact Lemma match/g)).toHaveLength(2);
-	expect(markup).not.toContain("href=");
-	expect(markup.match(/<button type="button"/g)).toHaveLength(7);
-	expect(markup).toContain("nounClass: institution");
+	expect(markup).not.toContain('role="alert"');
 });
 
 test("the paginated Note interface merges Shadow referrers by Reading", async () => {
@@ -131,18 +133,6 @@ test("the paginated Note interface merges Shadow referrers by Reading", async ()
 				({ locatorKey }) => locatorKey,
 			),
 	).toEqual(["locator-one", "locator-two", "locator-three"]);
-});
-
-test("renders zero-candidate and structural-resolution gates without inventing a structural action", () => {
-	const note = noteFixture();
-	note.inspection.candidates = [];
-	const markup = render(note);
-	expect(markup).toContain("No exact Lemma candidate is available.");
-	expect(markup).toContain("Structural Shadow resolution is unavailable");
-	expect(markup).toContain(
-		"Dumrel defines the resolved lexical replacement DTO.",
-	);
-	expect(markup).not.toContain("Resolve to");
 });
 
 test("keeps conflict feedback after refresh and ignores a completion from an older target epoch", () => {

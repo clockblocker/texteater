@@ -1,22 +1,22 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useConvex } from "convex/react";
+import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import type { RouteNoteTarget } from "@/lib/navigation";
-import { renderNote, type SurfaceNotePresentationCapabilities } from "@/notes";
-import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
-import type {
-	RouteNoteData,
-	RouteNotePresentationCapabilities,
-} from "@/notes/route";
+import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
+import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
-export type RouteNote = RouteNoteData;
+export type RouteNote = Exclude<
+	NonNullable<FunctionReturnType<typeof api.routeNotes.get>>,
+	{ readonly kind: "Shadow" | "Reading" }
+>;
 type PaginatedRouteNote = Extract<RouteNote, { kind: "Lemma" }>;
 type PaginatedSurfaceNote = Extract<RouteNote, { kind: "Surface" }>;
 
@@ -56,7 +56,10 @@ export function RouteNoteView({
 		);
 	}
 	return noteQuery.data.kind === "Attestation" ? (
-		renderNote(noteQuery.data, routeNoteCapabilities(follow))
+		renderNote({
+			noteData: noteQuery.data,
+			capabilities: routeNoteCapabilities(follow),
+		})
 	) : (
 		<PaginatedRouteNote initialNote={noteQuery.data} />
 	);
@@ -90,7 +93,7 @@ function PaginatedSurfaceNote({
 		],
 	);
 	const pagination = usePaginatedNoteLoading(initialNote, loadSurfacePage);
-	const capabilities: SurfaceNotePresentationCapabilities = {
+	const capabilities = {
 		presentation,
 		activeAnalysisKey,
 		pagination: {
@@ -101,7 +104,7 @@ function PaginatedSurfaceNote({
 		},
 		follow,
 	};
-	return renderNote(pagination.note, capabilities);
+	return renderNote({ noteData: pagination.note, capabilities });
 }
 
 function PaginatedRouteNote({
@@ -124,15 +127,15 @@ function PaginatedRouteNote({
 	);
 	const pagination = usePaginatedNoteLoading(initialNote, loadRoutePage);
 
-	return renderNote(
-		pagination.note,
-		routeNoteCapabilities(follow, {
+	return renderNote({
+		noteData: pagination.note,
+		capabilities: routeNoteCapabilities(follow, {
 			hasMore: pagination.hasMore,
 			isLoading: pagination.isLoading,
 			error: pagination.error,
 			loadMore: pagination.hasMore ? pagination.loadMore : null,
 		}),
-	);
+	});
 }
 
 function routeNoteQueryArgs(
@@ -163,14 +166,24 @@ function routeNoteQueryArgs(
 }
 
 function routeNoteCapabilities(
-	follow: RouteNotePresentationCapabilities["follow"],
-	pagination: RouteNotePresentationCapabilities["pagination"] = {
+	follow: (
+		target: import("@/workspace/sheet-workspace").WorkspaceTarget,
+	) => void,
+	pagination: {
+		hasMore: boolean;
+		isLoading: boolean;
+		error: string | null;
+		loadMore: (() => Promise<void>) | null;
+	} = {
 		hasMore: false,
 		isLoading: false,
 		error: null,
 		loadMore: null,
 	},
-): RouteNotePresentationCapabilities {
+): {
+	readonly pagination: typeof pagination;
+	readonly follow: typeof follow;
+} {
 	return { pagination, follow };
 }
 

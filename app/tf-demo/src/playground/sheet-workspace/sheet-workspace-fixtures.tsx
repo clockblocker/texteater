@@ -1,11 +1,9 @@
+import type { FunctionReturnType } from "convex/server";
 import { presentedFeatureNames } from "dumling/vocabulary";
+import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 import { useCallback } from "react";
 import type { SentenceView } from "@/lib/action-results";
 import { renderNote } from "@/notes";
-import type { AnyReadingNoteData } from "@/notes/reading";
-import { createDefaultReadingNoteCapabilities } from "@/notes/reading/reading-note-render-context";
-import type { RouteNoteData } from "@/notes/route";
-import { createDefaultRouteNoteCapabilities } from "@/notes/route/route-note-render-context";
 import { TextPresentation } from "@/views/text-view";
 import type { CardSheetWorkspaceProps } from "@/workspace/card-sheet-workspace";
 import type {
@@ -13,7 +11,18 @@ import type {
 	WorkspaceSubject,
 } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
+import type { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+
+type FixtureNoteData = NonNullable<
+	| FunctionReturnType<typeof api.readingNotes.get>
+	| FunctionReturnType<typeof api.routeNotes.get>
+>;
+type AnyReadingNoteData = Extract<
+	FixtureNoteData,
+	{ readonly kind: "Reading" }
+>;
+type RouteNoteData = Exclude<FixtureNoteData, { readonly kind: "Reading" }>;
 
 export const FIXTURE_TEXT_SUBJECT = {
 	kind: "Text",
@@ -132,16 +141,26 @@ export const renderFixtureSubject = (
 	if (!source) return <p>Unknown Note fixture.</p>;
 	const note = fixtureNote(source);
 	if (note.kind === "Reading") {
-		return renderNote(note, { ...readingCapabilities(note), presentation });
-	}
-	if (note.kind === "Surface") {
-		return renderNote(note, {
-			presentation,
-			follow: routeCapabilities().follow,
+		return renderNote({
+			noteData: note,
+			capabilities: { ...readingCapabilities(note), presentation },
 		});
 	}
-	if (note.kind === "Lemma") return renderNote(note, routeCapabilities());
-	return renderNote(note, routeCapabilities());
+	if (note.kind === "Surface") {
+		return renderNote({
+			noteData: note,
+			capabilities: {
+				presentation,
+				follow: routeCapabilities().follow,
+			},
+		});
+	}
+	if (note.kind === "Lemma")
+		return renderNote({
+			noteData: note,
+			capabilities: routeCapabilities(),
+		});
+	return renderNote({ noteData: note, capabilities: routeCapabilities() });
 };
 
 export const renderFixtureCardTail: CardSheetWorkspaceProps["renderCardTail"] =
@@ -447,11 +466,30 @@ function surfaceTarget(normalizedSurface: string) {
 }
 
 function readingCapabilities(note: AnyReadingNoteData) {
-	return createDefaultReadingNoteCapabilities(note);
+	return {
+		knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
+		sourceContexts: {
+			items: note.sourceContexts.page,
+			hasMore: false,
+			isLoading: false,
+			error: null,
+			loadMore: null,
+		},
+		definition: { isSaving: false, error: null, save: null },
+		follow: () => {},
+	};
 }
 
 function routeCapabilities() {
-	return createDefaultRouteNoteCapabilities();
+	return {
+		pagination: {
+			hasMore: false,
+			isLoading: false,
+			error: null,
+			loadMore: null,
+		},
+		follow: () => {},
+	};
 }
 
 function fixtureSentence(
