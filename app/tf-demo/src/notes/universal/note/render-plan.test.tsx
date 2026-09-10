@@ -13,7 +13,7 @@ const coordinates = {
 	kind: "NOUN",
 } as const;
 
-test("reconciles stale layouts before applying ordering and visibility", () => {
+test("omits unavailable and duplicate Blocks while applying visibility", () => {
 	const registry: RegisteredBlockMap = {
 		Header: () => <p>header</p>,
 		Relations: () => <p>relations</p>,
@@ -26,6 +26,51 @@ test("reconciles stale layouts before applying ordering and visibility", () => {
 	expect(layout.order).toEqual(["Relations", "Header"]);
 	expect([...layout.hidden]).toEqual(["Header"]);
 	expect(plan.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
+});
+
+test("inserts newly available Blocks in their default relative order", () => {
+	const registry: RegisteredBlockMap = {
+		Header: () => <p>header</p>,
+		Relations: () => <p>relations</p>,
+		Translations: () => <p>translations</p>,
+		Definition: () => <p>definition</p>,
+	};
+	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: ["Definition", "Header"],
+		hidden: new Set(),
+	});
+
+	expect(layout.order).toEqual([
+		"Definition",
+		"Header",
+		"Relations",
+		"Translations",
+	]);
+	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
+		"Definition",
+		"Header",
+		"Relations",
+		"Translations",
+	]);
+});
+
+test("retains a hidden Block's position while excluding it from the plan", () => {
+	const registry: RegisteredBlockMap = {
+		Header: () => <p>header</p>,
+		Relations: () => <p>relations</p>,
+		Definition: () => <p>definition</p>,
+	};
+	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: ["Relations", "Header", "Definition"],
+		hidden: new Set(["Header"]),
+	});
+
+	expect(layout.order).toEqual(["Relations", "Header", "Definition"]);
+	expect([...layout.hidden]).toEqual(["Header"]);
+	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
+		"Relations",
+		"Definition",
+	]);
 });
 
 test("isolates a failing block while preserving subsequent registered blocks", () => {
