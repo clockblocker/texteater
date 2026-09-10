@@ -6,7 +6,6 @@ import type {
 	NoteBlockRenderer,
 	NoteFamilyFor,
 	NoteLemmaKindFor,
-	ReadingRenderContext,
 } from "./renderer";
 
 type BlockMap<
