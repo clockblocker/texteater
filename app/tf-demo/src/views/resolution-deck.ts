@@ -1,3 +1,4 @@
+import type { Id } from "../../convex/_generated/dataModel";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 import type {
 	ResolutionStepKind,
@@ -6,13 +7,13 @@ import type {
 import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
 
 export type CanonicalResolution = {
-	readonly readingId: string;
-	readonly lemmaId: string;
+	readonly readingId: Id<"readings">;
+	readonly lemmaId: Id<"lemmas">;
 	readonly surfaceLanguage: "de";
 	readonly normalizedSurface: string;
 	/** The analysis selected by this occurrence, not the aggregate Surface identity. */
-	readonly surfaceId: string;
-	readonly attestationId: string;
+	readonly surfaceId: Id<"surfaces">;
+	readonly attestationId: Id<"attestations">;
 };
 
 const progressPosition = {

@@ -1,3 +1,4 @@
+import type { Id } from "../../convex/_generated/dataModel";
 import type {
 	AttestationNoteTarget,
 	LemmaNoteTarget,
@@ -36,7 +37,7 @@ export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
 
 export type SurfaceNotePresentationContext = {
 	/** Selects one of the aggregate Surface Note's analyses for this Presentation. */
-	readonly activeAnalysisKey: string;
+	readonly activeAnalysisKey: Id<"surfaces">;
 };
 
 type ContextualSurfaceNoteSubject = {

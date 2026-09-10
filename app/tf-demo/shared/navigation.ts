@@ -1,3 +1,5 @@
+import type { Id } from "../convex/_generated/dataModel";
+
 export type LibraryTarget = {
 	readonly kind: "Library";
 };
@@ -20,7 +22,7 @@ export type ReadingNoteTarget = {
 
 export type LemmaNoteTarget = {
 	readonly kind: "Lemma";
-	readonly lemmaId: string;
+	readonly lemmaId: Id<"lemmas">;
 };
 
 export type SurfaceNoteTarget = {
@@ -31,7 +33,7 @@ export type SurfaceNoteTarget = {
 
 export type AttestationNoteTarget = {
 	readonly kind: "Attestation";
-	readonly attestationId: string;
+	readonly attestationId: Id<"attestations">;
 };
 
 export type ShadowNoteTarget = {

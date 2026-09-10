@@ -1,5 +1,10 @@
 import type { z } from "zod";
 
+import type { Id } from "../../convex/_generated/dataModel";
+import type {
+	AttestationNoteTarget,
+	LemmaNoteTarget,
+} from "../../shared/navigation";
 import type {
 	NoteBlockRenderer,
 	NoteBlockRendererRegistry,
@@ -30,6 +35,23 @@ type Equal<Left, Right> =
 		? true
 		: false;
 type Assert<Condition extends true> = Condition;
+
+declare const lemmaId: Id<"lemmas">;
+declare const attestationId: Id<"attestations">;
+({ kind: "Lemma", lemmaId }) satisfies LemmaNoteTarget;
+({ kind: "Attestation", attestationId }) satisfies AttestationNoteTarget;
+const invalidLemmaTarget: LemmaNoteTarget = {
+	kind: "Lemma",
+	// @ts-expect-error Client Lemma locators must retain their Convex document ID type.
+	lemmaId: "lemma-1",
+};
+const invalidAttestationTarget: AttestationNoteTarget = {
+	kind: "Attestation",
+	// @ts-expect-error Client Attestation locators must retain their Convex document ID type.
+	attestationId: "attestation-1",
+};
+void invalidLemmaTarget;
+void invalidAttestationTarget;
 
 export type NoteKindsComeFromTheSchema = Assert<
 	Equal<NoteKind, z.infer<typeof noteKindSchema>>

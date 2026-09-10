@@ -1,6 +1,5 @@
 import { presentedFeatureNames } from "dumling/vocabulary";
 import { useCallback } from "react";
-
 import type { SentenceView } from "@/lib/action-results";
 import { renderNote } from "@/notes";
 import type { AnyReadingNoteData } from "@/notes/reading";
@@ -14,6 +13,7 @@ import type {
 	WorkspaceSubject,
 } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
+import type { Id } from "../../../convex/_generated/dataModel";
 
 export const FIXTURE_TEXT_SUBJECT = {
 	kind: "Text",
@@ -209,7 +209,9 @@ function fixtureTarget(
 ) {
 	const id = fixtureNoteId(kind, sentencePosition, segmentIndex);
 	if (kind === "reading") return { kind: "Reading", readingId: id } as const;
-	if (kind === "lemma") return { kind: "Lemma", lemmaId: id } as const;
+	if (kind === "lemma") {
+		return { kind: "Lemma", lemmaId: id as Id<"lemmas"> } as const;
+	}
 	if (kind === "surface") {
 		return {
 			kind: "Surface",
@@ -217,7 +219,10 @@ function fixtureTarget(
 			normalizedSurface: id,
 		} as const;
 	}
-	return { kind: "Attestation", attestationId: id } as const;
+	return {
+		kind: "Attestation",
+		attestationId: id as Id<"attestations">,
+	} as const;
 }
 
 function fixtureSubjectId(subject: WorkspaceSubject): string {

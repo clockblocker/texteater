@@ -14,6 +14,7 @@ export const get = query({
 			kind: v.literal("Surface"),
 			language: v.literal("de"),
 			normalizedSurface: v.string(),
+			activeAnalysisKey: v.optional(v.id("surfaces")),
 			contextCursor: v.optional(v.string()),
 		}),
 		v.object({

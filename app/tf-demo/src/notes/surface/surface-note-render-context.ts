@@ -6,6 +6,7 @@ import type {
 import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { Id } from "../../../convex/_generated/dataModel";
 import type { NoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
 import type { UnitReadingFamilyFor } from "../reading/reading-note-route";
@@ -64,7 +65,7 @@ export type ConcreteSurfaceNoteData<L extends TargetLanguage> = Omit<
 
 export type SurfaceNotePresentationCapabilities = {
 	readonly presentation?: "Card" | "Sheet";
-	readonly activeAnalysisKey?: string;
+	readonly activeAnalysisKey?: Id<"surfaces">;
 	readonly blockLayout?: NoteBlockLayout;
 	readonly pagination?: {
 		readonly hasMore: boolean;

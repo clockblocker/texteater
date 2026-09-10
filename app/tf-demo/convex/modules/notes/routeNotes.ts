@@ -130,6 +130,7 @@ type RouteNoteTarget =
 			readonly kind: "Surface";
 			readonly language: "de";
 			readonly normalizedSurface: string;
+			readonly activeAnalysisKey?: Id<"surfaces">;
 	  }
 	| { readonly kind: "Lemma"; readonly lemmaId: Id<"lemmas"> };
 
@@ -147,6 +148,7 @@ export async function loadRouteNote(
 			target.language,
 			target.normalizedSurface,
 			contextCursor,
+			target.activeAnalysisKey,
 		);
 	}
 	return loadLemmaRouteNote(ctx, target.lemmaId, contextCursor);
@@ -205,6 +207,7 @@ async function loadSurfaceRouteNote(
 	language: "de",
 	normalizedSurface: string,
 	contextCursor?: string,
+	activeAnalysisKey?: Id<"surfaces">,
 ) {
 	const page = await ctx.db
 		.query("surfaces")
@@ -217,7 +220,17 @@ async function loadSurfaceRouteNote(
 			cursor: contextCursor ?? null,
 			numItems: SURFACE_ANALYSIS_PAGE_SIZE,
 		});
-	const surfaces = page.page;
+	let surfaces = page.page;
+	if (contextCursor === undefined && activeAnalysisKey !== undefined) {
+		const activeSurface = await ctx.db.get(activeAnalysisKey);
+		if (
+			activeSurface?.language === language &&
+			activeSurface.normalizedSurface === normalizedSurface &&
+			!surfaces.some((surface) => surface._id === activeSurface._id)
+		) {
+			surfaces = [...surfaces, activeSurface];
+		}
+	}
 	if (surfaces.length === 0) return null;
 	const lemmas = await Promise.all(
 		surfaces.map((surface) => ctx.db.get(surface.lemmaId)),

@@ -97,14 +97,17 @@ const routeNote = (
 	{
 		target,
 		contextCursor,
+		activeAnalysisKey,
 	}: {
 		target: NoteTarget;
 		contextCursor?: string;
+		activeAnalysisKey?: string;
 	},
 ) =>
 	routeNoteHandler(ctx, {
 		...target,
 		...(contextCursor ? { contextCursor } : {}),
+		...(activeAnalysisKey ? { activeAnalysisKey } : {}),
 	});
 
 test("Note locators are strict across Attestation, Surface, and Lemma kinds", async () => {
@@ -832,6 +835,72 @@ test("Surface Note paginates every analysis beyond one query transaction", async
 			),
 		),
 	).toEqual(new Set(lemmas.map((_, index) => `surface-${index}`)));
+});
+
+test("Surface Note includes an active analysis beyond the initial page", async () => {
+	const lemmas = Array.from({ length: 101 }, (_, index) =>
+		lemma(`lemma-${index}`, "de", `Bank-${index}`, "Lexeme", "NOUN"),
+	);
+	const db = new RouteDb({
+		lemmas,
+		surfaces: lemmas.map((entry, index) =>
+			surface(`surface-${index}`, entry._id, "de", "Bank"),
+		),
+	});
+	const target = {
+		kind: "Surface",
+		language: "de",
+		normalizedSurface: "Bank",
+	} as const;
+	const first = (await routeNote(
+		{ db },
+		{ target, activeAnalysisKey: "surface-100" },
+	)) as {
+		analyses: Array<{ analysisKey: string }>;
+		continueCursor: string;
+		isDone: boolean;
+	};
+	const second = (await routeNote(
+		{ db },
+		{ target, contextCursor: first.continueCursor },
+	)) as typeof first;
+
+	expect(first.analyses).toHaveLength(101);
+	expect(
+		first.analyses.some(({ analysisKey }) => analysisKey === "surface-100"),
+	).toBe(true);
+	expect(first.isDone).toBe(false);
+	expect(second.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
+		"surface-100",
+	]);
+});
+
+test("Surface Note does not inject an active analysis from another aggregate", async () => {
+	const db = new RouteDb({
+		lemmas: [
+			lemma("lemma-bank", "de", "Bank", "Lexeme", "NOUN"),
+			lemma("lemma-banken", "de", "banken", "Lexeme", "VERB"),
+		],
+		surfaces: [
+			surface("surface-bank", "lemma-bank", "de", "Bank"),
+			surface("surface-banken", "lemma-banken", "de", "banken"),
+		],
+	});
+	const note = (await routeNote(
+		{ db },
+		{
+			target: {
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "Bank",
+			},
+			activeAnalysisKey: "surface-banken",
+		},
+	)) as { analyses: Array<{ analysisKey: string }> };
+
+	expect(note.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
+		"surface-bank",
+	]);
 });
 
 test("homographic demonstrative and relative Lemma navigation keeps exact Readings separate", async () => {

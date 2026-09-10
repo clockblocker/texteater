@@ -218,6 +218,8 @@ test("Route Note query locators retain table-specific Convex IDs", () => {
 	expect(args).toContain('"tableName":"attestations"');
 	expect(args).toContain('"lemmaId"');
 	expect(args).toContain('"tableName":"lemmas"');
+	expect(args).toContain('"activeAnalysisKey"');
+	expect(args).toContain('"tableName":"surfaces"');
 });
 
 test("the persistence adapter does not load exhaustive domain schemas", async () => {

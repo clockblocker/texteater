@@ -27,11 +27,14 @@ export function RouteNoteView({
 }: {
 	target: RouteNoteTarget;
 	presentation?: "Card" | "Sheet";
-	activeAnalysisKey?: string;
+	activeAnalysisKey?: Id<"surfaces">;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const noteQuery = useQuery({
-		...convexQuery(api.routeNotes.get, routeNoteQueryArgs(target)),
+		...convexQuery(
+			api.routeNotes.get,
+			routeNoteQueryArgs(target, activeAnalysisKey),
+		),
 		gcTime: 10_000,
 	});
 	if (noteQuery.isPending) return <RouteNoteSkeleton />;
@@ -66,7 +69,7 @@ function PaginatedSurfaceNote({
 }: {
 	initialNote: PaginatedSurfaceNote;
 	presentation: "Card" | "Sheet";
-	activeAnalysisKey?: string;
+	activeAnalysisKey?: Id<"surfaces">;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
@@ -132,23 +135,29 @@ function PaginatedRouteNote({
 	);
 }
 
-function routeNoteQueryArgs(target: RouteNoteTarget) {
+function routeNoteQueryArgs(
+	target: RouteNoteTarget,
+	activeAnalysisKey?: Id<"surfaces">,
+) {
 	switch (target.kind) {
 		case "Lemma":
 			return {
 				kind: "Lemma" as const,
-				lemmaId: target.lemmaId as Id<"lemmas">,
+				lemmaId: target.lemmaId,
 			};
 		case "Surface":
 			return {
 				kind: "Surface" as const,
 				language: target.language,
 				normalizedSurface: target.normalizedSurface,
+				...(activeAnalysisKey !== undefined
+					? { activeAnalysisKey }
+					: {}),
 			};
 		case "Attestation":
 			return {
 				kind: "Attestation" as const,
-				attestationId: target.attestationId as Id<"attestations">,
+				attestationId: target.attestationId,
 			};
 	}
 }

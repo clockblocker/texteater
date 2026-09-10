@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { Id } from "../../../convex/_generated/dataModel";
 import type { NoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
 
@@ -12,7 +13,7 @@ export type RouteNoteData =
 export type RouteNotePresentationCapabilities = {
 	readonly presentation?: "Card" | "Sheet";
 	readonly blockLayout?: NoteBlockLayout;
-	readonly activeAnalysisKey?: string;
+	readonly activeAnalysisKey?: Id<"surfaces">;
 	readonly pagination: {
 		readonly hasMore: boolean;
 		readonly isLoading: boolean;
