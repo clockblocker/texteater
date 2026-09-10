@@ -70,7 +70,8 @@ export function renderReadingNote(
 }
 
 function createRenderContext<
-	L extends import("../target-language").TargetLanguage,
+	L extends
+		import("../../../shared/supported-target-language").SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(

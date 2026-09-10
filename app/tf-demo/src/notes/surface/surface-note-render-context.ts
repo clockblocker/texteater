@@ -7,17 +7,17 @@ import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { Id } from "../../../convex/_generated/dataModel";
+import type { SupportedTargetLanguage } from "../../../shared/supported-target-language";
 import type { NoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
 import type { UnitReadingFamilyFor } from "../reading/reading-note-route";
-import type { TargetLanguage } from "../target-language";
 
 export type SurfaceNoteData = NoteDataFor<"Surface">;
 type RawSurfaceAnalysis = SurfaceNoteData["analyses"][number];
 
 type PresentedValue<Value> = Value | readonly Value[] | null;
 type PresentedInflectionalFeatures<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends LemmaFamilyFor<L>,
 	K extends LemmaKindFor<L, F>,
 > = Readonly<{
@@ -27,7 +27,7 @@ type PresentedInflectionalFeatures<
 }>;
 
 export type SurfaceAnalysis<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends LemmaKindFor<L, F>,
 > = Omit<RawSurfaceAnalysis, "presented"> & {
@@ -49,13 +49,13 @@ export type SurfaceAnalysis<
 	};
 };
 
-export type SurfaceAnalysisFor<L extends TargetLanguage> = {
+export type SurfaceAnalysisFor<L extends SupportedTargetLanguage> = {
 	[F in UnitReadingFamilyFor<L>]: {
 		[K in LemmaKindFor<L, F>]: SurfaceAnalysis<L, F, K>;
 	}[LemmaKindFor<L, F>];
 }[UnitReadingFamilyFor<L>];
 
-export type ConcreteSurfaceNoteData<L extends TargetLanguage> = Omit<
+export type ConcreteSurfaceNoteData<L extends SupportedTargetLanguage> = Omit<
 	SurfaceNoteData,
 	"target" | "analyses"
 > & {
@@ -76,23 +76,23 @@ export type SurfaceNotePresentationCapabilities = {
 	readonly follow: (target: WorkspaceTarget) => void;
 };
 
-export type SurfaceNoteRenderContext<L extends TargetLanguage> = {
+export type SurfaceNoteRenderContext<L extends SupportedTargetLanguage> = {
 	readonly noteData: ConcreteSurfaceNoteData<L>;
 	readonly PresentationCapabilities: SurfaceNotePresentationCapabilities;
 };
 
-export type SurfaceNoteBlockRenderer<L extends TargetLanguage> = (
+export type SurfaceNoteBlockRenderer<L extends SupportedTargetLanguage> = (
 	context: SurfaceNoteRenderContext<L>,
 ) => ReactElement | null;
 
 export type SurfaceAnalysisDescriptionRenderer<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends LemmaKindFor<L, F>,
 > = (analysis: SurfaceAnalysis<L, F, K>) => ReactElement;
 
 export type SurfaceAnalysisDescriptionRendererRegistry<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 > = Partial<{
 	[F in UnitReadingFamilyFor<L>]: Partial<{
 		[K in LemmaKindFor<L, F>]: SurfaceAnalysisDescriptionRenderer<L, F, K>;

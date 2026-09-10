@@ -1,22 +1,25 @@
 import type { LemmaFamilyFor, LemmaKindFor } from "dumling/types";
+import {
+	type SupportedTargetLanguage,
+	supportedTargetLanguageSchema,
+} from "../../../shared/supported-target-language";
 import { registeredNoteBlockMap } from "../note-block-renderer-registry-runtime";
 import type { NoteDataFor } from "../note-data";
-import { type TargetLanguage, targetLanguageSchema } from "../target-language";
 
 type AnyReadingNoteData = NoteDataFor<"Reading">;
 
-export type UnitReadingFamilyFor<L extends TargetLanguage> = Extract<
+export type UnitReadingFamilyFor<L extends SupportedTargetLanguage> = Extract<
 	LemmaFamilyFor<L>,
 	"Lexeme" | "Phraseme" | "Morpheme"
 >;
 
 export type UnitReadingKindFor<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 > = LemmaKindFor<L, F>;
 
 export type ReadingNoteRouteKey<
-	L extends TargetLanguage = TargetLanguage,
+	L extends SupportedTargetLanguage = SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L> = UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F> = UnitReadingKindFor<L, F>,
 > = {
@@ -25,7 +28,7 @@ export type ReadingNoteRouteKey<
 	readonly kind: K;
 };
 
-export type ReadingNoteRouteFor<L extends TargetLanguage> = {
+export type ReadingNoteRouteFor<L extends SupportedTargetLanguage> = {
 	[Family in UnitReadingFamilyFor<L>]: {
 		[Kind in UnitReadingKindFor<L, Family>]: ReadingNoteRouteKey<
 			L,
@@ -36,8 +39,8 @@ export type ReadingNoteRouteFor<L extends TargetLanguage> = {
 }[UnitReadingFamilyFor<L>];
 
 export type ReadingNoteRoute = {
-	[Language in TargetLanguage]: ReadingNoteRouteFor<Language>;
-}[TargetLanguage];
+	[Language in SupportedTargetLanguage]: ReadingNoteRouteFor<Language>;
+}[SupportedTargetLanguage];
 
 /**
  * Derives and validates the widened Convex route before applicability or
@@ -48,7 +51,7 @@ export function readingNoteRouteFor(
 	note: AnyReadingNoteData,
 ): ReadingNoteRoute | null {
 	const lemma = note.reading.lemma;
-	const language = targetLanguageSchema.safeParse(lemma.language);
+	const language = supportedTargetLanguageSchema.safeParse(lemma.language);
 	if (!language.success) return null;
 
 	const route = {

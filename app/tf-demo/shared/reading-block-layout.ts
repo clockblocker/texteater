@@ -11,7 +11,7 @@ export const READING_BLOCK_KIND_VALUES = [
 export type ReadingBlockKind = (typeof READING_BLOCK_KIND_VALUES)[number];
 
 export type ReadingBlockRoute = {
-	readonly targetLanguage: "de";
+	readonly targetLanguage: SupportedTargetLanguage;
 	readonly family: string;
 	readonly kind: string;
 };
@@ -77,3 +77,4 @@ export function routeKey(route: ReadingBlockRoute): string {
 }
 
 import { reconcileSerializedBlockLayout } from "./note-block-layout";
+import type { SupportedTargetLanguage } from "./supported-target-language";

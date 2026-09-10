@@ -1,6 +1,6 @@
 import type { LemmaKindFor } from "dumling/types";
 import type { ReactElement } from "react";
-
+import type { SupportedTargetLanguage } from "../../shared/supported-target-language";
 import type { NoteBlockKind } from "./note-block-kind";
 import type { NoteDataFor } from "./note-data";
 import type { NoteKind } from "./note-kind";
@@ -18,23 +18,22 @@ import type {
 	SurfaceNoteBlockRenderer,
 	SurfaceNotePresentationCapabilities,
 } from "./surface";
-import type { TargetLanguage } from "./target-language";
 
 export type GrammaticalNoteKind = Exclude<NoteKind, "Surface">;
 
 export type NoteFamilyFor<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 > = N extends GrammaticalNoteKind ? UnitReadingFamilyFor<L> : never;
 
 export type NoteLemmaKindFor<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 	F extends NoteFamilyFor<L, N>,
 > = LemmaKindFor<L, F>;
 
 type CoordinateRefinement<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 	F extends NoteFamilyFor<L, N>,
 	K extends NoteLemmaKindFor<L, N, F>,
@@ -78,7 +77,7 @@ type CoordinateRefinement<
 				};
 
 export type GrammaticalNoteDataFor<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 	F extends NoteFamilyFor<L, N>,
 	K extends NoteLemmaKindFor<L, N, F>,
@@ -94,7 +93,7 @@ export type NotePresentationCapabilitiesFor<N extends NoteKind> =
 				: RouteNotePresentationCapabilities;
 
 export type GrammaticalNoteRenderContext<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 	F extends NoteFamilyFor<L, N>,
 	K extends NoteLemmaKindFor<L, N, F>,
@@ -105,7 +104,7 @@ export type GrammaticalNoteRenderContext<
 };
 
 export type NoteBlockRenderer<
-	L extends TargetLanguage = TargetLanguage,
+	L extends SupportedTargetLanguage = SupportedTargetLanguage,
 	N extends NoteKind = NoteKind,
 	F extends UnitReadingFamilyFor<L> = UnitReadingFamilyFor<L>,
 	K extends LemmaKindFor<L, F> = LemmaKindFor<L, F>,
@@ -128,14 +127,14 @@ export type NoteBlockRenderer<
 			: never;
 
 type BlockRendererMap<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends NoteKind,
 	F extends UnitReadingFamilyFor<L>,
 	K extends LemmaKindFor<L, F>,
 > = Partial<Record<NoteBlockKind, NoteBlockRenderer<L, N, F, K>>>;
 
 type GrammaticalNoteKindRegistry<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 > = Partial<{
 	[F in NoteFamilyFor<L, N>]: Partial<{
@@ -144,7 +143,7 @@ type GrammaticalNoteKindRegistry<
 }>;
 
 type NoteKindRegistry<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	N extends NoteKind,
 > = N extends "Surface"
 	? Partial<Record<NoteBlockKind, SurfaceNoteBlockRenderer<L>>>
@@ -152,20 +151,22 @@ type NoteKindRegistry<
 		? GrammaticalNoteKindRegistry<L, N>
 		: never;
 
-type LanguageRegistry<L extends TargetLanguage> = {
+type LanguageRegistry<L extends SupportedTargetLanguage> = {
 	[N in NoteKind]: NoteKindRegistry<L, N>;
 };
 
 export type NoteBlockRendererRegistry<
-	L extends TargetLanguage | never = never,
+	L extends SupportedTargetLanguage | never = never,
 	N extends NoteKind | never = never,
-	F extends L extends TargetLanguage
+	F extends L extends SupportedTargetLanguage
 		? UnitReadingFamilyFor<L>
 		: never = never,
 	K extends string | never = never,
 > = [L] extends [never]
-	? { [Language in TargetLanguage]: LanguageRegistry<Language> }
-	: L extends TargetLanguage
+	? {
+			[Language in SupportedTargetLanguage]: LanguageRegistry<Language>;
+		}
+	: L extends SupportedTargetLanguage
 		? [N] extends [never]
 			? LanguageRegistry<L>
 			: N extends NoteKind

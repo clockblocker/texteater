@@ -9,6 +9,7 @@ import {
 	reconcileReadingBlockLayout,
 	type SerializedReadingBlockLayout,
 } from "../shared/reading-block-layout";
+import type { SupportedTargetLanguage } from "../shared/supported-target-language";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
@@ -18,7 +19,6 @@ import {
 } from "./model/validators";
 
 type LayoutCtx = QueryCtx | MutationCtx;
-type TargetLanguage = ReadingBlockRoute["targetLanguage"];
 const MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE = 128;
 
 function assertVisitorId(visitorId: string): void {
@@ -28,7 +28,7 @@ function assertVisitorId(visitorId: string): void {
 }
 
 function availableLanguageBlocks(
-	_targetLanguage: TargetLanguage,
+	_targetLanguage: SupportedTargetLanguage,
 ): readonly ReadingBlockKind[] {
 	return DEFAULT_DE_READING_LANGUAGE_LAYOUT.order;
 }
@@ -41,7 +41,7 @@ function cloneLayout(layout: SerializedReadingBlockLayout): {
 }
 
 function defaultLanguageLayout(
-	targetLanguage: TargetLanguage,
+	targetLanguage: SupportedTargetLanguage,
 ): SerializedReadingBlockLayout {
 	return reconcileReadingBlockLayout(
 		DEFAULT_DE_READING_LANGUAGE_LAYOUT,
@@ -65,7 +65,7 @@ function setBlockVisibility(
 async function findLanguageLayout(
 	ctx: LayoutCtx,
 	visitorId: string,
-	targetLanguage: TargetLanguage,
+	targetLanguage: SupportedTargetLanguage,
 ) {
 	return await ctx.db
 		.query("readingLanguageLayouts")
@@ -78,7 +78,7 @@ async function findLanguageLayout(
 async function loadLanguageLayout(
 	ctx: LayoutCtx,
 	visitorId: string,
-	targetLanguage: TargetLanguage,
+	targetLanguage: SupportedTargetLanguage,
 ): Promise<SerializedReadingBlockLayout> {
 	const stored = await findLanguageLayout(ctx, visitorId, targetLanguage);
 	return stored
@@ -133,7 +133,7 @@ async function loadFamilyKindLayoutForMutation(
 async function loadStoredFamilyKindLayouts(
 	ctx: MutationCtx,
 	visitorId: string,
-	targetLanguage: TargetLanguage,
+	targetLanguage: SupportedTargetLanguage,
 ) {
 	const layouts = await ctx.db
 		.query("readingFamilyKindLayouts")
@@ -156,7 +156,7 @@ async function loadStoredFamilyKindLayouts(
 async function storeLanguageLayout(
 	ctx: MutationCtx,
 	visitorId: string,
-	targetLanguage: TargetLanguage,
+	targetLanguage: SupportedTargetLanguage,
 	layout: SerializedReadingBlockLayout,
 	updatedAt: number,
 ): Promise<void> {

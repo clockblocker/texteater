@@ -33,6 +33,8 @@ import {
 	type SurfaceNotePresentationCapabilities,
 } from "./surface";
 
+export type { SupportedTargetLanguage } from "../../shared/supported-target-language";
+export { supportedTargetLanguageSchema } from "../../shared/supported-target-language";
 export { renderErrorNote } from "./error-note";
 export type { NoteBlockKind } from "./note-block-kind";
 export { noteBlockKindSchema } from "./note-block-kind";
@@ -70,8 +72,6 @@ export type {
 	SurfaceNotePresentationCapabilities,
 	SurfaceNoteRenderContext,
 } from "./surface";
-export type { TargetLanguage } from "./target-language";
-export { targetLanguageSchema } from "./target-language";
 
 type LemmaNoteData = NoteDataFor<"Lemma">;
 type AttestationNoteData = NoteDataFor<"Attestation">;

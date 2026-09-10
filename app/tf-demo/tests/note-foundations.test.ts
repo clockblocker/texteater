@@ -9,7 +9,7 @@ import {
 	noteKindSchema,
 	orderNoteBlockKinds,
 	renderNote,
-	targetLanguageSchema,
+	supportedTargetLanguageSchema,
 	WEIGHT_FOR_NOTE_BLOCK_KIND,
 } from "../src/notes";
 
@@ -31,7 +31,7 @@ test("shared Note and Block schemas expose the frozen vocabulary", () => {
 		"LexicalBreakdown",
 		"Routes",
 	]);
-	expect(targetLanguageSchema.options).toEqual(["de"]);
+	expect(supportedTargetLanguageSchema.options).toEqual(["de"]);
 	expect(Object.keys(NOTE_BLOCK_RENDERER_REGISTRY.de.Surface)).toEqual([
 		"Header",
 		"Routes",

@@ -1,7 +1,7 @@
+import type { SupportedTargetLanguage } from "../../../shared/supported-target-language";
 import type { NoteBlockKind } from "../note-block-kind";
 import { reconcileNoteBlockLayout } from "../note-block-layout";
 import { registeredNoteBlockMap } from "../note-block-renderer-registry-runtime";
-import type { TargetLanguage } from "../target-language";
 import type { ReadingNoteBlockRenderer } from "./reading-note-render-context";
 import type {
 	ReadingNoteRouteKey,
@@ -18,7 +18,7 @@ export type ReadingBlockLayout = {
 };
 
 export type ReadingBlockPlan<
-	L extends TargetLanguage = TargetLanguage,
+	L extends SupportedTargetLanguage = SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L> = UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F> = UnitReadingKindFor<L, F>,
 > = readonly {
@@ -28,7 +28,7 @@ export type ReadingBlockPlan<
 
 /** Reconciles persisted layout state with trusted catalog behavior. */
 export function resolveReadingBlockPlan<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(

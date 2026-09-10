@@ -1,6 +1,6 @@
 import "./reading-note.css";
 import type { ReactElement } from "react";
-import type { TargetLanguage } from "../target-language";
+import type { SupportedTargetLanguage } from "../../../shared/supported-target-language";
 import { ReadingNoteBlockErrorBoundary, renderErrorBlock } from "./error-block";
 import type { ReadingBlockPlan } from "./reading-block-plan";
 import type { ReadingNoteRenderContext } from "./reading-note-render-context";
@@ -11,7 +11,7 @@ import type {
 import { ReadingMetadata } from "./renderers/default/header-renderer";
 
 export function renderReadingNoteComposition<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(
@@ -39,7 +39,7 @@ export function renderReadingNoteComposition<
 }
 
 export function renderReadingBlockPlan<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(

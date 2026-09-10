@@ -3,9 +3,9 @@ import { DEFAULT_KNOWLEDGE_SETTINGS, type KnowledgeSettings } from "dumrel";
 import type { ReactElement } from "react";
 
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { SupportedTargetLanguage } from "../../../shared/supported-target-language";
 import { defaultNoteBlockLayout } from "../note-block-layout";
 import type { NoteDataFor } from "../note-data";
-import type { TargetLanguage } from "../target-language";
 import type { ReadingBlockLayout } from "./reading-block-plan";
 import type {
 	ReadingNoteRouteKey,
@@ -19,7 +19,7 @@ type AnyReadingNoteData = NoteDataFor<"Reading">;
 type SourceContext = AnyReadingNoteData["sourceContexts"]["page"][number];
 
 type ConcreteReadingNoteData<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 > = Omit<AnyReadingNoteData, "reading"> & {
@@ -50,7 +50,7 @@ export type ReadingNotePresentationCapabilities = {
 };
 
 export type ReadingNoteRenderContext<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 > =
@@ -65,13 +65,13 @@ export type ReadingNoteRenderContext<
 		: never;
 
 export type ReadingNoteBlockRenderer<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 > = (context: ReadingNoteRenderContext<L, F, K>) => ReactElement | null;
 
 export type ReadingNoteDefaultRenderer = <
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(

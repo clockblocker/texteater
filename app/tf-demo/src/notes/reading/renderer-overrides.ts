@@ -1,5 +1,5 @@
+import type { SupportedTargetLanguage } from "../../../shared/supported-target-language";
 import type { NoteBlockKind } from "../note-block-kind";
-import type { TargetLanguage } from "../target-language";
 import type { ReadingNoteBlockRenderer } from "./reading-note-render-context";
 import type {
 	ReadingNoteRouteKey,
@@ -7,20 +7,21 @@ import type {
 	UnitReadingKindFor,
 } from "./reading-note-route";
 
-export type ReadingNoteRendererOverrideRegistry<L extends TargetLanguage> =
-	Partial<{
-		[Family in UnitReadingFamilyFor<L>]: Partial<{
-			[Kind in UnitReadingKindFor<L, Family>]: Partial<
-				Record<
-					Exclude<NoteBlockKind, "Routes">,
-					ReadingNoteBlockRenderer<L, Family, Kind>
-				>
-			>;
-		}>;
+export type ReadingNoteRendererOverrideRegistry<
+	L extends SupportedTargetLanguage,
+> = Partial<{
+	[Family in UnitReadingFamilyFor<L>]: Partial<{
+		[Kind in UnitReadingKindFor<L, Family>]: Partial<
+			Record<
+				Exclude<NoteBlockKind, "Routes">,
+				ReadingNoteBlockRenderer<L, Family, Kind>
+			>
+		>;
 	}>;
+}>;
 
 export type ReadingNoteRouteRendererOverrides<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 > = Partial<
@@ -28,7 +29,7 @@ export type ReadingNoteRouteRendererOverrides<
 >;
 
 export function readingNoteRendererOverrideFor<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(
@@ -43,7 +44,7 @@ export function readingNoteRendererOverrideFor<
 }
 
 export function selectReadingNoteRenderer<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(

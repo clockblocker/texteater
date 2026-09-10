@@ -11,16 +11,16 @@ import type {
 	NoteData,
 	NoteDataFor,
 	NoteKind,
+	SupportedTargetLanguage,
 	SurfaceAnalysisDescriptionRenderer,
 	SurfaceAnalysisDescriptionRendererRegistry,
 	SurfaceNotePresentationCapabilities,
-	TargetLanguage,
 } from "../../src/notes";
 import {
 	NOTE_BLOCK_RENDERER_REGISTRY,
 	type noteKindSchema,
 	renderNote,
-	targetLanguageSchema,
+	supportedTargetLanguageSchema,
 } from "../../src/notes";
 import type { RouteNotePresentationCapabilities } from "../../src/notes/route";
 import type {
@@ -64,10 +64,10 @@ export type ReadingDataIsIndexedFromTheOnlyDto = Assert<
 	>
 >;
 
-const targetLanguage: TargetLanguage = "de";
-void targetLanguage;
+const supportedTargetLanguage: SupportedTargetLanguage = "de";
+void supportedTargetLanguage;
 // @ts-expect-error Only app-configured target languages are accepted.
-const unconfiguredTargetLanguage: TargetLanguage = "en";
+const unconfiguredTargetLanguage: SupportedTargetLanguage = "en";
 void unconfiguredTargetLanguage;
 
 NOTE_BLOCK_RENDERER_REGISTRY satisfies NoteBlockRendererRegistry;
@@ -137,4 +137,4 @@ renderNote(surfaceNote, surfaceCapabilities);
 renderNote(shadowNote, shadowCapabilities);
 // @ts-expect-error Lemma Notes cannot receive Shadow Note capabilities.
 renderNote(lemmaNote, shadowCapabilities);
-targetLanguageSchema satisfies z.ZodType<TargetLanguage>;
+supportedTargetLanguageSchema satisfies z.ZodType<SupportedTargetLanguage>;

@@ -38,6 +38,10 @@ carries member orthography; ordered memberships reconstruct Attestation members.
 The universal tf-demo set of Lemmas, Surfaces, Readings, and Knowledge. Visitor
 identity never scopes its records.
 
+**Supported Target Language**:
+A target language for which tf-demo provides resolution and learner-facing
+Notes.
+
 **Fixed Member Loading**:
 Idempotent reconciliation of package-owned fixed linguistic values into the
 Shared Demo Dictionary through ordinary application records.

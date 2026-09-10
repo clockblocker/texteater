@@ -1,6 +1,6 @@
+import type { SupportedTargetLanguage } from "../../../shared/supported-target-language";
 import type { NoteBlockKind } from "../note-block-kind";
 import { registeredNoteBlockMap } from "../note-block-renderer-registry-runtime";
-import type { TargetLanguage } from "../target-language";
 import type { ReadingNoteBlockRenderer } from "./reading-note-render-context";
 import type {
 	ReadingNoteRoute,
@@ -36,7 +36,7 @@ export function availableBlocksFor(route: {
 }
 
 export function rendererFor<
-	L extends TargetLanguage,
+	L extends SupportedTargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(
