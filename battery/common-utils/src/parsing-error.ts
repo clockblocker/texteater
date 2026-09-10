@@ -156,3 +156,7 @@ export class ParsingError<_Output = unknown> extends Error {
 		super(JSON.stringify(issues, null, 2));
 	}
 }
+
+export type Prettify<T> = {
+	[K in keyof T]: T[K];
+} & {};

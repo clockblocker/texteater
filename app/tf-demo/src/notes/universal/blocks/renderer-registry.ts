@@ -6,6 +6,7 @@ import type {
 	NoteBlockRenderer,
 	NoteFamilyFor,
 	NoteLemmaKindFor,
+	ReadingRenderContext,
 } from "./renderer";
 
 type BlockMap<
@@ -65,3 +66,5 @@ export type RendererRegistry<
 						: never
 				: never
 		: never;
+
+// type aasd = RendererRegistry<"de", "Reading", "Lexeme", "VERB">["Definition"];

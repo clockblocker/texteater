@@ -79,10 +79,12 @@ function PaginatedSurfaceNote({
 	const loadSurfacePage = useCallback(
 		async (cursor: string): Promise<PaginatedSurfaceNote | null> => {
 			const next = await convex.query(api.routeNotes.get, {
-				kind: "Surface",
-				language: initialNote.target.language,
-				normalizedSurface: initialNote.target.normalizedSurface,
-				contextCursor: cursor,
+				target: {
+					kind: "Surface",
+					language: initialNote.target.language,
+					normalizedSurface: initialNote.target.normalizedSurface,
+					contextCursor: cursor,
+				},
 			});
 			return next?.kind === "Surface" ? next : null;
 		},
@@ -117,9 +119,11 @@ function PaginatedRouteNote({
 	const loadRoutePage = useCallback(
 		async (cursor: string): Promise<PaginatedRouteNote | null> => {
 			const next = await convex.query(api.routeNotes.get, {
-				kind: "Lemma",
-				lemmaId: initialNote.target.lemmaId,
-				contextCursor: cursor,
+				target: {
+					kind: "Lemma",
+					lemmaId: initialNote.target.lemmaId,
+					contextCursor: cursor,
+				},
 			});
 			return next?.kind === "Lemma" ? next : null;
 		},
@@ -145,22 +149,28 @@ function routeNoteQueryArgs(
 	switch (target.kind) {
 		case "Lemma":
 			return {
-				kind: "Lemma" as const,
-				lemmaId: target.lemmaId,
+				target: {
+					kind: "Lemma" as const,
+					lemmaId: target.lemmaId,
+				},
 			};
 		case "Surface":
 			return {
-				kind: "Surface" as const,
-				language: target.language,
-				normalizedSurface: target.normalizedSurface,
-				...(activeAnalysisKey !== undefined
-					? { activeAnalysisKey }
-					: {}),
+				target: {
+					kind: "Surface" as const,
+					language: target.language,
+					normalizedSurface: target.normalizedSurface,
+					...(activeAnalysisKey !== undefined
+						? { activeAnalysisKey }
+						: {}),
+				},
 			};
 		case "Attestation":
 			return {
-				kind: "Attestation" as const,
-				attestationId: target.attestationId,
+				target: {
+					kind: "Attestation" as const,
+					attestationId: target.attestationId,
+				},
 			};
 	}
 }

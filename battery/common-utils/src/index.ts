@@ -14,6 +14,7 @@ export {
 	type ParsingIssue,
 	type ParsingIssueBase,
 	type ParsingPath,
+	type Prettify,
 	type PrimitiveValue,
 	type TooBigIssue,
 	type TooSmallIssue,
