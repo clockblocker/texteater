@@ -1,4 +1,5 @@
 import type { Descriptor } from "../types/descriptor.js";
+import type { EntityValue } from "../types/documentation-types.js";
 import type {
 	AttestationOptionsFor,
 	DumlingBase64Url,
@@ -10,7 +11,6 @@ import type {
 	Attestation,
 	CoreFeaturesFor,
 	DumlingCsv,
-	EntityValue,
 	Lemma,
 	LemmaFamilyFor,
 	LemmaFamilyForSurfaceKind,

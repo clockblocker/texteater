@@ -29,10 +29,6 @@ import type {
 export type SupportedLanguage = CoreSupportedLanguage;
 export type Language = SupportedLanguage;
 export type EntityKind = "Lemma" | "Surface" | "Attestation";
-export type EntityValue<L extends SupportedLanguage = SupportedLanguage> =
-	| Lemma<L>
-	| Surface<L>
-	| Attestation<L>;
 
 export type DumlingCsv<L extends SupportedLanguage = SupportedLanguage> =
 	string & {

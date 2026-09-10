@@ -5,12 +5,12 @@ export type {
 	LanguageApi,
 	ParseError,
 } from "./operations/api-shape.js";
+export type { EntityValue } from "./types/documentation-types.js";
 export type {
 	Attestation,
 	CoreFeaturesFor,
 	DumlingCsv,
 	EntityKind,
-	EntityValue,
 	InflectionalFeaturesFor,
 	Language,
 	Lemma,
