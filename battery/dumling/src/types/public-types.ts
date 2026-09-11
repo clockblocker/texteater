@@ -245,13 +245,15 @@ export type SurfaceKindFor<L extends SupportedLanguage> =
 		: SurfaceKind;
 
 export type LemmaFamilyForSurfaceKind<
-	L extends SupportedLanguage,
-	SK extends SurfaceKindFor<L>,
+	L extends LooseAutocomplete<SupportedLanguage>,
+	SK extends SurfaceKindFor<L & SupportedLanguage> = SurfaceKindFor<
+		L & SupportedLanguage
+	>,
 > = L extends ConcreteLanguage
 	? SK extends keyof SurfaceByKindForLanguage<L>
 		? Extract<keyof SurfaceByKindForLanguage<L>[SK], LemmaFamilyFor<L>>
 		: never
-	: LemmaFamilyFor<L>;
+	: never;
 
 export type CoreFeaturesFor<
 	L extends SupportedLanguage,
