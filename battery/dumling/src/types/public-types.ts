@@ -30,61 +30,6 @@ export type SupportedLanguage = CoreSupportedLanguage;
 export type Language = SupportedLanguage;
 export type EntityKind = "Lemma" | "Surface" | "Attestation";
 
-export type DumlingCsv<L extends SupportedLanguage = SupportedLanguage> =
-	string & {
-		readonly __dumlingCsvBrand: {
-			readonly language: L;
-		};
-	};
-
-export type LemmaFamilyFor<L extends SupportedLanguage> =
-	L extends ConcreteLanguage
-		? Extract<keyof LanguagePackFeatureRegistry[L], LemmaFamily>
-		: LemmaFamily;
-
-export type LemmaKindFor<
-	L extends SupportedLanguage,
-	LK extends string,
-> = L extends ConcreteLanguage
-	? LK extends LemmaFamilyFor<L>
-		? Extract<
-				keyof LanguagePackFeatureRegistry[L][LK],
-				AbstractLemmaKindFor<LK & LemmaFamily>
-			>
-		: never
-	: LK extends LemmaFamily
-		? AbstractLemmaKindFor<LK>
-		: never;
-
-/**
- * One language, Family, and Kind coordinate used by linguistic production
- * policy. The mapped union preserves the Family-to-Kind correlation.
- */
-export type LemmaRoute<L extends SupportedLanguage = SupportedLanguage> =
-	L extends SupportedLanguage
-		? {
-				[F in LemmaFamilyFor<L>]: Readonly<{
-					language: L;
-					family: F;
-					kind: LemmaKindFor<L, F>;
-				}>;
-			}[LemmaFamilyFor<L>]
-		: never;
-
-export type SurfaceKindFor<L extends SupportedLanguage> =
-	L extends ConcreteLanguage
-		? Extract<keyof SurfaceByKindForLanguage<L>, SurfaceKind>
-		: SurfaceKind;
-
-export type LemmaFamilyForSurfaceKind<
-	L extends SupportedLanguage,
-	SK extends SurfaceKindFor<L>,
-> = L extends ConcreteLanguage
-	? SK extends keyof SurfaceByKindForLanguage<L>
-		? Extract<keyof SurfaceByKindForLanguage<L>[SK], LemmaFamilyFor<L>>
-		: never
-	: LemmaFamilyFor<L>;
-
 export type Lemma<
 	L extends SupportedLanguage = SupportedLanguage,
 	LK extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
@@ -187,34 +132,6 @@ export type Reading<
 	emojiDescription: string;
 };
 
-export type CoreFeaturesFor<
-	L extends SupportedLanguage,
-	LK extends LemmaFamilyFor<L>,
-	LSK extends LemmaKindFor<L, LK>,
-> = FeatureSet<L, "core", LK, LSK>;
-
-export type InflectionalFeaturesFor<
-	L extends SupportedLanguage,
-	LK extends LemmaFamilyFor<L>,
-	LSK extends LemmaKindFor<L, LK>,
-> = FeatureSet<L, "inflectional", LK, LSK>;
-
-type PresentedFeatureValue<F extends AbstractFeatureName> =
-	| AbstractFeatureValueForName<F>
-	| readonly [
-			AbstractFeatureValueForName<F>,
-			...AbstractFeatureValueForName<F>[],
-	  ]
-	| null;
-
-/**
- * Stable presentation feature bag. Every known feature leaf is present;
- * features that do not apply to the selected canonical route are `null`.
- */
-export type PresentedFeatureSet = {
-	[F in AbstractFeatureName]-?: PresentedFeatureValue<F>;
-};
-
 /** A fully totalized Lemma DTO for presentation-layer consumers. */
 export type PresentedLemma<
 	L extends SupportedLanguage = SupportedLanguage,
@@ -271,6 +188,89 @@ export type SurfaceIdentity<L extends SupportedLanguage = SupportedLanguage> = {
 	surfaceKind: SurfaceKindFor<L>;
 	lemma: LemmaIdentity<L>;
 	inflectionalFeatures?: Record<string, unknown>;
+};
+
+export type DumlingCsv<L extends SupportedLanguage = SupportedLanguage> =
+	string & {
+		readonly __dumlingCsvBrand: {
+			readonly language: L;
+		};
+	};
+
+export type LemmaFamilyFor<L extends SupportedLanguage> =
+	L extends ConcreteLanguage
+		? Extract<keyof LanguagePackFeatureRegistry[L], LemmaFamily>
+		: LemmaFamily;
+
+export type LemmaKindFor<
+	L extends SupportedLanguage,
+	LK extends string,
+> = L extends ConcreteLanguage
+	? LK extends LemmaFamilyFor<L>
+		? Extract<
+				keyof LanguagePackFeatureRegistry[L][LK],
+				AbstractLemmaKindFor<LK & LemmaFamily>
+			>
+		: never
+	: LK extends LemmaFamily
+		? AbstractLemmaKindFor<LK>
+		: never;
+
+/**
+ * One language, Family, and Kind coordinate used by linguistic production
+ * policy. The mapped union preserves the Family-to-Kind correlation.
+ */
+export type LemmaRoute<L extends SupportedLanguage = SupportedLanguage> =
+	L extends SupportedLanguage
+		? {
+				[F in LemmaFamilyFor<L>]: Readonly<{
+					language: L;
+					family: F;
+					kind: LemmaKindFor<L, F>;
+				}>;
+			}[LemmaFamilyFor<L>]
+		: never;
+
+export type SurfaceKindFor<L extends SupportedLanguage> =
+	L extends ConcreteLanguage
+		? Extract<keyof SurfaceByKindForLanguage<L>, SurfaceKind>
+		: SurfaceKind;
+
+export type LemmaFamilyForSurfaceKind<
+	L extends SupportedLanguage,
+	SK extends SurfaceKindFor<L>,
+> = L extends ConcreteLanguage
+	? SK extends keyof SurfaceByKindForLanguage<L>
+		? Extract<keyof SurfaceByKindForLanguage<L>[SK], LemmaFamilyFor<L>>
+		: never
+	: LemmaFamilyFor<L>;
+
+export type CoreFeaturesFor<
+	L extends SupportedLanguage,
+	LK extends LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK>,
+> = FeatureSet<L, "core", LK, LSK>;
+
+export type InflectionalFeaturesFor<
+	L extends SupportedLanguage,
+	LK extends LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK>,
+> = FeatureSet<L, "inflectional", LK, LSK>;
+
+type PresentedFeatureValue<F extends AbstractFeatureName> =
+	| AbstractFeatureValueForName<F>
+	| readonly [
+			AbstractFeatureValueForName<F>,
+			...AbstractFeatureValueForName<F>[],
+	  ]
+	| null;
+
+/**
+ * Stable presentation feature bag. Every known feature leaf is present;
+ * features that do not apply to the selected canonical route are `null`.
+ */
+export type PresentedFeatureSet = {
+	[F in AbstractFeatureName]-?: PresentedFeatureValue<F>;
 };
 
 type PlaceholderLemma<
