@@ -77,7 +77,7 @@
 		"dependency-cruiser": "^18.1.0",
 		"esbuild": "^0.28.1",
 		"knip": "^6.29.0",
-		"prinfer": "^2.2.0",
+		"prinfer": "^2.3.0",
 		"typescript": "^7.0.2"
 	}
 }

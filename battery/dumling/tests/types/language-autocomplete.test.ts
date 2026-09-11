@@ -1,7 +1,7 @@
-import { describe, expect, it } from "bun:test";
+import { afterAll, describe, expect, it } from "bun:test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { completions } from "prinfer";
+import { closeTestingSessions, inferredCompletions } from "prinfer/testing";
 
 import type {
 	Attestation,
@@ -25,6 +25,8 @@ import type {
 	SurfaceIdentity,
 	SurfaceKindFor,
 } from "../../src/types";
+
+afterAll(closeTestingSessions);
 
 export type asda = LemmaFamilyForSurfaceKind<"">;
 
@@ -92,20 +94,24 @@ const publicLanguageGenerics = [
 	["AutocompleteLanguageApi", "LanguageApi"],
 ] as const;
 
-function completionNamesAtEmptyString(
+async function completionNamesAtEmptyString(
 	file: string,
 	source: string,
 	alias: string,
-): string[] {
+): Promise<string[]> {
 	const declarationOffset = source.indexOf(`type ${alias} =`);
 	const cursorOffset = source.indexOf('""', declarationOffset) + 1;
 	const sourceBeforeCursor = source.slice(0, cursorOffset);
 	const line = sourceBeforeCursor.split("\n").length;
 	const column = cursorOffset - sourceBeforeCursor.lastIndexOf("\n");
 
-	return completions(file, line, column)
-		.entries.map(({ name }) => name)
-		.sort();
+	return (
+		await inferredCompletions(file, {
+			line,
+			column,
+			backend: "typescript7",
+		})
+	).sort();
 }
 
 describe("Dumling language autocomplete", () => {
@@ -113,12 +119,10 @@ describe("Dumling language autocomplete", () => {
 	const source = readFileSync(file, "utf8");
 
 	for (const [alias, generic] of publicLanguageGenerics) {
-		it(`suggests supported languages for ${generic}`, () => {
-			expect(completionNamesAtEmptyString(file, source, alias)).toEqual([
-				"de",
-				"en",
-				"he",
-			]);
+		it(`suggests supported languages for ${generic}`, async () => {
+			expect(
+				await completionNamesAtEmptyString(file, source, alias),
+			).toEqual(["de", "en", "he"]);
 		});
 	}
 });

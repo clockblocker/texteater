@@ -1,7 +1,9 @@
-import { describe, expect, it } from "bun:test";
-import { inferredType } from "prinfer/testing";
+import { afterAll, describe, expect, it } from "bun:test";
+import { closeTestingSessions, inferredType } from "prinfer/testing";
 
 import type { Reading } from "../../src/types";
+
+afterAll(closeTestingSessions);
 
 export type GermanVerbReadingBranch = Extract<
 	Reading<"de">,
@@ -9,11 +11,14 @@ export type GermanVerbReadingBranch = Extract<
 >;
 
 describe("Dumling Reading inference", () => {
-	it("preserves each language, Family, and Kind branch", () => {
+	it("preserves each language, Family, and Kind branch", async () => {
 		expect(
-			inferredType(import.meta.url, { name: "GermanVerbReadingBranch" }),
+			await inferredType(import.meta.url, {
+				name: "GermanVerbReadingBranch",
+				backend: "typescript7",
+			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbReadingBranch = { lemma: { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; }; emojiDescription: string; }"`,
+			`"type GermanVerbReadingBranch = { lemma: { canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; family: "Lexeme"; kind: "VERB"; language: "de"; }; emojiDescription: string; }"`,
 		);
 	}, 30_000);
 });

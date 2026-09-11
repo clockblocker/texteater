@@ -1,13 +1,15 @@
-import { describe, expect, it } from "bun:test";
+import { afterAll, describe, expect, it } from "bun:test";
 import type { Equal, Expect } from "common-utils";
 import type { Reading } from "dumling/types";
-import { inferredType } from "prinfer/testing";
+import { closeTestingSessions, inferredType } from "prinfer/testing";
 
 import type {
 	KnowledgeGenerationInput,
 	ReadingCatalogMiss,
 	ReadingKnowledgeCatalogMiss,
 } from "../../src";
+
+afterAll(closeTestingSessions);
 
 type GermanVerb = {
 	lemma: { language: "de"; family: "Lexeme"; kind: "VERB" };
@@ -55,35 +57,38 @@ export type KnowledgeCatalogMissRejectsMismatchedRoute = Expect<
 >;
 
 describe("Dumgen Reading inference", () => {
-	it("preserves the selected branch at Knowledge Generation ingress", () => {
+	it("preserves the selected branch at Knowledge Generation ingress", async () => {
 		expect(
-			inferredType(import.meta.url, {
+			await inferredType(import.meta.url, {
 				name: "GermanVerbKnowledgeInputReading",
+				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbKnowledgeInputReading = { lemma: { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; }; emojiDescription: string; }"`,
+			`"type GermanVerbKnowledgeInputReading = { lemma: { canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; family: "Lexeme"; kind: "VERB"; language: "de"; }; emojiDescription: string; }"`,
 		);
 	}, 30_000);
 
-	it("preserves and correlates the selected branch in Reading Catalog Misses", () => {
+	it("preserves and correlates the selected branch in Reading Catalog Misses", async () => {
 		expect(
-			inferredType(import.meta.url, {
+			await inferredType(import.meta.url, {
 				name: "GermanVerbReadingCatalogMiss",
 				full: true,
+				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbReadingCatalogMiss = { readonly decision: "CatalogMiss"; readonly reason: CatalogMissReason; readonly language: "de"; readonly route: Readonly<{ family: "Lexeme"; kind: "VERB"; }>; readonly stage: "Reading"; readonly candidate: { lemma: { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; }; emojiDescription: string; }; }"`,
+			`"type GermanVerbReadingCatalogMiss = { readonly decision: "CatalogMiss"; readonly reason: CatalogMissReason; readonly language: "de"; readonly route: Readonly<{ family: "Lexeme"; kind: "VERB"; }>; readonly stage: "Reading"; readonly candidate: { lemma: { canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; family: "Lexeme"; kind: "VERB"; language: "de"; }; emojiDescription: string; }; }"`,
 		);
 	}, 30_000);
 
-	it("preserves and correlates the selected branch in Knowledge Catalog Misses", () => {
+	it("preserves and correlates the selected branch in Knowledge Catalog Misses", async () => {
 		expect(
-			inferredType(import.meta.url, {
+			await inferredType(import.meta.url, {
 				name: "GermanVerbKnowledgeCatalogMiss",
 				full: true,
+				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbKnowledgeCatalogMiss = { readonly decision: "CatalogMiss"; readonly reason: CatalogMissReason; readonly language: "de"; readonly route: Readonly<{ family: "Lexeme"; kind: "VERB"; }>; readonly stage: "ReadingKnowledge"; readonly reading: { lemma: { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; }; emojiDescription: string; }; readonly missingRequest: KnowledgeGenerationRequest; }"`,
+			`"type GermanVerbKnowledgeCatalogMiss = { readonly decision: "CatalogMiss"; readonly reason: CatalogMissReason; readonly language: "de"; readonly route: Readonly<{ family: "Lexeme"; kind: "VERB"; }>; readonly stage: "ReadingKnowledge"; readonly reading: { lemma: { canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; family: "Lexeme"; kind: "VERB"; language: "de"; }; emojiDescription: string; }; readonly missingRequest: KnowledgeGenerationRequest; }"`,
 		);
 	}, 30_000);
 });

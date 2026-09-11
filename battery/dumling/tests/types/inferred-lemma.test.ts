@@ -1,6 +1,8 @@
-import { describe, expect, it } from "bun:test";
-import { inferredType } from "prinfer/testing";
+import { afterAll, describe, expect, it } from "bun:test";
+import { closeTestingSessions, inferredType } from "prinfer/testing";
 import { dumling } from "../../src";
+
+afterAll(closeTestingSessions);
 
 const germanNounLemmaInferenceGuard = dumling.de.create.lemma({
 	canonicalForm: "Schloss",
@@ -10,14 +12,15 @@ const germanNounLemmaInferenceGuard = dumling.de.create.lemma({
 });
 
 describe("Dumling Lemma inference", () => {
-	it("keeps the language, Family, and Kind branches in the inferred type", () => {
+	it("keeps the language, Family, and Kind branches in the inferred type", async () => {
 		void germanNounLemmaInferenceGuard;
 		expect(
-			inferredType(import.meta.url, {
+			await inferredType(import.meta.url, {
 				name: "germanNounLemmaInferenceGuard",
+				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"{ language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NOUN"; coreFeatures: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; }"`,
+			`"{ canonicalForm: string; coreFeatures: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; family: "Lexeme"; kind: "NOUN"; language: "de"; }"`,
 		);
 	});
 });

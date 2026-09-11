@@ -1,11 +1,13 @@
-import { describe, expect, it } from "bun:test";
-import { inferredType } from "prinfer/testing";
+import { afterAll, describe, expect, it } from "bun:test";
+import { closeTestingSessions, inferredType } from "prinfer/testing";
 
 import type {
 	DumdictReadingDraft,
 	ReadingCandidate,
 	ReadingEntry,
 } from "../../src";
+
+afterAll(closeTestingSessions);
 
 type GermanVerb = {
 	lemma: { language: "de"; family: "Lexeme"; kind: "VERB" };
@@ -26,25 +28,32 @@ export type GermanVerbCandidateReading = Extract<
 	GermanVerb
 >;
 
-const germanVerbReading = `{ lemma: { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; }; emojiDescription: string; }`;
+const germanVerbReading = `{ lemma: { canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; family: "Lexeme"; kind: "VERB"; language: "de"; }; emojiDescription: string; }`;
 
 describe("Dumdict Reading inference", () => {
-	it("preserves the selected branch at the draft ingress", () => {
+	it("preserves the selected branch at the draft ingress", async () => {
 		expect(
-			inferredType(import.meta.url, { name: "GermanVerbDraftReading" }),
+			await inferredType(import.meta.url, {
+				name: "GermanVerbDraftReading",
+				backend: "typescript7",
+			}),
 		).toBe(`type GermanVerbDraftReading = ${germanVerbReading}`);
 	}, 30_000);
 
-	it("preserves the selected branch in stored entries", () => {
+	it("preserves the selected branch in stored entries", async () => {
 		expect(
-			inferredType(import.meta.url, { name: "GermanVerbStoredReading" }),
+			await inferredType(import.meta.url, {
+				name: "GermanVerbStoredReading",
+				backend: "typescript7",
+			}),
 		).toBe(`type GermanVerbStoredReading = ${germanVerbReading}`);
 	}, 30_000);
 
-	it("preserves the selected branch in lookup candidates", () => {
+	it("preserves the selected branch in lookup candidates", async () => {
 		expect(
-			inferredType(import.meta.url, {
+			await inferredType(import.meta.url, {
 				name: "GermanVerbCandidateReading",
+				backend: "typescript7",
 			}),
 		).toBe(`type GermanVerbCandidateReading = ${germanVerbReading}`);
 	}, 30_000);
