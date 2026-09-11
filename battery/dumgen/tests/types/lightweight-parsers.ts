@@ -76,8 +76,7 @@ type _SwappedAttestationLanguageMustFail = Assert<
 		"Citation/Lexeme/NOUN",
 		// @ts-expect-error A Hebrew leaf cannot back the canonical German route.
 		ActualHebrewNounAttestationSchema
-	>
->;
+	>>;
 
 const narrowedGermanNounAttestationSchema = canonicalGermanAttestationSchemas[
 	"Citation/Lexeme/NOUN"
@@ -87,8 +86,7 @@ type _NarrowedAttestationLeafMustFail = Assert<
 	ProveCanonicalGermanAttestationSchemaRoute<
 		"Citation/Lexeme/NOUN",
 		typeof narrowedGermanNounAttestationSchema
-	>
->;
+	>>;
 
 type DroppedGermanAttestationRouteKey = Exclude<
 	CanonicalGermanAttestationRouteKey,
@@ -96,8 +94,10 @@ type DroppedGermanAttestationRouteKey = Exclude<
 >;
 type _DroppedAttestationLeafMustFail = Assert<
 	// @ts-expect-error Dropping an actual leaf must fail exact inventory equality.
-	Equal<DroppedGermanAttestationRouteKey, CanonicalGermanAttestationRouteKey>
->;
+	Equal<
+		DroppedGermanAttestationRouteKey,
+		CanonicalGermanAttestationRouteKey
+	>>;
 
 type ActualGermanSegmentedSentenceSchema =
 	(typeof canonicalDumgenValidationSchemas)["parseAsSegmentedSentence:de"];
@@ -125,8 +125,7 @@ type _NarrowedActualSchemaMustFail = Assert<
 		"parseAsSegmentedSentence:de",
 		// @ts-expect-error A narrowed schema cannot replace the exact canonical route.
 		typeof narrowedGermanSegmentedSentenceSchema
-	>
->;
+	>>;
 
 const narrowedGermanGrammaticalResultSchema = canonicalDumgenValidationSchemas[
 	"parseAsGrammaticalResult:de"
@@ -136,8 +135,7 @@ type _NarrowedGrammaticalResultSchemaMustFail = Assert<
 	ProveCanonicalDumgenValidationSchemaRoute<
 		"parseAsGrammaticalResult:de",
 		typeof narrowedGermanGrammaticalResultSchema
-	>
->;
+	>>;
 
 declare const actualGermanSchema: CanonicalDumgenValidationSchemaForRoute<"parseAsSegmentedSentence:de">;
 void actualGermanSchema;

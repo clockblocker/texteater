@@ -96,8 +96,7 @@ type _NarrowedCompatibilityOutputMustFail = Assert<
 	ProveCompatibilityOutput<
 		EnglishVerbLemmaDescriptor,
 		Lemma<"en"> & { readonly proofOnly: true }
-	>
->;
+	>>;
 
 type ActualGermanLemmaRecordSchema =
 	(typeof canonicalDumdictValidationSchemas)["parseAsLemmaRecord:de"];
@@ -127,8 +126,7 @@ type _NarrowedActualSchemaMustFail = Assert<
 	ProveCanonicalDumdictValidationSchemaRoute<
 		"parseAsLemmaRecord:de",
 		typeof narrowedGermanLemmaRecordSchema
-	>
->;
+	>>;
 
 declare const actualGermanLemmaRecordSchema: CanonicalDumdictValidationSchemaForRoute<"parseAsLemmaRecord:de">;
 void actualGermanLemmaRecordSchema;

@@ -7,9 +7,5 @@
 		"tests/**/*.ts"
 	],
 	"project": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
-	"ignoreDependencies": [
-		"@biomejs/biome",
-		"bun-types",
-		"dependency-cruiser"
-	]
+	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
 }

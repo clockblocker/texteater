@@ -64,8 +64,7 @@ module.exports = {
 				"Private German renderer leaves may only be imported by the auditable German registry.",
 			severity: "error",
 			from: {
-				pathNot:
-					"^app/tf-demo/src/notes/de/registry\\.ts$",
+				pathNot: "^app/tf-demo/src/notes/de/registry\\.ts$",
 			},
 			to: {
 				path: "^app/tf-demo/src/notes/de/block-renderer-overrides/",

@@ -1,4 +1,3 @@
-import { renderHeaderDeLexemeVerb } from "./de/block-renderer-overrides/reading/header/lexeme-verb";
 import { DE_RENDERER_REGISTRY } from "./de/registry";
 import { RENDERER_REGISTRY } from "./renderer-registry";
 import type {
@@ -41,7 +40,7 @@ renderDefaultReadingHeader satisfies NoteBlockRenderer<
 	"Lexeme",
 	"NOUN"
 >;
-renderHeaderDeLexemeVerb satisfies NoteBlockRenderer<
+DE_RENDERER_REGISTRY.Reading.Lexeme.VERB.Header satisfies NoteBlockRenderer<
 	"de",
 	"Reading",
 	"Lexeme",
