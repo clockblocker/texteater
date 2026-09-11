@@ -1,3 +1,4 @@
+import type { Prettify } from "common-utils";
 import type {
 	InflectionalFeaturesFor,
 	LemmaFamilyFor,
@@ -99,13 +100,13 @@ type ReadingWithNoteIdentity<
 		emojiDescription: string;
 	},
 > = Value extends unknown
-	? {
+	? Prettify<{
 			lemma: LemmaWithNoteIdentity<Value["lemma"]>;
 			emojiDescription: Value["emojiDescription"];
 			ownerKind: NoteDataFor<"Reading">["reading"]["ownerKind"];
 			ownerKey: NoteDataFor<"Reading">["reading"]["ownerKey"];
 			readingId: NoteDataFor<"Reading">["reading"]["readingId"];
-		}
+		}>
 	: never;
 
 type LemmaWithNoteIdentity<
@@ -117,7 +118,7 @@ type LemmaWithNoteIdentity<
 		coreFeatures: Readonly<Record<string, unknown>>;
 	},
 > = Value extends unknown
-	? {
+	? Prettify<{
 			language: Value["language"];
 			family: Value["family"];
 			kind: Value["kind"];
@@ -125,7 +126,7 @@ type LemmaWithNoteIdentity<
 			coreFeatures: Value["coreFeatures"];
 			ownerKind: NoteDataFor<"Reading">["reading"]["lemma"]["ownerKind"];
 			ownerKey: NoteDataFor<"Reading">["reading"]["lemma"]["ownerKey"];
-		}
+		}>
 	: never;
 
 export type ReadingRenderContext<
