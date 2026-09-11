@@ -1,3 +1,4 @@
+import type { LooseAutocomplete } from "common-utils";
 import type {
 	AbstractInflectionalFeaturesFor,
 	AbstractLemma,
@@ -203,8 +204,10 @@ export type LemmaFamilyFor<L extends SupportedLanguage> =
 		: LemmaFamily;
 
 export type LemmaKindFor<
-	L extends SupportedLanguage,
-	LK extends string,
+	L extends LooseAutocomplete<SupportedLanguage>,
+	LK extends LooseAutocomplete<LemmaFamily> = LemmaFamilyFor<
+		L & SupportedLanguage
+	>,
 > = L extends ConcreteLanguage
 	? LK extends LemmaFamilyFor<L>
 		? Extract<

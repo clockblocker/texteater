@@ -1,6 +1,8 @@
+import type { LooseAutocomplete } from "./totat-typescript-helpers.js";
+
 export type ParsingPath = PropertyKey[];
 
-export type InvalidTypeExpected =
+export type InvalidTypeExpected = LooseAutocomplete<
 	| "string"
 	| "number"
 	| "int"
@@ -22,7 +24,7 @@ export type InvalidTypeExpected =
 	| "nonoptional"
 	| "nan"
 	| "function"
-	| (string & {});
+>;
 
 export interface ParsingIssueBase {
 	readonly code: string;
@@ -156,7 +158,3 @@ export class ParsingError<_Output = unknown> extends Error {
 		super(JSON.stringify(issues, null, 2));
 	}
 }
-
-export type Prettify<T> = {
-	[K in keyof T]: T[K];
-} & {};

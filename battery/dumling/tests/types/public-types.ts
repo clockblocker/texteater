@@ -11,6 +11,7 @@ import type {
 	Attestation,
 	DumlingCsv,
 	Lemma,
+	LemmaKindFor,
 	PresentedAttestation,
 	PresentedLemma,
 	PresentedSurface,
@@ -34,6 +35,9 @@ const lemma = dumling.de.create.lemma({
 	kind: "NOUN",
 	coreFeatures: { gender: "Masc", hyph: null },
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
+
+type _CustomLanguageLemmaKinds = LemmaKindFor<"">;
+type _CustomFamilyLemmaKinds = LemmaKindFor<"de", "">;
 
 const surface = dumling.de.create.surface.citation({
 	lemma,

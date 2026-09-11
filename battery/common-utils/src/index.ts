@@ -14,12 +14,15 @@ export {
 	type ParsingIssue,
 	type ParsingIssueBase,
 	type ParsingPath,
-	type Prettify,
 	type PrimitiveValue,
 	type TooBigIssue,
 	type TooSmallIssue,
 	type UnrecognizedKeysIssue,
 } from "./parsing-error.js";
+export type {
+	LooseAutocomplete,
+	Prettify,
+} from "./totat-typescript-helpers.js";
 export {
 	type ArrayConstraintCheck,
 	type ArtifactPrimitive,
