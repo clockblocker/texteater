@@ -7,7 +7,7 @@ export async function temporaryRepository(): Promise<string> {
 	await writeJson(join(root, "package.json"), {
 		name: "fixture",
 		private: true,
-		packageManager: "bun@1.3.14",
+		packageManager: "bun@1.4.2",
 		engines: { node: "24.x" },
 		workspaces: ["app/*", "battery/*"],
 		scripts: {
@@ -15,8 +15,8 @@ export async function temporaryRepository(): Promise<string> {
 			validate: "bun tooling/validate-repository.ts",
 		},
 		devDependencies: {
-			"@biomejs/biome": "2.5.7",
-			"bun-types": "1.3.14",
+			"@biomejs/biome": "2.5.13",
+			"bun-types": "1.4.2",
 			node: "24.19.0",
 		},
 	});
@@ -46,7 +46,7 @@ export async function addWorkspace(
 		description: `${options.name} fixture`,
 		private: options.private ?? true,
 		type: "module",
-		packageManager: "bun@1.3.14",
+		packageManager: "bun@1.4.2",
 		engines: { node: "24.x" },
 		license: "MIT",
 		exports: options.exports ?? { ".": "./dist/index.js" },
