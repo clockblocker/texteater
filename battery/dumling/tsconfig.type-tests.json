@@ -5,6 +5,7 @@
 		"dist",
 		"generate-readme/**/*.ts",
 		"tests/internal/**/*.ts",
-		"tests/external/**/*.ts"
+		"tests/external/**/*.ts",
+		"tests/**/*.test.ts"
 	]
 }

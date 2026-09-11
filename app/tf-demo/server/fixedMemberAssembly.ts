@@ -71,7 +71,7 @@ export function assembleFixedInventory(
 			const lemmaKey = readingFingerprint({
 				lemma,
 				emojiDescription: "fixed-lemma-identity",
-			});
+			} as Reading<"de">);
 			if (lemmaKeys.has(lemmaKey)) {
 				throw new Error(`Duplicate fixed Lemma ${lemmaKey}.`);
 			}

@@ -1,6 +1,5 @@
 import type {
 	InflectionalFeaturesFor,
-	Lemma,
 	LemmaFamilyFor,
 	LemmaKindFor,
 	Reading,
@@ -78,21 +77,63 @@ export type GrammaticalNoteDataFor<
 	K extends NoteLemmaKindFor<L, F>,
 > = NoteDataFor<N> & CoordinateRefinement<L, N, F, K>;
 
+type ReadingNoteDataFor<
+	L extends SupportedTargetLanguage,
+	F extends NoteFamilyFor<L>,
+	K extends NoteLemmaKindFor<L, F>,
+> = {
+	readonly [Key in keyof NoteDataFor<"Reading">]: Key extends "reading"
+		? ReadingWithNoteIdentity<Reading<L, F, K>>
+		: NoteDataFor<"Reading">[Key];
+};
+
+type ReadingWithNoteIdentity<
+	Value extends {
+		lemma: {
+			language: string;
+			family: string;
+			kind: string;
+			canonicalForm: string;
+			coreFeatures: Readonly<Record<string, unknown>>;
+		};
+		emojiDescription: string;
+	},
+> = Value extends unknown
+	? {
+			lemma: LemmaWithNoteIdentity<Value["lemma"]>;
+			emojiDescription: Value["emojiDescription"];
+			ownerKind: NoteDataFor<"Reading">["reading"]["ownerKind"];
+			ownerKey: NoteDataFor<"Reading">["reading"]["ownerKey"];
+			readingId: NoteDataFor<"Reading">["reading"]["readingId"];
+		}
+	: never;
+
+type LemmaWithNoteIdentity<
+	Value extends {
+		language: string;
+		family: string;
+		kind: string;
+		canonicalForm: string;
+		coreFeatures: Readonly<Record<string, unknown>>;
+	},
+> = Value extends unknown
+	? {
+			language: Value["language"];
+			family: Value["family"];
+			kind: Value["kind"];
+			canonicalForm: Value["canonicalForm"];
+			coreFeatures: Value["coreFeatures"];
+			ownerKind: NoteDataFor<"Reading">["reading"]["lemma"]["ownerKind"];
+			ownerKey: NoteDataFor<"Reading">["reading"]["lemma"]["ownerKey"];
+		}
+	: never;
+
 export type ReadingRenderContext<
 	L extends SupportedTargetLanguage,
 	F extends NoteFamilyFor<L>,
 	K extends NoteLemmaKindFor<L, F>,
 > = {
-	readonly noteData: Omit<NoteDataFor<"Reading">, "reading"> & {
-		readonly reading: Reading<L, F, K> &
-			Omit<NoteDataFor<"Reading">["reading"], keyof Reading> & {
-				readonly lemma: Reading<L, F, K>["lemma"] &
-					Omit<
-						NoteDataFor<"Reading">["reading"]["lemma"],
-						keyof Lemma
-					>;
-			};
-	};
+	readonly noteData: ReadingNoteDataFor<L, F, K>;
 	readonly RouteKey: {
 		readonly language: L;
 		readonly family: F;

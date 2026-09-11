@@ -3,6 +3,7 @@ import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 
 import type { api } from "../../convex/_generated/api";
 import { renderNote } from "../../src/notes";
+
 type ReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
 	{ readonly kind: "Reading" }
@@ -54,5 +55,3 @@ renderNote({
 
 // @ts-expect-error The public renderer accepts one object, never positional arguments.
 renderNote(reading, {});
-
-// type test = ReadingRenderContext<"de", "Lexeme", "VERB">["noteData"];

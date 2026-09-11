@@ -128,10 +128,17 @@ export type Reading<
 	L extends SupportedLanguage = SupportedLanguage,
 	LK extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
 	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
-> = {
-	lemma: Lemma<L, LK, LSK>;
-	emojiDescription: string;
-};
+> = ReadingForLemma<Lemma<L, LK, LSK>>;
+
+type ReadingForLemma<
+	TAllLemmas extends Lemma,
+	TLemma extends TAllLemmas = TAllLemmas,
+> = TLemma extends unknown
+	? {
+			lemma: TLemma;
+			emojiDescription: string;
+		}
+	: never;
 
 /** A fully totalized Lemma DTO for presentation-layer consumers. */
 export type PresentedLemma<

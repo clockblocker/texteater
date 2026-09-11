@@ -3,5 +3,6 @@
 	"compilerOptions": {
 		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.type-tests.tsbuildinfo"
 	},
-	"include": ["tests/types"]
+	"include": ["tests/types"],
+	"exclude": ["tests/**/*.test.ts"]
 }
