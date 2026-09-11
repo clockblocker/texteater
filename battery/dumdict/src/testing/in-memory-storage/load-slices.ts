@@ -1,5 +1,5 @@
 import type { SupportedLanguage } from "dumling/types";
-import { sameLemma } from "../../core/identity";
+import { readingLemma, sameLemma } from "../../core/identity";
 import {
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
@@ -112,7 +112,7 @@ export function loadReadingEntryContext<L extends SupportedLanguage>(
 	}
 
 	recordRead("existingLemma");
-	const existingBundle = state.findStoredBundleByLemma(reading.lemma);
+	const existingBundle = state.findStoredBundleByLemma(readingLemma(reading));
 	if (request.intent === "ensureReadingEntry")
 		return {
 			intent: request.intent,
@@ -173,7 +173,7 @@ export function loadReadingEntryContext<L extends SupportedLanguage>(
 	recordRead("pendingRelationsMatchingLemma");
 	const matchingPending = state
 		.allPendingRelations()
-		.filter((record) => pendingMatchesLemma(record, reading.lemma));
+		.filter((record) => pendingMatchesLemma(record, readingLemma(reading)));
 	recordRead("relationLemmas");
 	const relationLemmas = state.storedNotes.map(
 		({ lemmaRecord }) => lemmaRecord,

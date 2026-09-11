@@ -1,14 +1,17 @@
+import type { Prettify } from "common-utils";
 import type { Lemma, Reading } from "dumling/types";
 
 import type { GermanGrammaticalRoute } from "../schema/de-grammatical-resolution-inventory";
 
 export type CatalogMissReason = "MemberNotCatalogued" | "InventoryNotLoaded";
 
-export type CatalogMissBase = Readonly<{
+export type CatalogMissBase<
+	Route extends GermanGrammaticalRoute = GermanGrammaticalRoute,
+> = Readonly<{
 	decision: "CatalogMiss";
 	reason: CatalogMissReason;
 	language: "de";
-	route: GermanGrammaticalRoute;
+	route: Route;
 }>;
 
 export type LemmaCatalogMiss = CatalogMissBase &
@@ -17,11 +20,26 @@ export type LemmaCatalogMiss = CatalogMissBase &
 		candidate: Lemma<"de">;
 	}>;
 
-export type ReadingCatalogMiss = CatalogMissBase &
-	Readonly<{
-		stage: "Reading";
-		candidate: Reading<"de">;
-	}>;
+export type GermanReadingRoute<Value extends Reading<"de">> =
+	Value extends unknown
+		? Readonly<{
+				family: Value["lemma"]["family"];
+				kind: Value["lemma"]["kind"];
+			}>
+		: never;
+
+export type ReadingCatalogMissFor<Value extends Reading<"de">> =
+	Value extends unknown
+		? Prettify<
+				CatalogMissBase<GermanReadingRoute<Value>> &
+					Readonly<{
+						stage: "Reading";
+						candidate: Value;
+					}>
+			>
+		: never;
+
+export type ReadingCatalogMiss = ReadingCatalogMissFor<Reading<"de">>;
 
 export function routeFor(value: {
 	readonly family: GermanGrammaticalRoute["family"];
@@ -31,6 +49,12 @@ export function routeFor(value: {
 		family: value.family,
 		kind: value.kind,
 	}) as GermanGrammaticalRoute;
+}
+
+export function readingRouteFor<Value extends Reading<"de">>(
+	reading: Value,
+): GermanReadingRoute<Value> {
+	return routeFor(reading.lemma) as GermanReadingRoute<Value>;
 }
 
 export function lemmaRouteFor(value: {

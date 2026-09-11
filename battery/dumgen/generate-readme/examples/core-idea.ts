@@ -3,6 +3,7 @@
 import { buildDumgen } from "dumgen";
 import { buildKnowledgeDumgenRuntime } from "dumgen/knowledge-runtime";
 import { buildOpenAiFetchModelGenerator } from "dumgen/openai-fetch";
+import type { Reading } from "dumling/types";
 import * as Effect from "effect/Effect";
 
 const modelGenerator = buildOpenAiFetchModelGenerator();
@@ -24,7 +25,7 @@ const program = Effect.gen(function* () {
  });
  return yield* knowledge.generate.knowledge("de", {
   markedContext: grammatical.markedContext,
-  reading: { lemma: grammatical.attestation.surface.lemma, emojiDescription: reading.emojiDescription },
+  reading: { lemma: grammatical.attestation.surface.lemma, emojiDescription: reading.emojiDescription } as Reading<"de">,
   request: { transcription: null, definition: null, translations: { en: null } },
  });
 });

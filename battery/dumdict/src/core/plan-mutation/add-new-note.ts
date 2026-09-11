@@ -18,7 +18,12 @@ import {
 } from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
-import { lemmaFingerprint, sameLemma, sameReading } from "../identity";
+import {
+	lemmaFingerprint,
+	readingLemma,
+	sameLemma,
+	sameReading,
+} from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -125,7 +130,7 @@ export function planAddNewNote<L extends SupportedLanguage>(
 	request: AddNewNoteRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	const { reading, note } = request.draft;
-	const { lemma } = reading;
+	const lemma = readingLemma(reading);
 	if (!relationLanguagesMatch(request))
 		return {
 			status: "rejected",

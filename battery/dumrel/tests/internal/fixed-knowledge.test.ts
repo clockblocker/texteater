@@ -7,6 +7,7 @@ import {
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
 } from "dumling/fixed";
+import type { Reading } from "dumling/types";
 import {
 	DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
 	DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
@@ -623,7 +624,12 @@ describe("fixed German Knowledge", () => {
 	test("returns an explicit Miss for an unauthored Reading", () => {
 		const lemma = allFixedLemmaCatalogs()[0]?.members[0];
 		if (!lemma) throw new Error("Fixed DET fixture is missing.");
-		expect(fixedKnowledgeFor({ lemma, emojiDescription: "🆕" })).toEqual({
+		expect(
+			fixedKnowledgeFor({
+				lemma,
+				emojiDescription: "🆕",
+			} as Reading<"de">),
+		).toEqual({
 			decision: "Miss",
 			reason: "MemberNotCatalogued",
 		});

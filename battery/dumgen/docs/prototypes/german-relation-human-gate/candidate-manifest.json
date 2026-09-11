@@ -1,6 +1,6 @@
 {
 	"formatVersion": "german-relation-human-gate-candidate-v1",
-	"candidateId": "79363a952face460001aff403d87457494b44cb650566a10ab79cfa393a7c247",
+	"candidateId": "bd6c41beb8cfca4ec5ba65a51a89a46faa1bd5cace5a3491deffafd7de9135ff",
 	"state": "development-gate-failed",
 	"artifacts": [
 		{
@@ -13,7 +13,7 @@
 			"issue": 190,
 			"role": "adjudicated-development-corpus",
 			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/retained-cases.ts",
-			"sha256": "a6d43fd1fc1a05f795bc21d7ca26fb529594c8339170cc8ea5e99ab690045a78"
+			"sha256": "f78dd6b35b671cb2b1a2e3294d1814708bd47b760b0609f87106c9b715b737d3"
 		},
 		{
 			"issue": 191,

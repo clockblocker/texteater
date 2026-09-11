@@ -2,6 +2,7 @@ import type { SupportedLanguage } from "dumling/types";
 import { makeSurfaceId } from "../../dumling-id";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
 import type { EnsureOwnedSurfaceContext } from "../../storage";
+import { readingLemma } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 export function planEnsureOwnedSurface<L extends SupportedLanguage>(
@@ -17,10 +18,8 @@ export function planEnsureOwnedSurface<L extends SupportedLanguage>(
 	}
 
 	const { surface, note } = request.ownedSurface;
-	const surfaceId = makeSurfaceId(
-		request.reading.lemma.language as L,
-		surface,
-	);
+	const lemma = readingLemma(request.reading);
+	const surfaceId = makeSurfaceId(lemma.language as L, surface);
 	const alreadyStored = slice.existingOwnedSurfaces.some(
 		(entry) => entry.id === surfaceId,
 	);
@@ -36,7 +35,7 @@ export function planEnsureOwnedSurface<L extends SupportedLanguage>(
 						entry: {
 							id: surfaceId,
 							surface,
-							ownerLemma: request.reading.lemma,
+							ownerLemma: lemma,
 							...note,
 						},
 						preconditions: [
@@ -47,7 +46,7 @@ export function planEnsureOwnedSurface<L extends SupportedLanguage>(
 							{ kind: "readingExists", reading: request.reading },
 							{
 								kind: "lemmaExists",
-								lemma: request.reading.lemma,
+								lemma,
 							},
 							{ kind: "surfaceMissing", surfaceId },
 						],

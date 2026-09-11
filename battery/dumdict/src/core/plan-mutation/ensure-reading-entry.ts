@@ -2,6 +2,7 @@ import type { SupportedLanguage } from "dumling/types";
 import type { ReadingEntry } from "../../dto";
 import type { EnsureReadingEntryRequest } from "../../public";
 import type { EnsureReadingEntryContext } from "../../storage";
+import { readingLemma } from "../identity";
 import type { PlannedChangeOp } from "../planned-changes";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
@@ -43,7 +44,7 @@ export function planEnsureReadingEntry<L extends SupportedLanguage>(
 ): PlanMutationResult<L> | PlanMutationRejected {
 	const { entry } = request;
 	const { reading } = entry;
-	const { lemma } = reading;
+	const lemma = readingLemma(reading);
 	if (slice.existingReading) {
 		if (!sameValue(slice.existingReading, entry)) {
 			return {

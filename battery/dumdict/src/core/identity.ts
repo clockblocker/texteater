@@ -1,5 +1,5 @@
 import { readingFingerprint } from "dumling/id";
-import type { Reading, SupportedLanguage } from "dumling/types";
+import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
 
 type LemmaLike = {
 	canonicalForm: string;
@@ -42,4 +42,11 @@ export function sameReading<L extends SupportedLanguage>(
 	right: Reading<L>,
 ): boolean {
 	return readingFingerprint(left) === readingFingerprint(right);
+}
+
+/** Bridges TypeScript's generic conditional-type limitation at owner seams. */
+export function readingLemma<L extends SupportedLanguage>(
+	reading: Reading<L>,
+): Lemma<L> {
+	return reading.lemma as Lemma<L>;
 }

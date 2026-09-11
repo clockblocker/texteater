@@ -1,4 +1,6 @@
+import type { Prettify } from "common-utils";
 import { v } from "convex/values";
+import type { Reading } from "dumling/types";
 import type {
 	LemmaReference,
 	ProjectedSemanticRelations,
@@ -31,6 +33,7 @@ import {
 	loadRelationProjections,
 	relationProjectionValidator,
 } from "./relations";
+import type { UnitReadingFamily } from "./unitReadingFamilies";
 
 const MAX_PENDING_RELATIONS_PER_READING_NOTE = 100;
 const MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE = 200;
@@ -314,6 +317,50 @@ export async function loadSourceContextPage(
 	};
 }
 
+type GermanUnitReading = Extract<
+	Reading<"de">,
+	{ lemma: { family: UnitReadingFamily } }
+>;
+
+type ReadingNoteIdentity<Value extends Reading<"de">> = Value extends unknown
+	? Prettify<{
+			lemma: Prettify<{
+				language: Value["lemma"]["language"];
+				family: Value["lemma"]["family"];
+				kind: Value["lemma"]["kind"];
+				canonicalForm: Value["lemma"]["canonicalForm"];
+				coreFeatures: Value["lemma"]["coreFeatures"];
+				ownerKind: "Lemma";
+				ownerKey: string;
+			}>;
+			emojiDescription: Value["emojiDescription"];
+			ownerKind: "Reading";
+			ownerKey: string;
+			readingId: Id<"readings">;
+		}>
+	: never;
+
+function withReadingNoteIdentity<Value extends Reading<"de">>(
+	value: Value,
+	identity: {
+		readonly readingId: Id<"readings">;
+		readonly readingKey: string;
+		readonly lemmaKey: string;
+	},
+): ReadingNoteIdentity<Value> {
+	return {
+		ownerKind: "Reading",
+		ownerKey: identity.readingKey,
+		readingId: identity.readingId,
+		...value,
+		lemma: {
+			ownerKind: "Lemma",
+			ownerKey: identity.lemmaKey,
+			...value.lemma,
+		},
+	} as unknown as ReadingNoteIdentity<Value>;
+}
+
 function projectReadingIdentity(
 	reading: {
 		readonly _id: Id<"readings">;
@@ -328,19 +375,16 @@ function projectReadingIdentity(
 		readonly canonicalForm: string;
 		readonly coreFeatures: unknown;
 	},
-) {
+): ReadingNoteIdentity<GermanUnitReading> {
+	if (!isUnitReadingFamily(lemma.family)) {
+		throw new Error(`Unsupported Unit Reading family: ${lemma.family}.`);
+	}
 	const readingValue = projectReadingValue(reading, lemma);
-	return {
-		ownerKind: "Reading" as const,
-		ownerKey: reading.readingKey,
+	return withReadingNoteIdentity(readingValue as GermanUnitReading, {
 		readingId: reading._id,
-		...readingValue,
-		lemma: {
-			ownerKind: "Lemma" as const,
-			ownerKey: lemma.lemmaKey,
-			...readingValue.lemma,
-		},
-	};
+		readingKey: reading.readingKey,
+		lemmaKey: lemma.lemmaKey,
+	});
 }
 
 function withResolvedSemanticRelations(

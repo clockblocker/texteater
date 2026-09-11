@@ -1,3 +1,4 @@
+import type { Equal, Expect } from "common-utils";
 import type { FunctionReturnType } from "convex/server";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 
@@ -12,6 +13,14 @@ type ReadingNote = Extract<
 type ShadowNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
 	{ readonly kind: "Shadow" }
+>;
+
+type ConstructionReadingNoteIdentity = Extract<
+	ReadingNote["reading"],
+	{ lemma: { language: "de"; family: "Construction" } }
+>;
+export type ReadingNotesContainOnlyUnitReadings = Expect<
+	Equal<ConstructionReadingNoteIdentity, never>
 >;
 
 declare const reading: ReadingNote;
@@ -57,4 +66,8 @@ renderNote({
 // @ts-expect-error The public renderer accepts one object, never positional arguments.
 renderNote(reading, {});
 
-export type test = ReadingRenderContext<"de", "Lexeme", "VERB">["noteData"]["reading"];
+export type test = ReadingRenderContext<
+	"de",
+	"Lexeme",
+	"VERB"
+>["noteData"]["reading"];

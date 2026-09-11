@@ -2252,7 +2252,7 @@ function reading(
 			family,
 			kind,
 			coreFeatures,
-		} as Reading<"de">["lemma"],
+		},
 		emojiDescription,
-	};
+	} as Reading<"de">;
 }

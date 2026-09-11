@@ -13,7 +13,12 @@ import {
 	parseAsSegmentationResult,
 	unwrapDumgenParse,
 } from "../parsing/lightweight-parsers";
-import { lemmaRouteFor, routeFor } from "../production/contracts";
+import type { ReadingCatalogMissFor } from "../production/contracts";
+import {
+	lemmaRouteFor,
+	readingRouteFor,
+	routeFor,
+} from "../production/contracts";
 import { dispatchProduction } from "../production/dispatcher";
 import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import { projectGrammaticalResolutionInput } from "../schema/normalized-surface-projection";
@@ -449,7 +454,6 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 						if (!catalog) {
 							return catalogMissForReading(
 								"InventoryNotLoaded",
-								germanInput.lemma,
 								candidate,
 							);
 						}
@@ -465,7 +469,6 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 								)
 							: catalogMissForReading(
 									"MemberNotCatalogued",
-									germanInput.lemma,
 									candidate,
 								);
 					}),
@@ -541,7 +544,7 @@ function generateReadingCandidate(
 		return Object.freeze({
 			lemma: input.lemma,
 			emojiDescription: generated.emojiDescription,
-		});
+		}) as Reading<"de">;
 	});
 }
 function readingSuccess(
@@ -555,19 +558,18 @@ function readingSuccess(
 		emojiDescription: reading.emojiDescription,
 	});
 }
-function catalogMissForReading(
+function catalogMissForReading<Value extends Reading<"de">>(
 	reason: "MemberNotCatalogued" | "InventoryNotLoaded",
-	lemma: Lemma<"de">,
-	candidate: Reading<"de">,
-): ReadingResolution {
+	candidate: Value,
+): ReadingCatalogMissFor<Value> {
 	return Object.freeze({
 		decision: "CatalogMiss",
 		reason,
 		language: "de",
-		route: routeFor(lemma),
+		route: readingRouteFor(candidate),
 		stage: "Reading",
 		candidate,
-	});
+	}) as ReadingCatalogMissFor<Value>;
 }
 function sameLemma(left: Lemma, right: Lemma): boolean {
 	if (

@@ -1,3 +1,4 @@
+import type { Prettify } from "common-utils";
 import type { Reading } from "dumling/types";
 import type {
 	KnowledgeChange,
@@ -5,7 +6,10 @@ import type {
 	PendingSemanticRelation,
 	UnitShadow,
 } from "dumrel";
-import type { CatalogMissBase } from "../production/contracts";
+import type {
+	CatalogMissBase,
+	GermanReadingRoute,
+} from "../production/contracts";
 import type { RequestableRelation } from "../vocabulary";
 
 export type KnowledgeGenerationLanguage = "de";
@@ -56,12 +60,21 @@ export type KnowledgeGenerationSuccess = DeepReadonly<{
 	>;
 }>;
 
-export type ReadingKnowledgeCatalogMiss = CatalogMissBase &
-	Readonly<{
-		stage: "ReadingKnowledge";
-		reading: Reading<"de">;
-		missingRequest: KnowledgeGenerationRequest;
-	}>;
+export type ReadingKnowledgeCatalogMissFor<Value extends Reading<"de">> =
+	Value extends unknown
+		? Prettify<
+				CatalogMissBase<GermanReadingRoute<Value>> &
+					Readonly<{
+						stage: "ReadingKnowledge";
+						reading: Value;
+						missingRequest: KnowledgeGenerationRequest;
+					}>
+			>
+		: never;
+
+export type ReadingKnowledgeCatalogMiss = ReadingKnowledgeCatalogMissFor<
+	Reading<"de">
+>;
 
 export type KnowledgeGenerationResult =
 	| KnowledgeGenerationSuccess

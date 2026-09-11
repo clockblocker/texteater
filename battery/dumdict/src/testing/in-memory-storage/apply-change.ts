@@ -1,6 +1,6 @@
 import type { SupportedLanguage } from "dumling/types";
 import { applyDumdictKnowledgeChange } from "../../core/apply-reading-knowledge-change";
-import { sameReading } from "../../core/identity";
+import { readingLemma, sameReading } from "../../core/identity";
 import { samePendingSemanticRelationLocator } from "../../core/pending";
 import type { PlannedChangeOp } from "../../core/planned-changes";
 import type { DraftStorageState } from "./preconditions";
@@ -26,7 +26,7 @@ export function applyChange<L extends SupportedLanguage>(
 		case "createReading": {
 			const bundle = findDraftBundleByLemma(
 				draft,
-				change.entry.reading.lemma,
+				readingLemma(change.entry.reading),
 			);
 			if (!bundle) return false;
 			bundle.readingEntries.push(structuredClone(change.entry));

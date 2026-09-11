@@ -8,12 +8,13 @@ import type {
 	KnowledgeGenerationResult,
 	KnowledgeGenerationSuccess,
 	ReadingKnowledgeCatalogMiss,
+	ReadingKnowledgeCatalogMissFor,
 } from "../knowledge-generation/contracts";
 import {
 	parseAsKnowledgeGenerationResult,
 	unwrapDumgenParse,
 } from "../parsing/lightweight-parsers";
-import { routeFor } from "./contracts";
+import { readingRouteFor } from "./contracts";
 
 export function generateFixedKnowledge(
 	input: KnowledgeGenerationInput<"de">,
@@ -42,30 +43,38 @@ function generateFixedKnowledgeFromLookup(
 	lookup: FixedKnowledgeLookup,
 ): KnowledgeGenerationResult {
 	if (lookup.decision === "Miss") {
-		return Object.freeze({
-			decision: "CatalogMiss",
-			reason: lookup.reason,
-			language: "de",
-			route: routeFor(input.reading.lemma),
-			stage: "ReadingKnowledge",
-			reading: input.reading,
-			missingRequest: input.request,
-		}) satisfies import("../knowledge-generation/contracts").ReadingKnowledgeCatalogMiss;
+		return catalogMissForReadingKnowledge(
+			lookup.reason,
+			input.reading,
+			input.request,
+		);
 	}
 	const missingRequest = unauthoredRequest(input.request, lookup);
 	if (missingRequest) {
-		return Object.freeze({
-			decision: "CatalogMiss",
-			reason: "MemberNotCatalogued",
-			language: "de",
-			route: routeFor(input.reading.lemma),
-			stage: "ReadingKnowledge",
-			reading: input.reading,
+		return catalogMissForReadingKnowledge(
+			"MemberNotCatalogued",
+			input.reading,
 			missingRequest,
-		} satisfies ReadingKnowledgeCatalogMiss);
+		);
 	}
 
 	return parseFixedSuccess(input.request, lookup.knowledge);
+}
+
+function catalogMissForReadingKnowledge<Value extends Reading<"de">>(
+	reason: ReadingKnowledgeCatalogMiss["reason"],
+	reading: Value,
+	missingRequest: KnowledgeGenerationInput<"de">["request"],
+): ReadingKnowledgeCatalogMissFor<Value> {
+	return Object.freeze({
+		decision: "CatalogMiss",
+		reason,
+		language: "de",
+		route: readingRouteFor(reading),
+		stage: "ReadingKnowledge",
+		reading,
+		missingRequest,
+	}) as ReadingKnowledgeCatalogMissFor<Value>;
 }
 
 function unauthoredRequest(
