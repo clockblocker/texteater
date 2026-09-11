@@ -1,3 +1,4 @@
+import type { Brand } from "common-utils";
 import type { Attestation, Lemma } from "dumling/types";
 import type {
 	LemmaCatalogMiss,
@@ -12,10 +13,7 @@ export type EnabledSegmentationLanguage = "de" | "he";
 export type GrammaticalResolutionLanguage = "de";
 export type ReadingResolutionLanguage = "de";
 
-declare const segmentedSentenceIdBrand: unique symbol;
-export type SegmentedSentenceId = string & {
-	readonly [segmentedSentenceIdBrand]: "SegmentedSentenceId";
-};
+export type SegmentedSentenceId = Brand<string, "SegmentedSentenceId">;
 
 export type SegmentKind =
 	| "ResolvableText"

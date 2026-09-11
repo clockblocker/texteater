@@ -1,3 +1,4 @@
+import type { Equal } from "common-utils";
 import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { z } from "zod";
 
@@ -38,13 +39,6 @@ export type CanonicalGermanAttestationSchemaRegistry = {
 type CanonicalGermanAttestationSchemaForRoute<
 	Key extends CanonicalGermanAttestationRouteKey,
 > = CanonicalGermanAttestationSchemaRegistry[Key];
-
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
 
 export type ProveCanonicalGermanAttestationSchemaRoute<
 	Key extends CanonicalGermanAttestationRouteKey,

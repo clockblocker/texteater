@@ -1,3 +1,4 @@
+import type { Equal } from "common-utils";
 import type { z } from "zod";
 import type {
 	grammaticalInputSchema,
@@ -56,13 +57,6 @@ export type ActualDumgenValidationRouteOutputMap = {
 		CanonicalDumgenValidationSchemaForRoute<Key>
 	>;
 };
-
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
 
 type RouteBindingFailure = {
 	[Key in DumgenValidationRouteKey]: ActualDumgenValidationRouteOutputMap[Key] extends DumgenValidationRouteOutputMap[Key]

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import type { Expect, ExpectFalse } from "common-utils";
 import { z } from "zod/v3";
 import { buildReshapeCodec } from "../src/v3/codec-builders/build-reshape-codec";
 
@@ -9,9 +10,6 @@ type IsUnknown<T> = unknown extends T
 		? true
 		: false
 	: false;
-type Assert<T extends true> = T;
-type AssertFalse<T extends false> = T;
-
 const questionnaireServerSchema = z.object({
 	ans_to_q1: z.string(),
 	comment_to_q1_: z.string(),
@@ -89,10 +87,10 @@ const addQuestionnaireFieldValue: AddQuestionnaireFieldOutput["questionnaire"] =
 		q1: { answer: "Yes", comment: "ok" },
 		q2: { answer: "No", comment: "ok" },
 	};
-type _addQuestionnaireFieldIdIsNotUnknown = AssertFalse<
+type _addQuestionnaireFieldIdIsNotUnknown = ExpectFalse<
 	IsUnknown<AddQuestionnaireFieldOutput["id"]>
 >;
-type _addQuestionnaireFieldIdMatches = Assert<
+type _addQuestionnaireFieldIdMatches = Expect<
 	AddQuestionnaireFieldOutput["id"] extends number ? true : false
 >;
 // @ts-expect-error dropped source key should not be present in output
@@ -136,10 +134,10 @@ const addQuestionnaireFieldCodecFromVariableDropFields = buildReshapeCodec(
 type AddQuestionnaireFieldOutputFromVariableDropFields = z.infer<
 	typeof addQuestionnaireFieldCodecFromVariableDropFields.outputSchema
 >;
-type _addQuestionnaireVariableDropFieldsIdIsNotUnknown = AssertFalse<
+type _addQuestionnaireVariableDropFieldsIdIsNotUnknown = ExpectFalse<
 	IsUnknown<AddQuestionnaireFieldOutputFromVariableDropFields["id"]>
 >;
-type _addQuestionnaireVariableDropFieldsIdMatches = Assert<
+type _addQuestionnaireVariableDropFieldsIdMatches = Expect<
 	AddQuestionnaireFieldOutputFromVariableDropFields["id"] extends
 		| number
 		| undefined

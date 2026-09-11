@@ -1,4 +1,4 @@
-import type { LooseAutocomplete } from "./totat-typescript-helpers.js";
+import type { LooseAutocomplete } from "./total-typescript-helpers.js";
 
 export type ParsingPath = PropertyKey[];
 

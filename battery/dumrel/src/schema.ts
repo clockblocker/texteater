@@ -1,3 +1,4 @@
+import type { Expect } from "common-utils";
 import { supportedLanguages } from "dumling";
 import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { readingSchema } from "dumling/schema";
@@ -502,19 +503,18 @@ export const knowledgeChangeSchema = z.union([
 	}),
 ]);
 
-type Assert<Value extends true> = Value;
-type _RecursiveNodeMatchesDomain = Assert<
+type _RecursiveNodeMatchesDomain = Expect<
 	RecursiveMorphologicalTreeNode extends MorphologicalTreeNode ? true : false
 >;
-type _DomainNodeMatchesRecursiveSchema = Assert<
+type _DomainNodeMatchesRecursiveSchema = Expect<
 	MorphologicalTreeNode extends RecursiveMorphologicalTreeNode ? true : false
 >;
-type _RecursiveStructureMatchesDomain = Assert<
+type _RecursiveStructureMatchesDomain = Expect<
 	RecursiveMorphologicalTreeStructure extends MorphologicalTreeStructure
 		? true
 		: false
 >;
-type _DomainStructureMatchesRecursiveSchema = Assert<
+type _DomainStructureMatchesRecursiveSchema = Expect<
 	MorphologicalTreeStructure extends RecursiveMorphologicalTreeStructure
 		? true
 		: false

@@ -1,4 +1,8 @@
-import type { ParsingError as ParsingErrorType } from "common-utils";
+import type {
+	Equal,
+	Expect,
+	ParsingError as ParsingErrorType,
+} from "common-utils";
 import type { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import type { Attestation } from "dumling/types";
 import { z } from "zod";
@@ -41,27 +45,19 @@ const packageRootParsers = {
 } satisfies DumgenParserInterface;
 void packageRootParsers;
 
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
-type Assert<Value extends true> = Value;
-
 type ActualGermanAttestationOutput = z.output<
 	CanonicalGermanAttestationSchemaRegistry[CanonicalGermanAttestationRouteKey]
 >;
-type _ActualLeavesCoverGermanAttestations = Assert<
+type _ActualLeavesCoverGermanAttestations = Expect<
 	ActualGermanAttestationOutput extends Attestation<"de"> ? true : false
 >;
-type _GermanAttestationsAreCoveredByActualLeaves = Assert<
+type _GermanAttestationsAreCoveredByActualLeaves = Expect<
 	Attestation<"de"> extends ActualGermanAttestationOutput ? true : false
 >;
 
 type ActualGermanNounAttestationSchema =
 	(typeof canonicalGermanAttestationSchemas)["Citation/Lexeme/NOUN"];
-type _ActualGermanNounLeafIsBound = Assert<
+type _ActualGermanNounLeafIsBound = Expect<
 	ProveCanonicalGermanAttestationSchemaRoute<
 		"Citation/Lexeme/NOUN",
 		ActualGermanNounAttestationSchema
@@ -70,7 +66,7 @@ type _ActualGermanNounLeafIsBound = Assert<
 type ActualHebrewNounAttestationSchema = ReturnType<
 	typeof schemasFor.he.entity.Attestation.Citation.Lexeme.NOUN
 >;
-type _SwappedAttestationLanguageMustFail = Assert<
+type _SwappedAttestationLanguageMustFail = Expect<
 	// @ts-expect-error A Hebrew leaf cannot back the canonical German route.
 	ProveCanonicalGermanAttestationSchemaRoute<
 		"Citation/Lexeme/NOUN",
@@ -81,7 +77,7 @@ type _SwappedAttestationLanguageMustFail = Assert<
 const narrowedGermanNounAttestationSchema = canonicalGermanAttestationSchemas[
 	"Citation/Lexeme/NOUN"
 ].and(z.strictObject({ proofOnly: z.literal(true) }));
-type _NarrowedAttestationLeafMustFail = Assert<
+type _NarrowedAttestationLeafMustFail = Expect<
 	// @ts-expect-error A narrowed leaf cannot replace the exact canonical route.
 	ProveCanonicalGermanAttestationSchemaRoute<
 		"Citation/Lexeme/NOUN",
@@ -92,7 +88,7 @@ type DroppedGermanAttestationRouteKey = Exclude<
 	CanonicalGermanAttestationRouteKey,
 	"Citation/Lexeme/NOUN"
 >;
-type _DroppedAttestationLeafMustFail = Assert<
+type _DroppedAttestationLeafMustFail = Expect<
 	// @ts-expect-error Dropping an actual leaf must fail exact inventory equality.
 	Equal<
 		DroppedGermanAttestationRouteKey,
@@ -104,7 +100,7 @@ type ActualGermanSegmentedSentenceSchema =
 type ActualHebrewSegmentedSentenceSchema =
 	(typeof canonicalDumgenValidationSchemas)["parseAsSegmentedSentence:he"];
 
-type _ActualGermanSchemaIsBoundToItsRoute = Assert<
+type _ActualGermanSchemaIsBoundToItsRoute = Expect<
 	ProveCanonicalDumgenValidationSchemaRoute<
 		"parseAsSegmentedSentence:de",
 		ActualGermanSegmentedSentenceSchema
@@ -119,7 +115,7 @@ type _SwappedLanguageSchemaMustFail = ProveCanonicalDumgenValidationSchemaRoute<
 const narrowedGermanSegmentedSentenceSchema = canonicalDumgenValidationSchemas[
 	"parseAsSegmentedSentence:de"
 ].and(z.strictObject({ proofOnly: z.literal(true) }));
-type _NarrowedActualSchemaMustFail = Assert<
+type _NarrowedActualSchemaMustFail = Expect<
 	// @ts-expect-error A narrowed schema cannot replace the exact canonical route.
 	ProveCanonicalDumgenValidationSchemaRoute<
 		"parseAsSegmentedSentence:de",
@@ -130,7 +126,7 @@ type _NarrowedActualSchemaMustFail = Assert<
 const narrowedGermanGrammaticalResultSchema = canonicalDumgenValidationSchemas[
 	"parseAsGrammaticalResult:de"
 ].and(z.strictObject({ proofOnly: z.literal(true) }));
-type _NarrowedGrammaticalResultSchemaMustFail = Assert<
+type _NarrowedGrammaticalResultSchemaMustFail = Expect<
 	// @ts-expect-error The outer parser route cannot be rebound to a narrower schema.
 	ProveCanonicalDumgenValidationSchemaRoute<
 		"parseAsGrammaticalResult:de",
@@ -160,10 +156,10 @@ type FrozenOutputMismatch = {
 type AssertNever<Value extends never> = Value;
 type _ActualSchemasMatchIndependentFrozenOutputs =
 	AssertNever<FrozenOutputMismatch>;
-type _ActualSchemasMatchRouteDerivedOutputs = Assert<
+type _ActualSchemasMatchRouteDerivedOutputs = Expect<
 	Equal<CanonicalOutputMap, ActualDumgenValidationRouteOutputMap>
 >;
-type _ActualSchemaInputsMatchEveryRoute = Assert<
+type _ActualSchemaInputsMatchEveryRoute = Expect<
 	Equal<CanonicalInputMap, DumgenValidationRouteInputMap>
 >;
 

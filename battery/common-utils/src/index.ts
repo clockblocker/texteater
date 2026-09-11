@@ -20,9 +20,20 @@ export {
 	type UnrecognizedKeysIssue,
 } from "./parsing-error.js";
 export type {
+	Brand,
+	DistributiveOmit,
+	DistributivePick,
+	Equal,
+	Expect,
+	ExpectFalse,
+	IsAny,
 	LooseAutocomplete,
 	Prettify,
-} from "./totat-typescript-helpers.js";
+	PrettifyDeep,
+	Replace,
+	ReplaceMany,
+	ValueOf,
+} from "./total-typescript-helpers.js";
 export {
 	type ArrayConstraintCheck,
 	type ArtifactPrimitive,

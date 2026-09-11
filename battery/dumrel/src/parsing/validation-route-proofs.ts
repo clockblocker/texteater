@@ -1,3 +1,4 @@
+import type { Equal } from "common-utils";
 import type { z } from "zod";
 import type {
 	directSemanticRelationGraphEdgeSchema,
@@ -55,13 +56,6 @@ export type ProveCanonicalDumrelValidationSchemaRoute<
 	Key extends DumrelValidationRouteKey,
 	Schema extends CanonicalDumrelValidationSchemaForRoute<Key>,
 > = Equal<Schema, CanonicalDumrelValidationSchemaForRoute<Key>>;
-
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
 
 export type DumrelValidationRouteInputMap = {
 	[Key in DumrelValidationRouteKey]: z.input<

@@ -1,3 +1,4 @@
+import type { Equal } from "common-utils";
 import type { SupportedLanguage } from "dumling/types";
 import type {
 	knowledgeChangeSchema,
@@ -114,13 +115,6 @@ export type ActualDumdictValidationRouteOutputMap = {
 		CanonicalDumdictValidationSchemaForRoute<Key>
 	>;
 };
-
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
 
 type RouteBindingFailure = {
 	[Key in DumdictValidationRouteKey]: Equal<

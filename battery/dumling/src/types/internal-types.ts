@@ -1,3 +1,4 @@
+import type { Brand, PrettifyDeep } from "common-utils";
 import type {
 	AbstractAttestation,
 	AttestationMember as AbstractAttestationMember,
@@ -22,7 +23,6 @@ import type {
 	LemmaKind as CoreLemmaKind,
 	SurfaceKind as CoreSurfaceKind,
 } from "./core/enums.js";
-import type { PrettifyDeep } from "./core/helpers.js";
 import type {
 	Attestation,
 	EntityKind,
@@ -54,19 +54,20 @@ export type EntityForKind<
 export type DumlingDescriptorCsv<
 	L extends SupportedLanguage = SupportedLanguage,
 	K extends EntityKind = EntityKind,
-> = string & {
-	readonly __dumlingDescriptorCsvBrand: {
-		readonly language: L;
+> = Brand<
+	string,
+	{
 		readonly entityKind: K;
-	};
-};
+		readonly format: "DumlingDescriptorCsv";
+		readonly language: L;
+	}
+>;
 
 export type DumlingBase64Url<L extends SupportedLanguage = SupportedLanguage> =
-	string & {
-		readonly __dumlingBase64UrlBrand: {
-			readonly language: L;
-		};
-	};
+	Brand<
+		string,
+		{ readonly format: "DumlingBase64Url"; readonly language: L }
+	>;
 
 export type LemmaKindForSurfaceKind<
 	L extends SupportedLanguage,
@@ -99,15 +100,11 @@ export type LemmaForRoute<R extends LemmaRoute> =
 			: never
 		: never;
 
-declare const readingFingerprintBrand: unique symbol;
-
 /**
  * Stable structural identity for a Reading. The serialized format is a public
  * compatibility contract suitable for equality and indexed host lookup.
  */
-export type ReadingFingerprint = string & {
-	readonly [readingFingerprintBrand]: "Reading";
-};
+export type ReadingFingerprint = Brand<string, "ReadingFingerprint">;
 
 export type FeatureSetKind = "core" | "inflectional";
 

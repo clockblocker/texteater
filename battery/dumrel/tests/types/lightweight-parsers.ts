@@ -1,4 +1,8 @@
-import type { ParsingError as ParsingErrorType } from "common-utils";
+import type {
+	Equal,
+	Expect,
+	ParsingError as ParsingErrorType,
+} from "common-utils";
 import { z } from "zod";
 import type { DumrelParserInterface } from "../../../../tooling/dumrel-parser-interface";
 import { canonicalDumrelValidationSchemas } from "../../codegen/validation-artifacts";
@@ -40,13 +44,6 @@ const packageRootParsers = {
 
 void packageRootParsers;
 
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
-type Assert<Value extends true> = Value;
 type AssertNever<Value extends never> = Value;
 
 type ActualKnowledgeSettingsSchema =
@@ -54,7 +51,7 @@ type ActualKnowledgeSettingsSchema =
 type ActualKnowledgeRequestMaskSchema =
 	typeof canonicalDumrelValidationSchemas.parseAsKnowledgeRequestMask;
 
-type _ActualKnowledgeSettingsSchemaIsBoundToItsRoute = Assert<
+type _ActualKnowledgeSettingsSchemaIsBoundToItsRoute = Expect<
 	ProveCanonicalDumrelValidationSchemaRoute<
 		"parseAsKnowledgeSettings",
 		ActualKnowledgeSettingsSchema
@@ -99,7 +96,7 @@ type CanonicalOutputMismatch = {
 }[DumrelValidationRouteKey];
 type _ActualCanonicalSchemasMatchEveryFrozenParserOutput =
 	AssertNever<CanonicalOutputMismatch>;
-type _ActualCanonicalSchemaInputsMatchEveryFrozenRoute = Assert<
+type _ActualCanonicalSchemaInputsMatchEveryFrozenRoute = Expect<
 	Equal<CanonicalInputMap, DumrelValidationRouteInputMap>
 >;
 

@@ -1,3 +1,4 @@
+import type { Expect } from "common-utils";
 import type { AbstractFeatureName } from "../../types/abstract/features/features-catalog.js";
 
 /** Compact Zod-free runtime inventory used by presentation DTO adapters. */
@@ -50,8 +51,7 @@ export const presentedFeatureNames = [
 	"voice",
 ] as const satisfies readonly AbstractFeatureName[];
 
-type Assert<T extends true> = T;
-type _PresentedFeatureNamesAreComplete = Assert<
+type _PresentedFeatureNamesAreComplete = Expect<
 	[AbstractFeatureName, (typeof presentedFeatureNames)[number]] extends [
 		(typeof presentedFeatureNames)[number],
 		AbstractFeatureName,

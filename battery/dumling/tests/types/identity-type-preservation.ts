@@ -1,14 +1,9 @@
+import type { Equal, Expect } from "common-utils";
 import type { AttestationMember } from "../../src/types/internal-types.js";
 import type { Attestation, Lemma } from "../../src/types.js";
 
-type Assert<T extends true> = T;
-type Equal<Left, Right> =
-	(<T>() => T extends Left ? 1 : 2) extends <T>() => T extends Right ? 1 : 2
-		? true
-		: false;
-
 type DeNounLemma = Extract<Lemma<"de">, { family: "Lexeme"; kind: "NOUN" }>;
-type _LemmaIsStructural = Assert<
+type _LemmaIsStructural = Expect<
 	Equal<
 		keyof DeNounLemma,
 		"language" | "canonicalForm" | "family" | "kind" | "coreFeatures"
@@ -16,9 +11,9 @@ type _LemmaIsStructural = Assert<
 >;
 
 type DeAttestation = Attestation<"de">;
-type _AttestationHasOnlyOccurrenceEvidenceAndSurface = Assert<
+type _AttestationHasOnlyOccurrenceEvidenceAndSurface = Expect<
 	Equal<keyof DeAttestation, "members" | "realizationCoverage" | "surface">
 >;
-type _MembersArePairedEvidence = Assert<
+type _MembersArePairedEvidence = Expect<
 	Equal<DeAttestation["members"][number], AttestationMember>
 >;

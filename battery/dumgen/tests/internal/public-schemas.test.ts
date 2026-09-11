@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import type { Equal, Expect } from "common-utils";
 import type {
 	GrammaticalInput,
 	GrammaticalResult,
@@ -33,14 +34,6 @@ import {
 	DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES,
 	DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES,
 } from "../../src/schema/de-grammatical-resolution-inventory";
-
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
-type Expect<Value extends true> = Value;
 
 type _SegmentComesFromSchema = Expect<
 	Equal<Segment, z.output<typeof segmentSchema>>

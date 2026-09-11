@@ -1,4 +1,4 @@
-import type { LooseAutocomplete } from "common-utils";
+import type { Brand, LooseAutocomplete } from "common-utils";
 import type {
 	AbstractInflectionalFeaturesFor,
 	AbstractLemma,
@@ -191,12 +191,10 @@ export type SurfaceIdentity<L extends SupportedLanguage = SupportedLanguage> = {
 	inflectionalFeatures?: Record<string, unknown>;
 };
 
-export type DumlingCsv<L extends SupportedLanguage = SupportedLanguage> =
-	string & {
-		readonly __dumlingCsvBrand: {
-			readonly language: L;
-		};
-	};
+export type DumlingCsv<L extends SupportedLanguage = SupportedLanguage> = Brand<
+	string,
+	{ readonly format: "DumlingCsv"; readonly language: L }
+>;
 
 export type LemmaFamilyFor<L extends SupportedLanguage> =
 	L extends ConcreteLanguage

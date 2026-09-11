@@ -1,9 +1,7 @@
-declare const sourceSentenceBrand: unique symbol;
+import type { Brand } from "common-utils";
 
 /** Caller-delimited sentence text, before Dumgen segmentation and persistence. */
-export type SourceSentence = string & {
-	readonly [sourceSentenceBrand]: "SourceSentence";
-};
+export type SourceSentence = Brand<string, "SourceSentence">;
 
 const sentenceSegmenter = new Intl.Segmenter("de", {
 	granularity: "sentence",

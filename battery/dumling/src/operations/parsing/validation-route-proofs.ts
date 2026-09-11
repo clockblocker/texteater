@@ -1,3 +1,4 @@
+import type { Equal } from "common-utils";
 import type { z } from "zod";
 import type {
 	buildReadingSchemaFor,
@@ -95,10 +96,6 @@ export type ProveCanonicalDumlingValidationOutputRoute<
 	Output extends CanonicalDumlingValidationOutputForRoute<Key>,
 > = Equal<Output, CanonicalDumlingValidationOutputForRoute<Key>>;
 
-type Equal<Left, Right> =
-	(<T>() => T extends Left ? 1 : 2) extends <T>() => T extends Right ? 1 : 2
-		? true
-		: false;
 type RouteBindingFailure =
 	CanonicalDumlingValidationSchemaRoute extends infer Route
 		? Route extends DumlingValidationSchemaRoute<infer Key, infer Schema>

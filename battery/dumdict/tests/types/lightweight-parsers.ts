@@ -1,4 +1,8 @@
-import type { ParsingError as ParsingErrorType } from "common-utils";
+import type {
+	Equal,
+	Expect,
+	ParsingError as ParsingErrorType,
+} from "common-utils";
 import type {
 	Attestation,
 	Lemma,
@@ -38,14 +42,6 @@ const packageRootParsers = {
 } satisfies DumdictParserInterface;
 
 void packageRootParsers;
-
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
-type Assert<Value extends true> = Value;
 
 type CompatibilityOutput<Descriptor> =
 	Descriptor extends Readonly<{
@@ -91,7 +87,7 @@ type ProveCompatibilityOutput<Descriptor, Output> = Equal<
 	CompatibilityOutput<Descriptor>,
 	Output
 >;
-type _NarrowedCompatibilityOutputMustFail = Assert<
+type _NarrowedCompatibilityOutputMustFail = Expect<
 	// @ts-expect-error A generated route cannot be rebound to a narrowed output.
 	ProveCompatibilityOutput<
 		EnglishVerbLemmaDescriptor,
@@ -103,7 +99,7 @@ type ActualGermanLemmaRecordSchema =
 type ActualEnglishLemmaRecordSchema =
 	(typeof canonicalDumdictValidationSchemas)["parseAsLemmaRecord:en"];
 
-type _ActualGermanLemmaRecordIsBoundToItsRoute = Assert<
+type _ActualGermanLemmaRecordIsBoundToItsRoute = Expect<
 	ProveCanonicalDumdictValidationSchemaRoute<
 		"parseAsLemmaRecord:de",
 		ActualGermanLemmaRecordSchema
@@ -121,7 +117,7 @@ const narrowedGermanLemmaRecordSchema = canonicalDumdictValidationSchemas[
 ].extend({
 	proofOnly: z.literal(true),
 });
-type _NarrowedActualSchemaMustFail = Assert<
+type _NarrowedActualSchemaMustFail = Expect<
 	// @ts-expect-error A narrowed schema cannot replace the exact canonical route.
 	ProveCanonicalDumdictValidationSchemaRoute<
 		"parseAsLemmaRecord:de",
@@ -141,13 +137,13 @@ type CanonicalInputMap = {
 		(typeof canonicalDumdictValidationSchemas)[Key]
 	>;
 };
-type _ActualSchemasMatchIndependentFrozenOutputs = Assert<
+type _ActualSchemasMatchIndependentFrozenOutputs = Expect<
 	Equal<CanonicalOutputMap, DumdictValidationRouteOutputMap>
 >;
-type _ActualSchemaMapMatchesRouteDerivedOutputs = Assert<
+type _ActualSchemaMapMatchesRouteDerivedOutputs = Expect<
 	Equal<CanonicalOutputMap, ActualDumdictValidationRouteOutputMap>
 >;
-type _ActualSchemaInputsMatchEveryRoute = Assert<
+type _ActualSchemaInputsMatchEveryRoute = Expect<
 	Equal<CanonicalInputMap, DumdictValidationRouteInputMap>
 >;
 

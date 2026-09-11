@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import type { Expect, ExpectFalse, IsAny } from "common-utils";
 import { z } from "zod/v3";
 import { codecBuilder3 as codecBuilder } from "../src/v3";
 import {
@@ -74,16 +75,12 @@ type WidenedAdapterOutput = ReturnType<typeof widenedAdapter.fromInput>;
 type AdapterCounterpartyId =
 	WidenedAdapterOutput["counterparties"][number]["id"];
 
-type IsAny<T> = 0 extends 1 & T ? true : false;
-type Assert<T extends true> = T;
-type AssertFalse<T extends false> = T;
-
-type _counterpartyIdIsNotAny = AssertFalse<IsAny<CounterpartyId>>;
-type _counterpartyIdMatches = Assert<
+type _counterpartyIdIsNotAny = ExpectFalse<IsAny<CounterpartyId>>;
+type _counterpartyIdMatches = Expect<
 	CounterpartyId extends number | null ? true : false
 >;
-type _adapterCounterpartyIdIsNotAny = AssertFalse<IsAny<AdapterCounterpartyId>>;
-type _adapterCounterpartyIdMatches = Assert<
+type _adapterCounterpartyIdIsNotAny = ExpectFalse<IsAny<AdapterCounterpartyId>>;
+type _adapterCounterpartyIdMatches = Expect<
 	AdapterCounterpartyId extends number | null ? true : false
 >;
 

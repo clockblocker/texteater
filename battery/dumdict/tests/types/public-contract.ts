@@ -1,3 +1,4 @@
+import type { Equal, Expect } from "common-utils";
 import type { Reading as DumlingReading } from "dumling/types";
 import type { z } from "zod/v4";
 import type * as Dumdict from "../../src";
@@ -34,13 +35,6 @@ plan.changes.push();
 plan.changes[0]?.preconditions.push();
 
 declare const germanSchemas: DumdictSchema.DumdictSchemasFor<"de">;
-type Equal<Left, Right> =
-	(<Value>() => Value extends Left ? 1 : 2) extends <
-		Value,
-	>() => Value extends Right ? 1 : 2
-		? true
-		: false;
-type Expect<Value extends true> = Value;
 type Primitive = string | number | boolean | bigint | symbol | null | undefined;
 type DeepReadonly<Value> = Value extends Primitive
 	? Value

@@ -1,3 +1,4 @@
+import type { Replace, ReplaceMany } from "common-utils";
 import type {
 	AbstractAttestation,
 	AbstractLemma,
@@ -5,7 +6,6 @@ import type {
 	AbstractSurface,
 } from "../abstract/entities.js";
 import type { LemmaFamily } from "../core/enums.js";
-import type { Replace, ReplaceMany } from "../core/helpers.js";
 import type {
 	ConcreteLanguage,
 	LanguagePackFeatureRegistry,
