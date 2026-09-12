@@ -5,6 +5,7 @@ import {
 	Gender,
 	GrammaticalNumber,
 	Mood,
+	nonEmptyFeatureBagSchema,
 	Person,
 	Tense,
 	VerbForm,
@@ -75,20 +76,14 @@ export const DE_FEATURE_SCHEMA = {
 } as const;
 
 // Verbal
-const DeVerbalUnspecifiedFormFeatureBagSchema = z
-	.strictObject({
+const DeVerbalUnspecifiedFormFeatureBagSchema = nonEmptyFeatureBagSchema(
+	z.strictObject({
 		number: DE_FEATURE_SCHEMA.number.nullable(),
 		tense: DE_FEATURE_SCHEMA.tense.nullable(),
 		verbForm: z.null(),
 		voice: DE_FEATURE_SCHEMA.voice.nullable(),
-	})
-	.refine(
-		({ number, tense, voice }) =>
-			number !== null || tense !== null || voice !== null,
-		{
-			error: "Inflectional Feature Bag must contain a marked feature",
-		},
-	);
+	}),
+);
 
 const DeVerbalImperativeFeatureBagSchema = z.strictObject({
 	mood: DE_FEATURE_SCHEMA.imperativeMood,
