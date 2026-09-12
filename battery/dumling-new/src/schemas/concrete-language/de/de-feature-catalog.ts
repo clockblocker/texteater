@@ -2,11 +2,18 @@ import { z } from "zod";
 import { UNIVERSAL_FEATURE_SCHEMA } from "../../universal/features/catalog.js";
 import {
 	Aspect,
+	Case,
+	Definite,
+	Degree,
+	ExtPos,
 	Gender,
 	GrammaticalNumber,
 	Mood,
+	NumType,
 	nonEmptyFeatureBagSchema,
 	Person,
+	Polite,
+	PronType,
 	Tense,
 	VerbForm,
 	VerbType,
@@ -56,6 +63,45 @@ const DeLexicallyReflexiveSchema = UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive;
 const DeModalVerbTypeSchema = UNIVERSAL_FEATURE_SCHEMA.verbType.extract([
 	VerbType.Mod,
 ]);
+const DeCaseSchema = UNIVERSAL_FEATURE_SCHEMA.case.extract([
+	Case.Acc,
+	Case.Dat,
+	Case.Gen,
+	Case.Nom,
+]);
+const DeDefiniteSchema = UNIVERSAL_FEATURE_SCHEMA.definite.extract([
+	Definite.Def,
+	Definite.Ind,
+]);
+const DeDegreeSchema = UNIVERSAL_FEATURE_SCHEMA.degree.extract([
+	Degree.Cmp,
+	Degree.Pos,
+	Degree.Sup,
+]);
+const DeDeterminerExtPosSchema = UNIVERSAL_FEATURE_SCHEMA.extPos.extract([
+	ExtPos.ADV,
+	ExtPos.DET,
+]);
+const DeNumTypeSchema = UNIVERSAL_FEATURE_SCHEMA.numType.extract([
+	NumType.Card,
+	NumType.Ord,
+]);
+const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract([
+	Polite.Form,
+	Polite.Infm,
+]);
+const DeDeterminerPronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
+	PronType.Art,
+	PronType.Dem,
+	PronType.Emp,
+	PronType.Exc,
+	PronType.Ind,
+	PronType.Int,
+	PronType.Neg,
+	PronType.Prs,
+	PronType.Rel,
+	PronType.Tot,
+]);
 
 export const DE_FEATURE_SCHEMA = {
 	aspect: DeAspectSchema,
@@ -73,6 +119,15 @@ export const DE_FEATURE_SCHEMA = {
 	hasSepPrefix: DeHasSepPrefixSchema,
 	lexicallyReflexive: DeLexicallyReflexiveSchema,
 	modalVerbType: DeModalVerbTypeSchema,
+	case: DeCaseSchema,
+	definite: DeDefiniteSchema,
+	degree: DeDegreeSchema,
+	determinerExtPos: DeDeterminerExtPosSchema,
+	foreign: UNIVERSAL_FEATURE_SCHEMA.foreign,
+	numType: DeNumTypeSchema,
+	polite: DePoliteSchema,
+	poss: UNIVERSAL_FEATURE_SCHEMA.poss,
+	determinerPronType: DeDeterminerPronTypeSchema,
 } as const;
 
 // Verbal
