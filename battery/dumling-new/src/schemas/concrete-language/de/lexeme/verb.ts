@@ -2,56 +2,58 @@ import type { Assert } from "common-utils";
 import { z } from "zod";
 import {
 	Aspect,
-	DUMLING_FEATURE_SCHEMA,
 	FeatureBagKind,
 	Gender,
 	GrammaticalNumber,
-	type IsUniversalFeatureBag,
+	type IsUniversalFeatureBags,
 	Mood,
 	Person,
 	Tense,
+	UNIVERSAL_FEATURE_SCHEMA,
 	VerbForm,
 	VerbType,
 	Voice,
 } from "../../../universal/index.js";
 
-const DeVerbAspectSchema = DUMLING_FEATURE_SCHEMA.aspect.extract([Aspect.Perf]);
-const DeVerbGenderSchema = DUMLING_FEATURE_SCHEMA.gender.extract([
+const DeVerbAspectSchema = UNIVERSAL_FEATURE_SCHEMA.aspect.extract([
+	Aspect.Perf,
+]);
+const DeVerbGenderSchema = UNIVERSAL_FEATURE_SCHEMA.gender.extract([
 	Gender.Fem,
 	Gender.Masc,
 	Gender.Neut,
 ]);
-const DeVerbMoodSchema = DUMLING_FEATURE_SCHEMA.mood.extract([
+const DeVerbMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract([
 	Mood.Ind,
 	Mood.Sub,
 ]);
-const DeVerbImperativeMoodSchema = DUMLING_FEATURE_SCHEMA.mood.extract([
+const DeVerbImperativeMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract([
 	Mood.Imp,
 ]);
-const DeVerbNumberSchema = DUMLING_FEATURE_SCHEMA.number.extract([
+const DeVerbNumberSchema = UNIVERSAL_FEATURE_SCHEMA.number.extract([
 	GrammaticalNumber.Plur,
 	GrammaticalNumber.Sing,
 ]);
-const DeVerbPersonSchema = DUMLING_FEATURE_SCHEMA.person.extract([
+const DeVerbPersonSchema = UNIVERSAL_FEATURE_SCHEMA.person.extract([
 	Person["1"],
 	Person["2"],
 	Person["3"],
 ]);
-const DeVerbTenseSchema = DUMLING_FEATURE_SCHEMA.tense.extract([
+const DeVerbTenseSchema = UNIVERSAL_FEATURE_SCHEMA.tense.extract([
 	Tense.Past,
 	Tense.Pres,
 ]);
-const DeVerbVoiceSchema = DUMLING_FEATURE_SCHEMA.voice.extract([Voice.Pass]);
-const DeVerbFiniteFormSchema = DUMLING_FEATURE_SCHEMA.verbForm.extract([
+const DeVerbVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract([Voice.Pass]);
+const DeVerbFiniteFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 	VerbForm.Fin,
 ]);
-const DeVerbInfinitiveFormSchema = DUMLING_FEATURE_SCHEMA.verbForm.extract([
+const DeVerbInfinitiveFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 	VerbForm.Inf,
 ]);
-const DeVerbParticipleFormSchema = DUMLING_FEATURE_SCHEMA.verbForm.extract([
+const DeVerbParticipleFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 	VerbForm.Part,
 ]);
-const DeModalVerbTypeSchema = DUMLING_FEATURE_SCHEMA.verbType.extract([
+const DeModalVerbTypeSchema = UNIVERSAL_FEATURE_SCHEMA.verbType.extract([
 	VerbType.Mod,
 ]);
 
@@ -109,9 +111,9 @@ const DeVerbParticipleFeatureBagSchema = z.strictObject({
 });
 
 const DeVerbCoreFeatureBagSchema = z.strictObject({
-	hasGovPrep: DUMLING_FEATURE_SCHEMA.hasGovPrep.nullable(),
-	hasSepPrefix: DUMLING_FEATURE_SCHEMA.hasSepPrefix.nullable(),
-	lexicallyReflexive: DUMLING_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
+	hasGovPrep: UNIVERSAL_FEATURE_SCHEMA.hasGovPrep.nullable(),
+	hasSepPrefix: UNIVERSAL_FEATURE_SCHEMA.hasSepPrefix.nullable(),
+	lexicallyReflexive: UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
 	verbType: DeModalVerbTypeSchema.nullable(),
 });
 
@@ -123,22 +125,13 @@ const DeVerbInflectionalFeatureBagSchema = z.union([
 	DeVerbParticipleFeatureBagSchema,
 ]);
 
-type DeVerbCoreFeatureBag = z.infer<typeof DeVerbCoreFeatureBagSchema>;
-type DeVerbInflectionalFeatureBag = z.infer<
-	typeof DeVerbInflectionalFeatureBagSchema
->;
-
-type _DeVerbCoreFeatureBagIsUniversal = Assert<
-	IsUniversalFeatureBag<DeVerbCoreFeatureBag>
->;
-
-type _DeVerbInflectionalFeatureBagIsUniversal = Assert<
-	IsUniversalFeatureBag<DeVerbInflectionalFeatureBag>
->;
-
 export const DeVerbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: DeVerbCoreFeatureBagSchema,
 	[FeatureBagKind.Inflectional]: DeVerbInflectionalFeatureBagSchema,
 });
 
 export type DeVerbFeatureBags = z.infer<typeof DeVerbFeatureBagsSchema>;
+
+type _DeVerbFeatureBagsAreUniversal = Assert<
+	IsUniversalFeatureBags<DeVerbFeatureBags>
+>;

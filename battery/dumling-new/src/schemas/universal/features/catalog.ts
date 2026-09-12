@@ -5,6 +5,7 @@ import { HasGovPrepSchema } from "./custom/governed-preposition.js";
 import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
+import { FeatureBagKind } from "./feature-bag-kind.js";
 import { AbbrSchema } from "./ud/abbr.js";
 import { AdpTypeSchema } from "./ud/adp-type.js";
 import { AnimacySchema } from "./ud/animacy.js";
@@ -44,7 +45,7 @@ import { VerbFormSchema } from "./ud/verb-form.js";
 import { VerbTypeSchema } from "./ud/verb-type.js";
 import { VoiceSchema } from "./ud/voice.js";
 
-export type IsUniversalFeatureBag<Bag> = false extends (
+type IsUniversalFeatureBag<Bag> = false extends (
 	Bag extends unknown
 		? IsUniversalFeatureBagMember<Bag>
 		: never
@@ -52,7 +53,24 @@ export type IsUniversalFeatureBag<Bag> = false extends (
 	? false
 	: true;
 
-export const DUMLING_FEATURE_SCHEMA = {
+export type IsUniversalFeatureBags<Bags> =
+	Exclude<keyof Bags, FeatureBagKind> extends never
+		? Bags extends { [FeatureBagKind.Core]: infer Core }
+			? IsUniversalFeatureBag<Core> extends true
+				? typeof FeatureBagKind.Inflectional extends keyof Bags
+					? Bags extends {
+							[FeatureBagKind.Inflectional]?: infer Inflectional;
+						}
+						? IsUniversalFeatureBag<
+								Exclude<Inflectional, undefined>
+							>
+						: false
+					: true
+				: false
+			: false
+		: false;
+
+export const UNIVERSAL_FEATURE_SCHEMA = {
 	abbr: AbbrSchema,
 	adpType: AdpTypeSchema,
 	animacy: AnimacySchema,
@@ -102,8 +120,8 @@ export const DUMLING_FEATURE_SCHEMA = {
 } as const;
 
 type UniversalFeatureAtoms = {
-	[Name in keyof typeof DUMLING_FEATURE_SCHEMA]: z.infer<
-		(typeof DUMLING_FEATURE_SCHEMA)[Name]
+	[Name in keyof typeof UNIVERSAL_FEATURE_SCHEMA]: z.infer<
+		(typeof UNIVERSAL_FEATURE_SCHEMA)[Name]
 	>;
 };
 
@@ -117,6 +135,11 @@ type UniversalFeatureBag = {
 	[Name in UniversalFeatureName]?: FeatureValueSet<
 		UniversalFeatureValue<Name>
 	> | null;
+};
+
+export type UniversalFeatureBags = {
+	[FeatureBagKind.Core]: UniversalFeatureBag;
+	[FeatureBagKind.Inflectional]?: UniversalFeatureBag;
 };
 
 type IsUniversalFeatureBagMember<Bag> =
