@@ -93,6 +93,7 @@
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun test",
 		"test:package": "bun test ./tests/internal/package-hygine/package-entrypoints.check.ts",
+		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config dependency-cruiser.cjs --ts-config tsconfig.json -- src generate-readme",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
