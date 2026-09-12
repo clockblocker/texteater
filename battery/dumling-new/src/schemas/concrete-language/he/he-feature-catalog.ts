@@ -24,6 +24,11 @@ const HeNumberSchema = UNIVERSAL_FEATURE_SCHEMA.number.extract([
 	GrammaticalNumber.Plur,
 	GrammaticalNumber.Sing,
 ]);
+const HeNumberWithDualSchema = UNIVERSAL_FEATURE_SCHEMA.number.extract([
+	GrammaticalNumber.Dual,
+	GrammaticalNumber.Plur,
+	GrammaticalNumber.Sing,
+]);
 const HeMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract([Mood.Imp]);
 const HePersonSchema = UNIVERSAL_FEATURE_SCHEMA.person.extract([
 	Person["1"],
@@ -49,6 +54,7 @@ const HeVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract([
 ]);
 
 export const HE_FEATURE_SCHEMA = {
+	...UNIVERSAL_FEATURE_SCHEMA,
 	abbr: HeAbbrSchema,
 	definite: HeDefiniteSchema,
 	gender: HeGenderSchema,
@@ -56,6 +62,7 @@ export const HE_FEATURE_SCHEMA = {
 	hebExistential: UNIVERSAL_FEATURE_SCHEMA.hebExistential,
 	mood: HeMoodSchema,
 	number: HeNumberSchema,
+	numberWithDual: HeNumberWithDualSchema,
 	person: HePersonSchema,
 	polarity: HePolaritySchema,
 	tense: HeTenseSchema,

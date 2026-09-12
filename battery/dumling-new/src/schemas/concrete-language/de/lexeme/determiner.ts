@@ -12,7 +12,7 @@ const DeDeterminerCoreFeatureBagSchema = z.strictObject({
 	definite: DE_FEATURE_SCHEMA.definite.nullable(),
 	extPos: DE_FEATURE_SCHEMA.determinerExtPos.nullable(),
 	foreign: DE_FEATURE_SCHEMA.foreign.nullable(),
-	numType: DE_FEATURE_SCHEMA.numType.nullable(),
+	numType: DE_FEATURE_SCHEMA.determinerNumType.nullable(),
 	person: DE_FEATURE_SCHEMA.person.nullable(),
 	polite: DE_FEATURE_SCHEMA.polite.nullable(),
 	poss: DE_FEATURE_SCHEMA.poss.nullable(),

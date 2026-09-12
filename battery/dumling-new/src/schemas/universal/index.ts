@@ -17,6 +17,7 @@ export { LexicallyReflexive } from "./features/custom/lexically-reflexive.js";
 export { Phrasal } from "./features/custom/phrasal.js";
 export type { HasSepPrefix } from "./features/custom/separable.js";
 export * from "./features/feature-bag-kind.js";
+export * from "./features/feature-bag-schema.js";
 export * from "./features/feature-value-set.js";
 export * from "./features/non-empty-feature-bag.js";
 export { Abbr } from "./features/ud/abbr.js";

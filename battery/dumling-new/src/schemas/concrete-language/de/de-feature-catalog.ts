@@ -104,9 +104,10 @@ const DeDeterminerPronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
 ]);
 
 export const DE_FEATURE_SCHEMA = {
+	...UNIVERSAL_FEATURE_SCHEMA,
 	aspect: DeAspectSchema,
 	gender: DeGenderSchema,
-	mood: DeMoodSchema,
+	finiteMood: DeMoodSchema,
 	imperativeMood: DeImperativeMoodSchema,
 	number: DeNumberSchema,
 	person: DePersonSchema,
@@ -124,7 +125,7 @@ export const DE_FEATURE_SCHEMA = {
 	degree: DeDegreeSchema,
 	determinerExtPos: DeDeterminerExtPosSchema,
 	foreign: UNIVERSAL_FEATURE_SCHEMA.foreign,
-	numType: DeNumTypeSchema,
+	determinerNumType: DeNumTypeSchema,
 	polite: DePoliteSchema,
 	poss: UNIVERSAL_FEATURE_SCHEMA.poss,
 	determinerPronType: DeDeterminerPronTypeSchema,
@@ -150,7 +151,7 @@ const DeVerbalImperativeFeatureBagSchema = z.strictObject({
 });
 
 const DeVerbalFiniteFeatureBagSchema = z.strictObject({
-	mood: DE_FEATURE_SCHEMA.mood.nullable(),
+	mood: DE_FEATURE_SCHEMA.finiteMood.nullable(),
 	number: DE_FEATURE_SCHEMA.number.nullable(),
 	person: DE_FEATURE_SCHEMA.person.nullable(),
 	tense: DE_FEATURE_SCHEMA.tense.nullable(),
