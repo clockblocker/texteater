@@ -11,10 +11,5 @@
 			"dumling/vocabulary": ["./src/vocabulary.ts"]
 		}
 	},
-	"include": [
-		"codegen/**/*.ts",
-		"generate-readme/**/*.ts",
-		"src/**/*.ts",
-		"tests/**/*.ts"
-	]
+	"include": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
 }

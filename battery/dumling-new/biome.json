@@ -4,13 +4,7 @@
 		"includes": ["!!dist", "!!node_modules", "!!.astro", "!src/lu/test.ts"]
 	},
 	"formatter": {
-		"includes": [
-			"**",
-			"!generate-readme/examples/**/*.ts",
-			"!src/generated/.validation-artifacts.json"
-		]
+		"includes": ["**", "!src/generated/.validation-artifacts.json"]
 	},
-	"linter": {
-		"includes": ["**", "!generate-readme/examples/**/*.ts"]
-	}
+	"linter": { "includes": ["**"] }
 }

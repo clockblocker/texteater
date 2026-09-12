@@ -68,7 +68,6 @@
 	},
 	"files": [
 		"dist",
-		"README.md",
 		"LICENSE"
 	],
 	"engines": {
@@ -84,16 +83,15 @@
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
-		"generate": "bun run generate:validation && bun run generate:readme",
+		"generate": "bun run generate:validation",
 		"generate:validation": "bun run codegen/generate-validation-artifacts.ts",
 		"generate:validation:check": "bun run codegen/generate-validation-artifacts.ts --check",
-		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",
-		"prepack": "bun run generate:readme && bun run build",
+		"prepack": "bun run build",
 		"test": "bun test",
 		"test:package": "bun test ./tests/internal/package-hygine/package-entrypoints.check.ts",
-		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config dependency-cruiser.cjs --ts-config tsconfig.json -- src generate-readme",
+		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config dependency-cruiser.cjs --ts-config tsconfig.json -- src",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {

@@ -45,31 +45,6 @@ import { VerbFormSchema } from "./ud/verb-form.js";
 import { VerbTypeSchema } from "./ud/verb-type.js";
 import { VoiceSchema } from "./ud/voice.js";
 
-type IsUniversalFeatureBag<Bag> = false extends (
-	Bag extends unknown
-		? IsUniversalFeatureBagMember<Bag>
-		: never
-)
-	? false
-	: true;
-
-export type IsUniversalFeatureBags<Bags> =
-	Exclude<keyof Bags, FeatureBagKind> extends never
-		? Bags extends { [FeatureBagKind.Core]: infer Core }
-			? IsUniversalFeatureBag<Core> extends true
-				? typeof FeatureBagKind.Inflectional extends keyof Bags
-					? Bags extends {
-							[FeatureBagKind.Inflectional]?: infer Inflectional;
-						}
-						? IsUniversalFeatureBag<
-								Exclude<Inflectional, undefined>
-							>
-						: false
-					: true
-				: false
-			: false
-		: false;
-
 export const UNIVERSAL_FEATURE_SCHEMA = {
 	abbr: AbbrSchema,
 	adpType: AdpTypeSchema,
@@ -138,15 +113,40 @@ type UniversalFeatureValue<Name extends UniversalFeatureName> =
 
 type FeatureValueSet<Value> = Value | readonly [Value, ...Value[]];
 
-type UniversalFeatureBag = {
-	[Name in UniversalFeatureName]?: FeatureValueSet<
-		UniversalFeatureValue<Name>
-	> | null;
-};
+type IsUniversalFeatureBag<Bag> = false extends (
+	Bag extends unknown
+		? IsUniversalFeatureBagMember<Bag>
+		: never
+)
+	? false
+	: true;
 
 type IsUniversalFeatureBagMember<Bag> =
 	Exclude<keyof Bag, UniversalFeatureName> extends never
 		? Bag extends UniversalFeatureBag
 			? true
+			: false
+		: false;
+
+export type UniversalFeatureBag = {
+	[Name in UniversalFeatureName]?: FeatureValueSet<
+		UniversalFeatureValue<Name>
+	> | null;
+};
+
+export type IsUniversalFeatureBags<Bags> =
+	Exclude<keyof Bags, FeatureBagKind> extends never
+		? Bags extends { [FeatureBagKind.Core]: infer Core }
+			? IsUniversalFeatureBag<Core> extends true
+				? typeof FeatureBagKind.Inflectional extends keyof Bags
+					? Bags extends {
+							[FeatureBagKind.Inflectional]?: infer Inflectional;
+						}
+						? IsUniversalFeatureBag<
+								Exclude<Inflectional, undefined>
+							>
+						: false
+					: true
+				: false
 			: false
 		: false;

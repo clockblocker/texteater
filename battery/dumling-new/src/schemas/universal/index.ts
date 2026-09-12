@@ -6,7 +6,10 @@ export * from "./core/unit-kind/lemma-kind.js";
 export * from "./core/unit-kind/morpheme-kind.js";
 export * from "./core/unit-kind/phraseme-kind.js";
 export * from "./core/unit-kind/surface-kind.js";
-export * from "./features/catalog.js";
+export type {
+	IsUniversalFeatureBags,
+	UniversalFeatureBags,
+} from "./features/catalog.js";
 export { DiscourseFormulaRole } from "./features/custom/discourse-formula-role.js";
 export { GovernedCase } from "./features/custom/governed-case.js";
 export type { HasGovPrep } from "./features/custom/governed-preposition.js";
@@ -14,6 +17,7 @@ export { LexicallyReflexive } from "./features/custom/lexically-reflexive.js";
 export { Phrasal } from "./features/custom/phrasal.js";
 export type { HasSepPrefix } from "./features/custom/separable.js";
 export * from "./features/feature-bag-kind.js";
+export * from "./features/feature-value-set.js";
 export { Abbr } from "./features/ud/abbr.js";
 export { AdpType } from "./features/ud/adp-type.js";
 export { Animacy } from "./features/ud/animacy.js";
