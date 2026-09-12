@@ -2,8 +2,10 @@ import { z } from "zod";
 import {
 	Aspect,
 	DUMLING_FEATURE_SCHEMA,
+	FeatureBagKind,
 	Gender,
 	GrammaticalNumber,
+	type IsUniversalFeatureBag,
 	Mood,
 	Person,
 	Tense,
@@ -37,7 +39,7 @@ const DeVerbTenseSchema = DUMLING_FEATURE_SCHEMA.tense.extract([
 ]);
 const DeVerbVoiceSchema = DUMLING_FEATURE_SCHEMA.voice.extract([Voice.Pass]);
 
-const DeVerbUnspecifiedFormFeaturesSchema = z
+const DeVerbUnspecifiedFormFeatureBagSchema = z
 	.strictObject({
 		number: DeVerbNumberSchema.nullable(),
 		tense: DeVerbTenseSchema.nullable(),
@@ -52,7 +54,7 @@ const DeVerbUnspecifiedFormFeaturesSchema = z
 		},
 	);
 
-const DeVerbImperativeFeaturesSchema = z.strictObject({
+const DeVerbImperativeFeatureBagSchema = z.strictObject({
 	mood: DUMLING_FEATURE_SCHEMA.mood.extract([Mood.Imp]),
 	number: DeVerbNumberSchema.nullable(),
 	person: DeVerbPersonSchema.nullable(),
@@ -61,7 +63,7 @@ const DeVerbImperativeFeaturesSchema = z.strictObject({
 	voice: DeVerbVoiceSchema.nullable(),
 });
 
-const DeVerbFiniteFeaturesSchema = z.strictObject({
+const DeVerbFiniteFeatureBagSchema = z.strictObject({
 	mood: DeVerbMoodSchema.nullable(),
 	number: DeVerbNumberSchema.nullable(),
 	person: DeVerbPersonSchema.nullable(),
@@ -70,7 +72,7 @@ const DeVerbFiniteFeaturesSchema = z.strictObject({
 	voice: DeVerbVoiceSchema.nullable(),
 });
 
-const DeVerbInfinitiveFeaturesSchema = z.strictObject({
+const DeVerbInfinitiveFeatureBagSchema = z.strictObject({
 	mood: z.null(),
 	number: DeVerbNumberSchema.nullable(),
 	person: z.null(),
@@ -79,7 +81,7 @@ const DeVerbInfinitiveFeaturesSchema = z.strictObject({
 	voice: DeVerbVoiceSchema.nullable(),
 });
 
-const DeVerbParticipleFeaturesSchema = z.strictObject({
+const DeVerbParticipleFeatureBagSchema = z.strictObject({
 	aspect: DeVerbAspectSchema.nullable(),
 	gender: DeVerbGenderSchema.nullable(),
 	mood: z.null(),
@@ -90,7 +92,7 @@ const DeVerbParticipleFeaturesSchema = z.strictObject({
 	voice: DeVerbVoiceSchema.nullable(),
 });
 
-const DeVerbCoreFeaturesSchema = z.strictObject({
+export const DeVerbCoreFeatureBagSchema = z.strictObject({
 	hasGovPrep: DUMLING_FEATURE_SCHEMA.hasGovPrep.nullable(),
 	hasSepPrefix: DUMLING_FEATURE_SCHEMA.hasSepPrefix.nullable(),
 	lexicallyReflexive: DUMLING_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
@@ -99,17 +101,31 @@ const DeVerbCoreFeaturesSchema = z.strictObject({
 		.nullable(),
 });
 
-const DeVerbInflectionalFeaturesSchema = z.union([
-	DeVerbUnspecifiedFormFeaturesSchema,
-	DeVerbImperativeFeaturesSchema,
-	DeVerbFiniteFeaturesSchema,
-	DeVerbInfinitiveFeaturesSchema,
-	DeVerbParticipleFeaturesSchema,
+export const DeVerbInflectionalFeatureBagSchema = z.union([
+	DeVerbUnspecifiedFormFeatureBagSchema,
+	DeVerbImperativeFeatureBagSchema,
+	DeVerbFiniteFeatureBagSchema,
+	DeVerbInfinitiveFeatureBagSchema,
+	DeVerbParticipleFeatureBagSchema,
 ]);
 
-export const DeVerbFeaturesSchema = z.strictObject({
-	core: DeVerbCoreFeaturesSchema,
-	inflectional: DeVerbInflectionalFeaturesSchema,
+export const DeVerbFeatureBagsSchema = z.strictObject({
+	[FeatureBagKind.Core]: DeVerbCoreFeatureBagSchema,
+	[FeatureBagKind.Inflectional]: DeVerbInflectionalFeatureBagSchema,
 });
 
-export type DeVerbFeatures = z.infer<typeof DeVerbFeaturesSchema>;
+export type DeVerbCoreFeatureBag = z.infer<typeof DeVerbCoreFeatureBagSchema>;
+export type DeVerbInflectionalFeatureBag = z.infer<
+	typeof DeVerbInflectionalFeatureBagSchema
+>;
+export type DeVerbFeatureBags = z.infer<typeof DeVerbFeatureBagsSchema>;
+
+type Assert<Condition extends true> = Condition;
+
+type _DeVerbCoreFeatureBagIsUniversal = Assert<
+	IsUniversalFeatureBag<DeVerbCoreFeatureBag>
+>;
+
+type _DeVerbInflectionalFeatureBagIsUniversal = Assert<
+	IsUniversalFeatureBag<DeVerbInflectionalFeatureBag>
+>;

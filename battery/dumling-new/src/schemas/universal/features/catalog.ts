@@ -44,6 +44,14 @@ import { VerbFormSchema } from "./ud/verb-form.js";
 import { VerbTypeSchema } from "./ud/verb-type.js";
 import { VoiceSchema } from "./ud/voice.js";
 
+export type IsUniversalFeatureBag<Bag> = false extends (
+	Bag extends unknown
+		? IsUniversalFeatureBagMember<Bag>
+		: never
+)
+	? false
+	: true;
+
 export const DUMLING_FEATURE_SCHEMA = {
 	abbr: AbbrSchema,
 	adpType: AdpTypeSchema,
@@ -99,6 +107,21 @@ type UniversalFeatureAtoms = {
 	>;
 };
 
-export type UniversalFeatureName = keyof UniversalFeatureAtoms;
-export type UniversalFeatureValue<Name extends UniversalFeatureName> =
+type UniversalFeatureName = keyof UniversalFeatureAtoms;
+type UniversalFeatureValue<Name extends UniversalFeatureName> =
 	UniversalFeatureAtoms[Name];
+
+type FeatureValueSet<Value> = Value | readonly [Value, ...Value[]];
+
+type UniversalFeatureBag = {
+	[Name in UniversalFeatureName]?: FeatureValueSet<
+		UniversalFeatureValue<Name>
+	> | null;
+};
+
+type IsUniversalFeatureBagMember<Bag> =
+	Exclude<keyof Bag, UniversalFeatureName> extends never
+		? Bag extends UniversalFeatureBag
+			? true
+			: false
+		: false;

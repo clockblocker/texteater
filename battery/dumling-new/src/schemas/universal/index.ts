@@ -13,6 +13,7 @@ export type { HasGovPrep } from "./features/custom/governed-preposition.js";
 export { LexicallyReflexive } from "./features/custom/lexically-reflexive.js";
 export { Phrasal } from "./features/custom/phrasal.js";
 export type { HasSepPrefix } from "./features/custom/separable.js";
+export * from "./features/feature-bag-kind.js";
 export { Abbr } from "./features/ud/abbr.js";
 export { AdpType } from "./features/ud/adp-type.js";
 export { Animacy } from "./features/ud/animacy.js";
