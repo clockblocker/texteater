@@ -121,6 +121,11 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	voice: VoiceSchema,
 } as const;
 
+export type UniversalFeatureBags = {
+	[FeatureBagKind.Core]: UniversalFeatureBag;
+	[FeatureBagKind.Inflectional]?: UniversalFeatureBag;
+};
+
 type UniversalFeatureAtoms = {
 	[Name in keyof typeof UNIVERSAL_FEATURE_SCHEMA]: z.infer<
 		(typeof UNIVERSAL_FEATURE_SCHEMA)[Name]
@@ -137,11 +142,6 @@ type UniversalFeatureBag = {
 	[Name in UniversalFeatureName]?: FeatureValueSet<
 		UniversalFeatureValue<Name>
 	> | null;
-};
-
-export type UniversalFeatureBags = {
-	[FeatureBagKind.Core]: UniversalFeatureBag;
-	[FeatureBagKind.Inflectional]?: UniversalFeatureBag;
 };
 
 type IsUniversalFeatureBagMember<Bag> =
