@@ -36,5 +36,5 @@
 		"bun.lock": "jsonc"
 	},
 	"js/ts.experimental.useTsgo": true,
-	"js/ts.tsdk.path": "node_modules/@typescript/native-preview"
+	"js/ts.tsdk.path": "node_modules/typescript/lib"
 }

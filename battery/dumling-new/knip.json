@@ -1,0 +1,26 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": [
+		"src/dangerously-heavy-schema-tree.ts",
+		"src/id.ts",
+		"src/public-schema.ts",
+		"src/reading.ts",
+		"src/schema.ts",
+		"src/types.ts",
+		"src/vocabulary.ts",
+		"generate-readme/examples/**/*.ts",
+		"tests/**/*.ts"
+	],
+	"project": [
+		"codegen/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	],
+	"ignoreDependencies": [
+		"@biomejs/biome",
+		"bun-types",
+		"codec-builder-library",
+		"dependency-cruiser"
+	]
+}
