@@ -44,9 +44,7 @@ import { VerbFormSchema } from "./ud/verb-form.js";
 import { VerbTypeSchema } from "./ud/verb-type.js";
 import { VoiceSchema } from "./ud/voice.js";
 
-type FeatureValueSet<T> = T | readonly [T, ...T[]];
-
-export const universalFeatureSchemas = {
+export const DUMLING_FEATURE_SCHEMA = {
 	abbr: AbbrSchema,
 	adpType: AdpTypeSchema,
 	animacy: AnimacySchema,
@@ -96,20 +94,8 @@ export const universalFeatureSchemas = {
 } as const;
 
 type UniversalFeatureAtoms = {
-	[Name in keyof typeof universalFeatureSchemas]: z.infer<
-		(typeof universalFeatureSchemas)[Name]
-	>;
-};
-
-export type UniversalCoreFeatures = {
-	[Name in keyof UniversalFeatureAtoms]?: FeatureValueSet<
-		UniversalFeatureAtoms[Name]
-	>;
-};
-
-export type UniversalInflectionalFeatures = {
-	[Name in keyof UniversalFeatureAtoms]?: FeatureValueSet<
-		UniversalFeatureAtoms[Name]
+	[Name in keyof typeof DUMLING_FEATURE_SCHEMA]: z.infer<
+		(typeof DUMLING_FEATURE_SCHEMA)[Name]
 	>;
 };
 
