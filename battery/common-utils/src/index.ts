@@ -20,6 +20,7 @@ export {
 	type UnrecognizedKeysIssue,
 } from "./parsing-error.js";
 export type {
+	Assert,
 	Brand,
 	DistributiveOmit,
 	DistributivePick,

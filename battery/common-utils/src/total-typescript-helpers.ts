@@ -43,6 +43,8 @@ export type Equal<Left, Right> =
 		? true
 		: false;
 
+export type Assert<Condition extends true> = Condition;
+
 export type Expect<Value extends true> = Value;
 
 export type ExpectFalse<Value extends false> = Value;

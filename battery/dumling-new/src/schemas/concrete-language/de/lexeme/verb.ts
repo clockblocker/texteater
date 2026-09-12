@@ -1,3 +1,4 @@
+import type { Assert } from "common-utils";
 import { z } from "zod";
 import {
 	Aspect,
@@ -92,7 +93,7 @@ const DeVerbParticipleFeatureBagSchema = z.strictObject({
 	voice: DeVerbVoiceSchema.nullable(),
 });
 
-export const DeVerbCoreFeatureBagSchema = z.strictObject({
+const DeVerbCoreFeatureBagSchema = z.strictObject({
 	hasGovPrep: DUMLING_FEATURE_SCHEMA.hasGovPrep.nullable(),
 	hasSepPrefix: DUMLING_FEATURE_SCHEMA.hasSepPrefix.nullable(),
 	lexicallyReflexive: DUMLING_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
@@ -101,7 +102,7 @@ export const DeVerbCoreFeatureBagSchema = z.strictObject({
 		.nullable(),
 });
 
-export const DeVerbInflectionalFeatureBagSchema = z.union([
+const DeVerbInflectionalFeatureBagSchema = z.union([
 	DeVerbUnspecifiedFormFeatureBagSchema,
 	DeVerbImperativeFeatureBagSchema,
 	DeVerbFiniteFeatureBagSchema,
@@ -109,18 +110,10 @@ export const DeVerbInflectionalFeatureBagSchema = z.union([
 	DeVerbParticipleFeatureBagSchema,
 ]);
 
-export const DeVerbFeatureBagsSchema = z.strictObject({
-	[FeatureBagKind.Core]: DeVerbCoreFeatureBagSchema,
-	[FeatureBagKind.Inflectional]: DeVerbInflectionalFeatureBagSchema,
-});
-
-export type DeVerbCoreFeatureBag = z.infer<typeof DeVerbCoreFeatureBagSchema>;
-export type DeVerbInflectionalFeatureBag = z.infer<
+type DeVerbCoreFeatureBag = z.infer<typeof DeVerbCoreFeatureBagSchema>;
+type DeVerbInflectionalFeatureBag = z.infer<
 	typeof DeVerbInflectionalFeatureBagSchema
 >;
-export type DeVerbFeatureBags = z.infer<typeof DeVerbFeatureBagsSchema>;
-
-type Assert<Condition extends true> = Condition;
 
 type _DeVerbCoreFeatureBagIsUniversal = Assert<
 	IsUniversalFeatureBag<DeVerbCoreFeatureBag>
@@ -129,3 +122,10 @@ type _DeVerbCoreFeatureBagIsUniversal = Assert<
 type _DeVerbInflectionalFeatureBagIsUniversal = Assert<
 	IsUniversalFeatureBag<DeVerbInflectionalFeatureBag>
 >;
+
+export const DeVerbFeatureBagsSchema = z.strictObject({
+	[FeatureBagKind.Core]: DeVerbCoreFeatureBagSchema,
+	[FeatureBagKind.Inflectional]: DeVerbInflectionalFeatureBagSchema,
+});
+
+export type DeVerbFeatureBags = z.infer<typeof DeVerbFeatureBagsSchema>;
