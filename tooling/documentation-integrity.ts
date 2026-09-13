@@ -77,11 +77,11 @@ const coordinationTokens = new Set([
 ]);
 
 const retainedEvidenceCompanionPaths = new Set([
-	"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
-	"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-	"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
-	"battery/dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-	"battery/dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
+	"battery/gumgen-old/docs/prototypes/german-relation-human-gate/README.md",
+	"battery/gumgen-old/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
+	"battery/gumgen-old/docs/prototypes/knowledge-analysis-combined/README.md",
+	"battery/gumgen-old/docs/prototypes/reading-resolution-meaning-isolation/README.md",
+	"battery/gumgen-old/docs/research/issue-58-de-he-clickable-boundaries.md",
 ]);
 
 function normalizeRepositoryPath(path: string): string {
@@ -135,11 +135,13 @@ function isProducedArtifact(path: string): boolean {
 		path.startsWith("battery/dumling/resources/") ||
 		path.startsWith("battery/dumling-old/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
+		path.startsWith("battery/gumgen-old/docs/learning/") ||
 		path.startsWith("battery/dumgen/.laboratory/sessions/") ||
-		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
+		path.startsWith("battery/gumgen-old/.laboratory/sessions/") ||
+		/^battery\/(?:dumgen|gumgen-old)\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
 			path,
 		) ||
-		/^battery\/dumgen\/src\/promptsmith\/.*\/corpus\//u.test(path)
+		/^battery\/(?:dumgen|gumgen-old)\/src\/promptsmith\/.*\/corpus\//u.test(path)
 	);
 }
 

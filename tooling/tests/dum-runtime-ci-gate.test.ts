@@ -14,10 +14,10 @@ import {
 	dumdictValidationOperations,
 } from "../../battery/dumdict/src/parsing/validation-operations";
 import type { DumdictValidationRouteKey } from "../../battery/dumdict/src/parsing/validation-route-types";
-import { encodedDumgenValidationArtifacts } from "../../battery/dumgen/src/generated/validation-artifacts";
-import { decodeDumgenValidationArtifact } from "../../battery/dumgen/src/parsing/lightweight-parsers";
-import { createDumgenValidationOperations } from "../../battery/dumgen/src/parsing/validation-operations";
-import type { DumgenValidationRouteKey } from "../../battery/dumgen/src/parsing/validation-routes";
+import { encodedDumgenValidationArtifacts } from "../../battery/gumgen-old/src/generated/validation-artifacts";
+import { decodeDumgenValidationArtifact } from "../../battery/gumgen-old/src/parsing/lightweight-parsers";
+import { createDumgenValidationOperations } from "../../battery/gumgen-old/src/parsing/validation-operations";
+import type { DumgenValidationRouteKey } from "../../battery/gumgen-old/src/parsing/validation-routes";
 import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
 import { DUM_PARSER_INTERFACE_CONTRACT } from "../dum-parser-interface-contract";
 import {

@@ -51,15 +51,15 @@ test("uses role-specific #307 census exclusions", () => {
 	expect(isDeveloperDocumentationPath("app/tf-demo/README.md")).toBeTrue();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/dumgen/docs/research/evidence.md",
+			"battery/gumgen-old/docs/research/evidence.md",
 		),
 	).toBeTrue();
 	expect(
-		isDeveloperDocumentationPath("battery/dumgen/README.md"),
+		isDeveloperDocumentationPath("battery/gumgen-old/README.md"),
 	).toBeFalse();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/dumgen/generate-readme/README.template.md",
+			"battery/gumgen-old/generate-readme/README.template.md",
 		),
 	).toBeFalse();
 	expect(
@@ -67,7 +67,7 @@ test("uses role-specific #307 census exclusions", () => {
 	).toBeFalse();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/dumgen/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
+			"battery/gumgen-old/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
 		),
 	).toBeFalse();
 });
@@ -77,9 +77,9 @@ test("enforces canonical developer-documentation paths", () => {
 		auditAllowedPaths([
 			"README.md",
 			"app/tf-demo/README.md",
-			"battery/dumgen/CONTEXT.md",
+			"battery/gumgen-old/CONTEXT.md",
 			"docs/adr/0001-use-a-contract.md",
-			"battery/dumgen/docs/reference/prompt-contract.md",
+			"battery/gumgen-old/docs/reference/prompt-contract.md",
 			"docs/runbooks/release.md",
 			"app/tf-demo/.agents/skills/convex-reviewer/SKILL.md",
 		]),
@@ -97,25 +97,25 @@ test("enforces canonical developer-documentation paths", () => {
 test("allows only the exact retained evidence companions outside canonical paths", () => {
 	expect(
 		auditAllowedPaths([
-			"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
-			"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-			"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
-			"battery/dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-			"battery/dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
+			"battery/gumgen-old/docs/prototypes/german-relation-human-gate/README.md",
+			"battery/gumgen-old/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
+			"battery/gumgen-old/docs/prototypes/knowledge-analysis-combined/README.md",
+			"battery/gumgen-old/docs/prototypes/reading-resolution-meaning-isolation/README.md",
+			"battery/gumgen-old/docs/research/issue-58-de-he-clickable-boundaries.md",
 		]),
 	).toEqual([]);
 	expect(
 		auditAllowedPaths([
-			"battery/dumgen/docs/research/another-investigation.md",
-			"battery/dumgen/docs/prototypes/another-experiment/README.md",
+			"battery/gumgen-old/docs/research/another-investigation.md",
+			"battery/gumgen-old/docs/prototypes/another-experiment/README.md",
 		]),
 	).toMatchObject([
 		{
-			file: "battery/dumgen/docs/research/another-investigation.md",
+			file: "battery/gumgen-old/docs/research/another-investigation.md",
 			kind: "allowed-path",
 		},
 		{
-			file: "battery/dumgen/docs/prototypes/another-experiment/README.md",
+			file: "battery/gumgen-old/docs/prototypes/another-experiment/README.md",
 			kind: "allowed-path",
 		},
 	]);
@@ -125,17 +125,17 @@ test("reports GOAL, misplaced Vision, and misplaced protected reference files", 
 	expect(
 		auditGoalsAndVisions([
 			"GOAL.md",
-			"battery/dumgen/docs/persistent/VISION.md",
-			"battery/dumgen/docs/human-owned/policy.md",
+			"battery/gumgen-old/docs/persistent/VISION.md",
+			"battery/gumgen-old/docs/human-owned/policy.md",
 		]),
 	).toMatchObject([
 		{ file: "GOAL.md", kind: "goal-removed" },
 		{
-			file: "battery/dumgen/docs/persistent/VISION.md",
+			file: "battery/gumgen-old/docs/persistent/VISION.md",
 			kind: "vision-placement",
 		},
 		{
-			file: "battery/dumgen/docs/human-owned/policy.md",
+			file: "battery/gumgen-old/docs/human-owned/policy.md",
 			kind: "protected-reference-placement",
 		},
 	]);
@@ -172,12 +172,12 @@ test("rejects coordination files but exempts functional agent instructions", () 
 	expect(
 		auditCoordinationFiles([
 			"docs/reference/migration-plan.md",
-			"battery/dumgen/docs/reference/prompt-logbook.md",
+			"battery/gumgen-old/docs/reference/prompt-logbook.md",
 		]),
 	).toMatchObject([
 		{ file: "docs/reference/migration-plan.md", kind: "coordination-file" },
 		{
-			file: "battery/dumgen/docs/reference/prompt-logbook.md",
+			file: "battery/gumgen-old/docs/reference/prompt-logbook.md",
 			kind: "coordination-file",
 		},
 	]);
@@ -340,7 +340,7 @@ test("surfaces protected changes without claiming approval", () => {
 	expect(isProtectedDeveloperDocument("battery/dumrel/VISION.md")).toBeTrue();
 	expect(
 		isProtectedDeveloperDocument(
-			"battery/dumgen/docs/reference/human-owned/prompting.md",
+			"battery/gumgen-old/docs/reference/human-owned/prompting.md",
 		),
 	).toBeTrue();
 	expect(

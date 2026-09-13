@@ -14,4 +14,4 @@ backlog/
 .env.local
 **/direct-checkpoint.json
 repos-for-refrence/
-battery/dumgen/docs/learning/
+battery/gumgen-old/docs/learning/

@@ -23,7 +23,7 @@ import {
 } from "../../battery/dumdict/src";
 import type { encodedDumdictValidationArtifacts } from "../../battery/dumdict/src/generated/validation-artifacts";
 import type { DumdictValidationRouteKey } from "../../battery/dumdict/src/parsing/validation-route-types";
-import { canonicalDumgenValidationSchemas } from "../../battery/dumgen/codegen/validation-artifacts";
+import { canonicalDumgenValidationSchemas } from "../../battery/gumgen-old/codegen/validation-artifacts";
 import {
 	parseAsGrammaticalInput,
 	parseAsGrammaticalInteraction,
@@ -38,8 +38,8 @@ import {
 	parseAsSegmentationResult,
 	parseAsSegmentedSentence,
 	parseAsSegmentedSentenceId,
-} from "../../battery/dumgen/src";
-import type { DumgenValidationRouteKey } from "../../battery/dumgen/src/parsing/validation-routes";
+} from "../../battery/gumgen-old/src";
+import type { DumgenValidationRouteKey } from "../../battery/gumgen-old/src/parsing/validation-routes";
 import { collectDumlingValidationSchemas } from "../../battery/dumling-old/codegen/validation-artifacts";
 import {
 	dumling,

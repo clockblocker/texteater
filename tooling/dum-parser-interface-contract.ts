@@ -16,7 +16,7 @@ import type {
 	SegmentationResult,
 	SegmentedSentence,
 	SegmentedSentenceId,
-} from "../battery/dumgen/src/types";
+} from "../battery/gumgen-old/src/types";
 
 export type { DumdictParserInterface } from "./dumdict-parser-interface";
 export type { DumlingParserInterface } from "./dumling-parser-interface";

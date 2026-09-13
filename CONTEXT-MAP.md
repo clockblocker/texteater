@@ -12,5 +12,5 @@
   algebra.
 - [Dumdict](./battery/dumdict/CONTEXT.md): manages dictionary records over
   Dumling entities.
-- [Dumgen](./battery/dumgen/CONTEXT.md): resolves learner text through the
+- [Dumgen](./battery/gumgen-old/CONTEXT.md): resolves learner text through the
   generation and prompt pipeline.

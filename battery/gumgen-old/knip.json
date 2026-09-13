@@ -1,0 +1,36 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": [
+		"src/knowledge.ts",
+		"src/knowledge-runtime.ts",
+		"src/model-authoring.ts",
+		"src/openai-fetch.ts",
+		"src/projection.ts",
+		"src/runtime.ts",
+		"src/runtime-prompt-data.ts",
+		"src/schema.ts",
+		"src/vocabulary.ts",
+		"generate-readme/examples/**/*.ts",
+		"tests/**/*.ts"
+	],
+	"ignore": [
+		"docs/prototypes/german-relation-human-gate/acceptance.ts",
+		"docs/prototypes/german-relation-prompt-iteration-lab/logic.ts",
+		"src/knowledge-generation/de/runtime-schema.ts",
+		"src/promptsmith/production/knowledge-analysis/de/retained-cases.ts",
+		"src/promptsmith/production/generated-system-prompt/grammatical-resolution/de/phraseme/collocation.ts"
+	],
+	"project": [
+		"codegen/**/*.ts",
+		"docs/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	],
+	"ignoreDependencies": [
+		"@biomejs/biome",
+		"bun-types",
+		"dependency-cruiser",
+		"dumdict"
+	]
+}
