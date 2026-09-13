@@ -1,0 +1,1047 @@
+{
+	"grammar-de-noun-demo-citation-haus": {
+		"input": {
+			"markedContext": "Wörterbucheintrag: <TARGET>Haus</TARGET>.",
+			"members": ["Haus"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Haus"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Haus",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-demo-acc-sing-hund": {
+		"input": {
+			"markedContext": "Sie sieht den <TARGET>Hund</TARGET> im Garten.",
+			"members": ["Hund"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Hund"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Hund",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-demo-dat-plur-kindern": {
+		"input": {
+			"markedContext": "Er hilft den <TARGET>Kindern</TARGET> bei den Aufgaben.",
+			"members": ["Kindern"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kindern"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kind",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-nom-plur-banken": {
+		"input": {
+			"markedContext": "Die <TARGET>Banken</TARGET> öffnen um neun Uhr.",
+			"members": ["Banken"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Banken"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Bank",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-dat-sing-bibliothek": {
+		"input": {
+			"markedContext": "Wir sitzen in der <TARGET>Bibliothek</TARGET>.",
+			"members": ["Bibliothek"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Bibliothek"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Bibliothek",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-gen-sing-mannes": {
+		"input": {
+			"markedContext": "Das Fahrrad des <TARGET>Mannes</TARGET> ist neu.",
+			"members": ["Mannes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Mannes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Mann",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-gen-plur-frauen": {
+		"input": {
+			"markedContext": "Die Stimmen der <TARGET>Frauen</TARGET> waren deutlich.",
+			"members": ["Frauen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Frauen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Frau",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-vocative-leute": {
+		"input": {
+			"markedContext": "Hallo, <TARGET>Leute</TARGET>, hört kurz zu!",
+			"members": ["Leute"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Leute"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Leute",
+				"coreFeatures": {
+					"gender": null,
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-acc-plur-buecher": {
+		"input": {
+			"markedContext": "Sie kauft die <TARGET>Bücher</TARGET> für den Kurs.",
+			"members": ["Bücher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Bücher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Buch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-nom-sing-maedchen": {
+		"input": {
+			"markedContext": "Das <TARGET>Mädchen</TARGET> wartet vor der Schule.",
+			"members": ["Mädchen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Mädchen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Mädchen",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-acc-sing-stadt": {
+		"input": {
+			"markedContext": "Wir besuchen die <TARGET>Stadt</TARGET> am Wochenende.",
+			"members": ["Stadt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Stadt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Stadt",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-dat-sing-chef": {
+		"input": {
+			"markedContext": "Sie spricht mit dem <TARGET>Chef</TARGET> über den Plan.",
+			"members": ["Chef"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Chef"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Chef",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-nom-plur-eltern": {
+		"input": {
+			"markedContext": "Die <TARGET>Eltern</TARGET> warten draußen.",
+			"members": ["Eltern"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Eltern"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Eltern",
+				"coreFeatures": {
+					"gender": null,
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-acc-plur-knie": {
+		"input": {
+			"markedContext": "Der Arzt untersucht beide <TARGET>Knie</TARGET> gründlich.",
+			"members": ["Knie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Knie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Knie",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The plural is fixed by beide while the noun form is invariant."
+	},
+	"grammar-de-noun-accept-nom-sing-mark": {
+		"input": {
+			"markedContext": "Die <TARGET>Mark</TARGET> war damals die Währung.",
+			"members": ["Mark"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Mark"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Mark",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Currency context fixes common NOUN, not a personal name."
+	},
+	"grammar-de-noun-accept-nom-sing-tisch": {
+		"input": {
+			"markedContext": "Der <TARGET>Tisch</TARGET> steht am Fenster.",
+			"members": ["Tisch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Tisch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Tisch",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-acc-sing-tuer": {
+		"input": {
+			"markedContext": "Sie öffnet die <TARGET>Tür</TARGET> ganz leise.",
+			"members": ["Tür"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Tür"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Tür",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-dat-plur-haeusern": {
+		"input": {
+			"markedContext": "Zwischen den <TARGET>Häusern</TARGET> liegt ein Hof.",
+			"members": ["Häusern"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Häusern"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Haus",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-gen-plur-kinder": {
+		"input": {
+			"markedContext": "Das Lachen der <TARGET>Kinder</TARGET> war laut.",
+			"members": ["Kinder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kind",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-invariant-plur-maedchen": {
+		"input": {
+			"markedContext": "Die drei <TARGET>Mädchen</TARGET> spielen draußen.",
+			"members": ["Mädchen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Mädchen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Mädchen",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-plural-only-ferien": {
+		"input": {
+			"markedContext": "Die <TARGET>Ferien</TARGET> beginnen morgen.",
+			"members": ["Ferien"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ferien"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Ferien",
+				"coreFeatures": {
+					"gender": null,
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-demo-typo-kaffe": {
+		"input": {
+			"markedContext": "Der <TARGET>Kaffe</TARGET> duftet am Morgen.",
+			"members": ["Kaffe"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["Kaffee"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kaffee",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-demo-archaic-antlitz": {
+		"input": {
+			"markedContext": "Sie bewundert sein <TARGET>Antlitz</TARGET>.",
+			"members": ["Antlitz"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Antlitz"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Antlitz",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-hyphenated-u-bahn": {
+		"input": {
+			"markedContext": "Sie nimmt die <TARGET>U-Bahn</TARGET> zur Arbeit.",
+			"members": ["U-Bahn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["U-Bahn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "U-Bahn",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": "Yes"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-variant-photographie": {
+		"input": {
+			"markedContext": "Die Redaktion führt „Fotografie“ als Leitform; die <TARGET>Photographie</TARGET> im Zitat bleibt zulässig.",
+			"members": ["Photographie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Photographie"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Fotografie",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Context names editorial headword; attested equal standard variant stays Variant."
+	},
+	"grammar-de-noun-dev-lowercase-katze": {
+		"input": {
+			"markedContext": "Sie streichelt die <TARGET>katze</TARGET> vorsichtig.",
+			"members": ["katze"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["Katze"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Katze",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-archaic-odem": {
+		"input": {
+			"markedContext": "Der <TARGET>Odem</TARGET> des Greises ging schwer.",
+			"members": ["Odem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Odem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Odem",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-compound-haustuer": {
+		"input": {
+			"markedContext": "Er streicht die <TARGET>Haustür</TARGET> grün.",
+			"members": ["Haustür"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Haustür"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Haustür",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-substantivized-reisenden": {
+		"input": {
+			"markedContext": "Die <TARGET>Reisenden</TARGET> steigen am Bahnhof aus.",
+			"members": ["Reisenden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Reisenden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Reisende",
+				"coreFeatures": {
+					"gender": null,
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-gen-sing-schule": {
+		"input": {
+			"markedContext": "Das Dach der <TARGET>Schule</TARGET> wird saniert.",
+			"members": ["Schule"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Schule"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Schule",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-hyphenated-e-mail": {
+		"input": {
+			"markedContext": "Sie beantwortet die <TARGET>E-Mail</TARGET> sofort.",
+			"members": ["E-Mail"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["E-Mail"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "E-Mail",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": "Yes"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-substantivized-angestellten": {
+		"input": {
+			"markedContext": "Wir danken den <TARGET>Angestellten</TARGET> für ihre Hilfe.",
+			"members": ["Angestellten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Angestellten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Angestellte",
+				"coreFeatures": {
+					"gender": null,
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-demo-suspended-kinderbuecher": {
+		"input": {
+			"markedContext": "Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
+			"members": ["Kinder-"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinderbücher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Ergänzungsstrich points to shared Bücher; one member stays Standard and Full."
+	},
+	"grammar-de-noun-dev-suspended-right-jugendbuecher": {
+		"input": {
+			"markedContext": "Sie verkauft Kinder- und <TARGET>Jugendbücher</TARGET>.",
+			"members": ["Jugendbücher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Jugendbücher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Jugendbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-suspended-hyphen-genitiv": {
+		"input": {
+			"markedContext": "Die Seiten des <TARGET>Kinder‐</TARGET> und Jugendbuchs fehlen.",
+			"members": ["Kinder‐"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinderbuchs"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-dev-suspended-typo": {
+		"input": {
+			"markedContext": "Sie verkauft <TARGET>Kidner-</TARGET> und Jugendbücher.",
+			"members": ["Kidner-"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["Kinderbücher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-suspended-nonbreaking": {
+		"input": {
+			"markedContext": "Der Laden führt <TARGET>Kinder‑</TARGET> und Jugendbücher.",
+			"members": ["Kinder‑"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinderbücher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-suspended-oder-singular": {
+		"input": {
+			"markedContext": "Sie kauft ein <TARGET>Kinder-</TARGET> oder Jugendbuch.",
+			"members": ["Kinder-"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinderbuch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-suspended-dativ-plural": {
+		"input": {
+			"markedContext": "Mit <TARGET>Kinder-</TARGET> und Jugendbüchern kennt sie sich aus.",
+			"members": ["Kinder-"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinderbüchern"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-noun-accept-suspended-nominativ-plural": {
+		"input": {
+			"markedContext": "<TARGET>Kinder-</TARGET> und Jugendbücher sind beliebt.",
+			"members": ["Kinder-"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Kinderbücher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Kinderbuch",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

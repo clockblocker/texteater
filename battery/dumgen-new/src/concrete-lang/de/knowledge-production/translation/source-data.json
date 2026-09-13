@@ -1,0 +1,176 @@
+{
+	"path": "knowledge-analysis/translation/prompt-source.ts",
+	"route": "knowledge-analysis/translation",
+	"body": "Decide whether one existing target-language Translation already\ncovers the supplied encounter of one fixed source Reading, or whether one new\nliteral Translation should be added.\n\nThe source Reading is already fixed. Never reconsider its Lemma or emoji\ndescription, never create a target-language Reading, and never emit a Semantic\nRelation. Use markedContext to preserve distinctions that matter to a learner,\nincluding polysemy within the fixed Reading, register, punctuation, casing, and\ncontext-specific wording.\n\nReturn Covered with the zero-based index of one existing literal when that\nliteral adequately covers this encounter. Near-equivalent wording or a concise\nparaphrase can cover the context; lexical novelty alone does not justify an\naddition. Return Add only when no existing literal covers a useful contextual\ndistinction, and supply exactly one non-empty target-language literal.\n\nPreserve literal casing and punctuation. Do not return gloss commentary,\nalternatives, confidence, relation targets, Reading data, or persistence\ninstructions.",
+	"cases": {
+		"translation-add-polysemy-sensitive-literal": {
+			"input": {
+				"markedContext": "Sie <TARGET>fährt</TARGET> mit dem Fahrrad zur Arbeit.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "fahren",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "🚲"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["drive"]
+			},
+			"idealOutput": {
+				"decision": "Add",
+				"translation": "ride"
+			},
+			"explanation": "Drive does not cover this bicycle encounter, so the fixed Reading gains a context-appropriate literal."
+		},
+		"translation-cover-near-equivalent": {
+			"input": {
+				"markedContext": "Die Sitzung <TARGET>beginnt</TARGET> um neun.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "beginnen",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "▶️"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["start", "commence"]
+			},
+			"idealOutput": {
+				"decision": "Covered",
+				"existingIndex": 0
+			},
+			"explanation": "The ordinary context is already covered by start; wording novelty alone is not a reason to add begin."
+		},
+		"translation-cover-concise-paraphrase": {
+			"input": {
+				"markedContext": "Wir müssen diesen Faktor <TARGET>in Betracht ziehen</TARGET>.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "in Betracht ziehen",
+						"family": "Phraseme",
+						"kind": "Collocation"
+					},
+					"emojiDescription": "🤔"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["consider"]
+			},
+			"idealOutput": {
+				"decision": "Covered",
+				"existingIndex": 0
+			},
+			"explanation": "A concise existing literal may cover a longer source expression without mirroring its form."
+		},
+		"translation-add-register-distinction": {
+			"input": {
+				"markedContext": "Der <TARGET>Knirps</TARGET> ist schon wieder draußen.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Knirps",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🧒"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["child"]
+			},
+			"idealOutput": {
+				"decision": "Add",
+				"translation": "kid"
+			},
+			"explanation": "The colloquial register is useful encounter Knowledge and is not erased by a neutral literal."
+		},
+		"translation-add-punctuation-distinction": {
+			"input": {
+				"markedContext": "<TARGET>Echt?</TARGET> Das wusste ich nicht.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "echt?",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula"
+					},
+					"emojiDescription": "❓"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["Really!"]
+			},
+			"idealOutput": {
+				"decision": "Add",
+				"translation": "Really?"
+			},
+			"explanation": "Question and exclamation punctuation distinguish the contextual discourse act and remain literal."
+		},
+		"translation-add-casing-distinction": {
+			"input": {
+				"markedContext": "Sie spricht <TARGET>Polnisch</TARGET>.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Polnisch",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🇵🇱"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["polish"]
+			},
+			"idealOutput": {
+				"decision": "Add",
+				"translation": "Polish"
+			},
+			"explanation": "The required proper-language casing is preserved; Dumrel does not case-fold literals."
+		},
+		"translation-add-context-specific-wording": {
+			"input": {
+				"markedContext": "Die Mannschaft <TARGET>gab</TARGET> den Vorsprung in der letzten Minute <TARGET>auf</TARGET>.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "aufgeben",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "🏳️"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["surrender"]
+			},
+			"idealOutput": {
+				"decision": "Add",
+				"translation": "give up"
+			},
+			"explanation": "The encounter calls for a context-specific wording not covered by the existing literal."
+		},
+		"translation-add-first-target-language-literal": {
+			"input": {
+				"markedContext": "Das <TARGET>Haus</TARGET> ist alt.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Haus",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🏠"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": []
+			},
+			"idealOutput": {
+				"decision": "Add",
+				"translation": "house"
+			}
+		}
+	},
+	"demonstrationIds": ["translation-add-polysemy-sensitive-literal"],
+	"localDemonstrations": []
+}

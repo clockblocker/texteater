@@ -28,3 +28,28 @@ export function isEmojiDescription(value: string): boolean {
 export function emojiDescriptionError(): string {
 	return "Emoji Description must contain one to four emoji graphemes";
 }
+
+/** Null records no marked distinction; it never substitutes for a known gender. */
+export function isGermanPronounCore(core: Record<string, unknown>): boolean {
+	const possessive = core.poss === "Yes";
+	if (
+		core["gender[psor]"] !== null &&
+		(!possessive ||
+			core.pronType !== "Prs" ||
+			core.person !== "3" ||
+			core.referenceNumber !== "Sing")
+	)
+		return false;
+	if (core.gender !== null && core.number === "Plur") return false;
+	if (
+		!possessive &&
+		core.pronType === "Prs" &&
+		core.gender !== null &&
+		(core.person !== "3" || core.referenceNumber !== "Sing")
+	)
+		return false;
+	return true;
+}
+export function germanPronounCoreError(): string {
+	return "German pronoun gender must agree with its subtype, person and number; possessor gender requires a third-person singular personal possessive";
+}

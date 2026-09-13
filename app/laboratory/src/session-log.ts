@@ -1,7 +1,7 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
-import type { DumgenModelExchange } from "dumgen";
+import { defaultRunOutputDirectory } from "dumgen/development";
+import type { DumgenModelExchange } from "gumgen-old";
 
 export type LaboratoryOperation = "segmentation-chain" | "click-resolution";
 
@@ -26,9 +26,9 @@ export type LaboratorySessionEvent = {
 	errors: LoggedError[];
 };
 
-export const sessionLogRoot = fileURLToPath(
-	new URL("../../../battery/dumgen/.laboratory/sessions/", import.meta.url),
-);
+export const sessionLogRoot =
+	process.env.LABORATORY_SESSION_DIRECTORY ??
+	join(defaultRunOutputDirectory, "..", "laboratory", "sessions");
 
 let appendQueue = Promise.resolve();
 

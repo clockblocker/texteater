@@ -46,6 +46,7 @@ import type {
 	SegmentationResponse,
 	SegmentationStageResult,
 } from "../shared/contract";
+import { Evaluations } from "./Evaluations";
 
 const sampleText =
 	"Guten Morgen! Fritz steht sofort auf. Draußen ist es noch still, und in der Küche wartet schon der erste Kaffee.";
@@ -992,6 +993,12 @@ function Laboratory({ state }: { state: LaboratoryState }) {
 				orientation === "horizontal" && "h-svh min-h-[44rem]",
 			)}
 		>
+			<a
+				className="mb-3 inline-block underline underline-offset-4"
+				href="/evaluations"
+			>
+				Evaluation runs
+			</a>
 			{orientation === "vertical" ? (
 				<div className="mx-auto w-full overflow-hidden rounded-xl border bg-card shadow-sm">
 					<div className="flex flex-col">
@@ -1043,7 +1050,15 @@ function Laboratory({ state }: { state: LaboratoryState }) {
 	);
 }
 
-export function App() {
+function InteractiveApp() {
 	const state = useLaboratory();
 	return <Laboratory state={state} />;
+}
+
+export function App() {
+	return location.pathname === "/evaluations" ? (
+		<Evaluations />
+	) : (
+		<InteractiveApp />
+	);
 }

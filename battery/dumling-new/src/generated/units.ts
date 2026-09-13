@@ -1300,6 +1300,9 @@ export interface UnitMap {
 			kind: "PRON";
 			canonicalForm: string;
 			coreFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				number: ("Plur" | "Sing") | null;
+				"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 				extPos: "DET" | null;
 				foreign: "Yes" | null;
 				person: ("1" | "2" | "3") | null;
@@ -1317,7 +1320,7 @@ export interface UnitMap {
 							| "Tot"
 					  )
 					| null;
-				referenceGender: ("Fem" | "Masc" | "Neut") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
 				referenceNumber: ("Plur" | "Sing") | null;
 			};
 		};
@@ -1331,6 +1334,9 @@ export interface UnitMap {
 				kind: "PRON";
 				canonicalForm: string;
 				coreFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					number: ("Plur" | "Sing") | null;
+					"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 					extPos: "DET" | null;
 					foreign: "Yes" | null;
 					person: ("1" | "2" | "3") | null;
@@ -1348,19 +1354,14 @@ export interface UnitMap {
 								| "Tot"
 						  )
 						| null;
-					referenceGender: ("Fem" | "Masc" | "Neut") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 					referenceNumber: ("Plur" | "Sing") | null;
 				};
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			inflectionalFeatures: {
-				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-				gender: ("Fem" | "Masc" | "Neut") | null;
-				number: ("Plur" | "Sing") | null;
-				reflex: "Yes" | null;
-			} | null;
+			inflectionalFeatures: { reflex: "Yes" | null } | null;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -1371,6 +1372,9 @@ export interface UnitMap {
 				kind: "PRON";
 				canonicalForm: string;
 				coreFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					number: ("Plur" | "Sing") | null;
+					"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 					extPos: "DET" | null;
 					foreign: "Yes" | null;
 					person: ("1" | "2" | "3") | null;
@@ -1388,7 +1392,7 @@ export interface UnitMap {
 								| "Tot"
 						  )
 						| null;
-					referenceGender: ("Fem" | "Masc" | "Neut") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 					referenceNumber: ("Plur" | "Sing") | null;
 				};
 			};
@@ -1406,6 +1410,9 @@ export interface UnitMap {
 					kind: "PRON";
 					canonicalForm: string;
 					coreFeatures: {
+						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+						number: ("Plur" | "Sing") | null;
+						"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 						extPos: "DET" | null;
 						foreign: "Yes" | null;
 						person: ("1" | "2" | "3") | null;
@@ -1423,19 +1430,14 @@ export interface UnitMap {
 									| "Tot"
 							  )
 							| null;
-						referenceGender: ("Fem" | "Masc" | "Neut") | null;
+						gender: ("Fem" | "Masc" | "Neut") | null;
 						referenceNumber: ("Plur" | "Sing") | null;
 					};
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-				inflectionalFeatures: {
-					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					number: ("Plur" | "Sing") | null;
-					reflex: "Yes" | null;
-				} | null;
+				inflectionalFeatures: { reflex: "Yes" | null } | null;
 			};
 			members: [
 				{ attested: string; orthography: "Standard" | "Typo" },

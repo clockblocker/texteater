@@ -82,3 +82,9 @@ export type KnowledgeChange<R extends Dumling.Reading = Dumling.Reading> = [
 ] extends [R]
 	? CanonicalKnowledgeChange
 	: SourceKnowledgeChange<R>;
+
+export type {
+	KnowledgeRequestMask,
+	KnowledgeSelectionInput,
+	KnowledgeSettings,
+} from "./generated/types.js";

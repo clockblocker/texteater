@@ -1,0 +1,623 @@
+{
+	"grammar-de-coll-decision-present-full": {
+		"input": {
+			"markedContext": "Der Ausschuss <TARGET>trifft</TARGET> <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET>.",
+			"members": ["trifft", "eine", "Entscheidung"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["trifft", "eine", "Entscheidung"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "eine Entscheidung treffen",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features.",
+		"contaminationKeys": ["de-coll-lemma:entscheidung-treffen"]
+	},
+	"grammar-de-coll-frage-citation": {
+		"input": {
+			"markedContext": "Wörterbucheintrag: <TARGET>eine</TARGET> <TARGET>Frage</TARGET> <TARGET>stellen</TARGET>",
+			"members": ["eine", "Frage", "stellen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["eine", "Frage", "stellen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "eine Frage stellen",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "An explicit dictionary entry is Citation rather than a contextual Inflection.",
+		"contaminationKeys": ["de-coll-lemma:frage-stellen"]
+	},
+	"grammar-de-coll-verfuegung-present-full": {
+		"input": {
+			"markedContext": "Wir <TARGET>stellen</TARGET> die Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
+			"members": ["stellen", "zur", "Verfügung"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["stellen", "zur", "Verfügung"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "zur Verfügung stellen",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full.",
+		"contaminationKeys": ["de-coll-lemma:verfuegung-stellen"]
+	},
+	"grammar-de-coll-anerkennung-participle-typo-full": {
+		"input": {
+			"markedContext": "Der Vorschlag <TARGET>hat</TARGET> <TARGET>Anerkenung</TARGET> <TARGET>gefunden</TARGET>.",
+			"members": ["hat", "Anerkenung", "gefunden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Typo", "Standard"],
+			"normalizedMembers": ["hat", "Anerkennung", "gefunden"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Anerkennung finden",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II.",
+		"contaminationKeys": ["de-coll-lemma:anerkennung-finden"]
+	},
+	"grammar-de-coll-antrag-present-full": {
+		"input": {
+			"markedContext": "Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>.",
+			"members": ["stellt", "einen", "Antrag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["stellt", "einen", "Antrag"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "einen Antrag stellen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:antrag-stellen"]
+	},
+	"grammar-de-coll-antrag-past-full": {
+		"input": {
+			"markedContext": "Gestern <TARGET>stellte</TARGET> sie <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>.",
+			"members": ["stellte", "einen", "Antrag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["stellte", "einen", "Antrag"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "einen Antrag stellen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:antrag-stellen"]
+	},
+	"grammar-de-coll-vereinbarung-present-full": {
+		"input": {
+			"markedContext": "Die Parteien <TARGET>treffen</TARGET> <TARGET>eine</TARGET> <TARGET>Vereinbarung</TARGET>.",
+			"members": ["treffen", "eine", "Vereinbarung"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["treffen", "eine", "Vereinbarung"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "eine Vereinbarung treffen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:vereinbarung-treffen"]
+	},
+	"grammar-de-coll-abbitte-plural-full": {
+		"input": {
+			"markedContext": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
+			"members": ["leisten", "Abbitte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["leisten", "Abbitte"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Abbitte leisten",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"]
+	},
+	"grammar-de-coll-abschied-past-full": {
+		"input": {
+			"markedContext": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
+			"members": ["nahmen", "Abschied"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["nahmen", "Abschied"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Abschied nehmen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"]
+	},
+	"grammar-de-coll-zustimmung-present-full": {
+		"input": {
+			"markedContext": "Der Rat <TARGET>erteilt</TARGET> <TARGET>Zustimmung</TARGET>.",
+			"members": ["erteilt", "Zustimmung"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["erteilt", "Zustimmung"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Zustimmung erteilen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:zustimmung-erteilen"]
+	},
+	"grammar-de-coll-ende-imperative-full": {
+		"input": {
+			"markedContext": "<TARGET>Komm</TARGET> endlich <TARGET>zum</TARGET> <TARGET>Ende</TARGET>!",
+			"members": ["Komm", "zum", "Ende"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["komm", "zum", "Ende"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Imp",
+					"number": "Sing",
+					"person": "2",
+					"tense": null,
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "zum Ende kommen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:ende-kommen"]
+	},
+	"grammar-de-coll-anspruch-participle-full": {
+		"input": {
+			"markedContext": "Sie <TARGET>hat</TARGET> Hilfe <TARGET>in</TARGET> <TARGET>Anspruch</TARGET> <TARGET>genommen</TARGET>.",
+			"members": ["hat", "in", "Anspruch", "genommen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["hat", "in", "Anspruch", "genommen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "in Anspruch nehmen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:anspruch-nehmen"]
+	},
+	"grammar-de-coll-ausdruck-infinitive-full": {
+		"input": {
+			"markedContext": "Sie versucht, ihre Sorge <TARGET>zum</TARGET> <TARGET>Ausdruck</TARGET> zu <TARGET>bringen</TARGET>.",
+			"members": ["zum", "Ausdruck", "bringen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["zum", "Ausdruck", "bringen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "zum Ausdruck bringen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:ausdruck-bringen"]
+	},
+	"grammar-de-coll-einfluss-present-full": {
+		"input": {
+			"markedContext": "Das Wetter <TARGET>nimmt</TARGET> <TARGET>Einfluss</TARGET> auf die Planung.",
+			"members": ["nimmt", "Einfluss"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["nimmt", "Einfluss"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Einfluss nehmen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:einfluss-nehmen"]
+	},
+	"grammar-de-coll-erscheinung-modified-full": {
+		"input": {
+			"markedContext": "Das Problem <TARGET>tritt</TARGET> plötzlich <TARGET>in</TARGET> <TARGET>Erscheinung</TARGET>.",
+			"members": ["tritt", "in", "Erscheinung"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["tritt", "in", "Erscheinung"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "in Erscheinung treten",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:erscheinung-treten"]
+	},
+	"grammar-de-coll-abschied-citation": {
+		"input": {
+			"markedContext": "Wörterbucheintrag: <TARGET>Abschied</TARGET> <TARGET>nehmen</TARGET>",
+			"members": ["Abschied", "nehmen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["Abschied", "nehmen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Abschied nehmen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"]
+	},
+	"grammar-de-coll-abbitte-typo": {
+		"input": {
+			"markedContext": "Sie <TARGET>leistet</TARGET> <TARGET>Abbite</TARGET>.",
+			"members": ["leistet", "Abbite"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Typo"],
+			"normalizedMembers": ["leistet", "Abbitte"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Abbitte leisten",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"]
+	},
+	"grammar-de-coll-unresolved-free-book-read": {
+		"input": {
+			"markedContext": "Sie <TARGET>liest</TARGET> <TARGET>ein</TARGET> <TARGET>Buch</TARGET>.",
+			"members": ["liest", "ein", "Buch"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "A freely composed verb-object phrase is not a conventional Collocation.",
+		"contaminationKeys": ["de-coll-boundary:free-combination"]
+	},
+	"grammar-de-coll-unresolved-idiom-loeffel": {
+		"input": {
+			"markedContext": "Irgendwann <TARGET>wird</TARGET> er <TARGET>den</TARGET> <TARGET>Löffel</TARGET> <TARGET>abgeben</TARGET>.",
+			"members": ["wird", "den", "Löffel", "abgeben"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "The phrase has an idiomatic whole meaning and belongs to Phraseme/Idiom, not Collocation.",
+		"contaminationKeys": ["de-coll-boundary:idiom"]
+	},
+	"grammar-de-coll-unresolved-construction-je-desto": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> länger er wartet, <TARGET>desto</TARGET> unruhiger wird er.",
+			"members": ["Je", "desto"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "Je ... desto is a paired Construction rather than a lexical Collocation.",
+		"contaminationKeys": ["de-coll-boundary:construction"]
+	},
+	"grammar-de-coll-unresolved-verb-only-antrag": {
+		"input": {
+			"markedContext": "Sie <TARGET>stellt</TARGET> einen Antrag.",
+			"members": ["stellt"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "A support verb alone is a Lexeme/VERB target, not a defensible Partial Collocation Surface.",
+		"contaminationKeys": [
+			"de-coll-boundary:verb-only",
+			"de-coll-lemma:antrag-stellen"
+		]
+	},
+	"grammar-de-coll-unresolved-mixed-occurrences": {
+		"input": {
+			"markedContext": "Sie <TARGET>stellt</TARGET> einen Antrag, und er leistet <TARGET>Abbitte</TARGET>.",
+			"members": ["stellt", "Abbitte"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "The two well-formed marked tokens belong to different Collocation occurrences and cannot form one Surface.",
+		"contaminationKeys": [
+			"de-coll-boundary:mixed-occurrences",
+			"de-coll-lemma:antrag-stellen",
+			"de-coll-lemma:abbitte-leisten"
+		]
+	},
+	"grammar-de-coll-unresolved-marked-dependent": {
+		"input": {
+			"markedContext": "Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>dringenden</TARGET> <TARGET>Antrag</TARGET>.",
+			"members": ["stellt", "einen", "dringenden", "Antrag"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "The adjective is a contextual modifier, not a lexical member of einen Antrag stellen; marking it makes the proposed Collocation Surface overbroad.",
+		"contaminationKeys": [
+			"de-coll-boundary:marked-dependent",
+			"de-coll-lemma:antrag-stellen"
+		]
+	},
+	"grammar-de-coll-unresolved-elliptic-kenntnis": {
+		"input": {
+			"markedContext": "Sie nahm den Bericht zur Kenntnis. Und die Warnung? – Ebenfalls <TARGET>zur</TARGET> <TARGET>Kenntnis</TARGET>.",
+			"members": ["zur", "Kenntnis"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "The support verb is absent from this elliptic occurrence, so the route cannot construct a feature-bearing Collocation Surface without borrowing grammar from another occurrence.",
+		"contaminationKeys": [
+			"de-coll-boundary:ellipsis",
+			"de-coll-lemma:kenntnis-nehmen"
+		]
+	},
+	"grammar-de-coll-unresolved-present-member-unmarked": {
+		"input": {
+			"markedContext": "Sie <TARGET>stellt</TARGET> einen <TARGET>Antrag</TARGET>.",
+			"members": ["stellt", "Antrag"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "The canonical member einen is present but unmarked; underselection cannot be reclassified as a Partial Surface.",
+		"contaminationKeys": [
+			"de-coll-boundary:present-member-unmarked",
+			"de-coll-lemma:antrag-stellen"
+		]
+	},
+	"grammar-de-coll-determiner-alternant": {
+		"input": {
+			"markedContext": "Der Ausschuss <TARGET>trifft</TARGET> <TARGET>die</TARGET> <TARGET>Entscheidung</TARGET>.",
+			"members": ["trifft", "die", "Entscheidung"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "Replacing canonical eine with die changes a lexical member; this route does not equate the resulting combination with eine Entscheidung treffen.",
+		"contaminationKeys": [
+			"de-coll-lemma:entscheidung-treffen",
+			"de-coll-member-identity:determiner-alternant"
+		]
+	},
+	"grammar-de-coll-plural-member-alternant": {
+		"input": {
+			"markedContext": "Die Ausschüsse <TARGET>treffen</TARGET> <TARGET>Entscheidungen</TARGET>.",
+			"members": ["treffen", "Entscheidungen"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "The bare plural nominal differs from the canonical article-plus-singular member sequence, and the verbal feature bundle cannot represent that nominal contrast.",
+		"contaminationKeys": [
+			"de-coll-lemma:entscheidung-treffen",
+			"de-coll-member-identity:plural-alternant"
+		]
+	},
+	"grammar-de-coll-support-verb-alternant": {
+		"input": {
+			"markedContext": "Der Ausschuss <TARGET>fällt</TARGET> <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET>.",
+			"members": ["fällt", "eine", "Entscheidung"]
+		},
+		"idealOutput": {
+			"decision": "Unresolved"
+		},
+		"explanation": "Fällen replaces the canonical support verb treffen; this route does not collapse the two conventional combinations into one Lemma.",
+		"contaminationKeys": [
+			"de-coll-lemma:entscheidung-treffen",
+			"de-coll-member-identity:support-verb-alternant"
+		]
+	}
+}

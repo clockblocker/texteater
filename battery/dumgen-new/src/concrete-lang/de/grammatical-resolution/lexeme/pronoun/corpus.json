@@ -1,0 +1,6678 @@
+{
+	"grammar-de-pron-fixed-mir": {
+		"input": {
+			"markedContext": "Bitte gib <TARGET>mir</TARGET> den Schlüssel.",
+			"members": ["mir"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mir"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mir",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-du": {
+		"input": {
+			"markedContext": "Heute kochst <TARGET>du</TARGET> das Abendessen.",
+			"members": ["du"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["du"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "du",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-dich": {
+		"input": {
+			"markedContext": "Ich rufe <TARGET>dich</TARGET> morgen an.",
+			"members": ["dich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dich",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-deiner": {
+		"input": {
+			"markedContext": "Wir gedachten <TARGET>deiner</TARGET> in Dankbarkeit.",
+			"members": ["deiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "deiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-er": {
+		"input": {
+			"markedContext": "Am Montag beginnt <TARGET>er</TARGET> die neue Stelle.",
+			"members": ["er"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["er"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "er",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihn": {
+		"input": {
+			"markedContext": "Die Kollegin begrüßt <TARGET>ihn</TARGET> am Eingang.",
+			"members": ["ihn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihn",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-seiner-masc": {
+		"input": {
+			"markedContext": "Die Gemeinde gedachte <TARGET>seiner</TARGET> feierlich.",
+			"members": ["seiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["seiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "seiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihr-fem": {
+		"input": {
+			"markedContext": "Der Arzt hilft <TARGET>ihr</TARGET> sofort.",
+			"members": ["ihr"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihr"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihr",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Fem",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihrer-fem": {
+		"input": {
+			"markedContext": "Die Nachbarn gedachten <TARGET>ihrer</TARGET> lange.",
+			"members": ["ihrer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihrer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihrer",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Fem",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihm-neut": {
+		"input": {
+			"markedContext": "Das Tier zittert; wir geben <TARGET>ihm</TARGET> Wasser.",
+			"members": ["ihm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihm"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihm",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Neut",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-seiner-neut": {
+		"input": {
+			"markedContext": "Des alten Gesetzes wurde <TARGET>seiner</TARGET> gedacht.",
+			"members": ["seiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["seiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "seiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Neut",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-uns": {
+		"input": {
+			"markedContext": "Die Gastgeber laden <TARGET>uns</TARGET> ein.",
+			"members": ["uns"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["uns"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "uns",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-unser-gen": {
+		"input": {
+			"markedContext": "Man erinnerte sich <TARGET>unser</TARGET> gern.",
+			"members": ["unser"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["unser"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "unser",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihr-second-plur": {
+		"input": {
+			"markedContext": "Morgen beginnt <TARGET>ihr</TARGET> früher.",
+			"members": ["ihr"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihr"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihr",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihnen-plur": {
+		"input": {
+			"markedContext": "Die Kinder frieren; wir geben <TARGET>ihnen</TARGET> Decken.",
+			"members": ["ihnen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihnen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihnen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihrer-plur": {
+		"input": {
+			"markedContext": "Die Stadt gedachte <TARGET>ihrer</TARGET> gemeinsam.",
+			"members": ["ihrer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihrer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihrer",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-sie-formal-sing": {
+		"input": {
+			"markedContext": "Kommen <TARGET>Sie</TARGET> bitte herein, Frau Müller.",
+			"members": ["Sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihnen-formal-sing": {
+		"input": {
+			"markedContext": "Ich helfe <TARGET>Ihnen</TARGET> gern, Herr Özdemir.",
+			"members": ["Ihnen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihnen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihnen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihrer-formal-sing": {
+		"input": {
+			"markedContext": "Frau Doktor, wir gedachten <TARGET>Ihrer</TARGET> dankbar.",
+			"members": ["Ihrer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihrer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihrer",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-sie-formal-plur": {
+		"input": {
+			"markedContext": "Kommen <TARGET>Sie</TARGET> bitte herein, meine Damen.",
+			"members": ["Sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihnen-formal-plur": {
+		"input": {
+			"markedContext": "Ich helfe <TARGET>Ihnen</TARGET> gern, liebe Gäste.",
+			"members": ["Ihnen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihnen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihnen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihrer-formal-plur": {
+		"input": {
+			"markedContext": "Meine Damen, wir gedachten <TARGET>Ihrer</TARGET> dankbar.",
+			"members": ["Ihrer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihrer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihrer",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-dein": {
+		"input": {
+			"markedContext": "Der freie Platz ist <TARGET>deiner</TARGET>.",
+			"members": ["deiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dein",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-sein-masc": {
+		"input": {
+			"markedContext": "Der schwarze Koffer ist <TARGET>seiner</TARGET>.",
+			"members": ["seiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["seiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": "Masc",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-sein-neut": {
+		"input": {
+			"markedContext": "Das rote Spielzeug ist <TARGET>seines</TARGET>.",
+			"members": ["seines"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["seines"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": "Neut",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihr-fem-poss": {
+		"input": {
+			"markedContext": "Der grüne Mantel ist <TARGET>ihrer</TARGET>.",
+			"members": ["ihrer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihrer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihr",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": "Fem",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihr-plur-poss": {
+		"input": {
+			"markedContext": "Die reservierten Plätze sind <TARGET>ihre</TARGET>.",
+			"members": ["ihre"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihre"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihr",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-unser-poss": {
+		"input": {
+			"markedContext": "Der große Tisch ist <TARGET>unserer</TARGET>.",
+			"members": ["unserer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["unserer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "unser",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-euer-poss": {
+		"input": {
+			"markedContext": "Der letzte Vorschlag ist <TARGET>eurer</TARGET>.",
+			"members": ["eurer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["eurer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "euer",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-ihr-formal-poss": {
+		"input": {
+			"markedContext": "Frau Weber, der Ordner ist <TARGET>Ihrer</TARGET>.",
+			"members": ["Ihrer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihrer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihr",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-wer": {
+		"input": {
+			"markedContext": "<TARGET>Wer</TARGET> kommt heute?",
+			"members": ["Wer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wer",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Int",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The free interrogative keeps its exact normalized case form as the learner-facing Lemma."
+	},
+	"grammar-de-pron-fixed-wen": {
+		"input": {
+			"markedContext": "<TARGET>Wen</TARGET> rufst du an?",
+			"members": ["Wen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wen",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Int",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The free interrogative keeps its exact normalized case form as the learner-facing Lemma."
+	},
+	"grammar-de-pron-fixed-wem": {
+		"input": {
+			"markedContext": "<TARGET>Wem</TARGET> hilfst du morgen?",
+			"members": ["Wem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wem",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Int",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The free interrogative keeps its exact normalized case form as the learner-facing Lemma."
+	},
+	"grammar-de-pron-fixed-wessen": {
+		"input": {
+			"markedContext": "<TARGET>Wessen</TARGET> bedarf es noch?",
+			"members": ["Wessen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wessen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wessen",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Int",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The free interrogative keeps its exact normalized case form as the learner-facing Lemma."
+	},
+	"grammar-de-pron-fixed-jemand-jemand": {
+		"input": {
+			"markedContext": "<TARGET>Jemand</TARGET> wartet vor der Tür.",
+			"members": ["Jemand"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jemand"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jemand",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+	},
+	"grammar-de-pron-fixed-jemand-jemanden": {
+		"input": {
+			"markedContext": "Ich sehe <TARGET>jemanden</TARGET> vor der Tür.",
+			"members": ["jemanden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jemanden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jemand",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+	},
+	"grammar-de-pron-fixed-jemand-jemandem": {
+		"input": {
+			"markedContext": "Ich helfe <TARGET>jemandem</TARGET> aus der Nachbarschaft.",
+			"members": ["jemandem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jemandem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jemand",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+	},
+	"grammar-de-pron-fixed-jemand-jemandes": {
+		"input": {
+			"markedContext": "Es bedarf <TARGET>jemandes</TARGET> mit Erfahrung.",
+			"members": ["jemandes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jemandes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jemand",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+	},
+	"grammar-de-pron-fixed-niemand-niemand": {
+		"input": {
+			"markedContext": "<TARGET>Niemand</TARGET> wartet vor der Tür.",
+			"members": ["Niemand"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["niemand"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "niemand",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+	},
+	"grammar-de-pron-fixed-niemand-niemanden": {
+		"input": {
+			"markedContext": "Ich sehe <TARGET>niemanden</TARGET> vor der Tür.",
+			"members": ["niemanden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["niemanden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "niemand",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+	},
+	"grammar-de-pron-fixed-niemand-niemandem": {
+		"input": {
+			"markedContext": "Ich helfe <TARGET>niemandem</TARGET> aus der Nachbarschaft.",
+			"members": ["niemandem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["niemandem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "niemand",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+	},
+	"grammar-de-pron-fixed-niemand-niemandes": {
+		"input": {
+			"markedContext": "Es bedarf <TARGET>niemandes</TARGET> mit Erfahrung.",
+			"members": ["niemandes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["niemandes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "niemand",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+	},
+	"grammar-de-pron-fixed-keiner-nom-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern kam <TARGET>keiner</TARGET>.",
+			"members": ["keiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-nom-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen kam <TARGET>keine</TARGET>.",
+			"members": ["keine"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keine"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-nom-sing-neut": {
+		"input": {
+			"markedContext": "Von den Geräten funktioniert <TARGET>keines</TARGET>.",
+			"members": ["keines"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keines"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-acc-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern sah ich <TARGET>keinen</TARGET>.",
+			"members": ["keinen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keinen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-acc-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen kenne ich <TARGET>keine</TARGET>.",
+			"members": ["keine"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keine"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-acc-sing-neut": {
+		"input": {
+			"markedContext": "Von den Geräten reparierte ich <TARGET>keines</TARGET>.",
+			"members": ["keines"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keines"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-dat-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern half ich <TARGET>keinem</TARGET>.",
+			"members": ["keinem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keinem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-dat-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen widersprach ich <TARGET>keiner</TARGET>.",
+			"members": ["keiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-dat-sing-neut": {
+		"input": {
+			"markedContext": "Von den Geräten vertraue ich <TARGET>keinem</TARGET>.",
+			"members": ["keinem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keinem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-gen-sing-masc": {
+		"input": {
+			"markedContext": "Es bedarf <TARGET>keines</TARGET> der vorgeschlagenen Verträge.",
+			"members": ["keines"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keines"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-gen-sing-fem": {
+		"input": {
+			"markedContext": "Es bedarf <TARGET>keiner</TARGET> der vorgeschlagenen Lösungen.",
+			"members": ["keiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-gen-sing-neut": {
+		"input": {
+			"markedContext": "Es bedarf <TARGET>keines</TARGET> der vorgeschlagenen Geräte.",
+			"members": ["keines"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keines"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-nom-plur": {
+		"input": {
+			"markedContext": "Von den Gästen kamen <TARGET>keine</TARGET>.",
+			"members": ["keine"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keine"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-acc-plur": {
+		"input": {
+			"markedContext": "Von den Gästegruppen sah ich <TARGET>keine</TARGET>.",
+			"members": ["keine"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keine"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-dat-plur": {
+		"input": {
+			"markedContext": "Von den Gästen half ich <TARGET>keinen</TARGET>.",
+			"members": ["keinen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keinen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-keiner-gen-plur": {
+		"input": {
+			"markedContext": "Die Stimmen <TARGET>keiner</TARGET> der Bewerber wurden gezählt.",
+			"members": ["keiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["keiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-nom-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern irrt sich <TARGET>mancher</TARGET>.",
+			"members": ["mancher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mancher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-nom-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen irrt sich <TARGET>manche</TARGET>.",
+			"members": ["manche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-nom-sing-neut": {
+		"input": {
+			"markedContext": "Von den Details bleibt <TARGET>manches</TARGET> unklar.",
+			"members": ["manches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-acc-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern kenne ich <TARGET>manchen</TARGET>.",
+			"members": ["manchen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manchen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-acc-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen kenne ich <TARGET>manche</TARGET>.",
+			"members": ["manche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-acc-sing-neut": {
+		"input": {
+			"markedContext": "Von den Details verstehe ich <TARGET>manches</TARGET>.",
+			"members": ["manches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-dat-sing-masc": {
+		"input": {
+			"markedContext": "Von den Kandidaten vertraue ich <TARGET>manchem</TARGET>.",
+			"members": ["manchem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manchem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-dat-sing-fem": {
+		"input": {
+			"markedContext": "Von den Empfehlungen folge ich <TARGET>mancher</TARGET>.",
+			"members": ["mancher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mancher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-dat-sing-neut": {
+		"input": {
+			"markedContext": "Von den Kindern hilft das <TARGET>manchem</TARGET>.",
+			"members": ["manchem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manchem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-gen-sing-masc": {
+		"input": {
+			"markedContext": "Die Meinung <TARGET>manches</TARGET> der Teilnehmer blieb ungehört.",
+			"members": ["manches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-gen-sing-fem": {
+		"input": {
+			"markedContext": "Die Stimme <TARGET>mancher</TARGET> der Frauen fehlte.",
+			"members": ["mancher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mancher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-gen-sing-neut": {
+		"input": {
+			"markedContext": "Die Wirkung <TARGET>manches</TARGET> der Mittel ist unklar.",
+			"members": ["manches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-nom-plur": {
+		"input": {
+			"markedContext": "Von den Gästen kommen <TARGET>manche</TARGET> später.",
+			"members": ["manche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-acc-plur": {
+		"input": {
+			"markedContext": "Von den Gästen kenne ich <TARGET>manche</TARGET>.",
+			"members": ["manche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-dat-plur": {
+		"input": {
+			"markedContext": "Von den Gästen helfe ich <TARGET>manchen</TARGET>.",
+			"members": ["manchen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["manchen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-mancher-gen-plur": {
+		"input": {
+			"markedContext": "Die Stimmen <TARGET>mancher</TARGET> fehlen.",
+			"members": ["mancher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mancher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mancher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-jedermann-nom": {
+		"input": {
+			"markedContext": "<TARGET>Jedermann</TARGET> ist willkommen.",
+			"members": ["Jedermann"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedermann"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedermann",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+	},
+	"grammar-de-pron-fixed-jedermann-acc": {
+		"input": {
+			"markedContext": "Das betrifft <TARGET>jedermann</TARGET>.",
+			"members": ["jedermann"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedermann"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedermann",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+	},
+	"grammar-de-pron-fixed-jedermann-dat": {
+		"input": {
+			"markedContext": "Das steht <TARGET>jedermann</TARGET> frei.",
+			"members": ["jedermann"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedermann"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedermann",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+	},
+	"grammar-de-pron-fixed-jedermann-gen": {
+		"input": {
+			"markedContext": "Das ist <TARGET>jedermanns</TARGET> Sache.",
+			"members": ["jedermanns"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedermanns"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedermann",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+	},
+	"grammar-de-pron-fixed-alles-nom": {
+		"input": {
+			"markedContext": "<TARGET>Alles</TARGET> funktioniert.",
+			"members": ["Alles"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["alles"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alles",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-alles-acc": {
+		"input": {
+			"markedContext": "Ich habe <TARGET>alles</TARGET> geprüft.",
+			"members": ["alles"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["alles"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alles",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-allem-dat": {
+		"input": {
+			"markedContext": "Mit <TARGET>allem</TARGET> bin ich einverstanden.",
+			"members": ["allem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["allem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alles",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-alle-nom": {
+		"input": {
+			"markedContext": "<TARGET>Alle</TARGET> sind angekommen.",
+			"members": ["Alle"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["alle"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alle",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-alle-acc": {
+		"input": {
+			"markedContext": "Ich kenne <TARGET>alle</TARGET>.",
+			"members": ["alle"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["alle"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alle",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-allen-dat": {
+		"input": {
+			"markedContext": "Ich helfe <TARGET>allen</TARGET>.",
+			"members": ["allen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["allen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alle",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-aller-gen": {
+		"input": {
+			"markedContext": "Die Stimmen <TARGET>aller</TARGET> zählen.",
+			"members": ["aller"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aller"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "alle",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+	},
+	"grammar-de-pron-fixed-mehrere-nom": {
+		"input": {
+			"markedContext": "<TARGET>Mehrere</TARGET> kamen.",
+			"members": ["Mehrere"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mehrere"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mehrere",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The plural-only paradigm keeps all four contextual Case forms under Lemma mehrere with plural Number and no Gender."
+	},
+	"grammar-de-pron-fixed-mehrere-acc": {
+		"input": {
+			"markedContext": "Ich kenne <TARGET>mehrere</TARGET>.",
+			"members": ["mehrere"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mehrere"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mehrere",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The plural-only paradigm keeps all four contextual Case forms under Lemma mehrere with plural Number and no Gender."
+	},
+	"grammar-de-pron-fixed-mehrere-dat": {
+		"input": {
+			"markedContext": "Ich helfe <TARGET>mehreren</TARGET>.",
+			"members": ["mehreren"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mehreren"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mehrere",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The plural-only paradigm keeps all four contextual Case forms under Lemma mehrere with plural Number and no Gender."
+	},
+	"grammar-de-pron-fixed-mehrere-gen": {
+		"input": {
+			"markedContext": "Die Aussagen <TARGET>mehrerer</TARGET> stimmen überein.",
+			"members": ["mehrerer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mehrerer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mehrere",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The plural-only paradigm keeps all four contextual Case forms under Lemma mehrere with plural Number and no Gender."
+	},
+	"grammar-de-pron-fixed-jeder-nom-masc": {
+		"input": {
+			"markedContext": "Unter den Männern hilft <TARGET>jeder</TARGET>.",
+			"members": ["jeder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-nom-fem": {
+		"input": {
+			"markedContext": "Unter den Frauen hilft <TARGET>jede</TARGET>.",
+			"members": ["jede"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jede"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-nom-neut": {
+		"input": {
+			"markedContext": "Unter den Kindern hilft <TARGET>jedes</TARGET>.",
+			"members": ["jedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-acc-masc": {
+		"input": {
+			"markedContext": "Von den Männern kenne ich <TARGET>jeden</TARGET>.",
+			"members": ["jeden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-acc-fem": {
+		"input": {
+			"markedContext": "Von den Frauen kenne ich <TARGET>jede</TARGET>.",
+			"members": ["jede"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jede"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-acc-neut": {
+		"input": {
+			"markedContext": "Von den Kindern kenne ich <TARGET>jedes</TARGET>.",
+			"members": ["jedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-dat-masc": {
+		"input": {
+			"markedContext": "Von den Männern helfe ich <TARGET>jedem</TARGET>.",
+			"members": ["jedem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-dat-fem": {
+		"input": {
+			"markedContext": "Von den Frauen helfe ich <TARGET>jeder</TARGET>.",
+			"members": ["jeder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-dat-neut": {
+		"input": {
+			"markedContext": "Von den Kindern helfe ich <TARGET>jedem</TARGET>.",
+			"members": ["jedem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-gen-masc": {
+		"input": {
+			"markedContext": "Die Bewerber stellten Projekte vor; der Beitrag <TARGET>jedes</TARGET> wurde geprüft.",
+			"members": ["jedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-gen-fem": {
+		"input": {
+			"markedContext": "Die Bewerberinnen stellten Projekte vor; der Beitrag <TARGET>jeder</TARGET> wurde geprüft.",
+			"members": ["jeder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jeder-gen-neut": {
+		"input": {
+			"markedContext": "Die Kinder stellten Projekte vor; der Beitrag <TARGET>jedes</TARGET> wurde geprüft.",
+			"members": ["jedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeder",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+	},
+	"grammar-de-pron-fixed-jedweder-nom-masc": {
+		"input": {
+			"markedContext": "Unter den Männern hilft <TARGET>jedweder</TARGET>.",
+			"members": ["jedweder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedweder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-nom-fem": {
+		"input": {
+			"markedContext": "Unter den Frauen hilft <TARGET>jedwede</TARGET>.",
+			"members": ["jedwede"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwede"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-nom-neut": {
+		"input": {
+			"markedContext": "Unter den Kindern hilft <TARGET>jedwedes</TARGET>.",
+			"members": ["jedwedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-acc-masc": {
+		"input": {
+			"markedContext": "Von den Männern kenne ich <TARGET>jedweden</TARGET>.",
+			"members": ["jedweden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedweden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-acc-fem": {
+		"input": {
+			"markedContext": "Von den Frauen kenne ich <TARGET>jedwede</TARGET>.",
+			"members": ["jedwede"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwede"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-acc-neut": {
+		"input": {
+			"markedContext": "Von den Kindern kenne ich <TARGET>jedwedes</TARGET>.",
+			"members": ["jedwedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-dat-masc": {
+		"input": {
+			"markedContext": "Von den Männern helfe ich <TARGET>jedwedem</TARGET>.",
+			"members": ["jedwedem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwedem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-dat-fem": {
+		"input": {
+			"markedContext": "Von den Frauen helfe ich <TARGET>jedweder</TARGET>.",
+			"members": ["jedweder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedweder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-dat-neut": {
+		"input": {
+			"markedContext": "Von den Kindern helfe ich <TARGET>jedwedem</TARGET>.",
+			"members": ["jedwedem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwedem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-gen-masc": {
+		"input": {
+			"markedContext": "Die Bewerber stellten Projekte vor; der Beitrag <TARGET>jedwedes</TARGET> wurde geprüft.",
+			"members": ["jedwedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-gen-fem": {
+		"input": {
+			"markedContext": "Die Bewerberinnen stellten Projekte vor; der Beitrag <TARGET>jedweder</TARGET> wurde geprüft.",
+			"members": ["jedweder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedweder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jedweder-gen-neut": {
+		"input": {
+			"markedContext": "Die Kinder stellten Projekte vor; der Beitrag <TARGET>jedwedes</TARGET> wurde geprüft.",
+			"members": ["jedwedes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedwedes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedweder",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
+	},
+	"grammar-de-pron-fixed-jeglicher-nom-sing-masc": {
+		"input": {
+			"markedContext": "Unter den Männern hilft <TARGET>jeglicher</TARGET>.",
+			"members": ["jeglicher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglicher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-nom-sing-fem": {
+		"input": {
+			"markedContext": "Unter den Frauen hilft <TARGET>jegliche</TARGET>.",
+			"members": ["jegliche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-nom-sing-neut": {
+		"input": {
+			"markedContext": "Unter den Kindern hilft <TARGET>jegliches</TARGET>.",
+			"members": ["jegliches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-acc-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern kenne ich <TARGET>jeglichen</TARGET>.",
+			"members": ["jeglichen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglichen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-acc-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen kenne ich <TARGET>jegliche</TARGET>.",
+			"members": ["jegliche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-acc-sing-neut": {
+		"input": {
+			"markedContext": "Von den Kindern kenne ich <TARGET>jegliches</TARGET>.",
+			"members": ["jegliches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-dat-sing-masc": {
+		"input": {
+			"markedContext": "Von den Männern helfe ich <TARGET>jeglichem</TARGET>.",
+			"members": ["jeglichem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglichem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-dat-sing-fem": {
+		"input": {
+			"markedContext": "Von den Frauen helfe ich <TARGET>jeglicher</TARGET>.",
+			"members": ["jeglicher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglicher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-dat-sing-neut": {
+		"input": {
+			"markedContext": "Von den Kindern helfe ich <TARGET>jeglichem</TARGET>.",
+			"members": ["jeglichem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglichem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-gen-sing-masc": {
+		"input": {
+			"markedContext": "Die Bewerber stellten Projekte vor; der Beitrag <TARGET>jegliches</TARGET> wurde geprüft.",
+			"members": ["jegliches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-gen-sing-fem": {
+		"input": {
+			"markedContext": "Die Bewerberinnen stellten Projekte vor; der Beitrag <TARGET>jeglicher</TARGET> wurde geprüft.",
+			"members": ["jeglicher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglicher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-gen-sing-neut": {
+		"input": {
+			"markedContext": "Die Kinder stellten Projekte vor; der Beitrag <TARGET>jegliches</TARGET> wurde geprüft.",
+			"members": ["jegliches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-nom-plur": {
+		"input": {
+			"markedContext": "Die Vorschläge lagen vor; <TARGET>jegliche</TARGET> wurden geprüft.",
+			"members": ["jegliche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-acc-plur": {
+		"input": {
+			"markedContext": "Die Vorschläge lagen vor; wir prüften <TARGET>jegliche</TARGET>.",
+			"members": ["jegliche"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jegliche"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-dat-plur": {
+		"input": {
+			"markedContext": "Die Vorschläge lagen vor; wir widersprachen <TARGET>jeglichen</TARGET>.",
+			"members": ["jeglichen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglichen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-jeglicher-gen-plur": {
+		"input": {
+			"markedContext": "Die Vorschläge lagen vor; der Wortlaut <TARGET>jeglicher</TARGET> wurde geprüft.",
+			"members": ["jeglicher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jeglicher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jeglicher",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-der-nom-masc": {
+		"input": {
+			"markedContext": "<TARGET>Der</TARGET> gefällt mir.",
+			"members": ["Der"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["der"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-den-acc-masc": {
+		"input": {
+			"markedContext": "<TARGET>Den</TARGET> nehme ich.",
+			"members": ["Den"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["den"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "den",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-dem-dat-masc": {
+		"input": {
+			"markedContext": "Der Mann dort: Mit <TARGET>dem</TARGET> arbeite ich.",
+			"members": ["dem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dem",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-dessen-gen-masc": {
+		"input": {
+			"markedContext": "Der Plan dort: <TARGET>Dessen</TARGET> bedarf es.",
+			"members": ["Dessen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dessen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dessen",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-die-nom-fem": {
+		"input": {
+			"markedContext": "<TARGET>Die</TARGET> gefällt mir.",
+			"members": ["Die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-die-acc-fem": {
+		"input": {
+			"markedContext": "Von den Frauen nehme ich <TARGET>die</TARGET>.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-der-dat-fem": {
+		"input": {
+			"markedContext": "Die Frau dort: Mit <TARGET>der</TARGET> arbeite ich.",
+			"members": ["der"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["der"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-deren-gen-fem": {
+		"input": {
+			"markedContext": "Die Lösung dort: <TARGET>Deren</TARGET> bedarf es.",
+			"members": ["Deren"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deren"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "deren",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-das-nom-neut": {
+		"input": {
+			"markedContext": "<TARGET>Das</TARGET> gefällt mir.",
+			"members": ["Das"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["das"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "das",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-das-acc-neut": {
+		"input": {
+			"markedContext": "<TARGET>Das</TARGET> nehme ich.",
+			"members": ["Das"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["das"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "das",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-dem-dat-neut": {
+		"input": {
+			"markedContext": "Das Gerät dort: Mit <TARGET>dem</TARGET> arbeite ich.",
+			"members": ["dem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dem",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-dessen-gen-neut": {
+		"input": {
+			"markedContext": "Das Werkzeug dort: <TARGET>Dessen</TARGET> bedarf es.",
+			"members": ["Dessen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dessen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dessen",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-die-nom-plur": {
+		"input": {
+			"markedContext": "<TARGET>Die</TARGET> gefallen mir.",
+			"members": ["Die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-die-acc-plur": {
+		"input": {
+			"markedContext": "Von den Geräten nehme ich <TARGET>die</TARGET>.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-denen-dat-plur": {
+		"input": {
+			"markedContext": "Mit <TARGET>denen</TARGET> arbeite ich.",
+			"members": ["denen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["denen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "denen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-dem-deren-gen-plur": {
+		"input": {
+			"markedContext": "Die Lösungen dort: <TARGET>Deren</TARGET> bedarf es.",
+			"members": ["Deren"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deren"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "deren",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-der-nom-masc": {
+		"input": {
+			"markedContext": "Das ist der Mann, <TARGET>der</TARGET> den Drucker repariert.",
+			"members": ["der"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["der"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-den-acc-masc": {
+		"input": {
+			"markedContext": "Das ist der Mann, <TARGET>den</TARGET> wir begrüßen.",
+			"members": ["den"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["den"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "den",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-dem-dat-masc": {
+		"input": {
+			"markedContext": "Das ist der Mann, mit <TARGET>dem</TARGET> wir arbeiten.",
+			"members": ["dem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dem",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-dessen-gen-masc": {
+		"input": {
+			"markedContext": "Das ist der Mann, <TARGET>dessen</TARGET> Plan wir prüfen.",
+			"members": ["dessen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dessen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dessen",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-die-nom-fem": {
+		"input": {
+			"markedContext": "Das ist die Frau, <TARGET>die</TARGET> heute auftritt.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-die-acc-fem": {
+		"input": {
+			"markedContext": "Das ist die Frau, <TARGET>die</TARGET> wir begrüßen.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-der-dat-fem": {
+		"input": {
+			"markedContext": "Das ist die Frau, mit <TARGET>der</TARGET> wir arbeiten.",
+			"members": ["der"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["der"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-deren-gen-fem": {
+		"input": {
+			"markedContext": "Das ist die Frau, <TARGET>deren</TARGET> Plan wir prüfen.",
+			"members": ["deren"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deren"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "deren",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-das-nom-neut": {
+		"input": {
+			"markedContext": "Das ist das Gerät, <TARGET>das</TARGET> im Labor steht.",
+			"members": ["das"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["das"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "das",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-das-acc-neut": {
+		"input": {
+			"markedContext": "Das ist das Gerät, <TARGET>das</TARGET> wir prüfen.",
+			"members": ["das"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["das"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "das",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-dem-dat-neut": {
+		"input": {
+			"markedContext": "Das ist das Gerät, mit <TARGET>dem</TARGET> wir arbeiten.",
+			"members": ["dem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dem",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-dessen-gen-neut": {
+		"input": {
+			"markedContext": "Das ist das Gerät, <TARGET>dessen</TARGET> Nummer wir notieren.",
+			"members": ["dessen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dessen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dessen",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-die-nom-plur": {
+		"input": {
+			"markedContext": "Das sind die Geräte, <TARGET>die</TARGET> im Labor stehen.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-die-acc-plur": {
+		"input": {
+			"markedContext": "Das sind die Geräte, <TARGET>die</TARGET> wir prüfen.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "die",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-denen-dat-plur": {
+		"input": {
+			"markedContext": "Das sind die Geräte, mit <TARGET>denen</TARGET> wir arbeiten.",
+			"members": ["denen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["denen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "denen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-fixed-der-paradigm-rel-deren-gen-plur": {
+		"input": {
+			"markedContext": "Das sind die Geräte, <TARGET>deren</TARGET> Nummern wir notieren.",
+			"members": ["deren"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deren"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "deren",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+	},
+	"grammar-de-pron-demo-personal-ihm": {
+		"input": {
+			"markedContext": "Anna hilft <TARGET>ihm</TARGET> beim Umzug.",
+			"members": ["ihm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihm"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihm",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Dative masculine singular fixed form identity."
+	},
+	"grammar-de-pron-demo-formal-ihnen": {
+		"input": {
+			"markedContext": "Frau Weber, ich danke <TARGET>Ihnen</TARGET> für die Hilfe.",
+			"members": ["Ihnen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihnen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihnen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Formal singular addressee; Surface remains morphologically plural."
+	},
+	"grammar-de-pron-dev-personal-ich": {
+		"input": {
+			"markedContext": "Heute fahre <TARGET>ich</TARGET> mit dem Zug nach Leipzig.",
+			"members": ["ich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ich",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-personal-sie-fem": {
+		"input": {
+			"markedContext": "Nach dem Essen liest <TARGET>sie</TARGET> noch eine Stunde.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Fem",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-personal-sie-plur-acc": {
+		"input": {
+			"markedContext": "Die Gäste warten draußen; der Portier ruft <TARGET>sie</TARGET> herein.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-personal-euch": {
+		"input": {
+			"markedContext": "Morgen besuche ich <TARGET>euch</TARGET> in Dresden.",
+			"members": ["euch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["euch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "euch",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-formal-sie-nom": {
+		"input": {
+			"markedContext": "Herr Yilmaz, <TARGET>Sie</TARGET> beginnen bitte mit dem Bericht.",
+			"members": ["Sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-personal-dir-dat": {
+		"input": {
+			"markedContext": "Nach der Besprechung gebe ich <TARGET>dir</TARGET> die Notizen zurück.",
+			"members": ["dir"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dir"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dir",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-personal-wir-nom": {
+		"input": {
+			"markedContext": "Am nächsten Morgen fahren <TARGET>wir</TARGET> gemeinsam zur Baustelle.",
+			"members": ["wir"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wir"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wir",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-formal-ihnen-dat": {
+		"input": {
+			"markedContext": "Herr Brandt, die Rezeption reserviert <TARGET>Ihnen</TARGET> ein ruhiges Zimmer.",
+			"members": ["Ihnen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Ihnen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ihnen",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-formal-sie-unknown-addressee": {
+		"input": {
+			"markedContext": "Kommen <TARGET>Sie</TARGET> bitte herein.",
+			"members": ["Sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Addressee count is unstated, so fixed-population selection must miss."
+	},
+	"grammar-de-pron-demo-reflexive-sich": {
+		"input": {
+			"markedContext": "Nach dem Training wäscht Lea <TARGET>sich</TARGET> die Hände.",
+			"members": ["sich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"reflex": "Yes"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Reflexive possessor. Dative form sich."
+	},
+	"grammar-de-pron-dev-reflexive-mich": {
+		"input": {
+			"markedContext": "Vor dem Spiegel kämme ich <TARGET>mich</TARGET> sorgfältig.",
+			"members": ["mich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"reflex": "Yes"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mich",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-nonreflexive-mich": {
+		"input": {
+			"markedContext": "Die Ärztin untersucht <TARGET>mich</TARGET> am Montag.",
+			"members": ["mich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mich",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-reflexive-dich": {
+		"input": {
+			"markedContext": "Nach dem Lauf wäschst du <TARGET>dich</TARGET> gründlich.",
+			"members": ["dich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"reflex": "Yes"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "dich",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-fixed-reflexive-uns": {
+		"input": {
+			"markedContext": "Vor dem Foto stellen wir <TARGET>uns</TARGET> nebeneinander.",
+			"members": ["uns"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["uns"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"reflex": "Yes"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "uns",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-reciprocal-einander": {
+		"input": {
+			"markedContext": "Nach dem Streit hörten die beiden <TARGET>einander</TARGET> wieder zu.",
+			"members": ["einander"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["einander"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "einander",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rcp",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Invariant reciprocal. Citation Surface."
+	},
+	"grammar-de-pron-dev-inherent-reflexive-sich": {
+		"input": {
+			"markedContext": "Mara schämt <TARGET>sich</TARGET> für den Irrtum.",
+			"members": ["sich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"reflex": "Yes"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "VERB selects it. Target still PRON only."
+	},
+	"grammar-de-pron-accept-v4-reflexive-euch-acc": {
+		"input": {
+			"markedContext": "Vor dem Wettkampf wärmt <TARGET>euch</TARGET> gründlich auf.",
+			"members": ["euch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["euch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"reflex": "Yes"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "euch",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-demo-relative-der": {
+		"input": {
+			"markedContext": "Das ist der Techniker, <TARGET>der</TARGET> den Drucker repariert hat.",
+			"members": ["der"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["der"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Current role relative. Scalar PronType Rel."
+	},
+	"grammar-de-pron-demo-indefinite-etwas": {
+		"input": {
+			"markedContext": "<TARGET>Etwas</TARGET> fehlt noch für das gemeinsame Frühstück.",
+			"members": ["Etwas"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["etwas"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "etwas",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Invariant Citation. Initial capital normalizes down."
+	},
+	"grammar-de-pron-dev-demonstrative-das-nom": {
+		"input": {
+			"markedContext": "<TARGET>Das</TARGET> gefällt der ganzen Familie.",
+			"members": ["Das"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["das"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-relative-die-nom": {
+		"input": {
+			"markedContext": "Die Musikerin, <TARGET>die</TARGET> heute auftritt, kommt aus Köln.",
+			"members": ["die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Fem",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-interrogative-wer-nom": {
+		"input": {
+			"markedContext": "<TARGET>Wer</TARGET> übernimmt morgen den Bereitschaftsdienst?",
+			"members": ["Wer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wer",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Int",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Question role. Scalar PronType Int."
+	},
+	"grammar-de-pron-dev-indefinite-jemandem": {
+		"input": {
+			"markedContext": "Die Notiz muss <TARGET>jemandem</TARGET> aus dem Team gehören.",
+			"members": ["jemandem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jemandem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jemand",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-negative-niemanden": {
+		"input": {
+			"markedContext": "Am Eingang sah der Pförtner <TARGET>niemanden</TARGET> mehr.",
+			"members": ["niemanden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["niemanden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "niemand",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-total-foreign-all": {
+		"input": {
+			"markedContext": "Im englischen Bericht stand: „<TARGET>All</TARGET> had arrived safely.“",
+			"members": ["All"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["all"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "all",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": "Yes",
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Tot",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Foreign invariant total PRON. Citation Surface."
+	},
+	"grammar-de-pron-dev-poss-meiner": {
+		"input": {
+			"markedContext": "Der rote Regenschirm am Eingang ist <TARGET>meiner</TARGET>.",
+			"members": ["meiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["meiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mein",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": "Yes",
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Possessor first person. Pronoun stands alone."
+	},
+	"grammar-de-pron-accept-v4-demonstrative-die-nom-plur": {
+		"input": {
+			"markedContext": "<TARGET>Die</TARGET> dort warten bereits auf den nächsten Bus.",
+			"members": ["Die"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["die"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-relative-dem-dat-neut": {
+		"input": {
+			"markedContext": "Das Gerät, mit <TARGET>dem</TARGET> wir messen, steht im Labor.",
+			"members": ["dem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "der",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rel",
+					"gender": "Neut",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-interrogative-wem-dat": {
+		"input": {
+			"markedContext": "<TARGET>Wem</TARGET> gehört der grüne Rucksack am Eingang?",
+			"members": ["Wem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wer",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Int",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-indefinite-irgendjemandem-dat": {
+		"input": {
+			"markedContext": "Die Nachricht muss <TARGET>irgendjemandem</TARGET> im Büro bekannt vorkommen.",
+			"members": ["irgendjemandem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["irgendjemandem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "irgendjemand",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-negative-niemanden-acc": {
+		"input": {
+			"markedContext": "Die Kontrolleurin ließ <TARGET>niemanden</TARGET> ohne Ausweis hinein.",
+			"members": ["niemanden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["niemanden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "niemand",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-reciprocal-einander": {
+		"input": {
+			"markedContext": "Im engen Flur gingen die Besucher <TARGET>einander</TARGET> höflich aus dem Weg.",
+			"members": ["einander"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["einander"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "einander",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Rcp",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-accept-v4-negative-nichts": {
+		"input": {
+			"markedContext": "Auf dem leeren Schreibtisch lag <TARGET>nichts</TARGET> mehr.",
+			"members": ["nichts"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nichts"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nichts",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-demo-variant-nix": {
+		"input": {
+			"markedContext": "Nach dem Gewitter war im Keller <TARGET>nix</TARGET> mehr trocken.",
+			"members": ["nix"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nix"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nichts",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Neg",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed colloquial form. Not Typo."
+	},
+	"grammar-de-pron-dev-contraction-s": {
+		"input": {
+			"markedContext": "Wenn '<TARGET>s</TARGET> morgen regnet, bleibt das Turnier in der Halle.",
+			"members": ["s"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["s"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "es",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Neut",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Apostrophe outside member. Contracted es remains full."
+	},
+	"grammar-de-pron-dev-typo-ihc": {
+		"input": {
+			"markedContext": "Nach der Sitzung fahre <TARGET>ihc</TARGET> direkt nach Hause.",
+			"members": ["ihc"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["ich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ich",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-pron-dev-archaic-euer": {
+		"input": {
+			"markedContext": "<TARGET>Euer</TARGET> gedenke ich in dieser schweren Stunde.",
+			"members": ["Euer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["euer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "euer",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Infm",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Plur"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Old genitive use. Initial capital is Standard."
+	},
+	"grammar-de-pron-demo-archaic-meiner": {
+		"input": {
+			"markedContext": "Er gedachte <TARGET>meiner</TARGET> in dieser schweren Stunde.",
+			"members": ["meiner"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["meiner"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "meiner",
+				"coreFeatures": {
+					"case": "Gen",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "1",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Personal genitive keeps the fixed meiner identity and is not possessive."
+	},
+	"grammar-de-pron-dev-formal-lowercase-typo": {
+		"input": {
+			"markedContext": "Frau Doktor, bitte setzen <TARGET>sie</TARGET> sich an den Tisch.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["Sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null,
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Formal address needs capital S."
+	},
+	"grammar-de-pron-accept-v4-foreign-he": {
+		"input": {
+			"markedContext": "Im englischen Protokoll heißt es: „<TARGET>He</TARGET> signed the form.“",
+			"members": ["He"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["he"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "he",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": "Yes",
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Masc",
+					"referenceNumber": "Sing"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "English code-switch PRON. Foreign Yes."
+	}
+}

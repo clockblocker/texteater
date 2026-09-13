@@ -1,0 +1,1842 @@
+{
+	"inputSchema": {
+		"def": {
+			"type": "pipe",
+			"in": {
+				"def": {
+					"type": "readonly",
+					"innerType": {
+						"def": {
+							"type": "object",
+							"shape": {
+								"markedContext": {
+									"def": { "type": "string", "checks": [{}] },
+									"type": "string",
+									"format": null,
+									"minLength": 1,
+									"maxLength": null
+								},
+								"reading": {
+									"def": {
+										"type": "pipe",
+										"in": {
+											"def": {
+												"type": "readonly",
+												"innerType": {
+													"def": {
+														"type": "lazy",
+														"checks": [
+															{
+																"def": {
+																	"type": "custom",
+																	"check": "custom",
+																	"path": [
+																		"lemma",
+																		"language"
+																	]
+																},
+																"type": "custom"
+															}
+														]
+													},
+													"type": "lazy"
+												}
+											},
+											"type": "readonly"
+										},
+										"out": {
+											"def": { "type": "transform" },
+											"type": "transform"
+										}
+									},
+									"type": "pipe",
+									"in": {
+										"def": {
+											"type": "readonly",
+											"innerType": {
+												"def": {
+													"type": "lazy",
+													"checks": [
+														{
+															"def": {
+																"type": "custom",
+																"check": "custom",
+																"path": [
+																	"lemma",
+																	"language"
+																]
+															},
+															"type": "custom"
+														}
+													]
+												},
+												"type": "lazy"
+											}
+										},
+										"type": "readonly"
+									},
+									"out": {
+										"def": { "type": "transform" },
+										"type": "transform"
+									}
+								},
+								"request": {
+									"def": {
+										"type": "readonly",
+										"innerType": {
+											"def": {
+												"type": "object",
+												"shape": {
+													"transcription": {
+														"def": {
+															"type": "optional",
+															"innerType": {
+																"def": {
+																	"type": "null"
+																},
+																"type": "null"
+															}
+														},
+														"type": "optional"
+													},
+													"definition": {
+														"def": {
+															"type": "optional",
+															"innerType": {
+																"def": {
+																	"type": "null"
+																},
+																"type": "null"
+															}
+														},
+														"type": "optional"
+													},
+													"translations": {
+														"def": {
+															"type": "optional",
+															"innerType": {
+																"def": {
+																	"type": "readonly",
+																	"innerType": {
+																		"def": {
+																			"type": "object",
+																			"shape": {
+																				"en": {
+																					"def": {
+																						"type": "optional",
+																						"innerType": {
+																							"def": {
+																								"type": "null"
+																							},
+																							"type": "null"
+																						}
+																					},
+																					"type": "optional"
+																				}
+																			},
+																			"catchall": {
+																				"def": {
+																					"type": "never"
+																				},
+																				"type": "never"
+																			},
+																			"checks": [
+																				{
+																					"def": {
+																						"type": "custom",
+																						"check": "custom"
+																					},
+																					"type": "custom"
+																				}
+																			]
+																		},
+																		"type": "object"
+																	}
+																},
+																"type": "readonly"
+															}
+														},
+														"type": "optional"
+													},
+													"semanticRelations": {
+														"def": {
+															"type": "optional",
+															"innerType": {
+																"def": {
+																	"type": "readonly",
+																	"innerType": {
+																		"def": {
+																			"type": "record",
+																			"keyType": {
+																				"def": {
+																					"type": "enum",
+																					"entries": {
+																						"synonym": "synonym",
+																						"nearSynonym": "nearSynonym",
+																						"antonym": "antonym",
+																						"nearAntonym": "nearAntonym",
+																						"hypernym": "hypernym",
+																						"holonym": "holonym"
+																					}
+																				},
+																				"type": "enum",
+																				"enum": {
+																					"synonym": "synonym",
+																					"nearSynonym": "nearSynonym",
+																					"antonym": "antonym",
+																					"nearAntonym": "nearAntonym",
+																					"hypernym": "hypernym",
+																					"holonym": "holonym"
+																				},
+																				"options": [
+																					"synonym",
+																					"nearSynonym",
+																					"antonym",
+																					"nearAntonym",
+																					"hypernym",
+																					"holonym"
+																				]
+																			},
+																			"valueType": {
+																				"def": {
+																					"type": "null"
+																				},
+																				"type": "null"
+																			},
+																			"checks": [
+																				{
+																					"def": {
+																						"type": "custom",
+																						"check": "custom"
+																					},
+																					"type": "custom"
+																				}
+																			]
+																		},
+																		"type": "record",
+																		"keyType": {
+																			"def": {
+																				"type": "enum",
+																				"entries": {
+																					"synonym": "synonym",
+																					"nearSynonym": "nearSynonym",
+																					"antonym": "antonym",
+																					"nearAntonym": "nearAntonym",
+																					"hypernym": "hypernym",
+																					"holonym": "holonym"
+																				}
+																			},
+																			"type": "enum",
+																			"enum": {
+																				"synonym": "synonym",
+																				"nearSynonym": "nearSynonym",
+																				"antonym": "antonym",
+																				"nearAntonym": "nearAntonym",
+																				"hypernym": "hypernym",
+																				"holonym": "holonym"
+																			},
+																			"options": [
+																				"synonym",
+																				"nearSynonym",
+																				"antonym",
+																				"nearAntonym",
+																				"hypernym",
+																				"holonym"
+																			]
+																		},
+																		"valueType": {
+																			"def": {
+																				"type": "null"
+																			},
+																			"type": "null"
+																		}
+																	}
+																},
+																"type": "readonly"
+															}
+														},
+														"type": "optional"
+													}
+												},
+												"catchall": {
+													"def": { "type": "never" },
+													"type": "never"
+												}
+											},
+											"type": "object"
+										}
+									},
+									"type": "readonly"
+								}
+							},
+							"catchall": {
+								"def": { "type": "never" },
+								"type": "never"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"type": "readonly"
+			},
+			"out": { "def": { "type": "transform" }, "type": "transform" }
+		},
+		"type": "pipe",
+		"in": {
+			"def": {
+				"type": "readonly",
+				"innerType": {
+					"def": {
+						"type": "object",
+						"shape": {
+							"markedContext": {
+								"def": { "type": "string", "checks": [{}] },
+								"type": "string",
+								"format": null,
+								"minLength": 1,
+								"maxLength": null
+							},
+							"reading": {
+								"def": {
+									"type": "pipe",
+									"in": {
+										"def": {
+											"type": "readonly",
+											"innerType": {
+												"def": {
+													"type": "lazy",
+													"checks": [
+														{
+															"def": {
+																"type": "custom",
+																"check": "custom",
+																"path": [
+																	"lemma",
+																	"language"
+																]
+															},
+															"type": "custom"
+														}
+													]
+												},
+												"type": "lazy"
+											}
+										},
+										"type": "readonly"
+									},
+									"out": {
+										"def": { "type": "transform" },
+										"type": "transform"
+									}
+								},
+								"type": "pipe",
+								"in": {
+									"def": {
+										"type": "readonly",
+										"innerType": {
+											"def": {
+												"type": "lazy",
+												"checks": [
+													{
+														"def": {
+															"type": "custom",
+															"check": "custom",
+															"path": [
+																"lemma",
+																"language"
+															]
+														},
+														"type": "custom"
+													}
+												]
+											},
+											"type": "lazy"
+										}
+									},
+									"type": "readonly"
+								},
+								"out": {
+									"def": { "type": "transform" },
+									"type": "transform"
+								}
+							},
+							"request": {
+								"def": {
+									"type": "readonly",
+									"innerType": {
+										"def": {
+											"type": "object",
+											"shape": {
+												"transcription": {
+													"def": {
+														"type": "optional",
+														"innerType": {
+															"def": {
+																"type": "null"
+															},
+															"type": "null"
+														}
+													},
+													"type": "optional"
+												},
+												"definition": {
+													"def": {
+														"type": "optional",
+														"innerType": {
+															"def": {
+																"type": "null"
+															},
+															"type": "null"
+														}
+													},
+													"type": "optional"
+												},
+												"translations": {
+													"def": {
+														"type": "optional",
+														"innerType": {
+															"def": {
+																"type": "readonly",
+																"innerType": {
+																	"def": {
+																		"type": "object",
+																		"shape": {
+																			"en": {
+																				"def": {
+																					"type": "optional",
+																					"innerType": {
+																						"def": {
+																							"type": "null"
+																						},
+																						"type": "null"
+																					}
+																				},
+																				"type": "optional"
+																			}
+																		},
+																		"catchall": {
+																			"def": {
+																				"type": "never"
+																			},
+																			"type": "never"
+																		},
+																		"checks": [
+																			{
+																				"def": {
+																					"type": "custom",
+																					"check": "custom"
+																				},
+																				"type": "custom"
+																			}
+																		]
+																	},
+																	"type": "object"
+																}
+															},
+															"type": "readonly"
+														}
+													},
+													"type": "optional"
+												},
+												"semanticRelations": {
+													"def": {
+														"type": "optional",
+														"innerType": {
+															"def": {
+																"type": "readonly",
+																"innerType": {
+																	"def": {
+																		"type": "record",
+																		"keyType": {
+																			"def": {
+																				"type": "enum",
+																				"entries": {
+																					"synonym": "synonym",
+																					"nearSynonym": "nearSynonym",
+																					"antonym": "antonym",
+																					"nearAntonym": "nearAntonym",
+																					"hypernym": "hypernym",
+																					"holonym": "holonym"
+																				}
+																			},
+																			"type": "enum",
+																			"enum": {
+																				"synonym": "synonym",
+																				"nearSynonym": "nearSynonym",
+																				"antonym": "antonym",
+																				"nearAntonym": "nearAntonym",
+																				"hypernym": "hypernym",
+																				"holonym": "holonym"
+																			},
+																			"options": [
+																				"synonym",
+																				"nearSynonym",
+																				"antonym",
+																				"nearAntonym",
+																				"hypernym",
+																				"holonym"
+																			]
+																		},
+																		"valueType": {
+																			"def": {
+																				"type": "null"
+																			},
+																			"type": "null"
+																		},
+																		"checks": [
+																			{
+																				"def": {
+																					"type": "custom",
+																					"check": "custom"
+																				},
+																				"type": "custom"
+																			}
+																		]
+																	},
+																	"type": "record",
+																	"keyType": {
+																		"def": {
+																			"type": "enum",
+																			"entries": {
+																				"synonym": "synonym",
+																				"nearSynonym": "nearSynonym",
+																				"antonym": "antonym",
+																				"nearAntonym": "nearAntonym",
+																				"hypernym": "hypernym",
+																				"holonym": "holonym"
+																			}
+																		},
+																		"type": "enum",
+																		"enum": {
+																			"synonym": "synonym",
+																			"nearSynonym": "nearSynonym",
+																			"antonym": "antonym",
+																			"nearAntonym": "nearAntonym",
+																			"hypernym": "hypernym",
+																			"holonym": "holonym"
+																		},
+																		"options": [
+																			"synonym",
+																			"nearSynonym",
+																			"antonym",
+																			"nearAntonym",
+																			"hypernym",
+																			"holonym"
+																		]
+																	},
+																	"valueType": {
+																		"def": {
+																			"type": "null"
+																		},
+																		"type": "null"
+																	}
+																}
+															},
+															"type": "readonly"
+														}
+													},
+													"type": "optional"
+												}
+											},
+											"catchall": {
+												"def": { "type": "never" },
+												"type": "never"
+											}
+										},
+										"type": "object"
+									}
+								},
+								"type": "readonly"
+							}
+						},
+						"catchall": {
+							"def": { "type": "never" },
+							"type": "never"
+						}
+					},
+					"type": "object"
+				}
+			},
+			"type": "readonly"
+		},
+		"out": { "def": { "type": "transform" }, "type": "transform" }
+	},
+	"outputSchema": {
+		"def": {
+			"type": "object",
+			"shape": {
+				"transcription": {
+					"def": {
+						"type": "optional",
+						"innerType": {
+							"def": {
+								"type": "nullable",
+								"innerType": {
+									"def": {
+										"type": "string",
+										"checks": [{}, {}, {}]
+									},
+									"type": "string",
+									"format": null,
+									"minLength": 1,
+									"maxLength": null
+								}
+							},
+							"type": "nullable"
+						}
+					},
+					"type": "optional"
+				},
+				"definition": {
+					"def": {
+						"type": "optional",
+						"innerType": {
+							"def": {
+								"type": "nullable",
+								"innerType": {
+									"def": {
+										"type": "string",
+										"checks": [{}, {}, {}]
+									},
+									"type": "string",
+									"format": null,
+									"minLength": 1,
+									"maxLength": null
+								}
+							},
+							"type": "nullable"
+						}
+					},
+					"type": "optional"
+				},
+				"translations": {
+					"def": {
+						"type": "optional",
+						"innerType": {
+							"def": {
+								"type": "object",
+								"shape": {
+									"en": {
+										"def": {
+											"type": "optional",
+											"innerType": {
+												"def": {
+													"type": "nullable",
+													"innerType": {
+														"def": {
+															"type": "string",
+															"checks": [
+																{},
+																{},
+																{}
+															]
+														},
+														"type": "string",
+														"format": null,
+														"minLength": 1,
+														"maxLength": null
+													}
+												},
+												"type": "nullable"
+											}
+										},
+										"type": "optional"
+									}
+								},
+								"catchall": {
+									"def": { "type": "never" },
+									"type": "never"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"type": "optional"
+				},
+				"semanticRelations": {
+					"def": {
+						"type": "optional",
+						"innerType": {
+							"def": {
+								"type": "record",
+								"keyType": {
+									"def": {
+										"type": "enum",
+										"entries": {
+											"synonym": "synonym",
+											"nearSynonym": "nearSynonym",
+											"antonym": "antonym",
+											"nearAntonym": "nearAntonym",
+											"hypernym": "hypernym",
+											"holonym": "holonym"
+										}
+									},
+									"type": "enum",
+									"enum": {
+										"synonym": "synonym",
+										"nearSynonym": "nearSynonym",
+										"antonym": "antonym",
+										"nearAntonym": "nearAntonym",
+										"hypernym": "hypernym",
+										"holonym": "holonym"
+									},
+									"options": [
+										"synonym",
+										"nearSynonym",
+										"antonym",
+										"nearAntonym",
+										"hypernym",
+										"holonym"
+									]
+								},
+								"valueType": {
+									"def": {
+										"type": "nullable",
+										"innerType": {
+											"def": {
+												"type": "array",
+												"element": {
+													"def": {
+														"type": "object",
+														"shape": {
+															"canonicalForm": {
+																"def": {
+																	"type": "string",
+																	"checks": [
+																		{},
+																		{},
+																		{}
+																	]
+																},
+																"type": "string",
+																"format": null,
+																"minLength": 1,
+																"maxLength": null
+															},
+															"kind": {
+																"def": {
+																	"type": "string",
+																	"checks": [
+																		{},
+																		{},
+																		{}
+																	]
+																},
+																"type": "string",
+																"format": null,
+																"minLength": 1,
+																"maxLength": null
+															}
+														},
+														"catchall": {
+															"def": {
+																"type": "never"
+															},
+															"type": "never"
+														}
+													},
+													"type": "object"
+												},
+												"checks": [{}, {}]
+											},
+											"type": "array",
+											"element": {
+												"def": {
+													"type": "object",
+													"shape": {
+														"canonicalForm": {
+															"def": {
+																"type": "string",
+																"checks": [
+																	{},
+																	{},
+																	{}
+																]
+															},
+															"type": "string",
+															"format": null,
+															"minLength": 1,
+															"maxLength": null
+														},
+														"kind": {
+															"def": {
+																"type": "string",
+																"checks": [
+																	{},
+																	{},
+																	{}
+																]
+															},
+															"type": "string",
+															"format": null,
+															"minLength": 1,
+															"maxLength": null
+														}
+													},
+													"catchall": {
+														"def": {
+															"type": "never"
+														},
+														"type": "never"
+													}
+												},
+												"type": "object"
+											}
+										}
+									},
+									"type": "nullable"
+								}
+							},
+							"type": "record",
+							"keyType": {
+								"def": {
+									"type": "enum",
+									"entries": {
+										"synonym": "synonym",
+										"nearSynonym": "nearSynonym",
+										"antonym": "antonym",
+										"nearAntonym": "nearAntonym",
+										"hypernym": "hypernym",
+										"holonym": "holonym"
+									}
+								},
+								"type": "enum",
+								"enum": {
+									"synonym": "synonym",
+									"nearSynonym": "nearSynonym",
+									"antonym": "antonym",
+									"nearAntonym": "nearAntonym",
+									"hypernym": "hypernym",
+									"holonym": "holonym"
+								},
+								"options": [
+									"synonym",
+									"nearSynonym",
+									"antonym",
+									"nearAntonym",
+									"hypernym",
+									"holonym"
+								]
+							},
+							"valueType": {
+								"def": {
+									"type": "nullable",
+									"innerType": {
+										"def": {
+											"type": "array",
+											"element": {
+												"def": {
+													"type": "object",
+													"shape": {
+														"canonicalForm": {
+															"def": {
+																"type": "string",
+																"checks": [
+																	{},
+																	{},
+																	{}
+																]
+															},
+															"type": "string",
+															"format": null,
+															"minLength": 1,
+															"maxLength": null
+														},
+														"kind": {
+															"def": {
+																"type": "string",
+																"checks": [
+																	{},
+																	{},
+																	{}
+																]
+															},
+															"type": "string",
+															"format": null,
+															"minLength": 1,
+															"maxLength": null
+														}
+													},
+													"catchall": {
+														"def": {
+															"type": "never"
+														},
+														"type": "never"
+													}
+												},
+												"type": "object"
+											},
+											"checks": [{}, {}]
+										},
+										"type": "array",
+										"element": {
+											"def": {
+												"type": "object",
+												"shape": {
+													"canonicalForm": {
+														"def": {
+															"type": "string",
+															"checks": [
+																{},
+																{},
+																{}
+															]
+														},
+														"type": "string",
+														"format": null,
+														"minLength": 1,
+														"maxLength": null
+													},
+													"kind": {
+														"def": {
+															"type": "string",
+															"checks": [
+																{},
+																{},
+																{}
+															]
+														},
+														"type": "string",
+														"format": null,
+														"minLength": 1,
+														"maxLength": null
+													}
+												},
+												"catchall": {
+													"def": { "type": "never" },
+													"type": "never"
+												}
+											},
+											"type": "object"
+										}
+									}
+								},
+								"type": "nullable"
+							}
+						}
+					},
+					"type": "optional"
+				}
+			},
+			"catchall": { "def": { "type": "never" }, "type": "never" }
+		},
+		"type": "object"
+	},
+	"byCaseId": {
+		"relation-demo-pfote-anchor": {
+			"rationale": "The approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.",
+			"failureModes": ["positive", "null", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Hund", "kind": "NOUN" },
+					"reason": "The encountered dog is a contingent bearer, not a category."
+				},
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Hund", "kind": "NOUN" },
+					"reason": "Context cannot narrow the generally valid bearer Tier to Hund."
+				}
+			],
+			"inverseJudgments": [
+				{
+					"relation": "hyponym",
+					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"rationale": "Körperteil → Pfote is the accepted inverse taxonomy judgment."
+				},
+				{
+					"relation": "meronym",
+					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"rationale": "Tier → Pfote is the accepted inverse part judgment."
+				}
+			]
+		},
+		"relation-demo-mieten-converse": {
+			"rationale": "Mieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.",
+			"failureModes": ["positive", "negative", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "vermieten", "kind": "VERB" },
+					"reason": "A converse changes viewpoint; it does not reverse or exclude the event."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-demo-zeit-ist-geld": {
+			"rationale": "No same-Family expression preserves this aphorism's proposition and stance; money-themed sayings are thematic associations, and the demo teaches the conservative null under the same-Family rule.",
+			"failureModes": ["null", "multi-member", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": {
+						"canonicalForm": "Geld allein macht nicht glücklich",
+						"kind": "Aphorism"
+					},
+					"reason": "Shared money topic, but a materially different proposition and stance."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"knowledge-demo-morpheme-suffix-heit": {
+			"rationale": "The thin Morpheme route owns base leaves only: one definition and one English literal for the bound suffix; it never requests Semantic Relations.",
+			"failureModes": ["positive"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"knowledge-demo-construction-fusion-ans": {
+			"rationale": "The thin Construction route owns base leaves only: one definition and one English literal for the fused an + das form; it never requests Semantic Relations.",
+			"failureModes": ["positive"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-basic-01-hubschrauber": {
+			"rationale": "Primary lexicography cross-lists Helikopter and supports the shared aircraft Reading; exact-synonym status is an explicit reviewer adjudication, while Luftfahrzeug is the useful category.",
+			"failureModes": ["positive", "null"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-basic-02-sichtbar": {
+			"rationale": "Sichtbar and unsichtbar form a conventional complementary opposition; shared morphology is not the evidence for the relation.",
+			"failureModes": ["positive"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-basic-03-pudel": {
+			"rationale": "Every poodle is a dog and Hund is the nearest useful category; Tier is too distant and Pfote is a part, not a category.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Tier", "kind": "NOUN" },
+					"reason": "Tier skips the useful intermediate Hund."
+				},
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"reason": "Pfote is a part, not a broader category."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-basic-04-berlin-city": {
+			"rationale": "The exact city Reading is conventionally an instance of Stadt. Berlin's Land Reading is kept separate rather than adding cross-Reading containment here.",
+			"failureModes": ["positive", "polysemy"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": [
+				{
+					"relation": "hyponym",
+					"target": { "canonicalForm": "Berlin", "kind": "PROPN" },
+					"rationale": "Stadt → Berlin is the inverse of the accepted instance-to-category judgment."
+				}
+			]
+		},
+		"relation-basic-05-sprinten": {
+			"rationale": "Primary lexicography defines sprinten as short-distance highest-speed running, directly supporting the broader action laufen.",
+			"failureModes": ["positive"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-01-bank-finance": {
+			"rationale": "Only the financial Reading is fixed. Duden treats Kreditinstitut as synonymous here, so it is not also a Hypernym; seating vocabulary belongs to another Reading.",
+			"failureModes": ["polysemy", "negative", "self-relation"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": {
+						"canonicalForm": "Kreditinstitut",
+						"kind": "NOUN"
+					},
+					"reason": "Primary lexicography treats the pair as synonyms, making taxonomy contested."
+				},
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "Sitzbank", "kind": "NOUN" },
+					"reason": "Sitzbank belongs to the furniture Reading."
+				},
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "Bank", "kind": "NOUN" },
+					"reason": "A source Lemma may never target itself."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-02-bank-bench": {
+			"rationale": "The furniture Reading admits the more explicit Sitzbank as a Near Synonym and Sitzmöbel as category; financial vocabulary would leak across Readings.",
+			"failureModes": ["polysemy", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": {
+						"canonicalForm": "Kreditinstitut",
+						"kind": "NOUN"
+					},
+					"reason": "The target denotes the unrelated financial Reading."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-03-schloss-building": {
+			"rationale": "The building Reading is a Gebäude; keys and locking devices belong to the other documented Schloss Reading.",
+			"failureModes": ["polysemy", "negative"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Schlüssel", "kind": "NOUN" },
+					"reason": "A key is an instrument for the lock Reading, not a whole of the building Reading."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-04-schloss-lock": {
+			"rationale": "The locking-device Reading is a Schließvorrichtung; palace and building targets are cross-Reading errors, and Schlüssel is an instrument rather than a component whole.",
+			"failureModes": ["polysemy", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Gebäude", "kind": "NOUN" },
+					"reason": "The category belongs to the palace Reading."
+				},
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Schlüssel", "kind": "NOUN" },
+					"reason": "Instrument use is not part-whole containment."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-05-klug-decision": {
+			"rationale": "The context fixes the sensible/appropriate Reading, for which vernünftig is close; intelligent favors cognitive capacity and would switch to another klug Reading.",
+			"failureModes": ["polysemy", "negative"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "intelligent", "kind": "ADJ" },
+					"reason": "The target selects cognitive capacity rather than sensible judgment."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-06-stark-physical": {
+			"rationale": "The physical-strength Reading supports kräftig and the scalar opposite schwach; heftig belongs to the intensity Reading found in starker Regen.",
+			"failureModes": ["polysemy", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "heftig", "kind": "ADJ" },
+					"reason": "A familiar collocation cannot import a target from another Reading."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-07-ins-gras-beissen": {
+			"rationale": "Primary lexicography explains the idiom through the Lexeme sterben, but ADR-0020 forbids that cross-Family target. Without a sourced same-Family equivalent, the relation stays null.",
+			"failureModes": [
+				"register",
+				"multi-member",
+				"negative",
+				"wrong-family"
+			],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "sterben", "kind": "VERB" },
+					"reason": "The lexical paraphrase crosses from the source Phraseme Family into Lexeme."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-08-foehre": {
+			"rationale": "Duden defines regional Föhre through the pine Reading of Kiefer; the regional restriction makes it Near Synonym, while Nadelbaum is the broader category.",
+			"failureModes": ["register", "polysemy"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "Kiefer", "kind": "NOUN" },
+					"reason": "Regional distribution blocks exact Synonymy."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-09-kaufen-converse": {
+			"rationale": "Primary definitions support reversed transaction viewpoints; Near Antonym is the project mapping, and erwerben is the broader acquisition action.",
+			"failureModes": ["negative", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "verkaufen", "kind": "VERB" },
+					"reason": "Both descriptions can be true of one transaction from different viewpoints."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-10-oeffnen": {
+			"rationale": "Duden directly cross-lists öffnen and schließen as antonyms, and the pair is a conventional reversive opposition.",
+			"failureModes": ["positive"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-11-warm": {
+			"rationale": "Warm and kalt are conventional opposing temperature poles; heiß is a higher value on the same side, not an opposite.",
+			"failureModes": ["negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "heiß", "kind": "ADJ" },
+					"reason": "A different scale value is not the opposing pole."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-12-hund-katze": {
+			"rationale": "Katze is only a contextual foil and co-hyponym, not a lexical opposite; the human-accepted null is not an inference from dictionary silence.",
+			"failureModes": ["negative", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearAntonym",
+					"target": { "canonicalForm": "Katze", "kind": "NOUN" },
+					"reason": "Arbitrary co-hyponyms do not become established opposites."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-13-auto-taxonomy": {
+			"rationale": "Kraftfahrzeug is a category; Rad is a part and Garage a contingent location, so taxonomy and part-whole must not be confused.",
+			"failureModes": ["wrong-kind", "null"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"reason": "A wheel is a Meronym, not a category."
+				},
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Garage", "kind": "NOUN" },
+					"reason": "A garage is an optional location, not an inherent whole."
+				}
+			],
+			"inverseJudgments": [
+				{
+					"relation": "meronym",
+					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"rationale": "Auto → wheel-sense Rad is the inverse-only conventional part judgment."
+				}
+			]
+		},
+		"relation-adv-14-rad-wheel": {
+			"rationale": "The wheel-part Reading is a Bauteil and an inherent part of a Fahrzeug; the encountered Fahrrad cannot narrow the general whole, and the bicycle Reading of Rad is excluded.",
+			"failureModes": ["polysemy", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "Fahrrad", "kind": "NOUN" },
+					"reason": "That relation holds only for the separate colloquial bicycle Reading of Rad."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-15-blutplasma": {
+			"rationale": "Duden defines Blutplasma as the liquid component of Blut, directly separating the category Flüssigkeit from the containing whole Blut.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": [
+				{
+					"relation": "meronym",
+					"target": { "canonicalForm": "Blutplasma", "kind": "NOUN" },
+					"rationale": "Blut → Blutplasma is the inverse constitutive-component judgment."
+				}
+			]
+		},
+		"relation-adv-16-berlin-land": {
+			"rationale": "The exact Land Reading is a Bundesland and an administrative member of Deutschland; it is not silently merged with the city Reading.",
+			"failureModes": ["polysemy", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": [
+				{
+					"relation": "meronym",
+					"target": { "canonicalForm": "Berlin", "kind": "PROPN" },
+					"rationale": "Deutschland → Berlin is the inverse administrative-member judgment."
+				}
+			]
+		},
+		"relation-adv-17-kreuzberg": {
+			"rationale": "Official Berlin sources identify Kreuzberg as an Ortsteil within Berlin, supporting both category and stable containment.",
+			"failureModes": ["positive"],
+			"authority": "primary-source",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-18-johann-trivial": {
+			"rationale": "The project rejects the trivial category Person for ordinary personal names, and the encounter supplies no stable whole; these are human-accepted nulls, not dictionary-silence claims.",
+			"failureModes": ["null", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Person", "kind": "NOUN" },
+					"reason": "The human-accepted case rejects trivial personal-name categories."
+				},
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Firma", "kind": "NOUN" },
+					"reason": "Employment or presence is contingent."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-19-mannschaft-inverse": {
+			"rationale": "Mannschaft is a kind of Gruppe. Spieler is a conventional member Meronym, but Dumgen never requests the downward relation.",
+			"failureModes": ["wrong-kind", "omission"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": [
+				{
+					"relation": "meronym",
+					"target": { "canonicalForm": "Spieler", "kind": "NOUN" },
+					"rationale": "Mannschaft → Spieler is the inverse of Spieler → Mannschaft Holonym."
+				}
+			]
+		},
+		"relation-adv-20-koerperteil-inverse": {
+			"rationale": "Körperteil is an anatomical structure and part of a Körper; Pfote is a narrower inverse-only Hyponym judgment.",
+			"failureModes": ["wrong-kind", "omission"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": [
+				{
+					"relation": "hyponym",
+					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"rationale": "Körperteil → Pfote is the inverse of Pfote → Körperteil Hypernym."
+				}
+			]
+		},
+		"relation-adv-21-innerhalb": {
+			"rationale": "Innerhalb and außerhalb form a conventional complementary spatial opposition; in is broader and syntactically different.",
+			"failureModes": ["positive", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-22-trotz": {
+			"rationale": "Ungeachtet shares the concessive relation but is systematically more formal, so only Near Synonym passes.",
+			"failureModes": ["register", "null"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-23-immer": {
+			"rationale": "The temporal-frequency Readings immer and nie are conventional endpoint opposites; manchmal is an intermediate frequency.",
+			"failureModes": ["positive", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "manchmal", "kind": "ADV" },
+					"reason": "An intermediate value is not the opposing pole."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-24-manchmal": {
+			"rationale": "Primary lexicography supports the shared occasional-frequency meaning; the elevated/literary distribution is reviewer-adjudicated as a Near-Synonym restriction.",
+			"failureModes": ["register", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-25-muessen": {
+			"rationale": "Sollen overlaps in obligation contexts but introduces reported or normative modality instead of preserving necessity.",
+			"failureModes": ["negative", "polysemy"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-26-und": {
+			"rationale": "Und and oder are conventionally paired coordination choices but not strict logical complements in ordinary German; CCONJ does not request Near Synonym.",
+			"failureModes": ["negative", "omission"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "oder", "kind": "CCONJ" },
+					"reason": "Inclusive and contextual uses prevent strict complementary opposition."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-27-jeder": {
+			"rationale": "Jeder and kein conventionally contrast universal and zero quantity but are not logical complements because intermediate quantities exist.",
+			"failureModes": ["negative", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-28-ja": {
+			"rationale": "As response particles, ja and nein conventionally affirm and reject the same proposition in parallel discourse roles.",
+			"failureModes": ["positive"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-29-zwei": {
+			"rationale": "No distinct exact-equivalent Lemma is adjudicated; the source Lemma and inflected Surfaces are forbidden, so the sole requested Synonym is null.",
+			"failureModes": ["null", "self-relation"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "zwei", "kind": "NUM" },
+					"reason": "A Reading may not target its own Lemma."
+				},
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "zweier", "kind": "NUM" },
+					"reason": "An inflected Surface is not a target Lemma."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-30-nicht": {
+			"rationale": "Keineswegs shares negation but adds emphatic intensity and differs grammatically, allowing Near Synonym but blocking exact equivalence.",
+			"failureModes": ["register", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-31-niemand": {
+			"rationale": "For the existential-person Reading, niemand and jemand form a conventional complementary opposition.",
+			"failureModes": ["positive"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-32-obwohl": {
+			"rationale": "Obgleich shares the concessive core but has a stable elevated register, so it is Near Synonym rather than exact Synonym.",
+			"failureModes": ["register", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-33-plus-symbol": {
+			"rationale": "Under the mathematical-operator Reading, plus and minus form a conventional reversive/opposing pair; the spelled word plus is another target identity.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-34-aphorism-null": {
+			"rationale": "No adjudicated expression preserves this aphorism's proposition and stance; the human-accepted null does not rely on dictionary silence, and thematic travel words are associations.",
+			"failureModes": ["null", "multi-member"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-35-in-betracht-ziehen": {
+			"rationale": "The Lexeme paraphrases berücksichtigen and bedenken leave the Collocation Family inventory, so no same-Family target is adjudicated; the complete Collocation still owns the judgments and the Lexeme contrast pair is covered by the erwägen case.",
+			"failureModes": [
+				"multi-member",
+				"wrong-family",
+				"omission",
+				"null"
+			],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": {
+						"canonicalForm": "berücksichtigen",
+						"kind": "VERB"
+					},
+					"reason": "The Lexeme paraphrase leaves the Collocation Family."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-36-auf-jeden-fall": {
+			"rationale": "Auf keinen Fall is the conventional complete-phraseme opposition; the former Lexeme adverb definitiv leaves the DiscourseFormula Family inventory and is dropped by the same-Family filter.",
+			"failureModes": ["multi-member", "wrong-family", "positive"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-37-proverb-null": {
+			"rationale": "Related proverbs about early action make different propositions; conservative nulls prevent a miscellaneous related-saying bucket.",
+			"failureModes": ["null", "multi-member", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": {
+						"canonicalForm": "Der frühe Vogel fängt den Wurm",
+						"kind": "Proverb"
+					},
+					"reason": "The sayings encourage related behavior but make materially different propositions."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-38-vereinigte-staaten": {
+			"rationale": "A fixed multi-word proper name remains one Lexeme/PROPN; it is an instance of Staat and geographically part of Nordamerika, never a Phraseme.",
+			"failureModes": ["multi-member", "wrong-family"],
+			"authority": "human-accepted",
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-39-eilen-multiword-target": {
+			"rationale": "Sich beeilen is a complete multi-member near-paraphrase, but it is a Phraseme and therefore outside the Lexeme Family inventory; no same-Family near paraphrase is adjudicated and no broader action is forced merely to fill the requested Hypernym leaf.",
+			"failureModes": ["multi-member", "wrong-family", "null"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": {
+						"canonicalForm": "sich beeilen",
+						"kind": "Collocation"
+					},
+					"reason": "The multi-member paraphrase is a Phraseme, outside the Lexeme Family."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-40-gluecklich-family": {
+			"rationale": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme, never Construction.",
+			"failureModes": ["wrong-family", "wrong-kind"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": {
+						"canonicalForm": "in Hochstimmung sein",
+						"kind": "Fusion"
+					},
+					"reason": "Construction targets are forbidden; a lexicalized phrase requires a Phraseme kind."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-41-schnell-kind": {
+			"rationale": "Rasch and langsam preserve the adjectival role; the associated noun Eile is grammatically incompatible and not semantic similarity.",
+			"failureModes": ["wrong-kind", "negative"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "Eile", "kind": "NOUN" },
+					"reason": "An associated noun fails grammatical compatibility and shared denotation."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-42-beginnen-alternative": {
+			"rationale": "Anfangen is adjudicated as equivalent here; starten is event-type/register restricted. Einsetzen is recorded as a bounded alternative target set.",
+			"failureModes": ["omission", "register"],
+			"authority": "human-accepted",
+			"acceptableTargetSets": {
+				"synonym": [[{ "canonicalForm": "einsetzen", "kind": "VERB" }]]
+			},
+			"harmfulTargets": [],
+			"inverseJudgments": []
+		},
+		"relation-adv-43-selbstbezug": {
+			"rationale": "Primary lexicography supports Bank as the distinct target Lemma; Kreditinstitut itself remains forbidden even if another Reading is imagined.",
+			"failureModes": ["self-relation", "positive"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": {
+						"canonicalForm": "Kreditinstitut",
+						"kind": "NOUN"
+					},
+					"reason": "Direct self-targets are categorically forbidden."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-44-rose-association": {
+			"rationale": "Rose is a kind of Blütenpflanze; Garten is only a location and Dorn only a possible part, so fluent associations cannot fill upward slots.",
+			"failureModes": ["negative", "wrong-kind", "null"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Garten", "kind": "NOUN" },
+					"reason": "A garden is a contingent location."
+				},
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Dorn", "kind": "NOUN" },
+					"reason": "A possible part is not a broader category."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-45-fahrrad-granularity": {
+			"rationale": "Zweirad is the nearest useful category; Verkehrsmittel is too distant, Hof contingent, and wheel-sense Rad a part rather than a category.",
+			"failureModes": ["negative", "wrong-kind", "omission"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": {
+						"canonicalForm": "Verkehrsmittel",
+						"kind": "NOUN"
+					},
+					"reason": "The target skips the useful intermediate Zweirad."
+				},
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Hof", "kind": "NOUN" },
+					"reason": "The encountered location is contingent."
+				},
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"reason": "Wheel-sense Rad is a component, not a category."
+				}
+			],
+			"inverseJudgments": [
+				{
+					"relation": "meronym",
+					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"rationale": "Fahrrad → wheel-sense Rad is the inverse-only part judgment."
+				}
+			]
+		},
+		"relation-adv-46-waehrend-adposition": {
+			"rationale": "Salvaged from the retired unit-shadow homograph pair: the adpositional Reading locates the event inside a nominal time span, which innerhalb shares; its spatial anchoring keeps the pair Near rather than exact Synonym and must not pull the subordinator's relations across the homograph.",
+			"failureModes": ["positive", "polysemy", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "innerhalb", "kind": "ADP" },
+					"reason": "The spatial anchoring of innerhalb blocks unrestricted substitution."
+				},
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "solange", "kind": "SCONJ" },
+					"reason": "The subordinator homograph belongs to the clause-linking Reading."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-47-waehrend-subordinator": {
+			"rationale": "Salvaged homograph counterpart: the subordinator Reading links finite clauses, which solange shares; solange adds a duration-profile restriction, and the adpositional Reading of während must not leak into this judgment.",
+			"failureModes": ["positive", "polysemy", "register"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "solange", "kind": "SCONJ" },
+					"reason": "The duration-profile restriction blocks exact equivalence."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-adv-48-erwaegen": {
+			"rationale": "Salvaged contrast pair with in Betracht ziehen: abwägen shares the deliberation proposition with a weighing nuance, so it is Near Synonym; the complete Collocation in Betracht ziehen is a Phraseme and therefore outside the Lexeme Family inventory.",
+			"failureModes": ["positive", "wrong-family", "multi-member"],
+			"authority": "human-accepted",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": {
+						"canonicalForm": "in Betracht ziehen",
+						"kind": "Collocation"
+					},
+					"reason": "The complete Collocation is a Phraseme, outside the Lexeme Family."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-syn-01-streichholz": {
+			"rationale": "Reciprocal unlabeled Duden synonymy supports exact Streichholz–Zündstäbchen equivalence; labeled Zündholz is unsafe as unrestricted exact synonymy.",
+			"failureModes": ["positive", "register"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "Zündholz", "kind": "NOUN" },
+					"reason": "Duden marks this otherwise equivalent form as technical or regional."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-syn-02-apfelsine-null": {
+			"rationale": "Regional and collocational restrictions prevent exact unrestricted equivalence with Orange.",
+			"failureModes": ["null", "register"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "synonym",
+					"target": { "canonicalForm": "Orange", "kind": "NOUN" },
+					"reason": "Same fruit denotation does not erase the sourced regional and compositional restriction."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-near-syn-01-semmel": {
+			"rationale": "Semmel and Brötchen share central denotation while Semmel carries a material Austrian/Bavarian distribution restriction.",
+			"failureModes": ["positive", "register"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "Brot", "kind": "NOUN" },
+					"reason": "A broader baked-food category is taxonomy, not near synonymy."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-near-syn-02-geige-null": {
+			"rationale": "Bratsche denotes a distinct larger instrument tuned a fifth lower, not a usage variant of Geige.",
+			"failureModes": ["null", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "nearSynonym",
+					"target": { "canonicalForm": "Bratsche", "kind": "NOUN" },
+					"reason": "A co-member of an instrument family is not a Near Synonym."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-ant-01-lebendig": {
+			"rationale": "The marked biological readings of lebendig and tot form a directly sourced complementary opposition.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "krank", "kind": "ADJ" },
+					"reason": "Illness can coexist with being alive and is not its complement."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-ant-02-nass": {
+			"rationale": "Nass and trocken are conventional opposite endpoints of the moisture scale.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "antonym",
+					"target": { "canonicalForm": "feucht", "kind": "ADJ" },
+					"reason": "Feucht lies on the same scale and overlaps low wetness rather than opposing it."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-near-ant-01-erben": {
+			"rationale": "Erben and vererben profile the same inheritance event from exchanged participant perspectives.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "nearAntonym",
+					"target": { "canonicalForm": "vermachen", "kind": "VERB" },
+					"reason": "Vermachen shares the bequeather direction and does not reverse viewpoint."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-near-ant-02-geben": {
+			"rationale": "Geben and bekommen conventionally profile the same transfer from giver and recipient perspectives.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "nearAntonym",
+					"target": { "canonicalForm": "wegnehmen", "kind": "VERB" },
+					"reason": "Removal is an opposing event, not the recipient view of the same transfer."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-hyp-01-amsel": {
+			"rationale": "Drossel is the directly evidenced nearest useful category for Amsel.",
+			"failureModes": ["positive", "omission"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Vogel", "kind": "NOUN" },
+					"reason": "This skips the directly evidenced nearer category Drossel."
+				},
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Singvogel", "kind": "NOUN" },
+					"reason": "This is also farther than the directly evidenced Drossel category."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-hyp-02-zylinderkopf-null": {
+			"rationale": "Zylinder is the containing technical whole, not a broader category of Zylinderkopf.",
+			"failureModes": ["null", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "hypernym",
+					"target": { "canonicalForm": "Zylinder", "kind": "NOUN" },
+					"reason": "Returning the whole as Hypernym confuses taxonomy with part–whole."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-hol-01-zeh": {
+			"rationale": "Fuß is the directly sourced immediate anatomical whole for Zeh.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Schuh", "kind": "NOUN" },
+					"reason": "A shoe may cover a toe but is not its constitutive whole."
+				}
+			],
+			"inverseJudgments": []
+		},
+		"relation-acceptance-hol-02-kapitell": {
+			"rationale": "Säule is the immediate constitutive architectural whole for Kapitell.",
+			"failureModes": ["positive", "wrong-kind"],
+			"authority": "primary-source",
+			"harmfulTargets": [
+				{
+					"relation": "holonym",
+					"target": { "canonicalForm": "Bauwerk", "kind": "NOUN" },
+					"reason": "This remote contextual container skips the immediate constitutive whole."
+				}
+			],
+			"inverseJudgments": []
+		}
+	}
+}

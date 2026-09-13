@@ -15,3 +15,5 @@ backlog/
 **/direct-checkpoint.json
 repos-for-refrence/
 battery/gumgen-old/docs/learning/
+
+.runs/

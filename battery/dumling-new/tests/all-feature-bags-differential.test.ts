@@ -61,6 +61,9 @@ const schemaPaths = (
 
 describe("supported Feature Bag fields preserve legacy validation", () => {
 	for (const schemaPath of schemaPaths) {
+		// #420/#421 intentionally change German PRON identity; concrete migration
+		// assertions live in german-pronoun-identity.test.ts.
+		if (schemaPath === "de/lexeme/pronoun.ts") continue;
 		test(schemaPath, async () => {
 			const oldModule = await import(
 				pathToFileURL(path.join(oldRoot, schemaPath)).href

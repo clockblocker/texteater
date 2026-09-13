@@ -1,0 +1,1150 @@
+{
+	"grammar-de-adj-demo-citation-sanft": {
+		"input": {
+			"markedContext": "Im Wörterbuch steht das Adjektiv <TARGET>sanft</TARGET>.",
+			"members": ["sanft"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sanft"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sanft",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Dictionary mention. Citation Surface. No inflection bag."
+	},
+	"grammar-de-adj-accept-citation-mild": {
+		"input": {
+			"markedContext": "Als Grundform wird <TARGET>mild</TARGET> angegeben.",
+			"members": ["mild"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mild"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mild",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-demo-attributive-klein": {
+		"input": {
+			"markedContext": "Der <TARGET>kleine</TARGET> Hund schläft.",
+			"members": ["kleine"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["kleine"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "klein",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Attributive ADJ. Context gives nominative masculine singular."
+	},
+	"grammar-de-adj-demo-adverbial-schnell": {
+		"input": {
+			"markedContext": "Der Hund läuft <TARGET>schnell</TARGET>.",
+			"members": ["schnell"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["schnell"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "schnell",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Productive adverbial ADJ, not lexical ADV. Degree Pos. No agreement."
+	},
+	"grammar-de-adj-dev-attributive-acc-fem-rot": {
+		"input": {
+			"markedContext": "Sie trägt die <TARGET>rote</TARGET> Tasche.",
+			"members": ["rote"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["rote"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "rot",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-attributive-dat-neut-kalt": {
+		"input": {
+			"markedContext": "Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drinnen.",
+			"members": ["kaltem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["kaltem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"degree": "Pos",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "kalt",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-attributive-gen-plur-neu": {
+		"input": {
+			"markedContext": "Wegen <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
+			"members": ["neuer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["neuer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "neu",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Ending syncretic. Context gives genitive plural; noun gives feminine identity."
+	},
+	"grammar-de-adj-dev-attributive-nom-plur-alt": {
+		"input": {
+			"markedContext": "Die <TARGET>alten</TARGET> Häuser stehen am Marktplatz.",
+			"members": ["alten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["alten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Neut",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "alt",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-predicative-blau": {
+		"input": {
+			"markedContext": "<TARGET>Blau</TARGET> ist der Himmel über dem Meer.",
+			"members": ["Blau"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["blau"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "blau",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-adverbial-leise": {
+		"input": {
+			"markedContext": "Sie schließt die Tür <TARGET>leise</TARGET>.",
+			"members": ["leise"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["leise"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "leise",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-attributive-dat-fem-lang": {
+		"input": {
+			"markedContext": "Mit <TARGET>langer</TARGET> Geduld löste sie das Rätsel.",
+			"members": ["langer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["langer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "lang",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-attributive-acc-neut-gruen": {
+		"input": {
+			"markedContext": "Sie kaufte ein <TARGET>grünes</TARGET> Fahrrad.",
+			"members": ["grünes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["grünes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Pos",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "grün",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-attributive-gen-masc-stark": {
+		"input": {
+			"markedContext": "Trotz <TARGET>starken</TARGET> Regens begann das Spiel.",
+			"members": ["starken"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["starken"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "stark",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-predicative-ruhig": {
+		"input": {
+			"markedContext": "Der See bleibt <TARGET>ruhig</TARGET>.",
+			"members": ["ruhig"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ruhig"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "ruhig",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-adverbial-deutlich": {
+		"input": {
+			"markedContext": "Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+			"members": ["deutlich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["deutlich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "deutlich",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-demo-comparative-besser": {
+		"input": {
+			"markedContext": "Der zweite Plan ist <TARGET>besser</TARGET>.",
+			"members": ["besser"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["besser"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Cmp",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "gut",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Suppletive comparative. Surface besser. Positive Lemma gut."
+	},
+	"grammar-de-adj-dev-attributive-comparative-teuer": {
+		"input": {
+			"markedContext": "Er kaufte ein <TARGET>teureres</TARGET> Gerät.",
+			"members": ["teureres"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["teureres"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Cmp",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "teuer",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-attributive-superlative-hoch": {
+		"input": {
+			"markedContext": "Der <TARGET>höchste</TARGET> Turm steht am Fluss.",
+			"members": ["höchste"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["höchste"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Sup",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "hoch",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig": {
+		"input": {
+			"markedContext": "Von allen arbeitet sie am <TARGET>sorgfältigsten</TARGET>.",
+			"members": ["sorgfältigsten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sorgfältigsten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Sup",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sorgfältig",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-predicative-comparative-nah": {
+		"input": {
+			"markedContext": "Das neue Büro liegt <TARGET>näher</TARGET>.",
+			"members": ["näher"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["näher"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Cmp",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "nah",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-irregular-superlative-beste": {
+		"input": {
+			"markedContext": "Das war die <TARGET>beste</TARGET> Lösung.",
+			"members": ["beste"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["beste"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Sup",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "gut",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-adverbial-comparative-schnell": {
+		"input": {
+			"markedContext": "Heute fährt der Zug <TARGET>schneller</TARGET>.",
+			"members": ["schneller"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["schneller"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Cmp",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "schnell",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-demo-typo-freundlcih": {
+		"input": {
+			"markedContext": "Die Antwort klingt <TARGET>freundlcih</TARGET>.",
+			"members": ["freundlcih"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["freundlich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "freundlich",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Letters transposed. Mark Typo. Repair Surface and Lemma."
+	},
+	"grammar-de-adj-dev-typo-grsser": {
+		"input": {
+			"markedContext": "Ein <TARGET>grßer</TARGET> Hund wartet draußen.",
+			"members": ["grßer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["großer"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "groß",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-typo-wunderschoen": {
+		"input": {
+			"markedContext": "Der Garten sieht <TARGET>wundershcön</TARGET> aus.",
+			"members": ["wundershcön"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["wunderschön"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "wunderschön",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-dev-participial-geschlossen": {
+		"input": {
+			"markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt heute zu.",
+			"members": ["geschlossene"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["geschlossene"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "geschlossen",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Established result adjective. Route fixed ADJ, not verbal participle."
+	},
+	"grammar-de-adj-dev-participial-spannend": {
+		"input": {
+			"markedContext": "Der <TARGET>spannende</TARGET> Vortrag dauerte eine Stunde.",
+			"members": ["spannende"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["spannende"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "spannend",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Established property adjective. Route fixed ADJ, not verbal participle."
+	},
+	"grammar-de-adj-dev-lexicalized-participial-verrueckt": {
+		"input": {
+			"markedContext": "Der Mann ist völlig <TARGET>verrückt</TARGET>.",
+			"members": ["verrückt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["verrückt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "verrückt",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "TIGER lexicalized property adjective. Predicative ADJ, not productive passive VERB."
+	},
+	"grammar-de-adj-dev-adverbial-participle-one-lachend": {
+		"input": {
+			"markedContext": "Er kam <TARGET>lachend</TARGET> herein.",
+			"members": ["lachend"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["lachend"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "lachend",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "TIGER adjectivally used Partizip I. Adverbial function keeps ADJ route."
+	},
+	"grammar-de-adj-dev-invariant-lila": {
+		"input": {
+			"markedContext": "Sie trug einen <TARGET>lila</TARGET> Schal.",
+			"members": ["lila"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["lila"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "lila",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Attributive color ADJ. Not color-name NOUN. Invariant form keeps agreement."
+	},
+	"grammar-de-adj-dev-archaic-hold": {
+		"input": {
+			"markedContext": "Ihr <TARGET>holdes</TARGET> Lächeln bezauberte die Gäste.",
+			"members": ["holdes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["holdes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "hold",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Old poetic adjective. Mark Surface Archaic."
+	},
+	"grammar-de-adj-accept-participial-glaenzend": {
+		"input": {
+			"markedContext": "Eine <TARGET>glänzende</TARGET> Idee rettete das Projekt.",
+			"members": ["glänzende"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["glänzende"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "glänzend",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-accept-invariant-rosa": {
+		"input": {
+			"markedContext": "Er kaufte ein <TARGET>rosa</TARGET> Kleid.",
+			"members": ["rosa"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["rosa"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Pos",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "rosa",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-adj-demo-ordinal-erste": {
+		"input": {
+			"markedContext": "Der <TARGET>erste</TARGET> Versuch gelang.",
+			"members": ["erste"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["erste"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "erst",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Ord",
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Ordinal ADJ. Keep agreement. Lemma NumType Ord."
+	},
+	"grammar-de-adj-dev-cardinal-siebenhundert": {
+		"input": {
+			"markedContext": "Sie las die <TARGET>siebenhundert</TARGET> Seiten in einer Woche.",
+			"members": ["siebenhundert"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["siebenhundert"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "siebenhundert",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card",
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Route fixed ADJ, not NUM. Cardinal identity. Invariant Surface."
+	},
+	"grammar-de-adj-dev-foreign-special": {
+		"input": {
+			"markedContext": "Das war ein <TARGET>special</TARGET> Moment für das Team.",
+			"members": ["special"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["special"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "special",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": "Yes",
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Overt English adjective in German context. Mark Foreign Yes."
+	},
+	"grammar-de-adj-dev-abbreviation-sog": {
+		"input": {
+			"markedContext": "Ein <TARGET>sog</TARGET>. Experte sagte vor Gericht aus.",
+			"members": ["sog"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sog"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sogenannt",
+				"coreFeatures": {
+					"abbr": "Yes",
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation. Period outside member. Variant Surface."
+	},
+	"grammar-de-adj-accept-ordinal-zweite": {
+		"input": {
+			"markedContext": "Die <TARGET>zweite</TARGET> Sitzung begann pünktlich.",
+			"members": ["zweite"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zweite"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "zweit",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Ord",
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

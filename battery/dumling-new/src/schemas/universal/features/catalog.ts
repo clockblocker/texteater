@@ -63,7 +63,6 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	foreign: ForeignSchema,
 	gender: GenderSchema,
 	"gender[psor]": GenderSchema,
-	referenceGender: GenderSchema,
 	governedCase: GovernedCaseSchema,
 	hasGovPrep: HasGovPrepSchema,
 	hasSepPrefix: HasSepPrefixSchema,

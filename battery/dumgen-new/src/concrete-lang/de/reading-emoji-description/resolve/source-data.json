@@ -1,0 +1,819 @@
+{
+	"path": "reading-resolution/de/prompt-source.ts",
+	"route": "reading-resolution/de",
+	"body": "We are helping a language learner distinguish meanings that are useful to distinguish.\n\nThe supplied *lemma* is already resolved and fixed. Do not revise it.\nConsider only the use marked by <TARGET>...</TARGET> in *markedContext*.\n\nChoose whether this use belongs to one of the learner's existing Readings for\nthis lemma:\n\n- Choose *Reuse* when an *existingEmojiDescription* is close enough to represent\n  the same learner-facing concept. Copy that description exactly.\n- Choose *New* when none is close enough, or when there are no existing\n  descriptions. Create a description that is not already in the supplied list.\n\nAn emojiDescription contains only one to four Unicode RGI emoji graphemes.\nNever include the lemma, a gloss, or explanatory text.\n\nThe lemma remains visible to the learner. The emoji only needs to distinguish\nthat lemma's learner-facing Readings; it does not need to identify the lemma by\nitself.\n\nDescribe only meaning that stays stable across attestations. Omit scenery,\nparticipants, tense, and other incidental details from the marked context.\nPrefer one conventional emoji by default. Use multiple emoji only when they\npreserve stable, useful lexical structure that one emoji cannot.\n\nTransparent prefixes, particles, or compound members may receive consistent\nemoji components when they add useful stable structure. Never illustrate\nopaque or fossilized components mechanically.\n\nWe follow a \"do not split semantic pennies\" policy:\n\n1. Different homonyms need different emoji descriptions.\n2. Related or polysemous uses should reuse one description unless doing so would\n   materially mislead a beginner.\n3. Prefer one broad, recognizable learner-facing concept over narrow\n   dictionary-style distinctions.\n\nThe decision and description must agree: *Reuse* requires an exact member of\n*existingEmojiDescriptions*; *New* requires a description that is not an exact\nmember.\nReturn only emojiDescription. The caller determines exact candidate membership.\n",
+	"cases": {
+		"reading-de-adj-sauer-acidic": {
+			"input": {
+				"markedContext": "Die Zitronenlimonade schmeckt <TARGET>sauer</TARGET>.",
+				"lemma": "sauer",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🍋"
+			},
+			"explanation": "Sour taste. First reading. New."
+		},
+		"reading-de-adj-sauer-acidic-reuse": {
+			"input": {
+				"markedContext": "Wir pflücken die <TARGET>sauren</TARGET> Äpfel später.",
+				"lemma": "sauer",
+				"existingEmojiDescriptions": ["🍋"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🍋"
+			},
+			"explanation": "Same sour taste across bearer and inflection. Reuse."
+		},
+		"reading-de-adj-sauer-angry": {
+			"input": {
+				"markedContext": "Nach der Absage war Lea <TARGET>sauer</TARGET> auf ihren Chef.",
+				"lemma": "sauer",
+				"existingEmojiDescriptions": ["🍋"]
+			},
+			"idealOutput": {
+				"emojiDescription": "😠"
+			},
+			"explanation": "Angry, not sour-tasting. New."
+		},
+		"reading-de-adj-sauer-angry-reuse": {
+			"input": {
+				"markedContext": "Wegen der Verspätung ist er noch immer <TARGET>sauer</TARGET>.",
+				"lemma": "sauer",
+				"existingEmojiDescriptions": ["🍋", "😠"]
+			},
+			"idealOutput": {
+				"emojiDescription": "😠"
+			},
+			"explanation": "Angry again. Reuse."
+		},
+		"reading-de-adj-leicht-weight": {
+			"input": {
+				"markedContext": "Der leere Koffer ist überraschend <TARGET>leicht</TARGET>.",
+				"lemma": "leicht",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🪶"
+			},
+			"explanation": "Low weight. First reading. New."
+		},
+		"reading-de-adj-leicht-easy": {
+			"input": {
+				"markedContext": "Die Aufgabe ist <TARGET>leicht</TARGET>.",
+				"lemma": "leicht",
+				"existingEmojiDescriptions": ["🪶"]
+			},
+			"idealOutput": {
+				"emojiDescription": "✅"
+			},
+			"explanation": "Easy, not low in weight. New."
+		},
+		"reading-de-adj-leicht-easy-reuse": {
+			"input": {
+				"markedContext": "Diese Anleitung ist <TARGET>leicht</TARGET> zu verstehen.",
+				"lemma": "leicht",
+				"existingEmojiDescriptions": ["🪶", "✅"]
+			},
+			"idealOutput": {
+				"emojiDescription": "✅"
+			},
+			"explanation": "Easy to understand. Same broad difficulty reading. Reuse."
+		},
+		"reading-de-scharf-spicy": {
+			"input": {
+				"markedContext": "Die Suppe ist sehr <TARGET>scharf</TARGET>.",
+				"lemma": "scharf",
+				"existingEmojiDescriptions": ["🔪"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🌶️"
+			},
+			"explanation": "Spicy, not sharp-edged. New."
+		},
+		"reading-de-scharf-sharp": {
+			"input": {
+				"markedContext": "Das Messer ist <TARGET>scharf</TARGET> genug, um das Brot zu schneiden.",
+				"lemma": "scharf",
+				"existingEmojiDescriptions": ["🌶️", "🔪"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🔪"
+			},
+			"explanation": "Sharp-edged. Reuse."
+		},
+		"reading-de-adj-blau-colour": {
+			"input": {
+				"markedContext": "Der Himmel ist heute tief <TARGET>blau</TARGET>.",
+				"lemma": "blau",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🟦"
+			},
+			"explanation": "Blue colour. First reading. New."
+		},
+		"reading-de-adj-blau-drunk": {
+			"input": {
+				"markedContext": "Nach fünf Bier war er völlig <TARGET>blau</TARGET>.",
+				"lemma": "blau",
+				"existingEmojiDescriptions": ["🟦"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🍺"
+			},
+			"explanation": "Drunk, not blue-coloured. New."
+		},
+		"reading-de-adj-menschlich-human": {
+			"input": {
+				"markedContext": "Der <TARGET>menschliche</TARGET> Körper braucht Wasser.",
+				"lemma": "menschlich",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🧑"
+			},
+			"explanation": "Relating to humans. First reading. New."
+		},
+		"reading-de-adj-menschlich-humane": {
+			"input": {
+				"markedContext": "Ihr Umgang mit den Patienten war stets <TARGET>menschlich</TARGET>.",
+				"lemma": "menschlich",
+				"existingEmojiDescriptions": ["🧑"]
+			},
+			"idealOutput": {
+				"emojiDescription": "❤️"
+			},
+			"explanation": "Humane and compassionate, not merely human. New."
+		},
+		"reading-de-adp-ueber-connector": {
+			"input": {
+				"markedContext": "Das Hotel verfügt <TARGET>über</TARGET> einen Pool.",
+				"lemma": "über",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🔗"
+			},
+			"explanation": "verfügen über fixed. über only links. New."
+		},
+		"reading-de-adp-ueber-above": {
+			"input": {
+				"markedContext": "Die Lampe hängt <TARGET>über</TARGET> dem Tisch.",
+				"lemma": "über",
+				"existingEmojiDescriptions": ["🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⬆️"
+			},
+			"explanation": "Above, not a generic connector. New."
+		},
+		"reading-de-adp-ueber-topic-unfall": {
+			"input": {
+				"markedContext": "Sie sprechen <TARGET>über</TARGET> den Unfall.",
+				"lemma": "über",
+				"existingEmojiDescriptions": ["⬆️", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "💬"
+			},
+			"explanation": "Topic, not above. New."
+		},
+		"reading-de-adp-ueber-topic-wetter": {
+			"input": {
+				"markedContext": "Wir reden <TARGET>über</TARGET> das Wetter.",
+				"lemma": "über",
+				"existingEmojiDescriptions": ["⬆️", "💬", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "💬"
+			},
+			"explanation": "Topic. Reuse."
+		},
+		"reading-de-adp-mit-means": {
+			"input": {
+				"markedContext": "Mara schneidet das Brot <TARGET>mit</TARGET> einem Messer.",
+				"lemma": "mit",
+				"existingEmojiDescriptions": ["🤝", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🛠️"
+			},
+			"explanation": "Means, not companion. New.",
+			"contaminationKeys": ["reading-de-adp-mit-instrumental"]
+		},
+		"reading-de-adp-mit-connector": {
+			"input": {
+				"markedContext": "Wir rechnen <TARGET>mit</TARGET> Regen.",
+				"lemma": "mit",
+				"existingEmojiDescriptions": ["🤝", "🛠️", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🔗"
+			},
+			"explanation": "rechnen mit fixed. mit only links."
+		},
+		"reading-de-adp-um-topic": {
+			"input": {
+				"markedContext": "Der Streit geht <TARGET>um</TARGET> Geld.",
+				"lemma": "um",
+				"existingEmojiDescriptions": ["🔄", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "💬"
+			},
+			"explanation": "Topic, not around. New."
+		},
+		"reading-de-adp-um-clock-time": {
+			"input": {
+				"markedContext": "Der Zug fährt <TARGET>um</TARGET> acht Uhr.",
+				"lemma": "um",
+				"existingEmojiDescriptions": ["🔄", "💬", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⏰"
+			},
+			"explanation": "Clock point. New."
+		},
+		"reading-de-adp-nach-sensory-characteristic": {
+			"input": {
+				"markedContext": "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
+				"lemma": "nach",
+				"existingEmojiDescriptions": ["🧭", "⏭️", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🟰"
+			},
+			"explanation": "A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New."
+		},
+		"reading-de-adp-vor-broad-precedence": {
+			"input": {
+				"markedContext": "Sie ruft mich <TARGET>vor</TARGET> dem Essen an.",
+				"lemma": "vor",
+				"existingEmojiDescriptions": ["⏮️", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⏮️"
+			},
+			"explanation": "Still before. Reuse."
+		},
+		"reading-de-adp-vor-cause": {
+			"input": {
+				"markedContext": "Das Kind zittert <TARGET>vor</TARGET> Angst.",
+				"lemma": "vor",
+				"existingEmojiDescriptions": ["⏮️", "🔗"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⚡"
+			},
+			"explanation": "Cause, not before. New."
+		},
+		"reading-de-adp-gegen-counteraction": {
+			"input": {
+				"markedContext": "Sie nimmt eine Tablette <TARGET>gegen</TARGET> Kopfschmerzen.",
+				"lemma": "gegen",
+				"existingEmojiDescriptions": ["⚔️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⚔️"
+			},
+			"explanation": "Medicine fights pain. Same against."
+		},
+		"reading-de-adp-gegen-approximation": {
+			"input": {
+				"markedContext": "Wir kommen <TARGET>gegen</TARGET> acht Uhr.",
+				"lemma": "gegen",
+				"existingEmojiDescriptions": ["⚔️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🤏"
+			},
+			"explanation": "Rough time, not against. New."
+		},
+		"reading-de-noun-bank-bench-new": {
+			"input": {
+				"markedContext": "Die Besucher saßen auf einer langen <TARGET>Bank</TARGET>.",
+				"lemma": "Bank",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🪑"
+			},
+			"explanation": "Seating object. New."
+		},
+		"reading-de-bank-park-bench": {
+			"input": {
+				"markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
+				"lemma": "Bank",
+				"existingEmojiDescriptions": ["🪑"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🪑"
+			},
+			"explanation": "Same seating object. The park is only scenery. Reuse."
+		},
+		"reading-de-bank-financial": {
+			"input": {
+				"markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
+				"lemma": "Bank",
+				"existingEmojiDescriptions": ["🪑"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🏦"
+			},
+			"explanation": "Financial institution, not seating. New."
+		},
+		"reading-de-noun-bank-financial-reuse": {
+			"input": {
+				"markedContext": "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
+				"lemma": "Bank",
+				"existingEmojiDescriptions": ["🪑", "🏦"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🏦"
+			},
+			"explanation": "Same financial institution in another context. Reuse."
+		},
+		"reading-de-noun-schluessel-literal-new": {
+			"input": {
+				"markedContext": "Der <TARGET>Schlüssel</TARGET> steckt im Schloss.",
+				"lemma": "Schlüssel",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🔑"
+			},
+			"explanation": "Physical key. New."
+		},
+		"reading-de-key-metaphor": {
+			"input": {
+				"markedContext": "Geduld ist der <TARGET>Schlüssel</TARGET> zum Erfolg.",
+				"lemma": "Schlüssel",
+				"existingEmojiDescriptions": ["🔑"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🔑"
+			},
+			"explanation": "Same access concept. Reuse."
+		},
+		"reading-de-noun-maus-animal-new": {
+			"input": {
+				"markedContext": "Die Katze jagt eine <TARGET>Maus</TARGET>.",
+				"lemma": "Maus",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🐭"
+			},
+			"explanation": "Animal. New."
+		},
+		"reading-de-maus-computer": {
+			"input": {
+				"markedContext": "Bewege den Zeiger mit der <TARGET>Maus</TARGET>.",
+				"lemma": "Maus",
+				"existingEmojiDescriptions": ["🐭"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🖱️"
+			},
+			"explanation": "Computer device, not animal. New."
+		},
+		"reading-de-noun-maus-computer-reuse": {
+			"input": {
+				"markedContext": "Die kabellose <TARGET>Maus</TARGET> braucht neue Batterien.",
+				"lemma": "Maus",
+				"existingEmojiDescriptions": ["🐭", "🖱️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🖱️"
+			},
+			"explanation": "Same computer device with a contextual detail. Reuse."
+		},
+		"reading-de-noun-absatz-heel-new": {
+			"input": {
+				"markedContext": "Der <TARGET>Absatz</TARGET> meines Stiefels ist abgebrochen.",
+				"lemma": "Absatz",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "👠"
+			},
+			"explanation": "Shoe heel. New."
+		},
+		"reading-de-noun-absatz-sales-new": {
+			"input": {
+				"markedContext": "Der <TARGET>Absatz</TARGET> der neuen Fahrräder steigt.",
+				"lemma": "Absatz",
+				"existingEmojiDescriptions": ["👠"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🛒"
+			},
+			"explanation": "Product sales, not a shoe heel. New."
+		},
+		"reading-de-noun-absatz-paragraph-new": {
+			"input": {
+				"markedContext": "Der erste <TARGET>Absatz</TARGET> führt das Thema ein.",
+				"lemma": "Absatz",
+				"existingEmojiDescriptions": ["👠", "🛒"]
+			},
+			"idealOutput": {
+				"emojiDescription": "📄"
+			},
+			"explanation": "Text paragraph, neither a shoe heel nor sales. New."
+		},
+		"reading-de-absatz-paragraph": {
+			"input": {
+				"markedContext": "Im zweiten <TARGET>Absatz</TARGET> steht die Begründung.",
+				"lemma": "Absatz",
+				"existingEmojiDescriptions": ["👠", "🛒", "📄"]
+			},
+			"idealOutput": {
+				"emojiDescription": "📄"
+			},
+			"explanation": "Another text paragraph. Reuse."
+		},
+		"reading-de-tea": {
+			"input": {
+				"markedContext": "Der <TARGET>Tee</TARGET> duftet.",
+				"lemma": "Tee",
+				"existingEmojiDescriptions": ["☕"]
+			},
+			"idealOutput": {
+				"emojiDescription": "☕"
+			},
+			"explanation": "The supplied cup already represents the stable tea concept. Reuse."
+		},
+		"reading-de-kitchen-room": {
+			"input": {
+				"markedContext": "Wir trinken Kaffee in der <TARGET>Küche</TARGET>.",
+				"lemma": "Küche",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🍳"
+			},
+			"explanation": "The kitchen room, independent of the coffee-drinking scene. New."
+		},
+		"reading-de-zug-chess-move": {
+			"input": {
+				"markedContext": "Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",
+				"lemma": "Zug",
+				"existingEmojiDescriptions": ["🚆", "💨", "🧲", "➡️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "➡️"
+			},
+			"explanation": "Chess move. ➡️ already fits."
+		},
+		"reading-de-leitung-management": {
+			"input": {
+				"markedContext": "Die <TARGET>Leitung</TARGET> berief eine Sitzung ein.",
+				"lemma": "Leitung",
+				"existingEmojiDescriptions": ["🔌"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🧑‍💼"
+			},
+			"explanation": "Management, not a conducting line. New."
+		},
+		"reading-de-construction-fusion-am-temporal": {
+			"input": {
+				"markedContext": "Der Kurs beginnt <TARGET>am</TARGET> Montag.",
+				"lemma": "am",
+				"existingEmojiDescriptions": ["📍"]
+			},
+			"idealOutput": {
+				"emojiDescription": "📅"
+			},
+			"explanation": "The fused form marks a calendar-time relation, not a place. New."
+		},
+		"reading-de-lexeme-cconj-entweder-oder": {
+			"input": {
+				"markedContext": "Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
+				"lemma": "entweder … oder",
+				"existingEmojiDescriptions": ["🔀"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🔀"
+			},
+			"explanation": "The multi-member Lexeme/CCONJ presents alternatives. Reuse."
+		},
+		"reading-de-lexeme-det-der-neighbor-house-isolation": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> Häuser sind groß.",
+				"lemma": "der",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "👉"
+			},
+			"explanation": "Definite article. The houses are the referent, not the determiner's meaning."
+		},
+		"reading-de-lexeme-pron-das-relative-neighbor-house-isolation": {
+			"input": {
+				"markedContext": "Das Haus, <TARGET>das</TARGET> dort steht, ist alt.",
+				"lemma": "der",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🔗"
+			},
+			"explanation": "Relative pronoun. The house is its antecedent, not the pronoun's meaning."
+		},
+		"reading-de-lexeme-det-der-neighbor-car-isolation": {
+			"input": {
+				"markedContext": "<TARGET>Das</TARGET> Auto ist neu.",
+				"lemma": "der",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "👉"
+			},
+			"explanation": "Definite article. The car is the referent, not the determiner's meaning."
+		},
+		"reading-de-lexeme-pron-die-relative-neighbor-cat-isolation": {
+			"input": {
+				"markedContext": "Die Katze, <TARGET>die</TARGET> schläft, ist alt.",
+				"lemma": "der",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🔗"
+			},
+			"explanation": "Relative pronoun. The cat and feminine agreement belong to its antecedent, not the pronoun's meaning."
+		},
+		"reading-de-lexeme-adv-sonst-usual": {
+			"input": {
+				"markedContext": "Er arbeitet <TARGET>sonst</TARGET> im Homeoffice, heute aber im Büro.",
+				"lemma": "sonst",
+				"existingEmojiDescriptions": ["⚠️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🔁"
+			},
+			"explanation": "Usual circumstances, not an otherwise-warning reading. New."
+		},
+		"reading-de-lexeme-aux-werden-passive": {
+			"input": {
+				"markedContext": "Der Antrag <TARGET>wird</TARGET> morgen geprüft.",
+				"lemma": "werden",
+				"existingEmojiDescriptions": ["🔮"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🔄"
+			},
+			"explanation": "Passive auxiliary use, not future prediction. New."
+		},
+		"reading-de-lexeme-cconj-aber-contrast-reuse": {
+			"input": {
+				"markedContext": "Sie ist müde, <TARGET>aber</TARGET> zufrieden.",
+				"lemma": "aber",
+				"existingEmojiDescriptions": ["↔️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "↔️"
+			},
+			"explanation": "Contrast between coordinated statements. Reuse."
+		},
+		"reading-de-lexeme-det-dieser-demonstrative-reuse": {
+			"input": {
+				"markedContext": "Ich nehme <TARGET>diesen</TARGET> Stuhl.",
+				"lemma": "dieser",
+				"existingEmojiDescriptions": ["👉"]
+			},
+			"idealOutput": {
+				"emojiDescription": "👉"
+			},
+			"explanation": "Demonstrative selection of a particular referent. Reuse."
+		},
+		"reading-de-lexeme-intj-hurra-celebration-new": {
+			"input": {
+				"markedContext": "<TARGET>Hurra</TARGET>, wir haben gewonnen!",
+				"lemma": "Hurra",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🎉"
+			},
+			"explanation": "A stable exclamation of celebration. New."
+		},
+		"reading-de-lexeme-num-drei-cardinal-reuse": {
+			"input": {
+				"markedContext": "Sie kauft <TARGET>drei</TARGET> Äpfel.",
+				"lemma": "drei",
+				"existingEmojiDescriptions": ["3️⃣"]
+			},
+			"idealOutput": {
+				"emojiDescription": "3️⃣"
+			},
+			"explanation": "Cardinal quantity three. Reuse."
+		},
+		"reading-de-lexeme-part-nicht-negation-reuse": {
+			"input": {
+				"markedContext": "Das stimmt <TARGET>nicht</TARGET>.",
+				"lemma": "nicht",
+				"existingEmojiDescriptions": ["🚫"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🚫"
+			},
+			"explanation": "Ordinary negation. Reuse."
+		},
+		"reading-de-lexeme-pron-jemand-person-reuse": {
+			"input": {
+				"markedContext": "<TARGET>Jemand</TARGET> wartet vor der Tür.",
+				"lemma": "jemand",
+				"existingEmojiDescriptions": ["👤"]
+			},
+			"idealOutput": {
+				"emojiDescription": "👤"
+			},
+			"explanation": "An unspecified person. Reuse."
+		},
+		"reading-de-lexeme-sconj-waehrend-adversative": {
+			"input": {
+				"markedContext": "<TARGET>Während</TARGET> Lea gern früh beginnt, arbeitet Amir lieber abends.",
+				"lemma": "während",
+				"existingEmojiDescriptions": ["⏳"]
+			},
+			"idealOutput": {
+				"emojiDescription": "↔️"
+			},
+			"explanation": "Adversative contrast, not temporal duration. New."
+		},
+		"reading-de-lexeme-propn-berlin-city-reuse": {
+			"input": {
+				"markedContext": "Sie lebt seit Jahren in <TARGET>Berlin</TARGET>.",
+				"lemma": "Berlin",
+				"existingEmojiDescriptions": ["🏙️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🏙️"
+			},
+			"explanation": "The city Berlin, independent of this residence scene. Reuse."
+		},
+		"reading-de-lexeme-sym-euro-currency-reuse": {
+			"input": {
+				"markedContext": "Das kostet zehn <TARGET>€</TARGET>.",
+				"lemma": "€",
+				"existingEmojiDescriptions": ["💶"]
+			},
+			"idealOutput": {
+				"emojiDescription": "💶"
+			},
+			"explanation": "The euro currency symbol. Reuse."
+		},
+		"reading-de-lexeme-x-lol-laughter-reuse": {
+			"input": {
+				"markedContext": "Er antwortete im Chat nur mit <TARGET>lol</TARGET>.",
+				"lemma": "lol",
+				"existingEmojiDescriptions": ["😂"]
+			},
+			"idealOutput": {
+				"emojiDescription": "😂"
+			},
+			"explanation": "The chat expression marks laughter. Reuse."
+		},
+		"reading-de-morpheme-suffix-chen-neighbor-house-isolation": {
+			"input": {
+				"markedContext": "Das Häus<TARGET>chen</TARGET> ist alt.",
+				"lemma": "-chen",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🤏"
+			},
+			"explanation": "Diminutive suffix. House belongs to the base; smallness is the suffix's stable contribution."
+		},
+		"reading-de-phraseme-collocation-entscheidung-treffen-new": {
+			"input": {
+				"markedContext": "Das Team <TARGET>trifft</TARGET> heute <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET>.",
+				"lemma": "eine Entscheidung treffen",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🤔✅"
+			},
+			"explanation": "The collocation denotes reaching a decision; all three lexical members form one stable concept. New."
+		},
+		"reading-de-phraseme-collocation-entscheidung-treffen-reuse": {
+			"input": {
+				"markedContext": "Wir müssen bald <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET> <TARGET>treffen</TARGET>.",
+				"lemma": "eine Entscheidung treffen",
+				"existingEmojiDescriptions": ["🤔✅"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🤔✅"
+			},
+			"explanation": "The same decision-making collocation in another attestation. Reuse."
+		},
+		"reading-de-idiom-mit-den-woelfen-heulen": {
+			"input": {
+				"markedContext": "Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET> <TARGET>den</TARGET> <TARGET>Wölfen</TARGET>.",
+				"lemma": "mit den Wölfen heulen",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🐺🗣️🤝"
+			},
+			"explanation": "Follow the group despite disagreement. Whole idiom. New."
+		},
+		"reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy": {
+			"input": {
+				"markedContext": "Als sie von seiner Krankheit hörte, sagte sie: „<TARGET>Das</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
+				"lemma": "Das tut mir leid",
+				"existingEmojiDescriptions": ["😔"]
+			},
+			"idealOutput": {
+				"emojiDescription": "😔"
+			},
+			"explanation": "A conventional expression of sympathy, not literal regret about an action. Reuse."
+		},
+		"reading-de-phraseme-aphorism-zeit-ist-geld": {
+			"input": {
+				"markedContext": "Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
+				"lemma": "Zeit ist Geld",
+				"existingEmojiDescriptions": ["⏳💰"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⏳💰"
+			},
+			"explanation": "The aphorism equates time with money. Reuse."
+		},
+		"reading-de-phraseme-proverb-viele-koeche": {
+			"input": {
+				"markedContext": "Im Projekt durfte nun jeder mitentscheiden – <TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.",
+				"lemma": "Viele Köche verderben den Brei",
+				"existingEmojiDescriptions": ["👥💥"]
+			},
+			"idealOutput": {
+				"emojiDescription": "👥💥"
+			},
+			"explanation": "The proverb warns that too many participants spoil the result. Reuse."
+		},
+		"reading-de-phraseme-idiom-den-faden-verlieren": {
+			"input": {
+				"markedContext": "Bei der dritten Zwischenfrage <TARGET>verlor</TARGET> die Rednerin <TARGET>den</TARGET> <TARGET>Faden</TARGET>.",
+				"lemma": "den Faden verlieren",
+				"existingEmojiDescriptions": ["🧵❌"]
+			},
+			"idealOutput": {
+				"emojiDescription": "🧵❌"
+			},
+			"explanation": "Losing one's train of thought, not losing literal thread. Reuse."
+		},
+		"reading-de-lexeme-verb-laufen-operate-new": {
+			"input": {
+				"markedContext": "Die Maschine <TARGET>läuft</TARGET> wieder.",
+				"lemma": "laufen",
+				"existingEmojiDescriptions": ["🏃"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⚙️"
+			},
+			"explanation": "A machine operating is not physical running. Create a stable operation reading."
+		},
+		"reading-de-lexeme-verb-laufen-operate-reuse": {
+			"input": {
+				"markedContext": "Der Motor <TARGET>läuft</TARGET> ruhig.",
+				"lemma": "laufen",
+				"existingEmojiDescriptions": ["🏃", "⚙️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "⚙️"
+			},
+			"explanation": "A motor operating is the same broad machine-operation reading. Reuse."
+		},
+		"reading-de-aufstehen-uprising": {
+			"input": {
+				"markedContext": "Die Bürger <TARGET>stehen</TARGET> gegen die Unterdrückung <TARGET>auf</TARGET>.",
+				"lemma": "aufstehen",
+				"existingEmojiDescriptions": ["🛏️⬆️"]
+			},
+			"idealOutput": {
+				"emojiDescription": "✊⬆️"
+			},
+			"explanation": "Revolt. Auf adds upward structure. New."
+		},
+		"reading-de-aufstehen-morning-six": {
+			"input": {
+				"markedContext": "Morgen <TARGET>steht</TARGET> sie um sechs Uhr <TARGET>auf</TARGET>.",
+				"lemma": "aufstehen",
+				"existingEmojiDescriptions": []
+			},
+			"idealOutput": {
+				"emojiDescription": "🛏️⬆️"
+			},
+			"explanation": "Get out of bed. Auf adds upward structure. New."
+		}
+	},
+	"demonstrationIds": [
+		"reading-de-key-metaphor",
+		"reading-de-maus-computer",
+		"reading-de-aufstehen-uprising",
+		"reading-de-adp-mit-connector",
+		"reading-de-idiom-mit-den-woelfen-heulen"
+	],
+	"localDemonstrations": []
+}

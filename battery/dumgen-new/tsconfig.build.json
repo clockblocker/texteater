@@ -5,8 +5,13 @@
 		"emitDeclarationOnly": true,
 		"noEmit": false,
 		"outDir": "./dist",
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"paths": {}
 	},
-	"include": ["src/**/*.ts"],
-	"exclude": ["src/parsing/validation-route-proofs.ts"]
+	"include": [
+		"src/index.ts",
+		"src/types.ts",
+		"src/schemas.ts",
+		"src/development.ts"
+	]
 }
