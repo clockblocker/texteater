@@ -1,0 +1,72 @@
+{
+	"name": "dumrel",
+	"version": "0.1.0",
+	"description": "Source-aware Reading Knowledge validation and transformations over Dumling values.",
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./types": {
+			"types": "./dist/types.d.ts",
+			"import": "./dist/types.js",
+			"default": "./dist/types.js"
+		},
+		"./schema": {
+			"types": "./dist/schemas.d.ts",
+			"import": "./dist/schemas.js",
+			"default": "./dist/schemas.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"engines": {
+		"node": "24.x"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
+		"fix": "bun run --silent biome check --write .",
+		"generate": "bun codegen/generate-dumling-schemas.ts && bun codegen/generate.ts",
+		"generate:check": "bun codegen/generate-dumling-schemas.ts --check && bun codegen/generate.ts --check",
+		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
+		"lint": "bun run --silent biome check .",
+		"prepack": "bun run build",
+		"test": "bun run build && bun test",
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:test": "bun run test"
+	},
+	"dependencies": {
+		"common-utils": "workspace:^",
+		"dumling": "workspace:^",
+		"zod": "^4.4.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"bun-types": "1.4.2",
+		"codegen": "workspace:^",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
+		"knip": "^6.29.0",
+		"prinfer": "^2.3.0",
+		"typescript": "^7.0.2"
+	}
+}

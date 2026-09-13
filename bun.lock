@@ -251,8 +251,7 @@
       "version": "0.1.0",
       "dependencies": {
         "common-utils": "workspace:^",
-        "dumling-old": "workspace:^",
-        "emoji-regex": "^10.6.0",
+        "dumling": "workspace:^",
         "zod": "^4.4.0",
       },
       "devDependencies": {

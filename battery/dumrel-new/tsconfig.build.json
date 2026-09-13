@@ -1,0 +1,20 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"noEmit": false,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"paths": {
+			"common-utils": ["../common-utils/dist/index.d.ts"],
+			"dumling": ["../dumling-new/dist/index.d.ts"],
+			"dumling/types": ["../dumling-new/dist/types.d.ts"],
+			"dumling/validation": [
+				"../dumling-new/dist/validation/operations.d.ts"
+			],
+			"dumling/schema/*": ["../dumling-new/dist/generated/schemas/*"]
+		}
+	},
+	"include": ["src/index.ts", "src/types.ts", "src/schemas.ts"]
+}

@@ -1,0 +1,17 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": [
+		"src/index.ts",
+		"src/schemas.ts",
+		"src/types.ts",
+		"codegen/generate.ts",
+		"tests/**/*.ts"
+	],
+	"project": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
+	"ignoreDependencies": [
+		"@biomejs/biome",
+		"bun-types",
+		"dependency-cruiser",
+		"esbuild"
+	]
+}

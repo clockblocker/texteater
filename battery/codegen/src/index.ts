@@ -35,6 +35,7 @@ export type {
 	TextSetInput,
 	TextSource,
 } from "./types.js";
+export { emitValidationOutputTypes } from "./validation-output-types.js";
 export type {
 	CompileZodValidationArtifactsOptions,
 	ZodValidationArtifactRegistry,

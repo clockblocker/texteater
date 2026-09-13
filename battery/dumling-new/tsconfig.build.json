@@ -10,5 +10,10 @@
 			"common-utils": ["../common-utils/dist/index.d.ts"]
 		}
 	},
-	"include": ["src/index.ts", "src/types.ts", "src/generated/schemas/**/*.ts"]
+	"include": [
+		"src/index.ts",
+		"src/types.ts",
+		"src/validation/operations.ts",
+		"src/generated/schemas/**/*.ts"
+	]
 }

@@ -1,0 +1,18 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"paths": {
+			"common-utils": ["../common-utils/src/index.ts"],
+			"dumling": ["../dumling-new/src/index.ts"],
+			"dumling/types": ["../dumling-new/src/types.ts"],
+			"dumling/validation": [
+				"../dumling-new/src/validation/operations.ts"
+			],
+			"dumling/schema/*": ["../dumling-new/src/generated/schemas/*"],
+			"dumrel": ["./src/index.ts"],
+			"dumrel/schema": ["./src/schemas.ts"],
+			"dumrel/types": ["./src/types.ts"]
+		}
+	},
+	"include": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+}
