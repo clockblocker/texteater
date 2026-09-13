@@ -18,12 +18,22 @@ and records. Its interactive workbench uses these same production operations
 and session-scoped Dumdict storage.
 
 Routine output belongs in the untracked `.runs/` directory, or the directory
-selected by `DUMGEN_RUN_DIRECTORY`. Retained historical evaluations live in
-`docs/prototypes/**/runs/`. Their original outputs, scores and hashes are
-preserved; adjacent `.ts.txt` files are frozen source, not runnable commands.
-Current experiments use the migrated corpora and evaluators through
-`dumgen/development` and produce new Promptsmith Evaluation Runs.
+selected by `DUMGEN_RUN_DIRECTORY`. Current experiments use the migrated corpora
+and evaluators through `dumgen/development` and produce new Promptsmith
+Evaluation Runs.
 
-The [historical relation review](docs/prototypes/german-relation-human-gate/README.md)
-keeps an explicit artifact-location map and cannot qualify the replacement
-pipeline without new evaluation and review.
+Historical run artifacts were removed in the commit titled
+`chore: archive historical Dumgen run artifacts in git history`.
+The last complete snapshot is [commit `e5060a04`](https://github.com/clockblocker/texteater/tree/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes).
+It contains all 518 files formerly under `docs/prototypes/**/runs/`, including
+outputs, scores and acceptance reservations. For example, inspect a deleted run
+without restoring it into the worktree:
+
+```sh
+git show e5060a0407252f25af801f59674f47a5aff71e55:battery/dumgen-new/docs/prototypes/reading-resolution-meaning-isolation/runs/2026-08-22T06-06-42-740Z/results.json
+```
+
+Adjacent `.ts.txt` files preserve source evidence. The
+[historical relation review](docs/prototypes/german-relation-human-gate/README.md)
+records which inputs remain locally verifiable and which require retrieval from
+Git history. Its candidate cannot qualify the current pipeline.

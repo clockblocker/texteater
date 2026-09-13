@@ -12,7 +12,7 @@ cases. The recorded post-stop calls remain part of the operational evidence.
 The [human-gate manifest](../german-relation-human-gate/candidate-manifest.json)
 binds the candidate to these exact artifacts.
 
-The [earlier topology result](../german-relation-topology-lab/runs/2026-08-20T08-32-05-075Z/results.json)
+The [earlier topology result](https://github.com/clockblocker/texteater/blob/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes/german-relation-topology-lab/runs/2026-08-20T08-32-05-075Z/results.json)
 records a rejected experiment design and cannot qualify publication.
 `logic.ts.txt` and `run.ts.txt` preserve the old source; their commands are retired.
 

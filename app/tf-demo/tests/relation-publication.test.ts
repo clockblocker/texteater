@@ -245,6 +245,7 @@ test("only an explicitly signed, fingerprint-matched promote verdict enters the 
 	expect(effectiveRelationPublicationPolicy()).toMatchObject({
 		qualifiedKinds: [],
 		invalidationReasons: [
+			"archivedRunEvidence",
 			"missingReviewedVerdictArtifact",
 			"historicalCandidateRequiresReevaluation",
 		],

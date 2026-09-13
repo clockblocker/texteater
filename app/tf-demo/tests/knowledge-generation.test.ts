@@ -567,6 +567,7 @@ test("production publication remains empty without a reviewed verdict", () => {
 		artifactPath: null,
 		qualifiedKinds: [],
 		invalidationReasons: [
+			"archivedRunEvidence",
 			"missingReviewedVerdictArtifact",
 			"historicalCandidateRequiresReevaluation",
 		],

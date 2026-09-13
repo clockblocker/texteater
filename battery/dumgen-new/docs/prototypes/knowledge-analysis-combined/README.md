@@ -6,15 +6,15 @@ requested nullable leaves for one German Reading.
 
 The retained v2 results were:
 
-- [Development round 1](runs/2026-08-19T09-28-29-202Z/results.json): 8/9.
-- [Development round 2](runs/2026-08-19T09-29-14-019Z/results.json): 8/9.
-- [Development round 3](runs/2026-08-19T09-29-45-328Z/results.json): 9/9.
-- [Untouched acceptance](runs/2026-08-19T09-30-11-432Z/results.json): 4/4.
+- [Development round 1](https://github.com/clockblocker/texteater/blob/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/runs/2026-08-19T09-28-29-202Z/results.json): 8/9.
+- [Development round 2](https://github.com/clockblocker/texteater/blob/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/runs/2026-08-19T09-29-14-019Z/results.json): 8/9.
+- [Development round 3](https://github.com/clockblocker/texteater/blob/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/runs/2026-08-19T09-29-45-328Z/results.json): 9/9.
+- [Untouched acceptance](https://github.com/clockblocker/texteater/blob/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/runs/2026-08-19T09-30-11-432Z/results.json): 4/4.
 
 All four runs completed without provider errors. The first two missed the
 multi-member `aufgeben` case because exact English comparison rejected
 context-inflected `gave up` against Reading-level `give up`. Those misses were
-classified as corpus/evaluator defects. The [v1 pilot](runs/2026-08-19T09-26-36-395Z/results.json)
+classified as corpus/evaluator defects. The [v1 pilot](https://github.com/clockblocker/texteater/blob/e5060a0407252f25af801f59674f47a5aff71e55/battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/runs/2026-08-19T09-26-36-395Z/results.json)
 retains earlier evaluator defects separately.
 
 These scores establish what the old combined prompt did. Current Dumgen uses

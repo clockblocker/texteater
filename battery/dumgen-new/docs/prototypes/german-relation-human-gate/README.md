@@ -6,14 +6,18 @@ revealed or executed. No reviewed verdict was produced. Those results remain
 bound to the original combined prompt, evaluator, schemas and source files.
 
 `candidate-manifest.json` retains the original paths, hashes and candidate ID.
-`artifact-locations.json` maps its artifact roles to their current locations.
+`artifact-locations.json` separates local frozen sources from archived run
+artifacts. Archived entries record the preserving commit and repository path;
+see the [Dumgen README](../../../README.md) for retrieval instructions.
 Frozen TypeScript files end in `.ts.txt`; they record the old implementation
 and are not executable tools for the replacement packages.
 
-The tf-demo relation-policy compiler verifies those hashes and separately
+The tf-demo relation-policy compiler verifies the remaining local hashes and separately
 fingerprints the current Dumgen, Dumling, Dumrel and Promptsmith sources.
 An old candidate or signed verdict cannot qualify the current pipeline.
-`historicalCandidateRequiresReevaluation` keeps its relation allowlist empty.
+`archivedRunEvidence` and `historicalCandidateRequiresReevaluation` keep its
+relation allowlist empty. An archived digest is a retrieval reference, not a
+successful verification of the deleted bytes.
 Base Knowledge generation continues through the current contracts.
 
 Current Knowledge production requires an Encounter and an exact tagged Reading.

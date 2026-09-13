@@ -11,7 +11,12 @@
 		"generated-system-prompt": "frozen-source/promptsmith/production/generated-system-prompt/knowledge-analysis/de/lexeme.ts.txt",
 		"model-facing-schema": "frozen-source/knowledge-generation/de/schemas.ts.txt",
 		"model-policy": "frozen-source/ai-sdk/model-policy.ts.txt",
-		"retained-result": "../german-relation-prompt-iteration-lab/runs/2026-08-20T17-05-28-531Z/results.json",
 		"human-review-development-gate": "../german-relation-human-gate/review.ts.txt"
+	},
+	"archivedArtifacts": {
+		"retained-result": {
+			"commit": "e5060a0407252f25af801f59674f47a5aff71e55",
+			"path": "battery/dumgen-new/docs/prototypes/german-relation-prompt-iteration-lab/runs/2026-08-20T17-05-28-531Z/results.json"
+		}
 	}
 }

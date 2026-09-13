@@ -13,6 +13,14 @@ export const COMPILED_RELATION_VERDICT = {
 	"historicalCandidate": {
 		"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",
 		"originalVerdictArtifactPath": "battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json",
+		"archivedArtifacts": [
+			{
+				"role": "retained-result",
+				"commit": "e5060a0407252f25af801f59674f47a5aff71e55",
+				"path": "battery/dumgen-new/docs/prototypes/german-relation-prompt-iteration-lab/runs/2026-08-20T17-05-28-531Z/results.json",
+				"sha256": "c968b9096f17a5dc756b3784f685dcf5c38975628280ee88d4e8f9efb753c082"
+			}
+		],
 		"fingerprints": {
 			"prompt": "sha256:0896648f922dcb122a3d7f3956126a9b30d2964bdf04a187503bc8526980628a",
 			"schema": "sha256:3562a451015bb9c16ae65e45792e5f5897ab4c118cbc7c76340ad38b11e7968d",
@@ -23,6 +31,7 @@ export const COMPILED_RELATION_VERDICT = {
 		"verdict": null
 	},
 	"invalidationReasons": [
+		"archivedRunEvidence",
 		"missingReviewedVerdictArtifact",
 		"historicalCandidateRequiresReevaluation"
 	],
