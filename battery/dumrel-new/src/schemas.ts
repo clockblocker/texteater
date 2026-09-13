@@ -1,3 +1,10 @@
+/**
+ * Canonical structural authoring surface. Compose these concrete schemas with
+ * .shape/.pick/.omit; source-dependent invariants belong to the runtime
+ * operations. Dumgen and Dumdict compose shared structures, so no language or
+ * Family subpaths are needed. Import domain values from dumling/types and
+ * source-correlated Knowledge/Change types from dumrel/types.
+ */
 import { z } from "zod";
 import {
 	lemmaSchema,

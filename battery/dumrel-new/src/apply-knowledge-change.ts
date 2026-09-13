@@ -9,6 +9,12 @@ import type {
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
 
+/**
+ * Applies one source-aware change atomically. Contribute adds absent atomic
+ * aspects or distinct bucket values; Correct replaces; Retract removes. Exact
+ * Reading targets support synonym only and require targetKind: "reading",
+ * including retractions. Failure returns ParsingError without a partial value.
+ */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
 	knowledge: ReadingKnowledge<R>;
