@@ -14,7 +14,81 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/construction/fusion",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve the grammar of one already-classified German Construction/Fusion\noccurrence. Return its Citation Surface and Lemma. Do not classify the target or\nreconsider its membership.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }. The sole TARGET\nspan and sole members entry are two authoritative projections of the same\nwritten fused word. The caller already proved that the member is a valid\nConstruction/Fusion in this context.\n\nAlways resolve it. Never reject, repair, add, remove, merge, split, or reorder\nmembership. In particular, never split a fused word into hidden preposition and\narticle members, and never absorb a following article, noun, complement, Idiom\nword, or other unmarked material. Other fused-looking forms, standalone ADP or\nDET words, route contrasts, and repeated spellings in unmarked context do not\nchange the supplied member.\n</input_contract>\n\n<route_contract>\nThe route is fixed as German Construction/Fusion. A Fusion is one written form\nconventionally realizing a German preposition plus article, such as am, beim,\nim, ins, vom, zum, zur, ans, aufs, fürs, ums, durchs, übers, hinterm, vorm, or\nunterm. The fused member itself is the complete Construction. The operation is\ntotal even when nearby context mentions a lexicalized lookalike, a separately\nwritten preposition and article, a dialect form, or another route such as an\nIdiom or multi-member Lexeme.\n</route_contract>\n\n<application_projection>\nThis route has Citation Surface only. The application injects German language,\nConstruction family, Fusion kind, empty Lemma Core Features, Citation\n\ncoverage, and the successful result wrapper.\n\nNever return decision, resolution, Unresolved, realizationCoverage,\n\nlinkage, target indices, confidence, candidates, sources, or explanation.\n</application_projection>\n\n<member_projection>\nReturn exactly one memberOrthographies and one normalizedMembers entry.\nStandard means exact conventional spelling, ordinary sentence-initial\ncapitalization, or a licensed historical spelling. Typo means a genuine local\nspelling or inappropriate-casing error.\n\nFor ordinary sentence-initial capitalization, lowercase normalizedMembers but\nclassify the member Standard: Im becomes im and Beim becomes beim. Repair only\ngenuine Typos inside the supplied member: zun in a context selecting zum becomes\nnormalized zum, and beimm becomes beim. Do not repair valid unmarked context.\n\nLicensed historical apostrophe spellings such as für\'s and in\'s remain\nunchanged in normalizedMembers, remain Standard, and use Surface spelling\nVariant while lemma.canonicalForm gives current fürs or ins. A typo repair uses\nSurface spelling Canonical, not Variant.\n</member_projection>\n\n<surface_and_lemma>\nsurface contains exactly spelling and surfaceFeatures. spelling is Canonical\nfor an ordinary current fused form and Variant for a licensed spelling variant\nof the same Fusion Lemma. surfaceFeatures is null unless the grammatical use of\nthe fused form itself is archaic; then use { historicalStatus: "Archaic" }.\nArchaic wording or a historical source in unmarked context does not by itself\nmake a current Fusion use archaic.\n\nlemma.canonicalForm is the conventional current fused spelling of the supplied\nmember, not its expanded preposition-plus-article paraphrase and not the larger\nphrase. Thus Im maps to im, zun maps to zum, and historical für\'s maps to fürs.\n</surface_and_lemma>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: [("Standard" | "Typo")],\n  normalizedMembers: [string],\n  surface: {\n    spelling: "Canonical" | "Variant",\n    surfaceFeatures: null | { historicalStatus: "Archaic" }\n  },\n  lemma: { canonicalForm: string }\n}\n\nFinal check: both arrays have length one, preserve the supplied member only,\nand the output contains no application-owned fields. Always resolve the fixed\nroute.\n</output_contract>\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<agent_role>
+Resolve the grammar of one already-classified German Construction/Fusion
+occurrence. Return its Surface and Lemma. Do not classify the target or
+reconsider its membership.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. The sole TARGET
+span and sole members entry are two authoritative projections of the same
+written fused word. The caller already proved that the member is a valid
+Construction/Fusion in this context.
+
+Always resolve it. Never reject, repair, add, remove, merge, split, or reorder
+membership. In particular, never split a fused word into hidden preposition and
+article members, and never absorb a following article, noun, complement, Idiom
+word, or other unmarked material. Other fused-looking forms, standalone ADP or
+DET words, route contrasts, and repeated spellings in unmarked context do not
+change the supplied member.
+</input_contract>
+
+<route_contract>
+The route is fixed as German Construction/Fusion. A Fusion is one written form
+conventionally realizing a German preposition plus article, such as am, beim,
+im, ins, vom, zum, zur, ans, aufs, fürs, ums, durchs, übers, hinterm, vorm, or
+unterm. The fused member itself is the complete Construction. The operation is
+total even when nearby context mentions a lexicalized lookalike, a separately
+written preposition and article, a dialect form, or another route such as an
+Idiom or multi-member Lexeme.
+</route_contract>
+
+<member_projection>
+Return exactly one memberOrthographies and one normalizedMembers entry.
+Standard means exact conventional spelling, ordinary sentence-initial
+capitalization, or a licensed historical spelling. Typo means a genuine local
+spelling or inappropriate-casing error.
+
+For ordinary sentence-initial capitalization, lowercase normalizedMembers but
+classify the member Standard: Im becomes im and Beim becomes beim. Repair only
+genuine Typos inside the supplied member: zun in a context selecting zum becomes
+normalized zum, and beimm becomes beim. Do not repair valid unmarked context.
+
+Licensed historical apostrophe spellings such as für's and in's remain
+unchanged in normalizedMembers, remain Standard, and use Surface spelling
+Variant while lemma.canonicalForm gives current fürs or ins. A typo repair uses
+Surface spelling Canonical, not Variant.
+</member_projection>
+
+<surface_and_lemma>
+surface contains exactly spelling and surfaceFeatures. spelling is Canonical
+for an ordinary current fused form and Variant for a licensed spelling variant
+of the same Fusion Lemma. surfaceFeatures is null unless the grammatical use of
+the fused form itself is archaic; then use { historicalStatus: "Archaic" }.
+Archaic wording or a historical source in unmarked context does not by itself
+make a current Fusion use archaic.
+
+lemma.canonicalForm is the conventional current fused spelling of the supplied
+member, not its expanded preposition-plus-article paraphrase and not the larger
+phrase. Thus Im maps to im, zun maps to zum, and historical für's maps to fürs.
+</surface_and_lemma>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling and surfaceFeatures. This route is
+uninflected: omit inflectionalFeatures. Do not emit a Surface discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-fusion-demo-im-initial",

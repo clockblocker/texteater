@@ -36,7 +36,7 @@ test("published consumer declarations preserve Language and Kind without a Zod g
 		await writeFile(
 			join(directory, "consumer.ts"),
 			`import {createDumgen} from ${JSON.stringify(join(root, "dist/index.js"))};
-import type {Encounter,AnalysisTarget} from ${JSON.stringify(join(root, "dist/types.js"))};
+import type {Encounter,AnalysisTarget,GenerationInput,ComparisonInput,KnowledgeInput} from ${JSON.stringify(join(root, "dist/types.js"))};
 import type * as Dumling from ${JSON.stringify(resolve(root, "../dumling-new/dist/types.js"))};
 import {Effect} from ${JSON.stringify(resolve(root, "../../node_modules/effect/dist/dts/index.js"))};
 declare const encounter:Encounter<"de">;
@@ -52,6 +52,37 @@ const wrongLanguage:AnalysisTarget<"he">={family:"Phraseme",kind:"Collocation",m
 // @ts-expect-error Empty membership is not an Analysis Target.
 const empty:AnalysisTarget<"de">={family:"Lexeme",kind:"NOUN",memberSegmentIndices:[]};
 const attestation:Dumling.Attestation<"de">=output;
+declare const noun:Dumling.Lemma<"de","Lexeme","NOUN">;
+declare const verb:Dumling.Lemma<"de","Lexeme","VERB">;
+declare const idiom:Dumling.Lemma<"de","Phraseme","Idiom">;
+declare const englishNoun:Dumling.Lemma<"en","Lexeme","NOUN">;
+declare const nounReading:Dumling.Reading<"de","Lexeme","NOUN">;
+declare const verbReading:Dumling.Reading<"de","Lexeme","VERB">;
+const nounEncounter={sentence:{id:"noun",language:"de",segments:[{kind:"ResolvableText",text:"Haus"}]},target:{family:"Lexeme",kind:"NOUN",memberSegmentIndices:[0]}} as const;
+const generation:GenerationInput<"de">={encounter:nounEncounter,lemma:noun};
+const comparison:ComparisonInput<"de">={...generation,candidates:["🏠"] as const};
+const knowledge:KnowledgeInput<"de">={encounter:nounEncounter,reading:nounReading,request:{definition:null}};
+// @ts-expect-error Encounter and Lemma must have the same Kind.
+const wrongGeneration:GenerationInput<"de">={encounter:nounEncounter,lemma:verb};
+// @ts-expect-error Encounter and Lemma must have the same Family.
+const wrongFamily:GenerationInput={encounter:nounEncounter,lemma:idiom};
+// @ts-expect-error Encounter and Lemma must have the same Language.
+const wrongUnitLanguage:GenerationInput={encounter:nounEncounter,lemma:englishNoun};
+// @ts-expect-error Candidate comparison preserves Encounter/Lemma correlation.
+const wrongComparison:ComparisonInput<"de">={encounter:nounEncounter,lemma:verb,candidates:["🏠"]};
+// @ts-expect-error Knowledge preserves Encounter/Reading correlation.
+const wrongKnowledge:KnowledgeInput<"de">={encounter:nounEncounter,reading:verbReading,request:{definition:null}};
+const dumgen=createDumgen({execute:async()=>null});
+dumgen.generateReadingEmojiDescription(generation);
+dumgen.resolveOrGenerateReadingEmojiDescription(comparison);
+dumgen.produceKnowledge(knowledge);
+// @ts-expect-error Public operations reject mismatched units too.
+dumgen.generateReadingEmojiDescription({encounter:nounEncounter,lemma:verb});
+// @ts-expect-error Public comparison rejects mismatched units too.
+dumgen.resolveOrGenerateReadingEmojiDescription({encounter:nounEncounter,lemma:verb,candidates:["🏠"]});
+// @ts-expect-error Public Knowledge rejects mismatched units too.
+dumgen.produceKnowledge({encounter:nounEncounter,reading:verbReading,request:{definition:null}});
+
 `,
 		);
 		await writeFile(

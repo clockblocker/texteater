@@ -31,25 +31,38 @@ export type Encounter<L extends DumgenLanguage = DumgenLanguage> =
 		: never;
 export type AnalysisTarget<L extends DumgenLanguage = DumgenLanguage> =
 	Encounter<L>["target"];
-export type GenerationInput<L extends DumgenLanguage = DumgenLanguage> = {
-	readonly encounter: Encounter<L>;
-	readonly lemma: Extract<
-		Generated.GenerationInput,
-		{ encounter: { sentence: { language: L } } }
-	>["lemma"];
-};
+// Map each complete schema branch independently so Encounter and unit routes
+// remain correlated. Domain units retain Dumling's own mutability contract.
+type OperationInput<T> = T extends { encounter: unknown }
+	? {
+			readonly [K in keyof T]: K extends "encounter"
+				? Immutable<T[K]>
+				: K extends "candidates"
+					? Readonly<T[K]>
+					: T[K];
+		}
+	: never;
+export type GenerationInput<L extends DumgenLanguage = DumgenLanguage> =
+	OperationInput<
+		Extract<
+			Generated.GenerationInput,
+			{ encounter: { sentence: { language: L } } }
+		>
+	>;
 export type ComparisonInput<L extends DumgenLanguage = DumgenLanguage> =
-	GenerationInput<L> & {
-		readonly candidates: Readonly<Generated.ComparisonInput["candidates"]>;
-	};
-export type KnowledgeInput<L extends DumgenLanguage = DumgenLanguage> = {
-	readonly encounter: Encounter<L>;
-	readonly reading: Extract<
-		Generated.KnowledgeInput,
-		{ encounter: { sentence: { language: L } } }
-	>["reading"];
-	readonly request: Generated.KnowledgeInput["request"];
-};
+	OperationInput<
+		Extract<
+			Generated.ComparisonInput,
+			{ encounter: { sentence: { language: L } } }
+		>
+	>;
+export type KnowledgeInput<L extends DumgenLanguage = DumgenLanguage> =
+	OperationInput<
+		Extract<
+			Generated.KnowledgeInput,
+			{ encounter: { sentence: { language: L } } }
+		>
+	>;
 export type EmojiDescription = Dumling.Reading["emojiDescription"];
 export type ReadingEmojiDescriptionResolution = {
 	readonly decision: "Reuse" | "New";

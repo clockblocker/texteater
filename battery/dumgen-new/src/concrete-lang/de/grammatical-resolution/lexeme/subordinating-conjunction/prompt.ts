@@ -14,7 +14,88 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/lexeme/subordinating-conjunction",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve the grammar of one already-classified German Lexeme/SCONJ occurrence.\nReturn its attested Surface analysis and dictionary Lemma. Do not classify the\ntarget or reconsider membership.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }. Every TARGET span\nmarks one supplied member, and members repeats those exact texts in source\norder. Both projections are authoritative. Never reject, repair, add, remove,\nmerge, split, or reorder membership.\n</input_contract>\n\n<fixed_route_contract>\nTarget Classification already established Lexeme/SCONJ and complete membership.\nThe operation is total: always resolve the supplied occurrence. Context\ndistinguishes identity, comparative function, orthography, and historical\nstatus, but never changes the route.\n\nDo not return Unresolved because an identical spelling can be CCONJ, ADV, ADP,\nor PART in a different occurrence. Unmarked neighbors remain outside the\ntarget. Keep every supplied member of a multi-member subordinator, including\nfixed discontinuous identities such as um zu, ohne zu, (an)statt zu, and\nso … dass, but never absorb unmarked clause material.\n\n\nSurface-to-Lemma linkage, normalized Surface, successful resolution, and Full\nrealization coverage. Do not return those fields.\n</fixed_route_contract>\n\n<member_projection>\nReturn exactly one memberOrthographies and one normalizedMembers entry per\nsupplied member. Standard includes canonical spelling, licensed variants, and\nordinary sentence-initial capitalization. Typo is only a genuine spelling or\ninappropriate-casing error.\n\nPreserve Standard members exactly except lowercase ordinary initial\ncapitalization of a normally lowercase conjunction. Preserve licensed\nhistorical spellings such as daß rather than replacing them with the Lemma\ncanonicalForm. Repair only Typo members. Never substitute a synonym or change\nthe supplied member count or order.\n</member_projection>\n\n<surface_model>\nGerman SCONJ exposes Citation Surfaces only, and the application injects the\nCitation discriminator. Return surface with exactly spelling and\nsurfaceFeatures.\n\nUse spelling Canonical for the ordinary dictionary spelling. Use Variant for a\nlicensed alternate realization, including an established historical spelling\nor separately written variant of a lexicalized multi-member identity. A real\nmisspelling is Typo; after repair, the Surface is Canonical.\n\nsurfaceFeatures is null unless this exact use is deliberately historical or\narchaic, when it is { historicalStatus: "Archaic" }. Historical forms remain\nStandard unless their attested characters also contain a genuine error.\n</surface_model>\n\n\n\n<route_distinctions>\n- Finite, infinitival, and established reduced subordinate clauses remain valid\n  SCONJ contexts when upstream classification and membership are supplied.\n- Homographs such as als, wie, da, ob, wenn, während, and denn may belong to\n  other routes elsewhere. Do not reconsider the supplied SCONJ occurrence.\n- A nearby CCONJ denn, adpositional während, adverbial da, or modal particle ja\n  is merely unmarked context and does not alter the target.\n- A supplied multi-member subordinator such as so dass, als ob, or ohne dass\n  keeps all supplied members. Do not merge them into one member or absorb the\n  following subject or clause.\n- The exact SCONJ codec has no abbreviation feature. Never invent one or expand\n  an unmarked abbreviation in the surrounding sentence.\n</route_distinctions>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: ("Standard" | "Typo")[],\n  normalizedMembers: string[],\n  surface: {\n    spelling: "Canonical" | "Variant",\n    surfaceFeatures: null | { historicalStatus: "Archaic" | null }\n  },\n  lemma: {\n    canonicalForm: string,\n    coreFeatures: { conjType: "Comp" | null }\n  }\n}\n\n\nrealizationCoverage, normalizedSurface, language, family, kind, Lemma linkage,\ntarget indices, confidence, alternatives, or explanation.\n</output_contract>\n\n\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/SCONJ occurrence.
+Return its attested Surface analysis and dictionary Lemma. Do not classify the
+target or reconsider membership.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span
+marks one supplied member, and members repeats those exact texts in source
+order. Both projections are authoritative. Never reject, repair, add, remove,
+merge, split, or reorder membership.
+</input_contract>
+
+<fixed_route_contract>
+Target Classification already established Lexeme/SCONJ and complete membership.
+The operation is total: always resolve the supplied occurrence. Context
+distinguishes identity, comparative function, orthography, and historical
+status, but never changes the route.
+
+Do not return Unresolved because an identical spelling can be CCONJ, ADV, ADP,
+or PART in a different occurrence. Unmarked neighbors remain outside the
+target. Keep every supplied member of a multi-member subordinator, including
+fixed discontinuous identities such as um zu, ohne zu, (an)statt zu, and
+so … dass, but never absorb unmarked clause material.
+</fixed_route_contract>
+
+<member_projection>
+Return exactly one memberOrthographies and one normalizedMembers entry per
+supplied member. Standard includes canonical spelling, licensed variants, and
+ordinary sentence-initial capitalization. Typo is only a genuine spelling or
+inappropriate-casing error.
+
+Preserve Standard members exactly except lowercase ordinary initial
+capitalization of a normally lowercase conjunction. Preserve licensed
+historical spellings such as daß rather than replacing them with the Lemma
+canonicalForm. Repair only Typo members. Never substitute a synonym or change
+the supplied member count or order.
+</member_projection>
+
+<surface_model>
+German SCONJ is uninflected. Return surface with exactly spelling and
+surfaceFeatures.
+
+Use spelling Canonical for the ordinary dictionary spelling. Use Variant for a
+licensed alternate realization, including an established historical spelling
+or separately written variant of a lexicalized multi-member identity. A real
+misspelling is Typo; after repair, the Surface is Canonical.
+
+surfaceFeatures is null unless this exact use is deliberately historical or
+archaic, when it is { historicalStatus: "Archaic" }. Historical forms remain
+Standard unless their attested characters also contain a genuine error.
+</surface_model>
+
+<route_distinctions>
+- Finite, infinitival, and established reduced subordinate clauses remain valid
+  SCONJ contexts when upstream classification and membership are supplied.
+- Homographs such as als, wie, da, ob, wenn, während, and denn may belong to
+  other routes elsewhere. Do not reconsider the supplied SCONJ occurrence.
+- A nearby CCONJ denn, adpositional während, adverbial da, or modal particle ja
+  is merely unmarked context and does not alter the target.
+- A supplied multi-member subordinator such as so dass, als ob, or ohne dass
+  keeps all supplied members. Do not merge them into one member or absorb the
+  following subject or clause.
+- The exact SCONJ codec has no abbreviation feature. Never invent one or expand
+  an unmarked abbreviation in the surrounding sentence.
+</route_distinctions>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling and surfaceFeatures. This route is
+uninflected: omit inflectionalFeatures. Do not emit a Surface discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-sconj-demo-finite-weil",

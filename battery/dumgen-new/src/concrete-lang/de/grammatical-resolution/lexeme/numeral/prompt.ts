@@ -14,7 +14,120 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/lexeme/numeral",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve the grammar of one already-classified German Lexeme/NUM occurrence.\nReturn its attested Surface analysis and dictionary Lemma. Do not classify the\ntarget or reconsider membership.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }. Every TARGET span\nmarks one supplied member, and members repeats those exact texts in source\norder. Both projections are authoritative. Never reject, repair, add, remove,\nmerge, split, or reorder membership.\n</input_contract>\n\n<fixed_route_contract>\nTarget Classification already established Lexeme/NUM and complete membership.\nThe operation is total: always resolve the supplied NUM occurrence. Context\ndistinguishes numerical identity and grammatical features but never changes the\nroute. A supplied numeral may contain one member or several ordered members,\nincluding a spoken decimal. Preserve every supplied member exactly once.\n\nDo not reject a target because a homograph or neighboring expression could be\nan ordinal-like ADJ, DET, PRON, NOUN, or SYM elsewhere. Those distinctions were\nfixed upstream. Resolve only the marked NUM, without copying features from an\nunmarked neighboring word or symbol.\n\nThe application injects German route identity, Surface-to-Lemma linkage,\nnormalized Surface, successful resolution, and Full realization coverage. Do\nnot return those fields.\n</fixed_route_contract>\n\n<member_projection>\nReturn one memberOrthographies and one normalizedMembers value for each supplied\nmember. Standard includes canonical spelling, ordinary sentence-initial\ncapitalization, licensed variants, and licensed abbreviations. Typo is only a\ngenuine spelling or inappropriate-casing error.\n\nPreserve each Standard member exactly except lowercase sentence-initial\ncapitalization of a word numeral. This casing projection is independent of\nCitation versus Inflection: an initial inflected quantity numeral also projects\nto lowercase. Repair only Typo members. Preserve digits, Roman-numeral casing,\nabbreviation casing, morphology, and member order. Never replace a digit with a\nword or a word with digits. A licensed Variant Surface remains Standard\noccurrence evidence. Sentence-initial capitalization must not survive in\nnormalizedMembers: initial Acht projects to acht while remaining Standard.\nRecognized historical spellings are licensed Standard evidence, not Typo: keep\ntheir attested spelling in normalizedMembers, use a Variant Surface with\nArchaic status, and map only canonicalForm to the modern spelling.\n</member_projection>\n\n<surface_kind>\nUse Citation for an invariant NUM occurrence, including ordinary clause uses of\nword cardinals, digits, spoken decimals, years, Roman numerals, fractions,\nmultiplicative forms, ranges, and multi-member spoken numbers. Citation\nis not restricted to dictionary labels.\n\nUse Inflection only when the NUM Surface itself carries or establishes at least\none inflectional feature:\n{\n  case: "Acc" | "Dat" | "Gen" | "Nom" | null,\n  gender: "Fem" | "Masc" | "Neut" | null,\n  number: "Plur" | "Sing" | null\n}\n\nAt least one value must be non-null. Inflected quantity numerals such as Million\nand Millionen can carry case, feminine gender, and number; an explicitly\ngendered historical word form can also carry agreement. Fill only features\nestablished by the Surface and realistic syntax. Invariant digits and words do\nnot acquire inflection merely from the case or gender of a neighboring noun.\nWhen no feature is established, use Citation rather than an all-null Inflection.\n\nGerman word quantities in the Million family and the larger -illion and\n-illiarde series are not invariant cardinals when their own singular or plural\nform and syntax establish agreement. Resolve such a quantity as Inflection with\nits established case, feminine gender, and number. At sentence start, keep its\noccurrence orthography Standard but lowercase the ordinary initial capital in\nnormalizedMembers. This quantity-word rule is mandatory and takes precedence\nover the general Citation rule for invariant numerals.\n\nsurface.spelling is Variant only for a licensed alternate spelling or\nabbreviation, such as zwo or T for Tausend, and Canonical otherwise.\nsurfaceFeatures is null unless the attested use itself is archaic; then use\n{ historicalStatus: "Archaic" }. A modern licensed variant is not Archaic.\nFor an archaic word form whose morphology visibly distinguishes agreement, use\nInflection with the established case, gender, and number, map canonicalForm to\nthe modern dictionary numeral, set spelling Variant, and set the Surface\nhistorical status Archaic. This is never Citation: visibly marked historical\nagreement always selects Inflection, even when the modern base numeral is\ninvariant. Do not preserve its ordinary sentence-initial capital in\nnormalizedMembers or canonicalForm.\n</surface_kind>\n\n\n\n<route_distinctions>\n- An ordinal ADJ in context does not make a separately marked cardinal label an\n  ADJ; the fixed NUM target remains NUM.\n- An unmarked DET such as beide is not part of a separately supplied numeral.\n- A standalone cardinal can head a phrase without becoming PRON.\n- A nominalized number word outside the target does not change the marked\n  numeric identity to NOUN.\n- Mathematical punctuation or operators outside the target do not make the\n  marked number a SYM.\n</route_distinctions>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: ("Standard" | "Typo")[],\n  normalizedMembers: string[],\n  surface: CitationSurface | InflectionSurface,\n  lemma: {\n    canonicalForm: string,\n    coreFeatures: {\n      abbr: "Yes" | null,\n      foreign: "Yes" | null,\n      numType: "Card" | "Frac" | "Mult" | "Range" | null\n    }\n  }\n}\n\n\nsurfaceFeatures.\nInflection, surfaceFeatures, and the non-empty case/gender/number feature bag.\n\nNever return decision, resolution, Unresolved, realizationCoverage,\nnormalizedSurface, language, family, kind, Lemma linkage, target indices,\nconfidence, candidates, or explanation.\n</output_contract>\n\n\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/NUM occurrence.
+Return its attested Surface analysis and dictionary Lemma. Do not classify the
+target or reconsider membership.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span
+marks one supplied member, and members repeats those exact texts in source
+order. Both projections are authoritative. Never reject, repair, add, remove,
+merge, split, or reorder membership.
+</input_contract>
+
+<fixed_route_contract>
+Target Classification already established Lexeme/NUM and complete membership.
+The operation is total: always resolve the supplied NUM occurrence. Context
+distinguishes numerical identity and grammatical features but never changes the
+route. A supplied numeral may contain one member or several ordered members,
+including a spoken decimal. Preserve every supplied member exactly once.
+
+Do not reject a target because a homograph or neighboring expression could be
+an ordinal-like ADJ, DET, PRON, NOUN, or SYM elsewhere. Those distinctions were
+fixed upstream. Resolve only the marked NUM, without copying features from an
+unmarked neighboring word or symbol.
+</fixed_route_contract>
+
+<member_projection>
+Return one memberOrthographies and one normalizedMembers value for each supplied
+member. Standard includes canonical spelling, ordinary sentence-initial
+capitalization, licensed variants, and licensed abbreviations. Typo is only a
+genuine spelling or inappropriate-casing error.
+
+Preserve each Standard member exactly except lowercase sentence-initial
+capitalization of a word numeral. This casing projection is independent of
+null versus marked inflectionalFeatures: an initial inflected quantity numeral also projects
+to lowercase. Repair only Typo members. Preserve digits, Roman-numeral casing,
+abbreviation casing, morphology, and member order. Never replace a digit with a
+word or a word with digits. A licensed Variant Surface remains Standard
+occurrence evidence. Sentence-initial capitalization must not survive in
+normalizedMembers: initial Acht projects to acht while remaining Standard.
+Recognized historical spellings are licensed Standard evidence, not Typo: keep
+their attested spelling in normalizedMembers, use a Variant Surface with
+Archaic status, and map only canonicalForm to the modern spelling.
+</member_projection>
+
+<surface_inflection>
+Use null inflectionalFeatures for an invariant NUM occurrence, including ordinary clause uses of
+word cardinals, digits, spoken decimals, years, Roman numerals, fractions,
+multiplicative forms, ranges, and multi-member spoken numbers. Null inflectionalFeatures is not restricted to dictionary labels.
+
+Use an inflectionalFeatures object only when the NUM Surface itself carries or establishes at least
+one inflectional feature:
+{
+  case: "Acc" | "Dat" | "Gen" | "Nom" | null,
+  gender: "Fem" | "Masc" | "Neut" | null,
+  number: "Plur" | "Sing" | null
+}
+
+At least one value must be non-null. Inflected quantity numerals such as Million
+and Millionen can carry case, feminine gender, and number; an explicitly
+gendered historical word form can also carry agreement. Fill only features
+established by the Surface and realistic syntax. Invariant digits and words do
+not acquire inflection merely from the case or gender of a neighboring noun.
+When no feature is established, use null inflectionalFeatures rather than an all-null feature object.
+
+German word quantities in the Million family and the larger -illion and
+-illiarde series are not invariant cardinals when their own singular or plural
+form and syntax establish agreement. Resolve such a quantity as an inflectionalFeatures object with
+its established case, feminine gender, and number. At sentence start, keep its
+occurrence orthography Standard but lowercase the ordinary initial capital in
+normalizedMembers. This quantity-word rule is mandatory and takes precedence
+over the general null-feature rule for invariant numerals.
+
+surface.spelling is Variant only for a licensed alternate spelling or
+abbreviation, such as zwo or T for Tausend, and Canonical otherwise.
+surfaceFeatures is null unless the attested use itself is archaic; then use
+{ historicalStatus: "Archaic" }. A modern licensed variant is not Archaic.
+For an archaic word form whose morphology visibly distinguishes agreement, use
+an inflectionalFeatures object with the established case, gender, and number, map canonicalForm to
+the modern dictionary numeral, set spelling Variant, and set the Surface
+historical status Archaic. Visibly marked historical
+agreement always requires an inflectionalFeatures object, even when the modern base numeral is
+invariant. Do not preserve its ordinary sentence-initial capital in
+normalizedMembers or canonicalForm.
+</surface_inflection>
+
+<route_distinctions>
+- An ordinal ADJ in context does not make a separately marked cardinal label an
+  ADJ; the fixed NUM target remains NUM.
+- An unmarked DET such as beide is not part of a separately supplied numeral.
+- A standalone cardinal can head a phrase without becoming PRON.
+- A nominalized number word outside the target does not change the marked
+  numeric identity to NOUN.
+- Mathematical punctuation or operators outside the target do not make the
+  marked number a SYM.
+</route_distinctions>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling, surfaceFeatures, and inflectionalFeatures.
+Use null inflectionalFeatures when no inflectional evidence is marked; otherwise
+use the feature object allowed by the response schema. Do not emit a Surface
+discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-num-demo-word-vier",

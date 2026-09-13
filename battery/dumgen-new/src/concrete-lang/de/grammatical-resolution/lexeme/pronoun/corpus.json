@@ -733,7 +733,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "dein",
+				"canonicalForm": "deiner",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -765,7 +765,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "sein",
+				"canonicalForm": "seiner",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -797,7 +797,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "sein",
+				"canonicalForm": "seines",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -808,7 +808,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": "Neut",
 					"referenceNumber": "Sing"
 				}
 			},
@@ -829,7 +829,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "ihr",
+				"canonicalForm": "ihrer",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -861,10 +861,10 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "ihr",
+				"canonicalForm": "ihre",
 				"coreFeatures": {
 					"case": "Nom",
-					"number": "Sing",
+					"number": "Plur",
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -872,7 +872,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Plur"
 				}
 			},
@@ -893,7 +893,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "unser",
+				"canonicalForm": "unserer",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -925,7 +925,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "euer",
+				"canonicalForm": "eurer",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -957,7 +957,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "Ihr",
+				"canonicalForm": "Ihrer",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -969,7 +969,7 @@
 					"poss": "Yes",
 					"pronType": "Prs",
 					"gender": "Masc",
-					"referenceNumber": null
+					"referenceNumber": "Sing"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -992,7 +992,7 @@
 				"canonicalForm": "wer",
 				"coreFeatures": {
 					"case": "Nom",
-					"number": "Sing",
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1025,7 +1025,7 @@
 				"canonicalForm": "wen",
 				"coreFeatures": {
 					"case": "Acc",
-					"number": "Sing",
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1058,7 +1058,7 @@
 				"canonicalForm": "wem",
 				"coreFeatures": {
 					"case": "Dat",
-					"number": "Sing",
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1091,7 +1091,7 @@
 				"canonicalForm": "wessen",
 				"coreFeatures": {
 					"case": "Gen",
-					"number": "Sing",
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1138,7 +1138,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+		"explanation": "The occurrence realizes the jemand Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-jemand-jemanden": {
 		"input": {
@@ -1154,7 +1154,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jemand",
+				"canonicalForm": "jemanden",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -1171,7 +1171,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+		"explanation": "The occurrence realizes the jemanden Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-jemand-jemandem": {
 		"input": {
@@ -1187,7 +1187,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jemand",
+				"canonicalForm": "jemandem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -1204,7 +1204,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+		"explanation": "The occurrence realizes the jemandem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-jemand-jemandes": {
 		"input": {
@@ -1220,7 +1220,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jemand",
+				"canonicalForm": "jemandes",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -1237,7 +1237,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed indefinite Lemma jemand."
+		"explanation": "The occurrence realizes the jemandes Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-niemand-niemand": {
 		"input": {
@@ -1270,7 +1270,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+		"explanation": "The occurrence realizes the niemand Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-niemand-niemanden": {
 		"input": {
@@ -1286,7 +1286,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "niemand",
+				"canonicalForm": "niemanden",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -1303,7 +1303,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+		"explanation": "The occurrence realizes the niemanden Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-niemand-niemandem": {
 		"input": {
@@ -1319,7 +1319,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "niemand",
+				"canonicalForm": "niemandem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -1336,7 +1336,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+		"explanation": "The occurrence realizes the niemandem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-niemand-niemandes": {
 		"input": {
@@ -1352,7 +1352,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "niemand",
+				"canonicalForm": "niemandes",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -1369,7 +1369,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual case form is an Inflection Surface of the one fixed negative Lemma niemand."
+		"explanation": "The occurrence realizes the niemandes Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-sing-masc": {
 		"input": {
@@ -1402,7 +1402,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keiner Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-sing-fem": {
 		"input": {
@@ -1418,7 +1418,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keine",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -1435,7 +1435,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keine Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-sing-neut": {
 		"input": {
@@ -1451,7 +1451,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keines",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -1468,7 +1468,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keines Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-masc": {
 		"input": {
@@ -1484,7 +1484,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keinen",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -1501,7 +1501,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keinen Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-fem": {
 		"input": {
@@ -1517,7 +1517,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keine",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -1534,7 +1534,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keine Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-neut": {
 		"input": {
@@ -1550,7 +1550,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keines",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -1567,7 +1567,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keines Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-sing-masc": {
 		"input": {
@@ -1583,7 +1583,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keinem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -1600,7 +1600,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keinem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-sing-fem": {
 		"input": {
@@ -1633,7 +1633,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keiner Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-sing-neut": {
 		"input": {
@@ -1649,7 +1649,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keinem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -1666,7 +1666,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keinem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-masc": {
 		"input": {
@@ -1682,7 +1682,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keines",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -1699,7 +1699,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keines Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-fem": {
 		"input": {
@@ -1732,7 +1732,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keiner Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-neut": {
 		"input": {
@@ -1748,7 +1748,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keines",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -1765,7 +1765,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keines Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-plur": {
 		"input": {
@@ -1781,7 +1781,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keine",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
@@ -1798,7 +1798,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keine Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-plur": {
 		"input": {
@@ -1814,7 +1814,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keine",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
@@ -1831,7 +1831,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keine Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-plur": {
 		"input": {
@@ -1847,7 +1847,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "keiner",
+				"canonicalForm": "keinen",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
@@ -1864,7 +1864,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keinen Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-plur": {
 		"input": {
@@ -1897,7 +1897,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone declined form is an Inflection Surface of the one fixed negative Lemma keiner; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the keiner Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-sing-masc": {
 		"input": {
@@ -1930,7 +1930,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the mancher Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-sing-fem": {
 		"input": {
@@ -1946,7 +1946,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manche",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -1963,7 +1963,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manche Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-sing-neut": {
 		"input": {
@@ -1979,7 +1979,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manches",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -1996,7 +1996,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manches Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-masc": {
 		"input": {
@@ -2012,7 +2012,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manchen",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -2029,7 +2029,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manchen Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-fem": {
 		"input": {
@@ -2045,7 +2045,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manche",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -2062,7 +2062,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manche Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-neut": {
 		"input": {
@@ -2078,7 +2078,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manches",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -2095,7 +2095,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manches Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-sing-masc": {
 		"input": {
@@ -2111,7 +2111,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manchem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -2128,7 +2128,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manchem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-sing-fem": {
 		"input": {
@@ -2161,7 +2161,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the mancher Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-sing-neut": {
 		"input": {
@@ -2177,7 +2177,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manchem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -2194,7 +2194,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manchem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-sing-masc": {
 		"input": {
@@ -2210,7 +2210,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manches",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -2227,7 +2227,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manches Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-sing-fem": {
 		"input": {
@@ -2260,7 +2260,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the mancher Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-sing-neut": {
 		"input": {
@@ -2276,7 +2276,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manches",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -2293,7 +2293,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manches Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-plur": {
 		"input": {
@@ -2309,7 +2309,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manche",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
@@ -2326,7 +2326,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manche Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-plur": {
 		"input": {
@@ -2342,7 +2342,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manche",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
@@ -2359,7 +2359,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manche Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-plur": {
 		"input": {
@@ -2375,7 +2375,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manchen",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
@@ -2392,7 +2392,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the manchen Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-plur": {
 		"input": {
@@ -2425,7 +2425,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The standalone form is an Inflection Surface of the one fixed total Lemma mancher; contextual case, number, and singular gender remain Surface evidence."
+		"explanation": "The occurrence realizes the mancher Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-jedermann-nom": {
 		"input": {
@@ -2458,7 +2458,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+		"explanation": "The singular case occurrence is an Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
 	},
 	"grammar-de-pron-fixed-jedermann-acc": {
 		"input": {
@@ -2491,7 +2491,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+		"explanation": "The singular case occurrence is an Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
 	},
 	"grammar-de-pron-fixed-jedermann-dat": {
 		"input": {
@@ -2524,7 +2524,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+		"explanation": "The singular case occurrence is an Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
 	},
 	"grammar-de-pron-fixed-jedermann-gen": {
 		"input": {
@@ -2540,7 +2540,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedermann",
+				"canonicalForm": "jedermanns",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -2557,7 +2557,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The singular case occurrence is an Inflection Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
+		"explanation": "The singular case occurrence is an Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
 	},
 	"grammar-de-pron-fixed-alles-nom": {
 		"input": {
@@ -2639,7 +2639,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "alles",
+				"canonicalForm": "allem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -2738,7 +2738,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "alle",
+				"canonicalForm": "allen",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
@@ -2771,7 +2771,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "alle",
+				"canonicalForm": "aller",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
@@ -2870,7 +2870,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mehrere",
+				"canonicalForm": "mehreren",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
@@ -2903,7 +2903,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mehrere",
+				"canonicalForm": "mehrerer",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
@@ -2953,7 +2953,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jeder Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-nom-fem": {
 		"input": {
@@ -2969,7 +2969,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jede",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -2986,7 +2986,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jede Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-nom-neut": {
 		"input": {
@@ -3002,7 +3002,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jedes",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -3019,7 +3019,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jedes Lemma with Nom Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-acc-masc": {
 		"input": {
@@ -3035,7 +3035,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jeden",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3052,7 +3052,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jeden Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-acc-fem": {
 		"input": {
@@ -3068,7 +3068,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jede",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3085,7 +3085,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jede Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-acc-neut": {
 		"input": {
@@ -3101,7 +3101,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jedes",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3118,7 +3118,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jedes Lemma with Acc Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-dat-masc": {
 		"input": {
@@ -3134,7 +3134,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jedem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -3151,7 +3151,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jedem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-dat-fem": {
 		"input": {
@@ -3184,7 +3184,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jeder Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-dat-neut": {
 		"input": {
@@ -3200,7 +3200,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jedem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -3217,7 +3217,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jedem Lemma with Dat Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-gen-masc": {
 		"input": {
@@ -3233,7 +3233,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jedes",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -3250,7 +3250,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jedes Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-gen-fem": {
 		"input": {
@@ -3283,7 +3283,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jeder Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-jeder-gen-neut": {
 		"input": {
@@ -3299,7 +3299,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeder",
+				"canonicalForm": "jedes",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -3316,7 +3316,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The contextual singular Case and Gender remain Surface evidence for the one fixed total-pronoun Lemma jeder."
+		"explanation": "The occurrence realizes the jedes Lemma with Gen Case in Core."
 	},
 	"grammar-de-pron-fixed-jedweder-nom-masc": {
 		"input": {
@@ -3365,7 +3365,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwede",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -3398,7 +3398,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwedes",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -3431,7 +3431,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedweden",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3464,7 +3464,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwede",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3497,7 +3497,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwedes",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3530,7 +3530,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwedem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -3596,7 +3596,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwedem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -3629,7 +3629,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwedes",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -3695,7 +3695,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jedweder",
+				"canonicalForm": "jedwedes",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -3761,7 +3761,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliche",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -3794,7 +3794,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliches",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -3827,7 +3827,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jeglichen",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3860,7 +3860,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliche",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3893,7 +3893,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliches",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -3926,7 +3926,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jeglichem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -3992,7 +3992,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jeglichem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -4025,7 +4025,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliches",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -4091,7 +4091,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliches",
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
@@ -4124,7 +4124,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliche",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
@@ -4157,7 +4157,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jegliche",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
@@ -4190,7 +4190,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jeglicher",
+				"canonicalForm": "jeglichen",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
@@ -5853,7 +5853,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Invariant reciprocal. Citation Surface."
+		"explanation": "Invariant reciprocal. Surface with unmarked inflectionalFeatures."
 	},
 	"grammar-de-pron-dev-inherent-reflexive-sich": {
 		"input": {
@@ -5988,7 +5988,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Invariant Citation. Initial capital normalizes down."
+		"explanation": "Invariant form with unmarked inflectionalFeatures. Initial capital normalizes down."
 	},
 	"grammar-de-pron-dev-demonstrative-das-nom": {
 		"input": {
@@ -6004,7 +6004,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "der",
+				"canonicalForm": "das",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -6036,7 +6036,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "der",
+				"canonicalForm": "die",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -6071,7 +6071,7 @@
 				"canonicalForm": "wer",
 				"coreFeatures": {
 					"case": "Nom",
-					"number": "Sing",
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -6101,7 +6101,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jemand",
+				"canonicalForm": "jemandem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -6133,7 +6133,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "niemand",
+				"canonicalForm": "niemanden",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
@@ -6182,7 +6182,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Foreign invariant total PRON. Citation Surface."
+		"explanation": "Foreign invariant total PRON. Surface with unmarked inflectionalFeatures."
 	},
 	"grammar-de-pron-dev-poss-meiner": {
 		"input": {
@@ -6198,7 +6198,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mein",
+				"canonicalForm": "meiner",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
@@ -6231,7 +6231,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "der",
+				"canonicalForm": "die",
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
@@ -6263,7 +6263,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "der",
+				"canonicalForm": "dem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -6295,10 +6295,10 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "wer",
+				"canonicalForm": "wem",
 				"coreFeatures": {
 					"case": "Dat",
-					"number": "Sing",
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -6327,7 +6327,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "irgendjemand",
+				"canonicalForm": "irgendjemandem",
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
@@ -6359,7 +6359,7 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "niemand",
+				"canonicalForm": "niemanden",
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",

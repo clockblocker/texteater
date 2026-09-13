@@ -14,7 +14,104 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/lexeme/pronoun",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve the grammar of one already-classified German Lexeme/PRON occurrence. Return its attested Surface and dictionary Lemma. Do not classify the target or reconsider membership.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }. Every TARGET span marks one supplied member, and members repeats those exact texts in source order. Both projections are authoritative. Never reject, repair, add, remove, merge, split, or reorder membership. Never absorb an adposition, determiner, particle, governing verb, or other contextual word.\n</input_contract>\n\n<route_contract>\nTarget Classification already established Lexeme/PRON. The operation is total: always resolve the supplied occurrence. Use context to fill codec-supported grammar, but never reclassify the target as DET, ADV, PART, NOUN, NUM, or VERB.\n\nThe fixed route is lexical, not inferred again from local syntax. A substantive demonstrative, relative, interrogative, indefinite, negative, total, personal, reflexive, reciprocal, or possessive occurrence can be PRON. A neighboring determiner remains context. Degree-modifying etwas elsewhere would be ADV, but the supplied target is PRON. A contracted pronoun remains PRON. A pronoun selected by an inherently reflexive verb is still the supplied PRON member; never absorb the verb or return a VERB feature.\n\nThe application injects German Lexeme/PRON identity, normalized Surface, Surface-to-Lemma linkage, successful result construction, and realizationCoverage Full. Do not return those fields.\n</route_contract>\n\n<member_projection>\nReturn one memberOrthographies entry and one normalizedMembers entry for every supplied member. Standard includes canonical spelling, ordinary sentence-initial capitalization, required formal-address capitalization, and licensed contractions or variants. Typo is only a genuine spelling or inappropriate-casing error.\n\nFor each Standard member, preserve its contextual form except always lowercase ordinary sentence-initial capitalization. This applies equally to personal, demonstrative, interrogative, indefinite, total, and foreign members. Preserve uppercase only when the lexeme itself requires it, as in the formal Sie paradigm. Repair only Typo members. A lowercase formal-address sie is Typo and normalizes to Sie. Punctuation is not a ResolvableText member: when an external apostrophe licenses contracted s for es, preserve supplied s in normalizedMembers. The contraction is Standard. Never replace a contextual member with its Lemma form.\n</member_projection>\n\n<surface_model>\nsurface is Citation or Inflection.\n\nUse Citation for an explicit dictionary mention and for an invariant whole-form occurrence when the form does not encode any non-null case, gender, number, or reflex distinction. Invariant etwas, nichts, nix, and einander remain Citation even when syntax gives them a role; do not manufacture morphology. Forms in the wer paradigm and compounds built on it are not invariant: contextual wer, wen, wem, irgendwer, and corresponding forms are Inflection with established case and singular number. The jemand and niemand paradigms are likewise inflecting: even contextual base forms identical to their Lemmas realize nominative singular and must be Inflection, never Citation.\n\nUse Inflection when the occurrence realizes at least one codec feature. Every contextual personal pronoun is Inflection, including a subject form identical to its Lemma, a repaired typo such as a misspelled first-person subject, and a foreign or code-switched personal pronoun. Foreign status alone forces neither Citation nor Inflection: use the lexeme\'s paradigm and context. A foreign personal paradigm inflects just as its source language establishes, while an invariant foreign total form remains Citation and never receives invented case or number. Its inflectionalFeatures contains exactly case, gender, number, and reflex; every key is present and at least one value is non-null. Case is Acc, Dat, Gen, or Nom. Gender is Fem, Masc, or Neut only when the pronoun form, its paradigm, and antecedent establish it; never copy gender from an unrelated neighboring noun. Standalone demonstrative das is neuter, while der, den, and dem uses in the masculine singular paradigm are masculine. Number is Plur or Sing when the paradigm establishes it; wer, compounds ending in -wer, jemand, niemand, and their case forms are singular. Non-possessive formal-address forms use morphological plural on Surface even when one person is addressed; addressee count belongs only in lemma.referenceNumber. Set reflex Yes when the target is co-referential with the clause subject and the subject performs the action on or for itself; otherwise null. This applies to personal forms such as mich, dir, and uns, not only to sich. First- and second-person reflexive uses retain their exact fixed personal form Lemma. The invariant dedicated third-person reflexive sich has person 3 and pronType Prs, but does not copy an antecedent\'s number: keep number null. Contracted es in subject position still carries nominative, neuter, singular morphology; never return an all-null Inflection bag.\n\nspelling is Variant only for a licensed whole-form variant or contraction relative to the Lemma; otherwise Canonical. A Typo member repaired to the ordinary canonical Surface spelling is Canonical, not Variant. External punctuation can license a contracted Variant even though it is not copied into normalizedMembers. surfaceFeatures is null unless this use is archaic, then { historicalStatus: "Archaic" }.\n</surface_model>\n\n\n\n<route_distinctions>\n- Resolve only the supplied PRON members; membership is authoritative.\n- Do not absorb a governing adposition or verb.\n- A nearby DET, ADV, or PART does not change the supplied PRON route.\n- For identical der/die/das spellings, free pointing use selects Dem and relative-clause use selects Rel; both keep the exact normalized form as canonicalForm.\n- A pronoun governed by an inherently reflexive VERB remains a PRON Surface with reflex Yes.\n- Syncretic sie uses context for feminine singular, plural, or formal address; do not guess beyond what agreement and discourse establish. Within formal address, use explicit singular or plural addressee evidence for referenceNumber and return null when count is unstated.\n- In a formal imperative with an addressed Sie and a neighboring reflexive sich, Sie is the nominative subject; do not copy the reflexive object\'s case.\n</route_distinctions>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: ("Standard" | "Typo")[],\n  normalizedMembers: string[],\n  surface:\n    | {\n        spelling: "Canonical" | "Variant",\n\n        surfaceFeatures: null | { historicalStatus: "Archaic" }\n      }\n    | {\n        spelling: "Canonical" | "Variant",\n\n        surfaceFeatures: null | { historicalStatus: "Archaic" },\n        inflectionalFeatures: {\n          case: "Acc" | "Dat" | "Gen" | "Nom" | null,\n          gender: "Fem" | "Masc" | "Neut" | null,\n          number: "Plur" | "Sing" | null,\n          reflex: "Yes" | null\n        }\n      },\n  lemma: {\n    canonicalForm: string,\n    coreFeatures: {\n      extPos: "DET" | null,\n      foreign: "Yes" | null,\n      person: "1" | "2" | "3" | null,\n      polite: "Form" | "Infm" | null,\n      poss: "Yes" | null,\n      pronType: "Dem" | "Ind" | "Int" | "Neg" | "Prs" | "Rcp" | "Rel" | "Tot" | null,\n      gender: "Fem" | "Masc" | "Neut" | null,\n      referenceNumber: "Plur" | "Sing" | null\n    }\n  }\n}\n\nNever return decision, resolution, Unresolved, realizationCoverage, normalizedSurface, language, family, kind, Lemma linkage, target indices, confidence, candidates, or explanation.\n</output_contract>\n\n\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\nFor German PRON, Case, agreement Number, gender and gender[psor] belong in lemma.coreFeatures. Keep personal gender separate from possessive gender[psor]. Inflectional Features contain only contextual reflexivity. Resolve case-specific Lemmas even when spellings coincide. Formal address preserves referenceNumber separately from plural agreement number.\n',
+	body: `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/PRON occurrence. Return its attested Surface and dictionary Lemma. Do not classify the target or reconsider membership.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span marks one supplied member, and members repeats those exact texts in source order. Both projections are authoritative. Never reject, repair, add, remove, merge, split, or reorder membership. Never absorb an adposition, determiner, particle, governing verb, or other contextual word.
+</input_contract>
+
+<route_contract>
+Target Classification already established Lexeme/PRON. The operation is total: always resolve the supplied occurrence. Use context to fill codec-supported grammar, but never reclassify the target as DET, ADV, PART, NOUN, NUM, or VERB.
+
+The fixed route is lexical, not inferred again from local syntax. A substantive demonstrative, relative, interrogative, indefinite, negative, total, personal, reflexive, reciprocal, or possessive occurrence can be PRON. A neighboring determiner remains context. Degree-modifying etwas elsewhere would be ADV, but the supplied target is PRON. A contracted pronoun remains PRON. A pronoun selected by an inherently reflexive verb is still the supplied PRON member; never absorb the verb or return a VERB feature.
+</route_contract>
+
+<member_projection>
+Return one memberOrthographies entry and one normalizedMembers entry for every supplied member. Standard includes canonical spelling, ordinary sentence-initial capitalization, required formal-address capitalization, and licensed contractions or variants. Typo is only a genuine spelling or inappropriate-casing error.
+
+For each Standard member, preserve its contextual form except always lowercase ordinary sentence-initial capitalization. This applies equally to personal, demonstrative, interrogative, indefinite, total, and foreign members. Preserve uppercase only when the lexeme itself requires it, as in the formal Sie paradigm. Repair only Typo members. A lowercase formal-address sie is Typo and normalizes to Sie. Punctuation is not a ResolvableText member: when an external apostrophe licenses contracted s for es, preserve supplied s in normalizedMembers. The contraction is Standard. Never replace a contextual member with its Lemma form.
+</member_projection>
+
+<lemma_identity>
+Case, agreement Number, gender, and gender[psor] belong in lemma.coreFeatures.
+Each case-bearing form has its own grammatical identity. Preserve the reviewed
+canonical form: jemand/Nom, jemanden/Acc, jemandem/Dat; likewise niemand,
+niemanden, niemandem. An alternate accusative jemand realizes the jemanden
+Lemma; retain jemand in normalizedMembers and use Variant spelling. Never
+collapse these identities to one nominative Lemma.
+
+Use the case-bearing form for personal, interrogative, demonstrative, relative,
+indefinite, total, and possessive identities. Keep same-spelling cases distinct:
+sie/Nom and sie/Acc, uns/Acc and uns/Dat. Demonstrative and relative der/die/das
+keep their normalized form and differ by pronType. Possessive seiner and seines
+retain their respective possessed-item gender Masc and Neut, independently of
+the possessor's gender[psor]. Do not reduce a possessive to its uninflected stem.
+
+Case is Acc, Dat, Gen, or Nom when established; invariant etwas, nichts, nix,
+and einander may retain null Case. Null is unmarked, not a wildcard. Use Number
+Plur or Sing when the identity establishes agreement; plural agreement has
+null gender. The reviewed wer/wen/wem/wessen identities retain unmarked Number.
+For other forms, preserve supported evidence without copying an unrelated
+neighbor's agreement.
+
+For non-possessive personal pronouns, marked gender requires third-person singular reference.
+For possessives, gender describes the possessed item and gender[psor] describes
+the possessor; neither supplies the other. Marked gender[psor] requires a
+personal possessive with third-person singular reference. Formal address uses
+plural agreement number independently of referenceNumber: explicit singular or
+plural addressee evidence supplies referenceNumber, otherwise null. Do not
+invent personal gender or infer it from a person's name alone.
+
+Foreign personal forms preserve source-language identity and supported grammar;
+an invariant foreign form receives no invented case or number. Contracted es
+in subject position retains the es Lemma with Nom, Neut, Sing coordinates.
+</lemma_identity>
+
+<surface_model>
+surface has spelling, surfaceFeatures, and inflectionalFeatures. Reflexivity is
+the only Inflectional Feature: use { reflex: "Yes" } when the target is
+co-referential with the clause subject and the subject acts on or for itself;
+otherwise use null. This applies to mich, dir, uns, and sich. First- and
+second-person reflexive uses retain their exact personal Lemma. Dedicated sich
+has person 3 and pronType Prs; do not copy the antecedent's number.
+
+spelling is Variant only for a licensed alternate realization or contraction
+of the same Lemma; otherwise Canonical. A repaired Typo has Canonical spelling.
+External punctuation may license a contracted Variant without being copied into
+normalizedMembers. surfaceFeatures is null unless the use is archaic, then
+{ historicalStatus: "Archaic" }. Case, Number, and both gender coordinates never
+appear in surface.inflectionalFeatures.
+</surface_model>
+
+<route_distinctions>
+- Resolve only the supplied PRON members; membership is authoritative.
+- Do not absorb a governing adposition or verb.
+- A nearby DET, ADV, or PART does not change the supplied PRON route.
+- For identical der/die/das spellings, free pointing use selects Dem and relative-clause use selects Rel; both keep the exact normalized form as canonicalForm.
+- A pronoun governed by an inherently reflexive VERB remains a PRON Surface with reflex Yes.
+- Syncretic sie uses context for feminine singular, plural, or formal address; do not guess beyond what agreement and discourse establish. Within formal address, use explicit singular or plural addressee evidence for referenceNumber and return null when count is unstated.
+- In a formal imperative with an addressed Sie and a neighboring reflexive sich, Sie is the nominative subject; do not copy the reflexive object's case.
+</route_distinctions>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling, surfaceFeatures, and inflectionalFeatures.
+Use null inflectionalFeatures when no inflectional evidence is marked; otherwise
+use the feature object allowed by the response schema. Do not emit a Surface
+discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-pron-demo-personal-ihm",

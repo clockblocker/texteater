@@ -14,7 +14,134 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/lexeme/other",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve the grammar of one valid, already-classified German Lexeme/X Analysis\nTarget. Return its smallest codec-supported Surface and Lemma grammar. Do not\nclassify the target, diagnose it as invalid, or reconsider its membership.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }. TARGET spans and\nmembers are authoritative projections of the same complete ordered target.\nReturn one memberOrthographies and one normalizedMembers entry per supplied\nmember, preserving source order.\n\nAlways resolve the supplied X. Never reject, add, remove, merge, split, or\nreorder membership. Never turn X back into a diagnostic Unresolved route. A\nreadable classified X may be unknown, foreign or code-switched Latin material,\nslang, fragmentary, mixed-orthography, or category-indeterminate while still\nbeing ResolvableText.\n</input_contract>\n\n<fixed_route>\nX is a residual grammatical identity, not an execution failure. The upstream\nclassifier has already distinguished the supplied target from OpaqueText, a\nknown abbreviation, PROPN, SYM, INTJ, and every identifiable German POS. Those\nkinds may appear unmarked nearby as context controls. Never use nearby route\nmaterial to replace or widen the selected X identity. Repeated unmarked\noccurrences also remain context.\n\nThe application owns German language, Lexeme family, X kind, normalized Surface\nconstruction, Surface-to-Lemma linkage, Full realization coverage, and the\nsuccessful result wrapper. Never return decision, resolution, Unresolved,\nrealizationCoverage, language, family, kind, normalizedSurface, linked Lemma,\nroute data, target indices, confidence, candidates, sources, or explanation.\n</fixed_route>\n\n<member_projection>\nStandard means the supplied spelling is licensed for this X identity, including\nordinary sentence-initial capitalization, established abbreviation casing,\nmixed letter-digit spelling, an internal hyphen, and licensed variants.\nTypo means a genuine local spelling or casing error. Repair only Typo members in\nnormalizedMembers. Ordinary sentence-initial Whatever normalizes to whatever\nbut remains Standard. Preserve registered internal casing, digits, and a\nmeaningful internal hyphen. Never normalize unmarked context.\n</member_projection>\n\n<surface>\nUse Citation when the occurrence expresses no codec-supported inflection. This\nincludes explicit entries and quotations plus invariant contextual X forms such\nas foreign insertions or slang when case, gender, mood, number, and verbForm are\nall unsupported. Citation surface contains only spelling and surfaceFeatures;\n\n\nUse Inflection only when syntax supports at least one of case, gender, mood,\nnumber, or verbForm.\nall five nullable inflectionalFeatures keys. The feature bag must contain at\nleast one non-null value. Determiners and government may license conservative\nnominal case, gender, and number even when lexical category remains unknown.\nTransparent unknown verbal morphology may license mood, number, and verbForm.\nNever invent a non-null feature simply to select Inflection; use Citation when\nthe codec-supported distinctions are all unsupported.\n\nResidual X identity concerns the absence of a more informative lexical route;\nit does not erase transparent contextual morphology. A governing German article\nor determiner makes a nonce nominal form Inflection when it supports case,\ngender, or number. For a different teaching form, mit dem Nerp licenses Dat,\nNeut, Sing. Transparent verbal templates also require Inflection: soll nargen\nlicenses verbForm Inf; sie nargt licenses Ind, Sing, Fin with canonicalForm\nnargen; hat genargt licenses Part; and sentence-initial Narg! licenses Imp,\nSing, Fin. The initial capital in that command is Standard, normalized narg,\nand must not introduce nominal case or gender. For a transparently inflected\nnonce verb, canonicalForm is its defensible infinitive rather than the contextual\nfinite or participial spelling.\n\nKeep normalizedMembers contextual and canonicalForm lexical. Thus an attested\nfinite nargt remains normalized nargt but has canonicalForm nargen. An attested\nsentence-initial imperative Narg is ordinary initial capitalization: Standard,\nnormalizedMembers ["narg"], and canonicalForm nargen. Never copy contextual\ninitial capitalization into either normalized value or a lowercase nonce-verb\nLemma.\n\nFor a finite nonce X inside indirect speech introduced by a reporting verb such\nas sagte, erklärte, or berichtete, a distinct transparent Konjunktiv form ending\nin -e licenses mood Sub rather than Ind. Return number Sing when the reported\nsubject is singular and verbForm Fin. This narrow rule does not make every -e\nform subjunctive: direct assertion, unclear morphology, or missing reported-\nspeech syntax leaves mood unsupported or follows its independently licensed\nanalysis.\n\nspelling is Canonical for an ordinary licensed form and for a repaired Typo.\nUse Variant only for an explicitly licensed spelling variant of the same Lemma,\nsuch as British colour mapped to canonical color in an English insertion.\nsurfaceFeatures is null unless the grammatical use itself is archaic; then use\n{ historicalStatus: "Archaic" }. A historical document alone is not enough.\nWhen context explicitly calls the exact supplied grammar archaic, historical,\nor obsolete—such as old foreign pronoun ye used inside a historical quotation—\nreturn Archaic. This differs from a current word merely printed in an old book.\n</surface>\n\n<lemma>\nlemma contains exactly canonicalForm and coreFeatures. canonicalForm is the\nnormalized lexical identity: preserve conventional abbreviation casing and\nmixed spelling; remove contextual nominal or verbal inflection when a base is\ndefensible; map a Typo or licensed Variant to its intended canonical identity.\nDo not translate foreign material or guess an expansion.\n\ncoreFeatures contains exactly { abbr, foreign, hyph, numType }; every key is\nmandatory and nullable. Use Yes only when the identity itself is an established\nabbreviation, overt foreign form, or hyphen-bearing form. foreign reflects the\ncurrent code-switched identity, not remote etymology: integrated slang may be\nnull. Use foreign Yes only when context presents the current token as a foreign\nor code-switched insertion; recognizable origin or English-looking spelling is\nnot enough. German-scene youth or forum slang presented as integrated usage has\nforeign null unless the context explicitly says otherwise. hyph records a\nmeaningful internal hyphen. numType is Card,\nMult, or Range only when the X identity transparently carries that numerical\nfunction. A compact identity such as 4K is abbr Yes and numType Card when its\ndigit transparently expresses the cardinal component; mixed shape alone remains\ninsufficient. Use null for every unsupported distinction.\n</lemma>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: ("Standard" | "Typo")[],\n  normalizedMembers: string[],\n  surface:\n    | {\n        spelling: "Canonical" | "Variant",\n        surfaceFeatures: null | { historicalStatus: "Archaic" }\n      }\n    | {\n        spelling: "Canonical" | "Variant",\n\n        inflectionalFeatures: {\n          case: "Acc" | "Dat" | "Gen" | "Nom" | null,\n          gender: "Fem" | "Masc" | "Neut" | null,\n          mood: "Imp" | "Ind" | "Sub" | null,\n          number: "Plur" | "Sing" | null,\n          verbForm: "Fin" | "Inf" | "Part" | null\n        },\n        surfaceFeatures: null | { historicalStatus: "Archaic" }\n      },\n  lemma: {\n    canonicalForm: string,\n    coreFeatures: {\n      abbr: "Yes" | null,\n      foreign: "Yes" | null,\n      hyph: "Yes" | null,\n      numType: "Card" | "Mult" | "Range" | null\n    }\n  }\n}\n\nFinal check: both arrays match members exactly in count and order; membership is\n\nthe discriminator and at least one non-null feature; all Core keys are present;\nthe result contains no application-owned fields.\n</output_contract>\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<agent_role>
+Resolve the grammar of one valid, already-classified German Lexeme/X Analysis
+Target. Return its smallest codec-supported Surface and Lemma grammar. Do not
+classify the target, diagnose it as invalid, or reconsider its membership.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. TARGET spans and
+members are authoritative projections of the same complete ordered target.
+Return one memberOrthographies and one normalizedMembers entry per supplied
+member, preserving source order.
+
+Always resolve the supplied X. Never reject, add, remove, merge, split, or
+reorder membership. Never turn X back into a diagnostic Unresolved route. A
+readable classified X may be unknown, foreign or code-switched Latin material,
+slang, fragmentary, mixed-orthography, or category-indeterminate while still
+being ResolvableText.
+</input_contract>
+
+<fixed_route>
+X is a residual grammatical identity, not an execution failure. The upstream
+classifier has already distinguished the supplied target from OpaqueText, a
+known abbreviation, PROPN, SYM, INTJ, and every identifiable German POS. Those
+kinds may appear unmarked nearby as context controls. Never use nearby route
+material to replace or widen the selected X identity. Repeated unmarked
+occurrences also remain context.
+</fixed_route>
+
+<member_projection>
+Standard means the supplied spelling is licensed for this X identity, including
+ordinary sentence-initial capitalization, established abbreviation casing,
+mixed letter-digit spelling, an internal hyphen, and licensed variants.
+Typo means a genuine local spelling or casing error. Repair only Typo members in
+normalizedMembers. Ordinary sentence-initial Whatever normalizes to whatever
+but remains Standard. Preserve registered internal casing, digits, and a
+meaningful internal hyphen. Never normalize unmarked context.
+</member_projection>
+
+<surface>
+Use null inflectionalFeatures when the occurrence expresses no codec-supported inflection. This
+includes explicit entries and quotations plus invariant contextual X forms such
+as foreign insertions or slang when case, gender, mood, number, and verbForm are
+all unsupported.
+
+Use an inflectionalFeatures object only when syntax supports at least one of case, gender, mood,
+number, or verbForm. Include all five nullable inflectionalFeatures keys. The feature bag must contain at
+least one non-null value. Determiners and government may license conservative
+nominal case, gender, and number even when lexical category remains unknown.
+Transparent unknown verbal morphology may license mood, number, and verbForm.
+Never invent a non-null feature simply to populate inflectionalFeatures; use null inflectionalFeatures when
+the codec-supported distinctions are all unsupported.
+
+Residual X identity concerns the absence of a more informative lexical route;
+it does not erase transparent contextual morphology. A governing German article
+or determiner makes a nonce nominal form carry inflectionalFeatures when it supports case,
+gender, or number. For a different teaching form, mit dem Nerp licenses Dat,
+Neut, Sing. Transparent verbal templates also require inflectionalFeatures: soll nargen
+licenses verbForm Inf; sie nargt licenses Ind, Sing, Fin with canonicalForm
+nargen; hat genargt licenses Part; and sentence-initial Narg! licenses Imp,
+Sing, Fin. The initial capital in that command is Standard, normalized narg,
+and must not introduce nominal case or gender. For a transparently inflected
+nonce verb, canonicalForm is its defensible infinitive rather than the contextual
+finite or participial spelling.
+
+Keep normalizedMembers contextual and canonicalForm lexical. Thus an attested
+finite nargt remains normalized nargt but has canonicalForm nargen. An attested
+sentence-initial imperative Narg is ordinary initial capitalization: Standard,
+normalizedMembers ["narg"], and canonicalForm nargen. Never copy contextual
+initial capitalization into either normalized value or a lowercase nonce-verb
+Lemma.
+
+For a finite nonce X inside indirect speech introduced by a reporting verb such
+as sagte, erklärte, or berichtete, a distinct transparent Konjunktiv form ending
+in -e licenses mood Sub rather than Ind. Return number Sing when the reported
+subject is singular and verbForm Fin. This narrow rule does not make every -e
+form subjunctive: direct assertion, unclear morphology, or missing reported-
+speech syntax leaves mood unsupported or follows its independently licensed
+analysis.
+
+spelling is Canonical for an ordinary licensed form and for a repaired Typo.
+Use Variant only for an explicitly licensed spelling variant of the same Lemma,
+such as British colour mapped to canonical color in an English insertion.
+surfaceFeatures is null unless the grammatical use itself is archaic; then use
+{ historicalStatus: "Archaic" }. A historical document alone is not enough.
+When context explicitly calls the exact supplied grammar archaic, historical,
+or obsolete—such as old foreign pronoun ye used inside a historical quotation—
+return Archaic. This differs from a current word merely printed in an old book.
+</surface>
+
+<lemma>
+lemma contains exactly canonicalForm and coreFeatures. canonicalForm is the
+normalized lexical identity: preserve conventional abbreviation casing and
+mixed spelling; remove contextual nominal or verbal inflection when a base is
+defensible; map a Typo or licensed Variant to its intended canonical identity.
+Do not translate foreign material or guess an expansion.
+
+coreFeatures contains exactly { abbr, foreign, hyph, numType }; every key is
+mandatory and nullable. Use Yes only when the identity itself is an established
+abbreviation, overt foreign form, or hyphen-bearing form. foreign reflects the
+current code-switched identity, not remote etymology: integrated slang may be
+null. Use foreign Yes only when context presents the current token as a foreign
+or code-switched insertion; recognizable origin or English-looking spelling is
+not enough. German-scene youth or forum slang presented as integrated usage has
+foreign null unless the context explicitly says otherwise. hyph records a
+meaningful internal hyphen. numType is Card,
+Mult, or Range only when the X identity transparently carries that numerical
+function. A compact identity such as 4K is abbr Yes and numType Card when its
+digit transparently expresses the cardinal component; mixed shape alone remains
+insufficient. Use null for every unsupported distinction.
+</lemma>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling, surfaceFeatures, and inflectionalFeatures.
+Use null inflectionalFeatures when no inflectional evidence is marked; otherwise
+use the feature object allowed by the response schema. Do not emit a Surface
+discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-x-demo-unknown-citation-zorp",

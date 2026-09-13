@@ -14,7 +14,78 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/lexeme/coordinating-conjunction",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve the grammar of one already-classified German Lexeme/CCONJ occurrence.\nReturn its attested Citation Surface and dictionary Lemma. Do not classify the\ntarget or reconsider its membership.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }.\nEvery TARGET span marks one supplied member, and members repeats those exact\ntexts in source order. Both projections are authoritative. Never reject,\nrepair, add, remove, merge, split, or reorder membership.\n</input_contract>\n\n<route_contract>\nTarget Classification already established Lexeme/CCONJ. The operation is\ntotal: always resolve the supplied occurrence. Ambiguous forms such as aber,\ndenn, doch, jedoch, als, and wie are CCONJ here; use the surrounding syntax only\nto resolve their grammatical identity and features. Fixed correlating units\nsuch as entweder … oder, weder … noch, sowohl … als, sowohl … als auch,\nsowohl … wie, sowohl … wie auch, je … desto, je … umso, and je … je are one\nCCONJ Lexeme each, with multiple ordered members. Do not reclassify the target\nas SCONJ, ADV, or PART, and do not absorb unmarked context.\n\nGerman CCONJ is uninflected. Every occurrence has a Citation Surface, including\nordinary contextual uses. The application injects Citation, German route\nidentity, Surface-to-Lemma linkage, normalized Surface, successful resolution,\nand Full realization coverage. Do not return any of those fields.\n</route_contract>\n\n<member_projection>\nReturn one memberOrthographies entry and one normalizedMembers entry for every\nsupplied member. Standard includes canonical spelling, ordinary\nsentence-initial capitalization, and licensed abbreviations or variants. Typo\nis only a genuine spelling error.\n\nFor each Standard member, preserve its spelling except lowercase ordinary\nsentence-initial capitalization. Repair only Typo members. Preserve licensed\nabbreviations such as bzw rather than expanding them. Array position is the\nalignment key.\n\nWhen a sentence-initial abbreviation has its period immediately after the\nclosing TARGET tag, lowercase the supplied member itself and leave the unmarked\nperiod outside normalizedMembers.\n</member_projection>\n\n<surface_and_lemma>\nsurface contains exactly spelling and surfaceFeatures. spelling is Variant for\na licensed abbreviation or spelling variant and Canonical otherwise.\nsurfaceFeatures is null unless the attested conjunction is archaic; then use\n{ historicalStatus: "Archaic" }.\n\nlemma.canonicalForm is the normalized unabbreviated dictionary form of the same\nCCONJ. For a multi-member identity it names the whole unit, conventionally\nshowing open slots when useful, for example entweder … oder or je … desto.\nlemma.coreFeatures contains exactly { conjType: "Comp" | null }. Use Comp only\nwhen a single-member als or wie introduces the comparison complement. Ordinary\ncoordinators and the fixed correlating units listed above use null.\n</surface_and_lemma>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: ("Standard" | "Typo")[],\n  normalizedMembers: string[],\n  surface: {\n    spelling: "Canonical" | "Variant",\n    surfaceFeatures: null | { historicalStatus: "Archaic" }\n  },\n  lemma: {\n    canonicalForm: string,\n    coreFeatures: { conjType: "Comp" | null }\n  }\n}\n\nNever return decision, resolution, Unresolved, realizationCoverage,\n\nLemma linkage, target indices, confidence, candidates, or explanation.\n</output_contract>\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/CCONJ occurrence.
+Return its attested Surface and dictionary Lemma. Do not classify the
+target or reconsider its membership.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }.
+Every TARGET span marks one supplied member, and members repeats those exact
+texts in source order. Both projections are authoritative. Never reject,
+repair, add, remove, merge, split, or reorder membership.
+</input_contract>
+
+<route_contract>
+Target Classification already established Lexeme/CCONJ. The operation is
+total: always resolve the supplied occurrence. Ambiguous forms such as aber,
+denn, doch, jedoch, als, and wie are CCONJ here; use the surrounding syntax only
+to resolve their grammatical identity and features. Fixed correlating units
+such as entweder … oder, weder … noch, sowohl … als, sowohl … als auch,
+sowohl … wie, sowohl … wie auch, je … desto, je … umso, and je … je are one
+CCONJ Lexeme each, with multiple ordered members. Do not reclassify the target
+as SCONJ, ADV, or PART, and do not absorb unmarked context.
+
+German CCONJ is uninflected. Every occurrence has a Surface, including
+ordinary contextual uses.
+</route_contract>
+
+<member_projection>
+Return one memberOrthographies entry and one normalizedMembers entry for every
+supplied member. Standard includes canonical spelling, ordinary
+sentence-initial capitalization, and licensed abbreviations or variants. Typo
+is only a genuine spelling error.
+
+For each Standard member, preserve its spelling except lowercase ordinary
+sentence-initial capitalization. Repair only Typo members. Preserve licensed
+abbreviations such as bzw rather than expanding them. Array position is the
+alignment key.
+
+When a sentence-initial abbreviation has its period immediately after the
+closing TARGET tag, lowercase the supplied member itself and leave the unmarked
+period outside normalizedMembers.
+</member_projection>
+
+<surface_and_lemma>
+surface contains exactly spelling and surfaceFeatures. spelling is Variant for
+a licensed abbreviation or spelling variant and Canonical otherwise.
+surfaceFeatures is null unless the attested conjunction is archaic; then use
+{ historicalStatus: "Archaic" }.
+
+lemma.canonicalForm is the normalized unabbreviated dictionary form of the same
+CCONJ. For a multi-member identity it names the whole unit, conventionally
+showing open slots when useful, for example entweder … oder or je … desto.
+lemma.coreFeatures contains exactly { conjType: "Comp" | null }. Use Comp only
+when a single-member als or wie introduces the comparison complement. Ordinary
+coordinators and the fixed correlating units listed above use null.
+</surface_and_lemma>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling and surfaceFeatures. This route is
+uninflected: omit inflectionalFeatures. Do not emit a Surface discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-cconj-demo-ordinary-und",

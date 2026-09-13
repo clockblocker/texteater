@@ -14,7 +14,125 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/phraseme/discourse-formula",
 	inputSchema,
 	outputSchema,
-	body: '<agent_role>\nResolve one already-classified German Phraseme/DiscourseFormula occurrence to\nits Citation Surface and Lemma grammar. The operation is total: always resolve\nthe supplied target.\n</agent_role>\n\n<input_contract>\nInput is exactly { markedContext: string, members: string[] }. Every TARGET span\nmarks one supplied fixed member, and members repeats those exact texts in source\norder. Both projections are authoritative. The caller has already proved the\nroute, occurrence, and complete membership.\n\nNever reject, repair, add, remove, merge, split, reorder, or reclassify\nmembership. Names, vocatives, modifiers, punctuation, complements, and nearby\nexpressions outside TARGET are context only. Return exactly one\nmemberOrthographies and one normalizedMembers entry for every supplied member,\nincluding repeated members and members separated by unmarked context.\n</input_contract>\n\n<route_contract>\nThis route contains conventionalized interactional formulas that perform a\ndiscourse act in context: greetings, leave-taking, thanks, apologies, wishes,\nresponses, refusals, requests, reactions, initiations, transitions, and other\nalready-classified formulas. A valid target may have one or several members,\nmay be discontinuous, and may be followed or interrupted by free material.\n\nUnmarked context may contain an Interjection, Idiom, Proverb, Aphorism,\nCollocation, arbitrary quotation, compositional phrase, or another occurrence.\nThose contrasts do not reopen the upstream route decision and never enter the\noutput arrays.\n</route_contract>\n\n<application_projection>\nThis route has Citation Surface only. The application injects German language,\n\nSurface-to-Lemma linkage, normalized Surface, and the successful result.\n\nReturn no decision or resolution wrapper. Never return Unresolved, language,\n\nindices, confidence, candidates, sources, or explanation.\n</application_projection>\n\n<lemma_identity>\nlemma contains canonicalForm and coreFeatures.discourseFormulaRole.\ncanonicalForm is the complete current dictionary wording of the formula in\nlowercase, including German nouns, with words joined by single spaces and no\npunctuation. It may contain words not realized by an explicitly Partial\noccurrence. An abbreviation or licensed orthographic variant maps to the full\ncurrent wording.\n\nFor Full coverage with Canonical spelling, derive canonicalForm mechanically:\nlowercase every normalizedMembers entry and join all entries with single\nspaces. Preserve repeated positions. Never absorb unmarked context, and never\ninvent or restore a word that is absent from the supplied Full occurrence.\nOnly an explicitly Partial occurrence or a licensed Variant may depart from\nthat mechanical equality.\n\ndiscourseFormulaRole is exactly one of Greeting, Farewell, Apology, Thanks,\nAcknowledgment, Refusal, Request, Reaction, Initiation, or Transition, or null.\nChoose the identity established by this context. The same canonical wording\nwith a different scalar role is a different grammatical Lemma: bitte schön can\nbe Request in an order but null when presenting an object; tut mir leid can be\nApology when the speaker caused harm but null when expressing sympathy.\nAcknowledgment covers conventional replies to thanks. Reaction covers an\nexpressive response to an event, not every conversational response. Use null\nwhen the classified formula has a supported function such as wish,\ncongratulation, presentation, or sympathy that no enum value names. Never emit\nan array or invent a nearby role.\n</lemma_identity>\n\n<coverage>\nrealizationCoverage is Full when the occurrence realizes all entity-owned\nlexical material. A conventional abbreviation such as MfG may fully realize\nthe formula and is Full.\n\nUse Partial only when fixed lexical material is genuinely unrealized and the\nexact full formula remains recoverable, normally from an explicitly broken-off\nor ellipsis-marked beginning such as Es tut mir … for es tut mir leid. Return\nonly realized supplied members in normalizedMembers and the complete wording\nin canonicalForm. Partial never repairs membership: it cannot excuse an overt\nunmarked word, delete a supplied member, or combine occurrences.\n\nWithout an explicit ellipsis or broken-off signal, an unbroken supplied formula\nis Full even when a longer related formula exists. Treat its supplied wording\nas the complete identity; never infer an unspoken prefix or tail merely because\nanother formula shares most of its words.\n</coverage>\n\n<orthography_and_surface>\nStandard means exact conventional spelling, ordinary utterance-initial\ncapitalization, a licensed abbreviation, or a licensed historical spelling.\nTypo means a genuine selected-member spelling or inappropriate-casing error.\nRepair only Typo positions in normalizedMembers. Normalize ordinary\nutterance-initial capitalization to citation casing without calling it a Typo:\nGuten Morgen yields guten and Morgen. Preserve required German noun\ncapitalization such as Morgen, Dank, Güte, Reise, Verzeihung, and Ursache. A\nlowercase noun such as morgen in Guten morgen is Typo and normalizes to Morgen.\n\nApply initial-casing normalization equally to Canonical and Variant Surfaces.\nNever preserve a first member\'s capital merely because it begins a quoted\nutterance: lowercase a non-noun, non-abbreviation first member in\nnormalizedMembers, while keeping its member orthography Standard. Preserve\nlexically required noun and abbreviation capitals.\n\nsurface contains exactly spelling and surfaceFeatures. spelling is Canonical\nfor current wording and Typo repair. Use Variant for a licensed orthographic or\nabbreviated realization of the same Lemma, such as Auf Wiedersehn or MfG; keep\nits attested licensed spelling in normalizedMembers. surfaceFeatures is null\nunless the formula\'s grammatical use itself is archaic, then return\n{ historicalStatus: "Archaic" }. Historical spelling alone is not an archaic\nuse.\n</orthography_and_surface>\n\n<output_contract>\nReturn exactly:\n{\n  memberOrthographies: ("Standard" | "Typo")[],\n  normalizedMembers: string[],\n  realizationCoverage: "Full" | "Partial",\n  surface: {\n    spelling: "Canonical" | "Variant",\n    surfaceFeatures: null | { historicalStatus: "Archaic" }\n  },\n  lemma: {\n    canonicalForm: string,\n    coreFeatures: { discourseFormulaRole: role | null }\n  }\n}\n\nFinal check: both arrays equal members.length, preserve every position in source\norder, and contain supplied members only. Always resolve the classified target.\n</output_contract>\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<agent_role>
+Resolve one already-classified German Phraseme/DiscourseFormula occurrence to
+its Surface and Lemma grammar. The operation is total: always resolve
+the supplied target.
+</agent_role>
+
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span
+marks one supplied fixed member, and members repeats those exact texts in source
+order. Both projections are authoritative. The caller has already proved the
+route, occurrence, and complete membership.
+
+Never reject, repair, add, remove, merge, split, reorder, or reclassify
+membership. Names, vocatives, modifiers, punctuation, complements, and nearby
+expressions outside TARGET are context only. Return exactly one
+memberOrthographies and one normalizedMembers entry for every supplied member,
+including repeated members and members separated by unmarked context.
+</input_contract>
+
+<route_contract>
+This route contains conventionalized interactional formulas that perform a
+discourse act in context: greetings, leave-taking, thanks, apologies, wishes,
+responses, refusals, requests, reactions, initiations, transitions, and other
+already-classified formulas. A valid target may have one or several members,
+may be discontinuous, and may be followed or interrupted by free material.
+
+Unmarked context may contain an Interjection, Idiom, Proverb, Aphorism,
+Collocation, arbitrary quotation, compositional phrase, or another occurrence.
+Those contrasts do not reopen the upstream route decision and never enter the
+output arrays.
+</route_contract>
+
+<lemma_identity>
+lemma contains canonicalForm and coreFeatures.discourseFormulaRole.
+canonicalForm is the complete current dictionary wording of the formula in
+lowercase, including German nouns, with words joined by single spaces and no
+punctuation. It may contain words not realized by an explicitly Partial
+occurrence. An abbreviation or licensed orthographic variant maps to the full
+current wording.
+
+For Full coverage with Canonical spelling, derive canonicalForm mechanically:
+lowercase every normalizedMembers entry and join all entries with single
+spaces. Preserve repeated positions. Never absorb unmarked context, and never
+invent or restore a word that is absent from the supplied Full occurrence.
+Only an explicitly Partial occurrence or a licensed Variant may depart from
+that mechanical equality.
+
+discourseFormulaRole is exactly one of Greeting, Farewell, Apology, Thanks,
+Acknowledgment, Refusal, Request, Reaction, Initiation, or Transition, or null.
+Choose the identity established by this context. The same canonical wording
+with a different scalar role is a different grammatical Lemma: bitte schön can
+be Request in an order but null when presenting an object; tut mir leid can be
+Apology when the speaker caused harm but null when expressing sympathy.
+Acknowledgment covers conventional replies to thanks. Reaction covers an
+expressive response to an event, not every conversational response. Use null
+when the classified formula has a supported function such as wish,
+congratulation, presentation, or sympathy that no enum value names. Never emit
+an array or invent a nearby role.
+</lemma_identity>
+
+<coverage>
+realizationCoverage is Full when the occurrence realizes all entity-owned
+lexical material. A conventional abbreviation such as MfG may fully realize
+the formula and is Full.
+
+Use Partial only when fixed lexical material is genuinely unrealized and the
+exact full formula remains recoverable, normally from an explicitly broken-off
+or ellipsis-marked beginning such as Es tut mir … for es tut mir leid. Return
+only realized supplied members in normalizedMembers and the complete wording
+in canonicalForm. Partial never repairs membership: it cannot excuse an overt
+unmarked word, delete a supplied member, or combine occurrences.
+
+Without an explicit ellipsis or broken-off signal, an unbroken supplied formula
+is Full even when a longer related formula exists. Treat its supplied wording
+as the complete identity; never infer an unspoken prefix or tail merely because
+another formula shares most of its words.
+</coverage>
+
+<orthography_and_surface>
+Standard means exact conventional spelling, ordinary utterance-initial
+capitalization, a licensed abbreviation, or a licensed historical spelling.
+Typo means a genuine selected-member spelling or inappropriate-casing error.
+Repair only Typo positions in normalizedMembers. Normalize ordinary
+utterance-initial capitalization to citation casing without calling it a Typo:
+Guten Morgen yields guten and Morgen. Preserve required German noun
+capitalization such as Morgen, Dank, Güte, Reise, Verzeihung, and Ursache. A
+lowercase noun such as morgen in Guten morgen is Typo and normalizes to Morgen.
+
+Apply initial-casing normalization equally to Canonical and Variant Surfaces.
+Never preserve a first member's capital merely because it begins a quoted
+utterance: lowercase a non-noun, non-abbreviation first member in
+normalizedMembers, while keeping its member orthography Standard. Preserve
+lexically required noun and abbreviation capitals.
+
+surface contains exactly spelling and surfaceFeatures. spelling is Canonical
+for current wording and Typo repair. Use Variant for a licensed orthographic or
+abbreviated realization of the same Lemma, such as Auf Wiedersehn or MfG; keep
+its attested licensed spelling in normalizedMembers. surfaceFeatures is null
+unless the formula's grammatical use itself is archaic, then return
+{ historicalStatus: "Archaic" }. Historical spelling alone is not an archaic
+use.
+</orthography_and_surface>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling and surfaceFeatures. This route is
+uninflected: omit inflectionalFeatures. Do not emit a Surface discriminator.
+
+Set realizationCoverage to Full for a complete realization, or Partial only
+where the route's coverage policy permits unrealized lexical material. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-discourse-formula-demo-guten-morgen",

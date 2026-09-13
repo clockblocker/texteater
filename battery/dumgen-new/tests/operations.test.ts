@@ -4,7 +4,8 @@ import {
 	selectGrammaticalAlternatives,
 	validateEncounter,
 } from "dumgen";
-import type { Encounter, ModelRequest } from "dumgen/types";
+import { generationInputSchema } from "dumgen/schemas";
+import type { Encounter, GenerationInput, ModelRequest } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
@@ -21,14 +22,14 @@ const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	canonicalForm: "Bank",
 	coreFeatures: { gender: "Fem", hyph: null },
 };
-const encounter: Encounter<"de"> = {
+const encounter = {
 	sentence: {
 		id: "test",
 		language: "de",
 		segments: [{ kind: "ResolvableText", text: "Bank" }],
 	},
 	target: { family: "Lexeme", kind: "NOUN", memberSegmentIndices: [0] },
-};
+} as const satisfies Encounter<"de">;
 function controlled(output: unknown) {
 	const calls: ModelRequest[] = [];
 	return {
@@ -180,13 +181,13 @@ test("emoji operations use exact candidates and omit options for candidate-free 
 				lemma: {
 					...noun,
 					kind: "ADJ",
-				} as unknown as Dumling.Lemma<"de">,
-			}),
+				},
+			} as unknown as GenerationInput<"de">),
 		),
 	).toBe("InvalidInput");
 });
 test("Knowledge carries a supplied encounter and code-owned target language and Family", async () => {
-	const reading: Dumling.Reading<"de"> = {
+	const reading: Dumling.Reading<"de", "Lexeme", "NOUN"> = {
 		unitKind: "Reading",
 		lemma: noun,
 		emojiDescription: "💰",
@@ -256,19 +257,23 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 	const { dumgen, calls } = controlled({ emojiDescription: "✨" });
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription({
-				encounter: fixedEncounter,
-				lemma: member.lemma,
-			}),
+			dumgen.generateReadingEmojiDescription(
+				generationInputSchema.parse({
+					encounter: fixedEncounter,
+					lemma: member.lemma,
+				}),
+			),
 		),
 	).toBe(member.reading.emojiDescription);
 	expect(calls).toHaveLength(0);
 	expect(
 		await tag(
-			dumgen.generateReadingEmojiDescription({
-				encounter: fixedEncounter,
-				lemma: { ...member.lemma, canonicalForm: "unreviewed" },
-			}),
+			dumgen.generateReadingEmojiDescription(
+				generationInputSchema.parse({
+					encounter: fixedEncounter,
+					lemma: { ...member.lemma, canonicalForm: "unreviewed" },
+				}),
+			),
 		),
 	).toBe("CatalogMiss");
 	expect(calls).toHaveLength(0);
@@ -281,10 +286,12 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 	});
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription({
-				encounter: openEncounter,
-				lemma: { ...pron.lemma, canonicalForm: "unreviewed" },
-			}),
+			dumgen.generateReadingEmojiDescription(
+				generationInputSchema.parse({
+					encounter: openEncounter,
+					lemma: { ...pron.lemma, canonicalForm: "unreviewed" },
+				}),
+			),
 		),
 	).toBe("✨");
 	expect(calls).toHaveLength(1);

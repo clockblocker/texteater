@@ -14,7 +14,96 @@ export const promptSource = defineLinguisticPrompt({
 	route: "grammatical-resolution/de/lexeme/symbol",
 	inputSchema,
 	outputSchema,
-	body: '<task>\nResolve the grammar of one already-classified German Lexeme/SYM occurrence.\nInput is exactly {markedContext: string, members: string[]}. TARGET contents and\nmembers are the complete ordered lexical membership. Always return one total\nflat resolution. Route classification and membership happened upstream; never\nreject, add, remove, merge, split, reorder, or reclassify a member.\n</task>\n\n<membership>\nReturn exactly one memberOrthographies and one normalizedMembers entry per\nsupplied member. A symbolic identity may contain several Unicode code points or\nASCII characters inside one member, such as :-) or §§. Preserve the supplied\ncardinality and order. Repeated identical symbols elsewhere in context, nearby\nnumbers, words, abbreviations, punctuation, and opaque emoji are not members.\n\nStandard is a conventional glyph or licensed Unicode presentation. Typo is an\nactual damaged or duplicated symbol whose intended identity is established by\ncontext. Repair only Typo members. normalizedMembers preserves the exact\nconventional occurrence glyph for Standard members, including licensed\nvariants; it contains the repaired glyph for Typo members. Never silently\nreplace x with ×, a full-width form with its ASCII counterpart, or one currency\nsign with another unless the context explicitly establishes Variant or Typo.\n</membership>\n\n<surface>\nUse Citation for an ordinary invariant symbolic occurrence and for an explicit\nmention of a symbol identity. Citation returns exactly {spelling,\nsurfaceFeatures}; its fixed kind is application-owned. Use Inflection only when\nthe symbol is used nominally and German syntax or agreement establishes at\nleast one of case, gender, or number. Inflection additionally returns\n\ngender, and number; at least one value must be non-null. A neighboring numeric\nquantity, article belonging to another noun, or mere visual invariance never by\nitself licenses Inflection.\n\nOperationally, when a German determiner directly governs the TARGET symbol and\nthe symbol itself fills that noun phrase, you MUST use Inflection and copy the\nestablished agreement: das + target is neuter singular, die + target is\nfeminine singular unless plural syntax establishes plural, and des + target is\ngenitive. Likewise, a governing preposition plus determiner establishes case.\nDo not downgrade these ordinary syntactic occurrences to Citation merely\nbecause the glyph has no visible inflectional ending. Use Citation for a symbol\nmentioned under a separate label noun such as Zeichen, Symbol, or Eintrag; that\nlabel\'s determiner and case do not govern the target.\n\nspelling is Canonical for the ordinary Lemma form and for a repaired Typo. Use\nVariant only when context establishes a licensed Unicode, historical, or other\nsymbolic alternative of a different canonicalForm. surfaceFeatures is null\nunless the occurrence is explicitly archaic or historical, in which case use\n{historicalStatus:"Archaic"}.\n</surface>\n\n<lemma>\ncanonicalForm is the normalized citation identity of this symbol. It normally\nequals the conventional occurrence glyph; a repaired Typo or explicitly\nrelated Variant may differ. Do not translate a symbol into a word or expand its\nmeaning.\n\ncoreFeatures contains exactly {foreign, numType}; both keys are mandatory and\nnullable. foreign is Yes only when context presents the symbol as\nsource-language material outside the established German symbolic inventory;\ninternational use or non-German origin alone is insufficient. numType is Card\nonly for a symbol whose established identity is a cardinal-number marker, and\nRange only for a symbol whose established identity is a numeric range marker.\nA currency, unit, percentage, operator, digit neighbor, or mathematical use\ndoes not otherwise imply numType.\n</lemma>\n\n<fixed_route_distinctions>\nThe SYM route and membership are authoritative. NUM digits, sentence PUNCT,\nOpaqueText emoji, written abbreviations, ordinary lexical strings, and symbols\nembedded in names remain outside this target because upstream classification\nalready fixed the distinction. Resolve the supplied SYM even when its glyph is\npunctuation-like or letter-like. Do not return Unresolved or repair membership.\n</fixed_route_distinctions>\n\n<output>\nReturn exactly memberOrthographies, normalizedMembers, surface, and lemma.\nNever return decision, resolution, Unresolved, realizationCoverage, language,\nfamily, kind, normalizedSurface, a linked Lemma inside Surface, target indices,\nconfidence, candidates, or explanations. The application injects the German\nSYM route, linkage, normalized Surface, successful result, and\nrealizationCoverage Full.\n</output>\n\n<self_check>\nCounts equal members; Standard material is preserved; Citation has no\n\nnon-empty feature bag; all nullable Core keys are present.\n</self_check>\nReturn the exact supplied response schema. Surface and Lemma are separate private values. Include realizationCoverage (Full or Partial). Omit language, family, kind and unitKind: the supplied route fixes them. There is no Citation/Inflection discriminator. Use inflectionalFeatures only where the response schema permits it; null means no marked inflectional evidence. Preserve available grammatical evidence.\n',
+	body: `<task>
+Resolve the grammar of one already-classified German Lexeme/SYM occurrence.
+Input is exactly {markedContext: string, members: string[]}. TARGET contents and
+members are the complete ordered lexical membership. Always return one total
+flat resolution. Route classification and membership happened upstream; never
+reject, add, remove, merge, split, reorder, or reclassify a member.
+</task>
+
+<membership>
+Return exactly one memberOrthographies and one normalizedMembers entry per
+supplied member. A symbolic identity may contain several Unicode code points or
+ASCII characters inside one member, such as :-) or §§. Preserve the supplied
+cardinality and order. Repeated identical symbols elsewhere in context, nearby
+numbers, words, abbreviations, punctuation, and opaque emoji are not members.
+
+Standard is a conventional glyph or licensed Unicode presentation. Typo is an
+actual damaged or duplicated symbol whose intended identity is established by
+context. Repair only Typo members. normalizedMembers preserves the exact
+conventional occurrence glyph for Standard members, including licensed
+variants; it contains the repaired glyph for Typo members. Never silently
+replace x with ×, a full-width form with its ASCII counterpart, or one currency
+sign with another unless the context explicitly establishes Variant or Typo.
+</membership>
+
+<surface>
+Use null inflectionalFeatures for an ordinary invariant symbolic occurrence and for an explicit
+mention of a symbol identity. Use an inflectionalFeatures object only when
+the symbol is used nominally and German syntax or agreement establishes at
+least one of case, gender, or number. The inflectionalFeatures object contains case, gender, and number; at least one value must be non-null. A neighboring numeric
+quantity, article belonging to another noun, or mere visual invariance never by
+itself licenses an inflectionalFeatures object.
+
+Operationally, when a German determiner directly governs the TARGET symbol and
+the symbol itself fills that noun phrase, you MUST use an inflectionalFeatures object and copy the
+established agreement: das + target is neuter singular, die + target is
+feminine singular unless plural syntax establishes plural, and des + target is
+genitive. Likewise, a governing preposition plus determiner establishes case.
+Do not downgrade these ordinary syntactic occurrences to null inflectionalFeatures merely
+because the glyph has no visible inflectional ending. Use null inflectionalFeatures for a symbol
+mentioned under a separate label noun such as Zeichen, Symbol, or Eintrag; that
+label's determiner and case do not govern the target.
+
+spelling is Canonical for the ordinary Lemma form and for a repaired Typo. Use
+Variant only when context establishes a licensed Unicode, historical, or other
+symbolic alternative of a different canonicalForm. surfaceFeatures is null
+unless the occurrence is explicitly archaic or historical, in which case use
+{historicalStatus:"Archaic"}.
+</surface>
+
+<lemma>
+canonicalForm is the normalized citation identity of this symbol. It normally
+equals the conventional occurrence glyph; a repaired Typo or explicitly
+related Variant may differ. Do not translate a symbol into a word or expand its
+meaning.
+
+coreFeatures contains exactly {foreign, numType}; both keys are mandatory and
+nullable. foreign is Yes only when context presents the symbol as
+source-language material outside the established German symbolic inventory;
+international use or non-German origin alone is insufficient. numType is Card
+only for a symbol whose established identity is a cardinal-number marker, and
+Range only for a symbol whose established identity is a numeric range marker.
+A currency, unit, percentage, operator, digit neighbor, or mathematical use
+does not otherwise imply numType.
+</lemma>
+
+<fixed_route_distinctions>
+The SYM route and membership are authoritative. NUM digits, sentence PUNCT,
+OpaqueText emoji, written abbreviations, ordinary lexical strings, and symbols
+embedded in names remain outside this target because upstream classification
+already fixed the distinction. Resolve the supplied SYM even when its glyph is
+punctuation-like or letter-like. Do not return Unresolved or repair membership.
+</fixed_route_distinctions>
+
+<output_contract>
+Return the exact supplied response schema. A resolved answer has exactly five
+fields: memberOrthographies, normalizedMembers, surface, lemma, and
+realizationCoverage. Both arrays have one entry per supplied member in source
+order. lemma contains canonicalForm and coreFeatures, including every required
+nullable key; use {} when this route has no Core Features.
+
+surface contains exactly spelling, surfaceFeatures, and inflectionalFeatures.
+Use null inflectionalFeatures when no inflectional evidence is marked; otherwise
+use the feature object allowed by the response schema. Do not emit a Surface
+discriminator.
+
+Set realizationCoverage to Full. This route has no Partial production policy. Keep
+Surface and Lemma separate. The application supplies language, family, kind,
+unitKind, normalized Surface construction and Surface-to-Lemma linkage; omit
+those fields, target indices, confidence, candidates, and explanations.
+</output_contract>`,
 	cases,
 	demonstrationIds: [
 		"grammar-de-sym-demo-percent-unit",
