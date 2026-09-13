@@ -34,17 +34,22 @@ function event(
 				operation === "click-resolution"
 					? [
 							{
-								phase: "rejected" as const,
-								promptPath:
-									"laboratory.grammaticalResolution.de.Lexeme.NOUN",
-								modelInput: {
-									markedContext: "<TARGET>Hund</TARGET>",
+								request: {
+									stage: "resolveGrammar",
+									route: "de/Lexeme/NOUN",
+									systemPrompt: "fixture",
+									outputSchema: {},
+									configuration: {
+										model: "fixture",
+										settings: {},
+									},
+									signal: new AbortController().signal,
+									input: {
+										markedContext: "<TARGET>Hund</TARGET>",
+									},
 								},
-								modelOutput: { decision: "Resolved" },
-								validationError: {
-									name: "ZodError",
-									message: "resolution payload missing",
-								},
+								failure: "provider unavailable",
+								durationMs: 1,
 							},
 						]
 					: [],

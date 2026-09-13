@@ -30,7 +30,11 @@
 			"types": "./dist/pending.d.ts",
 			"import": "./dist/pending.js"
 		},
-		"./package.json": "./package.json"
+		"./package.json": "./package.json",
+		"./memory": {
+			"types": "./dist/memory.d.ts",
+			"import": "./dist/memory.js"
+		}
 	},
 	"files": [
 		"dist",
@@ -42,7 +46,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/runtime.ts src/relations.ts src/pending.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/runtime.ts src/memory.ts src/relations.ts src/pending.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",

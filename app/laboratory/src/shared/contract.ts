@@ -1,32 +1,23 @@
 import type {
-	Attestation as DumlingAttestation,
-	Lemma as DumlingLemma,
-	Reading as DumlingReading,
-	Surface as DumlingSurface,
-} from "dumling-old";
-import type {
 	Segment as DumgenSegment,
-	SegmentedSentence as DumgenSegmentedSentence,
-	EnabledSegmentationLanguage,
-	GrammaticalInteraction,
-	GrammaticalRoute,
-} from "gumgen-old";
-
-export type Attestation = DumlingAttestation<"de">;
-export type Lemma = DumlingLemma<"de">;
-export type Surface = DumlingSurface<"de">;
-export type Reading = DumlingReading<"de">;
+	SegmentedSentence as DumgenSentence,
+	AnalysisTarget as DumgenTarget,
+	Encounter,
+} from "dumgen/types";
+import type * as Dumling from "dumling/types";
+export type Attestation = Dumling.Attestation<"de">;
+export type Lemma = Dumling.Lemma<"de">;
+export type Surface = Dumling.Surface<"de">;
+export type Reading = Dumling.Reading<"de">;
 export type MemberOrthography = Attestation["members"][number]["orthography"];
 
-export type AnalysisTarget = GrammaticalRoute<"de"> & {
-	readonly memberSegmentIndices: readonly number[];
-};
+export type AnalysisTarget = DumgenTarget<"de">;
 
 export type EntityRepresentation = {
 	attestation: Attestation;
 	reading: Reading;
 	resolution: "dumgen";
-	model: "gpt-5.6-luna";
+	model: string;
 };
 
 export type Segment = DumgenSegment;
@@ -51,26 +42,25 @@ export type SegmentationResponse = {
 		segmentation?: SegmentationStageResult;
 	};
 	generation: {
-		model: "gpt-5.6-luna";
+		model: string;
 		prompts: string[];
 	};
 };
 
-export type SegmentedSentence = {
-	readonly [Language in EnabledSegmentationLanguage]: DumgenSegmentedSentence<Language>;
-}[EnabledSegmentationLanguage];
-export type GermanSegmentedSentence = DumgenSegmentedSentence<"de">;
+export type SegmentedSentence = DumgenSentence<"de"> | DumgenSentence<"he">;
+export type GermanSegmentedSentence = DumgenSentence<"de">;
 
 export type ClickResolutionRequest = {
 	segmentedSentenceId: string;
 	clickedSegmentIndex: number;
+	target?: AnalysisTarget;
 };
 
 export type ClassificationStageName = "target" | "grammatical" | "reading";
 
 export type ClassificationStageResult = {
 	prompt: string;
-	traceOrigin: "generated" | "cached";
+	traceOrigin: "generated" | "cached" | "supplied" | "authored";
 	input: unknown;
 	output: unknown;
 	result: unknown;
@@ -87,7 +77,7 @@ export type ResolutionDiagnostic = {
 };
 
 export type ClassificationGeneration = {
-	model: "gpt-5.6-luna";
+	model: string;
 	prompts: string[];
 	cache: "miss" | "member-hit";
 	modelCalls: number;
@@ -97,7 +87,7 @@ export type ClickResolutionResponse =
 	| {
 			decision: "Resolved";
 			target: AnalysisTarget;
-			interaction: GrammaticalInteraction;
+			encounter: Encounter<"de">;
 			entity: EntityRepresentation;
 			stages: Partial<
 				Record<ClassificationStageName, ClassificationStageResult>
@@ -129,13 +119,9 @@ export type ClickResolutionResponse =
 	  }
 	| {
 			decision: "CatalogMiss";
-			stage: "Lemma" | "Reading";
-			reason: "MemberNotCatalogued" | "InventoryNotLoaded";
-			language: "de";
-			family: AnalysisTarget["family"];
-			kind: AnalysisTarget["kind"];
-			target: AnalysisTarget;
-			candidate: Lemma | Reading;
+			stage: string;
+			message: string;
+			target?: AnalysisTarget;
 			stages: Partial<
 				Record<ClassificationStageName, ClassificationStageResult>
 			>;

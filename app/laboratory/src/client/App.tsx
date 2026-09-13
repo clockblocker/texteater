@@ -78,12 +78,12 @@ function orthographiesBySegmentIndex(
 	resolution: ResolvedClickResolution,
 ): Record<number, MemberOrthography> {
 	return Object.fromEntries(
-		resolution.interaction.memberSegmentIndices.map(
+		resolution.encounter.target.memberSegmentIndices.map(
 			(segmentIndex, position) => {
 				const member = resolution.entity.attestation.members[position];
 				if (!member) {
 					throw new Error(
-						"Attestation members and interaction indices are not positionally aligned.",
+						"Attestation members and Encounter indices are not positionally aligned.",
 					);
 				}
 				return [segmentIndex, member.orthography];
@@ -744,8 +744,7 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 										? {
 												attestation:
 													resolved.entity.attestation,
-												interaction:
-													resolved.interaction,
+												encounter: resolved.encounter,
 											}
 										: undefined
 								}

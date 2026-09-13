@@ -1,25 +1,27 @@
 # Laboratory
 
-> EARLY-WIP prompt laboratory. It is not a production prompt namespace.
-
-The laboratory exposes Dumgen's German intake, segmentation, target
-classification, grammatical resolution, and Reading resolution stages in a
-React/Vite UI backed by a Bun API.
+Laboratory exposes Dumgen's segmentation, Target Classification, Grammatical
+Resolution, and Reading production in a React/Vite workbench backed by a Bun
+API. Its Evaluation runs view opens and compares the same Promptsmith records
+as the Dumgen CLI.
 
 ```sh
 OPENAI_API_KEY=... bun run --cwd app/laboratory dev
 ```
 
-Open <http://127.0.0.1:5173/>, select one complete German sentence, and run
-Intake plus Segmentation. Only `ResolvableText` Segments are clickable. The API
-key stays in the server environment.
+Open <http://127.0.0.1:5173/>, submit a German sentence, and select a
+`ResolvableText` Segment. Intake uses the model; German segmentation is
+deterministic. Subsequent stages share one Encounter. The resolution API also
+accepts a supplied Analysis Target and skips classification for that request.
+The API key stays in the server environment.
 
-Intake and Segmentation are separate model calls. A click then follows the
-Target, Grammatical, and Reading stages. Only German `Lexeme/NOUN` currently
-reaches the last two stages; other valid targets stop at
-`ResolutionRouteNotImplemented`.
+Readings and Surfaces are stored in an isolated, in-memory Dumdict. Repeated
+clicks reuse completed results; a Reading failure keeps successful grammar
+available for retry. Resetting the session clears this dictionary and cached
+results while retaining earlier logs.
 
-Each server run appends JSONL events under
-`battery/dumgen/.laboratory/sessions/<session-id>/events.jsonl`. Resetting the
-session rotates its ID and clears in-memory results without deleting older
-files.
+`DUMGEN_RUN_DIRECTORY` selects Evaluation run storage. Interactive JSONL logs
+use its sibling `laboratory/sessions` directory, or
+`LABORATORY_SESSION_DIRECTORY` when set. Defaults live outside the repository
+in the user's data directory. Model exchanges, failures, and cached or authored
+stages remain visible in each session record.
