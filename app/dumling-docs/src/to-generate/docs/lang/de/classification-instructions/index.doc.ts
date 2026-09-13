@@ -67,25 +67,16 @@ expressions such as \`eine Entscheidung treffen\` belong here rather than under
 
 \`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\`.
 
-## Surface Kinds And Attested Evidence
+## Surface and attested evidence
 
-Every surface is either \`Citation\` or \`Inflection\`.
+Every Surface carries normalized spelling and the represented grammatical
+features of its route. Use \`checkIfGrundform\` to assess canonical realization.
+An assessment error leaves the distinction undetermined.
 
-\`Citation\` means the stored surface is already in citation or Grundform shape from the learner's perspective.
-
-\`Inflection\` means the stored surface is an inflected form and carries \`inflectionalFeatures\`.
-
-Examples:
-
-- \`Mutter\` is \`Citation\`
-- \`Kindern\` is \`Inflection\`
-- \`fünften\` is \`Inflection\`
-
-The current public model also imposes two important constraints:
-
-- verbal \`Phraseme\` Surfaces may be inflected; their Attestations may mark
-  \`realizationCoverage: "Partial"\`
-- \`Construction/Fusion\` Lemmas are citation-only and currently featureless.
+For example, nominative singular \`Mutter\` is Grundform, while \`Kindern\` and
+\`fünften\` carry contrary inflection. Verbal Phraseme Surfaces may be inflected;
+their Attestations can have \`realizationCoverage: "Partial"\`.
+\`Construction/Fusion\` currently has no core or inflectional feature distinctions.
 
 \`Attestation\` records occurrence evidence:
 

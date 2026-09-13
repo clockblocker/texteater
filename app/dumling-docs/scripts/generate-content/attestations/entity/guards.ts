@@ -1,24 +1,19 @@
-import type {
-	Attestation,
-	EntityValue,
-	Lemma,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
 	return value !== null && typeof value === "object";
 }
 
-export function isSupportedLanguage(
-	value: unknown,
-): value is SupportedLanguage {
+export function isSupportedLanguage(value: unknown): value is Dumling.Language {
 	return value === "de" || value === "en" || value === "he";
 }
 
-export function isLemma(value: unknown): value is Lemma<SupportedLanguage> {
+export function isLemma(
+	value: unknown,
+): value is Dumling.Lemma<Dumling.Language> {
 	return (
 		isRecord(value) &&
+		value.unitKind === "Lemma" &&
 		isSupportedLanguage(value.language) &&
 		typeof value.canonicalForm === "string" &&
 		typeof value.family === "string" &&
@@ -27,22 +22,25 @@ export function isLemma(value: unknown): value is Lemma<SupportedLanguage> {
 	);
 }
 
-export function isSurface(value: unknown): value is Surface<SupportedLanguage> {
+export function isSurface(
+	value: unknown,
+): value is Dumling.Surface<Dumling.Language> {
 	return (
 		isRecord(value) &&
 		isSupportedLanguage(value.language) &&
 		typeof value.normalizedSurface === "string" &&
 		(value.spelling === "Canonical" || value.spelling === "Variant") &&
-		typeof value.surfaceKind === "string" &&
+		value.unitKind === "Surface" &&
 		isLemma(value.lemma)
 	);
 }
 
 export function isAttestation(
 	value: unknown,
-): value is Attestation<SupportedLanguage> {
+): value is Dumling.Attestation<Dumling.Language> {
 	return (
 		isRecord(value) &&
+		value.unitKind === "Attestation" &&
 		Array.isArray(value.members) &&
 		value.members.length > 0 &&
 		value.members.every(
@@ -59,6 +57,8 @@ export function isAttestation(
 	);
 }
 
-export function isEntityValue(value: unknown): value is EntityValue {
+export function isEntityValue(
+	value: unknown,
+): value is Dumling.Lemma | Dumling.Surface | Dumling.Attestation {
 	return isAttestation(value) || isSurface(value) || isLemma(value);
 }

@@ -1,15 +1,9 @@
-import type {
-	Attestation,
-	EntityKind,
-	EntityValue,
-	Lemma,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { isAttestation, isSurface } from "./guards";
 
-export function languageLabelFor(language: SupportedLanguage): string {
-	const labels: Record<SupportedLanguage, string> = {
+export function languageLabelFor(language: Dumling.Language): string {
+	const labels: Record<Dumling.Language, string> = {
 		de: "German",
 		en: "English",
 		he: "Hebrew",
@@ -17,7 +11,9 @@ export function languageLabelFor(language: SupportedLanguage): string {
 	return labels[language];
 }
 
-export function entityKindFor(value: EntityValue): EntityKind {
+export function entityKindFor(
+	value: Dumling.Lemma | Dumling.Surface | Dumling.Attestation,
+): Dumling.UnitKind {
 	if (isAttestation(value)) {
 		return "Attestation";
 	}
@@ -28,12 +24,16 @@ export function entityKindFor(value: EntityValue): EntityKind {
 }
 
 export function surfaceForEntity(
-	value: Surface<SupportedLanguage> | Attestation<SupportedLanguage>,
-): Surface<SupportedLanguage> {
+	value:
+		| Dumling.Surface<Dumling.Language>
+		| Dumling.Attestation<Dumling.Language>,
+): Dumling.Surface<Dumling.Language> {
 	return isAttestation(value) ? value.surface : value;
 }
 
-export function lemmaForEntity(value: EntityValue): Lemma<SupportedLanguage> {
+export function lemmaForEntity(
+	value: Dumling.Lemma | Dumling.Surface | Dumling.Attestation,
+): Dumling.Lemma<Dumling.Language> {
 	if (isAttestation(value)) {
 		return value.surface.lemma;
 	}

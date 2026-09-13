@@ -1,162 +1,162 @@
-sentence_markdown,normalizedSurface,surfaceKind,family,kind
-[Am] nächsten Morgen war alles anders.,am,Citation,Construction,Fusion
-Am [nächsten] Morgen war alles anders.,nächsten,Inflection,Lexeme,ADJ
-Am nächsten Morgen war alles [anders].,anders,Citation,Lexeme,ADJ
-Auf der Karte sind drei [Seen] eingezeichnet.,Seen,Inflection,Lexeme,NOUN
-Auf der Karte sind drei Seen [eingezeichnet].,eingezeichnet,Inflection,Lexeme,VERB
-Bei dieser Formel verstehe ich nur [Bahnhof].,verstehe nur Bahnhof,Inflection,Phraseme,Idiom
-Bitte folgen Sie [Ihrem] Ansprechpartner.,Ihrem,Inflection,Lexeme,DET
-Damit triffst du den [Nagel] auf den Kopf.,den nagel auf den kopf,Citation,Phraseme,Idiom
-Das ist [nicht] mein Problem.,nicht,Citation,Lexeme,PART
-Das ist schwer [zu] erklären.,zu,Citation,Lexeme,PART
-Das [muss] heute noch raus.,muss,Inflection,Lexeme,VERB
-Das muss heute noch [raus].,raus,Citation,Lexeme,ADV
-Das [Rennen] hat Spaß gemacht.,Rennen,Citation,Lexeme,NOUN
-Das rote [Band] lag auf dem Geschenk.,Band,Citation,Lexeme,NOUN
-Das rote Band [lag] auf dem Geschenk.,lag,Inflection,Lexeme,VERB
-Das rote Band lag [auf] dem Geschenk.,auf,Citation,Lexeme,ADP
-Das [Schloss] an der Tür klemmt.,Schloss,Citation,Lexeme,NOUN
-Das [Schloss] über dem Fluss wurde renoviert.,Schloss,Citation,Lexeme,NOUN
-Das [Un]- in Unkosten wirkt historisch irritierend.,Un,Citation,Morpheme,Prefix
-Das [wäre] fast schief gewesen.,wäre,Inflection,Lexeme,AUX
-Das wäre [fast] schief gewesen.,fast,Citation,Lexeme,ADV
-Das wäre fast schief [gewesen].,gewesen,Inflection,Lexeme,AUX
-Das wäre schön [gewesen].,gewesen,Inflection,Lexeme,AUX
-"Der Autor, [dessen] Buch fehlt, wartet draußen.",dessen,Inflection,Lexeme,PRON
-Der Brief ist schon [geschrieben].,ist geschrieben,Inflection,Lexeme,VERB
-Der dritte [Band] ist längst vergriffen.,Band,Citation,Lexeme,NOUN
-Der Fährmann hat uns [übergesetzt].,übergesetzt,Inflection,Lexeme,VERB
-Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Inflection,Lexeme,ADJ
-Der hockte da im grünen Gras; dem [floß] der Kaffee auf die Nas.,floß,Inflection,Lexeme,VERB
-Der hockte da im grünen Gras; dem floß der Kaffee [auf] die Nas.,auf,Citation,Lexeme,ADP
-Der [Kiefer] schmerzte nach der Operation.,Kiefer,Citation,Lexeme,NOUN
-Der [lachende] Junge winkte uns zu.,lachende,Inflection,Lexeme,ADJ
-Der Laster [fuhr] das Schild um.,fuhr um,Inflection,Lexeme,VERB
-Der [Leiter] der Werkstatt kam später.,Leiter,Citation,Lexeme,NOUN
-Der [reisende] Händler wartete draußen.,reisende,Inflection,Lexeme,ADJ
-Der [Reisende] wartete draußen.,Reisende,Citation,Lexeme,NOUN
-Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Inflection,Lexeme,ADJ
-Die alte [Kiefer] steht am Hang.,Kiefer,Citation,Lexeme,NOUN
-Die [Angestellten] streikten gestern.,Angestellten,Inflection,Lexeme,NOUN
-Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Inflection,Lexeme,ADJ
-Die Aufgabe bleibt [ungelöst].,ungelöst,Inflection,Lexeme,ADJ
-Die [Band] spielt heute im Kellerclub.,Band,Citation,Lexeme,NOUN
-Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Inflection,Lexeme,ADJ
-Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Inflection,Lexeme,ADJ
-Die Kartoffeln sind bereits [gekocht].,sind gekocht,Inflection,Lexeme,VERB
-Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Citation,Lexeme,NOUN
-Die [linke] Hand zitterte.,linke,Inflection,Lexeme,ADJ
-Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Inflection,Lexeme,ADJ
-Die [Mutter] passt nicht auf diese Schraube.,Mutter,Citation,Lexeme,NOUN
-[Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Inflection,Lexeme,DET
-Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Citation,Lexeme,NOUN
-Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat mitgebracht,Inflection,Lexeme,VERB
-Die Peitsche hat [er] mitgebracht und nimmt sie sorglich sehr in acht.,er,Inflection,Lexeme,PRON
-Die Peitsche hat er [mitgebracht] und nimmt sie sorglich sehr in acht.,hat mitgebracht,Inflection,Lexeme,VERB
-Die Peitsche hat er mitgebracht [und] nimmt sie sorglich sehr in acht.,und,Citation,Lexeme,CCONJ
-Die Peitsche hat er mitgebracht und [nimmt] sie sorglich sehr in acht.,nimmt,Citation,Phraseme,Idiom
-Die Peitsche hat er mitgebracht und nimmt [sie] sorglich sehr in acht.,sie,Inflection,Lexeme,PRON
-Die Peitsche hat er mitgebracht und nimmt sie [sorglich] sehr in acht.,sorglich,Citation,Lexeme,ADV
-Die Peitsche hat er mitgebracht und nimmt sie sorglich [sehr] in acht.,sehr,Citation,Lexeme,ADV
-Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr [in] acht.,in acht,Citation,Phraseme,Idiom
-Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr in [acht].,in acht,Citation,Phraseme,Idiom
-Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Inflection,Lexeme,ADJ
-Die schoß das Häschen ganz [entzwei]; da rief die Frau: »O wei! O wei!«,entzwei,Citation,Lexeme,ADJ
-Die schoß das Häschen ganz entzwei; da rief die Frau: »[O] wei! O wei!«,o wei,Citation,Phraseme,DiscourseFormula
-Die schoß das Häschen ganz entzwei; da rief die Frau: »O [wei]! O wei!«,o wei,Citation,Phraseme,DiscourseFormula
-Die Tür ist [geschlossen].,ist geschlossen,Inflection,Lexeme,VERB
-"Die Zeugin, [deren] Aussage zählt, bleibt anonym.",deren,Inflection,Lexeme,PRON
-Ein [interessierter] Leser fragte nach.,interessierter,Inflection,Lexeme,ADJ
-Ein [Verletzter] lag am Straßenrand.,Verletzter,Citation,Lexeme,NOUN
-[Einst] ging er an Ufers Rand mit der Mappe in der Hand.,einst,Citation,Lexeme,ADV
-Einst [ging] er an Ufers Rand mit der Mappe in der Hand.,ging,Inflection,Lexeme,VERB
-Einst ging er [an] Ufers Rand mit der Mappe in der Hand.,an,Citation,Lexeme,ADP
-Einst ging er an [Ufers] Rand mit der Mappe in der Hand.,Ufers,Inflection,Lexeme,NOUN
-Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Citation,Lexeme,NOUN
-Er ging [zum] Bahnhof.,zum,Citation,Construction,Fusion
-Er lief erst nach links und dann [hinaus].,hinaus,Citation,Lexeme,ADV
-Er [muss] heute arbeiten.,muss,Inflection,Lexeme,AUX
-Er saß [schweigend] am Fenster.,schweigend,Inflection,Lexeme,ADJ
-Er vergaß [seinen] Schlüssel im Büro.,seinen,Inflection,Lexeme,DET
-"Er versucht, [hinauszulaufen].",hinauszulaufen,Inflection,Lexeme,VERB
-Er [wartet] auf den Nachtbus.,wartet auf,Inflection,Lexeme,VERB
-Er [wog] vielleicht ein halbes Lot – und war am fünften Tage tot. ,wog,Inflection,Lexeme,VERB
-Er wog vielleicht ein halbes [Lot] – und war am fünften Tage tot. ,Lot,Inflection,Lexeme,NOUN
-Er wog vielleicht ein halbes Lot – und [war] am fünften Tage tot. ,war,Inflection,Lexeme,AUX
-Er wog vielleicht ein halbes Lot – und war am [fünften] Tage tot. ,fünften,Inflection,Lexeme,ADJ
-Er wog vielleicht ein halbes Lot – und war am fünften Tage [tot]. ,tot,Citation,Lexeme,ADJ
-"[Es] brennt die Hand, es brennt das Haar, es brennt das ganze Kind sogar.",es,Inflection,Lexeme,PRON
-"Es brennt die Hand, es brennt das Haar, es brennt das [ganze] Kind sogar.",ganze,Inflection,Lexeme,ADJ
-"Es brennt die Hand, es brennt das Haar, es brennt das ganze Kind [sogar].",sogar,Citation,Lexeme,ADV
-[Es] zog der wilde Jägersmann sein grasgrün neues Röcklein an;,es,Inflection,Lexeme,PRON
-Es [zog] der wilde Jägersmann sein grasgrün neues Röcklein an;,zog an,Inflection,Lexeme,VERB
-Es zog der wilde Jägersmann sein grasgrün neues Röcklein [an];,zog an,Inflection,Lexeme,VERB
-[Fort] geht nun die Mutter und wupp! den Daumen in den Mund. ,fort,Citation,Lexeme,ADV
-Fort geht nun die Mutter und [wupp]! den Daumen in den Mund. ,wupp,Citation,Lexeme,INTJ
-[Geh] bitte nicht ohne Jacke raus.,geh,Inflection,Lexeme,VERB
-Genau da liegt der [Hase] im Pfeffer.,da liegt der hase im pfeffer,Citation,Phraseme,Idiom
-"[Guten Tag], ich habe einen Termin.",Guten Tag,Citation,Phraseme,DiscourseFormula
-"Ich gehe Tomaten kaufen, um einen Salat [zu] machen.",um zu,Citation,Lexeme,SCONJ
-Ich [lasse] mir morgen die Haare schneiden.,lasse,Inflection,Lexeme,VERB
-Ich suche einen [besseren] Ansatz.,besseren,Inflection,Lexeme,ADJ
-Ich will mir morgen die Haare schneiden [lassen].,lassen,Inflection,Lexeme,VERB
-Im Heft stand [Filosofie] statt Philosophie.,Philosophie,Inflection,Lexeme,NOUN
-In Berlin betreibt die [BVG] die U-Bahn.,BVG,Citation,Lexeme,PROPN
-In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge t,Citation,Morpheme,Circumfix
-"Jetzt schien die Sonne gar zu sehr, [da] ward ihm sein Gewehr zu schwer.",da,Citation,Lexeme,ADV
-"Jetzt schien die Sonne gar zu sehr, da [ward] ihm sein Gewehr zu schwer.",ward,Inflection,Lexeme,VERB
-Meine [Mutter] ruft jeden Sonntag an.,Mutter,Citation,Lexeme,NOUN
-Mit den [Kindern] ist es nie langweilig.,Kindern,Inflection,Lexeme,NOUN
-Mit [keinem] Wort erwähnte sie den Plan.,keinem,Inflection,Lexeme,DET
-"[Morgenstund] hat Gold im Mund, sagte sie verschlafen.",morgenstund hat gold im mund,Citation,Phraseme,Proverb
-"[Na ja], ganz überzeugt bin ich nicht.",na ja,Citation,Phraseme,DiscourseFormula
-"Na [ja], ganz überzeugt bin ich nicht.",na ja,Citation,Phraseme,DiscourseFormula
-Nach [manchem] Fehler lernt man schneller.,manchem,Inflection,Lexeme,DET
-"nahm Ranzen, Pulverhorn und Flint und [lief] hinaus ins Feld geschwind",lief,Inflection,Lexeme,VERB
-"nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Citation,Lexeme,ADV
-"nahm Ranzen, Pulverhorn und Flint und lief hinaus [ins] Feld geschwind",ins,Citation,Construction,Fusion
-"nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Citation,Lexeme,ADV
-[Pass] auf dich auf!,pass auf auf,Inflection,Lexeme,VERB
-Pass [auf] dich auf!,pass auf auf,Inflection,Lexeme,VERB
-Pass auf [dich] auf!,dich,Inflection,Lexeme,PRON
-Pass auf dich [auf]!,pass auf auf,Inflection,Lexeme,VERB
-[Schwimmen] ist gesund.,Schwimmen,Citation,Lexeme,NOUN
-Sein ständiges [Meckern] nervt.,Meckern,Citation,Lexeme,NOUN
-Sie [erinnert] sich an den Geruch.,erinnert sich an,Inflection,Lexeme,VERB
-Sie folgte ihrem [Herzen].,Herzen,Inflection,Lexeme,NOUN
-Sie ist [verheiratet].,verheiratet,Inflection,Lexeme,ADJ
-Sie kam [lachend] herein.,lachend,Inflection,Lexeme,ADJ
-Sie sprang [ins] kalte Wasser.,ins,Citation,Construction,Fusion
-Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Inflection,Lexeme,VERB
-Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Inflection,Lexeme,VERB
-Sie wurde um Geduld [gebeten].,wurde um gebeten,Inflection,Lexeme,VERB
-"[Sieh] einmal, hier steht er, pfui, der Struwwelpeter!",sieh,Inflection,Lexeme,VERB
-"Sieh [einmal], hier steht er, pfui, der Struwwelpeter!",einmal,Citation,Lexeme,ADV
-"Sieh einmal, [hier] steht er, pfui, der Struwwelpeter!",hier,Citation,Lexeme,ADV
-"Sieh einmal, hier [steht] er, pfui, der Struwwelpeter!",steht,Inflection,Lexeme,VERB
-"Sieh einmal, hier steht [er], pfui, der Struwwelpeter!",er,Inflection,Lexeme,PRON
-"Sieh einmal, hier steht er, [pfui], der Struwwelpeter!",pfui,Citation,Lexeme,INTJ
-"Sieh einmal, hier steht er, pfui, [der] Struwwelpeter!",der,Inflection,Lexeme,DET
-"Sieh einmal, hier steht er, pfui, der [Struwwelpeter]!",Struwwelpeter,Citation,Lexeme,PROPN
-"Sieh [mal] an, die Kleine von nebenan.",mal,Citation,Lexeme,ADV
-"[Tut mir leid], das war mein Fehler.",tut mir leid,Citation,Phraseme,DiscourseFormula
-"Und Minz und Maunz, [die] schreien gar jämmerlich zu zweien",die,Inflection,Lexeme,PRON
-"Und Minz und Maunz, die schreien [gar] jämmerlich zu zweien",gar,Citation,Lexeme,ADV
-"Und Minz und Maunz, die schreien gar [jämmerlich] zu zweien",jämmerlich,Citation,Lexeme,ADV
-"Und Minz und Maunz, die schreien gar jämmerlich [zu] zweien",zu,Citation,Lexeme,ADP
-"Und Minz und Maunz, die schreien gar jämmerlich zu [zweien]",zweien,Inflection,Lexeme,NUM
-Unter falschem [Namen] mietete er das Zimmer.,Namen,Inflection,Lexeme,NOUN
-"[Verbrannt] ist alles ganz und gar, das arme Kind mit Haut und Haar;",verbrannt,Inflection,Lexeme,VERB
-"Verbrannt ist alles [ganz] und gar, das arme Kind mit Haut und Haar;",ganz und gar,Citation,Phraseme,Idiom
-"Verbrannt ist alles ganz [und] gar, das arme Kind mit Haut und Haar;",ganz und gar,Citation,Phraseme,Idiom
-"Verbrannt ist alles ganz und [gar], das arme Kind mit Haut und Haar;",ganz und gar,Citation,Phraseme,Idiom
-"Verbrannt ist alles ganz und gar, das arme Kind mit [Haut] und Haar;",Haut,Inflection,Lexeme,NOUN
-"Verbrannt ist alles ganz und gar, das arme Kind mit Haut [und] Haar;",und,Citation,Lexeme,CCONJ
-"Verbrannt ist alles ganz und gar, das arme Kind mit Haut und [Haar];",Haar,Inflection,Lexeme,NOUN
-Viele [deutschsprachigen] Quellen fehlen noch.,deutschsprachigen,Inflection,Lexeme,ADJ
-[Viele] kamen zu spät.,viele,Inflection,Lexeme,PRON
-[Wegen] dem Regen kamen wir zu spät.,wegen,Citation,Lexeme,ADP
-[Wer] war das?,wer,Inflection,Lexeme,PRON
-"[Wer] zuerst kommt, mahlt zuerst.",wer,Inflection,Lexeme,PRON
-Wir [hätten] gern mehr Zeit.,hätten,Inflection,Lexeme,AUX
-Wir liefen den Fluss [entlang].,entlang,Citation,Lexeme,ADP
+sentence_markdown,normalizedSurface,grundform,family,kind
+[Am] nächsten Morgen war alles anders.,am,Grundform,Construction,Fusion
+Am [nächsten] Morgen war alles anders.,nächsten,Not Grundform,Lexeme,ADJ
+Am nächsten Morgen war alles [anders].,anders,Undetermined,Lexeme,ADJ
+Auf der Karte sind drei [Seen] eingezeichnet.,Seen,Not Grundform,Lexeme,NOUN
+Auf der Karte sind drei Seen [eingezeichnet].,eingezeichnet,Not Grundform,Lexeme,VERB
+Bei dieser Formel verstehe ich nur [Bahnhof].,verstehe nur Bahnhof,Not Grundform,Phraseme,Idiom
+Bitte folgen Sie [Ihrem] Ansprechpartner.,Ihrem,Not Grundform,Lexeme,DET
+Damit triffst du den [Nagel] auf den Kopf.,den nagel auf den kopf,Not Grundform,Phraseme,Idiom
+Das ist [nicht] mein Problem.,nicht,Grundform,Lexeme,PART
+Das ist schwer [zu] erklären.,zu,Grundform,Lexeme,PART
+Das [muss] heute noch raus.,muss,Not Grundform,Lexeme,VERB
+Das muss heute noch [raus].,raus,Undetermined,Lexeme,ADV
+Das [Rennen] hat Spaß gemacht.,Rennen,Undetermined,Lexeme,NOUN
+Das rote [Band] lag auf dem Geschenk.,Band,Undetermined,Lexeme,NOUN
+Das rote Band [lag] auf dem Geschenk.,lag,Not Grundform,Lexeme,VERB
+Das rote Band lag [auf] dem Geschenk.,auf,Grundform,Lexeme,ADP
+Das [Schloss] an der Tür klemmt.,Schloss,Undetermined,Lexeme,NOUN
+Das [Schloss] über dem Fluss wurde renoviert.,Schloss,Undetermined,Lexeme,NOUN
+Das [Un]- in Unkosten wirkt historisch irritierend.,Un,Grundform,Morpheme,Prefix
+Das [wäre] fast schief gewesen.,wäre,Not Grundform,Lexeme,AUX
+Das wäre [fast] schief gewesen.,fast,Undetermined,Lexeme,ADV
+Das wäre fast schief [gewesen].,gewesen,Not Grundform,Lexeme,AUX
+Das wäre schön [gewesen].,gewesen,Not Grundform,Lexeme,AUX
+"Der Autor, [dessen] Buch fehlt, wartet draußen.",dessen,Grundform,Lexeme,PRON
+Der Brief ist schon [geschrieben].,ist geschrieben,Not Grundform,Lexeme,VERB
+Der dritte [Band] ist längst vergriffen.,Band,Undetermined,Lexeme,NOUN
+Der Fährmann hat uns [übergesetzt].,übergesetzt,Not Grundform,Lexeme,VERB
+Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
+Der hockte da im grünen Gras; dem [floß] der Kaffee auf die Nas.,floß,Not Grundform,Lexeme,VERB
+Der hockte da im grünen Gras; dem floß der Kaffee [auf] die Nas.,auf,Grundform,Lexeme,ADP
+Der [Kiefer] schmerzte nach der Operation.,Kiefer,Undetermined,Lexeme,NOUN
+Der [lachende] Junge winkte uns zu.,lachende,Not Grundform,Lexeme,ADJ
+Der Laster [fuhr] das Schild um.,fuhr um,Not Grundform,Lexeme,VERB
+Der [Leiter] der Werkstatt kam später.,Leiter,Undetermined,Lexeme,NOUN
+Der [reisende] Händler wartete draußen.,reisende,Not Grundform,Lexeme,ADJ
+Der [Reisende] wartete draußen.,Reisende,Undetermined,Lexeme,NOUN
+Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Not Grundform,Lexeme,ADJ
+Die alte [Kiefer] steht am Hang.,Kiefer,Undetermined,Lexeme,NOUN
+Die [Angestellten] streikten gestern.,Angestellten,Not Grundform,Lexeme,NOUN
+Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Not Grundform,Lexeme,ADJ
+Die Aufgabe bleibt [ungelöst].,ungelöst,Grundform,Lexeme,ADJ
+Die [Band] spielt heute im Kellerclub.,Band,Undetermined,Lexeme,NOUN
+Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Not Grundform,Lexeme,ADJ
+Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Not Grundform,Lexeme,ADJ
+Die Kartoffeln sind bereits [gekocht].,sind gekocht,Not Grundform,Lexeme,VERB
+Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Undetermined,Lexeme,NOUN
+Die [linke] Hand zitterte.,linke,Not Grundform,Lexeme,ADJ
+Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
+Die [Mutter] passt nicht auf diese Schraube.,Mutter,Undetermined,Lexeme,NOUN
+[Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Not Grundform,Lexeme,DET
+Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Undetermined,Lexeme,NOUN
+Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat mitgebracht,Not Grundform,Lexeme,VERB
+Die Peitsche hat [er] mitgebracht und nimmt sie sorglich sehr in acht.,er,Grundform,Lexeme,PRON
+Die Peitsche hat er [mitgebracht] und nimmt sie sorglich sehr in acht.,hat mitgebracht,Not Grundform,Lexeme,VERB
+Die Peitsche hat er mitgebracht [und] nimmt sie sorglich sehr in acht.,und,Grundform,Lexeme,CCONJ
+Die Peitsche hat er mitgebracht und [nimmt] sie sorglich sehr in acht.,nimmt,Not Grundform,Phraseme,Idiom
+Die Peitsche hat er mitgebracht und nimmt [sie] sorglich sehr in acht.,sie,Grundform,Lexeme,PRON
+Die Peitsche hat er mitgebracht und nimmt sie [sorglich] sehr in acht.,sorglich,Undetermined,Lexeme,ADV
+Die Peitsche hat er mitgebracht und nimmt sie sorglich [sehr] in acht.,sehr,Undetermined,Lexeme,ADV
+Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr [in] acht.,in acht,Not Grundform,Phraseme,Idiom
+Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr in [acht].,in acht,Not Grundform,Phraseme,Idiom
+Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Not Grundform,Lexeme,ADJ
+Die schoß das Häschen ganz [entzwei]; da rief die Frau: »O wei! O wei!«,entzwei,Undetermined,Lexeme,ADJ
+Die schoß das Häschen ganz entzwei; da rief die Frau: »[O] wei! O wei!«,o wei,Grundform,Phraseme,DiscourseFormula
+Die schoß das Häschen ganz entzwei; da rief die Frau: »O [wei]! O wei!«,o wei,Grundform,Phraseme,DiscourseFormula
+Die Tür ist [geschlossen].,ist geschlossen,Not Grundform,Lexeme,VERB
+"Die Zeugin, [deren] Aussage zählt, bleibt anonym.",deren,Grundform,Lexeme,PRON
+Ein [interessierter] Leser fragte nach.,interessierter,Not Grundform,Lexeme,ADJ
+Ein [Verletzter] lag am Straßenrand.,Verletzter,Undetermined,Lexeme,NOUN
+[Einst] ging er an Ufers Rand mit der Mappe in der Hand.,einst,Undetermined,Lexeme,ADV
+Einst [ging] er an Ufers Rand mit der Mappe in der Hand.,ging,Not Grundform,Lexeme,VERB
+Einst ging er [an] Ufers Rand mit der Mappe in der Hand.,an,Grundform,Lexeme,ADP
+Einst ging er an [Ufers] Rand mit der Mappe in der Hand.,Ufers,Not Grundform,Lexeme,NOUN
+Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Undetermined,Lexeme,NOUN
+Er ging [zum] Bahnhof.,zum,Grundform,Construction,Fusion
+Er lief erst nach links und dann [hinaus].,hinaus,Undetermined,Lexeme,ADV
+Er [muss] heute arbeiten.,muss,Not Grundform,Lexeme,AUX
+Er saß [schweigend] am Fenster.,schweigend,Grundform,Lexeme,ADJ
+Er vergaß [seinen] Schlüssel im Büro.,seinen,Not Grundform,Lexeme,DET
+"Er versucht, [hinauszulaufen].",hinauszulaufen,Not Grundform,Lexeme,VERB
+Er [wartet] auf den Nachtbus.,wartet auf,Not Grundform,Lexeme,VERB
+Er [wog] vielleicht ein halbes Lot – und war am fünften Tage tot. ,wog,Not Grundform,Lexeme,VERB
+Er wog vielleicht ein halbes [Lot] – und war am fünften Tage tot. ,Lot,Not Grundform,Lexeme,NOUN
+Er wog vielleicht ein halbes Lot – und [war] am fünften Tage tot. ,war,Not Grundform,Lexeme,AUX
+Er wog vielleicht ein halbes Lot – und war am [fünften] Tage tot. ,fünften,Not Grundform,Lexeme,ADJ
+Er wog vielleicht ein halbes Lot – und war am fünften Tage [tot]. ,tot,Undetermined,Lexeme,ADJ
+"[Es] brennt die Hand, es brennt das Haar, es brennt das ganze Kind sogar.",es,Grundform,Lexeme,PRON
+"Es brennt die Hand, es brennt das Haar, es brennt das [ganze] Kind sogar.",ganze,Not Grundform,Lexeme,ADJ
+"Es brennt die Hand, es brennt das Haar, es brennt das ganze Kind [sogar].",sogar,Undetermined,Lexeme,ADV
+[Es] zog der wilde Jägersmann sein grasgrün neues Röcklein an;,es,Grundform,Lexeme,PRON
+Es [zog] der wilde Jägersmann sein grasgrün neues Röcklein an;,zog an,Not Grundform,Lexeme,VERB
+Es zog der wilde Jägersmann sein grasgrün neues Röcklein [an];,zog an,Not Grundform,Lexeme,VERB
+[Fort] geht nun die Mutter und wupp! den Daumen in den Mund. ,fort,Undetermined,Lexeme,ADV
+Fort geht nun die Mutter und [wupp]! den Daumen in den Mund. ,wupp,Grundform,Lexeme,INTJ
+[Geh] bitte nicht ohne Jacke raus.,geh,Not Grundform,Lexeme,VERB
+Genau da liegt der [Hase] im Pfeffer.,da liegt der hase im pfeffer,Not Grundform,Phraseme,Idiom
+"[Guten Tag], ich habe einen Termin.",Guten Tag,Grundform,Phraseme,DiscourseFormula
+"Ich gehe Tomaten kaufen, um einen Salat [zu] machen.",um zu,Grundform,Lexeme,SCONJ
+Ich [lasse] mir morgen die Haare schneiden.,lasse,Not Grundform,Lexeme,VERB
+Ich suche einen [besseren] Ansatz.,besseren,Not Grundform,Lexeme,ADJ
+Ich will mir morgen die Haare schneiden [lassen].,lassen,Grundform,Lexeme,VERB
+Im Heft stand [Filosofie] statt Philosophie.,Philosophie,Grundform,Lexeme,NOUN
+In Berlin betreibt die [BVG] die U-Bahn.,BVG,Undetermined,Lexeme,PROPN
+In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge t,Grundform,Morpheme,Circumfix
+"Jetzt schien die Sonne gar zu sehr, [da] ward ihm sein Gewehr zu schwer.",da,Undetermined,Lexeme,ADV
+"Jetzt schien die Sonne gar zu sehr, da [ward] ihm sein Gewehr zu schwer.",ward,Not Grundform,Lexeme,VERB
+Meine [Mutter] ruft jeden Sonntag an.,Mutter,Undetermined,Lexeme,NOUN
+Mit den [Kindern] ist es nie langweilig.,Kindern,Not Grundform,Lexeme,NOUN
+Mit [keinem] Wort erwähnte sie den Plan.,keinem,Not Grundform,Lexeme,DET
+"[Morgenstund] hat Gold im Mund, sagte sie verschlafen.",morgenstund hat gold im mund,Not Grundform,Phraseme,Proverb
+"[Na ja], ganz überzeugt bin ich nicht.",na ja,Grundform,Phraseme,DiscourseFormula
+"Na [ja], ganz überzeugt bin ich nicht.",na ja,Grundform,Phraseme,DiscourseFormula
+Nach [manchem] Fehler lernt man schneller.,manchem,Not Grundform,Lexeme,DET
+"nahm Ranzen, Pulverhorn und Flint und [lief] hinaus ins Feld geschwind",lief,Not Grundform,Lexeme,VERB
+"nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Undetermined,Lexeme,ADV
+"nahm Ranzen, Pulverhorn und Flint und lief hinaus [ins] Feld geschwind",ins,Grundform,Construction,Fusion
+"nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Undetermined,Lexeme,ADV
+[Pass] auf dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
+Pass [auf] dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
+Pass auf [dich] auf!,dich,Grundform,Lexeme,PRON
+Pass auf dich [auf]!,pass auf auf,Not Grundform,Lexeme,VERB
+[Schwimmen] ist gesund.,Schwimmen,Undetermined,Lexeme,NOUN
+Sein ständiges [Meckern] nervt.,Meckern,Undetermined,Lexeme,NOUN
+Sie [erinnert] sich an den Geruch.,erinnert sich an,Not Grundform,Lexeme,VERB
+Sie folgte ihrem [Herzen].,Herzen,Not Grundform,Lexeme,NOUN
+Sie ist [verheiratet].,verheiratet,Grundform,Lexeme,ADJ
+Sie kam [lachend] herein.,lachend,Grundform,Lexeme,ADJ
+Sie sprang [ins] kalte Wasser.,ins,Grundform,Construction,Fusion
+Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Not Grundform,Lexeme,VERB
+Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Not Grundform,Lexeme,VERB
+Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB
+"[Sieh] einmal, hier steht er, pfui, der Struwwelpeter!",sieh,Not Grundform,Lexeme,VERB
+"Sieh [einmal], hier steht er, pfui, der Struwwelpeter!",einmal,Undetermined,Lexeme,ADV
+"Sieh einmal, [hier] steht er, pfui, der Struwwelpeter!",hier,Undetermined,Lexeme,ADV
+"Sieh einmal, hier [steht] er, pfui, der Struwwelpeter!",steht,Not Grundform,Lexeme,VERB
+"Sieh einmal, hier steht [er], pfui, der Struwwelpeter!",er,Grundform,Lexeme,PRON
+"Sieh einmal, hier steht er, [pfui], der Struwwelpeter!",pfui,Grundform,Lexeme,INTJ
+"Sieh einmal, hier steht er, pfui, [der] Struwwelpeter!",der,Undetermined,Lexeme,DET
+"Sieh einmal, hier steht er, pfui, der [Struwwelpeter]!",Struwwelpeter,Undetermined,Lexeme,PROPN
+"Sieh [mal] an, die Kleine von nebenan.",mal,Undetermined,Lexeme,ADV
+"[Tut mir leid], das war mein Fehler.",tut mir leid,Grundform,Phraseme,DiscourseFormula
+"Und Minz und Maunz, [die] schreien gar jämmerlich zu zweien",die,Grundform,Lexeme,PRON
+"Und Minz und Maunz, die schreien [gar] jämmerlich zu zweien",gar,Undetermined,Lexeme,ADV
+"Und Minz und Maunz, die schreien gar [jämmerlich] zu zweien",jämmerlich,Undetermined,Lexeme,ADV
+"Und Minz und Maunz, die schreien gar jämmerlich [zu] zweien",zu,Grundform,Lexeme,ADP
+"Und Minz und Maunz, die schreien gar jämmerlich zu [zweien]",zweien,Not Grundform,Lexeme,NUM
+Unter falschem [Namen] mietete er das Zimmer.,Namen,Not Grundform,Lexeme,NOUN
+"[Verbrannt] ist alles ganz und gar, das arme Kind mit Haut und Haar;",verbrannt,Not Grundform,Lexeme,VERB
+"Verbrannt ist alles [ganz] und gar, das arme Kind mit Haut und Haar;",ganz und gar,Undetermined,Phraseme,Idiom
+"Verbrannt ist alles ganz [und] gar, das arme Kind mit Haut und Haar;",ganz und gar,Undetermined,Phraseme,Idiom
+"Verbrannt ist alles ganz und [gar], das arme Kind mit Haut und Haar;",ganz und gar,Undetermined,Phraseme,Idiom
+"Verbrannt ist alles ganz und gar, das arme Kind mit [Haut] und Haar;",Haut,Not Grundform,Lexeme,NOUN
+"Verbrannt ist alles ganz und gar, das arme Kind mit Haut [und] Haar;",und,Grundform,Lexeme,CCONJ
+"Verbrannt ist alles ganz und gar, das arme Kind mit Haut und [Haar];",Haar,Not Grundform,Lexeme,NOUN
+Viele [deutschsprachigen] Quellen fehlen noch.,deutschsprachigen,Not Grundform,Lexeme,ADJ
+[Viele] kamen zu spät.,viele,Grundform,Lexeme,PRON
+[Wegen] dem Regen kamen wir zu spät.,wegen,Grundform,Lexeme,ADP
+[Wer] war das?,wer,Grundform,Lexeme,PRON
+"[Wer] zuerst kommt, mahlt zuerst.",wer,Grundform,Lexeme,PRON
+Wir [hätten] gern mehr Zeit.,hätten,Not Grundform,Lexeme,AUX
+Wir liefen den Fluss [entlang].,entlang,Grundform,Lexeme,ADP

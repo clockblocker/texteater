@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { getLanguageApi } from "dumling-old";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+import { grundformLabel } from "../../../../src/lib/unit-presentation";
+
 import {
 	classificationLogbookDir,
 	sourceAttestationsDir,
@@ -47,16 +48,16 @@ export function sentenceMarkdownCsvValue(sentenceMarkdown: string): string {
 	return sentenceMarkdown.replaceAll(/\s*[\r\n]+\s*/gu, " ");
 }
 
-function legacyClassificationLogbookDir(language: SupportedLanguage): string {
+function legacyClassificationLogbookDir(language: Dumling.Language): string {
 	return join(sourceAttestationsDir, language, "classification-logbook");
 }
 
-function activeClassificationLogbookDir(language: SupportedLanguage): string {
+function activeClassificationLogbookDir(language: Dumling.Language): string {
 	return join(classificationLogbookDir, language);
 }
 
 function assertNoLegacyClassificationLogbookContent(): void {
-	for (const language of ["de", "en", "he"] satisfies SupportedLanguage[]) {
+	for (const language of ["de", "en", "he"] satisfies Dumling.Language[]) {
 		const legacyDir = legacyClassificationLogbookDir(language);
 		if (!existsSync(legacyDir) || readdirSync(legacyDir).length === 0) {
 			continue;
@@ -74,21 +75,18 @@ export function prepareAttestationLogbooks(): void {
 export function attestationLogbookCsvOutputs(
 	attestations: AttestationLogbookRow[],
 ): AttestationLogbookCsvOutput[] {
-	const rowsByLanguage = new Map<
-		SupportedLanguage,
-		AttestationLogbookRow[]
-	>();
+	const rowsByLanguage = new Map<Dumling.Language, AttestationLogbookRow[]>();
 	const outputs: AttestationLogbookCsvOutput[] = [];
 
 	for (const attestation of attestations) {
 		const language = attestation.entity.surface.lemma
-			.language as SupportedLanguage;
+			.language as Dumling.Language;
 		const existing = rowsByLanguage.get(language) ?? [];
 		existing.push(attestation);
 		rowsByLanguage.set(language, existing);
 	}
 
-	for (const language of ["de", "en", "he"] satisfies SupportedLanguage[]) {
+	for (const language of ["de", "en", "he"] satisfies Dumling.Language[]) {
 		const attestationsForLanguage = (
 			rowsByLanguage.get(language) ?? []
 		).toSorted((left, right) =>
@@ -114,39 +112,16 @@ export function attestationLogbookCsvOutputs(
 			),
 		];
 		const descriptorLines = [
-			"sentence_markdown,normalizedSurface,surfaceKind,family,kind",
+			"sentence_markdown,normalizedSurface,grundform,family,kind",
 			...attestationsForLanguage.map((attestation) => {
-				const language = attestation.entity.surface.lemma.language;
-				const languageApi = getLanguageApi(language);
-				const descriptorFields = String(
-					languageApi.describe.asCsv.attestation(
-						attestation.entity as never,
-					),
-				).split(",");
-				const [
-					_entityKind,
-					_descriptorLanguage,
-					surfaceKind,
-					family,
-					kind,
-				] = descriptorFields;
-
-				if (
-					surfaceKind === undefined ||
-					family === undefined ||
-					kind === undefined
-				) {
-					throw new Error(
-						`Unexpected descriptor CSV shape for ${attestationSemanticSourcePath(attestation)}.`,
-					);
-				}
+				const { family, kind } = attestation.entity.surface.lemma;
 
 				return [
 					csvCell(
 						sentenceMarkdownCsvValue(attestation.sentenceMarkdown),
 					),
 					csvCell(attestation.entity.surface.normalizedSurface),
-					csvCell(surfaceKind),
+					csvCell(grundformLabel(attestation.entity.surface)),
 					csvCell(family),
 					csvCell(kind),
 				].join(",");

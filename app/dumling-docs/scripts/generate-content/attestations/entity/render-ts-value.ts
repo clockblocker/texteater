@@ -26,7 +26,7 @@ export function renderTsValue(value: unknown, indent = 0): string {
 		return `{\n${entries
 			.map(
 				([key, entryValue]) =>
-					`${childIndentation}${key}: ${renderTsValue(
+					`${childIndentation}${/^[A-Za-z_$][\w$]*$/u.test(key) ? key : JSON.stringify(key)}: ${renderTsValue(
 						entryValue,
 						indent + 1,
 					)},`,

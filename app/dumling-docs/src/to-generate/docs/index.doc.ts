@@ -74,8 +74,7 @@ It does not model syntactic dependency relations, phrase structure, or sentence-
 
 The scope is narrower: connect attested evidence to a Surface and its Lemma,
 then describe that grammatical chain in a stable, language-aware shape.
-Dumling also owns the foundational Reading DTO, schema, value equality, and
-stable tuple-derived identity operation. Applications and dictionary modules
+Dumling owns the foundational Reading value and validation. Applications and dictionary modules
 own learner-scoped Reading records, selection, persistence, and workflows.
 
 ## Runtime Scope
@@ -86,7 +85,7 @@ The current implemented runtime languages are:
 - \`de\`: German
 - \`he\`: Hebrew
 
-The language inventory is curated by the package. Consumers can choose a supported language dynamically with \`getLanguageApi(language)\`, but arbitrary user-defined language packs are not part of the public runtime API.
+The language inventory is curated by the package. Use \`parseUnit\` to validate supported units from their coordinates. Arbitrary user-defined language packs are not part of the public runtime API.
 `,
 });
 

@@ -5,9 +5,8 @@ const document = defineGeneratedDocPage({
 	order: 110,
 	title: "German",
 	body: `
-German is available operationally at \`dumling.de\` and \`getLanguageApi("de")\`.
-The route-specific Zod tree is the roughly-100-MiB danger-zone
-\`dangerouslyHeavySchemasForAbout100MiBRss.de\`.
+German units use \`language: "de"\`. Validate them with \`parseUnit\`
+and import concrete schemas from \`dumling/schema/de/<family>/<kind-name>\`.
 
 ## Public Classification Tree
 
@@ -49,9 +48,12 @@ German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal 
 ## Example
 
 \`\`\`ts
-import { dumling } from "dumling-old";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 
-const seeLemma = dumling.de.create.lemma({
+const seeLemma = {
+\tunitKind: "Lemma",
+\tlanguage: "de",
 \tcanonicalForm: "See",
 \tfamily: "Lexeme",
 \tkind: "NOUN",
@@ -59,9 +61,11 @@ const seeLemma = dumling.de.create.lemma({
 \t\tgender: "Masc",
 \t\thyph: null,
 \t},
-});
+} satisfies Dumling.Lemma<"de", "Lexeme", "NOUN">;
 
-const seenSurface = dumling.de.create.surface.inflection({
+const seenSurface = {
+\tunitKind: "Surface",
+\tlanguage: "de",
 \tlemma: seeLemma,
 \tnormalizedSurface: "Seen",
 \tspelling: "Canonical",
@@ -70,60 +74,67 @@ const seenSurface = dumling.de.create.surface.inflection({
 \t\tnumber: "Plur",
 \t},
 \tsurfaceFeatures: null,
-});
+} satisfies Dumling.Surface<"de", "Lexeme", "NOUN">;
 
-const seenAttestation = dumling.de.create.attestation({
+const seenAttestation = {
+\tunitKind: "Attestation",
 \tmembers: [{ attested: "Seen", orthography: "Standard" }],
 \trealizationCoverage: "Full",
 \tsurface: seenSurface,
-});
+} satisfies Dumling.Attestation<"de">;
 
-dumling.de.parse.attestation(seenAttestation);
+parseUnit(seenAttestation);
 \`\`\`
 
 German fusion example:
 
 \`\`\`ts
-const zumLemma = dumling.de.create.lemma({
+const zumLemma = {
+\tunitKind: "Lemma",
+\tlanguage: "de",
 \tcanonicalForm: "zum",
 \tfamily: "Construction",
 \tkind: "Fusion",
 \tcoreFeatures: {},
-});
+} satisfies Dumling.Lemma<"de", "Construction", "Fusion">;
 
-const zumAttestation = dumling.de.create.attestation({
+const zumAttestation = {
+\tunitKind: "Attestation",
 \tmembers: [{ attested: "zum", orthography: "Standard" }],
 \trealizationCoverage: "Full",
-\tsurface: dumling.de.convert.lemma.toSurface(zumLemma),
-});
+\tsurface: { unitKind: "Surface", language: "de", lemma: zumLemma, normalizedSurface: zumLemma.canonicalForm, spelling: "Canonical", surfaceFeatures: null },
+} satisfies Dumling.Attestation<"de">;
 \`\`\`
 
 German multi-member Lexeme example:
 
 \`\`\`ts
-const umZuLemma = dumling.de.create.lemma({
+const umZuLemma = {
+\tunitKind: "Lemma",
+\tlanguage: "de",
 \tcanonicalForm: "um zu",
 \tfamily: "Lexeme",
 \tkind: "SCONJ",
 \tcoreFeatures: { conjType: null },
-});
+} satisfies Dumling.Lemma<"de", "Lexeme", "SCONJ">;
 
-const umZuAttestation = dumling.de.create.attestation({
+const umZuAttestation = {
+\tunitKind: "Attestation",
 \tmembers: [
 \t	{ attested: "um", orthography: "Standard" },
 \t	{ attested: "zu", orthography: "Standard" },
 \t],
 \trealizationCoverage: "Full",
-\tsurface: dumling.de.convert.lemma.toSurface(umZuLemma),
-});
+\tsurface: { unitKind: "Surface", language: "de", lemma: umZuLemma, normalizedSurface: umZuLemma.canonicalForm, spelling: "Canonical", surfaceFeatures: null },
+} satisfies Dumling.Attestation<"de">;
 \`\`\`
 
-## Schema Access
+## Schema access
 
 \`\`\`ts
-dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
-dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.SCONJ();
-dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Construction.Fusion();
+import { lemmaSchema } from "dumling/schema/de/lexeme/noun";
+
+const formSchema = lemmaSchema.shape.canonicalForm;
 \`\`\`
 `,
 });

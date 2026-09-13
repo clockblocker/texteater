@@ -1,27 +1,9 @@
 import { expect, test } from "bun:test";
-import { dumling } from "dumling-old";
 import {
 	attestationSlugForEntity,
 	attestationSlugForSource,
 } from "../scripts/generate-content/attestations/entity/attestation-slug";
-
-const lemma = dumling.en.create.lemma({
-	canonicalForm: "walk",
-	family: "Lexeme",
-	kind: "VERB",
-	coreFeatures: {
-		abbr: null,
-		extPos: null,
-		hasGovPrep: null,
-		phrasal: null,
-		style: null,
-	},
-});
-const surface = dumling.en.convert.lemma.toSurface(lemma);
-const attestation = dumling.en.convert.surface.toAttestation(surface, {
-	members: [{ attested: "walk", orthography: "Standard" }],
-	realizationCoverage: "Full",
-});
+import { attestation, lemma, surface } from "./fixtures";
 
 test("identity-addressed attestation routes remain filesystem safe", () => {
 	const lemmaSlug = attestationSlugForEntity(lemma);
@@ -66,4 +48,20 @@ test("occurrence routes are stable when the linked Attestation changes", () => {
 			entity: { ...attestation, realizationCoverage: "Partial" },
 		}),
 	);
+});
+
+test("docs structural slugs normalize forms and ignore object insertion order", () => {
+	expect(
+		attestationSlugForEntity({ ...lemma, canonicalForm: " walk " }),
+	).toBe(attestationSlugForEntity(lemma));
+	expect(
+		attestationSlugForEntity({
+			coreFeatures: lemma.coreFeatures,
+			kind: lemma.kind,
+			family: lemma.family,
+			canonicalForm: lemma.canonicalForm,
+			language: lemma.language,
+			unitKind: lemma.unitKind,
+		}),
+	).toBe(attestationSlugForEntity(lemma));
 });

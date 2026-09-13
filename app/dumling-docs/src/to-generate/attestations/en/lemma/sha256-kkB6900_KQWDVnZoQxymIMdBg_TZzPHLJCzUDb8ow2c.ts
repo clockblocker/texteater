@@ -1,6 +1,7 @@
-import type { Lemma } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export const runLemma = {
+	unitKind: "Lemma",
 	language: "en",
 	canonicalForm: "run",
 	family: "Lexeme",
@@ -12,7 +13,7 @@ export const runLemma = {
 		phrasal: null,
 		style: null,
 	},
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
 export const attestation = {
 	lemma: runLemma,

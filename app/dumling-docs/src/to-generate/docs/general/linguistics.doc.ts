@@ -37,12 +37,11 @@ The Surface always contains a \`Lemma\`. It owns:
 - \`spelling\`: \`Canonical\` or a licensed \`Variant\`, such as \`armor\` / \`armour\`
 - inflectional features and Lemma identity
 
-There are two surface kinds:
-
-- \`Citation\`: the Surface realizes the Lemma's canonical form
-- \`Inflection\`: the surface is an inflected form of the Lemma
-
-Inflection surfaces carry \`inflectionalFeatures\`, such as number, case, tense, person, gender, degree, definiteness, or verb form, depending on the language and Lemma kind.
+Routes with represented inflection carry nullable \`inflectionalFeatures\`,
+such as number, case, tense, person or verb form. \`checkIfGrundform\` assesses
+whether a Surface realizes its Lemma's canonical grammar and spelling. It
+returns an assessment error when the supplied evidence cannot establish that
+distinction; there is no stored Surface-kind tag.
 
 ## Attestation
 
@@ -81,10 +80,10 @@ IDs, click indices, and marked context belong to the calling application.
 
 A \`Reading\` is Dumling's foundational semantic value:
 
-\`Reading = { lemma, emojiDescription }\`
+\`Reading = { unitKind: "Reading", lemma, emojiDescription }\`
 
 The same Lemma may participate in several Readings. Dumling owns the Reading
-DTO, schema, value equality, and stable tuple-derived identity operation. A
+value and validation. A
 dictionary establishes the learner or hosted scope and owns Reading records,
 candidate lookup, selection, persistence, and workflows.
 

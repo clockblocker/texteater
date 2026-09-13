@@ -5,9 +5,8 @@ const document = defineGeneratedDocPage({
 	order: 100,
 	title: "English",
 	body: `
-English is available operationally at \`dumling.en\` and \`getLanguageApi("en")\`.
-The route-specific Zod tree is the roughly-100-MiB danger-zone
-\`dangerouslyHeavySchemasForAbout100MiBRss.en\`.
+English units use \`language: "en"\`. Validate them with \`parseUnit\`
+and import concrete schemas from \`dumling/schema/en/<family>/<kind-name>\`.
 
 ## Supported Lemma Families
 
@@ -20,7 +19,7 @@ English supports the same public Lemma families as the other implemented languag
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 | \`Construction\` | \`Fusion\` |
 
-\`Construction\` is part of the shared public ontology even though the English examples here focus on lexemes, morphemes, and phrasemes. Construction Lemmas are citation-only and currently featureless.
+\`Construction\` is part of the shared public ontology even though the English examples here focus on lexemes, morphemes, and phrasemes. Construction/Fusion currently has no core or inflectional feature distinctions.
 
 ## Common Feature Areas
 
@@ -42,18 +41,20 @@ Lemma and Surface attestations are generated from files under
 \`lemma/\` and \`surface/\`. Occurrence evidence lives under
 \`attestation/{sentence}/\`; its bracketed sentence is docs-only review context.
 
-- [English attestation routes](/en/attestation/)
-- [run](/en/lemma/djIsbCxlbixlbnRyeV9aX1A3OFpmYUdnU0k0TEh0QXA/)
-- [book](/en/lemma/djIsbCxlbixlbnRyeV9tZnhsMGp4WnU1MWJ6a3VTa2M/)
-- [ran](/en/surface/djIscyxlbixpLHJhbixudT1zfHBlPXAxfHRlPXB8dmY9ZixlbnRyeV9aX1A3OFpmYUdnU0k0TEh0QXA/)
-- [books](/en/surface/djIscyxlbixpLGJvb2tzLG51PXAsZW50cnlfbWZ4bDBqeFp1NTFiemt1U2tj/)
+- [run](/en/lemma/sha256-kkB6900_KQWDVnZoQxymIMdBg_TZzPHLJCzUDb8ow2c/)
+- [book](/en/lemma/sha256-peGvpmPHvQCiqFBFNZbi36hUDI0f8IJAoerjb926bKI/)
+- [books](/en/surface/sha256-8jDh8y4Qj8_7roYVkECdSfRIIvJEb0rnUemOhPMh84U/)
+- [ran](/en/surface/sha256-jo34mLdUJMakhkq3JxExLTwq4CxSIJH4Hr86SrcAXuU/)
 
 ## Example
 
 \`\`\`ts
-import { dumling } from "dumling-old";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 
-const runLemma = dumling.en.create.lemma({
+const runLemma = {
+\tunitKind: "Lemma",
+\tlanguage: "en",
 \tcanonicalForm: "run",
 \tfamily: "Lexeme",
 \tkind: "VERB",
@@ -64,9 +65,11 @@ const runLemma = dumling.en.create.lemma({
 \t\tphrasal: null,
 \t\tstyle: null,
 \t},
-});
+} satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
-const ranSurface = dumling.en.create.surface.inflection({
+const ranSurface = {
+\tunitKind: "Surface",
+\tlanguage: "en",
 \tlemma: runLemma,
 \tnormalizedSurface: "ran",
 \tspelling: "Canonical",
@@ -79,20 +82,24 @@ const ranSurface = dumling.en.create.surface.inflection({
 \t\tvoice: null,
 \t},
 \tsurfaceFeatures: null,
-});
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
-const ranAttestation = dumling.en.convert.surface.toAttestation(ranSurface, {
+const ranAttestation = {
+\tunitKind: "Attestation",
+\tsurface: ranSurface,
 \tmembers: [{ attested: "ran", orthography: "Standard" }],
 \trealizationCoverage: "Full",
-});
+} satisfies Dumling.Attestation<"en">;
 
-dumling.en.parse.attestation(ranAttestation);
+parseUnit(ranAttestation);
 \`\`\`
 
-## Schema Access
+## Schema access
 
 \`\`\`ts
-dangerouslyHeavySchemasForAbout100MiBRss.en.entity.Lemma.Lexeme.VERB();
+import { lemmaSchema } from "dumling/schema/en/lexeme/verb";
+
+const formSchema = lemmaSchema.shape.canonicalForm;
 \`\`\`
 `,
 });

@@ -1,115 +1,65 @@
 import { defineGeneratedDocPage } from "../../../lib/docs/source-mirrored-doc-pages.ts";
 
-const document = defineGeneratedDocPage({
-	description: "The core dumling DTO model.",
-	order: 20,
+export default defineGeneratedDocPage({
 	title: "Model",
+	order: 20,
+	description: "Dumling units and grammatical evidence.",
 	body: `
-The public Dumling model is built around three hydrated DTOs:
-
-- \`Lemma\`: the normalized grammatical identity
-- \`Surface\`: the normalized form resolved from the attested text
-- \`Attestation\`: click-independent evidence for one observed occurrence
-
-Attestations are always hydrated:
-
-- an \`Attestation\` always contains a \`Surface\`
-- a \`Surface\` always contains a \`Lemma\`
+Dumling has four tagged units. A Lemma identifies grammar, a Reading pairs a
+Lemma with an Emoji Description, a Surface describes a realization, and an
+Attestation records occurrence evidence.
 
 ## Lemma
 
 <!-- DOC_BLOCK:core-lemma -->
 
-A Lemma owns its \`language\`, \`canonicalForm\`, \`family\`, \`kind\`, and
-\`coreFeatures\`. Together these fields are grammatical identity. There is no
-separate opaque identity layered above the Lemma.
-
-Grammatically indistinguishable homonyms share one Lemma. Semantic identity is
-a Reading—the pair of a Lemma and an emoji description. Dumling owns that
-foundational value and its equality and identity operations; dictionary scope,
-records, and workflows belong to consumers.
+A Lemma has \`unitKind: "Lemma"\`, \`language\`, \`family\`, \`kind\`, \`canonicalForm\`,
+and \`coreFeatures\`. These fields distinguish grammatical identities.
+Grammatically indistinguishable homonyms share one Lemma. Their Readings may
+have different Emoji Descriptions.
 
 ## Surface
 
 <!-- DOC_BLOCK:core-surface -->
 
-A citation surface uses \`surfaceKind: "Citation"\`. Every Surface also owns
-\`spelling: "Canonical" | "Variant"\`.
+A Surface has \`unitKind: "Surface"\`, its Lemma, \`language\`, \`normalizedSurface\`,
+\`spelling\`, and \`surfaceFeatures\`. Routes that represent inflection also have
+nullable \`inflectionalFeatures\`. A marked feature bag contains at least one
+non-null value; null means no marked features were supplied.
 
-Marked properties of the resolved surface live in \`surfaceFeatures\`. For example, a historical citation or inflection can carry \`surfaceFeatures: { historicalStatus: "Archaic" }\`.
+\`checkIfGrundform(surface)\` assesses canonical realization from spelling and
+grammar. It returns a boolean on success or an assessment error when evidence
+is missing, ambiguous, or unrepresentable. Matching spelling alone does not
+establish Grundform. For example, English past-tense *read* has the same spelling
+as its infinitive.
 
-Construction Lemmas are citation-only today, so \`Construction/Fusion\` only appears under \`Surface<Citation>\` and never under \`Surface<Inflection>\`. Multi-member Lexemes follow the surface policy of their whole-unit POS.
+German PRON case, number and gender belong to Lemma identity. Contextual
+reflexiveness belongs to the Surface's inflectional features.
 
-An inflection surface uses \`surfaceKind: "Inflection"\` and adds \`inflectionalFeatures\`:
+## Reading
 
-\`\`\`ts
-const ranSurface = dumling.en.create.surface.inflection({
-\tlemma: runLemma,
-\tnormalizedSurface: "ran",
-\tspelling: "Canonical",
-\tinflectionalFeatures: {
-\t\ttense: "Past",
-\t\tverbForm: "Fin",
-\t},
-});
-\`\`\`
+A Reading has \`unitKind: "Reading"\`, a \`lemma\`, and an \`emojiDescription\` of
+one to four emoji graphemes. Dictionary scope, persistence and identity keys
+belong to consumers.
 
 ## Attestation
 
 <!-- DOC_BLOCK:core-attestation -->
 
-An Attestation records a non-empty, source-ordered tuple of exact member strings
-and per-member orthography evidence, plus \`Full | Partial\` realization coverage.
-It links exactly one Surface. It contains no sentence ID, click, segment index,
-marked context, identity, or persistence contract.
+An Attestation has \`unitKind: "Attestation"\`, a Surface, a non-empty ordered
+\`members\` tuple, and \`realizationCoverage: "Full" | "Partial"\`. Each member
+records exact \`attested\` text and \`orthography: "Standard" | "Typo"\`.
+Sentences and clicks belong to the consuming application.
 
-## Descriptors
+## Validation and routing
 
-Descriptors are compact structural summaries of DTOs. They are useful when code needs to route by entity kind, language, Lemma family and kind, or Surface kind without carrying the whole object through the branch.
+\`parseUnit(input)\` normalizes a complete unit and returns either
+\`{ success: true, chain }\` or \`{ success: false, error }\`. The chain contains
+\`unitKind\`, \`language\`, \`family\`, \`kind\`, and the validated \`value\`.
+Supplying a complete expected route narrows the result and rejects mismatches.
 
-\`\`\`ts
-const descriptor = dumling.de.describe.as.attestation(seeAttestation);
-
-descriptor.entityKind; // "Attestation"
-descriptor.language; // "de"
-descriptor.family; // "Lexeme"
-descriptor.kind; // "NOUN"
-descriptor.surfaceKind; // "Citation"
-\`\`\`
-
-## IDs
-
-IDs are compact identity keys for Lemmas and Surfaces. Attestations deliberately
-have no ID codec:
-
-\`\`\`ts
-const id = dumling.de.id.encode.asBase64Url(seeAttestation.surface);
-const decoded = dumling.de.id.decode.asSurfaceIdentity(id);
-\`\`\`
-
-Lemma identity is its complete grammatical tuple: language, canonical form,
-family, kind, and core features. Attestation route slugs in this docs site are
-opaque docs-local structural hashes, not Dumling identities.
-
-## Runtime Validation
-
-Parsing returns an \`ApiResult\` instead of throwing:
-
-\`\`\`ts
-const parsed = dumling.de.parse.attestation(input);
-
-if (!parsed.success) {
-\tconsole.error(parsed.error.code, parsed.error.issues);
-}
-\`\`\`
-
-Route-specific Zod schema access is an expensive schema-authoring escape hatch,
-not the application-validation interface:
-
-\`\`\`ts
-dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Attestation.Citation.Lexeme.NOUN().parse(value);
-\`\`\`
+[The API page](/general/api/) shows runtime validation and schema composition.
+Docs occurrence slugs identify their sentence wrappers; changing the linked
+Attestation does not change the occurrence route.
 `,
 });
-
-export default document;

@@ -1,10 +1,11 @@
 import { relative } from "node:path";
-import type { EntityKind } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { sourceAttestationsDir } from "../../shared/paths";
 
 export function expectedEntityKindForPath(
 	sourcePath: string,
-): EntityKind | undefined {
+): Dumling.UnitKind | undefined {
 	const [, kindDirectory] = relative(sourceAttestationsDir, sourcePath).split(
 		/[\\/]/u,
 	);

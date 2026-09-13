@@ -1,6 +1,7 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 const occurrenceAttestation = {
+	unitKind: "Attestation",
 	members: [
 		{
 			attested: "#",
@@ -9,11 +10,14 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	surface: {
+		unitKind: "Surface",
+		inflectionalFeatures: null,
 		language: "en",
 		normalizedSurface: "#",
 		spelling: "Canonical",
-		surfaceKind: "Citation",
+
 		lemma: {
+			unitKind: "Lemma",
 			language: "en",
 			canonicalForm: "number sign",
 			family: "Lexeme",
@@ -25,7 +29,7 @@ const occurrenceAttestation = {
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"en", "Citation", "Lexeme", "SYM">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "SYM">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,

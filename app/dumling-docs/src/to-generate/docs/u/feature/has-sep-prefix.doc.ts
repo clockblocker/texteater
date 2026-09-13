@@ -42,7 +42,7 @@ An attached form is one member; a detached realization contributes both its stem
 		{
 			heading: "Current Dumling support",
 			body: `
-Current concrete Dumling schemas expose \`hasSepPrefix\` in the German pack on [\`VERB\`](/lang/de/entity/lemma/lexeme/verb/) Lemmas and on German [\`Prefix\`](/lang/de/entity/lemma/morpheme/prefix/) morpheme Lemmas.
+Current concrete Dumling schemas expose \`hasSepPrefix\` in the German pack on [\`VERB\`](/de/entity/lemma/lexeme/verb/) Lemmas and on German [\`Prefix\`](/de/entity/lemma/morpheme/prefix/) morpheme Lemmas.
 `,
 		},
 	],

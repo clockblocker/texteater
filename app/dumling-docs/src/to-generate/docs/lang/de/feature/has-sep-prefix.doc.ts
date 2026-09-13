@@ -18,7 +18,7 @@ const document = defineLanguageOverlayPage({
 	body: `
 In German, \`HasSepPrefix\` is used on Lemmas whose lexical analysis includes a separable verbal prefix.
 
-The current German concrete schema exposes this feature on [\`VERB\`](/lang/de/entity/lemma/lexeme/verb/) Lemmas and on German [\`Prefix\`](/lang/de/entity/lemma/morpheme/prefix/) morpheme Lemmas. The value is the prefix string itself, such as \`"auf"\`, \`"mit"\`, or \`"hinaus"\`.
+The current German concrete schema exposes this feature on [\`VERB\`](/de/entity/lemma/lexeme/verb/) Lemmas and on German [\`Prefix\`](/de/entity/lemma/morpheme/prefix/) morpheme Lemmas. The value is the prefix string itself, such as \`"auf"\`, \`"mit"\`, or \`"hinaus"\`.
 
 German attestations in this repository show the feature across multiple surface patterns:
 

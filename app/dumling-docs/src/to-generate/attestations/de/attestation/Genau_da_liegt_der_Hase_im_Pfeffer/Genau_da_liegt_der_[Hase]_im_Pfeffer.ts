@@ -1,6 +1,7 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 const occurrenceAttestation = {
+	unitKind: "Attestation",
 	members: [
 		{
 			attested: "da",
@@ -29,11 +30,14 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	surface: {
+		unitKind: "Surface",
+		inflectionalFeatures: null,
 		language: "de",
 		normalizedSurface: "da liegt der hase im pfeffer",
 		spelling: "Canonical",
-		surfaceKind: "Citation",
+
 		lemma: {
+			unitKind: "Lemma",
 			language: "de",
 			canonicalForm: "da liegt der Hase im Pfeffer",
 			family: "Phraseme",
@@ -42,7 +46,7 @@ const occurrenceAttestation = {
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Citation", "Phraseme", "Idiom">;
+} satisfies Dumling.Attestation<"de", "Phraseme", "Idiom">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,

@@ -1,10 +1,11 @@
-import type { Surface } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export const ranSurface = {
+	unitKind: "Surface",
 	language: "en",
 	normalizedSurface: "ran",
 	spelling: "Canonical",
-	surfaceKind: "Inflection",
+
 	inflectionalFeatures: {
 		mood: null,
 		number: "Sing",
@@ -15,6 +16,7 @@ export const ranSurface = {
 	},
 	surfaceFeatures: null,
 	lemma: {
+		unitKind: "Lemma",
 		language: "en",
 		canonicalForm: "run",
 		family: "Lexeme",
@@ -27,7 +29,7 @@ export const ranSurface = {
 			style: null,
 		},
 	},
-} satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 export const attestation = {
 	order: 39,

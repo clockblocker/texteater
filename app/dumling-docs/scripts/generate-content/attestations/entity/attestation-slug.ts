@@ -1,28 +1,26 @@
 import { createHash } from "node:crypto";
-import { getLanguageApi } from "dumling-old";
-import type { EntityValue } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+import { structuralIdentity } from "../../../../src/lib/unit-presentation";
+
 import { isAttestation } from "./guards";
-import { lemmaForEntity } from "./helpers";
 
 /** A filesystem-safe projection of structural identity, not a domain ID. */
-export function attestationSlugForEntity(entity: EntityValue): string {
+export function attestationSlugForEntity(
+	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation,
+): string {
 	if (isAttestation(entity)) {
 		throw new Error(
 			"Attestation routes require docs-owned occurrence wrapper evidence.",
 		);
 	}
-	const language = lemmaForEntity(entity).language;
-	const structuralIdentity = String(
-		getLanguageApi(language).id.encode.asCsv(entity),
-	);
 	const digest = createHash("sha256")
-		.update(structuralIdentity)
+		.update(structuralIdentity(entity))
 		.digest("base64url");
 	return `sha256-${digest}`;
 }
 
 export function attestationSlugForSource(source: {
-	entity: EntityValue;
+	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation;
 	sentenceMarkdown?: string;
 }): string {
 	if (!isAttestation(source.entity)) {

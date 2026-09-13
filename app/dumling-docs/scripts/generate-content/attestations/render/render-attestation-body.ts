@@ -12,7 +12,7 @@ import { typeExpressionForEntity } from "./type-expression";
 
 export function renderAttestationBody(
 	source: AttestationSource,
-	identityCsv?: string,
+	identity?: string,
 ): string {
 	const entity = source.entity;
 	const kind = entityKindFor(entity);
@@ -25,10 +25,9 @@ export function renderAttestationBody(
 	const variableBase = camelCaseIdentifier(displayName, "attested");
 	const entityVariable = `${variableBase}${kind}`;
 	const identityBlock =
-		identityCsv === undefined
+		identity === undefined
 			? ""
-			: `\nexport const ${entityVariable}IdentityCsv =\n\t${JSON.stringify(identityCsv)} as const;\n`;
-	const importType = typeExpressionForEntity(entity).split("<", 1)[0];
+			: `\nexport const ${entityVariable}Identity =\n\t${JSON.stringify(identity)} as const;\n`;
 	const title = source.title ?? displayName;
 	const sentenceBlock =
 		source.sentenceMarkdown === undefined
@@ -38,7 +37,7 @@ export function renderAttestationBody(
 	return `# ${languageLabelFor(lemma.language)} attestation: ${title}
 ${sentenceBlock}
 \`\`\`ts
-import type { ${importType} } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export const ${entityVariable} = ${renderTsValue(entity)} satisfies ${typeExpressionForEntity(entity)};
 

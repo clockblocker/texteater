@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { runCodegen } from "codegen";
-import { getLanguageApi } from "dumling-old";
+import { structuralIdentity } from "../../../src/lib/unit-presentation";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
 import { generatedEntitiesDir } from "../shared/paths";
 import type { OccurrenceAttestationSource, SourcePage } from "../shared/types";
@@ -39,7 +39,6 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 		const source = await loadAttestationSource(sourcePath);
 		validateOccurrenceAttestation(source);
 		const language = lemmaForEntity(source.entity).language;
-		const languageApi = getLanguageApi(language);
 		const attestationSlug = attestationSlugForSource(source);
 		const entityKind =
 			entityKindFor(source.entity) === "Lemma"
@@ -53,7 +52,7 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 			source,
 			entityKind === "attestation"
 				? undefined
-				: String(languageApi.id.encode.asCsv(source.entity as never)),
+				: structuralIdentity(source.entity),
 		);
 
 		outputs.push({

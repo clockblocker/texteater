@@ -1,6 +1,7 @@
-import type { Lemma } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export const bookLemma = {
+	unitKind: "Lemma",
 	language: "en",
 	canonicalForm: "book",
 	family: "Lexeme",
@@ -13,7 +14,7 @@ export const bookLemma = {
 		numType: null,
 		style: null,
 	},
-} satisfies Lemma<"en", "Lexeme", "NOUN">;
+} satisfies Dumling.Lemma<"en", "Lexeme", "NOUN">;
 
 export const attestation = {
 	lemma: bookLemma,

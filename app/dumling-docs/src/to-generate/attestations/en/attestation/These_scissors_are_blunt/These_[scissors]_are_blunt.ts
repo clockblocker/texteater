@@ -1,6 +1,7 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 const occurrenceAttestation = {
+	unitKind: "Attestation",
 	members: [
 		{
 			attested: "scissors",
@@ -9,14 +10,16 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	surface: {
+		unitKind: "Surface",
 		language: "en",
 		normalizedSurface: "scissors",
 		spelling: "Canonical",
-		surfaceKind: "Inflection",
+
 		inflectionalFeatures: {
 			number: "Ptan",
 		},
 		lemma: {
+			unitKind: "Lemma",
 			language: "en",
 			canonicalForm: "scissors",
 			family: "Lexeme",
@@ -32,7 +35,7 @@ const occurrenceAttestation = {
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"en", "Inflection", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,

@@ -1,4 +1,5 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { Prettify } from "../../../helper-types";
 
 export type DocPageMeta = {
@@ -15,7 +16,7 @@ export const languageOverlayPageMarker = "language-overlay-page";
 
 /** Docs-owned review context around a fleeting Dumling Attestation. */
 export type AttestedAttestation = Readonly<{
-	attestation: Attestation;
+	attestation: Dumling.Attestation;
 	classifierNotes?: string;
 	classificationMistakes?: string;
 	isVerified?: true;

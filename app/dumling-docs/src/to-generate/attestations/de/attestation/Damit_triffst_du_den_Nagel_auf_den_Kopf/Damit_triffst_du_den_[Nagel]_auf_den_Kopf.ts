@@ -1,6 +1,7 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 const occurrenceAttestation = {
+	unitKind: "Attestation",
 	members: [
 		{
 			attested: "den",
@@ -25,11 +26,14 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	surface: {
+		unitKind: "Surface",
+		inflectionalFeatures: null,
 		language: "de",
 		normalizedSurface: "den nagel auf den kopf",
 		spelling: "Canonical",
-		surfaceKind: "Citation",
+
 		lemma: {
+			unitKind: "Lemma",
 			language: "de",
 			canonicalForm: "den Nagel auf den Kopf treffen",
 			family: "Phraseme",
@@ -38,7 +42,7 @@ const occurrenceAttestation = {
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Citation", "Phraseme", "Idiom">;
+} satisfies Dumling.Attestation<"de", "Phraseme", "Idiom">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,

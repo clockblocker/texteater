@@ -1,27 +1,10 @@
 import { expect, test } from "bun:test";
-import { dumling } from "dumling-old";
 import { isAttestation } from "../scripts/generate-content/attestations/entity/guards";
 import { validateOccurrenceAttestation } from "../scripts/generate-content/attestations/validate/validate-occurrence-attestation";
 import type { AttestationSource } from "../scripts/generate-content/shared/types";
+import { attestation } from "./fixtures";
 
-const lemma = dumling.en.create.lemma({
-	canonicalForm: "walk",
-	family: "Lexeme",
-	kind: "VERB",
-	coreFeatures: {
-		abbr: null,
-		extPos: null,
-		hasGovPrep: null,
-		phrasal: null,
-		style: null,
-	},
-});
-const surface = dumling.en.convert.lemma.toSurface(lemma);
-const valid = dumling.en.create.attestation({
-	members: [{ attested: "walk", orthography: "Standard" }],
-	realizationCoverage: "Full",
-	surface,
-});
+const valid = attestation;
 
 function source(entity: unknown): AttestationSource {
 	return {

@@ -5,9 +5,8 @@ const document = defineGeneratedDocPage({
 	order: 120,
 	title: "Hebrew",
 	body: `
-Hebrew is available operationally at \`dumling.he\` and \`getLanguageApi("he")\`.
-The route-specific Zod tree is the roughly-100-MiB danger-zone
-\`dangerouslyHeavySchemasForAbout100MiBRss.he\`.
+Hebrew units use \`language: "he"\`. Validate them with \`parseUnit\`
+and import concrete schemas from \`dumling/schema/he/<family>/<kind-name>\`.
 
 ## Supported Lemma Families
 
@@ -18,7 +17,7 @@ The route-specific Zod tree is the roughly-100-MiB danger-zone
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 | \`Construction\` | \`Fusion\` |
 
-\`Construction\` is part of the shared public ontology even though the Hebrew examples here focus on lexemes, morphemes, and phrasemes. Construction Lemmas are citation-only and currently featureless.
+\`Construction\` is part of the shared public ontology even though the Hebrew examples here focus on lexemes, morphemes, and phrasemes. Construction/Fusion currently has no core or inflectional feature distinctions.
 
 ## Common Feature Areas
 
@@ -35,9 +34,12 @@ Hebrew gender values are scoped to \`Fem\` and \`Masc\`. Hebrew noun number supp
 ## Example
 
 \`\`\`ts
-import { dumling } from "dumling-old";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 
-const katavLemma = dumling.he.create.lemma({
+const katavLemma = {
+\tunitKind: "Lemma",
+\tlanguage: "he",
 \tcanonicalForm: "כתב",
 \tfamily: "Lexeme",
 \tkind: "VERB",
@@ -45,9 +47,11 @@ const katavLemma = dumling.he.create.lemma({
 \t\thebBinyan: "PAAL",
 \t\thebExistential: null,
 \t},
-});
+} satisfies Dumling.Lemma<"he", "Lexeme", "VERB">;
 
-const katavSurface = dumling.he.create.surface.inflection({
+const katavSurface = {
+\tunitKind: "Surface",
+\tlanguage: "he",
 \tlemma: katavLemma,
 \tnormalizedSurface: "כתב",
 \tspelling: "Canonical",
@@ -63,20 +67,24 @@ const katavSurface = dumling.he.create.surface.inflection({
 \t\tvoice: null,
 \t},
 \tsurfaceFeatures: null,
-});
+} satisfies Dumling.Surface<"he", "Lexeme", "VERB">;
 
-const katavAttestation = dumling.he.convert.surface.toAttestation(katavSurface, {
+const katavAttestation = {
+\tunitKind: "Attestation",
+\tsurface: katavSurface,
 \tmembers: [{ attested: "כתב", orthography: "Standard" }],
 \trealizationCoverage: "Full",
-});
+} satisfies Dumling.Attestation<"he">;
 
-dumling.he.parse.attestation(katavAttestation);
+parseUnit(katavAttestation);
 \`\`\`
 
-## Schema Access
+## Schema access
 
 \`\`\`ts
-dangerouslyHeavySchemasForAbout100MiBRss.he.entity.Lemma.Lexeme.VERB();
+import { lemmaSchema } from "dumling/schema/he/lexeme/verb";
+
+const formSchema = lemmaSchema.shape.canonicalForm;
 \`\`\`
 `,
 });

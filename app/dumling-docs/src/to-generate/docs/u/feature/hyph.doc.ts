@@ -43,7 +43,7 @@ partial realization belongs to
 			body: `
 The abstract feature enum follows UD and exposes only \`Yes\`.
 
-Current concrete Dumling schemas expose \`hyph\` only as a core feature on German [\`NOUN\`](/u/entity/lemma/lexeme/noun/) and German [\`OTHER\`](/u/entity/lemma/lexeme/other/) lexemes.
+Current concrete Dumling schemas expose \`hyph\` only as a core feature on German [\`NOUN\`](/u/entity/lemma/lexeme/noun/) and German [\`X\`](/u/entity/lemma/lexeme/x/) lexemes.
 `,
 		},
 	],

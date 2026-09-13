@@ -1,44 +1,43 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
-const occurrenceAttestation: Attestation<"de", "Inflection", "Lexeme", "PRON"> =
-	{
-		members: [
-			{
-				attested: "Viele",
-				orthography: "Standard",
-			},
-		],
-		realizationCoverage: "Full",
-		surface: {
+const occurrenceAttestation: Dumling.Attestation<"de", "Lexeme", "PRON"> = {
+	unitKind: "Attestation",
+	members: [
+		{
+			attested: "Viele",
+			orthography: "Standard",
+		},
+	],
+	realizationCoverage: "Full",
+	surface: {
+		unitKind: "Surface",
+		language: "de",
+		normalizedSurface: "viele",
+		spelling: "Canonical",
+		inflectionalFeatures: null,
+		lemma: {
+			unitKind: "Lemma",
 			language: "de",
-			normalizedSurface: "viele",
-			spelling: "Canonical",
-			surfaceKind: "Inflection",
-			inflectionalFeatures: {
+			canonicalForm: "viele",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
+				pronType: "Ind",
+				extPos: null,
+				foreign: null,
+				person: null,
+				polite: null,
+				poss: null,
+				referenceNumber: null,
 				case: "Nom",
 				number: "Plur",
 				gender: null,
-				reflex: null,
+				"gender[psor]": null,
 			},
-			lemma: {
-				language: "de",
-				canonicalForm: "viel",
-				family: "Lexeme",
-				kind: "PRON",
-				coreFeatures: {
-					pronType: "Ind",
-					extPos: null,
-					foreign: null,
-					person: null,
-					polite: null,
-					poss: null,
-					referenceGender: null,
-					referenceNumber: null,
-				},
-			},
-			surfaceFeatures: null,
 		},
-	};
+		surfaceFeatures: null,
+	},
+};
 
 export const attestation = {
 	attestation: occurrenceAttestation,

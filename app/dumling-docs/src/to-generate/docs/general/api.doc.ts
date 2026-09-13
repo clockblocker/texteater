@@ -1,105 +1,61 @@
 import { defineGeneratedDocPage } from "../../../lib/docs/source-mirrored-doc-pages.ts";
 
-const document = defineGeneratedDocPage({
-	description: "Runtime API namespaces and package entrypoints.",
-	order: 30,
+export default defineGeneratedDocPage({
 	title: "API",
+	order: 30,
+	description:
+		"Runtime validation, structural types and concrete schema composition.",
 	body: `
-\`dumling\` exposes separate entrypoints for workflow operations, public types, and schemas.
-
-## Entrypoints
+Dumling separates runtime validation, public types and schema authoring.
 
 | Import path | Purpose |
 | --- | --- |
-| \`dumling\` | Runtime API |
-| \`dumling/types\` | Public DTOs, feature helpers, descriptors, API result types, and ID types |
-| \`dumling/schema\` | Broad Zod composition schemas |
-| \`dumling/dangerously-heavy-schema-tree\` | Route-specific schema tree; roughly 100 MiB max RSS |
+| \`dumling\` | \`parseUnit\`, \`checkIfGrundform\`, and error values |
+| \`dumling/types\` | Structural units and valid route coordinates |
+| \`dumling/schema/<language>/<family>/<kind-name>\` | Concrete composable Zod schemas |
 
-## Lemma → Surface → Attestation
-
-\`\`\`ts
-import { dumling } from "dumling-old";
-
-const runLemma = dumling.en.create.lemma({
-\tcanonicalForm: "run",
-\tfamily: "Lexeme",
-\tkind: "VERB",
-\tcoreFeatures: {
-\t\tabbr: null,
-\t\textPos: null,
-\t\thasGovPrep: null,
-\t\tphrasal: null,
-\t\tstyle: null,
-\t},
-});
-
-const ranSurface = dumling.en.create.surface.inflection({
-\tlemma: runLemma,
-\tnormalizedSurface: "ran",
-\tspelling: "Canonical",
-\tinflectionalFeatures: {
-\t\tmood: null,
-\t\tnumber: "Sing",
-\t\tperson: "1",
-\t\ttense: "Past",
-\t\tverbForm: "Fin",
-\t\tvoice: null,
-\t},
-\tsurfaceFeatures: null,
-});
-
-const ranAttestation = dumling.en.create.attestation({
-\tmembers: [{ attested: "ran", orthography: "Standard" }],
-\trealizationCoverage: "Full",
-\tsurface: ranSurface,
-});
-\`\`\`
-
-## Operations
-
-- \`create\` constructs strict DTOs and Lemma/Surface IDs.
-- \`convert.lemma.toSurface\` makes the canonical full citation Surface.
-- \`convert.*.toAttestation\` requires occurrence members and coverage.
-- \`extract.lemma\` retrieves the Lemma from any hydrated layer.
-- \`parse\` safely validates unknown input.
-- \`describe\` returns compact structural descriptors.
-
-## Identity IDs
+## Validate a unit
 
 \`\`\`ts
-const id = dumling.en.id.encode.asBase64Url(ranAttestation.surface);
-const decoded = dumling.en.id.decode.asSurfaceIdentity(id);
+import { parseUnit, checkIfGrundform } from "dumling";
 
-if (decoded.success) {
-\tdecoded.data.surfaceIdentity.normalizedSurface;
+declare const input: unknown;
+const parsed = parseUnit(input, {
+  unitKind: "Surface", language: "de", family: "Lexeme", kind: "NOUN",
+});
+if (parsed.success) {
+  const surface = parsed.chain.value;
+  const assessment = checkIfGrundform(surface);
+  if (assessment.success) {
+    console.log(assessment.value);
+  } else {
+    console.log(assessment.error.issues);
+  }
+} else {
+  console.log(parsed.error.issues);
 }
 \`\`\`
 
-Decoding returns identity keys, not a fabricated hydrated graph. Use
-\`asLemmaIdentity\` or \`asSurfaceIdentity\` when the expected layer is known.
-Attestations are intentionally absent from the ID API.
+Create units with object literals containing their \`unitKind\` and complete
+route-specific fields. Use \`satisfies Dumling.Lemma<"de", "Lexeme", "NOUN">\`
+with \`import type * as Dumling from "dumling/types"\` to check authored values.
 
-## Schemas
+See the [German](/lang/de/), [English](/lang/en/) and [Hebrew](/lang/he/) pages for complete examples.
+
+## Compose a concrete schema
 
 \`\`\`ts
-import { abstractSchemas, anyLemmaSchema, readingSchema } from "dumling-old/schema";
-import {
-	dangerouslyHeavySchemasForAbout100MiBRss,
-	getDangerouslyHeavySchemaTreeForAbout100MiBRss,
-} from "dumling-old/dangerously-heavy-schema-tree";
+import { lemmaSchema, surfaceSchema, readingSchema, attestationSchema }
+  from "dumling/schema/de/lexeme/noun";
 
-dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
-getDangerouslyHeavySchemaTreeForAbout100MiBRss("de");
-void abstractSchemas.entity.Attestation;
-void anyLemmaSchema;
-void readingSchema;
+const nounForm = lemmaSchema.pick({ canonicalForm: true });
+const coreFeatures = lemmaSchema.shape.coreFeatures;
+const withoutSpelling = surfaceSchema.omit({ spelling: true });
 \`\`\`
 
-The danger-zone import adds roughly 100 MiB max RSS. Application validation
-uses the lightweight \`parseAsLemma\`, \`parseAsSurface\`,
-\`parseAsAttestation\`, and \`parseAsReading\` interfaces instead.
+Each concrete module exports \`lemmaSchema\`, \`surfaceSchema\`, \`readingSchema\`
+and \`attestationSchema\`. These retain their Zod composition types. Operational
+and type-only imports are independent of Zod; import concrete schemas when
+authoring a schema rather than for ordinary runtime parsing.
 `,
 });
-
-export default document;

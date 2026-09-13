@@ -1,4 +1,5 @@
-import type { EntityValue } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { AttestationSource } from "../../shared/types";
 import { isEntityValue, isRecord } from "../entity/guards";
 
@@ -53,7 +54,10 @@ export function getWrappedAttestation(
 	return {
 		classifierNotes,
 		classificationMistakes,
-		entity: entityEntries[0]?.[1] as EntityValue,
+		entity: entityEntries[0]?.[1] as
+			| Dumling.Lemma
+			| Dumling.Surface
+			| Dumling.Attestation,
 		isVerified,
 		order,
 		sentenceMarkdown,

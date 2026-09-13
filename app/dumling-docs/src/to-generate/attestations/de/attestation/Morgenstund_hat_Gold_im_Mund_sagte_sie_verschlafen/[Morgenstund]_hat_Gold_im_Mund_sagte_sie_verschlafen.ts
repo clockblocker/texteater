@@ -1,6 +1,7 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 const occurrenceAttestation = {
+	unitKind: "Attestation",
 	members: [
 		{
 			attested: "Morgenstund",
@@ -25,11 +26,13 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	surface: {
+		unitKind: "Surface",
 		language: "de",
 		normalizedSurface: "morgenstund hat gold im mund",
 		spelling: "Canonical",
-		surfaceKind: "Citation",
+
 		lemma: {
+			unitKind: "Lemma",
 			language: "de",
 			canonicalForm: "Morgenstund hat Gold im Mund",
 			family: "Phraseme",
@@ -38,7 +41,7 @@ const occurrenceAttestation = {
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Citation", "Phraseme", "Proverb">;
+} satisfies Dumling.Attestation<"de", "Phraseme", "Proverb">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,

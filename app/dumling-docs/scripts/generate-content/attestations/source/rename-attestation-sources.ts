@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { EntityValue, SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { listTypeScriptFiles, removeEmptyDirectories } from "../../shared/fs";
 import { sourceAttestationsDir } from "../../shared/paths";
 import { attestationSemanticSourcePath } from "../attestation/semantic-source-path";
@@ -32,7 +33,10 @@ function applyRenamePlan(renamePlan: Map<string, string>) {
 	}
 }
 
-function identityAddressedSourcePath(sourcePath: string, entity: EntityValue) {
+function identityAddressedSourcePath(
+	sourcePath: string,
+	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation,
+) {
 	return join(dirname(sourcePath), `${attestationSlugForEntity(entity)}.ts`);
 }
 
@@ -61,7 +65,7 @@ export async function renameAttestationSources(): Promise<string[]> {
 
 	applyRenamePlan(renamePlan);
 
-	for (const language of ["de", "en", "he"] satisfies SupportedLanguage[]) {
+	for (const language of ["de", "en", "he"] satisfies Dumling.Language[]) {
 		removeEmptyDirectories(
 			`${sourceAttestationsDir}/${language}/attestation`,
 		);

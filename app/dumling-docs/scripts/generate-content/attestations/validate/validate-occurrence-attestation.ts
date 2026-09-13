@@ -1,4 +1,4 @@
-import { getLanguageApi } from "dumling-old";
+import { parseUnit } from "dumling";
 import type {
 	AttestationSource,
 	OccurrenceAttestationSource,
@@ -37,7 +37,7 @@ export function validateOccurrenceAttestation(
 		);
 	}
 
-	const parsed = getLanguageApi(language).parse.attestation(source.entity);
+	const parsed = parseUnit(source.entity);
 	if (!parsed.success) {
 		throw new Error(
 			`${source.sourcePath} occurrence attestation failed strict ${language} Dumling validation: ${parsed.error.message}`,
@@ -55,7 +55,9 @@ export function validateOccurrenceAttestation(
 	);
 	let searchFrom = 0;
 	let reviewSpanMatchesMember = false;
-	for (const member of parsed.data.members) {
+	for (const member of parsed.chain.value.unitKind === "Attestation"
+		? parsed.chain.value.members
+		: []) {
 		const index = sentenceText.indexOf(member.attested, searchFrom);
 		if (index === -1) {
 			throw new Error(

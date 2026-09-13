@@ -1,8 +1,4 @@
-import type {
-	Attestation,
-	EntityValue,
-	SupportedLanguage,
-} from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export interface Frontmatter {
 	description?: string;
@@ -22,7 +18,7 @@ export interface SourcePage {
 export type AttestationSource = {
 	classifierNotes?: string;
 	classificationMistakes?: string;
-	entity: EntityValue;
+	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation;
 	isVerified?: true;
 	order?: number;
 	sentenceMarkdown?: string;
@@ -40,6 +36,6 @@ export type OccurrenceAttestationSource = Omit<
 	AttestationSource,
 	"entity" | "sentenceMarkdown"
 > & {
-	entity: Attestation<SupportedLanguage>;
+	entity: Dumling.Attestation<Dumling.Language>;
 	sentenceMarkdown: string;
 };
