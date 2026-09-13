@@ -5,8 +5,7 @@
   "scripts": {
     "generate": "bun comparison/generate.ts",
     "bench": "bun comparison/benchmark.ts",
-    "verify": "bun comparison/verify.ts",
-    "legacy:runtime": "bun previous/runtime/build.ts && bun previous/runtime/measure.ts"
+    "verify": "bun comparison/verify.ts"
   },
   "dependencies": {
     "@arrirpc/schema": "0.84.1",
