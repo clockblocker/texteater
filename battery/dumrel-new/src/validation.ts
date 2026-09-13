@@ -12,6 +12,7 @@ import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
 type Registry = {
 	version: 1;
 	roots: Record<
+		| "semanticProjectionInput"
 		| "knowledgeChange"
 		| "readingKnowledge"
 		| "knowledgeSettings"
@@ -59,5 +60,11 @@ export const parseRequestMaskShape = (input: unknown) =>
 export const parseSelectionShape = (input: unknown) =>
 	parse<import("./types.js").KnowledgeSelectionInput>(
 		"knowledgeSelectionInput",
+		input,
+	);
+
+export const parseProjectionShape = (input: unknown) =>
+	parse<import("./types.js").ReadingWithKnowledge[]>(
+		"semanticProjectionInput",
 		input,
 	);

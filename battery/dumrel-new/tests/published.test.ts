@@ -128,3 +128,21 @@ test("published operational and type imports exclude the authoring declaration g
 			.filter((path) => /\/zod\/|\/schemas[/.]|\/codegen\//.test(path)),
 	).toEqual([]);
 }, 30_000);
+
+test("published projection preserves actual units, provenance, and typed failure", async () => {
+	for (const [name, expected] of [
+		["ProjectionTargetKind", '"Lemma" | "Reading"'],
+		["ProjectionProvenance", '"direct" | "inferred"'],
+		["ProjectionFailure", '"ParsingError"'],
+		["ProjectionSourceCompatible", "true"],
+		["ProjectionTargetCompatible", "true"],
+	] as const) {
+		expect(
+			await inferredType(consumer, {
+				name,
+				full: true,
+				backend: "typescript7",
+			}),
+		).toBe(`type ${name} = ${expected}`);
+	}
+}, 30_000);

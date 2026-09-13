@@ -11,6 +11,9 @@ import {
 	morphologicalTreeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
+	semanticProjectionInputSchema,
+	semanticRelationProjectionSchema,
+	semanticRelationSchema,
 	semanticRelationsSchema,
 	translationLanguageSchema,
 	unitShadowSchema,
@@ -46,6 +49,9 @@ const compiled = compileZodValidationArtifacts({
 		semanticRelations: semanticRelationsSchema,
 		translationLanguage: translationLanguageSchema,
 		unitShadow: unitShadowSchema,
+		semanticProjectionInput: semanticProjectionInputSchema,
+		semanticRelation: semanticRelationSchema,
+		semanticRelationProjection: semanticRelationProjectionSchema,
 	},
 	operations,
 });
@@ -66,6 +72,8 @@ const outputs = {
 				SemanticRelations: "semanticRelations",
 				ReadingKnowledge: "readingKnowledge",
 				KnowledgeChange: "knowledgeChange",
+				SemanticRelation: "semanticRelation",
+				SemanticRelationProjection: "semanticRelationProjection",
 			},
 			typePreservingOperations: [
 				"dumling.feature-bag.marked",

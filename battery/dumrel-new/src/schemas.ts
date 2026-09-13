@@ -7,6 +7,7 @@ import {
 	readingSchema,
 	unitShadowSchema,
 } from "./generated/dumling-schemas.js";
+import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
 import {
 	directSemanticRelationValues,
@@ -175,3 +176,17 @@ export {
 	knowledgeSettingsSchema,
 	semanticRelationSchema,
 } from "./selection-schemas.js";
+
+export const readingWithKnowledgeSchema = z.strictObject({
+	reading: readingSchema,
+	knowledge: readingKnowledgeSchema,
+});
+export const semanticProjectionInputSchema = z.array(
+	readingWithKnowledgeSchema,
+);
+export const semanticRelationProjectionSchema = z.strictObject({
+	source: readingSchema,
+	relation: semanticRelationSchema,
+	target: z.union([lemmaSchema, readingSchema]),
+	provenance: z.enum(["direct", "inferred"]),
+});

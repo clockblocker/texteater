@@ -4794,6 +4794,23 @@ type _Output1427 =
 	| _Output1458
 	| _Output1460
 	| _Output1462;
+type _Output1465 =
+	| "synonym"
+	| "nearSynonym"
+	| "antonym"
+	| "nearAntonym"
+	| "hypernym"
+	| "hyponym"
+	| "meronym"
+	| "holonym";
+type _Output1467 = _Output1404 | _Output818;
+type _Output1468 = "direct" | "inferred";
+type _Output1466 = {
+	source: _Output818;
+	relation: _Output1465;
+	target: _Output1467;
+	provenance: _Output1468;
+};
 export type KnowledgeSettings = _Output0;
 export type KnowledgeRequestMask = _Output7;
 export type KnowledgeSelectionInput = _Output14;
@@ -4806,3 +4823,5 @@ export type PendingSemanticRelation = _Output812;
 export type SemanticRelations = _Output813;
 export type ReadingKnowledge = _Output1415;
 export type KnowledgeChange = _Output1427;
+export type SemanticRelation = _Output1465;
+export type SemanticRelationProjection = _Output1466;

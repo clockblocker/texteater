@@ -24,6 +24,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"applyKnowledgeChange",
 		"directSemanticRelationValues",
 		"parseReadingKnowledge",
+		"projectSemanticRelations",
 		"selectKnowledge",
 		"translationLanguageValues",
 	]);

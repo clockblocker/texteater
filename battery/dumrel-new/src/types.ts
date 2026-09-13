@@ -12,6 +12,8 @@ export type {
 	LexicalBreakdown,
 	MorphologicalTree,
 	PendingSemanticRelation,
+	SemanticRelation,
+	SemanticRelationProjection,
 	TranslationLanguage,
 	UnitShadow,
 } from "./generated/types.js";
@@ -88,3 +90,9 @@ export type {
 	KnowledgeSelectionInput,
 	KnowledgeSettings,
 } from "./generated/types.js";
+
+export type ReadingWithKnowledge<R extends Dumling.Reading = Dumling.Reading> =
+	{
+		readonly reading: R;
+		readonly knowledge: ReadingKnowledge<R>;
+	};

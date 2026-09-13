@@ -1,5 +1,9 @@
 import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
+import {
+	applyKnowledgeChange,
+	parseReadingKnowledge,
+	projectSemanticRelations,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
 export type Definition = Dumrel.ReadingKnowledge["definition"];
@@ -113,3 +117,21 @@ void [
 	validRetract,
 	validBreakdown,
 ];
+
+const projected = projectSemanticRelations([
+	{ reading: source, knowledge: {} },
+]);
+type Projection = Extract<typeof projected, { success: true }>["value"][number];
+export type ProjectionTargetKind = Projection["target"]["unitKind"];
+export type ProjectionProvenance = Projection["provenance"];
+export type ProjectionFailure = Extract<
+	typeof projected,
+	{ success: false }
+>["error"]["name"];
+export type ProjectionSourceCompatible =
+	Projection["source"] extends Dumling.Reading ? true : false;
+export type ProjectionTargetCompatible = Projection["target"] extends
+	| Dumling.Lemma
+	| Dumling.Reading
+	? true
+	: false;
