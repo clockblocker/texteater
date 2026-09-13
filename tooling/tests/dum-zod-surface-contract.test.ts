@@ -25,9 +25,7 @@ test("normal Zod surfaces expose only the frozen broad composition primitives", 
 });
 
 test("concrete Dumling schema routes expose exact composable units", async () => {
-	const { loadRoutes } = await import(
-		"../../battery/dumling-new/codegen/routes"
-	);
+	const { loadRoutes } = await import("../../battery/dumling/codegen/routes");
 	for (const route of await loadRoutes()) {
 		const schema = await import(
 			`dumling/schema/${route.modulePath.replace(/\.js$/, "")}`

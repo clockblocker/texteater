@@ -4,10 +4,10 @@ import {
 	emitValidationOutputTypes,
 } from "codegen";
 import { z } from "zod";
-import { registrations as dumlingOperations } from "../../dumling-new/codegen/operations.js";
-import { loadRoutes } from "../../dumling-new/codegen/routes.js";
-import { formatTypeScript } from "../../dumrel-new/codegen/format-typescript.js";
-import { normalizeText } from "../../dumrel-new/src/semantics.js";
+import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
+import { loadRoutes } from "../../dumling/codegen/routes.js";
+import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
+import { normalizeText } from "../../dumrel/src/semantics.js";
 
 const check = process.argv.includes("--check");
 async function emit(name: string, source: string) {

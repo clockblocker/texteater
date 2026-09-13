@@ -3,7 +3,7 @@ import {
 	compileZodValidationArtifacts,
 	emitValidationOutputTypes,
 } from "codegen";
-import { registrations as dumlingOperations } from "../../dumling-new/codegen/operations.js";
+import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
 import {
 	directSemanticRelationSchema,
 	knowledgeChangeSchema,

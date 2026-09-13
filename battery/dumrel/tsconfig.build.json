@@ -8,12 +8,12 @@
 		"rootDir": "./src",
 		"paths": {
 			"common-utils": ["../common-utils/dist/index.d.ts"],
-			"dumling": ["../dumling-new/dist/index.d.ts"],
-			"dumling/types": ["../dumling-new/dist/types.d.ts"],
+			"dumling": ["../dumling/dist/index.d.ts"],
+			"dumling/types": ["../dumling/dist/types.d.ts"],
 			"dumling/validation": [
-				"../dumling-new/dist/validation/operations.d.ts"
+				"../dumling/dist/validation/operations.d.ts"
 			],
-			"dumling/schema/*": ["../dumling-new/dist/generated/schemas/*"]
+			"dumling/schema/*": ["../dumling/dist/generated/schemas/*"]
 		}
 	},
 	"include": ["src/index.ts", "src/types.ts", "src/schemas.ts"]

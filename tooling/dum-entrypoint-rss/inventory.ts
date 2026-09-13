@@ -26,10 +26,10 @@ export type DumEntryPoint = OperationalEntryPoint | ExemptEntryPoint;
  * new public subpath cannot silently escape the memory audit.
  */
 export const DUM_PACKAGE_PATHS = {
-	dumling: "dumling-new",
-	dumrel: "dumrel-new",
+	dumling: "dumling",
+	dumrel: "dumrel",
 	dumdict: "dumdict",
-	dumgen: "dumgen-new",
+	dumgen: "dumgen",
 } as const;
 export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 	{

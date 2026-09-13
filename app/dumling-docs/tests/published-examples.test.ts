@@ -47,19 +47,19 @@ test("rendered unit and API examples compile against the published package", asy
 						dumling: [
 							resolve(
 								root,
-								"../../battery/dumling-new/dist/index.d.ts",
+								"../../battery/dumling/dist/index.d.ts",
 							),
 						],
 						"dumling/types": [
 							resolve(
 								root,
-								"../../battery/dumling-new/dist/types.d.ts",
+								"../../battery/dumling/dist/types.d.ts",
 							),
 						],
 						"dumling/schema/*": [
 							resolve(
 								root,
-								"../../battery/dumling-new/dist/generated/schemas/*.d.ts",
+								"../../battery/dumling/dist/generated/schemas/*.d.ts",
 							),
 						],
 					},

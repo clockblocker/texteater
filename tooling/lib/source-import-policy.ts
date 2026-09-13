@@ -123,34 +123,34 @@ const buildSourceSeams = new Map<string, readonly string[]>([
 	[
 		"battery/dumdict/codegen/generate-unit-schemas.ts",
 		[
-			"../../dumling-new/codegen/routes.js",
-			"../../dumrel-new/codegen/format-typescript.js",
+			"../../dumling/codegen/routes.js",
+			"../../dumrel/codegen/format-typescript.js",
 		],
 	],
 	[
 		"battery/dumdict/codegen/validation-artifacts.ts",
 		[
-			"../../dumling-new/codegen/operations.js",
-			"../../dumrel-new/codegen/format-typescript.js",
-			"../../dumrel-new/src/semantics.js",
+			"../../dumling/codegen/operations.js",
+			"../../dumrel/codegen/format-typescript.js",
+			"../../dumrel/src/semantics.js",
 		],
 	],
 	[
-		"battery/dumgen-new/codegen/generate.ts",
+		"battery/dumgen/codegen/generate.ts",
 		[
-			"../../dumling-new/codegen/operations.js",
-			"../../dumling-new/codegen/routes.js",
-			"../../dumrel-new/codegen/format-typescript.js",
-			"../../dumrel-new/src/semantics.js",
+			"../../dumling/codegen/operations.js",
+			"../../dumling/codegen/routes.js",
+			"../../dumrel/codegen/format-typescript.js",
+			"../../dumrel/src/semantics.js",
 		],
 	],
 	[
-		"battery/dumrel-new/codegen/generate.ts",
-		["../../dumling-new/codegen/operations.js"],
+		"battery/dumrel/codegen/generate.ts",
+		["../../dumling/codegen/operations.js"],
 	],
 	[
 		"app/laboratory/tests/evaluations.test.ts",
-		["../../../battery/dumgen-new/cli/evaluate"],
+		["../../../battery/dumgen/cli/evaluate"],
 	],
 ]);
 function isExplicitAuthoringSource(

@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 const workspace = resolve(import.meta.dir, "../../..");
 const gateDirectory = resolve(
 	workspace,
-	"battery/dumgen-new/docs/prototypes/german-relation-human-gate",
+	"battery/dumgen/docs/prototypes/german-relation-human-gate",
 );
 const manifestPath = resolve(gateDirectory, "candidate-manifest.json");
 const locationsPath = resolve(gateDirectory, "artifact-locations.json");
@@ -177,7 +177,7 @@ export async function currentRelationFingerprints() {
 			paths.push(`${directory}/${path}`);
 		return paths;
 	}
-	const dumgen = "battery/dumgen-new/src";
+	const dumgen = "battery/dumgen/src";
 	return {
 		prompt: await digest([`${dumgen}/generated/prompts.ts`]),
 		schema: await digest([
@@ -198,8 +198,8 @@ export async function currentRelationFingerprints() {
 		// Cover route dispatch, projection, corpus selections and foundational contracts.
 		policy: await digest([
 			...(await sources(dumgen)),
-			...(await sources("battery/dumrel-new/src")),
-			...(await sources("battery/dumling-new/src")),
+			...(await sources("battery/dumrel/src")),
+			...(await sources("battery/dumling/src")),
 			"app/tf-demo/server/generatedKnowledgeRequest.ts",
 		]),
 	};
@@ -328,7 +328,7 @@ export async function compileRelationVerdict(
 		"verdict artifact path",
 	);
 	const verdictArtifactPath =
-		"battery/dumgen-new/docs/prototypes/german-relation-human-gate/verdict.json";
+		"battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json";
 
 	let compiledVerdict: JsonRecord | null = null;
 	const invalidationReasons: string[] = [];

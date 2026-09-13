@@ -179,7 +179,7 @@
         "typescript": "^7.0.2",
       },
     },
-    "battery/dumgen-new": {
+    "battery/dumgen": {
       "name": "dumgen",
       "version": "0.1.0",
       "dependencies": {
@@ -201,7 +201,7 @@
         "typescript": "^7.0.2",
       },
     },
-    "battery/dumling-new": {
+    "battery/dumling": {
       "name": "dumling",
       "version": "0.1.12",
       "dependencies": {
@@ -221,7 +221,7 @@
         "typescript": "^7.0.2",
       },
     },
-    "battery/dumrel-new": {
+    "battery/dumrel": {
       "name": "dumrel",
       "version": "0.1.0",
       "dependencies": {
@@ -1203,11 +1203,11 @@
 
     "dumdict": ["dumdict@workspace:battery/dumdict"],
 
-    "dumgen": ["dumgen@workspace:battery/dumgen-new"],
+    "dumgen": ["dumgen@workspace:battery/dumgen"],
 
-    "dumling": ["dumling@workspace:battery/dumling-new"],
+    "dumling": ["dumling@workspace:battery/dumling"],
 
-    "dumrel": ["dumrel@workspace:battery/dumrel-new"],
+    "dumrel": ["dumrel@workspace:battery/dumrel"],
 
     "dunder-proto": ["dunder-proto@1.0.1", "", { "dependencies": { "call-bind-apply-helpers": "^1.0.1", "es-errors": "^1.3.0", "gopd": "^1.2.0" } }, "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A=="],
 

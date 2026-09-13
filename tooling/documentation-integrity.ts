@@ -78,12 +78,12 @@ const coordinationTokens = new Set([
 ]);
 
 const retainedEvidenceCompanionPaths = new Set([
-	"battery/dumling-new/experimets/compiled-zod/findings.md",
-	"battery/dumgen-new/docs/prototypes/german-relation-human-gate/README.md",
-	"battery/dumgen-new/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-	"battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/README.md",
-	"battery/dumgen-new/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-	"battery/dumgen-new/docs/research/issue-58-de-he-clickable-boundaries.md",
+	"battery/dumling/experimets/compiled-zod/findings.md",
+	"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
+	"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
+	"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
+	"battery/dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
+	"battery/dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
 ]);
 
 function normalizeRepositoryPath(path: string): string {
@@ -134,19 +134,13 @@ function isProducedArtifact(path: string): boolean {
 		path.startsWith("app/dumling-docs/public/") ||
 		path.startsWith("app/dumling-docs/src/generated/") ||
 		path.startsWith("app/dumling-docs/dist/") ||
-		path.startsWith("battery/dumling-new/resources/") ||
 		path.startsWith("battery/dumling/resources/") ||
-		path.startsWith("battery/dumling-old/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
-		path.startsWith("battery/gumgen-old/docs/learning/") ||
 		path.startsWith("battery/dumgen/.laboratory/sessions/") ||
-		path.startsWith("battery/gumgen-old/.laboratory/sessions/") ||
-		/^battery\/(?:dumgen|dumgen-new|gumgen-old)\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
+		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
 			path,
 		) ||
-		/^battery\/(?:dumgen|dumgen-new|gumgen-old)\/src\/promptsmith\/.*\/corpus\//u.test(
-			path,
-		)
+		/^battery\/dumgen\/src\/promptsmith\/.*\/corpus\//u.test(path)
 	);
 }
 

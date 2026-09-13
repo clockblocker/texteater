@@ -10,13 +10,13 @@ import { canonicalDumdictValidationSchemas } from "../../battery/dumdict/codegen
 import { encodedDumdictValidationArtifacts } from "../../battery/dumdict/src/generated/validation-artifacts";
 import { dumdictValidationOperations } from "../../battery/dumdict/src/parsing/validation-operations";
 import { successfulInputs } from "../../battery/dumdict/tests/internal/differential-fixtures";
-import { canonicalDumgenValidationSchemas } from "../../battery/dumgen-new/codegen/validation-schemas";
-import { encodedValidation as production } from "../../battery/dumgen-new/src/generated/validation";
-import { loadRoutes } from "../../battery/dumling-new/codegen/routes";
-import { encodedValidation as units } from "../../battery/dumling-new/src/generated/validation";
-import { unitFixtures } from "../../battery/dumling-new/tests/unit-fixtures";
-import { encodedValidation as knowledge } from "../../battery/dumrel-new/src/generated/validation";
-import { samples as knowledgeSamples } from "../../battery/dumrel-new/tests/compiled-schema-fixtures";
+import { canonicalDumgenValidationSchemas } from "../../battery/dumgen/codegen/validation-schemas";
+import { encodedValidation as production } from "../../battery/dumgen/src/generated/validation";
+import { loadRoutes } from "../../battery/dumling/codegen/routes";
+import { encodedValidation as units } from "../../battery/dumling/src/generated/validation";
+import { unitFixtures } from "../../battery/dumling/tests/unit-fixtures";
+import { encodedValidation as knowledge } from "../../battery/dumrel/src/generated/validation";
+import { samples as knowledgeSamples } from "../../battery/dumrel/tests/compiled-schema-fixtures";
 import type { DifferentialTarget } from "./differential";
 
 const operations: ValidationOperations = {

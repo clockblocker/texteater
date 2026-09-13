@@ -4,12 +4,14 @@ Encounter-based linguistic production over Dumling and Dumrel. Import operations
 from `dumgen`, structural types from `dumgen/types`, and composable authoring
 schemas from `dumgen/schemas`. Execution is injected into `createDumgen`.
 
+Prompt authoring follows the [prompting philosophy](docs/reference/human-owned/prompting-philosophy.md).
+
 Developer experiments are available through `dumgen/development`:
 
 ```sh
-bun run --cwd battery/dumgen-new evaluate --list
-bun run --cwd battery/dumgen-new evaluate --experiment grammatical-resolution/de/lexeme/noun --revision YOUR_COMMIT --output .runs/dumgen
-bun run --cwd battery/dumgen-new evaluate --open RUN_ID --output .runs/dumgen
+bun run --cwd battery/dumgen evaluate --list
+bun run --cwd battery/dumgen evaluate --experiment grammatical-resolution/de/lexeme/noun --revision YOUR_COMMIT --output .runs/dumgen
+bun run --cwd battery/dumgen evaluate --open RUN_ID --output .runs/dumgen
 ```
 
 `--model` and `--settings` override execution configuration. Model runs require

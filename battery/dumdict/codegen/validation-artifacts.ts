@@ -8,9 +8,9 @@ import {
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 } from "dumrel/schema";
-import { registrations as dumlingOperations } from "../../dumling-new/codegen/operations.js";
-import { formatTypeScript } from "../../dumrel-new/codegen/format-typescript.js";
-import { normalizeText } from "../../dumrel-new/src/semantics.js";
+import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
+import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
+import { normalizeText } from "../../dumrel/src/semantics.js";
 import { unitSchemas } from "../src/generated/unit-schemas.js";
 import {
 	commitChangesResultSchema,

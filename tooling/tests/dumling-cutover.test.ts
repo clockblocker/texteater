@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { DUM_PACKAGE_PATHS } from "../dum-entrypoint-rss/inventory";
 import { discoverWorkspaces, findRepositoryRoot } from "../lib/workspaces";
 
-test("only replacement Dum packages participate in workspace resolution", async () => {
+test("Dum packages resolve from their canonical workspace directories", async () => {
 	const root = await findRepositoryRoot(import.meta.dir);
 	for (const [name, directory] of Object.entries(DUM_PACKAGE_PATHS))
 		expect(
@@ -15,7 +15,7 @@ test("only replacement Dum packages participate in workspace resolution", async 
 		).toBe(join(root, "battery", directory, "package.json"));
 	expect(
 		(await discoverWorkspaces(root)).filter((w) =>
-			/-(?:old)$/.test(String(w.manifest.name)),
+			/-(?:old|new)$/.test(w.relativePath),
 		),
 	).toEqual([]);
 });

@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { loadRoutes } from "../../dumling-new/codegen/routes.js";
-import { formatTypeScript } from "../../dumrel-new/codegen/format-typescript.js";
+import { loadRoutes } from "../../dumling/codegen/routes.js";
+import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
 
 const routes = await loadRoutes();
 const imports = routes

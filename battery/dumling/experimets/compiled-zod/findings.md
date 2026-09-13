@@ -8,7 +8,7 @@ The prototype's source-text check predates the extracted production predicate
 and will reject the current source. Its generated artifacts retain the original
 experiment; use the production generator for current schemas.
 
-This experiment compiles all 100 existing concrete-language feature-bag schemas in `dumling-new` into package-owned validation artifacts and emits flat consumer types. Production source, manifests, and lockfiles are unchanged. It uses the repository's existing compiler and interpreter, not a new general-purpose Zod compiler.
+This experiment compiles all 100 existing concrete-language feature-bag schemas in `dumling` into package-owned validation artifacts and emits flat consumer types. Production source, manifests, and lockfiles are unchanged. It uses the repository's existing compiler and interpreter, not a new general-purpose Zod compiler.
 
 The benchmark envelope is `{unitKind, language, family, kind, value}`. `value` is the complete existing feature-bag object, including `core` and `inflectional` where defined. All four unit tags accept the same bag envelope. This deliberately tests actual feature-schema semantics; it is **not** a final Lemma/Surface/Reading/Attestation representation and is not equivalent to the separate full-wrapper toy comparison.
 
@@ -29,11 +29,11 @@ The declaration emitter only accepts the actual compiler vocabulary used here. I
 Run from the repository root:
 
 ```sh
-bun battery/dumling-new/experimets/compiled-zod/generate.ts
-bun test battery/dumling-new/experimets/compiled-zod/verify.test.ts
-node node_modules/typescript/bin/tsc --ignoreConfig --strict --skipLibCheck --noEmit --target esnext --module preserve --moduleResolution bundler --allowImportingTsExtensions --resolveJsonModule --extendedDiagnostics battery/dumling-new/experimets/compiled-zod/consumer.ts
-./node_modules/.bin/esbuild battery/dumling-new/experimets/compiled-zod/index.ts --bundle --platform=node --format=esm --outfile=battery/dumling-new/experimets/compiled-zod/compiled.bundle.mjs
-./node_modules/.bin/esbuild battery/dumling-new/experimets/compiled-zod/direct.ts --bundle --platform=node --format=esm --outfile=battery/dumling-new/experimets/compiled-zod/direct.bundle.mjs
+bun battery/dumling/experimets/compiled-zod/generate.ts
+bun test battery/dumling/experimets/compiled-zod/verify.test.ts
+node node_modules/typescript/bin/tsc --ignoreConfig --strict --skipLibCheck --noEmit --target esnext --module preserve --moduleResolution bundler --allowImportingTsExtensions --resolveJsonModule --extendedDiagnostics battery/dumling/experimets/compiled-zod/consumer.ts
+./node_modules/.bin/esbuild battery/dumling/experimets/compiled-zod/index.ts --bundle --platform=node --format=esm --outfile=battery/dumling/experimets/compiled-zod/compiled.bundle.mjs
+./node_modules/.bin/esbuild battery/dumling/experimets/compiled-zod/direct.ts --bundle --platform=node --format=esm --outfile=battery/dumling/experimets/compiled-zod/direct.bundle.mjs
 ```
 
 Both `index.ts` and the generated `direct.ts` export `parseUnit(input: unknown)` and `schemaCount`. The result is `{success:true,data}` or `{success:false,issues}`. `fixtures.ts` exports `sample()` and `samples`; load fixtures separately so they do not inflate the measured parser import. The compiled parser additionally accepts `{route,unitKind}` as a second argument and checks those coordinates before returning the exact declared output.

@@ -37,7 +37,7 @@ test("published consumer declarations preserve Language and Kind without a Zod g
 			join(directory, "consumer.ts"),
 			`import {createDumgen} from ${JSON.stringify(join(root, "dist/index.js"))};
 import type {Encounter,AnalysisTarget,GenerationInput,ComparisonInput,KnowledgeInput} from ${JSON.stringify(join(root, "dist/types.js"))};
-import type * as Dumling from ${JSON.stringify(resolve(root, "../dumling-new/dist/types.js"))};
+import type * as Dumling from ${JSON.stringify(resolve(root, "../dumling/dist/types.js"))};
 import {Effect} from ${JSON.stringify(resolve(root, "../../node_modules/effect/dist/dts/index.js"))};
 declare const encounter:Encounter<"de">;
 const operation=createDumgen({execute:async()=>null}).resolveGrammar(encounter);

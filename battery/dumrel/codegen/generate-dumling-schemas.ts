@@ -1,10 +1,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { formatTypeScript } from "./format-typescript.js";
 
-const root = new URL(
-	"../../dumling-new/src/generated/schemas/",
-	import.meta.url,
-);
+const root = new URL("../../dumling/src/generated/schemas/", import.meta.url);
 const paths = (await readdir(root, { recursive: true }))
 	.filter((path) => path.endsWith(".ts"))
 	.map((path) => path.replace(/\.ts$/, ""))

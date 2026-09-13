@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { getExperiment } from "dumgen/development";
 import { stableJson } from "promptsmith";
 import type { EvaluationRun } from "promptsmith/evaluation";
-import { runEvaluationCli } from "../../../battery/dumgen-new/cli/evaluate";
+import { runEvaluationCli } from "../../../battery/dumgen/cli/evaluate";
 import { createEvaluationService } from "../src/evaluations";
 
 test("CLI and Laboratory share cases, evaluation records and configured storage", async () => {

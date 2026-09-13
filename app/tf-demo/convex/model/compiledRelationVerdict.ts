@@ -2,13 +2,13 @@
 export const COMPILED_RELATION_VERDICT = {
 	"formatVersion": "tf-demo-compiled-relation-verdict-v2",
 	"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",
-	"verdictArtifactPath": "battery/dumgen-new/docs/prototypes/german-relation-human-gate/verdict.json",
+	"verdictArtifactPath": "battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json",
 	"fingerprints": {
-		"prompt": "sha256:ae9aa855bdc580d8ca3d4f6affcfe0c333ae059fdcdbfc2cf8be04fd00abf409",
-		"schema": "sha256:716e94fb262aacfc74bad2bd91e3e6f30d2e2b39ad1ca8d3b416b1c5738b988a",
-		"evaluator": "sha256:63510d813010a4aac16b37cd459b94f88702ed7ab6050febfb72699728925ae3",
-		"model": "sha256:204632f1c2281a15aef8cda8289907af330fbcbae1a8c3e64af179592dbcf10d",
-		"policy": "sha256:d01bb7f1b8123247e57e964d008a3850741ac3a2bde932bc2402076ea79ce031"
+		"prompt": "sha256:780e4f773333a7f17a3ea3cab694290d29d76c7996214cfaa5850b9f9ec7756a",
+		"schema": "sha256:174c376cd24d899f2a2ea00778ef3ae1328ad46b121ad2ec4302aa60b4c4b821",
+		"evaluator": "sha256:f2de9ee1815ec9f9df32673383f0e43d877eeb4f98424b85081a5cfdf66a6840",
+		"model": "sha256:de1af433bc0ca1af7d910387aaf53cc8a751c3add5002ef671f71b37cf788b17",
+		"policy": "sha256:9da8e369d4b0820aebd1750fb25985f49cb61b1668df9d8fa07c39ffabd38509"
 	},
 	"historicalCandidate": {
 		"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",

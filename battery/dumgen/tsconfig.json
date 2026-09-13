@@ -8,8 +8,8 @@
 	],
 	"compilerOptions": {
 		"paths": {
-			"dumling/schema/*": ["../dumling-new/src/generated/schemas/*"],
-			"dumrel/schema": ["../dumrel-new/src/schemas.ts"]
+			"dumling/schema/*": ["../dumling/src/generated/schemas/*"],
+			"dumrel/schema": ["../dumrel/src/schemas.ts"]
 		}
 	}
 }
