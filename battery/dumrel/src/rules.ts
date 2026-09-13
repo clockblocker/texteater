@@ -144,6 +144,15 @@ export function propagateRelations(
 /**
  * Projects direct claims together with every deterministic inferred view.
  * Direct claims win provenance when an inference reaches the same edge.
+ *
+ * @remarks
+ * Lemma-targeted claims allow every supplied Reading of the target Lemma to
+ * participate, including unrelated Readings. This is an interim optimization
+ * to avoid extra LLM calls for each newly added word, not the long-term semantic
+ * model. A separate LLM workflow will resolve exact target Readings; projection
+ * itself remains deterministic and makes no model calls.
+ *
+ * @see {@link https://github.com/clockblocker/texteater/issues/176 | Smart Shadow Pickup}
  */
 export function projectRelations(
 	graph: SemanticRelationGraph,
