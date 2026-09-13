@@ -1,0 +1,5176 @@
+{
+	"sourceCommit": "b0070e35",
+	"note": "Frozen legacy acceptance before retirement; German PRON deliberately covered by current identity tests.",
+	"all": [
+		{
+			"route": "de/construction/fusion.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/construction/fusion.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/construction/fusion.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/construction/fusion.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/construction/fusion.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/construction/fusion.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"numType": "Card",
+					"variant": "Short"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"degree": "Cmp",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/adjective.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adjective.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adjective.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"numType": "Card",
+					"variant": "Short"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"degree": "Cmp",
+					"gender": "Fem",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"adpType": "Circ",
+					"extPos": "ADV",
+					"foreign": "Yes",
+					"governedCase": "Acc",
+					"partType": "Vbp"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/adposition.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adposition.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adposition.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"adpType": "Circ",
+					"extPos": "ADV",
+					"foreign": "Yes",
+					"governedCase": "Acc",
+					"partType": "Vbp"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"foreign": "Yes",
+					"numType": "Card",
+					"pronType": "Dem"
+				},
+				"inflectional": {
+					"degree": "Cmp"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/adverb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adverb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adverb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"foreign": "Yes",
+					"numType": "Card",
+					"pronType": "Dem"
+				},
+				"inflectional": {
+					"degree": "Cmp"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"verbType": "Mod"
+				},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/auxiliary.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/auxiliary.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/auxiliary.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"verbType": "Mod"
+				},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"conjType": "Comp"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/coordinating-conjunction.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/coordinating-conjunction.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"conjType": "Comp"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"definite": "Def",
+					"extPos": "ADV",
+					"foreign": "Yes",
+					"numType": "Card",
+					"person": "1",
+					"polite": "Form",
+					"poss": "Yes",
+					"pronType": "Art"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"degree": "Cmp",
+					"gender": "Fem",
+					"gender[psor]": "Fem",
+					"number": "Plur",
+					"number[psor]": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/determiner.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/determiner.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/determiner.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"definite": "Def",
+					"extPos": "ADV",
+					"foreign": "Yes",
+					"numType": "Card",
+					"person": "1",
+					"polite": "Form",
+					"poss": "Yes",
+					"pronType": "Art"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"degree": "Cmp",
+					"gender": "Fem",
+					"gender[psor]": "Fem",
+					"number": "Plur",
+					"number[psor]": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"partType": "Res"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/interjection.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/interjection.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/interjection.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"partType": "Res"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"gender": "Fem",
+					"hyph": "Yes"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/noun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/noun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/noun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"gender": "Fem",
+					"hyph": "Yes"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"numType": "Card"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/numeral.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/numeral.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/numeral.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"numType": "Card"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/other.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"hyph": "Yes",
+					"numType": "Card"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"mood": "Imp",
+					"number": "Plur",
+					"verbForm": "Fin"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/other.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/other.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/other.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/other.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/other.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"hyph": "Yes",
+					"numType": "Card"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"mood": "Imp",
+					"number": "Plur",
+					"verbForm": "Fin"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"partType": "Inf",
+					"polarity": "Neg"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/particle.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/particle.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/particle.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"partType": "Inf",
+					"polarity": "Neg"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"gender": "Fem"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/proper-noun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/proper-noun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/proper-noun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"gender": "Fem"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/punctuation.ts",
+			"input": {
+				"core": {
+					"punctType": "Brck"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/punctuation.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/punctuation.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/punctuation.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/punctuation.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/punctuation.ts",
+			"input": {
+				"core": {
+					"punctType": "Brck"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"conjType": "Comp"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/subordinating-conjunction.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/subordinating-conjunction.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"conjType": "Comp"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"foreign": "Yes",
+					"numType": "Card"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/symbol.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/symbol.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/symbol.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"foreign": "Yes",
+					"numType": "Card"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"hasGovPrep": "value",
+					"hasSepPrefix": "value",
+					"lexicallyReflexive": "Yes",
+					"verbType": "Mod"
+				},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/lexeme/verb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/verb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/verb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"hasGovPrep": "value",
+					"hasSepPrefix": "value",
+					"lexicallyReflexive": "Yes",
+					"verbType": "Mod"
+				},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/circumfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/circumfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/circumfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/circumfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/circumfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/circumfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/clitic.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/clitic.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/clitic.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/clitic.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/clitic.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/clitic.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/duplifix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/duplifix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/duplifix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/duplifix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/duplifix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/duplifix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/infix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/infix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/infix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/infix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/infix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/infix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/interfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/interfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/interfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/interfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/interfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/interfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/prefix.ts",
+			"input": {
+				"core": {
+					"hasSepPrefix": "value"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/prefix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/prefix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/prefix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/prefix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/prefix.ts",
+			"input": {
+				"core": {
+					"hasSepPrefix": "value"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/root.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/root.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/root.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/root.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/root.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/root.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/suffix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffixoid.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/suffixoid.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffixoid.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffixoid.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffixoid.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/suffixoid.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/transfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/morpheme/transfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/transfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/transfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/transfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/morpheme/transfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/aphorism.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/phraseme/aphorism.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/aphorism.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/aphorism.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/aphorism.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/aphorism.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/collocation.ts",
+			"input": {
+				"core": {},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/phraseme/collocation.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/collocation.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/collocation.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/collocation.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/collocation.ts",
+			"input": {
+				"core": {},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"discourseFormulaRole": "Greeting"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/phraseme/discourse-formula.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/discourse-formula.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"discourseFormulaRole": "Greeting"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/phraseme/idiom.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/idiom.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/idiom.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"inflectional": {
+					"number": "Plur",
+					"tense": "Past",
+					"verbForm": null,
+					"voice": "Pass"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/proverb.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "de/phraseme/proverb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/proverb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/proverb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/proverb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "de/phraseme/proverb.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/construction/fusion.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/construction/fusion.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/construction/fusion.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/construction/fusion.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/construction/fusion.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/construction/fusion.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"numForm": "Combi",
+					"numType": "Frac",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"degree": "Cmp"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/adjective.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adjective.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adjective.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"numForm": "Combi",
+					"numType": "Frac",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"degree": "Cmp"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/adposition.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adposition.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adposition.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"numForm": "Word",
+					"numType": "Frac",
+					"pronType": "Dem",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"degree": "Cmp"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/adverb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adverb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adverb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"numForm": "Word",
+					"numType": "Frac",
+					"pronType": "Dem",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"degree": "Cmp"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"style": "Arch"
+				},
+				"inflectional": {
+					"mood": "Imp",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Past",
+					"verbForm": "Fin"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/auxiliary.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/auxiliary.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/auxiliary.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"style": "Arch"
+				},
+				"inflectional": {
+					"mood": "Imp",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Past",
+					"verbForm": "Fin"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"polarity": "Neg"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/coordinating-conjunction.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/coordinating-conjunction.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"polarity": "Neg"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"definite": "Def",
+					"extPos": "ADV",
+					"numForm": "Word",
+					"numType": "Frac",
+					"pronType": "Art",
+					"style": "Vrnc"
+				},
+				"inflectional": {
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/determiner.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/determiner.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/determiner.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"definite": "Def",
+					"extPos": "ADV",
+					"numForm": "Word",
+					"numType": "Frac",
+					"pronType": "Art",
+					"style": "Vrnc"
+				},
+				"inflectional": {
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"polarity": "Neg",
+					"style": "Expr"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/interjection.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/interjection.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/interjection.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"foreign": "Yes",
+					"polarity": "Neg",
+					"style": "Expr"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADV",
+					"foreign": "Yes",
+					"numForm": "Combi",
+					"numType": "Card",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/noun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/noun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/noun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADV",
+					"foreign": "Yes",
+					"numForm": "Combi",
+					"numType": "Card",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "PROPN",
+					"numForm": "Digit",
+					"numType": "Card"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/numeral.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/numeral.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/numeral.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "PROPN",
+					"numForm": "Digit",
+					"numType": "Card"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/other.ts",
+			"input": {
+				"core": {
+					"extPos": "PROPN",
+					"foreign": "Yes"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/other.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/other.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/other.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/other.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/other.ts",
+			"input": {
+				"core": {
+					"extPos": "PROPN",
+					"foreign": "Yes"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "CCONJ",
+					"polarity": "Neg"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/particle.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/particle.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/particle.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "CCONJ",
+					"polarity": "Neg"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/pronoun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADV",
+					"person": "1",
+					"poss": "Yes",
+					"pronType": "Dem",
+					"style": "Arch"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Plur",
+					"reflex": "Yes"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/pronoun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/pronoun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/pronoun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/pronoun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/pronoun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADV",
+					"person": "1",
+					"poss": "Yes",
+					"pronType": "Dem",
+					"style": "Arch"
+				},
+				"inflectional": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Plur",
+					"reflex": "Yes"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "PROPN",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/proper-noun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/proper-noun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/proper-noun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "PROPN",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/punctuation.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/punctuation.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/punctuation.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/punctuation.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/punctuation.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/punctuation.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"style": "Vrnc"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/subordinating-conjunction.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/subordinating-conjunction.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"style": "Vrnc"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP"
+				},
+				"inflectional": {
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/symbol.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/symbol.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/symbol.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP"
+				},
+				"inflectional": {
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"hasGovPrep": "value",
+					"phrasal": "Yes",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"mood": "Imp",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": "Pass"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/lexeme/verb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/verb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/verb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"extPos": "ADP",
+					"hasGovPrep": "value",
+					"phrasal": "Yes",
+					"style": "Expr"
+				},
+				"inflectional": {
+					"mood": "Imp",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": "Pass"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/circumfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/circumfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/circumfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/circumfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/circumfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/circumfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/clitic.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/clitic.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/clitic.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/clitic.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/clitic.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/clitic.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/duplifix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/duplifix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/duplifix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/duplifix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/duplifix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/duplifix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/infix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/infix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/infix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/infix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/infix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/infix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/interfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/interfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/interfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/interfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/interfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/interfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/prefix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/prefix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/prefix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/prefix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/prefix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/prefix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/root.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/root.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/root.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/root.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/root.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/root.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/suffix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffixoid.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/suffixoid.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffixoid.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffixoid.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffixoid.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/suffixoid.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/tone-marking.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/tone-marking.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/tone-marking.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/tone-marking.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/tone-marking.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/tone-marking.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/transfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/morpheme/transfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/transfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/transfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/transfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/morpheme/transfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/aphorism.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/phraseme/aphorism.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/aphorism.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/aphorism.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/aphorism.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/aphorism.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"discourseFormulaRole": "Greeting"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/phraseme/discourse-formula.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/discourse-formula.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"discourseFormulaRole": "Greeting"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/idiom.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/phraseme/idiom.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/idiom.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/idiom.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/proverb.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "en/phraseme/proverb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/proverb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/proverb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/proverb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "en/phraseme/proverb.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/construction/fusion.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/construction/fusion.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/construction/fusion.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/construction/fusion.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/construction/fusion.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/construction/fusion.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/adjective.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adjective.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adjective.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adjective.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"case": "Acc"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/adposition.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adposition.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adposition.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adposition.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"case": "Acc"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"prefix": "Yes"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/adverb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adverb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adverb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/adverb.ts",
+			"input": {
+				"core": {
+					"prefix": "Yes"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"verbType": "Cop"
+				},
+				"inflectional": {
+					"gender": "Fem",
+					"number": "Plur",
+					"person": "1",
+					"polarity": "Neg",
+					"tense": "Fut",
+					"verbForm": "Inf"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/auxiliary.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/auxiliary.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/auxiliary.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/auxiliary.ts",
+			"input": {
+				"core": {
+					"verbType": "Cop"
+				},
+				"inflectional": {
+					"gender": "Fem",
+					"number": "Plur",
+					"person": "1",
+					"polarity": "Neg",
+					"tense": "Fut",
+					"verbForm": "Inf"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/coordinating-conjunction.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/coordinating-conjunction.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/coordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"pronType": "Art"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/determiner.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/determiner.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/determiner.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/determiner.ts",
+			"input": {
+				"core": {
+					"pronType": "Art"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/interjection.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/interjection.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/interjection.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/interjection.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/interjection.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/interjection.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"gender": "Fem"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"number": "Dual"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/noun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/noun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/noun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"gender": "Fem"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"number": "Dual"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/numeral.ts",
+			"input": {
+				"core": {},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"number": "Dual"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/numeral.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/numeral.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/numeral.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/numeral.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/numeral.ts",
+			"input": {
+				"core": {},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"number": "Dual"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/other.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/other.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/other.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/other.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/other.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/other.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/particle.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/particle.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/particle.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/particle.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/particle.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/particle.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/pronoun.ts",
+			"input": {
+				"core": {
+					"definite": "Def",
+					"pronType": "Dem",
+					"reflex": "Yes"
+				},
+				"inflectional": {
+					"gender": "Fem",
+					"number": "Plur",
+					"person": "1"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/pronoun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/pronoun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/pronoun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/pronoun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/pronoun.ts",
+			"input": {
+				"core": {
+					"definite": "Def",
+					"pronType": "Dem",
+					"reflex": "Yes"
+				},
+				"inflectional": {
+					"gender": "Fem",
+					"number": "Plur",
+					"person": "1"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"gender": "Fem"
+				},
+				"inflectional": {
+					"number": "Plur"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/proper-noun.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/proper-noun.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/proper-noun.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/proper-noun.ts",
+			"input": {
+				"core": {
+					"abbr": "Yes",
+					"gender": "Fem"
+				},
+				"inflectional": {
+					"number": "Plur"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/punctuation.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/punctuation.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/punctuation.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/punctuation.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/punctuation.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/punctuation.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"case": "Tem"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/subordinating-conjunction.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/subordinating-conjunction.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/subordinating-conjunction.ts",
+			"input": {
+				"core": {
+					"case": "Tem"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/symbol.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/symbol.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/symbol.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/symbol.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/symbol.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/symbol.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"hebBinyan": "HIFIL",
+					"hebExistential": "Yes"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"mood": "Imp",
+					"number": "Plur",
+					"person": "1",
+					"polarity": "Neg",
+					"tense": "Fut",
+					"verbForm": "Inf",
+					"voice": "Act"
+				}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/lexeme/verb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/verb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/verb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/lexeme/verb.ts",
+			"input": {
+				"core": {
+					"hebBinyan": "HIFIL",
+					"hebExistential": "Yes"
+				},
+				"inflectional": {
+					"definite": "Cons",
+					"gender": "Fem",
+					"mood": "Imp",
+					"number": "Plur",
+					"person": "1",
+					"polarity": "Neg",
+					"tense": "Fut",
+					"verbForm": "Inf",
+					"voice": "Act"
+				},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/circumfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/circumfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/circumfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/circumfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/circumfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/circumfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/clitic.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/clitic.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/clitic.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/clitic.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/clitic.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/clitic.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/duplifix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/duplifix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/duplifix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/duplifix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/duplifix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/duplifix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/infix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/infix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/infix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/infix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/infix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/infix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/interfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/interfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/interfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/interfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/interfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/interfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/prefix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/prefix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/prefix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/prefix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/prefix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/prefix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/root.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/root.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/root.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/root.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/root.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/root.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/suffix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffixoid.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/suffixoid.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffixoid.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffixoid.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffixoid.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/suffixoid.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/tone-marking.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/tone-marking.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/tone-marking.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/tone-marking.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/tone-marking.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/tone-marking.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/transfix.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/morpheme/transfix.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/transfix.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/transfix.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/transfix.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/morpheme/transfix.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/aphorism.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/phraseme/aphorism.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/aphorism.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/aphorism.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/aphorism.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/aphorism.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/phraseme/discourse-formula.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/discourse-formula.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/discourse-formula.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/idiom.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/phraseme/idiom.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/idiom.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/idiom.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/idiom.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/proverb.ts",
+			"input": {
+				"core": {}
+			},
+			"accepted": true
+		},
+		{
+			"route": "he/phraseme/proverb.ts",
+			"input": null,
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/proverb.ts",
+			"input": {},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/proverb.ts",
+			"input": {
+				"core": {},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/proverb.ts",
+			"input": {
+				"core": {
+					"unexpected": true
+				},
+				"inflectional": {}
+			},
+			"accepted": false
+		},
+		{
+			"route": "he/phraseme/proverb.ts",
+			"input": {
+				"core": {},
+				"unexpected": true
+			},
+			"accepted": false
+		}
+	],
+	"focused": [
+		{
+			"name": "DeVerbFeatureBagsSchema",
+			"cases": [
+				{
+					"input": {
+						"core": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"inflectional": {
+							"number": "Sing",
+							"tense": null,
+							"verbForm": null,
+							"voice": null
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"hasGovPrep": "mit",
+							"hasSepPrefix": "ab",
+							"lexicallyReflexive": "Yes",
+							"verbType": "Mod"
+						},
+						"inflectional": {
+							"mood": "Ind",
+							"number": "Plur",
+							"person": "3",
+							"tense": "Pres",
+							"verbForm": "Fin",
+							"voice": null
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"inflectional": {
+							"number": null,
+							"tense": null,
+							"verbForm": null,
+							"voice": null
+						}
+					},
+					"accepted": false
+				},
+				{
+					"input": {
+						"core": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": "Cop"
+						},
+						"inflectional": {
+							"number": "Sing",
+							"tense": null,
+							"verbForm": null,
+							"voice": null
+						}
+					},
+					"accepted": false
+				}
+			]
+		},
+		{
+			"name": "HeAdjectiveFeatureBagsSchema",
+			"cases": [
+				{
+					"input": {
+						"core": {
+							"abbr": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": "Fem",
+							"number": null
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"abbr": "Yes"
+						},
+						"inflectional": {
+							"definite": "Def",
+							"gender": ["Fem", "Masc"],
+							"number": "Plur"
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"abbr": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": null,
+							"number": null
+						}
+					},
+					"accepted": false
+				},
+				{
+					"input": {
+						"core": {
+							"abbr": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": [],
+							"number": null
+						}
+					},
+					"accepted": false
+				},
+				{
+					"input": {
+						"core": {
+							"abbr": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": ["Neut"],
+							"number": null
+						}
+					},
+					"accepted": false
+				}
+			]
+		},
+		{
+			"name": "HeVerbFeatureBagsSchema",
+			"cases": [
+				{
+					"input": {
+						"core": {
+							"hebBinyan": "PAAL",
+							"hebExistential": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": ["Fem", "Masc"],
+							"mood": null,
+							"number": "Plur",
+							"person": ["2", "3"],
+							"polarity": null,
+							"tense": "Past",
+							"verbForm": null,
+							"voice": "Act"
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"hebBinyan": null,
+							"hebExistential": "Yes"
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": "Masc",
+							"mood": "Imp",
+							"number": null,
+							"person": "2",
+							"polarity": "Pos",
+							"tense": null,
+							"verbForm": null,
+							"voice": null
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"hebBinyan": null,
+							"hebExistential": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": null,
+							"mood": null,
+							"number": null,
+							"person": null,
+							"polarity": null,
+							"tense": null,
+							"verbForm": null,
+							"voice": null
+						}
+					},
+					"accepted": false
+				},
+				{
+					"input": {
+						"core": {
+							"hebBinyan": "UNKNOWN",
+							"hebExistential": null
+						},
+						"inflectional": {
+							"definite": null,
+							"gender": "Neut",
+							"mood": null,
+							"number": null,
+							"person": [],
+							"polarity": null,
+							"tense": null,
+							"verbForm": null,
+							"voice": null
+						}
+					},
+					"accepted": false
+				}
+			]
+		},
+		{
+			"name": "DeDeterminerFeatureBagsSchema",
+			"cases": [
+				{
+					"input": {
+						"core": {
+							"definite": "Def",
+							"extPos": "DET",
+							"foreign": null,
+							"numType": "Card",
+							"person": "3",
+							"polite": null,
+							"poss": "Yes",
+							"pronType": "Art"
+						},
+						"inflectional": {
+							"case": "Nom",
+							"degree": null,
+							"gender": "Masc",
+							"gender[psor]": ["Fem", "Masc"],
+							"number": "Sing",
+							"number[psor]": null
+						}
+					},
+					"accepted": true
+				},
+				{
+					"input": {
+						"core": {
+							"definite": null,
+							"extPos": null,
+							"foreign": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": null
+						},
+						"inflectional": {
+							"case": null,
+							"degree": null,
+							"gender": null,
+							"gender[psor]": null,
+							"number": null,
+							"number[psor]": null
+						}
+					},
+					"accepted": false
+				},
+				{
+					"input": {
+						"core": {
+							"definite": "Cons",
+							"extPos": "PRON",
+							"foreign": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Rcp"
+						},
+						"inflectional": {
+							"case": "Loc",
+							"degree": null,
+							"gender": null,
+							"gender[psor]": [],
+							"number": null,
+							"number[psor]": null
+						}
+					},
+					"accepted": false
+				}
+			]
+		}
+	]
+}

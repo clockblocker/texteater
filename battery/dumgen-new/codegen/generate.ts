@@ -8,7 +8,6 @@ import { registrations as dumlingOperations } from "../../dumling-new/codegen/op
 import { loadRoutes } from "../../dumling-new/codegen/routes.js";
 import { formatTypeScript } from "../../dumrel-new/codegen/format-typescript.js";
 import { normalizeText } from "../../dumrel-new/src/semantics.js";
-import * as universal from "../src/universal/schemas.js";
 
 const check = process.argv.includes("--check");
 async function emit(name: string, source: string) {
@@ -58,49 +57,10 @@ export const targetsByLanguage={${["de", "en", "he"]
 		.join(",")}};
 `,
 );
-const privateSchemas = await import("../src/concrete-lang/de/model-schemas.js");
-const generated = await import("../src/generated/schemas.js");
-const schemas = {
-	...Object.fromEntries(
-		Object.entries(universal).filter(
-			([, value]) => value instanceof z.ZodType,
-		),
-	),
-	encounterSchema: generated.encounterSchema,
-	lemmaSchema: generated.lemmaSchema,
-	readingSchema: generated.readingSchema,
-	attestationSchema: generated.attestationSchema,
-	emojiDescriptionSchema: generated.emojiDescriptionSchema,
-	generationInput: generated.generationInputSchema,
-	comparisonInput: generated.comparisonInputSchema,
-	knowledgeInput: generated.knowledgeInputSchema,
-	emojiOutput: z.strictObject({
-		emojiDescription: generated.emojiDescriptionSchema,
-	}),
-	intakeOutput: privateSchemas.intakeOutputSchema,
-	knowledgeOutput: privateSchemas.knowledgeOutputSchema,
+const { canonicalDumgenValidationSchemas: schemas } = await import(
+	"./validation-schemas.js"
+);
 
-	...Object.fromEntries(
-		Object.entries(generated.grammarSchemas).map(([key, value]) => [
-			`grammar/${key}`,
-			z.union([
-				value,
-				z.strictObject({ decision: z.literal("Unresolved") }),
-			]),
-		]),
-	),
-	...Object.fromEntries(
-		Object.entries(generated.targetsByLanguage).map(([key, value]) => [
-			`target/${key}`,
-			key === "de"
-				? privateSchemas.targetOutputSchema
-				: z.union([
-						value,
-						z.strictObject({ decision: z.literal("Unresolved") }),
-					]),
-		]),
-	),
-};
 const operations = [
 	...dumlingOperations,
 	{

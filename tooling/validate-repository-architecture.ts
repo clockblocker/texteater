@@ -1,6 +1,9 @@
 import { join } from "node:path";
 import { reportFailures, runAll } from "./lib/process";
-import { validateSourceImports } from "./lib/source-import-policy";
+import {
+	conventionalArchitectureInputs,
+	validateSourceImports,
+} from "./lib/source-import-policy";
 import { toolPaths } from "./lib/tools";
 import { discoverWorkspaces, findRepositoryRoot } from "./lib/workspaces";
 
@@ -28,8 +31,11 @@ const results = await runAll([
 			"--config",
 			join(repositoryRoot, "tooling/dependency-cruiser.repository.cjs"),
 			"--",
-			"app",
-			"battery",
+			...workspaces.flatMap((workspace) =>
+				conventionalArchitectureInputs(workspace.dir).map((input) =>
+					join(workspace.relativePath, input),
+				),
+			),
 		],
 		cwd: repositoryRoot,
 		label: "repository dependency-cruiser rules",

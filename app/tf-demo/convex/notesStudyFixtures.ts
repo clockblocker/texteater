@@ -11,7 +11,7 @@ import {
 	NOTE_STUDY_VISITOR_ID,
 	type NoteStudyDatabaseUnit,
 	storedRelation,
-} from "../src/playground/notes-study/note-study-dummy-database";
+} from "../shared/notes-study/note-study-dummy-database";
 import type { Id } from "./_generated/dataModel";
 import { internalMutation, type MutationCtx, query } from "./_generated/server";
 import { shadowKeyFor } from "./model/shadows";

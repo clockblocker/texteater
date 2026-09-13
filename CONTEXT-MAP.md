@@ -14,7 +14,3 @@
   Dumling entities.
 - [Dumgen](./battery/dumgen-new/CONTEXT.md): resolves learner text through the
   generation and prompt pipeline.
-
-- [Retained Dumling](./battery/dumling-old/CONTEXT.md): vocabulary used by consumers awaiting migration.
-- [Retained Dumrel](./battery/dumrel-old/CONTEXT.md): relation contracts used by retained consumers.
-- [Retained Dumgen](./battery/gumgen-old/CONTEXT.md): generation contracts and evidence used by retained consumers.

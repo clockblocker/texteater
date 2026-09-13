@@ -183,10 +183,16 @@ export async function compileRelationVerdict(
 			await Bun.file(
 				resolve(
 					workspace,
-					normalized.path.replace(
-						/^battery\/dumgen\//,
-						"battery/gumgen-old/",
-					),
+					normalized.path.startsWith("battery/dumgen/src/")
+						? "battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/" +
+								normalized.path.slice(
+									"battery/dumgen/src/".length,
+								) +
+								".txt"
+						: normalized.path.replace(
+								/^battery\/dumgen\//,
+								"battery/gumgen-old/",
+							),
 				),
 			).arrayBuffer(),
 		);

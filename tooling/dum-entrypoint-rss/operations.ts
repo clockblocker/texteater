@@ -1,441 +1,151 @@
+import assert from "node:assert/strict";
+
 type PublicModule = Record<string, unknown>;
-
-type RepresentativeOperation = (
-	publicModule: PublicModule,
-) => Promise<void> | void;
-
-const germanNounLemma = {
-	canonicalForm: "Haus",
-	coreFeatures: { gender: "Neut", hyph: null },
+const lemma = {
+	unitKind: "Lemma",
+	language: "de",
 	family: "Lexeme",
 	kind: "NOUN",
-	language: "de",
-} as const;
-
-const englishVerbLemma = {
-	canonicalForm: "walk",
-	coreFeatures: {
-		abbr: null,
-		extPos: null,
-		hasGovPrep: null,
-		phrasal: null,
-		style: null,
-	},
-	family: "Lexeme",
-	kind: "VERB",
-	language: "en",
-} as const;
-
-const englishReading = {
-	emojiDescription: "🚶",
-	lemma: englishVerbLemma,
-} as const;
-
-const germanDeterminerReading = {
-	emojiDescription: "👉",
-	lemma: {
-		canonicalForm: "der",
-		coreFeatures: {
-			definite: "Def",
-			extPos: null,
-			foreign: null,
-			numType: null,
-			person: null,
-			polite: null,
-			poss: null,
-			pronType: "Art",
-		},
-		family: "Lexeme",
-		kind: "DET",
-		language: "de",
-	},
-} as const;
-
-function exportedFunction(
-	publicModule: PublicModule,
-	name: string,
-): (...args: never[]) => unknown {
-	const value = publicModule[name];
-	if (typeof value !== "function") {
-		throw new Error(`Representative operation expected export ${name}.`);
-	}
-	return value as (...args: never[]) => unknown;
-}
-
-function assert(condition: unknown, message: string): asserts condition {
-	if (!condition) throw new Error(message);
-}
-
-function noNetworkSdk() {
-	return {
-		structuredGeneration() {
-			throw new Error(
-				"RSS representative operation must not call a model.",
-			);
-		},
-		unstructuredGeneration() {
-			throw new Error(
-				"RSS representative operation must not call a model.",
-			);
-		},
-	};
-}
-
-const operations: Readonly<Record<string, RepresentativeOperation>> = {
-	"dumling.parse-lemma"(publicModule) {
-		const getLanguageApi = exportedFunction(publicModule, "getLanguageApi");
-		const languageApi = getLanguageApi("de" as never) as {
-			parse: { lemma(input: unknown): { success: boolean } };
-		};
-		assert(
-			languageApi.parse.lemma(germanNounLemma).success,
-			"Dumling representative Lemma must parse.",
-		);
-	},
-	"dumling.reading-fingerprint"(publicModule) {
-		const readingFingerprint = exportedFunction(
-			publicModule,
-			"readingFingerprint",
-		);
-		const fingerprint = readingFingerprint(englishReading as never);
-		assert(
-			typeof fingerprint === "string" && fingerprint.length > 0,
-			"Dumling representative Reading must have a fingerprint.",
-		);
-	},
-	"dumling.id-round-trip"(publicModule) {
-		const buildIdOperations = exportedFunction(
-			publicModule,
-			"buildIdOperations",
-		) as unknown as (
-			language: "en",
-			parse: {
-				lemma(input: unknown): { success: true; data: unknown };
-				surface(input: unknown): { success: true; data: unknown };
-			},
-		) => {
-			decode: {
-				asLemmaIdentity(input: string): {
-					data?: {
-						kind: string;
-						language: string;
-					};
-					success: boolean;
-				};
-			};
-			encode: { asBase64Url(input: unknown): string };
-		};
-		const acceptCanonicalEntity = (input: unknown) => ({
-			data: input,
-			success: true as const,
-		});
-		const id = buildIdOperations("en", {
-			lemma: acceptCanonicalEntity,
-			surface: acceptCanonicalEntity,
-		});
-		const encoded = id.encode.asBase64Url(englishVerbLemma);
-		const decoded = id.decode.asLemmaIdentity(encoded);
-		assert(
-			decoded.success &&
-				decoded.data?.kind === "Lemma" &&
-				decoded.data.language === "en",
-			"Dumling lean ID facade must round-trip a canonical English Lemma.",
-		);
-	},
-	"dumling.read-vocabulary"(publicModule) {
-		assert(
-			Array.isArray(publicModule.memberOrthographyValues) &&
-				publicModule.memberOrthographyValues.includes("Standard"),
-			"Dumling runtime vocabulary must contain Standard orthography.",
-		);
-	},
-	"dumling.read-fixed-catalog"(publicModule) {
-		const allFixedLemmaCatalogs = exportedFunction(
-			publicModule,
-			"allFixedLemmaCatalogs",
-		);
-		const catalogs = allFixedLemmaCatalogs() as readonly {
-			coverage?: string;
-			members?: readonly unknown[];
-			scope?: string;
-		}[];
-		const detCatalog = catalogs.find(
-			({ scope }) => scope === "de-Lexeme-DET-v1",
-		);
-		assert(
-			detCatalog?.coverage === "Complete" &&
-				(detCatalog.members?.length ?? 0) > 0,
-			"Dumling fixed DET catalog must expose its complete named perimeter.",
-		);
-	},
-	"dumrel.apply-knowledge-change"(publicModule) {
-		const applyKnowledgeChange = exportedFunction(
-			publicModule,
-			"applyKnowledgeChange",
-		);
-		const result = applyKnowledgeChange(
-			undefined as never,
-			{
-				aspect: "definition",
-				kind: "Contribute",
-				value: " a dwelling ",
-			} as never,
-		) as { definition?: string };
-		assert(
-			result.definition === "a dwelling",
-			"Dumrel representative Knowledge Change must normalize its value.",
-		);
-	},
-	"dumrel.project-relations"(publicModule) {
-		const projectRelations = exportedFunction(
-			publicModule,
-			"projectRelations",
-		);
-		const result = projectRelations({
-			edges: [],
-			readings: [{ lemma: "lemma:house", reading: "reading:house" }],
-		} as never);
-		assert(
-			Array.isArray(result) && result.length === 0,
-			"Dumrel representative graph must project to an empty edge list.",
-		);
-	},
-	"dumrel.project-grammatical-relations"(publicModule) {
-		const projectGrammaticalRelations = exportedFunction(
-			publicModule,
-			"projectGrammaticalRelations",
-		);
-		const result = projectGrammaticalRelations([] as never);
-		assert(
-			Array.isArray(result) &&
-				result.length === 0 &&
-				Object.isFrozen(result),
-			"Dumrel representative grammatical projection must return a frozen empty claim list.",
-		);
-	},
-	"dumrel.read-default-settings"(publicModule) {
-		const settings = publicModule.DEFAULT_KNOWLEDGE_SETTINGS as
-			| { definition?: boolean }
-			| undefined;
-		assert(
-			settings?.definition === true && Object.isFrozen(settings),
-			"Dumrel default Knowledge Settings must be enabled and frozen.",
-		);
-	},
-	"dumrel.read-vocabulary"(publicModule) {
-		assert(
-			Array.isArray(publicModule.semanticRelationValues) &&
-				publicModule.semanticRelationValues.includes("synonym"),
-			"Dumrel runtime vocabulary must contain synonym.",
-		);
-	},
-	"dumrel.resolve-fixed-knowledge"(publicModule) {
-		const fixedKnowledgeFor = exportedFunction(
-			publicModule,
-			"fixedKnowledgeFor",
-		);
-		const result = fixedKnowledgeFor(germanDeterminerReading as never) as {
-			decision?: string;
-			knowledge?: { definition?: string; transcription?: string };
-		};
-		assert(
-			result.decision === "Found" &&
-				typeof result.knowledge?.definition === "string" &&
-				result.knowledge.transcription === undefined,
-			"Dumrel fixed DET lookup must return authored Knowledge without an unauthored transcription.",
-		);
-	},
-	"dumdict.apply-knowledge-change"(publicModule) {
-		const applyDumdictKnowledgeChange = exportedFunction(
-			publicModule,
-			"applyDumdictKnowledgeChange",
-		);
-		const result = applyDumdictKnowledgeChange(
-			{
-				attestations: ["They walk home together."],
-				attestedTranslations: ["walk"],
-				notes: "Core motion reading.",
-				reading: englishReading,
-			} as never,
-			{
-				change: {
-					aspect: "definition",
-					kind: "Contribute",
-					value: " motion on foot ",
-				},
-				reading: englishReading,
-			} as never,
-		) as { knowledge?: { definition?: string } };
-		assert(
-			result.knowledge?.definition === "motion on foot",
-			"Dumdict representative Knowledge Change must update the Reading Entry.",
-		);
-	},
-	"dumdict.project-relations"(publicModule) {
-		const projectSemanticRelations = exportedFunction(
-			publicModule,
-			"projectSemanticRelations",
-		);
-		const result = projectSemanticRelations({
-			lemmas: [],
-			readings: [],
-		} as never);
-		assert(
-			Array.isArray(result) && result.length === 0,
-			"Dumdict empty inventory must project to an empty relation list.",
-		);
-	},
-	"dumdict.derive-pending-identity"(publicModule) {
-		const createPendingSemanticRelationRecord = exportedFunction(
-			publicModule,
-			"createPendingSemanticRelationRecord",
-		);
-		const result = createPendingSemanticRelationRecord(
-			englishReading as never,
-			{
-				relation: "nearSynonym",
-				target: {
-					language: "en",
-					canonicalForm: "  swim  ",
-					family: "Lexeme",
-					kind: "VERB",
-				},
-			} as never,
-		) as {
-			locator?: { targetPendingId?: string };
-			pending?: { target?: { canonicalForm?: string } };
-		};
-		assert(
-			result.pending?.target?.canonicalForm === "swim" &&
-				result.locator?.targetPendingId ===
-					"pending-entry:v2:en:Lexeme:VERB:swim",
-			"Dumdict Pending Semantic Relation identity must be canonical.",
-		);
-	},
-	"dumgen.build"(publicModule) {
-		const buildDumgen = exportedFunction(publicModule, "buildDumgen");
-		const dumgen = buildDumgen({
-			modelGenerator: noNetworkSdk(),
-		} as never) as {
-			segment?: unknown;
-		};
-		assert(
-			typeof dumgen.segment === "function",
-			"Dumgen representative runtime must expose segmentation.",
-		);
-	},
-	"dumgen.project-grammatical-input"(publicModule) {
-		const project = exportedFunction(
-			publicModule,
-			"projectGrammaticalResolutionInput",
-		);
-		const result = project({
-			memberSegmentIndices: [0],
-			segments: [{ kind: "ResolvableText", text: "Haus" }],
-		} as never) as { markedContext?: string; members?: readonly string[] };
-		assert(
-			result.markedContext === "<TARGET>Haus</TARGET>" &&
-				result.members?.[0] === "Haus",
-			"Dumgen representative grammatical input must preserve the target.",
-		);
-	},
-	"dumgen.build-knowledge"(publicModule) {
-		const buildKnowledgeDumgen = exportedFunction(
-			publicModule,
-			"buildKnowledgeDumgen",
-		);
-		const dumgen = buildKnowledgeDumgen({
-			modelGenerator: noNetworkSdk(),
-		} as never) as {
-			generate?: unknown;
-		};
-		assert(
-			typeof dumgen.generate === "object",
-			"Dumgen representative Knowledge runtime must expose generation.",
-		);
-	},
-	"dumgen.build-knowledge-runtime"(publicModule) {
-		const buildKnowledgeDumgenRuntime = exportedFunction(
-			publicModule,
-			"buildKnowledgeDumgenRuntime",
-		);
-		const dumgen = buildKnowledgeDumgenRuntime({
-			modelGenerator: noNetworkSdk(),
-		} as never) as {
-			generate?: unknown;
-		};
-		assert(
-			typeof dumgen.generate === "object",
-			"Dumgen representative injected Knowledge runtime must expose generation.",
-		);
-	},
-	async "dumgen.openai-fetch"(publicModule) {
-		const buildOpenAiFetchModelGenerator = exportedFunction(
-			publicModule,
-			"buildOpenAiFetchModelGenerator",
-		);
-		const sdk = buildOpenAiFetchModelGenerator({
-			apiKey: "rss-audit",
-			fetch: async () =>
-				Response.json({
-					output: [
-						{
-							content: [{ text: "ok", type: "output_text" }],
-							type: "message",
-						},
-					],
-					status: "completed",
-				}),
-		} as never) as {
-			unstructuredGeneration(
-				input: string,
-			): import("effect/Effect").Effect<string, unknown>;
-		};
-		assert(
-			(await (
-				await import("effect/Effect")
-			).runPromise(sdk.unstructuredGeneration("rss audit"))) === "ok",
-			"Dumgen fetch adapter must complete a representative response.",
-		);
-	},
-	"dumgen.build-runtime"(publicModule) {
-		const buildDumgenRuntime = exportedFunction(
-			publicModule,
-			"buildDumgenRuntime",
-		);
-		const dumgen = buildDumgenRuntime({
-			modelGenerator: noNetworkSdk(),
-		} as never) as { resolve?: unknown };
-		assert(
-			typeof dumgen.resolve === "object",
-			"Dumgen representative injected runtime must expose resolution.",
-		);
-	},
-	"dumgen.read-runtime-prompt-data"(publicModule) {
-		const payload = publicModule.encodedRuntimePromptData;
-		assert(
-			typeof payload === "string" &&
-				payload.length > 100 &&
-				/^[A-Za-z0-9+/]+={0,2}$/u.test(payload),
-			"Dumgen runtime prompt data must be a compressed Base64 payload.",
-		);
-	},
-	"dumgen.read-vocabulary"(publicModule) {
-		assert(
-			Array.isArray(publicModule.segmentKindValues) &&
-				publicModule.segmentKindValues.includes("ResolvableText"),
-			"Dumgen runtime vocabulary must contain ResolvableText.",
-		);
-	},
+	canonicalForm: "Bank",
+	coreFeatures: { gender: "Fem", hyph: null },
 };
-
+const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
+function call(module: PublicModule, name: string, ...args: unknown[]): any {
+	const operation = module[name];
+	assert.equal(
+		typeof operation,
+		"function",
+		`Missing public operation ${name}`,
+	);
+	return (operation as (...args: unknown[]) => unknown)(...args);
+}
 export async function runRepresentativeOperation(
-	operationId: string,
-	publicModule: PublicModule,
+	id: string,
+	module: PublicModule,
 ): Promise<void> {
-	const operation = operations[operationId];
-	if (operation === undefined) {
-		throw new Error(`Unknown representative operation: ${operationId}`);
+	switch (id) {
+		case "dumling.parse-unit":
+			assert.equal(call(module, "parseUnit", lemma).success, true);
+			break;
+		case "dumling.validate-feature-bag": {
+			const operations = module.validationOperations as Record<
+				string,
+				(input: unknown) => { value: unknown; issues?: unknown[] }
+			>;
+			assert.equal(
+				typeof operations["dumling.feature-bag.marked"],
+				"function",
+			);
+			assert.ok(
+				(operations["dumling.feature-bag.marked"]!({ case: "Nom" })
+					.issues?.length ?? 0) === 0,
+			);
+			break;
+		}
+		case "dumrel.knowledge-projection": {
+			const result = call(module, "applyKnowledgeChange", {
+				source: reading,
+				knowledge: {},
+				change: {
+					kind: "Contribute",
+					aspect: "definition",
+					value: " bank ",
+				},
+			});
+			assert.deepEqual(result, {
+				success: true,
+				value: { definition: "bank" },
+			});
+			assert.equal(
+				call(module, "selectKnowledge", {
+					route: { language: "de", family: "Lexeme", kind: "NOUN" },
+				}).success,
+				true,
+			);
+			assert.equal(
+				call(module, "projectSemanticRelations", [
+					{ reading, knowledge: result.value },
+				]).success,
+				true,
+			);
+			break;
+		}
+		case "dumdict.identity":
+			assert.equal(
+				typeof call(module, "makeSurfaceId", "de", {
+					unitKind: "Surface",
+					language: "de",
+					lemma,
+					normalizedSurface: "Bank",
+					spelling: "Canonical",
+					surfaceFeatures: null,
+					inflectionalFeatures: { case: "Nom", number: "Sing" },
+				}),
+				"string",
+			);
+			break;
+		case "dumdict.parse-record": {
+			const result = call(module, "parseAsLemmaRecord", { lemma }, "de");
+			assert.deepEqual(result, { lemma });
+			break;
+		}
+		case "dumdict.session-storage": {
+			const storage = call(module, "createMemoryStorage", "de");
+			assert.deepEqual(storage.snapshot(), []);
+			break;
+		}
+		case "dumdict.project-relations":
+			assert.deepEqual(call(module, "projectSemanticRelations", []), {
+				success: true,
+				value: [],
+			});
+			break;
+		case "dumdict.pending-identity":
+			assert.equal(
+				typeof module.createPendingSemanticRelationRecord,
+				"function",
+			);
+			assert.deepEqual(
+				call(module, "deduplicatePendingSemanticRelationRecords", []),
+				[],
+			);
+			break;
+		case "dumgen.resolve-supplied-target": {
+			const dumgen = call(module, "createDumgen", {
+				execute: async () => ({
+					memberOrthographies: ["Standard"],
+					normalizedMembers: ["Bank"],
+					surface: {
+						spelling: "Canonical",
+						surfaceFeatures: null,
+						inflectionalFeatures: { case: "Nom", number: "Sing" },
+					},
+					lemma: {
+						canonicalForm: "Bank",
+						coreFeatures: { gender: "Fem", hyph: null },
+					},
+					realizationCoverage: "Full",
+				}),
+			});
+			const { runPromise } = await import("effect/Effect");
+			const result: any = await runPromise(
+				dumgen.resolveGrammar({
+					sentence: {
+						id: "rss",
+						language: "de",
+						segments: [{ kind: "ResolvableText", text: "Bank" }],
+					},
+					target: {
+						family: "Lexeme",
+						kind: "NOUN",
+						memberSegmentIndices: [0],
+					},
+				}),
+			);
+			assert.equal(result.unitKind, "Attestation");
+			break;
+		}
+		default:
+			throw new Error(`Unknown representative operation: ${id}`);
 	}
-	await operation(publicModule);
 }

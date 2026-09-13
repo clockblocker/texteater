@@ -25,311 +25,167 @@ export type DumEntryPoint = OperationalEntryPoint | ExemptEntryPoint;
  * Dumdict, and Dumgen. Tests compare this list to the package manifests so a
  * new public subpath cannot silently escape the memory audit.
  */
+export const DUM_PACKAGE_PATHS = {
+	dumling: "dumling-new",
+	dumrel: "dumrel-new",
+	dumdict: "dumdict",
+	dumgen: "dumgen-new",
+} as const;
 export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 	{
+		specifier: "dumling",
 		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
 		operation: {
-			description:
-				"Parse a valid German NOUN Lemma through the language API.",
-			id: "dumling.parse-lemma",
+			id: "dumling.parse-unit",
+			description: "parse unit",
 		},
-		rationale: "Package root exposes Dumling runtime operations.",
-		specifier: "dumling-old",
 	},
 	{
+		specifier: "dumling/types",
 		classification: "type-only",
-		rationale:
-			"Published JavaScript is empty; the subpath is a type surface.",
-		specifier: "dumling-old/types",
+		rationale: "Structural declarations, with empty JavaScript.",
 	},
 	{
-		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately Zod-bearing public schema composition surface.",
-		specifier: "dumling-old/schema",
-	},
-	{
-		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately dangerous route-specific schema tree costing roughly 100 MiB RSS.",
-		specifier: "dumling-old/dangerously-heavy-schema-tree",
-	},
-	{
+		specifier: "dumling/validation",
 		classification: "operational",
-		operation: {
-			description:
-				"Encode and decode a canonical Lemma ID through the lean codec facade.",
-			id: "dumling.id-round-trip",
-		},
 		rationale:
-			"Lean canonical ID codecs operate without a schema or parser-artifact import.",
-		specifier: "dumling-old/id",
-	},
-	{
-		classification: "operational",
+			"Published application runtime; must exclude schema authoring.",
 		operation: {
-			description: "Compute the stable fingerprint of a Reading.",
-			id: "dumling.reading-fingerprint",
+			id: "dumling.validate-feature-bag",
+			description: "validate feature bag",
 		},
-		rationale: "Runtime Reading identity operation.",
-		specifier: "dumling-old/reading",
 	},
 	{
-		classification: "operational",
-		operation: {
-			description:
-				"Read and verify the public Dumling runtime vocabulary.",
-			id: "dumling.read-vocabulary",
-		},
-		rationale: "Runtime constants consumed without a schema import.",
-		specifier: "dumling-old/vocabulary",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description: "Read and verify the fixed German determiner catalog.",
-			id: "dumling.read-fixed-catalog",
-		},
-		rationale: "Runtime fixed-member catalog and lookup surface.",
-		specifier: "dumling-old/fixed",
-	},
-	{
+		specifier: "dumling/package.json",
 		classification: "metadata",
-		rationale: "Package metadata, not executable application code.",
-		specifier: "dumling-old/package.json",
+		rationale: "Package metadata.",
 	},
 	{
-		classification: "operational",
-		operation: {
-			description: "Apply a normalized Definition Knowledge Change.",
-			id: "dumrel.apply-knowledge-change",
-		},
-		rationale: "Package root exposes Knowledge and relation operations.",
+		specifier: "dumling/schema/*",
+		classification: "schema-authoring-exempt",
+		rationale: "Explicit schema or experiment authoring surface.",
+	},
+	{
 		specifier: "dumrel",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumrel.knowledge-projection",
+			description: "knowledge projection",
+		},
 	},
 	{
-		classification: "type-only",
-		rationale:
-			"Published JavaScript is empty; the subpath is a type surface.",
 		specifier: "dumrel/types",
+		classification: "type-only",
+		rationale: "Structural declarations, with empty JavaScript.",
 	},
 	{
-		classification: "operational",
-		operation: {
-			description: "Project a minimal direct Semantic Relation graph.",
-			id: "dumrel.project-relations",
-		},
-		rationale: "Lean relation-algebra runtime surface.",
-		specifier: "dumrel/relations",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description: "Project an empty Grammatical Relation claim set.",
-			id: "dumrel.project-grammatical-relations",
-		},
-		rationale: "Lean grammatical-relation algebra runtime surface.",
-		specifier: "dumrel/grammatical-relations",
-	},
-	{
-		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately Zod-bearing public schema composition surface.",
 		specifier: "dumrel/schema",
+		classification: "schema-authoring-exempt",
+		rationale: "Explicit schema or experiment authoring surface.",
 	},
 	{
-		classification: "operational",
-		operation: {
-			description:
-				"Read and verify the frozen default Knowledge Settings.",
-			id: "dumrel.read-default-settings",
-		},
-		rationale: "Runtime settings data consumed without a schema import.",
-		specifier: "dumrel/settings",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description: "Read and verify the public relation vocabulary.",
-			id: "dumrel.read-vocabulary",
-		},
-		rationale: "Runtime constants consumed without a schema import.",
-		specifier: "dumrel/vocabulary",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Resolve fixed Knowledge for a catalogued German determiner Reading.",
-			id: "dumrel.resolve-fixed-knowledge",
-		},
-		rationale: "Runtime fixed-Knowledge lookup surface.",
-		specifier: "dumrel/fixed",
-	},
-	{
-		classification: "metadata",
-		rationale: "Package metadata, not executable application code.",
 		specifier: "dumrel/package.json",
+		classification: "metadata",
+		rationale: "Package metadata.",
 	},
 	{
-		classification: "operational",
-		operation: {
-			description:
-				"Apply a Definition Knowledge Change to a Reading Entry.",
-			id: "dumdict.apply-knowledge-change",
-		},
-		rationale:
-			"Package root exposes dictionary workflows and runtime schemas.",
 		specifier: "dumdict",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumdict.parse-record",
+			description: "parse record",
+		},
 	},
 	{
-		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately Zod-bearing public schema composition surface.",
 		specifier: "dumdict/schema",
-	},
-	{
 		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately dangerous language-specific schema tree costing roughly 100 MiB RSS.",
-		specifier: "dumdict/dangerously-heavy-schema-tree",
+		rationale: "Explicit schema or experiment authoring surface.",
 	},
 	{
-		classification: "operational",
-		operation: {
-			description:
-				"Apply a Definition Knowledge Change to a Reading Entry.",
-			id: "dumdict.apply-knowledge-change",
-		},
-		rationale: "Schema-free-named dictionary runtime facade.",
 		specifier: "dumdict/runtime",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumdict.identity",
+			description: "parse record",
+		},
 	},
 	{
-		classification: "operational",
-		operation: {
-			description:
-				"Project an empty learner Semantic Relation inventory.",
-			id: "dumdict.project-relations",
-		},
-		rationale: "Dictionary relation projection runtime surface.",
 		specifier: "dumdict/relations",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumdict.project-relations",
+			description: "project relations",
+		},
 	},
 	{
-		classification: "operational",
-		operation: {
-			description:
-				"Construct canonical Pending Semantic Relation identity.",
-			id: "dumdict.derive-pending-identity",
-		},
-		rationale: "Dictionary pending-identity runtime surface.",
 		specifier: "dumdict/pending",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumdict.pending-identity",
+			description: "pending identity",
+		},
 	},
 	{
-		classification: "metadata",
-		rationale: "Package metadata, not executable application code.",
 		specifier: "dumdict/package.json",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description: "Build Dumgen with an injected no-network model SDK.",
-			id: "dumgen.build",
-		},
-		rationale: "Package root exposes the generation runtime.",
-		specifier: "dumgen",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description: "Project a grammatical target from Segments.",
-			id: "dumgen.project-grammatical-input",
-		},
-		rationale: "Deterministic grammatical projection runtime.",
-		specifier: "dumgen/projection",
-	},
-	{
-		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately Zod-bearing public model and DTO schema composition surface.",
-		specifier: "dumgen/schema",
-	},
-	{
-		classification: "schema-authoring-exempt",
-		rationale:
-			"Deliberately Zod-bearing prompt and structured-output authoring surface.",
-		specifier: "dumgen/model-authoring",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Build Knowledge generation with an injected no-network SDK.",
-			id: "dumgen.build-knowledge",
-		},
-		rationale: "Convenience Knowledge generation runtime.",
-		specifier: "dumgen/knowledge",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Build Knowledge generation with an injected no-network SDK.",
-			id: "dumgen.build-knowledge-runtime",
-		},
-		rationale: "Injected-provider Knowledge generation runtime.",
-		specifier: "dumgen/knowledge-runtime",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Perform a no-network unstructured Responses operation.",
-			id: "dumgen.openai-fetch",
-		},
-		rationale: "Fetch-only OpenAI runtime adapter.",
-		specifier: "dumgen/openai-fetch",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Build Dumgen runtime with injected no-network dependencies.",
-			id: "dumgen.build-runtime",
-		},
-		rationale: "Injected-provider main generation runtime.",
-		specifier: "dumgen/runtime",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Read the generated compressed prompt payload for sidecar-free runtime bundlers.",
-			id: "dumgen.read-runtime-prompt-data",
-		},
-		rationale:
-			"Compressed generated runtime data injected only by bundlers that cannot deploy package sidecars.",
-		specifier: "dumgen/runtime-prompt-data",
-	},
-	{
-		classification: "operational",
-		operation: {
-			description:
-				"Read and verify the public Dumgen runtime vocabulary.",
-			id: "dumgen.read-vocabulary",
-		},
-		rationale: "Runtime constants consumed without a schema import.",
-		specifier: "dumgen/vocabulary",
-	},
-	{
 		classification: "metadata",
-		rationale: "Package metadata, not executable application code.",
-		specifier: "dumgen/package.json",
+		rationale: "Package metadata.",
 	},
-] as const;
-
+	{
+		specifier: "dumdict/memory",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumdict.session-storage",
+			description: "session storage",
+		},
+	},
+	{
+		specifier: "dumgen",
+		classification: "operational",
+		rationale:
+			"Published application runtime; must exclude schema authoring.",
+		operation: {
+			id: "dumgen.resolve-supplied-target",
+			description: "resolve supplied target",
+		},
+	},
+	{
+		specifier: "dumgen/types",
+		classification: "type-only",
+		rationale: "Structural declarations, with empty JavaScript.",
+	},
+	{
+		specifier: "dumgen/schemas",
+		classification: "schema-authoring-exempt",
+		rationale: "Explicit schema or experiment authoring surface.",
+	},
+	{
+		specifier: "dumgen/development",
+		classification: "schema-authoring-exempt",
+		rationale: "Explicit schema or experiment authoring surface.",
+	},
+	{
+		specifier: "dumgen/package.json",
+		classification: "metadata",
+		rationale: "Package metadata.",
+	},
+];
 export function operationalEntrypoints(): readonly OperationalEntryPoint[] {
 	return DUM_ENTRYPOINTS.filter(
-		(entrypoint): entrypoint is OperationalEntryPoint =>
-			entrypoint.classification === "operational",
+		(entry): entry is OperationalEntryPoint =>
+			entry.classification === "operational",
 	);
 }

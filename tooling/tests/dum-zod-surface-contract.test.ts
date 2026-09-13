@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import {
-	DUM_DANGEROUSLY_HEAVY_ZOD_SURFACES,
 	DUM_OPERATIONAL_ZOD_FREE_EXPORT_SURFACES,
 	DUM_PUBLIC_ZOD_SURFACES,
 } from "../dum-zod-surface-contract";
@@ -25,17 +24,21 @@ test("normal Zod surfaces expose only the frozen broad composition primitives", 
 	}
 });
 
-test("heavyweight route trees require cost-bearing danger-zone names", async () => {
-	for (const [specifier, expectedExports] of Object.entries(
-		DUM_DANGEROUSLY_HEAVY_ZOD_SURFACES,
-	)) {
-		expect(specifier).toContain("dangerously-heavy");
-		const actualExports = Object.keys(await import(specifier)).sort();
-		expect(actualExports).toEqual([...expectedExports].sort());
-		for (const exported of actualExports) {
-			expect(exported).toMatch(/DangerouslyHeavy|dangerouslyHeavy/u);
-			expect(exported).toMatch(/100MiBRss/u);
-		}
+test("concrete Dumling schema routes expose exact composable units", async () => {
+	const { loadRoutes } = await import(
+		"../../battery/dumling-new/codegen/routes"
+	);
+	for (const route of await loadRoutes()) {
+		const schema = await import(
+			`dumling/schema/${route.modulePath.replace(/\.js$/, "")}`
+		);
+		expect(Object.keys(schema).sort()).toEqual([
+			"attestationSchema",
+			"lemmaSchema",
+			"readingSchema",
+			"surfaceSchema",
+		]);
+		expect(schema.lemmaSchema.shape.language.value).toBe(route.language);
 	}
 });
 

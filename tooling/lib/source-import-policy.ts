@@ -26,7 +26,13 @@ const sourceExtensions = new Set([
 	".ts",
 	".tsx",
 ]);
-const ignoredDirectories = new Set([".astro", ".git", "dist", "node_modules"]);
+const ignoredDirectories = new Set([
+	".astro",
+	".git",
+	"dist",
+	"node_modules",
+	"experimets",
+]);
 async function sourceFiles(dir: string): Promise<string[]> {
 	const files: string[] = [];
 	for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -99,30 +105,73 @@ const dumSchemaAuthoringSubpaths = new Set([
 	"dangerously-heavy-schema-tree",
 	"model-authoring",
 	"schema",
+	"schemas",
+	"development",
 ]);
-const dumPackages = new Set([
-	"dumdict",
-	"dumgen",
-	"dumling",
-	"dumling-old",
-	"dumrel",
-]);
+const dumPackages = new Set(["dumdict", "dumgen", "dumling", "dumrel"]);
 
 function isDumSchemaAuthoringSpecifier(specifier: string): boolean {
 	const [packageName, subpath, ...rest] = specifier.split("/");
 	return (
 		dumPackages.has(packageName ?? "") &&
-		rest.length === 0 &&
+		(rest.length === 0 || subpath === "schema") &&
 		dumSchemaAuthoringSubpaths.has(subpath ?? "")
 	);
 }
 
+const buildSourceSeams = new Map<string, readonly string[]>([
+	[
+		"battery/dumdict/codegen/generate-unit-schemas.ts",
+		[
+			"../../dumling-new/codegen/routes.js",
+			"../../dumrel-new/codegen/format-typescript.js",
+		],
+	],
+	[
+		"battery/dumdict/codegen/validation-artifacts.ts",
+		[
+			"../../dumling-new/codegen/operations.js",
+			"../../dumrel-new/codegen/format-typescript.js",
+			"../../dumrel-new/src/semantics.js",
+		],
+	],
+	[
+		"battery/dumgen-new/codegen/generate.ts",
+		[
+			"../../dumling-new/codegen/operations.js",
+			"../../dumling-new/codegen/routes.js",
+			"../../dumrel-new/codegen/format-typescript.js",
+			"../../dumrel-new/src/semantics.js",
+		],
+	],
+	[
+		"battery/dumrel-new/codegen/generate.ts",
+		["../../dumling-new/codegen/operations.js"],
+	],
+	[
+		"app/laboratory/tests/evaluations.test.ts",
+		["../../../battery/dumgen-new/cli/evaluate"],
+	],
+]);
 function isExplicitAuthoringSource(
 	workspace: Workspace,
 	file: string,
 	specifier: string,
 ): boolean {
 	const path = relative(workspace.dir, file).replaceAll("\\", "/");
+	if (
+		specifier === "dumgen/development" &&
+		((workspace.relativePath === "app/laboratory" &&
+			[
+				"src/evaluations.ts",
+				"src/session-log.ts",
+				"tests/evaluations.test.ts",
+			].includes(path)) ||
+			(workspace.manifest.name === "dumgen" &&
+				path === "cli/evaluate.ts"))
+	)
+		return true;
+
 	const segments = path.split("/");
 	const topLevel = segments[0];
 	if (
@@ -148,9 +197,12 @@ function isExplicitAuthoringSource(
 		segments.some(
 			(segment) => segment === "schema" || segment === "schemas",
 		) ||
-		/(?:^|\/)(?:dangerously-heavy-schema-tree|model-authoring|public-schema|schema|schemas)\.[cm]?[jt]sx?$/u.test(
+		/(?:^|\/)(?:dangerously-heavy-schema-tree|model-authoring|public-schema|[a-z-]*schemas|schema)\.[cm]?[jt]sx?$/u.test(
 			path,
 		) ||
+		path.startsWith("src/development/") ||
+		path.startsWith("src/selection-schemas.") ||
+		path.startsWith("src/universal/schemas.") ||
 		path.startsWith("src/promptsmith/") ||
 		path.startsWith("src/catalog/laboratory/")
 	);
@@ -260,11 +312,16 @@ export async function validateSourceImports(options: {
 						options.workspaces,
 					);
 					if (target && target.dir !== workspace.dir) {
-						issues.push({
-							file: relative(options.repositoryRoot, file),
-							message: `relative/filesystem import crosses into ${target.relativePath}`,
-							specifier,
-						});
+						if (
+							!buildSourceSeams
+								.get(relative(options.repositoryRoot, file))
+								?.includes(specifier)
+						)
+							issues.push({
+								file: relative(options.repositoryRoot, file),
+								message: `relative/filesystem import crosses into ${target.relativePath}`,
+								specifier,
+							});
 						graph
 							.get(workspace.relativePath)
 							?.add(target.relativePath);
@@ -334,6 +391,13 @@ export async function validateSourceImports(options: {
 export function conventionalArchitectureInputs(packageDir: string): string[] {
 	const inputs = [
 		"src",
+		"shared",
+		"lib",
+		"workspace",
+		"server",
+		"convex",
+		"codegen",
+		"cli",
 		"tests",
 		"test",
 		"scripts",

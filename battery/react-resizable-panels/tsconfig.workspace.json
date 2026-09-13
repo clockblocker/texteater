@@ -5,7 +5,10 @@
 		"emitDeclarationOnly": true,
 		"noEmit": false,
 		"outDir": "./dist/workspace",
-		"rootDir": "./workspace"
+		"rootDir": "./workspace",
+		"paths": {
+			"react-resizable-panels": ["./dist/react-resizable-panels.d.ts"]
+		}
 	},
 	"include": ["workspace/**/*.ts", "workspace/**/*.tsx"],
 	"exclude": ["workspace/**/*.test.ts", "workspace/**/*.test.tsx"]

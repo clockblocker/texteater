@@ -624,7 +624,23 @@ function parsePipe(
 		definitions,
 		operations,
 	);
-	if (!parsed.ok) return parsed;
+	if (!parsed.ok) {
+		// Zod length checks still inspect array-like inputs after a string type
+		// failure, while overwrite/refinement callbacks remain skipped.
+		if (constraint[1][0] === "string" && typeof input !== "string")
+			return failure(
+				[
+					...parsed.issues,
+					...constraint[2].flatMap((effect) =>
+						effect[0] === "string"
+							? crossTypeStringCheckIssues(input, effect[1], path)
+							: [],
+					),
+				],
+				parsed.aborted,
+			);
+		return parsed;
+	}
 
 	let value = parsed.value;
 	const issues: ParsingIssue[] = [];

@@ -211,3 +211,36 @@ test("tests and package code generators may import explicit schema-authoring sur
 
 	expect(await issuesFor(root)).toEqual([]);
 });
+
+test("Laboratory's evaluation authoring seam does not allow model-authoring imports in the workbench", async () => {
+	const root = await temporaryRepository();
+	await addWorkspace(root, {
+		kind: "battery",
+		name: "dumgen",
+		exports: {
+			".": "./dist/index.js",
+			"./development": "./dist/development.js",
+		},
+	});
+	const lab = await addWorkspace(root, {
+		kind: "app",
+		name: "laboratory",
+		dependencies: { dumgen: "workspace:^" },
+	});
+	await writeSource(
+		lab,
+		"src/evaluations.ts",
+		'import { x } from "dumgen/development";',
+	);
+	expect(await issuesFor(root)).toEqual([]);
+	await writeSource(
+		lab,
+		"src/workbench.ts",
+		'import { x } from "dumgen/development";',
+	);
+	expect(
+		(await issuesFor(root)).some((issue) =>
+			issue.file.endsWith("workbench.ts"),
+		),
+	).toBe(true);
+});

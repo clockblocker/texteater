@@ -77,6 +77,7 @@ const coordinationTokens = new Set([
 ]);
 
 const retainedEvidenceCompanionPaths = new Set([
+	"battery/dumling-new/experimets/compiled-zod/findings.md",
 	"battery/gumgen-old/docs/prototypes/german-relation-human-gate/README.md",
 	"battery/gumgen-old/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
 	"battery/gumgen-old/docs/prototypes/knowledge-analysis-combined/README.md",
@@ -132,6 +133,7 @@ function isProducedArtifact(path: string): boolean {
 		path.startsWith("app/dumling-docs/public/") ||
 		path.startsWith("app/dumling-docs/src/generated/") ||
 		path.startsWith("app/dumling-docs/dist/") ||
+		path.startsWith("battery/dumling-new/resources/") ||
 		path.startsWith("battery/dumling/resources/") ||
 		path.startsWith("battery/dumling-old/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
@@ -141,7 +143,9 @@ function isProducedArtifact(path: string): boolean {
 		/^battery\/(?:dumgen|gumgen-old)\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
 			path,
 		) ||
-		/^battery\/(?:dumgen|gumgen-old)\/src\/promptsmith\/.*\/corpus\//u.test(path)
+		/^battery\/(?:dumgen|gumgen-old)\/src\/promptsmith\/.*\/corpus\//u.test(
+			path,
+		)
 	);
 }
 

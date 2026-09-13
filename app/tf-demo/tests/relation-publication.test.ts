@@ -192,17 +192,17 @@ test("runtime fingerprints stay bound to the frozen candidate sources", async ()
 			)
 			.digest("hex");
 	expect(RELATION_PUBLICATION_FINGERPRINTS.prompt).toBe(
-		`sha256:${await sha256("../../../battery/gumgen-old/src/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts")}`,
+		`sha256:${await sha256("../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt")}`,
 	);
 	expect(RELATION_PUBLICATION_FINGERPRINTS.schema).toBe(
-		`sha256:${await sha256("../../../battery/gumgen-old/src/knowledge-generation/de/schemas.ts")}`,
+		`sha256:${await sha256("../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/knowledge-generation/de/schemas.ts.txt")}`,
 	);
 	expect(RELATION_PUBLICATION_FINGERPRINTS.evaluator).toBe(
-		`sha256:${await sha256("../../../battery/gumgen-old/src/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts")}`,
+		`sha256:${await sha256("../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt")}`,
 	);
 	const modelPolicy = await Bun.file(
 		new URL(
-			"../../../battery/gumgen-old/src/ai-sdk/model-policy.ts",
+			"../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/ai-sdk/model-policy.ts.txt",
 			import.meta.url,
 		),
 	).text();

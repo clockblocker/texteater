@@ -64,7 +64,6 @@
 	"dependencies": {
 		"common-utils": "workspace:^",
 		"dumrel": "workspace:^",
-		"emoji-regex": "^10.6.0",
 		"zod": "^4.4.0",
 		"effect": "3.22.1",
 		"dumling": "workspace:^"

@@ -1,30 +1,28 @@
 import { describe, expect, test } from "bun:test";
-import { deDeterminerFeaturesSchema as OldDeDeterminerFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/de/lexeme/determiner.js";
-import { deVerbFeaturesSchema as OldDeVerbFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/de/lexeme/verb.js";
-import { heAdjectiveFeaturesSchema as OldHeAdjectiveFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/he/lexeme/adjective.js";
-import { heVerbFeaturesSchema as OldHeVerbFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/he/lexeme/verb.js";
 import { DeConstructionFusionFeatureBagsSchema } from "../src/schemas/concrete-language/de/construction/fusion.js";
 import { DeDeterminerFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/determiner.js";
 import { DeVerbFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/verb.js";
 import { HeAdjectiveFeatureBagsSchema } from "../src/schemas/concrete-language/he/lexeme/adjective.js";
 import { HeVerbFeatureBagsSchema } from "../src/schemas/concrete-language/he/lexeme/verb.js";
 
+import fixtures from "./fixtures/legacy-feature-acceptance.json";
+
 function expectSameAcceptance(
-	oldSchema: { safeParse(value: unknown): { success: boolean } },
-	newSchema: { safeParse(value: unknown): { success: boolean } },
+	name: string,
+	schema: { safeParse(value: unknown): { success: boolean } },
 	values: readonly unknown[],
 ) {
-	for (const value of values) {
-		expect(newSchema.safeParse(value).success, JSON.stringify(value)).toBe(
-			oldSchema.safeParse(value).success,
-		);
-	}
+	const retained = fixtures.focused.find((group) => group.name === name);
+	if (!retained) throw new Error(`Missing retained evidence: ${name}`);
+	expect(values).toEqual(retained.cases.map((c) => c.input));
+	for (const sample of retained.cases)
+		expect(schema.safeParse(sample.input).success).toBe(sample.accepted);
 }
 
-describe("old and new Feature Bag schemas accept the same values", () => {
+describe("Feature Bag schemas preserve retained acceptance cases", () => {
 	test("German Lexeme/VERB", () => {
 		expectSameAcceptance(
-			OldDeVerbFeatureBagsSchema,
+			"DeVerbFeatureBagsSchema",
 			DeVerbFeatureBagsSchema,
 			[
 				{
@@ -107,7 +105,7 @@ describe("old and new Feature Bag schemas accept the same values", () => {
 
 	test("Hebrew Lexeme/ADJ", () => {
 		expectSameAcceptance(
-			OldHeAdjectiveFeatureBagsSchema,
+			"HeAdjectiveFeatureBagsSchema",
 			HeAdjectiveFeatureBagsSchema,
 			[
 				{
@@ -156,7 +154,7 @@ describe("old and new Feature Bag schemas accept the same values", () => {
 
 	test("Hebrew Lexeme/VERB", () => {
 		expectSameAcceptance(
-			OldHeVerbFeatureBagsSchema,
+			"HeVerbFeatureBagsSchema",
 			HeVerbFeatureBagsSchema,
 			[
 				{
@@ -221,7 +219,7 @@ describe("old and new Feature Bag schemas accept the same values", () => {
 
 	test("German Lexeme/DET", () => {
 		expectSameAcceptance(
-			OldDeDeterminerFeatureBagsSchema,
+			"DeDeterminerFeatureBagsSchema",
 			DeDeterminerFeatureBagsSchema,
 			[
 				{

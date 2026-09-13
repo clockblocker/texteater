@@ -17,3 +17,6 @@ repos-for-refrence/
 battery/gumgen-old/docs/learning/
 
 .runs/
+
+# Local logs retained outside the retired workspace.
+battery/gumgen-old/.laboratory/

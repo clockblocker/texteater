@@ -1,13 +1,15 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { findRepositoryRoot } from "../lib/workspaces";
 import {
 	DUM_ENTRYPOINTS,
+	DUM_PACKAGE_PATHS,
 	type DumEntryPoint,
 	type OperationalEntryPoint,
 	operationalEntrypoints,
 } from "./inventory";
 import { type RssMeasurement, summarizeSamples } from "./measurement";
+import { preparePublishedRuntime } from "./published-runtime";
 import {
 	auditEntrypointReachability,
 	type EntrypointReachability,
@@ -16,7 +18,9 @@ import {
 export const SAMPLE_COUNT = 5;
 const IMPORT_BUDGET_MIB = 5;
 const OPERATION_BUDGET_MIB = 5.3;
-const packages = ["dumling-old", "dumrel", "dumdict", "dumgen"] as const;
+const packages = Object.keys(
+	DUM_PACKAGE_PATHS,
+) as (keyof typeof DUM_PACKAGE_PATHS)[];
 
 type MeasurementMode = "baseline" | "import-only" | "import-plus-operation";
 
@@ -87,7 +91,7 @@ export async function buildPackages(root: string): Promise<void> {
 		);
 		await run(
 			[process.execPath, "run", "build"],
-			join(root, "battery", packageName),
+			join(root, "battery", DUM_PACKAGE_PATHS[packageName]),
 		);
 	}
 }
@@ -133,6 +137,8 @@ export function markdownFor(report: Report): string {
 		`Captured ${report.environment.capturedAt} from \`${report.environment.sourceCommit}\` with Bun ${report.environment.bunVersion} on ${report.environment.platform}/${report.environment.arch}.`,
 		"",
 		`Contract: five fresh Bun processes per measurement; median max RSS delta over an empty imported module. Strict surfaces must keep import-only below ${report.contract.importBudgetMiB} MiB and import-plus-operation at or below ${report.contract.operationBudgetMiB} MiB. Effect workflows are measured and reported without an RSS cap. Raw byte samples are retained in the adjacent JSON artifact.`,
+		"",
+		"Each probe runs against staged package manifests and built JavaScript, outside development TypeScript path aliases. Bun reports maxRSS in KiB; raw samples convert that value to bytes before calculating deltas.",
 		"",
 		`Empty-module samples: ${report.baseline.samplesBytes.map((sample) => `\`${sample}\``).join(", ")} bytes; median \`${report.baseline.medianBytes}\` bytes.`,
 		"",
@@ -188,85 +194,103 @@ export function markdownFor(report: Report): string {
 }
 
 export async function createReport(root: string): Promise<Report> {
-	const baselineSamplesBytes = await sample(root, "baseline");
-	const baselineMedianBytes = [...baselineSamplesBytes].sort(
-		(left, right) => left - right,
-	)[Math.floor(SAMPLE_COUNT / 2)] as number;
-	const sourceCommit = (await run(["git", "rev-parse", "HEAD"], root)).trim();
-	const packageStatus = (
-		await run(
-			[
-				"git",
-				"status",
-				"--porcelain",
-				"--",
-				...packages.map((packageName) => `battery/${packageName}`),
-			],
-			root,
-		)
-	).trim();
-	const entries: MeasuredOperationalEntryPoint[] = [];
+	const runtimeRoot = await preparePublishedRuntime(root);
+	try {
+		const baselineSamplesBytes = await sample(runtimeRoot, "baseline");
+		const baselineMedianBytes = [...baselineSamplesBytes].sort(
+			(left, right) => left - right,
+		)[Math.floor(SAMPLE_COUNT / 2)] as number;
+		const sourceCommit = (
+			await run(["git", "rev-parse", "HEAD"], root)
+		).trim();
+		const packageStatus = (
+			await run(
+				[
+					"git",
+					"status",
+					"--porcelain",
+					"--",
+					...packages.map(
+						(packageName) =>
+							`battery/${DUM_PACKAGE_PATHS[packageName]}`,
+					),
+				],
+				root,
+			)
+		).trim();
+		const entries: MeasuredOperationalEntryPoint[] = [];
 
-	for (const entrypoint of operationalEntrypoints()) {
-		process.stderr.write(`Measuring ${entrypoint.specifier}…\n`);
-		const scenario = {
-			operationId: entrypoint.operation.id,
-			specifier: entrypoint.specifier,
+		for (const entrypoint of operationalEntrypoints()) {
+			process.stderr.write(`Measuring ${entrypoint.specifier}…\n`);
+			const scenario = {
+				operationId: entrypoint.operation.id,
+				specifier: entrypoint.specifier,
+			};
+			const importSamples = await sample(
+				runtimeRoot,
+				"import-only",
+				scenario,
+			);
+			const operationSamples = await sample(
+				runtimeRoot,
+				"import-plus-operation",
+				scenario,
+			);
+			const reachability = await auditEntrypointReachability(
+				entrypoint.specifier,
+			);
+			entries.push({
+				...entrypoint,
+				importOnly: summarizeSamples(
+					importSamples,
+					baselineSamplesBytes,
+				),
+				importPlusOperation: summarizeSamples(
+					operationSamples,
+					baselineSamplesBytes,
+				),
+				reachability,
+			});
+		}
+
+		const measuredBySpecifier = new Map(
+			entries.map((entrypoint) => [entrypoint.specifier, entrypoint]),
+		);
+		return {
+			baseline: {
+				medianBytes: baselineMedianBytes,
+				samplesBytes: baselineSamplesBytes,
+			},
+			contract: {
+				baseline: "empty imported Bun module",
+				importBudgetMiB: IMPORT_BUDGET_MIB,
+				operationBudgetMiB: OPERATION_BUDGET_MIB,
+				processesPerMeasurement: SAMPLE_COUNT,
+				statistic: "median max RSS delta",
+			},
+			entrypoints: DUM_ENTRYPOINTS.map((entrypoint) => {
+				if (entrypoint.classification !== "operational")
+					return entrypoint;
+				const measured = measuredBySpecifier.get(entrypoint.specifier);
+				if (measured === undefined) {
+					throw new Error(
+						`Missing RSS measurement for ${entrypoint.specifier}.`,
+					);
+				}
+				return measured;
+			}),
+			environment: {
+				arch: process.arch,
+				bunVersion: Bun.version,
+				capturedAt: new Date().toISOString(),
+				packageSourcesDirty: packageStatus.length > 0,
+				platform: process.platform,
+				sourceCommit,
+			},
 		};
-		const importSamples = await sample(root, "import-only", scenario);
-		const operationSamples = await sample(
-			root,
-			"import-plus-operation",
-			scenario,
-		);
-		const reachability = await auditEntrypointReachability(
-			entrypoint.specifier,
-		);
-		entries.push({
-			...entrypoint,
-			importOnly: summarizeSamples(importSamples, baselineSamplesBytes),
-			importPlusOperation: summarizeSamples(
-				operationSamples,
-				baselineSamplesBytes,
-			),
-			reachability,
-		});
+	} finally {
+		await rm(runtimeRoot, { recursive: true, force: true });
 	}
-
-	const measuredBySpecifier = new Map(
-		entries.map((entrypoint) => [entrypoint.specifier, entrypoint]),
-	);
-	return {
-		baseline: {
-			medianBytes: baselineMedianBytes,
-			samplesBytes: baselineSamplesBytes,
-		},
-		contract: {
-			baseline: "empty imported Bun module",
-			importBudgetMiB: IMPORT_BUDGET_MIB,
-			operationBudgetMiB: OPERATION_BUDGET_MIB,
-			processesPerMeasurement: SAMPLE_COUNT,
-			statistic: "median max RSS delta",
-		},
-		entrypoints: DUM_ENTRYPOINTS.map((entrypoint) => {
-			if (entrypoint.classification !== "operational") return entrypoint;
-			const measured = measuredBySpecifier.get(entrypoint.specifier);
-			if (measured === undefined) {
-				throw new Error(
-					`Missing RSS measurement for ${entrypoint.specifier}.`,
-				);
-			}
-			return measured;
-		}),
-		environment: {
-			arch: process.arch,
-			bunVersion: Bun.version,
-			capturedAt: new Date().toISOString(),
-			packageSourcesDirty: packageStatus.length > 0,
-			platform: process.platform,
-			sourceCommit,
-		},
-	};
 }
 
 async function runBenchmarkCli(): Promise<void> {

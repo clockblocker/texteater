@@ -1,7 +1,13 @@
 import { dirname, join, normalize } from "node:path";
 import { findRepositoryRoot } from "../lib/workspaces";
 
-const workspacePackages = new Set(["dumling-old", "dumrel", "dumdict", "dumgen"]);
+import { DUM_PACKAGE_PATHS } from "./inventory";
+
+const runtimePackagePaths = {
+	...DUM_PACKAGE_PATHS,
+	"common-utils": "common-utils",
+};
+const workspacePackages = new Set(Object.keys(runtimePackagePaths));
 const heavyweightPackages = new Set(["codec-builder-library", "openai", "zod"]);
 
 export type EntrypointReachability = {
@@ -38,7 +44,14 @@ export async function auditEntrypointReachability(
 		let manifest = manifestCache.get(packageName);
 		if (manifest === undefined) {
 			const loadedManifest: Record<string, unknown> = await Bun.file(
-				join(root, "battery", packageName, "package.json"),
+				join(
+					root,
+					"battery",
+					runtimePackagePaths[
+						packageName as keyof typeof runtimePackagePaths
+					],
+					"package.json",
+				),
 			).json();
 			manifestCache.set(packageName, loadedManifest);
 			manifest = loadedManifest;
@@ -57,7 +70,14 @@ export async function auditEntrypointReachability(
 				`Cannot resolve published entrypoint ${specifier}.`,
 			);
 		}
-		return join(root, "battery", packageName, relative);
+		return join(
+			root,
+			"battery",
+			runtimePackagePaths[
+				packageName as keyof typeof runtimePackagePaths
+			],
+			relative,
+		);
 	}
 
 	async function visitFile(file: string): Promise<void> {
@@ -77,7 +97,7 @@ export async function auditEntrypointReachability(
 			const packageName = packageNameFor(specifier);
 			if (workspacePackages.has(packageName)) {
 				workspaceEntrypoints.add(specifier);
-				if (specifier.endsWith("/schema"))
+				if (/\/(?:schema(?:s)?)(?:\/|$)/.test(specifier))
 					schemaEntrypoints.add(specifier);
 				await visitFile(await resolveWorkspaceEntrypoint(specifier));
 				continue;

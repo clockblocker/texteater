@@ -2,20 +2,28 @@ import { expect, test } from "bun:test";
 import { join } from "node:path";
 import {
 	DUM_ENTRYPOINTS,
+	DUM_PACKAGE_PATHS,
 	operationalEntrypoints,
 } from "../dum-entrypoint-rss/inventory";
 import { median, summarizeSamples } from "../dum-entrypoint-rss/measurement";
 import { runRepresentativeOperation } from "../dum-entrypoint-rss/operations";
 import { findRepositoryRoot } from "../lib/workspaces";
 
-const packages = ["dumling-old", "dumrel", "dumdict", "dumgen"] as const;
+const packages = Object.keys(
+	DUM_PACKAGE_PATHS,
+) as (keyof typeof DUM_PACKAGE_PATHS)[];
 
 test("every published dum* entrypoint has an explicit RSS-audit classification", async () => {
 	const root = await findRepositoryRoot(import.meta.dir);
 	const published = await Promise.all(
 		packages.map(async (packageName) => {
 			const manifest = await Bun.file(
-				join(root, "battery", packageName, "package.json"),
+				join(
+					root,
+					"battery",
+					DUM_PACKAGE_PATHS[packageName],
+					"package.json",
+				),
 			).json();
 			return Object.keys(manifest.exports).map((subpath) =>
 				subpath === "."
@@ -44,13 +52,11 @@ test("schema and model-authoring surfaces are explicitly exempt", () => {
 		({ classification }) => classification === "schema-authoring-exempt",
 	).map(({ specifier }) => specifier);
 	expect(schemaAuthoringSurfaces).toEqual([
-		"dumling-old/schema",
-		"dumling-old/dangerously-heavy-schema-tree",
+		"dumling/schema/*",
 		"dumrel/schema",
 		"dumdict/schema",
-		"dumdict/dangerously-heavy-schema-tree",
-		"dumgen/schema",
-		"dumgen/model-authoring",
+		"dumgen/schemas",
+		"dumgen/development",
 	]);
 	const documentedInventory = schemaAuthoringSurfaces
 		.map((specifier) => `\`${specifier}\``)

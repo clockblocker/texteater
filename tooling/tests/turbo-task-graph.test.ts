@@ -40,19 +40,20 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"common-utils#build",
 		"dumdict#build",
 		"dumgen#build",
-		"dumling-old#build",
+		"dumling#build",
 		"dumrel#build",
+		"promptsmith#build",
 		"react-resizable-panels#build",
 	]);
 	expect(plan.tasks.map((task) => task.taskId).toSorted()).toEqual([
 		"@texteater/tf-demo#dev",
-		"codec-builder-library#build",
 		"codegen#build",
 		"common-utils#build",
 		"dumdict#build",
 		"dumgen#build",
-		"dumling-old#build",
+		"dumling#build",
 		"dumrel#build",
+		"promptsmith#build",
 		"react-resizable-panels#build",
 	]);
 });

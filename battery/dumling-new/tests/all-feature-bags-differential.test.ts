@@ -1,110 +1,22 @@
-import { describe, expect, test } from "bun:test";
-import { readdir } from "node:fs/promises";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { expect, test } from "bun:test";
 import { z } from "zod";
+import fixtures from "./fixtures/legacy-feature-acceptance.json";
 
-type JsonSchema = {
-	anyOf?: JsonSchema[];
-	const?: unknown;
-	enum?: unknown[];
-	items?: JsonSchema;
-	properties?: Record<string, JsonSchema>;
-	type?: string;
-};
-
-function exampleFrom(schema: JsonSchema): unknown {
-	if (schema.anyOf) {
-		const option =
-			schema.anyOf.find((candidate) => candidate.type !== "null") ??
-			schema.anyOf[0];
-		return option ? exampleFrom(option) : undefined;
-	}
-	if ("const" in schema) return schema.const;
-	if (schema.enum) return schema.enum[0];
-	if (schema.type === "array") return [exampleFrom(schema.items ?? {})];
-	if (schema.type === "object") {
-		return Object.fromEntries(
-			Object.entries(schema.properties ?? {}).map(([name, property]) => [
-				name,
-				exampleFrom(property),
-			]),
+for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
+	test(`retained Feature Bag acceptance: ${route}`, async () => {
+		const module = await import(
+			`../src/schemas/concrete-language/${route}`
 		);
-	}
-	if (schema.type === "null") return null;
-	if (schema.type === "boolean") return true;
-	if (schema.type === "number" || schema.type === "integer") return 0;
-	return "value";
+		const schema = Object.values(module).find(
+			(value) => value instanceof z.ZodObject,
+		);
+		if (!schema) throw new Error(`Missing schema: ${route}`);
+		for (const sample of fixtures.all.filter(
+			(sample) => sample.route === route,
+		))
+			expect(
+				schema.safeParse(sample.input).success,
+				JSON.stringify(sample.input),
+			).toBe(sample.accepted);
+	});
 }
-
-const packageRoot = path.resolve(import.meta.dir, "..");
-const oldRoot = path.resolve(
-	packageRoot,
-	"../dumling-old/src/schemas/concrete-language/features",
-);
-const newRoot = path.resolve(packageRoot, "src/schemas/concrete-language");
-
-const schemaPaths = (
-	await readdir(newRoot, { recursive: true, withFileTypes: true })
-)
-	.filter(
-		(entry) =>
-			entry.isFile() &&
-			entry.name.endsWith(".ts") &&
-			!entry.name.endsWith("-subtree.ts"),
-	)
-	.map((entry) =>
-		path.relative(newRoot, path.join(entry.parentPath, entry.name)),
-	)
-	.filter((schemaPath) => schemaPath.split(path.sep).length === 3)
-	.sort();
-
-describe("supported Feature Bag fields preserve legacy validation", () => {
-	for (const schemaPath of schemaPaths) {
-		// #420/#421 intentionally change German PRON identity; concrete migration
-		// assertions live in german-pronoun-identity.test.ts.
-		if (schemaPath === "de/lexeme/pronoun.ts") continue;
-		test(schemaPath, async () => {
-			const oldModule = await import(
-				pathToFileURL(path.join(oldRoot, schemaPath)).href
-			);
-			const newModule = await import(
-				pathToFileURL(path.join(newRoot, schemaPath)).href
-			);
-			const oldSchema = Object.values(oldModule).find(
-				(value) => value instanceof z.ZodObject,
-			);
-			const newSchema = Object.values(newModule).find(
-				(value) => value instanceof z.ZodObject,
-			);
-			if (!oldSchema || !newSchema)
-				throw Error(`Missing schema: ${schemaPath}`);
-			// The rewrite deliberately removes inapplicable inflectional fields.
-			const retainedLegacySchema = Object.hasOwn(
-				newSchema.shape,
-				"inflectional",
-			)
-				? oldSchema
-				: oldSchema.omit({ inflectional: true });
-			const validExample = exampleFrom(
-				z.toJSONSchema(retainedLegacySchema) as unknown as JsonSchema,
-			);
-
-			expect(retainedLegacySchema.safeParse(validExample).success).toBe(
-				true,
-			);
-			for (const value of [
-				validExample,
-				null,
-				{},
-				{ core: {}, inflectional: {} },
-				{ core: { unexpected: true }, inflectional: {} },
-				{ ...(validExample as object), unexpected: true },
-			]) {
-				expect(newSchema.safeParse(value).success).toBe(
-					retainedLegacySchema.safeParse(value).success,
-				);
-			}
-		});
-	}
-});

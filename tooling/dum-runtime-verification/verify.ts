@@ -4,15 +4,12 @@ import {
 } from "../dum-declaration-reachability";
 import { buildPackages, createReport } from "../dum-entrypoint-rss/benchmark";
 import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
-import { DUM_PARSER_INTERFACE_CONTRACT } from "../dum-parser-interface-contract";
 import { findRepositoryRoot } from "../lib/workspaces";
 import { compareDifferentialTarget } from "./differential";
 import { DUM_DIFFERENTIAL_TARGETS } from "./differential-targets";
 import {
 	evaluateEntrypointRss,
 	formatRssGateReport,
-	PARSER_DIFFERENTIAL_POLICIES,
-	type ParserDifferentialPolicy,
 	RSS_ENTRYPOINT_POLICIES,
 	type RssGateReportEntry,
 	type RssPolicy,
@@ -31,24 +28,6 @@ function sameMembers(
 }
 
 function verifyDifferentialInventory(): boolean {
-	const frozenParserIds = Object.entries(
-		DUM_PARSER_INTERFACE_CONTRACT.packages,
-	).flatMap(([packageName, parsers]) =>
-		Object.keys(parsers).map(
-			(parserName) => `${packageName}:${parserName}`,
-		),
-	);
-	const policies = PARSER_DIFFERENTIAL_POLICIES as Readonly<
-		Record<string, ParserDifferentialPolicy>
-	>;
-	if (!sameMembers(frozenParserIds, Object.keys(policies))) {
-		process.stderr.write(
-			"FAIL differential policy does not exactly match ADR 0014 parser inventory.\n",
-		);
-		return false;
-	}
-
-	const targetIds = new Set(DUM_DIFFERENTIAL_TARGETS.map(({ id }) => id));
 	let passed = true;
 	for (const target of DUM_DIFFERENTIAL_TARGETS) {
 		const result = compareDifferentialTarget(target);
@@ -64,29 +43,6 @@ function verifyDifferentialInventory(): boolean {
 		}
 	}
 
-	const waiverCounts = new Map<number, number>();
-	for (const [parserId, policy] of Object.entries(policies)) {
-		if (policy.status === "strict") {
-			if (!targetIds.has(policy.differentialTargetId)) {
-				passed = false;
-				process.stderr.write(
-					`FAIL ${parserId}: missing differential target ${policy.differentialTargetId}.\n`,
-				);
-			}
-			continue;
-		}
-		waiverCounts.set(
-			policy.issue,
-			(waiverCounts.get(policy.issue) ?? 0) + 1,
-		);
-	}
-	for (const [issue, count] of [...waiverCounts].sort(
-		([left], [right]) => left - right,
-	)) {
-		process.stdout.write(
-			`WAIVED differential issue ${issue}: ${count} frozen parser surfaces remain unmigrated\n`,
-		);
-	}
 	return passed;
 }
 

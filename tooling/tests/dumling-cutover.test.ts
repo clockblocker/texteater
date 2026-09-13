@@ -1,28 +1,21 @@
 import { expect, test } from "bun:test";
 import { realpath } from "node:fs/promises";
-import path from "node:path";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { DUM_PACKAGE_PATHS } from "../dum-entrypoint-rss/inventory";
+import { discoverWorkspaces, findRepositoryRoot } from "../lib/workspaces";
 
-const repositoryRoot = path.resolve(import.meta.dir, "../..");
-
-test("the dumling package name resolves only to the replacement", async () => {
-	const replacementManifest = await realpath(
-		fileURLToPath(import.meta.resolve("dumling/package.json")),
-	);
-	const legacyManifest = await realpath(
-		fileURLToPath(import.meta.resolve("dumling-old/package.json")),
-	);
-
-	expect(replacementManifest).toBe(
-		path.join(repositoryRoot, "battery/dumling-new/package.json"),
-	);
-	expect(legacyManifest).toBe(
-		path.join(repositoryRoot, "battery/dumling-old/package.json"),
-	);
-	expect(replacementManifest).not.toBe(legacyManifest);
-
-	const replacement = await import("dumling");
-	const legacy = await import("dumling-old");
-	expect(typeof replacement.parseUnit).toBe("function");
-	expect(typeof legacy.dumling).toBe("object");
+test("only replacement Dum packages participate in workspace resolution", async () => {
+	const root = await findRepositoryRoot(import.meta.dir);
+	for (const [name, directory] of Object.entries(DUM_PACKAGE_PATHS))
+		expect(
+			await realpath(
+				fileURLToPath(import.meta.resolve(`${name}/package.json`)),
+			),
+		).toBe(join(root, "battery", directory, "package.json"));
+	expect(
+		(await discoverWorkspaces(root)).filter((w) =>
+			/-(?:old)$/.test(String(w.manifest.name)),
+		),
+	).toEqual([]);
 });

@@ -18,25 +18,19 @@ if (
 	);
 }
 
-if (mode === "baseline") {
-	await import("./empty-module");
-} else {
-	const specifier = argument("--specifier");
-	if (specifier === undefined) {
+const specifier =
+	mode === "baseline" ? "./empty-module.ts" : argument("--specifier");
+if (specifier === undefined)
+	throw new Error("RSS runner requires --specifier for an entrypoint mode.");
+const publicModule = await import(specifier);
+if (mode === "import-plus-operation") {
+	const operation = argument("--operation");
+	if (operation === undefined) {
 		throw new Error(
-			"RSS runner requires --specifier for an entrypoint mode.",
+			"RSS runner requires --operation for import-plus-operation mode.",
 		);
 	}
-	const publicModule = await import(specifier);
-	if (mode === "import-plus-operation") {
-		const operation = argument("--operation");
-		if (operation === undefined) {
-			throw new Error(
-				"RSS runner requires --operation for import-plus-operation mode.",
-			);
-		}
-		await runRepresentativeOperation(operation, publicModule);
-	}
+	await runRepresentativeOperation(operation, publicModule);
 }
 
-process.stdout.write(`${process.resourceUsage().maxRSS}\n`);
+process.stdout.write(`${process.resourceUsage().maxRSS * 1024}\n`);

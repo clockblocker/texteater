@@ -1,5 +1,5 @@
-import { NOTE_STUDY_FIXTURES } from "./fixtures";
-import { NOTE_STUDY_DATABASE } from "./note-study-dummy-database";
+import { NOTE_STUDY_FIXTURES } from "../../../shared/notes-study/fixtures/index";
+import { NOTE_STUDY_DATABASE } from "../../../shared/notes-study/note-study-dummy-database";
 import type {
 	NoteStudyFixture,
 	NoteStudyForm,
@@ -8,7 +8,7 @@ import type {
 	NoteStudyRelation,
 	NoteStudyToken,
 	NoteStudyTone,
-} from "./note-study-fixture";
+} from "../../../shared/notes-study/note-study-fixture";
 
 /** Extra layout copy which has no place in Dumling, Dumrel, or source Texts. */
 export type NoteStudyPresentation = {

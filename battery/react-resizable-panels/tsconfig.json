@@ -9,7 +9,10 @@
 			"bun-types",
 			"@testing-library/jest-dom",
 			"@testing-library/jest-dom/vitest"
-		]
+		],
+		"paths": {
+			"react-resizable-panels": ["./lib/index.ts"]
+		}
 	},
 	"include": [
 		"lib",

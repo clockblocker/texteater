@@ -8,99 +8,13 @@ import { validationOperations } from "dumling/validation";
 import * as schemas from "dumrel/schema";
 import { encodedValidation } from "../src/generated/validation";
 import { normalizeText } from "../src/semantics";
-import { houseLemma, houseReading, prefixLemma } from "./fixtures";
 
 const registry = JSON.parse(encodedValidation) as {
 	roots: Record<string, ValidationArtifact["root"]>;
 	definitions: ValidationArtifact["definitions"];
 };
-const shadow = {
-	language: "de",
-	family: "Lexeme",
-	kind: "NOUN",
-	canonicalForm: "Haus",
-};
-const samples: Record<string, unknown[]> = {
-	readingKnowledge: [
-		{},
-		{ definition: "  Geba\u0308ude  ", translations: { en: [" house "] } },
-		{ semanticRelations: { synonym: [houseLemma] } },
-		{
-			semanticRelations: {
-				targetKind: "reading",
-				synonym: [houseReading],
-			},
-		},
-		{
-			morphologicalTree: {
-				root: {
-					nodeKind: "structure",
-					children: [
-						{
-							nodeKind: "morphemeReading",
-							reading: {
-								unitKind: "Reading",
-								lemma: prefixLemma,
-								emojiDescription: "🚫",
-							},
-						},
-					],
-				},
-			},
-		},
-	],
-	knowledgeChange: [
-		{ kind: "Contribute", aspect: "definition", value: " x " },
-		{ kind: "Retract", aspect: "translations", language: "en" },
-		{
-			kind: "Correct",
-			aspect: "semanticRelations",
-			relation: "synonym",
-			targetKind: "reading",
-			value: [houseReading],
-		},
-	],
-	knowledgeSettings: [
-		{},
-		{ definition: false, semanticRelations: { synonym: true } },
-	],
-	knowledgeRequestMask: [{}, { translations: { en: null } }],
-	knowledgeSelectionInput: [
-		{
-			route: { language: "de", family: "Lexeme", kind: "NOUN" },
-			settings: { definition: false },
-		},
-	],
-	pendingSemanticRelation: [{ relation: "nearSynonym", target: shadow }],
-	unitShadow: [shadow],
-	lexicalBreakdown: [[shadow, shadow]],
-	morphologicalTree: [
-		{
-			root: {
-				nodeKind: "structure",
-				children: [{ nodeKind: "unitShadow", unitShadow: shadow }],
-			},
-		},
-	],
-	semanticRelations: [
-		{ targetKind: "reading", synonym: [houseReading] },
-		{ hypernym: [houseLemma] },
-	],
-	semanticProjectionInput: [
-		[{ reading: houseReading, knowledge: { definition: " home " } }],
-	],
-	semanticRelationProjection: [
-		{
-			source: houseReading,
-			relation: "hyponym",
-			target: houseLemma,
-			provenance: "inferred",
-		},
-	],
-	directSemanticRelation: ["synonym", "holonym"],
-	semanticRelation: ["hyponym", "meronym"],
-	translationLanguage: ["en", "ru"],
-};
+
+import { samples } from "./compiled-schema-fixtures";
 
 test("every generated root agrees with its public canonical schema, including normalization and recursive leaves", () => {
 	expect(Object.keys(samples).sort()).toEqual(

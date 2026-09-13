@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { NOTE_STUDY_FIXTURES } from "../src/playground/notes-study/fixtures";
+import { NOTE_STUDY_FIXTURES } from "../shared/notes-study/fixtures/index";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
 	NOTE_STUDY_PENDING_RELATIONS,
 	NOTE_STUDY_RELATED_DATABASE,
 	NOTE_STUDY_RESOLVED_RELATIONS,
-} from "../src/playground/notes-study/note-study-dummy-database";
+} from "../shared/notes-study/note-study-dummy-database";
 import { NOTE_STUDY_PRESENTATION_BY_READING_KEY } from "../src/playground/notes-study/note-study-presentation";
 
 const routeKey = ({ family, kind }: { family: string; kind: string }) =>

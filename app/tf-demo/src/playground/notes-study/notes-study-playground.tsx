@@ -23,7 +23,7 @@ import type {
 	NoteStudyLine,
 	NoteStudyToken,
 	NoteStudyTone,
-} from "./note-study-fixture";
+} from "../../../shared/notes-study/note-study-fixture";
 import { NOTE_STUDY_PRESENTATION_BY_READING_KEY } from "./note-study-presentation";
 import "./notes-study-playground.css";
 
