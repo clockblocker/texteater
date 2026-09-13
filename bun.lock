@@ -50,7 +50,9 @@
         "dumgen": "workspace:^",
         "dumling-old": "workspace:^",
         "effect": "3.22.1",
+        "gumgen-old": "workspace:^",
         "lucide-react": "^1.28.0",
+        "promptsmith": "workspace:^",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
         "react-resizable-panels": "workspace:^",
@@ -183,14 +185,11 @@
       "name": "dumgen",
       "version": "0.1.0",
       "dependencies": {
-        "codec-builder-library": "workspace:^",
         "common-utils": "workspace:^",
-        "dumdict": "workspace:^",
-        "dumling-old": "workspace:^",
+        "dumling": "workspace:^",
         "dumrel": "workspace:^",
         "effect": "3.22.1",
-        "emoji-regex": "^10.6.0",
-        "openai": "^7.0.0",
+        "promptsmith": "workspace:^",
         "zod": "^4.4.0",
       },
       "devDependencies": {
@@ -299,6 +298,25 @@
         "effect": "3.22.1",
         "emoji-regex": "^10.6.0",
         "openai": "^7.0.0",
+        "zod": "^4.4.0",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "2.5.13",
+        "@types/node": "^24.13.3",
+        "bun-types": "1.4.2",
+        "codegen": "workspace:^",
+        "dependency-cruiser": "^18.1.0",
+        "esbuild": "^0.28.1",
+        "knip": "^6.29.0",
+        "prinfer": "^2.3.0",
+        "typescript": "^7.0.2",
+      },
+    },
+    "battery/promptsmith": {
+      "name": "promptsmith",
+      "version": "0.1.0",
+      "dependencies": {
+        "codegen": "workspace:^",
         "zod": "^4.4.0",
       },
       "devDependencies": {
@@ -1738,6 +1756,8 @@
     "process-ancestry": ["process-ancestry@0.1.0", "", {}, "sha512-tGqJW/UnclpYASFcM6Xh8D8l/BMtaQ9+CSG0vlJSJTcdMM4lDRv4c6H0Pdcsfted+bVczdYSfk2fdukg2gQkZg=="],
 
     "prompts": ["prompts@2.4.2", "", { "dependencies": { "kleur": "^3.0.3", "sisteransi": "^1.0.5" } }, "sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q=="],
+
+    "promptsmith": ["promptsmith@workspace:battery/promptsmith"],
 
     "property-information": ["property-information@7.2.0", "", {}, "sha512-IAtzIB6sUiWaJYrX9smp3V46pBGbBeLFRGdh25kg1334VcBlD8HzhPeNIWQH9zhGmo2itIe25EHt9dQP7G5hmg=="],
 

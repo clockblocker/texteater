@@ -1,5 +1,9 @@
 import type { Assert } from "common-utils";
 import { z } from "zod";
+import {
+	germanPronounCoreError,
+	isGermanPronounCore,
+} from "../../../../validation/semantics.js";
 import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
@@ -10,6 +14,13 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 export const DePronounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
+		case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
+		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
+		"gender[psor]": DE_FEATURE_SCHEMA.gender.extract([
+			"Fem",
+			"Masc",
+			"Neut",
+		]),
 		extPos: DE_FEATURE_SCHEMA.extPos.extract(["DET"]),
 		foreign: DE_FEATURE_SCHEMA.foreign,
 		person: DE_FEATURE_SCHEMA.person.extract(["1", "2", "3"]),
@@ -25,18 +36,11 @@ export const DePronounFeatureBagsSchema = z.strictObject({
 			"Rel",
 			"Tot",
 		]),
-		referenceGender: DE_FEATURE_SCHEMA.gender.extract([
-			"Fem",
-			"Masc",
-			"Neut",
-		]),
+		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
 		referenceNumber: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
-	}),
+	}).refine(isGermanPronounCore, { error: germanPronounCoreError }),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
-			case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
-			gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
-			number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
 			reflex: DE_FEATURE_SCHEMA.reflex,
 		}),
 	),

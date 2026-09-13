@@ -1,8 +1,10 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	germanPronounCoreError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanPronounCore,
 	nonEmptyFeatureBagError,
 	normalizeForm,
 } from "./semantics.js";
@@ -20,6 +22,10 @@ function check(
 				};
 }
 export const validationOperations: ValidationOperations = {
+	"dumling.de-pronoun.core": check(
+		isGermanPronounCore,
+		germanPronounCoreError,
+	),
 	"dumling.feature-bag.marked": check(
 		hasMarkedFeature,
 		nonEmptyFeatureBagError,

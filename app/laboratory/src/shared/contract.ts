@@ -1,16 +1,16 @@
 import type {
-	Segment as DumgenSegment,
-	SegmentedSentence as DumgenSegmentedSentence,
-	EnabledSegmentationLanguage,
-	GrammaticalInteraction,
-	GrammaticalRoute,
-} from "dumgen";
-import type {
 	Attestation as DumlingAttestation,
 	Lemma as DumlingLemma,
 	Reading as DumlingReading,
 	Surface as DumlingSurface,
 } from "dumling-old";
+import type {
+	Segment as DumgenSegment,
+	SegmentedSentence as DumgenSegmentedSentence,
+	EnabledSegmentationLanguage,
+	GrammaticalInteraction,
+	GrammaticalRoute,
+} from "gumgen-old";
 
 export type Attestation = DumlingAttestation<"de">;
 export type Lemma = DumlingLemma<"de">;

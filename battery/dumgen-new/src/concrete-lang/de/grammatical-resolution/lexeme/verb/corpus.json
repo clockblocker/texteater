@@ -1,0 +1,1599 @@
+{
+	"grammar-de-verb-finite-liest": {
+		"input": {
+			"markedContext": "Sie <TARGET>liest</TARGET> leise.",
+			"members": ["liest"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["liest"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "lesen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-citation-arbeiten": {
+		"input": {
+			"markedContext": "Wörterbucheintrag Vollverb: <TARGET>arbeiten</TARGET>",
+			"members": ["arbeiten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["arbeiten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "arbeiten",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-past-ging": {
+		"input": {
+			"markedContext": "Er <TARGET>ging</TARGET> nach Hause.",
+			"members": ["ging"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ging"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "gehen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-imperative-lauf": {
+		"input": {
+			"markedContext": "<TARGET>Lauf</TARGET> schneller!",
+			"members": ["Lauf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["lauf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Imp",
+					"number": "Sing",
+					"person": "2",
+					"tense": null,
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "laufen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-infinitive-hinauszulaufen": {
+		"input": {
+			"markedContext": "Er versucht, <TARGET>hinauszulaufen</TARGET>.",
+			"members": ["hinauszulaufen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["hinauszulaufen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "hinauslaufen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "hinaus",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-participle-mitgebracht": {
+		"input": {
+			"markedContext": "Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>.",
+			"members": ["hat", "mitgebracht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["hat", "mitgebracht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mitbringen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "mit",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-participle-gesungen": {
+		"input": {
+			"markedContext": "Sie <TARGET>hat</TARGET> <TARGET>gesungen</TARGET>.",
+			"members": ["hat", "gesungen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["hat", "gesungen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "singen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-separable-imperative-aufpassen": {
+		"input": {
+			"markedContext": "<TARGET>Pass</TARGET> <TARGET>auf</TARGET> dich <TARGET>auf</TARGET>!",
+			"members": ["Pass", "auf", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["pass", "auf", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Imp",
+					"number": "Sing",
+					"person": "2",
+					"tense": null,
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "aufpassen",
+				"coreFeatures": {
+					"hasGovPrep": "auf",
+					"hasSepPrefix": "auf",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Two auf. First governed preposition. Second separable prefix. dich free."
+	},
+	"grammar-de-verb-reflexive-erinnert": {
+		"input": {
+			"markedContext": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+			"members": ["erinnert", "sich", "an"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["erinnert", "sich", "an"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich erinnern",
+				"coreFeatures": {
+					"hasGovPrep": "an",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "sich inherent. an governed. Both members."
+	},
+	"grammar-de-verb-governed-preposition-wartet": {
+		"input": {
+			"markedContext": "Sie <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den nächsten Zug.",
+			"members": ["wartet", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["wartet", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "warten",
+				"coreFeatures": {
+					"hasGovPrep": "auf",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-separable-finite-aufstehen": {
+		"input": {
+			"markedContext": "Sie <TARGET>steht</TARGET> jeden Morgen früh <TARGET>auf</TARGET>.",
+			"members": ["steht", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["steht", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "aufstehen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "auf",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-reflexive-schaemt": {
+		"input": {
+			"markedContext": "Er <TARGET>schämt</TARGET> <TARGET>sich</TARGET>.",
+			"members": ["schämt", "sich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["schämt", "sich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich schämen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-future-wird-reisen": {
+		"input": {
+			"markedContext": "Sie <TARGET>wird</TARGET> <TARGET>reisen</TARGET>.",
+			"members": ["wird", "reisen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["wird", "reisen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "reisen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "wird member. reisen head. Head stays Inf."
+	},
+	"grammar-de-verb-passive-wurde-gebeten": {
+		"input": {
+			"markedContext": "Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+			"members": ["wurde", "um", "gebeten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["wurde", "um", "gebeten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bitten",
+				"coreFeatures": {
+					"hasGovPrep": "um",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "wurde and um members. gebeten head. Head stays Part; voice null."
+	},
+	"grammar-de-verb-full-modal-mag": {
+		"input": {
+			"markedContext": "Sie <TARGET>mag</TARGET> Schokolade.",
+			"members": ["mag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mag"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-elliptical-modal-kann": {
+		"input": {
+			"markedContext": "Sie <TARGET>kann</TARGET> das.",
+			"members": ["kann"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["kann"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "können",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB."
+	},
+	"grammar-de-verb-full-werden": {
+		"input": {
+			"markedContext": "Sie <TARGET>wird</TARGET> Ärztin.",
+			"members": ["wird"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wird"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-full-hat": {
+		"input": {
+			"markedContext": "Sie <TARGET>hat</TARGET> ein Fahrrad.",
+			"members": ["hat"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["hat"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "haben",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-typo-tanzd": {
+		"input": {
+			"markedContext": "Er <TARGET>tanzd</TARGET> gern.",
+			"members": ["tanzd"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["tanzt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "tanzen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-passive-participle-geschlossen": {
+		"input": {
+			"markedContext": "Die Tür <TARGET>wurde</TARGET> <TARGET>geschlossen</TARGET>.",
+			"members": ["wurde", "geschlossen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["wurde", "geschlossen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "schließen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part."
+	},
+	"grammar-de-verb-state-passive-geschlossen": {
+		"input": {
+			"markedContext": "Die Tür <TARGET>ist</TARGET> <TARGET>geschlossen</TARGET>.",
+			"members": ["ist", "geschlossen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["ist", "geschlossen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "schließen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "TIGER productive state passive. ist member. geschlossen head stays Part under schließen."
+	},
+	"grammar-de-verb-provisional-zu-infinitive-warten": {
+		"input": {
+			"markedContext": "Sie versucht zu <TARGET>warten</TARGET>.",
+			"members": ["warten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["warten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "warten",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-dw-future-beteiligen": {
+		"input": {
+			"markedContext": "\"Deutschland <TARGET>wird</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> diesem Manöver <TARGET>beteiligen</TARGET>\", sagte Regierungssprecher Stefan Kornelius der Deutschen Presse-Agentur.",
+			"members": ["wird", "sich", "an", "beteiligen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["wird", "sich", "an", "beteiligen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich beteiligen",
+				"coreFeatures": {
+					"hasGovPrep": "an",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
+		]
+	},
+	"grammar-de-verb-dw-separable-aufsetzen": {
+		"input": {
+			"markedContext": "Zahnärztin Shimaa Mahmoud <TARGET>setzt</TARGET> sich eine Gesichtsmaske <TARGET>auf</TARGET>.",
+			"members": ["setzt", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["setzt", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "aufsetzen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "auf",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "sich ordinary object. Not member.",
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/krieg-im-sudan-gesundheitsversorgung-im-exil/a-75817375"
+		]
+	},
+	"grammar-de-verb-dw-perfect-etabliert": {
+		"input": {
+			"markedContext": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+			"members": ["sich", "etabliert", "hat"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sich", "etabliert", "hat"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich etablieren",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
+		]
+	},
+	"grammar-de-verb-dw-perfect-eingependelt": {
+		"input": {
+			"markedContext": "Mittlerweile <TARGET>hat</TARGET> <TARGET>sich</TARGET> der Preis auf rund 4150 US-Dollar pro Feinunze <TARGET>eingependelt</TARGET> (Stand 27. November).",
+			"members": ["hat", "sich", "eingependelt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["hat", "sich", "eingependelt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich einpendeln",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "ein",
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
+		]
+	},
+	"grammar-de-verb-dw-perfect-ausgeschlossen": {
+		"input": {
+			"markedContext": "Die tansanische Wahlkommission <TARGET>hat</TARGET> die CHADEMA-Partei des Oppositionsführers Tundu Lissu <TARGET>von</TARGET> den Präsidentschafts- und Parlamentswahlen 2025 <TARGET>ausgeschlossen</TARGET>.",
+			"members": ["hat", "von", "ausgeschlossen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["hat", "von", "ausgeschlossen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "ausschließen",
+				"coreFeatures": {
+					"hasGovPrep": "von",
+					"hasSepPrefix": "aus",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
+		]
+	},
+	"grammar-de-verb-dw-separable-nachwirken": {
+		"input": {
+			"markedContext": "Die Eindrücke <TARGET>wirken</TARGET> noch <TARGET>nach</TARGET>, sagt der Historiker beim Treffen mit der DW in seiner Berliner Wohnung.",
+			"members": ["wirken", "nach"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["wirken", "nach"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "nachwirken",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "nach",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
+		]
+	},
+	"grammar-de-verb-dw-passive-weitergeleitet": {
+		"input": {
+			"markedContext": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+			"members": ["an", "weitergeleitet", "werden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["an", "weitergeleitet", "werden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "weiterleiten",
+				"coreFeatures": {
+					"hasGovPrep": "an",
+					"hasSepPrefix": "weiter",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
+		]
+	},
+	"grammar-de-verb-dw-future-finden": {
+		"input": {
+			"markedContext": "Auch Emilia <TARGET>wird</TARGET> vermutlich schnell einen Job <TARGET>finden</TARGET>, sobald sie fertig mit ihrem Studium der nachhaltigen Mode sein wird.",
+			"members": ["wird", "finden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["wird", "finden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "finden",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "First wird member. Last wird other verb.",
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/zukunft-stadtplanung-wie-werden-wir-leben-transport-nahrung-stadtentwicklung/a-74137152"
+		]
+	},
+	"grammar-de-verb-dw-modal-passive-hergestellt": {
+		"input": {
+			"markedContext": "Die Impfstofflieferung für die EU soll in den Produktionsstätten von Biontech in Deutschland sowie in Pfizers Werken in Belgien <TARGET>hergestellt</TARGET> <TARGET>werden</TARGET>.",
+			"members": ["hergestellt", "werden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["hergestellt", "werden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "herstellen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "her",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "soll modal. Not member. werden passive member.",
+		"contaminationKeys": [
+			"source:https://www.dw.com/de/eu-sichert-sich-300-millionen-biontech-impfdosen-f%C3%BCr-europa/a-55566897"
+		]
+	},
+	"grammar-de-verb-dw-pluperfect-angekuendigt": {
+		"input": {
+			"markedContext": "Die Grünen <TARGET>hatten</TARGET> in ihrem Wahlprogramm <TARGET>angekündigt</TARGET>, dass sie gegenüber der Türkei eine prinzipienfestere Politik verfolgen und stärker auf Menschenrechte und Rechtsstaatlichkeit achten wollen.",
+			"members": ["hatten", "angekündigt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["hatten", "angekündigt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "ankündigen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "an",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
+		]
+	},
+	"grammar-de-verb-dw-passive-aufgefressen": {
+		"input": {
+			"markedContext": "Diese Erfolge <TARGET>werden</TARGET> jedoch von den steigenden Emissionen im Verkehrs- und Gebäudesektor <TARGET>aufgefressen</TARGET>.",
+			"members": ["werden", "aufgefressen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["werden", "aufgefressen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "auffressen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "auf",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
+		]
+	},
+	"grammar-de-verb-dw-perfect-ausgesprochen": {
+		"input": {
+			"markedContext": "Der Deutsche Ärztetag, die Vertretung der Mediziner in Deutschland, <TARGET>hat</TARGET> <TARGET>sich</TARGET> <TARGET>für</TARGET> ein Verbot jeder Form der organisierten Sterbehilfe <TARGET>ausgesprochen</TARGET>.",
+			"members": ["hat", "sich", "für", "ausgesprochen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["hat", "sich", "für", "ausgesprochen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich aussprechen",
+				"coreFeatures": {
+					"hasGovPrep": "für",
+					"hasSepPrefix": "aus",
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
+		]
+	},
+	"grammar-de-verb-dw-perfect-passive-aufgefunden": {
+		"input": {
+			"markedContext": "In Südkorea <TARGET>ist</TARGET> der junge Musiker und Schauspieler Cha In-ha (Artikelbild) tot in seinem Haus in der Hauptstadt Seoul <TARGET>aufgefunden</TARGET> <TARGET>worden</TARGET>.",
+			"members": ["ist", "aufgefunden", "worden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["ist", "aufgefunden", "worden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "auffinden",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": "auf",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
+		]
+	},
+	"grammar-de-verb-dw-pluperfect-passive-verschifft": {
+		"input": {
+			"markedContext": "Durch die Meerenge <TARGET>war</TARGET> zuvor fast ein Fünftel des weltweit verbrauchten Rohöls <TARGET>verschifft</TARGET> <TARGET>worden</TARGET>.",
+			"members": ["war", "verschifft", "worden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["war", "verschifft", "worden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "verschiffen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
+		]
+	},
+	"grammar-de-verb-dw-separable-vorbereiten": {
+		"input": {
+			"markedContext": "Die Bundeswehr <TARGET>bereitet</TARGET> <TARGET>sich</TARGET> <TARGET>auf</TARGET> einen möglichen Minenräum-Einsatz in der Straße von Hormus <TARGET>vor</TARGET>.",
+			"members": ["bereitet", "sich", "auf", "vor"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["bereitet", "sich", "auf", "vor"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich vorbereiten",
+				"coreFeatures": {
+					"hasGovPrep": "auf",
+					"hasSepPrefix": "vor",
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"contaminationKeys": [
+			"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
+		]
+	},
+	"grammar-de-verb-prep-governed-warten-auf": {
+		"input": {
+			"markedContext": "Die Fahrgäste <TARGET>warten</TARGET> trotz der eisigen Kälte geduldig <TARGET>auf</TARGET> den verspäteten Nachtzug nach Hamburg.",
+			"members": ["warten", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["warten", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "warten",
+				"coreFeatures": {
+					"hasGovPrep": "auf",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-free-warten-im": {
+		"input": {
+			"markedContext": "Während des schweren Gewitters <TARGET>wartet</TARGET> der Hausmeister im trockenen Keller des alten Schulgebäudes.",
+			"members": ["wartet"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wartet"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "warten",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-governed-verzichten-auf": {
+		"input": {
+			"markedContext": "Die Ministerin <TARGET>verzichtet</TARGET> trotz heftiger Kritik aus der eigenen Partei <TARGET>auf</TARGET> eine erneute Kandidatur.",
+			"members": ["verzichtet", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["verzichtet", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "verzichten",
+				"coreFeatures": {
+					"hasGovPrep": "auf",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-free-sprechen-im": {
+		"input": {
+			"markedContext": "Nach langen Verhandlungen <TARGET>spricht</TARGET> die Ministerin im voll besetzten Parlament ruhig, langsam und mit großer Entschlossenheit.",
+			"members": ["spricht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["spricht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sprechen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-governed-reflexive-erinnern-an": {
+		"input": {
+			"markedContext": "Der pensionierte Lehrer <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> noch deutlich <TARGET>an</TARGET> seinen ersten Schultag in dem kleinen Bergdorf.",
+			"members": ["erinnert", "sich", "an"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["erinnert", "sich", "an"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich erinnern",
+				"coreFeatures": {
+					"hasGovPrep": "an",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-governed-reflexive-sehnen-nach": {
+		"input": {
+			"markedContext": "Viele Bewohner <TARGET>sehnen</TARGET> <TARGET>sich</TARGET> nach Monaten voller Lärm <TARGET>nach</TARGET> etwas Ruhe und verlässlichen Nächten.",
+			"members": ["sehnen", "sich", "nach"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sehnen", "sich", "nach"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich sehnen",
+				"coreFeatures": {
+					"hasGovPrep": "nach",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-free-reflexive-erholen-im": {
+		"input": {
+			"markedContext": "Nach der anstrengenden Sitzung <TARGET>erholt</TARGET> <TARGET>sich</TARGET> die Ministerin im stillen Garten hinter dem Kanzleramt.",
+			"members": ["erholt", "sich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["erholt", "sich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sich erholen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-governed-warnen-vor": {
+		"input": {
+			"markedContext": "Internationale Fachleute <TARGET>warnen</TARGET> die Küstenstädte seit Jahren <TARGET>vor</TARGET> den Folgen eines ungebremsten Meeresspiegelanstiegs.",
+			"members": ["warnen", "vor"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["warnen", "vor"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "warnen",
+				"coreFeatures": {
+					"hasGovPrep": "vor",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-free-arbeiten-mit": {
+		"input": {
+			"markedContext": "Die Ärztin <TARGET>arbeitet</TARGET> seit vielen Jahren mit einem besonders präzisen Mikroskop in der Forschungsklinik.",
+			"members": ["arbeitet"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["arbeitet"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "arbeiten",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-verb-prep-free-spielen-auf": {
+		"input": {
+			"markedContext": "Die Kinder <TARGET>spielen</TARGET> auch bei kühlem Herbstwetter auf dem frisch renovierten Schulhof hinter der Turnhalle.",
+			"members": ["spielen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["spielen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "spielen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

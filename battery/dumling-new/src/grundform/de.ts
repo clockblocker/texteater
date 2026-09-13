@@ -30,46 +30,9 @@ function noun(surface: Surface): GrundformRule {
 		};
 	return { features: { ...features, number: ["Sing"] } };
 }
-// ADR 0018: reviewed German personal case forms are separate Lemmas. Case
-// therefore belongs to each canonical form, not to one PRON-wide Nom default.
-const germanPersonalCases: Readonly<Record<string, readonly string[]>> = {
-	ich: ["Nom"],
-	mich: ["Acc"],
-	mir: ["Dat"],
-	meiner: ["Gen"],
-	du: ["Nom"],
-	dich: ["Acc"],
-	dir: ["Dat"],
-	deiner: ["Gen"],
-	er: ["Nom"],
-	ihn: ["Acc"],
-	ihm: ["Dat"],
-	seiner: ["Gen"],
-	sie: ["Nom", "Acc"],
-	ihr: ["Nom", "Dat"],
-	ihrer: ["Gen"],
-	es: ["Nom", "Acc"],
-	wir: ["Nom"],
-	uns: ["Acc", "Dat"],
-	unser: ["Gen"],
-	euch: ["Acc", "Dat"],
-	euer: ["Gen"],
-	ihnen: ["Dat"],
-	Sie: ["Nom", "Acc"],
-	Ihnen: ["Dat"],
-	Ihrer: ["Gen"],
-	sich: ["Acc", "Dat"],
-};
-function germanPronoun(surface: Surface): GrundformRule {
-	const core = surface.lemma.coreFeatures;
-	if (!("pronType" in core) || core.pronType !== "Prs")
-		return lexicalConvention;
-	const form = surface.lemma.canonicalForm;
-	const cases = Object.hasOwn(germanPersonalCases, form)
-		? germanPersonalCases[form]
-		: undefined;
-	return cases ? { features: { case: cases } } : lexicalConvention;
-}
+// German PRON Case, Gender and Number distinguish the Lemma itself.
+// Valid realizations need no separate inflectional citation-form requirement.
+const germanPronoun: GrundformRule = { features: {} };
 
 export const germanRules = {
 	"de/Lexeme/ADJ": adjective,

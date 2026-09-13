@@ -1,0 +1,63 @@
+{
+	"path": "knowledge-analysis/lexical-breakdown/segmentation/prompt-source.ts",
+	"route": "knowledge-analysis/lexical-breakdown/segmentation",
+	"body": "Design an ordered learner-facing Lexical Breakdown.\n\nThis route is only for Phraseme Readings and useful Lexeme/VERB analyses. Do not\nreturn a breakdown for other owner families or kinds. It is lexical-internal\nand must not change sentence Source Segmentation.\n\nSplit a Phraseme into its contextual Lexeme units. For a selected verb, retain\nonly fixed learner-useful lexical components. Do not include free arguments,\nadjuncts, or replaceable fillers.\n\nReturn only the ordered source-text strings that the resolution phase must\nclassify. Repeated material appears repeatedly. Do not return roles, source\nspans, alignment or realization labels, alternatives, or default selection.\n\nDo not resolve component grammar and do not generate component Knowledge in\nthis phase. markedContext selects one durable breakdown.",
+	"cases": {
+		"lexical-segment-phraseme-repetition": {
+			"input": {
+				"source": "so oder so",
+				"markedContext": "Das ist <TARGET>so oder so</TARGET> nötig.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "so oder so",
+						"family": "Phraseme",
+						"kind": "Idiom"
+					},
+					"emojiDescription": "🔁"
+				}
+			},
+			"idealOutput": {
+				"components": ["so", "oder", "so"]
+			}
+		},
+		"lexical-segment-contextual-reflexive": {
+			"input": {
+				"source": "mich erinnern",
+				"markedContext": "Ich kann <TARGET>mich erinnern</TARGET>.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "sich erinnern",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "🧠"
+				}
+			},
+			"idealOutput": {
+				"components": ["mich", "erinnern"]
+			}
+		},
+		"lexical-segment-collocation": {
+			"input": {
+				"source": "in Betracht ziehen",
+				"markedContext": "Wir sollten das <TARGET>in Betracht ziehen</TARGET>.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "in Betracht ziehen",
+						"family": "Phraseme",
+						"kind": "Collocation"
+					},
+					"emojiDescription": "🤔"
+				}
+			},
+			"idealOutput": {
+				"components": ["in", "Betracht", "ziehen"]
+			}
+		}
+	},
+	"demonstrationIds": ["lexical-segment-phraseme-repetition"],
+	"localDemonstrations": []
+}

@@ -1,0 +1,1647 @@
+{
+	"grammar-de-aphorism-alt-werden": {
+		"input": {
+			"markedContext": "„<TARGET>Alt</TARGET> <TARGET>werden</TARGET>, <TARGET>heißt</TARGET> <TARGET>sehend</TARGET> <TARGET>werden</TARGET>.“",
+			"members": ["Alt", "werden", "heißt", "sehend", "werden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Alt", "werden", "heißt", "sehend", "werden"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Alt werden heißt sehend werden",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Every lexical member is selected; quotation marks, comma, and full stop are punctuation rather than Phraseme members.",
+		"contaminationKeys": [
+			"de-aphorism-lemma:alt-werden-heisst-sehend-werden"
+		]
+	},
+	"grammar-de-aphorism-typo-hoert": {
+		"input": {
+			"markedContext": "<TARGET>Wo</TARGET> <TARGET>die</TARGET> <TARGET>Eitelkeit</TARGET> <TARGET>anfängt</TARGET>, <TARGET>höhrt</TARGET> <TARGET>der</TARGET> <TARGET>Verstand</TARGET> <TARGET>auf</TARGET>.",
+			"members": [
+				"Wo",
+				"die",
+				"Eitelkeit",
+				"anfängt",
+				"höhrt",
+				"der",
+				"Verstand",
+				"auf"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Typo",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wo",
+				"die",
+				"Eitelkeit",
+				"anfängt",
+				"hört",
+				"der",
+				"Verstand",
+				"auf"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wo die Eitelkeit anfängt hört der Verstand auf",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The one misspelled member is repaired in the normalized Surface and marked Typo; punctuation remains outside membership.",
+		"contaminationKeys": [
+			"de-aphorism-lemma:wo-die-eitelkeit-anfaengt-hoert-der-verstand-auf"
+		]
+	},
+	"grammar-de-aphorism-historical-muss": {
+		"input": {
+			"markedContext": "<TARGET>Wer</TARGET> <TARGET>nichts</TARGET> <TARGET>weiß</TARGET>, <TARGET>muß</TARGET> <TARGET>alles</TARGET> <TARGET>glauben</TARGET>.",
+			"members": ["Wer", "nichts", "weiß", "muß", "alles", "glauben"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wer",
+				"nichts",
+				"weiß",
+				"muß",
+				"alles",
+				"glauben"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer nichts weiß muss alles glauben",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The attested 1893 muß is a licensed historical spelling, not a typo; the Canonical Form uses current muss.",
+		"contaminationKeys": [
+			"de-aphorism-lemma:wer-nichts-weiss-muss-alles-glauben"
+		]
+	},
+	"grammar-de-aphorism-nachahmer": {
+		"input": {
+			"markedContext": "Ebner-Eschenbach schrieb: „<TARGET>Die</TARGET> <TARGET>meisten</TARGET> <TARGET>Nachahmer</TARGET> <TARGET>lockt</TARGET> <TARGET>das</TARGET> <TARGET>Unnachahmliche</TARGET>.“",
+			"members": [
+				"Die",
+				"meisten",
+				"Nachahmer",
+				"lockt",
+				"das",
+				"Unnachahmliche"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"meisten",
+				"Nachahmer",
+				"lockt",
+				"das",
+				"Unnachahmliche"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die meisten Nachahmer lockt das Unnachahmliche",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:die-meisten-nachahmer"]
+	},
+	"grammar-de-aphorism-nachsicht": {
+		"input": {
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>meiste</TARGET> <TARGET>Nachsicht</TARGET> <TARGET>übt</TARGET> <TARGET>der</TARGET>, <TARGET>der</TARGET> <TARGET>die</TARGET> <TARGET>wenigste</TARGET> <TARGET>braucht</TARGET>.",
+			"members": [
+				"Die",
+				"meiste",
+				"Nachsicht",
+				"übt",
+				"der",
+				"der",
+				"die",
+				"wenigste",
+				"braucht"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"meiste",
+				"Nachsicht",
+				"übt",
+				"der",
+				"der",
+				"die",
+				"wenigste",
+				"braucht"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die meiste Nachsicht übt der der die wenigste braucht",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:die-meiste-nachsicht"]
+	},
+	"grammar-de-aphorism-kindheit": {
+		"input": {
+			"markedContext": "<TARGET>Wer</TARGET> <TARGET>sich</TARGET> <TARGET>seiner</TARGET> <TARGET>eigenen</TARGET> <TARGET>Kindheit</TARGET> <TARGET>nicht</TARGET> <TARGET>mehr</TARGET> <TARGET>deutlich</TARGET> <TARGET>erinnert</TARGET>, <TARGET>ist</TARGET> <TARGET>ein</TARGET> <TARGET>schlechter</TARGET> <TARGET>Erzieher</TARGET>.",
+			"members": [
+				"Wer",
+				"sich",
+				"seiner",
+				"eigenen",
+				"Kindheit",
+				"nicht",
+				"mehr",
+				"deutlich",
+				"erinnert",
+				"ist",
+				"ein",
+				"schlechter",
+				"Erzieher"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wer",
+				"sich",
+				"seiner",
+				"eigenen",
+				"Kindheit",
+				"nicht",
+				"mehr",
+				"deutlich",
+				"erinnert",
+				"ist",
+				"ein",
+				"schlechter",
+				"Erzieher"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:wer-sich-seiner-kindheit"]
+	},
+	"grammar-de-aphorism-alter": {
+		"input": {
+			"markedContext": "Im Lektorat stand erst „Das Alter verklärt oder versteinert“; später wiederholte sie: „<TARGET>Das</TARGET> <TARGET>Alter</TARGET> <TARGET>verklärt</TARGET> <TARGET>oder</TARGET> <TARGET>versteinert</TARGET>.“",
+			"members": ["Das", "Alter", "verklärt", "oder", "versteinert"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Das",
+				"Alter",
+				"verklärt",
+				"oder",
+				"versteinert"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Das Alter verklärt oder versteinert",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:das-alter-verklaert"]
+	},
+	"grammar-de-aphorism-jugend": {
+		"input": {
+			"markedContext": "<TARGET>In</TARGET> <TARGET>der</TARGET> <TARGET>Jugend</TARGET> <TARGET>lernt</TARGET>, <TARGET>im</TARGET> <TARGET>Alter</TARGET> <TARGET>versteht</TARGET> <TARGET>man</TARGET>.",
+			"members": [
+				"In",
+				"der",
+				"Jugend",
+				"lernt",
+				"im",
+				"Alter",
+				"versteht",
+				"man"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"In",
+				"der",
+				"Jugend",
+				"lernt",
+				"im",
+				"Alter",
+				"versteht",
+				"man"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "In der Jugend lernt im Alter versteht man",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:in-der-jugend-lernt"]
+	},
+	"grammar-de-aphorism-tadel": {
+		"input": {
+			"markedContext": "<TARGET>Unbegründeter</TARGET> <TARGET>Tadel</TARGET> <TARGET>ist</TARGET> <TARGET>manchmal</TARGET> <TARGET>eine</TARGET> <TARGET>feine</TARGET> <TARGET>Form</TARGET> <TARGET>der</TARGET> <TARGET>Schmeichelei</TARGET>.",
+			"members": [
+				"Unbegründeter",
+				"Tadel",
+				"ist",
+				"manchmal",
+				"eine",
+				"feine",
+				"Form",
+				"der",
+				"Schmeichelei"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Unbegründeter",
+				"Tadel",
+				"ist",
+				"manchmal",
+				"eine",
+				"feine",
+				"Form",
+				"der",
+				"Schmeichelei"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:unbegruendeter-tadel"]
+	},
+	"grammar-de-aphorism-liebe-rechte": {
+		"input": {
+			"markedContext": "Neben dem Werbeslogan „Liebe lohnt sich“ stand der Aphorismus: „<TARGET>Die</TARGET> <TARGET>Liebe</TARGET> <TARGET>hat</TARGET> <TARGET>nicht</TARGET> <TARGET>nur</TARGET> <TARGET>Rechte</TARGET>, <TARGET>sie</TARGET> <TARGET>hat</TARGET> <TARGET>auch</TARGET> <TARGET>immer</TARGET> <TARGET>recht</TARGET>.“",
+			"members": [
+				"Die",
+				"Liebe",
+				"hat",
+				"nicht",
+				"nur",
+				"Rechte",
+				"sie",
+				"hat",
+				"auch",
+				"immer",
+				"recht"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"Liebe",
+				"hat",
+				"nicht",
+				"nur",
+				"Rechte",
+				"sie",
+				"hat",
+				"auch",
+				"immer",
+				"recht"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die Liebe hat nicht nur Rechte sie hat auch immer recht",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:die-liebe-hat-rechte"]
+	},
+	"grammar-de-aphorism-gegenwart": {
+		"input": {
+			"markedContext": "Nachdem sie die Redewendung „den Nagel auf den Kopf treffen“ erklärt hatte, zitierte sie: „<TARGET>Nur</TARGET> <TARGET>was</TARGET> <TARGET>für</TARGET> <TARGET>die</TARGET> <TARGET>Gegenwart</TARGET> <TARGET>zu</TARGET> <TARGET>gut</TARGET> <TARGET>ist</TARGET>, <TARGET>ist</TARGET> <TARGET>gut</TARGET> <TARGET>genug</TARGET> <TARGET>für</TARGET> <TARGET>die</TARGET> <TARGET>Zukunft</TARGET>.“",
+			"members": [
+				"Nur",
+				"was",
+				"für",
+				"die",
+				"Gegenwart",
+				"zu",
+				"gut",
+				"ist",
+				"ist",
+				"gut",
+				"genug",
+				"für",
+				"die",
+				"Zukunft"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Nur",
+				"was",
+				"für",
+				"die",
+				"Gegenwart",
+				"zu",
+				"gut",
+				"ist",
+				"ist",
+				"gut",
+				"genug",
+				"für",
+				"die",
+				"Zukunft"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Nur was für die Gegenwart zu gut ist ist gut genug für die Zukunft",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:nur-was-fuer-die-gegenwart"]
+	},
+	"grammar-de-aphorism-streiten": {
+		"input": {
+			"markedContext": "Nach dem Grammatikbeispiel „eine Entscheidung treffen“ folgte: „<TARGET>Nicht</TARGET> <TARGET>jene</TARGET>, <TARGET>die</TARGET> <TARGET>streiten</TARGET>, <TARGET>sind</TARGET> <TARGET>zu</TARGET> <TARGET>fürchten</TARGET>, <TARGET>sondern</TARGET> <TARGET>jene</TARGET>, <TARGET>die</TARGET> <TARGET>ausweichen</TARGET>.“",
+			"members": [
+				"Nicht",
+				"jene",
+				"die",
+				"streiten",
+				"sind",
+				"zu",
+				"fürchten",
+				"sondern",
+				"jene",
+				"die",
+				"ausweichen"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Nicht",
+				"jene",
+				"die",
+				"streiten",
+				"sind",
+				"zu",
+				"fürchten",
+				"sondern",
+				"jene",
+				"die",
+				"ausweichen"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Nicht jene die streiten sind zu fürchten sondern jene die ausweichen",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:nicht-jene-die-streiten"]
+	},
+	"grammar-de-aphorism-unbezahlbar": {
+		"input": {
+			"markedContext": "Die Protokollnotiz „Die Sitzung endet um fünf“ war nur episodisch; danach zitierte sie: „<TARGET>Man</TARGET> <TARGET>kann</TARGET> <TARGET>viele</TARGET> <TARGET>Dinge</TARGET> <TARGET>kaufen</TARGET>, <TARGET>die</TARGET> <TARGET>unbezahlbar</TARGET> <TARGET>sind</TARGET>.“",
+			"members": [
+				"Man",
+				"kann",
+				"viele",
+				"Dinge",
+				"kaufen",
+				"die",
+				"unbezahlbar",
+				"sind"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Man",
+				"kann",
+				"viele",
+				"Dinge",
+				"kaufen",
+				"die",
+				"unbezahlbar",
+				"sind"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Man kann viele Dinge kaufen die unbezahlbar sind",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:man-kann-viele-dinge-kaufen"]
+	},
+	"grammar-de-aphorism-grundsaetze": {
+		"input": {
+			"markedContext": "Anders als das Sprichwort „Morgenstund hat Gold im Mund“ ist dies ein zugeschriebener Aphorismus: „<TARGET>Wenn</TARGET> <TARGET>zwei</TARGET> <TARGET>brave</TARGET> <TARGET>Menschen</TARGET> <TARGET>über</TARGET> <TARGET>Grundsätze</TARGET> <TARGET>streiten</TARGET>, <TARGET>haben</TARGET> <TARGET>immer</TARGET> <TARGET>beide</TARGET> <TARGET>recht</TARGET>.“",
+			"members": [
+				"Wenn",
+				"zwei",
+				"brave",
+				"Menschen",
+				"über",
+				"Grundsätze",
+				"streiten",
+				"haben",
+				"immer",
+				"beide",
+				"recht"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wenn",
+				"zwei",
+				"brave",
+				"Menschen",
+				"über",
+				"Grundsätze",
+				"streiten",
+				"haben",
+				"immer",
+				"beide",
+				"recht"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wenn zwei brave Menschen über Grundsätze streiten haben immer beide recht",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:wenn-zwei-brave-menschen"]
+	},
+	"grammar-de-aphorism-casing-menschen": {
+		"input": {
+			"markedContext": "<TARGET>die</TARGET> <TARGET>Menschen</TARGET>, <TARGET>denen</TARGET> <TARGET>wir</TARGET> <TARGET>eine</TARGET> <TARGET>Stütze</TARGET> <TARGET>sind</TARGET>, <TARGET>die</TARGET> <TARGET>geben</TARGET> <TARGET>uns</TARGET> <TARGET>den</TARGET> <TARGET>Halt</TARGET> <TARGET>im</TARGET> <TARGET>Leben</TARGET>.",
+			"members": [
+				"die",
+				"Menschen",
+				"denen",
+				"wir",
+				"eine",
+				"Stütze",
+				"sind",
+				"die",
+				"geben",
+				"uns",
+				"den",
+				"Halt",
+				"im",
+				"Leben"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Typo",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"Menschen",
+				"denen",
+				"wir",
+				"eine",
+				"Stütze",
+				"sind",
+				"die",
+				"geben",
+				"uns",
+				"den",
+				"Halt",
+				"im",
+				"Leben"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Lowercase at the beginning of the complete maxim is inappropriate casing, so that member is Typo and normalized to Die.",
+		"contaminationKeys": [
+			"de-aphorism-lemma:die-menschen-denen-wir-eine-stuetze-sind"
+		]
+	},
+	"grammar-de-aphorism-aphorismus-ring": {
+		"input": {
+			"markedContext": "<TARGET>Ein</TARGET> <TARGET>Aphorismus</TARGET> <TARGET>ist</TARGET> <TARGET>der</TARGET> <TARGET>letzte</TARGET> <TARGET>Ring</TARGET> <TARGET>einer</TARGET> <TARGET>langen</TARGET> <TARGET>Gedankenkette</TARGET>.",
+			"members": [
+				"Ein",
+				"Aphorismus",
+				"ist",
+				"der",
+				"letzte",
+				"Ring",
+				"einer",
+				"langen",
+				"Gedankenkette"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Ein",
+				"Aphorismus",
+				"ist",
+				"der",
+				"letzte",
+				"Ring",
+				"einer",
+				"langen",
+				"Gedankenkette"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ein Aphorismus ist der letzte Ring einer langen Gedankenkette",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": [
+			"de-aphorism-lemma:ein-aphorismus-ist-der-letzte-ring"
+		]
+	},
+	"grammar-de-aphorism-selbstverstaendlich": {
+		"input": {
+			"markedContext": "<TARGET>Sag</TARGET> <TARGET>etwas</TARGET>, <TARGET>das</TARGET> <TARGET>sich</TARGET> <TARGET>von</TARGET> <TARGET>selbst</TARGET> <TARGET>versteht</TARGET>, <TARGET>zum</TARGET> <TARGET>ersten</TARGET> <TARGET>Mal</TARGET>, <TARGET>und</TARGET> <TARGET>du</TARGET> <TARGET>bist</TARGET> <TARGET>unsterblich</TARGET>.",
+			"members": [
+				"Sag",
+				"etwas",
+				"das",
+				"sich",
+				"von",
+				"selbst",
+				"versteht",
+				"zum",
+				"ersten",
+				"Mal",
+				"und",
+				"du",
+				"bist",
+				"unsterblich"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Sag",
+				"etwas",
+				"das",
+				"sich",
+				"von",
+				"selbst",
+				"versteht",
+				"zum",
+				"ersten",
+				"Mal",
+				"und",
+				"du",
+				"bist",
+				"unsterblich"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": [
+			"de-aphorism-lemma:sag-etwas-das-sich-von-selbst-versteht"
+		]
+	},
+	"grammar-de-aphorism-sichtbare-schoenheit": {
+		"input": {
+			"markedContext": "<TARGET>Was</TARGET> <TARGET>uns</TARGET> <TARGET>an</TARGET> <TARGET>der</TARGET> <TARGET>sichtbaren</TARGET> <TARGET>Schönheit</TARGET> <TARGET>entzückt</TARGET>, <TARGET>ist</TARGET> <TARGET>ewig</TARGET> <TARGET>nur</TARGET> <TARGET>die</TARGET> <TARGET>unsichtbare</TARGET>.",
+			"members": [
+				"Was",
+				"uns",
+				"an",
+				"der",
+				"sichtbaren",
+				"Schönheit",
+				"entzückt",
+				"ist",
+				"ewig",
+				"nur",
+				"die",
+				"unsichtbare"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Was",
+				"uns",
+				"an",
+				"der",
+				"sichtbaren",
+				"Schönheit",
+				"entzückt",
+				"ist",
+				"ewig",
+				"nur",
+				"die",
+				"unsichtbare"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Was uns an der sichtbaren Schönheit entzückt ist ewig nur die unsichtbare",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": [
+			"de-aphorism-lemma:was-uns-an-der-sichtbaren-schoenheit"
+		]
+	},
+	"grammar-de-aphorism-verstehen-partial": {
+		"input": {
+			"markedContext": "Im Seminar zitierte sie verkürzt: „<TARGET>Die</TARGET> <TARGET>verstehen</TARGET> <TARGET>sehr</TARGET> <TARGET>wenig</TARGET> …“.",
+			"members": ["Die", "verstehen", "sehr", "wenig"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Die", "verstehen", "sehr", "wenig"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die verstehen sehr wenig die nur das verstehen was sich erklären lässt",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Quote stops at ellipsis. Missing tail not overt. Full source known.",
+		"contaminationKeys": ["de-aphorism-lemma:die-verstehen-sehr-wenig"]
+	},
+	"grammar-de-aphorism-vertrauen-discontinuous": {
+		"input": {
+			"markedContext": "„<TARGET>Vertrauen</TARGET>“, schrieb sie, „<TARGET>ist</TARGET> <TARGET>Mut</TARGET>, <TARGET>und</TARGET> <TARGET>Treue</TARGET> <TARGET>ist</TARGET> <TARGET>Kraft</TARGET>.“",
+			"members": [
+				"Vertrauen",
+				"ist",
+				"Mut",
+				"und",
+				"Treue",
+				"ist",
+				"Kraft"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Vertrauen",
+				"ist",
+				"Mut",
+				"und",
+				"Treue",
+				"ist",
+				"Kraft"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Vertrauen ist Mut und Treue ist Kraft",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Split quotation. Attribution free. Target words keep source order.",
+		"contaminationKeys": ["de-aphorism-lemma:vertrauen-ist-mut"]
+	},
+	"grammar-de-aphorism-geduld-streitsucht": {
+		"input": {
+			"markedContext": "<TARGET>Geduld</TARGET> <TARGET>mit</TARGET> <TARGET>der</TARGET> <TARGET>Streitsucht</TARGET> <TARGET>der</TARGET> <TARGET>Einfältigen</TARGET>! <TARGET>Es</TARGET> <TARGET>ist</TARGET> <TARGET>nicht</TARGET> <TARGET>leicht</TARGET> <TARGET>zu</TARGET> <TARGET>begreifen</TARGET>, <TARGET>dass</TARGET> <TARGET>man</TARGET> <TARGET>nicht</TARGET> <TARGET>begreift</TARGET>.",
+			"members": [
+				"Geduld",
+				"mit",
+				"der",
+				"Streitsucht",
+				"der",
+				"Einfältigen",
+				"Es",
+				"ist",
+				"nicht",
+				"leicht",
+				"zu",
+				"begreifen",
+				"dass",
+				"man",
+				"nicht",
+				"begreift"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Geduld",
+				"mit",
+				"der",
+				"Streitsucht",
+				"der",
+				"Einfältigen",
+				"Es",
+				"ist",
+				"nicht",
+				"leicht",
+				"zu",
+				"begreifen",
+				"dass",
+				"man",
+				"nicht",
+				"begreift"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:geduld-mit-der-streitsucht"]
+	},
+	"grammar-de-aphorism-weise-gut": {
+		"input": {
+			"markedContext": "<TARGET>Wie</TARGET> <TARGET>weise</TARGET> <TARGET>muss</TARGET> <TARGET>man</TARGET> <TARGET>sein</TARGET>, <TARGET>um</TARGET> <TARGET>immer</TARGET> <TARGET>gut</TARGET> <TARGET>zu</TARGET> <TARGET>sein</TARGET>!",
+			"members": [
+				"Wie",
+				"weise",
+				"muss",
+				"man",
+				"sein",
+				"um",
+				"immer",
+				"gut",
+				"zu",
+				"sein"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wie",
+				"weise",
+				"muss",
+				"man",
+				"sein",
+				"um",
+				"immer",
+				"gut",
+				"zu",
+				"sein"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wie weise muss man sein um immer gut zu sein",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:wie-weise-muss-man-sein"]
+	},
+	"grammar-de-aphorism-warten": {
+		"input": {
+			"markedContext": "<TARGET>Warten</TARGET> <TARGET>lernen</TARGET> <TARGET>wir</TARGET> <TARGET>gewöhnlich</TARGET> <TARGET>erst</TARGET>, <TARGET>wenn</TARGET> <TARGET>wir</TARGET> <TARGET>nichts</TARGET> <TARGET>mehr</TARGET> <TARGET>zu</TARGET> <TARGET>erwarten</TARGET> <TARGET>haben</TARGET>.",
+			"members": [
+				"Warten",
+				"lernen",
+				"wir",
+				"gewöhnlich",
+				"erst",
+				"wenn",
+				"wir",
+				"nichts",
+				"mehr",
+				"zu",
+				"erwarten",
+				"haben"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Warten",
+				"lernen",
+				"wir",
+				"gewöhnlich",
+				"erst",
+				"wenn",
+				"wir",
+				"nichts",
+				"mehr",
+				"zu",
+				"erwarten",
+				"haben"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:warten-lernen-wir"]
+	},
+	"grammar-de-aphorism-leidenschaft": {
+		"input": {
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>Leidenschaft</TARGET> <TARGET>ist</TARGET> <TARGET>immer</TARGET> <TARGET>ein</TARGET> <TARGET>Leiden</TARGET>, <TARGET>auch</TARGET> <TARGET>die</TARGET> <TARGET>befriedigte</TARGET>.",
+			"members": [
+				"Die",
+				"Leidenschaft",
+				"ist",
+				"immer",
+				"ein",
+				"Leiden",
+				"auch",
+				"die",
+				"befriedigte"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"Leidenschaft",
+				"ist",
+				"immer",
+				"ein",
+				"Leiden",
+				"auch",
+				"die",
+				"befriedigte"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die Leidenschaft ist immer ein Leiden auch die befriedigte",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:die-leidenschaft-ist-immer"]
+	},
+	"grammar-de-aphorism-gebrannte-kinder": {
+		"input": {
+			"markedContext": "<TARGET>Gebrannte</TARGET> <TARGET>Kinder</TARGET> <TARGET>fürchten</TARGET> <TARGET>das</TARGET> <TARGET>Feuer</TARGET> <TARGET>oder</TARGET> <TARGET>vernarren</TARGET> <TARGET>sich</TARGET> <TARGET>darein</TARGET>.",
+			"members": [
+				"Gebrannte",
+				"Kinder",
+				"fürchten",
+				"das",
+				"Feuer",
+				"oder",
+				"vernarren",
+				"sich",
+				"darein"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Gebrannte",
+				"Kinder",
+				"fürchten",
+				"das",
+				"Feuer",
+				"oder",
+				"vernarren",
+				"sich",
+				"darein"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Gebrannte Kinder fürchten das Feuer oder vernarren sich darein",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:gebrannte-kinder-fuerchten"]
+	},
+	"grammar-de-aphorism-mitleid-neglige": {
+		"input": {
+			"markedContext": "<TARGET>Mitleid</TARGET> <TARGET>ist</TARGET> <TARGET>Liebe</TARGET> <TARGET>im</TARGET> <TARGET>Négligé</TARGET>.",
+			"members": ["Mitleid", "ist", "Liebe", "im", "Négligé"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Mitleid", "ist", "Liebe", "im", "Négligé"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Mitleid ist Liebe im Négligé",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:mitleid-ist-liebe"]
+	},
+	"grammar-de-aphorism-arme-reiche": {
+		"input": {
+			"markedContext": "<TARGET>Der</TARGET> <TARGET>Arme</TARGET> <TARGET>rechnet</TARGET> <TARGET>dem</TARGET> <TARGET>Reichen</TARGET> <TARGET>die</TARGET> <TARGET>Großmut</TARGET> <TARGET>niemals</TARGET> <TARGET>als</TARGET> <TARGET>Tugend</TARGET> <TARGET>an</TARGET>.",
+			"members": [
+				"Der",
+				"Arme",
+				"rechnet",
+				"dem",
+				"Reichen",
+				"die",
+				"Großmut",
+				"niemals",
+				"als",
+				"Tugend",
+				"an"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Der",
+				"Arme",
+				"rechnet",
+				"dem",
+				"Reichen",
+				"die",
+				"Großmut",
+				"niemals",
+				"als",
+				"Tugend",
+				"an"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:der-arme-rechnet-dem-reichen"]
+	},
+	"grammar-de-aphorism-widerspruch-partial": {
+		"input": {
+			"markedContext": "Die Ausgabe kürzt mit Auslassungszeichen: „<TARGET>Die</TARGET> <TARGET>Leute</TARGET> <TARGET>denen</TARGET> <TARGET>man</TARGET> <TARGET>nie</TARGET> <TARGET>widerspricht</TARGET> <TARGET>sind</TARGET> <TARGET>entweder</TARGET> <TARGET>die</TARGET> …“.",
+			"members": [
+				"Die",
+				"Leute",
+				"denen",
+				"man",
+				"nie",
+				"widerspricht",
+				"sind",
+				"entweder",
+				"die"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"Leute",
+				"denen",
+				"man",
+				"nie",
+				"widerspricht",
+				"sind",
+				"entweder",
+				"die"
+			],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die Leute denen man nie widerspricht sind entweder die welche man am meisten liebt oder die welche man am geringsten achtet",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Quote stops at ellipsis. Missing tail not overt. Full source known.",
+		"contaminationKeys": [
+			"de-aphorism-lemma:die-leute-denen-man-nie-widerspricht"
+		]
+	},
+	"grammar-de-aphorism-huete-dich": {
+		"input": {
+			"markedContext": "<TARGET>Hüte</TARGET> <TARGET>dich</TARGET> <TARGET>vor</TARGET> <TARGET>der</TARGET> <TARGET>Tugend</TARGET>, <TARGET>die</TARGET> <TARGET>zu</TARGET> <TARGET>besitzen</TARGET> <TARGET>ein</TARGET> <TARGET>Mensch</TARGET> <TARGET>von</TARGET> <TARGET>sich</TARGET> <TARGET>selber</TARGET> <TARGET>rühmt</TARGET>.",
+			"members": [
+				"Hüte",
+				"dich",
+				"vor",
+				"der",
+				"Tugend",
+				"die",
+				"zu",
+				"besitzen",
+				"ein",
+				"Mensch",
+				"von",
+				"sich",
+				"selber",
+				"rühmt"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Hüte",
+				"dich",
+				"vor",
+				"der",
+				"Tugend",
+				"die",
+				"zu",
+				"besitzen",
+				"ein",
+				"Mensch",
+				"von",
+				"sich",
+				"selber",
+				"rühmt"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:huete-dich-vor-der-tugend"]
+	},
+	"grammar-de-aphorism-alten-lesen": {
+		"input": {
+			"markedContext": "<TARGET>Wenn</TARGET> <TARGET>man</TARGET> <TARGET>nur</TARGET> <TARGET>die</TARGET> <TARGET>Alten</TARGET> <TARGET>liest</TARGET>, <TARGET>ist</TARGET> <TARGET>man</TARGET> <TARGET>sicher</TARGET>, <TARGET>immer</TARGET> <TARGET>neu</TARGET> <TARGET>zu</TARGET> <TARGET>bleiben</TARGET>.",
+			"members": [
+				"Wenn",
+				"man",
+				"nur",
+				"die",
+				"Alten",
+				"liest",
+				"ist",
+				"man",
+				"sicher",
+				"immer",
+				"neu",
+				"zu",
+				"bleiben"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wenn",
+				"man",
+				"nur",
+				"die",
+				"Alten",
+				"liest",
+				"ist",
+				"man",
+				"sicher",
+				"immer",
+				"neu",
+				"zu",
+				"bleiben"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-aphorism-lemma:wenn-man-nur-die-alten-liest"]
+	},
+	"grammar-de-aphorism-kunst-tempel-partial": {
+		"input": {
+			"markedContext": "Auf der Karte war nur der Anfang gedruckt: „<TARGET>Wenn</TARGET> <TARGET>der</TARGET> <TARGET>Kunst</TARGET> <TARGET>kein</TARGET> <TARGET>Tempel</TARGET> <TARGET>mehr</TARGET> <TARGET>offen</TARGET> <TARGET>steht</TARGET> …“.",
+			"members": [
+				"Wenn",
+				"der",
+				"Kunst",
+				"kein",
+				"Tempel",
+				"mehr",
+				"offen",
+				"steht"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wenn",
+				"der",
+				"Kunst",
+				"kein",
+				"Tempel",
+				"mehr",
+				"offen",
+				"steht"
+			],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wenn der Kunst kein Tempel mehr offen steht dann flüchtet sie in die Werkstatt",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Quote stops at ellipsis. Missing tail not overt. Full source known.",
+		"contaminationKeys": ["de-aphorism-lemma:wenn-der-kunst-kein-tempel"]
+	},
+	"grammar-de-aphorism-guete-grenzenlos": {
+		"input": {
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>Güte</TARGET>, <TARGET>die</TARGET> <TARGET>nicht</TARGET> <TARGET>grenzenlos</TARGET> <TARGET>ist</TARGET>, <TARGET>verdient</TARGET> <TARGET>den</TARGET> <TARGET>Namen</TARGET> <TARGET>nicht</TARGET>.",
+			"members": [
+				"Die",
+				"Güte",
+				"die",
+				"nicht",
+				"grenzenlos",
+				"ist",
+				"verdient",
+				"den",
+				"Namen",
+				"nicht"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Die",
+				"Güte",
+				"die",
+				"nicht",
+				"grenzenlos",
+				"ist",
+				"verdient",
+				"den",
+				"Namen",
+				"nicht"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Die Güte die nicht grenzenlos ist verdient den Namen nicht",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": [
+			"de-aphorism-lemma:die-guete-die-nicht-grenzenlos-ist"
+		]
+	}
+}

@@ -1,0 +1,210 @@
+{
+	"path": "knowledge-analysis/morphological-tree/resolution/prompt-source.ts",
+	"route": "knowledge-analysis/morphological-tree/resolution",
+	"body": "Resolve a proposed Morphological Tree into direct component pointers.\n\nPreserve hierarchy and child order exactly. Resolution must not re-segment the\nsource or add any structural labels.\n\nFor each morpheme leaf, produce a Morpheme Reading draft: lemmaDescriptor family\nmust be Morpheme and emojiDescription must distinguish the contextual function.\nThis draft is not a resolved Reading; the caller projects it through Reading\nresolution before constructing Dumrel Knowledge.\n\nFor each lexicalUnit leaf, produce a Unit Shadow with language, canonicalForm,\nfamily, and kind. Its Family must remain Lexeme or Phraseme.\n\nReturn structure nodes with children only. Return no operation, role, source,\nspan, alignment, realization, alternative-analysis, or default-selection\nmetadata. Dumling DTOs on the pointers carry the grammatical distinctions.\n\nStop at this direct frontier. Never generate component Knowledge or recursively\nwalk the component graph.",
+	"cases": {
+		"morphology-resolve-direct-pointers": {
+			"input": {
+				"source": "entspannen",
+				"markedContext": "Musik hilft mir, mich zu <TARGET>entspannen</TARGET>.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "entspannen",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "😌"
+				},
+				"segmentation": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "morpheme",
+								"sourceText": "ent-"
+							},
+							{
+								"nodeKind": "lexicalUnit",
+								"sourceText": "spannen"
+							}
+						]
+					}
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "morphemeReading",
+							"reading": {
+								"lemmaDescriptor": {
+									"language": "de",
+									"canonicalForm": "ent-",
+									"family": "Morpheme",
+									"kind": "Prefix"
+								},
+								"emojiDescription": "↩️"
+							}
+						},
+						{
+							"nodeKind": "unitShadow",
+							"unitShadow": {
+								"language": "de",
+								"canonicalForm": "spannen",
+								"family": "Lexeme",
+								"kind": "VERB"
+							}
+						}
+					]
+				}
+			},
+			"explanation": "Only the Morpheme becomes a Reading draft; the lexical component remains a Unit Shadow."
+		},
+		"morphology-resolve-nested-pointers": {
+			"input": {
+				"source": "Entspannung",
+				"markedContext": "Ich brauche etwas <TARGET>Entspannung</TARGET>.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Entspannung",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🧘"
+				},
+				"segmentation": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "structure",
+								"children": [
+									{
+										"nodeKind": "morpheme",
+										"sourceText": "ent-"
+									},
+									{
+										"nodeKind": "lexicalUnit",
+										"sourceText": "spannen"
+									}
+								]
+							},
+							{
+								"nodeKind": "morpheme",
+								"sourceText": "-ung"
+							}
+						]
+					}
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "structure",
+							"children": [
+								{
+									"nodeKind": "morphemeReading",
+									"reading": {
+										"lemmaDescriptor": {
+											"language": "de",
+											"canonicalForm": "ent-",
+											"family": "Morpheme",
+											"kind": "Prefix"
+										},
+										"emojiDescription": "↩️"
+									}
+								},
+								{
+									"nodeKind": "unitShadow",
+									"unitShadow": {
+										"language": "de",
+										"canonicalForm": "spannen",
+										"family": "Lexeme",
+										"kind": "VERB"
+									}
+								}
+							]
+						},
+						{
+							"nodeKind": "morphemeReading",
+							"reading": {
+								"lemmaDescriptor": {
+									"language": "de",
+									"canonicalForm": "-ung",
+									"family": "Morpheme",
+									"kind": "Suffix"
+								},
+								"emojiDescription": "📦"
+							}
+						}
+					]
+				}
+			}
+		},
+		"morphology-resolve-phraseme-shadow": {
+			"input": {
+				"source": "forget-me-not-like",
+				"markedContext": "The flowers have a <TARGET>forget-me-not-like</TARGET> blue.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "en",
+						"canonicalForm": "forget-me-not-like",
+						"family": "Lexeme",
+						"kind": "ADJ"
+					},
+					"emojiDescription": "🌸"
+				},
+				"segmentation": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "lexicalUnit",
+								"sourceText": "forget me not"
+							},
+							{
+								"nodeKind": "morpheme",
+								"sourceText": "-like"
+							}
+						]
+					}
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "unitShadow",
+							"unitShadow": {
+								"language": "en",
+								"canonicalForm": "forget me not",
+								"family": "Phraseme",
+								"kind": "Idiom"
+							}
+						},
+						{
+							"nodeKind": "morphemeReading",
+							"reading": {
+								"lemmaDescriptor": {
+									"language": "en",
+									"canonicalForm": "-like",
+									"family": "Morpheme",
+									"kind": "Suffix"
+								},
+								"emojiDescription": "🔁"
+							}
+						}
+					]
+				}
+			}
+		}
+	},
+	"demonstrationIds": ["morphology-resolve-direct-pointers"],
+	"localDemonstrations": []
+}

@@ -1,11 +1,11 @@
+import * as Effect from "effect/Effect";
 import type {
 	Dumgen,
 	DumgenError,
 	DumgenModelExchange,
 	GrammaticalResult,
 	ReadingResolution,
-} from "dumgen";
-import * as Effect from "effect/Effect";
+} from "gumgen-old";
 import type {
 	AnalysisTarget,
 	ClassificationStageName,

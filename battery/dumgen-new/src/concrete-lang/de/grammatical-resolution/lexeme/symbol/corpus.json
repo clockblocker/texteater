@@ -1,0 +1,1081 @@
+{
+	"grammar-de-sym-demo-percent-unit": {
+		"input": {
+			"markedContext": "Die Anzeige zeigt 80 <TARGET>%</TARGET> Ladezustand.",
+			"members": ["%"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["%"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "%",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The neighboring number is not a member and does not make the percent sign a NUM Lemma."
+	},
+	"grammar-de-sym-demo-times-nominal": {
+		"input": {
+			"markedContext": "Ein einziges <TARGET>×</TARGET> steht zwischen den Zahlen.",
+			"members": ["×"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["×"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "×",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Explicit nominal agreement licenses Inflection even though the glyph itself is invariant."
+	},
+	"grammar-de-sym-demo-euro-currency": {
+		"input": {
+			"markedContext": "Der Eintritt kostet zwölf <TARGET>€</TARGET>.",
+			"members": ["€"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["€"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "€",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-section-dative": {
+		"input": {
+			"markedContext": "Mit dem <TARGET>§</TARGET> verweist sie auf die einschlägige Vorschrift.",
+			"members": ["§"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["§"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "§",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-equals-genitive": {
+		"input": {
+			"markedContext": "Die Form des <TARGET>=</TARGET> ist in dieser Schrift besonders breit.",
+			"members": ["="]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["="],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "=",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-feminine-hash": {
+		"input": {
+			"markedContext": "Die Lektorin nennt die <TARGET>#</TARGET> eine Raute.",
+			"members": ["#"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["#"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "#",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The feminine article directly governs the symbol itself, so the occurrence is Inflection rather than a Citation mention."
+	},
+	"grammar-de-sym-demo-foreign-arabic-percent": {
+		"input": {
+			"markedContext": "In der arabischen Quellenzeile folgt auf die Zahl das Zeichen <TARGET>٪</TARGET>.",
+			"members": ["٪"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["٪"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "٪",
+				"coreFeatures": {
+					"foreign": "Yes",
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-card-number-sign": {
+		"input": {
+			"markedContext": "In der Inventarliste kennzeichnet <TARGET>№</TARGET> die folgende Kardinalnummer.",
+			"members": ["№"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["№"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "№",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-range-dash": {
+		"input": {
+			"markedContext": "In der tabellarischen Angabe 10<TARGET>–</TARGET>12 bezeichnet der Strich einen Wertebereich.",
+			"members": ["–"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["–"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "–",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": "Range"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Upstream already classified this numeric-range glyph as SYM rather than sentence PUNCT."
+	},
+	"grammar-de-sym-demo-variant-fullwidth-plus": {
+		"input": {
+			"markedContext": "Die Unicode-Tabelle nennt <TARGET>＋</TARGET> ausdrücklich als vollbreite Variante von +.",
+			"members": ["＋"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["＋"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "+",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-typo-ocr-euro": {
+		"input": {
+			"markedContext": "Im fehlerhaften OCR-Text steht <TARGET>Є</TARGET> statt des Eurozeichens €.",
+			"members": ["Є"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["€"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "€",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-demo-sections-plural": {
+		"input": {
+			"markedContext": "Die beiden <TARGET>§§</TARGET> verweisen auf getrennte Regelungen.",
+			"members": ["§§"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["§§"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "§",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-math-plus": {
+		"input": {
+			"markedContext": "Die Rechnung lautet zwei <TARGET>+</TARGET> drei.",
+			"members": ["+"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["+"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "+",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-math-minus": {
+		"input": {
+			"markedContext": "Auf der Tafel steht neun <TARGET>−</TARGET> vier.",
+			"members": ["−"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["−"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "−",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-science-integral": {
+		"input": {
+			"markedContext": "Die Dozentin schreibt ein <TARGET>∫</TARGET> vor den Ausdruck.",
+			"members": ["∫"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["∫"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "∫",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-measurement-micro": {
+		"input": {
+			"markedContext": "Die Korngröße beträgt fünf <TARGET>µ</TARGET>m.",
+			"members": ["µ"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["µ"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "µ",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-measurement-degree": {
+		"input": {
+			"markedContext": "Am Nachmittag werden achtzehn <TARGET>°</TARGET> C gemessen.",
+			"members": ["°"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["°"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "°",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-measurement-permille": {
+		"input": {
+			"markedContext": "Die Probe enthält zwei <TARGET>‰</TARGET> Salz.",
+			"members": ["‰"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["‰"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "‰",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-currency-dollar": {
+		"input": {
+			"markedContext": "Das Ersatzteil kostet dreißig <TARGET>$</TARGET>.",
+			"members": ["$"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["$"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "$",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-currency-pound": {
+		"input": {
+			"markedContext": "Der Katalog nennt einen Preis von vierzig <TARGET>£</TARGET>.",
+			"members": ["£"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["£"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "£",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-legal-copyright": {
+		"input": {
+			"markedContext": "Im Impressum steht vor dem Erscheinungsjahr ein <TARGET>©</TARGET>.",
+			"members": ["©"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["©"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "©",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-coordinator-ampersand": {
+		"input": {
+			"markedContext": "Auf dem Schild steht Brot <TARGET>&</TARGET> Kuchen.",
+			"members": ["&"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["&"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "&",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The independent graphical coordinator is SYM; the neighboring ordinary words remain outside membership."
+	},
+	"grammar-de-sym-dev-marker-hash": {
+		"input": {
+			"markedContext": "Setze ein <TARGET>#</TARGET> vor das Stichwort.",
+			"members": ["#"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["#"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "#",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-emoticon-wink": {
+		"input": {
+			"markedContext": "Sie beendet die Nachricht mit <TARGET>;-)</TARGET>.",
+			"members": [";-)"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": [";-)"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": ";-)",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-repeated-plus-second": {
+		"input": {
+			"markedContext": "Links steht bereits +, rechts ergänzt sie ein zweites <TARGET>+</TARGET>.",
+			"members": ["+"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["+"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "+",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Only the supplied second occurrence belongs to this target; identical context material is not added."
+	},
+	"grammar-de-sym-dev-numeric-neighbor-percent": {
+		"input": {
+			"markedContext": "Die Statistik weist einen Anteil von 47 <TARGET>%</TARGET> aus.",
+			"members": ["%"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["%"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "%",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-punctuation-neighbor-star": {
+		"input": {
+			"markedContext": "Vor dem abschließenden Komma steht ein <TARGET>*</TARGET>, das auf die Fußnote verweist.",
+			"members": ["*"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["*"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "*",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-opaque-neighbor-hash": {
+		"input": {
+			"markedContext": "Vor dem nicht anklickbaren Emoji 😀 steht ein <TARGET>#</TARGET>.",
+			"members": ["#"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["#"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "#",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-abbreviation-neighbor-section": {
+		"input": {
+			"markedContext": "Die Fundstelle lautet <TARGET>§</TARGET> 8 Abs. 2.",
+			"members": ["§"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["§"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "§",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-inflection-acc-plus": {
+		"input": {
+			"markedContext": "Die Lehrerin markiert das <TARGET>+</TARGET> rot.",
+			"members": ["+"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["+"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "+",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-inflection-gen-percent": {
+		"input": {
+			"markedContext": "Die Form des <TARGET>%</TARGET> ist in dieser Schrift ungewöhnlich.",
+			"members": ["%"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["%"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "%",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-inflection-feminine-at": {
+		"input": {
+			"markedContext": "Die Designerin nennt die <TARGET>@</TARGET> eine Klammeraffe.",
+			"members": ["@"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["@"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "@",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-dev-archaic-dagger": {
+		"input": {
+			"markedContext": "Die Legende führt <TARGET>†</TARGET> als historisches Todeszeichen auf.",
+			"members": ["†"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["†"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "†",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-division-inflection": {
+		"input": {
+			"markedContext": "Die Schülerin umkreist das <TARGET>÷</TARGET> mit roter Farbe.",
+			"members": ["÷"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["÷"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "÷",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-not-equal": {
+		"input": {
+			"markedContext": "Die Bedingung lautet x <TARGET>≠</TARGET> 5.",
+			"members": ["≠"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["≠"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "≠",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-sum": {
+		"input": {
+			"markedContext": "In der Herleitung wird die Reihe mit <TARGET>∑</TARGET> notiert.",
+			"members": ["∑"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["∑"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "∑",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-rupee": {
+		"input": {
+			"markedContext": "Auf der indischen Rechnung stehen achthundert <TARGET>₹</TARGET>.",
+			"members": ["₹"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["₹"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "₹",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-registered": {
+		"input": {
+			"markedContext": "Die Verpackung trägt hinter dem Namen <TARGET>®</TARGET>.",
+			"members": ["®"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["®"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "®",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-double-arrow": {
+		"input": {
+			"markedContext": "Das Zustandsdiagramm zeigt A <TARGET>↔</TARGET> B.",
+			"members": ["↔"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["↔"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "↔",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-basis-point": {
+		"input": {
+			"markedContext": "Die Abweichung beträgt drei <TARGET>‱</TARGET>.",
+			"members": ["‱"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["‱"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "‱",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-card-numero": {
+		"input": {
+			"markedContext": "Im französischen Formular kennzeichnet <TARGET>nº</TARGET> ausdrücklich die folgende Kardinalnummer.",
+			"members": ["nº"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nº"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nº",
+				"coreFeatures": {
+					"foreign": "Yes",
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-range-tilde": {
+		"input": {
+			"markedContext": "In der Zahlenangabe 20<TARGET>~</TARGET>30 dient die Tilde ausdrücklich als Bereichszeichen.",
+			"members": ["~"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["~"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "~",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": "Range"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-foreign-japanese-reference": {
+		"input": {
+			"markedContext": "Im japanischen Original steht vor dem Hinweis das Zeichen <TARGET>※</TARGET>.",
+			"members": ["※"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["※"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "※",
+				"coreFeatures": {
+					"foreign": "Yes",
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-variant-small-percent": {
+		"input": {
+			"markedContext": "Die Unicode-Liste erklärt <TARGET>﹪</TARGET> als kleine Variante von %.",
+			"members": ["﹪"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["﹪"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "%",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-sym-accept-v2-typo-double-permille": {
+		"input": {
+			"markedContext": "Durch einen Tippfehler erscheint <TARGET>‰‰</TARGET> statt eines einzelnen Promillezeichens.",
+			"members": ["‰‰"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["‰"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "‰",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

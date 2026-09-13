@@ -32,7 +32,14 @@ function example(shape: Shape): unknown {
 	return "example";
 }
 export function unitFixtures(route: SourceRoute, zod: typeof z) {
-	const bag = route.bag.parse(example(zod.toJSONSchema(route.bag) as Shape));
+	const sample = example(zod.toJSONSchema(route.bag) as Shape) as {
+		core: Record<string, unknown>;
+	};
+	if (route.key === "de/Lexeme/PRON")
+		sample.core = Object.fromEntries(
+			Object.keys(sample.core).map((key) => [key, null]),
+		);
+	const bag = route.bag.parse(sample);
 	const Lemma = {
 		unitKind: "Lemma",
 		language: route.language,

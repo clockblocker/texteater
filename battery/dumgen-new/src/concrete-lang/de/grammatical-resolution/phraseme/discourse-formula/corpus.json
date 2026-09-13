@@ -1,0 +1,766 @@
+{
+	"grammar-de-discourse-formula-demo-guten-morgen": {
+		"input": {
+			"markedContext": "Obwohl am Empfang schon jemand ‚Hallo!‘ gerufen hatte, begrüßte Lea die neue Kollegin mit „<TARGET>Guten</TARGET> <TARGET>Morgen</TARGET>, Frau Keller!“",
+			"members": ["Guten", "Morgen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["guten", "Morgen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "guten morgen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Greeting"
+				}
+			}
+		},
+		"explanation": "The marked formula performs the greeting; the nearby interjection and vocative remain context."
+	},
+	"grammar-de-discourse-formula-demo-es-tut-mir-leid-discontinuous": {
+		"input": {
+			"markedContext": "Nachdem er die Vase zerbrochen hatte, sagte er: „<TARGET>Es</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET>, wirklich, <TARGET>leid</TARGET>, dass das passiert ist.“",
+			"members": ["Es", "tut", "mir", "leid"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["es", "tut", "mir", "leid"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "es tut mir leid",
+				"coreFeatures": {
+					"discourseFormulaRole": "Apology"
+				}
+			}
+		},
+		"explanation": "The parenthetical intensifier and following complement do not become fixed formula members."
+	},
+	"grammar-de-discourse-formula-demo-vielen-dank-complement": {
+		"input": {
+			"markedContext": "Nach der schnellen Reparatur sagte der Mieter: „<TARGET>Vielen</TARGET> <TARGET>Dank</TARGET> für Ihre Hilfe.“",
+			"members": ["Vielen", "Dank"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["vielen", "Dank"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vielen dank",
+				"coreFeatures": {
+					"discourseFormulaRole": "Thanks"
+				}
+			}
+		},
+		"explanation": "The free für complement remains outside the fixed thanks formula."
+	},
+	"grammar-de-discourse-formula-demo-ach-du-meine-guete-vocative": {
+		"input": {
+			"markedContext": "Als die Leiter umkippte, rief sie: „<TARGET>Ach</TARGET> <TARGET>du</TARGET> <TARGET>meine</TARGET> <TARGET>Güte</TARGET>, Paul!“",
+			"members": ["Ach", "du", "meine", "Güte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["ach", "du", "meine", "Güte"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ach du meine güte",
+				"coreFeatures": {
+					"discourseFormulaRole": "Reaction"
+				}
+			}
+		},
+		"explanation": "The formula reacts to the accident; the name after it is a vocative."
+	},
+	"grammar-de-discourse-formula-demo-mfg-variant": {
+		"input": {
+			"markedContext": "Am Ende der dienstlichen Nachricht stand als Grußformel: „<TARGET>MfG</TARGET>“.",
+			"members": ["MfG"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["MfG"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mit freundlichen grüßen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Farewell"
+				}
+			}
+		},
+		"explanation": "The conventional abbreviation fully realizes the farewell formula as a licensed spelling variant."
+	},
+	"grammar-de-discourse-formula-dev-auf-wiedersehen": {
+		"input": {
+			"markedContext": "Als der letzte Zug einfuhr, verabschiedete sich Mira mit „<TARGET>Auf</TARGET> <TARGET>Wiedersehen</TARGET>“.",
+			"members": ["Auf", "Wiedersehen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["auf", "Wiedersehen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "auf wiedersehen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Farewell"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-dev-gern-geschehen": {
+		"input": {
+			"markedContext": "Auf den Dank des Nachbarn antwortete sie: „<TARGET>Gern</TARGET> <TARGET>geschehen</TARGET>.“",
+			"members": ["Gern", "geschehen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["gern", "geschehen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "gern geschehen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Acknowledgment"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-dev-nein-danke": {
+		"input": {
+			"markedContext": "„Möchten Sie noch Kuchen?“ – „<TARGET>Nein</TARGET> <TARGET>danke</TARGET>, ich bin satt.“",
+			"members": ["Nein", "danke"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["nein", "danke"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nein danke",
+				"coreFeatures": {
+					"discourseFormulaRole": "Refusal"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-dev-darf-ich-bitten": {
+		"input": {
+			"markedContext": "Als das Gespräch lauter wurde, fragte die Vorsitzende: „<TARGET>Darf</TARGET> <TARGET>ich</TARGET> um Ruhe <TARGET>bitten</TARGET>?“",
+			"members": ["Darf", "ich", "bitten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["darf", "ich", "bitten"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "darf ich bitten",
+				"coreFeatures": {
+					"discourseFormulaRole": "Request"
+				}
+			}
+		},
+		"explanation": "The free request complement is context between the classified fixed members."
+	},
+	"grammar-de-discourse-formula-dev-dann-wollen-wir-mal": {
+		"input": {
+			"markedContext": "Nachdem alle ihre Werkzeuge bereitgelegt hatten, sagte der Meister: „<TARGET>Dann</TARGET> <TARGET>wollen</TARGET> <TARGET>wir</TARGET> <TARGET>mal</TARGET>.“",
+			"members": ["Dann", "wollen", "wir", "mal"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["dann", "wollen", "wir", "mal"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dann wollen wir mal",
+				"coreFeatures": {
+					"discourseFormulaRole": "Initiation"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-dev-wie-dem-auch-sei": {
+		"input": {
+			"markedContext": "Nach dem Einwand und dem zitierten Spruch ‚Morgenstund hat Gold im Mund‘ beendete sie den Exkurs: „<TARGET>Wie</TARGET> <TARGET>dem</TARGET> <TARGET>auch</TARGET> <TARGET>sei</TARGET>, wir stimmen jetzt ab.“",
+			"members": ["Wie", "dem", "auch", "sei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["wie", "dem", "auch", "sei"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wie dem auch sei",
+				"coreFeatures": {
+					"discourseFormulaRole": "Transition"
+				}
+			}
+		},
+		"explanation": "The unmarked Proverb is contextual route contrast; the marked formula changes topic."
+	},
+	"grammar-de-discourse-formula-dev-herzlich-willkommen": {
+		"input": {
+			"markedContext": "Die Museumsleiterin begrüßte die neue Gruppe mit „<TARGET>Herzlich</TARGET> <TARGET>willkommen</TARGET> in Leipzig!“",
+			"members": ["Herzlich", "willkommen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["herzlich", "willkommen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "herzlich willkommen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Greeting"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-dev-bitte-schoen-presentation": {
+		"input": {
+			"markedContext": "Der Kellner stellte die Tasse vor den Gast und sagte: „<TARGET>Bitte</TARGET> <TARGET>schön</TARGET>.“",
+			"members": ["Bitte", "schön"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["bitte", "schön"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "bitte schön",
+				"coreFeatures": {
+					"discourseFormulaRole": null
+				}
+			}
+		},
+		"explanation": "The presentation function has no exact value in the role enum, so this Lemma identity has null role."
+	},
+	"grammar-de-discourse-formula-dev-bitte-schoen-request": {
+		"input": {
+			"markedContext": "Am Schalter bestellte sie: „Zwei Fahrkarten nach Bonn, <TARGET>bitte</TARGET> <TARGET>schön</TARGET>.“",
+			"members": ["bitte", "schön"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["bitte", "schön"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "bitte schön",
+				"coreFeatures": {
+					"discourseFormulaRole": "Request"
+				}
+			}
+		},
+		"explanation": "The order context establishes the Request identity of the same canonical wording."
+	},
+	"grammar-de-discourse-formula-dev-tut-mir-leid-sympathy": {
+		"input": {
+			"markedContext": "Als sie vom Tod seines Hundes erfuhr, sagte sie leise: „<TARGET>Tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
+			"members": ["Tut", "mir", "leid"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["tut", "mir", "leid"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "tut mir leid",
+				"coreFeatures": {
+					"discourseFormulaRole": null
+				}
+			}
+		},
+		"explanation": "The speaker expresses sympathy rather than an apology; Sympathy has no role enum value."
+	},
+	"grammar-de-discourse-formula-dev-herzlichen-glueckwunsch": {
+		"input": {
+			"markedContext": "Nach der bestandenen Prüfung sagte der Ausbilder: „<TARGET>Herzlichen</TARGET> <TARGET>Glückwunsch</TARGET>, Nina!“",
+			"members": ["Herzlichen", "Glückwunsch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["herzlichen", "Glückwunsch"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "herzlichen glückwunsch",
+				"coreFeatures": {
+					"discourseFormulaRole": null
+				}
+			}
+		},
+		"explanation": "Congratulation is a supported interactional formula but is not represented by the role enum."
+	},
+	"grammar-de-discourse-formula-dev-danke-danke-repetition": {
+		"input": {
+			"markedContext": "Als beide Kisten endlich oben standen, erwiderte der erleichterte Bewohner: „<TARGET>Danke</TARGET>, <TARGET>danke</TARGET> für die Hilfe!“",
+			"members": ["Danke", "danke"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["danke", "danke"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "danke danke",
+				"coreFeatures": {
+					"discourseFormulaRole": "Thanks"
+				}
+			}
+		},
+		"explanation": "Both positions belong to one emphatically repeated, already-classified formula occurrence."
+	},
+	"grammar-de-discourse-formula-accept-schoenen-guten-tag": {
+		"input": {
+			"markedContext": "An der Hotelrezeption wandte sich der Gast an die Mitarbeiterin: „<TARGET>Schönen</TARGET> <TARGET>guten</TARGET> <TARGET>Tag</TARGET>, Frau Özdemir.“",
+			"members": ["Schönen", "guten", "Tag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["schönen", "guten", "Tag"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "schönen guten tag",
+				"coreFeatures": {
+					"discourseFormulaRole": "Greeting"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-accept-gute-nacht": {
+		"input": {
+			"markedContext": "Vor dem Ausschalten des Flurlichts verabschiedete sich der Vater mit „<TARGET>Gute</TARGET> <TARGET>Nacht</TARGET>, ihr zwei.“",
+			"members": ["Gute", "Nacht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["gute", "Nacht"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "gute nacht",
+				"coreFeatures": {
+					"discourseFormulaRole": "Farewell"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-accept-besten-dank": {
+		"input": {
+			"markedContext": "Nachdem die Bibliothekarin das seltene Buch gefunden hatte, sagte der Forscher: „<TARGET>Besten</TARGET> <TARGET>Dank</TARGET> für Ihre Mühe.“",
+			"members": ["Besten", "Dank"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["besten", "Dank"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "besten dank",
+				"coreFeatures": {
+					"discourseFormulaRole": "Thanks"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-accept-ich-bitte-um-verzeihung": {
+		"input": {
+			"markedContext": "Nachdem sie den Termin verwechselt hatte, sagte die Ärztin: „<TARGET>Ich</TARGET> <TARGET>bitte</TARGET> <TARGET>um</TARGET> <TARGET>Verzeihung</TARGET> für die Wartezeit.“",
+			"members": ["Ich", "bitte", "um", "Verzeihung"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["ich", "bitte", "um", "Verzeihung"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ich bitte um verzeihung",
+				"coreFeatures": {
+					"discourseFormulaRole": "Apology"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-accept-keine-ursache": {
+		"input": {
+			"markedContext": "Auf sein dankbares Nicken antwortete der Hausmeister: „<TARGET>Keine</TARGET> <TARGET>Ursache</TARGET>, das mache ich gern.“",
+			"members": ["Keine", "Ursache"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["keine", "Ursache"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "keine ursache",
+				"coreFeatures": {
+					"discourseFormulaRole": "Acknowledgment"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-demo-es-tut-mir-partial": {
+		"input": {
+			"markedContext": "In der abgebrochenen Sprachnachricht war nur die Entschuldigung „<TARGET>Es</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> …“ zu hören.",
+			"members": ["Es", "tut", "mir"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["es", "tut", "mir"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "es tut mir leid",
+				"coreFeatures": {
+					"discourseFormulaRole": "Apology"
+				}
+			}
+		},
+		"explanation": "The ellipsis signals genuinely unrealized fixed material; every realized member is selected."
+	},
+	"grammar-de-discourse-formula-dev-guten-morgen-casing-typo": {
+		"input": {
+			"markedContext": "Auf dem handgeschriebenen Schild stand die Begrüßung „<TARGET>Guten</TARGET> <TARGET>morgen</TARGET>“.",
+			"members": ["Guten", "morgen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Typo"],
+			"normalizedMembers": ["guten", "Morgen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "guten morgen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Greeting"
+				}
+			}
+		},
+		"explanation": "The formula-initial adjective is ordinary contextual casing, while the lowercase noun is an actual casing error."
+	},
+	"grammar-de-discourse-formula-dev-herzlich-wilkommen-typo": {
+		"input": {
+			"markedContext": "Die Gastgeberin öffnete die Tür und sagte: „<TARGET>Herzlich</TARGET> <TARGET>wilkommen</TARGET> in unserer Runde!“",
+			"members": ["Herzlich", "wilkommen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Typo"],
+			"normalizedMembers": ["herzlich", "willkommen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "herzlich willkommen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Greeting"
+				}
+			}
+		},
+		"explanation": "The missing second l is repaired only in the selected misspelled member."
+	},
+	"grammar-de-discourse-formula-dev-auf-wiedersehn-variant": {
+		"input": {
+			"markedContext": "Am Gartentor verabschiedete sich der Besucher mit „<TARGET>Auf</TARGET> <TARGET>Wiedersehn</TARGET>!“",
+			"members": ["Auf", "Wiedersehn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["auf", "Wiedersehn"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "auf wiedersehen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Farewell"
+				}
+			}
+		},
+		"explanation": "The licensed contracted spelling is preserved on the Surface and maps to the current full Lemma wording."
+	},
+	"grammar-de-discourse-formula-dev-gott-befohlen-archaic": {
+		"input": {
+			"markedContext": "Im historischen Bühnenstück verabschiedete sich der Wanderer mit „<TARGET>Gott</TARGET> <TARGET>befohlen</TARGET>!“",
+			"members": ["Gott", "befohlen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["Gott", "befohlen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "gott befohlen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Farewell"
+				}
+			}
+		},
+		"explanation": "The formula's discourse use is archaic, while its attested spelling is canonical."
+	},
+	"grammar-de-discourse-formula-dev-mit-freundlichen-partial": {
+		"input": {
+			"markedContext": "Der beschädigte Briefentwurf endete sichtbar mit „<TARGET>Mit</TARGET> <TARGET>freundlichen</TARGET> …“.",
+			"members": ["Mit", "freundlichen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["mit", "freundlichen"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mit freundlichen grüßen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Farewell"
+				}
+			}
+		},
+		"explanation": "The visible ellipsis marks an unrealized tail; it is not an omitted present member."
+	},
+	"grammar-de-discourse-formula-accept-vielen-herzlichen-partial": {
+		"input": {
+			"markedContext": "Die Aufnahme brach mitten in der Dankesformel „<TARGET>Vielen</TARGET> <TARGET>herzlichen</TARGET> …“ ab.",
+			"members": ["Vielen", "herzlichen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["vielen", "herzlichen"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vielen herzlichen dank",
+				"coreFeatures": {
+					"discourseFormulaRole": "Thanks"
+				}
+			}
+		},
+		"explanation": "The recording contains only the recoverable beginning, so missing Dank is genuinely unrealized."
+	},
+	"grammar-de-discourse-formula-dev-gute-reise-wish": {
+		"input": {
+			"markedContext": "Nachdem sie über eine gute Reise im nächsten Jahr gesprochen hatten, wünschte Karim seiner Schwester am Bahnsteig: „<TARGET>Gute</TARGET> <TARGET>Reise</TARGET>, Leyla!“",
+			"members": ["Gute", "Reise"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["gute", "Reise"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "gute reise",
+				"coreFeatures": {
+					"discourseFormulaRole": null
+				}
+			}
+		},
+		"explanation": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context, and Wish has no role enum value."
+	},
+	"grammar-de-discourse-formula-accept-auf-keinen-fall": {
+		"input": {
+			"markedContext": "„Gibst du ihm das Original ohne Quittung?“ – „<TARGET>Auf</TARGET> <TARGET>keinen</TARGET> <TARGET>Fall</TARGET>.“",
+			"members": ["Auf", "keinen", "Fall"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["auf", "keinen", "Fall"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "auf keinen fall",
+				"coreFeatures": {
+					"discourseFormulaRole": "Refusal"
+				}
+			}
+		},
+		"explanation": "The standalone reply performs a refusal rather than serving as an embedded adverbial."
+	},
+	"grammar-de-discourse-formula-accept-nun-denn": {
+		"input": {
+			"markedContext": "Als alle Plätze besetzt waren, eröffnete die Moderatorin die Sitzung mit „<TARGET>Nun</TARGET> <TARGET>denn</TARGET>, beginnen wir.“",
+			"members": ["Nun", "denn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["nun", "denn"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nun denn",
+				"coreFeatures": {
+					"discourseFormulaRole": "Initiation"
+				}
+			}
+		}
+	},
+	"grammar-de-discourse-formula-accept-um-himmels-willen": {
+		"input": {
+			"markedContext": "Nachdem jemand den Idiom-Ausdruck ‚ins Gras beißen‘ erwähnt hatte, sah die Ärztin den falschen Befund und rief: „<TARGET>Um</TARGET> <TARGET>Himmels</TARGET> <TARGET>willen</TARGET>!“",
+			"members": ["Um", "Himmels", "willen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["um", "Himmels", "willen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "um himmels willen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Reaction"
+				}
+			}
+		},
+		"explanation": "The unmarked Idiom mention is route-contrast context; the marked reaction formula is authoritative."
+	},
+	"grammar-de-discourse-formula-accept-willkommen-single": {
+		"input": {
+			"markedContext": "Nach dem lockeren Zuruf ‚Hallo!‘ trat die Gastgeberin ans Mikrofon und begrüßte die Gäste offiziell: „<TARGET>Willkommen</TARGET> in Dresden!“",
+			"members": ["Willkommen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["willkommen"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "willkommen",
+				"coreFeatures": {
+					"discourseFormulaRole": "Greeting"
+				}
+			}
+		},
+		"explanation": "A valid single-member formula is resolved on this authoritative route; the nearby unmarked Interjection does not alter membership."
+	}
+}

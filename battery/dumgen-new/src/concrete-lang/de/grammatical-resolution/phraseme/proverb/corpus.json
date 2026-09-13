@@ -1,0 +1,1070 @@
+{
+	"grammar-de-proverb-demo-morgenstund-attribution": {
+		"input": {
+			"markedContext": "Als die Enkel über das frühe Aufstehen klagten, erinnerte die Großmutter sie: „<TARGET>Morgenstund</TARGET> <TARGET>hat</TARGET> <TARGET>Gold</TARGET> <TARGET>im</TARGET> <TARGET>Mund</TARGET>.“",
+			"members": ["Morgenstund", "hat", "Gold", "im", "Mund"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Morgenstund", "hat", "Gold", "im", "Mund"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Morgenstund hat Gold im Mund",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The attribution, quotation marks, and punctuation remain outside the authoritative members.",
+		"contaminationKeys": ["de-proverb:morgenstund-hat-gold-im-mund"]
+	},
+	"grammar-de-proverb-demo-aller-anfang-typo": {
+		"input": {
+			"markedContext": "Auf dem fehlerhaften Übungsblatt stand das Sprichwort „<TARGET>Aller</TARGET> <TARGET>Anfank</TARGET> <TARGET>ist</TARGET> <TARGET>schwer</TARGET>.“",
+			"members": ["Aller", "Anfank", "ist", "schwer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Typo", "Standard", "Standard"],
+			"normalizedMembers": ["Aller", "Anfang", "ist", "schwer"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Aller Anfang ist schwer",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The real spelling error is repaired only in its selected member.",
+		"contaminationKeys": ["de-proverb:aller-anfang-ist-schwer"]
+	},
+	"grammar-de-proverb-demo-was-heute-punctuation": {
+		"input": {
+			"markedContext": "Vor der Abreise mahnte der Vater: „<TARGET>Was</TARGET> <TARGET>du</TARGET> <TARGET>heute</TARGET> <TARGET>kannst</TARGET> <TARGET>besorgen</TARGET>, <TARGET>das</TARGET> <TARGET>verschiebe</TARGET> <TARGET>nicht</TARGET> <TARGET>auf</TARGET> <TARGET>morgen</TARGET>.“",
+			"members": [
+				"Was",
+				"du",
+				"heute",
+				"kannst",
+				"besorgen",
+				"das",
+				"verschiebe",
+				"nicht",
+				"auf",
+				"morgen"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Was",
+				"du",
+				"heute",
+				"kannst",
+				"besorgen",
+				"das",
+				"verschiebe",
+				"nicht",
+				"auf",
+				"morgen"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Was du heute kannst besorgen das verschiebe nicht auf morgen",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Internal and terminal punctuation is context, not lexical membership or Canonical Form.",
+		"contaminationKeys": ["de-proverb:was-du-heute-kannst-besorgen"]
+	},
+	"grammar-de-proverb-dev-andere-laender": {
+		"input": {
+			"markedContext": "Nachdem die Reisenden über ungewohnte Essenszeiten gesprochen hatten, sagte ihre Begleiterin: „<TARGET>Andere</TARGET> <TARGET>Länder</TARGET>, <TARGET>andere</TARGET> <TARGET>Sitten</TARGET>.“",
+			"members": ["Andere", "Länder", "andere", "Sitten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Andere", "Länder", "andere", "Sitten"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Andere Länder andere Sitten",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:andere-laender-andere-sitten"]
+	},
+	"grammar-de-proverb-dev-ende-gut": {
+		"input": {
+			"markedContext": "Als die Aufführung trotz der Panne gelang, fasste der Regisseur den Abend zusammen: „<TARGET>Ende</TARGET> <TARGET>gut</TARGET>, <TARGET>alles</TARGET> <TARGET>gut</TARGET>.“",
+			"members": ["Ende", "gut", "alles", "gut"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Ende", "gut", "alles", "gut"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Ende gut alles gut",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:ende-gut-alles-gut"]
+	},
+	"grammar-de-proverb-dev-uebung-meister": {
+		"input": {
+			"markedContext": "Nach dem ersten misslungenen Versuch ermutigte die Trainerin den Schüler mit „<TARGET>Übung</TARGET> <TARGET>macht</TARGET> <TARGET>den</TARGET> <TARGET>Meister</TARGET>.“",
+			"members": ["Übung", "macht", "den", "Meister"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Übung", "macht", "den", "Meister"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Übung macht den Meister",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:uebung-macht-den-meister"]
+	},
+	"grammar-de-proverb-dev-viele-koeche": {
+		"input": {
+			"markedContext": "Als fünf Personen gleichzeitig den Ablauf ändern wollten, warnte die Projektleiterin: „<TARGET>Viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.“",
+			"members": ["Viele", "Köche", "verderben", "den", "Brei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Viele", "Köche", "verderben", "den", "Brei"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Viele Köche verderben den Brei",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:viele-koeche-verderben-den-brei"]
+	},
+	"grammar-de-proverb-dev-grube": {
+		"input": {
+			"markedContext": "Nachdem der Intrigant an seinem eigenen Plan gescheitert war, bemerkte seine Kollegin: „<TARGET>Wer</TARGET> <TARGET>anderen</TARGET> <TARGET>eine</TARGET> <TARGET>Grube</TARGET> <TARGET>gräbt</TARGET>, <TARGET>fällt</TARGET> <TARGET>selbst</TARGET> <TARGET>hinein</TARGET>.“",
+			"members": [
+				"Wer",
+				"anderen",
+				"eine",
+				"Grube",
+				"gräbt",
+				"fällt",
+				"selbst",
+				"hinein"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wer",
+				"anderen",
+				"eine",
+				"Grube",
+				"gräbt",
+				"fällt",
+				"selbst",
+				"hinein"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer anderen eine Grube gräbt fällt selbst hinein",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:wer-anderen-eine-grube-graebt"]
+	},
+	"grammar-de-proverb-dev-zuletzt-lacht": {
+		"input": {
+			"markedContext": "Nach dem unerwarteten Sieg erinnerte der Kapitän die Spötter: „<TARGET>Wer</TARGET> <TARGET>zuletzt</TARGET> <TARGET>lacht</TARGET>, <TARGET>lacht</TARGET> <TARGET>am</TARGET> <TARGET>besten</TARGET>.“",
+			"members": ["Wer", "zuletzt", "lacht", "lacht", "am", "besten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wer",
+				"zuletzt",
+				"lacht",
+				"lacht",
+				"am",
+				"besten"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer zuletzt lacht lacht am besten",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:wer-zuletzt-lacht-lacht-am-besten"]
+	},
+	"grammar-de-proverb-dev-stille-wasser": {
+		"input": {
+			"markedContext": "Als der schweigsame Bewerber die beste Analyse vorlegte, sagte die Chefin: „<TARGET>Stille</TARGET> <TARGET>Wasser</TARGET> <TARGET>sind</TARGET> <TARGET>tief</TARGET>.“",
+			"members": ["Stille", "Wasser", "sind", "tief"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Stille", "Wasser", "sind", "tief"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Stille Wasser sind tief",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:stille-wasser-sind-tief"]
+	},
+	"grammar-de-proverb-dev-gelegenheit-diebe": {
+		"input": {
+			"markedContext": "Beim Abschließen des Lagerraums erklärte der Hausmeister seine Vorsicht: „<TARGET>Gelegenheit</TARGET> <TARGET>macht</TARGET> <TARGET>Diebe</TARGET>.“",
+			"members": ["Gelegenheit", "macht", "Diebe"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["Gelegenheit", "macht", "Diebe"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Gelegenheit macht Diebe",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:gelegenheit-macht-diebe"]
+	},
+	"grammar-de-proverb-dev-apfel-stamm": {
+		"input": {
+			"markedContext": "Als Mutter und Tochter denselben Beruf wählten, kommentierte der Onkel: „<TARGET>Der</TARGET> <TARGET>Apfel</TARGET> <TARGET>fällt</TARGET> <TARGET>nicht</TARGET> <TARGET>weit</TARGET> <TARGET>vom</TARGET> <TARGET>Stamm</TARGET>.“",
+			"members": [
+				"Der",
+				"Apfel",
+				"fällt",
+				"nicht",
+				"weit",
+				"vom",
+				"Stamm"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Der",
+				"Apfel",
+				"fällt",
+				"nicht",
+				"weit",
+				"vom",
+				"Stamm"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Der Apfel fällt nicht weit vom Stamm",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": [
+			"de-proverb:der-apfel-faellt-nicht-weit-vom-stamm"
+		]
+	},
+	"grammar-de-proverb-dev-kleinvieh": {
+		"input": {
+			"markedContext": "Als sich die kleinen monatlichen Beträge summierten, sagte die Sparerin: „<TARGET>Kleinvieh</TARGET> <TARGET>macht</TARGET> <TARGET>auch</TARGET> <TARGET>Mist</TARGET>.“",
+			"members": ["Kleinvieh", "macht", "auch", "Mist"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Kleinvieh", "macht", "auch", "Mist"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Kleinvieh macht auch Mist",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:kleinvieh-macht-auch-mist"]
+	},
+	"grammar-de-proverb-dev-luegen-beine": {
+		"input": {
+			"markedContext": "Nachdem die erfundene Ausrede sofort aufflog, stellte der Lehrer fest: „<TARGET>Lügen</TARGET> <TARGET>haben</TARGET> <TARGET>kurze</TARGET> <TARGET>Beine</TARGET>.“",
+			"members": ["Lügen", "haben", "kurze", "Beine"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Lügen", "haben", "kurze", "Beine"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Lügen haben kurze Beine",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:luegen-haben-kurze-beine"]
+	},
+	"grammar-de-proverb-dev-reden-silber": {
+		"input": {
+			"markedContext": "Bevor die Zeugin antwortete, erinnerte ihr Anwalt sie an den Satz „<TARGET>Reden</TARGET> <TARGET>ist</TARGET> <TARGET>Silber</TARGET>, <TARGET>Schweigen</TARGET> <TARGET>ist</TARGET> <TARGET>Gold</TARGET>.“",
+			"members": ["Reden", "ist", "Silber", "Schweigen", "ist", "Gold"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Reden",
+				"ist",
+				"Silber",
+				"Schweigen",
+				"ist",
+				"Gold"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Reden ist Silber Schweigen ist Gold",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:reden-ist-silber-schweigen-ist-gold"]
+	},
+	"grammar-de-proverb-dev-wer-rastet": {
+		"input": {
+			"markedContext": "Nach der Winterpause begann die Laufgruppe wieder zu trainieren, denn „<TARGET>Wer</TARGET> <TARGET>rastet</TARGET>, <TARGET>der</TARGET> <TARGET>rostet</TARGET>.“",
+			"members": ["Wer", "rastet", "der", "rostet"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Wer", "rastet", "der", "rostet"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer rastet der rostet",
+				"coreFeatures": {}
+			}
+		},
+		"contaminationKeys": ["de-proverb:wer-rastet-der-rostet"]
+	},
+	"grammar-de-proverb-dev-repeated-das": {
+		"input": {
+			"markedContext": "Als der Schüler sich über denselben Streich beschwerte, zitierte die Lehrerin: „<TARGET>Was</TARGET> <TARGET>du</TARGET> <TARGET>nicht</TARGET> <TARGET>willst</TARGET>, <TARGET>das</TARGET> <TARGET>man</TARGET> <TARGET>dir</TARGET> <TARGET>tu</TARGET>, <TARGET>das</TARGET> <TARGET>füg</TARGET> <TARGET>auch</TARGET> <TARGET>keinem</TARGET> <TARGET>andern</TARGET> <TARGET>zu</TARGET>.“",
+			"members": [
+				"Was",
+				"du",
+				"nicht",
+				"willst",
+				"das",
+				"man",
+				"dir",
+				"tu",
+				"das",
+				"füg",
+				"auch",
+				"keinem",
+				"andern",
+				"zu"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Was",
+				"du",
+				"nicht",
+				"willst",
+				"das",
+				"man",
+				"dir",
+				"tu",
+				"das",
+				"füg",
+				"auch",
+				"keinem",
+				"andern",
+				"zu"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Was du nicht willst das man dir tu das füg auch keinem andern zu",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Both occurrences of das are authoritative positions in one proverb and remain separate members."
+	},
+	"grammar-de-proverb-accept-wer-zuerst": {
+		"input": {
+			"markedContext": "Vor dem Kartenverkauf wies die Veranstalterin auf die begrenzten Plätze hin: „<TARGET>Wer</TARGET> <TARGET>zuerst</TARGET> <TARGET>kommt</TARGET>, <TARGET>mahlt</TARGET> <TARGET>zuerst</TARGET>.“",
+			"members": ["Wer", "zuerst", "kommt", "mahlt", "zuerst"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Wer", "zuerst", "kommt", "mahlt", "zuerst"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer zuerst kommt mahlt zuerst",
+				"coreFeatures": {}
+			}
+		}
+	},
+	"grammar-de-proverb-accept-wo-rauch": {
+		"input": {
+			"markedContext": "Als mehrere voneinander unabhängige Hinweise eintrafen, meinte der Redakteur: „<TARGET>Wo</TARGET> <TARGET>Rauch</TARGET> <TARGET>ist</TARGET>, <TARGET>ist</TARGET> <TARGET>auch</TARGET> <TARGET>Feuer</TARGET>.“",
+			"members": ["Wo", "Rauch", "ist", "ist", "auch", "Feuer"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Wo", "Rauch", "ist", "ist", "auch", "Feuer"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wo Rauch ist ist auch Feuer",
+				"coreFeatures": {}
+			}
+		}
+	},
+	"grammar-de-proverb-accept-wo-wille": {
+		"input": {
+			"markedContext": "Trotz des knappen Zeitplans blieb die Ingenieurin zuversichtlich: „<TARGET>Wo</TARGET> <TARGET>ein</TARGET> <TARGET>Wille</TARGET> <TARGET>ist</TARGET>, <TARGET>ist</TARGET> <TARGET>auch</TARGET> <TARGET>ein</TARGET> <TARGET>Weg</TARGET>.“",
+			"members": [
+				"Wo",
+				"ein",
+				"Wille",
+				"ist",
+				"ist",
+				"auch",
+				"ein",
+				"Weg"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wo",
+				"ein",
+				"Wille",
+				"ist",
+				"ist",
+				"auch",
+				"ein",
+				"Weg"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wo ein Wille ist ist auch ein Weg",
+				"coreFeatures": {}
+			}
+		}
+	},
+	"grammar-de-proverb-accept-geteiltes-leid": {
+		"input": {
+			"markedContext": "Nachdem er seine Sorge endlich erzählt hatte, erinnerte ihn seine Freundin: „<TARGET>Geteiltes</TARGET> <TARGET>Leid</TARGET> <TARGET>ist</TARGET> <TARGET>halbes</TARGET> <TARGET>Leid</TARGET>.“",
+			"members": ["Geteiltes", "Leid", "ist", "halbes", "Leid"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Geteiltes", "Leid", "ist", "halbes", "Leid"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Geteiltes Leid ist halbes Leid",
+				"coreFeatures": {}
+			}
+		}
+	},
+	"grammar-de-proverb-demo-grube-partial": {
+		"input": {
+			"markedContext": "Auf dem beschädigten Tonband war nur der Anfang „<TARGET>Wer</TARGET> <TARGET>anderen</TARGET> <TARGET>eine</TARGET> <TARGET>Grube</TARGET> <TARGET>gräbt</TARGET> …“ erhalten.",
+			"members": ["Wer", "anderen", "eine", "Grube", "gräbt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Wer", "anderen", "eine", "Grube", "gräbt"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer anderen eine Grube gräbt fällt selbst hinein",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The ellipsis signals genuinely unrealized fixed material; every realized word is selected."
+	},
+	"grammar-de-proverb-demo-muss-historical-variant": {
+		"input": {
+			"markedContext": "In der Zeitung von 1985 stand das Sprichwort „<TARGET>Wer</TARGET> <TARGET>A</TARGET> <TARGET>sagt</TARGET>, <TARGET>muß</TARGET> <TARGET>auch</TARGET> <TARGET>B</TARGET> <TARGET>sagen</TARGET>.“",
+			"members": ["Wer", "A", "sagt", "muß", "auch", "B", "sagen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wer",
+				"A",
+				"sagt",
+				"muß",
+				"auch",
+				"B",
+				"sagen"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer A sagt muss auch B sagen",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The licensed pre-reform spelling remains Standard on the Surface and maps to current muss in the Lemma."
+	},
+	"grammar-de-proverb-dev-casing-viele-koeche": {
+		"input": {
+			"markedContext": "Auf dem Schild war der Sprichwortanfang fälschlich kleingeschrieben: „<TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.“",
+			"members": ["viele", "Köche", "verderben", "den", "Brei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Typo",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Viele", "Köche", "verderben", "den", "Brei"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Viele Köche verderben den Brei",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "A lowercase first word in the complete written proverb is an inappropriate-casing Typo and normalizes to uppercase."
+	},
+	"grammar-de-proverb-dev-stille-wasser-typo": {
+		"input": {
+			"markedContext": "Im Schülerheft stand der fehlerhafte Satz „<TARGET>Stille</TARGET> <TARGET>Wasser</TARGET> <TARGET>sint</TARGET> <TARGET>tief</TARGET>.“",
+			"members": ["Stille", "Wasser", "sint", "tief"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Typo", "Standard"],
+			"normalizedMembers": ["Stille", "Wasser", "sind", "tief"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Stille Wasser sind tief",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "Only the misspelled verb member is Typo and repaired."
+	},
+	"grammar-de-proverb-dev-wes-brot-archaic": {
+		"input": {
+			"markedContext": "Der Schauspieler verwendete im historischen Stück die alte Sprichwortform „<TARGET>Wes</TARGET> <TARGET>Brot</TARGET> <TARGET>ich</TARGET> <TARGET>ess</TARGET>, <TARGET>des</TARGET> <TARGET>Lied</TARGET> <TARGET>ich</TARGET> <TARGET>sing</TARGET>.“",
+			"members": [
+				"Wes",
+				"Brot",
+				"ich",
+				"ess",
+				"des",
+				"Lied",
+				"ich",
+				"sing"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wes",
+				"Brot",
+				"ich",
+				"ess",
+				"des",
+				"Lied",
+				"ich",
+				"sing"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Wes Brot ich ess des Lied ich sing",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The archaic case forms and apocopated verbs characterize the grammatical use, not merely its spelling."
+	},
+	"grammar-de-proverb-dev-reden-silber-partial": {
+		"input": {
+			"markedContext": "Der abgerissene Zettel enthielt nur die halbe Zeile „<TARGET>Reden</TARGET> <TARGET>ist</TARGET> <TARGET>Silber</TARGET> …“.",
+			"members": ["Reden", "ist", "Silber"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["Reden", "ist", "Silber"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Reden ist Silber Schweigen ist Gold",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The visibly lost second clause is unrealized; Partial does not add it to normalized members."
+	},
+	"grammar-de-proverb-accept-glashaus-partial": {
+		"input": {
+			"markedContext": "Die Aufnahme endete nach dem klar erkennbaren Sprichwortanfang „<TARGET>Wer</TARGET> <TARGET>im</TARGET> <TARGET>Glashaus</TARGET> <TARGET>sitzt</TARGET> …“.",
+			"members": ["Wer", "im", "Glashaus", "sitzt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Wer", "im", "Glashaus", "sitzt"],
+			"realizationCoverage": "Partial",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wer im Glashaus sitzt soll nicht mit Steinen werfen",
+				"coreFeatures": {}
+			}
+		}
+	},
+	"grammar-de-proverb-demo-wo-gehobelt-discontinuous": {
+		"input": {
+			"markedContext": "„<TARGET>Wo</TARGET> <TARGET>gehobelt</TARGET> <TARGET>wird</TARGET>, <TARGET>da</TARGET>“, erklärte der Meister und setzte das Sprichwort nach der Pause fort, „<TARGET>fallen</TARGET> <TARGET>Späne</TARGET>.“",
+			"members": ["Wo", "gehobelt", "wird", "da", "fallen", "Späne"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wo",
+				"gehobelt",
+				"wird",
+				"da",
+				"fallen",
+				"Späne"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wo gehobelt wird da fallen Späne",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The attribution interrupts one quotation but remains unmarked context; all supplied proverb members stay in source order."
+	},
+	"grammar-de-proverb-accept-frueher-vogel-slogan-context": {
+		"input": {
+			"markedContext": "Nachdem die Gruppe den Werbeslogan „Geiz ist geil“ verworfen hatte, begründete Tom den frühen Start mit dem Sprichwort „<TARGET>Der</TARGET> <TARGET>frühe</TARGET> <TARGET>Vogel</TARGET> <TARGET>fängt</TARGET> <TARGET>den</TARGET> <TARGET>Wurm</TARGET>.“",
+			"members": ["Der", "frühe", "Vogel", "fängt", "den", "Wurm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Der",
+				"frühe",
+				"Vogel",
+				"fängt",
+				"den",
+				"Wurm"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Der frühe Vogel fängt den Wurm",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The unmarked slogan is route-contrast context and does not enter membership."
+	},
+	"grammar-de-proverb-accept-eile-discourse-context": {
+		"input": {
+			"markedContext": "Nach der Begrüßung „Guten Morgen“ bremste die Ausbilderin den hektischen Lehrling mit „<TARGET>Eile</TARGET> <TARGET>mit</TARGET> <TARGET>Weile</TARGET>.“",
+			"members": ["Eile", "mit", "Weile"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["Eile", "mit", "Weile"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Eile mit Weile",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The unmarked greeting is a nearby DiscourseFormula; the marked Proverb remains authoritative."
+	},
+	"grammar-de-proverb-accept-betten-idiom-context": {
+		"input": {
+			"markedContext": "Obwohl im Gespräch zuvor die Redewendung „den Nagel auf den Kopf treffen“ gefallen war, kommentierte sie die selbst gewählte Lage mit „<TARGET>Wie</TARGET> <TARGET>man</TARGET> <TARGET>sich</TARGET> <TARGET>bettet</TARGET>, <TARGET>so</TARGET> <TARGET>liegt</TARGET> <TARGET>man</TARGET>.“",
+			"members": ["Wie", "man", "sich", "bettet", "so", "liegt", "man"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Wie",
+				"man",
+				"sich",
+				"bettet",
+				"so",
+				"liegt",
+				"man"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Wie man sich bettet so liegt man",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The unmarked Idiom mention does not affect the fixed Proverb target."
+	},
+	"grammar-de-proverb-accept-doppelt-quotation-context": {
+		"input": {
+			"markedContext": "Die bloße Meldung „Der Bus kommt später“ war nur eine gewöhnliche Aussage; als sie beide Kopien einpackte, scherzte Mia dagegen: „<TARGET>Doppelt</TARGET> <TARGET>gemoppelt</TARGET> <TARGET>hält</TARGET> <TARGET>besser</TARGET>.“",
+			"members": ["Doppelt", "gemoppelt", "hält", "besser"]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": ["Doppelt", "gemoppelt", "hält", "besser"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Doppelt gemoppelt hält besser",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The arbitrary unmarked quotation and ordinary assertion remain contextual contrast."
+	},
+	"grammar-de-proverb-accept-gaul-aphorism-context": {
+		"input": {
+			"markedContext": "Nach dem Aphorismus „Alt werden heißt sehend werden“ wechselte die Dozentin zu einem traditionellen Sprichwort: „<TARGET>Einem</TARGET> <TARGET>geschenkten</TARGET> <TARGET>Gaul</TARGET> <TARGET>schaut</TARGET> <TARGET>man</TARGET> <TARGET>nicht</TARGET> <TARGET>ins</TARGET> <TARGET>Maul</TARGET>.“",
+			"members": [
+				"Einem",
+				"geschenkten",
+				"Gaul",
+				"schaut",
+				"man",
+				"nicht",
+				"ins",
+				"Maul"
+			]
+		},
+		"idealOutput": {
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"normalizedMembers": [
+				"Einem",
+				"geschenkten",
+				"Gaul",
+				"schaut",
+				"man",
+				"nicht",
+				"ins",
+				"Maul"
+			],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Einem geschenkten Gaul schaut man nicht ins Maul",
+				"coreFeatures": {}
+			}
+		},
+		"explanation": "The explicitly framed unmarked Aphorism is context, not a reason to reopen the marked target's route."
+	}
+}

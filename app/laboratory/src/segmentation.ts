@@ -1,11 +1,11 @@
+import * as Effect from "effect/Effect";
 import type {
 	Dumgen,
 	DumgenError,
 	DumgenModelExchange,
 	DumgenSection1Trace,
 	Section1Error,
-} from "dumgen";
-import * as Effect from "effect/Effect";
+} from "gumgen-old";
 
 import type { SegmentationResponse } from "./shared/contract";
 

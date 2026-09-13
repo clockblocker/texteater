@@ -15,6 +15,11 @@ import {
 	translationLanguageSchema,
 	unitShadowSchema,
 } from "../src/schemas.js";
+import {
+	knowledgeRequestMaskSchema,
+	knowledgeSelectionInputSchema,
+	knowledgeSettingsSchema,
+} from "../src/selection-schemas.js";
 import { normalizeText } from "../src/semantics.js";
 import { formatTypeScript } from "./format-typescript.js";
 
@@ -29,6 +34,9 @@ const operations = [
 ] as const;
 const compiled = compileZodValidationArtifacts({
 	schemas: {
+		knowledgeSettings: knowledgeSettingsSchema,
+		knowledgeRequestMask: knowledgeRequestMaskSchema,
+		knowledgeSelectionInput: knowledgeSelectionInputSchema,
 		knowledgeChange: knowledgeChangeSchema,
 		readingKnowledge: readingKnowledgeSchema,
 		directSemanticRelation: directSemanticRelationSchema,
@@ -46,6 +54,9 @@ const outputs = {
 		{
 			artifact: compiled,
 			exports: {
+				KnowledgeSettings: "knowledgeSettings",
+				KnowledgeRequestMask: "knowledgeRequestMask",
+				KnowledgeSelectionInput: "knowledgeSelectionInput",
 				DirectSemanticRelation: "directSemanticRelation",
 				TranslationLanguage: "translationLanguage",
 				UnitShadow: "unitShadow",
@@ -58,6 +69,7 @@ const outputs = {
 			},
 			typePreservingOperations: [
 				"dumling.feature-bag.marked",
+				"dumling.de-pronoun.core",
 				"dumling.emoji-description",
 				"dumling.normalize-form",
 				"dumrel.normalize-text",

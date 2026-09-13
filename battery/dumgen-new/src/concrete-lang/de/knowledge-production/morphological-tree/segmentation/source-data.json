@@ -1,0 +1,171 @@
+{
+	"path": "knowledge-analysis/morphological-tree/segmentation/prompt-source.ts",
+	"route": "knowledge-analysis/morphological-tree/segmentation",
+	"body": "Design a learner-useful Morphological Tree for the supplied Reading.\n\nThis is lexical-internal analysis. It is not sentence Source Segmentation and\nmust not alter the supplied owner Reading or source.\n\nReturn exactly one hierarchy selected by markedContext. Structure nodes contain\nonly ordered children. A leaf contains only nodeKind and the sourceText needed\nby the resolution phase:\n\n- nodeKind morpheme for a true Morpheme;\n- nodeKind lexicalUnit for a useful Lexeme or Phraseme chunk.\n\nPrefer high-value chunks such as Kraftwerk in Kohlekraftwerk, or an established\nPhraseme base in a derived unit, over an exhaustive pure-morpheme leaf list. Do\nnot recursively analyze component units and do not generate their Knowledge.\n\nDo not return operation names, edge roles, source spans, alignment or\nrealization labels, alternatives, confidence, or a default-selection field.\nDumling component DTOs own the grammatical distinctions; hierarchy and order\nare the entire structural output.",
+	"cases": {
+		"morphology-segment-compound-high-value-chunks": {
+			"input": {
+				"source": "Kohlekraftwerk",
+				"markedContext": "Das <TARGET>Kohlekraftwerk</TARGET> wird stillgelegt.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Kohlekraftwerk",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🏭"
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "lexicalUnit",
+							"sourceText": "Kohle"
+						},
+						{
+							"nodeKind": "lexicalUnit",
+							"sourceText": "Kraftwerk"
+						}
+					]
+				}
+			},
+			"explanation": "The tree keeps two useful lexical chunks; their Dumling descriptors will carry the grammar."
+		},
+		"morphology-segment-mixed-morpheme-and-lexeme": {
+			"input": {
+				"source": "entspannen",
+				"markedContext": "Musik hilft mir, mich zu <TARGET>entspannen</TARGET>.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "entspannen",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "😌"
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "morpheme",
+							"sourceText": "ent-"
+						},
+						{
+							"nodeKind": "lexicalUnit",
+							"sourceText": "spannen"
+						}
+					]
+				}
+			}
+		},
+		"morphology-segment-nested-derivation": {
+			"input": {
+				"source": "Entspannung",
+				"markedContext": "Ich brauche etwas <TARGET>Entspannung</TARGET>.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Entspannung",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🧘"
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "structure",
+							"children": [
+								{
+									"nodeKind": "morpheme",
+									"sourceText": "ent-"
+								},
+								{
+									"nodeKind": "lexicalUnit",
+									"sourceText": "spannen"
+								}
+							]
+						},
+						{
+							"nodeKind": "morpheme",
+							"sourceText": "-ung"
+						}
+					]
+				}
+			},
+			"explanation": "Nesting alone records that the nominal form contains the verbal structure."
+		},
+		"morphology-segment-phraseme-shadow": {
+			"input": {
+				"source": "forget-me-not-like",
+				"markedContext": "The flowers have a <TARGET>forget-me-not-like</TARGET> blue.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "en",
+						"canonicalForm": "forget-me-not-like",
+						"family": "Lexeme",
+						"kind": "ADJ"
+					},
+					"emojiDescription": "🌸"
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "lexicalUnit",
+							"sourceText": "forget me not"
+						},
+						{
+							"nodeKind": "morpheme",
+							"sourceText": "-like"
+						}
+					]
+				}
+			}
+		},
+		"morphology-segment-reading-sensitive-tree": {
+			"input": {
+				"source": "unlockable",
+				"markedContext": "The chest is <TARGET>unlockable</TARGET> once the key arrives.",
+				"owner": {
+					"lemmaDescriptor": {
+						"language": "en",
+						"canonicalForm": "unlockable",
+						"family": "Lexeme",
+						"kind": "ADJ"
+					},
+					"emojiDescription": "🔓"
+				}
+			},
+			"idealOutput": {
+				"root": {
+					"nodeKind": "structure",
+					"children": [
+						{
+							"nodeKind": "lexicalUnit",
+							"sourceText": "unlock"
+						},
+						{
+							"nodeKind": "morpheme",
+							"sourceText": "-able"
+						}
+					]
+				}
+			},
+			"explanation": "The encounter selects one durable hierarchy; alternatives are not stored as Knowledge metadata."
+		}
+	},
+	"demonstrationIds": ["morphology-segment-compound-high-value-chunks"],
+	"localDemonstrations": []
+}

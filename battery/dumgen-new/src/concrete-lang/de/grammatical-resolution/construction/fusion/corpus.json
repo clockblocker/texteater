@@ -1,0 +1,657 @@
+{
+	"grammar-de-fusion-demo-im-initial": {
+		"input": {
+			"markedContext": "<TARGET>Im</TARGET> Garten blühen bereits die ersten Rosen.",
+			"members": ["Im"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["im"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "im",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Ordinary sentence-initial capitalization is Standard and normalizes to im."
+	},
+	"grammar-de-fusion-demo-zur-noun-control": {
+		"input": {
+			"markedContext": "Nach dem Frühstück gingen die Kinder <TARGET>zur</TARGET> Schule.",
+			"members": ["zur"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zur"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zur",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The following noun is unmarked context and is not absorbed into the singleton Fusion."
+	},
+	"grammar-de-fusion-demo-zum-typo": {
+		"input": {
+			"markedContext": "Auf dem fehlerhaften Wegweiser zeigte der Pfeil <TARGET>zun</TARGET> Bahnhof.",
+			"members": ["zun"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["zum"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The nonword zun is an evident local typo for the contextually selected Fusion zum."
+	},
+	"grammar-de-fusion-demo-fuers-historical-variant": {
+		"input": {
+			"markedContext": "In der Druckausgabe von 1908 stand an dieser Stelle <TARGET>für's</TARGET> Vaterland.",
+			"members": ["für's"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["für's"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "fürs",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The historical apostrophe spelling is Standard as attested, maps to current fürs, and does not make the Fusion use archaic."
+	},
+	"grammar-de-fusion-dev-am-bahnhof": {
+		"input": {
+			"markedContext": "Wir treffen uns morgen <TARGET>am</TARGET> Bahnhof neben dem Kiosk.",
+			"members": ["am"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["am"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "am",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-beim-umzug": {
+		"input": {
+			"markedContext": "Die Nachbarn halfen uns <TARGET>beim</TARGET> Umzug in den dritten Stock.",
+			"members": ["beim"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["beim"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beim",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-vom-arzt": {
+		"input": {
+			"markedContext": "Der unterschriebene Brief kam direkt <TARGET>vom</TARGET> Arzt.",
+			"members": ["vom"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["vom"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vom",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-ins-haus": {
+		"input": {
+			"markedContext": "Nachmittags spielten die Kinder in dem Hof; wegen des starken Regens liefen dann alle schnell <TARGET>ins</TARGET> Haus.",
+			"members": ["ins"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ins"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ins",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-ans-meer": {
+		"input": {
+			"markedContext": "In den Sommerferien fährt die Familie <TARGET>ans</TARGET> Meer.",
+			"members": ["ans"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ans"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ans",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-aufs-dach": {
+		"input": {
+			"markedContext": "Die junge Katze sprang vorsichtig <TARGET>aufs</TARGET> Dach.",
+			"members": ["aufs"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aufs"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aufs",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-fuers-essen": {
+		"input": {
+			"markedContext": "Den größten Teil des Budgets brauchten sie <TARGET>fürs</TARGET> Essen.",
+			"members": ["fürs"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["fürs"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "fürs",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-ums-haus": {
+		"input": {
+			"markedContext": "Der schmale Fußweg führt einmal <TARGET>ums</TARGET> Haus.",
+			"members": ["ums"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ums"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ums",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-durchs-tor": {
+		"input": {
+			"markedContext": "Nach dem Signal gingen die Besucher <TARGET>durchs</TARGET> Tor.",
+			"members": ["durchs"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["durchs"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "durchs",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-uebers-wetter": {
+		"input": {
+			"markedContext": "Beim Kaffee sprachen die Gäste lange <TARGET>übers</TARGET> Wetter.",
+			"members": ["übers"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["übers"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "übers",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-zum-behufe-archaic-context": {
+		"input": {
+			"markedContext": "In der historisch markierten Wendung ging es <TARGET>zum</TARGET> Behufe der Prüfung um alte Amtssprache.",
+			"members": ["zum"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zum"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The archaic unmarked complement does not make the still-current fused form zum an archaic grammatical use."
+	},
+	"grammar-de-fusion-dev-hinterm-schrank": {
+		"input": {
+			"markedContext": "Der verlorene Schlüssel lag <TARGET>hinterm</TARGET> Schrank.",
+			"members": ["hinterm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["hinterm"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "hinterm",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-vorm-haus": {
+		"input": {
+			"markedContext": "Das Taxi wartete bereits <TARGET>vorm</TARGET> Haus.",
+			"members": ["vorm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["vorm"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vorm",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-unterm-tisch": {
+		"input": {
+			"markedContext": "Der Hund schlief ruhig <TARGET>unterm</TARGET> Tisch.",
+			"members": ["unterm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["unterm"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "unterm",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-beim-initial": {
+		"input": {
+			"markedContext": "<TARGET>Beim</TARGET> Lesen vergaß sie völlig die Zeit.",
+			"members": ["Beim"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["beim"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beim",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-beimm-typo": {
+		"input": {
+			"markedContext": "In der Nachricht bat er um Hilfe <TARGET>beimm</TARGET> Umzug.",
+			"members": ["beimm"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["beim"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beim",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The repeated final consonant is an evident local typo, repaired only within the classified member."
+	},
+	"grammar-de-fusion-dev-ins-historical-variant": {
+		"input": {
+			"markedContext": "In der alten Erzählung ging der Wanderer <TARGET>in's</TARGET> Dorf zurück.",
+			"members": ["in's"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["in's"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ins",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-dev-zur-anmeldung": {
+		"input": {
+			"markedContext": "Die erforderlichen Unterlagen gehören <TARGET>zur</TARGET> Anmeldung.",
+			"members": ["zur"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zur"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zur",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-im-garten": {
+		"input": {
+			"markedContext": "Im Haus wird das Essen vorbereitet, doch die Geburtstagsfeier findet <TARGET>im</TARGET> Garten statt.",
+			"members": ["im"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["im"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "im",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Only the second im is marked; the earlier identical occurrence stays context and does not create another member."
+	},
+	"grammar-de-fusion-accept-zur-schule": {
+		"input": {
+			"markedContext": "Der neue Radweg führt direkt <TARGET>zur</TARGET> Schule.",
+			"members": ["zur"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zur"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zur",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-zum-markt": {
+		"input": {
+			"markedContext": "Am Samstag gehen wir gemeinsam <TARGET>zum</TARGET> Markt.",
+			"members": ["zum"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zum"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-am-see": {
+		"input": {
+			"markedContext": "Das kleine Ferienhaus liegt direkt <TARGET>am</TARGET> See.",
+			"members": ["am"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["am"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "am",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-beim-lesen": {
+		"input": {
+			"markedContext": "Die neue Lampe hilft ihr <TARGET>beim</TARGET> Lesen.",
+			"members": ["beim"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["beim"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beim",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-vom-bahnhof": {
+		"input": {
+			"markedContext": "Der Shuttle fährt stündlich <TARGET>vom</TARGET> Bahnhof zum Hotel.",
+			"members": ["vom"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["vom"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vom",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-ans-ufer": {
+		"input": {
+			"markedContext": "Nach einer Stunde ruderten sie zurück <TARGET>ans</TARGET> Ufer.",
+			"members": ["ans"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ans"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ans",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-aufs-land": {
+		"input": {
+			"markedContext": "Nach dem Studium zog das Paar <TARGET>aufs</TARGET> Land.",
+			"members": ["aufs"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aufs"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aufs",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-durchs-fenster": {
+		"input": {
+			"markedContext": "Am Morgen fiel warmes Licht <TARGET>durchs</TARGET> Fenster.",
+			"members": ["durchs"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["durchs"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "durchs",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-accept-uebers-meer": {
+		"input": {
+			"markedContext": "Am Abend blickten die Gäste weit <TARGET>übers</TARGET> Meer.",
+			"members": ["übers"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["übers"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "übers",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-fusion-demo-am-near-route-controls": {
+		"input": {
+			"markedContext": "Mia läuft am schnellsten und ihr Bruder wartet an dem Tor; später treffen beide sich <TARGET>am</TARGET> Bahnhof.",
+			"members": ["am"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["am"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "am",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked superlative am and separately written ADP/DET are context only; the supplied member is the classified Fusion."
+	},
+	"grammar-de-fusion-demo-ins-near-idiom-and-dialect": {
+		"input": {
+			"markedContext": "Im Seminar wurden die Wendung „ins Gras beißen“ und die Dialektform „aufm“ besprochen; danach ging die Gruppe <TARGET>ins</TARGET> Freie.",
+			"members": ["ins"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ins"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ins",
+				"coreFeatures": {}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked Idiom and dialectal contraction do not alter or enlarge the authoritative singleton Fusion member."
+	}
+}

@@ -2,11 +2,16 @@
 status: accepted
 ---
 
-# Separate Grammatical Relations from Semantic Relations
+# Select grammatical alternatives from reviewed members
 
-Case, Person, and Number Counterparts are direct grammatical claims between
-homogeneous Lemma endpoints or homogeneous exact-Reading endpoints. They are
-symmetric, non-transitive, and non-substitutive. Hosts store only direct claims
-and project reverse navigation. These relations remain outside Reading
-Knowledge, Semantic Relation settings, propagation, pending resolution, and
-synonym substitution.
+Grammatical navigation selects Dumgen-authored members by their Core Features.
+A query starts with a reviewed member and names the coordinates allowed to vary;
+it preserves every other feature, including pronoun subtype, and compares null
+literally. Missing coordinates return no members. The query never synthesizes a
+Cartesian product, infers membership from spelling, or stores subgroup IDs.
+
+This replaces explicit Counterpart claims, Grammatical Series compilation and
+grammatical relation projection in the replacement packages. Those abstractions
+connected distinct spellings without reliably preserving their claimed axis.
+Semantic Relation algebra stays in Dumrel. Dumgen owns the reviewed inventory
+and its feature-based selection; Dumling owns values and validation.

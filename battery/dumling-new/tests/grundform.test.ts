@@ -220,35 +220,23 @@ describe("Grundform assessment", () => {
 			),
 		).toEqual({ success: true, value: false });
 	});
-	test("German personal case forms use the particular Lemma", () => {
-		const options = {
-			core: { pronType: "Prs" },
-			features: {
-				case: "Dat",
-				gender: null,
-				number: "Sing",
-				reflex: null,
-			},
-		};
-		expect(
-			checkIfGrundform(
-				surface("de/Lexeme/PRON", { ...options, canonical: "mir" }),
-			),
-		).toEqual({ success: true, value: true });
-		expect(
-			checkIfGrundform(
-				surface("de/Lexeme/PRON", { ...options, canonical: "ich" }),
-			),
-		).toEqual({ success: true, value: false });
-		expect(
-			checkIfGrundform(
-				surface("de/Lexeme/PRON", {
-					...options,
-					canonical: "ich",
-					features: { ...options.features, case: "Nom" },
-				}),
-			),
-		).toEqual({ success: true, value: true });
+	test("German personal case forms use Core identity", () => {
+		for (const [canonical, grammaticalCase] of [
+			["mir", "Dat"],
+			["ich", "Nom"],
+			["uns", "Acc"],
+			["uns", "Dat"],
+		]) {
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/PRON", {
+						canonical,
+						core: { pronType: "Prs", case: grammaticalCase },
+						features: null,
+					}),
+				),
+			).toEqual({ success: true, value: true });
+		}
 	});
 	test("Hebrew adjective gender alternatives preserve uncertainty", () => {
 		const features = {

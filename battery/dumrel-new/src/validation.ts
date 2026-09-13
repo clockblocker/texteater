@@ -11,7 +11,14 @@ import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
 
 type Registry = {
 	version: 1;
-	roots: Record<"knowledgeChange" | "readingKnowledge", Constraint>;
+	roots: Record<
+		| "knowledgeChange"
+		| "readingKnowledge"
+		| "knowledgeSettings"
+		| "knowledgeRequestMask"
+		| "knowledgeSelectionInput",
+		Constraint
+	>;
 	definitions: Record<string, Constraint>;
 };
 const registry: Registry = JSON.parse(encodedValidation);
@@ -40,3 +47,17 @@ export const parseChangeShape = (
 	input: unknown,
 ): KnowledgeChange | ParsingError =>
 	parse<KnowledgeChange>("knowledgeChange", input);
+
+export const parseSettingsShape = (input: unknown) =>
+	parse<import("./types.js").KnowledgeSettings>("knowledgeSettings", input);
+export const parseRequestMaskShape = (input: unknown) =>
+	parse<import("./types.js").KnowledgeRequestMask>(
+		"knowledgeRequestMask",
+		input,
+	);
+
+export const parseSelectionShape = (input: unknown) =>
+	parse<import("./types.js").KnowledgeSelectionInput>(
+		"knowledgeSelectionInput",
+		input,
+	);
