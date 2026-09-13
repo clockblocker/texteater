@@ -5,7 +5,6 @@ export * from "./core/unit-kind/construction-kind.js";
 export * from "./core/unit-kind/lemma-kind.js";
 export * from "./core/unit-kind/morpheme-kind.js";
 export * from "./core/unit-kind/phraseme-kind.js";
-export * from "./core/unit-kind/surface-kind.js";
 export type {
 	IsUniversalFeatureBags,
 	UniversalFeatureBags,

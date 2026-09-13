@@ -26,12 +26,17 @@ source and the compiled artifacts remain private, as required by ADR 0013.
 Surface has no Citation/Inflection type branch. A route with Inflectional
 Features exposes a nullable `inflectionalFeatures` field. Omitting the
 `inflectional` bag from the route schema omits that Surface field entirely;
-supplying it is rejected. Surface Kind is assessed separately: a marked feature
-suggests Inflection, otherwise Citation. `assessSurfaceKind` accepts an explicit
-override. The assessment is not a type parameter or a stored discriminator.
-A route's feature schema determines which non-null bags are valid.
+supplying it is rejected. A route's feature schema determines which non-null
+bags are valid. ADR 0002 replaces the initial Surface Kind heuristic with
+Grundform assessment.
 
 Compile-time cost is paid by the package. Consumers use generated declarations
 rather than repeatedly evaluating Zod generic types. Differential tests compare
 compiled acceptance and successful normalized output with the canonical
 schemas; package tests enforce the runtime and declaration separation.
+
+Codec authors import exact composable Zod schemas from concrete subpaths such
+as `dumling/schema/de/lexeme/noun`. Generated entrypoints preserve the concrete
+schema types that dynamic codegen discovery erases. Each imports one route;
+there is no runtime selector or aggregate registry. Operational imports remain
+independent of these schema entrypoints.

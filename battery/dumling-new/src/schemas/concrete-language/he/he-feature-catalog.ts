@@ -57,6 +57,11 @@ export const HE_FEATURE_SCHEMA = {
 	...UNIVERSAL_FEATURE_SCHEMA,
 	abbr: HeAbbrSchema,
 	definite: HeDefiniteSchema,
+	nominalDefinite: UNIVERSAL_FEATURE_SCHEMA.definite.extract([
+		Definite.Cons,
+		Definite.Def,
+		Definite.Ind,
+	]),
 	gender: HeGenderSchema,
 	hebBinyan: UNIVERSAL_FEATURE_SCHEMA.hebBinyan,
 	hebExistential: UNIVERSAL_FEATURE_SCHEMA.hebExistential,

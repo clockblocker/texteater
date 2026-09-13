@@ -3,7 +3,7 @@ import { compileZodValidationArtifacts } from "codegen";
 import { z } from "zod";
 import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";
-import { assessSurfaceKind, parseUnit, UnitKind } from "../src/index.js";
+import { parseUnit, UnitKind } from "../src/index.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
 const routes = await loadRoutes();
@@ -183,10 +183,7 @@ describe("compiled unit interface", () => {
 			expect(
 				Object.hasOwn(parsed.chain.value, "inflectionalFeatures"),
 			).toBe(false);
-			expect(assessSurfaceKind(parsed.chain.value)).toBe("Citation");
-			expect(assessSurfaceKind(parsed.chain.value, "Inflection")).toBe(
-				"Inflection",
-			);
+
 			for (const inflectionalFeatures of [
 				undefined,
 				null,
@@ -203,28 +200,6 @@ describe("compiled unit interface", () => {
 				).toBe(false);
 			}
 		}
-	});
-	test("assesses Surface Kind separately with an explicit override", () => {
-		const result = parseUnit(noun.Surface, {
-			unitKind: "Surface",
-			language: "de",
-			family: "Lexeme",
-			kind: "NOUN",
-		});
-		expect(result.success).toBe(true);
-		if (!result.success) return;
-		const surface = result.chain.value;
-		expect(assessSurfaceKind(surface)).toBe("Inflection");
-		expect(
-			assessSurfaceKind({ ...surface, inflectionalFeatures: null }),
-		).toBe("Citation");
-		expect(assessSurfaceKind(surface, "Citation")).toBe("Citation");
-		expect(
-			assessSurfaceKind(
-				{ ...surface, inflectionalFeatures: null },
-				"Inflection",
-			),
-		).toBe("Inflection");
 	});
 	test("compilation rejects unregistered custom behavior", () => {
 		expect(() =>

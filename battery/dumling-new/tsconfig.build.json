@@ -10,5 +10,5 @@
 			"common-utils": ["../common-utils/dist/index.d.ts"]
 		}
 	},
-	"include": ["src/index.ts", "src/types.ts"]
+	"include": ["src/index.ts", "src/types.ts", "src/generated/schemas/**/*.ts"]
 }

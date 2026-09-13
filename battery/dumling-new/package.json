@@ -34,7 +34,12 @@
 			"import": "./dist/types.js",
 			"default": "./dist/types.js"
 		},
-		"./package.json": "./package.json"
+		"./package.json": "./package.json",
+		"./schema/*": {
+			"types": "./dist/generated/schemas/*.d.ts",
+			"import": "./dist/generated/schemas/*.js",
+			"default": "./dist/generated/schemas/*.js"
+		}
 	},
 	"files": [
 		"dist",
@@ -48,7 +53,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run generate:validation:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace && bun codegen/build-schemas.ts",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",

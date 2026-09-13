@@ -6692,11 +6692,14 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
-				definite: ("Cons" | "Def") | null;
+				definite: ("Cons" | "Def" | "Ind") | null;
 				number:
 					| (
-							| ("Dual" | "Plur")
-							| ["Dual" | "Plur", ...Array<"Dual" | "Plur">]
+							| ("Dual" | "Plur" | "Sing")
+							| [
+									"Dual" | "Plur" | "Sing",
+									...Array<"Dual" | "Plur" | "Sing">,
+							  ]
 					  )
 					| null;
 			} | null;
@@ -6746,11 +6749,14 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
-					definite: ("Cons" | "Def") | null;
+					definite: ("Cons" | "Def" | "Ind") | null;
 					number:
 						| (
-								| ("Dual" | "Plur")
-								| ["Dual" | "Plur", ...Array<"Dual" | "Plur">]
+								| ("Dual" | "Plur" | "Sing")
+								| [
+										"Dual" | "Plur" | "Sing",
+										...Array<"Dual" | "Plur" | "Sing">,
+								  ]
 						  )
 						| null;
 				} | null;
@@ -8476,7 +8482,6 @@ export interface UnitMap {
 }
 
 export type UnitKind = "Lemma" | "Surface" | "Reading" | "Attestation";
-export type SurfaceKind = "Citation" | "Inflection";
 export type Language = UnitMap[keyof UnitMap]["Lemma"]["language"];
 export type Family<L extends Language = Language> = L extends Language
 	? {
@@ -8506,12 +8511,6 @@ export type Unit<
 	F extends Family<L> = Family<L>,
 	K extends Kind<L, F> = Kind<L, F>,
 > = UnitMap[Extract<`${L}/${F}/${K}`, keyof UnitMap>][U];
-export type DumlingUnit<
-	U extends UnitKind = UnitKind,
-	L extends Language = Language,
-	F extends Family<L> = Family<L>,
-	K extends Kind<L, F> = Kind<L, F>,
-> = Unit<U, L, F, K>;
 export type Lemma<
 	L extends Language = Language,
 	F extends Family<L> = Family<L>,

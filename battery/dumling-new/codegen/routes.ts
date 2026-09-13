@@ -67,13 +67,15 @@ export async function loadRoutes() {
 			const module: Record<string, unknown> = await import(
 				new URL(path, root).href
 			);
-			const schemas = Object.values(module).filter(
-				(value) => value instanceof z.ZodObject,
+			const schemas = Object.entries(module).filter(
+				(entry): entry is [string, z.ZodObject] =>
+					entry[1] instanceof z.ZodObject,
 			);
 			if (schemas.length !== 1)
 				throw Error(`Expected exactly one feature-bag schema: ${path}`);
-			const bag = schemas[0];
-			if (!bag) throw Error(`Missing feature-bag schema: ${path}`);
+			const entry = schemas[0];
+			if (!entry) throw Error(`Missing feature-bag schema: ${path}`);
+			const [exportName, bag] = entry;
 			const core: unknown = bag.shape.core,
 				inflectional: unknown = bag.shape.inflectional;
 			if (
@@ -84,6 +86,8 @@ export async function loadRoutes() {
 				throw Error(`Missing Feature Bags: ${path}`);
 			const coordinate = { language, family, kind };
 			return {
+				modulePath: path.replace(/\.ts$/, ".js"),
+				exportName,
 				...coordinate,
 				key: `${language}/${family}/${kind}`,
 				bag,

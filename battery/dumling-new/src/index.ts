@@ -1,10 +1,14 @@
 export { ParsingError } from "common-utils";
-export { assessSurfaceKind } from "./assess-surface-kind.js";
-export { SurfaceKind, UnitKind } from "./generated/vocabulary.js";
+export { checkIfGrundform } from "./check-if-grundform.js";
+export { UnitKind } from "./generated/vocabulary.js";
+export {
+	GrundformAssessmentError,
+	type GrundformIssue,
+	type GrundformResult,
+} from "./grundform/result.js";
 export { type ParseResult, parseUnit } from "./parse-unit.js";
 export type {
 	Attestation,
-	DumlingUnit,
 	Family,
 	Kind,
 	Language,

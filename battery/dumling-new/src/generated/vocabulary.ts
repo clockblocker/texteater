@@ -5,9 +5,4 @@ export const UnitKind = {
 	Reading: "Reading",
 	Attestation: "Attestation",
 } as const;
-export const SurfaceKind = {
-	Citation: "Citation",
-	Inflection: "Inflection",
-} as const;
 export type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];
-export type SurfaceKind = (typeof SurfaceKind)[keyof typeof SurfaceKind];

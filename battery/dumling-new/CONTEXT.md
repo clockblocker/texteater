@@ -39,8 +39,12 @@ A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional
 features.
 
-**Surface Kind**:
-An assessment of a Surface as Citation or Inflection.
+**Grundform**:
+A Surface's realization of its particular Lemma's canonical grammatical form.
+An accepted spelling variant may realize Grundform. The applicable inflectional
+features depend on the language, Family, Kind, and sometimes the particular
+Lemma.
+_Avoid_: Surface Kind, stored Citation/Inflection discriminator
 
 **Attestation**:
 A fleeting occurrence of one Surface, represented by ordered attested members

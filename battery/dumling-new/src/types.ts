@@ -1,6 +1,5 @@
 export type {
 	Attestation,
-	DumlingUnit,
 	Family,
 	Kind,
 	Language,
@@ -8,8 +7,8 @@ export type {
 	ParsedUnit,
 	Reading,
 	Surface,
-	SurfaceKind,
 	Unit,
 	UnitKind,
 	UnitRoute,
 } from "./generated/units.js";
+export type { GrundformIssue, GrundformResult } from "./grundform/result.js";

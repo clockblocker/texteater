@@ -18,10 +18,8 @@ export const HeNounFeatureBagsSchema = z.strictObject({
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
-			definite: HE_FEATURE_SCHEMA.definite.extract(["Cons", "Def"]),
-			number: featureValueSetSchema(
-				HE_FEATURE_SCHEMA.numberWithDual.extract(["Dual", "Plur"]),
-			),
+			definite: HE_FEATURE_SCHEMA.nominalDefinite,
+			number: featureValueSetSchema(HE_FEATURE_SCHEMA.numberWithDual),
 		}),
 	),
 });

@@ -6,9 +6,9 @@
 			"dumling": ["./src/index.ts"],
 			"dumling/id": ["./src/id.ts"],
 			"dumling/reading": ["./src/reading.ts"],
-			"dumling/schema": ["./src/schema.ts"],
 			"dumling/types": ["./src/types.ts"],
-			"dumling/vocabulary": ["./src/vocabulary.ts"]
+			"dumling/vocabulary": ["./src/vocabulary.ts"],
+			"dumling/schema/*": ["./src/generated/schemas/*"]
 		}
 	},
 	"include": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]

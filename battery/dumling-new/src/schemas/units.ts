@@ -13,7 +13,6 @@ export const UnitKindSchema = z.enum([
 	"Reading",
 	"Attestation",
 ]);
-export { SurfaceKindSchema } from "./universal/index.js";
 
 const normalizedFormSchema = z.string().overwrite(normalizeForm).min(1);
 const emojiDescriptionSchema = normalizedFormSchema.refine(isEmojiDescription, {
@@ -44,17 +43,28 @@ export function buildUnitSchemas<
 		canonicalForm: normalizedFormSchema,
 		coreFeatures: core,
 	});
-	const Surface = z.strictObject({
+	const surfaceShape = {
 		unitKind: z.literal(UnitKindSchema.enum.Surface),
 		language: z.literal(route.language),
 		lemma: Lemma,
 		normalizedSurface: normalizedFormSchema,
 		spelling: z.enum(["Canonical", "Variant"]),
 		surfaceFeatures: surfaceFeaturesSchema,
+	};
+	// The conditional type preserves field presence for concrete schema callers.
+	// Runtime construction uses the same inflectional-schema condition.
+	const Surface = z.strictObject({
+		...surfaceShape,
 		...(inflectional === undefined
 			? {}
 			: { inflectionalFeatures: z.nullable(inflectional) }),
-	});
+	}) as z.ZodObject<
+		typeof surfaceShape &
+			(I extends z.core.$ZodType
+				? { inflectionalFeatures: z.ZodNullable<I> }
+				: Record<never, never>),
+		z.core.$strict
+	>;
 	const Reading = z.strictObject({
 		unitKind: z.literal(UnitKindSchema.enum.Reading),
 		lemma: Lemma,
