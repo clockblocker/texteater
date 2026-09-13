@@ -1,7 +1,6 @@
-import type { KnowledgeSettings } from "dumrel";
-
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import type { KnowledgePreferences } from "../../../../shared/knowledge-preferences";
 import type { NoteDataFor } from "./data";
 
 type SourceContext = NoteDataFor<"Reading">["sourceContexts"]["page"][number];
@@ -9,8 +8,13 @@ export type ShadowNoteReferrer =
 	NoteDataFor<"Shadow">["references"]["page"][number];
 
 export type ReadingPresentationCapabilities = {
+	readonly grammaticalAlternatives?: {
+		readonly follow: (readingKey: string) => Promise<void>;
+		readonly pending: boolean;
+		readonly error: string | null;
+	};
 	readonly presentation?: "Card" | "Sheet";
-	readonly knowledgeSettings: KnowledgeSettings;
+	readonly knowledgeSettings: KnowledgePreferences;
 	readonly sourceContexts: {
 		readonly items: readonly SourceContext[];
 		readonly hasMore: boolean;

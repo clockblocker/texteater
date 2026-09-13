@@ -1,4 +1,8 @@
-import { projectGrammaticalResolutionInput } from "dumgen/projection";
+import {
+	parseGermanAttestation,
+	parseGermanReading,
+} from "../../server/operationalParsing";
+
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 
@@ -18,7 +22,6 @@ type SurfaceRecord = {
 	language: "de" | "he";
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
-	surfaceKind: "Citation" | "Inflection";
 	surfaceFeatures: unknown;
 	inflectionalFeatures?: unknown;
 };
@@ -27,6 +30,7 @@ type ReadingRecord = { emojiDescription: string };
 
 export function lemmaValue(lemma: LemmaRecord) {
 	return {
+		unitKind: "Lemma" as const,
 		language: lemma.language,
 		family: lemma.family,
 		kind: lemma.kind,
@@ -37,10 +41,10 @@ export function lemmaValue(lemma: LemmaRecord) {
 
 export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
 	return {
+		unitKind: "Surface" as const,
 		language: surface.language,
 		normalizedSurface: surface.normalizedSurface,
 		spelling: surface.spelling,
-		surfaceKind: surface.surfaceKind,
 		surfaceFeatures: surface.surfaceFeatures,
 		...(surface.inflectionalFeatures === undefined
 			? {}
@@ -51,6 +55,7 @@ export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
 
 export function readingValue(reading: ReadingRecord, lemma: LemmaRecord) {
 	return {
+		unitKind: "Reading" as const,
 		lemma: lemmaValue(lemma),
 		emojiDescription: reading.emojiDescription,
 	};
@@ -149,6 +154,8 @@ export async function loadOccurrenceAttestation(
 	}
 	const sentence = await ctx.db.get(sentenceId);
 	if (!sentence) return null;
+	if (sentence.language !== "de")
+		throw new Error("Only German occurrences are supported.");
 	const sentenceSegments = await ctx.db
 		.query("segments")
 		.withIndex("by_sentence_id_and_index", (q) =>
@@ -164,14 +171,23 @@ export async function loadOccurrenceAttestation(
 		(left, right) => left.index - right.index,
 	);
 	const memberSegmentIndices = orderedMembers.map(({ index }) => index);
-	const markedContext = projectGrammaticalResolutionInput({
-		segments: orderedSentenceSegments.map(({ kind, text }) => ({
-			kind,
-			text,
-		})),
-		memberSegmentIndices: memberSegmentIndices as [number, ...number[]],
-	}).markedContext;
+	const encounter = {
+		sentence: {
+			id: sentence.segmentedSentenceId,
+			language: sentence.language,
+			segments: orderedSentenceSegments.map(({ kind, text }) => ({
+				kind,
+				text,
+			})),
+		},
+		target: {
+			family: lemma.family,
+			kind: lemma.kind,
+			memberSegmentIndices,
+		},
+	};
 	const publicAttestation = {
+		unitKind: "Attestation" as const,
 		members: orderedMembers.map((member) => ({
 			attested: member.text,
 			orthography: member.attestationMembership?.orthography as
@@ -191,8 +207,8 @@ export async function loadOccurrenceAttestation(
 		members: orderedMembers,
 		segments: orderedSentenceSegments,
 		memberSegmentIndices,
-		markedContext,
-		publicAttestation,
-		publicReading: readingValue(reading, lemma),
+		encounter,
+		publicAttestation: parseGermanAttestation(publicAttestation),
+		publicReading: parseGermanReading(readingValue(reading, lemma)),
 	};
 }

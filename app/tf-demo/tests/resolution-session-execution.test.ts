@@ -153,12 +153,14 @@ function grammaticalInput(canonicalForm = "Bank") {
 	return {
 		decision: "Resolved" as const,
 		attestation: {
+			unitKind: "Attestation",
 			members: [{ attested: "Banken", orthography: "Standard" as const }],
 			realizationCoverage: "Full" as const,
 			surface: {
+				unitKind: "Surface",
 				normalizedSurface: "Banken",
 				spelling: "Canonical" as const,
-				surfaceKind: "Inflection" as const,
+
 				lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
 			},
 		},
@@ -168,6 +170,7 @@ function grammaticalInput(canonicalForm = "Bank") {
 
 function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
 	return {
+		unitKind: "Reading",
 		emojiDescription,
 		lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
 		plan: { raw: "must not leak" },

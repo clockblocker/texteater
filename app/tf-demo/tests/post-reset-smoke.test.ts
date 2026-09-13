@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { createDumdictService, type DumdictStoragePort } from "dumdict";
-import { readingFingerprint } from "dumling-old";
 import * as Effect from "effect/Effect";
 import {
 	clearVisitorDataBatch,
@@ -8,7 +7,12 @@ import {
 	resetDemoTableNames,
 } from "../convex/demoReset";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
+import {
+	findClickResultByRequestId,
+	persistSubmittedText,
+} from "../convex/persistence";
 import tfDemoSchema from "../convex/schema";
+import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
 import { createTestConvexDumdictStorage } from "./support/dumdict-storage";
 import {
 	IndexedTestDb,
@@ -24,6 +28,7 @@ const verbFeatures = {
 } as const;
 
 const gehenLemma = {
+	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",
 	kind: "VERB",
@@ -37,10 +42,23 @@ const prefixedFahrenLemma = {
 	coreFeatures: { ...verbFeatures, hasSepPrefix: "ab" },
 } as const;
 
-const gehenReading = { lemma: gehenLemma, emojiDescription: "🚶" } as const;
-const laufenReading = { lemma: laufenLemma, emojiDescription: "🏃" } as const;
-const fahrenReading = { lemma: fahrenLemma, emojiDescription: "🚗" } as const;
+const gehenReading = {
+	unitKind: "Reading",
+	lemma: gehenLemma,
+	emojiDescription: "🚶",
+} as const;
+const laufenReading = {
+	unitKind: "Reading",
+	lemma: laufenLemma,
+	emojiDescription: "🏃",
+} as const;
+const fahrenReading = {
+	unitKind: "Reading",
+	lemma: fahrenLemma,
+	emojiDescription: "🚗",
+} as const;
 const prefixedFahrenReading = {
+	unitKind: "Reading",
 	lemma: prefixedFahrenLemma,
 	emojiDescription: "🚙",
 } as const;
@@ -362,5 +380,84 @@ describe("tf-demo post-reset contract", () => {
 				).fingerprints,
 			).toEqual([]);
 		}
+	});
+});
+
+test("submission retries reuse exact segmentation despite a fresh generated sentence ID", async () => {
+	const db = new IndexedTestDb();
+	const input = {
+		submissionKey: "retry",
+		sourceText: "Banken",
+		sentences: [
+			{
+				segmentedSentenceId: "first",
+				position: 0,
+				language: "de",
+				stitchedText: "Banken",
+				segments: [{ kind: "ResolvableText", text: "Banken" }],
+			},
+		],
+	};
+	const first = await runTestMutation(db, persistSubmittedText, input);
+	const second = await runTestMutation(db, persistSubmittedText, {
+		...input,
+		sentences: [{ ...input.sentences[0], segmentedSentenceId: "fresh" }],
+	});
+	expect(second).toMatchObject({ ...(first as object), deduplicated: true });
+	expect(db.rows("sentences")).toHaveLength(1);
+	expect(db.rows("sentences")[0]?.segmentedSentenceId).toBe("first");
+});
+test("an active Visitor Encounter is not replayed as an Unresolved result", async () => {
+	const db = new IndexedTestDb({
+		texts: [{ _id: "text-1" }],
+		sentences: [{ _id: "sentence-1", textId: "text-1" }],
+		segments: [
+			{
+				_id: "segment-1",
+				sentenceId: "sentence-1",
+				index: 0,
+				kind: "ResolvableText",
+				text: "Banken",
+			},
+		],
+		visitorClicks: [
+			{
+				_id: "click-1",
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				segmentId: "segment-1",
+			},
+		],
+		resolutionSessions: [
+			{
+				_id: "session-1",
+				requestId: "request-1",
+				lifecycle: {
+					state: "Active",
+					progress: "RouteAvailable",
+					activity: "Running",
+				},
+			},
+		],
+	});
+	const input = {
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 0,
+	};
+	expect(
+		await runTestQuery(db, findClickResultByRequestId, input),
+	).toBeNull();
+	await db.patch("session-1", {
+		lifecycle: {
+			state: "Terminal",
+			progress: "RouteAvailable",
+			outcome: "Unresolved",
+		},
+	});
+	expect(await runTestQuery(db, findClickResultByRequestId, input)).toEqual({
+		clickId: "click-1",
+		status: "Unresolved",
 	});
 });

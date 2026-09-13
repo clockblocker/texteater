@@ -1,20 +1,20 @@
-import type { Reading } from "dumling-old/types";
-import type { DirectSemanticRelation } from "dumrel";
-import { defaultKnowledgeRequestMask } from "dumrel";
-import { directSemanticRelationValues } from "dumrel/vocabulary";
+import type * as Dumling from "dumling/types";
+import { directSemanticRelationValues, selectKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 
-/**
- * Request-mask construction is intentionally kept outside convex/. Importing
- * dumrel's barrel eagerly constructs its Dumling/Zod schema graph, which is too
- * large for Convex's 64 MB isolate module-analysis ceiling. The Node action
- * dynamically imports this helper only when generation actually runs.
- */
 export function generationRequestFor(
-	reading: Reading<"de">,
-	qualifiedKinds: readonly DirectSemanticRelation[],
+	reading: Dumling.Reading<"de">,
+	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[],
 ) {
-	const applicable = defaultKnowledgeRequestMask(reading);
-	if (!applicable) throw new Error("Unsupported Knowledge language.");
+	const {
+		unitKind: _unitKind,
+		canonicalForm: _canonicalForm,
+		coreFeatures: _coreFeatures,
+		...route
+	} = reading.lemma;
+	const selected = selectKnowledge({ route });
+	if (!selected.success) throw selected.error;
+	const applicable = selected.value;
 	const {
 		morphologicalTree: _morphologicalTree,
 		lexicalBreakdown: _lexicalBreakdown,

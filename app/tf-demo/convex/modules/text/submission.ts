@@ -127,8 +127,6 @@ export async function persistSubmittedText(
 					return (
 						submitted !== undefined &&
 						existing.position === submitted.position &&
-						existing.segmentedSentenceId ===
-							submitted.segmentedSentenceId &&
 						existing.language === submitted.language &&
 						existing.stitchedText === submitted.stitchedText &&
 						segments.length === submitted.segments.length &&

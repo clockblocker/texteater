@@ -1,8 +1,16 @@
-import {
-	DumgenError,
-	type GenerationEvent,
-	type GenerationFailure,
-} from "dumgen";
+import type { Infer } from "convex/values";
+import { DumgenFailure } from "dumgen";
+import type {
+	resolutionGenerationEventValidator,
+	safeGenerationFailureValidator,
+} from "../convex/model/validators";
+export type GenerationFailure = Infer<typeof safeGenerationFailureValidator>;
+export type GenerationEvent =
+	Infer<typeof resolutionGenerationEventValidator> extends infer Event
+		? Event extends unknown
+			? Omit<Event, "phase" | "requestId" | "runToken">
+			: never
+		: never;
 
 export type ResolutionRunPhase = "Route" | "Grammar" | "Reading" | "Commit";
 
@@ -27,10 +35,21 @@ export type ClassifiedResolutionFailure =
 export function classifyResolutionFailure(
 	error: unknown,
 ): ClassifiedResolutionFailure {
-	if (error instanceof DumgenError && error.generationFailure) {
+	if (
+		error instanceof DumgenFailure &&
+		(error._tag === "ProviderFailure" ||
+			error._tag === "InvalidModelOutput")
+	) {
 		return {
 			kind: "Generation",
-			failure: safeGenerationFailure(error.generationFailure),
+			failure: safeGenerationFailure({
+				attempts: 1,
+				category:
+					error._tag === "InvalidModelOutput"
+						? "InvalidOutput"
+						: "ProviderUnavailable",
+				retryable: error._tag === "ProviderFailure",
+			}),
 		};
 	}
 	return {
@@ -48,7 +67,12 @@ export function projectResolutionGenerationEvent(
 		readonly runToken: string;
 	},
 ): ResolutionGenerationEvent {
-	return Object.freeze({ ...context, ...event });
+	return Object.freeze({
+		requestId: context.requestId,
+		runToken: context.runToken,
+		phase: context.phase,
+		...event,
+	});
 }
 
 function safeGenerationFailure(failure: GenerationFailure): GenerationFailure {

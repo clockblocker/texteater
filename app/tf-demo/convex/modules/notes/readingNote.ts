@@ -1,14 +1,7 @@
 import type { Prettify } from "common-utils";
 import { v } from "convex/values";
-import type { Reading } from "dumling-old/types";
-import type {
-	LemmaReference,
-	ProjectedSemanticRelations,
-	ReadingKnowledge,
-	ReadingReference,
-	TranslationLanguage,
-} from "dumrel";
-
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { loadCompleteOccurrenceMembers } from "../../model/occurrenceAttestations";
@@ -27,9 +20,10 @@ import {
 	projectReadingKnowledge,
 	projectReadingValue,
 } from "./projections";
+import type { PresentedRelations } from "./relations";
 import {
-	grammaticalRelationProjectionValidator,
-	loadGrammaticalRelationProjections,
+	grammaticalAlternativeValidator,
+	loadGrammaticalAlternatives,
 	loadRelationProjections,
 	relationProjectionValidator,
 } from "./relations";
@@ -47,6 +41,7 @@ const unitShadowProjectionValidator = v.object({
 });
 
 const readingValueLemmaValidator = v.object({
+	unitKind: v.literal("Lemma"),
 	language: v.string(),
 	family: v.string(),
 	kind: v.string(),
@@ -55,11 +50,13 @@ const readingValueLemmaValidator = v.object({
 });
 
 const readingValueReadingValidator = v.object({
+	unitKind: v.literal("Reading"),
 	lemma: readingValueLemmaValidator,
 	emojiDescription: v.string(),
 });
 
 const readingNoteLemmaValidator = v.object({
+	unitKind: v.literal("Lemma"),
 	ownerKind: v.literal("Lemma"),
 	ownerKey: v.string(),
 	language: v.string(),
@@ -70,6 +67,7 @@ const readingNoteLemmaValidator = v.object({
 });
 
 const readingNoteReadingValidator = v.object({
+	unitKind: v.literal("Reading"),
 	ownerKind: v.literal("Reading"),
 	ownerKey: v.string(),
 	readingId: v.id("readings"),
@@ -152,7 +150,7 @@ export const readingNoteValidator = v.object({
 	knowledge: readingKnowledgeValidator,
 	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 	relations: v.array(relationProjectionValidator),
-	grammaticalRelations: v.array(grammaticalRelationProjectionValidator),
+	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
 	sourceContexts: v.object({
@@ -207,7 +205,7 @@ export async function loadUnitReadingNote(
 	const [
 		readingKnowledge,
 		relationProjections,
-		grammaticalRelations,
+		grammaticalAlternatives,
 		pendingRelations,
 		structuralReferences,
 		sourceContexts,
@@ -220,7 +218,7 @@ export async function loadUnitReadingNote(
 			)
 			.unique(),
 		loadRelationProjections(ctx, reading._id),
-		loadGrammaticalRelationProjections(ctx, reading._id),
+		loadGrammaticalAlternatives(ctx, reading._id),
 		ctx.db
 			.query("pendingSemanticRelations")
 			.withIndex("by_source_reading_key", (q) =>
@@ -243,7 +241,10 @@ export async function loadUnitReadingNote(
 		);
 	}
 
-	const knowledge = projectReadingKnowledge(readingKnowledge?.knowledge);
+	const knowledge = projectReadingKnowledge(
+		projectReadingValue(reading, lemma),
+		readingKnowledge?.knowledge,
+	);
 	const activeAttempt = attempts.find(
 		({ state }) => state === "Scheduled" || state === "Running",
 	);
@@ -279,7 +280,7 @@ export async function loadUnitReadingNote(
 		),
 		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 		relations: relationProjections.resolved,
-		grammaticalRelations,
+		grammaticalAlternatives,
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
 		sourceContexts,
@@ -318,29 +319,32 @@ export async function loadSourceContextPage(
 }
 
 type GermanUnitReading = Extract<
-	Reading<"de">,
+	Dumling.Reading<"de">,
 	{ lemma: { family: UnitReadingFamily } }
 >;
 
-type ReadingNoteIdentity<Value extends Reading<"de">> = Value extends unknown
-	? Prettify<{
-			lemma: Prettify<{
-				language: Value["lemma"]["language"];
-				family: Value["lemma"]["family"];
-				kind: Value["lemma"]["kind"];
-				canonicalForm: Value["lemma"]["canonicalForm"];
-				coreFeatures: Value["lemma"]["coreFeatures"];
-				ownerKind: "Lemma";
+type ReadingNoteIdentity<Value extends Dumling.Reading<"de">> =
+	Value extends unknown
+		? Prettify<{
+				lemma: Prettify<{
+					unitKind: "Lemma";
+					language: Value["lemma"]["language"];
+					family: Value["lemma"]["family"];
+					kind: Value["lemma"]["kind"];
+					canonicalForm: Value["lemma"]["canonicalForm"];
+					coreFeatures: Value["lemma"]["coreFeatures"];
+					ownerKind: "Lemma";
+					ownerKey: string;
+				}>;
+				unitKind: "Reading";
+				emojiDescription: Value["emojiDescription"];
+				ownerKind: "Reading";
 				ownerKey: string;
-			}>;
-			emojiDescription: Value["emojiDescription"];
-			ownerKind: "Reading";
-			ownerKey: string;
-			readingId: Id<"readings">;
-		}>
-	: never;
+				readingId: Id<"readings">;
+			}>
+		: never;
 
-function withReadingNoteIdentity<Value extends Reading<"de">>(
+function withReadingNoteIdentity<Value extends Dumling.Reading<"de">>(
 	value: Value,
 	identity: {
 		readonly readingId: Id<"readings">;
@@ -388,16 +392,10 @@ function projectReadingIdentity(
 }
 
 function withResolvedSemanticRelations(
-	knowledge: ReadingKnowledge<TranslationLanguage>,
-	semanticRelations: ProjectedSemanticRelations<
-		LemmaReference,
-		ReadingReference
-	>,
-): Omit<ReadingKnowledge<TranslationLanguage>, "semanticRelations"> & {
-	semanticRelations?: ProjectedSemanticRelations<
-		LemmaReference,
-		ReadingReference
-	>;
+	knowledge: Dumrel.ReadingKnowledge,
+	semanticRelations: PresentedRelations,
+): Omit<Dumrel.ReadingKnowledge, "semanticRelations"> & {
+	semanticRelations?: PresentedRelations;
 } {
 	return Object.keys(semanticRelations).length === 0
 		? knowledge

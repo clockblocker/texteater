@@ -21,7 +21,7 @@ const grammar = {
 	realizationCoverage: "Full" as const,
 	normalizedSurface: "Banken",
 	spelling: "Canonical" as const,
-	surfaceKind: "Inflection" as const,
+	grundform: false,
 	canonicalForm: "Bank",
 	family: "Lexeme",
 	kind: "NOUN",

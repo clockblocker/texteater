@@ -1,6 +1,9 @@
 import { v } from "convex/values";
-import { type Reading, readingFingerprint } from "dumling-old/reading";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import type * as Dumling from "dumling/types";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+} from "../server/linguisticIdentity";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
@@ -139,7 +142,7 @@ async function settleResolvedSession(
 async function reconstructReusableAttestation(
 	ctx: MutationCtx | QueryCtx,
 	attestationId: Id<"attestations">,
-	clickedSegmentIndex: number,
+	_clickedSegmentIndex: number,
 ) {
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
 	if (!occurrence) {
@@ -153,14 +156,8 @@ async function reconstructReusableAttestation(
 			grammatical: {
 				decision: "Resolved" as const,
 				language: "de" as const,
-				markedContext: occurrence.markedContext,
+				encounter: occurrence.encounter,
 				attestation: occurrence.publicAttestation,
-				interaction: {
-					segmentedSentenceId:
-						occurrence.sentence.segmentedSentenceId,
-					clickedSegmentIndex,
-					memberSegmentIndices: occurrence.memberSegmentIndices,
-				},
 			},
 			reading: occurrence.publicReading,
 		},
@@ -340,6 +337,20 @@ export const findClickResultByRequestId = internalQuery({
 				occurrence: reusable.value,
 			};
 		}
+
+		const session = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_request_id", (q) =>
+				q.eq("requestId", args.requestId),
+			)
+			.unique();
+		// Selecting a Segment records the Visitor Encounter before resolution starts.
+		if (
+			session &&
+			(session.lifecycle.state !== "Terminal" ||
+				session.lifecycle.outcome !== "Unresolved")
+		)
+			return null;
 		return { clickId: click._id, status: "Unresolved" as const };
 	},
 });
@@ -593,7 +604,7 @@ export const persistResolvedClick = internalMutation({
 			return result;
 		}
 		if (
-			readingFingerprint(args.reading as Reading<"de">) !==
+			readingIdentityKey(args.reading as Dumling.Reading<"de">) !==
 			args.readingKey
 		) {
 			throw new Error(

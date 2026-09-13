@@ -2,11 +2,14 @@
 
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
-import type { ReadingKnowledgeCatalogMiss } from "dumgen";
-import type { KnowledgeDumgen } from "dumgen/knowledge-runtime";
-import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
-import type { Reading } from "dumling-old/types";
+import type { KnowledgeInput } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import { createProductionDumgen } from "../server/modelExecution";
+import { parseGermanReading } from "../server/operationalParsing";
+import {
+	type CatalogMissSignal,
+	parseResolvedGrammar,
+} from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
 import {
@@ -52,35 +55,18 @@ const recordRejectedRelationOutput = makeFunctionReference<
 
 const recordKnowledgeCatalogMiss = makeFunctionReference<
 	"mutation",
-	{ attemptKey: string; miss: ReadingKnowledgeCatalogMiss },
+	{ attemptKey: string; miss: CatalogMissSignal },
 	null
 >(
 	"catalogGrowthSignals:recordKnowledgeCatalogMiss",
 ) as unknown as FunctionReference<
 	"mutation",
 	"internal",
-	{ attemptKey: string; miss: ReadingKnowledgeCatalogMiss },
+	{ attemptKey: string; miss: CatalogMissSignal },
 	null
 >;
 
-let dumgenPromise: Promise<KnowledgeDumgen> | undefined;
-
-function getKnowledgeDumgen(): Promise<KnowledgeDumgen> {
-	dumgenPromise ??= Promise.all([
-		import("dumgen/knowledge-runtime"),
-		import("dumgen/openai-fetch"),
-	]).then(
-		([
-			{ buildKnowledgeDumgenRuntime },
-			{ buildOpenAiFetchModelGenerator },
-		]) =>
-			buildKnowledgeDumgenRuntime({
-				runtimePromptData: encodedRuntimePromptData,
-				modelGenerator: buildOpenAiFetchModelGenerator(),
-			}),
-	);
-	return dumgenPromise;
-}
+const knowledgeDumgen = createProductionDumgen();
 
 function getGenerationRequestBuilder() {
 	return import("../server/generatedKnowledgeRequest").then(
@@ -115,7 +101,7 @@ export const runKnowledgeGeneration = internalAction({
 			if (input.reading.lemma.language !== "de") {
 				throw new Error("Unsupported Knowledge language.");
 			}
-			const reading = input.reading as Reading<"de">;
+			const reading = parseGermanReading(input.reading);
 			const authorization = await ctx.runQuery(
 				getRelationPublicationAuthorization,
 				{},
@@ -135,15 +121,23 @@ export const runKnowledgeGeneration = internalAction({
 				fingerprints: authorization.fingerprints,
 			};
 			const generated = await Effect.runPromise(
-				(await getKnowledgeDumgen()).generate
-					.knowledge("de", {
-						markedContext: input.markedContext,
+				knowledgeDumgen
+					.produceKnowledge({
+						encounter: parseResolvedGrammar({
+							encounter: input.encounter,
+							attestation: input.attestation,
+						}).encounter,
 						reading,
 						request,
-					})
+					} as KnowledgeInput<"de">)
 					.pipe(
-						Effect.catchTag("DumgenDomainFailure", ({ result }) =>
-							Effect.succeed(result),
+						Effect.catchTag("CatalogMiss", (failure) =>
+							Effect.succeed({
+								decision: "CatalogMiss" as const,
+								stage: failure.stage,
+								route: failure.route ?? "de",
+								message: failure.message,
+							}),
 						),
 					),
 			);

@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import type { SemanticRelation } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -317,7 +317,7 @@ export async function loadShadowNote(
 			};
 			pendingRelations: {
 				locatorKey: string;
-				relation: SemanticRelation;
+				relation: Dumrel.SemanticRelation;
 			}[];
 			structuralReferences: {
 				aspect: "morphologicalTree" | "lexicalBreakdown";

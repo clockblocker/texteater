@@ -32,7 +32,7 @@ describe("Reading renderer inference", () => {
 				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbReadingNoteIdentity = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
+			`"type GermanVerbReadingNoteIdentity = { lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; }; unitKind: "Reading"; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
 		);
 	}, 30_000);
 

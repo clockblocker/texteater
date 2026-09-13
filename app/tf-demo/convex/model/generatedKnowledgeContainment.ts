@@ -1,5 +1,5 @@
-import type { DirectSemanticRelation } from "dumrel";
-import { directSemanticRelationValues } from "dumrel/vocabulary";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { COMPILED_RELATION_VERDICT } from "./compiledRelationVerdict";
 
 export type RelationPublicationFingerprints = Readonly<{
@@ -11,7 +11,7 @@ export type RelationPublicationFingerprints = Readonly<{
 }>;
 
 export type RelationKindVerdict = Readonly<{
-	relation: DirectSemanticRelation;
+	relation: Dumrel.DirectSemanticRelation;
 	verdict: "promote" | "revise" | "doNotGenerate";
 }>;
 
@@ -75,7 +75,7 @@ export const GENERATED_SEMANTIC_RELATION_POLICY = Object.freeze({
 export type EffectiveRelationPublicationPolicy = Readonly<{
 	artifactPath: string | null;
 	fingerprints: RelationPublicationFingerprints;
-	qualifiedKinds: readonly DirectSemanticRelation[];
+	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[];
 	invalidationReasons: readonly string[];
 }>;
 
@@ -126,7 +126,7 @@ export function effectiveRelationPublicationPolicy(
 	)
 		invalidationReasons.push("candidateFingerprintMismatch");
 
-	const seen = new Set<DirectSemanticRelation>();
+	const seen = new Set<Dumrel.DirectSemanticRelation>();
 	for (const verdict of artifact.verdicts) {
 		if (seen.has(verdict.relation)) {
 			invalidationReasons.push(`duplicateVerdict:${verdict.relation}`);
@@ -165,9 +165,9 @@ export function withoutGeneratedSemanticRelationRequest<
 
 export function requestedRelationKinds(request: {
 	readonly semanticRelations?: Readonly<
-		Partial<Record<DirectSemanticRelation, null>>
+		Partial<Record<Dumrel.DirectSemanticRelation, null>>
 	>;
-}): DirectSemanticRelation[] {
+}): Dumrel.DirectSemanticRelation[] {
 	return directSemanticRelationValues.filter(
 		(relation) => request.semanticRelations?.[relation] === null,
 	);
@@ -186,7 +186,7 @@ export function generatedKnowledgeAllowedForPublication<
 		readonly changes: readonly TChange[];
 		readonly pendingRelations: readonly TPendingRelation[];
 	},
-	qualifiedKinds: readonly DirectSemanticRelation[] = effectiveRelationPublicationPolicy()
+	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[] = effectiveRelationPublicationPolicy()
 		.qualifiedKinds,
 ): { changes: TChange[]; pendingRelations: TPendingRelation[] } {
 	const allowed = new Set(qualifiedKinds);
@@ -194,12 +194,12 @@ export function generatedKnowledgeAllowedForPublication<
 		changes: generated.changes.filter(
 			(change) =>
 				!isSemanticRelationChange(change) ||
-				allowed.has(change.relation as DirectSemanticRelation),
+				allowed.has(change.relation as Dumrel.DirectSemanticRelation),
 		),
 		pendingRelations: generated.pendingRelations.filter(
 			(pending) =>
 				typeof pending.relation === "string" &&
-				allowed.has(pending.relation as DirectSemanticRelation),
+				allowed.has(pending.relation as Dumrel.DirectSemanticRelation),
 		),
 	};
 }

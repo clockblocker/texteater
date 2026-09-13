@@ -30,6 +30,7 @@ function noteFixture(): ShadowNote {
 			revision: "convex-4",
 			candidates: [
 				{
+					unitKind: "Lemma",
 					lemmaId: "lemma-bank-a" as never,
 					canonicalForm: "Bank",
 					family: "Lexeme",
@@ -38,6 +39,7 @@ function noteFixture(): ShadowNote {
 					target: { kind: "Lemma", lemmaId: "lemma-bank-a" as never },
 				},
 				{
+					unitKind: "Lemma",
 					lemmaId: "lemma-bank-b" as never,
 					canonicalForm: "Bank",
 					family: "Lexeme",

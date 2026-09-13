@@ -1,30 +1,17 @@
 import { describe, expect, test } from "bun:test";
-import type { LemmaCatalogMiss } from "dumgen";
 import {
 	recordAndSettleCatalogMiss,
 	recordKnowledgeCatalogMiss,
 } from "../convex/catalogGrowthSignals";
+import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { IndexedTestDb, runTestMutation } from "./support/indexed-db";
 
 const miss = {
 	decision: "CatalogMiss",
-	reason: "MemberNotCatalogued",
-	language: "de",
-	route: { family: "Lexeme", kind: "VERB" },
-	stage: "Lemma",
-	candidate: {
-		language: "de",
-		family: "Lexeme",
-		kind: "VERB",
-		canonicalForm: "wachsen",
-		coreFeatures: {
-			verbType: null,
-			lexicallyReflexive: null,
-			hasSepPrefix: null,
-			hasGovPrep: null,
-		},
-	},
-} as const satisfies LemmaCatalogMiss;
+	route: "de/Lexeme/DET",
+	stage: "resolveGrammar",
+	message: "No reviewed member matches",
+} as const satisfies CatalogMissSignal;
 
 function seedSession(requestId: string, runToken: string, suffix: string) {
 	return {
@@ -81,11 +68,8 @@ describe("Catalog Growth Signals", () => {
 
 		expect(db.rows("catalogGrowthSignals")).toHaveLength(1);
 		expect(db.rows("catalogGrowthSignals")[0]).toMatchObject({
-			language: "de",
-			family: "Lexeme",
-			kind: "VERB",
-			stage: "Lemma",
-			reason: "MemberNotCatalogued",
+			route: miss.route,
+			stage: miss.stage,
 			occurrences: 2,
 			lastRequestId: "request-2",
 		});
@@ -123,65 +107,23 @@ describe("Catalog Growth Signals", () => {
 		expect(db.rows("catalogGrowthSignals")[0]?.occurrences).toBe(1);
 	});
 
-	test("rejects every Catalog Miss stage when route evidence disagrees", async () => {
-		const reading = { lemma: miss.candidate, emojiDescription: "🌱" };
-		const mismatches = [
-			{
-				...miss,
-				route: { family: "Lexeme", kind: "NOUN" },
-			},
-			{
-				...miss,
-				route: { family: "Lexeme", kind: "NOUN" },
-				stage: "Reading",
-				candidate: reading,
-			},
-			{
-				...miss,
-				route: { family: "Lexeme", kind: "NOUN" },
-				stage: "ReadingKnowledge",
-				reading,
-				missingRequest: { definition: null },
-			},
-		] as const;
-
-		for (const [index, mismatchedMiss] of mismatches.entries()) {
-			const suffix = String(index + 1);
-			const requestId = `request-${suffix}`;
-			const runToken = `run-${suffix}`;
-			const db = new IndexedTestDb(
-				seedSession(requestId, runToken, suffix),
-			);
-			expect(
-				runTestMutation(db, recordAndSettleCatalogMiss, {
-					guard: {
-						requestId,
-						runToken,
-						segmentId: `segment-${suffix}`,
-					},
-					miss: mismatchedMiss,
-				}),
-			).rejects.toThrow("route must match");
-			expect(db.rows("catalogGrowthSignals")).toHaveLength(0);
-			expect(db.rows("resolutionSessions")[0]?.lifecycle).toEqual({
-				state: "Active",
-				progress: "RouteAvailable",
-				activity: "Running",
-			});
-		}
+	test("rejects oversized catalog diagnostics without changing the session", async () => {
+		const db = new IndexedTestDb(seedSession("request-1", "run-1", "1"));
+		await expect(
+			runTestMutation(db, recordAndSettleCatalogMiss, {
+				guard: {
+					requestId: "request-1",
+					runToken: "run-1",
+					segmentId: "segment-1",
+				},
+				miss: { ...miss, message: "x".repeat(2001) },
+			}),
+		).rejects.toThrow("too long");
+		expect(db.rows("catalogGrowthSignals")).toHaveLength(0);
 	});
 
 	test("records a Knowledge catalog miss and fails its attempt exactly once", async () => {
-		const knowledgeMiss = {
-			...miss,
-			stage: "ReadingKnowledge",
-			reading: {
-				lemma: miss.candidate,
-				emojiDescription: "🌱",
-			},
-			missingRequest: { definition: null },
-		} as const;
-		const { candidate: _candidate, ...withoutCandidate } = knowledgeMiss;
+		const withoutCandidate = { ...miss, stage: "produceKnowledge" };
 		const db = new IndexedTestDb({
 			knowledgeGenerationAttempts: [
 				{

@@ -1,12 +1,12 @@
 import type { Infer } from "convex/values";
 import type { DumdictPlan } from "dumdict/runtime";
-import type { Reading } from "dumling-old/reading";
+import type * as Dumling from "dumling/types";
 
 import type { dictionaryPlanValidator } from "../model/validators";
 
 export type DictionaryPlanResult = Infer<typeof dictionaryPlanValidator>;
 
-function mutableReading(input: Reading<"de">) {
+function mutableReading(input: Dumling.Reading<"de">) {
 	return { ...input, lemma: { ...input.lemma } };
 }
 

@@ -15,8 +15,9 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 			lemmaId: "lemma-1",
 			language: "de",
 			normalizedSurface: "aufmachen",
+			inflectionalFeatures: null,
 			spelling: "Canonical",
-			surfaceKind: "Citation",
+
 			surfaceFeatures: null,
 		},
 		"reading-1": {
@@ -26,17 +27,24 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 			emojiDescription: "🚪",
 		},
 		"lemma-1": {
+			unitKind: "Lemma",
 			_id: "lemma-1",
 			lemmaKey: "lemma-key-1",
 			language: "de",
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "aufmachen",
-			coreFeatures: { separability: "Separable" },
+			coreFeatures: {
+				hasSepPrefix: "Yes",
+				hasGovPrep: null,
+				lexicallyReflexive: null,
+				verbType: null,
+			},
 		},
 		"sentence-1": {
 			_id: "sentence-1",
 			segmentedSentenceId: "segmented-1",
+			language: "de",
 		},
 	};
 	const segments = [
@@ -118,10 +126,9 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 	);
 
 	expect(occurrence?.memberSegmentIndices).toEqual([0, 4]);
-	expect(occurrence?.markedContext).toBe(
-		"<TARGET>Macht</TARGET> die &lt;Tür&gt; &amp; <TARGET>auf&amp;</TARGET>",
-	);
+	expect(occurrence?.encounter.target.memberSegmentIndices).toEqual([0, 4]);
 	expect(occurrence?.publicAttestation).toMatchObject({
+		unitKind: "Attestation",
 		members: [
 			{ attested: "Macht", orthography: "Typo" },
 			{ attested: "auf&", orthography: "Standard" },

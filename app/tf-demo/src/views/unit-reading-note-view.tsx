@@ -5,9 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import type { KnowledgeSettings } from "dumrel";
 import { useCallback } from "react";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ReadingNoteTarget } from "@/lib/navigation";
@@ -20,6 +18,7 @@ import { NotFoundView } from "@/views/not-found-view";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
 
 export type UnitReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
@@ -78,13 +77,25 @@ function ReadingNoteContainer({
 	presentation: "Card" | "Sheet";
 	visitorId: string;
 	note: UnitReadingNote;
-	knowledgeSettings: KnowledgeSettings;
+	knowledgeSettings: KnowledgePreferences;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
 	const applyKnowledgeChangeAction = useAction(
 		api.orchestration.applyReadingKnowledgeChange,
 	);
+	const followAlternative = useAction(
+		api.orchestration.followGrammaticalAlternative,
+	);
+	const alternativeMutation = useReactQueryMutation({
+		mutationFn: async (readingKey: string) => {
+			const readingId = await followAlternative({
+				sourceReadingId: note.target.readingId,
+				readingKey,
+			});
+			follow({ kind: "Reading", readingId });
+		},
+	});
 	const definitionMutation = useReactQueryMutation({
 		mutationFn: applyKnowledgeChangeAction,
 	});
@@ -110,6 +121,14 @@ function ReadingNoteContainer({
 		if (args) await definitionMutation.mutateAsync(args);
 	}
 	const capabilities = {
+		grammaticalAlternatives: {
+			follow: (readingKey: string) =>
+				alternativeMutation.mutateAsync(readingKey),
+			pending: alternativeMutation.isPending,
+			error: alternativeMutation.error
+				? "Could not open this form. Please retry."
+				: null,
+		},
 		presentation,
 		knowledgeSettings,
 		sourceContexts: {

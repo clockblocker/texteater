@@ -1,6 +1,6 @@
 import "./reading-note.css";
-import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 import { createElement, type ReactElement } from "react";
+import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../../shared/knowledge-preferences";
 import type { NoteBlockKind } from "../blocks/kind";
 import { ReadingMetadata } from "../blocks/renderers/reading/header/default";
 import type {

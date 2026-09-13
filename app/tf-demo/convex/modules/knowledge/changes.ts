@@ -1,8 +1,9 @@
-import type { KnowledgeChange } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import type { Id } from "../../_generated/dataModel";
 import type { MutationCtx } from "../../_generated/server";
 import { applyTrustedReadingKnowledgeChange } from "../../model/readingKnowledge";
 import { replaceAccumulatedKnowledge } from "../../model/shadows";
+import { projectReadingValue } from "../notes/projections";
 
 type ReadingKnowledgeReference = {
 	ownerReadingKey: string;
@@ -70,8 +71,11 @@ export async function persistKnowledgeChange(
 		)
 		.unique();
 	if (!reading) throw new Error("Reading does not exist.");
-	const change = input.change as KnowledgeChange;
+	const change = input.change as Dumrel.KnowledgeChange;
+	const lemma = await ctx.db.get(reading.lemmaId);
+	if (!lemma) throw new Error("Reading has no Lemma.");
 	const knowledge = applyTrustedReadingKnowledgeChange(
+		projectReadingValue(reading, lemma),
 		existingAccumulated?.knowledge,
 		change as unknown as Record<string, unknown>,
 	);

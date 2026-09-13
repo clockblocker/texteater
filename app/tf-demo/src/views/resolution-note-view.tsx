@@ -290,7 +290,11 @@ function ResolutionStepBody({
 									{note.grammar.spelling}
 								</Badge>
 								<Badge variant="outline">
-									{note.grammar.surfaceKind}
+									{note.grammar.grundform === null
+										? "Undetermined"
+										: note.grammar.grundform
+											? "Grundform"
+											: "Not Grundform"}
 								</Badge>
 								<Badge variant="outline">
 									{note.grammar.realizationCoverage}

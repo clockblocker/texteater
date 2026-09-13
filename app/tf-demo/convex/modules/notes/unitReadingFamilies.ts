@@ -1,7 +1,7 @@
-import type { LemmaFamilyFor } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export type UnitReadingFamily = Extract<
-	LemmaFamilyFor<"de">,
+	Dumling.Family<"de">,
 	"Lexeme" | "Phraseme" | "Morpheme"
 >;
 

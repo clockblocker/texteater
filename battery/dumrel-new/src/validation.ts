@@ -22,7 +22,7 @@ type Registry = {
 	>;
 	definitions: Record<string, Constraint>;
 };
-const registry: Registry = JSON.parse(encodedValidation);
+const registry: Registry = /* @__PURE__ */ JSON.parse(encodedValidation);
 const operations: ValidationOperations = {
 	...dumlingValidationOperations,
 	"dumrel.normalize-text": (value) => ({

@@ -176,7 +176,8 @@ export const loadInput = internalQuery({
 		return {
 			kind: "Generate" as const,
 			reading: occurrence.publicReading,
-			markedContext: occurrence.markedContext,
+			encounter: occurrence.encounter,
+			attestation: occurrence.publicAttestation,
 			runNumber: attempt.runNumber ?? 1,
 		};
 	},

@@ -1,5 +1,6 @@
 import { useQuery } from "convex/react";
-import type { SemanticRelation } from "dumrel";
+import type * as Dumrel from "dumrel/types";
+
 import { ArrowUpRightIcon } from "lucide-react";
 import {
 	type CSSProperties,
@@ -850,7 +851,7 @@ function RelationRow({
 	readonly children: ReactNode;
 	readonly label: string;
 	readonly mark: string;
-	readonly relation: SemanticRelation;
+	readonly relation: Dumrel.SemanticRelation;
 }) {
 	return (
 		<div data-relation={relation}>

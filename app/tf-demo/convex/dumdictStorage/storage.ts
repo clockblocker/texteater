@@ -1,10 +1,12 @@
 import type { PendingSemanticRelationRecord } from "dumdict/pending";
-import { type Reading, readingFingerprint } from "dumling-old/reading";
-import type { SupportedLanguage } from "dumling-old/types";
-import type { DirectSemanticRelation } from "dumrel";
-import { directSemanticRelationValues } from "dumrel/vocabulary";
-
-import { lemmaIdentityKey } from "../../server/linguisticIdentity";
+import type * as Dumling from "dumling/types";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../../server/linguisticIdentity";
+import { parseGermanReading } from "../../server/operationalParsing";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { pendingRecordLocatorIndexKey } from "../model/dumdictPendingIndexes";
@@ -66,33 +68,33 @@ export function assertLemmaRecordHasNoKnowledge(record: AnyRecord): void {
 }
 
 export function readingIdentityKey(value: unknown): string {
-	const reading = requireRecord(value, "Reading");
-	return readingFingerprint({
-		lemma: reading.lemma,
-		emojiDescription: requireString(
-			reading.emojiDescription,
-			"Reading emojiDescription",
-		),
-	} as Reading);
+	return readingFingerprint(parseGermanReading(value));
 }
 
 export function requireDirectSemanticRelation(
 	value: unknown,
-): DirectSemanticRelation {
+): Dumrel.DirectSemanticRelation {
 	const relation = requireString(value, "Semantic Relation");
 	if (!directSemanticRelations.has(relation)) {
 		throw new Error(`Unsupported direct Semantic Relation: ${relation}`);
 	}
-	return relation as DirectSemanticRelation;
+	return relation as Dumrel.DirectSemanticRelation;
 }
 
-export function withoutSemanticRelations(value: unknown): unknown {
+export function withoutSemanticRelationTargets(value: unknown): unknown {
 	const knowledge =
 		value === undefined
 			? undefined
 			: requireRecord(value, "Reading Knowledge");
 	if (!knowledge) return undefined;
 	const result = withoutKeys(knowledge, ["semanticRelations"]);
+	const relations = knowledge.semanticRelations;
+	if (
+		relations &&
+		typeof relations === "object" &&
+		Reflect.get(relations, "targetKind") === "reading"
+	)
+		result.semanticRelations = { targetKind: "reading" };
 	return Object.keys(result).length === 0 ? undefined : result;
 }
 
@@ -117,6 +119,7 @@ export function applyReadingKnowledgeChange(
 		"Reading Knowledge Change value",
 	);
 	const knowledge = applyTrustedReadingKnowledgeChange(
+		entry.reading,
 		entry.knowledge,
 		change,
 	);
@@ -129,7 +132,7 @@ export function applyReadingKnowledgeChange(
 export function pendingLocatorKey(recordValue: unknown): string {
 	const record = requireRecord(recordValue, "Pending Semantic Relation");
 	return pendingRecordLocatorIndexKey(
-		record as unknown as PendingSemanticRelationRecord<SupportedLanguage>,
+		record as unknown as PendingSemanticRelationRecord<Dumling.Language>,
 	);
 }
 
@@ -212,9 +215,10 @@ export async function findCanonicalReading(
 			q.eq(
 				"readingKey",
 				readingFingerprint({
+					unitKind: "Reading",
 					lemma: reading.lemma,
 					emojiDescription,
-				} as Reading),
+				} as Dumling.Reading),
 			),
 		)
 		.unique();
@@ -299,7 +303,16 @@ export async function loadCanonicalReadingKnowledge(
 		throw new Error(
 			"One Reading Knowledge value cannot mix Lemma- and Reading-targeted Semantic Relations.",
 		);
-	const targetKind = targetKinds.has("reading") ? "reading" : "lemma";
+	const preserved = withoutSemanticRelationTargets(storedKnowledge);
+	const previousRelations =
+		preserved && typeof preserved === "object"
+			? Reflect.get(preserved, "semanticRelations")
+			: undefined;
+	const targetKind =
+		targetKinds.has("reading") ||
+		previousRelations?.targetKind === "reading"
+			? "reading"
+			: "lemma";
 	const semanticRelations: AnyRecord = {};
 	if (targetKind === "reading") semanticRelations.targetKind = "reading";
 	for (const edge of edges) {
@@ -321,7 +334,7 @@ export async function loadCanonicalReadingKnowledge(
 		bucket.push(targetValue);
 		semanticRelations[edge.relation] = bucket;
 	}
-	const base = withoutSemanticRelations(storedKnowledge);
+	const base = withoutSemanticRelationTargets(storedKnowledge);
 	const knowledge =
 		base === undefined ? {} : requireRecord(base, "Reading Knowledge");
 	if (Object.keys(semanticRelations).length > 0) {

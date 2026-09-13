@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { dumling } from "dumling-old";
+import { makeSurfaceId } from "dumdict/runtime";
 
 import {
 	makeUrl,
@@ -108,7 +108,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 		});
 	}
 
-	const surfaceKey = dumling.de.id.encode.asCsv(unit.citationSurface);
+	const surfaceKey = makeSurfaceId("de", unit.citationSurface);
 	let surface = await ctx.db
 		.query("surfaces")
 		.withIndex("by_surface_key", (q) => q.eq("surfaceKey", surfaceKey))
@@ -121,7 +121,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 			language: value.language,
 			normalizedSurface: value.normalizedSurface,
 			spelling: value.spelling,
-			surfaceKind: value.surfaceKind,
+
 			surfaceFeatures: value.surfaceFeatures,
 		});
 		surface = await ctx.db.get(surfaceId);
@@ -138,7 +138,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 		});
 	}
 	for (const value of unit.presentationSurfaces) {
-		const presentationSurfaceKey = dumling.de.id.encode.asCsv(value);
+		const presentationSurfaceKey = makeSurfaceId("de", value);
 		let presentationSurface = await ctx.db
 			.query("surfaces")
 			.withIndex("by_surface_key", (q) =>
@@ -152,7 +152,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 				language: value.language,
 				normalizedSurface: value.normalizedSurface,
 				spelling: value.spelling,
-				surfaceKind: value.surfaceKind,
+
 				surfaceFeatures: value.surfaceFeatures,
 			});
 			presentationSurface = await ctx.db.get(id);
@@ -318,6 +318,8 @@ export const load = internalMutation({
 			pendingIndex,
 			pending,
 		] of NOTE_STUDY_PENDING_RELATIONS.entries()) {
+			if (pending.target.language !== "de")
+				throw new Error("Expected German fixture target.");
 			const shadowKey = shadowKeyFor(pending.target);
 			let shadow = await ctx.db
 				.query("shadows")

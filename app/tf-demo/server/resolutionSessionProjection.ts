@@ -1,3 +1,5 @@
+import { checkIfGrundform } from "dumling";
+import type * as Dumling from "dumling/types";
 export type ResolutionGrammarProjection = {
 	readonly members: {
 		readonly attested: string;
@@ -6,7 +8,7 @@ export type ResolutionGrammarProjection = {
 	readonly realizationCoverage: "Full" | "Partial";
 	readonly normalizedSurface: string;
 	readonly spelling: "Canonical" | "Variant";
-	readonly surfaceKind: "Citation" | "Inflection";
+	readonly grundform: boolean | null;
 	readonly canonicalForm: string;
 	readonly family: string;
 	readonly kind: string;
@@ -20,23 +22,7 @@ export type ResolutionReadingProjection = {
 };
 
 type ResolvedGrammaticalProjectionInput = {
-	readonly attestation: {
-		readonly members: readonly {
-			readonly attested: string;
-			readonly orthography: "Standard" | "Typo";
-		}[];
-		readonly realizationCoverage: "Full" | "Partial";
-		readonly surface: {
-			readonly normalizedSurface: string;
-			readonly spelling: "Canonical" | "Variant";
-			readonly surfaceKind: "Citation" | "Inflection";
-			readonly lemma: {
-				readonly canonicalForm: string;
-				readonly family: string;
-				readonly kind: string;
-			};
-		};
-	};
+	readonly attestation: Dumling.Attestation;
 };
 
 type ReadingProjectionInput = {
@@ -52,6 +38,7 @@ export function projectResolutionGrammar(
 	grammatical: ResolvedGrammaticalProjectionInput,
 ): ResolutionGrammarProjection {
 	const surface = grammatical.attestation.surface;
+	const assessment = checkIfGrundform(surface);
 	return {
 		members: grammatical.attestation.members.map((member) => ({
 			attested: member.attested,
@@ -60,7 +47,7 @@ export function projectResolutionGrammar(
 		realizationCoverage: grammatical.attestation.realizationCoverage,
 		normalizedSurface: surface.normalizedSurface,
 		spelling: surface.spelling,
-		surfaceKind: surface.surfaceKind,
+		grundform: assessment.success ? assessment.value : null,
 		canonicalForm: surface.lemma.canonicalForm,
 		family: surface.lemma.family,
 		kind: surface.lemma.kind,

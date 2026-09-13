@@ -1,7 +1,7 @@
-import type { LemmaRoute } from "dumling-old";
-import type { SemanticRelation } from "dumrel";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 
-type NoteStudyRoute = Omit<LemmaRoute<"de">, "language">;
+type NoteStudyRoute = Pick<Dumling.Lemma<"de">, "family" | "kind">;
 export type NoteStudyFamily = NoteStudyRoute["family"];
 
 export type NoteStudyTone =
@@ -22,7 +22,7 @@ export type NoteStudyToken = {
 export type NoteStudyLine = readonly (string | NoteStudyToken)[];
 
 export type NoteStudyRelation = {
-	readonly relation: SemanticRelation;
+	readonly relation: Dumrel.SemanticRelation;
 	readonly label: string;
 	readonly mark: string;
 	readonly content: NoteStudyLine;

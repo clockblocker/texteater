@@ -1,12 +1,14 @@
 import { expect, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
-import { readingFingerprint } from "dumling-old";
 import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import {
 	persistResolvedClick,
 	persistUnresolvedClick,
 } from "../convex/persistence";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../server/linguisticIdentity";
 
 test("a host-composed empty Dumdict plan does not advance revision", async () => {
 	let patches = 0;
@@ -94,6 +96,7 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 					type: "createLemma",
 					record: {
 						lemma: {
+							unitKind: "Lemma",
 							language: "de",
 							family: "Lexeme",
 							kind: "NOUN",
@@ -119,6 +122,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 	const readingId = "reading-1";
 	const surfaceId = "surface-1";
 	const lemma = {
+		unitKind: "Lemma",
 		language: "de",
 		family: "Lexeme",
 		kind: "NOUN",
@@ -126,15 +130,20 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		coreFeatures: { gender: "Fem", hyph: null },
 	} as const;
 	const surface = {
+		unitKind: "Surface",
 		language: "de",
 		normalizedSurface: "Banken",
 		spelling: "Canonical",
-		surfaceKind: "Inflection",
+
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur" },
 		lemma,
 	} as const;
-	const readingValue = { lemma, emojiDescription: "🏦" } as const;
+	const readingValue = {
+		unitKind: "Reading",
+		lemma,
+		emojiDescription: "🏦",
+	} as const;
 	const readingKey = readingFingerprint(readingValue);
 	const surfaceKey = makeSurfaceId("de", surface);
 	const rows: Record<string, unknown> = {
@@ -160,8 +169,10 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			_id: sentenceId,
 			textId,
 			segmentedSentenceId: "segmented-1",
+			language: "de",
 		},
 		[lemmaId]: {
+			unitKind: "Lemma",
 			...rows.lemmas,
 			language: "de",
 			family: "Lexeme",
@@ -175,7 +186,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			language: "de",
 			normalizedSurface: "Banken",
 			spelling: "Canonical",
-			surfaceKind: "Inflection",
+
 			surfaceFeatures: null,
 			inflectionalFeatures: { case: "Nom", number: "Plur" },
 		},
@@ -255,6 +266,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		occurrence: {
 			memberSegmentIndices: [0],
 			attestation: {
+				unitKind: "Attestation",
 				members: [{ attested: "Banken", orthography: "Typo" }],
 				realizationCoverage: "Full",
 				surface,
@@ -291,6 +303,7 @@ function existingOccurrenceHarness(
 ) {
 	const winnerMembers = new Set(winnerMemberIndices);
 	const lemmaValue = {
+		unitKind: "Lemma",
 		language: "de",
 		family: "Lexeme",
 		kind: "NOUN",
@@ -303,10 +316,11 @@ function existingOccurrenceHarness(
 		...lemmaValue,
 	};
 	const surfaceValue = {
+		unitKind: "Surface",
 		language: "de",
 		normalizedSurface: "Banken",
 		spelling: "Canonical",
-		surfaceKind: "Inflection",
+
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur" },
 		lemma: lemmaValue,
@@ -317,7 +331,11 @@ function existingOccurrenceHarness(
 		lemmaId: lemma._id,
 		...surfaceValue,
 	};
-	const readingValue = { lemma: lemmaValue, emojiDescription: "🏦" } as const;
+	const readingValue = {
+		unitKind: "Reading",
+		lemma: lemmaValue,
+		emojiDescription: "🏦",
+	} as const;
 	const reading = {
 		_id: "reading-1",
 		readingKey: readingFingerprint(readingValue),
@@ -327,6 +345,7 @@ function existingOccurrenceHarness(
 	const sentence = {
 		_id: "sentence-1",
 		segmentedSentenceId: "segmented-1",
+		language: "de",
 	};
 	const attestation = {
 		_id: "attestation-1",
@@ -507,6 +526,7 @@ test("clicked membership reuses the winner even when the losing proposal has few
 		occurrence: {
 			memberSegmentIndices: [2],
 			attestation: {
+				unitKind: "Attestation",
 				members: [{ attested: "geöffnet", orthography: "Standard" }],
 				realizationCoverage: "Full",
 				surface: surfaceValue,
@@ -544,7 +564,7 @@ test("an unresolved model loser records and returns the committed winner", async
 		attestationId: "attestation-1",
 		occurrence: {
 			grammatical: {
-				interaction: { memberSegmentIndices: [0, 2] },
+				encounter: { target: { memberSegmentIndices: [0, 2] } },
 			},
 		},
 	});
@@ -618,6 +638,7 @@ test("partial overlap reports the committed membership and writes nothing", asyn
 		occurrence: {
 			memberSegmentIndices: [0, 2],
 			attestation: {
+				unitKind: "Attestation",
 				members: [
 					{ attested: "sind", orthography: "Standard" },
 					{ attested: "geöffnet", orthography: "Standard" },

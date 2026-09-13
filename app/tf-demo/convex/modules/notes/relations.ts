@@ -1,16 +1,15 @@
 import { v } from "convex/values";
-import { readingFingerprint } from "dumling-old/reading";
-import type { Lemma, Reading } from "dumling-old/types";
-import type {
-	DirectSemanticRelationGraphEdge,
-	GrammaticalRelation,
-	LemmaReference,
-	ProjectedSemanticRelations,
-	ReadingReference,
-	SemanticRelation,
+import { selectGrammaticalAlternatives } from "dumgen";
+import type * as Dumling from "dumling/types";
+import {
+	directSemanticRelationValues,
+	parseReadingKnowledge,
+	projectSemanticRelations,
 } from "dumrel";
-import { projectRelations } from "dumrel";
-import { semanticRelationValues } from "dumrel/vocabulary";
+import type * as Dumrel from "dumrel/types";
+import { readingIdentityKey as readingFingerprint } from "../../../server/linguisticIdentity";
+
+const semanticRelationValues = directSemanticRelationValues;
 
 import { lemmaIdentityKey } from "../../../server/linguisticIdentity";
 import {
@@ -60,33 +59,24 @@ export const relationProjectionValidator = v.object({
 	),
 });
 
-export const grammaticalRelationProjectionValidator = v.object({
-	relation: v.union(
-		v.literal("CaseCounterpart"),
-		v.literal("PersonCounterpart"),
-		v.literal("NumberCounterpart"),
+export const grammaticalAlternativeValidator = v.object({
+	feature: v.union(
+		v.literal("case"),
+		v.literal("person"),
+		v.literal("number"),
 	),
-	targetCanonicalForm: v.string(),
-	provenance: v.union(v.literal("direct"), v.literal("inferred")),
-	target: v.object({
-		kind: v.literal("Reading"),
-		readingId: v.id("readings"),
-	}),
+	readingKey: v.string(),
+	canonicalForm: v.string(),
 });
-
-export type GrammaticalRelationProjection<ReadingId extends string = string> = {
-	readonly relation: GrammaticalRelation;
-	readonly targetCanonicalForm: string;
-	readonly provenance: "direct" | "inferred";
-	readonly target: {
-		readonly kind: "Reading";
-		readonly readingId: ReadingId;
-	};
+export type GrammaticalAlternative = {
+	readonly feature: "case" | "person" | "number";
+	readonly readingKey: string;
+	readonly canonicalForm: string;
 };
 
 export type RelationFingerprintProjection =
 	| {
-			readonly relation: SemanticRelation;
+			readonly relation: Dumrel.SemanticRelation;
 			readonly targetKind?: "lemma";
 			readonly targetLemmaKey: string;
 			readonly targetReadingKey?: never;
@@ -94,7 +84,7 @@ export type RelationFingerprintProjection =
 			readonly provenance: "direct" | "inferred";
 	  }
 	| {
-			readonly relation: SemanticRelation;
+			readonly relation: Dumrel.SemanticRelation;
 			readonly targetKind: "reading";
 			readonly targetReadingKey: string;
 			readonly targetLemmaKey?: never;
@@ -106,7 +96,7 @@ export type RelationProjection<
 	LemmaId extends string = string,
 	ReadingId extends string = string,
 > = {
-	readonly relation: SemanticRelation;
+	readonly relation: Dumrel.SemanticRelation;
 	readonly targetCanonicalForm: string;
 	readonly provenance: "direct" | "inferred";
 	readonly target:
@@ -143,7 +133,7 @@ export function flattenDirectSemanticRelations(
 								relation,
 								targetKind: "reading",
 								targetReadingKey: readingFingerprint(
-									targetRecord as unknown as ReadingReference,
+									targetRecord as unknown as Dumling.Reading,
 								),
 								targetCanonicalForm,
 								provenance: "direct",
@@ -203,20 +193,21 @@ type RelationNeighborhood = {
 
 type TargetedRelationProjection =
 	| {
-			relation: SemanticRelation;
+			relation: Dumrel.SemanticRelation;
 			targetKind: "lemma";
-			targetLemma: Lemma<"de">;
+			targetLemma: Dumling.Lemma<"de">;
 			provenance: "direct" | "inferred";
 	  }
 	| {
-			relation: SemanticRelation;
+			relation: Dumrel.SemanticRelation;
 			targetKind: "reading";
-			targetReading: Reading<"de">;
+			targetReading: Dumling.Reading<"de">;
 			provenance: "direct" | "inferred";
 	  };
 
-function parseStoredGermanLemma(lemma: Doc<"lemmas">): Lemma<"de"> {
+function parseStoredGermanLemma(lemma: Doc<"lemmas">): Dumling.Lemma<"de"> {
 	return parseGermanLemma({
+		unitKind: "Lemma",
 		language: lemma.language,
 		family: lemma.family,
 		kind: lemma.kind,
@@ -424,111 +415,88 @@ async function loadTargetedRelationProjections(
 	for (const reading of neighborhood.readings.values()) {
 		await rememberLemma(reading.lemmaId);
 	}
-	const graphReadings = [...neighborhood.readings.values()].flatMap(
-		(reading) => {
+	const units = new Map(
+		[...neighborhood.readings.values()].map((reading) => {
 			const lemma = neighborhood.lemmas.get(reading.lemmaId);
-			if (!lemma) return [];
-			const outgoing = outgoingByReading.get(reading._id) ?? [];
+			if (!lemma)
+				throw new Error("Relation neighborhood has a missing Lemma.");
 			return [
-				{
-					reading: reading.readingKey,
-					lemma: lemma.lemmaKey,
-					relationTargetKind: outgoing.some(
-						(edge) =>
-							edge.targetKind === "reading" ||
-							edge.targetReadingId !== undefined,
-					)
-						? ("reading" as const)
-						: ("lemma" as const),
-				},
-			];
-		},
+				reading._id,
+				parseGermanReading({
+					unitKind: "Reading",
+					lemma: parseStoredGermanLemma(lemma),
+					emojiDescription: reading.emojiDescription,
+				}),
+			] as const;
+		}),
 	);
-	const graphEdges = [...neighborhood.edges.values()].flatMap(
-		(edge): DirectSemanticRelationGraphEdge[] => {
-			const sourceReading = neighborhood.readings.get(
-				edge.sourceReadingId,
-			);
-			if (!sourceReading) return [];
-			if (edge.targetKind === "reading" || edge.targetReadingId) {
-				if (edge.relation !== "synonym") return [];
-				const target = edge.targetReadingId
-					? neighborhood.readings.get(edge.targetReadingId)
-					: undefined;
-				return target
-					? [
-							{
-								sourceReading: sourceReading.readingKey,
-								relation: edge.relation,
-								targetKind: "reading",
-								targetReading: target.readingKey,
-							},
-						]
-					: [];
-			}
-			const target = edge.targetLemmaId
-				? neighborhood.lemmas.get(edge.targetLemmaId)
-				: undefined;
-			return target
-				? [
-						{
-							sourceReading: sourceReading.readingKey,
-							relation: edge.relation,
-							targetLemma: target.lemmaKey,
-						},
-					]
-				: [];
-		},
-	);
-	const readingByKey = new Map(
-		[...neighborhood.readings.values()].map((reading) => [
-			reading.readingKey,
-			reading,
-		]),
-	);
-	const lemmaByKey = new Map(
-		[...neighborhood.lemmas.values()].map((lemma) => [
-			lemma.lemmaKey,
-			lemma,
-		]),
-	);
-	return projectRelations({ readings: [...graphReadings], edges: graphEdges })
-		.filter((projection) => projection.sourceReading === source.readingKey)
-		.flatMap((projection): TargetedRelationProjection[] => {
-			if (projection.targetKind === "reading") {
-				const targetReading = readingByKey.get(
-					projection.targetReading,
-				);
-				const targetLemma = targetReading
-					? neighborhood.lemmas.get(targetReading.lemmaId)
-					: undefined;
-				return targetReading && targetLemma
-					? [
-							{
-								relation: projection.relation,
-								targetKind: "reading" as const,
-								targetReading: parseGermanReading({
-									lemma: parseStoredGermanLemma(targetLemma),
-									emojiDescription:
-										targetReading.emojiDescription,
-								}),
-								provenance: projection.provenance,
-							},
-						]
-					: [];
-			}
-			const targetLemma = lemmaByKey.get(projection.targetLemma);
-			return targetLemma
-				? [
-						{
-							relation: projection.relation,
-							targetKind: "lemma" as const,
-							targetLemma: parseStoredGermanLemma(targetLemma),
-							provenance: projection.provenance,
-						},
-					]
-				: [];
+	const entries: Dumrel.ReadingWithKnowledge[] = [];
+	for (const [id, reading] of units) {
+		const accumulated = await ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", readingFingerprint(reading)),
+			)
+			.unique();
+		const stored = parseReadingKnowledge({
+			source: reading,
+			knowledge: accumulated?.knowledge ?? {},
 		});
+		if (!stored.success) throw stored.error;
+		const readingMode =
+			stored.value.semanticRelations?.targetKind === "reading" ||
+			[...neighborhood.edges.values()].some(
+				(edge) =>
+					edge.sourceReadingId === id &&
+					edge.targetKind === "reading",
+			);
+		const relations: Record<string, unknown> = readingMode
+			? { targetKind: "reading" }
+			: {};
+		for (const edge of neighborhood.edges.values()) {
+			if (edge.sourceReadingId !== id) continue;
+			const target = edge.targetReadingId
+				? units.get(edge.targetReadingId)
+				: edge.targetLemmaId
+					? neighborhood.lemmas.get(edge.targetLemmaId)
+					: undefined;
+			if (!target)
+				throw new Error("Relation neighborhood has a missing target.");
+			const value =
+				"emojiDescription" in target
+					? target
+					: parseStoredGermanLemma(target);
+			const bucket = relations[edge.relation];
+			if (Array.isArray(bucket)) bucket.push(value);
+			else relations[edge.relation] = [value];
+		}
+		const knowledge = parseReadingKnowledge({
+			source: reading,
+			knowledge: { semanticRelations: relations },
+		});
+		if (!knowledge.success) throw knowledge.error;
+		entries.push({ reading, knowledge: knowledge.value });
+	}
+	const projected = projectSemanticRelations(entries);
+	if (!projected.success) throw projected.error;
+	return projected.value
+		.filter((item) => readingFingerprint(item.source) === source.readingKey)
+		.map(
+			(item): TargetedRelationProjection =>
+				item.target.unitKind === "Reading"
+					? {
+							relation: item.relation,
+							targetKind: "reading",
+							targetReading: parseGermanReading(item.target),
+							provenance: item.provenance,
+						}
+					: {
+							relation: item.relation,
+							targetKind: "lemma",
+							targetLemma: parseGermanLemma(item.target),
+							provenance: item.provenance,
+						},
+		);
 }
 
 export async function loadRelationProjections(
@@ -578,10 +546,9 @@ export async function loadRelationProjections(
 		);
 	const fingerprints: RelationFingerprintProjection[] = [];
 	const resolved: RelationProjection<Id<"lemmas">, Id<"readings">>[] = [];
-	const knowledge: ProjectedSemanticRelations<
-		LemmaReference,
-		ReadingReference
-	> = readingMode ? { targetKind: "reading" } : {};
+	const knowledge: PresentedRelations = readingMode
+		? { targetKind: "reading" }
+		: {};
 	for (const [index, projection] of projections.entries()) {
 		const targetDoc = targetDocs[index];
 		if (!targetDoc) continue;
@@ -617,6 +584,7 @@ export async function loadRelationProjections(
 		if (!("lemmaKey" in targetDoc) || knowledge.targetKind === "reading")
 			continue;
 		const target = parseGermanLemma({
+			unitKind: "Lemma",
 			language: targetDoc.language,
 			family: targetDoc.family,
 			kind: targetDoc.kind,
@@ -645,78 +613,38 @@ export async function loadRelationProjections(
 	return { fingerprints, knowledge, resolved };
 }
 
-export async function loadGrammaticalRelationProjections(
+export async function loadGrammaticalAlternatives(
 	ctx: QueryCtx,
 	readingId: Id<"readings">,
-): Promise<GrammaticalRelationProjection<Id<"readings">>[]> {
-	const [outgoing, incoming] = await Promise.all([
-		ctx.db
-			.query("grammaticalRelationEdges")
-			.withIndex("by_source_reading_id", (q) =>
-				q.eq("sourceReadingId", readingId),
-			)
-			.take(MAX_RELATIONS_PER_NOTE + 1),
-		ctx.db
-			.query("grammaticalRelationEdges")
-			.withIndex("by_target_reading_id", (q) =>
-				q.eq("targetReadingId", readingId),
-			)
-			.take(MAX_RELATIONS_PER_NOTE + 1),
-	]);
-	const candidates = [
-		...outgoing.map((edge) => ({
-			relation: edge.relation,
-			targetReadingId: edge.targetReadingId,
-			provenance: "direct" as const,
-		})),
-		...incoming.map((edge) => ({
-			relation: edge.relation,
-			targetReadingId: edge.sourceReadingId,
-			provenance: "inferred" as const,
-		})),
-	];
-	if (candidates.length > MAX_RELATIONS_PER_NOTE) {
-		throw new Error(
-			`A Reading Note supports at most ${MAX_RELATIONS_PER_NOTE} Grammatical Relations.`,
+): Promise<GrammaticalAlternative[]> {
+	const source = await ctx.db.get(readingId);
+	if (!source) return [];
+	const lemmaDoc = await ctx.db.get(source.lemmaId);
+	if (!lemmaDoc) return [];
+	return reviewedAlternatives(parseStoredGermanLemma(lemmaDoc)).map(
+		({ feature, reading }) => ({
+			feature,
+			readingKey: readingFingerprint(reading),
+			canonicalForm: reading.lemma.canonicalForm,
+		}),
+	);
+}
+export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
+	if (lemma.family !== "Lexeme" || lemma.kind !== "PRON") return [];
+	try {
+		return (["case", "person", "number"] as const).flatMap((feature) =>
+			selectGrammaticalAlternatives({
+				source: lemma,
+				vary:
+					feature === "number"
+						? ["number", "referenceNumber"]
+						: [feature],
+			}).map((reading) => ({ feature, reading })),
 		);
+	} catch (error) {
+		if (error instanceof Error && error.name === "InvalidInput") return [];
+		throw error;
 	}
-	const targetDocs = await Promise.all(
-		candidates.map(({ targetReadingId }) =>
-			targetReadingId ? ctx.db.get(targetReadingId) : null,
-		),
-	);
-	const targetLemmas = await Promise.all(
-		targetDocs.map((target) =>
-			target ? ctx.db.get(target.lemmaId) : Promise.resolve(null),
-		),
-	);
-	const unique = new Map<
-		string,
-		GrammaticalRelationProjection<Id<"readings">>
-	>();
-	for (const [index, candidate] of candidates.entries()) {
-		const targetLemma = targetLemmas[index];
-		if (!candidate.targetReadingId || !targetLemma) continue;
-		const projection: GrammaticalRelationProjection<Id<"readings">> = {
-			relation: candidate.relation,
-			targetCanonicalForm: targetLemma.canonicalForm,
-			provenance: candidate.provenance,
-			target: {
-				kind: "Reading",
-				readingId: candidate.targetReadingId,
-			},
-		};
-		const key = `${projection.relation}:${projection.target.readingId}`;
-		const current = unique.get(key);
-		if (!current || projection.provenance === "direct") {
-			unique.set(key, projection);
-		}
-	}
-	return [...unique.values()].sort((left, right) =>
-		`${left.relation}:${left.targetCanonicalForm}:${left.target.readingId}`.localeCompare(
-			`${right.relation}:${right.targetCanonicalForm}:${right.target.readingId}`,
-		),
-	);
 }
 
 function optionalRecord(value: unknown): UnknownRecord | null {
@@ -730,3 +658,11 @@ function optionalNonEmptyString(value: unknown): string | null {
 		? value.trim()
 		: null;
 }
+
+export type PresentedRelations =
+	| ({ targetKind?: "lemma" } & Partial<
+			Record<Dumrel.SemanticRelation, Dumling.Lemma[]>
+	  >)
+	| ({ targetKind: "reading" } & Partial<
+			Record<Dumrel.SemanticRelation, Dumling.Reading[]>
+	  >);

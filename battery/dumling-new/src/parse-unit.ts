@@ -12,7 +12,7 @@ interface Registry {
 	roots: Readonly<Record<string, Constraint>>;
 	definitions: Readonly<Record<string, Constraint>>;
 }
-const registry: Registry = JSON.parse(encodedValidation);
+const registry: Registry = /* @__PURE__ */ JSON.parse(encodedValidation);
 export type ParseResult<T> =
 	| { success: true; chain: T }
 	| { success: false; error: ParsingError };

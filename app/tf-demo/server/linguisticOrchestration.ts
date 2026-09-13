@@ -1,39 +1,22 @@
+import type { DumdictPlan, DumdictService, StoreRevision } from "dumdict";
+import { makeSurfaceId } from "dumdict/runtime";
 import type {
-	DumdictPlan,
-	DumdictService,
-	Lemma,
-	ReadingEntry,
-	ReadingKnowledgeChange,
-	StoreRevision,
-	Surface,
-} from "dumdict";
-import { applyDumdictKnowledgeChange, makeSurfaceId } from "dumdict/runtime";
-import type {
+	ComparisonInput,
 	Dumgen,
-	GrammaticalResult,
-	LemmaCatalogMiss,
-	ReadingCatalogMiss,
+	Encounter,
+	GenerationInput,
 	Segment,
 	SegmentedSentence,
-	SegmentedSentenceId,
-} from "dumgen";
-import { readingFingerprint } from "dumling-old";
-import type { Reading } from "dumling-old/types";
-import {
-	type KnowledgeChange,
-	type LexemeUnitShadow,
-	parseAsKnowledgeChange,
-	type ReadingKnowledge,
-} from "dumrel";
+} from "dumgen/types";
+import type * as Dumling from "dumling/types";
+import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import type { UnknownException } from "effect/Cause";
 import * as Effect from "effect/Effect";
-
-import { lemmaIdentityKey } from "./linguisticIdentity";
-import {
-	parseGermanLemma,
-	parseGermanReading,
-	unwrapOperationalParse,
-} from "./operationalParsing";
+import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
+import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
+import type { GenerationEvent } from "./resolutionFailure";
+import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import { splitInSentences } from "./sentenceSplitting";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
@@ -65,25 +48,19 @@ export type ResolvedClickPersistence = {
 	readonly clickedSegmentIndex: number;
 	readonly occurrence: {
 		readonly memberSegmentIndices: readonly number[];
-		readonly attestation: Extract<
-			GrammaticalResult<"de">,
-			{ decision: "Resolved" }
-		>["attestation"];
+		readonly attestation: ResolvedGrammar["attestation"];
 		readonly surfaceKey: string;
 		readonly lemmaKey: string;
 	};
-	readonly reading: Reading<"de">;
+	readonly reading: Dumling.Reading<"de">;
 	readonly readingKey: string;
 	readonly dictionaryPlan: DumdictPlan<"de">;
 };
 
 export type ReusableAttestation = {
 	readonly attestationId: string;
-	readonly grammatical: Extract<
-		GrammaticalResult<"de">,
-		{ decision: "Resolved" }
-	>;
-	readonly reading: Reading<"de">;
+	readonly grammatical: ResolvedGrammar;
+	readonly reading: Dumling.Reading<"de">;
 };
 
 export type RecordedClick =
@@ -143,15 +120,12 @@ export type ResolvedClickCommit =
 			readonly latestRevision?: StoreRevision;
 	  };
 
-type ResolvedGrammatical = Extract<
-	GrammaticalResult<"de">,
-	{ decision: "Resolved" }
->;
+type ResolvedGrammatical = ResolvedGrammar;
 
-type NonResolvedGrammatical = Exclude<
-	GrammaticalResult<"de">,
-	{ decision: "Resolved" | "CatalogMiss" }
->;
+type NonResolvedGrammatical = {
+	readonly decision: "Unresolved";
+	readonly language: "de";
+};
 
 type ReadingResolution = {
 	readonly decision: "Reuse" | "New";
@@ -160,11 +134,11 @@ type ReadingResolution = {
 
 export type ResolveSegmentResult =
 	| {
-			readonly catalogMiss: LemmaCatalogMiss | ReadingCatalogMiss;
+			readonly catalogMiss: CatalogMissSignal;
 	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Reading<"de">;
+			readonly reading: Dumling.Reading<"de">;
 			readonly reused: true;
 			readonly deduplicated: true;
 			readonly persisted: Extract<RecordedClick, { status: "Resolved" }>;
@@ -182,13 +156,13 @@ export type ResolveSegmentResult =
 	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Reading<"de">;
+			readonly reading: Dumling.Reading<"de">;
 			readonly reused: true;
 			readonly persisted: ReusedResolvedClickCommit;
 	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Reading<"de">;
+			readonly reading: Dumling.Reading<"de">;
 			readonly reused: true;
 			readonly persisted: LateResolvedClickCommit;
 	  }
@@ -199,7 +173,7 @@ export type ResolveSegmentResult =
 	| {
 			readonly grammatical: ResolvedGrammatical;
 			readonly readingResolution: ReadingResolution;
-			readonly reading: Reading<"de">;
+			readonly reading: Dumling.Reading<"de">;
 			readonly dictionaryPlan: DumdictPlan<"de">;
 			readonly persisted: Extract<
 				ResolvedClickCommit,
@@ -209,7 +183,7 @@ export type ResolveSegmentResult =
 	| {
 			readonly grammatical: ResolvedGrammatical;
 			readonly readingResolution: ReadingResolution;
-			readonly reading: Reading<"de">;
+			readonly reading: Dumling.Reading<"de">;
 			readonly dictionaryPlan: DumdictPlan<"de">;
 			readonly reused: boolean;
 			readonly persisted: Extract<
@@ -271,11 +245,12 @@ export type ResolveSegmentInput = {
 };
 
 export type ResolutionProgressObserver = {
+	generationEvent?(event: GenerationEvent): void;
 	grammarAvailable(input: {
 		readonly grammatical: ResolvedGrammatical;
 	}): Promise<void>;
 	readingAvailable(input: {
-		readonly reading: Reading<"de">;
+		readonly reading: Dumling.Reading<"de">;
 		readonly readingResolution: ReadingResolution;
 	}): Promise<void>;
 	committing(): Promise<void>;
@@ -285,7 +260,7 @@ export type ResolutionCheckpoints = {
 	readonly grammatical?: ResolvedGrammatical;
 	readonly reading?: {
 		readonly resolution: ReadingResolution;
-		readonly reading: Reading<"de">;
+		readonly reading: Dumling.Reading<"de">;
 	};
 };
 
@@ -310,7 +285,12 @@ export function createTfDemoOrchestrator(options: {
 			const sourceSentences = splitInSentences(input.sourceText);
 			assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
 			const segmentation = yield* effectFrom(
-				options.dumgen.segment(sourceSentences),
+				options.dumgen.segment({
+					sourceSentences: [
+						sourceSentences[0]!,
+						...sourceSentences.slice(1),
+					],
+				}),
 			);
 
 			const sentences = segmentation.flatMap(
@@ -320,7 +300,7 @@ export function createTfDemoOrchestrator(options: {
 								{
 									segmentedSentenceId: decision.sentence.id,
 									position,
-									language: decision.language,
+									language: decision.sentence.language,
 									stitchedText: decision.sentence.segments
 										.map(({ text }) => text)
 										.join(""),
@@ -438,6 +418,7 @@ export function createTfDemoOrchestrator(options: {
 			const reading = checkpoints.reading
 				? parseGermanReading(checkpoints.reading.reading)
 				: parseGermanReading({
+						unitKind: "Reading",
 						lemma,
 						emojiDescription: readingResolution.emojiDescription,
 					});
@@ -492,7 +473,7 @@ export function createTfDemoOrchestrator(options: {
 					...input,
 					occurrence: {
 						memberSegmentIndices:
-							grammatical.interaction.memberSegmentIndices,
+							grammatical.encounter.target.memberSegmentIndices,
 						attestation: grammatical.attestation,
 						surfaceKey,
 						lemmaKey,
@@ -537,14 +518,34 @@ export function createTfDemoOrchestrator(options: {
 						);
 					}
 					const sentence = parseGermanSentence(stored);
-					return yield* effectFrom(
-						options.dumgen.resolve.grammatical("de", {
+					return yield* Effect.gen(function* () {
+						const target = yield* options.dumgen.classifyTarget({
 							sentence,
 							clickedSegmentIndex: request.clickedSegmentIndex,
-						}),
-					).pipe(
-						Effect.catchTag("DumgenDomainFailure", ({ result }) =>
-							Effect.succeed(result),
+						});
+						const encounter: Encounter<"de"> = { sentence, target };
+						const attestation =
+							yield* options.dumgen.resolveGrammar(encounter);
+						return {
+							decision: "Resolved" as const,
+							language: "de" as const,
+							encounter,
+							attestation,
+						};
+					}).pipe(
+						Effect.catchTag("Unresolved", () =>
+							Effect.succeed({
+								decision: "Unresolved" as const,
+								language: "de" as const,
+							}),
+						),
+						Effect.catchTag("CatalogMiss", (failure) =>
+							Effect.succeed({
+								decision: "CatalogMiss" as const,
+								stage: failure.stage,
+								route: failure.route ?? "de",
+								message: failure.message,
+							}),
 						),
 					);
 				});
@@ -552,7 +553,7 @@ export function createTfDemoOrchestrator(options: {
 
 			function resolveReading(
 				resolved: ResolvedGrammatical,
-				resolvedLemma: Lemma<"de">,
+				resolvedLemma: Dumling.Lemma<"de">,
 			) {
 				return Effect.gen(function* () {
 					const storedReadings = yield* effectFrom(
@@ -560,18 +561,50 @@ export function createTfDemoOrchestrator(options: {
 							lemma: resolvedLemma,
 						}),
 					);
-					return yield* effectFrom(
-						options.dumgen.resolve.reading("de", {
-							markedContext: resolved.markedContext,
-							lemma: resolvedLemma,
-							existingEmojiDescriptions:
-								storedReadings.candidates.map(
-									({ reading }) => reading.emojiDescription,
-								),
-						}),
-					).pipe(
-						Effect.catchTag("DumgenDomainFailure", ({ result }) =>
-							Effect.succeed(result),
+					if (
+						resolved.encounter.target.family !==
+							resolvedLemma.family ||
+						resolved.encounter.target.kind !== resolvedLemma.kind
+					)
+						throw new Error(
+							"Reading route does not match the Encounter.",
+						);
+					const candidates = storedReadings.candidates.map(
+						({ reading }) => reading.emojiDescription,
+					);
+					const base = {
+						encounter: resolved.encounter,
+						lemma: resolvedLemma,
+					};
+					const operation =
+						candidates.length === 0
+							? options.dumgen
+									.generateReadingEmojiDescription(
+										base as GenerationInput<"de">,
+									)
+									.pipe(
+										Effect.map((emojiDescription) => ({
+											decision: "New" as const,
+											emojiDescription,
+										})),
+									)
+							: options.dumgen.resolveOrGenerateReadingEmojiDescription(
+									{
+										...base,
+										candidates: [
+											candidates[0]!,
+											...candidates.slice(1),
+										],
+									} as ComparisonInput<"de">,
+								);
+					return yield* operation.pipe(
+						Effect.catchTag("CatalogMiss", (failure) =>
+							Effect.succeed({
+								decision: "CatalogMiss" as const,
+								stage: failure.stage,
+								route: failure.route ?? "de",
+								message: failure.message,
+							}),
 						),
 					);
 				});
@@ -594,45 +627,33 @@ export function applyValidatedReadingKnowledgeChange(input: {
 	readonly knowledge?: unknown;
 	readonly change: unknown;
 }): {
-	readonly change: KnowledgeChange;
-	readonly knowledge: ReadingKnowledge;
+	readonly change: Dumrel.KnowledgeChange;
+	readonly knowledge: Dumrel.ReadingKnowledge;
 } {
-	const change = unwrapOperationalParse<KnowledgeChange>(
-		parseAsKnowledgeChange(input.change),
-	);
 	const reading = parseGermanReading(input.reading);
-	const record = {
-		reading,
-		...(input.knowledge === undefined
-			? {}
-			: {
-					knowledge: input.knowledge as ReadingKnowledge<
-						string,
-						Lemma<"de">,
-						LexemeUnitShadow,
-						Reading<"de">
-					>,
-				}),
-		attestedTranslations: [],
-		attestations: [],
-		notes: "",
-	} satisfies ReadingEntry<"de">;
-	const envelope = {
-		reading,
-		change: change as ReadingKnowledgeChange<"de">["change"],
-	} satisfies ReadingKnowledgeChange<"de">;
-	const updated = applyDumdictKnowledgeChange(record, envelope);
-	return { change, knowledge: updated.knowledge ?? {} };
+	const current = parseReadingKnowledge({
+		source: reading,
+		knowledge: input.knowledge ?? {},
+	});
+	if (!current.success) throw current.error;
+	const updated = applyKnowledgeChange({
+		source: reading,
+		knowledge: current.value,
+		change: input.change,
+	});
+	if (!updated.success) throw updated.error;
+	// applyKnowledgeChange has validated the complete source-aware change.
+	return {
+		change: input.change as Dumrel.KnowledgeChange,
+		knowledge: updated.value,
+	};
 }
 
-export function surfaceIdentityKey(surface: Surface<"de">): string {
+export function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 	return makeSurfaceId("de", surface);
 }
 
-/** Stable key for Dumling Reading equality: Lemma identity plus emoji meaning. */
-export function readingIdentityKey(reading: Reading<"de">): string {
-	return readingFingerprint(reading);
-}
+export { readingIdentityKey } from "./linguisticIdentity";
 
 function parseGermanSentence(
 	stored: PersistedSentence,
@@ -664,7 +685,7 @@ function parseGermanSentence(
 		);
 	}
 	return Object.freeze({
-		id: stored.segmentedSentenceId as SegmentedSentenceId,
+		id: stored.segmentedSentenceId,
 		language: "de",
 		segments: Object.freeze(segments),
 	});

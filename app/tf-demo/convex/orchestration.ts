@@ -4,14 +4,7 @@ import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { type Infer, v } from "convex/values";
 import type { ApplyGeneratedKnowledgeRequest } from "dumdict";
 import { createDumdictService } from "dumdict/runtime";
-import {
-	type Dumgen,
-	type GrammaticalResult,
-	parseAsGrammaticalResult,
-} from "dumgen";
-import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
-import { type KnowledgeChange, parseAsKnowledgeChange } from "dumrel";
-import { directSemanticRelationValues } from "dumrel/vocabulary";
+import { directSemanticRelationValues } from "dumrel";
 import * as Effect from "effect/Effect";
 import {
 	createTfDemoOrchestrator,
@@ -27,10 +20,12 @@ import {
 	type ReusedResolvedClickCommit,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
+import { createProductionDumgen } from "../server/modelExecution";
+import { parseGermanReading } from "../server/operationalParsing";
 import {
-	parseGermanReading,
-	unwrapOperationalParse,
-} from "../server/operationalParsing";
+	parseResolvedGrammar,
+	type ResolvedGrammar,
+} from "../server/resolutionGrammar";
 import {
 	executeResolutionSession,
 	type ResolutionSessionLifecyclePort,
@@ -105,38 +100,6 @@ const recordRelationPublicationFailure = makeFunctionReference<
 	null
 >;
 
-function createLazyDumgen(): Dumgen {
-	let dumgenPromise: Promise<Dumgen> | undefined;
-	const getDumgen = () => {
-		dumgenPromise ??= Promise.all([
-			import("dumgen/openai-fetch"),
-			import("dumgen/runtime"),
-		]).then(
-			([{ buildOpenAiFetchModelGenerator }, { buildDumgenRuntime }]) =>
-				buildDumgenRuntime({
-					runtimePromptData: encodedRuntimePromptData,
-					modelGenerator: buildOpenAiFetchModelGenerator(),
-				}),
-		);
-		return dumgenPromise;
-	};
-	const run = <Value, Failure>(
-		operation: (dumgen: Dumgen) => Effect.Effect<Value, Failure>,
-	): Effect.Effect<Value, Failure> =>
-		Effect.promise(getDumgen).pipe(Effect.flatMap(operation));
-	return {
-		segment: (sentences) => run((dumgen) => dumgen.segment(sentences)),
-		resolve: {
-			grammatical: (language, input) =>
-				run((dumgen) => dumgen.resolve.grammatical(language, input)),
-			reading: (language, input) =>
-				run((dumgen) => dumgen.resolve.reading(language, input)),
-		},
-	};
-}
-
-const lazyDumgen = createLazyDumgen();
-
 type ResolveSegmentActionResult = Infer<typeof resolveSegmentResultValidator>;
 type ResolvedGrammaticalActionResult = Infer<
 	typeof resolvedGrammaticalValidator
@@ -160,66 +123,35 @@ function nonResolvedGrammaticalActionResult(
 		{ decision: "Unresolved" | "NotImplemented" }
 	>,
 ): NonResolvedGrammaticalActionResult {
-	if (input.decision === "Unresolved") {
-		const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
-			parseAsGrammaticalResult(input, "de"),
-		);
-		if (parsed.decision !== "Unresolved") {
-			throw new Error("Expected an Unresolved grammatical result.");
-		}
-		return { decision: "Unresolved", language: parsed.language };
-	}
-	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
-		parseAsGrammaticalResult(input, "de"),
-	);
-	if (parsed.decision !== "NotImplemented") {
-		throw new Error("Expected a NotImplemented grammatical result.");
-	}
-	return {
-		decision: "NotImplemented",
-		language: parsed.language,
-		route: { ...parsed.route },
-	};
+	return input;
 }
 
 function resolvedGrammaticalActionResult(
-	input: Extract<GrammaticalResolveSegmentResult, { decision: "Resolved" }>,
+	input: ResolvedGrammar,
 ): ResolvedGrammaticalActionResult {
-	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
-		parseAsGrammaticalResult(input, "de"),
-	);
-	if (parsed.decision !== "Resolved") {
-		throw new Error("Expected a Resolved grammatical result.");
-	}
+	const parsed = parseResolvedGrammar(input);
 	return {
 		...parsed,
-		attestation: {
-			...parsed.attestation,
-			members: parsed.attestation.members.map((member) => ({
-				...member,
-			})),
-			surface: {
-				...parsed.attestation.surface,
-				lemma: { ...parsed.attestation.surface.lemma },
+		encounter: {
+			sentence: {
+				...parsed.encounter.sentence,
+				segments: parsed.encounter.sentence.segments.map((segment) => ({
+					...segment,
+				})),
 			},
-		},
-		interaction: {
-			...parsed.interaction,
-			memberSegmentIndices: [...parsed.interaction.memberSegmentIndices],
+			target: {
+				...parsed.encounter.target,
+				memberSegmentIndices: [
+					...parsed.encounter.target.memberSegmentIndices,
+				],
+			},
 		},
 	};
 }
-
 function resolvedGrammaticalCheckpoint(
 	input: ResolvedGrammaticalActionResult,
-): Extract<GrammaticalResult<"de">, { decision: "Resolved" }> {
-	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
-		parseAsGrammaticalResult(input, "de"),
-	);
-	if (parsed.decision !== "Resolved") {
-		throw new Error("Expected a resolved Grammar checkpoint.");
-	}
-	return parsed;
+): ResolvedGrammar {
+	return parseResolvedGrammar(input);
 }
 
 function reusableAttestationResult(
@@ -625,14 +557,8 @@ export const applyReadingKnowledgeChange = action({
 	},
 	returns: v.null(),
 	handler: async (ctx, args): Promise<null> => {
-		const change = unwrapOperationalParse<KnowledgeChange>(
-			parseAsKnowledgeChange(args.change),
-		);
-		if (change.aspect !== "definition") {
-			throw new Error(
-				"Only definition changes are accepted by this action.",
-			);
-		}
+		const change = args.change;
+
 		await ctx.runMutation(internal.persistence.persistKnowledgeChange, {
 			...args,
 			change,
@@ -647,7 +573,7 @@ function orchestratorFor(
 	observer?: ResolutionProgressObserver,
 ) {
 	return createTfDemoOrchestrator({
-		dumgen: lazyDumgen,
+		dumgen: createProductionDumgen(observer?.generationEvent),
 		dictionary: createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
@@ -988,5 +914,74 @@ export const cleanupPendingRelation = action({
 				message: result.message ?? "Shadow cleanup was rejected.",
 			};
 		throw new Error("Shadow cleanup storage failed.");
+	},
+});
+
+/** Materializes only the reviewed Reading selected by this navigation request. */
+export const followGrammaticalAlternative = action({
+	args: { sourceReadingId: v.id("readings"), readingKey: v.string() },
+	returns: v.id("readings"),
+	handler: async (
+		ctx,
+		{ sourceReadingId, readingKey },
+	): Promise<Id<"readings">> => {
+		const { reviewedAlternatives } = await import(
+			"./modules/notes/relations"
+		);
+		const { readingIdentityKey } = await import(
+			"../server/linguisticIdentity"
+		);
+		const source = parseGermanReading(
+			await ctx.runQuery(internal.reviewedNavigation.source, {
+				readingId: sourceReadingId,
+			}),
+		);
+		const selected = reviewedAlternatives(source.lemma).find(
+			({ reading }) => readingIdentityKey(reading) === readingKey,
+		);
+		if (!selected)
+			throw new Error(
+				"This Reading is not a reviewed grammatical alternative.",
+			);
+		const dictionary = createDumdictService({
+			language: "de",
+			storage: createConvexDumdictStorage(ctx),
+		});
+		for (
+			let attempt = 0;
+			attempt < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
+			attempt++
+		) {
+			const existing = await ctx.runQuery(
+				internal.reviewedNavigation.destination,
+				{ readingKey },
+			);
+			if (existing) return existing;
+			const result = await Effect.runPromise(
+				Effect.either(
+					dictionary.ensureReadingEntry({
+						entry: {
+							reading: selected.reading,
+							attestedTranslations: [],
+							attestations: [],
+							notes: "",
+						},
+					}),
+				),
+			);
+			const destination = await ctx.runQuery(
+				internal.reviewedNavigation.destination,
+				{ readingKey },
+			);
+			if (destination) return destination;
+			if (
+				result._tag === "Left" &&
+				result.left._tag !== "DumdictRevisionConflict"
+			)
+				throw new Error("Grammatical alternative could not be stored.");
+		}
+		throw new Error(
+			"Grammatical alternative conflicted with another change; try again.",
+		);
 	},
 });

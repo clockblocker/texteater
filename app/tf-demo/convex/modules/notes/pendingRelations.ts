@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import type { SemanticRelation } from "dumrel";
-import { semanticRelationValues } from "dumrel/vocabulary";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 
 import type { Id } from "../../_generated/dataModel";
 import { semanticRelationValidator } from "../../model/validators";
@@ -21,7 +21,7 @@ export const pendingRelationProjectionValidator = v.object({
 
 export type PendingRelationProjection = {
 	readonly locatorKey: string;
-	readonly relation: SemanticRelation;
+	readonly relation: Dumrel.SemanticRelation;
 	readonly targetCanonicalForm: string;
 	readonly targetFamily: string;
 	readonly targetKind: string;
@@ -84,8 +84,8 @@ export function projectPendingRelations(
 	});
 }
 
-function isSemanticRelation(value: unknown): value is SemanticRelation {
-	return semanticRelationValues.some((relation) => relation === value);
+function isSemanticRelation(value: unknown): value is Dumrel.SemanticRelation {
+	return directSemanticRelationValues.some((relation) => relation === value);
 }
 
 function optionalRecord(value: unknown): UnknownRecord | null {

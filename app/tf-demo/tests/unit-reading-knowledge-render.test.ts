@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
-import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 
 import {
 	KnowledgeSettingsChecklist,
@@ -21,7 +21,7 @@ test("renders every global setting and reflects disabled leaves", () => {
 		}),
 	);
 
-	expect(markup.match(/type="checkbox"/g)).toHaveLength(14);
+	expect(markup.match(/type="checkbox"/g)).toHaveLength(12);
 	expect(markup).toContain("English translations");
 	expect(markup).toContain("Russian translations");
 	expect(markup).toContain("near synonym");

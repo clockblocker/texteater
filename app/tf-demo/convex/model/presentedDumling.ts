@@ -1,22 +1,11 @@
 import { type Infer, v } from "convex/values";
-import { getLanguageApi, toPresented } from "dumling-old";
-import type {
-	PresentedAttestation,
-	PresentedFeatureSet,
-	PresentedLemma,
-	PresentedSurface,
-} from "dumling-old/types";
-import { presentedFeatureNames } from "dumling-old/vocabulary";
-
+import { checkIfGrundform, parseUnit } from "dumling";
 import {
-	type attestationValueValidator,
+	grundformValidator,
 	languageValidator,
-	type lemmaValueValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
-	surfaceKindValidator,
 	surfaceSpellingValidator,
-	type surfaceValueValidator,
 } from "./validators";
 
 const presentedFeatureValueValidator = v.union(
@@ -43,7 +32,7 @@ export const presentedSurfaceValidator = v.object({
 	language: languageValidator,
 	normalizedSurface: v.string(),
 	spelling: surfaceSpellingValidator,
-	surfaceKind: surfaceKindValidator,
+	grundform: grundformValidator,
 	surfaceFeatures: v.object({
 		historicalStatus: v.union(v.null(), v.literal("Archaic")),
 	}),
@@ -62,85 +51,58 @@ export const presentedAttestationValidator = v.object({
 	surface: presentedSurfaceValidator,
 });
 
-type LemmaValue = Infer<typeof lemmaValueValidator>;
-type SurfaceValue = Infer<typeof surfaceValueValidator>;
-type AttestationValue = Infer<typeof attestationValueValidator>;
-
 export function presentLemma(
-	value: LemmaValue,
+	value: unknown,
 ): Infer<typeof presentedLemmaValidator> {
-	const parsed = getLanguageApi(value.language).parse.lemma(value);
-	if (!parsed.success) throw new Error(parsed.error.message);
-	const presented = exactPresentedLemma(toPresented.lemma(parsed.data));
-	assertCompletePresentedFeatureSet(presented.coreFeatures);
-	return presented as unknown as Infer<typeof presentedLemmaValidator>;
+	const parsed = parseUnit(value);
+	if (!parsed.success) throw parsed.error;
+	if (parsed.chain.unitKind !== "Lemma" || parsed.chain.language === "en")
+		throw new Error("Expected a Lemma.");
+	const { language, family, kind, canonicalForm, coreFeatures } =
+		parsed.chain.value;
+	return {
+		language,
+		family,
+		kind,
+		canonicalForm,
+		coreFeatures: coreFeatures ?? {},
+	};
 }
-
 export function presentSurface(
-	value: SurfaceValue,
+	value: unknown,
 ): Infer<typeof presentedSurfaceValidator> {
-	const parsed = getLanguageApi(value.language).parse.surface(value);
-	if (!parsed.success) throw new Error(parsed.error.message);
-	const presented = exactPresentedSurface(toPresented.surface(parsed.data));
-	assertCompletePresentedSurface(presented);
-	return presented as unknown as Infer<typeof presentedSurfaceValidator>;
+	const parsed = parseUnit(value);
+	if (!parsed.success) throw parsed.error;
+	if (parsed.chain.unitKind !== "Surface" || parsed.chain.language === "en")
+		throw new Error("Expected a Surface.");
+	const surface = parsed.chain.value;
+	const assessment = checkIfGrundform(surface);
+	return {
+		language: surface.language,
+		normalizedSurface: surface.normalizedSurface,
+		spelling: surface.spelling,
+		grundform: assessment.success ? assessment.value : null,
+		surfaceFeatures: {
+			historicalStatus: surface.surfaceFeatures?.historicalStatus ?? null,
+		},
+		inflectionalFeatures:
+			"inflectionalFeatures" in surface
+				? (surface.inflectionalFeatures ?? {})
+				: {},
+		lemma: presentLemma(surface.lemma),
+	};
 }
-
 export function presentAttestation(
-	value: AttestationValue,
+	value: unknown,
 ): Infer<typeof presentedAttestationValidator> {
-	const language = value.surface.language;
-	const parsed = getLanguageApi(language).parse.attestation(value);
-	if (!parsed.success) throw new Error(parsed.error.message);
-	const projected = toPresented.attestation(parsed.data);
-	const presented: PresentedAttestation = {
-		...projected,
-		surface: exactPresentedSurface(projected.surface),
-	};
-	assertCompletePresentedSurface(presented.surface);
-	return presented as unknown as Infer<typeof presentedAttestationValidator>;
-}
-
-function exactPresentedSurface(surface: PresentedSurface): PresentedSurface {
+	const parsed = parseUnit(value);
+	if (!parsed.success) throw parsed.error;
+	if (parsed.chain.unitKind !== "Attestation")
+		throw new Error("Expected an Attestation.");
+	const attestation = parsed.chain.value;
 	return {
-		...surface,
-		lemma: exactPresentedLemma(surface.lemma),
-		inflectionalFeatures: exactPresentedFeatureSet(
-			surface.inflectionalFeatures,
-		),
+		members: attestation.members.map((member) => ({ ...member })),
+		realizationCoverage: attestation.realizationCoverage,
+		surface: presentSurface(attestation.surface),
 	};
-}
-
-function exactPresentedLemma(lemma: PresentedLemma): PresentedLemma {
-	return {
-		...lemma,
-		coreFeatures: exactPresentedFeatureSet(lemma.coreFeatures),
-	};
-}
-
-function exactPresentedFeatureSet(
-	features: Readonly<Record<string, unknown>>,
-): PresentedFeatureSet {
-	return Object.fromEntries(
-		presentedFeatureNames.map((name) => [name, features[name] ?? null]),
-	) as PresentedFeatureSet;
-}
-
-function assertCompletePresentedSurface(surface: PresentedSurface): void {
-	assertCompletePresentedFeatureSet(surface.lemma.coreFeatures);
-	assertCompletePresentedFeatureSet(surface.inflectionalFeatures);
-}
-
-function assertCompletePresentedFeatureSet(
-	features: Readonly<Record<string, unknown>>,
-): void {
-	const names = Object.keys(features);
-	if (
-		names.length !== presentedFeatureNames.length ||
-		presentedFeatureNames.some((name) => !Object.hasOwn(features, name))
-	) {
-		throw new Error(
-			"Dumling returned an incomplete Presented feature set.",
-		);
-	}
 }

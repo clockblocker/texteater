@@ -1,5 +1,3 @@
-import { withTraceRecorder } from "common-utils/workflow";
-import type { GenerationEvent, GenerationFailure } from "dumgen";
 import * as Effect from "effect/Effect";
 import type {
 	ResolutionCheckpoints,
@@ -7,6 +5,7 @@ import type {
 	ResolveSegmentInput,
 	ResolveSegmentResult,
 } from "./linguisticOrchestration";
+import type { GenerationEvent, GenerationFailure } from "./resolutionFailure";
 import {
 	classifyResolutionFailure,
 	projectResolutionGenerationEvent,
@@ -140,6 +139,7 @@ export function executeResolutionSession({
 			);
 		};
 		const observer: ResolutionProgressObserver = {
+			generationEvent: onGenerationEvent,
 			async grammarAvailable({ grammatical }) {
 				await lifecycle.advance({
 					progress: "GrammarAvailable",
@@ -171,16 +171,10 @@ export function executeResolutionSession({
 			: input.checkpoints.grammatical
 				? "Reading"
 				: "Grammar";
-		const result = yield* withTraceRecorder(
-			resolve(input.selection, input.checkpoints, observer),
-			{
-				record: (trace) =>
-					Effect.sync(() => {
-						if (trace.event === "model.generation.event")
-							onGenerationEvent(trace.payload as GenerationEvent);
-					}),
-				diagnostic: diagnostics.error,
-			},
+		const result = yield* resolve(
+			input.selection,
+			input.checkpoints,
+			observer,
 		);
 		if ("catalogMiss" in result) {
 			yield* Effect.tryPromise(() =>

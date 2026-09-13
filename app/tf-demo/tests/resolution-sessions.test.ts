@@ -153,6 +153,8 @@ function sourceSeed(): Record<string, readonly Row[]> {
 		sentences: [
 			{
 				_id: "sentence-1",
+				language: "de",
+				segmentedSentenceId: "fixture-sentence",
 				textId: "text-1",
 				stitchedText: "Die Banken.",
 			},
@@ -214,6 +216,7 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 		],
 		lemmas: [
 			{
+				unitKind: "Lemma",
 				_id: "lemma-1",
 				language: "de",
 				family: "Lexeme",
@@ -229,9 +232,9 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 				language: "de",
 				normalizedSurface: "Banken",
 				spelling: "Canonical",
-				surfaceKind: "Inflection",
-				surfaceFeatures: {},
-				inflectionalFeatures: {},
+
+				surfaceFeatures: null,
+				inflectionalFeatures: null,
 			},
 		],
 	};
@@ -1581,12 +1584,14 @@ function grammaticalInput(canonicalForm = "Bank") {
 	return {
 		decision: "Resolved" as const,
 		attestation: {
+			unitKind: "Attestation",
 			members: [{ attested: "Banken", orthography: "Standard" as const }],
 			realizationCoverage: "Full" as const,
 			surface: {
+				unitKind: "Surface",
 				normalizedSurface: "Banken",
 				spelling: "Canonical" as const,
-				surfaceKind: "Inflection" as const,
+
 				lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
 			},
 		},
@@ -1596,6 +1601,7 @@ function grammaticalInput(canonicalForm = "Bank") {
 
 function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
 	return {
+		unitKind: "Reading",
 		emojiDescription,
 		lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
 		plan: { raw: "must not leak" },
@@ -1615,7 +1621,7 @@ function grammarProjection(canonicalForm = "Bank") {
 		realizationCoverage: "Full" as const,
 		normalizedSurface: "Banken",
 		spelling: "Canonical" as const,
-		surfaceKind: "Inflection" as const,
+		grundform: false as const,
 		canonicalForm,
 		family: "Lexeme",
 		kind: "NOUN",

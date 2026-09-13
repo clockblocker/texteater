@@ -1,355 +1,142 @@
 import { expect, test } from "bun:test";
-import { readingFingerprint } from "dumling-old/reading";
-import { allFixedGrammaticalRelationClaims } from "dumrel/fixed";
-import { commitFixedGrammaticalRelation } from "../convex/fixedMemberPersistence";
-import { loadGrammaticalRelationProjections } from "../convex/modules/notes/relations";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
-import { IndexedTestDb, runTestMutation } from "./support/indexed-db";
+import { getFunctionName } from "convex/server";
+import type * as Dumling from "dumling/types";
+import * as storageFunctions from "../convex/dumdictStorage";
+import {
+	loadGrammaticalAlternatives,
+	reviewedAlternatives,
+} from "../convex/modules/notes/relations";
+import { followGrammaticalAlternative } from "../convex/orchestration";
+import * as navigationFunctions from "../convex/reviewedNavigation";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+} from "../server/linguisticIdentity";
+import {
+	IndexedTestDb,
+	runTestMutation,
+	runTestQuery,
+} from "./support/indexed-db";
 
-test("stores one direct grammatical claim and projects its exact symmetric Reading", async () => {
-	const claim = allFixedGrammaticalRelationClaims()[0];
-	if (claim?.endpointKind !== "reading") {
-		throw new Error("Expected a fixed Reading grammatical claim.");
-	}
-	const sourceLemmaId = "lemma-source";
-	const targetLemmaId = "lemma-target";
-	const sourceReadingId = "reading-source";
-	const targetReadingId = "reading-target";
-	const db = new IndexedTestDb({
+const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "mich",
+	coreFeatures: {
+		extPos: null,
+		foreign: null,
+		person: "1",
+		polite: null,
+		poss: null,
+		pronType: "Prs",
+		referenceNumber: "Sing",
+		case: "Acc",
+		number: "Sing",
+		gender: null,
+		"gender[psor]": null,
+	},
+};
+const reading: Dumling.Reading<"de", "Lexeme", "PRON"> = {
+	unitKind: "Reading",
+	lemma,
+	emojiDescription: "👤",
+};
+function database() {
+	return new IndexedTestDb({
 		lemmas: [
 			{
-				_id: sourceLemmaId,
-				lemmaKey: lemmaIdentityKey(claim.source.lemma),
-				...claim.source.lemma,
-			},
-			{
-				_id: targetLemmaId,
-				lemmaKey: lemmaIdentityKey(claim.target.lemma),
-				...claim.target.lemma,
+				_id: "source-lemma",
+				lemmaKey: lemmaIdentityKey(lemma),
+				...lemma,
 			},
 		],
 		readings: [
 			{
-				_id: sourceReadingId,
-				readingKey: readingFingerprint(claim.source),
-				lemmaId: sourceLemmaId,
-				emojiDescription: claim.source.emojiDescription,
-			},
-			{
-				_id: targetReadingId,
-				readingKey: readingFingerprint(claim.target),
-				lemmaId: targetLemmaId,
-				emojiDescription: claim.target.emojiDescription,
+				_id: "source-reading",
+				readingKey: readingIdentityKey(reading),
+				lemmaId: "source-lemma",
+				emojiDescription: reading.emojiDescription,
 			},
 		],
 	});
-
-	expect(
-		await runTestMutation(db, commitFixedGrammaticalRelation, { claim }),
-	).toEqual({ status: "loaded" });
-	expect(
-		await runTestMutation(db, commitFixedGrammaticalRelation, { claim }),
-	).toEqual({ status: "unchanged" });
-	expect(db.rows("grammaticalRelationEdges")).toHaveLength(1);
-
-	await expect(
-		loadGrammaticalRelationProjections(
-			{ db } as never,
-			sourceReadingId as never,
+}
+function follow(db: IndexedTestDb, readingKey: string) {
+	const functions = new Map<string, unknown>([
+		...Object.entries(storageFunctions).map(
+			([name, fn]) => [`dumdictStorage:${name}`, fn] as const,
 		),
-	).resolves.toEqual([
-		{
-			relation: claim.relation,
-			targetCanonicalForm: claim.target.lemma.canonicalForm,
-			provenance: "direct",
-			target: { kind: "Reading", readingId: targetReadingId },
-		},
-	]);
-	await expect(
-		loadGrammaticalRelationProjections(
-			{ db } as never,
-			targetReadingId as never,
+		...Object.entries(navigationFunctions).map(
+			([name, fn]) => [`reviewedNavigation:${name}`, fn] as const,
 		),
-	).resolves.toEqual([
-		{
-			relation: claim.relation,
-			targetCanonicalForm: claim.source.lemma.canonicalForm,
-			provenance: "inferred",
-			target: { kind: "Reading", readingId: sourceReadingId },
-		},
 	]);
-});
-
-test("stores and projects the fixed total NumberCounterpart as an ordinary typed relation", async () => {
-	const claim = allFixedGrammaticalRelationClaims().find(
-		(candidate) => candidate.relation === "NumberCounterpart",
+	const implementation = (reference: unknown) => {
+		const name = getFunctionName(reference as never);
+		const fn = functions.get(name);
+		if (!fn) throw new Error(`Unexpected function: ${name}`);
+		return fn;
+	};
+	return (
+		followGrammaticalAlternative as unknown as {
+			_handler: (ctx: unknown, args: unknown) => Promise<string>;
+		}
+	)._handler(
+		{
+			runQuery: (reference: unknown, args: unknown) =>
+				runTestQuery(db, implementation(reference), args),
+			runMutation: (reference: unknown, args: unknown) =>
+				runTestMutation(db, implementation(reference), args),
+		},
+		{ sourceReadingId: "source-reading", readingKey },
 	);
-	if (claim?.endpointKind !== "reading") {
-		throw new Error("Expected the fixed Reading NumberCounterpart.");
-	}
-	const sourceLemmaId = "lemma-total-source";
-	const targetLemmaId = "lemma-total-target";
-	const sourceReadingId = "reading-total-source";
-	const targetReadingId = "reading-total-target";
-	const db = new IndexedTestDb({
-		lemmas: [
-			{
-				_id: sourceLemmaId,
-				lemmaKey: lemmaIdentityKey(claim.source.lemma),
-				...claim.source.lemma,
-			},
-			{
-				_id: targetLemmaId,
-				lemmaKey: lemmaIdentityKey(claim.target.lemma),
-				...claim.target.lemma,
-			},
-		],
-		readings: [
-			{
-				_id: sourceReadingId,
-				readingKey: readingFingerprint(claim.source),
-				lemmaId: sourceLemmaId,
-				emojiDescription: claim.source.emojiDescription,
-			},
-			{
-				_id: targetReadingId,
-				readingKey: readingFingerprint(claim.target),
-				lemmaId: targetLemmaId,
-				emojiDescription: claim.target.emojiDescription,
-			},
-		],
+}
+
+test("reviewed alternatives are visible without preloading and only the selected Reading is materialized", async () => {
+	const db = database();
+	const before = db.snapshot();
+	const alternatives = await loadGrammaticalAlternatives(
+		{ db } as never,
+		"source-reading" as never,
+	);
+	expect(db.snapshot()).toEqual(before);
+	const mir = alternatives.find(
+		(value) => value.canonicalForm === "mir" && value.feature === "case",
+	);
+	expect(mir).toBeDefined();
+	expect(
+		alternatives.some(
+			(value) =>
+				value.canonicalForm === "uns" && value.feature === "number",
+		),
+	).toBe(true);
+	const destination = await follow(db, mir!.readingKey);
+	expect(db.rows("readings")).toHaveLength(2);
+	expect(db.rows("lemmas")).toHaveLength(2);
+	expect(db.rows("surfaces")).toHaveLength(0);
+	expect(db.rows("accumulatedKnowledge")).toHaveLength(0);
+	const entry = db
+		.rows("readingEntries")
+		.find((row) => row.readingId === destination)!;
+	await db.patch(entry._id, {
+		record: {
+			...(entry.record as object),
+			knowledge: { definition: "User-authored note" },
+		},
 	});
-
-	await expect(
-		runTestMutation(db, commitFixedGrammaticalRelation, { claim }),
-	).resolves.toEqual({ status: "loaded" });
-	await expect(
-		loadGrammaticalRelationProjections(
-			{ db } as never,
-			sourceReadingId as never,
-		),
-	).resolves.toEqual([
-		{
-			relation: "NumberCounterpart",
-			targetCanonicalForm: claim.target.lemma.canonicalForm,
-			provenance: "direct",
-			target: { kind: "Reading", readingId: targetReadingId },
-		},
-	]);
-	await expect(
-		loadGrammaticalRelationProjections(
-			{ db } as never,
-			targetReadingId as never,
-		),
-	).resolves.toEqual([
-		{
-			relation: "NumberCounterpart",
-			targetCanonicalForm: claim.source.lemma.canonicalForm,
-			provenance: "inferred",
-			target: { kind: "Reading", readingId: sourceReadingId },
-		},
-	]);
+	const stored = db.snapshot();
+	expect(await follow(db, mir!.readingKey)).toBe(destination);
+	expect(db.snapshot()).toEqual(stored);
 });
 
-test("stores one formal-address number edge per spelling and navigates both exact Readings", async () => {
-	const claims = allFixedGrammaticalRelationClaims().filter(
-		(candidate) =>
-			candidate.relation === "NumberCounterpart" &&
-			candidate.endpointKind === "reading" &&
-			candidate.source.lemma.coreFeatures.polite === "Form",
+test("unreviewed destinations cannot create arbitrary Readings", async () => {
+	const db = database();
+	const before = db.snapshot();
+	await expect(follow(db, "invented-reading")).rejects.toThrow(
+		"not a reviewed",
 	);
+	expect(db.snapshot()).toEqual(before);
 	expect(
-		claims.map(({ source, target }) => ({
-			canonicalForm: source.lemma.canonicalForm,
-			sourceNumber: source.lemma.coreFeatures.referenceNumber,
-			targetNumber: target.lemma.coreFeatures.referenceNumber,
-		})),
-	).toEqual([
-		{
-			canonicalForm: "Sie",
-			sourceNumber: "Plur",
-			targetNumber: "Sing",
-		},
-		{
-			canonicalForm: "Ihnen",
-			sourceNumber: "Plur",
-			targetNumber: "Sing",
-		},
-		{
-			canonicalForm: "Ihrer",
-			sourceNumber: "Plur",
-			targetNumber: "Sing",
-		},
-	]);
-
-	for (const [index, claim] of claims.entries()) {
-		if (claim.endpointKind !== "reading") {
-			throw new Error("Expected exact formal-address Reading endpoints.");
-		}
-		const sourceLemmaId = `lemma-formal-source-${index}`;
-		const targetLemmaId = `lemma-formal-target-${index}`;
-		const sourceReadingId = `reading-formal-source-${index}`;
-		const targetReadingId = `reading-formal-target-${index}`;
-		const db = new IndexedTestDb({
-			lemmas: [
-				{
-					_id: sourceLemmaId,
-					lemmaKey: lemmaIdentityKey(claim.source.lemma),
-					...claim.source.lemma,
-				},
-				{
-					_id: targetLemmaId,
-					lemmaKey: lemmaIdentityKey(claim.target.lemma),
-					...claim.target.lemma,
-				},
-			],
-			readings: [
-				{
-					_id: sourceReadingId,
-					readingKey: readingFingerprint(claim.source),
-					lemmaId: sourceLemmaId,
-					emojiDescription: claim.source.emojiDescription,
-				},
-				{
-					_id: targetReadingId,
-					readingKey: readingFingerprint(claim.target),
-					lemmaId: targetLemmaId,
-					emojiDescription: claim.target.emojiDescription,
-				},
-			],
-		});
-
-		expect(readingFingerprint(claim.source)).not.toBe(
-			readingFingerprint(claim.target),
-		);
-		await expect(
-			runTestMutation(db, commitFixedGrammaticalRelation, { claim }),
-		).resolves.toEqual({ status: "loaded" });
-		expect(db.rows("grammaticalRelationEdges")).toHaveLength(1);
-		await expect(
-			loadGrammaticalRelationProjections(
-				{ db } as never,
-				sourceReadingId as never,
-			),
-		).resolves.toEqual([
-			{
-				relation: "NumberCounterpart",
-				targetCanonicalForm: claim.target.lemma.canonicalForm,
-				provenance: "direct",
-				target: {
-					kind: "Reading",
-					readingId: targetReadingId,
-				},
-			},
-		]);
-		await expect(
-			loadGrammaticalRelationProjections(
-				{ db } as never,
-				targetReadingId as never,
-			),
-		).resolves.toEqual([
-			{
-				relation: "NumberCounterpart",
-				targetCanonicalForm: claim.source.lemma.canonicalForm,
-				provenance: "inferred",
-				target: {
-					kind: "Reading",
-					readingId: sourceReadingId,
-				},
-			},
-		]);
-	}
-});
-
-test("persists and navigates exact der-population Case and Number endpoints", async () => {
-	const claims = [
-		allFixedGrammaticalRelationClaims().find(
-			(candidate) =>
-				candidate.relation === "CaseCounterpart" &&
-				candidate.endpointKind === "reading" &&
-				candidate.source.lemma.coreFeatures.pronType === "Dem",
-		),
-		allFixedGrammaticalRelationClaims().find(
-			(candidate) =>
-				candidate.relation === "NumberCounterpart" &&
-				candidate.endpointKind === "reading" &&
-				candidate.source.lemma.coreFeatures.pronType === "Rel",
-		),
-	];
-	expect(claims.every(Boolean)).toBe(true);
-
-	for (const [index, claim] of claims.entries()) {
-		if (claim?.endpointKind !== "reading") {
-			throw new Error("Expected exact der-population Reading endpoints.");
-		}
-		const sourceLemmaId = `lemma-der-source-${index}`;
-		const targetLemmaId = `lemma-der-target-${index}`;
-		const sourceReadingId = `reading-der-source-${index}`;
-		const targetReadingId = `reading-der-target-${index}`;
-		const db = new IndexedTestDb({
-			lemmas: [
-				{
-					_id: sourceLemmaId,
-					lemmaKey: lemmaIdentityKey(claim.source.lemma),
-					...claim.source.lemma,
-				},
-				{
-					_id: targetLemmaId,
-					lemmaKey: lemmaIdentityKey(claim.target.lemma),
-					...claim.target.lemma,
-				},
-			],
-			readings: [
-				{
-					_id: sourceReadingId,
-					readingKey: readingFingerprint(claim.source),
-					lemmaId: sourceLemmaId,
-					emojiDescription: claim.source.emojiDescription,
-				},
-				{
-					_id: targetReadingId,
-					readingKey: readingFingerprint(claim.target),
-					lemmaId: targetLemmaId,
-					emojiDescription: claim.target.emojiDescription,
-				},
-			],
-		});
-
-		await expect(
-			runTestMutation(db, commitFixedGrammaticalRelation, { claim }),
-		).resolves.toEqual({ status: "loaded" });
-		expect(db.rows("grammaticalRelationEdges")).toHaveLength(1);
-		await expect(
-			loadGrammaticalRelationProjections(
-				{ db } as never,
-				sourceReadingId as never,
-			),
-		).resolves.toEqual([
-			{
-				relation: claim.relation,
-				targetCanonicalForm: claim.target.lemma.canonicalForm,
-				provenance: "direct",
-				target: {
-					kind: "Reading",
-					readingId: targetReadingId,
-				},
-			},
-		]);
-		await expect(
-			loadGrammaticalRelationProjections(
-				{ db } as never,
-				targetReadingId as never,
-			),
-		).resolves.toEqual([
-			{
-				relation: claim.relation,
-				targetCanonicalForm: claim.source.lemma.canonicalForm,
-				provenance: "inferred",
-				target: {
-					kind: "Reading",
-					readingId: sourceReadingId,
-				},
-			},
-		]);
-	}
+		reviewedAlternatives({ ...lemma, canonicalForm: "unreviewed" }),
+	).toEqual([]);
 });

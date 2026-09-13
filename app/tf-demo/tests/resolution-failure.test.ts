@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { GenerationEvent } from "dumgen";
+import type { GenerationEvent } from "../server/resolutionFailure";
 import {
 	classifyResolutionFailure,
 	projectResolutionGenerationEvent,
@@ -38,8 +38,11 @@ test("provider attempt events gain Resolution Run correlation", () => {
 	expect(
 		projectResolutionGenerationEvent(event, {
 			phase: "Reading",
-			requestId: "request-1",
-			runToken: "run-2",
+			...{
+				requestId: "request-1",
+				runToken: "run-2",
+				segmentId: "segment-1",
+			},
 		}),
 	).toEqual({
 		kind: "AttemptFailed",

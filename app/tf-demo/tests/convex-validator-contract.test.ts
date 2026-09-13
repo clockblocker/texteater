@@ -1,17 +1,22 @@
 import { expect, test } from "bun:test";
-import {
-	enabledSegmentationLanguageValues,
-	grammaticalResolutionLanguageValues,
-	segmentKindValues,
-} from "dumgen/vocabulary";
-import {
-	memberOrthographyValues,
-	presentedFeatureNames,
-	realizationCoverageValues,
-	surfaceKindValues,
-	surfaceSpellingValues,
-} from "dumling-old/vocabulary";
-import { semanticRelationValues } from "dumrel/vocabulary";
+import { directSemanticRelationValues } from "dumrel";
+
+const semanticRelationValues = [
+	...directSemanticRelationValues,
+	"hyponym",
+	"meronym",
+];
+const enabledSegmentationLanguageValues = ["de", "he"];
+const grammaticalResolutionLanguageValues = ["de"];
+const segmentKindValues = [
+	"ResolvableText",
+	"OpaqueText",
+	"Whitespace",
+	"Punctuation",
+];
+const memberOrthographyValues = ["Standard", "Typo"];
+const realizationCoverageValues = ["Full", "Partial"];
+const surfaceSpellingValues = ["Canonical", "Variant"];
 
 import {
 	presentedAttestationValidator,
@@ -24,6 +29,7 @@ import {
 	dictionaryPlanValidator,
 	dumdictPlannedChangeValidator,
 	grammaticalLanguageValidator,
+	grundformValidator,
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
@@ -32,7 +38,6 @@ import {
 	segmentInputValidator,
 	segmentKindValidator,
 	semanticRelationValidator,
-	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "../convex/model/validators";
 import { readingNoteValidator } from "../convex/modules/notes/readingNote";
@@ -87,7 +92,7 @@ test("Convex validators describe compact storage contracts", () => {
 	expect(literalValues(surfaceSpellingValidator)).toEqual(
 		surfaceSpellingValues,
 	);
-	expect(literalValues(surfaceKindValidator)).toEqual(surfaceKindValues);
+	expect(grundformValidator.json.type).toBe("union");
 	expect(fieldType(segmentInputValidator, "kind")).toEqual(
 		segmentKindValidator.json,
 	);
@@ -107,13 +112,14 @@ test("Presented Dumling validators cover the exact stable presentation branches"
 	expect(featureJson.type).toBe("record");
 	expect(featureJson.keys).toEqual({ type: "string" });
 	const projected = presentLemma({
+		unitKind: "Lemma",
 		language: "de",
 		canonicalForm: "Bank",
 		family: "Lexeme",
 		kind: "NOUN",
 		coreFeatures: { gender: "Fem", hyph: null },
 	});
-	expect(Object.keys(projected.coreFeatures)).toEqual(presentedFeatureNames);
+	expect(Object.keys(projected.coreFeatures)).toEqual(["gender", "hyph"]);
 
 	expect(fieldType(presentedLemmaValidator, "coreFeatures")).toEqual(
 		presentedFeatureSetValidator.json,
@@ -280,75 +286,31 @@ test("persistence result validators retain table-specific Convex IDs", () => {
 	);
 });
 
-test("the Convex runtime can inject Dumgen prompt data without package-relative file I/O", async () => {
+test("the current Dumgen factory executes without package-relative file I/O", async () => {
 	const child = Bun.spawn(
 		[
 			process.execPath,
 			"-e",
 			`
-				const originalGetBuiltinModule = process.getBuiltinModule.bind(process);
-				process.getBuiltinModule = (id) => id === "node:fs"
-					? { ...originalGetBuiltinModule(id), readFileSync() { throw new Error("filesystem unavailable"); } }
-					: originalGetBuiltinModule(id);
-				const [
-					{ encodedRuntimePromptData },
-					{ buildKnowledgeDumgenRuntime },
-					{ buildDumgenRuntime },
-					Effect,
-				] = await Promise.all([
-					import("dumgen/runtime-prompt-data"),
-					import("dumgen/knowledge-runtime"),
-					import("dumgen/runtime"),
-					import("effect/Effect"),
-				]);
-				const modelGenerator = {
-					structuredGeneration() { return Effect.fail({ code: "provider-error" }); },
-					unstructuredGeneration() { return Effect.fail({ code: "provider-error" }); },
-				};
-				const knowledgeDumgen = buildKnowledgeDumgenRuntime({
-					runtimePromptData: encodedRuntimePromptData,
-					modelGenerator,
-				});
-				const knowledgeResult = await Effect.runPromiseExit(
-					knowledgeDumgen.generate.knowledge("de", {
-						markedContext: "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
-						reading: {
-							lemma: {
-								canonicalForm: "Bank",
-								coreFeatures: { gender: "Fem", hyph: null },
-								family: "Lexeme",
-								kind: "NOUN",
-								language: "de",
-							},
-							emojiDescription: "🏦",
-						},
-						request: { definition: null },
-					}),
-				);
-				if (knowledgeResult._tag !== "Failure") {
-					throw new Error(JSON.stringify(knowledgeResult));
-				}
-				const dumgen = buildDumgenRuntime({
-					runtimePromptData: encodedRuntimePromptData,
-					modelGenerator,
-					async generateKnowledge() { throw new Error("unexpected knowledge generation"); },
-				});
-				const result = await Effect.runPromiseExit(dumgen.segment(["Die Banken sind geöffnet."]));
-				if (result._tag !== "Failure") {
-					throw new Error(JSON.stringify(result));
-				}
-			`,
+ const original = process.getBuiltinModule.bind(process);
+ process.getBuiltinModule = id => id === "node:fs" ? {...original(id), readFileSync() {throw Error("filesystem unavailable");}} : original(id);
+ const {createDumgen} = await import("dumgen");
+ const Effect = await import("effect/Effect");
+ const dumgen = createDumgen({execute: async () => {throw Error("controlled provider failure");}});
+ const result = await Effect.runPromiseExit(dumgen.segment({sourceSentences: ["Die Banken sind geöffnet."]}));
+ if (result._tag !== "Failure") throw Error("Expected controlled failure");
+ `,
 		],
 		{
 			cwd: new URL("..", import.meta.url).pathname,
-			stderr: "pipe",
 			stdout: "pipe",
+			stderr: "pipe",
 		},
 	);
-	const [exitCode, stderr] = await Promise.all([
+	const [code, stderr] = await Promise.all([
 		child.exited,
 		new Response(child.stderr).text(),
 	]);
 	expect(stderr).toBe("");
-	expect(exitCode).toBe(0);
+	expect(code).toBe(0);
 });

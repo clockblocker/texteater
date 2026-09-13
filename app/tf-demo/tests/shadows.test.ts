@@ -443,6 +443,7 @@ describe("Shadow backfills and presentation", () => {
 		const db = new ShadowDb({
 			lemmas: [
 				{
+					unitKind: "Lemma",
 					_id: "lemma_source",
 					lemmaKey: "lemma-key",
 					language: "de",
@@ -521,6 +522,7 @@ describe("Shadow backfills and presentation", () => {
 		const db = new ShadowDb({
 			lemmas: [
 				{
+					unitKind: "Lemma",
 					_id: "lemma_source",
 					lemmaKey: "lemma-key",
 					language: "de",
@@ -594,6 +596,7 @@ describe("Shadow backfills and presentation", () => {
 			dictionaryState: [{ _id: "state", key: "global", revision: 7 }],
 			lemmas: [
 				{
+					unitKind: "Lemma",
 					_id: "lemma-source",
 					lemmaKey: "source",
 					language: "de",
@@ -604,6 +607,7 @@ describe("Shadow backfills and presentation", () => {
 				},
 				...lemmaRows.map(
 					([id, language, canonicalForm, family, kind]) => ({
+						unitKind: "Lemma",
 						_id: `lemma-${id}`,
 						lemmaKey: id,
 						language,
@@ -698,6 +702,7 @@ describe("Shadow backfills and presentation", () => {
 		const db = new ShadowDb({
 			lemmas: [
 				{
+					unitKind: "Lemma",
 					_id: "lemma-source",
 					lemmaKey: "source",
 					language: "de",
@@ -851,6 +856,7 @@ test("Reading deletion removes outgoing edges and preserves incoming edges until
 	const db = new ShadowDb({
 		lemmas: [
 			{
+				unitKind: "Lemma",
 				_id: "lemma-doomed",
 				lemmaKey: "doomed",
 				language: "de",
@@ -860,6 +866,7 @@ test("Reading deletion removes outgoing edges and preserves incoming edges until
 				coreFeatures: {},
 			},
 			{
+				unitKind: "Lemma",
 				_id: "lemma-survivor",
 				lemmaKey: "survivor",
 				language: "de",

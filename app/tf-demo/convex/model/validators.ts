@@ -1,19 +1,22 @@
-import { type Infer, v } from "convex/values";
-import {
-	enabledSegmentationLanguageValues,
-	grammaticalResolutionLanguageValues,
-	segmentKindValues,
-} from "dumgen/vocabulary";
-import {
-	memberOrthographyValues,
-	realizationCoverageValues,
-	surfaceKindValues,
-	surfaceSpellingValues,
-} from "dumling-old/vocabulary";
-import {
-	directSemanticRelationValues,
-	semanticRelationValues,
-} from "dumrel/vocabulary";
+import { v } from "convex/values";
+import { directSemanticRelationValues } from "dumrel";
+
+const enabledSegmentationLanguageValues = ["de", "he"] as const;
+const grammaticalResolutionLanguageValues = ["de"] as const;
+const segmentKindValues = [
+	"ResolvableText",
+	"OpaqueText",
+	"Whitespace",
+	"Punctuation",
+] as const;
+const memberOrthographyValues = ["Standard", "Typo"] as const;
+const realizationCoverageValues = ["Full", "Partial"] as const;
+const surfaceSpellingValues = ["Canonical", "Variant"] as const;
+const semanticRelationValues = [
+	...directSemanticRelationValues,
+	"hyponym",
+	"meronym",
+] as const;
 
 import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
 
@@ -56,9 +59,10 @@ export const realizationCoverageValidator = literalUnion(
 
 export const surfaceSpellingValidator = literalUnion(surfaceSpellingValues);
 
-export const surfaceKindValidator = literalUnion(surfaceKindValues);
+export const grundformValidator = v.union(v.boolean(), v.null());
 
 export const lemmaValueValidator = v.object({
+	unitKind: v.literal("Lemma"),
 	language: languageValidator,
 	family: v.string(),
 	kind: v.string(),
@@ -67,16 +71,18 @@ export const lemmaValueValidator = v.object({
 });
 
 export const surfaceValueValidator = v.object({
+	unitKind: v.literal("Surface"),
 	language: languageValidator,
 	normalizedSurface: v.string(),
 	spelling: surfaceSpellingValidator,
-	surfaceKind: surfaceKindValidator,
+
 	surfaceFeatures: v.any(),
 	inflectionalFeatures: v.optional(v.any()),
 	lemma: lemmaValueValidator,
 });
 
 export const attestationValueValidator = v.object({
+	unitKind: v.literal("Attestation"),
 	members: v.array(
 		v.object({
 			attested: v.string(),
@@ -111,7 +117,12 @@ export const relationPublicationFingerprintsValidator = v.object({
 export const relationTargetShadowValidator = v.object({
 	language: v.literal("de"),
 	canonicalForm: v.string(),
-	family: v.union(v.literal("Lexeme"), v.literal("Phraseme")),
+	family: v.union(
+		v.literal("Lexeme"),
+		v.literal("Phraseme"),
+		v.literal("Morpheme"),
+		v.literal("Construction"),
+	),
 	kind: v.string(),
 });
 
@@ -178,20 +189,11 @@ export const knowledgeSettingsValidator = v.object({
 		antonym: v.boolean(),
 		nearAntonym: v.boolean(),
 		hypernym: v.boolean(),
-		hyponym: v.boolean(),
-		meronym: v.boolean(),
 		holonym: v.boolean(),
 	}),
 });
 
-/** Compatibility shape for settings written before Russian was configurable. */
-export const storedKnowledgeSettingsValidator =
-	knowledgeSettingsValidator.extend({
-		translations: v.object({
-			en: v.boolean(),
-			ru: v.optional(v.boolean()),
-		}),
-	});
+export const storedKnowledgeSettingsValidator = knowledgeSettingsValidator;
 
 export const readingBlockKindValidator = literalUnion(
 	READING_BLOCK_KIND_VALUES,
@@ -216,94 +218,18 @@ export const occurrenceAttestationInputValidator = v.object({
 });
 
 export const readingValueValidator = v.object({
+	unitKind: v.literal("Reading"),
 	lemma: lemmaValueValidator,
 	emojiDescription: v.string(),
 });
 
-const catalogCoreFeaturesValidator = v.record(
-	v.string(),
-	v.union(v.null(), v.string(), v.array(v.string())),
-);
-
-const catalogLemmaValidator = v.object({
-	language: v.literal("de"),
-	family: v.string(),
-	kind: v.string(),
-	canonicalForm: v.string(),
-	coreFeatures: catalogCoreFeaturesValidator,
-});
-
-const catalogReadingValidator = v.object({
-	lemma: catalogLemmaValidator,
-	emojiDescription: v.string(),
-});
-
-export const catalogMissReasonValidator = v.union(
-	v.literal("MemberNotCatalogued"),
-	v.literal("InventoryNotLoaded"),
-);
-
-export const catalogMissStageValidator = v.union(
-	v.literal("Lemma"),
-	v.literal("Reading"),
-	v.literal("ReadingKnowledge"),
-);
-
-const catalogMissBase = {
+export const catalogMissStageValidator = v.string();
+export const catalogMissValidator = v.object({
 	decision: v.literal("CatalogMiss"),
-	reason: catalogMissReasonValidator,
-	language: v.literal("de"),
-	route: v.object({ family: v.string(), kind: v.string() }),
-};
-
-const missingKnowledgeRequestValidator = v.object({
-	transcription: v.optional(v.null()),
-	definition: v.optional(v.null()),
-	translations: v.optional(v.object({ en: v.optional(v.null()) })),
-	semanticRelations: v.optional(
-		v.object({
-			synonym: v.optional(v.null()),
-			nearSynonym: v.optional(v.null()),
-			antonym: v.optional(v.null()),
-			nearAntonym: v.optional(v.null()),
-			hypernym: v.optional(v.null()),
-			hyponym: v.optional(v.null()),
-			meronym: v.optional(v.null()),
-			holonym: v.optional(v.null()),
-		}),
-	),
+	stage: catalogMissStageValidator,
+	route: v.string(),
+	message: v.string(),
 });
-
-export const catalogMissValidator = v.union(
-	v.object({
-		...catalogMissBase,
-		stage: v.literal("Lemma"),
-		candidate: catalogLemmaValidator,
-	}),
-	v.object({
-		...catalogMissBase,
-		stage: v.literal("Reading"),
-		candidate: catalogReadingValidator,
-	}),
-	v.object({
-		...catalogMissBase,
-		stage: v.literal("ReadingKnowledge"),
-		reading: catalogReadingValidator,
-		missingRequest: missingKnowledgeRequestValidator,
-	}),
-);
-
-export function catalogMissRouteMatches(
-	miss: Infer<typeof catalogMissValidator>,
-): boolean {
-	const lemma =
-		miss.stage === "Lemma"
-			? miss.candidate
-			: miss.stage === "Reading"
-				? miss.candidate.lemma
-				: miss.reading.lemma;
-	return miss.route.family === lemma.family && miss.route.kind === lemma.kind;
-}
 
 export const resolutionProgressValidator = v.union(
 	v.literal("Starting"),
@@ -438,6 +364,7 @@ export const resolutionRouteProjectionValidator = v.object({
 });
 
 export const resolutionGrammarProjectionValidator = v.object({
+	grundform: grundformValidator,
 	members: v.array(
 		v.object({
 			attested: v.string(),
@@ -447,7 +374,7 @@ export const resolutionGrammarProjectionValidator = v.object({
 	realizationCoverage: realizationCoverageValidator,
 	normalizedSurface: v.string(),
 	spelling: surfaceSpellingValidator,
-	surfaceKind: surfaceKindValidator,
+
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
@@ -502,16 +429,23 @@ export const dumdictPlannedChangeValidator = v.union(
 	}),
 );
 
+export const encounterValidator = v.object({
+	sentence: v.object({
+		id: v.string(),
+		language: grammaticalLanguageValidator,
+		segments: v.array(segmentInputValidator),
+	}),
+	target: v.object({
+		family: v.string(),
+		kind: v.string(),
+		memberSegmentIndices: v.array(v.number()),
+	}),
+});
 export const resolvedGrammaticalValidator = v.object({
 	decision: v.literal("Resolved"),
 	language: grammaticalLanguageValidator,
-	markedContext: v.string(),
+	encounter: encounterValidator,
 	attestation: attestationValueValidator,
-	interaction: v.object({
-		segmentedSentenceId: v.string(),
-		clickedSegmentIndex: v.number(),
-		memberSegmentIndices: v.array(v.number()),
-	}),
 });
 
 export const nonResolvedGrammaticalValidator = v.union(

@@ -1,10 +1,6 @@
 import type { Prettify } from "common-utils";
-import type {
-	InflectionalFeaturesFor,
-	LemmaFamilyFor,
-	LemmaKindFor,
-	Reading,
-} from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { ReactElement } from "react";
 
 import type { SupportedTargetLanguage } from "../../../../shared/supported-target-language";
@@ -19,13 +15,13 @@ import type { NoteKind } from "../note/kind";
 
 export type GrammaticalNoteKind = Exclude<NoteKind, "Surface">;
 export type NoteFamilyFor<L extends SupportedTargetLanguage> = Extract<
-	LemmaFamilyFor<L>,
+	Dumling.Family<L>,
 	"Lexeme" | "Phraseme" | "Morpheme"
 >;
 export type NoteLemmaKindFor<
 	L extends SupportedTargetLanguage,
 	F extends NoteFamilyFor<L>,
-> = LemmaKindFor<L, F>;
+> = Dumling.Kind<L, F>;
 
 type CoordinateRefinement<
 	L extends SupportedTargetLanguage,
@@ -84,7 +80,7 @@ type ReadingNoteDataFor<
 	K extends NoteLemmaKindFor<L, F>,
 > = {
 	readonly [Key in keyof NoteDataFor<"Reading">]: Key extends "reading"
-		? ReadingWithNoteIdentity<Reading<L, F, K>>
+		? ReadingWithNoteIdentity<Dumling.Reading<L, F, K>>
 		: NoteDataFor<"Reading">[Key];
 };
 
@@ -162,6 +158,16 @@ export type GrammaticalRenderContext<
 		: RoutePresentationCapabilities;
 };
 
+type InflectionalFeaturesFor<
+	L extends Dumling.Language,
+	F extends Dumling.Family<L>,
+	K extends Dumling.Kind<L, F>,
+> =
+	Dumling.Surface<L, F, K> extends infer S
+		? S extends { inflectionalFeatures: infer Features }
+			? NonNullable<Features>
+			: Record<never, never>
+		: never;
 type PresentedValue<Value> = Value | readonly Value[] | null;
 export type SurfaceAnalysis<
 	L extends SupportedTargetLanguage,

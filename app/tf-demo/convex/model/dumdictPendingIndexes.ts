@@ -4,10 +4,10 @@ import {
 	type PendingSemanticRelationLocator,
 	type PendingSemanticRelationRecord,
 } from "dumdict/pending";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export function pendingLocatorIndexKey(
-	locator: PendingSemanticRelationLocator<SupportedLanguage>,
+	locator: PendingSemanticRelationLocator<Dumling.Language>,
 ): string {
 	return JSON.stringify([
 		locator.sourceReadingKey,
@@ -17,7 +17,7 @@ export function pendingLocatorIndexKey(
 }
 
 export function pendingRecordLocatorIndexKey(
-	record: PendingSemanticRelationRecord<SupportedLanguage>,
+	record: PendingSemanticRelationRecord<Dumling.Language>,
 ): string {
 	assertPendingSemanticRelationRecordIdentity(record);
 	return pendingLocatorIndexKey(

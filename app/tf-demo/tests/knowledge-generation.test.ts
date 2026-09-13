@@ -166,6 +166,7 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 	return {
 		lemmas: [
 			{
+				unitKind: "Lemma",
 				_id: "lemma-1",
 				lemmaKey: "lemma-key",
 				language: "de",
@@ -181,9 +182,10 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 				lemmaId: "lemma-1",
 				language: "de",
 				normalizedSurface: "Bank",
+				inflectionalFeatures: null,
 				spelling: "Canonical",
-				surfaceKind: "Citation",
-				surfaceFeatures: {},
+
+				surfaceFeatures: null,
 			},
 		],
 		readings: [
@@ -206,6 +208,7 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 			{
 				_id: "sentence-1",
 				segmentedSentenceId: "segmented-sentence-1",
+				language: "de",
 			},
 		],
 		segments: [
@@ -429,7 +432,9 @@ test("a manual write applies to Knowledge committed after the action started", a
 	const lemma = rows.lemmas?.[0];
 	if (!lemma) throw new Error("Missing test Lemma.");
 	const reading = {
+		unitKind: "Reading",
 		lemma: {
+			unitKind: "Lemma",
 			language: lemma.language,
 			family: lemma.family,
 			kind: lemma.kind,
@@ -530,7 +535,9 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 
 	const request = generationRequestFor(
 		{
+			unitKind: "Reading",
 			lemma: {
+				unitKind: "Lemma",
 				language: "de",
 				family: "Lexeme",
 				kind: "NOUN",
@@ -612,7 +619,9 @@ test("production publication remains empty without a reviewed verdict", () => {
 
 test("the production application path keeps generated relations outside Dumdict", async () => {
 	const reading = {
+		unitKind: "Reading",
 		lemma: {
+			unitKind: "Lemma",
 			language: "de",
 			family: "Lexeme",
 			kind: "NOUN",
@@ -750,7 +759,14 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		expect.objectContaining({
 			kind: "Generate",
 			reading: expect.objectContaining({ emojiDescription: "🏦" }),
-			markedContext: expect.any(String),
+			encounter: expect.objectContaining({
+				target: {
+					family: "Lexeme",
+					kind: "NOUN",
+					memberSegmentIndices: [0],
+				},
+			}),
+			attestation: expect.objectContaining({ unitKind: "Attestation" }),
 		}),
 	);
 	expect(JSON.stringify(loaded)).toContain("Bank");
@@ -927,18 +943,13 @@ test("Knowledge settings default enabled and persist independently per visitor",
 	expect(await getSettings({ db }, { visitorId: "visitor-2" })).toEqual(
 		defaults,
 	);
-	await db.insert("knowledgeSettings", {
-		visitorId: "visitor-legacy",
-		settings: { ...defaults, translations: { en: false } },
-		updatedAt: 1,
-	});
-	expect(
-		await getSettings({ db }, { visitorId: "visitor-legacy" }),
-	).toMatchObject({ translations: { en: false, ru: true } });
+
 	expect(
 		generationRequestFor(
 			{
+				unitKind: "Reading",
 				lemma: {
+					unitKind: "Lemma",
 					language: "de",
 					family: "Lexeme",
 					kind: "NOUN",

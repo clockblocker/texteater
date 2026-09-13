@@ -1,11 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling-old";
-
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../server/linguisticIdentity";
 
 describe("global linguistic and visitor-scoped identities", () => {
 	test("global linguistic keys do not contain a visitor identity", () => {
 		const lemma = {
+			unitKind: "Lemma",
 			language: "de",
 			canonicalForm: "Haus",
 			family: "Lexeme",
@@ -14,6 +16,7 @@ describe("global linguistic and visitor-scoped identities", () => {
 		} as const;
 		const lemmaKey = lemmaIdentityKey(lemma);
 		const readingKey = readingFingerprint({
+			unitKind: "Reading",
 			lemma,
 			emojiDescription: "🏠",
 		});
@@ -21,13 +24,14 @@ describe("global linguistic and visitor-scoped identities", () => {
 		expect(lemmaKey).not.toContain("visitor-a");
 		expect(readingKey).not.toContain("visitor-a");
 		expect(lemmaKey).toBe(
-			'{"canonicalForm":"Haus","coreFeatures":{"gender":"Neut","hyph":null},"family":"Lexeme","kind":"NOUN","language":"de"}',
+			'{"canonicalForm":"Haus","coreFeatures":{"gender":"Neut","hyph":null},"family":"Lexeme","kind":"NOUN","language":"de","unitKind":"Lemma"}',
 		);
 		expect(lemmaIdentityKey({ ...lemma })).toBe(lemmaKey);
 	});
 
 	test("Reading identity follows Dumling normalization", () => {
 		const lemma = {
+			unitKind: "Lemma",
 			canonicalForm: "Haus",
 			coreFeatures: { gender: "Neut", hyph: null },
 			family: "Lexeme",
@@ -35,8 +39,18 @@ describe("global linguistic and visitor-scoped identities", () => {
 			language: "de",
 		} as const;
 
-		expect(readingFingerprint({ lemma, emojiDescription: "  🏠  " })).toBe(
-			readingFingerprint({ lemma, emojiDescription: "🏠" }),
+		expect(
+			readingFingerprint({
+				unitKind: "Reading",
+				lemma,
+				emojiDescription: "  🏠  ",
+			}),
+		).toBe(
+			readingFingerprint({
+				unitKind: "Reading",
+				lemma,
+				emojiDescription: "🏠",
+			}),
 		);
 	});
 });

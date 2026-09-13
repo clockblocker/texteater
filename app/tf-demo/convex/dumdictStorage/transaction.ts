@@ -1,7 +1,9 @@
 import { v } from "convex/values";
-import { type Reading, readingFingerprint } from "dumling-old/reading";
-
-import { lemmaIdentityKey } from "../../server/linguisticIdentity";
+import type * as Dumling from "dumling/types";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
 import { internalMutation, type MutationCtx } from "../_generated/server";
 import {
@@ -39,7 +41,7 @@ import {
 	requireDirectSemanticRelation,
 	revisionString,
 	STATE_KEY,
-	withoutSemanticRelations,
+	withoutSemanticRelationTargets,
 } from "./storage";
 
 type PreflightState = {
@@ -454,9 +456,10 @@ async function applyChange(
 				return false;
 			}
 			const readingKey = readingFingerprint({
+				unitKind: "Reading",
 				lemma: reading.lemma,
 				emojiDescription,
-			} as Reading);
+			} as Dumling.Reading);
 			const canonical = await findCanonicalReading(ctx, reading);
 			if (
 				canonical &&
@@ -482,10 +485,11 @@ async function applyChange(
 						"attestations",
 						"knowledge",
 					]),
-					...(withoutSemanticRelations(entry.knowledge) === undefined
+					...(withoutSemanticRelationTargets(entry.knowledge) ===
+					undefined
 						? {}
 						: {
-								knowledge: withoutSemanticRelations(
+								knowledge: withoutSemanticRelationTargets(
 									entry.knowledge,
 								),
 							}),
@@ -497,7 +501,9 @@ async function applyChange(
 				storedLemma.canonical._id,
 				entry.knowledge,
 			);
-			const baseKnowledge = withoutSemanticRelations(entry.knowledge);
+			const baseKnowledge = withoutSemanticRelationTargets(
+				entry.knowledge,
+			);
 			if (baseKnowledge !== undefined) {
 				await replaceAccumulatedKnowledge(
 					ctx,
@@ -531,13 +537,6 @@ async function applyChange(
 			if (spelling !== "Canonical" && spelling !== "Variant") {
 				throw new Error("Unsupported Surface spelling.");
 			}
-			const surfaceKind = requireString(
-				surface.surfaceKind,
-				"Surface kind",
-			);
-			if (surfaceKind !== "Citation" && surfaceKind !== "Inflection") {
-				throw new Error("Unsupported Surface kind.");
-			}
 			const canonical = await findCanonicalSurface(ctx, surfaceKey);
 			if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
 				throw new Error(
@@ -555,7 +554,6 @@ async function applyChange(
 						"normalizedSurface",
 					),
 					spelling,
-					surfaceKind,
 					surfaceFeatures: surface.surfaceFeatures,
 					...(surface.inflectionalFeatures === undefined
 						? {}
@@ -630,10 +628,11 @@ async function applyChange(
 						"attestations",
 						"knowledge",
 					]),
-					...(withoutSemanticRelations(entry.knowledge) === undefined
+					...(withoutSemanticRelationTargets(entry.knowledge) ===
+					undefined
 						? {}
 						: {
-								knowledge: withoutSemanticRelations(
+								knowledge: withoutSemanticRelationTargets(
 									entry.knowledge,
 								),
 							}),
@@ -656,7 +655,9 @@ async function applyChange(
 					),
 				];
 			});
-			const baseKnowledge = withoutSemanticRelations(entry.knowledge);
+			const baseKnowledge = withoutSemanticRelationTargets(
+				entry.knowledge,
+			);
 			if (baseKnowledge !== undefined) {
 				await replaceAccumulatedKnowledge(
 					ctx,

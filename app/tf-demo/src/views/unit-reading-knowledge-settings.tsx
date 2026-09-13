@@ -1,12 +1,7 @@
 import { useMutation } from "convex/react";
-import {
-	type KnowledgeSettings,
-	type SemanticRelation,
-	semanticRelationValues,
-	type TranslationLanguage,
-} from "dumrel";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { useEffect, useState } from "react";
-
 import {
 	Field,
 	FieldGroup,
@@ -15,13 +10,14 @@ import {
 	FieldSet,
 } from "@/components/ui/field";
 import { api } from "../../convex/_generated/api";
+import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
 
 export function KnowledgeSettingsForm({
 	visitorId,
 	initialSettings,
 }: {
 	visitorId: string;
-	initialSettings: KnowledgeSettings;
+	initialSettings: KnowledgePreferences;
 }) {
 	const updateSettings = useMutation(api.knowledgeSettings.update);
 	const [settings, setSettings] = useState(initialSettings);
@@ -32,7 +28,7 @@ export function KnowledgeSettingsForm({
 		setSettings(initialSettings);
 	}, [initialSettings]);
 
-	async function change(next: KnowledgeSettings) {
+	async function change(next: KnowledgePreferences) {
 		setSettings(next);
 		setIsSaving(true);
 		setError(null);
@@ -72,10 +68,10 @@ export function KnowledgeSettingsForm({
 type KnowledgeSettingPath =
 	| "transcription"
 	| "definition"
-	| `translations.${TranslationLanguage}`
+	| `translations.${Dumrel.TranslationLanguage}`
 	| "morphologicalTree"
 	| "lexicalBreakdown"
-	| `semanticRelations.${SemanticRelation}`;
+	| `semanticRelations.${Dumrel.DirectSemanticRelation}`;
 
 const KNOWLEDGE_SETTING_LABELS: ReadonlyArray<{
 	readonly path: KnowledgeSettingPath;
@@ -87,7 +83,7 @@ const KNOWLEDGE_SETTING_LABELS: ReadonlyArray<{
 	{ path: "translations.ru", label: "Russian translations" },
 	{ path: "morphologicalTree", label: "Morphological tree" },
 	{ path: "lexicalBreakdown", label: "Lexical breakdown" },
-	...semanticRelationValues.map((relation) => ({
+	...directSemanticRelationValues.map((relation) => ({
 		path: `semanticRelations.${relation}` as const,
 		label: relationLabel(relation),
 	})),
@@ -98,9 +94,9 @@ export function KnowledgeSettingsChecklist({
 	disabled = false,
 	onChange,
 }: {
-	settings: KnowledgeSettings;
+	settings: KnowledgePreferences;
 	disabled?: boolean;
-	onChange?: (settings: KnowledgeSettings) => void;
+	onChange?: (settings: KnowledgePreferences) => void;
 }) {
 	return (
 		<FieldSet disabled={disabled}>
@@ -134,17 +130,17 @@ export function KnowledgeSettingsChecklist({
 }
 
 export function withKnowledgeSetting(
-	settings: KnowledgeSettings,
+	settings: KnowledgePreferences,
 	path: KnowledgeSettingPath,
 	enabled: boolean,
-): KnowledgeSettings {
+): KnowledgePreferences {
 	if (path === "transcription" || path === "definition") {
 		return { ...settings, [path]: enabled };
 	}
 	if (path.startsWith("translations.")) {
 		const language = path.slice(
 			"translations.".length,
-		) as TranslationLanguage;
+		) as Dumrel.TranslationLanguage;
 		return {
 			...settings,
 			translations: { ...settings.translations, [language]: enabled },
@@ -155,7 +151,7 @@ export function withKnowledgeSetting(
 	}
 	const relation = path.slice(
 		"semanticRelations.".length,
-	) as SemanticRelation;
+	) as Dumrel.DirectSemanticRelation;
 	return {
 		...settings,
 		semanticRelations: {
@@ -166,19 +162,19 @@ export function withKnowledgeSetting(
 }
 
 function knowledgeSettingValue(
-	settings: KnowledgeSettings,
+	settings: KnowledgePreferences,
 	path: KnowledgeSettingPath,
 ): boolean {
 	if (path.startsWith("translations.")) {
 		const language = path.slice(
 			"translations.".length,
-		) as TranslationLanguage;
+		) as Dumrel.TranslationLanguage;
 		return settings.translations[language];
 	}
 	if (path.startsWith("semanticRelations.")) {
 		const relation = path.slice(
 			"semanticRelations.".length,
-		) as SemanticRelation;
+		) as Dumrel.DirectSemanticRelation;
 		return settings.semanticRelations[relation];
 	}
 	switch (path) {
@@ -194,6 +190,6 @@ function knowledgeSettingValue(
 	throw new Error(`Unsupported Knowledge setting: ${path}`);
 }
 
-function relationLabel(relation: SemanticRelation): string {
+function relationLabel(relation: Dumrel.SemanticRelation): string {
 	return relation.replace(/[A-Z]/g, (letter) => ` ${letter.toLowerCase()}`);
 }

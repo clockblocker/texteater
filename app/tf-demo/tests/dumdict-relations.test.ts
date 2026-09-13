@@ -7,10 +7,8 @@ import {
 	makeSurfaceId,
 	type StoreRevision,
 } from "dumdict";
-import type { Dumgen } from "dumgen";
-import { readingFingerprint } from "dumling-old";
+import { createDumgen } from "dumgen";
 import * as Effect from "effect/Effect";
-
 import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
 import {
 	commitDumdictChanges,
@@ -20,7 +18,10 @@ import {
 } from "../convex/dumdictStorage";
 import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
@@ -185,6 +186,7 @@ const verbFeatures = {
 } as const;
 
 const gehenLemma = {
+	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",
 	kind: "VERB",
@@ -193,9 +195,18 @@ const gehenLemma = {
 } as const;
 const laufenLemma = { ...gehenLemma, canonicalForm: "laufen" } as const;
 const springenLemma = { ...gehenLemma, canonicalForm: "springen" } as const;
-const gehenReading = { lemma: gehenLemma, emojiDescription: "🚶" } as const;
-const laufenReading = { lemma: laufenLemma, emojiDescription: "🏃" } as const;
+const gehenReading = {
+	unitKind: "Reading",
+	lemma: gehenLemma,
+	emojiDescription: "🚶",
+} as const;
+const laufenReading = {
+	unitKind: "Reading",
+	lemma: laufenLemma,
+	emojiDescription: "🏃",
+} as const;
 const springenReading = {
+	unitKind: "Reading",
 	lemma: springenLemma,
 	emojiDescription: "🦘",
 } as const;
@@ -207,10 +218,12 @@ const note = {
 
 function surface(normalizedSurface: string) {
 	return {
+		unitKind: "Surface",
+		inflectionalFeatures: null,
 		language: "de" as const,
 		normalizedSurface,
 		spelling: "Canonical" as const,
-		surfaceKind: "Citation" as const,
+
 		surfaceFeatures: null,
 		lemma: gehenLemma,
 	};
@@ -317,6 +330,7 @@ function readingKnowledge(db: IndexedDb, key: string) {
 		if (!lemma) continue;
 		const targets = semanticRelations[edge.relation] ?? [];
 		targets.push({
+			unitKind: "Lemma",
 			language: lemma.language,
 			family: lemma.family,
 			kind: lemma.kind,
@@ -440,6 +454,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
 			readingKey: readingFingerprint({
+				unitKind: "Reading",
 				lemma: gehenLemma,
 				emojiDescription: "🥾",
 			}),
@@ -746,6 +761,74 @@ describe("tf-demo Dumdict relation storage", () => {
 		});
 	});
 
+	test("removing the last exact target preserves the Reading relation mode in storage", async () => {
+		const db = new IndexedDb(initialSeed());
+		const dict = createDumdictService({
+			language: "de",
+			storage: storageFor(db),
+		});
+		await Effect.runPromise(
+			dict.addNewNote({ draft: { reading: laufenReading, note } }),
+		);
+		await Effect.runPromise(
+			dict.applyGeneratedKnowledge({
+				reading: laufenReading,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						targetKind: "reading",
+						value: [gehenReading],
+					},
+				],
+				pendingRelations: [],
+			}),
+		);
+		await Effect.runPromise(
+			dict.applyGeneratedKnowledge({
+				reading: laufenReading,
+				changes: [
+					{
+						kind: "Retract",
+						aspect: "semanticRelations",
+						relation: "synonym",
+						targetKind: "reading",
+					},
+				],
+				pendingRelations: [],
+			}),
+		);
+		expect(db.rows("semanticRelationEdges")).toHaveLength(0);
+		expect(
+			await runQuery(db, loadDumdictReadingForPatch, {
+				readingKey: readingFingerprint(laufenReading),
+			}),
+		).toMatchObject({
+			reading: {
+				knowledge: { semanticRelations: { targetKind: "reading" } },
+			},
+		});
+		const snapshot = db.snapshot();
+		await expect(
+			Effect.runPromise(
+				dict.applyGeneratedKnowledge({
+					reading: laufenReading,
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "semanticRelations",
+							relation: "nearSynonym",
+							value: [gehenReading.lemma],
+						},
+					],
+					pendingRelations: [],
+				}),
+			),
+		).rejects.toThrow();
+		expect(db.snapshot()).toEqual(snapshot);
+	});
+
 	test("applies graph-wide direct target conflicts atomically at the Convex seam", async () => {
 		const db = new IndexedDb(initialSeed());
 		const dict = createDumdictService({
@@ -1023,6 +1106,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			coreFeatures: { ...verbFeatures, hasSepPrefix: "mit" },
 		} as const;
 		const alternativeReading = {
+			unitKind: "Reading",
 			lemma: alternativeLemma,
 			emojiDescription: "🏃‍♀️",
 		} as const;
@@ -1348,7 +1432,7 @@ describe("tf-demo Dumdict relation storage", () => {
 	test("repeated orchestration encounters through the real Convex adapter preserve direct and pending relations", async () => {
 		const seed = initialSeed();
 		const directKnowledge = {
-			semanticRelations: { nearSynonym: [laufenReading] },
+			semanticRelations: { nearSynonym: [laufenReading.lemma] },
 		};
 		seed.readingEntries = [
 			{
@@ -1397,16 +1481,28 @@ describe("tf-demo Dumdict relation storage", () => {
 		const grammatical = {
 			decision: "Resolved",
 			language: "de",
-			markedContext: "Wir <TARGET>gehen</TARGET>.",
+			encounter: {
+				sentence: {
+					id: "segmented-1",
+					language: "de",
+					segments: [
+						{ kind: "ResolvableText", text: "Wir" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "gehen" },
+						{ kind: "Punctuation", text: "." },
+					],
+				},
+				target: {
+					family: "Lexeme",
+					kind: "VERB",
+					memberSegmentIndices: [2],
+				},
+			},
 			attestation: {
+				unitKind: "Attestation",
 				members: [{ attested: "gehen", orthography: "Standard" }],
 				realizationCoverage: "Full",
 				surface: citation,
-			},
-			interaction: {
-				segmentedSentenceId: "segmented-1",
-				clickedSegmentIndex: 2,
-				memberSegmentIndices: [2],
 			},
 		} as const;
 		const persistence: OrchestrationPersistence = {
@@ -1458,21 +1554,20 @@ describe("tf-demo Dumdict relation storage", () => {
 		};
 		const orchestrator = createTfDemoOrchestrator({
 			dumgen: {
-				async segment() {
-					throw new Error("Unexpected segmentation.");
-				},
-				resolve: {
-					async grammatical() {
-						return grammatical;
+				...createDumgen({
+					execute: async () => {
+						throw new Error("Unexpected model execution.");
 					},
-					async reading() {
-						return {
-							decision: "Reuse",
-							emojiDescription: gehenReading.emojiDescription,
-						};
-					},
-				},
-			} as Dumgen,
+				}),
+				classifyTarget: () =>
+					Effect.succeed(grammatical.encounter.target),
+				resolveGrammar: () => Effect.succeed(grammatical.attestation),
+				resolveOrGenerateReadingEmojiDescription: () =>
+					Effect.succeed({
+						decision: "Reuse" as const,
+						emojiDescription: gehenReading.emojiDescription,
+					}),
+			},
 			dictionary: createDumdictService({
 				language: "de",
 				storage: storageFor(db),

@@ -1,9 +1,5 @@
 import { type Infer, v } from "convex/values";
-import type {
-	LemmaCatalogMiss,
-	ReadingCatalogMiss,
-	ReadingKnowledgeCatalogMiss,
-} from "dumgen";
+import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 import { canonicalJson } from "./model/canonicalJson";
 import {
@@ -11,21 +7,15 @@ import {
 	settleFailed,
 } from "./model/resolutionSessions";
 import {
-	catalogMissRouteMatches,
 	catalogMissValidator,
 	resolutionSessionGuardValidator,
 } from "./model/validators";
 
-type CatalogMiss =
-	| LemmaCatalogMiss
-	| ReadingCatalogMiss
-	| ReadingKnowledgeCatalogMiss;
+type CatalogMiss = CatalogMissSignal;
 type ValidatedCatalogMiss = Infer<typeof catalogMissValidator>;
 
 const MAX_IDENTIFIER_LENGTH = 200;
 const MAX_CATALOG_MISS_JSON_LENGTH = 20_000;
-const MAX_FEATURES = 64;
-const MAX_FEATURE_VALUES = 16;
 
 function fnv1a64(value: string): string {
 	let hash = 0xcbf29ce484222325n;
@@ -42,52 +32,11 @@ function assertBoundedString(value: string, label: string): void {
 	}
 }
 
-function assertBoundedLemma(lemma: {
-	canonicalForm: string;
-	family: string;
-	kind: string;
-	coreFeatures: Record<string, null | string | string[]>;
-}): void {
-	assertBoundedString(lemma.canonicalForm, "Catalog candidate canonicalForm");
-	assertBoundedString(lemma.family, "Catalog route family");
-	assertBoundedString(lemma.kind, "Catalog route kind");
-	const entries = Object.entries(lemma.coreFeatures);
-	if (entries.length > MAX_FEATURES) {
-		throw new Error("Catalog candidate has too many Core Features.");
-	}
-	for (const [name, rawValue] of entries) {
-		assertBoundedString(name, "Catalog Core Feature name");
-		const values = Array.isArray(rawValue) ? rawValue : [rawValue];
-		if (values.length > MAX_FEATURE_VALUES) {
-			throw new Error("Catalog Core Feature has too many values.");
-		}
-		for (const value of values) {
-			if (value !== null)
-				assertBoundedString(value, "Catalog Core Feature value");
-		}
-	}
-}
-
 function assertBoundedMiss(miss: ValidatedCatalogMiss): void {
-	if (!catalogMissRouteMatches(miss)) {
-		throw new Error(
-			"Catalog Miss route must match its candidate Lemma family and kind.",
-		);
-	}
-	assertBoundedString(miss.route.family, "Catalog route family");
-	assertBoundedString(miss.route.kind, "Catalog route kind");
-	const reading =
-		miss.stage === "ReadingKnowledge" ? miss.reading : undefined;
-	const candidate = miss.stage === "Reading" ? miss.candidate : reading;
-	const lemma = miss.stage === "Lemma" ? miss.candidate : candidate?.lemma;
-	if (!lemma) throw new Error("Catalog Miss has no candidate Lemma.");
-	assertBoundedLemma(lemma);
-	if (candidate) {
-		assertBoundedString(
-			candidate.emojiDescription,
-			"Catalog candidate emojiDescription",
-		);
-	}
+	assertBoundedString(miss.route, "Catalog route");
+	assertBoundedString(miss.stage, "Catalog stage");
+	if (miss.message.length > 2000)
+		throw new Error("Catalog diagnostic is too long.");
 }
 
 /** Stable operational identity for aggregating equal catalog-growth signals. */
@@ -134,11 +83,8 @@ async function recordCatalogGrowthSignal(
 	} else {
 		await ctx.db.insert("catalogGrowthSignals", {
 			signalKey,
-			language: miss.language,
-			family: miss.route.family,
-			kind: miss.route.kind,
+			route: miss.route,
 			stage: miss.stage,
-			reason: miss.reason,
 			catalogMissJson,
 			occurrences: 1,
 			firstSeenAt: now,
@@ -160,7 +106,7 @@ export const recordAndSettleCatalogMiss = internalMutation({
 		await settleFailed(
 			ctx,
 			session,
-			"Required fixed catalog inventory is unavailable.",
+			"No reviewed catalog member matches this encounter.",
 			"CatalogMiss",
 		);
 		return null;
@@ -171,11 +117,6 @@ export const recordKnowledgeCatalogMiss = internalMutation({
 	args: { attemptKey: v.string(), miss: catalogMissValidator },
 	returns: v.null(),
 	handler: async (ctx, { attemptKey, miss }) => {
-		if (miss.stage !== "ReadingKnowledge") {
-			throw new Error(
-				"Knowledge generation requires a ReadingKnowledge miss.",
-			);
-		}
 		const attempt = await ctx.db
 			.query("knowledgeGenerationAttempts")
 			.withIndex("by_attempt_key", (q) => q.eq("attemptKey", attemptKey))
@@ -185,7 +126,8 @@ export const recordKnowledgeCatalogMiss = internalMutation({
 		await ctx.db.patch(attempt._id, {
 			state: "Failed",
 			failureCode: "catalogMiss",
-			failureMessage: "Required fixed catalog inventory is unavailable.",
+			failureMessage:
+				"No reviewed catalog member matches this encounter.",
 			updatedAt: Date.now(),
 		});
 		return null;

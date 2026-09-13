@@ -1,5 +1,6 @@
-import type { SemanticRelation } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { LockIcon } from "lucide-react";
+import { relationPreference } from "../../../../../../../shared/knowledge-preferences";
 
 import type { ReadingDefaultRenderer } from "../../../renderer";
 
@@ -10,20 +11,20 @@ export const renderDefaultReadingRelations = (({
 	const relations = noteData.relations.filter(
 		({ relation }) =>
 			PresentationCapabilities.knowledgeSettings.semanticRelations[
-				relation
+				relationPreference(relation)
 			],
 	);
 	const pendingRelations = noteData.pendingRelations.filter(
 		({ relation }) =>
 			PresentationCapabilities.knowledgeSettings.semanticRelations[
-				relation
+				relationPreference(relation)
 			],
 	);
-	const grammaticalRelations = noteData.grammaticalRelations ?? [];
+	const grammaticalAlternatives = noteData.grammaticalAlternatives ?? [];
 	if (
 		relations.length === 0 &&
 		pendingRelations.length === 0 &&
-		grammaticalRelations.length === 0
+		grammaticalAlternatives.length === 0
 	) {
 		return null;
 	}
@@ -92,40 +93,48 @@ export const renderDefaultReadingRelations = (({
 					))}
 				</ul>
 			) : null}
-			{grammaticalRelations.length > 0 ? (
+			{grammaticalAlternatives.length > 0 ? (
 				<ul
 					className="reading-note__relation-list"
-					aria-label="Grammatical relations"
+					aria-label="Grammatical alternatives"
 				>
-					{grammaticalRelations.map((relation) => (
+					{grammaticalAlternatives.map((alternative) => (
 						<li
-							key={`${relation.relation}:${relation.target.readingId}`}
+							key={`${alternative.feature}:${alternative.readingKey}`}
 						>
 							<button
 								type="button"
-								onClick={() =>
-									PresentationCapabilities.follow(
-										relation.target,
-									)
+								disabled={
+									!PresentationCapabilities.grammaticalAlternatives ||
+									PresentationCapabilities
+										.grammaticalAlternatives.pending
 								}
+								onClick={() => {
+									void PresentationCapabilities.grammaticalAlternatives
+										?.follow(alternative.readingKey)
+										.catch(() => {});
+								}}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
-								<span>
-									<RelationMark
-										relation={relation.relation}
-									/>{" "}
-									{relation.targetCanonicalForm}
+								{alternative.canonicalForm}{" "}
+								<span className="sr-only">
+									— vary {alternative.feature}
 								</span>
 							</button>
 						</li>
 					))}
 				</ul>
 			) : null}
+			{PresentationCapabilities.grammaticalAlternatives?.error ? (
+				<p role="alert">
+					{PresentationCapabilities.grammaticalAlternatives.error}
+				</p>
+			) : null}
 		</section>
 	);
 }) satisfies ReadingDefaultRenderer;
 
-const RELATION_MARKS: Record<SemanticRelation, string> = {
+const RELATION_MARKS: Record<Dumrel.SemanticRelation, string> = {
 	synonym: "=",
 	nearSynonym: "≈",
 	antonym: "≠",
@@ -137,7 +146,7 @@ const RELATION_MARKS: Record<SemanticRelation, string> = {
 };
 function RelationMark({ relation }: { relation: string }) {
 	const mark = Object.hasOwn(RELATION_MARKS, relation)
-		? RELATION_MARKS[relation as SemanticRelation]
+		? RELATION_MARKS[relation as Dumrel.SemanticRelation]
 		: relation;
 	return (
 		<span

@@ -46,6 +46,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 			},
 		},
 		presented: {
+			unitKind: "Attestation",
 			members: [
 				{ attested: "steht", orthography: "Standard" },
 				{ attested: "auf", orthography: "Standard" },
@@ -156,6 +157,7 @@ function surfaceNote(): NoteDataFor<"Surface"> {
 
 function presentedLemma(canonicalForm: string, kind: string) {
 	return {
+		unitKind: "Lemma",
 		language: "de",
 		canonicalForm,
 		family: "Lexeme",
@@ -170,10 +172,11 @@ function presentedSurface(
 	kind: string,
 ) {
 	return {
+		unitKind: "Surface",
 		language: "de",
 		normalizedSurface,
 		spelling: "Canonical",
-		surfaceKind: "Citation",
+
 		surfaceFeatures: {},
 		lemma: presentedLemma(canonicalForm, kind),
 		inflectionalFeatures: {},

@@ -1,26 +1,16 @@
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
+import { parseReadingKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import {
-	type Attestation,
-	dumling,
-	type Lemma,
-	ParsingError,
-	parseAsAttestation,
-	parseAsReading,
-	parseAsSurface,
-	type Reading,
-	readingFingerprint,
-	type Surface,
-} from "dumling-old";
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../../../server/linguisticIdentity";
 import {
-	type DirectSemanticRelation,
-	inverseRelationFor,
-	parseAsReadingKnowledge,
-	type ReadingKnowledge,
-	type SemanticRelation,
-	type TranslationLanguage,
-	type UnitShadow,
-} from "dumrel";
-
-import { lemmaIdentityKey } from "../../../server/linguisticIdentity";
+	parseGermanAttestation,
+	parseGermanReading,
+	parseGermanSurface,
+} from "../../../server/operationalParsing";
 import { NOTE_STUDY_FIXTURES } from "./fixtures";
 import type {
 	NoteStudyFixture,
@@ -40,29 +30,29 @@ export type NoteStudyOccurrence = {
 	readonly segmentedSentenceId: string;
 	readonly segments: readonly Segment[];
 	readonly memberSegmentIndices: readonly number[];
-	readonly attestation: Attestation<"de">;
+	readonly attestation: Dumling.Attestation<"de">;
 };
 
 export type NoteStudyDatabaseUnit = {
-	readonly reading: Reading<"de">;
+	readonly reading: Dumling.Reading<"de">;
 	readonly readingKey: string;
 	readonly lemmaKey: string;
-	readonly citationSurface: Surface<"de", "Citation">;
-	readonly presentationSurfaces: readonly Surface<"de", "Citation">[];
-	readonly knowledge: ReadingKnowledge<TranslationLanguage>;
+	readonly citationSurface: Dumling.Surface<"de">;
+	readonly presentationSurfaces: readonly Dumling.Surface<"de">[];
+	readonly knowledge: Dumrel.ReadingKnowledge;
 	readonly occurrences: readonly NoteStudyOccurrence[];
 };
 
 export type NoteStudyResolvedRelation = {
 	readonly sourceReadingKey: string;
-	readonly relation: SemanticRelation;
+	readonly relation: Dumrel.SemanticRelation;
 	readonly target: NoteStudyDatabaseUnit;
 };
 
 export type NoteStudyPendingRelation = {
 	readonly sourceReadingKey: string;
-	readonly relation: DirectSemanticRelation;
-	readonly target: UnitShadow<"de">;
+	readonly relation: Dumrel.DirectSemanticRelation;
+	readonly target: Dumrel.UnitShadow;
 };
 
 const NULL_CORE_FEATURES_BY_KIND = {
@@ -99,7 +89,10 @@ const NULL_CORE_FEATURES_BY_KIND = {
 		polite: null,
 		poss: null,
 		pronType: null,
-		referenceGender: null,
+		case: null,
+		number: null,
+		gender: null,
+		"gender[psor]": null,
 		referenceNumber: null,
 	},
 	PROPN: { abbr: null, foreign: null, gender: null },
@@ -127,7 +120,6 @@ const NULL_CORE_FEATURES_BY_KIND = {
 	Root: {},
 	Suffix: {},
 	Suffixoid: {},
-	ToneMarking: {},
 	Transfix: {},
 	Fusion: {},
 } as const;
@@ -203,14 +195,7 @@ const NOTE_STUDY_IDENTITY_BY_PRESENTATION_KEY = new Map(
 	),
 );
 
-function unwrap<T>(value: T | ParsingError<T>, label: string): T {
-	if (value instanceof ParsingError) {
-		throw new Error(`${label}: ${value.message}`);
-	}
-	return value;
-}
-
-function readingFor(fixture: NoteStudyFixture): Reading<"de"> {
+function readingFor(fixture: NoteStudyFixture): Dumling.Reading<"de"> {
 	const identity = NOTE_STUDY_IDENTITY_BY_PRESENTATION_KEY.get(
 		fixture.presentationKey as (typeof NOTE_STUDY_READING_IDENTITIES)[number][0],
 	);
@@ -219,7 +204,9 @@ function readingFor(fixture: NoteStudyFixture): Reading<"de"> {
 			`Missing Notes Study identity ${fixture.presentationKey}.`,
 		);
 	const input = {
+		unitKind: "Reading",
 		lemma: {
+			unitKind: "Lemma",
 			language: "de",
 			family: identity.family,
 			kind: identity.kind,
@@ -228,31 +215,28 @@ function readingFor(fixture: NoteStudyFixture): Reading<"de"> {
 		},
 		emojiDescription: identity.emojiDescription,
 	};
-	return unwrap(
-		parseAsReading(input, "de", identity.family, identity.kind),
-		`Invalid Notes Study Reading ${fixture.titleText}`,
-	) as Reading<"de">;
+	return parseGermanReading(input);
 }
 
-function knowledgeFor(
-	fixture: NoteStudyFixture,
-): ReadingKnowledge<TranslationLanguage> {
+function knowledgeFor(fixture: NoteStudyFixture): Dumrel.ReadingKnowledge {
 	const [english, russian] = fixture.translations;
 	if (!english || !russian) {
 		throw new Error(
 			`${fixture.titleText} needs English and Russian translations.`,
 		);
 	}
-	return unwrap(
-		parseAsReadingKnowledge({
+	const parsed = parseReadingKnowledge({
+		source: readingFor(fixture),
+		knowledge: {
 			...(fixture.ipa
 				? { transcription: fixture.ipa.replaceAll("/", "") }
 				: {}),
 			definition: fixture.definition,
 			translations: { en: [english], ru: [russian] },
-		}),
-		`Invalid Notes Study Knowledge ${fixture.titleText}`,
-	) as ReadingKnowledge<TranslationLanguage>;
+		},
+	});
+	if (!parsed.success) throw parsed.error;
+	return parsed.value;
 }
 
 function splitLiteral(text: string): Segment[] {
@@ -281,7 +265,7 @@ function targetTokens(fixture: NoteStudyFixture, line: NoteStudyLine) {
 
 function occurrenceFor(
 	fixture: NoteStudyFixture,
-	reading: Reading<"de">,
+	reading: Dumling.Reading<"de">,
 	context: NoteStudyLine,
 	contextIndex: number,
 ): NoteStudyOccurrence {
@@ -301,24 +285,16 @@ function occurrenceFor(
 			`${fixture.titleText} context ${contextIndex} has no target.`,
 		);
 	}
-	const citationSurface = dumling.de.convert.lemma.toSurface(reading.lemma);
-	const attestation = unwrap(
-		parseAsAttestation(
-			{
-				members: memberSegmentIndices.map((index) => ({
-					attested: segments[index]?.text ?? "",
-					orthography: "Standard",
-				})),
-				realizationCoverage: "Full",
-				surface: citationSurface,
-			},
-			"de",
-			"Citation",
-			reading.lemma.family,
-			reading.lemma.kind,
-		),
-		`Invalid Notes Study Attestation ${fixture.titleText}`,
-	) as Attestation<"de">;
+	const citationSurface = fixtureSurface(reading.lemma);
+	const attestation = parseGermanAttestation({
+		unitKind: "Attestation",
+		members: memberSegmentIndices.map((index) => ({
+			attested: segments[index]?.text ?? "",
+			orthography: "Standard",
+		})),
+		realizationCoverage: "Full",
+		surface: citationSurface,
+	});
 	return {
 		submissionKey: `notes-study:${fixture.presentationKey}:${contextIndex}`,
 		segmentedSentenceId: `notes-study:${fixture.presentationKey}:${contextIndex}:sentence`,
@@ -348,28 +324,9 @@ function databaseUnitFor(fixture: NoteStudyFixture): NoteStudyDatabaseUnit {
 		reading,
 		readingKey: readingFingerprint(reading),
 		lemmaKey: lemmaIdentityKey(reading.lemma),
-		citationSurface: dumling.de.convert.lemma.toSurface(reading.lemma),
+		citationSurface: fixtureSurface(reading.lemma),
 		presentationSurfaces: [...new Set(presentationSurfaceTexts)].map(
-			(text) =>
-				unwrap(
-					parseAsSurface(
-						{
-							...dumling.de.convert.lemma.toSurface(
-								reading.lemma,
-							),
-							normalizedSurface: text,
-							spelling:
-								text === reading.lemma.canonicalForm
-									? "Canonical"
-									: "Variant",
-						},
-						"de",
-						"Citation",
-						reading.lemma.family,
-						reading.lemma.kind,
-					),
-					`Invalid Notes Study presentation Surface ${text}`,
-				) as Surface<"de", "Citation">,
+			(text) => fixtureSurface(reading.lemma, text),
 		),
 		knowledge: knowledgeFor(fixture),
 		occurrences: fixture.contexts.map((context, index) =>
@@ -382,24 +339,18 @@ function databaseUnitFor(fixture: NoteStudyFixture): NoteStudyDatabaseUnit {
 export const NOTE_STUDY_DATABASE = NOTE_STUDY_FIXTURES.map(databaseUnitFor);
 
 function relatedUnitFor(token: NoteStudyToken): NoteStudyDatabaseUnit {
-	const reading = unwrap(
-		parseAsReading(
-			{
-				lemma: {
-					language: "de",
-					family: "Lexeme",
-					kind: "X",
-					canonicalForm: token.text,
-					coreFeatures: NULL_CORE_FEATURES_BY_KIND.X,
-				},
-				emojiDescription: "🔗",
-			},
-			"de",
-			"Lexeme",
-			"X",
-		),
-		`Invalid related Reading ${token.text}`,
-	) as Reading<"de">;
+	const reading = parseGermanReading({
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "X",
+			canonicalForm: token.text,
+			coreFeatures: NULL_CORE_FEATURES_BY_KIND.X,
+		},
+		emojiDescription: "🔗",
+	});
 	const fixture = {
 		presentationKey: `related-${encodeURIComponent(token.text)}`,
 		family: "Lexeme" as const,
@@ -418,7 +369,7 @@ function relatedUnitFor(token: NoteStudyToken): NoteStudyDatabaseUnit {
 		reading,
 		readingKey: readingFingerprint(reading),
 		lemmaKey: lemmaIdentityKey(reading.lemma),
-		citationSurface: dumling.de.convert.lemma.toSurface(reading.lemma),
+		citationSurface: fixtureSurface(reading.lemma),
 		presentationSurfaces: [],
 		knowledge: { definition: fixture.definition },
 		occurrences: [occurrenceFor(fixture, reading, fixture.contexts[0], 0)],
@@ -472,7 +423,7 @@ export const NOTE_STUDY_PENDING_RELATIONS: readonly NoteStudyPendingRelation[] =
 								{
 									sourceReadingKey: source.readingKey,
 									relation:
-										relation as DirectSemanticRelation,
+										relation as Dumrel.DirectSemanticRelation,
 									target: {
 										language: "de",
 										canonicalForm: part.text,
@@ -488,15 +439,13 @@ export const NOTE_STUDY_PENDING_RELATIONS: readonly NoteStudyPendingRelation[] =
 
 export function storedRelation(relation: NoteStudyResolvedRelation): {
 	readonly sourceReadingKey: string;
-	readonly relation: DirectSemanticRelation;
+	readonly relation: Dumrel.DirectSemanticRelation;
 	readonly targetLemmaKey: string;
 } {
 	if (relation.relation === "hyponym" || relation.relation === "meronym") {
 		return {
 			sourceReadingKey: relation.target.readingKey,
-			relation: inverseRelationFor(
-				relation.relation,
-			) as DirectSemanticRelation,
+			relation: relation.relation === "hyponym" ? "hypernym" : "holonym",
 			targetLemmaKey:
 				NOTE_STUDY_DATABASE.find(
 					({ readingKey }) =>
@@ -506,12 +455,12 @@ export function storedRelation(relation: NoteStudyResolvedRelation): {
 	}
 	return {
 		sourceReadingKey: relation.sourceReadingKey,
-		relation: relation.relation as DirectSemanticRelation,
+		relation: relation.relation as Dumrel.DirectSemanticRelation,
 		targetLemmaKey: relation.target.lemmaKey,
 	};
 }
 
-export function makeUrl(unit: Reading<"de">): string {
+export function makeUrl(unit: Dumling.Reading<"de">): string {
 	const canonical = unit.lemma.canonicalForm
 		.normalize("NFC")
 		.replaceAll("ä", "ae")
@@ -529,9 +478,32 @@ export const NOTE_STUDY_DATABASE_BY_URL = new Map(
 	NOTE_STUDY_DATABASE.map((unit) => [makeUrl(unit.reading), unit]),
 );
 
-export const NOTE_STUDY_READING_BY_LEMMA = new Map<string, Lemma<"de">>(
+export const NOTE_STUDY_READING_BY_LEMMA = new Map<string, Dumling.Lemma<"de">>(
 	NOTE_STUDY_DATABASE.map(({ lemmaKey, reading }) => [
 		lemmaKey,
 		reading.lemma,
 	]),
 );
+
+/** Fixture evidence intentionally leaves unrepresented inflection unknown. */
+function fixtureSurface(
+	lemma: Dumling.Lemma<"de">,
+	text = lemma.canonicalForm,
+): Dumling.Surface<"de"> {
+	const input = {
+		unitKind: "Surface",
+		language: "de",
+		lemma,
+		normalizedSurface: text,
+		spelling: "Canonical",
+		surfaceFeatures: null,
+	};
+	const bare = parseUnit(input);
+	if (
+		bare.success &&
+		bare.chain.unitKind === "Surface" &&
+		bare.chain.language === "de"
+	)
+		return bare.chain.value;
+	return parseGermanSurface({ ...input, inflectionalFeatures: null });
+}

@@ -1,8 +1,6 @@
 import { v } from "convex/values";
-import {
-	DEFAULT_KNOWLEDGE_SETTINGS,
-	type KnowledgeSettings,
-} from "dumrel/settings";
+import type { KnowledgePreferences } from "../shared/knowledge-preferences";
+import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
@@ -14,29 +12,20 @@ function assertVisitorId(visitorId: string): void {
 	}
 }
 
-export function defaultKnowledgeSettings(): KnowledgeSettings {
+export function defaultKnowledgeSettings(): KnowledgePreferences {
 	return cloneKnowledgeSettings(DEFAULT_KNOWLEDGE_SETTINGS);
 }
 
 function cloneKnowledgeSettings(
-	settings: Omit<KnowledgeSettings, "translations"> & {
-		readonly translations: { readonly en: boolean; readonly ru?: boolean };
-	},
-): KnowledgeSettings {
-	return {
-		...settings,
-		translations: {
-			en: settings.translations.en,
-			ru: settings.translations.ru ?? true,
-		},
-		semanticRelations: { ...settings.semanticRelations },
-	};
+	settings: KnowledgePreferences,
+): KnowledgePreferences {
+	return structuredClone(settings);
 }
 
 export async function loadKnowledgeSettings(
 	ctx: QueryCtx | MutationCtx,
 	visitorId: string,
-): Promise<KnowledgeSettings> {
+): Promise<KnowledgePreferences> {
 	assertVisitorId(visitorId);
 	const stored = await ctx.db
 		.query("knowledgeSettings")

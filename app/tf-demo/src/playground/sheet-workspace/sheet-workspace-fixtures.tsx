@@ -1,6 +1,4 @@
 import type { FunctionReturnType } from "convex/server";
-import { presentedFeatureNames } from "dumling-old/vocabulary";
-import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 import { useCallback } from "react";
 import type { SentenceView } from "@/lib/action-results";
 import { renderNote } from "@/notes";
@@ -13,6 +11,7 @@ import type {
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import type { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../shared/knowledge-preferences";
 
 type FixtureNoteData = NonNullable<
 	| FunctionReturnType<typeof api.readingNotes.get>
@@ -411,9 +410,7 @@ function fixtureNote(
 function fixturePresentedFeatureSet(
 	features: Readonly<Record<string, string | readonly string[] | null>> = {},
 ) {
-	return Object.fromEntries(
-		presentedFeatureNames.map((name) => [name, features[name] ?? null]),
-	);
+	return { ...features };
 }
 
 function fixturePresentedLemma(lexeme: ReturnType<typeof fixtureLexeme>) {
@@ -434,10 +431,11 @@ function fixturePresentedSurface(
 		language: "de" as const,
 		normalizedSurface,
 		spelling: "Canonical" as const,
-		surfaceKind: "Citation" as const,
+
 		surfaceFeatures: { historicalStatus: null },
 		lemma: fixturePresentedLemma(lexeme),
 		inflectionalFeatures: fixturePresentedFeatureSet(),
+		grundform: null,
 	};
 }
 

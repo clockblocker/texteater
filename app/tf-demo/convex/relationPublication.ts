@@ -1,7 +1,7 @@
 import { type Infer, v } from "convex/values";
 import { derivePendingEntryId } from "dumdict/pending";
-import type { DirectSemanticRelation } from "dumrel";
-import { directSemanticRelationValues } from "dumrel/vocabulary";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 
 import type { Doc } from "./_generated/dataModel";
 import {
@@ -167,7 +167,7 @@ function assertRunNumber(runNumber: number): void {
 function runKey(
 	attemptKey: string,
 	runNumber: number,
-	relation: DirectSemanticRelation,
+	relation: Dumrel.DirectSemanticRelation,
 ): string {
 	return JSON.stringify([attemptKey, runNumber, relation]);
 }
@@ -186,7 +186,7 @@ function targetKey(
 function proposalKey(
 	attemptKey: string,
 	runNumber: number,
-	relation: DirectSemanticRelation,
+	relation: Dumrel.DirectSemanticRelation,
 	target: Infer<typeof relationTargetShadowValidator>,
 ): string {
 	return JSON.stringify([attemptKey, runNumber, relation, targetKey(target)]);
@@ -194,7 +194,7 @@ function proposalKey(
 
 function pendingLocatorKey(
 	sourceReadingKey: string,
-	relation: DirectSemanticRelation,
+	relation: Dumrel.DirectSemanticRelation,
 	target: Infer<typeof relationTargetShadowValidator>,
 ): string {
 	return pendingLocatorIndexKey({

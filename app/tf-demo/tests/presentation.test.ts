@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test";
-import { readingFingerprint } from "dumling-old/reading";
 import { structuralShadowLocatorKey } from "../convex/model/shadows";
 import { projectFeaturesForPresentation as projectFeatures } from "../convex/modules/notes/featurePresentation";
 import {
@@ -11,6 +10,7 @@ import { projectResolvedRelationTargets } from "../convex/modules/notes/relation
 import { isUnitReadingFamily } from "../convex/modules/notes/unitReadingFamilies";
 import { get as getReadingNote } from "../convex/readingNotes";
 import { get as getTextView, loadTextFocus } from "../convex/textViews";
+import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
 
 const getReadingNoteHandler = queryHandler<{
 	readingId: string;
@@ -34,6 +34,7 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 	const reading = projectReadingValue(
 		{ emojiDescription: "🏃" },
 		{
+			unitKind: "Lemma",
 			language: "de",
 			family: "Lexeme",
 			kind: "VERB",
@@ -46,7 +47,7 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 			},
 		},
 	);
-	const knowledge = projectReadingKnowledge({
+	const knowledge = projectReadingKnowledge(reading, {
 		transcription: "  aʊ̯fˌpasn̩  ",
 		definition: "  aufmerksam sein  ",
 		translations: { en: ["pay attention"] },
@@ -67,6 +68,7 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 
 test("Unit Reading NoteData ignores visitor settings and keeps all pure data", async () => {
 	const sourceLemma = {
+		unitKind: "Lemma",
 		_id: "lemma-source",
 		lemmaKey: "lemma-source-key",
 		language: "de",
@@ -81,7 +83,9 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		},
 	};
 	const readingKey = readingFingerprint({
+		unitKind: "Reading",
 		lemma: {
+			unitKind: "Lemma",
 			language: sourceLemma.language,
 			family: sourceLemma.family,
 			kind: sourceLemma.kind,
@@ -91,6 +95,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		emojiDescription: "🏃",
 	});
 	const targetLemma = {
+		unitKind: "Lemma",
 		_id: "lemma-target",
 		lemmaKey: "lemma-target-key",
 		language: "de",
@@ -239,6 +244,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		semanticRelations: {
 			synonym: [
 				{
+					unitKind: "Lemma",
 					language: targetLemma.language,
 					family: targetLemma.family,
 					kind: targetLemma.kind,

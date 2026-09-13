@@ -42,10 +42,6 @@ identity never scopes its records.
 A target language for which tf-demo provides resolution and learner-facing
 Notes.
 
-**Fixed Member Loading**:
-Idempotent reconciliation of package-owned fixed linguistic values into the
-Shared Demo Dictionary through ordinary application records.
-
 **Catalog Growth Signal**:
 An application-owned aggregate of equivalent Catalog Misses. It is diagnostic
 evidence, not linguistic identity or Visitor history.
@@ -54,9 +50,10 @@ evidence, not linguistic identity or Visitor history.
 A normalized direct Reading-owned claim targeting either a Lemma or exact
 Reading. Only direct claims persist; missing targets remain pending Unit Shadows.
 
-**Grammatical Relation Edge**:
-A direct Case, Person, or Number Counterpart claim with homogeneous endpoints.
-tf-demo projects its symmetric reverse without Semantic Relation inference.
+**Reviewed Grammatical Alternative**:
+A reviewed authored Reading selected by varying named Core Features of another
+reviewed member. The selected Reading can be opened before it has been
+encountered in a Text.
 
 **Unit Reading**:
 A Reading whose Lemma family is Lexeme, Phraseme, or Morpheme. The grouping adds

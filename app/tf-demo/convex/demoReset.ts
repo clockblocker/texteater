@@ -40,7 +40,6 @@ export const resetDemoTableNames = [
 	"visitorClicks",
 	"ownedSurfaces",
 	"readingEntries",
-	"grammaticalRelationEdges",
 	"semanticRelationEdges",
 	"readings",
 	"dictionaryLemmas",
@@ -435,8 +434,6 @@ const readingCleanupPhaseValidator = v.union(
 	v.literal("AccumulatedKnowledge"),
 	v.literal("OutgoingSemanticEdges"),
 	v.literal("IncomingSemanticEdges"),
-	v.literal("OutgoingGrammaticalEdges"),
-	v.literal("IncomingGrammaticalEdges"),
 	v.literal("Reading"),
 );
 
@@ -447,8 +444,6 @@ type ReadingCleanupPhase =
 	| "AccumulatedKnowledge"
 	| "OutgoingSemanticEdges"
 	| "IncomingSemanticEdges"
-	| "OutgoingGrammaticalEdges"
-	| "IncomingGrammaticalEdges"
 	| "Reading";
 
 type ReadingCleanupCursor = {
@@ -474,10 +469,6 @@ function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
 		case "OutgoingSemanticEdges":
 			return "IncomingSemanticEdges";
 		case "IncomingSemanticEdges":
-			return "OutgoingGrammaticalEdges";
-		case "OutgoingGrammaticalEdges":
-			return "IncomingGrammaticalEdges";
-		case "IncomingGrammaticalEdges":
 			return "Reading";
 		case "Reading":
 			return "PendingRelations";
@@ -571,9 +562,7 @@ export const clearReadingDataBatch = internalMutation({
 					break;
 				}
 				case "OutgoingSemanticEdges":
-				case "IncomingSemanticEdges":
-				case "OutgoingGrammaticalEdges":
-				case "IncomingGrammaticalEdges": {
+				case "IncomingSemanticEdges": {
 					const reading = await ctx.db
 						.query("readings")
 						.withIndex("by_reading_key", (q) =>
@@ -596,24 +585,6 @@ export const clearReadingDataBatch = internalMutation({
 							.query("semanticRelationEdges")
 							.withIndex("by_target_reading_id", (q) =>
 								q.eq("targetReadingId", reading._id),
-							)
-							.take(remaining);
-						for (const row of rows) await ctx.db.delete(row._id);
-						deleted += rows.length;
-						phaseComplete = rows.length < remaining;
-					} else {
-						const outgoing =
-							cursor.phase === "OutgoingGrammaticalEdges";
-						const rows = await ctx.db
-							.query("grammaticalRelationEdges")
-							.withIndex(
-								outgoing
-									? "by_source_reading_id"
-									: "by_target_reading_id",
-								(q) =>
-									outgoing
-										? q.eq("sourceReadingId", reading._id)
-										: q.eq("targetReadingId", reading._id),
 							)
 							.take(remaining);
 						for (const row of rows) await ctx.db.delete(row._id);
@@ -674,17 +645,10 @@ export const clearReadingDataBatch = internalMutation({
 const lemmaCleanupPhaseValidator = v.union(
 	v.literal("Surfaces"),
 	v.literal("IncomingSemanticEdges"),
-	v.literal("OutgoingGrammaticalEdges"),
-	v.literal("IncomingGrammaticalEdges"),
 	v.literal("Lemma"),
 );
 
-type LemmaCleanupPhase =
-	| "Surfaces"
-	| "IncomingSemanticEdges"
-	| "OutgoingGrammaticalEdges"
-	| "IncomingGrammaticalEdges"
-	| "Lemma";
+type LemmaCleanupPhase = "Surfaces" | "IncomingSemanticEdges" | "Lemma";
 
 type LemmaCleanupCursor = { itemIndex: number; phase: LemmaCleanupPhase };
 
@@ -698,10 +662,6 @@ function nextLemmaPhase(phase: LemmaCleanupPhase): LemmaCleanupPhase {
 		case "Surfaces":
 			return "IncomingSemanticEdges";
 		case "IncomingSemanticEdges":
-			return "OutgoingGrammaticalEdges";
-		case "OutgoingGrammaticalEdges":
-			return "IncomingGrammaticalEdges";
-		case "IncomingGrammaticalEdges":
 			return "Lemma";
 		case "Lemma":
 			return "Surfaces";
@@ -803,27 +763,6 @@ export const clearLemmaDataBatch = internalMutation({
 						.query("semanticRelationEdges")
 						.withIndex("by_target_lemma_id", (q) =>
 							q.eq("targetLemmaId", lemmaId),
-						)
-						.take(remaining);
-					for (const row of rows) await ctx.db.delete(row._id);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
-					break;
-				}
-				case "OutgoingGrammaticalEdges":
-				case "IncomingGrammaticalEdges": {
-					const outgoing =
-						cursor.phase === "OutgoingGrammaticalEdges";
-					const rows = await ctx.db
-						.query("grammaticalRelationEdges")
-						.withIndex(
-							outgoing
-								? "by_source_lemma_id"
-								: "by_target_lemma_id",
-							(q) =>
-								outgoing
-									? q.eq("sourceLemmaId", lemmaId)
-									: q.eq("targetLemmaId", lemmaId),
 						)
 						.take(remaining);
 					for (const row of rows) await ctx.db.delete(row._id);

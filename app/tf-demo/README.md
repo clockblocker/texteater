@@ -22,8 +22,8 @@ Set the model key on the Convex deployment:
 bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
 ```
 
-Load the package-owned fixed inventory with `bun run load:fixed-members`. The
-operation is idempotent and reports conflicting ordinary Reading Entry content.
+The dictionary starts empty. Dumgen supplies reviewed Units and Knowledge on
+demand; grammatical navigation adds only the selected Reading.
 
 Load the local Notes Study user and its normalized Dumling/Dumrel graph with
 `bun run load:notes-study`. This explicit playground seed is idempotent and is

@@ -1,9 +1,8 @@
 import { expect, test } from "bun:test";
 import type { FunctionReturnType } from "convex/server";
-import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 import { renderToStaticMarkup } from "react-dom/server";
-
 import type { api } from "../convex/_generated/api";
+import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
 
 type ReadingNote = Extract<
@@ -92,11 +91,13 @@ function readingNote(): ReadingNote {
 		kind: "Reading",
 		target: { kind: "Reading", readingId: "reading-1" },
 		reading: {
+			unitKind: "Reading",
 			ownerKind: "Reading",
 			ownerKey: "reading-key-1",
 			readingId: "reading-1",
 			emojiDescription: "🏃",
 			lemma: {
+				unitKind: "Lemma",
 				ownerKind: "Lemma",
 				ownerKey: "lemma-key-1",
 				language: "de",

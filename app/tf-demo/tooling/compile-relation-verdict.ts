@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 const workspace = resolve(import.meta.dir, "../../..");
 const gateDirectory = resolve(
 	workspace,
-	"battery/dumgen/docs/prototypes/german-relation-human-gate",
+	"battery/gumgen-old/docs/prototypes/german-relation-human-gate",
 );
 const manifestPath = resolve(gateDirectory, "candidate-manifest.json");
 const verdictPath = resolve(gateDirectory, "verdict.json");
@@ -180,7 +180,15 @@ export async function compileRelationVerdict(
 			sha256: string(artifact.sha256, "artifact sha256"),
 		};
 		const contents = new Uint8Array(
-			await Bun.file(resolve(workspace, normalized.path)).arrayBuffer(),
+			await Bun.file(
+				resolve(
+					workspace,
+					normalized.path.replace(
+						/^battery\/dumgen\//,
+						"battery/gumgen-old/",
+					),
+				),
+			).arrayBuffer(),
 		);
 		if (sha256(contents) !== normalized.sha256)
 			throw new Error(

@@ -2,7 +2,6 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 import {
-	catalogMissReasonValidator,
 	catalogMissStageValidator,
 	directSemanticRelationValidator,
 	knowledgeGenerationAttemptStateValidator,
@@ -29,7 +28,6 @@ import {
 	segmentKindValidator,
 	segmentResolutionStateValidator,
 	storedKnowledgeSettingsValidator,
-	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "./model/validators";
 
@@ -89,7 +87,6 @@ export default defineSchema({
 		language: languageValidator,
 		normalizedSurface: v.string(),
 		spelling: surfaceSpellingValidator,
-		surfaceKind: surfaceKindValidator,
 		surfaceFeatures: v.any(),
 		inflectionalFeatures: v.optional(v.any()),
 	})
@@ -135,38 +132,6 @@ export default defineSchema({
 		])
 		.index("by_source_reading_id_and_relation_and_target_lemma_id", [
 			"sourceReadingId",
-			"relation",
-			"targetLemmaId",
-		])
-		.index("by_source_reading_id_and_relation_and_target_reading_id", [
-			"sourceReadingId",
-			"relation",
-			"targetReadingId",
-		]),
-
-	grammaticalRelationEdges: defineTable({
-		endpointKind: v.union(v.literal("lemma"), v.literal("reading")),
-		sourceLemmaId: v.optional(v.id("lemmas")),
-		targetLemmaId: v.optional(v.id("lemmas")),
-		sourceReadingId: v.optional(v.id("readings")),
-		targetReadingId: v.optional(v.id("readings")),
-		relation: v.union(
-			v.literal("CaseCounterpart"),
-			v.literal("PersonCounterpart"),
-			v.literal("NumberCounterpart"),
-		),
-	})
-		.index("by_source_lemma_id", ["sourceLemmaId"])
-		.index("by_target_lemma_id", ["targetLemmaId"])
-		.index("by_source_reading_id", ["sourceReadingId"])
-		.index("by_target_reading_id", ["targetReadingId"])
-		.index("by_source_lemma_id_and_relation", ["sourceLemmaId", "relation"])
-		.index("by_source_reading_id_and_relation", [
-			"sourceReadingId",
-			"relation",
-		])
-		.index("by_source_lemma_id_and_relation_and_target_lemma_id", [
-			"sourceLemmaId",
 			"relation",
 			"targetLemmaId",
 		])
@@ -465,11 +430,8 @@ export default defineSchema({
 
 	catalogGrowthSignals: defineTable({
 		signalKey: v.string(),
-		language: v.literal("de"),
-		family: v.string(),
-		kind: v.string(),
+		route: v.string(),
 		stage: catalogMissStageValidator,
-		reason: catalogMissReasonValidator,
 		catalogMissJson: v.string(),
 		occurrences: v.number(),
 		firstSeenAt: v.number(),
@@ -477,12 +439,9 @@ export default defineSchema({
 		lastRequestId: v.string(),
 	})
 		.index("by_signal_key", ["signalKey"])
-		.index("by_route_stage_reason_and_last_seen_at", [
-			"language",
-			"family",
-			"kind",
+		.index("by_route_stage_and_last_seen_at", [
+			"route",
 			"stage",
-			"reason",
 			"lastSeenAt",
 		]),
 

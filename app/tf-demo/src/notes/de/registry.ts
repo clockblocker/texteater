@@ -55,7 +55,6 @@ const READING = {
 		Root: READING_BASE,
 		Suffix: READING_BASE,
 		Suffixoid: READING_BASE,
-		ToneMarking: READING_BASE,
 		Transfix: READING_BASE,
 	},
 } satisfies RendererRegistry<"de", "Reading">;
@@ -110,7 +109,6 @@ const LEMMA = {
 		Root: EMPTY_LEMMA_ROUTE,
 		Suffix: EMPTY_LEMMA_ROUTE,
 		Suffixoid: EMPTY_LEMMA_ROUTE,
-		ToneMarking: EMPTY_LEMMA_ROUTE,
 		Transfix: EMPTY_LEMMA_ROUTE,
 	},
 } satisfies RendererRegistry<"de", "Lemma">;
@@ -151,7 +149,6 @@ const ATTESTATION = {
 		Root: EMPTY_ATTESTATION_ROUTE,
 		Suffix: EMPTY_ATTESTATION_ROUTE,
 		Suffixoid: EMPTY_ATTESTATION_ROUTE,
-		ToneMarking: EMPTY_ATTESTATION_ROUTE,
 		Transfix: EMPTY_ATTESTATION_ROUTE,
 	},
 } satisfies RendererRegistry<"de", "Attestation">;
@@ -192,7 +189,6 @@ const SHADOW = {
 		Root: EMPTY_SHADOW_ROUTE,
 		Suffix: EMPTY_SHADOW_ROUTE,
 		Suffixoid: EMPTY_SHADOW_ROUTE,
-		ToneMarking: EMPTY_SHADOW_ROUTE,
 		Transfix: EMPTY_SHADOW_ROUTE,
 	},
 } satisfies RendererRegistry<"de", "Shadow">;

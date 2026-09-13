@@ -1,14 +1,8 @@
-import type { Reading } from "dumling-old/types";
-import {
-	parseAsReadingKnowledge,
-	type ReadingKnowledge,
-	type TranslationLanguage,
-} from "dumrel";
+import type * as Dumling from "dumling/types";
+import { parseReadingKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 
-import {
-	parseGermanReading,
-	unwrapOperationalParse,
-} from "../../../server/operationalParsing";
+import { parseGermanReading } from "../../../server/operationalParsing";
 
 export { isUnitReadingFamily } from "./unitReadingFamilies";
 
@@ -22,9 +16,11 @@ export function projectReadingValue(
 		readonly canonicalForm: string;
 		readonly coreFeatures: unknown;
 	},
-): Reading<"de"> {
+): Dumling.Reading<"de"> {
 	return parseGermanReading({
+		unitKind: "Reading",
 		lemma: {
+			unitKind: "Lemma",
 			language: lemma.language,
 			family: lemma.family,
 			kind: lemma.kind,
@@ -37,20 +33,10 @@ export function projectReadingValue(
 
 /** Validates stored identityless Knowledge without applying presentation policy. */
 export function projectReadingKnowledge(
+	source: Dumling.Reading<"de">,
 	value: unknown,
-): ReadingKnowledge<TranslationLanguage> {
-	const knowledge = unwrapOperationalParse<ReadingKnowledge>(
-		parseAsReadingKnowledge(value ?? {}),
-	);
-	if (
-		knowledge.translations &&
-		Object.keys(knowledge.translations).some(
-			(language) => language !== "en" && language !== "ru",
-		)
-	) {
-		throw new Error(
-			"tf-demo Reading Knowledge only supports English and Russian translations.",
-		);
-	}
-	return knowledge as ReadingKnowledge<TranslationLanguage>;
+): Dumrel.ReadingKnowledge<Dumling.Reading<"de">> {
+	const parsed = parseReadingKnowledge({ source, knowledge: value ?? {} });
+	if (!parsed.success) throw parsed.error;
+	return parsed.value;
 }
