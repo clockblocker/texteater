@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling-old/reading";
 import { structuralShadowLocatorKey } from "../convex/model/shadows";
 import { projectFeaturesForPresentation as projectFeatures } from "../convex/modules/notes/featurePresentation";
 import {

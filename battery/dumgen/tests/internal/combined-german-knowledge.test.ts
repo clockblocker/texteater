@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { type DumTraceSink, withTraceRecorder } from "common-utils/workflow";
-import { fixedMembersFor } from "dumling/fixed";
-import type { Reading } from "dumling/types";
+import { fixedMembersFor } from "dumling-old/fixed";
+import type { Reading } from "dumling-old/types";
 import { relationTargetWithinFamilySchema } from "dumrel/schema";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";

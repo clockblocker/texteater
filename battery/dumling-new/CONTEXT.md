@@ -63,27 +63,6 @@ _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 The stable dictionary-scoped semantic label that distinguishes Readings of the
 same Lemma.
 
-### Production policy
-
-**Route Closure**:
-The policy that classifies a language, Family, and Kind production route as
-Open or Closed. Closure is not part of Lemma or Reading identity.
-_Avoid_: DTO closure flag, Knowledge closure
-
-**Fixed Catalog**:
-A package-owned collection of ordinary linguistic values for a route, with
-Complete or deliberately Curated coverage for a named scope.
-_Avoid_: Seed table, Closed DTO collection
-
-**Fixed Population**:
-A Curated package-owned set of ordinary Lemmas and Readings inside an Open
-Route. A non-member continues through the Open Route.
-_Avoid_: Partially Closed Route, fallback catalog
-
-**Catalog Miss**:
-The result produced when a Closed Route has no fixed member for a candidate. It
-is catalog-growth evidence, not an Unresolved result.
-
 ### German classifications
 
 **Verbal Participle**:

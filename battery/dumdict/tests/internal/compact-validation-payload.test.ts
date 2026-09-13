@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { dangerouslyHeavyCompactEmojiSequencePatternForAbout100MiBRss as compactEmojiSequencePattern } from "dumling/dangerously-heavy-schema-tree";
+import { dangerouslyHeavyCompactEmojiSequencePatternForAbout100MiBRss as compactEmojiSequencePattern } from "dumling-old/dangerously-heavy-schema-tree";
 import {
 	actualDumlingCompatibilityValidationRouteKeys,
 	compileDumdictValidationArtifacts,

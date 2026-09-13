@@ -1,4 +1,4 @@
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 import type { MorphologicalTree } from "../../src/types";
 
 export const nounReading = {

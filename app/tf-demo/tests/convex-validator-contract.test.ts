@@ -10,7 +10,7 @@ import {
 	realizationCoverageValues,
 	surfaceKindValues,
 	surfaceSpellingValues,
-} from "dumling/vocabulary";
+} from "dumling-old/vocabulary";
 import { semanticRelationValues } from "dumrel/vocabulary";
 
 import {

@@ -93,7 +93,7 @@
 		"codec-builder-library": "workspace:^",
 		"common-utils": "workspace:^",
 		"dumdict": "workspace:^",
-		"dumling": "workspace:^",
+		"dumling-old": "workspace:^",
 		"dumrel": "workspace:^",
 		"effect": "3.22.1",
 		"emoji-regex": "^10.6.0",

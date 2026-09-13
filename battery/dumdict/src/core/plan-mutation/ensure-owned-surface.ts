@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import { makeSurfaceId } from "../../dumling-id";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
 import type { EnsureOwnedSurfaceContext } from "../../storage";

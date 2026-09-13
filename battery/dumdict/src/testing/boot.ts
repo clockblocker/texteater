@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import type { SerializedDictionaryNote } from "../dto";
 import type { DumdictService } from "../public";
 import { createDumdictService } from "../service/create-dumdict-service";

@@ -1,5 +1,5 @@
 import type { FunctionReturnType } from "convex/server";
-import { presentedFeatureNames } from "dumling/vocabulary";
+import { presentedFeatureNames } from "dumling-old/vocabulary";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "dumrel";
 import { useCallback } from "react";
 import type { SentenceView } from "@/lib/action-results";

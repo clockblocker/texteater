@@ -16,7 +16,7 @@ import {
 export const SAMPLE_COUNT = 5;
 const IMPORT_BUDGET_MIB = 5;
 const OPERATION_BUDGET_MIB = 5.3;
-const packages = ["dumling", "dumrel", "dumdict", "dumgen"] as const;
+const packages = ["dumling-old", "dumrel", "dumdict", "dumgen"] as const;
 
 type MeasurementMode = "baseline" | "import-only" | "import-plus-operation";
 

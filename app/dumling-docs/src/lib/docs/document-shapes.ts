@@ -1,4 +1,4 @@
-import type { Attestation } from "dumling/types";
+import type { Attestation } from "dumling-old/types";
 import type { Prettify } from "../../../helper-types";
 
 export type DocPageMeta = {

@@ -40,7 +40,7 @@ import {
 	parseAsSegmentedSentenceId,
 } from "../../battery/dumgen/src";
 import type { DumgenValidationRouteKey } from "../../battery/dumgen/src/parsing/validation-routes";
-import { collectDumlingValidationSchemas } from "../../battery/dumling/codegen/validation-artifacts";
+import { collectDumlingValidationSchemas } from "../../battery/dumling-old/codegen/validation-artifacts";
 import {
 	dumling,
 	parseAsAttestation,
@@ -48,11 +48,11 @@ import {
 	parseAsReading,
 	parseAsSurface,
 	readingFingerprint,
-} from "../../battery/dumling/src";
-import { decodeDumlingValidationArtifactForRouteKey } from "../../battery/dumling/src/operations/parsing/lightweight-parsers";
-import { dumlingValidationOperations } from "../../battery/dumling/src/operations/parsing/validation-operations";
-import type { CanonicalDumlingValidationRouteKey } from "../../battery/dumling/src/operations/parsing/validation-routes";
-import type { SupportedLanguage } from "../../battery/dumling/src/types";
+} from "../../battery/dumling-old/src";
+import { decodeDumlingValidationArtifactForRouteKey } from "../../battery/dumling-old/src/operations/parsing/lightweight-parsers";
+import { dumlingValidationOperations } from "../../battery/dumling-old/src/operations/parsing/validation-operations";
+import type { CanonicalDumlingValidationRouteKey } from "../../battery/dumling-old/src/operations/parsing/validation-routes";
+import type { SupportedLanguage } from "../../battery/dumling-old/src/types";
 import { canonicalDumrelValidationSchemas } from "../../battery/dumrel/codegen/validation-artifacts";
 import {
 	parseAsDirectSemanticRelationGraphEdge,
@@ -870,7 +870,7 @@ function dumlingTarget(entity: DumlingEntity): DifferentialTarget<unknown> {
 				return schema.safeParse(fixture.input);
 			},
 		},
-		id: `dumling:parseAs${entity}`,
+		id: `dumling-old:parseAs${entity}`,
 		lightweight: (value) => parseDumlingDifferentialCase(entity, value),
 		propertyValues,
 		representativeValues,

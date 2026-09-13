@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling-old";
 import { makeSurfaceId, type StoreRevision } from "../../src";
 import {
 	commitChangesResultSchema,

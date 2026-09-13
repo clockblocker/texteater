@@ -9,7 +9,7 @@ import {
 	type Reading,
 	readingFingerprint,
 	type Surface,
-} from "dumling";
+} from "dumling-old";
 import {
 	type DirectSemanticRelation,
 	inverseRelationFor,

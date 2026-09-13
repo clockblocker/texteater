@@ -3,7 +3,7 @@ import {
 	allFixedLemmaCatalogs,
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
-} from "dumling/fixed";
+} from "dumling-old/fixed";
 
 import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/pronoun/golden-corpus/corpus";
 import { corpus as targetCorpus } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/corpus/corpus";

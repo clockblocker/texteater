@@ -2,7 +2,7 @@ import type {
 	Attestation,
 	EntityValue,
 	SupportedLanguage,
-} from "dumling/types";
+} from "dumling-old/types";
 
 export interface Frontmatter {
 	description?: string;

@@ -59,13 +59,13 @@ import {
 	dumling as packageDumling,
 	parseAsReading as packageParseAsReading,
 	readingFingerprint as packageReadingFingerprint,
-} from "dumling";
+} from "dumling-old";
 import type {
 	Attestation as PackageAttestation,
 	Lemma as PackageLemma,
 	Reading as PackageReading,
 	Surface as PackageSurface,
-} from "dumling/types";
+} from "dumling-old/types";
 
 const lemma = packageDumling.de.create.lemma({
 	canonicalForm: "see",

@@ -1,4 +1,4 @@
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import type { FixedKnowledgeLookup } from "dumrel/fixed";
 import type { DirectSemanticRelation, ReadingKnowledge } from "dumrel/types";
 import * as Effect from "effect/Effect";

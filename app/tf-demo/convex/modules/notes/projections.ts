@@ -1,4 +1,4 @@
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import {
 	parseAsReadingKnowledge,
 	type ReadingKnowledge,

@@ -10,7 +10,7 @@ import type {
 	Lemma as DumlingLemma,
 	Reading as DumlingReading,
 	Surface as DumlingSurface,
-} from "dumling";
+} from "dumling-old";
 
 export type Attestation = DumlingAttestation<"de">;
 export type Lemma = DumlingLemma<"de">;

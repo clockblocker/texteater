@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { type Reading, readingFingerprint } from "dumling/reading";
+import { type Reading, readingFingerprint } from "dumling-old/reading";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import type { Id } from "./_generated/dataModel";
 import {

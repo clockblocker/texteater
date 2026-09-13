@@ -25,20 +25,20 @@ export type ParserDifferentialPolicy =
  * silently acquire a waiver.
  */
 export const PARSER_DIFFERENTIAL_POLICIES = {
-	"dumling:parseAsLemma": {
-		differentialTargetId: "dumling:parseAsLemma",
+	"dumling-old:parseAsLemma": {
+		differentialTargetId: "dumling-old:parseAsLemma",
 		status: "strict",
 	},
-	"dumling:parseAsSurface": {
-		differentialTargetId: "dumling:parseAsSurface",
+	"dumling-old:parseAsSurface": {
+		differentialTargetId: "dumling-old:parseAsSurface",
 		status: "strict",
 	},
-	"dumling:parseAsAttestation": {
-		differentialTargetId: "dumling:parseAsAttestation",
+	"dumling-old:parseAsAttestation": {
+		differentialTargetId: "dumling-old:parseAsAttestation",
 		status: "strict",
 	},
-	"dumling:parseAsReading": {
-		differentialTargetId: "dumling:parseAsReading",
+	"dumling-old:parseAsReading": {
+		differentialTargetId: "dumling-old:parseAsReading",
 		status: "strict",
 	},
 	"dumrel:parseAsKnowledgeSettings": {
@@ -230,11 +230,11 @@ const workflow = { status: "effect-workflow" } as const;
 
 /** Every operational export retains schema isolation; Effect workflows report measured RSS. */
 export const RSS_ENTRYPOINT_POLICIES = {
-	dumling: strict,
-	"dumling/id": strict,
-	"dumling/reading": strict,
-	"dumling/vocabulary": strict,
-	"dumling/fixed": strict,
+	"dumling-old": strict,
+	"dumling-old/id": strict,
+	"dumling-old/reading": strict,
+	"dumling-old/vocabulary": strict,
+	"dumling-old/fixed": strict,
 	dumrel: strict,
 	"dumrel/relations": strict,
 	"dumrel/grammatical-relations": strict,

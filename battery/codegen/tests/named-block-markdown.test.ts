@@ -60,7 +60,7 @@ test("named blocks retain actionable source diagnostics", async () => {
 for (const [packageName, command] of [
 	["dumdict", "bun"],
 	["dumgen", "bun"],
-	["dumling", "npm"],
+	["dumling-old", "npm"],
 ] as const) {
 	test(`${packageName} README remains byte-for-byte generated`, async () => {
 		const packageRoot = resolve(import.meta.dir, `../../${packageName}`);

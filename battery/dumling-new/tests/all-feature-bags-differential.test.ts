@@ -40,7 +40,7 @@ function exampleFrom(schema: JsonSchema): unknown {
 const packageRoot = path.resolve(import.meta.dir, "..");
 const oldRoot = path.resolve(
 	packageRoot,
-	"../dumling/src/schemas/concrete-language/features",
+	"../dumling-old/src/schemas/concrete-language/features",
 );
 const newRoot = path.resolve(packageRoot, "src/schemas/concrete-language");
 

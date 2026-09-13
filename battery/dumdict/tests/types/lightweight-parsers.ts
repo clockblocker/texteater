@@ -8,7 +8,7 @@ import type {
 	Lemma,
 	SupportedLanguage,
 	Surface,
-} from "dumling/types";
+} from "dumling-old/types";
 import { z } from "zod";
 import type { DumdictParserInterface } from "../../../../tooling/dumdict-parser-interface";
 import { canonicalDumdictValidationSchemas } from "../../codegen/validation-artifacts";
@@ -92,7 +92,8 @@ type _NarrowedCompatibilityOutputMustFail = Expect<
 	ProveCompatibilityOutput<
 		EnglishVerbLemmaDescriptor,
 		Lemma<"en"> & { readonly proofOnly: true }
-	>>;
+	>
+>;
 
 type ActualGermanLemmaRecordSchema =
 	(typeof canonicalDumdictValidationSchemas)["parseAsLemmaRecord:de"];
@@ -122,7 +123,8 @@ type _NarrowedActualSchemaMustFail = Expect<
 	ProveCanonicalDumdictValidationSchemaRoute<
 		"parseAsLemmaRecord:de",
 		typeof narrowedGermanLemmaRecordSchema
-	>>;
+	>
+>;
 
 declare const actualGermanLemmaRecordSchema: CanonicalDumdictValidationSchemaForRoute<"parseAsLemmaRecord:de">;
 void actualGermanLemmaRecordSchema;

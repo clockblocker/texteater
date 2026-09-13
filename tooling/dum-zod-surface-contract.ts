@@ -36,7 +36,7 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"segmentedSentenceSchema",
 		"unresolvedGrammaticalResultSchema",
 	],
-	"dumling/schema": ["abstractSchemas", "anyLemmaSchema", "readingSchema"],
+	"dumling-old/schema": ["abstractSchemas", "anyLemmaSchema", "readingSchema"],
 	"dumrel/schema": [
 		"bindLexicalUnitShadow",
 		"bindSupportedUnitShadow",
@@ -80,7 +80,7 @@ export const DUM_DANGEROUSLY_HEAVY_ZOD_SURFACES = {
 	"dumdict/dangerously-heavy-schema-tree": [
 		"getDangerouslyHeavyDumdictSchemaTreeForAbout100MiBRss",
 	],
-	"dumling/dangerously-heavy-schema-tree": [
+	"dumling-old/dangerously-heavy-schema-tree": [
 		"dangerouslyHeavyCompactEmojiSequencePatternForAbout100MiBRss",
 		"dangerouslyHeavySchemasForAbout100MiBRss",
 		"getDangerouslyHeavySchemaTreeForAbout100MiBRss",
@@ -88,9 +88,9 @@ export const DUM_DANGEROUSLY_HEAVY_ZOD_SURFACES = {
 } as const;
 
 export const DUM_OPERATIONAL_ZOD_FREE_EXPORT_SURFACES = [
-	"dumling",
-	"dumling/reading",
-	"dumling/vocabulary",
+	"dumling-old",
+	"dumling-old/reading",
+	"dumling-old/vocabulary",
 	"dumrel",
 	"dumrel/relations",
 	"dumrel/grammatical-relations",

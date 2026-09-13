@@ -1,4 +1,4 @@
-import type { Language } from "dumling/types";
+import type { Language } from "dumling-old/types";
 import { z } from "zod";
 
 export const SUPPORTED_TARGET_LANGUAGE_VALUES = [

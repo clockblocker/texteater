@@ -1,4 +1,4 @@
-import type { Lemma, SupportedLanguage } from "dumling/types";
+import type { Lemma, SupportedLanguage } from "dumling-old/types";
 import { sameLemma, sameReading } from "../../core/identity";
 import { samePendingSemanticRelationLocator } from "../../core/pending";
 import type {

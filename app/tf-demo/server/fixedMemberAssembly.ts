@@ -1,7 +1,7 @@
 import type { ReadingEntry } from "dumdict";
-import { allFixedLemmaCatalogs, fixedMembersFor } from "dumling/fixed";
-import { readingFingerprint } from "dumling/reading";
-import type { Lemma, Reading } from "dumling/types";
+import { allFixedLemmaCatalogs, fixedMembersFor } from "dumling-old/fixed";
+import { readingFingerprint } from "dumling-old/reading";
+import type { Lemma, Reading } from "dumling-old/types";
 import {
 	allFixedGrammaticalRelationClaims,
 	type FixedKnowledgeLookup,

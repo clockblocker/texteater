@@ -8,7 +8,7 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import type { Dumgen } from "dumgen";
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling-old";
 import * as Effect from "effect/Effect";
 
 import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { getLanguageApi } from "dumling";
-import type { EntityValue } from "dumling/types";
+import { getLanguageApi } from "dumling-old";
+import type { EntityValue } from "dumling-old/types";
 import { isAttestation } from "./guards";
 import { lemmaForEntity } from "./helpers";
 

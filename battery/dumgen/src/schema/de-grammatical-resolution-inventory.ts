@@ -1,4 +1,4 @@
-import type { LemmaFamilyFor, LemmaKindFor } from "dumling/types";
+import type { LemmaFamilyFor, LemmaKindFor } from "dumling-old/types";
 
 export type GermanGrammaticalRoute = {
 	readonly [Family in LemmaFamilyFor<"de">]: {

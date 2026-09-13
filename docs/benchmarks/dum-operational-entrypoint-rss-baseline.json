@@ -18,7 +18,7 @@
 				"id": "dumling.parse-lemma"
 			},
 			"rationale": "Package root exposes Dumling runtime operations.",
-			"specifier": "dumling",
+			"specifier": "dumling-old",
 			"importOnly": {
 				"baselineMedianBytes": 31195136,
 				"deltaBytes": 3850240,
@@ -41,23 +41,23 @@
 				"externalPackages": ["emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling"]
+				"workspaceEntrypoints": ["dumling-old"]
 			}
 		},
 		{
 			"classification": "type-only",
 			"rationale": "Published JavaScript is empty; the subpath is a type surface.",
-			"specifier": "dumling/types"
+			"specifier": "dumling-old/types"
 		},
 		{
 			"classification": "schema-authoring-exempt",
 			"rationale": "Deliberately Zod-bearing public schema composition surface.",
-			"specifier": "dumling/schema"
+			"specifier": "dumling-old/schema"
 		},
 		{
 			"classification": "schema-authoring-exempt",
 			"rationale": "Deliberately dangerous route-specific schema tree costing roughly 100 MiB RSS.",
-			"specifier": "dumling/dangerously-heavy-schema-tree"
+			"specifier": "dumling-old/dangerously-heavy-schema-tree"
 		},
 		{
 			"classification": "operational",
@@ -66,7 +66,7 @@
 				"id": "dumling.id-round-trip"
 			},
 			"rationale": "Lean canonical ID codecs operate without a schema or parser-artifact import.",
-			"specifier": "dumling/id",
+			"specifier": "dumling-old/id",
 			"importOnly": {
 				"baselineMedianBytes": 31195136,
 				"deltaBytes": 2129920,
@@ -89,7 +89,7 @@
 				"externalPackages": [],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling/id"]
+				"workspaceEntrypoints": ["dumling-old/id"]
 			}
 		},
 		{
@@ -99,7 +99,7 @@
 				"id": "dumling.reading-fingerprint"
 			},
 			"rationale": "Runtime Reading identity operation.",
-			"specifier": "dumling/reading",
+			"specifier": "dumling-old/reading",
 			"importOnly": {
 				"baselineMedianBytes": 31195136,
 				"deltaBytes": 1081344,
@@ -122,7 +122,7 @@
 				"externalPackages": [],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling/reading"]
+				"workspaceEntrypoints": ["dumling-old/reading"]
 			}
 		},
 		{
@@ -132,7 +132,7 @@
 				"id": "dumling.read-vocabulary"
 			},
 			"rationale": "Runtime constants consumed without a schema import.",
-			"specifier": "dumling/vocabulary",
+			"specifier": "dumling-old/vocabulary",
 			"importOnly": {
 				"baselineMedianBytes": 31195136,
 				"deltaBytes": 999424,
@@ -155,7 +155,7 @@
 				"externalPackages": [],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling/vocabulary"]
+				"workspaceEntrypoints": ["dumling-old/vocabulary"]
 			}
 		},
 		{
@@ -165,7 +165,7 @@
 				"id": "dumling.read-fixed-catalog"
 			},
 			"rationale": "Runtime fixed-member catalog and lookup surface.",
-			"specifier": "dumling/fixed",
+			"specifier": "dumling-old/fixed",
 			"importOnly": {
 				"baselineMedianBytes": 31195136,
 				"deltaBytes": 2015232,
@@ -188,13 +188,13 @@
 				"externalPackages": [],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling/fixed"]
+				"workspaceEntrypoints": ["dumling-old/fixed"]
 			}
 		},
 		{
 			"classification": "metadata",
 			"rationale": "Package metadata, not executable application code.",
-			"specifier": "dumling/package.json"
+			"specifier": "dumling-old/package.json"
 		},
 		{
 			"classification": "operational",
@@ -401,7 +401,7 @@
 				"externalPackages": [],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling/fixed", "dumrel/fixed"]
+				"workspaceEntrypoints": ["dumling-old/fixed", "dumrel/fixed"]
 			}
 		},
 		{
@@ -441,7 +441,7 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"dumdict",
-					"dumling/fixed",
+					"dumling-old/fixed",
 					"dumrel/fixed",
 					"dumrel/relations"
 				]
@@ -489,7 +489,7 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"dumdict/runtime",
-					"dumling/fixed",
+					"dumling-old/fixed",
 					"dumrel/fixed",
 					"dumrel/relations"
 				]
@@ -599,7 +599,7 @@
 				"externalPackages": ["common-utils", "effect", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumgen", "dumling", "dumling/fixed"]
+				"workspaceEntrypoints": ["dumgen", "dumling-old", "dumling-old/fixed"]
 			}
 		},
 		{
@@ -677,8 +677,8 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"dumgen/knowledge",
-					"dumling",
-					"dumling/fixed",
+					"dumling-old",
+					"dumling-old/fixed",
 					"dumrel/fixed"
 				]
 			}
@@ -715,8 +715,8 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"dumgen/knowledge-runtime",
-					"dumling",
-					"dumling/fixed",
+					"dumling-old",
+					"dumling-old/fixed",
 					"dumrel/fixed"
 				]
 			}
@@ -786,8 +786,8 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"dumgen/runtime",
-					"dumling",
-					"dumling/fixed"
+					"dumling-old",
+					"dumling-old/fixed"
 				]
 			}
 		},

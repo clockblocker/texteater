@@ -1,5 +1,5 @@
 import { relative } from "node:path";
-import type { EntityKind } from "dumling/types";
+import type { EntityKind } from "dumling-old/types";
 import { sourceAttestationsDir } from "../../shared/paths";
 
 export function expectedEntityKindForPath(

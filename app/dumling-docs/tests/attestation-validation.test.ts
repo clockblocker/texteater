@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 import { isAttestation } from "../scripts/generate-content/attestations/entity/guards";
 import { validateOccurrenceAttestation } from "../scripts/generate-content/attestations/validate/validate-occurrence-attestation";
 import type { AttestationSource } from "../scripts/generate-content/shared/types";

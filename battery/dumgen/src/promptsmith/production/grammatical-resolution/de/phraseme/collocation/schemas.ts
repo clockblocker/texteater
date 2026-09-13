@@ -1,4 +1,4 @@
-import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling-old/dangerously-heavy-schema-tree";
 import { z } from "zod";
 
 import {

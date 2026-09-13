@@ -51,7 +51,7 @@ Lemma and Surface attestations are generated from files under
 ## Example
 
 \`\`\`ts
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 
 const runLemma = dumling.en.create.lemma({
 \tcanonicalForm: "run",

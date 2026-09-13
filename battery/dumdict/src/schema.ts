@@ -1,7 +1,12 @@
-import { supportedLanguages } from "dumling";
-import { getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling/dangerously-heavy-schema-tree";
-import { readingSchema } from "dumling/schema";
-import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
+import { supportedLanguages } from "dumling-old";
+import { getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling-old/dangerously-heavy-schema-tree";
+import { readingSchema } from "dumling-old/schema";
+import type {
+	Lemma,
+	Reading,
+	SupportedLanguage,
+	Surface,
+} from "dumling-old/types";
 import {
 	directSemanticRelationSchema,
 	knowledgeChangeSchema,

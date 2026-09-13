@@ -152,13 +152,39 @@ The route-specific continuation chosen after Target Classification fixes the lan
 
 A route whose established resolution branch may generate a result and then replace an exact fixed-population match with its authored value.
 
+**Authored Content**:
+
+Dumgen-owned Lemmas, Readings, Reading Knowledge, and grammatical and semantic
+relation claims established through authoring rather than generation for an
+encounter.
+
+**Route Closure**:
+
+The Dumgen policy that classifies a language, Family, and Kind production route
+as Open or Closed. Closure is not part of Lemma or Reading identity.
+_Avoid_: DTO closure flag, Knowledge closure
+
+**Fixed Catalog**:
+
+A Dumgen-owned collection of Authored Content for a route, with Complete or
+deliberately Curated coverage for a named scope.
+_Avoid_: Seed table, Closed DTO collection
+
+**Fixed Population**:
+
+A Curated Dumgen-owned set of Authored Content inside an Open Route. A
+non-member continues through the Open Route.
+_Avoid_: Partially Closed Route, fallback catalog
+
 **Closed Route**:
 
 A route whose fixed catalog is its complete resolution boundary. It never falls through to the corresponding Open Route.
 
 **Catalog Miss**:
 
-A structured non-success result from a Closed Route whose fixed catalog lacks the required Lemma, Reading, or Reading Knowledge.
+A structured non-success result from a Closed Route whose Fixed Catalog lacks
+the required Lemma, Reading, or Reading Knowledge. It is catalog-growth
+evidence, not an Unresolved result.
 
 **Reading**:
 

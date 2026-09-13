@@ -1,4 +1,4 @@
-import type { Attestation } from "dumling/types";
+import type { Attestation } from "dumling-old/types";
 
 const occurrenceAttestation: Attestation<"de", "Inflection", "Lexeme", "PRON"> =
 	{

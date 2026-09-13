@@ -3,8 +3,8 @@ import {
 	allFixedLemmaCatalogs,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	fixedMembersFor,
-} from "dumling/fixed";
-import type { Lemma, Reading } from "dumling/types";
+} from "dumling-old/fixed";
+import type { Lemma, Reading } from "dumling-old/types";
 import { fixedKnowledgeFor } from "dumrel/fixed";
 import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../../src";

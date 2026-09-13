@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { Surface } from "dumling/types";
+import type { Surface } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import { createFullSliceValidation } from "../../../src/service/full-slice-validation";
 import { loadReadingEntryContext } from "../../../src/service/load-reading-entry-context";

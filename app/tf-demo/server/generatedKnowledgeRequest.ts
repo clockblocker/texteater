@@ -1,4 +1,4 @@
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import type { DirectSemanticRelation } from "dumrel";
 import { defaultKnowledgeRequestMask } from "dumrel";
 import { directSemanticRelationValues } from "dumrel/vocabulary";

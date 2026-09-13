@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling/id";
+import { readingFingerprint } from "dumling-old/id";
 import type { UnitShadow } from "dumrel/types";
 import type {
 	DumdictPendingSemanticRelation,

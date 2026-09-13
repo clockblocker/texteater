@@ -9,7 +9,7 @@ import type {
 	SupportedLanguage,
 	Surface,
 	SurfaceKindFor,
-} from "../battery/dumling/src/types";
+} from "../battery/dumling-old/src/types";
 
 type Parsed<Value> = Value | ParsingError<Value>;
 

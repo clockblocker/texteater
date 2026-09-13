@@ -8,10 +8,10 @@
 		"rootDir": "./src",
 		"paths": {
 			"common-utils": ["../common-utils/dist/index.d.ts"],
-			"dumling": ["./src/index.ts"],
-			"dumling/schema": ["./src/schema.ts"],
-			"dumling/types": ["./src/types.ts"],
-			"dumling/vocabulary": ["./src/vocabulary.ts"]
+			"dumling-old": ["./src/index.ts"],
+			"dumling-old/schema": ["./src/schema.ts"],
+			"dumling-old/types": ["./src/types.ts"],
+			"dumling-old/vocabulary": ["./src/vocabulary.ts"]
 		}
 	},
 	"include": ["src/**/*.ts"],

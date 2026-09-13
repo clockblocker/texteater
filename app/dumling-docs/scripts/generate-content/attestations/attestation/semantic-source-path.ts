@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import { sourceAttestationsDir } from "../../shared/paths";
 
 type AttestationSemanticSourceInput = {

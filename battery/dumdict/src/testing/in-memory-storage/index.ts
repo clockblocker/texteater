@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../dto";
 import type {

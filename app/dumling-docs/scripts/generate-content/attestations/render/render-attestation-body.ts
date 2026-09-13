@@ -38,7 +38,7 @@ export function renderAttestationBody(
 	return `# ${languageLabelFor(lemma.language)} attestation: ${title}
 ${sentenceBlock}
 \`\`\`ts
-import type { ${importType} } from "dumling/types";
+import type { ${importType} } from "dumling-old/types";
 
 export const ${entityVariable} = ${renderTsValue(entity)} satisfies ${typeExpressionForEntity(entity)};
 

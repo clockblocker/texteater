@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 import {
 	attestationSlugForEntity,
 	attestationSlugForSource,

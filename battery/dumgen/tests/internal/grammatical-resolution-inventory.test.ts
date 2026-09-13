@@ -51,7 +51,7 @@ import {
 	type ModelGenerator,
 	type SegmentedSentence,
 } from "dumgen";
-import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling-old/dangerously-heavy-schema-tree";
 import { DUMGEN_GENERATION_MODEL } from "../../src/ai-sdk/model-policy";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "../../src/catalog/laboratory/de-authored-grammatical-resolution-prompts";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";

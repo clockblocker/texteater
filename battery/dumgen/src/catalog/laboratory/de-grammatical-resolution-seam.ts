@@ -1,6 +1,6 @@
 import { codecBuilder4 } from "codec-builder-library/v4";
-import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
-import type { Lemma } from "dumling/types";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling-old/dangerously-heavy-schema-tree";
+import type { Lemma } from "dumling-old/types";
 import { type input, type output, z } from "zod";
 
 import { DUMGEN_GENERATION_MODEL } from "../../ai-sdk/model-policy";

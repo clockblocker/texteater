@@ -5,7 +5,7 @@ import {
 	parseValidationArtifact,
 	type ValidationArtifact,
 } from "common-utils";
-import { canonicalizeNullableProperties } from "dumling/id";
+import { canonicalizeNullableProperties } from "dumling-old/id";
 import type {
 	ApiResult,
 	Attestation,
@@ -14,7 +14,7 @@ import type {
 	ParseError,
 	SupportedLanguage,
 	Surface,
-} from "dumling/types";
+} from "dumling-old/types";
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,

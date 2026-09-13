@@ -49,7 +49,7 @@ German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal 
 ## Example
 
 \`\`\`ts
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 
 const seeLemma = dumling.de.create.lemma({
 \tcanonicalForm: "See",

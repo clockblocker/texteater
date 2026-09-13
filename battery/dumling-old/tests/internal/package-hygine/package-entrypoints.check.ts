@@ -59,16 +59,16 @@ describe("published package entrypoints", () => {
 		run(process.execPath, ["run", "build"]);
 
 		const runtimeSmokeTest = `
-			import { dumling, getLanguageApi, parseAs, readingFingerprint, supportedLanguages, toPresented } from "dumling";
-			import { readingFingerprint as idReadingFingerprint } from "dumling/id";
-			import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";
-			import { presentedFeatureNames } from "dumling/vocabulary";
-			import { abstractSchemas, readingSchema } from "dumling/schema";
+			import { dumling, getLanguageApi, parseAs, readingFingerprint, supportedLanguages, toPresented } from "dumling-old";
+			import { readingFingerprint as idReadingFingerprint } from "dumling-old/id";
+			import { readingFingerprint as leanReadingFingerprint } from "dumling-old/reading";
+			import { presentedFeatureNames } from "dumling-old/vocabulary";
+			import { abstractSchemas, readingSchema } from "dumling-old/schema";
 			import {
 				dangerouslyHeavySchemasForAbout100MiBRss as schemasFor,
 				getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor,
-			} from "dumling/dangerously-heavy-schema-tree";
-			import * as schemaModule from "dumling/schema";
+			} from "dumling-old/dangerously-heavy-schema-tree";
+			import * as schemaModule from "dumling-old/schema";
 
 			if (supportedLanguages.join(",") !== "de,en,he") throw new Error("language inventory is missing");
 			if (presentedFeatureNames.length !== 46) throw new Error("presented feature inventory is incomplete");
@@ -121,17 +121,17 @@ describe("published package entrypoints", () => {
 			writeFileSync(
 				join(typecheckDir, "fixture.ts"),
 				[
-					'import { dumling, getLanguageApi, parseAs, readingFingerprint, supportedLanguages, toPresented } from "dumling";',
-					'import { readingFingerprint as idReadingFingerprint } from "dumling/id";',
-					'import type { Reading as IdReading, ReadingFingerprint as IdReadingFingerprint } from "dumling/id";',
-					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
-					'import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";',
-					'import { presentedFeatureNames } from "dumling/vocabulary";',
-					'import type { Reading as LeanReading, ReadingFingerprint as LeanReadingFingerprint } from "dumling/reading";',
-					'import { abstractSchemas, readingSchema } from "dumling/schema";',
-					'import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor, getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling/dangerously-heavy-schema-tree";',
+					'import { dumling, getLanguageApi, parseAs, readingFingerprint, supportedLanguages, toPresented } from "dumling-old";',
+					'import { readingFingerprint as idReadingFingerprint } from "dumling-old/id";',
+					'import type { Reading as IdReading, ReadingFingerprint as IdReadingFingerprint } from "dumling-old/id";',
+					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling-old";',
+					'import { readingFingerprint as leanReadingFingerprint } from "dumling-old/reading";',
+					'import { presentedFeatureNames } from "dumling-old/vocabulary";',
+					'import type { Reading as LeanReading, ReadingFingerprint as LeanReadingFingerprint } from "dumling-old/reading";',
+					'import { abstractSchemas, readingSchema } from "dumling-old/schema";',
+					'import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor, getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling-old/dangerously-heavy-schema-tree";',
 					'import type * as z from "zod";',
-					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, PresentedAttestation, PresentedLemma, PresentedSurface, Reading, ReadingFingerprint, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
+					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, PresentedAttestation, PresentedLemma, PresentedSurface, Reading, ReadingFingerprint, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling-old/types";',
 					"",
 					'const languages: readonly ("de" | "en" | "he")[] = supportedLanguages;',
 					"void languages;",

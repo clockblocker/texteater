@@ -1,5 +1,5 @@
 import type { Prettify } from "common-utils";
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import type {
 	KnowledgeChange,
 	KnowledgeRequestMask,

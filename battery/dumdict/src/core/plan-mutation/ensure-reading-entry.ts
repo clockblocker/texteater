@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import type { ReadingEntry } from "../../dto";
 import type { EnsureReadingEntryRequest } from "../../public";
 import type { EnsureReadingEntryContext } from "../../storage";

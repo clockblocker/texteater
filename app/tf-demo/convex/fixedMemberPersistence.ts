@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { readingFingerprint } from "dumling/reading";
-import type { Lemma, Reading } from "dumling/types";
+import { readingFingerprint } from "dumling-old/reading";
+import type { Lemma, Reading } from "dumling-old/types";
 import { ParsingError, parseAsGrammaticalRelationClaim } from "dumrel";
 import type { GrammaticalRelationClaim } from "dumrel/types";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";

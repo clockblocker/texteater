@@ -40,7 +40,7 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"common-utils#build",
 		"dumdict#build",
 		"dumgen#build",
-		"dumling#build",
+		"dumling-old#build",
 		"dumrel#build",
 		"react-resizable-panels#build",
 	]);
@@ -51,7 +51,7 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"common-utils#build",
 		"dumdict#build",
 		"dumgen#build",
-		"dumling#build",
+		"dumling-old#build",
 		"dumrel#build",
 		"react-resizable-panels#build",
 	]);

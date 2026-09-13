@@ -3,7 +3,7 @@ import {
 	dumling as canonicalDumling,
 	supportedLanguages as canonicalSupportedLanguages,
 	getLanguageApi as getCanonicalLanguageApi,
-} from "dumling";
+} from "dumling-old";
 import {
 	dumling,
 	getLanguageApi,

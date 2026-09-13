@@ -11,14 +11,14 @@ Empty-module samples: `31211520`, `31227904`, `31162368`, `31195136`, `31145984`
 | Entrypoint | Classification | Representative operation | Import delta (MiB) | Import + operation delta (MiB) | Reachable schema/heavy dependencies |
 | --- | --- | --- | ---: | ---: | --- |
 | `dumling` | operational | Parse a valid German NOUN Lemma through the language API. | 3.672 | 4.203 | none |
-| `dumling/types` | type-only | Published JavaScript is empty; the subpath is a type surface. | — | — | — |
-| `dumling/schema` | schema-authoring-exempt | Deliberately Zod-bearing public schema composition surface. | — | — | — |
-| `dumling/dangerously-heavy-schema-tree` | schema-authoring-exempt | Deliberately dangerous route-specific schema tree costing roughly 100 MiB RSS. | — | — | — |
-| `dumling/id` | operational | Encode and decode a canonical Lemma ID through the lean codec facade. | 2.031 | 3.219 | none |
-| `dumling/reading` | operational | Compute the stable fingerprint of a Reading. | 1.031 | 1.422 | none |
-| `dumling/vocabulary` | operational | Read and verify the public Dumling runtime vocabulary. | 0.953 | 0.969 | none |
-| `dumling/fixed` | operational | Read and verify the fixed German determiner catalog. | 1.922 | 1.875 | none |
-| `dumling/package.json` | metadata | Package metadata, not executable application code. | — | — | — |
+| `dumling-old/types` | type-only | Published JavaScript is empty; the subpath is a type surface. | — | — | — |
+| `dumling-old/schema` | schema-authoring-exempt | Deliberately Zod-bearing public schema composition surface. | — | — | — |
+| `dumling-old/dangerously-heavy-schema-tree` | schema-authoring-exempt | Deliberately dangerous route-specific schema tree costing roughly 100 MiB RSS. | — | — | — |
+| `dumling-old/id` | operational | Encode and decode a canonical Lemma ID through the lean codec facade. | 2.031 | 3.219 | none |
+| `dumling-old/reading` | operational | Compute the stable fingerprint of a Reading. | 1.031 | 1.422 | none |
+| `dumling-old/vocabulary` | operational | Read and verify the public Dumling runtime vocabulary. | 0.953 | 0.969 | none |
+| `dumling-old/fixed` | operational | Read and verify the fixed German determiner catalog. | 1.922 | 1.875 | none |
+| `dumling-old/package.json` | metadata | Package metadata, not executable application code. | — | — | — |
 | `dumrel` | operational | Apply a normalized Definition Knowledge Change. | 3.891 | 4.891 | none |
 | `dumrel/types` | type-only | Published JavaScript is empty; the subpath is a type surface. | — | — | — |
 | `dumrel/relations` | operational | Project a minimal direct Semantic Relation graph. | 1.594 | 1.875 | none |
@@ -51,7 +51,7 @@ Empty-module samples: `31211520`, `31227904`, `31162368`, `31195136`, `31145984`
 
 The user-approved 5.3 MiB operation ceiling is one global allowance for observed five-process median measurement noise around 5 MiB, not a per-package waiver. It applies only to strict surfaces. Effect workflow RSS is retained as an observation because its runtime cost is no longer a proxy for schema loading. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.
 
-The explicit schema/model-authoring escape hatches are `dumling/schema`, `dumling/dangerously-heavy-schema-tree`, `dumrel/schema`, `dumdict/schema`, `dumdict/dangerously-heavy-schema-tree`, `dumgen/schema`, `dumgen/model-authoring`. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.
+The explicit schema/model-authoring escape hatches are `dumling-old/schema`, `dumling-old/dangerously-heavy-schema-tree`, `dumrel/schema`, `dumdict/schema`, `dumdict/dangerously-heavy-schema-tree`, `dumgen/schema`, `dumgen/model-authoring`. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.
 
 A vocabulary or settings subpath is operational runtime data, so it is measured. Type-only JavaScript and `package.json` metadata are inventoried for exhaustiveness but not benchmarked.
 

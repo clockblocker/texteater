@@ -1,4 +1,4 @@
-import { anyLemmaSchema, readingSchema } from "dumling/schema";
+import { anyLemmaSchema, readingSchema } from "dumling-old/schema";
 import { knowledgeChangeSchema, lexicalUnitShadowSchema } from "dumrel/schema";
 import { z } from "zod";
 import type { KnowledgeGenerationResult } from "../knowledge-generation/contracts";

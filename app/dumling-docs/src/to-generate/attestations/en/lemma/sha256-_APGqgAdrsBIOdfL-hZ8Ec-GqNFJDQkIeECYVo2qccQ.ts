@@ -1,4 +1,4 @@
-import type { Lemma } from "dumling/types";
+import type { Lemma } from "dumling-old/types";
 
 export const runLemma = {
 	language: "en",

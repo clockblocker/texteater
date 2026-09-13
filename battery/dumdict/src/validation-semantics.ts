@@ -1,5 +1,10 @@
-import { readingFingerprint } from "dumling/id";
-import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type {
+	Lemma,
+	Reading,
+	SupportedLanguage,
+	Surface,
+} from "dumling-old/types";
 import { directSemanticRelationValues } from "dumrel/relations";
 import type {
 	KnowledgeChange,

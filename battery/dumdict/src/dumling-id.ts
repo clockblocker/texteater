@@ -1,4 +1,4 @@
-import { buildIdOperations, supportedLanguages } from "dumling/id";
+import { buildIdOperations, supportedLanguages } from "dumling-old/id";
 import type {
 	DumlingCsv,
 	IdDecodeSuccess,
@@ -6,7 +6,7 @@ import type {
 	Lemma,
 	SupportedLanguage,
 	Surface,
-} from "dumling/types";
+} from "dumling-old/types";
 
 declare const surfaceIdBrand: unique symbol;
 

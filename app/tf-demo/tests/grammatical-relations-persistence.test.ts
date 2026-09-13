@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling-old/reading";
 import { allFixedGrammaticalRelationClaims } from "dumrel/fixed";
 import { commitFixedGrammaticalRelation } from "../convex/fixedMemberPersistence";
 import { loadGrammaticalRelationProjections } from "../convex/modules/notes/relations";

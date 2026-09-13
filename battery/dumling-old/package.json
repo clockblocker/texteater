@@ -1,5 +1,5 @@
 {
-	"name": "dumling",
+	"name": "dumling-old",
 	"version": "0.1.12",
 	"description": "TypeScript and Zod schemas, DTO types, operations, and stable IDs for learner-facing linguistic annotation.",
 	"type": "module",

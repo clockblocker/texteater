@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import { DE_REL_MAP } from "./applicability/de.js";
 import type { RelMap } from "./applicability/types.js";
 import {

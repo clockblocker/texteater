@@ -1,4 +1,9 @@
-import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
+import type {
+	Lemma,
+	Reading,
+	SupportedLanguage,
+	Surface,
+} from "dumling-old/types";
 import type { DirectSemanticRelation } from "dumrel/types";
 import type { DumdictPendingSemanticRelation } from "./pending";
 

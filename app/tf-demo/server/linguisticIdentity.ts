@@ -1,4 +1,4 @@
-import type { Lemma, SupportedLanguage } from "dumling";
+import type { Lemma, SupportedLanguage } from "dumling-old";
 
 function stableValue(value: unknown): unknown {
 	if (Array.isArray(value)) return value.map(stableValue);

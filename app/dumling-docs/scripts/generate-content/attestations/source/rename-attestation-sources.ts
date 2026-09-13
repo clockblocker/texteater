@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { EntityValue, SupportedLanguage } from "dumling/types";
+import type { EntityValue, SupportedLanguage } from "dumling-old/types";
 import { listTypeScriptFiles, removeEmptyDirectories } from "../../shared/fs";
 import { sourceAttestationsDir } from "../../shared/paths";
 import { attestationSemanticSourcePath } from "../attestation/semantic-source-path";

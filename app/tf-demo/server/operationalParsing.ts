@@ -1,5 +1,5 @@
-import { dumling, ParsingError, parseAsReading } from "dumling";
-import type { Lemma, Reading } from "dumling/types";
+import { dumling, ParsingError, parseAsReading } from "dumling-old";
+import type { Lemma, Reading } from "dumling-old/types";
 
 export function unwrapOperationalParse<Output>(
 	parsed: Output | ParsingError<unknown>,

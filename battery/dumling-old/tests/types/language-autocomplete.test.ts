@@ -63,7 +63,8 @@ export type AutocompleteInflectionalFeaturesFor = InflectionalFeaturesFor<
 	// @ts-expect-error The empty argument deliberately captures editor completions.
 	"",
 	never,
-	never>;
+	never
+>;
 // @ts-expect-error The empty argument deliberately captures editor completions.
 export type AutocompleteEntityValue = EntityValue<"">;
 // @ts-expect-error The empty argument deliberately captures editor completions.

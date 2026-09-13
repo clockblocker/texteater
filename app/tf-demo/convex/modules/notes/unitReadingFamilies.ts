@@ -1,4 +1,4 @@
-import type { LemmaFamilyFor } from "dumling/types";
+import type { LemmaFamilyFor } from "dumling-old/types";
 
 export type UnitReadingFamily = Extract<
 	LemmaFamilyFor<"de">,

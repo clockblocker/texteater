@@ -1,5 +1,5 @@
 import { recordTrace } from "common-utils/workflow";
-import type { Attestation, Lemma, Reading } from "dumling/types";
+import type { Attestation, Lemma, Reading } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import type { RUNTIME_PROMPT_CATALOG } from "../catalog/runtime-prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
@@ -268,7 +268,7 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 			});
 			const route = lemmaRouteFor(target);
 			const { isClosedRouteFor } = yield* Effect.promise(
-				() => import("dumling"),
+				() => import("dumling-old"),
 			);
 			const resolutionOrMiss = yield* dispatchProduction<
 				| GrammaticalResolution
@@ -288,7 +288,7 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 							target,
 						);
 						const { fixedPopulationFor } = yield* Effect.promise(
-							() => import("dumling/fixed"),
+							() => import("dumling-old/fixed"),
 						);
 						const fixedLemma = fixedPopulationFor
 							.lemma(route)
@@ -302,7 +302,7 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 				runClosed: () =>
 					Effect.gen(function* () {
 						const { fixedMembersFor } = yield* Effect.promise(
-							() => import("dumling/fixed"),
+							() => import("dumling-old/fixed"),
 						);
 						const candidate = yield* generateGrammaticalCandidate(
 							grammar,
@@ -405,12 +405,12 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 			const germanInput = input as unknown as ReadingInput<"de">;
 			const route = lemmaRouteFor(germanInput.lemma);
 			const { isClosedRouteFor } = yield* Effect.promise(
-				() => import("dumling"),
+				() => import("dumling-old"),
 			);
 			const runOpen = (): Effect.Effect<ReadingResolution, DumgenError> =>
 				Effect.gen(function* () {
 					const { fixedPopulationFor } = yield* Effect.promise(
-						() => import("dumling/fixed"),
+						() => import("dumling-old/fixed"),
 					);
 					const fixed = fixedPopulationFor.reading(germanInput.lemma);
 					if (fixed?.members.length === 1) {
@@ -435,7 +435,7 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 				runClosed: () =>
 					Effect.gen(function* () {
 						const { fixedMembersFor } = yield* Effect.promise(
-							() => import("dumling/fixed"),
+							() => import("dumling-old/fixed"),
 						);
 						const catalog = fixedMembersFor.reading(
 							germanInput.lemma,

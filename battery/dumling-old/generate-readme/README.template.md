@@ -97,7 +97,7 @@ Minimal end-to-end usage:
 The supported route-specific trees remain available only as an explicit danger-zone escape hatch for schema-authoring integrations that genuinely require an exact leaf:
 
 ```ts
-import { dangerouslyHeavySchemasForAbout100MiBRss } from "dumling/dangerously-heavy-schema-tree";
+import { dangerouslyHeavySchemasForAbout100MiBRss } from "dumling-old/dangerously-heavy-schema-tree";
 
 dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
 ```

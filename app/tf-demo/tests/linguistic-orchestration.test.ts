@@ -6,7 +6,7 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { buildDumgen, type Dumgen, type ModelGenerator } from "dumgen";
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling-old";
 import * as Effect from "effect/Effect";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {

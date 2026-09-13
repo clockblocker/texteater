@@ -1,4 +1,4 @@
-import { getLanguageApi } from "dumling";
+import { getLanguageApi } from "dumling-old";
 import type { AttestedAttestation } from "../../../../../../../src/lib/docs/document-shapes.ts";
 import { withLinkedAttestationSpan } from "../helpers/attested-attestation";
 import type { AttestedAttestationRenderer } from "../types";

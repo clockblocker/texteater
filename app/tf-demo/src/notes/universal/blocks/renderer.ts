@@ -4,7 +4,7 @@ import type {
 	LemmaFamilyFor,
 	LemmaKindFor,
 	Reading,
-} from "dumling/types";
+} from "dumling-old/types";
 import type { ReactElement } from "react";
 
 import type { SupportedTargetLanguage } from "../../../../shared/supported-target-language";

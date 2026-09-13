@@ -44,7 +44,7 @@ describe("dumrel/relations topology", () => {
 		expect(
 			inputs.some(
 				(input) =>
-					input.includes("/battery/dumling/") ||
+					input.includes("/battery/dumling-old/") ||
 					input.includes("/node_modules/dumling/"),
 			),
 		).toBe(false);
@@ -66,7 +66,7 @@ describe("dumrel/relations topology", () => {
 		expect(
 			inputs.some(
 				(input) =>
-					input.includes("/battery/dumling/") ||
+					input.includes("/battery/dumling-old/") ||
 					input.includes("/node_modules/dumling/"),
 			),
 		).toBe(false);

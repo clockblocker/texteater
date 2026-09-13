@@ -1,4 +1,4 @@
-import type { LemmaRoute, Reading } from "dumling/types";
+import type { LemmaRoute, Reading } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import type { ModelGenerator } from "../ai-sdk/ai-sdk";
 import { RUNTIME_KNOWLEDGE_PROMPT_CATALOG } from "../catalog/runtime-prompt-catalog";
@@ -111,7 +111,7 @@ export function createKnowledgeDumgen(options: {
 				kind: validated.reading.lemma.kind,
 			} as LemmaRoute;
 			const { isClosedRouteFor } = yield* Effect.promise(
-				() => import("dumling"),
+				() => import("dumling-old"),
 			);
 			const { fixedKnowledgeFor } = yield* Effect.promise(
 				() => import("dumrel/fixed"),

@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
 
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import {
 	type Lemma,

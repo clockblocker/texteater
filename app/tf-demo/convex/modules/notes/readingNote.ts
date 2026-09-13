@@ -1,6 +1,6 @@
 import type { Prettify } from "common-utils";
 import { v } from "convex/values";
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import type {
 	LemmaReference,
 	ProjectedSemanticRelations,

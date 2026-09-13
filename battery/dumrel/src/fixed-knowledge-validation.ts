@@ -1,4 +1,4 @@
-import type { Lemma, Reading } from "dumling/types";
+import type { Lemma, Reading } from "dumling-old/types";
 import {
 	ParsingError,
 	parseAsLexicalUnitShadow,

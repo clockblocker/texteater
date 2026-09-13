@@ -47,7 +47,8 @@ describe("differential validation CI contract", () => {
 			DUM_PARSER_INTERFACE_CONTRACT.packages,
 		).flatMap(([packageName, parsers]) =>
 			Object.keys(parsers).map(
-				(parserName) => `${packageName}:${parserName}`,
+				(parserName) =>
+					`${packageName === "dumling" ? "dumling-old" : packageName}:${parserName}`,
 			),
 		);
 
@@ -387,7 +388,7 @@ describe("operational RSS CI contract", () => {
 	});
 
 	test("strict surfaces keep imports below 5 MiB and operations at or below 5.3 MiB", () => {
-		const policy = RSS_ENTRYPOINT_POLICIES["dumling/reading"];
+		const policy = RSS_ENTRYPOINT_POLICIES["dumling-old/reading"];
 		expect(policy.status).toBe("strict");
 		expect(
 			evaluateEntrypointRss(policy, {
@@ -422,7 +423,7 @@ describe("operational RSS CI contract", () => {
 	});
 
 	test("the migrated Dumling root is held to the strict RSS and reachability contract", () => {
-		const policy = RSS_ENTRYPOINT_POLICIES.dumling;
+		const policy = RSS_ENTRYPOINT_POLICIES["dumling-old"];
 		expect(policy.status).toBe("strict");
 		expect(
 			evaluateEntrypointRss(policy, {

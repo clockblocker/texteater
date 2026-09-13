@@ -1,4 +1,4 @@
-import type { EntityValue } from "dumling/types";
+import type { EntityValue } from "dumling-old/types";
 import type { AttestationSource } from "../../shared/types";
 import { isEntityValue, isRecord } from "../entity/guards";
 

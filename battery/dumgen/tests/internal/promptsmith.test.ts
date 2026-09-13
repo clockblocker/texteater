@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { runCodegen } from "codegen";
-import type { Lemma, Surface } from "dumling/types";
+import type { Lemma, Surface } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import { zodTextFormat } from "openai/helpers/zod";
 

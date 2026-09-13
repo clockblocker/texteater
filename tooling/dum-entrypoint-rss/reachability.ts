@@ -1,7 +1,7 @@
 import { dirname, join, normalize } from "node:path";
 import { findRepositoryRoot } from "../lib/workspaces";
 
-const workspacePackages = new Set(["dumling", "dumrel", "dumdict", "dumgen"]);
+const workspacePackages = new Set(["dumling-old", "dumrel", "dumdict", "dumgen"]);
 const heavyweightPackages = new Set(["codec-builder-library", "openai", "zod"]);
 
 export type EntrypointReachability = {

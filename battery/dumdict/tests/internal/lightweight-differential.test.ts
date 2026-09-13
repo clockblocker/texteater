@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling";
-import type { SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old";
+import type { SupportedLanguage } from "dumling-old/types";
 import { knowledgeChangeSchema } from "dumrel/schema";
 import type { z } from "zod";
 import { canonicalDumdictValidationSchemas } from "../../codegen/validation-artifacts";

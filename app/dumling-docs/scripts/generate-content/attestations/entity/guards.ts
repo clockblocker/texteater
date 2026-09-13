@@ -4,7 +4,7 @@ import type {
 	Lemma,
 	SupportedLanguage,
 	Surface,
-} from "dumling/types";
+} from "dumling-old/types";
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
 	return value !== null && typeof value === "object";

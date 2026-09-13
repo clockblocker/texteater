@@ -1,5 +1,5 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import { sameLemma } from "../core/identity";
 import { planEnsureOwnedSurface } from "../core/plan-mutation";

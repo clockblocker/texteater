@@ -1,4 +1,4 @@
-import type { LemmaRoute } from "dumling";
+import type { LemmaRoute } from "dumling-old";
 import type { SemanticRelation } from "dumrel";
 
 type NoteStudyRoute = Omit<LemmaRoute<"de">, "language">;

@@ -1,7 +1,7 @@
 import type { Expect } from "common-utils";
-import { supportedLanguages } from "dumling";
-import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
-import { readingSchema } from "dumling/schema";
+import { supportedLanguages } from "dumling-old";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling-old/dangerously-heavy-schema-tree";
+import { readingSchema } from "dumling-old/schema";
 import { type ZodType, z } from "zod";
 
 import type {

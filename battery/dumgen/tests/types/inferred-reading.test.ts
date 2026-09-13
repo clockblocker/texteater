@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from "bun:test";
 import type { Equal, Expect } from "common-utils";
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
 
 import type {

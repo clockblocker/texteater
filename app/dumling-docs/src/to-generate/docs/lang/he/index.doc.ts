@@ -35,7 +35,7 @@ Hebrew gender values are scoped to \`Fem\` and \`Masc\`. Hebrew noun number supp
 ## Example
 
 \`\`\`ts
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 
 const katavLemma = dumling.he.create.lemma({
 \tcanonicalForm: "כתב",

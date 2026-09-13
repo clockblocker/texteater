@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 
 import { defaultKnowledgeRequestMask } from "../../src";
 import { DE_REL_MAP } from "../../src/applicability/de";

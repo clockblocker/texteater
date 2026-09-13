@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling/reading";
-import type { Reading } from "dumling/types";
+import { readingFingerprint } from "dumling-old/reading";
+import type { Reading } from "dumling-old/types";
 import {
 	allFixedGrammaticalRelationClaims,
 	allFixedGrammaticalSeries,

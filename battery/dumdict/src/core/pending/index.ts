@@ -1,5 +1,5 @@
-import { readingFingerprint } from "dumling/id";
-import type { Reading, SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type { Reading, SupportedLanguage } from "dumling-old/types";
 import type { UnitShadow } from "dumrel/types";
 import type {
 	DumdictPendingSemanticRelation,

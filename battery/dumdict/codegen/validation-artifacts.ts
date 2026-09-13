@@ -5,11 +5,11 @@ import {
 	type ZodValidationOperationRegistration,
 } from "codegen";
 import type { Equal, Expect } from "common-utils";
-import { supportedLanguages } from "dumling";
+import { supportedLanguages } from "dumling-old";
 import {
 	dangerouslyHeavyCompactEmojiSequencePatternForAbout100MiBRss as compactEmojiSequencePattern,
 	dangerouslyHeavySchemasForAbout100MiBRss as schemasFor,
-} from "dumling/dangerously-heavy-schema-tree";
+} from "dumling-old/dangerously-heavy-schema-tree";
 import {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
@@ -535,7 +535,7 @@ export const dumdictValidationArtifactRecipe = defineCodegen({
 	inputs: {
 		dumlingSchemas: {
 			kind: "text-set",
-			root: resolve(packageRoot, "../dumling/src"),
+			root: resolve(packageRoot, "../dumling-old/src"),
 			include: ["schemas/**/*.ts", "validation-semantics.ts"],
 			recursive: true,
 		},

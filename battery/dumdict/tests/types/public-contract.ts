@@ -1,5 +1,5 @@
 import type { Equal, Expect } from "common-utils";
-import type { Reading as DumlingReading } from "dumling/types";
+import type { Reading as DumlingReading } from "dumling-old/types";
 import type { z } from "zod/v4";
 import type * as Dumdict from "../../src";
 import type * as DumdictSchema from "../../src/public-schema";

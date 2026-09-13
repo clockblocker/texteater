@@ -27,7 +27,7 @@
       "dependencies": {
         "astro": "^7.1.3",
         "codegen": "workspace:^",
-        "dumling": "workspace:^",
+        "dumling-old": "workspace:^",
       },
       "devDependencies": {
         "@biomejs/biome": "2.5.13",
@@ -48,7 +48,7 @@
         "common-utils": "workspace:^",
         "dumdict": "workspace:^",
         "dumgen": "workspace:^",
-        "dumling": "workspace:^",
+        "dumling-old": "workspace:^",
         "effect": "3.22.1",
         "lucide-react": "^1.28.0",
         "react": "^19.2.4",
@@ -84,7 +84,7 @@
         "convex": "^1.44.0",
         "dumdict": "workspace:^",
         "dumgen": "workspace:^",
-        "dumling": "workspace:^",
+        "dumling-old": "workspace:^",
         "dumrel": "workspace:^",
         "effect": "3.22.1",
         "lucide-react": "^1.31.0",
@@ -161,7 +161,7 @@
       "version": "0.1.0",
       "dependencies": {
         "common-utils": "workspace:^",
-        "dumling": "workspace:^",
+        "dumling-old": "workspace:^",
         "dumrel": "workspace:^",
         "effect": "3.22.1",
         "emoji-regex": "^10.6.0",
@@ -186,7 +186,7 @@
         "codec-builder-library": "workspace:^",
         "common-utils": "workspace:^",
         "dumdict": "workspace:^",
-        "dumling": "workspace:^",
+        "dumling-old": "workspace:^",
         "dumrel": "workspace:^",
         "effect": "3.22.1",
         "emoji-regex": "^10.6.0",
@@ -205,8 +205,28 @@
         "typescript": "^7.0.2",
       },
     },
-    "battery/dumling": {
+    "battery/dumling-new": {
       "name": "dumling",
+      "version": "0.1.12",
+      "dependencies": {
+        "common-utils": "workspace:^",
+        "emoji-regex": "^10.6.0",
+        "zod": "^4.4.0",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "2.5.13",
+        "@types/node": "^24.13.3",
+        "bun-types": "1.4.2",
+        "codegen": "workspace:^",
+        "dependency-cruiser": "^18.1.0",
+        "esbuild": "^0.28.1",
+        "knip": "^6.29.0",
+        "prinfer": "^2.3.0",
+        "typescript": "^7.0.2",
+      },
+    },
+    "battery/dumling-old": {
+      "name": "dumling-old",
       "version": "0.1.12",
       "dependencies": {
         "codec-builder-library": "workspace:^",
@@ -231,7 +251,7 @@
       "version": "0.1.0",
       "dependencies": {
         "common-utils": "workspace:^",
-        "dumling": "workspace:^",
+        "dumling-old": "workspace:^",
         "emoji-regex": "^10.6.0",
         "zod": "^4.4.0",
       },
@@ -1193,7 +1213,9 @@
 
     "dumgen": ["dumgen@workspace:battery/dumgen"],
 
-    "dumling": ["dumling@workspace:battery/dumling"],
+    "dumling": ["dumling@workspace:battery/dumling-new"],
+
+    "dumling-old": ["dumling-old@workspace:battery/dumling-old"],
 
     "dumrel": ["dumrel@workspace:battery/dumrel"],
 

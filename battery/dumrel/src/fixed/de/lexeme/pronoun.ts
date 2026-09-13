@@ -1,5 +1,5 @@
-import { fixedMembersFor } from "dumling/fixed";
-import type { Lemma, Reading } from "dumling/types";
+import { fixedMembersFor } from "dumling-old/fixed";
+import type { Lemma, Reading } from "dumling-old/types";
 import { compileGrammaticalSeries } from "../../../grammatical-relations.js";
 import type {
 	GrammaticalRelationClaim,

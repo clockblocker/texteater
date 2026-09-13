@@ -48,7 +48,7 @@ try {
 	for (const dependency of [
 		"common-utils",
 		"dumdict",
-		"dumling",
+		"dumling-old",
 		"dumrel",
 		"effect",
 	]) {

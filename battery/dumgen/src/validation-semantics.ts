@@ -1,5 +1,5 @@
 import type { ParsingIssue } from "common-utils";
-import type { Lemma, Reading } from "dumling/types";
+import type { Lemma, Reading } from "dumling-old/types";
 import type { KnowledgeChange, UnitShadow } from "dumrel/types";
 import type {
 	KnowledgeGenerationInput,

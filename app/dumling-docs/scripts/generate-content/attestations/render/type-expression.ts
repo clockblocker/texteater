@@ -1,4 +1,4 @@
-import type { EntityValue } from "dumling/types";
+import type { EntityValue } from "dumling-old/types";
 import { isAttestation, isSurface } from "../entity/guards";
 import { lemmaForEntity } from "../entity/helpers";
 

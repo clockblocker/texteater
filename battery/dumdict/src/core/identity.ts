@@ -1,5 +1,5 @@
-import { readingFingerprint } from "dumling/id";
-import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type { Lemma, Reading, SupportedLanguage } from "dumling-old/types";
 
 type LemmaLike = {
 	canonicalForm: string;

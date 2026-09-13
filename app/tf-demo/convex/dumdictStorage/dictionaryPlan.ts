@@ -1,6 +1,6 @@
 import type { Infer } from "convex/values";
 import type { DumdictPlan } from "dumdict/runtime";
-import type { Reading } from "dumling/reading";
+import type { Reading } from "dumling-old/reading";
 
 import type { dictionaryPlanValidator } from "../model/validators";
 

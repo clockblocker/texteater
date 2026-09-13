@@ -1,5 +1,5 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import type { DumdictService } from "../public";
 import { addAttestation, prepareAddAttestation } from "./add-attestation";

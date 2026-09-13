@@ -2,7 +2,7 @@ import type {
 	LemmaFamilyFor,
 	LemmaKindFor,
 	SupportedLanguage,
-} from "dumling/types";
+} from "dumling-old/types";
 
 import type { KnowledgeRequestMask } from "../types.js";
 

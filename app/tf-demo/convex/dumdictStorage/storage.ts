@@ -1,6 +1,6 @@
 import type { PendingSemanticRelationRecord } from "dumdict/pending";
-import { type Reading, readingFingerprint } from "dumling/reading";
-import type { SupportedLanguage } from "dumling/types";
+import { type Reading, readingFingerprint } from "dumling-old/reading";
+import type { SupportedLanguage } from "dumling-old/types";
 import type { DirectSemanticRelation } from "dumrel";
 import { directSemanticRelationValues } from "dumrel/vocabulary";
 

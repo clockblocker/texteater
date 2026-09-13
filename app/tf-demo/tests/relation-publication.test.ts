@@ -46,7 +46,7 @@ test("the isolate publication policy does not bundle Dumling's schema graph", as
 	expect(
 		bundledInputs.some(
 			(path) =>
-				path.includes("dumling/dist/schema.js") ||
+				path.includes("dumling-old/dist/schema.js") ||
 				path.includes("node_modules/zod/"),
 		),
 	).toBe(false);

@@ -17,8 +17,8 @@ import type {
 	SegmentedSentence,
 	SegmentedSentenceId,
 } from "dumgen";
-import { readingFingerprint } from "dumling";
-import type { Reading } from "dumling/types";
+import { readingFingerprint } from "dumling-old";
+import type { Reading } from "dumling-old/types";
 import {
 	type KnowledgeChange,
 	type LexemeUnitShadow,

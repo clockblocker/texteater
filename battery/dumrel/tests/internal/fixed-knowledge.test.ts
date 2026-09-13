@@ -6,8 +6,8 @@ import {
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
-} from "dumling/fixed";
-import type { Reading } from "dumling/types";
+} from "dumling-old/fixed";
+import type { Reading } from "dumling-old/types";
 import {
 	DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
 	DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,

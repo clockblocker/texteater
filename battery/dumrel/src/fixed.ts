@@ -4,8 +4,8 @@ import {
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
-} from "dumling/fixed";
-import type { Lemma, Reading } from "dumling/types";
+} from "dumling-old/fixed";
+import type { Lemma, Reading } from "dumling-old/types";
 import type {
 	LexemeUnitShadow,
 	ReadingKnowledge,

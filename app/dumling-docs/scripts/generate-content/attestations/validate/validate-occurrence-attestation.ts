@@ -1,4 +1,4 @@
-import { getLanguageApi } from "dumling";
+import { getLanguageApi } from "dumling-old";
 import type {
 	AttestationSource,
 	OccurrenceAttestationSource,

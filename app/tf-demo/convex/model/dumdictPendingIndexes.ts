@@ -4,7 +4,7 @@ import {
 	type PendingSemanticRelationLocator,
 	type PendingSemanticRelationRecord,
 } from "dumdict/pending";
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 
 export function pendingLocatorIndexKey(
 	locator: PendingSemanticRelationLocator<SupportedLanguage>,

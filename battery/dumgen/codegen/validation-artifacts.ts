@@ -4,8 +4,8 @@ import {
 	defineCodegen,
 	type ZodValidationOperationRegistration,
 } from "codegen";
-import { supportedLanguages } from "dumling";
-import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
+import { supportedLanguages } from "dumling-old";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling-old/dangerously-heavy-schema-tree";
 import { lexicalUnitShadowSchema } from "dumrel/schema";
 import emojiRegex from "emoji-regex";
 import type { z } from "zod";
@@ -389,7 +389,7 @@ export const dumgenValidationArtifactRecipe = defineCodegen({
 		},
 		dumlingSchemas: {
 			kind: "text-set",
-			root: resolve(packageRoot, "../dumling/src"),
+			root: resolve(packageRoot, "../dumling-old/src"),
 			include: ["schemas/**/*.ts", "validation-semantics.ts"],
 			recursive: true,
 		},

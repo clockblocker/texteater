@@ -8,7 +8,7 @@ import { median, summarizeSamples } from "../dum-entrypoint-rss/measurement";
 import { runRepresentativeOperation } from "../dum-entrypoint-rss/operations";
 import { findRepositoryRoot } from "../lib/workspaces";
 
-const packages = ["dumling", "dumrel", "dumdict", "dumgen"] as const;
+const packages = ["dumling-old", "dumrel", "dumdict", "dumgen"] as const;
 
 test("every published dum* entrypoint has an explicit RSS-audit classification", async () => {
 	const root = await findRepositoryRoot(import.meta.dir);
@@ -44,8 +44,8 @@ test("schema and model-authoring surfaces are explicitly exempt", () => {
 		({ classification }) => classification === "schema-authoring-exempt",
 	).map(({ specifier }) => specifier);
 	expect(schemaAuthoringSurfaces).toEqual([
-		"dumling/schema",
-		"dumling/dangerously-heavy-schema-tree",
+		"dumling-old/schema",
+		"dumling-old/dangerously-heavy-schema-tree",
 		"dumrel/schema",
 		"dumdict/schema",
 		"dumdict/dangerously-heavy-schema-tree",

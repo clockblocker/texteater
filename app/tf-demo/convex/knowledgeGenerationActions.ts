@@ -5,7 +5,7 @@ import { v } from "convex/values";
 import type { ReadingKnowledgeCatalogMiss } from "dumgen";
 import type { KnowledgeDumgen } from "dumgen/knowledge-runtime";
 import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";

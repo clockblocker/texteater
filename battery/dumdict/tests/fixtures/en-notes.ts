@@ -1,4 +1,4 @@
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling-old";
 import type {
 	Lemma,
 	Reading,

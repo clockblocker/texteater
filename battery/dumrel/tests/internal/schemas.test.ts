@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { readingSchema } from "dumling/schema";
+import { readingSchema } from "dumling-old/schema";
 
 import {
 	directSemanticRelationGraphEdgeSchema,

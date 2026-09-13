@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 
 import {
 	makeUrl,

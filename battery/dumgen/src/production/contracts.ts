@@ -1,5 +1,5 @@
 import type { Prettify } from "common-utils";
-import type { Lemma, Reading } from "dumling/types";
+import type { Lemma, Reading } from "dumling-old/types";
 
 import type { GermanGrammaticalRoute } from "../schema/de-grammatical-resolution-inventory";
 
@@ -60,6 +60,6 @@ export function readingRouteFor<Value extends Reading<"de">>(
 export function lemmaRouteFor(value: {
 	readonly family: GermanGrammaticalRoute["family"];
 	readonly kind: string;
-}): import("dumling/types").LemmaRoute<"de"> {
+}): import("dumling-old/types").LemmaRoute<"de"> {
 	return Object.freeze({ language: "de", ...routeFor(value) });
 }

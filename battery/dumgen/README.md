@@ -31,7 +31,7 @@ Example usage:
 import { buildDumgen } from "dumgen";
 import { buildKnowledgeDumgenRuntime } from "dumgen/knowledge-runtime";
 import { buildOpenAiFetchModelGenerator } from "dumgen/openai-fetch";
-import type { Reading } from "dumling/types";
+import type { Reading } from "dumling-old/types";
 import * as Effect from "effect/Effect";
 
 const modelGenerator = buildOpenAiFetchModelGenerator();

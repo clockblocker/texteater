@@ -5,7 +5,7 @@ import type {
 	Lemma,
 	SupportedLanguage,
 	Surface,
-} from "dumling/types";
+} from "dumling-old/types";
 import { isAttestation, isSurface } from "./guards";
 
 export function languageLabelFor(language: SupportedLanguage): string {

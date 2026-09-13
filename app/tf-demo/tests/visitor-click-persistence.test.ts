@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling-old";
 import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import {
 	persistResolvedClick,

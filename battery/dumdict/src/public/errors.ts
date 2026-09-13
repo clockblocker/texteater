@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 
 export class DumdictLanguageMismatchError extends Error {
 	readonly expectedLanguage: SupportedLanguage;

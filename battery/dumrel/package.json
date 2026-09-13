@@ -79,7 +79,7 @@
 	},
 	"dependencies": {
 		"common-utils": "workspace:^",
-		"dumling": "workspace:^",
+		"dumling-old": "workspace:^",
 		"emoji-regex": "^10.6.0",
 		"zod": "^4.4.0"
 	},

@@ -1,4 +1,4 @@
-import type { LemmaFamilyFor, LemmaKindFor } from "dumling/types";
+import type { LemmaFamilyFor, LemmaKindFor } from "dumling-old/types";
 
 const LEXEME_KINDS_BEFORE_PUNCT = [
 	"ADJ",

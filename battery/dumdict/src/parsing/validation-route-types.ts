@@ -3,7 +3,7 @@ import type {
 	Lemma,
 	SupportedLanguage,
 	Surface,
-} from "dumling/types";
+} from "dumling-old/types";
 import type {
 	KnowledgeChange,
 	PendingSemanticRelation,

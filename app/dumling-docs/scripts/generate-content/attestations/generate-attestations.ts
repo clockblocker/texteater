@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { runCodegen } from "codegen";
-import { getLanguageApi } from "dumling";
+import { getLanguageApi } from "dumling-old";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
 import { generatedEntitiesDir } from "../shared/paths";
 import type { OccurrenceAttestationSource, SourcePage } from "../shared/types";

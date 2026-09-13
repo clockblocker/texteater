@@ -1,6 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import { readingFingerprint } from "dumling/id";
-import type { Reading, SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type { Reading, SupportedLanguage } from "dumling-old/types";
 import { fixedKnowledgeFor } from "dumrel/fixed";
 import type { KnowledgeChange } from "dumrel/types";
 import * as Effect from "effect/Effect";

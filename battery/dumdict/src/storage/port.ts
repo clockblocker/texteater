@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import type * as Effect from "effect/Effect";
 import type { DumdictStorageFailure } from "../public/results";
 import type { CommitChangesRequest, CommitChangesResult } from "./commit";

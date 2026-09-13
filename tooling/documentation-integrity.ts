@@ -133,6 +133,7 @@ function isProducedArtifact(path: string): boolean {
 		path.startsWith("app/dumling-docs/src/generated/") ||
 		path.startsWith("app/dumling-docs/dist/") ||
 		path.startsWith("battery/dumling/resources/") ||
+		path.startsWith("battery/dumling-old/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
 		path.startsWith("battery/dumgen/.laboratory/sessions/") ||
 		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(

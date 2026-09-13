@@ -100,7 +100,13 @@ const dumSchemaAuthoringSubpaths = new Set([
 	"model-authoring",
 	"schema",
 ]);
-const dumPackages = new Set(["dumdict", "dumgen", "dumling", "dumrel"]);
+const dumPackages = new Set([
+	"dumdict",
+	"dumgen",
+	"dumling",
+	"dumling-old",
+	"dumrel",
+]);
 
 function isDumSchemaAuthoringSpecifier(specifier: string): boolean {
 	const [packageName, subpath, ...rest] = specifier.split("/");

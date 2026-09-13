@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { presentedFeatureNames } from "dumling/vocabulary";
+import { presentedFeatureNames } from "dumling-old/vocabulary";
 
 import { get } from "../convex/routeNotes";
 

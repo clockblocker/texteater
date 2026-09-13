@@ -1,5 +1,5 @@
-import { readingFingerprint } from "dumling/id";
-import type { EntityKind, Lemma, SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type { EntityKind, Lemma, SupportedLanguage } from "dumling-old/types";
 import {
 	directSemanticRelationValues,
 	semanticRelationValues,

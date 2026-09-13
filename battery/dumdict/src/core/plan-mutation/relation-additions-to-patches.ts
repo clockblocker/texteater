@@ -1,5 +1,5 @@
-import { readingFingerprint } from "dumling/id";
-import type { Lemma, SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type { Lemma, SupportedLanguage } from "dumling-old/types";
 import type { DirectSemanticRelation } from "dumrel/types";
 import type { StoreRevision } from "../../domain-types";
 import type { Reading, ReadingKnowledgeChange } from "../../dto";

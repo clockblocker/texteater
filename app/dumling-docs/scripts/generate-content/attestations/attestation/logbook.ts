@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { getLanguageApi } from "dumling";
-import type { SupportedLanguage } from "dumling/types";
+import { getLanguageApi } from "dumling-old";
+import type { SupportedLanguage } from "dumling-old/types";
 import {
 	classificationLogbookDir,
 	sourceAttestationsDir,

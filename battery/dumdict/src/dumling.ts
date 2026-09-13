@@ -1,7 +1,7 @@
 import {
 	buildLanguageApiFromParseOperations,
 	supportedLanguages,
-} from "dumling/id";
+} from "dumling-old/id";
 import type {
 	CoreFeaturesFor,
 	DumlingApi,
@@ -15,7 +15,7 @@ import type {
 	SupportedLanguage,
 	Surface,
 	SurfaceIdentity,
-} from "dumling/types";
+} from "dumling-old/types";
 import { createLazyLanguageApiRecord } from "./lazy-language-api.js";
 import { getDumdictCompatibilityParseOperations } from "./parsing/lightweight-parsers.js";
 

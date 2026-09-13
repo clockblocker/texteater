@@ -137,13 +137,13 @@ import {
 	dumling as packageDumling,
 	parseAsReading as packageParseAsReading,
 	readingFingerprint as packageReadingFingerprint,
-} from "dumling";
+} from "dumling-old";
 import type {
 	Attestation as PackageAttestation,
 	Lemma as PackageLemma,
 	Reading as PackageReading,
 	Surface as PackageSurface,
-} from "dumling/types";
+} from "dumling-old/types";
 
 const lemma = packageDumling.de.create.lemma({
 	canonicalForm: "see",
@@ -206,7 +206,7 @@ readingIdentity satisfies string;
 The supported route-specific trees remain available only as an explicit danger-zone escape hatch for schema-authoring integrations that genuinely require an exact leaf:
 
 ```ts
-import { dangerouslyHeavySchemasForAbout100MiBRss } from "dumling/dangerously-heavy-schema-tree";
+import { dangerouslyHeavySchemasForAbout100MiBRss } from "dumling-old/dangerously-heavy-schema-tree";
 
 dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
 ```

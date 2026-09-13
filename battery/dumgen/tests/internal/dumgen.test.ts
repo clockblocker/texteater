@@ -53,7 +53,7 @@ import {
 	type ModelGenerator,
 	type SegmentedSentence,
 } from "dumgen";
-import { fixedMembersFor } from "dumling/fixed";
+import { fixedMembersFor } from "dumling-old/fixed";
 import { z } from "zod";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import type { PromptTree } from "../../src/catalog/prompt-definition";

@@ -19,7 +19,7 @@ const document = defineGeneratedDocPage({
 ## Lemma → Surface → Attestation
 
 \`\`\`ts
-import { dumling } from "dumling";
+import { dumling } from "dumling-old";
 
 const runLemma = dumling.en.create.lemma({
 \tcanonicalForm: "run",
@@ -83,11 +83,11 @@ Attestations are intentionally absent from the ID API.
 ## Schemas
 
 \`\`\`ts
-import { abstractSchemas, anyLemmaSchema, readingSchema } from "dumling/schema";
+import { abstractSchemas, anyLemmaSchema, readingSchema } from "dumling-old/schema";
 import {
 	dangerouslyHeavySchemasForAbout100MiBRss,
 	getDangerouslyHeavySchemaTreeForAbout100MiBRss,
-} from "dumling/dangerously-heavy-schema-tree";
+} from "dumling-old/dangerously-heavy-schema-tree";
 
 dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
 getDangerouslyHeavySchemaTreeForAbout100MiBRss("de");

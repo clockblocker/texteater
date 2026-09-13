@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { deDeterminerFeaturesSchema as OldDeDeterminerFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/de/lexeme/determiner.js";
-import { deVerbFeaturesSchema as OldDeVerbFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/de/lexeme/verb.js";
-import { heAdjectiveFeaturesSchema as OldHeAdjectiveFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/he/lexeme/adjective.js";
-import { heVerbFeaturesSchema as OldHeVerbFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/he/lexeme/verb.js";
+import { deDeterminerFeaturesSchema as OldDeDeterminerFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/de/lexeme/determiner.js";
+import { deVerbFeaturesSchema as OldDeVerbFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/de/lexeme/verb.js";
+import { heAdjectiveFeaturesSchema as OldHeAdjectiveFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/he/lexeme/adjective.js";
+import { heVerbFeaturesSchema as OldHeVerbFeatureBagsSchema } from "../../dumling-old/src/schemas/concrete-language/features/he/lexeme/verb.js";
 import { DeConstructionFusionFeatureBagsSchema } from "../src/schemas/concrete-language/de/construction/fusion.js";
 import { DeDeterminerFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/determiner.js";
 import { DeVerbFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/verb.js";

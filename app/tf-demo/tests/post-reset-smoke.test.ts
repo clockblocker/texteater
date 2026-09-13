@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { createDumdictService, type DumdictStoragePort } from "dumdict";
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling-old";
 import * as Effect from "effect/Effect";
 import {
 	clearVisitorDataBatch,

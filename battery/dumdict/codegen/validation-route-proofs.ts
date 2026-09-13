@@ -1,5 +1,5 @@
 import type { Equal } from "common-utils";
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import type {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,

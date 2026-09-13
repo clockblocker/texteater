@@ -6,7 +6,7 @@
   records occurrence-specific Attestations and Visitor Encounter history.
 - [react-resizable-panels](./battery/react-resizable-panels/CONTEXT.md): owns
   workspace Presentation, Card, Sheet, and gesture terminology.
-- [Dumling](./battery/dumling/CONTEXT.md): names the grammatical entities to
+- [Dumling](./battery/dumling-new/CONTEXT.md): names the grammatical entities to
   which learner text resolves.
 - [Dumrel](./battery/dumrel/CONTEXT.md): defines Reading Knowledge and relation
   algebra.

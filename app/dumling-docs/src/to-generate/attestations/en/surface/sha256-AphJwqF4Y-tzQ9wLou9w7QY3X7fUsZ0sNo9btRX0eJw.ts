@@ -1,4 +1,4 @@
-import type { Surface } from "dumling/types";
+import type { Surface } from "dumling-old/types";
 
 export const booksSurface = {
 	language: "en",

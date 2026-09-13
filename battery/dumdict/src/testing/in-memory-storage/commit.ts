@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "dumling-old/types";
 import type { SerializedDictionaryNote } from "../../dto";
 import type { CommitChangesRequest, CommitChangesResult } from "../../storage";
 import { applyChange } from "./apply-change";

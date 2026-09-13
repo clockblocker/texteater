@@ -1,4 +1,4 @@
-import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
+import type { Lemma, Reading, SupportedLanguage } from "dumling-old/types";
 import type {
 	KnowledgeChange,
 	LexemeUnitShadow,

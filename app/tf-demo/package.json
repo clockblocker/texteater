@@ -38,7 +38,7 @@
 		"convex": "^1.44.0",
 		"dumdict": "workspace:^",
 		"dumgen": "workspace:^",
-		"dumling": "workspace:^",
+		"dumling-old": "workspace:^",
 		"dumrel": "workspace:^",
 		"effect": "3.22.1",
 		"lucide-react": "^1.31.0",

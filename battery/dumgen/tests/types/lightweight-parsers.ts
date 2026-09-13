@@ -3,8 +3,8 @@ import type {
 	Expect,
 	ParsingError as ParsingErrorType,
 } from "common-utils";
-import type { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
-import type { Attestation } from "dumling/types";
+import type { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling-old/dangerously-heavy-schema-tree";
+import type { Attestation } from "dumling-old/types";
 import { z } from "zod";
 import type { DumgenParserInterface } from "../../../../tooling/dum-parser-interface-contract";
 import { canonicalDumgenValidationSchemas } from "../../codegen/validation-artifacts";
@@ -72,7 +72,8 @@ type _SwappedAttestationLanguageMustFail = Expect<
 		"Citation/Lexeme/NOUN",
 		// @ts-expect-error A Hebrew leaf cannot back the canonical German route.
 		ActualHebrewNounAttestationSchema
-	>>;
+	>
+>;
 
 const narrowedGermanNounAttestationSchema = canonicalGermanAttestationSchemas[
 	"Citation/Lexeme/NOUN"
@@ -82,7 +83,8 @@ type _NarrowedAttestationLeafMustFail = Expect<
 	ProveCanonicalGermanAttestationSchemaRoute<
 		"Citation/Lexeme/NOUN",
 		typeof narrowedGermanNounAttestationSchema
-	>>;
+	>
+>;
 
 type DroppedGermanAttestationRouteKey = Exclude<
 	CanonicalGermanAttestationRouteKey,
@@ -90,10 +92,8 @@ type DroppedGermanAttestationRouteKey = Exclude<
 >;
 type _DroppedAttestationLeafMustFail = Expect<
 	// @ts-expect-error Dropping an actual leaf must fail exact inventory equality.
-	Equal<
-		DroppedGermanAttestationRouteKey,
-		CanonicalGermanAttestationRouteKey
-	>>;
+	Equal<DroppedGermanAttestationRouteKey, CanonicalGermanAttestationRouteKey>
+>;
 
 type ActualGermanSegmentedSentenceSchema =
 	(typeof canonicalDumgenValidationSchemas)["parseAsSegmentedSentence:de"];
@@ -121,7 +121,8 @@ type _NarrowedActualSchemaMustFail = Expect<
 		"parseAsSegmentedSentence:de",
 		// @ts-expect-error A narrowed schema cannot replace the exact canonical route.
 		typeof narrowedGermanSegmentedSentenceSchema
-	>>;
+	>
+>;
 
 const narrowedGermanGrammaticalResultSchema = canonicalDumgenValidationSchemas[
 	"parseAsGrammaticalResult:de"
@@ -131,7 +132,8 @@ type _NarrowedGrammaticalResultSchemaMustFail = Expect<
 	ProveCanonicalDumgenValidationSchemaRoute<
 		"parseAsGrammaticalResult:de",
 		typeof narrowedGermanGrammaticalResultSchema
-	>>;
+	>
+>;
 
 declare const actualGermanSchema: CanonicalDumgenValidationSchemaForRoute<"parseAsSegmentedSentence:de">;
 void actualGermanSchema;

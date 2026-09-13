@@ -1,8 +1,8 @@
 import { v } from "convex/values";
 import { makeSurfaceId } from "dumdict/runtime";
-import { allFixedReadingCatalogs } from "dumling/fixed";
-import { readingFingerprint } from "dumling/reading";
-import type { Reading, Surface } from "dumling/types";
+import { allFixedReadingCatalogs } from "dumling-old/fixed";
+import { readingFingerprint } from "dumling-old/reading";
+import type { Reading, Surface } from "dumling-old/types";
 
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import { internal } from "./_generated/api";

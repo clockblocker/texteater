@@ -34,25 +34,25 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			id: "dumling.parse-lemma",
 		},
 		rationale: "Package root exposes Dumling runtime operations.",
-		specifier: "dumling",
+		specifier: "dumling-old",
 	},
 	{
 		classification: "type-only",
 		rationale:
 			"Published JavaScript is empty; the subpath is a type surface.",
-		specifier: "dumling/types",
+		specifier: "dumling-old/types",
 	},
 	{
 		classification: "schema-authoring-exempt",
 		rationale:
 			"Deliberately Zod-bearing public schema composition surface.",
-		specifier: "dumling/schema",
+		specifier: "dumling-old/schema",
 	},
 	{
 		classification: "schema-authoring-exempt",
 		rationale:
 			"Deliberately dangerous route-specific schema tree costing roughly 100 MiB RSS.",
-		specifier: "dumling/dangerously-heavy-schema-tree",
+		specifier: "dumling-old/dangerously-heavy-schema-tree",
 	},
 	{
 		classification: "operational",
@@ -63,7 +63,7 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 		rationale:
 			"Lean canonical ID codecs operate without a schema or parser-artifact import.",
-		specifier: "dumling/id",
+		specifier: "dumling-old/id",
 	},
 	{
 		classification: "operational",
@@ -72,7 +72,7 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			id: "dumling.reading-fingerprint",
 		},
 		rationale: "Runtime Reading identity operation.",
-		specifier: "dumling/reading",
+		specifier: "dumling-old/reading",
 	},
 	{
 		classification: "operational",
@@ -82,7 +82,7 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			id: "dumling.read-vocabulary",
 		},
 		rationale: "Runtime constants consumed without a schema import.",
-		specifier: "dumling/vocabulary",
+		specifier: "dumling-old/vocabulary",
 	},
 	{
 		classification: "operational",
@@ -91,12 +91,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			id: "dumling.read-fixed-catalog",
 		},
 		rationale: "Runtime fixed-member catalog and lookup surface.",
-		specifier: "dumling/fixed",
+		specifier: "dumling-old/fixed",
 	},
 	{
 		classification: "metadata",
 		rationale: "Package metadata, not executable application code.",
-		specifier: "dumling/package.json",
+		specifier: "dumling-old/package.json",
 	},
 	{
 		classification: "operational",

@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[5]
-RESOURCES = REPO / "battery/dumling/resources"
+RESOURCES = REPO / "battery/dumling-old/resources"
 FRAGMENTS = RESOURCES / "tools-for-parsing/temp"
 TARGET = RESOURCES / "TIGER/tiger_scheme-syntax.md"
 PARTS = (

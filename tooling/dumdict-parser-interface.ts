@@ -12,7 +12,7 @@ import type {
 	ReadingPatchOp,
 	SurfaceEntry,
 } from "../battery/dumdict/src/domain-types";
-import type { SupportedLanguage } from "../battery/dumling/src/types";
+import type { SupportedLanguage } from "../battery/dumling-old/src/types";
 
 type Parsed<Value> = Value | ParsingError<Value>;
 

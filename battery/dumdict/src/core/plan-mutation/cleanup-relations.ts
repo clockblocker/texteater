@@ -1,5 +1,5 @@
-import { readingFingerprint } from "dumling/id";
-import type { SupportedLanguage } from "dumling/types";
+import { readingFingerprint } from "dumling-old/id";
+import type { SupportedLanguage } from "dumling-old/types";
 import type { Reading } from "../../dto";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";

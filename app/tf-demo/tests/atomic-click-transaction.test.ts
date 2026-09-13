@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import type { DumdictPlan } from "dumdict";
 import { makeSurfaceId } from "dumdict";
-import { readingFingerprint } from "dumling";
-import { fixedMembersFor } from "dumling/fixed";
+import { readingFingerprint } from "dumling-old";
+import { fixedMembersFor } from "dumling-old/fixed";
 import { persistResolvedClick } from "../convex/persistence";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 

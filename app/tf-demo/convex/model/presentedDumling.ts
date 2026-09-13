@@ -1,12 +1,12 @@
 import { type Infer, v } from "convex/values";
-import { getLanguageApi, toPresented } from "dumling";
+import { getLanguageApi, toPresented } from "dumling-old";
 import type {
 	PresentedAttestation,
 	PresentedFeatureSet,
 	PresentedLemma,
 	PresentedSurface,
-} from "dumling/types";
-import { presentedFeatureNames } from "dumling/vocabulary";
+} from "dumling-old/types";
+import { presentedFeatureNames } from "dumling-old/vocabulary";
 
 import {
 	type attestationValueValidator,

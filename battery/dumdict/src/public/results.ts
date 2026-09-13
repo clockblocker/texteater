@@ -1,4 +1,4 @@
-import type { Lemma, SupportedLanguage } from "dumling/types";
+import type { Lemma, SupportedLanguage } from "dumling-old/types";
 import type {
 	PendingSemanticRelationRecord,
 	Reading,

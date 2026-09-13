@@ -1,5 +1,5 @@
 import type { Brand } from "common-utils";
-import type { Attestation, Lemma } from "dumling/types";
+import type { Attestation, Lemma } from "dumling-old/types";
 import type {
 	LemmaCatalogMiss,
 	ReadingCatalogMiss,
@@ -174,5 +174,5 @@ export type GrammaticalResolution = {
 	readonly memberOrthographies: readonly ("Standard" | "Typo")[];
 	readonly normalizedMembers: readonly string[];
 	readonly realizationCoverage: "Full" | "Partial";
-	readonly surface: import("dumling/types").Surface<"de">;
+	readonly surface: import("dumling-old/types").Surface<"de">;
 };
