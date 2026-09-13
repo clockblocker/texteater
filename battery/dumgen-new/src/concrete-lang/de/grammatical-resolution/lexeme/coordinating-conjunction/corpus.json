@@ -1,0 +1,1242 @@
+{
+	"grammar-de-cconj-demo-ordinary-und": {
+		"input": {
+			"markedContext": "Anna liest, <TARGET>und</TARGET> Ben kocht.",
+			"members": ["und"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["und"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Route fixed. Joins clauses. Citation only. Ordinary Lemma."
+	},
+	"grammar-de-cconj-dev-ordinary-oder-nouns": {
+		"input": {
+			"markedContext": "Zum Frühstück gibt es Müsli <TARGET>oder</TARGET> Brot.",
+			"members": ["oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-adversative-aber-clauses": {
+		"input": {
+			"markedContext": "Sie ist müde, <TARGET>aber</TARGET> sie arbeitet weiter.",
+			"members": ["aber"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aber"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aber",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-adversative-doch-clauses": {
+		"input": {
+			"markedContext": "Er wollte kommen, <TARGET>doch</TARGET> der Zug fiel aus.",
+			"members": ["doch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-corrective-sondern": {
+		"input": {
+			"markedContext": "Das Wasser ist nicht kalt, <TARGET>sondern</TARGET> warm.",
+			"members": ["sondern"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sondern"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sondern",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-additive-sowie": {
+		"input": {
+			"markedContext": "Brot <TARGET>sowie</TARGET> Käse werden serviert.",
+			"members": ["sowie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sowie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowie",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-beziehungsweise-full": {
+		"input": {
+			"markedContext": "Die Eltern <TARGET>beziehungsweise</TARGET> Sorgeberechtigten unterschreiben.",
+			"members": ["beziehungsweise"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["beziehungsweise"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beziehungsweise",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-sentence-initial-und": {
+		"input": {
+			"markedContext": "<TARGET>Und</TARGET> danach gingen alle nach Hause.",
+			"members": ["Und"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["und"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-repeated-second-und": {
+		"input": {
+			"markedContext": "Anna und Ben singen, <TARGET>und</TARGET> Carla tanzt.",
+			"members": ["und"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["und"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-und-list": {
+		"input": {
+			"markedContext": "Im Korb liegen Äpfel, Birnen <TARGET>und</TARGET> Pflaumen.",
+			"members": ["und"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["und"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-oder-clauses": {
+		"input": {
+			"markedContext": "Wir fahren heute, <TARGET>oder</TARGET> wir bleiben zu Hause.",
+			"members": ["oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-aber-adjectives": {
+		"input": {
+			"markedContext": "Der Weg ist lang, <TARGET>aber</TARGET> gut ausgeschildert.",
+			"members": ["aber"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aber"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aber",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-sowie-subjects": {
+		"input": {
+			"markedContext": "Die Ärztin <TARGET>sowie</TARGET> der Pfleger wurden informiert.",
+			"members": ["sowie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sowie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowie",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-variant-u": {
+		"input": {
+			"markedContext": "Auf dem Zettel stehen Brot <TARGET>u</TARGET>. Käse.",
+			"members": ["u"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["u"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-demo-sowohl-als-auch": {
+		"input": {
+			"markedContext": "Sie hat <TARGET>sowohl</TARGET> den Film gesehen <TARGET>als</TARGET> <TARGET>auch</TARGET> das Buch gelesen.",
+			"members": ["sowohl", "als", "auch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "als", "auch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … als auch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-demo-je-desto": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> länger der Weg wird, <TARGET>desto</TARGET> müder werden die Reisenden.",
+			"members": ["Je", "desto"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["je", "desto"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "je … desto",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Je and desto are the fixed CCONJ anchors; comparative payload remains unmarked."
+	},
+	"grammar-de-cconj-demo-entweder-typo": {
+		"input": {
+			"markedContext": "Wir nehmen <TARGET>endweder</TARGET> den Bus <TARGET>oder</TARGET> die Bahn.",
+			"members": ["endweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Repair the misspelled first anchor while preserving authoritative membership."
+	},
+	"grammar-de-cconj-dev-entweder-freitag": {
+		"input": {
+			"markedContext": "Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
+			"members": ["entweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-entweder-clauses": {
+		"input": {
+			"markedContext": "<TARGET>Entweder</TARGET> fährt Mia heute, <TARGET>oder</TARGET> sie bleibt bis morgen.",
+			"members": ["Entweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-weder-noch": {
+		"input": {
+			"markedContext": "Sie trinkt <TARGET>weder</TARGET> Tee <TARGET>noch</TARGET> Kaffee.",
+			"members": ["weder", "noch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["weder", "noch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "weder … noch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-sowohl-als": {
+		"input": {
+			"markedContext": "Sie schätzt <TARGET>sowohl</TARGET> Ruhe <TARGET>als</TARGET> Bewegung.",
+			"members": ["sowohl", "als"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "als"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … als",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-sowohl-wie": {
+		"input": {
+			"markedContext": "Die Regel gilt <TARGET>sowohl</TARGET> für Kinder <TARGET>wie</TARGET> für Erwachsene.",
+			"members": ["sowohl", "wie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "wie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … wie",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-sowohl-wie-auch": {
+		"input": {
+			"markedContext": "Das Angebot gilt <TARGET>sowohl</TARGET> online <TARGET>wie</TARGET> <TARGET>auch</TARGET> im Laden.",
+			"members": ["sowohl", "wie", "auch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "wie", "auch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … wie auch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-je-umso": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> genauer wir messen, <TARGET>umso</TARGET> sicherer wird das Ergebnis.",
+			"members": ["Je", "umso"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["je", "umso"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "je … umso",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-je-je": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> mehr er versprach, <TARGET>je</TARGET> weniger glaubte man ihm.",
+			"members": ["Je", "je"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["je", "je"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "je … je",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The repeated anchors are separate ordered members of one proportional CCONJ."
+	},
+	"grammar-de-cconj-dev-casing-entweder": {
+		"input": {
+			"markedContext": "<TARGET>Entweder</TARGET> gewinnen wir heute, <TARGET>oder</TARGET> wir üben morgen weiter.",
+			"members": ["Entweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-desto-typo": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> höher der Druck, <TARGET>desdo</TARGET> größer das Risiko.",
+			"members": ["Je", "desdo"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Typo"],
+			"normalizedMembers": ["je", "desto"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "je … desto",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-near-ordinary-cconj": {
+		"input": {
+			"markedContext": "Die Frage lautet „Kaffee oder Tee?“, doch wir bestellen <TARGET>entweder</TARGET> Saft <TARGET>oder</TARGET> Wasser.",
+			"members": ["entweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The earlier ordinary coordinators are unmarked context; only the supplied anchors belong to this Lexeme."
+	},
+	"grammar-de-cconj-dev-near-sconj": {
+		"input": {
+			"markedContext": "Ob es regnet, weiß niemand; wir fahren <TARGET>entweder</TARGET> mit dem Bus <TARGET>oder</TARGET> mit der Bahn.",
+			"members": ["entweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Initial ob is unmarked SCONJ context and does not alter membership."
+	},
+	"grammar-de-cconj-dev-near-adv": {
+		"input": {
+			"markedContext": "Außerdem ist der Entwurf <TARGET>sowohl</TARGET> klar <TARGET>als</TARGET> <TARGET>auch</TARGET> knapp.",
+			"members": ["sowohl", "als", "auch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "als", "auch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … als auch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Außerdem is unmarked ADV context; all three supplied anchors belong to one CCONJ."
+	},
+	"grammar-de-cconj-accept-entweder-nouns": {
+		"input": {
+			"markedContext": "Zum Frühstück gibt es <TARGET>entweder</TARGET> Müsli <TARGET>oder</TARGET> Brot.",
+			"members": ["entweder", "oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["entweder", "oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "entweder … oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-weder-clauses": {
+		"input": {
+			"markedContext": "<TARGET>Weder</TARGET> rief sie zurück, <TARGET>noch</TARGET> schrieb sie eine Nachricht.",
+			"members": ["Weder", "noch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["weder", "noch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "weder … noch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-sowohl-als-auch": {
+		"input": {
+			"markedContext": "Der Kurs ist <TARGET>sowohl</TARGET> anspruchsvoll <TARGET>als</TARGET> <TARGET>auch</TARGET> unterhaltsam.",
+			"members": ["sowohl", "als", "auch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "als", "auch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … als auch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-sowohl-wie": {
+		"input": {
+			"markedContext": "Das Verfahren eignet sich <TARGET>sowohl</TARGET> für kleine Teams <TARGET>wie</TARGET> für große Abteilungen.",
+			"members": ["sowohl", "wie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["sowohl", "wie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sowohl … wie",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-je-desto": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> ruhiger die See war, <TARGET>desto</TARGET> schneller kamen wir voran.",
+			"members": ["Je", "desto"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["je", "desto"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "je … desto",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-je-umso": {
+		"input": {
+			"markedContext": "<TARGET>Je</TARGET> später der Abend wurde, <TARGET>umso</TARGET> leiser sprach die Runde.",
+			"members": ["Je", "umso"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["je", "umso"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "je … umso",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-demo-comparative-als": {
+		"input": {
+			"markedContext": "Mira ist größer <TARGET>als</TARGET> ihre Schwester.",
+			"members": ["als"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["als"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "als",
+				"coreFeatures": {
+					"conjType": "Comp"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Comparison complement. Route fixed. Mark Comp."
+	},
+	"grammar-de-cconj-demo-causal-denn": {
+		"input": {
+			"markedContext": "Wir gehen jetzt, <TARGET>denn</TARGET> es wird spät.",
+			"members": ["denn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["denn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "denn",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Second clause stays V2. Causal coordinator. Not particle or subordinator."
+	},
+	"grammar-de-cconj-dev-comparative-wie": {
+		"input": {
+			"markedContext": "Mira ist genauso groß <TARGET>wie</TARGET> ihre Schwester.",
+			"members": ["wie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wie",
+				"coreFeatures": {
+					"conjType": "Comp"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-comparative-als-mehr": {
+		"input": {
+			"markedContext": "Heute kamen mehr Gäste <TARGET>als</TARGET> gestern.",
+			"members": ["als"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["als"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "als",
+				"coreFeatures": {
+					"conjType": "Comp"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-jedoch-null-position": {
+		"input": {
+			"markedContext": "Die Polizei suchte überall, <TARGET>jedoch</TARGET> sie fand ihn nicht.",
+			"members": ["jedoch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedoch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedoch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Pronoun before finite verb. Coordinator slot. Not integrated ADV."
+	},
+	"grammar-de-cconj-dev-aber-not-particle": {
+		"input": {
+			"markedContext": "Die Aufgabe war schwierig, <TARGET>aber</TARGET> alle lösten sie.",
+			"members": ["aber"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aber"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aber",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Joins clauses. Route fixed CCONJ. Not intensifying PART."
+	},
+	"grammar-de-cconj-dev-doch-not-particle": {
+		"input": {
+			"markedContext": "Wir warteten lange, <TARGET>doch</TARGET> niemand erschien.",
+			"members": ["doch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Joins clauses. Route fixed CCONJ. Not modal PART."
+	},
+	"grammar-de-cconj-dev-denn-verb-second-anchor": {
+		"input": {
+			"markedContext": "Nora schloss das Fenster, <TARGET>denn</TARGET> draußen tobte ein Sturm.",
+			"members": ["denn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["denn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "denn",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Finite verb stays second. Coordinator. Not SCONJ."
+	},
+	"grammar-de-cconj-dev-ordinary-oder-without-correlate": {
+		"input": {
+			"markedContext": "Du kannst anrufen <TARGET>oder</TARGET> eine Nachricht schreiben.",
+			"members": ["oder"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Plain oder joins alternatives without an upstream correlating partner."
+	},
+	"grammar-de-cconj-accept-comparative-als-tiefer": {
+		"input": {
+			"markedContext": "Der neue Brunnen ist tiefer <TARGET>als</TARGET> der alte.",
+			"members": ["als"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["als"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "als",
+				"coreFeatures": {
+					"conjType": "Comp"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-comparative-wie-ebenso": {
+		"input": {
+			"markedContext": "Die zweite Lösung ist ebenso robust <TARGET>wie</TARGET> die erste.",
+			"members": ["wie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wie",
+				"coreFeatures": {
+					"conjType": "Comp"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-denn-causal": {
+		"input": {
+			"markedContext": "Lea nahm einen Schirm, <TARGET>denn</TARGET> dunkle Wolken zogen auf.",
+			"members": ["denn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["denn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "denn",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-doch-sentence-initial": {
+		"input": {
+			"markedContext": "<TARGET>Doch</TARGET> niemand wollte den Plan aufgeben.",
+			"members": ["Doch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-jedoch-null-position": {
+		"input": {
+			"markedContext": "Der Weg war weit, <TARGET>jedoch</TARGET> die Gruppe blieb zusammen.",
+			"members": ["jedoch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jedoch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedoch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Subject before finite verb. CCONJ. Not integrated ADV."
+	},
+	"grammar-de-cconj-demo-typo-udn": {
+		"input": {
+			"markedContext": "Tee <TARGET>udn</TARGET> Kaffee stehen bereit.",
+			"members": ["udn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["und"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Letters swapped. Mark Typo. Repair normalized member and Lemma."
+	},
+	"grammar-de-cconj-demo-variant-bzw": {
+		"input": {
+			"markedContext": "Die Eltern <TARGET>bzw</TARGET>. Sorgeberechtigten unterschreiben.",
+			"members": ["bzw"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bzw"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beziehungsweise",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation. Standard member. Variant Surface. Full Lemma."
+	},
+	"grammar-de-cconj-demo-archaic-allein": {
+		"input": {
+			"markedContext": "Ich wollte helfen, <TARGET>allein</TARGET> mir fehlte die Zeit.",
+			"members": ["allein"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["allein"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "allein",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Old adversative coordinator. Mark Surface Archaic."
+	},
+	"grammar-de-cconj-dev-typo-odre": {
+		"input": {
+			"markedContext": "Nimm den Bus <TARGET>odre</TARGET> geh zu Fuß.",
+			"members": ["odre"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["oder"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "oder",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-typo-sonedrn": {
+		"input": {
+			"markedContext": "Das Paket ist nicht leicht, <TARGET>sonedrn</TARGET> schwer.",
+			"members": ["sonedrn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["sondern"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sondern",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-dev-variant-bzw-initial": {
+		"input": {
+			"markedContext": "<TARGET>Bzw</TARGET>. die gesetzliche Vertretung muss zustimmen.",
+			"members": ["Bzw"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bzw"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "beziehungsweise",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-typo-jedcoh": {
+		"input": {
+			"markedContext": "Der Versuch war riskant, <TARGET>jedcoh</TARGET> das Team setzte ihn fort.",
+			"members": ["jedcoh"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["jedoch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jedoch",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-cconj-accept-archaic-allein": {
+		"input": {
+			"markedContext": "Die Mannschaft kämpfte tapfer, <TARGET>allein</TARGET> der Sieg blieb aus.",
+			"members": ["allein"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["allein"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "allein",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

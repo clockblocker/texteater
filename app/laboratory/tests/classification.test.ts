@@ -20,7 +20,7 @@ import {
 	type Dumgen,
 	type DumgenModelExchange,
 	type ModelGenerator,
-} from "dumgen";
+} from "gumgen-old";
 import {
 	GermanClassificationResolver,
 	targetClassificationPrompt,

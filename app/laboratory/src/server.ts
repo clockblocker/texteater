@@ -1,14 +1,18 @@
+import { createEvaluationService } from "./evaluations";
+
+const evaluations = createEvaluationService();
+
 import {
 	type DumTraceEvent,
 	type DumTraceSink,
 	withTraceRecorder,
 } from "common-utils/workflow";
-import type { DumgenModelExchange, DumgenSection1Trace } from "dumgen";
-import { buildDumgen } from "dumgen";
-import { buildOpenAiFetchModelGenerator } from "dumgen/openai-fetch";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Runtime from "effect/Runtime";
+import type { DumgenModelExchange, DumgenSection1Trace } from "gumgen-old";
+import { buildDumgen } from "gumgen-old";
+import { buildOpenAiFetchModelGenerator } from "gumgen-old/openai-fetch";
 import { GermanClassificationResolver } from "./classification";
 import {
 	attemptedPromptPaths,
@@ -143,6 +147,81 @@ const server = Bun.serve({
 	hostname: "127.0.0.1",
 	port: 3100,
 	routes: {
+		"/api/evaluations/experiments": {
+			GET() {
+				return Response.json(evaluations.experiments());
+			},
+		},
+		"/api/evaluations/runs": {
+			async GET(request) {
+				try {
+					const url = new URL(request.url);
+					return Response.json(
+						await evaluations.list(
+							url.searchParams.get("directory") || undefined,
+						),
+					);
+				} catch (error) {
+					return Response.json(
+						{ error: String(error) },
+						{ status: 400 },
+					);
+				}
+			},
+			async POST(request) {
+				try {
+					return Response.json(
+						await evaluations.run(
+							await request.json(),
+							request.signal,
+						),
+					);
+				} catch (error) {
+					return Response.json(
+						{ error: String(error) },
+						{ status: 400 },
+					);
+				}
+			},
+		},
+		"/api/evaluations/runs/:id": {
+			async GET(request) {
+				try {
+					return Response.json(
+						await evaluations.open(
+							request.params.id,
+							new URL(request.url).searchParams.get(
+								"directory",
+							) || undefined,
+						),
+					);
+				} catch (error) {
+					return Response.json(
+						{ error: String(error) },
+						{ status: 400 },
+					);
+				}
+			},
+		},
+		"/api/evaluations/compare": {
+			async GET(request) {
+				try {
+					const url = new URL(request.url);
+					return Response.json(
+						await evaluations.compare(
+							url.searchParams.get("left") ?? "",
+							url.searchParams.get("right") ?? "",
+							url.searchParams.get("directory") || undefined,
+						),
+					);
+				} catch (error) {
+					return Response.json(
+						{ error: String(error) },
+						{ status: 400 },
+					);
+				}
+			},
+		},
 		"/api/health": Response.json({
 			ok: true,
 			service: "laboratory",

@@ -1,0 +1,243 @@
+{
+	"path": "knowledge-analysis/de/phraseme/prompt-source.ts",
+	"route": "knowledge-analysis/de/phraseme",
+	"body": "\n\nGenerate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German relation\n  targets, or null, for each requested relation kind.\n\nA relation target contains only canonicalForm and kind. Its German language\nand Family follow from this Reading, so every target Kind is one of this\nReading's Family's Kinds. A target never contains\nCore Features, a Reading, an emoji description, an ID, or persistence\ninstructions. Relation targets describe the related concept, not a surface\ninflection from the sentence. Use only exact Dumling Kind tokens already\ndemonstrated by the schema. In particular, a German adverb Lexeme has Kind ADV,\nnever ADVERB.\n\n\nKeep exact Synonym distinct from Near Synonym. Antonym is opposition; Hypernym\nis broader; Hyponym is narrower; Meronym is a part/member/substance; Holonym is\nthe containing whole.\n\nA relation target must be a Phraseme whose Kind is one of this Family's\nconventionalized-unit Kinds (Aphorism, Collocation, DiscourseFormula, Idiom,\nProverb). A Lexeme, Morpheme, or Construction Kind leaves this Family's\ninventory; the complete multi-member unit owns the relation, and a free phrase\nis never a target. Prefer returning null over a cross-Family guess.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\n\nBefore returning, confirm that the response mirrors the requested tree exactly,\nthat every populated leaf is one defensible candidate for the fixed Reading,\nand that every relation target is a same-Family, valid-Kind German Unit Shadow.\n\n\nCanonical Reading input uses Dumling unitKind tags. Propose targets as Canonical Form and Kind. Language and source Family are supplied in code; never reclassify targets with another model call.\n",
+	"cases": {
+		"relation-demo-zeit-ist-geld": {
+			"input": {
+				"markedContext": "Wir müssen höflich bleiben: <TARGET>Zeit ist Geld</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Zeit ist Geld",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"coreFeatures": {},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⏳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "No same-Family expression preserves this aphorism's proposition and stance; money-themed sayings are thematic associations, and the demo teaches the conservative null under the same-Family rule.",
+			"contaminationKeys": ["relation-de-zeit-ist-geld"]
+		},
+		"relation-adv-07-ins-gras-beissen": {
+			"input": {
+				"markedContext": "Der Tyrann <TARGET>biss endlich ins Gras</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "ins Gras beißen",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"coreFeatures": {},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "☠️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Primary lexicography explains the idiom through the Lexeme sterben, but ADR-0020 forbids that cross-Family target. Without a sourced same-Family equivalent, the relation stays null.",
+			"sources": [
+				{
+					"title": "Duden: Gras",
+					"url": "https://www.duden.de/rechtschreibung/Gras",
+					"supports": "Defines the complete phrase ins Gras beißen as sterben and marks it salopp."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Distinguishes exact Synonymy from non-substitutive Near Synonymy."
+				},
+				{
+					"title": "ADR-0020: Keep Semantic Relations inside one Family",
+					"path": "docs/adr/0020-keep-semantic-relations-inside-one-family.md",
+					"supports": "Keeps direct Semantic Relations inside the source Family."
+				}
+			],
+			"contaminationKeys": ["relation-de-ins-gras-beissen"]
+		},
+		"relation-adv-34-aphorism-null": {
+			"input": {
+				"markedContext": "Es gilt: <TARGET>Der Weg ist das Ziel</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Der Weg ist das Ziel",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"coreFeatures": {},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🛤️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "No adjudicated expression preserves this aphorism's proposition and stance; the human-accepted null does not rely on dictionary silence, and thematic travel words are associations.",
+			"contaminationKeys": ["relation-de-weg-ist-ziel"]
+		},
+		"relation-adv-35-in-betracht-ziehen": {
+			"input": {
+				"markedContext": "Wir müssen den Einwand <TARGET>in Betracht ziehen</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "in Betracht ziehen",
+						"family": "Phraseme",
+						"kind": "Collocation",
+						"coreFeatures": {},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🤔",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "The Lexeme paraphrases berücksichtigen and bedenken leave the Collocation Family inventory, so no same-Family target is adjudicated; the complete Collocation still owns the judgments and the Lexeme contrast pair is covered by the erwägen case.",
+			"contaminationKeys": ["relation-de-in-betracht-ziehen"]
+		},
+		"relation-adv-36-auf-jeden-fall": {
+			"input": {
+				"markedContext": "Das ist <TARGET>auf jeden Fall</TARGET> richtig.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "auf jeden Fall",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"coreFeatures": {
+							"discourseFormulaRole": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "✅",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "auf keinen Fall",
+							"kind": "DiscourseFormula"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Auf keinen Fall is the conventional complete-phraseme opposition; the former Lexeme adverb definitiv leaves the DiscourseFormula Family inventory and is dropped by the same-Family filter.",
+			"contaminationKeys": ["relation-de-auf-jeden-fall"]
+		},
+		"relation-adv-37-proverb-null": {
+			"input": {
+				"markedContext": "Sie sagt: <TARGET>Morgenstund hat Gold im Mund</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Morgenstund hat Gold im Mund",
+						"family": "Phraseme",
+						"kind": "Proverb",
+						"coreFeatures": {},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🌅",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Related proverbs about early action make different propositions; conservative nulls prevent a miscellaneous related-saying bucket.",
+			"contaminationKeys": ["relation-de-morgenstund"]
+		}
+	},
+	"demonstrationIds": ["relation-demo-zeit-ist-geld"],
+	"localDemonstrations": []
+}

@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type {
 	Dumgen,
 	DumgenModelExchange,
 	DumgenSection1Trace,
 	SegmentedSentence,
-} from "dumgen";
-import { DumgenError } from "dumgen";
-import * as Effect from "effect/Effect";
+} from "gumgen-old";
+import { DumgenError } from "gumgen-old";
 import { segmentForLaboratory } from "../src/segmentation";
 
 const sentence: SegmentedSentence<"de"> = {

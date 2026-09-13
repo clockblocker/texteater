@@ -167,3 +167,11 @@ export const pendingSemanticRelationSchema = z.strictObject({
 	relation: directSemanticRelationSchema,
 	target: unitShadowSchema,
 });
+
+export {
+	knowledgeRequestMaskSchema,
+	knowledgeRouteSchema,
+	knowledgeSelectionInputSchema,
+	knowledgeSettingsSchema,
+	semanticRelationSchema,
+} from "./selection-schemas.js";

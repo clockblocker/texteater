@@ -1,0 +1,1141 @@
+{
+	"grammar-de-aux-demo-future-wird": {
+		"input": {
+			"markedContext": "Mara <TARGET>wird</TARGET> morgen abreisen.",
+			"members": ["wird"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wird"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Future AUX. Finite present third singular. Not passive. VerbType null."
+	},
+	"grammar-de-aux-demo-modal-kann": {
+		"input": {
+			"markedContext": "Das Kind <TARGET>kann</TARGET> schon schwimmen.",
+			"members": ["kann"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["kann"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "können",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Meaning-bearing modal AUX. Bare infinitive outside target. VerbType Mod."
+	},
+	"grammar-de-aux-demo-copula-ist": {
+		"input": {
+			"markedContext": "Der Innenhof <TARGET>ist</TARGET> heute still.",
+			"members": ["ist"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ist"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "ist",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Copular sein is AUX on fixed route. Predicate stays context. VerbType null."
+	},
+	"grammar-de-aux-demo-citation-duerfen": {
+		"input": {
+			"markedContext": "Im Wörterbuch steht das Modalauxiliar <TARGET>dürfen</TARGET>.",
+			"members": ["dürfen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dürfen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dürfen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Explicit dictionary headword. Citation Surface. Modal identity remains Mod."
+	},
+	"grammar-de-aux-demo-imperative-sei": {
+		"input": {
+			"markedContext": "<TARGET>Sei</TARGET> bitte vorsichtig!",
+			"members": ["Sei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Imp",
+					"number": "Sing",
+					"person": "2",
+					"tense": null,
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Copular imperative. Initial capital is Standard and normalizes lowercase."
+	},
+	"grammar-de-aux-dev-perfect-hat-gegessen": {
+		"input": {
+			"markedContext": "Nora <TARGET>hat</TARGET> bereits gegessen.",
+			"members": ["hat"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["hat"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "haben",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-perfect-waren-gegangen": {
+		"input": {
+			"markedContext": "Die Gäste <TARGET>waren</TARGET> schon gegangen.",
+			"members": ["waren"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["waren"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-passive-wird-repariert": {
+		"input": {
+			"markedContext": "Die Brücke <TARGET>wird</TARGET> im Sommer repariert.",
+			"members": ["wird"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wird"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": "Pass"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Passive-forming werden. Mark AUX Surface voice Pass."
+	},
+	"grammar-de-aux-dev-passive-wurde-gesperrt": {
+		"input": {
+			"markedContext": "Die Straße <TARGET>wurde</TARGET> gestern gesperrt.",
+			"members": ["wurde"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wurde"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": "Pass"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-copula-bin-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>bin</TARGET> ich müde.",
+			"members": ["bin"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bin"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bin",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-copula-bist-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>bist</TARGET> du müde.",
+			"members": ["bist"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bist"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "2",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bist",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-copula-sind-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>sind</TARGET> wir müde.",
+			"members": ["sind"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sind"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sind",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-copula-seid-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>seid</TARGET> ihr müde.",
+			"members": ["seid"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["seid"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "2",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "seid",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-subjunctive-sei-gegangen": {
+		"input": {
+			"markedContext": "Der Zeuge sagt, die Frau <TARGET>sei</TARGET> früh gegangen.",
+			"members": ["sei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Sub",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Konjunktiv I. Tense Pres in AUX codec."
+	},
+	"grammar-de-aux-dev-subjunctive-waeren-geblieben": {
+		"input": {
+			"markedContext": "Ohne den Anruf <TARGET>wären</TARGET> sie länger geblieben.",
+			"members": ["wären"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wären"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Sub",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Konjunktiv II. Tense Past in AUX codec."
+	},
+	"grammar-de-aux-dev-modal-darf-bleiben": {
+		"input": {
+			"markedContext": "Der Hund <TARGET>darf</TARGET> heute drinnen bleiben.",
+			"members": ["darf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["darf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "dürfen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-modal-wolltest-gehen": {
+		"input": {
+			"markedContext": "Du <TARGET>wolltest</TARGET> doch früher gehen.",
+			"members": ["wolltest"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wolltest"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "2",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "wollen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-modal-moechte-bleiben": {
+		"input": {
+			"markedContext": "Lea <TARGET>möchte</TARGET> noch etwas bleiben.",
+			"members": ["möchte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["möchte"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Sub",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Modal möchte. Lemma mögen. Konjunktiv II shape."
+	},
+	"grammar-de-aux-dev-modal-sollen-syncretic": {
+		"input": {
+			"markedContext": "In der beschädigten Notiz steht: „Wir <TARGET>sollen</TARGET> …“",
+			"members": ["sollen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sollen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sollen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Form syncretic for indicative and subjunctive. Context damaged. Mood null."
+	},
+	"grammar-de-aux-dev-infinitive-sein": {
+		"input": {
+			"markedContext": "Mira wird längst angekommen <TARGET>sein</TARGET>.",
+			"members": ["sein"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sein"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-infinitive-passive-werden": {
+		"input": {
+			"markedContext": "Der Saal muss heute gereinigt <TARGET>werden</TARGET>.",
+			"members": ["werden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["werden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": "Pass"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Passive auxiliary infinitive. Voice Pass."
+	},
+	"grammar-de-aux-dev-participle-gewesen": {
+		"input": {
+			"markedContext": "Der Raum ist lange leer <TARGET>gewesen</TARGET>.",
+			"members": ["gewesen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["gewesen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-participle-worden": {
+		"input": {
+			"markedContext": "Der Antrag ist gestern genehmigt <TARGET>worden</TARGET>.",
+			"members": ["worden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["worden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"aspect": null,
+					"gender": null,
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Part",
+					"voice": "Pass"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Passive auxiliary participle. Voice Pass."
+	},
+	"grammar-de-aux-accept-perfect-ist-gegangen": {
+		"input": {
+			"markedContext": "Der Kurier <TARGET>ist</TARGET> pünktlich gegangen.",
+			"members": ["ist"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ist"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "ist",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-future-werden-abreisen": {
+		"input": {
+			"markedContext": "Wir <TARGET>werden</TARGET> am Freitag abreisen.",
+			"members": ["werden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["werden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-passive-wurden-gerufen": {
+		"input": {
+			"markedContext": "Die Helfer <TARGET>wurden</TARGET> sofort gerufen.",
+			"members": ["wurden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wurden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": "Pass"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-copula-war-ruhig": {
+		"input": {
+			"markedContext": "Der See <TARGET>war</TARGET> am Morgen ruhig.",
+			"members": ["war"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["war"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-subjunctive-haette": {
+		"input": {
+			"markedContext": "Mit mehr Zeit <TARGET>hätte</TARGET> er das Ziel erreicht.",
+			"members": ["hätte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["hätte"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Sub",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "haben",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-modal-muessen": {
+		"input": {
+			"markedContext": "Wir <TARGET>müssen</TARGET> jetzt eintreten.",
+			"members": ["müssen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["müssen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "müssen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-modal-mag": {
+		"input": {
+			"markedContext": "Tobias <TARGET>mag</TARGET> später mitkommen.",
+			"members": ["mag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mag"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-modal-wollt": {
+		"input": {
+			"markedContext": "Ihr <TARGET>wollt</TARGET> morgen weiterfahren.",
+			"members": ["wollt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wollt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "2",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "wollen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-citation-sein": {
+		"input": {
+			"markedContext": "Der Wörterbucheintrag nennt <TARGET>sein</TARGET> als Kopula.",
+			"members": ["sein"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sein"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-infinitive-haben": {
+		"input": {
+			"markedContext": "Sie könnte den Zug verpasst <TARGET>haben</TARGET>.",
+			"members": ["haben"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["haben"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": null,
+					"person": null,
+					"tense": null,
+					"verbForm": "Inf",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "haben",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-demo-typo-sol": {
+		"input": {
+			"markedContext": "Er <TARGET>sol</TARGET> jetzt warten.",
+			"members": ["sol"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["soll"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sollen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Missing letter. Mark Typo. Repair member. Keep modal AUX grammar."
+	},
+	"grammar-de-aux-dev-typo-mus": {
+		"input": {
+			"markedContext": "Der Fahrer <TARGET>mus</TARGET> sofort bremsen.",
+			"members": ["mus"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["muss"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "müssen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-dev-variant-muss": {
+		"input": {
+			"markedContext": "Im alten Brief steht: „Er <TARGET>muß</TARGET> morgen abreisen.“",
+			"members": ["muß"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["muß"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "müssen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed pre-reform spelling. Standard member. Preserve Surface. Variant spelling."
+	},
+	"grammar-de-aux-accept-typo-koenen": {
+		"input": {
+			"markedContext": "Wir <TARGET>könen</TARGET> den Termin einhalten.",
+			"members": ["könen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["können"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "können",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-aux-accept-archaic-ward": {
+		"input": {
+			"markedContext": "Der Bote <TARGET>ward</TARGET> freundlich empfangen.",
+			"members": ["ward"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ward"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": "Pass"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "werden",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Old passive auxiliary form. Standard attestation. Variant spelling. Surface Archaic."
+	},
+	"grammar-de-aux-dev-contrast-modal-mag": {
+		"input": {
+			"markedContext": "Sie mag Schokolade, aber heute <TARGET>mag</TARGET> sie lieber kochen.",
+			"members": ["mag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mag"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Marked use governs infinitive and is fixed AUX. Earlier nominal-object use stays unmarked lexical contrast."
+	}
+}

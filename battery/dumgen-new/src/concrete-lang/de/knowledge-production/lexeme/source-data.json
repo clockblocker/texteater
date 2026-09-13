@@ -1,0 +1,3344 @@
+{
+	"path": "knowledge-analysis/de/lexeme/prompt-source.ts",
+	"route": "knowledge-analysis/de/lexeme",
+	"body": "\n\nGenerate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German relation\n  targets, or null, for each requested relation kind.\n\nA relation target contains only canonicalForm and kind. Its German language\nand Family follow from this Reading, so every target Kind is one of this\nReading's Family's Kinds. A target never contains\nCore Features, a Reading, an emoji description, an ID, or persistence\ninstructions. Relation targets describe the related concept, not a surface\ninflection from the sentence. Use only exact Dumling Kind tokens already\ndemonstrated by the schema. In particular, a German adverb Lexeme has Kind ADV,\nnever ADVERB.\n\n\nKeep exact Synonym distinct from Near Synonym. Antonym is opposition; Hypernym\nis broader; Hyponym is narrower; Meronym is a part/member/substance; Holonym is\nthe containing whole.\n\nA relation target must be a Lexeme whose Kind is one of this Family's\nUniversal-Dependencies-style parts of speech. A Phraseme, Morpheme, or\nConstruction Kind leaves this Family's inventory; prefer returning null over a\ncross-Family guess.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\n\nBefore returning, confirm that the response mirrors the requested tree exactly,\nthat every populated leaf is one defensible candidate for the fixed Reading,\nand that every relation target is a same-Family, valid-Kind German Unit Shadow.\n\n\nCanonical Reading input uses Dumling unitKind tags. Propose targets as Canonical Form and Kind. Language and source Family are supplied in code; never reclassify targets with another model call.\n",
+	"cases": {
+		"relation-demo-pfote-anchor": {
+			"input": {
+				"markedContext": "Der Hund hob die <TARGET>Pfote</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Pfote",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🐾",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "Tatze",
+							"kind": "NOUN"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Körperteil",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Tier",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "The approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.",
+			"sources": [
+				{
+					"title": "Duden: Pfote",
+					"url": "https://www.duden.de/rechtschreibung/Pfote",
+					"supports": "Defines Pfote as the foot of various mammals and supports an animal bearer."
+				},
+				{
+					"title": "Duden: Tatze",
+					"url": "https://www.duden.de/rechtschreibung/Tatze",
+					"supports": "Restricts Tatze to larger predators, supporting Near Synonym rather than exact Synonym."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Separates broader-category Hypernym from whole-bearing Holonym."
+				}
+			],
+			"contaminationKeys": ["relation-de-pfote-paw"]
+		},
+		"relation-demo-mieten-converse": {
+			"input": {
+				"markedContext": "Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "mieten",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🔑",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": [
+						{
+							"canonicalForm": "vermieten",
+							"kind": "VERB"
+						}
+					],
+					"hypernym": null
+				}
+			},
+			"explanation": "Mieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.",
+			"sources": [
+				{
+					"title": "IDS Grammis: konvers",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1005",
+					"supports": "Defines converses as the same relation viewed through exchanged arguments."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines Near Antonym as the project category for conventional lexical contrast that is not strict opposition."
+				}
+			],
+			"contaminationKeys": ["relation-de-mieten-rent"]
+		},
+		"relation-basic-01-hubschrauber": {
+			"input": {
+				"markedContext": "Der <TARGET>Hubschrauber</TARGET> landete sicher.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Hubschrauber",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🚁",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "Helikopter",
+							"kind": "NOUN"
+						}
+					],
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Luftfahrzeug",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Primary lexicography cross-lists Helikopter and supports the shared aircraft Reading; exact-synonym status is an explicit reviewer adjudication, while Luftfahrzeug is the useful category.",
+			"sources": [
+				{
+					"title": "Duden: Hubschrauber synonyms",
+					"url": "https://www.duden.de/synonyme/Hubschrauber",
+					"supports": "Lists Helikopter as a synonym of Hubschrauber."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines exact Synonymy; assigning that stricter project category remains human-accepted."
+				}
+			],
+			"contaminationKeys": ["relation-de-hubschrauber-aircraft"]
+		},
+		"relation-basic-02-sichtbar": {
+			"input": {
+				"markedContext": "Der Fleck ist deutlich <TARGET>sichtbar</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "sichtbar",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "👁️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "unsichtbar",
+							"kind": "ADJ"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Sichtbar and unsichtbar form a conventional complementary opposition; shared morphology is not the evidence for the relation.",
+			"contaminationKeys": ["relation-de-sichtbar-visibility"]
+		},
+		"relation-basic-03-pudel": {
+			"input": {
+				"markedContext": "Der <TARGET>Pudel</TARGET> wartet vor der Tür.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Pudel",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🐩",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Hund",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Every poodle is a dog and Hund is the nearest useful category; Tier is too distant and Pfote is a part, not a category.",
+			"sources": [
+				{
+					"title": "Duden: Pudel",
+					"url": "https://www.duden.de/rechtschreibung/Pudel",
+					"supports": "Defines Pudel as a dog."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines Hypernym as the direct narrower-to-broader relation."
+				}
+			],
+			"contaminationKeys": ["relation-de-pudel-dog"]
+		},
+		"relation-basic-04-berlin-city": {
+			"input": {
+				"markedContext": "<TARGET>Berlin</TARGET> ist Deutschlands größte Stadt.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Berlin",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"gender": "Neut"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏙️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Stadt",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "The exact city Reading is conventionally an instance of Stadt. Berlin's Land Reading is kept separate rather than adding cross-Reading containment here.",
+			"sources": [
+				{
+					"title": "Constitution of Berlin, Article 1",
+					"url": "https://www.berlin.de/rbmskzl/politik/senat/verfassung/verfassung-von-berlin-abschnitt-i-die-grundlagen-41549.php",
+					"supports": "States that Berlin is both a German Land and a city."
+				},
+				{
+					"title": "Berlin economic location",
+					"url": "https://www.berlin.de/wirtschaft/wirtschaftsstandort/",
+					"supports": "Identifies Berlin as Germany's largest city."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Allows one Lemma to participate in several Readings, keeping the city and Land meanings separate."
+				}
+			],
+			"contaminationKeys": ["relation-de-berlin"]
+		},
+		"relation-basic-05-sprinten": {
+			"input": {
+				"markedContext": "Auf den letzten Metern <TARGET>sprintete</TARGET> sie.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "sprinten",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏃💨",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "laufen",
+							"kind": "VERB"
+						}
+					]
+				}
+			},
+			"explanation": "Primary lexicography defines sprinten as short-distance highest-speed running, directly supporting the broader action laufen.",
+			"sources": [
+				{
+					"title": "Duden: sprinten",
+					"url": "https://www.duden.de/rechtschreibung/sprinten",
+					"supports": "Defines sprinten as covering a short distance at highest speed and colloquially as running fast."
+				}
+			],
+			"contaminationKeys": ["relation-de-sprinten-run"]
+		},
+		"relation-adv-01-bank-finance": {
+			"input": {
+				"markedContext": "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Bank",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏦",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "Kreditinstitut",
+							"kind": "NOUN"
+						}
+					],
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": null,
+					"holonym": null
+				}
+			},
+			"explanation": "Only the financial Reading is fixed. Duden treats Kreditinstitut as synonymous here, so it is not also a Hypernym; seating vocabulary belongs to another Reading.",
+			"sources": [
+				{
+					"title": "Duden: Bank",
+					"url": "https://www.duden.de/rechtschreibung/Bank_Geldinstitut",
+					"supports": "Defines the financial Bank Reading through money and credit business."
+				},
+				{
+					"title": "Duden: Kreditinstitut",
+					"url": "https://www.duden.de/rechtschreibung/Kreditinstitut",
+					"supports": "Lists Bank as a synonym of Kreditinstitut, making Hypernymy contested."
+				},
+				{
+					"title": "Kreditwesengesetz § 1",
+					"url": "https://www.gesetze-im-internet.de/kredwg/BJNR008810961.html",
+					"supports": "Defines Kreditinstitut as a legal category without settling the lexical relation label."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Keeps the financial and seating meanings as separate semantic Readings."
+				}
+			],
+			"contaminationKeys": ["relation-de-bank"]
+		},
+		"relation-adv-02-bank-bench": {
+			"input": {
+				"markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Bank",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🪑",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "Sitzbank",
+							"kind": "NOUN"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Sitzmöbel",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "The furniture Reading admits the more explicit Sitzbank as a Near Synonym and Sitzmöbel as category; financial vocabulary would leak across Readings.",
+			"sources": [
+				{
+					"title": "Duden: Sitzbank",
+					"url": "https://www.duden.de/rechtschreibung/Sitzbank",
+					"supports": "Documents the furniture Reading represented by Sitzbank."
+				},
+				{
+					"title": "Duden: Bank",
+					"url": "https://www.duden.de/rechtschreibung/Bank_Geldinstitut",
+					"supports": "Documents the separate financial Bank Reading excluded here."
+				},
+				{
+					"title": "IDS Grammis: Homonymie",
+					"url": "https://grammis.ids-mannheim.de/terminologie/510",
+					"supports": "Uses Bank as an example of homonymy between financial institution and seating."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Makes the Reading, rather than spelling alone, the semantic identity under judgment."
+				}
+			],
+			"contaminationKeys": ["relation-de-bank"]
+		},
+		"relation-adv-03-schloss-building": {
+			"input": {
+				"markedContext": "Das <TARGET>Schloss</TARGET> steht auf einem Hügel.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Schloss",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏰",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Gebäude",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "The building Reading is a Gebäude; keys and locking devices belong to the other documented Schloss Reading.",
+			"sources": [
+				{
+					"title": "Duden: Schloss",
+					"url": "https://www.duden.de/rechtschreibung/Schloss",
+					"supports": "Documents both the building and locking-device senses of Schloss."
+				},
+				{
+					"title": "IDS Grammis: Homonymie",
+					"url": "https://grammis.ids-mannheim.de/terminologie/510",
+					"supports": "Uses the Schloss sense split as an example of homonymy."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Requires semantic judgments to stay on the selected Reading."
+				}
+			],
+			"contaminationKeys": ["relation-de-schloss"]
+		},
+		"relation-adv-04-schloss-lock": {
+			"input": {
+				"markedContext": "Der Schlüssel steckt im <TARGET>Schloss</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Schloss",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🔒",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Schließvorrichtung",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "The locking-device Reading is a Schließvorrichtung; palace and building targets are cross-Reading errors, and Schlüssel is an instrument rather than a component whole.",
+			"sources": [
+				{
+					"title": "Duden: Schloss",
+					"url": "https://www.duden.de/rechtschreibung/Schloss",
+					"supports": "Documents the locking-device sense separately from the building sense."
+				},
+				{
+					"title": "IDS Grammis: Homonymie",
+					"url": "https://grammis.ids-mannheim.de/terminologie/510",
+					"supports": "Uses the Schloss sense split as an example of homonymy."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Requires semantic judgments to stay on the selected Reading."
+				}
+			],
+			"contaminationKeys": ["relation-de-schloss"]
+		},
+		"relation-adv-05-klug-decision": {
+			"input": {
+				"markedContext": "Das war eine <TARGET>kluge</TARGET> Entscheidung.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "klug",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🧭",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "vernünftig",
+							"kind": "ADJ"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "The context fixes the sensible/appropriate Reading, for which vernünftig is close; intelligent favors cognitive capacity and would switch to another klug Reading.",
+			"sources": [
+				{
+					"title": "Duden: klug",
+					"url": "https://www.duden.de/rechtschreibung/klug",
+					"supports": "Documents sensible or appropriate and intellectual Readings of klug."
+				},
+				{
+					"title": "Duden: intelligent",
+					"url": "https://www.duden.de/rechtschreibung/intelligent",
+					"supports": "Defines intelligent through possession or display of intelligence."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Allows distinct semantic Readings to share one grammatical Lemma."
+				}
+			],
+			"contaminationKeys": ["relation-de-klug-sensible"]
+		},
+		"relation-adv-06-stark-physical": {
+			"input": {
+				"markedContext": "Sie ist körperlich sehr <TARGET>stark</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "stark",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "💪",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "kräftig",
+							"kind": "ADJ"
+						}
+					],
+					"antonym": [
+						{
+							"canonicalForm": "schwach",
+							"kind": "ADJ"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "The physical-strength Reading supports kräftig and the scalar opposite schwach; heftig belongs to the intensity Reading found in starker Regen.",
+			"sources": [
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Allows the physical-strength and intensity meanings to remain distinct Readings of one Lemma."
+				}
+			],
+			"contaminationKeys": ["relation-de-stark-physical"]
+		},
+		"relation-adv-08-foehre": {
+			"input": {
+				"markedContext": "Die <TARGET>Föhre</TARGET> ist immergrün.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Föhre",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🌲",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "Kiefer",
+							"kind": "NOUN"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Nadelbaum",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Duden defines regional Föhre through the pine Reading of Kiefer; the regional restriction makes it Near Synonym, while Nadelbaum is the broader category.",
+			"sources": [
+				{
+					"title": "Duden: Föhre",
+					"url": "https://www.duden.de/rechtschreibung/Foehre",
+					"supports": "Defines Föhre through Kiefer and marks it regional or Austrian."
+				},
+				{
+					"title": "IDS Grammis: Homonymie",
+					"url": "https://grammis.ids-mannheim.de/terminologie/510",
+					"supports": "Documents the pine and jaw homonymy of Kiefer."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Keeps the pine Reading separate from the jaw Reading."
+				}
+			],
+			"contaminationKeys": ["relation-de-foehre-pine"]
+		},
+		"relation-adv-09-kaufen-converse": {
+			"input": {
+				"markedContext": "Sie <TARGET>kauft</TARGET> das Fahrrad von ihm.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "kaufen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🛒",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": [
+						{
+							"canonicalForm": "verkaufen",
+							"kind": "VERB"
+						}
+					],
+					"hypernym": [
+						{
+							"canonicalForm": "erwerben",
+							"kind": "VERB"
+						}
+					]
+				}
+			},
+			"explanation": "Primary definitions support reversed transaction viewpoints; Near Antonym is the project mapping, and erwerben is the broader acquisition action.",
+			"sources": [
+				{
+					"title": "Duden: kaufen",
+					"url": "https://www.duden.de/rechtschreibung/kaufen",
+					"supports": "Defines kaufen as acquiring something against payment."
+				},
+				{
+					"title": "Duden: verkaufen",
+					"url": "https://www.duden.de/rechtschreibung/verkaufen",
+					"supports": "Defines verkaufen as transferring property to someone for payment."
+				},
+				{
+					"title": "IDS Grammis: converse relations",
+					"url": "https://grammis.ids-mannheim.de/systematische-grammatik/2130",
+					"supports": "Supports analysis of one relation through reversed participant perspectives."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Supplies the human-accepted Near Antonym category for that converse structure."
+				}
+			],
+			"contaminationKeys": ["relation-de-kaufen-buy"]
+		},
+		"relation-adv-10-oeffnen": {
+			"input": {
+				"markedContext": "Bitte <TARGET>öffne</TARGET> das Fenster.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "öffnen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🪟",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "schließen",
+							"kind": "VERB"
+						}
+					],
+					"nearAntonym": null,
+					"hypernym": null
+				}
+			},
+			"explanation": "Duden directly cross-lists öffnen and schließen as antonyms, and the pair is a conventional reversive opposition.",
+			"sources": [
+				{
+					"title": "Duden: öffnen",
+					"url": "https://www.duden.de/rechtschreibung/oeffnen",
+					"supports": "Lists schließen as an antonym of öffnen."
+				},
+				{
+					"title": "Duden: schließen",
+					"url": "https://www.duden.de/rechtschreibung/schlieszen",
+					"supports": "Lists öffnen as an antonym of schließen."
+				}
+			],
+			"contaminationKeys": ["relation-de-oeffnen-open"]
+		},
+		"relation-adv-11-warm": {
+			"input": {
+				"markedContext": "Die Suppe ist noch <TARGET>warm</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "warm",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🌡️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "kalt",
+							"kind": "ADJ"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Warm and kalt are conventional opposing temperature poles; heiß is a higher value on the same side, not an opposite.",
+			"contaminationKeys": ["relation-de-warm-temperature"]
+		},
+		"relation-adv-12-hund-katze": {
+			"input": {
+				"markedContext": "Der <TARGET>Hund</TARGET> schläft neben der Katze.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Hund",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🐕",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Raubtier",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Katze is only a contextual foil and co-hyponym, not a lexical opposite; the human-accepted null is not an inference from dictionary silence.",
+			"sources": [
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Requires Near Antonym to be a conventional lexical contrast; incidental co-hyponyms do not qualify."
+				}
+			],
+			"contaminationKeys": ["relation-de-hund-animal"]
+		},
+		"relation-adv-13-auto-taxonomy": {
+			"input": {
+				"markedContext": "Das <TARGET>Auto</TARGET> steht vor dem Haus.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Auto",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🚗",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Kraftfahrzeug",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Kraftfahrzeug is a category; Rad is a part and Garage a contingent location, so taxonomy and part-whole must not be confused.",
+			"sources": [
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Separates broader-category Hypernym from part-to-whole Holonym."
+				}
+			],
+			"contaminationKeys": ["relation-de-auto-car"]
+		},
+		"relation-adv-14-rad-wheel": {
+			"input": {
+				"markedContext": "Ein <TARGET>Rad</TARGET> des Fahrrads ist verbogen.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Rad",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🛞",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Bauteil",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Fahrzeug",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "The wheel-part Reading is a Bauteil and an inherent part of a Fahrzeug; the encountered Fahrrad cannot narrow the general whole, and the bicycle Reading of Rad is excluded.",
+			"sources": [
+				{
+					"title": "Duden: Fahrrad",
+					"url": "https://www.duden.de/rechtschreibung/Fahrrad",
+					"supports": "Defines Fahrrad as a two-wheeled vehicle."
+				},
+				{
+					"title": "Duden: Rad",
+					"url": "https://www.duden.de/rechtschreibung/Rad_Fahrrad",
+					"supports": "Documents both the wheel-part and colloquial bicycle senses of Rad."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Keeps those Rad meanings as distinct semantic Readings."
+				}
+			],
+			"contaminationKeys": ["relation-de-rad-wheel"]
+		},
+		"relation-adv-15-blutplasma": {
+			"input": {
+				"markedContext": "Das <TARGET>Blutplasma</TARGET> wurde untersucht.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Blutplasma",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🩸",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Flüssigkeit",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Blut",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Duden defines Blutplasma as the liquid component of Blut, directly separating the category Flüssigkeit from the containing whole Blut.",
+			"sources": [
+				{
+					"title": "Duden: Blutplasma",
+					"url": "https://www.duden.de/rechtschreibung/Blutplasma",
+					"supports": "Defines Blutplasma as the liquid component of Blut."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Separates broader-category Hypernym from part-to-whole Holonym."
+				}
+			],
+			"contaminationKeys": ["relation-de-blutplasma"]
+		},
+		"relation-adv-16-berlin-land": {
+			"input": {
+				"markedContext": "<TARGET>Berlin</TARGET> ist ein Land der Bundesrepublik.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Berlin",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"gender": "Neut"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏛️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Bundesland",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Deutschland",
+							"kind": "PROPN"
+						}
+					]
+				}
+			},
+			"explanation": "The exact Land Reading is a Bundesland and an administrative member of Deutschland; it is not silently merged with the city Reading.",
+			"sources": [
+				{
+					"title": "Constitution of Berlin, Article 1",
+					"url": "https://www.berlin.de/rbmskzl/politik/senat/verfassung/verfassung-von-berlin-abschnitt-i-die-grundlagen-41549.php",
+					"supports": "States that Berlin is a German Land and a city."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Allows the Land and city meanings to remain distinct Readings of one Lemma."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines administrative member-to-whole direction as Holonym."
+				}
+			],
+			"contaminationKeys": ["relation-de-berlin"]
+		},
+		"relation-adv-17-kreuzberg": {
+			"input": {
+				"markedContext": "<TARGET>Kreuzberg</TARGET> liegt südlich der Spree.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Kreuzberg",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"gender": "Masc"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏙️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Ortsteil",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Berlin",
+							"kind": "PROPN"
+						}
+					]
+				}
+			},
+			"explanation": "Official Berlin sources identify Kreuzberg as an Ortsteil within Berlin, supporting both category and stable containment.",
+			"sources": [
+				{
+					"title": "Friedrichshain-Kreuzberg district data",
+					"url": "https://www.berlin.de/ba-friedrichshain-kreuzberg/politik-und-verwaltung/service-und-organisationseinheiten/bezirkliche-planung-und-koordinierung/sozialraumorientierte-planungskoordination/daten/",
+					"supports": "Identifies Kreuzberg as an Ortsteil in the Friedrichshain-Kreuzberg district."
+				},
+				{
+					"title": "Berlin.de: Kreuzberg",
+					"url": "https://www.berlin.de/special/stadtteile/kreuzberg/881280-5170818-wohnlagen-infrastruktur.html",
+					"supports": "Identifies Kreuzberg as a Berlin Stadtteil."
+				}
+			],
+			"contaminationKeys": ["relation-de-kreuzberg"]
+		},
+		"relation-adv-18-johann-trivial": {
+			"input": {
+				"markedContext": "<TARGET>Johann</TARGET> wartet draußen.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Johann",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"gender": "Masc"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "👤",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"hypernym": null,
+					"holonym": null
+				}
+			},
+			"explanation": "The project rejects the trivial category Person for ordinary personal names, and the encounter supplies no stable whole; these are human-accepted nulls, not dictionary-silence claims.",
+			"contaminationKeys": ["relation-de-johann-person"]
+		},
+		"relation-adv-19-mannschaft-inverse": {
+			"input": {
+				"markedContext": "Die <TARGET>Mannschaft</TARGET> jubelte.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Mannschaft",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "👥",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Gruppe",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Mannschaft is a kind of Gruppe. Spieler is a conventional member Meronym, but Dumgen never requests the downward relation.",
+			"contaminationKeys": ["relation-de-mannschaft-team"]
+		},
+		"relation-adv-20-koerperteil-inverse": {
+			"input": {
+				"markedContext": "Das verletzte <TARGET>Körperteil</TARGET> wurde untersucht.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Körperteil",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🩻",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "anatomische Struktur",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Körper",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Körperteil is an anatomical structure and part of a Körper; Pfote is a narrower inverse-only Hyponym judgment.",
+			"contaminationKeys": ["relation-de-koerperteil-body-part"]
+		},
+		"relation-adv-21-innerhalb": {
+			"input": {
+				"markedContext": "Bleiben Sie <TARGET>innerhalb</TARGET> der Markierung.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "innerhalb",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": null,
+							"extPos": null,
+							"foreign": null,
+							"governedCase": null,
+							"partType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⭕",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "außerhalb",
+							"kind": "ADP"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Innerhalb and außerhalb form a conventional complementary spatial opposition; in is broader and syntactically different.",
+			"contaminationKeys": ["relation-de-innerhalb-inside"]
+		},
+		"relation-adv-22-trotz": {
+			"input": {
+				"markedContext": "<TARGET>Trotz</TARGET> des Regens gingen wir spazieren.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "trotz",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": null,
+							"extPos": null,
+							"foreign": null,
+							"governedCase": null,
+							"partType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "☔",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "ungeachtet",
+							"kind": "ADP"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Ungeachtet shares the concessive relation but is systematically more formal, so only Near Synonym passes.",
+			"contaminationKeys": ["relation-de-trotz-despite"]
+		},
+		"relation-adv-23-immer": {
+			"input": {
+				"markedContext": "Sie kommt <TARGET>immer</TARGET> pünktlich.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "immer",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "♾️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "nie",
+							"kind": "ADV"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "The temporal-frequency Readings immer and nie are conventional endpoint opposites; manchmal is an intermediate frequency.",
+			"contaminationKeys": ["relation-de-immer-always"]
+		},
+		"relation-adv-24-manchmal": {
+			"input": {
+				"markedContext": "<TARGET>Manchmal</TARGET> fährt sie mit dem Zug.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "manchmal",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🕰️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "bisweilen",
+							"kind": "ADV"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Primary lexicography supports the shared occasional-frequency meaning; the elevated/literary distribution is reviewer-adjudicated as a Near-Synonym restriction.",
+			"sources": [
+				{
+					"title": "Duden: manchmal",
+					"url": "https://www.duden.de/rechtschreibung/manchmal",
+					"supports": "Lists bisweilen for the occasional-frequency meaning of manchmal."
+				},
+				{
+					"title": "Duden: bisweilen",
+					"url": "https://www.duden.de/rechtschreibung/bisweilen",
+					"supports": "Defines bisweilen through occasional-frequency expressions."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Supplies Near Synonym for the human-accepted register restriction."
+				}
+			],
+			"contaminationKeys": ["relation-de-manchmal-sometimes"]
+		},
+		"relation-adv-25-muessen": {
+			"input": {
+				"markedContext": "Wir <TARGET>müssen</TARGET> jetzt gehen.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "müssen",
+						"family": "Lexeme",
+						"kind": "AUX",
+						"coreFeatures": {
+							"verbType": "Mod"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "❗",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "sollen",
+							"kind": "AUX"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Sollen overlaps in obligation contexts but introduces reported or normative modality instead of preserving necessity.",
+			"contaminationKeys": ["relation-de-muessen-obligation"]
+		},
+		"relation-adv-26-und": {
+			"input": {
+				"markedContext": "Anna <TARGET>und</TARGET> Ben kommen.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "und",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"coreFeatures": {
+							"conjType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "➕",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"antonym": null,
+					"nearAntonym": [
+						{
+							"canonicalForm": "oder",
+							"kind": "CCONJ"
+						}
+					]
+				}
+			},
+			"explanation": "Und and oder are conventionally paired coordination choices but not strict logical complements in ordinary German; CCONJ does not request Near Synonym.",
+			"contaminationKeys": ["relation-de-und-coordination"]
+		},
+		"relation-adv-27-jeder": {
+			"input": {
+				"markedContext": "<TARGET>Jeder</TARGET> Gast erhielt ein Glas.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "jeder",
+						"family": "Lexeme",
+						"kind": "DET",
+						"coreFeatures": {
+							"definite": null,
+							"extPos": null,
+							"foreign": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Tot"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🌐",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": [
+						{
+							"canonicalForm": "kein",
+							"kind": "DET"
+						}
+					]
+				}
+			},
+			"explanation": "Jeder and kein conventionally contrast universal and zero quantity but are not logical complements because intermediate quantities exist.",
+			"contaminationKeys": ["relation-de-jeder-every"]
+		},
+		"relation-adv-28-ja": {
+			"input": {
+				"markedContext": "<TARGET>Ja</TARGET>, ich komme mit.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "ja",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"coreFeatures": {
+							"partType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "✅",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "nein",
+							"kind": "INTJ"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "As response particles, ja and nein conventionally affirm and reject the same proposition in parallel discourse roles.",
+			"contaminationKeys": ["relation-de-ja-response"]
+		},
+		"relation-adv-29-zwei": {
+			"input": {
+				"markedContext": "Wir brauchen <TARGET>zwei</TARGET> Tickets.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "zwei",
+						"family": "Lexeme",
+						"kind": "NUM",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": "Card"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "2️⃣",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null
+				}
+			},
+			"explanation": "No distinct exact-equivalent Lemma is adjudicated; the source Lemma and inflected Surfaces are forbidden, so the sole requested Synonym is null.",
+			"contaminationKeys": ["relation-de-zwei-number"]
+		},
+		"relation-adv-30-nicht": {
+			"input": {
+				"markedContext": "Das ist <TARGET>nicht</TARGET> wahr.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "nicht",
+						"family": "Lexeme",
+						"kind": "PART",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"partType": null,
+							"polarity": "Neg"
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🚫",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "keineswegs",
+							"kind": "ADV"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Keineswegs shares negation but adds emphatic intensity and differs grammatically, allowing Near Synonym but blocking exact equivalence.",
+			"contaminationKeys": ["relation-de-nicht-negation"]
+		},
+		"relation-adv-31-niemand": {
+			"input": {
+				"markedContext": "<TARGET>Niemand</TARGET> antwortete.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "niemand",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Neg",
+							"referenceNumber": null,
+							"case": null,
+							"number": null,
+							"gender": null,
+							"gender[psor]": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🚷",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "jemand",
+							"kind": "PRON"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "For the existential-person Reading, niemand and jemand form a conventional complementary opposition.",
+			"contaminationKeys": ["relation-de-niemand-nobody"]
+		},
+		"relation-adv-32-obwohl": {
+			"input": {
+				"markedContext": "<TARGET>Obwohl</TARGET> es regnete, gingen wir spazieren.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "obwohl",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": {
+							"conjType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "☔",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "obgleich",
+							"kind": "SCONJ"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Obgleich shares the concessive core but has a stable elevated register, so it is Near Synonym rather than exact Synonym.",
+			"contaminationKeys": ["relation-de-obwohl-although"]
+		},
+		"relation-adv-33-plus-symbol": {
+			"input": {
+				"markedContext": "Rechne drei <TARGET>+</TARGET> zwei.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "+",
+						"family": "Lexeme",
+						"kind": "SYM",
+						"coreFeatures": {
+							"foreign": null,
+							"numType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "➕",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "−",
+							"kind": "SYM"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Under the mathematical-operator Reading, plus and minus form a conventional reversive/opposing pair; the spelled word plus is another target identity.",
+			"contaminationKeys": ["relation-de-plus-operator"]
+		},
+		"relation-adv-38-vereinigte-staaten": {
+			"input": {
+				"markedContext": "Die <TARGET>Vereinigten Staaten</TARGET> liegen in Nordamerika.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Vereinigte Staaten",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"gender": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🇺🇸",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Staat",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": [
+						{
+							"canonicalForm": "Nordamerika",
+							"kind": "PROPN"
+						}
+					]
+				}
+			},
+			"explanation": "A fixed multi-word proper name remains one Lexeme/PROPN; it is an instance of Staat and geographically part of Nordamerika, never a Phraseme.",
+			"contaminationKeys": ["relation-de-vereinigte-staaten"]
+		},
+		"relation-adv-39-eilen-multiword-target": {
+			"input": {
+				"markedContext": "Wir müssen uns <TARGET>eilen</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "eilen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⏱️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": null
+				}
+			},
+			"explanation": "Sich beeilen is a complete multi-member near-paraphrase, but it is a Phraseme and therefore outside the Lexeme Family inventory; no same-Family near paraphrase is adjudicated and no broader action is forced merely to fill the requested Hypernym leaf.",
+			"contaminationKeys": ["relation-de-eilen-hurry"]
+		},
+		"relation-adv-40-gluecklich-family": {
+			"input": {
+				"markedContext": "Sie ist heute sehr <TARGET>glücklich</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "glücklich",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "😊",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "froh",
+							"kind": "ADJ"
+						}
+					],
+					"antonym": [
+						{
+							"canonicalForm": "unglücklich",
+							"kind": "ADJ"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme, never Construction.",
+			"contaminationKeys": ["relation-de-gluecklich-happy"]
+		},
+		"relation-adv-41-schnell-kind": {
+			"input": {
+				"markedContext": "Das ist ein <TARGET>schnelles</TARGET> Fahrrad.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "schnell",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⚡",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "rasch",
+							"kind": "ADJ"
+						}
+					],
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "langsam",
+							"kind": "ADJ"
+						}
+					],
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Rasch and langsam preserve the adjectival role; the associated noun Eile is grammatically incompatible and not semantic similarity.",
+			"contaminationKeys": ["relation-de-schnell-fast"]
+		},
+		"relation-adv-42-beginnen-alternative": {
+			"input": {
+				"markedContext": "Die Sitzung <TARGET>beginnt</TARGET> um neun.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "beginnen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "▶️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "anfangen",
+							"kind": "VERB"
+						}
+					],
+					"nearSynonym": [
+						{
+							"canonicalForm": "starten",
+							"kind": "VERB"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": null
+				}
+			},
+			"explanation": "Anfangen is adjudicated as equivalent here; starten is event-type/register restricted. Einsetzen is recorded as a bounded alternative target set.",
+			"contaminationKeys": ["relation-de-beginnen-start"]
+		},
+		"relation-adv-43-selbstbezug": {
+			"input": {
+				"markedContext": "Das <TARGET>Kreditinstitut</TARGET> prüfte den Antrag.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Kreditinstitut",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏦",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "Bank",
+							"kind": "NOUN"
+						}
+					],
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": null,
+					"holonym": null
+				}
+			},
+			"explanation": "Primary lexicography supports Bank as the distinct target Lemma; Kreditinstitut itself remains forbidden even if another Reading is imagined.",
+			"sources": [
+				{
+					"title": "Duden: Kreditinstitut",
+					"url": "https://www.duden.de/rechtschreibung/Kreditinstitut",
+					"supports": "Lists Bank as a synonym of Kreditinstitut."
+				},
+				{
+					"title": "Duden: Bank",
+					"url": "https://www.duden.de/rechtschreibung/Bank_Geldinstitut",
+					"supports": "Documents the financial Bank Reading used as the distinct target Lemma."
+				}
+			],
+			"contaminationKeys": ["relation-de-kreditinstitut"]
+		},
+		"relation-adv-44-rose-association": {
+			"input": {
+				"markedContext": "Die <TARGET>Rose</TARGET> blüht im Garten.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Rose",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🌹",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Blütenpflanze",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Rose is a kind of Blütenpflanze; Garten is only a location and Dorn only a possible part, so fluent associations cannot fill upward slots.",
+			"contaminationKeys": ["relation-de-rose-flower"]
+		},
+		"relation-adv-45-fahrrad-granularity": {
+			"input": {
+				"markedContext": "Das <TARGET>Fahrrad</TARGET> steht im Hof.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Fahrrad",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🚲",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Zweirad",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				}
+			},
+			"explanation": "Zweirad is the nearest useful category; Verkehrsmittel is too distant, Hof contingent, and wheel-sense Rad a part rather than a category.",
+			"sources": [
+				{
+					"title": "Duden: Fahrrad",
+					"url": "https://www.duden.de/rechtschreibung/Fahrrad",
+					"supports": "Defines Fahrrad as a two-wheeled vehicle, supporting Zweirad as the useful category."
+				},
+				{
+					"title": "Duden: Rad",
+					"url": "https://www.duden.de/rechtschreibung/Rad_Fahrrad",
+					"supports": "Documents Rad as a vehicle part and as a separate colloquial bicycle Reading."
+				},
+				{
+					"title": "Dumling generated docs source: Linguistics",
+					"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+					"supports": "Keeps the part and bicycle meanings of Rad in separate Readings."
+				}
+			],
+			"contaminationKeys": ["relation-de-fahrrad-bicycle"]
+		},
+		"relation-adv-46-waehrend-adposition": {
+			"input": {
+				"markedContext": "<TARGET>Während</TARGET> der Pause lernten wir.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "während",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": null,
+							"extPos": null,
+							"foreign": null,
+							"governedCase": null,
+							"partType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⏳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "innerhalb",
+							"kind": "ADP"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Salvaged from the retired unit-shadow homograph pair: the adpositional Reading locates the event inside a nominal time span, which innerhalb shares; its spatial anchoring keeps the pair Near rather than exact Synonym and must not pull the subordinator's relations across the homograph.",
+			"contaminationKeys": ["relation-de-waehrend-adposition"]
+		},
+		"relation-adv-47-waehrend-subordinator": {
+			"input": {
+				"markedContext": "<TARGET>Während</TARGET> wir aßen, kam Ben an.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "während",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": {
+							"conjType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⏳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "solange",
+							"kind": "SCONJ"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null
+				}
+			},
+			"explanation": "Salvaged homograph counterpart: the subordinator Reading links finite clauses, which solange shares; solange adds a duration-profile restriction, and the adpositional Reading of während must not leak into this judgment.",
+			"contaminationKeys": ["relation-de-waehrend-subordinator"]
+		},
+		"relation-adv-48-erwaegen": {
+			"input": {
+				"markedContext": "Wir <TARGET>erwägen</TARGET> einen Umzug.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "erwägen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⚖️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": [
+						{
+							"canonicalForm": "abwägen",
+							"kind": "VERB"
+						}
+					],
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": null
+				}
+			},
+			"explanation": "Salvaged contrast pair with in Betracht ziehen: abwägen shares the deliberation proposition with a weighing nuance, so it is Near Synonym; the complete Collocation in Betracht ziehen is a Phraseme and therefore outside the Lexeme Family inventory.",
+			"contaminationKeys": ["relation-de-erwaegen-consider"]
+		},
+		"relation-acceptance-syn-01-streichholz": {
+			"input": {
+				"markedContext": "Sie entzündete die Kerze mit einem <TARGET>Streichholz</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Streichholz",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🔥",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "Zündstäbchen",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Reciprocal unlabeled Duden synonymy supports exact Streichholz–Zündstäbchen equivalence; labeled Zündholz is unsafe as unrestricted exact synonymy.",
+			"sources": [
+				{
+					"title": "Duden: Streichholz",
+					"url": "https://www.duden.de/rechtschreibung/Streichholz",
+					"supports": "Lists Zündstäbchen as a synonym of Streichholz."
+				},
+				{
+					"title": "Duden: Zündstäbchen",
+					"url": "https://www.duden.de/rechtschreibung/Zuendstaebchen",
+					"supports": "Reciprocally points to Streichholz without a usage label."
+				},
+				{
+					"title": "Duden: Zündholz",
+					"url": "https://www.duden.de/rechtschreibung/Zuendholz",
+					"supports": "Marks Zündholz as technical or regional, excluding unrestricted exact Synonymy."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-streichholz-candle-2026"
+			]
+		},
+		"relation-acceptance-syn-02-apfelsine-null": {
+			"input": {
+				"markedContext": "Zum Frühstück schälte Mara eine saftige <TARGET>Apfelsine</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Apfelsine",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🍊",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"synonym": null
+				}
+			},
+			"explanation": "Regional and collocational restrictions prevent exact unrestricted equivalence with Orange.",
+			"sources": [
+				{
+					"title": "Duden: Apfelsine",
+					"url": "https://www.duden.de/rechtschreibung/Apfelsine",
+					"supports": "Equates the fruit sense with Orange."
+				},
+				{
+					"title": "Duden: Das Synonymwörterbuch, sample",
+					"url": "https://shop.duden.de/media/af/fa/e3/1687342120/Leseprobe_9783411912766_Duden_%E2%80%93_Das_Synonymw%C3%B6rterbuch.pdf",
+					"supports": "Documents regional and collocational restrictions between Apfelsine and Orange."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Requires exact semantic equivalence for Synonym."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-apfelsine-breakfast-2026"
+			]
+		},
+		"relation-acceptance-near-syn-01-semmel": {
+			"input": {
+				"markedContext": "In München bestellte er zum Frühstück eine <TARGET>Semmel</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Semmel",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🥖",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"nearSynonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"nearSynonym": [
+						{
+							"canonicalForm": "Brötchen",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Semmel and Brötchen share central denotation while Semmel carries a material Austrian/Bavarian distribution restriction.",
+			"sources": [
+				{
+					"title": "Duden: Semmel",
+					"url": "https://www.duden.de/rechtschreibung/Semmel",
+					"supports": "Defines Semmel as Brötchen and marks Austrian or Bavarian distribution."
+				},
+				{
+					"title": "Duden: Brötchen",
+					"url": "https://www.duden.de/rechtschreibung/Broetchen",
+					"supports": "Provides the unrestricted counterpart for the shared bread-roll meaning."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-semmel-munich-2026"
+			]
+		},
+		"relation-acceptance-near-syn-02-geige-null": {
+			"input": {
+				"markedContext": "Die Solistin stimmte ihre <TARGET>Geige</TARGET> vor dem Konzert.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Geige",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🎻",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"nearSynonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"nearSynonym": null
+				}
+			},
+			"explanation": "Bratsche denotes a distinct larger instrument tuned a fifth lower, not a usage variant of Geige.",
+			"sources": [
+				{
+					"title": "Duden: Geige",
+					"url": "https://www.duden.de/rechtschreibung/Geige",
+					"supports": "Defines Geige as the violin-family instrument selected by the context."
+				},
+				{
+					"title": "Duden: Bratsche",
+					"url": "https://www.duden.de/rechtschreibung/Bratsche",
+					"supports": "Defines Bratsche as a distinct larger instrument tuned a fifth lower."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-geige-concert-2026"
+			]
+		},
+		"relation-acceptance-ant-01-lebendig": {
+			"input": {
+				"markedContext": "Der gerettete Käfer war noch <TARGET>lebendig</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "lebendig",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🫀",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"antonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"antonym": [
+						{
+							"canonicalForm": "tot",
+							"kind": "ADJ"
+						}
+					]
+				}
+			},
+			"explanation": "The marked biological readings of lebendig and tot form a directly sourced complementary opposition.",
+			"sources": [
+				{
+					"title": "Duden: lebendig",
+					"url": "https://www.duden.de/rechtschreibung/lebendig",
+					"supports": "Documents the biological alive Reading of lebendig."
+				},
+				{
+					"title": "Duden: tot",
+					"url": "https://www.duden.de/rechtschreibung/tot",
+					"supports": "Documents the complementary biological state tot."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-lebendig-beetle-2026"
+			]
+		},
+		"relation-acceptance-ant-02-nass": {
+			"input": {
+				"markedContext": "Nach dem Wolkenbruch war der Mantel völlig <TARGET>nass</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "nass",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "💧",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"antonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"antonym": [
+						{
+							"canonicalForm": "trocken",
+							"kind": "ADJ"
+						}
+					]
+				}
+			},
+			"explanation": "Nass and trocken are conventional opposite endpoints of the moisture scale.",
+			"sources": [
+				{
+					"title": "Duden: nass",
+					"url": "https://www.duden.de/rechtschreibung/nass",
+					"supports": "Documents nass as soaked with liquid."
+				},
+				{
+					"title": "Duden: trocken",
+					"url": "https://www.duden.de/rechtschreibung/trocken",
+					"supports": "Documents trocken as the conventional moisture-scale opposite."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-nass-raincoat-2026"
+			]
+		},
+		"relation-acceptance-near-ant-01-erben": {
+			"input": {
+				"markedContext": "Nora wird das Haus von ihrer Tante <TARGET>erben</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "erben",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "📜",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"nearAntonym": [
+						{
+							"canonicalForm": "vererben",
+							"kind": "VERB"
+						}
+					]
+				}
+			},
+			"explanation": "Erben and vererben profile the same inheritance event from exchanged participant perspectives.",
+			"sources": [
+				{
+					"title": "Duden: erben",
+					"url": "https://www.duden.de/rechtschreibung/erben",
+					"supports": "Defines erben from the recipient perspective of inheritance."
+				},
+				{
+					"title": "Duden: vererben",
+					"url": "https://www.duden.de/rechtschreibung/vererben",
+					"supports": "Defines vererben from the bequeather perspective of the same event."
+				},
+				{
+					"title": "Duden: Das Wunder des Verbs",
+					"url": "https://cdn.duden.de/public_files/2018-11/Konrad-Duden-Preis_Fabricius_Hansen_Das_Wunder_des_Verbs_2004.pdf",
+					"supports": "Analyzes the exchanged participant perspectives of erben and vererben."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Supplies Near Antonym for the human-accepted converse mapping."
+				}
+			],
+			"contaminationKeys": ["acceptance-reservation-de-erben-house-2026"]
+		},
+		"relation-acceptance-near-ant-02-geben": {
+			"input": {
+				"markedContext": "Die Großmutter wird dem Kind ein Buch <TARGET>geben</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "geben",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🎁",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"nearAntonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"nearAntonym": [
+						{
+							"canonicalForm": "bekommen",
+							"kind": "VERB"
+						}
+					]
+				}
+			},
+			"explanation": "Geben and bekommen conventionally profile the same transfer from giver and recipient perspectives.",
+			"sources": [
+				{
+					"title": "Duden: geben",
+					"url": "https://www.duden.de/rechtschreibung/geben",
+					"supports": "Defines geben from the transferor perspective."
+				},
+				{
+					"title": "Duden: bekommen",
+					"url": "https://www.duden.de/rechtschreibung/bekommen",
+					"supports": "Defines bekommen from the recipient perspective."
+				},
+				{
+					"title": "IDS Grammis: konvers",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1005",
+					"supports": "Defines converse predicates through exchanged argument assignment."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Supplies Near Antonym for the human-accepted converse mapping."
+				}
+			],
+			"contaminationKeys": ["acceptance-reservation-de-geben-gift-2026"]
+		},
+		"relation-acceptance-hyp-01-amsel": {
+			"input": {
+				"markedContext": "Im Garten zog eine <TARGET>Amsel</TARGET> einen Wurm aus dem Rasen.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Amsel",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🐦",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"hypernym": [
+						{
+							"canonicalForm": "Drossel",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Drossel is the directly evidenced nearest useful category for Amsel.",
+			"sources": [
+				{
+					"title": "Duden: Amsel",
+					"url": "https://www.duden.de/rechtschreibung/Amsel",
+					"supports": "Defines Amsel as a Drossel."
+				},
+				{
+					"title": "Duden: Drossel",
+					"url": "https://www.duden.de/rechtschreibung/Drossel_Singvogel",
+					"supports": "Defines the directly evidenced broader Drossel category."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines Hypernym as the direct narrower-to-broader relation."
+				}
+			],
+			"contaminationKeys": ["acceptance-reservation-de-amsel-garden-2026"]
+		},
+		"relation-acceptance-hyp-02-zylinderkopf-null": {
+			"input": {
+				"markedContext": "Die Werkstatt ersetzte den gerissenen <TARGET>Zylinderkopf</TARGET> des Motors.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Zylinderkopf",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🔧",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"hypernym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"hypernym": null
+				}
+			},
+			"explanation": "Zylinder is the containing technical whole, not a broader category of Zylinderkopf.",
+			"sources": [
+				{
+					"title": "Duden: Zylinderkopf",
+					"url": "https://www.duden.de/rechtschreibung/Zylinderkopf",
+					"supports": "Defines Zylinderkopf as the upper closing component of a Zylinder."
+				},
+				{
+					"title": "Duden: Zylinder",
+					"url": "https://www.duden.de/rechtschreibung/Zylinder",
+					"supports": "Documents Zylinder as the technical whole rather than a broader category."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Separates broader-category Hypernym from part-to-whole Holonym."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-zylinderkopf-engine-2026"
+			]
+		},
+		"relation-acceptance-hol-01-zeh": {
+			"input": {
+				"markedContext": "Beim Barfußlaufen stieß er sich den kleinen <TARGET>Zeh</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Zeh",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🦶",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"holonym": [
+						{
+							"canonicalForm": "Fuß",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Fuß is the directly sourced immediate anatomical whole for Zeh.",
+			"sources": [
+				{
+					"title": "Duden: Zeh",
+					"url": "https://www.duden.de/rechtschreibung/Zeh",
+					"supports": "Defines Zeh as a member of the Fuß."
+				},
+				{
+					"title": "Duden: Fuß",
+					"url": "https://www.duden.de/rechtschreibung/Fusz",
+					"supports": "Documents Fuß as the immediate anatomical whole."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines the direct part-to-whole direction as Holonym."
+				}
+			],
+			"contaminationKeys": ["acceptance-reservation-de-zeh-barefoot-2026"]
+		},
+		"relation-acceptance-hol-02-kapitell": {
+			"input": {
+				"markedContext": "Das korinthische <TARGET>Kapitell</TARGET> krönt die Marmorsäule.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Kapitell",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🏛️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"semanticRelations": {
+						"holonym": null
+					}
+				}
+			},
+			"idealOutput": {
+				"semanticRelations": {
+					"holonym": [
+						{
+							"canonicalForm": "Säule",
+							"kind": "NOUN"
+						}
+					]
+				}
+			},
+			"explanation": "Säule is the immediate constitutive architectural whole for Kapitell.",
+			"sources": [
+				{
+					"title": "Duden: Kapitell",
+					"url": "https://www.duden.de/rechtschreibung/Kapitell",
+					"supports": "Defines Kapitell as the upper termination of a column or pillar."
+				},
+				{
+					"title": "Duden: Säule",
+					"url": "https://www.duden.de/rechtschreibung/Saeule_Pfeiler",
+					"supports": "Documents Säule as the immediate architectural whole."
+				},
+				{
+					"title": "Dumrel settled Semantic Relation policy",
+					"path": "battery/dumrel/CONTEXT.md",
+					"supports": "Defines the direct part-to-whole direction as Holonym."
+				}
+			],
+			"contaminationKeys": [
+				"acceptance-reservation-de-kapitell-column-2026"
+			]
+		}
+	},
+	"demonstrationIds": [
+		"relation-demo-pfote-anchor",
+		"relation-demo-mieten-converse"
+	],
+	"localDemonstrations": []
+}

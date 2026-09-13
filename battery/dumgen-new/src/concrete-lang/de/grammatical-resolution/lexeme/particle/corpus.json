@@ -1,0 +1,1035 @@
+{
+	"grammar-de-part-demo-negative-nicht": {
+		"input": {
+			"markedContext": "Heute fährt der letzte Bus <TARGET>nicht</TARGET>.",
+			"members": ["nicht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nicht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Clause-negating nicht is PART with Polarity=Neg; the fixed route is not reconsidered."
+	},
+	"grammar-de-part-demo-infinitival-zu": {
+		"input": {
+			"markedContext": "Mina hofft, das Paket morgen <TARGET>zu</TARGET> erhalten.",
+			"members": ["zu"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zu"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zu",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": "Inf",
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The infinitive marker has PartType=Inf and no polarity."
+	},
+	"grammar-de-part-demo-modal-halt": {
+		"input": {
+			"markedContext": "Dann warten wir <TARGET>halt</TARGET> bis Montag.",
+			"members": ["halt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["halt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "halt",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The modal particle is an uninflected Citation Surface; the codec has no modal PartType value."
+	},
+	"grammar-de-part-demo-focus-sogar": {
+		"input": {
+			"markedContext": "Lea hat <TARGET>sogar</TARGET> den schwierigen Zusatztest bestanden.",
+			"members": ["sogar"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sogar"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sogar",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The supplied focus-particle route is authoritative even though the form can be analyzed differently elsewhere."
+	},
+	"grammar-de-part-demo-typo-ebn": {
+		"input": {
+			"markedContext": "Das ist <TARGET>ebn</TARGET> der entscheidende Unterschied.",
+			"members": ["ebn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["eben"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "eben",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Repair the omitted letter while recording the supplied member as Typo."
+	},
+	"grammar-de-part-demo-archaic-nit": {
+		"input": {
+			"markedContext": "Das historische Wörterbuch kennzeichnet <TARGET>nit</TARGET> ausdrücklich als alte Variante von nicht.",
+			"members": ["nit"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nit"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The explicit lexicographic variant-of relation makes nicht the Lemma and nit its archaic Variant Surface."
+	},
+	"grammar-de-part-demo-distinct-archaic-ni": {
+		"input": {
+			"markedContext": "Das Fachlexikon führt die historische Negationspartikel <TARGET>ni</TARGET> unter einem eigenen Lemmaeintrag.",
+			"members": ["ni"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ni"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "ni",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An explicit own-headword cue establishes a distinct archaic Lemma, so the attested form is Canonical rather than a Variant of nicht."
+	},
+	"grammar-de-part-demo-foreign-yes": {
+		"input": {
+			"markedContext": "Im deutsch-englischen Gespräch sagte sie: „Das ist <TARGET>yes</TARGET>, ganz eindeutig.“",
+			"members": ["yes"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["yes"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "yes",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": "Yes",
+					"partType": null,
+					"polarity": "Pos"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The overt English particle keeps an English Lemma; its unchanged source-language form is Canonical relative to that Lemma, not a German Variant."
+	},
+	"grammar-de-part-demo-abbreviation-aff": {
+		"input": {
+			"markedContext": "In der Codeliste wird die affirmative Partikel mit <TARGET>aff</TARGET>. abgekürzt.",
+			"members": ["aff"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aff"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aff.",
+				"coreFeatures": {
+					"abbr": "Yes",
+					"foreign": null,
+					"partType": null,
+					"polarity": "Pos"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The supplied letters plus the punctuation outside TARGET identify the established abbreviation Lemma aff.; never expand its canonicalForm to the full word affirmativ."
+	},
+	"grammar-de-part-dev-negative-initial": {
+		"input": {
+			"markedContext": "<TARGET>Nicht</TARGET> jeder Vorschlag wurde angenommen.",
+			"members": ["Nicht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nicht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-answer-ja": {
+		"input": {
+			"markedContext": "Auf die Kontrollfrage antwortete sie klar mit <TARGET>ja</TARGET>.",
+			"members": ["ja"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ja"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ja",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Pos"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The already-classified affirmative answer particle has Polarity=Pos rather than modal-particle null polarity."
+	},
+	"grammar-de-part-dev-foreign-not": {
+		"input": {
+			"markedContext": "Im deutsch-englischen Gespräch sagte er: „Das ist <TARGET>not</TARGET> okay.“",
+			"members": ["not"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["not"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "not",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": "Yes",
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-abbreviation-n": {
+		"input": {
+			"markedContext": "Im Transkript wurde die Partikel nicht als <TARGET>n</TARGET>. abgekürzt.",
+			"members": ["n"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["n"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "n.",
+				"coreFeatures": {
+					"abbr": "Yes",
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The period is outside the supplied member; the conventional abbreviated Lemma retains it."
+	},
+	"grammar-de-part-dev-modal-doch": {
+		"input": {
+			"markedContext": "Komm <TARGET>doch</TARGET> nach der Arbeit kurz vorbei!",
+			"members": ["doch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-modal-denn": {
+		"input": {
+			"markedContext": "Wie hast du das <TARGET>denn</TARGET> so schnell geschafft?",
+			"members": ["denn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["denn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "denn",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-modal-wohl": {
+		"input": {
+			"markedContext": "Der Zug wird <TARGET>wohl</TARGET> erst am Abend eintreffen.",
+			"members": ["wohl"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wohl"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "wohl",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-modal-mal": {
+		"input": {
+			"markedContext": "Sieh <TARGET>mal</TARGET> im oberen Fach nach.",
+			"members": ["mal"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mal"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mal",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-modal-ja": {
+		"input": {
+			"markedContext": "Du kennst den Weg <TARGET>ja</TARGET> bereits.",
+			"members": ["ja"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ja"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ja",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Modal ja is clause-dependent and therefore has null polarity, unlike an affirmative answer particle."
+	},
+	"grammar-de-part-dev-focus-nur": {
+		"input": {
+			"markedContext": "Für die Reparatur braucht sie <TARGET>nur</TARGET> einen Schraubendreher.",
+			"members": ["nur"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nur"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nur",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-focus-selbst": {
+		"input": {
+			"markedContext": "<TARGET>Selbst</TARGET> der erfahrenste Techniker übersah den Riss.",
+			"members": ["Selbst"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["selbst"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "selbst",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-intensifying-sehr": {
+		"input": {
+			"markedContext": "Das Ergebnis ist <TARGET>sehr</TARGET> viel besser als erwartet.",
+			"members": ["sehr"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sehr"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sehr",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The fixed PART route identifies the supplied intensifying particle; do not reclassify it as ADV."
+	},
+	"grammar-de-part-dev-answer-doch": {
+		"input": {
+			"markedContext": "Auf die negative Frage antwortete Pavel entschieden mit <TARGET>doch</TARGET>.",
+			"members": ["doch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Pos"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-infinitival-beside-adp": {
+		"input": {
+			"markedContext": "Sie fährt zum Archiv, um die Akte <TARGET>zu</TARGET> prüfen.",
+			"members": ["zu"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zu"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zu",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": "Inf",
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The marked infinitive particle remains PART; the earlier fusion zum is only context, not ADP membership."
+	},
+	"grammar-de-part-dev-focus-beside-adv": {
+		"input": {
+			"markedContext": "Er arbeitet heute <TARGET>bloß</TARGET> vormittags von zu Hause.",
+			"members": ["bloß"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bloß"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "bloß",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The supplied focus particle is PART, not the later temporal ADV vormittags."
+	},
+	"grammar-de-part-dev-modal-beside-sconj": {
+		"input": {
+			"markedContext": "Sie ist <TARGET>eben</TARGET> gegangen, weil der Bus schon kam.",
+			"members": ["eben"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["eben"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "eben",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The marked modal particle is PART; the unmarked weil remains SCONJ context."
+	},
+	"grammar-de-part-dev-modal-aber-not-cconj": {
+		"input": {
+			"markedContext": "Das ist <TARGET>aber</TARGET> eine erfreuliche Nachricht!",
+			"members": ["aber"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["aber"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "aber",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The supplied emphatic particle use is PART, not the clause-linking CCONJ homograph."
+	},
+	"grammar-de-part-dev-beside-verb-particle": {
+		"input": {
+			"markedContext": "Hör <TARGET>mal</TARGET> mit dem Lärm auf!",
+			"members": ["mal"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mal"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mal",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Only mal is the supplied PART member; the later separable VERB element auf stays outside membership."
+	},
+	"grammar-de-part-dev-variant-nich": {
+		"input": {
+			"markedContext": "Das Dialektwörterbuch bezeichnet <TARGET>nich</TARGET> als regionale Variante von nicht.",
+			"members": ["nich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nich"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-typo-dohc": {
+		"input": {
+			"markedContext": "Komm <TARGET>dohc</TARGET> bitte kurz herein.",
+			"members": ["dohc"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-dev-other-eigentlich": {
+		"input": {
+			"markedContext": "Was wolltest du <TARGET>eigentlich</TARGET> noch erzählen?",
+			"members": ["eigentlich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["eigentlich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "eigentlich",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-negative-nicht": {
+		"input": {
+			"markedContext": "Der Wartungsbericht wurde gestern <TARGET>nicht</TARGET> veröffentlicht.",
+			"members": ["nicht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nicht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-infinitival-zu": {
+		"input": {
+			"markedContext": "Die Technikerin versucht, den Fehler vor Mittag <TARGET>zu</TARGET> beheben.",
+			"members": ["zu"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zu"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zu",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": "Inf",
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-answer-doch": {
+		"input": {
+			"markedContext": "Auf die Frage, ob sie nicht teilnehmen könne, antwortete sie mit <TARGET>doch</TARGET>.",
+			"members": ["doch"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["doch"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "doch",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Pos"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-foreign-never": {
+		"input": {
+			"markedContext": "Im deutsch-englischen Dialog sagte Kim: „Das würde ich <TARGET>never</TARGET> machen.“",
+			"members": ["never"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["never"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "never",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": "Yes",
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-abbreviation-pos": {
+		"input": {
+			"markedContext": "In der Tag-Legende wird die positive Antwortpartikel mit <TARGET>pos</TARGET>. abgekürzt.",
+			"members": ["pos"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["pos"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "pos.",
+				"coreFeatures": {
+					"abbr": "Yes",
+					"foreign": null,
+					"partType": null,
+					"polarity": "Pos"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-modal-bloss": {
+		"input": {
+			"markedContext": "Wie konnte der Schlüssel <TARGET>bloß</TARGET> hinter den Schrank geraten?",
+			"members": ["bloß"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bloß"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "bloß",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-focus-lediglich": {
+		"input": {
+			"markedContext": "Die Änderung betrifft <TARGET>lediglich</TARGET> den letzten Absatz.",
+			"members": ["lediglich"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["lediglich"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "lediglich",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-intensifying-gar": {
+		"input": {
+			"markedContext": "Die Messwerte waren <TARGET>gar</TARGET> nicht so ungewöhnlich.",
+			"members": ["gar"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["gar"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "gar",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-modal-ja-not-intj": {
+		"input": {
+			"markedContext": "Der neue Ablauf ist <TARGET>ja</TARGET> deutlich einfacher als der alte.",
+			"members": ["ja"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ja"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ja",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The embedded supplied modal particle is PART with null polarity, not a standalone INTJ answer."
+	},
+	"grammar-de-part-accept-v2-typo-nciht": {
+		"input": {
+			"markedContext": "Die Datei wurde <TARGET>nciht</TARGET> rechtzeitig gespeichert.",
+			"members": ["nciht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["nicht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-explicit-variant-nedd": {
+		"input": {
+			"markedContext": "Das Regionalwörterbuch nennt <TARGET>nedd</TARGET> ausdrücklich eine Mundartvariante von nicht.",
+			"members": ["nedd"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["nedd"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "nicht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-part-accept-v2-distinct-archaic-en": {
+		"input": {
+			"markedContext": "Das historische Lexikon führt die Negationspartikel <TARGET>en</TARGET> als selbstständiges Stichwort.",
+			"members": ["en"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["en"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "en",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"partType": null,
+					"polarity": "Neg"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

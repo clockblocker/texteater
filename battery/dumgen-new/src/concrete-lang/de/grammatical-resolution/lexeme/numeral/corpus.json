@@ -1,0 +1,960 @@
+{
+	"grammar-de-num-demo-word-vier": {
+		"input": {
+			"markedContext": "Die Schülerin kauft <TARGET>vier</TARGET> karierte Hefte.",
+			"members": ["vier"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["vier"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vier",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The classified word-form cardinal is invariant and uses Citation with NumType Card."
+	},
+	"grammar-de-num-demo-digit-7": {
+		"input": {
+			"markedContext": "Auf der Anzeigetafel steht <TARGET>7</TARGET>.",
+			"members": ["7"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["7"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "7",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The codec has no NumForm feature, so the digit remains its own canonical identity."
+	},
+	"grammar-de-num-dev-initial-fuenf": {
+		"input": {
+			"markedContext": "<TARGET>Fünf</TARGET> Gäste warten bereits im Foyer.",
+			"members": ["Fünf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["fünf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "fünf",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-decimal-drei-komma-vierzehn": {
+		"input": {
+			"markedContext": "Der gemessene Wert beträgt <TARGET>drei</TARGET> <TARGET>Komma</TARGET> <TARGET>vierzehn</TARGET>.",
+			"members": ["drei", "Komma", "vierzehn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["drei", "Komma", "vierzehn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "drei Komma vierzehn",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-year-2024": {
+		"input": {
+			"markedContext": "Die neue Brücke wurde <TARGET>2024</TARGET> eröffnet.",
+			"members": ["2024"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["2024"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "2024",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-roman-xiv": {
+		"input": {
+			"markedContext": "Als römische Zahl wird vierzehn <TARGET>XIV</TARGET> geschrieben.",
+			"members": ["XIV"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["XIV"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "XIV",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-abbreviation-t": {
+		"input": {
+			"markedContext": "Die Stückzahl ist mit <TARGET>T</TARGET> für Tausend angegeben.",
+			"members": ["T"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["T"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Tausend",
+				"coreFeatures": {
+					"abbr": "Yes",
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "German GSD licenses T as an abbreviated Surface of Tausend; the occurrence remains Standard."
+	},
+	"grammar-de-num-dev-foreign-three": {
+		"input": {
+			"markedContext": "Im englischen Zitat stand die Zahl <TARGET>three</TARGET>.",
+			"members": ["three"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["three"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "three",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": "Yes",
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-distributive-zwei": {
+		"input": {
+			"markedContext": "Die Kinder erhielten jeweils <TARGET>zwei</TARGET> Äpfel.",
+			"members": ["zwei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zwei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zwei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked jeweils supplies distributive meaning, but the exact German NUM codec has no Dist value; the numeral identity remains Card."
+	},
+	"grammar-de-num-dev-collective-zwei": {
+		"input": {
+			"markedContext": "Für die Reise kaufte sie <TARGET>zwei</TARGET> Paar Wanderschuhe.",
+			"members": ["zwei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zwei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zwei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked measure noun expresses sets; the exact codec has no Sets or collective value, so the supplied NUM remains Card."
+	},
+	"grammar-de-num-dev-multi-member-ein-komma-fuenf": {
+		"input": {
+			"markedContext": "Der Mittelwert beträgt <TARGET>ein</TARGET> <TARGET>Komma</TARGET> <TARGET>fünf</TARGET>.",
+			"members": ["ein", "Komma", "fünf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["ein", "Komma", "fünf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ein Komma fünf",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "All three authoritative members realize one spoken decimal NUM; preserve membership and source order."
+	},
+	"grammar-de-num-accept-v3-word-dreizehn": {
+		"input": {
+			"markedContext": "Auf dem Bahnsteig warten <TARGET>dreizehn</TARGET> Reisende.",
+			"members": ["dreizehn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dreizehn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dreizehn",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-digit-73": {
+		"input": {
+			"markedContext": "Das Trikot trägt die Nummer <TARGET>73</TARGET>.",
+			"members": ["73"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["73"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "73",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-decimal-sieben-komma-acht": {
+		"input": {
+			"markedContext": "Der Pegel liegt bei <TARGET>sieben</TARGET> <TARGET>Komma</TARGET> <TARGET>acht</TARGET> Metern.",
+			"members": ["sieben", "Komma", "acht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["sieben", "Komma", "acht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sieben Komma acht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-year-1987": {
+		"input": {
+			"markedContext": "Die Aufnahme entstand <TARGET>1987</TARGET> in Leipzig.",
+			"members": ["1987"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["1987"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "1987",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-roman-xix": {
+		"input": {
+			"markedContext": "Die römische Zahl neunzehn wird als <TARGET>XIX</TARGET> notiert.",
+			"members": ["XIX"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["XIX"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "XIX",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-multi-member-vier-komma-neun": {
+		"input": {
+			"markedContext": "Die Waage zeigt <TARGET>vier</TARGET> <TARGET>Komma</TARGET> <TARGET>neun</TARGET> Kilogramm.",
+			"members": ["vier", "Komma", "neun"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["vier", "Komma", "neun"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vier Komma neun",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-demo-inflected-millionen": {
+		"input": {
+			"markedContext": "Mit <TARGET>Millionen</TARGET> rechnet die Planerin nicht.",
+			"members": ["Millionen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Millionen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Million",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "German GSD licenses inflected quantity numerals; mit establishes dative feminine plural."
+	},
+	"grammar-de-num-demo-initial-inflected-trillionen": {
+		"input": {
+			"markedContext": "<TARGET>Trillionen</TARGET> winziger Teilchen würden den Behälter füllen.",
+			"members": ["Trillionen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["trillionen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Trillion",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The initial German quantity word is a feminine plural NUM Inflection in nominative context; its ordinary initial capitalization normalizes to lowercase."
+	},
+	"grammar-de-num-dev-inflected-million-acc": {
+		"input": {
+			"markedContext": "Der Fonds investiert eine <TARGET>Million</TARGET> Euro.",
+			"members": ["Million"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Million"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Million",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-inflected-millionen-gen": {
+		"input": {
+			"markedContext": "Trotz <TARGET>Millionen</TARGET> offener Fragen begann das Projekt.",
+			"members": ["Millionen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Millionen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Million",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-inflected-quadrillionen-nom": {
+		"input": {
+			"markedContext": "<TARGET>Quadrillionen</TARGET> kleinster Einheiten wären dafür nötig.",
+			"members": ["Quadrillionen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["quadrillionen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Quadrillion",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-demo-typo-dreii": {
+		"input": {
+			"markedContext": "Für das Experiment fehlen <TARGET>dreii</TARGET> Kabel.",
+			"members": ["dreii"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["drei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "drei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Repair the duplicated final i and mark the occurrence Typo."
+	},
+	"grammar-de-num-dev-archaic-zween": {
+		"input": {
+			"markedContext": "<TARGET>Zween</TARGET> Ritter bewachten der Sage nach das Tor.",
+			"members": ["Zween"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zween"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "zwei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Zween is an archaic masculine inflected form of zwei; initial capitalization remains Standard."
+	},
+	"grammar-de-num-dev-variant-zwo": {
+		"input": {
+			"markedContext": "Im Funkverkehr meldete die Pilotin <TARGET>zwo</TARGET> Kontakte.",
+			"members": ["zwo"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zwo"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zwei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The licensed disambiguating form zwo is Standard occurrence evidence and a Variant Surface of zwei."
+	},
+	"grammar-de-num-accept-v3-typo-neunzhen": {
+		"input": {
+			"markedContext": "Im Protokoll stehen <TARGET>neunzhen</TARGET> einzelne Meldungen.",
+			"members": ["neunzhen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["neunzehn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "neunzehn",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-archaic-fuenff": {
+		"input": {
+			"markedContext": "Im alten Rechenbuch steht die Zahl <TARGET>fünff</TARGET>.",
+			"members": ["fünff"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["fünff"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": {
+					"historicalStatus": "Archaic"
+				},
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "fünf",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-dev-route-adj-drei": {
+		"input": {
+			"markedContext": "Nach dem zweiten Versuch gelang schließlich Versuch Nummer <TARGET>drei</TARGET>.",
+			"members": ["drei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["drei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "drei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked zweiten is an ordinal ADJ, but the classified cardinal label drei remains NUM."
+	},
+	"grammar-de-num-dev-route-det-zwei": {
+		"input": {
+			"markedContext": "Von beiden Gruppen kamen jeweils <TARGET>zwei</TARGET> Personen zur Probe.",
+			"members": ["zwei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["zwei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zwei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked beiden is DET; the supplied cardinal target is independently NUM."
+	},
+	"grammar-de-num-dev-route-pron-drei": {
+		"input": {
+			"markedContext": "Von den zwölf Bewerbern kamen <TARGET>drei</TARGET> später an.",
+			"members": ["drei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["drei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "drei",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "A standalone cardinal can head this phrase without becoming PRON; the route is fixed upstream."
+	},
+	"grammar-de-num-dev-route-noun-eins": {
+		"input": {
+			"markedContext": "Die Anzeige sprang von der Null auf <TARGET>eins</TARGET>.",
+			"members": ["eins"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["eins"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "eins",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The unmarked nominalized Null contrasts with the classified numeric value eins; do not copy the NOUN route."
+	},
+	"grammar-de-num-dev-route-symbol-7": {
+		"input": {
+			"markedContext": "Die Gleichung lautet drei plus vier gleich <TARGET>7</TARGET>.",
+			"members": ["7"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["7"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "7",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Card"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Mathematical context does not turn the classified digit into SYM; only the numeric target is resolved."
+	},
+	"grammar-de-num-demo-fraction-eineinhalb": {
+		"input": {
+			"markedContext": "Die Fahrt dauert <TARGET>eineinhalb</TARGET> Stunden.",
+			"members": ["eineinhalb"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["eineinhalb"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "eineinhalb",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Frac"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The fixed NUM route and exact fraction glyph establish the codec-supported Frac identity."
+	},
+	"grammar-de-num-demo-range-zehn-bis-zwoelf": {
+		"input": {
+			"markedContext": "Die Sprechstunde läuft von <TARGET>zehn</TARGET> <TARGET>bis</TARGET> <TARGET>zwölf</TARGET> Uhr.",
+			"members": ["zehn", "bis", "zwölf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["zehn", "bis", "zwölf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zehn bis zwölf",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Range"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The supplied one-member interval is a Range; never split or replace the authoritative member."
+	},
+	"grammar-de-num-dev-multiplicative-dreifach": {
+		"input": {
+			"markedContext": "Der klassifizierte Multiplikator lautet <TARGET>dreifach</TARGET>.",
+			"members": ["dreifach"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dreifach"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dreifach",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Mult"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-fraction-siebenachtel": {
+		"input": {
+			"markedContext": "Der Tank ist zu <TARGET>siebenachtel</TARGET> gefüllt.",
+			"members": ["siebenachtel"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["siebenachtel"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "siebenachtel",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Frac"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-multiplicative-sechsfach": {
+		"input": {
+			"markedContext": "Die Beschichtung schützt <TARGET>sechsfach</TARGET> besser.",
+			"members": ["sechsfach"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sechsfach"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sechsfach",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Mult"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	},
+	"grammar-de-num-accept-v3-range-zwoelf-bis-sechzehn": {
+		"input": {
+			"markedContext": "Das Angebot gilt für Gruppen von <TARGET>zwölf</TARGET> <TARGET>bis</TARGET> <TARGET>sechzehn</TARGET> Personen.",
+			"members": ["zwölf", "bis", "sechzehn"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["zwölf", "bis", "sechzehn"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zwölf bis sechzehn",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": "Range"
+				}
+			},
+			"realizationCoverage": "Full"
+		}
+	}
+}

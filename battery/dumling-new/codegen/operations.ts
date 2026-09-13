@@ -1,13 +1,22 @@
 import type { ZodValidationOperationRegistration } from "codegen";
 import {
 	emojiDescriptionError,
+	germanPronounCoreError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanPronounCore,
 	nonEmptyFeatureBagError,
 	normalizeForm,
 } from "../src/validation/semantics.js";
 
 export const registrations = [
+	{
+		construct: "custom",
+		implementation: isGermanPronounCore,
+		error: germanPronounCoreError,
+		name: "dumling.de-pronoun.core",
+		version: 1,
+	},
 	{
 		construct: "custom",
 		implementation: hasMarkedFeature,

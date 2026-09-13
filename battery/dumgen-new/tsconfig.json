@@ -1,16 +1,15 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
+	"include": [
+		"src/**/*.ts",
+		"tests/**/*.ts",
+		"codegen/**/*.ts",
+		"cli/**/*.ts"
+	],
 	"compilerOptions": {
 		"paths": {
-			"dumgen": ["./src/index.ts"],
-			"dumgen/knowledge-runtime": ["./src/knowledge-runtime.ts"],
-			"dumgen/model-authoring": ["./src/model-authoring.ts"],
-			"dumgen/openai-fetch": ["./src/openai-fetch.ts"],
-			"dumgen/runtime": ["./src/runtime.ts"],
-			"dumgen/runtime-prompt-data": ["./src/runtime-prompt-data.ts"],
-			"dumgen/schema": ["./src/schema.ts"],
-			"dumgen/vocabulary": ["./src/vocabulary.ts"]
+			"dumling/schema/*": ["../dumling-new/src/generated/schemas/*"],
+			"dumrel/schema": ["../dumrel-new/src/schemas.ts"]
 		}
-	},
-	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+	}
 }
