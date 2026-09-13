@@ -48,7 +48,7 @@
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
-		"test": "bun ./node_modules/vitest/vitest.mjs run",
+		"test": "bun run --bun vitest run",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config ../../tooling/dependency-cruiser.package.cjs --ts-config tsconfig.json --exclude '(^|/)vitest\\.d\\.ts$' -- lib workspace",
 		"validate:test": "bun run test"
