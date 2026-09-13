@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { SerializedDictionaryNote } from "../../dto";
 import type { CommitChangesRequest, CommitChangesResult } from "../../storage";
 import { applyChange } from "./apply-change";
@@ -8,7 +9,7 @@ import {
 } from "./preconditions";
 import type { InMemoryStorageState } from "./state";
 
-export function commitChanges<L extends SupportedLanguage>(
+export function commitChanges<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: CommitChangesRequest<L>,
 ): CommitChangesResult {
@@ -48,7 +49,7 @@ export function commitChanges<L extends SupportedLanguage>(
 	};
 }
 
-function semanticConflict<L extends SupportedLanguage>(
+function semanticConflict<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 ) {
 	return {

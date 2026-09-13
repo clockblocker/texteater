@@ -1,12 +1,15 @@
-import type { Surface } from "../../../src";
+import type * as Dumling from "dumling/types";
+
 import { germanHausLemma } from "./lemmas";
 
 // Attestation: "Das [Haus] steht leer."
 export const germanHausCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "de",
 	normalizedSurface: "Haus",
-	surfaceKind: "Citation",
+
 	lemma: germanHausLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"de", "Lexeme", "NOUN">;

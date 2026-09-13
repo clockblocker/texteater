@@ -1,4 +1,3 @@
-export type { Reading } from "dumling-old/types";
 export * from "./drafts";
 export * from "./entries";
 export * from "./knowledge";

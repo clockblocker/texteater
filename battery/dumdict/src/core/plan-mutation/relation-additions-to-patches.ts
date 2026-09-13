@@ -1,31 +1,31 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
-import type { DirectSemanticRelation } from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type { StoreRevision } from "../../domain-types";
-import type { Reading, ReadingKnowledgeChange } from "../../dto";
+import type { ReadingKnowledgeChange } from "../../dto";
+import { readingFingerprint } from "../identity";
 import type { PlannedRelationAddition } from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";
 
-type ReadingPatch<L extends SupportedLanguage> = Extract<
+type ReadingPatch<L extends Dumling.Language> = Extract<
 	PlannedChangeOp<L>,
 	{ type: "patchReading" }
 >;
 
-export function relationAdditionsToPatches<L extends SupportedLanguage>(
+export function relationAdditionsToPatches<L extends Dumling.Language>(
 	additions: readonly PlannedRelationAddition<L>[],
 	revision: StoreRevision,
 ): ReadingPatch<L>[] {
 	const lemmaBuckets = new Map<
 		string,
 		{
-			reading: Reading<L>;
-			relation: DirectSemanticRelation;
-			targets: Lemma<L>[];
+			reading: Dumling.Reading<L>;
+			relation: Dumrel.DirectSemanticRelation;
+			targets: Dumling.Lemma<L>[];
 		}
 	>();
 	const readingBuckets = new Map<
 		string,
-		{ reading: Reading<L>; targets: Reading<L>[] }
+		{ reading: Dumling.Reading<L>; targets: Dumling.Reading<L>[] }
 	>();
 	for (const addition of additions) {
 		const key = `${readingFingerprint(addition.reading)}\0${addition.relation}`;
@@ -72,8 +72,8 @@ export function relationAdditionsToPatches<L extends SupportedLanguage>(
 	];
 }
 
-function patch<L extends SupportedLanguage>(
-	reading: Reading<L>,
+function patch<L extends Dumling.Language>(
+	reading: Dumling.Reading<L>,
 	revision: StoreRevision,
 	change: ReadingKnowledgeChange<L>["change"],
 ): ReadingPatch<L> {

@@ -1,28 +1,28 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { Reading, SupportedLanguage } from "dumling-old/types";
-import type { UnitShadow } from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type {
 	DumdictPendingSemanticRelation,
 	PendingEntryId,
 	PendingSemanticRelationLocator,
 	PendingSemanticRelationRecord,
 } from "../../dto";
+import { readingFingerprint } from "../identity";
 
-function normalizeUnitShadow<L extends SupportedLanguage>(
-	target: UnitShadow<L>,
-): UnitShadow<L> {
+function normalizeUnitShadow<L extends Dumling.Language>(
+	target: Dumrel.UnitShadow & { language: L },
+): Dumrel.UnitShadow & { language: L } {
 	return {
 		...target,
 		canonicalForm: target.canonicalForm.trim().normalize("NFC"),
 		family: target.family.trim().normalize("NFC"),
 		kind: target.kind.trim().normalize("NFC"),
-	} as UnitShadow<L>;
+	} as Dumrel.UnitShadow & { language: L };
 }
 
-export function derivePendingEntryId<L extends SupportedLanguage>(
-	target: UnitShadow<L>,
+export function derivePendingEntryId<L extends Dumling.Language>(
+	target: Dumrel.UnitShadow & { language: L },
 ): PendingEntryId<L> {
-	const normalized = normalizeUnitShadow(target);
+	const normalized = normalizeUnitShadow<L>(target);
 	const description = [
 		normalized.language,
 		normalized.family,
@@ -33,27 +33,25 @@ export function derivePendingEntryId<L extends SupportedLanguage>(
 }
 
 export function derivePendingSemanticRelationLocator<
-	L extends SupportedLanguage,
+	L extends Dumling.Language,
 >(
-	sourceReading: Reading<L>,
+	sourceReading: Dumling.Reading<L>,
 	pending: DumdictPendingSemanticRelation<L>,
 ): PendingSemanticRelationLocator<L> {
 	return {
 		sourceReadingKey: readingFingerprint(sourceReading),
 		relation: pending.relation,
-		targetPendingId: derivePendingEntryId(pending.target),
+		targetPendingId: derivePendingEntryId<L>(pending.target),
 	};
 }
 
-export function createPendingSemanticRelationRecord<
-	L extends SupportedLanguage,
->(
-	sourceReading: Reading<L>,
+export function createPendingSemanticRelationRecord<L extends Dumling.Language>(
+	sourceReading: Dumling.Reading<L>,
 	pending: DumdictPendingSemanticRelation<L>,
 ): PendingSemanticRelationRecord<L> {
 	const normalizedPending = {
 		...pending,
-		target: normalizeUnitShadow(pending.target),
+		target: normalizeUnitShadow<L>(pending.target),
 	} as DumdictPendingSemanticRelation<L>;
 	return {
 		sourceReading,
@@ -65,7 +63,7 @@ export function createPendingSemanticRelationRecord<
 	};
 }
 
-export function samePendingSemanticRelationLocator<L extends SupportedLanguage>(
+export function samePendingSemanticRelationLocator<L extends Dumling.Language>(
 	left: PendingSemanticRelationLocator<L>,
 	right: PendingSemanticRelationLocator<L>,
 ): boolean {
@@ -76,7 +74,7 @@ export function samePendingSemanticRelationLocator<L extends SupportedLanguage>(
 	);
 }
 
-export function pendingSemanticRelationLocatorKey<L extends SupportedLanguage>(
+export function pendingSemanticRelationLocatorKey<L extends Dumling.Language>(
 	locator: PendingSemanticRelationLocator<L>,
 ): string {
 	return JSON.stringify([
@@ -87,7 +85,7 @@ export function pendingSemanticRelationLocatorKey<L extends SupportedLanguage>(
 }
 
 export function deduplicatePendingSemanticRelationRecords<
-	L extends SupportedLanguage,
+	L extends Dumling.Language,
 >(
 	records: readonly PendingSemanticRelationRecord<L>[],
 ): PendingSemanticRelationRecord<L>[] {
@@ -101,7 +99,7 @@ export function deduplicatePendingSemanticRelationRecords<
 }
 
 export function assertPendingSemanticRelationRecordIdentity<
-	L extends SupportedLanguage,
+	L extends Dumling.Language,
 >(record: PendingSemanticRelationRecord<L>): void {
 	const expected = derivePendingSemanticRelationLocator(
 		record.sourceReading,

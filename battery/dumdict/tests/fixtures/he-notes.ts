@@ -1,6 +1,8 @@
-import type { Lemma, Reading, SerializedDictionaryNote } from "../../src";
+import type * as Dumling from "dumling/types";
+import type { SerializedDictionaryNote } from "../../src";
 
 export const hebrewKatavLemma = {
+	unitKind: "Lemma" as const,
 	canonicalForm: "כתב",
 	coreFeatures: {
 		hebBinyan: "PAAL",
@@ -9,12 +11,13 @@ export const hebrewKatavLemma = {
 	language: "he",
 	family: "Lexeme",
 	kind: "VERB",
-} satisfies Lemma<"he", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"he", "Lexeme", "VERB">;
 
 export const hebrewKatavReading = {
+	unitKind: "Reading" as const,
 	lemma: hebrewKatavLemma,
 	emojiDescription: "✍️",
-} satisfies Reading<"he">;
+} satisfies Dumling.Reading<"he">;
 
 export const heSerializedNotes = [
 	{

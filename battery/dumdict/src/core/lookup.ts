@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type {
 	FindStoredReadingsResult,
 	GetInfoForRelationsCleanupResult,
@@ -8,7 +9,7 @@ import type {
 	StoredReadingsSlice,
 } from "../storage";
 
-export function lookupStoredReadings<L extends SupportedLanguage>(
+export function lookupStoredReadings<L extends Dumling.Language>(
 	slice: StoredReadingsSlice<L>,
 ): FindStoredReadingsResult<L> {
 	return {
@@ -25,7 +26,7 @@ export function lookupStoredReadings<L extends SupportedLanguage>(
 	};
 }
 
-export function lookupRelationsCleanupInfo<L extends SupportedLanguage>(
+export function lookupRelationsCleanupInfo<L extends Dumling.Language>(
 	slice: RelationsCleanupInfoSlice<L>,
 ): GetInfoForRelationsCleanupResult<L> {
 	return {

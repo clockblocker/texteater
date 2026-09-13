@@ -1,24 +1,14 @@
-import { supportedLanguages } from "dumling-old";
-import { getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling-old/dangerously-heavy-schema-tree";
-import { readingSchema } from "dumling-old/schema";
-import type {
-	Lemma,
-	Reading,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
+
+const supportedLanguages = ["de", "en", "he"] as const;
+
 import {
 	directSemanticRelationSchema,
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 } from "dumrel/schema";
-import type {
-	KnowledgeChange,
-	LexemeUnitShadow,
-	ReadingKnowledge,
-	UnitShadow,
-} from "dumrel/types";
 import { type ZodType, z } from "zod/v4";
 import type {
 	ChangePrecondition,
@@ -34,7 +24,8 @@ import type {
 	StoreRevision,
 	SurfaceEntry,
 } from "./domain-types.js";
-import type { SurfaceId } from "./dumling";
+import type { SurfaceId } from "./dumling-id";
+import { unitSchemas } from "./generated/unit-schemas.js";
 import {
 	dumdictNamedValidationErrors,
 	dumdictNamedValidationPredicates,
@@ -42,8 +33,6 @@ import {
 	retainCommitChangesRequest,
 	retainDumdictPlan,
 } from "./validation-semantics";
-
-type SchemaGetter = () => ZodType;
 
 type ObjectSchemaWithField<
 	Output,
@@ -61,26 +50,6 @@ type ExtendableObjectSchemaWithField<
 > = ZodType<Output> &
 	Pick<z.ZodObject<{ [Field in Key]: ZodType<FieldOutput> }>, "extend">;
 
-function collectSchemas(tree: unknown): ZodType[] {
-	if (typeof tree === "function") return [(tree as SchemaGetter)()];
-	return Object.values(tree as Record<string, unknown>).flatMap(
-		collectSchemas,
-	);
-}
-
-/**
- * Dumling's public registry is a nested object rather than a schema tuple, so
- * this adapter is the one place where its leaf union must be re-associated
- * with the entity type owned by Dumling.
- */
-function unionOf<T>(schemas: ZodType[]): ZodType<T> {
-	const [first, second, ...rest] = schemas;
-	if (first === undefined)
-		throw new Error("Dumling exposes no schemas for this entity.");
-	if (second === undefined) return first as ZodType<T>;
-	return z.union([first, second, ...rest]) as ZodType<T>;
-}
-
 function namedValidationPredicate<Value>(
 	name: keyof typeof dumdictNamedValidationPredicates,
 ): (value: Value) => unknown {
@@ -93,7 +62,7 @@ function namedValidationError(
 	return { error: dumdictNamedValidationErrors[name] };
 }
 
-function pendingEntryIdTransform<L extends SupportedLanguage>(
+function pendingEntryIdTransform<L extends Dumling.Language>(
 	language: L,
 ): (value: string) => PendingEntryId<L> {
 	return dumdictNamedValidationTransforms[
@@ -101,21 +70,21 @@ function pendingEntryIdTransform<L extends SupportedLanguage>(
 	] as (value: string) => PendingEntryId<L>;
 }
 
-export type DumdictSchemasFor<L extends SupportedLanguage> = Readonly<{
+export type DumdictSchemasFor<L extends Dumling.Language> = Readonly<{
 	lemmaRecordSchema: ExtendableObjectSchemaWithField<
 		LemmaRecord<L>,
 		"lemma",
-		Lemma<L>
+		Dumling.Lemma<L>
 	>;
 	readingEntrySchema: ObjectSchemaWithField<
 		ReadingEntry<L>,
 		"reading",
-		Reading<L>
+		Dumling.Reading<L>
 	>;
 	surfaceEntrySchema: ObjectSchemaWithField<
 		SurfaceEntry<L>,
 		"surface",
-		Surface<L>
+		Dumling.Surface<L>
 	>;
 	pendingSemanticRelationLocatorSchema: ZodType<
 		PendingSemanticRelationLocator<L>
@@ -130,44 +99,46 @@ export type DumdictSchemasFor<L extends SupportedLanguage> = Readonly<{
 	commitChangesRequestSchema: ZodType<CommitChangesRequest<L>>;
 }>;
 
-function createSchemasFor<const L extends SupportedLanguage>(
+function createSchemasFor<const L extends Dumling.Language>(
 	language: L,
 ): DumdictSchemasFor<L> {
-	const entitySchemas = getSchemaTreeFor(language).entity;
-	const lemmaSchema = unionOf<Lemma<L>>(collectSchemas(entitySchemas.Lemma));
-	const surfaceSchema = unionOf<Surface<L>>(
-		collectSchemas(entitySchemas.Surface),
-	);
+	const lemmaSchema = unitSchemas[language].lemma as ZodType<
+		Dumling.Lemma<L>
+	>;
+	const surfaceSchema = unitSchemas[language].surface as ZodType<
+		Dumling.Surface<L>
+	>;
+	const readingSchema = unitSchemas[language].reading;
 
 	// These casts narrow schemas owned by Dumling and Dumrel after a runtime
 	// language refinement. Local Dumdict object and union outputs remain inferred.
 	const languageReadingSchema = (
-		readingSchema as unknown as ZodType<Reading<L>>
+		readingSchema as unknown as ZodType<Dumling.Reading<L>>
 	).refine(
-		namedValidationPredicate<Reading<L>>(
+		namedValidationPredicate<Dumling.Reading<L>>(
 			`dumdict.reading.language.${language}`,
 		),
 		namedValidationError(`dumdict.reading.language.${language}`),
 	);
 	const languageReadingKnowledgeSchema = (
 		readingKnowledgeSchema as unknown as ZodType<
-			ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
+			Dumrel.ReadingKnowledge<Dumling.Reading<L>>
 		>
 	).refine(
-		namedValidationPredicate<
-			ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
-		>(`dumdict.reading-knowledge.language.${language}`),
+		namedValidationPredicate<Dumrel.ReadingKnowledge<Dumling.Reading<L>>>(
+			`dumdict.reading-knowledge.language.${language}`,
+		),
 		namedValidationError(`dumdict.reading-knowledge.language.${language}`),
 	);
 	const languagePendingSemanticRelationSchema = (
 		pendingSemanticRelationSchema as unknown as ZodType<{
 			relation: z.output<typeof directSemanticRelationSchema>;
-			target: UnitShadow<L>;
+			target: Dumrel.UnitShadow & { language: L };
 		}>
 	).refine(
 		namedValidationPredicate<{
 			relation: z.output<typeof directSemanticRelationSchema>;
-			target: UnitShadow<L>;
+			target: Dumrel.UnitShadow & { language: L };
 		}>(`dumdict.pending.target-language.${language}`),
 		namedValidationError(`dumdict.pending.target-language.${language}`),
 	);
@@ -198,6 +169,10 @@ function createSchemasFor<const L extends SupportedLanguage>(
 		.refine(
 			namedValidationPredicate("dumdict.reading-entry.no-same-lemma"),
 			namedValidationError("dumdict.reading-entry.no-same-lemma"),
+		)
+		.refine(
+			namedValidationPredicate("dumdict.reading-entry.source-family"),
+			namedValidationError("dumdict.reading-entry.source-family"),
 		);
 	const surfaceEntrySchema = z
 		.strictObject({
@@ -238,7 +213,7 @@ function createSchemasFor<const L extends SupportedLanguage>(
 			namedValidationError("dumdict.pending.locator-matches-relation"),
 		);
 
-	const changePreconditionSchema = z.discriminatedUnion("kind", [
+	const changePreconditionSchema = z.union([
 		z.strictObject({
 			kind: z.literal("revisionMatches"),
 			revision: storeRevisionSchema,
@@ -278,20 +253,18 @@ function createSchemasFor<const L extends SupportedLanguage>(
 
 	const languageReadingKnowledgeChangeValueSchema =
 		knowledgeChangeSchema.refine(
-			namedValidationPredicate<KnowledgeChange>(
+			namedValidationPredicate<Dumrel.KnowledgeChange>(
 				`dumdict.knowledge-change.language.${language}`,
 			),
 			namedValidationError(
 				`dumdict.knowledge-change.language.${language}`,
 			),
-		) as unknown as ZodType<
-			KnowledgeChange<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
-		>;
+		) as unknown as ZodType<Dumrel.KnowledgeChange<Dumling.Reading<L>>>;
 	const readingKnowledgeChangeSchema = z.strictObject({
 		reading: languageReadingSchema,
 		change: languageReadingKnowledgeChangeValueSchema,
 	});
-	const readingPatchOpSchema = z.discriminatedUnion("kind", [
+	const readingPatchOpSchema = z.union([
 		z.strictObject({
 			kind: z.literal("addAttestation"),
 			value: z.string(),
@@ -303,7 +276,7 @@ function createSchemasFor<const L extends SupportedLanguage>(
 	]);
 	const preconditionsSchema = z.array(changePreconditionSchema);
 	const plannedChangeOpSchema = z
-		.discriminatedUnion("type", [
+		.union([
 			z.strictObject({
 				type: z.literal("createLemma"),
 				record: lemmaRecordSchema,
@@ -371,9 +344,9 @@ const schemasByLanguage = {
 	de: createSchemasFor("de"),
 	en: createSchemasFor("en"),
 	he: createSchemasFor("he"),
-} satisfies { [L in SupportedLanguage]: DumdictSchemasFor<L> };
+} satisfies { [L in Dumling.Language]: DumdictSchemasFor<L> };
 
-export function getDumdictSchemasFor<L extends SupportedLanguage>(
+export function getDumdictSchemasFor<L extends Dumling.Language>(
 	language: L,
 ): DumdictSchemasFor<L> {
 	// Generic indexed access widens this to the map's concrete-language union;
@@ -381,10 +354,10 @@ export function getDumdictSchemasFor<L extends SupportedLanguage>(
 	return schemasByLanguage[language] as unknown as DumdictSchemasFor<L>;
 }
 
-type DumdictSchemaKey = keyof DumdictSchemasFor<SupportedLanguage>;
+type DumdictSchemaKey = keyof DumdictSchemasFor<Dumling.Language>;
 type AggregateSchemaOutput<Key extends DumdictSchemaKey> = {
-	[L in SupportedLanguage]: z.output<DumdictSchemasFor<L>[Key]>;
-}[SupportedLanguage];
+	[L in Dumling.Language]: z.output<DumdictSchemasFor<L>[Key]>;
+}[Dumling.Language];
 
 function aggregateSchema<Key extends DumdictSchemaKey>(
 	key: Key,
@@ -425,7 +398,7 @@ export const commitConflictCodeSchema = z.enum([
 	"revisionConflict",
 	"semanticPreconditionFailed",
 ]);
-export const commitChangesResultSchema = z.discriminatedUnion("status", [
+export const commitChangesResultSchema = z.union([
 	z.strictObject({
 		status: z.literal("committed"),
 		nextRevision: z.string().min(1) as ZodType<StoreRevision>,

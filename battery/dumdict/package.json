@@ -18,10 +18,6 @@
 			"types": "./dist/public-schema.d.ts",
 			"import": "./dist/public-schema.js"
 		},
-		"./dangerously-heavy-schema-tree": {
-			"types": "./dist/dangerously-heavy-schema-tree.d.ts",
-			"import": "./dist/dangerously-heavy-schema-tree.js"
-		},
 		"./runtime": {
 			"types": "./dist/runtime.d.ts",
 			"import": "./dist/runtime.js"
@@ -46,7 +42,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/dangerously-heavy-schema-tree.ts src/runtime.ts src/relations.ts src/pending.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --alias:dumling-old/id=../dumling-old/src/id.ts",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/runtime.ts src/relations.ts src/pending.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
@@ -64,10 +60,10 @@
 	"dependencies": {
 		"common-utils": "workspace:^",
 		"dumrel": "workspace:^",
-		"dumling-old": "workspace:^",
 		"emoji-regex": "^10.6.0",
 		"zod": "^4.4.0",
-		"effect": "3.22.1"
+		"effect": "3.22.1",
+		"dumling": "workspace:^"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",
@@ -78,6 +74,7 @@
 		"esbuild": "^0.28.1",
 		"knip": "^6.29.0",
 		"prinfer": "^2.3.0",
-		"typescript": "^7.0.2"
+		"typescript": "^7.0.2",
+		"dumgen": "workspace:^"
 	}
 }

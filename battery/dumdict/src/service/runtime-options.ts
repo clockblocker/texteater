@@ -1,5 +1,5 @@
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
-import type { Reading } from "../dto";
+import type * as Dumling from "dumling/types";
+
 import type {
 	CommitChangesRequest,
 	CommitChangesResult,
@@ -15,14 +15,14 @@ import type {
 	StoredReadingsSlice,
 } from "../storage/slices";
 
-export type DumdictSliceValidation<L extends SupportedLanguage> = {
+export type DumdictSliceValidation<L extends Dumling.Language> = {
 	readonly storedReadings: (
 		slice: StoredReadingsSlice<L>,
-		requestedLemma?: Lemma<L>,
+		requestedLemma?: Dumling.Lemma<L>,
 	) => void;
 	readonly readingPatch: (
 		slice: ReadingPatchSlice<L>,
-		requestedReading?: Reading<L>,
+		requestedReading?: Dumling.Reading<L>,
 	) => void;
 	readonly readingEntryContext: (
 		context: ReadingEntryContext<L>,
@@ -38,7 +38,7 @@ export type DumdictSliceValidation<L extends SupportedLanguage> = {
 	readonly commitResult: (value: unknown) => CommitChangesResult;
 };
 
-export type DumdictServiceRuntimeOptions<L extends SupportedLanguage> =
+export type DumdictServiceRuntimeOptions<L extends Dumling.Language> =
 	CreateDumdictServiceOptions<L> & {
 		readonly sliceValidation: DumdictSliceValidation<L>;
 	};

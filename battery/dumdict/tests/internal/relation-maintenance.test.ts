@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { projectSemanticRelations, type ReadingEntry } from "../../src";
-import { sameLemma } from "../../src/core/identity";
+import { sameLemma, sameReading } from "../../src/core/identity";
 import { planRelationMaintenance } from "../../src/core/plan-relation-maintenance";
 import {
 	englishRunLemma,
@@ -15,7 +15,11 @@ const jogLemma = {
 	...englishRunLemma,
 	canonicalForm: "jog",
 };
-const jogReading = { lemma: jogLemma, emojiDescription: "🏃‍➡️" };
+const jogReading = {
+	unitKind: "Reading" as const,
+	lemma: jogLemma,
+	emojiDescription: "🏃‍➡️",
+};
 
 function entry(
 	reading: ReadingEntry<"en">["reading"],
@@ -119,12 +123,13 @@ describe("relation maintenance planner", () => {
 		if (plan.status !== "planned") return;
 		expect(plan.additions).toEqual([]);
 		expect(
-			projectSemanticRelations(inventory).some(
+			projections(inventory.readings).some(
 				(projection) =>
-					projection.sourceReading === englishWalkReading &&
+					sameReading(projection.source, englishWalkReading) &&
 					projection.relation === "antonym" &&
 					projection.provenance === "inferred" &&
-					sameLemma(projection.targetLemma, jogLemma),
+					projection.target.unitKind === "Lemma" &&
+					sameLemma(projection.target, jogLemma),
 			),
 		).toBe(true);
 	});
@@ -155,3 +160,9 @@ describe("relation maintenance planner", () => {
 		).toBe(false);
 	});
 });
+
+function projections(readings: import("../../src").ReadingEntry<"en">[]) {
+	const result = projectSemanticRelations(readings);
+	if (!result.success) throw result.error;
+	return result.value;
+}

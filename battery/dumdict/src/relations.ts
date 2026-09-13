@@ -1,5 +1,1 @@
-export {
-	type ProjectSemanticRelationsInput,
-	projectSemanticRelations,
-	type SemanticRelationProjection,
-} from "./core/project-semantic-relations";
+export { projectSemanticRelations } from "./core/project-semantic-relations.js";

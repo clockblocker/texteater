@@ -1,23 +1,11 @@
 import type { Equal, Expect } from "common-utils";
-import type { Reading as DumlingReading } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 import type { z } from "zod/v4";
 import type * as Dumdict from "../../src";
 import type * as DumdictSchema from "../../src/public-schema";
 
-declare const canonicalReading: DumlingReading<"en">;
-canonicalReading satisfies Dumdict.Reading<"en">;
-declare const reexportedReading: Dumdict.Reading<"en">;
-reexportedReading satisfies DumlingReading<"en">;
-
-// @ts-expect-error Dumling Attestation is not Dumdict-owned vocabulary.
-type Attestation = Dumdict.Attestation;
-
-void (undefined as unknown as Attestation);
-
-declare const inspection: Dumdict.DumlingIdInspection;
-const identityBearingKind: "Lemma" | "Surface" = inspection.kind;
-void identityBearingKind;
-
+// @ts-expect-error Linguistic units are imported from Dumling.
+export type Reading = Dumdict.Reading;
 declare const serializedNote: Dumdict.SerializedDictionaryNote<"en">;
 const schemaVersion: 1 = serializedNote.schemaVersion;
 void schemaVersion;
@@ -118,7 +106,7 @@ type _ConflictCodeComesFromSchema = Expect<
 type _AggregateTracksEverySupportedLanguage = Expect<
 	Equal<
 		z.output<typeof DumdictSchema.lemmaRecordSchema>["lemma"]["language"],
-		Dumdict.SupportedLanguage
+		Dumling.Language
 	>
 >;
 

@@ -1,4 +1,5 @@
-import type { Surface } from "../../../src";
+import type * as Dumling from "dumling/types";
+
 import {
 	hebrewKatavLemma,
 	hebrewShanaLemma,
@@ -7,6 +8,7 @@ import {
 
 // Attestation: "הם [כתבו] מכתב."
 export const hebrewKatvuPastThirdPluralInflectionSurface = {
+	unitKind: "Surface" as const,
 	inflectionalFeatures: {
 		number: "Plur",
 		person: "3",
@@ -20,14 +22,15 @@ export const hebrewKatvuPastThirdPluralInflectionSurface = {
 	},
 	language: "he",
 	normalizedSurface: "כתבו",
-	surfaceKind: "Inflection",
+
 	lemma: hebrewKatavLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"he", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"he", "Lexeme", "VERB">;
 
 // Attestation: "הם [כתבו] מכתב."
 export const hebrewKatvuAttestedInflectionSurface = {
+	unitKind: "Surface" as const,
 	inflectionalFeatures: {
 		number: "Plur",
 		person: "3",
@@ -41,28 +44,32 @@ export const hebrewKatvuAttestedInflectionSurface = {
 	},
 	language: "he",
 	normalizedSurface: "כתבו",
-	surfaceKind: "Inflection",
+
 	lemma: hebrewKatavLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"he", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"he", "Lexeme", "VERB">;
 
 // Attestation: "עוד [שנה] עברה."
 export const hebrewShanaCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "he",
 	normalizedSurface: "שנה",
-	surfaceKind: "Citation",
+
 	lemma: hebrewShanaLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"he", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"he", "Lexeme", "NOUN">;
 
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
 export const hebrewUsAbbreviationCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "he",
 	normalizedSurface: "ארה״ב",
-	surfaceKind: "Citation",
+
 	lemma: hebrewUsAbbreviationLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"he", "Citation", "Lexeme", "PROPN">;
+} satisfies Dumling.Surface<"he", "Lexeme", "PROPN">;

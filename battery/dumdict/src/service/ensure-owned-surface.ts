@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { sameLemma } from "../core/identity";
 import { planEnsureOwnedSurface } from "../core/plan-mutation";
@@ -18,13 +19,13 @@ function invalidInput(message: string): DumdictInvalidInput {
 	return { _tag: "DumdictInvalidInput", message };
 }
 
-export function prepareEnsureOwnedSurface<L extends SupportedLanguage>(
+export function prepareEnsureOwnedSurface<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: EnsureOwnedSurfaceRequest<L>,
 ): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
 	if (
 		request.reading.lemma.language !== options.language ||
-		request.ownedSurface.surface.language !== options.language ||
+		request.ownedSurface.surface.lemma.language !== options.language ||
 		request.ownedSurface.surface.lemma.language !== options.language
 	)
 		return Effect.fail(
@@ -53,7 +54,7 @@ export function prepareEnsureOwnedSurface<L extends SupportedLanguage>(
 	);
 }
 
-export function ensureOwnedSurface<L extends SupportedLanguage>(
+export function ensureOwnedSurface<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: EnsureOwnedSurfaceRequest<L>,
 ): Effect.Effect<

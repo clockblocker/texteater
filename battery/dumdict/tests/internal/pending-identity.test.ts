@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling-old/id";
-import type { UnitShadow } from "dumrel/types";
+import type * as Dumrel from "dumrel/types";
+import { readingFingerprint } from "../../src/core/identity";
+
 import type {
 	DumdictPendingSemanticRelation,
 	PendingSemanticRelationRecord,
@@ -65,7 +66,7 @@ describe("Pending Semantic Relation identity", () => {
 			canonicalForm: "caf\u00e9",
 			family: "Lexeme",
 			kind: "NOUN",
-		} satisfies UnitShadow<"en">;
+		} satisfies Extract<Dumrel.UnitShadow, { language: "en" }>;
 		const equivalent = {
 			...normalized,
 			canonicalForm: "  cafe\u0301 ",
@@ -73,9 +74,9 @@ describe("Pending Semantic Relation identity", () => {
 		const distinct = [
 			{ ...normalized, language: "de" },
 			{ ...normalized, canonicalForm: "Kaffee" },
-			{ ...normalized, family: "Morpheme" },
+			{ ...normalized, family: "Morpheme", kind: "Prefix" },
 			{ ...normalized, kind: "VERB" },
-		] as UnitShadow[];
+		] as Dumrel.UnitShadow[];
 
 		expect(derivePendingEntryId(equivalent)).toBe(
 			derivePendingEntryId(normalized),
@@ -104,7 +105,9 @@ describe("Pending Semantic Relation identity", () => {
 		);
 		const differentTarget = createPendingSemanticRelationRecord(
 			englishWalkReading,
-			pending({ target: { ...pending().target, kind: "NOUN" } }),
+			pending({
+				target: { ...pending().target, family: "Lexeme", kind: "NOUN" },
+			}),
 		);
 
 		expect(

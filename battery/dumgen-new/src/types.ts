@@ -69,9 +69,13 @@ export type ReadingEmojiDescriptionResolution = {
 	readonly emojiDescription: EmojiDescription;
 };
 export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
-export type KnowledgeProduction = {
-	readonly changes: readonly Dumrel.KnowledgeChange[];
-	readonly pendingRelations: readonly Dumrel.PendingSemanticRelation[];
+export type KnowledgeProduction<L extends DumgenLanguage = DumgenLanguage> = {
+	readonly changes: readonly Dumrel.KnowledgeChange<Dumling.Reading<L>>[];
+	readonly pendingRelations: readonly (Dumrel.PendingSemanticRelation & {
+		target: {
+			language: L;
+		};
+	})[];
 };
 export type Task<T> = Effect.Effect<T, DumgenFailure>;
 export interface Dumgen {
@@ -91,9 +95,9 @@ export interface Dumgen {
 	generateReadingEmojiDescription<L extends DumgenLanguage>(
 		input: GenerationInput<L>,
 	): Task<EmojiDescription>;
-	produceKnowledge<L extends DumgenLanguage>(
-		input: KnowledgeInput<L>,
-	): Task<KnowledgeProduction>;
+	produceKnowledge<I extends KnowledgeInput>(
+		input: I,
+	): Task<KnowledgeProduction<I["reading"]["lemma"]["language"]>>;
 }
 export type ModelConfiguration = {
 	readonly model: string;

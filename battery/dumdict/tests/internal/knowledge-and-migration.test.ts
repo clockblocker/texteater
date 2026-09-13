@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { applyKnowledgeChange } from "dumrel";
 import { readingKnowledgeSchema } from "dumrel/schema";
-import type { KnowledgeChange, ReadingKnowledge } from "dumrel/types";
+import type * as Dumrel from "dumrel/types";
+
 import { applyDumdictKnowledgeChange } from "../../src";
 import {
 	englishRunLemma,
@@ -63,7 +64,7 @@ describe("Reading Knowledge Changes", () => {
 				value: [shadow, shadow],
 			},
 			{ kind: "Retract", aspect: "lexicalBreakdown" },
-		] as const satisfies readonly KnowledgeChange[];
+		] as const satisfies readonly Dumrel.KnowledgeChange[];
 
 		for (const existing of [undefined, {}] as const) {
 			for (const change of changes) {
@@ -77,9 +78,14 @@ describe("Reading Knowledge Changes", () => {
 					{ reading: englishWalkReading, change },
 				);
 				const knowledge = result.knowledge ?? {};
-				expect(knowledge as unknown).toEqual(
-					applyKnowledgeChange(existing, change),
-				);
+				const expected = applyKnowledgeChange({
+					source: englishWalkReading,
+					knowledge: existing ?? {},
+					change,
+				});
+				expect(expected.success).toBe(true);
+				if (!expected.success) throw expected.error;
+				expect(knowledge).toEqual(expected.value);
 				expect(
 					readingKnowledgeSchema.safeParse(knowledge).success,
 				).toBe(true);
@@ -104,8 +110,8 @@ describe("Reading Knowledge Changes", () => {
 					language: "en",
 					value: [decomposed, decomposed],
 				},
-			] as const satisfies readonly KnowledgeChange[];
-			let existing: ReadingKnowledge | undefined;
+			] as const satisfies readonly Dumrel.KnowledgeChange[];
+			let existing: Dumrel.ReadingKnowledge | undefined;
 			for (const change of changes) {
 				const result = applyDumdictKnowledgeChange(
 					{

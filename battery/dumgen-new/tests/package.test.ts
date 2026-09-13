@@ -75,7 +75,10 @@ const wrongKnowledge:KnowledgeInput<"de">={encounter:nounEncounter,reading:verbR
 const dumgen=createDumgen({execute:async()=>null});
 dumgen.generateReadingEmojiDescription(generation);
 dumgen.resolveOrGenerateReadingEmojiDescription(comparison);
-dumgen.produceKnowledge(knowledge);
+const production=dumgen.produceKnowledge(knowledge);
+type Production=Effect.Effect.Success<typeof production>;
+declare const proposal:Production;
+const pendingLanguage:"de"=proposal.pendingRelations[0]!.target.language;
 // @ts-expect-error Public operations reject mismatched units too.
 dumgen.generateReadingEmojiDescription({encounter:nounEncounter,lemma:verb});
 // @ts-expect-error Public comparison rejects mismatched units too.

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { dumling } from "../../src";
+import { parseUnit } from "dumling";
 import {
 	englishAttestations,
 	englishGiveUpTypoFullAttestation,
@@ -12,8 +12,7 @@ describe("Dumdict ↔ Dumling attested fixture boundary", () => {
 	test("parses every stored English occurrence through Dumling", () => {
 		expect(
 			englishAttestations.map(
-				(attestation) =>
-					dumling.en.parse.attestation(attestation).success,
+				(attestation) => parseUnit(attestation).success,
 			),
 		).toEqual([
 			true,

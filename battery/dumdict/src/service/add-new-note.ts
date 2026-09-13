@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { sameLemma } from "../core/identity";
 import { planAddNewNote } from "../core/plan-mutation";
@@ -14,7 +15,7 @@ import { commitPrepared, prepared } from "./effect-mutation";
 import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export function prepareAddNewNote<L extends SupportedLanguage>(
+export function prepareAddNewNote<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: AddNewNoteRequest<L>,
 ): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
@@ -28,7 +29,7 @@ export function prepareAddNewNote<L extends SupportedLanguage>(
 		} satisfies DumdictInvalidInput);
 	for (const owned of request.draft.ownedSurfaces ?? []) {
 		if (
-			owned.surface.language !== options.language ||
+			owned.surface.lemma.language !== options.language ||
 			owned.surface.lemma.language !== options.language ||
 			!sameLemma(owned.surface.lemma, request.draft.reading.lemma)
 		)
@@ -52,7 +53,7 @@ export function prepareAddNewNote<L extends SupportedLanguage>(
 	);
 }
 
-export function addNewNote<L extends SupportedLanguage>(
+export function addNewNote<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: AddNewNoteRequest<L>,
 ): Effect.Effect<

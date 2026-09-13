@@ -1,14 +1,10 @@
-import type {
-	Lemma,
-	Reading,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
-import type { DirectSemanticRelation } from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
+
 import type { DumdictPendingSemanticRelation } from "./pending";
 
-export type OwnedSurfaceDraft<L extends SupportedLanguage> = {
-	surface: Surface<L>;
+export type OwnedSurfaceDraft<out L extends Dumling.Language> = {
+	surface: Dumling.Surface<L>;
 	note: {
 		attestedTranslations: string[];
 		attestations: string[];
@@ -16,8 +12,8 @@ export type OwnedSurfaceDraft<L extends SupportedLanguage> = {
 	};
 };
 
-export type DumdictReadingDraft<L extends SupportedLanguage> = {
-	reading: Reading<L>;
+export type DumdictReadingDraft<out L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
 	note: {
 		attestedTranslations: string[];
 		attestations: string[];
@@ -27,10 +23,10 @@ export type DumdictReadingDraft<L extends SupportedLanguage> = {
 	relations?: DumdictSemanticRelationDraft<L>[];
 };
 
-export type DumdictSemanticRelationDraft<L extends SupportedLanguage> =
+export type DumdictSemanticRelationDraft<L extends Dumling.Language> =
 	| {
-			relation: DirectSemanticRelation;
-			target: { kind: "existing"; lemma: Lemma<L> };
+			relation: Dumrel.DirectSemanticRelation;
+			target: { kind: "existing"; lemma: Dumling.Lemma<L> };
 	  }
 	| {
 			target: {

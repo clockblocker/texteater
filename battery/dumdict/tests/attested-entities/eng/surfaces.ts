@@ -1,4 +1,5 @@
-import type { Surface } from "../../../src";
+import type * as Dumling from "dumling/types";
+
 import {
 	englishBankFinancialLemma,
 	englishBankRiverLemma,
@@ -17,6 +18,7 @@ import {
 
 // Attestation: "They [walk] home together."
 export const englishWalkPresentFiniteInflectionSurface = {
+	unitKind: "Surface" as const,
 	inflectionalFeatures: {
 		tense: "Pres",
 		verbForm: "Fin",
@@ -27,14 +29,15 @@ export const englishWalkPresentFiniteInflectionSurface = {
 	},
 	language: "en",
 	normalizedSurface: "walk",
-	surfaceKind: "Inflection",
+
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
 export const englishWalkAttestedInflectionSurface = {
+	unitKind: "Surface" as const,
 	inflectionalFeatures: {
 		tense: "Pres",
 		verbForm: "Fin",
@@ -45,34 +48,39 @@ export const englishWalkAttestedInflectionSurface = {
 	},
 	language: "en",
 	normalizedSurface: "walk",
-	surfaceKind: "Inflection",
+
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
 export const englishWalkCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "walk",
-	surfaceKind: "Citation",
+
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
 export const englishWalkCanonicalCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "walk",
-	surfaceKind: "Citation",
+
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
 export const englishGiveUpPastFiniteInflectionSurface = {
+	unitKind: "Surface" as const,
 	inflectionalFeatures: {
 		tense: "Past",
 		verbForm: "Fin",
@@ -83,118 +91,140 @@ export const englishGiveUpPastFiniteInflectionSurface = {
 	},
 	language: "en",
 	normalizedSurface: "gave up",
-	surfaceKind: "Inflection",
+
 	lemma: englishGiveUpLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
 export const englishBankFinancialCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "bank",
-	surfaceKind: "Citation",
+
 	lemma: englishBankFinancialLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
 export const englishBankRiverCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "bank",
-	surfaceKind: "Citation",
+
 	lemma: englishBankRiverLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
 export const englishPlantOrganismCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "plant",
-	surfaceKind: "Citation",
+
 	lemma: englishPlantOrganismLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
 export const englishPlantFactoryCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "plant",
-	surfaceKind: "Citation",
+
 	lemma: englishPlantFactoryLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
 export const englishLightIlluminationCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "light",
-	surfaceKind: "Citation",
+
 	lemma: englishLightIlluminationLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
 export const englishLightWeightCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "light",
-	surfaceKind: "Citation",
+
 	lemma: englishLightWeightLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "ADJ">;
+} satisfies Dumling.Surface<"en", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
 export const englishSpringSeasonCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "spring",
-	surfaceKind: "Citation",
+
 	lemma: englishSpringSeasonLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
 export const englishSpringCoilCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "spring",
-	surfaceKind: "Citation",
+
 	lemma: englishSpringCoilLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
 export const englishRakeToolCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "rake",
-	surfaceKind: "Citation",
+
 	lemma: englishRakeToolLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Surface<"en", "Lexeme", "NOUN">;
 
 // Attestation: "They [look up] every unknown word."
 export const englishLookUpCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "look up",
-	surfaceKind: "Citation",
+
 	lemma: englishLookUpLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
 export const englishLookCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	normalizedSurface: "look",
-	surfaceKind: "Citation",
+
 	lemma: englishLookLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;

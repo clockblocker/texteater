@@ -1,17 +1,12 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { EntityKind, Lemma, SupportedLanguage } from "dumling-old/types";
-import {
-	directSemanticRelationValues,
-	semanticRelationValues,
-} from "dumrel/relations";
+import type * as Dumling from "dumling/types";
+import { directSemanticRelationValues } from "dumrel";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingEntry,
 	SurfaceEntry,
 } from "../dto";
-import { inspectDumlingId, makeSurfaceId } from "../dumling-id";
+import { makeSurfaceId } from "../dumling-id";
 import {
 	parseAsLemmaRecord,
 	parseAsPendingSemanticRelationRecord,
@@ -35,7 +30,12 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
-import { lemmaFingerprint, sameLemma, sameReading } from "./identity";
+import {
+	lemmaFingerprint,
+	readingFingerprint,
+	sameLemma,
+	sameReading,
+} from "./identity";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,
@@ -43,8 +43,8 @@ import {
 } from "./pending";
 
 function assertLanguage(
-	expected: SupportedLanguage,
-	actual: SupportedLanguage | undefined,
+	expected: Dumling.Language,
+	actual: Dumling.Language | undefined,
 ) {
 	if (actual !== expected)
 		throw new DumdictLanguageMismatchError({
@@ -58,7 +58,7 @@ function assertNoDuplicates(values: string[], context: string) {
 		throw new Error(`${context} contains duplicates.`);
 }
 
-function validateLemmaRecord<L extends SupportedLanguage>(
+function validateLemmaRecord<L extends Dumling.Language>(
 	expected: L,
 	record: LemmaRecord<L>,
 ) {
@@ -66,9 +66,9 @@ function validateLemmaRecord<L extends SupportedLanguage>(
 	assertLanguage(expected, record.lemma.language);
 }
 
-function validateReading<L extends SupportedLanguage>(
+function validateReading<L extends Dumling.Language>(
 	expected: L,
-	reading: Reading<L>,
+	reading: Dumling.Reading<L>,
 ) {
 	unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected));
 	assertLanguage(expected, reading.lemma.language);
@@ -81,7 +81,7 @@ function validateReading<L extends SupportedLanguage>(
 		);
 }
 
-function validateReadingEntry<L extends SupportedLanguage>(
+function validateReadingEntry<L extends Dumling.Language>(
 	expected: L,
 	entry: ReadingEntry<L>,
 ) {
@@ -114,17 +114,13 @@ function validateReadingEntry<L extends SupportedLanguage>(
 	}
 }
 
-function validateSurfaceEntry<L extends SupportedLanguage>(
+function validateSurfaceEntry<L extends Dumling.Language>(
 	expected: L,
 	entry: SurfaceEntry<L>,
 ) {
 	unwrapDumdictParse(parseAsSurfaceEntry(entry, expected));
-	assertLanguage(expected, entry.surface.language);
 	assertLanguage(expected, entry.surface.lemma.language);
-	const inspected = inspectDumlingId(entry.id);
-	assertLanguage(expected, inspected?.language);
-	if (inspected?.kind !== ("Surface" satisfies EntityKind))
-		throw new Error("surface entry id must be a Surface id.");
+	assertLanguage(expected, entry.surface.lemma.language);
 	if (entry.id !== makeSurfaceId(expected, entry.surface))
 		throw new Error("surface entry id does not match its derived id.");
 	if (!sameLemma(entry.ownerLemma, entry.surface.lemma))
@@ -133,7 +129,7 @@ function validateSurfaceEntry<L extends SupportedLanguage>(
 		);
 }
 
-function validatePendingRecord<L extends SupportedLanguage>(
+function validatePendingRecord<L extends Dumling.Language>(
 	expected: L,
 	record: PendingSemanticRelationRecord<L>,
 ) {
@@ -149,12 +145,12 @@ function validatePendingRecord<L extends SupportedLanguage>(
 		throw new Error(
 			"Pending Semantic Relation endpoints must use the same language.",
 		);
-	if (!semanticRelationValues.includes(parsedRecord.locator.relation))
+	if (!directSemanticRelationValues.includes(parsedRecord.locator.relation))
 		throw new Error("Invalid Semantic Relation.");
 	assertPendingSemanticRelationRecordIdentity(parsedRecord);
 }
 
-function validateRelationInventory<L extends SupportedLanguage>(
+function validateRelationInventory<L extends Dumling.Language>(
 	expected: L,
 	lemmas: LemmaRecord<L>[],
 	readings: ReadingEntry<L>[],
@@ -200,10 +196,10 @@ function validateRelationInventory<L extends SupportedLanguage>(
 	}
 }
 
-export function validateStoredReadingsSlice<L extends SupportedLanguage>(
+export function validateStoredReadingsSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: StoredReadingsSlice<L>,
-	requestedLemma?: Lemma<L>,
+	requestedLemma?: Dumling.Lemma<L>,
 ) {
 	for (const candidate of slice.candidates) {
 		validateReadingEntry(expected, candidate.reading);
@@ -219,10 +215,10 @@ export function validateStoredReadingsSlice<L extends SupportedLanguage>(
 	}
 }
 
-export function validateReadingPatchSlice<L extends SupportedLanguage>(
+export function validateReadingPatchSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: ReadingPatchSlice<L>,
-	requested?: Reading<L>,
+	requested?: Dumling.Reading<L>,
 ) {
 	if (!slice.reading) return;
 	validateReadingEntry(expected, slice.reading);
@@ -237,13 +233,13 @@ function validateRevision(value: unknown) {
 		throw new Error("Reading Entry context has an invalid revision.");
 }
 
-function validateExistingIdentity<L extends SupportedLanguage>(
+function validateExistingIdentity<L extends Dumling.Language>(
 	expected: L,
 	context: {
 		existingLemma?: LemmaRecord<L>;
 		existingReading?: ReadingEntry<L>;
 	},
-	reading: Reading<L>,
+	reading: Dumling.Reading<L>,
 ) {
 	if (context.existingLemma) {
 		validateLemmaRecord(expected, context.existingLemma);
@@ -261,7 +257,7 @@ function validateExistingIdentity<L extends SupportedLanguage>(
 	}
 }
 
-function validateRequestedSurfaces<L extends SupportedLanguage>(
+function validateRequestedSurfaces<L extends Dumling.Language>(
 	expected: L,
 	entries: SurfaceEntry<L>[],
 	requestedSurfaceIds: Set<string>,
@@ -279,7 +275,7 @@ function validateRequestedSurfaces<L extends SupportedLanguage>(
 	);
 }
 
-function validateExactPendingSelection<L extends SupportedLanguage>(
+function validateExactPendingSelection<L extends Dumling.Language>(
 	expected: L,
 	records: PendingSemanticRelationRecord<L>[],
 	requestedKeys: Set<string>,
@@ -303,7 +299,7 @@ function validateExactPendingSelection<L extends SupportedLanguage>(
 	);
 }
 
-function validateAddNewNoteContext<L extends SupportedLanguage>(
+function validateAddNewNoteContext<L extends Dumling.Language>(
 	expected: L,
 	context: AddNewNoteContext<L>,
 	request: Extract<
@@ -375,7 +371,7 @@ function validateAddNewNoteContext<L extends SupportedLanguage>(
 	);
 }
 
-function validateApplyGeneratedKnowledgeContext<L extends SupportedLanguage>(
+function validateApplyGeneratedKnowledgeContext<L extends Dumling.Language>(
 	expected: L,
 	context: ApplyGeneratedKnowledgeContext<L>,
 	request: Extract<
@@ -411,7 +407,7 @@ function validateApplyGeneratedKnowledgeContext<L extends SupportedLanguage>(
 	);
 }
 
-export function validateReadingEntryContext<L extends SupportedLanguage>(
+export function validateReadingEntryContext<L extends Dumling.Language>(
 	expected: L,
 	context: ReadingEntryContext<L>,
 	request: LoadReadingEntryContextRequest<L>,
@@ -471,7 +467,7 @@ export function validateReadingEntryContext<L extends SupportedLanguage>(
 	}
 }
 
-export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
+export function validateRelationsCleanupInfoSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: RelationsCleanupInfoSlice<L>,
 	requestedCanonicalForm?: string,
@@ -511,7 +507,7 @@ export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
 	);
 }
 
-export function validateCleanupRelationsSlice<L extends SupportedLanguage>(
+export function validateCleanupRelationsSlice<L extends Dumling.Language>(
 	expected: L,
 	slice: CleanupRelationsSlice<L>,
 ) {

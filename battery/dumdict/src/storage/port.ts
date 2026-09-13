@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type * as Effect from "effect/Effect";
 import type { DumdictStorageFailure } from "../public/results";
 import type { CommitChangesRequest, CommitChangesResult } from "./commit";
@@ -22,7 +23,7 @@ import type {
  * `commitChanges` must apply every ordered direct change atomically or report a
  * conflict; adapters do not infer relation views or resolve Unit Shadows.
  */
-export type DumdictStoragePort<L extends SupportedLanguage> = {
+export type DumdictStoragePort<L extends Dumling.Language> = {
 	findStoredReadings(
 		request: FindStoredReadingsStorageRequest<L>,
 	): Effect.Effect<StoredReadingsSlice<L>, DumdictStorageFailure>;
@@ -48,11 +49,11 @@ export type DumdictStoragePort<L extends SupportedLanguage> = {
 	) => Effect.Effect<CommitChangesResult, DumdictStorageFailure>;
 };
 
-export type DumdictServiceConfig<L extends SupportedLanguage> = {
+export type DumdictServiceConfig<L extends Dumling.Language> = {
 	language?: L;
 };
 
-export type CreateDumdictServiceOptions<L extends SupportedLanguage> = {
+export type CreateDumdictServiceOptions<L extends Dumling.Language> = {
 	language: L;
 	storage: DumdictStoragePort<L>;
 	config?: DumdictServiceConfig<L>;

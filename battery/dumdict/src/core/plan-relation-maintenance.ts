@@ -1,54 +1,53 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
-import { directSemanticRelationValues } from "dumrel/relations";
-import type { DirectSemanticRelation, UnitShadow } from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingEntry,
 } from "../dto";
 import {
 	compareLemmas,
 	lemmaFingerprint,
+	readingFingerprint,
 	sameLemma,
 	sameReading,
 } from "./identity";
 
-export type RelationRequest<L extends SupportedLanguage> = {
-	sourceReading: Reading<L>;
-	relation: DirectSemanticRelation;
+export type RelationRequest<L extends Dumling.Language> = {
+	sourceReading: Dumling.Reading<L>;
+	relation: Dumrel.DirectSemanticRelation;
 	target:
-		| { kind: "lemma"; lemma: Lemma<L> }
-		| { kind: "reading"; reading: Reading<L> }
+		| { kind: "lemma"; lemma: Dumling.Lemma<L> }
+		| { kind: "reading"; reading: Dumling.Reading<L> }
 		| {
 				kind: "shadow";
-				shadow: UnitShadow<L>;
+				shadow: Dumrel.UnitShadow & { language: L };
 				pendingRecord: PendingSemanticRelationRecord<L>;
 		  };
 };
 
-type PlannedLemmaRelation<L extends SupportedLanguage> = {
-	reading: Reading<L>;
-	relation: DirectSemanticRelation;
+type PlannedLemmaRelation<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
+	relation: Dumrel.DirectSemanticRelation;
 	targetKind?: "lemma";
-	targetLemma: Lemma<L>;
+	targetLemma: Dumling.Lemma<L>;
 	targetReading?: never;
 };
-type PlannedReadingRelation<L extends SupportedLanguage> = {
-	reading: Reading<L>;
+type PlannedReadingRelation<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
 	relation: "synonym";
 	targetKind: "reading";
-	targetReading: Reading<L>;
+	targetReading: Dumling.Reading<L>;
 	targetLemma?: never;
 };
-export type PlannedRelationAddition<L extends SupportedLanguage> =
+export type PlannedRelationAddition<L extends Dumling.Language> =
 	| PlannedLemmaRelation<L>
 	| PlannedReadingRelation<L>;
-export type PlannedRelationRemoval<L extends SupportedLanguage> =
+export type PlannedRelationRemoval<L extends Dumling.Language> =
 	PlannedRelationAddition<L>;
 
-export type RelationMaintenancePlan<L extends SupportedLanguage> =
+export type RelationMaintenancePlan<L extends Dumling.Language> =
 	| {
 			status: "planned";
 			additions: PlannedRelationAddition<L>[];
@@ -66,14 +65,14 @@ export type RelationMaintenancePlan<L extends SupportedLanguage> =
 			message: string;
 	  };
 
-type Edge<L extends SupportedLanguage> = PlannedRelationAddition<L>;
+type Edge<L extends Dumling.Language> = PlannedRelationAddition<L>;
 
-function targetKey<L extends SupportedLanguage>(edge: Edge<L>): string {
+function targetKey<L extends Dumling.Language>(edge: Edge<L>): string {
 	return edge.targetKind === "reading"
 		? readingFingerprint(edge.targetReading)
 		: lemmaFingerprint(edge.targetLemma);
 }
-function edgeKey<L extends SupportedLanguage>(edge: Edge<L>): string {
+function edgeKey<L extends Dumling.Language>(edge: Edge<L>): string {
 	return JSON.stringify([
 		readingFingerprint(edge.reading),
 		edge.relation,
@@ -81,9 +80,9 @@ function edgeKey<L extends SupportedLanguage>(edge: Edge<L>): string {
 		targetKey(edge),
 	]);
 }
-function shadowMatchesLemma<L extends SupportedLanguage>(
-	shadow: UnitShadow<L>,
-	lemma: Lemma<L>,
+function shadowMatchesLemma<L extends Dumling.Language>(
+	shadow: Dumrel.UnitShadow & { language: L },
+	lemma: Dumling.Lemma<L>,
 ): boolean {
 	return (
 		shadow.language === lemma.language &&
@@ -93,7 +92,7 @@ function shadowMatchesLemma<L extends SupportedLanguage>(
 	);
 }
 
-function existingEdges<L extends SupportedLanguage>(
+function existingEdges<L extends Dumling.Language>(
 	readings: readonly ReadingEntry<L>[],
 ): Edge<L>[] {
 	return readings.flatMap((entry): Edge<L>[] => {
@@ -118,7 +117,7 @@ function existingEdges<L extends SupportedLanguage>(
 }
 
 /** Plans dictionary-owned direct relation maintenance without inference. */
-export function planRelationMaintenance<L extends SupportedLanguage>(input: {
+export function planRelationMaintenance<L extends Dumling.Language>(input: {
 	lemmas: readonly LemmaRecord<L>[];
 	readings: readonly ReadingEntry<L>[];
 	requests: readonly RelationRequest<L>[];
@@ -194,7 +193,7 @@ export function planRelationMaintenance<L extends SupportedLanguage>(input: {
 			continue;
 		}
 
-		let targets: Lemma<L>[];
+		let targets: Dumling.Lemma<L>[];
 		if (request.target.kind === "lemma") {
 			const storedTarget = lemmaByKey.get(
 				lemmaFingerprint(request.target.lemma),
@@ -289,7 +288,7 @@ function rejected(
 ) {
 	return { status: "rejected" as const, code, message };
 }
-function groupEdgesByTarget<L extends SupportedLanguage>(
+function groupEdgesByTarget<L extends Dumling.Language>(
 	edges: readonly Edge<L>[],
 ): Map<string, Edge<L>[]> {
 	const grouped = new Map<string, Edge<L>[]>();

@@ -1,17 +1,7 @@
-import type {
-	Lemma,
-	Reading,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
-import type {
-	DirectSemanticRelation,
-	KnowledgeChange,
-	LexemeUnitShadow,
-	ReadingKnowledge,
-	UnitShadow,
-} from "dumrel/types";
-import type { SurfaceId } from "./dumling.js";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
+
+import type { SurfaceId } from "./dumling-id.js";
 
 type Primitive = string | number | boolean | bigint | symbol | null | undefined;
 
@@ -25,7 +15,7 @@ export type DeepReadonly<Value> = Value extends Primitive
 				? { readonly [Key in keyof Value]: DeepReadonly<Value[Key]> }
 				: Value;
 
-export type PendingEntryId<L extends SupportedLanguage> = string & {
+export type PendingEntryId<L extends Dumling.Language> = string & {
 	readonly __pendingEntryIdBrand?: unique symbol;
 	readonly __language?: L;
 };
@@ -34,8 +24,8 @@ export type StoreRevision = string & {
 	readonly __storeRevisionBrand?: unique symbol;
 };
 
-export type LemmaRecord<L extends SupportedLanguage> = {
-	lemma: Lemma<L>;
+export type LemmaRecord<out L extends Dumling.Language> = {
+	lemma: Dumling.Lemma<L>;
 };
 
 /**
@@ -45,51 +35,46 @@ export type LemmaRecord<L extends SupportedLanguage> = {
  * Knowledge. Lemma targeting is the default; reviewed closed-class inventories
  * may opt into exact Reading targeting.
  */
-export type ReadingEntry<L extends SupportedLanguage> = {
-	reading: Reading<L>;
-	knowledge?: ReadingKnowledge<
-		string,
-		Lemma<L>,
-		LexemeUnitShadow,
-		Reading<L>
-	>;
+export type ReadingEntry<out L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
+	knowledge?: Dumrel.ReadingKnowledge<Dumling.Reading<L>>;
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;
 };
 
-export type SurfaceEntry<L extends SupportedLanguage> = {
+export type SurfaceEntry<out L extends Dumling.Language> = {
 	id: SurfaceId<L>;
-	surface: Surface<L>;
-	ownerLemma: Lemma<L>;
+	surface: Dumling.Surface<L>;
+	ownerLemma: Dumling.Lemma<L>;
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;
 };
 
-export type PendingSemanticRelationLocator<L extends SupportedLanguage> = {
+export type PendingSemanticRelationLocator<L extends Dumling.Language> = {
 	sourceReadingKey: string;
-	relation: DirectSemanticRelation;
+	relation: Dumrel.DirectSemanticRelation;
 	targetPendingId: PendingEntryId<L>;
 };
 
-export type DumdictPendingSemanticRelation<L extends SupportedLanguage> = {
-	relation: DirectSemanticRelation;
-	target: UnitShadow<L>;
+export type DumdictPendingSemanticRelation<out L extends Dumling.Language> = {
+	relation: Dumrel.DirectSemanticRelation;
+	target: Dumrel.UnitShadow & { language: L };
 };
 
-export type PendingSemanticRelationRecord<L extends SupportedLanguage> = {
-	sourceReading: Reading<L>;
+export type PendingSemanticRelationRecord<out L extends Dumling.Language> = {
+	sourceReading: Dumling.Reading<L>;
 	pending: DumdictPendingSemanticRelation<L>;
 	locator: PendingSemanticRelationLocator<L>;
 };
 
-export type ChangePrecondition<L extends SupportedLanguage> =
+export type ChangePrecondition<L extends Dumling.Language> =
 	| { kind: "revisionMatches"; revision: StoreRevision }
-	| { kind: "lemmaExists"; lemma: Lemma<L> }
-	| { kind: "lemmaMissing"; lemma: Lemma<L> }
-	| { kind: "readingExists"; reading: Reading<L> }
-	| { kind: "readingMissing"; reading: Reading<L> }
+	| { kind: "lemmaExists"; lemma: Dumling.Lemma<L> }
+	| { kind: "lemmaMissing"; lemma: Dumling.Lemma<L> }
+	| { kind: "readingExists"; reading: Dumling.Reading<L> }
+	| { kind: "readingMissing"; reading: Dumling.Reading<L> }
 	| { kind: "surfaceExists"; surfaceId: SurfaceId<L> }
 	| { kind: "surfaceMissing"; surfaceId: SurfaceId<L> }
 	| {
@@ -102,23 +87,23 @@ export type ChangePrecondition<L extends SupportedLanguage> =
 	  }
 	| {
 			kind: "readingAttestationMissing";
-			reading: Reading<L>;
+			reading: Dumling.Reading<L>;
 			value: string;
 	  };
 
-type ReadingKnowledgeChange<L extends SupportedLanguage> = {
-	reading: Reading<L>;
-	change: KnowledgeChange<string, Lemma<L>, LexemeUnitShadow, Reading<L>>;
+type ReadingKnowledgeChange<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
+	change: Dumrel.KnowledgeChange<Dumling.Reading<L>>;
 };
 
-export type ReadingPatchOp<L extends SupportedLanguage> =
+export type ReadingPatchOp<L extends Dumling.Language> =
 	| { kind: "addAttestation"; value: string }
 	| {
 			kind: "applyKnowledgeChange";
 			envelope: ReadingKnowledgeChange<L>;
 	  };
 
-export type PlannedChangeOp<L extends SupportedLanguage> =
+export type PlannedChangeOp<L extends Dumling.Language> =
 	| {
 			type: "createLemma";
 			record: LemmaRecord<L>;
@@ -131,7 +116,7 @@ export type PlannedChangeOp<L extends SupportedLanguage> =
 	  }
 	| {
 			type: "patchReading";
-			reading: Reading<L>;
+			reading: Dumling.Reading<L>;
 			ops: ReadingPatchOp<L>[];
 			preconditions: ChangePrecondition<L>[];
 	  }
@@ -151,16 +136,16 @@ export type PlannedChangeOp<L extends SupportedLanguage> =
 			preconditions: ChangePrecondition<L>[];
 	  };
 
-type MutableCommitChangesRequest<L extends SupportedLanguage> = {
+type MutableCommitChangesRequest<L extends Dumling.Language> = {
 	baseRevision: StoreRevision;
 	changes: PlannedChangeOp<L>[];
 };
 
-export type DumdictPlan<L extends SupportedLanguage> = DeepReadonly<
+export type DumdictPlan<L extends Dumling.Language> = DeepReadonly<
 	MutableCommitChangesRequest<L>
 >;
 
-export type CommitChangesRequest<L extends SupportedLanguage> = Readonly<{
+export type CommitChangesRequest<L extends Dumling.Language> = Readonly<{
 	baseRevision: StoreRevision;
 	changes: readonly PlannedChangeOp<L>[];
 }>;

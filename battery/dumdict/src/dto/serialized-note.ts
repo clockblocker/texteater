@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { LemmaRecord, ReadingEntry, SurfaceEntry } from "./entries";
 import type { PendingSemanticRelationRecord } from "./pending";
 
@@ -8,7 +9,7 @@ import type { PendingSemanticRelationRecord } from "./pending";
  * @remarks This is a hard-break format. Dumdict does not migrate the old
  * unversioned Reading-targeted relation shape; hosts must reset or rewrite it.
  */
-export type SerializedDictionaryNote<L extends SupportedLanguage> = {
+export type SerializedDictionaryNote<L extends Dumling.Language> = {
 	schemaVersion: 1;
 	lemmaRecord: LemmaRecord<L>;
 	readingEntries: ReadingEntry<L>[];

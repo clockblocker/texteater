@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import type { Surface } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { createFullSliceValidation } from "../../../src/service/full-slice-validation";
 import { loadReadingEntryContext } from "../../../src/service/load-reading-entry-context";
@@ -14,13 +15,15 @@ import {
 } from "./helpers";
 
 const walkSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	lemma: englishWalkLemma,
 	normalizedSurface: "walk",
 	spelling: "Canonical",
-	surfaceKind: "Citation",
+
 	surfaceFeatures: null,
-} satisfies Surface<"en">;
+} satisfies Dumling.Surface<"en">;
 
 describe("Reading Entry context load", () => {
 	test("shapes one intent request, calls storage once, and validates the matching result", async () => {

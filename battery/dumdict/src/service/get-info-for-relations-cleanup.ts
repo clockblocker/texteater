@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { lookupRelationsCleanupInfo } from "../core/lookup";
 import type {
@@ -9,7 +10,7 @@ import type {
 } from "../public";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
+export function getInfoForRelationsCleanup<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
 ): Effect.Effect<

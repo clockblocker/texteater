@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { readingFingerprint } from "dumling-old";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 import { knowledgeChangeSchema } from "dumrel/schema";
 import type { z } from "zod";
 import { canonicalDumdictValidationSchemas } from "../../codegen/validation-artifacts";
@@ -19,6 +18,7 @@ import {
 	parseAsReadingPatchOp,
 	parseAsSurfaceEntry,
 } from "../../src";
+import { readingFingerprint } from "../../src/core/identity";
 import {
 	parseKnowledgeChangeForDumdictRuntime,
 	parseReadingForDumdictRuntime,
@@ -47,10 +47,10 @@ function parseRoute(route: DumdictValidationRouteKey, input: unknown): unknown {
 		excludeGlobal: Exclude<
 			DumdictValidationRouteKey,
 			"parseAsCommitChangesResult"
-		> extends `${infer Name}:${SupportedLanguage}`
+		> extends `${infer Name}:${import("dumling/types").Language}`
 			? Name
 			: never,
-		language: SupportedLanguage,
+		language: Dumling.Language,
 	];
 	switch (name) {
 		case "parseAsChangePrecondition":
@@ -94,7 +94,7 @@ function expectParity(route: DumdictValidationRouteKey, input: unknown): void {
 }
 
 function expectReadingGuardParity(
-	language: SupportedLanguage,
+	language: Dumling.Language,
 	input: unknown,
 ): void {
 	const schema = canonicalDumdictValidationSchemas[
@@ -133,7 +133,7 @@ const languageFixtures = {
 	},
 } as const;
 
-function fixturesFor(language: SupportedLanguage) {
+function fixturesFor(language: Dumling.Language) {
 	const fixture = languageFixtures[language];
 	const lemmaRecord = { lemma: fixture.lemma };
 	const readingEntry = {

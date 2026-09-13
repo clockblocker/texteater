@@ -1,7 +1,7 @@
 export { applyDumdictKnowledgeChange } from "./core/apply-reading-knowledge-change";
 export type * from "./domain-types";
 export * from "./dto";
-export * from "./dumling";
+export * from "./dumling-id";
 export {
 	ParsingError,
 	parseAsChangePrecondition,
@@ -17,11 +17,7 @@ export {
 	parseAsSurfaceEntry,
 } from "./parsing/lightweight-parsers";
 export * from "./public";
-export {
-	type ProjectSemanticRelationsInput,
-	projectSemanticRelations,
-	type SemanticRelationProjection,
-} from "./relations";
+export { projectSemanticRelations } from "./relations";
 export { createDumdictService } from "./service/create-dumdict-service";
 export { createDumdictLayer } from "./service/layer";
 export type * from "./storage";

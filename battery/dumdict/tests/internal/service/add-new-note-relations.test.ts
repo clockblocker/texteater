@@ -13,6 +13,7 @@ import {
 	failure,
 	germanGehenReading,
 	getBootedUpDumdict,
+	lemmaRelations,
 } from "./helpers";
 
 const pendingWalkFast = {
@@ -110,22 +111,23 @@ describe("configured service relation writes", () => {
 			.flatMap(({ readingEntries }) => readingEntries);
 		expect(result.status).toBe("applied");
 		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🏊")
-				?.knowledge?.semanticRelations?.nearSynonym,
+			lemmaRelations(
+				readings.find(
+					({ reading }) => reading.emojiDescription === "🏊",
+				)?.knowledge?.semanticRelations,
+			)?.nearSynonym,
 		).toEqual([englishWalkLemma]);
 		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🚶")
-				?.knowledge?.semanticRelations?.nearSynonym,
+			lemmaRelations(
+				readings.find(
+					({ reading }) => reading.emojiDescription === "🚶",
+				)?.knowledge?.semanticRelations,
+			)?.nearSynonym,
 		).toBeUndefined();
-		expect(
-			projectSemanticRelations({
-				lemmas: storage.loadAll().map(({ lemmaRecord }) => lemmaRecord),
-				readings,
-			}),
-		).toContainEqual({
-			sourceReading: expect.objectContaining({ emojiDescription: "🚶" }),
+		expect(projections(readings)).toContainEqual({
+			source: expect.objectContaining({ emojiDescription: "🚶" }),
 			relation: "nearSynonym",
-			targetLemma: englishSwimLemma,
+			target: englishSwimLemma,
 			provenance: "inferred",
 		});
 	});
@@ -165,12 +167,18 @@ describe("configured service relation writes", () => {
 		).toEqual([]);
 		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
 		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🏃")
-				?.knowledge?.semanticRelations?.antonym,
+			lemmaRelations(
+				readings.find(
+					({ reading }) => reading.emojiDescription === "🏃",
+				)?.knowledge?.semanticRelations,
+			)?.antonym,
 		).toEqual([englishWalkLemma]);
 		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🚶")
-				?.knowledge?.semanticRelations?.antonym,
+			lemmaRelations(
+				readings.find(
+					({ reading }) => reading.emojiDescription === "🚶",
+				)?.knowledge?.semanticRelations,
+			)?.antonym,
 		).toBeUndefined();
 	});
 
@@ -312,3 +320,9 @@ describe("configured service relation writes", () => {
 		).toHaveLength(1);
 	});
 });
+
+function projections(readings: import("../../../src").ReadingEntry<"en">[]) {
+	const result = projectSemanticRelations(readings);
+	if (!result.success) throw result.error;
+	return result.value;
+}

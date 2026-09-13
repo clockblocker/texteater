@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
 	projectSemanticRelations,
-	type Reading,
 	type SerializedDictionaryNote,
 } from "../../../src";
 import {
@@ -12,9 +12,12 @@ import {
 	englishWalkLemma,
 	enSerializedNotesWithPendingSwimRelation,
 	getBootedUpDumdict,
+	lemmaRelations,
 } from "./helpers";
 
-function swimNote(reading: Reading<"en">): SerializedDictionaryNote<"en"> {
+function swimNote(
+	reading: Dumling.Reading<"en">,
+): SerializedDictionaryNote<"en"> {
 	return {
 		schemaVersion: 1,
 		lemmaRecord: { lemma: reading.lemma },
@@ -78,12 +81,18 @@ describe("relations cleanup", () => {
 			.flatMap(({ readingEntries }) => readingEntries);
 		expect(result.status).toBe("applied");
 		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🚶")
-				?.knowledge?.semanticRelations?.nearSynonym,
+			lemmaRelations(
+				readings.find(
+					({ reading }) => reading.emojiDescription === "🚶",
+				)?.knowledge?.semanticRelations,
+			)?.nearSynonym,
 		).toEqual([englishSwimLemma]);
 		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🏊")
-				?.knowledge?.semanticRelations?.nearSynonym,
+			lemmaRelations(
+				readings.find(
+					({ reading }) => reading.emojiDescription === "🏊",
+				)?.knowledge?.semanticRelations,
+			)?.nearSynonym,
 		).toBeUndefined();
 		expect(
 			storage
@@ -101,9 +110,10 @@ describe("relations cleanup", () => {
 			},
 		};
 		const alternateReading = {
+			unitKind: "Reading" as const,
 			lemma: alternateLemma,
 			emojiDescription: "🌊",
-		} satisfies Reading<"en">;
+		} satisfies Dumling.Reading<"en">;
 		const run = async (reverse: boolean) => {
 			const matches = [
 				swimNote(englishSwimReading),
@@ -121,15 +131,19 @@ describe("relations cleanup", () => {
 				({ readingEntries }) => readingEntries,
 			);
 			expect(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🚶",
-				)?.knowledge?.semanticRelations?.nearSynonym,
+				lemmaRelations(
+					readings.find(
+						({ reading }) => reading.emojiDescription === "🚶",
+					)?.knowledge?.semanticRelations,
+				)?.nearSynonym,
 			).toBeUndefined();
 			for (const emoji of ["🏊", "🌊"])
 				expect(
-					readings.find(
-						({ reading }) => reading.emojiDescription === emoji,
-					)?.knowledge?.semanticRelations?.nearSynonym,
+					lemmaRelations(
+						readings.find(
+							({ reading }) => reading.emojiDescription === emoji,
+						)?.knowledge?.semanticRelations,
+					)?.nearSynonym,
 				).toBeUndefined();
 			expect(
 				notes.flatMap(({ pendingRelations }) => pendingRelations),
@@ -168,19 +182,22 @@ describe("relations cleanup", () => {
 				?.knowledge,
 		).toBeUndefined();
 		expect(
-			projectSemanticRelations({
-				lemmas: notes.map(({ lemmaRecord }) => lemmaRecord),
-				readings,
-			}).filter(
+			projections(readings).filter(
 				(projection) =>
-					projection.sourceReading.emojiDescription === "🌊" &&
+					projection.source.emojiDescription === "🌊" &&
 					projection.relation === "hyponym",
 			),
 		).toEqual([
 			expect.objectContaining({
-				targetLemma: englishWalkLemma,
+				target: englishWalkLemma,
 				provenance: "inferred",
 			}),
 		]);
 	});
 });
+
+function projections(readings: import("../../../src").ReadingEntry<"en">[]) {
+	const result = projectSemanticRelations(readings);
+	if (!result.success) throw result.error;
+	return result.value;
+}

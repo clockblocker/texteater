@@ -1,10 +1,11 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { AddAttestationRequest } from "../../public";
 import type { ReadingPatchSlice } from "../../storage";
 import { sameReading } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-export function planAppendReadingAttestation<L extends SupportedLanguage>(
+export function planAppendReadingAttestation<L extends Dumling.Language>(
 	slice: ReadingPatchSlice<L>,
 	request: AddAttestationRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {

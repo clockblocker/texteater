@@ -7,6 +7,7 @@ import type {
 	Encounter,
 	KnowledgeProduction,
 	KnowledgeRequest,
+	KnowledgeInput as PublicKnowledgeInput,
 	SegmentedSentence,
 } from "../../types.js";
 import { DumgenFailure } from "../../universal/failure.js";
@@ -275,7 +276,7 @@ export function createGermanOperations(
 				},
 			);
 		},
-		produceKnowledge(raw: KnowledgeInput) {
+		produceKnowledge<I extends PublicKnowledgeInput>(raw: I) {
 			return task("produceKnowledge", async (signal) => {
 				const input = parse<KnowledgeInput>(
 					"knowledgeInput",
@@ -312,7 +313,9 @@ export function createGermanOperations(
 							missing: input.request,
 						};
 				if (!Object.keys(authored.missing).length)
-					return authored.production;
+					return authored.production as KnowledgeProduction<
+						I["reading"]["lemma"]["language"]
+					>;
 				if (closed)
 					throw new DumgenFailure(
 						"CatalogMiss",
@@ -346,7 +349,9 @@ export function createGermanOperations(
 						...authored.production.pendingRelations,
 						...generated.pendingRelations,
 					],
-				};
+				} as unknown as KnowledgeProduction<
+					I["reading"]["lemma"]["language"]
+				>;
 			});
 		},
 	};

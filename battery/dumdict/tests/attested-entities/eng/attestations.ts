@@ -1,4 +1,5 @@
-import type { Attestation } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import {
 	englishBankFinancialCitationSurface,
 	englishBankRiverCitationSurface,
@@ -18,107 +19,121 @@ import {
 
 // Attestation: "They [walk] home together."
 export const englishWalkStandardFullAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "walk", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishWalkAttestedInflectionSurface,
-} satisfies Attestation<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
 export const englishWalkCitationAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "walk", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishWalkCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "Mark [gvae] [up] on it."
 export const englishGiveUpTypoFullAttestation = {
+	unitKind: "Attestation" as const,
 	members: [
 		{ attested: "gvae", orthography: "Typo" },
 		{ attested: "up", orthography: "Standard" },
 	],
 	realizationCoverage: "Full",
 	surface: englishGiveUpPastFiniteInflectionSurface,
-} satisfies Attestation<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
 export const englishBankFinancialAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "bank", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishBankFinancialCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
 export const englishBankRiverAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "bank", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishBankRiverCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
 export const englishPlantOrganismAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "plant", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishPlantOrganismCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
 export const englishPlantFactoryAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "plant", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishPlantFactoryCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
 export const englishLightIlluminationAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "light", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishLightIlluminationCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
 export const englishLightWeightAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "light", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishLightWeightCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "ADJ">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
 export const englishSpringSeasonAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "spring", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishSpringSeasonCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
 export const englishSpringCoilAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "spring", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishSpringCoilCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
 export const englishRakeToolAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "rake", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishRakeToolCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "NOUN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
 // Attestation: "They [look] [up] every unknown word."
 export const englishLookUpAttestation = {
+	unitKind: "Attestation" as const,
 	members: [
 		{ attested: "look", orthography: "Standard" },
 		{ attested: "up", orthography: "Standard" },
 	],
 	realizationCoverage: "Full",
 	surface: englishLookUpCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
 export const englishLookAttestation = {
+	unitKind: "Attestation" as const,
 	members: [{ attested: "look", orthography: "Standard" }],
 	realizationCoverage: "Full",
 	surface: englishLookCitationSurface,
-} satisfies Attestation<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
 
 export const englishAttestations = [
 	englishWalkStandardFullAttestation,
@@ -135,4 +150,4 @@ export const englishAttestations = [
 	englishRakeToolAttestation,
 	englishLookUpAttestation,
 	englishLookAttestation,
-] as const satisfies readonly Attestation<"en">[];
+] as const satisfies readonly Dumling.Attestation<"en">[];

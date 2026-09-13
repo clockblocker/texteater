@@ -3,12 +3,7 @@ import type {
 	Expect,
 	ParsingError as ParsingErrorType,
 } from "common-utils";
-import type {
-	Attestation,
-	Lemma,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
+
 import { z } from "zod";
 import type { DumdictParserInterface } from "../../../../tooling/dumdict-parser-interface";
 import { canonicalDumdictValidationSchemas } from "../../codegen/validation-artifacts";
@@ -22,7 +17,6 @@ import type {
 } from "../../codegen/validation-route-proofs";
 import * as dumdict from "../../src";
 import type { LemmaRecord } from "../../src/domain-types";
-import type { GeneratedDumlingCompatibilityValidationRouteDescriptor } from "../../src/generated/validation-artifacts";
 
 const packageRootParsers = {
 	ParsingError: dumdict.ParsingError,
@@ -42,58 +36,6 @@ const packageRootParsers = {
 } satisfies DumdictParserInterface;
 
 void packageRootParsers;
-
-type CompatibilityOutput<Descriptor> =
-	Descriptor extends Readonly<{
-		entity: infer Entity;
-		language: infer Language extends SupportedLanguage;
-	}>
-		? Entity extends "Lemma"
-			? Lemma<Language>
-			: Entity extends "Surface"
-				? Surface<Language>
-				: Entity extends "Attestation"
-					? Attestation<Language>
-					: never
-		: never;
-
-type EnglishVerbLemmaDescriptor =
-	GeneratedDumlingCompatibilityValidationRouteDescriptor<"internal:dumling:Lemma:en/Lexeme/VERB">;
-
-const englishVerbLemmaDescriptor = {
-	entity: "Lemma",
-	key: "internal:dumling:Lemma:en/Lexeme/VERB",
-	language: "en",
-} as const satisfies EnglishVerbLemmaDescriptor;
-void englishVerbLemmaDescriptor;
-
-const swappedLanguageDescriptor = {
-	entity: "Lemma",
-	key: "internal:dumling:Lemma:en/Lexeme/VERB",
-	// @ts-expect-error The generated English route cannot claim German output.
-	language: "de",
-} as const satisfies EnglishVerbLemmaDescriptor;
-void swappedLanguageDescriptor;
-
-const swappedEntityDescriptor = {
-	// @ts-expect-error The generated Lemma route cannot claim Surface output.
-	entity: "Surface",
-	key: "internal:dumling:Lemma:en/Lexeme/VERB",
-	language: "en",
-} as const satisfies EnglishVerbLemmaDescriptor;
-void swappedEntityDescriptor;
-
-type ProveCompatibilityOutput<Descriptor, Output> = Equal<
-	CompatibilityOutput<Descriptor>,
-	Output
->;
-type _NarrowedCompatibilityOutputMustFail = Expect<
-	// @ts-expect-error A generated route cannot be rebound to a narrowed output.
-	ProveCompatibilityOutput<
-		EnglishVerbLemmaDescriptor,
-		Lemma<"en"> & { readonly proofOnly: true }
-	>
->;
 
 type ActualGermanLemmaRecordSchema =
 	(typeof canonicalDumdictValidationSchemas)["parseAsLemmaRecord:de"];
@@ -123,8 +65,7 @@ type _NarrowedActualSchemaMustFail = Expect<
 	ProveCanonicalDumdictValidationSchemaRoute<
 		"parseAsLemmaRecord:de",
 		typeof narrowedGermanLemmaRecordSchema
-	>
->;
+	>>;
 
 declare const actualGermanLemmaRecordSchema: CanonicalDumdictValidationSchemaForRoute<"parseAsLemmaRecord:de">;
 void actualGermanLemmaRecordSchema;

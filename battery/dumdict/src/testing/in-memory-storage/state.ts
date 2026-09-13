@@ -1,8 +1,8 @@
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { sameLemma, sameReading } from "../../core/identity";
 import type {
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingEntry,
 	SerializedDictionaryNote,
 	StoreRevision,
@@ -10,23 +10,23 @@ import type {
 import type { DumdictStoragePort } from "../../storage";
 import type { ReadingEntryContextRead } from "./load-slices";
 
-export type InMemoryTestStorage<L extends SupportedLanguage> =
+export type InMemoryTestStorage<L extends Dumling.Language> =
 	DumdictStoragePort<L> & {
 		loadAll(): SerializedDictionaryNote<L>[];
 		readingEntryContextReads(): ReadingEntryContextRead[];
 	};
 
-export type InMemoryStorageState<L extends SupportedLanguage> = {
+export type InMemoryStorageState<L extends Dumling.Language> = {
 	language: L;
 	revisionNumber: number;
 	storedNotes: SerializedDictionaryNote<L>[];
 	currentRevision(): StoreRevision;
 	findStoredBundleByLemma(
-		lemma: Lemma<L>,
+		lemma: Dumling.Lemma<L>,
 	): SerializedDictionaryNote<L> | undefined;
-	findStoredReading(reading: Reading<L>): ReadingEntry<L> | undefined;
+	findStoredReading(reading: Dumling.Reading<L>): ReadingEntry<L> | undefined;
 	findStoredBundleByReading(
-		reading: Reading<L>,
+		reading: Dumling.Reading<L>,
 	): SerializedDictionaryNote<L> | undefined;
 	findStoredSurfaceById(
 		surfaceId: string,
@@ -34,7 +34,7 @@ export type InMemoryStorageState<L extends SupportedLanguage> = {
 	allPendingRelations(): PendingSemanticRelationRecord<L>[];
 };
 
-export function createInMemoryStorageState<L extends SupportedLanguage>(
+export function createInMemoryStorageState<L extends Dumling.Language>(
 	language: L,
 	notes: SerializedDictionaryNote<L>[] = [],
 ): InMemoryStorageState<L> {

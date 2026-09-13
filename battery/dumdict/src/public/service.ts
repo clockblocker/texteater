@@ -1,15 +1,11 @@
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
-import type {
-	KnowledgeChange,
-	PendingSemanticRelation,
-	UnitShadow,
-} from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
+
 import type * as Effect from "effect/Effect";
 import type {
 	DumdictReadingDraft,
 	OwnedSurfaceDraft,
 	PendingSemanticRelationLocator,
-	Reading,
 	ReadingEntry,
 	StoreRevision,
 } from "../dto";
@@ -23,25 +19,25 @@ import type {
 	PreparedMutation,
 } from "./results";
 
-export type FindStoredReadingsRequest<L extends SupportedLanguage> = {
-	lemma: Lemma<L>;
+export type FindStoredReadingsRequest<L extends Dumling.Language> = {
+	lemma: Dumling.Lemma<L>;
 };
 
-export type AddAttestationRequest<L extends SupportedLanguage> = {
-	reading: Reading<L>;
+export type AddAttestationRequest<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
 	attestation: string;
 };
 
-export type AddNewNoteRequest<L extends SupportedLanguage> = {
+export type AddNewNoteRequest<L extends Dumling.Language> = {
 	draft: DumdictReadingDraft<L>;
 };
 
-export type EnsureOwnedSurfaceRequest<L extends SupportedLanguage> = {
-	reading: Reading<L>;
+export type EnsureOwnedSurfaceRequest<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
 	ownedSurface: OwnedSurfaceDraft<L>;
 };
 
-export type EnsureReadingEntryRequest<L extends SupportedLanguage> = {
+export type EnsureReadingEntryRequest<L extends Dumling.Language> = {
 	/**
 	 * Exact ordinary entry to create or verify. Semantic Relations are excluded
 	 * because their graph invariants require Dumdict's relation-aware workflows.
@@ -49,23 +45,26 @@ export type EnsureReadingEntryRequest<L extends SupportedLanguage> = {
 	entry: ReadingEntry<L>;
 };
 
-export type ApplyGeneratedKnowledgeRequest<L extends SupportedLanguage> = {
-	reading: Reading<L>;
-	changes: readonly KnowledgeChange<string, Lemma<L>>[];
-	pendingRelations: readonly (Omit<PendingSemanticRelation, "target"> & {
-		target: UnitShadow<L>;
+export type ApplyGeneratedKnowledgeRequest<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
+	changes: readonly Dumrel.KnowledgeChange<Dumling.Reading<L>>[];
+	pendingRelations: readonly (Omit<
+		Dumrel.PendingSemanticRelation,
+		"target"
+	> & {
+		target: Dumrel.UnitShadow & { language: L };
 	})[];
 };
 
-export type GetInfoForRelationsCleanupRequest<_L extends SupportedLanguage> = {
+export type GetInfoForRelationsCleanupRequest<_L extends Dumling.Language> = {
 	canonicalForm: string;
 };
 
-export type CleanupRelationResolution<L extends SupportedLanguage> = {
+export type CleanupRelationResolution<L extends Dumling.Language> = {
 	locator: PendingSemanticRelationLocator<L>;
 };
 
-export type CleanupRelationsRequest<L extends SupportedLanguage> = {
+export type CleanupRelationsRequest<L extends Dumling.Language> = {
 	baseRevision: StoreRevision;
 	resolutions: CleanupRelationResolution<L>[];
 };
@@ -85,7 +84,7 @@ export type DumdictPreparationFailure =
  * the configured storage port. `prepare` exposes the immutable plan for host
  * inspection before a separate host-owned atomic commit.
  */
-export type DumdictService<L extends SupportedLanguage> = {
+export type DumdictService<L extends Dumling.Language> = {
 	findStoredReadings: (
 		request: FindStoredReadingsRequest<L>,
 	) => Effect.Effect<

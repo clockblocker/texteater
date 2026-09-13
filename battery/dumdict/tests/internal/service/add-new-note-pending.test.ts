@@ -7,6 +7,7 @@ import {
 	englishWalkReading,
 	enSerializedNotesWithPendingSwimRelation,
 	getBootedUpDumdict,
+	lemmaRelations,
 } from "./helpers";
 
 describe("pending lifecycle", () => {
@@ -63,19 +64,23 @@ describe("pending lifecycle", () => {
 			notes.flatMap(({ pendingRelations }) => pendingRelations),
 		).toHaveLength(0);
 		expect(
-			notes
-				.flatMap(({ readingEntries }) => readingEntries)
-				.find(
-					({ reading }) =>
-						reading.emojiDescription ===
-						englishWalkReading.emojiDescription,
-				)?.knowledge?.semanticRelations?.nearSynonym,
+			lemmaRelations(
+				notes
+					.flatMap(({ readingEntries }) => readingEntries)
+					.find(
+						({ reading }) =>
+							reading.emojiDescription ===
+							englishWalkReading.emojiDescription,
+					)?.knowledge?.semanticRelations,
+			)?.nearSynonym,
 		).toEqual([englishSwimLemma]);
 		expect(
-			notes
-				.flatMap(({ readingEntries }) => readingEntries)
-				.find(({ reading }) => reading.emojiDescription === "🏊")
-				?.knowledge?.semanticRelations?.nearSynonym,
+			lemmaRelations(
+				notes
+					.flatMap(({ readingEntries }) => readingEntries)
+					.find(({ reading }) => reading.emojiDescription === "🏊")
+					?.knowledge?.semanticRelations,
+			)?.nearSynonym,
 		).toBeUndefined();
 	});
 });

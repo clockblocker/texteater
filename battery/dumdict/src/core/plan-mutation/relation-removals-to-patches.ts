@@ -1,18 +1,17 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { SupportedLanguage } from "dumling-old/types";
-import type { DirectSemanticRelation } from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type { StoreRevision } from "../../domain-types";
 import type { ReadingEntry, ReadingKnowledgeChange } from "../../dto";
-import { sameLemma, sameReading } from "../identity";
+import { readingFingerprint, sameLemma, sameReading } from "../identity";
 import type { PlannedRelationRemoval } from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";
 
-type ReadingPatch<L extends SupportedLanguage> = Extract<
+type ReadingPatch<L extends Dumling.Language> = Extract<
 	PlannedChangeOp<L>,
 	{ type: "patchReading" }
 >;
 
-export function relationRemovalsToPatches<L extends SupportedLanguage>(
+export function relationRemovalsToPatches<L extends Dumling.Language>(
 	removals: readonly PlannedRelationRemoval<L>[],
 	readings: readonly ReadingEntry<L>[],
 	revision: StoreRevision,
@@ -24,7 +23,7 @@ export function relationRemovalsToPatches<L extends SupportedLanguage>(
 		string,
 		{
 			entry: ReadingEntry<L>;
-			relation: DirectSemanticRelation;
+			relation: Dumrel.DirectSemanticRelation;
 			removals: PlannedRelationRemoval<L>[];
 		}
 	>();

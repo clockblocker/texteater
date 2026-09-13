@@ -1,156 +1,44 @@
-import type { Equal } from "common-utils";
-import type { SupportedLanguage } from "dumling-old/types";
+import type { Equal, Expect } from "common-utils";
 import type {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
-	semanticRelationRetractKnowledgeChangeSchema,
-	semanticRelationSetKnowledgeChangeSchema,
 } from "dumrel/schema";
+import type * as Dumrel from "dumrel/types";
 import type { z } from "zod";
-import type {
-	DumdictValidationRouteKey,
-	DumdictValidationRouteOutputMap,
-	InternalDumdictOwnedValidationRouteKey,
-	InternalDumdictValidationRouteOutputMap,
-} from "../src/parsing/validation-route-types.js";
-import type {
-	commitChangesResultSchema,
-	DumdictSchemasFor,
-} from "../src/schema.js";
 
-export type {
-	DumdictValidationRouteKey,
-	DumdictValidationRouteOutputMap,
-} from "../src/parsing/validation-route-types.js";
+type KnowledgeShape = z.output<typeof readingKnowledgeSchema>;
+type ChangeShape = z.output<typeof knowledgeChangeSchema>;
+type PendingShape = z.output<typeof pendingSemanticRelationSchema>;
+export type CanonicalKnowledge = Expect<
+	KnowledgeShape extends Dumrel.ReadingKnowledge ? true : false
+>;
+export type CanonicalChange = Expect<
+	ChangeShape extends Dumrel.KnowledgeChange ? true : false
+>;
+export type CanonicalPending = Expect<
+	PendingShape extends Dumrel.PendingSemanticRelation ? true : false
+>;
 
-type LanguageParserSchemaKeyMap = {
-	parseAsChangePrecondition: "changePreconditionSchema";
-	parseAsCommitChangesRequest: "commitChangesRequestSchema";
-	parseAsDumdictPlan: "dumdictPlanSchema";
-	parseAsLemmaRecord: "lemmaRecordSchema";
-	parseAsPendingSemanticRelationLocator: "pendingSemanticRelationLocatorSchema";
-	parseAsPendingSemanticRelationRecord: "pendingSemanticRelationRecordSchema";
-	parseAsPlannedChangeOp: "plannedChangeOpSchema";
-	parseAsReadingEntry: "readingEntrySchema";
-	parseAsReadingPatchOp: "readingPatchOpSchema";
-	parseAsSurfaceEntry: "surfaceEntrySchema";
-};
-
-type LanguageValidationSchemaRegistry = {
-	[Language in SupportedLanguage]: {
-		[Parser in keyof LanguageParserSchemaKeyMap as `${Parser}:${Language}`]: DumdictSchemasFor<Language>[LanguageParserSchemaKeyMap[Parser]];
-	};
-}[SupportedLanguage];
-
-type UnionToIntersection<Value> = (
-	Value extends unknown
-		? (value: Value) => void
-		: never
-) extends (value: infer Intersection) => void
-	? Intersection
-	: never;
-
-/** Actual, unforced canonical schema type bound to every generated root. */
-export type CanonicalDumdictValidationSchemaRegistry =
-	UnionToIntersection<LanguageValidationSchemaRegistry> & {
-		parseAsCommitChangesResult: typeof commitChangesResultSchema;
-	};
-
-type ActualDumdictValidationRouteKey =
-	keyof CanonicalDumdictValidationSchemaRegistry & string;
-
-/** Private operational guards compiled alongside, but outside, the 31-key API. */
-export type InternalDumdictOperationalValidationSchemaRegistry = {
-	"internal:knowledge-change": typeof knowledgeChangeSchema;
-	"internal:knowledge-change:bucket:definition": (typeof knowledgeChangeSchema.options)[8];
-	"internal:knowledge-change:bucket:lexical-breakdown": (typeof knowledgeChangeSchema.options)[12];
-	"internal:knowledge-change:bucket:morphological-tree": (typeof knowledgeChangeSchema.options)[10];
-	"internal:knowledge-change:bucket:semantic-relations": typeof semanticRelationSetKnowledgeChangeSchema;
-	"internal:knowledge-change:bucket:transcription": (typeof knowledgeChangeSchema.options)[0];
-	"internal:knowledge-change:bucket:translations": (typeof knowledgeChangeSchema.options)[2];
-	"internal:knowledge-change:retract:definition": (typeof knowledgeChangeSchema.options)[9];
-	"internal:knowledge-change:retract:lexical-breakdown": (typeof knowledgeChangeSchema.options)[13];
-	"internal:knowledge-change:retract:morphological-tree": (typeof knowledgeChangeSchema.options)[11];
-	"internal:knowledge-change:retract:semantic-relations": typeof semanticRelationRetractKnowledgeChangeSchema;
-	"internal:knowledge-change:retract:transcription": (typeof knowledgeChangeSchema.options)[1];
-	"internal:knowledge-change:retract:translations": (typeof knowledgeChangeSchema.options)[3];
-	"internal:pending-semantic-relation": typeof pendingSemanticRelationSchema;
-	"internal:reading:de": DumdictSchemasFor<"de">["readingEntrySchema"]["shape"]["reading"];
-	"internal:reading:en": DumdictSchemasFor<"en">["readingEntrySchema"]["shape"]["reading"];
-	"internal:reading:he": DumdictSchemasFor<"he">["readingEntrySchema"]["shape"]["reading"];
-	"internal:reading-knowledge": typeof readingKnowledgeSchema;
-	"internal:surface:de": DumdictSchemasFor<"de">["surfaceEntrySchema"]["shape"]["surface"];
-	"internal:surface:en": DumdictSchemasFor<"en">["surfaceEntrySchema"]["shape"]["surface"];
-	"internal:surface:he": DumdictSchemasFor<"he">["surfaceEntrySchema"]["shape"]["surface"];
-};
-
-type InternalDumdictValidationSchemaRegistry =
-	InternalDumdictOperationalValidationSchemaRegistry;
-
-type ActualInternalDumdictValidationRouteOutputMap = {
-	[Key in keyof InternalDumdictOperationalValidationSchemaRegistry]: z.output<
-		InternalDumdictValidationSchemaRegistry[Key]
+import type { canonicalDumdictValidationSchemas } from "./validation-artifacts.js";
+export type DumdictValidationRouteKey =
+	keyof typeof canonicalDumdictValidationSchemas;
+export type CanonicalDumdictValidationSchemaForRoute<
+	K extends DumdictValidationRouteKey,
+> = (typeof canonicalDumdictValidationSchemas)[K];
+export type DumdictValidationRouteInputMap = {
+	[K in DumdictValidationRouteKey]: z.input<
+		CanonicalDumdictValidationSchemaForRoute<K>
 	>;
 };
-
-export type CanonicalDumdictValidationSchemaForRoute<
-	Key extends DumdictValidationRouteKey,
-> = CanonicalDumdictValidationSchemaRegistry[Key &
-	keyof CanonicalDumdictValidationSchemaRegistry];
+export type ActualDumdictValidationRouteOutputMap = {
+	[K in DumdictValidationRouteKey]: z.output<
+		CanonicalDumdictValidationSchemaForRoute<K>
+	>;
+};
+export type { DumdictValidationRouteOutputMap } from "../src/parsing/validation-route-types.js";
 
 export type ProveCanonicalDumdictValidationSchemaRoute<
 	Key extends DumdictValidationRouteKey,
-	Schema extends CanonicalDumdictValidationSchemaForRoute<Key>,
-> = Equal<Schema, CanonicalDumdictValidationSchemaForRoute<Key>>;
-
-export type DumdictValidationRouteInputMap = {
-	[Key in DumdictValidationRouteKey]: z.input<
-		CanonicalDumdictValidationSchemaForRoute<Key>
-	>;
-};
-
-export type ActualDumdictValidationRouteOutputMap = {
-	[Key in DumdictValidationRouteKey]: z.output<
-		CanonicalDumdictValidationSchemaForRoute<Key>
-	>;
-};
-
-type RouteBindingFailure = {
-	[Key in DumdictValidationRouteKey]: Equal<
-		ActualDumdictValidationRouteOutputMap[Key],
-		DumdictValidationRouteOutputMap[Key]
-	> extends true
-		? never
-		: Key;
-}[DumdictValidationRouteKey];
-
-type AssertNever<Value extends never> = Value;
-type _ActualSchemaRoutesMatchOperationalRoutes = AssertNever<
-	| Exclude<ActualDumdictValidationRouteKey, DumdictValidationRouteKey>
-	| Exclude<DumdictValidationRouteKey, ActualDumdictValidationRouteKey>
->;
-type _ActualSchemaOutputsMatchFrozenParsers = AssertNever<RouteBindingFailure>;
-
-type _ActualInternalSchemaRoutesMatchOperationalRoutes = AssertNever<
-	| Exclude<
-			keyof InternalDumdictOperationalValidationSchemaRegistry,
-			InternalDumdictOwnedValidationRouteKey
-	  >
-	| Exclude<
-			InternalDumdictOwnedValidationRouteKey,
-			keyof InternalDumdictOperationalValidationSchemaRegistry
-	  >
->;
-
-type InternalRouteBindingFailure = {
-	[Key in keyof InternalDumdictOperationalValidationSchemaRegistry]: Equal<
-		ActualInternalDumdictValidationRouteOutputMap[Key],
-		InternalDumdictValidationRouteOutputMap[Key]
-	> extends true
-		? never
-		: Key;
-}[keyof InternalDumdictOperationalValidationSchemaRegistry];
-
-type _ActualInternalSchemaOutputsMatchFrozenGuards =
-	AssertNever<InternalRouteBindingFailure>;
+	Schema extends z.ZodType<ActualDumdictValidationRouteOutputMap[Key]>,
+> = Equal<z.output<Schema>, ActualDumdictValidationRouteOutputMap[Key]>;

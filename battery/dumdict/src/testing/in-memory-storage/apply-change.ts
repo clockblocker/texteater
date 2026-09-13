@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { applyDumdictKnowledgeChange } from "../../core/apply-reading-knowledge-change";
 import { readingLemma, sameReading } from "../../core/identity";
 import { samePendingSemanticRelationLocator } from "../../core/pending";
@@ -9,7 +10,7 @@ import {
 	findDraftBundleByReading,
 } from "./preconditions";
 
-export function applyChange<L extends SupportedLanguage>(
+export function applyChange<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
 	change: PlannedChangeOp<L>,
 ): boolean {
@@ -70,7 +71,7 @@ export function applyChange<L extends SupportedLanguage>(
 	}
 }
 
-function applyReadingPatch<L extends SupportedLanguage>(
+function applyReadingPatch<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
 	change: Extract<PlannedChangeOp<L>, { type: "patchReading" }>,
 ) {

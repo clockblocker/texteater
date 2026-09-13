@@ -1,12 +1,12 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 
 export class DumdictLanguageMismatchError extends Error {
-	readonly expectedLanguage: SupportedLanguage;
-	readonly actualLanguage: SupportedLanguage | undefined;
+	readonly expectedLanguage: Dumling.Language;
+	readonly actualLanguage: Dumling.Language | undefined;
 
 	constructor(input: {
-		expectedLanguage: SupportedLanguage;
-		actualLanguage: SupportedLanguage | undefined;
+		expectedLanguage: Dumling.Language;
+		actualLanguage: Dumling.Language | undefined;
 		message?: string;
 	}) {
 		super(

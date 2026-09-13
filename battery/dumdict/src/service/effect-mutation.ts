@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import type { PlanMutationResult } from "../core/plan-mutation";
 import type {
@@ -24,7 +25,7 @@ function freeze<T>(value: T): T {
 	return value;
 }
 
-export function prepared<L extends SupportedLanguage>(
+export function prepared<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	plan:
 		| PlanMutationResult<L>
@@ -53,7 +54,7 @@ export function prepared<L extends SupportedLanguage>(
 	});
 }
 
-export function commitPrepared<L extends SupportedLanguage>(
+export function commitPrepared<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	preparedMutation: PreparedMutation<L>,
 ): Effect.Effect<MutationResult<L>, DumdictCommitFailure> {

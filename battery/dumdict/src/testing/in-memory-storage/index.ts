@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../dto";
 import type {
@@ -22,7 +23,7 @@ import { createInMemoryStorageState, type InMemoryTestStorage } from "./state";
 
 export type { InMemoryTestStorage } from "./state";
 
-export function createInMemoryTestStorage<L extends SupportedLanguage>(
+export function createInMemoryTestStorage<L extends Dumling.Language>(
 	language: L,
 	notes: SerializedDictionaryNote<L>[] = [],
 ): InMemoryTestStorage<L> {

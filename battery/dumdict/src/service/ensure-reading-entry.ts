@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { planEnsureReadingEntry } from "../core/plan-mutation";
 import type {
@@ -13,7 +14,7 @@ import { commitPrepared, prepared } from "./effect-mutation";
 import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export function prepareEnsureReadingEntry<L extends SupportedLanguage>(
+export function prepareEnsureReadingEntry<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: EnsureReadingEntryRequest<L>,
 ): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
@@ -46,7 +47,7 @@ export function prepareEnsureReadingEntry<L extends SupportedLanguage>(
 	);
 }
 
-export function ensureReadingEntry<L extends SupportedLanguage>(
+export function ensureReadingEntry<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: EnsureReadingEntryRequest<L>,
 ): Effect.Effect<

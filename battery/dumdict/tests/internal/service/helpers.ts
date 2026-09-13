@@ -3,7 +3,6 @@ import {
 	createDumdictService,
 	DumdictLanguageMismatchError,
 	type DumdictStoragePort,
-	type Lemma,
 	makeSurfaceId,
 	type ReadingEntry,
 	type StoreRevision,
@@ -36,13 +35,7 @@ import {
 	heSerializedNotes,
 } from "../../fixtures/he-notes";
 
-export type {
-	DumdictStoragePort,
-	Lemma,
-	ReadingEntry,
-	StoreRevision,
-	SurfaceEntry,
-};
+export type { DumdictStoragePort, ReadingEntry, StoreRevision, SurfaceEntry };
 export {
 	createDumdictService,
 	DumdictLanguageMismatchError,
@@ -87,7 +80,7 @@ export async function failure<E>(
 }
 
 export function withUnusedCleanupStorageMethods<
-	L extends import("../../../src").SupportedLanguage,
+	L extends import("dumling/types").Language,
 >(
 	storage: Omit<
 		DumdictStoragePort<L>,
@@ -128,3 +121,11 @@ export const storageRejectingReadingEntryContext = () => {
 		getLoadReadingEntryContextCalls: () => loadReadingEntryContextCalls,
 	};
 };
+
+export function lemmaRelations(
+	relations: import("dumrel/types").SemanticRelations | undefined,
+) {
+	if (relations?.targetKind === "reading")
+		throw new Error("Expected Lemma target mode");
+	return relations;
+}

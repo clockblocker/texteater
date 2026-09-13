@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { StoreRevision } from "../../dto";
 import type {
 	AffectedDictionaryEntities,
@@ -7,7 +8,7 @@ import type {
 } from "../../public";
 import type { PlannedChangeOp } from "../planned-changes";
 
-export type PlanMutationResult<L extends SupportedLanguage> = {
+export type PlanMutationResult<L extends Dumling.Language> = {
 	status: "planned";
 	baseRevision: StoreRevision;
 	changes: PlannedChangeOp<L>[];

@@ -1,37 +1,37 @@
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { sameLemma, sameReading } from "../../core/identity";
 import { samePendingSemanticRelationLocator } from "../../core/pending";
 import type {
 	PendingSemanticRelationRecord,
-	Reading,
 	SerializedDictionaryNote,
 } from "../../dto";
 import type { ChangePrecondition } from "../../storage";
 
-export type DraftStorageState<L extends SupportedLanguage> = {
+export type DraftStorageState<L extends Dumling.Language> = {
 	currentRevision(): string;
 	draftNotes: SerializedDictionaryNote<L>[];
 };
 
-export function findDraftBundleByLemma<L extends SupportedLanguage>(
+export function findDraftBundleByLemma<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
-	lemma: Lemma<L>,
+	lemma: Dumling.Lemma<L>,
 ) {
 	return draft.draftNotes.find(({ lemmaRecord }) =>
 		sameLemma(lemmaRecord.lemma, lemma),
 	);
 }
 
-export function findDraftBundleByReading<L extends SupportedLanguage>(
+export function findDraftBundleByReading<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
-	reading: Reading<L>,
+	reading: Dumling.Reading<L>,
 ) {
 	return draft.draftNotes.find(({ readingEntries }) =>
 		readingEntries.some((entry) => sameReading(entry.reading, reading)),
 	);
 }
 
-function findDraftSurfaceById<L extends SupportedLanguage>(
+function findDraftSurfaceById<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
 	surfaceId: string,
 ) {
@@ -40,7 +40,7 @@ function findDraftSurfaceById<L extends SupportedLanguage>(
 		.find(({ id }) => id === surfaceId);
 }
 
-function hasDraftPendingRelation<L extends SupportedLanguage>(
+function hasDraftPendingRelation<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
 	record: PendingSemanticRelationRecord<L>,
 ) {
@@ -51,7 +51,7 @@ function hasDraftPendingRelation<L extends SupportedLanguage>(
 		);
 }
 
-export function draftPreconditionFails<L extends SupportedLanguage>(
+export function draftPreconditionFails<L extends Dumling.Language>(
 	draft: DraftStorageState<L>,
 	precondition: ChangePrecondition<L>,
 ) {

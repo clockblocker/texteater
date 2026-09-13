@@ -1,8 +1,5 @@
 import { traceStage } from "common-utils/workflow";
-import { readingFingerprint } from "dumling-old/id";
-import type { Reading, SupportedLanguage } from "dumling-old/types";
-import { fixedKnowledgeFor } from "dumrel/fixed";
-import type { KnowledgeChange } from "dumrel/types";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { planApplyGeneratedKnowledge } from "../core/plan-mutation";
 import {
@@ -14,7 +11,6 @@ import type {
 	ApplyGeneratedKnowledgeRequest,
 	DumdictInvalidInput,
 	DumdictPreparationFailure,
-	DumdictRejection,
 	MutationResult,
 	PreparedMutation,
 } from "../public";
@@ -22,7 +18,7 @@ import { commitPrepared, prepared } from "./effect-mutation";
 import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export function prepareApplyGeneratedKnowledge<L extends SupportedLanguage>(
+export function prepareApplyGeneratedKnowledge<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
@@ -43,27 +39,6 @@ export function prepareApplyGeneratedKnowledge<L extends SupportedLanguage>(
 					),
 				),
 			);
-			const semanticChanges = changes.filter(
-				(
-					change,
-				): change is Extract<
-					KnowledgeChange,
-					{ aspect: "semanticRelations" }
-				> => change.aspect === "semanticRelations",
-			);
-			if (
-				semanticChanges.length > 0 &&
-				!approvedFixedReadingTargetChanges(
-					request.reading,
-					semanticChanges,
-				)
-			)
-				yield* Effect.fail({
-					_tag: "DumdictRejection",
-					code: "invalidRequest",
-					message:
-						"Generated direct relations must enter as pending Unit Shadows unless they exactly match a reviewed fixed Reading-targeted set.",
-				} satisfies DumdictRejection);
 			const pendingRelations = yield* Effect.sync(
 				() =>
 					request.pendingRelations.map((pending) =>
@@ -103,7 +78,7 @@ export function prepareApplyGeneratedKnowledge<L extends SupportedLanguage>(
 	);
 }
 
-export function applyGeneratedKnowledge<L extends SupportedLanguage>(
+export function applyGeneratedKnowledge<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): Effect.Effect<
@@ -112,31 +87,5 @@ export function applyGeneratedKnowledge<L extends SupportedLanguage>(
 > {
 	return prepareApplyGeneratedKnowledge(options, request).pipe(
 		Effect.flatMap((value) => commitPrepared(options, value)),
-	);
-}
-
-function approvedFixedReadingTargetChanges<L extends SupportedLanguage>(
-	reading: Reading<L>,
-	changes: readonly Extract<
-		KnowledgeChange,
-		{ aspect: "semanticRelations" }
-	>[],
-): boolean {
-	const fixed = fixedKnowledgeFor(reading as unknown as Reading);
-	if (
-		fixed.decision !== "Found" ||
-		fixed.coverage.semanticRelationTargetKind !== "reading" ||
-		fixed.knowledge.semanticRelations?.targetKind !== "reading"
-	)
-		return false;
-	const approved = fixed.knowledge.semanticRelations.synonym ?? [];
-	const approvedKeys = approved.map(readingFingerprint).toSorted();
-	return changes.every(
-		(change) =>
-			change.kind !== "Retract" &&
-			change.targetKind === "reading" &&
-			change.relation === "synonym" &&
-			change.value.map(readingFingerprint).toSorted().join("\0") ===
-				approvedKeys.join("\0"),
 	);
 }

@@ -1,11 +1,12 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { makeSurfaceId } from "../../dumling-id";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
 import type { EnsureOwnedSurfaceContext } from "../../storage";
 import { readingLemma } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-export function planEnsureOwnedSurface<L extends SupportedLanguage>(
+export function planEnsureOwnedSurface<L extends Dumling.Language>(
 	slice: EnsureOwnedSurfaceContext<L>,
 	request: EnsureOwnedSurfaceRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {

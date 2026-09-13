@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import type {
 	AddNewNoteRequest,
@@ -12,7 +13,7 @@ import type {
 } from "../storage";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export type ReadingEntryContextLoad<L extends SupportedLanguage> =
+export type ReadingEntryContextLoad<L extends Dumling.Language> =
 	| { intent: "addNewNote"; request: AddNewNoteRequest<L> }
 	| {
 			intent: "applyGeneratedKnowledge";
@@ -28,11 +29,11 @@ export type ReadingEntryContextLoad<L extends SupportedLanguage> =
 	  };
 
 type ContextFor<
-	L extends SupportedLanguage,
+	L extends Dumling.Language,
 	Load extends ReadingEntryContextLoad<L>,
 > = Extract<ReadingEntryContext<L>, { intent: Load["intent"] }>;
 
-function storageRequestFor<L extends SupportedLanguage>(
+function storageRequestFor<L extends Dumling.Language>(
 	load: ReadingEntryContextLoad<L>,
 ): LoadReadingEntryContextRequest<L> {
 	switch (load.intent) {
@@ -67,7 +68,7 @@ function storageRequestFor<L extends SupportedLanguage>(
 }
 
 export function loadReadingEntryContext<
-	L extends SupportedLanguage,
+	L extends Dumling.Language,
 	Load extends ReadingEntryContextLoad<L>,
 >(
 	options: DumdictServiceRuntimeOptions<L>,

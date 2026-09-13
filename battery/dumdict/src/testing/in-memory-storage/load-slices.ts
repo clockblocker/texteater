@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import { readingLemma, sameLemma } from "../../core/identity";
 import {
 	derivePendingSemanticRelationLocator,
@@ -19,7 +20,7 @@ import type {
 } from "../../storage";
 import type { InMemoryStorageState } from "./state";
 
-function pendingMatchesLemma<L extends SupportedLanguage>(
+function pendingMatchesLemma<L extends Dumling.Language>(
 	record: InMemoryStorageState<L>["storedNotes"][number]["pendingRelations"][number],
 	lemma: InMemoryStorageState<L>["storedNotes"][number]["lemmaRecord"]["lemma"],
 ) {
@@ -32,7 +33,7 @@ function pendingMatchesLemma<L extends SupportedLanguage>(
 	);
 }
 
-export function findStoredReadings<L extends SupportedLanguage>(
+export function findStoredReadings<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: FindStoredReadingsStorageRequest<L>,
 ): StoredReadingsSlice<L> {
@@ -49,7 +50,7 @@ export function findStoredReadings<L extends SupportedLanguage>(
 	};
 }
 
-export function loadReadingForPatch<L extends SupportedLanguage>(
+export function loadReadingForPatch<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: LoadReadingForPatchRequest<L>,
 ): ReadingPatchSlice<L> {
@@ -69,7 +70,7 @@ export type ReadingEntryContextRead =
 	| "relationLemmas"
 	| "relationReadings";
 
-export function loadReadingEntryContext<L extends SupportedLanguage>(
+export function loadReadingEntryContext<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: LoadReadingEntryContextRequest<L>,
 	recordRead: (read: ReadingEntryContextRead) => void = () => {},
@@ -196,7 +197,7 @@ export function loadReadingEntryContext<L extends SupportedLanguage>(
 	};
 }
 
-export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
+export function getInfoForRelationsCleanup<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: GetInfoForRelationsCleanupStorageRequest<L>,
 ): RelationsCleanupInfoSlice<L> {
@@ -217,7 +218,7 @@ export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	};
 }
 
-export function loadCleanupRelationsContext<L extends SupportedLanguage>(
+export function loadCleanupRelationsContext<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
 	request: LoadCleanupRelationsContextRequest<L>,
 ): CleanupRelationsSlice<L> {

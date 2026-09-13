@@ -1,6 +1,7 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
-import { semanticRelationValues } from "dumrel/relations";
+import type * as Dumling from "dumling/types";
+
+import { directSemanticRelationValues } from "dumrel";
 import * as Effect from "effect/Effect";
 import { pendingSemanticRelationLocatorKey } from "../core/pending";
 import { planCleanupRelations } from "../core/plan-mutation";
@@ -15,7 +16,7 @@ import type {
 import { commitPrepared, prepared } from "./effect-mutation";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export function prepareCleanupRelations<L extends SupportedLanguage>(
+export function prepareCleanupRelations<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: CleanupRelationsRequest<L>,
 ): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
@@ -25,7 +26,8 @@ export function prepareCleanupRelations<L extends SupportedLanguage>(
 	if (
 		new Set(keys).size !== keys.length ||
 		request.resolutions.some(
-			({ locator }) => !semanticRelationValues.includes(locator.relation),
+			({ locator }) =>
+				!directSemanticRelationValues.includes(locator.relation),
 		)
 	) {
 		return Effect.fail({
@@ -76,7 +78,7 @@ export function prepareCleanupRelations<L extends SupportedLanguage>(
 	);
 }
 
-export function cleanupRelations<L extends SupportedLanguage>(
+export function cleanupRelations<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: CleanupRelationsRequest<L>,
 ): Effect.Effect<

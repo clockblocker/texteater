@@ -54,6 +54,7 @@ describe("consumer workflow", () => {
 		const secondWalkReading = {
 			...englishSwimDraft,
 			reading: {
+				unitKind: "Reading" as const,
 				lemma: englishWalkLemma,
 				emojiDescription: "🚶‍➡️",
 			},

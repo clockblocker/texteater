@@ -1,14 +1,6 @@
-import type {
-	Attestation,
-	Lemma,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
-import type {
-	KnowledgeChange,
-	PendingSemanticRelation,
-	ReadingKnowledge,
-} from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
+
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,
@@ -36,7 +28,7 @@ type LanguageParserName =
 	| "parseAsSurfaceEntry";
 
 export type DumdictValidationRouteKey =
-	| `${LanguageParserName}:${SupportedLanguage}`
+	| `${LanguageParserName}:${Dumling.Language}`
 	| "parseAsCommitChangesResult";
 
 export type InternalDumdictOwnedValidationRouteKey =
@@ -56,72 +48,68 @@ export type InternalDumdictOwnedValidationRouteKey =
 			| "transcription"
 			| "translations"}`
 	| "internal:pending-semantic-relation"
-	| `internal:reading:${SupportedLanguage}`
+	| `internal:reading:${Dumling.Language}`
 	| "internal:reading-knowledge"
-	| `internal:surface:${SupportedLanguage}`;
-
-type InternalDumlingCompatibilityValidationRouteKey =
-	`internal:dumling:${"Attestation" | "Lemma" | "Surface"}:${SupportedLanguage}/${string}`;
+	| `internal:surface:${Dumling.Language}`;
 
 export type InternalDumdictValidationRouteKey =
-	| InternalDumdictOwnedValidationRouteKey
-	| InternalDumlingCompatibilityValidationRouteKey;
+	InternalDumdictOwnedValidationRouteKey;
 
 export type InternalDumdictValidationRouteOutputMap = {
-	"internal:knowledge-change": KnowledgeChange;
+	"internal:knowledge-change": Dumrel.KnowledgeChange;
 	"internal:knowledge-change:bucket:definition": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "definition"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:bucket:lexical-breakdown": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "lexicalBreakdown"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:bucket:morphological-tree": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "morphologicalTree"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:bucket:semantic-relations": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "semanticRelations"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:bucket:transcription": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "transcription"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:bucket:translations": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "translations"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:retract:definition": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "definition"; kind: "Retract" }
 	>;
 	"internal:knowledge-change:retract:lexical-breakdown": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "lexicalBreakdown"; kind: "Retract" }
 	>;
 	"internal:knowledge-change:retract:morphological-tree": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "morphologicalTree"; kind: "Retract" }
 	>;
 	"internal:knowledge-change:retract:semantic-relations": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "semanticRelations"; kind: "Retract" }
 	>;
 	"internal:knowledge-change:retract:transcription": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "transcription"; kind: "Retract" }
 	>;
 	"internal:knowledge-change:retract:translations": Extract<
-		KnowledgeChange,
+		Dumrel.KnowledgeChange,
 		{ aspect: "translations"; kind: "Retract" }
 	>;
-	"internal:pending-semantic-relation": PendingSemanticRelation;
+	"internal:pending-semantic-relation": Dumrel.PendingSemanticRelation;
 	"internal:reading:de": ReadingEntry<"de">["reading"];
 	"internal:reading:en": ReadingEntry<"en">["reading"];
 	"internal:reading:he": ReadingEntry<"he">["reading"];
-	"internal:reading-knowledge": ReadingKnowledge;
+	"internal:reading-knowledge": Dumrel.ReadingKnowledge;
 	"internal:surface:de": SurfaceEntry<"de">["surface"];
 	"internal:surface:en": SurfaceEntry<"en">["surface"];
 	"internal:surface:he": SurfaceEntry<"he">["surface"];
@@ -129,38 +117,30 @@ export type InternalDumdictValidationRouteOutputMap = {
 
 export type InternalDumdictValidationRouteOutput<
 	Key extends InternalDumdictValidationRouteKey,
-> = Key extends keyof InternalDumdictValidationRouteOutputMap
-	? InternalDumdictValidationRouteOutputMap[Key]
-	: Key extends `internal:dumling:Lemma:${infer Language extends SupportedLanguage}/${string}`
-		? Lemma<Language>
-		: Key extends `internal:dumling:Surface:${infer Language extends SupportedLanguage}/${string}`
-			? Surface<Language>
-			: Key extends `internal:dumling:Attestation:${infer Language extends SupportedLanguage}/${string}`
-				? Attestation<Language>
-				: never;
+> = InternalDumdictValidationRouteOutputMap[Key];
 
 type FrozenOutputForRoute<Key extends DumdictValidationRouteKey> =
-	Key extends `parseAsChangePrecondition:${infer Language extends SupportedLanguage}`
+	Key extends `parseAsChangePrecondition:${infer Language extends Dumling.Language}`
 		? ChangePrecondition<Language>
-		: Key extends `parseAsCommitChangesRequest:${infer Language extends SupportedLanguage}`
+		: Key extends `parseAsCommitChangesRequest:${infer Language extends Dumling.Language}`
 			? CommitChangesRequest<Language>
 			: Key extends "parseAsCommitChangesResult"
 				? CommitChangesResult
-				: Key extends `parseAsDumdictPlan:${infer Language extends SupportedLanguage}`
+				: Key extends `parseAsDumdictPlan:${infer Language extends Dumling.Language}`
 					? DumdictPlan<Language>
-					: Key extends `parseAsLemmaRecord:${infer Language extends SupportedLanguage}`
+					: Key extends `parseAsLemmaRecord:${infer Language extends Dumling.Language}`
 						? LemmaRecord<Language>
-						: Key extends `parseAsPendingSemanticRelationLocator:${infer Language extends SupportedLanguage}`
+						: Key extends `parseAsPendingSemanticRelationLocator:${infer Language extends Dumling.Language}`
 							? PendingSemanticRelationLocator<Language>
-							: Key extends `parseAsPendingSemanticRelationRecord:${infer Language extends SupportedLanguage}`
+							: Key extends `parseAsPendingSemanticRelationRecord:${infer Language extends Dumling.Language}`
 								? PendingSemanticRelationRecord<Language>
-								: Key extends `parseAsPlannedChangeOp:${infer Language extends SupportedLanguage}`
+								: Key extends `parseAsPlannedChangeOp:${infer Language extends Dumling.Language}`
 									? PlannedChangeOp<Language>
-									: Key extends `parseAsReadingEntry:${infer Language extends SupportedLanguage}`
+									: Key extends `parseAsReadingEntry:${infer Language extends Dumling.Language}`
 										? ReadingEntry<Language>
-										: Key extends `parseAsReadingPatchOp:${infer Language extends SupportedLanguage}`
+										: Key extends `parseAsReadingPatchOp:${infer Language extends Dumling.Language}`
 											? ReadingPatchOp<Language>
-											: Key extends `parseAsSurfaceEntry:${infer Language extends SupportedLanguage}`
+											: Key extends `parseAsSurfaceEntry:${infer Language extends Dumling.Language}`
 												? SurfaceEntry<Language>
 												: never;
 

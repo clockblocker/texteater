@@ -1,52 +1,51 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { Lemma, Reading, SupportedLanguage } from "dumling-old/types";
-
-type LemmaLike = {
-	canonicalForm: string;
-	coreFeatures: object;
-	family: string;
-	kind: string;
-	language: SupportedLanguage;
-};
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 
 function stableValue(value: unknown): unknown {
-	if (Array.isArray(value)) {
-		return value.map(stableValue);
-	}
-	if (value !== null && typeof value === "object") {
+	if (Array.isArray(value)) return value.map(stableValue);
+	if (value !== null && typeof value === "object")
 		return Object.fromEntries(
 			Object.entries(value)
-				.sort(([left], [right]) => left.localeCompare(right))
-				.map(([key, member]) => [key, stableValue(member)]),
+				.filter(([, child]) => child !== undefined)
+				.sort(([left], [right]) =>
+					left < right ? -1 : left > right ? 1 : 0,
+				)
+				.map(([name, child]) => [name, stableValue(child)]),
 		);
-	}
 	return value;
 }
 
-export function lemmaFingerprint(lemma: LemmaLike): string {
-	return JSON.stringify(stableValue(lemma));
+/** Dictionary-scoped structural identity, derived after canonical normalization. */
+export function unitFingerprint(unit: Dumling.Unit): string {
+	const result = parseUnit(unit);
+	if (!result.success) throw result.error;
+	return JSON.stringify(stableValue(result.chain.value));
 }
-
-export function compareLemmas(left: LemmaLike, right: LemmaLike): number {
-	const leftKey = lemmaFingerprint(left);
-	const rightKey = lemmaFingerprint(right);
-	return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+export function lemmaFingerprint(lemma: Dumling.Lemma): string {
+	return unitFingerprint(lemma);
 }
-
-export function sameLemma(left: LemmaLike, right: LemmaLike): boolean {
+export function readingFingerprint(reading: Dumling.Reading): string {
+	return unitFingerprint(reading);
+}
+export function compareLemmas(
+	left: Dumling.Lemma,
+	right: Dumling.Lemma,
+): number {
+	const a = lemmaFingerprint(left),
+		b = lemmaFingerprint(right);
+	return a < b ? -1 : a > b ? 1 : 0;
+}
+export function sameLemma(left: Dumling.Lemma, right: Dumling.Lemma): boolean {
 	return lemmaFingerprint(left) === lemmaFingerprint(right);
 }
-
-export function sameReading<L extends SupportedLanguage>(
-	left: Reading<L>,
-	right: Reading<L>,
+export function sameReading(
+	left: Dumling.Reading,
+	right: Dumling.Reading,
 ): boolean {
 	return readingFingerprint(left) === readingFingerprint(right);
 }
-
-/** Bridges TypeScript's generic conditional-type limitation at owner seams. */
-export function readingLemma<L extends SupportedLanguage>(
-	reading: Reading<L>,
-): Lemma<L> {
-	return reading.lemma as Lemma<L>;
+export function readingLemma<L extends Dumling.Language>(
+	reading: Dumling.Reading<L>,
+): Dumling.Lemma<L> {
+	return reading.lemma as Dumling.Lemma<L>;
 }

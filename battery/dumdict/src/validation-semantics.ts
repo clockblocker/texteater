@@ -1,16 +1,8 @@
-import { readingFingerprint } from "dumling-old/id";
-import type {
-	Lemma,
-	Reading,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
-import { directSemanticRelationValues } from "dumrel/relations";
-import type {
-	KnowledgeChange,
-	MorphologicalTreeNode,
-	ReadingKnowledge,
-} from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import { directSemanticRelationValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
+import { readingFingerprint } from "./core/identity";
+
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeLemmaId, makeSurfaceId } from "./dumling-id.js";
 
@@ -34,7 +26,7 @@ export function retainCommitChangesRequest<
 	}>;
 }
 
-function bindPendingEntryIdFor<Language extends SupportedLanguage>(
+function bindPendingEntryIdFor<Language extends Dumling.Language>(
 	value: string,
 ): PendingEntryId<Language> {
 	return value as PendingEntryId<Language>;
@@ -46,31 +38,34 @@ export const dumdictNamedValidationTransforms = {
 	"dumdict.pending-entry-id.he": bindPendingEntryIdFor<"he">,
 } as const;
 
-function lemmaUsesLanguage(lemma: Lemma, language: SupportedLanguage): boolean {
+function lemmaUsesLanguage(
+	lemma: Dumling.Lemma,
+	language: Dumling.Language,
+): boolean {
 	return lemma.language === language;
 }
 
-function sameLemma(left: Lemma, right: Lemma): boolean {
+function sameLemma(left: Dumling.Lemma, right: Dumling.Lemma): boolean {
 	if (left.language !== right.language) return false;
 	return (
 		makeLemmaId(left.language, left) === makeLemmaId(right.language, right)
 	);
 }
 
-function sameReading(left: Reading, right: Reading): boolean {
+function sameReading(left: Dumling.Reading, right: Dumling.Reading): boolean {
 	return readingFingerprint(left) === readingFingerprint(right);
 }
 
 function readingUsesLanguage(
-	reading: Reading,
-	language: SupportedLanguage,
+	reading: Dumling.Reading,
+	language: Dumling.Language,
 ): boolean {
 	return reading.lemma.language === language;
 }
 
 function knowledgeUsesLanguage(
-	knowledge: ReadingKnowledge,
-	language: SupportedLanguage,
+	knowledge: Dumrel.ReadingKnowledge,
+	language: Dumling.Language,
 ): boolean {
 	const relations = knowledge.semanticRelations;
 	if (relations?.targetKind === "reading") {
@@ -91,7 +86,9 @@ function knowledgeUsesLanguage(
 		}
 	}
 
-	const visitMorphologyNode = (node: MorphologicalTreeNode): boolean => {
+	const visitMorphologyNode = (
+		node: Dumrel.MorphologicalTreeNode,
+	): boolean => {
 		if (node.nodeKind === "morphemeReading")
 			return readingUsesLanguage(node.reading, language);
 		if (node.nodeKind === "unitShadow")
@@ -110,8 +107,8 @@ function knowledgeUsesLanguage(
 }
 
 function knowledgeChangeUsesLanguage(
-	change: KnowledgeChange,
-	language: SupportedLanguage,
+	change: Dumrel.KnowledgeChange,
+	language: Dumling.Language,
 ): boolean {
 	if (change.aspect === "semanticRelations" && "value" in change)
 		return change.targetKind === "reading"
@@ -130,14 +127,14 @@ function knowledgeChangeUsesLanguage(
 }
 
 type ReadingEntryLike = {
-	readonly knowledge?: ReadingKnowledge;
-	readonly reading: Reading;
+	readonly knowledge?: Dumrel.ReadingKnowledge;
+	readonly reading: Dumling.Reading;
 };
 
 type SurfaceEntryLike = {
 	readonly id: string;
-	readonly ownerLemma: Lemma;
-	readonly surface: Surface;
+	readonly ownerLemma: Dumling.Lemma;
+	readonly surface: Dumling.Surface;
 };
 
 type PendingSemanticRelationRecordLike = {
@@ -147,21 +144,21 @@ type PendingSemanticRelationRecordLike = {
 	};
 	readonly pending: {
 		readonly relation: string;
-		readonly target: { readonly language: SupportedLanguage };
+		readonly target: { readonly language: Dumling.Language };
 	};
-	readonly sourceReading: Reading;
+	readonly sourceReading: Dumling.Reading;
 };
 
 type PendingSemanticRelationLike = {
-	readonly target: { readonly language: SupportedLanguage };
+	readonly target: { readonly language: Dumling.Language };
 };
 
 type PlannedChangeLike = {
 	readonly ops?: readonly {
-		readonly envelope?: { readonly reading: Reading };
+		readonly envelope?: { readonly reading: Dumling.Reading };
 		readonly kind: string;
 	}[];
-	readonly reading?: Reading;
+	readonly reading?: Dumling.Reading;
 	readonly type: string;
 };
 
@@ -178,12 +175,29 @@ function readingEntryHasNoDirectSameLemma(entry: ReadingEntryLike): boolean {
 	);
 }
 
+function readingEntryTargetsShareFamily(entry: ReadingEntryLike): boolean {
+	const relations = entry.knowledge?.semanticRelations;
+	if (!relations) return true;
+	const family = entry.reading.lemma.family;
+	return relations.targetKind === "reading"
+		? (relations.synonym ?? []).every(
+				(target) => target.lemma.family === family,
+			)
+		: directSemanticRelationValues.every((relation) =>
+				(relations[relation] ?? []).every(
+					(target) => target.family === family,
+				),
+			);
+}
+
 function surfaceOwnerMatches(entry: SurfaceEntryLike): boolean {
 	return sameLemma(entry.ownerLemma, entry.surface.lemma);
 }
 
 function surfaceIdMatches(entry: SurfaceEntryLike): boolean {
-	return entry.id === makeSurfaceId(entry.surface.language, entry.surface);
+	return (
+		entry.id === makeSurfaceId(entry.surface.lemma.language, entry.surface)
+	);
 }
 
 function pendingLocatorIdentifiesSource(
@@ -217,8 +231,8 @@ function knowledgeChangeReadingMatchesPatched(
 }
 
 function forLanguage<Value>(
-	language: SupportedLanguage,
-	predicate: (value: Value, language: SupportedLanguage) => boolean,
+	language: Dumling.Language,
+	predicate: (value: Value, language: Dumling.Language) => boolean,
 ): (value: unknown) => boolean {
 	return (value) => predicate(value as Value, language);
 }
@@ -240,6 +254,7 @@ const predicateNames = [
 	"dumdict.pending.target-language.en",
 	"dumdict.pending.target-language.he",
 	"dumdict.reading-entry.no-same-lemma",
+	"dumdict.reading-entry.source-family",
 	"dumdict.reading-knowledge.language.de",
 	"dumdict.reading-knowledge.language.en",
 	"dumdict.reading-knowledge.language.he",
@@ -311,6 +326,8 @@ function constructNamedPredicate(name: PredicateName): NamedPredicate {
 				(pending: PendingSemanticRelationLike, language) =>
 					pending.target.language === language,
 			);
+		case "dumdict.reading-entry.source-family":
+			return namedPredicate(readingEntryTargetsShareFamily);
 		case "dumdict.reading-entry.no-same-lemma":
 			return namedPredicate(readingEntryHasNoDirectSameLemma);
 		case "dumdict.reading-knowledge.language.de":
@@ -378,6 +395,10 @@ function constructNamedError(name: PredicateName): () => string {
 		case "dumdict.pending.target-language.he":
 			return constantError(
 				"Pending Semantic Relation target must use he.",
+			);
+		case "dumdict.reading-entry.source-family":
+			return constantError(
+				"Semantic Relation targets must share the source Family.",
 			);
 		case "dumdict.reading-entry.no-same-lemma":
 			return constantError(

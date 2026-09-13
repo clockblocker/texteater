@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import type { DumdictService } from "../public";
 import { addAttestation, prepareAddAttestation } from "./add-attestation";
@@ -20,7 +21,7 @@ import {
 import { findStoredReadings } from "./find-stored-readings";
 import { getInfoForRelationsCleanup } from "./get-info-for-relations-cleanup";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
-export function createDumdictServiceImplementation<L extends SupportedLanguage>(
+export function createDumdictServiceImplementation<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 ): DumdictService<L> {
 	return {

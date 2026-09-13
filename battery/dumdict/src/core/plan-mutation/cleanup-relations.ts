@@ -1,8 +1,7 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { SupportedLanguage } from "dumling-old/types";
-import type { Reading } from "../../dto";
+import type * as Dumling from "dumling/types";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
+import { readingFingerprint } from "../identity";
 import { pendingSemanticRelationLocatorKey } from "../pending";
 import {
 	planRelationMaintenance,
@@ -13,7 +12,7 @@ import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-export function planCleanupRelations<L extends SupportedLanguage>(
+export function planCleanupRelations<L extends Dumling.Language>(
 	slice: CleanupRelationsSlice<L>,
 	request: CleanupRelationsRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
@@ -84,7 +83,7 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 			}),
 		),
 	];
-	const affectedReadings = new Map<string, Reading<L>>();
+	const affectedReadings = new Map<string, Dumling.Reading<L>>();
 	for (const addition of relationPlan.additions)
 		affectedReadings.set(
 			readingFingerprint(addition.reading),

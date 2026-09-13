@@ -1,10 +1,6 @@
-import { readingFingerprint } from "dumling-old";
-import type {
-	Lemma,
-	Reading,
-	SerializedDictionaryNote,
-	Surface,
-} from "../../src";
+import type * as Dumling from "dumling/types";
+import type { SerializedDictionaryNote } from "../../src";
+import { readingFingerprint } from "../../src/core/identity";
 import { derivePendingEntryId } from "../../src/core/pending";
 
 const englishVerbFeatures = {
@@ -16,50 +12,58 @@ const englishVerbFeatures = {
 } as const;
 
 export const englishWalkLemma = {
+	unitKind: "Lemma" as const,
 	canonicalForm: "walk",
 	coreFeatures: englishVerbFeatures,
 	language: "en",
 	family: "Lexeme",
 	kind: "VERB",
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
 export const englishRunLemma = {
+	unitKind: "Lemma" as const,
 	canonicalForm: "run",
 	coreFeatures: englishVerbFeatures,
 	language: "en",
 	family: "Lexeme",
 	kind: "VERB",
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
 export const englishSwimLemma = {
+	unitKind: "Lemma" as const,
 	canonicalForm: "swim",
 	coreFeatures: englishVerbFeatures,
 	language: "en",
 	family: "Lexeme",
 	kind: "VERB",
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
 export const englishWalkReading = {
+	unitKind: "Reading" as const,
 	lemma: englishWalkLemma,
 	emojiDescription: "🚶",
-} satisfies Reading<"en">;
+} satisfies Dumling.Reading<"en">;
 export const englishRunReading = {
+	unitKind: "Reading" as const,
 	lemma: englishRunLemma,
 	emojiDescription: "🏃",
-} satisfies Reading<"en">;
+} satisfies Dumling.Reading<"en">;
 export const englishSwimReading = {
+	unitKind: "Reading" as const,
 	lemma: englishSwimLemma,
 	emojiDescription: "🏊",
-} satisfies Reading<"en">;
+} satisfies Dumling.Reading<"en">;
 
 export const englishSwimCitationSurface = {
+	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "en",
 	lemma: englishSwimLemma,
 	normalizedSurface: "swim",
 	spelling: "Canonical",
-	surfaceKind: "Citation",
+
 	surfaceFeatures: null,
-} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 export const englishSwimDraft = {
 	reading: englishSwimReading,

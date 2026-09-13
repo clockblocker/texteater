@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { planAppendReadingAttestation } from "../core/plan-mutation";
 import type {
@@ -12,9 +13,9 @@ import type {
 import { commitPrepared, prepared } from "./effect-mutation";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-function languageFailure<L extends SupportedLanguage>(
+function languageFailure<L extends Dumling.Language>(
 	expectedLanguage: L,
-	actualLanguage: SupportedLanguage | undefined,
+	actualLanguage: Dumling.Language | undefined,
 ): DumdictInvalidInput {
 	return {
 		_tag: "DumdictInvalidInput",
@@ -24,7 +25,7 @@ function languageFailure<L extends SupportedLanguage>(
 	};
 }
 
-export function prepareAddAttestation<L extends SupportedLanguage>(
+export function prepareAddAttestation<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: AddAttestationRequest<L>,
 ): Effect.Effect<PreparedMutation<L>, DumdictPreparationFailure> {
@@ -50,7 +51,7 @@ export function prepareAddAttestation<L extends SupportedLanguage>(
 	);
 }
 
-export function addAttestation<L extends SupportedLanguage>(
+export function addAttestation<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: AddAttestationRequest<L>,
 ): Effect.Effect<

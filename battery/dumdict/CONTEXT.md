@@ -30,7 +30,3 @@ new Reading.
 **Semantic Relation Edge**:
 A direct Reading-owned claim with either a Lemma or exact Reading target. One
 Reading Knowledge value uses a single target mode.
-
-**Grammatical Relation Edge**:
-A direct Grammatical Relation claim whose endpoints are both Lemmas or both
-exact Readings.

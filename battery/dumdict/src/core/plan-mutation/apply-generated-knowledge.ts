@@ -1,8 +1,6 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
 import type {
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingKnowledgeChange,
 } from "../../dto";
 import {
@@ -14,6 +12,8 @@ import type {
 	ApplyGeneratedKnowledgeContext,
 	ReadingPatchOp,
 } from "../../storage";
+import { applyDumdictKnowledgeChange } from "../apply-reading-knowledge-change.js";
+import { readingFingerprint, sameLemma, sameReading } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -28,7 +28,7 @@ import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-function pendingRecords<L extends SupportedLanguage>(
+function pendingRecords<L extends Dumling.Language>(
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): PendingSemanticRelationRecord<L>[] {
 	const records = request.pendingRelations.map((value) => {
@@ -40,7 +40,7 @@ function pendingRecords<L extends SupportedLanguage>(
 	return deduplicatePendingSemanticRelationRecords(records);
 }
 
-export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
+export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 	slice: ApplyGeneratedKnowledgeContext<L>,
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
@@ -49,6 +49,48 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 			status: "rejected",
 			code: "readingMissing",
 			message: "Generated Knowledge requires an existing Reading.",
+		};
+	}
+
+	let changed = slice.existingReading;
+	try {
+		for (const change of request.changes) {
+			if (change.aspect === "semanticRelations" && "value" in change) {
+				const missing =
+					change.targetKind === "reading"
+						? change.value.some(
+								(target) =>
+									!slice.relationReadings.some((entry) =>
+										sameReading(entry.reading, target),
+									),
+							)
+						: change.value.some(
+								(target) =>
+									!slice.relationLemmas.some((entry) =>
+										sameLemma(entry.lemma, target),
+									),
+							);
+				if (missing)
+					return {
+						status: "rejected",
+						code: "invalidRequest",
+						message:
+							"Direct Semantic Relation target is missing from the dictionary",
+					};
+			}
+			changed = applyDumdictKnowledgeChange(changed, {
+				reading: request.reading,
+				change,
+			});
+		}
+	} catch (error) {
+		return {
+			status: "rejected",
+			code: "invalidRequest",
+			message:
+				error instanceof Error
+					? error.message
+					: "Invalid Knowledge change",
 		};
 	}
 
@@ -74,16 +116,19 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 			},
 		};
 	});
+	const changedReadings = slice.relationReadings.map((entry) =>
+		sameReading(entry.reading, changed.reading) ? changed : entry,
+	);
 	const relationPlan = planRelationMaintenance({
 		lemmas: slice.relationLemmas,
-		readings: slice.relationReadings,
+		readings: changedReadings,
 		requests: relationRequests,
 	});
 	if (relationPlan.status === "rejected") return relationPlan;
 
 	const operations = new Map<
 		string,
-		{ reading: Reading<L>; ops: ReadingPatchOp<L>[] }
+		{ reading: Dumling.Reading<L>; ops: ReadingPatchOp<L>[] }
 	>();
 	if (request.changes.length > 0) {
 		operations.set(readingFingerprint(request.reading), {
@@ -113,7 +158,7 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 	}
 	for (const relationPatch of relationRemovalsToPatches(
 		relationPlan.removals,
-		slice.relationReadings,
+		changedReadings,
 		slice.revision,
 	)) {
 		const readingKey = readingFingerprint(relationPatch.reading);
@@ -183,7 +228,7 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 		),
 	];
 
-	const affectedReadings = new Map<string, Reading<L>>();
+	const affectedReadings = new Map<string, Dumling.Reading<L>>();
 	for (const patch of operations.values())
 		affectedReadings.set(readingFingerprint(patch.reading), patch.reading);
 	return {

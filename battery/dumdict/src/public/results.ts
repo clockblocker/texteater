@@ -1,16 +1,16 @@
-import type { Lemma, SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type {
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingNoteForDisambiguation,
 	StoreRevision,
 } from "../dto";
-import type { SurfaceId } from "../dumling";
+import type { SurfaceId } from "../dumling-id";
 import type { DumdictDiagnostic } from "./diagnostics";
 
-export type AffectedDictionaryEntities<L extends SupportedLanguage> = {
-	lemmas?: Lemma<L>[];
-	readings?: Reading<L>[];
+export type AffectedDictionaryEntities<L extends Dumling.Language> = {
+	lemmas?: Dumling.Lemma<L>[];
+	readings?: Dumling.Reading<L>[];
 	surfaceIds?: SurfaceId<L>[];
 	pendingIds?: string[];
 };
@@ -19,29 +19,29 @@ export type MutationSummary = {
 	message: string;
 };
 
-export type ReadingCandidate<L extends SupportedLanguage> = {
-	reading: Reading<L>;
+export type ReadingCandidate<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
 	note: ReadingNoteForDisambiguation<L>;
 };
 
-export type FindStoredReadingsResult<L extends SupportedLanguage> = {
+export type FindStoredReadingsResult<L extends Dumling.Language> = {
 	revision: StoreRevision;
 	candidates: ReadingCandidate<L>[];
 	diagnostics?: DumdictDiagnostic[];
 };
 
-export type CleanupPendingRelation<L extends SupportedLanguage> =
+export type CleanupPendingRelation<L extends Dumling.Language> =
 	PendingSemanticRelationRecord<L>;
 
-export type GetInfoForRelationsCleanupResult<L extends SupportedLanguage> = {
+export type GetInfoForRelationsCleanupResult<L extends Dumling.Language> = {
 	revision: StoreRevision;
 	canonicalForm: string;
-	candidateLemmas: Lemma<L>[];
+	candidateLemmas: Dumling.Lemma<L>[];
 	pendingRelations: CleanupPendingRelation<L>[];
 	diagnostics?: DumdictDiagnostic[];
 };
 
-export type MutationResult<L extends SupportedLanguage> = {
+export type MutationResult<L extends Dumling.Language> = {
 	status: "applied";
 	baseRevision: StoreRevision;
 	nextRevision: StoreRevision;
@@ -50,7 +50,7 @@ export type MutationResult<L extends SupportedLanguage> = {
 	diagnostics?: readonly DumdictDiagnostic[];
 };
 
-export type PreparedMutation<L extends SupportedLanguage> = Readonly<{
+export type PreparedMutation<L extends Dumling.Language> = Readonly<{
 	plan: import("../storage").DumdictPlan<L>;
 	affected: AffectedDictionaryEntities<L>;
 	summary: MutationSummary;
@@ -59,8 +59,8 @@ export type PreparedMutation<L extends SupportedLanguage> = Readonly<{
 
 export type DumdictInvalidInput = Readonly<{
 	_tag: "DumdictInvalidInput";
-	expectedLanguage?: SupportedLanguage;
-	actualLanguage?: SupportedLanguage;
+	expectedLanguage?: Dumling.Language;
+	actualLanguage?: Dumling.Language;
 	message: string;
 }>;
 

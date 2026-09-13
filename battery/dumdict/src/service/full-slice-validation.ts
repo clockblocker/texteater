@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import {
 	validateCleanupRelationsSlice,
 	validateReadingEntryContext,
@@ -14,7 +15,7 @@ import {
 } from "../parsing/lightweight-parsers";
 import type { DumdictSliceValidation } from "./runtime-options";
 
-export function createFullSliceValidation<L extends SupportedLanguage>(
+export function createFullSliceValidation<L extends Dumling.Language>(
 	language: L,
 ): DumdictSliceValidation<L> {
 	return {

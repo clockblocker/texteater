@@ -1,11 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import {
-	allFixedLemmaCatalogs,
-	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
-	fixedMembersFor,
-} from "dumling-old/fixed";
-import type { Lemma, Reading } from "dumling-old/types";
-import { fixedKnowledgeFor } from "dumrel/fixed";
+
 import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../../src";
 import { createDumdictService } from "../../../src";
@@ -23,6 +17,7 @@ const germanRennenLemma = {
 } as const;
 
 const germanRennenReading = {
+	unitKind: "Reading" as const,
 	lemma: germanRennenLemma,
 	emojiDescription: "🏃",
 } as const;
@@ -37,93 +32,45 @@ function serviceFor(
 	};
 }
 
-function fixedSeinPeerNotes(): SerializedDictionaryNote<"de">[] {
-	const catalog = allFixedLemmaCatalogs().find(
-		({ scope }) => scope === FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
-	);
-	if (!catalog) throw new Error("Expected the fixed German AUX catalog.");
-	return catalog.members
-		.filter(
-			(lemma): lemma is Lemma<"de", "Lexeme", "AUX"> =>
-				lemma.language === "de" &&
-				lemma.family === "Lexeme" &&
-				lemma.kind === "AUX" &&
-				["sein", "bin", "bist", "ist", "sind", "seid"].includes(
-					lemma.canonicalForm,
-				),
-		)
-		.map((lemma) => {
-			const reading = fixedMembersFor.reading(lemma)?.members[0];
-			if (!reading) {
-				throw new Error(
-					`Expected one fixed Reading for ${lemma.canonicalForm}.`,
-				);
-			}
-			return {
-				schemaVersion: 1,
-				lemmaRecord: { lemma },
-				readingEntries: [
-					{
-						reading: reading as unknown as Reading<"de">,
-						attestedTranslations: [],
-						attestations: [],
-						notes: "",
-					},
-				],
-				ownedSurfaceEntries: [],
-				pendingRelations: [],
-			};
-		});
-}
-
 describe("applyGeneratedKnowledge", () => {
-	test("admits only the reviewed exact Reading set for fixed closed-class Knowledge", async () => {
-		const notes = fixedSeinPeerNotes();
-		const source = notes
-			.flatMap(({ readingEntries }) => readingEntries)
-			.find(
-				({ reading }) => reading.lemma.canonicalForm === "bin",
-			)?.reading;
-		if (!source) throw new Error("Expected the fixed bin Reading.");
-		const fixed = fixedKnowledgeFor(source as Reading);
-		if (
-			fixed.decision !== "Found" ||
-			fixed.knowledge.semanticRelations?.targetKind !== "reading"
-		) {
-			throw new Error(
-				"Expected reviewed Reading-targeted fixed Knowledge.",
-			);
-		}
-		const synonyms = (fixed.knowledge.semanticRelations.synonym ??
-			[]) as Reading<"de">[];
-		const { service, storage } = serviceFor(notes);
+	test("accepts supplied exact targets already stored without catalog lookup", async () => {
+		const { service, storage } = serviceFor();
+		await Effect.runPromise(
+			service.ensureReadingEntry({
+				entry: {
+					reading: germanRennenReading,
+					attestedTranslations: [],
+					attestations: [],
+					notes: "",
+				},
+			}),
+		);
 		const result = await Effect.runPromise(
 			service.applyGeneratedKnowledge({
-				reading: source,
+				reading: germanGehenReading,
 				changes: [
 					{
 						kind: "Contribute",
 						aspect: "semanticRelations",
 						relation: "synonym",
 						targetKind: "reading",
-						value: synonyms,
+						value: [germanRennenReading],
 					},
 				],
 				pendingRelations: [],
 			}),
 		);
-
 		expect(result.status).toBe("applied");
 		expect(
 			storage
 				.loadAll()
-				.flatMap(({ readingEntries }) => readingEntries)
-				.find(({ reading }) => reading.lemma.canonicalForm === "bin")
+				.flatMap((note) => note.readingEntries)
+				.find((entry) => entry.reading.emojiDescription === "🚶")
 				?.knowledge?.semanticRelations,
-		).toEqual({ targetKind: "reading", synonym: synonyms });
+		).toEqual({ targetKind: "reading", synonym: [germanRennenReading] });
 	});
 
-	test("rejects an unreviewed generated Reading-targeted relation", async () => {
+	test("rejects a direct exact target missing from the dictionary", async () => {
 		const { service } = serviceFor();
 		const result = await failure(
 			service.applyGeneratedKnowledge({

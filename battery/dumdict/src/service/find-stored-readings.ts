@@ -1,5 +1,6 @@
 import { traceStage } from "common-utils/workflow";
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import * as Effect from "effect/Effect";
 import { lookupStoredReadings } from "../core/lookup";
 import type {
@@ -9,7 +10,7 @@ import type {
 } from "../public";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export function findStoredReadings<L extends SupportedLanguage>(
+export function findStoredReadings<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	request: FindStoredReadingsRequest<L>,
 ): Effect.Effect<

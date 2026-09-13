@@ -1,7 +1,7 @@
-import type { Lemma, Reading, SupportedLanguage } from "dumling-old/types";
-import type { KnowledgeChange, LexemeUnitShadow } from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 
-export type ReadingKnowledgeChange<L extends SupportedLanguage> = {
-	reading: Reading<L>;
-	change: KnowledgeChange<string, Lemma<L>, LexemeUnitShadow, Reading<L>>;
+export type ReadingKnowledgeChange<L extends Dumling.Language> = {
+	reading: Dumling.Reading<L>;
+	change: Dumrel.KnowledgeChange<Dumling.Reading<L>>;
 };

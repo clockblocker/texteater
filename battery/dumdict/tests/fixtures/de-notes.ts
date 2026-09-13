@@ -1,6 +1,8 @@
-import type { Lemma, Reading, SerializedDictionaryNote } from "../../src";
+import type * as Dumling from "dumling/types";
+import type { SerializedDictionaryNote } from "../../src";
 
 export const germanGehenLemma = {
+	unitKind: "Lemma" as const,
 	canonicalForm: "gehen",
 	coreFeatures: {
 		verbType: null,
@@ -11,12 +13,13 @@ export const germanGehenLemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "VERB",
-} satisfies Lemma<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"de", "Lexeme", "VERB">;
 
 export const germanGehenReading = {
+	unitKind: "Reading" as const,
 	lemma: germanGehenLemma,
 	emojiDescription: "🚶",
-} satisfies Reading<"de">;
+} satisfies Dumling.Reading<"de">;
 
 export const deSerializedNotes = [
 	{

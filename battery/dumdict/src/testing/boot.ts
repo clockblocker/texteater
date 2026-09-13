@@ -1,4 +1,5 @@
-import type { SupportedLanguage } from "dumling-old/types";
+import type * as Dumling from "dumling/types";
+
 import type { SerializedDictionaryNote } from "../dto";
 import type { DumdictService } from "../public";
 import { createDumdictService } from "../service/create-dumdict-service";
@@ -7,7 +8,7 @@ import {
 	type InMemoryTestStorage,
 } from "./in-memory-storage";
 
-export function getBootedUpDumdict<L extends SupportedLanguage>(
+export function getBootedUpDumdict<L extends Dumling.Language>(
 	language: L,
 	notes: SerializedDictionaryNote<L>[] = [],
 ): {

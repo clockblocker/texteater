@@ -1,18 +1,12 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
+import type * as Dumling from "dumling/types";
 
-import type { Reading } from "dumling-old/types";
+
 import * as Effect from "effect/Effect";
-import {
-	type Lemma,
-	type LemmaRecord,
-	makeSurfaceId,
-	type ReadingEntry,
-	type Surface,
-	type SurfaceEntry,
-} from "../../src";
-import { getBootedUpDumdict } from "../../src/testing/boot";
+import {type LemmaRecord,makeSurfaceId,type ReadingEntry,type SurfaceEntry} from "../../src";
+import {getBootedUpDumdict} from "../../src/testing/boot";
 
-const walkLemma = {
+const walkLemma = {unitKind: "Lemma" as const,
 	canonicalForm: "walk",
 	coreFeatures: {
 		style: null,
@@ -24,24 +18,24 @@ const walkLemma = {
 	language: "en",
 	family: "Lexeme",
 	kind: "VERB",
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+} satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
 const runLemma = {
 	...walkLemma,
 	canonicalForm: "run",
 };
 
-const walkReading = {
+const walkReading = {unitKind: "Reading" as const,
 	lemma: walkLemma,
 	emojiDescription: "🚶",
-} satisfies Reading<"en">;
+} satisfies Dumling.Reading<"en">;
 
-const runReading = {
+const runReading = {unitKind: "Reading" as const,
 	lemma: runLemma,
 	emojiDescription: "🏃",
-} satisfies Reading<"en">;
+} satisfies Dumling.Reading<"en">;
 
-const walkSurface = {
+const walkSurface = {unitKind: "Surface" as const,
 	inflectionalFeatures: {
 		mood: null,
 		number: null,
@@ -52,11 +46,11 @@ const walkSurface = {
 	},
 	language: "en",
 	normalizedSurface: "walk",
-	surfaceKind: "Inflection",
+
 	lemma: walkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-} satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
+} satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // README_BLOCK:english-walk-entry-record:start
 const walkLemmaRecord = {

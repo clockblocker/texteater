@@ -30,11 +30,12 @@ test("plans an unseen Surface and treats an existing Surface as a no-op", async 
 	const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 	const ownedSurface = {
 		surface: {
+			unitKind: "Surface" as const,
 			language: "en",
 			lemma: englishWalkLemma,
 			normalizedSurface: "walked",
 			spelling: "Canonical",
-			surfaceKind: "Inflection",
+
 			surfaceFeatures: null,
 			inflectionalFeatures: {
 				tense: "Past",

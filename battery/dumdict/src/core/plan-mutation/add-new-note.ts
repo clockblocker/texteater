@@ -1,10 +1,5 @@
-import { readingFingerprint } from "dumling-old/id";
-import type { Lemma, Reading, SupportedLanguage } from "dumling-old/types";
-import type {
-	DirectSemanticRelation,
-	LexemeUnitShadow,
-	ReadingKnowledge,
-} from "dumrel/types";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
@@ -20,6 +15,7 @@ import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
 import {
 	lemmaFingerprint,
+	readingFingerprint,
 	readingLemma,
 	sameLemma,
 	sameReading,
@@ -48,10 +44,10 @@ function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 	});
 }
 
-function appendRelation<L extends SupportedLanguage>(
-	knowledge: ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>,
-	relation: DirectSemanticRelation,
-	target: Lemma<L>,
+function appendRelation<L extends Dumling.Language>(
+	knowledge: Dumrel.ReadingKnowledge<Dumling.Reading<L>>,
+	relation: Dumrel.DirectSemanticRelation,
+	target: Dumling.Lemma<L>,
 ) {
 	const semanticRelations =
 		knowledge.semanticRelations !== undefined &&
@@ -64,7 +60,7 @@ function appendRelation<L extends SupportedLanguage>(
 	knowledge.semanticRelations = semanticRelations;
 }
 
-function makePendingRecords<L extends SupportedLanguage>(
+function makePendingRecords<L extends Dumling.Language>(
 	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ): PendingSemanticRelationRecord<L>[] {
@@ -94,7 +90,7 @@ function makePendingRecords<L extends SupportedLanguage>(
 	);
 }
 
-function relationLanguagesMatch<L extends SupportedLanguage>(
+function relationLanguagesMatch<L extends Dumling.Language>(
 	request: AddNewNoteRequest<L>,
 ) {
 	const language = request.draft.reading.lemma.language;
@@ -109,7 +105,7 @@ function relationLanguagesMatch<L extends SupportedLanguage>(
 	);
 }
 
-function explicitTargetsArePresent<L extends SupportedLanguage>(
+function explicitTargetsArePresent<L extends Dumling.Language>(
 	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ) {
@@ -125,7 +121,7 @@ function explicitTargetsArePresent<L extends SupportedLanguage>(
 	);
 }
 
-export function planAddNewNote<L extends SupportedLanguage>(
+export function planAddNewNote<L extends Dumling.Language>(
 	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
@@ -222,12 +218,7 @@ export function planAddNewNote<L extends SupportedLanguage>(
 	});
 	if (relationPlan.status === "rejected") return relationPlan;
 
-	const knowledge: ReadingKnowledge<
-		string,
-		Lemma<L>,
-		LexemeUnitShadow,
-		Reading<L>
-	> = {};
+	const knowledge: Dumrel.ReadingKnowledge<Dumling.Reading<L>> = {};
 	for (const addition of relationPlan.additions) {
 		if (
 			addition.targetKind !== "reading" &&

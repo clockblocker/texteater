@@ -1,99 +1,32 @@
-import { buildIdOperations, supportedLanguages } from "dumling-old/id";
-import type {
-	DumlingCsv,
-	IdDecodeSuccess,
-	LanguageApi,
-	Lemma,
-	SupportedLanguage,
-	Surface,
-} from "dumling-old/types";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
+import { unitFingerprint } from "./core/identity.js";
 
 declare const surfaceIdBrand: unique symbol;
-
-export type SurfaceId<L extends SupportedLanguage = SupportedLanguage> =
-	DumlingCsv<L> & {
+export type SurfaceId<L extends Dumling.Language = Dumling.Language> =
+	string & {
 		readonly [surfaceIdBrand]: "Surface";
+		readonly language?: L;
 	};
 
-type IdParsers = {
-	[Language in SupportedLanguage]: Pick<
-		LanguageApi<Language>["parse"],
-		"lemma" | "surface"
-	>;
-};
-
-let idParsers: IdParsers | undefined;
-
-/** Initializes the codec with the package's exact generated guard parsers. */
-export function configureDumdictIdParsers(parsers: IdParsers): void {
-	idParsers = parsers;
-}
-
-function buildDumdictIdOperations<const L extends SupportedLanguage>(
+/** Derives a Surface identity inside the caller's dictionary scope. */
+export function makeSurfaceId<L extends Dumling.Language>(
 	language: L,
-): LanguageApi<L>["id"] {
-	const parsers = idParsers?.[language];
-	if (parsers === undefined) {
-		throw new ReferenceError("Dumdict ID parsers are not initialized.");
-	}
-	return buildIdOperations(
-		language,
-		parsers as Pick<LanguageApi<L>["parse"], "lemma" | "surface">,
-	);
-}
-
-const idOperations = {
-	de: undefined,
-	en: undefined,
-	he: undefined,
-} as {
-	[Language in SupportedLanguage]: LanguageApi<Language>["id"] | undefined;
-};
-
-function getDumdictIdOperations<const L extends SupportedLanguage>(
-	language: L,
-): LanguageApi<L>["id"] {
-	const cached = idOperations[language];
-	if (cached !== undefined) return cached as LanguageApi<L>["id"];
-	const created = buildDumdictIdOperations(language);
-	idOperations[language] = created as (typeof idOperations)[L];
-	return created;
-}
-
-export function makeSurfaceId<L extends SupportedLanguage>(
-	language: L,
-	surface: Surface<L>,
+	surface: Dumling.Surface<L>,
 ): SurfaceId<L> {
-	return getDumdictIdOperations(language).encode.asCsv(
-		surface,
-	) as SurfaceId<L>;
+	const result = parseUnit(surface);
+	if (!result.success) throw result.error;
+	if (result.chain.language !== language)
+		throw new Error("Unit language does not match the dictionary");
+	return unitFingerprint(result.chain.value) as SurfaceId<L>;
 }
-
-export function makeLemmaId<L extends SupportedLanguage>(
+export function makeLemmaId<L extends Dumling.Language>(
 	language: L,
-	lemma: Lemma<L>,
-): DumlingCsv<L> {
-	return getDumdictIdOperations(language).encode.asCsv(lemma);
-}
-
-export type DumlingIdInspection<
-	L extends SupportedLanguage = SupportedLanguage,
-> = {
-	format: "csv" | "base64url";
-	kind: IdDecodeSuccess<L>["kind"];
-	language: L;
-};
-
-export function inspectDumlingId(id: string): DumlingIdInspection | undefined {
-	for (const language of supportedLanguages) {
-		const decoded = getDumdictIdOperations(language).decode.any(id);
-		if (decoded.success) {
-			return {
-				format: decoded.data.format,
-				kind: decoded.data.kind,
-				language: decoded.data.language,
-			};
-		}
-	}
-	return undefined;
+	lemma: Dumling.Lemma<L>,
+): string {
+	const result = parseUnit(lemma);
+	if (!result.success) throw result.error;
+	if (result.chain.language !== language)
+		throw new Error("Unit language does not match the dictionary");
+	return unitFingerprint(result.chain.value);
 }
