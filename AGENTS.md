@@ -1,5 +1,7 @@
 ## Repository work
 
+- Before writing or refactoring TypeScript, read
+  `docs/reference/code-conventions.md`.
 - For GitHub issues, PRDs, labels, or Wayfinder work, read
   `docs/reference/issue-tracker.md`.
 - Before exploring or changing domain language or decisions, read
