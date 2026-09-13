@@ -8,7 +8,6 @@ export const DePunctuationFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		punctType: DE_FEATURE_SCHEMA.punctType,
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DePunctuationFeatureBags = z.infer<

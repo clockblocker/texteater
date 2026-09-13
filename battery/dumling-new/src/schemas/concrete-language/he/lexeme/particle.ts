@@ -5,7 +5,6 @@ import { FeatureBagKind, featureBagSchema } from "../../../universal/index.js";
 
 export const HeParticleFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type HeParticleFeatureBags = z.infer<typeof HeParticleFeatureBagsSchema>;

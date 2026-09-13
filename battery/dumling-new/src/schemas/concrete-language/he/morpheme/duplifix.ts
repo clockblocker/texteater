@@ -5,7 +5,6 @@ import { FeatureBagKind, featureBagSchema } from "../../../universal/index.js";
 
 export const HeDuplifixMorphemeFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type HeDuplifixMorphemeFeatureBags = z.infer<

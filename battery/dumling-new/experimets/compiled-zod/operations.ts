@@ -1,0 +1,5 @@
+// Generated from the audited source predicate; see generate.ts.
+import type { ValidationOperations, ValidationOperation } from "../../../common-utils/src/validation-artifact.ts";
+const predicate: (featureBag: Record<string, unknown>) => boolean = (featureBag) => Object.values(featureBag).some((featureValue) => featureValue !== null);
+const operation: ValidationOperation = (value: unknown) => predicate(value as Record<string, unknown>) ? { value } : { value, issues: [{ code: "custom", path: [], message: "Feature Bag must contain a marked feature" }] };
+export const operations: ValidationOperations = Object.fromEntries(["nonempty-0","nonempty-1","nonempty-10","nonempty-11","nonempty-12","nonempty-13","nonempty-14","nonempty-15","nonempty-16","nonempty-17","nonempty-18","nonempty-19","nonempty-2","nonempty-20","nonempty-21","nonempty-22","nonempty-23","nonempty-24","nonempty-25","nonempty-26","nonempty-3","nonempty-4","nonempty-5","nonempty-6","nonempty-7","nonempty-8","nonempty-9"].map(name => [name, operation]));

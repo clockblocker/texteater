@@ -1,0 +1,7 @@
+{
+  "schemaCount": 100,
+  "registeredOperations": 27,
+  "artifactBytes": 72904,
+  "generationMs": 76.73362499999999,
+  "unregisteredFailure": "ZodValidationCompilationError: Cannot compile schema \"de/Lexeme/ADJ\" at $.value.inflectional: unsupported custom check; no explicitly named operation registration matched."
+}

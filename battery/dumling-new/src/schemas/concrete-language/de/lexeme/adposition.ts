@@ -13,7 +13,6 @@ export const DeAdpositionFeatureBagsSchema = z.strictObject({
 		governedCase: DE_FEATURE_SCHEMA.governedCase,
 		partType: DE_FEATURE_SCHEMA.partType.extract(["Vbp"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DeAdpositionFeatureBags = z.infer<

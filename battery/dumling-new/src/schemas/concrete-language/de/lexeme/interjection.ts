@@ -8,7 +8,6 @@ export const DeInterjectionFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		partType: DE_FEATURE_SCHEMA.partType.extract(["Res"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DeInterjectionFeatureBags = z.infer<

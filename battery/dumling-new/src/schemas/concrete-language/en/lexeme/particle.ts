@@ -10,7 +10,6 @@ export const EnParticleFeatureBagsSchema = z.strictObject({
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["CCONJ"]),
 		polarity: EN_FEATURE_SCHEMA.polarity.extract(["Neg"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnParticleFeatureBags = z.infer<typeof EnParticleFeatureBagsSchema>;

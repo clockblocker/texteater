@@ -1,0 +1,1527 @@
+{
+  "environment": {
+    "capturedAt": "2026-09-12T06:20:55.337Z",
+    "bun": "1.4.2",
+    "node": "24.19.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "sampleCount": 5,
+    "metric": "median fresh-process peak RSS; maxRSS KiB converted to bytes",
+    "dependencies": {
+      "@arrirpc/schema": "0.84.1",
+      "arktype": "2.2.3",
+      "valibot": "1.5.0",
+      "zod": "4.4.3"
+    }
+  },
+  "bundleInfo": [
+    {
+      "id": "zod-100",
+      "bytes": 700353,
+      "modules": 81
+    },
+    {
+      "id": "valibot-100",
+      "bytes": 126538,
+      "modules": 3
+    },
+    {
+      "id": "arktype-100",
+      "bytes": 424171,
+      "modules": 117
+    },
+    {
+      "id": "arri-100",
+      "bytes": 306518,
+      "modules": 6
+    },
+    {
+      "id": "zod-1000",
+      "bytes": 2112255,
+      "modules": 81
+    },
+    {
+      "id": "valibot-1000",
+      "bytes": 1182040,
+      "modules": 3
+    },
+    {
+      "id": "arktype-1000",
+      "bytes": 1516573,
+      "modules": 117
+    },
+    {
+      "id": "arri-1000",
+      "bytes": 1531221,
+      "modules": 6
+    },
+    {
+      "id": "actual-zod",
+      "bytes": 1195687,
+      "modules": 320
+    },
+    {
+      "id": "actual-compiled",
+      "bytes": 99801,
+      "modules": 5
+    }
+  ],
+  "results": [
+    {
+      "runtime": "bun",
+      "scenario": "baseline",
+      "mode": "baseline",
+      "peakBytes": 10829824,
+      "rssBytes": 10878976,
+      "loadMs": 0,
+      "operationMs": 0,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 10797056,
+          "rssBytes": 10846208,
+          "heapBytes": 659456,
+          "loadMs": 0,
+          "operationMs": 0,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 10862592,
+          "rssBytes": 10911744,
+          "heapBytes": 659456,
+          "loadMs": 0,
+          "operationMs": 0,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 10928128,
+          "rssBytes": 10977280,
+          "heapBytes": 659456,
+          "loadMs": 0,
+          "operationMs": 0,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 10829824,
+          "rssBytes": 10878976,
+          "heapBytes": 659456,
+          "loadMs": 0,
+          "operationMs": 0,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 10813440,
+          "rssBytes": 10862592,
+          "heapBytes": 659456,
+          "loadMs": 0,
+          "operationMs": 0,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-100",
+      "mode": "import",
+      "peakBytes": 53968896,
+      "rssBytes": 54001664,
+      "loadMs": 26.810665999999998,
+      "operationMs": 0.003167000000004805,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 61833216,
+          "rssBytes": 61865984,
+          "heapBytes": 12094045,
+          "loadMs": 37.2045,
+          "operationMs": 0.003167000000004805,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 53166080,
+          "rssBytes": 53198848,
+          "heapBytes": 12557595,
+          "loadMs": 26.810665999999998,
+          "operationMs": 0.0039589999999982695,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 53854208,
+          "rssBytes": 53886976,
+          "heapBytes": 13636691,
+          "loadMs": 27.037708,
+          "operationMs": 0.003667000000000087,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 53968896,
+          "rssBytes": 54001664,
+          "heapBytes": 12943015,
+          "loadMs": 24.22475,
+          "operationMs": 0.0031250000000007105,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 53985280,
+          "rssBytes": 54018048,
+          "heapBytes": 11642385,
+          "loadMs": 24.410834,
+          "operationMs": 0.00274999999999892,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-100",
+      "mode": "cold",
+      "peakBytes": 54312960,
+      "rssBytes": 54362112,
+      "loadMs": 23.699917,
+      "operationMs": 1.3292090000000023,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 55132160,
+          "rssBytes": 55164928,
+          "heapBytes": 11193046,
+          "loadMs": 23.679166,
+          "operationMs": 1.3201250000000009,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 54312960,
+          "rssBytes": 54362112,
+          "heapBytes": 13221039,
+          "loadMs": 24.788958,
+          "operationMs": 1.4342499999999987,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 54247424,
+          "rssBytes": 54280192,
+          "heapBytes": 12724643,
+          "loadMs": 23.520208999999998,
+          "operationMs": 1.3292090000000023,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 54673408,
+          "rssBytes": 54706176,
+          "heapBytes": 11808656,
+          "loadMs": 24.602958,
+          "operationMs": 1.376375000000003,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 53657600,
+          "rssBytes": 53690368,
+          "heapBytes": 12431386,
+          "loadMs": 23.699917,
+          "operationMs": 1.3277500000000018,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-100",
+      "mode": "all",
+      "peakBytes": 89096192,
+      "rssBytes": 89358336,
+      "loadMs": 23.683666,
+      "operationMs": 24.456292,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 88145920,
+          "rssBytes": 89358336,
+          "heapBytes": 21944434,
+          "loadMs": 23.674291,
+          "operationMs": 24.554874999999996,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 90701824,
+          "rssBytes": 90767360,
+          "heapBytes": 23840612,
+          "loadMs": 24.429750000000002,
+          "operationMs": 24.456292,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 89096192,
+          "rssBytes": 89178112,
+          "heapBytes": 21978008,
+          "loadMs": 23.683666,
+          "operationMs": 23.675708999999998,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 89800704,
+          "rssBytes": 89849856,
+          "heapBytes": 30255125,
+          "loadMs": 23.362750000000002,
+          "operationMs": 26.77325,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 87621632,
+          "rssBytes": 87670784,
+          "heapBytes": 22352967,
+          "loadMs": 24.829250000000002,
+          "operationMs": 23.442042,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-100",
+      "mode": "warm",
+      "peakBytes": 94060544,
+      "rssBytes": 94109696,
+      "loadMs": 23.365375,
+      "operationMs": 29.302667,
+      "iterations": 20000,
+      "samples": [
+        {
+          "peakBytes": 93126656,
+          "rssBytes": 93208576,
+          "heapBytes": 16677544,
+          "loadMs": 23.365375,
+          "operationMs": 20.183374999999998,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 94060544,
+          "rssBytes": 94109696,
+          "heapBytes": 16678582,
+          "loadMs": 26.502917,
+          "operationMs": 40.959833,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 95338496,
+          "rssBytes": 95387648,
+          "heapBytes": 16674471,
+          "loadMs": 24.560125000000003,
+          "operationMs": 30.19025,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 94404608,
+          "rssBytes": 94453760,
+          "heapBytes": 16669904,
+          "loadMs": 23.278582999999998,
+          "operationMs": 29.302667,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 91783168,
+          "rssBytes": 91947008,
+          "heapBytes": 16668204,
+          "loadMs": 23.25775,
+          "operationMs": 28.365375,
+          "iterations": 20000
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-100",
+      "mode": "import",
+      "peakBytes": 23412736,
+      "rssBytes": 23461888,
+      "loadMs": 4.247,
+      "operationMs": 0.0002909999999998192,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 27213824,
+          "rssBytes": 27279360,
+          "heapBytes": 2335744,
+          "loadMs": 7.15525,
+          "operationMs": 0.00024999999999941735,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23412736,
+          "rssBytes": 23461888,
+          "heapBytes": 2335744,
+          "loadMs": 4.156167,
+          "operationMs": 0.0003330000000003608,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23363584,
+          "rssBytes": 23412736,
+          "heapBytes": 2335744,
+          "loadMs": 4.174417,
+          "operationMs": 0.00041699999999966764,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23478272,
+          "rssBytes": 23527424,
+          "heapBytes": 2335744,
+          "loadMs": 4.247,
+          "operationMs": 0.0002909999999998192,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23232512,
+          "rssBytes": 23330816,
+          "heapBytes": 2335744,
+          "loadMs": 4.352292,
+          "operationMs": 0.0002909999999998192,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-100",
+      "mode": "cold",
+      "peakBytes": 23855104,
+      "rssBytes": 23887872,
+      "loadMs": 4.287125,
+      "operationMs": 0.35908300000000004,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 23986176,
+          "rssBytes": 24018944,
+          "heapBytes": 2354176,
+          "loadMs": 4.205874999999999,
+          "operationMs": 0.3454170000000003,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23855104,
+          "rssBytes": 23887872,
+          "heapBytes": 2354176,
+          "loadMs": 4.444542,
+          "operationMs": 0.4143329999999992,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23887872,
+          "rssBytes": 23920640,
+          "heapBytes": 2354176,
+          "loadMs": 4.219833,
+          "operationMs": 0.3496250000000005,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23756800,
+          "rssBytes": 23789568,
+          "heapBytes": 2354176,
+          "loadMs": 4.287125,
+          "operationMs": 0.35908300000000004,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 23609344,
+          "rssBytes": 23642112,
+          "heapBytes": 2354176,
+          "loadMs": 4.446834,
+          "operationMs": 0.36695800000000034,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-100",
+      "mode": "all",
+      "peakBytes": 25722880,
+      "rssBytes": 25804800,
+      "loadMs": 4.2827910000000005,
+      "operationMs": 1.4723330000000008,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 25722880,
+          "rssBytes": 25772032,
+          "heapBytes": 3009536,
+          "loadMs": 4.563458000000001,
+          "operationMs": 1.4723330000000008,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25722880,
+          "rssBytes": 25804800,
+          "heapBytes": 3009536,
+          "loadMs": 4.163,
+          "operationMs": 1.4492499999999993,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25755648,
+          "rssBytes": 25804800,
+          "heapBytes": 3009536,
+          "loadMs": 4.211458,
+          "operationMs": 1.4561249999999992,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25657344,
+          "rssBytes": 25788416,
+          "heapBytes": 3009536,
+          "loadMs": 4.2827910000000005,
+          "operationMs": 1.4857500000000003,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25870336,
+          "rssBytes": 25919488,
+          "heapBytes": 3009536,
+          "loadMs": 4.358292,
+          "operationMs": 1.4803750000000004,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-100",
+      "mode": "warm",
+      "peakBytes": 52838400,
+      "rssBytes": 52920320,
+      "loadMs": 4.210167,
+      "operationMs": 22.897541,
+      "iterations": 20000,
+      "samples": [
+        {
+          "peakBytes": 52592640,
+          "rssBytes": 52674560,
+          "heapBytes": 2641113,
+          "loadMs": 4.488208,
+          "operationMs": 12.054790999999998,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 53657600,
+          "rssBytes": 53739520,
+          "heapBytes": 2640921,
+          "loadMs": 4.148458,
+          "operationMs": 24.297875,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 49119232,
+          "rssBytes": 49201152,
+          "heapBytes": 2643230,
+          "loadMs": 4.453792,
+          "operationMs": 22.897541,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 52838400,
+          "rssBytes": 52920320,
+          "heapBytes": 2641113,
+          "loadMs": 4.210167,
+          "operationMs": 12.143666999999999,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 53428224,
+          "rssBytes": 53510144,
+          "heapBytes": 2639785,
+          "loadMs": 4.1292089999999995,
+          "operationMs": 23.044208000000005,
+          "iterations": 20000
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-100",
+      "mode": "import",
+      "peakBytes": 241270784,
+      "rssBytes": 241303552,
+      "loadMs": 305.283041,
+      "operationMs": 0.0006250000000136424,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 241844224,
+          "rssBytes": 241876992,
+          "heapBytes": 52987818,
+          "loadMs": 317.863542,
+          "operationMs": 0.0006659999999669708,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 238845952,
+          "rssBytes": 238878720,
+          "heapBytes": 52695183,
+          "loadMs": 305.283041,
+          "operationMs": 0.0006250000000136424,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 242696192,
+          "rssBytes": 242728960,
+          "heapBytes": 51952654,
+          "loadMs": 302.438916,
+          "operationMs": 0.0005419999999958236,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 241270784,
+          "rssBytes": 241303552,
+          "heapBytes": 52338724,
+          "loadMs": 299.403083,
+          "operationMs": 0.0007079999999746178,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 240058368,
+          "rssBytes": 240091136,
+          "heapBytes": 52930739,
+          "loadMs": 306.92333299999996,
+          "operationMs": 0.0006250000000136424,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-100",
+      "mode": "cold",
+      "peakBytes": 239648768,
+      "rssBytes": 239697920,
+      "loadMs": 346.55116699999996,
+      "operationMs": 0.4802920000000199,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 239157248,
+          "rssBytes": 239190016,
+          "heapBytes": 52887970,
+          "loadMs": 373.93458300000003,
+          "operationMs": 0.5794589999999857,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 237404160,
+          "rssBytes": 237436928,
+          "heapBytes": 52896297,
+          "loadMs": 316.774542,
+          "operationMs": 0.46995800000001964,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 241090560,
+          "rssBytes": 241123328,
+          "heapBytes": 51960056,
+          "loadMs": 307.87575,
+          "operationMs": 0.7636249999999905,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 239648768,
+          "rssBytes": 239697920,
+          "heapBytes": 52016497,
+          "loadMs": 346.55116699999996,
+          "operationMs": 0.47558399999996936,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 241238016,
+          "rssBytes": 241270784,
+          "heapBytes": 52298174,
+          "loadMs": 363.609667,
+          "operationMs": 0.4802920000000199,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-100",
+      "mode": "all",
+      "peakBytes": 272187392,
+      "rssBytes": 272236544,
+      "loadMs": 356.38104200000004,
+      "operationMs": 60.84566700000005,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 272187392,
+          "rssBytes": 272236544,
+          "heapBytes": 52188681,
+          "loadMs": 334.760709,
+          "operationMs": 59.91829200000001,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 268599296,
+          "rssBytes": 268648448,
+          "heapBytes": 53205003,
+          "loadMs": 347.914625,
+          "operationMs": 59.297792000000015,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 272842752,
+          "rssBytes": 272891904,
+          "heapBytes": 52399807,
+          "loadMs": 375.884333,
+          "operationMs": 62.363541999999995,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 271138816,
+          "rssBytes": 271187968,
+          "heapBytes": 52887897,
+          "loadMs": 370.116209,
+          "operationMs": 68.435,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 272187392,
+          "rssBytes": 272236544,
+          "heapBytes": 52347396,
+          "loadMs": 356.38104200000004,
+          "operationMs": 60.84566700000005,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-100",
+      "mode": "warm",
+      "peakBytes": 252510208,
+      "rssBytes": 253001728,
+      "loadMs": 323.33379199999996,
+      "operationMs": 7.358291000000008,
+      "iterations": 20000,
+      "samples": [
+        {
+          "peakBytes": 250101760,
+          "rssBytes": 251052032,
+          "heapBytes": 52175994,
+          "loadMs": 373.045583,
+          "operationMs": 7.722499999999968,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 251281408,
+          "rssBytes": 252149760,
+          "heapBytes": 53375494,
+          "loadMs": 332.518333,
+          "operationMs": 7.3552910000000224,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 252854272,
+          "rssBytes": 253001728,
+          "heapBytes": 52055161,
+          "loadMs": 319.754625,
+          "operationMs": 7.783249999999953,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 252510208,
+          "rssBytes": 253116416,
+          "heapBytes": 52328581,
+          "loadMs": 323.33379199999996,
+          "operationMs": 7.358291000000008,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 252985344,
+          "rssBytes": 253411328,
+          "heapBytes": 52694765,
+          "loadMs": 308.901959,
+          "operationMs": 6.707167000000027,
+          "iterations": 20000
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arri-100",
+      "mode": "import",
+      "peakBytes": 24739840,
+      "rssBytes": 24772608,
+      "loadMs": 6.213208,
+      "operationMs": 0.001541999999998822,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 30162944,
+          "rssBytes": 30195712,
+          "heapBytes": 3060736,
+          "loadMs": 12.039709,
+          "operationMs": 0.0014579999999995152,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25100288,
+          "rssBytes": 25133056,
+          "heapBytes": 3060736,
+          "loadMs": 6.213208,
+          "operationMs": 0.0024170000000012237,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 24494080,
+          "rssBytes": 24526848,
+          "heapBytes": 3060736,
+          "loadMs": 6.159083000000001,
+          "operationMs": 0.001541999999998822,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 24739840,
+          "rssBytes": 24772608,
+          "heapBytes": 3060736,
+          "loadMs": 6.314458,
+          "operationMs": 0.0014580000000012916,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 24494080,
+          "rssBytes": 24543232,
+          "heapBytes": 3060736,
+          "loadMs": 6.177541,
+          "operationMs": 0.001875000000000071,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arri-100",
+      "mode": "cold",
+      "peakBytes": 25182208,
+      "rssBytes": 25214976,
+      "loadMs": 6.208125000000001,
+      "operationMs": 0.3696659999999987,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 25116672,
+          "rssBytes": 25149440,
+          "heapBytes": 3079168,
+          "loadMs": 6.198292,
+          "operationMs": 0.3729169999999993,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25182208,
+          "rssBytes": 25214976,
+          "heapBytes": 3079168,
+          "loadMs": 6.188833,
+          "operationMs": 0.3696659999999987,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25542656,
+          "rssBytes": 25575424,
+          "heapBytes": 3079168,
+          "loadMs": 6.208125000000001,
+          "operationMs": 0.36641600000000096,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25559040,
+          "rssBytes": 25591808,
+          "heapBytes": 3079168,
+          "loadMs": 6.2947500000000005,
+          "operationMs": 0.3670410000000004,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 25133056,
+          "rssBytes": 25165824,
+          "heapBytes": 3079168,
+          "loadMs": 6.217458,
+          "operationMs": 0.3698750000000004,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arri-100",
+      "mode": "all",
+      "peakBytes": 29655040,
+      "rssBytes": 29818880,
+      "loadMs": 6.404916,
+      "operationMs": 2.4796250000000004,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 29458432,
+          "rssBytes": 29687808,
+          "heapBytes": 4865024,
+          "loadMs": 6.611584000000001,
+          "operationMs": 2.862499999999999,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 29655040,
+          "rssBytes": 29818880,
+          "heapBytes": 4865024,
+          "loadMs": 6.404916,
+          "operationMs": 2.549458999999999,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 29442048,
+          "rssBytes": 29704192,
+          "heapBytes": 4865024,
+          "loadMs": 6.288667,
+          "operationMs": 2.4796250000000004,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 30408704,
+          "rssBytes": 30507008,
+          "heapBytes": 4865024,
+          "loadMs": 6.407917,
+          "operationMs": 2.4513750000000005,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 29802496,
+          "rssBytes": 29900800,
+          "heapBytes": 4865024,
+          "loadMs": 6.183333,
+          "operationMs": 2.4154999999999998,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arri-100",
+      "mode": "warm",
+      "peakBytes": 55525376,
+      "rssBytes": 55607296,
+      "loadMs": 6.228292000000001,
+      "operationMs": 42.261042,
+      "iterations": 20000,
+      "samples": [
+        {
+          "peakBytes": 55443456,
+          "rssBytes": 55525376,
+          "heapBytes": 3494952,
+          "loadMs": 6.247416,
+          "operationMs": 42.261042,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 55525376,
+          "rssBytes": 55623680,
+          "heapBytes": 3794017,
+          "loadMs": 6.333125000000001,
+          "operationMs": 53.674125000000004,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 55525376,
+          "rssBytes": 55607296,
+          "heapBytes": 3519708,
+          "loadMs": 6.2145410000000005,
+          "operationMs": 55.084208000000004,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 55902208,
+          "rssBytes": 55984128,
+          "heapBytes": 3778957,
+          "loadMs": 6.228292000000001,
+          "operationMs": 41.761250000000004,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 54509568,
+          "rssBytes": 54591488,
+          "heapBytes": 3778662,
+          "loadMs": 6.178541999999999,
+          "operationMs": 41.755458000000004,
+          "iterations": 20000
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-1000",
+      "mode": "import",
+      "peakBytes": 217366528,
+      "rssBytes": 217415680,
+      "loadMs": 132.13225,
+      "operationMs": 0.002041999999988775,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 231440384,
+          "rssBytes": 231473152,
+          "heapBytes": 93437919,
+          "loadMs": 155.06841699999998,
+          "operationMs": 0.002041999999988775,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 216039424,
+          "rssBytes": 216088576,
+          "heapBytes": 113169280,
+          "loadMs": 129.666208,
+          "operationMs": 0.001958999999999378,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 217628672,
+          "rssBytes": 217661440,
+          "heapBytes": 110051075,
+          "loadMs": 130.46025,
+          "operationMs": 0.002167000000014241,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 217366528,
+          "rssBytes": 217415680,
+          "heapBytes": 111689934,
+          "loadMs": 136.45962500000002,
+          "operationMs": 0.002290999999985388,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 217333760,
+          "rssBytes": 217366528,
+          "heapBytes": 109830842,
+          "loadMs": 132.13225,
+          "operationMs": 0.002041999999988775,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-1000",
+      "mode": "cold",
+      "peakBytes": 218923008,
+      "rssBytes": 218955776,
+      "loadMs": 151.745042,
+      "operationMs": 1.492874999999998,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 215711744,
+          "rssBytes": 215744512,
+          "heapBytes": 114292580,
+          "loadMs": 151.745042,
+          "operationMs": 1.481915999999984,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 223723520,
+          "rssBytes": 223756288,
+          "heapBytes": 88174623,
+          "loadMs": 157.254208,
+          "operationMs": 1.8037499999999795,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 216268800,
+          "rssBytes": 216301568,
+          "heapBytes": 105267838,
+          "loadMs": 155.160542,
+          "operationMs": 1.522166999999996,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 219725824,
+          "rssBytes": 219758592,
+          "heapBytes": 101362509,
+          "loadMs": 127.09120899999999,
+          "operationMs": 1.492874999999998,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 218923008,
+          "rssBytes": 218955776,
+          "heapBytes": 118493712,
+          "loadMs": 131.419834,
+          "operationMs": 1.4876250000000084,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-1000",
+      "mode": "all",
+      "peakBytes": 537608192,
+      "rssBytes": 537657344,
+      "loadMs": 138.797083,
+      "operationMs": 214.87083399999997,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 537608192,
+          "rssBytes": 537657344,
+          "heapBytes": 217415494,
+          "loadMs": 128.303042,
+          "operationMs": 196.98862499999998,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 549552128,
+          "rssBytes": 549601280,
+          "heapBytes": 308935113,
+          "loadMs": 138.797083,
+          "operationMs": 221.84995800000002,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 527220736,
+          "rssBytes": 527286272,
+          "heapBytes": 228857549,
+          "loadMs": 134.43520800000002,
+          "operationMs": 207.55745899999997,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 536838144,
+          "rssBytes": 536887296,
+          "heapBytes": 310836584,
+          "loadMs": 153.833875,
+          "operationMs": 226.660375,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 540327936,
+          "rssBytes": 540377088,
+          "heapBytes": 216119919,
+          "loadMs": 144.413084,
+          "operationMs": 214.87083399999997,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "zod-1000",
+      "mode": "warm",
+      "peakBytes": 322945024,
+      "rssBytes": 322994176,
+      "loadMs": 134.89116700000002,
+      "operationMs": 20.195042,
+      "iterations": 20000,
+      "samples": [
+        {
+          "peakBytes": 321912832,
+          "rssBytes": 322043904,
+          "heapBytes": 114545951,
+          "loadMs": 140.95583299999998,
+          "operationMs": 19.733750000000015,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 322191360,
+          "rssBytes": 322273280,
+          "heapBytes": 111642998,
+          "loadMs": 146.683,
+          "operationMs": 20.74729100000002,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 329449472,
+          "rssBytes": 329498624,
+          "heapBytes": 91194512,
+          "loadMs": 134.009917,
+          "operationMs": 20.195042,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 322945024,
+          "rssBytes": 322994176,
+          "heapBytes": 114582272,
+          "loadMs": 134.89116700000002,
+          "operationMs": 21.078167000000008,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 326090752,
+          "rssBytes": 326139904,
+          "heapBytes": 98674279,
+          "loadMs": 133.3385,
+          "operationMs": 20.08262499999998,
+          "iterations": 20000
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-1000",
+      "mode": "import",
+      "peakBytes": 66764800,
+      "rssBytes": 66813952,
+      "loadMs": 37.569832999999996,
+      "operationMs": 0.0007090000000005148,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 71712768,
+          "rssBytes": 71811072,
+          "heapBytes": 15029829,
+          "loadMs": 55.462709000000004,
+          "operationMs": 0.0007090000000005148,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 66011136,
+          "rssBytes": 66060288,
+          "heapBytes": 15663953,
+          "loadMs": 35.432667,
+          "operationMs": 0.0007919999999970173,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 67289088,
+          "rssBytes": 67338240,
+          "heapBytes": 15608911,
+          "loadMs": 37.569832999999996,
+          "operationMs": 0.0007090000000005148,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 66764800,
+          "rssBytes": 66813952,
+          "heapBytes": 16378004,
+          "loadMs": 37.59775,
+          "operationMs": 0.0006249999999994316,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 66748416,
+          "rssBytes": 66797568,
+          "heapBytes": 16996038,
+          "loadMs": 34.25145800000001,
+          "operationMs": 0.0006249999999994316,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-1000",
+      "mode": "cold",
+      "peakBytes": 66945024,
+      "rssBytes": 66977792,
+      "loadMs": 34.484207999999995,
+      "operationMs": 0.4666250000000005,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 66994176,
+          "rssBytes": 67026944,
+          "heapBytes": 16231467,
+          "loadMs": 37.03475,
+          "operationMs": 0.4756669999999943,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 66945024,
+          "rssBytes": 66977792,
+          "heapBytes": 17366006,
+          "loadMs": 34.46775,
+          "operationMs": 0.46212500000000034,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 67190784,
+          "rssBytes": 67223552,
+          "heapBytes": 16872740,
+          "loadMs": 34.484207999999995,
+          "operationMs": 0.4522499999999994,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 66043904,
+          "rssBytes": 66076672,
+          "heapBytes": 15170913,
+          "loadMs": 34.194792,
+          "operationMs": 0.4666250000000005,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 66699264,
+          "rssBytes": 66732032,
+          "heapBytes": 17272099,
+          "loadMs": 34.68475,
+          "operationMs": 0.49645899999999443,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-1000",
+      "mode": "all",
+      "peakBytes": 74711040,
+      "rssBytes": 74776576,
+      "loadMs": 34.434542,
+      "operationMs": 7.947165999999996,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 75350016,
+          "rssBytes": 75415552,
+          "heapBytes": 19432713,
+          "loadMs": 34.362042,
+          "operationMs": 7.366166999999997,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 73842688,
+          "rssBytes": 73908224,
+          "heapBytes": 19422617,
+          "loadMs": 34.108916,
+          "operationMs": 9.686875,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 74711040,
+          "rssBytes": 74776576,
+          "heapBytes": 19433377,
+          "loadMs": 34.434542,
+          "operationMs": 7.947165999999996,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 75005952,
+          "rssBytes": 75071488,
+          "heapBytes": 19436137,
+          "loadMs": 34.536584,
+          "operationMs": 7.3225419999999986,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 73744384,
+          "rssBytes": 73809920,
+          "heapBytes": 19426862,
+          "loadMs": 35.107334,
+          "operationMs": 7.961207999999999,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "valibot-1000",
+      "mode": "warm",
+      "peakBytes": 89096192,
+      "rssBytes": 89161728,
+      "loadMs": 36.033666,
+      "operationMs": 13.167749999999998,
+      "iterations": 20000,
+      "samples": [
+        {
+          "peakBytes": 90406912,
+          "rssBytes": 90472448,
+          "heapBytes": 19399798,
+          "loadMs": 35.653583,
+          "operationMs": 14.256083000000004,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 88031232,
+          "rssBytes": 88096768,
+          "heapBytes": 19400238,
+          "loadMs": 36.033666,
+          "operationMs": 12.767332999999994,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 89096192,
+          "rssBytes": 89161728,
+          "heapBytes": 19401806,
+          "loadMs": 36.981832999999995,
+          "operationMs": 13.915040999999995,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 88440832,
+          "rssBytes": 88506368,
+          "heapBytes": 19400190,
+          "loadMs": 36.799958000000004,
+          "operationMs": 12.026208000000004,
+          "iterations": 20000
+        },
+        {
+          "peakBytes": 89276416,
+          "rssBytes": 89341952,
+          "heapBytes": 19400006,
+          "loadMs": 34.949124999999995,
+          "operationMs": 13.167749999999998,
+          "iterations": 20000
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-1000",
+      "mode": "import",
+      "peakBytes": 1469693952,
+      "rssBytes": 1469726720,
+      "loadMs": 2435.438584,
+      "operationMs": 0.000792000000274129,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 1190690816,
+          "rssBytes": 1179844608,
+          "heapBytes": 628807389,
+          "loadMs": 2808.830791,
+          "operationMs": 0.000792000000274129,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1266843648,
+          "rssBytes": 1048002560,
+          "heapBytes": 621981397,
+          "loadMs": 3384.561,
+          "operationMs": 0.0007499999996980478,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1469693952,
+          "rssBytes": 1469726720,
+          "heapBytes": 605012642,
+          "loadMs": 2435.438584,
+          "operationMs": 0.000792000000274129,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1478721536,
+          "rssBytes": 1478770688,
+          "heapBytes": 624588778,
+          "loadMs": 2361.188334,
+          "operationMs": 0.0008339999999407155,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1486929920,
+          "rssBytes": 1486962688,
+          "heapBytes": 629835502,
+          "loadMs": 2335.878542,
+          "operationMs": 0.0006249999996725819,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-1000",
+      "mode": "cold",
+      "peakBytes": 1470808064,
+      "rssBytes": 1470840832,
+      "loadMs": 2372.278125,
+      "operationMs": 0.4903749999998581,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 1469382656,
+          "rssBytes": 1469415424,
+          "heapBytes": 606603168,
+          "loadMs": 2378.5021659999998,
+          "operationMs": 0.5522500000001855,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1470808064,
+          "rssBytes": 1470840832,
+          "heapBytes": 605744825,
+          "loadMs": 2377.553292,
+          "operationMs": 0.4608330000000933,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1480916992,
+          "rssBytes": 1480966144,
+          "heapBytes": 610961379,
+          "loadMs": 2359.2335829999997,
+          "operationMs": 0.4826250000000982,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1479278592,
+          "rssBytes": 1479311360,
+          "heapBytes": 625214878,
+          "loadMs": 2334.679625,
+          "operationMs": 0.5082919999999831,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1467138048,
+          "rssBytes": 1467203584,
+          "heapBytes": 602495028,
+          "loadMs": 2372.278125,
+          "operationMs": 0.4903749999998581,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "runtime": "bun",
+      "scenario": "arktype-1000",
+      "mode": "all",
+      "peakBytes": 1769947136,
+      "rssBytes": 1769996288,
+      "loadMs": 2377.148041,
+      "operationMs": 602.7635420000001,
+      "iterations": 0,
+      "samples": [
+        {
+          "peakBytes": 1562738688,
+          "rssBytes": 1125302272,
+          "heapBytes": 626909719,
+          "loadMs": 2569.936584,
+          "operationMs": 859.6946670000002,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1778040832,
+          "rssBytes": 1778089984,
+          "heapBytes": 624020368,
+          "loadMs": 2339.8277080000003,
+          "operationMs": 602.7635420000001,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1759051776,
+          "rssBytes": 1759117312,
+          "heapBytes": 602595431,
+          "loadMs": 2401.88625,
+          "operationMs": 618.2931670000003,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1781088256,
+          "rssBytes": 1781137408,
+          "heapBytes": 626270801,
+          "loadMs": 2340.093083,
+          "operationMs": 598.3676660000001,
+          "iterations": 0
+        },
+        {
+          "peakBytes": 1769947136,
+          "rssBytes": 1769996288,
+          "heapBytes": 611949277,
+          "loadMs": 2377.148041,
+          "operationMs": 601.1753749999998,
+          "iterations": 0
+        }
+      ]
+    }
+  ]
+}

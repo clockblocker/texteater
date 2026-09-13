@@ -8,7 +8,6 @@ export const DeSubordinatingConjunctionFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		conjType: DE_FEATURE_SCHEMA.conjType.extract(["Comp"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DeSubordinatingConjunctionFeatureBags = z.infer<

@@ -1,0 +1,11 @@
+node_modules/
+previous/runtime/*.mjs
+previous/runtime/*.meta.json
+comparison/generated/
+comparison/dist/
+comparison/consumer/
+compiled-zod/*.bundle.mjs
+compiled-zod/production-runner.mjs
+compiled-zod/production-consumer/
+
+!previous/runtime/runner.mjs

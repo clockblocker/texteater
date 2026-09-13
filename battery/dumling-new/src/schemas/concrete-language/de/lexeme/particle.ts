@@ -11,7 +11,6 @@ export const DeParticleFeatureBagsSchema = z.strictObject({
 		partType: DE_FEATURE_SCHEMA.partType.extract(["Inf"]),
 		polarity: DE_FEATURE_SCHEMA.polarity.extract(["Neg", "Pos"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DeParticleFeatureBags = z.infer<typeof DeParticleFeatureBagsSchema>;

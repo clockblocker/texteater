@@ -10,7 +10,6 @@ export const EnSubordinatingConjunctionFeatureBagsSchema = z.strictObject({
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADP", "SCONJ"]),
 		style: EN_FEATURE_SCHEMA.style.extract(["Vrnc"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnSubordinatingConjunctionFeatureBags = z.infer<

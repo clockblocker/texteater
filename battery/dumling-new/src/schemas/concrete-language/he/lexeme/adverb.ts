@@ -8,7 +8,6 @@ export const HeAdverbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		prefix: HE_FEATURE_SCHEMA.prefix,
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type HeAdverbFeatureBags = z.infer<typeof HeAdverbFeatureBagsSchema>;

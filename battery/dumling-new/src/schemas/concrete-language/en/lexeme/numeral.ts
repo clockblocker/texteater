@@ -11,7 +11,6 @@ export const EnNumeralFeatureBagsSchema = z.strictObject({
 		numForm: EN_FEATURE_SCHEMA.numForm.extract(["Digit", "Roman", "Word"]),
 		numType: EN_FEATURE_SCHEMA.numType.extract(["Card", "Frac"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnNumeralFeatureBags = z.infer<typeof EnNumeralFeatureBagsSchema>;

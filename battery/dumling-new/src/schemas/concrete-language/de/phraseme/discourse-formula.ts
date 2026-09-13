@@ -8,7 +8,6 @@ export const DeDiscourseFormulaPhrasemeFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		discourseFormulaRole: DE_FEATURE_SCHEMA.discourseFormulaRole,
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DeDiscourseFormulaPhrasemeFeatureBags = z.infer<

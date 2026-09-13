@@ -1,0 +1,94 @@
+{
+  "baseline": [
+    {
+      "Types": "226726",
+      "Instantiations": "593411",
+      "Memory used": "286420K",
+      "Check time": "0.383s",
+      "Total time": "0.428s"
+    },
+    {
+      "Types": "226726",
+      "Instantiations": "593411",
+      "Memory used": "286410K",
+      "Check time": "0.352s",
+      "Total time": "0.390s"
+    },
+    {
+      "Types": "226726",
+      "Instantiations": "593411",
+      "Memory used": "286501K",
+      "Check time": "0.357s",
+      "Total time": "0.388s"
+    }
+  ],
+  "narrow": [
+    {
+      "Types": "228076",
+      "Instantiations": "597717",
+      "Memory used": "287541K",
+      "Check time": "0.374s",
+      "Total time": "0.414s"
+    },
+    {
+      "Types": "228076",
+      "Instantiations": "597717",
+      "Memory used": "287601K",
+      "Check time": "0.320s",
+      "Total time": "0.355s"
+    },
+    {
+      "Types": "228076",
+      "Instantiations": "597717",
+      "Memory used": "287501K",
+      "Check time": "0.480s",
+      "Total time": "0.529s"
+    }
+  ],
+  "full": [
+    {
+      "Types": "249767",
+      "Instantiations": "707619",
+      "Memory used": "308095K",
+      "Check time": "0.504s",
+      "Total time": "0.568s"
+    },
+    {
+      "Types": "249767",
+      "Instantiations": "707619",
+      "Memory used": "307862K",
+      "Check time": "0.310s",
+      "Total time": "0.346s"
+    },
+    {
+      "Types": "249767",
+      "Instantiations": "707619",
+      "Memory used": "307983K",
+      "Check time": "0.339s",
+      "Total time": "0.374s"
+    }
+  ],
+  "broad": [
+    {
+      "Types": "226763",
+      "Instantiations": "593435",
+      "Memory used": "286481K",
+      "Check time": "0.307s",
+      "Total time": "0.349s"
+    },
+    {
+      "Types": "226763",
+      "Instantiations": "593435",
+      "Memory used": "286495K",
+      "Check time": "0.357s",
+      "Total time": "0.393s"
+    },
+    {
+      "Types": "226763",
+      "Instantiations": "593435",
+      "Memory used": "286474K",
+      "Check time": "0.357s",
+      "Total time": "0.393s"
+    }
+  ]
+}

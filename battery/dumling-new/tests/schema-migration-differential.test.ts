@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { deConstructionFusionFeaturesSchema as OldDeConstructionFusionFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/de/construction/fusion.js";
 import { deDeterminerFeaturesSchema as OldDeDeterminerFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/de/lexeme/determiner.js";
 import { deVerbFeaturesSchema as OldDeVerbFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/de/lexeme/verb.js";
 import { heAdjectiveFeaturesSchema as OldHeAdjectiveFeatureBagsSchema } from "../../dumling/src/schemas/concrete-language/features/he/lexeme/adjective.js";
@@ -90,17 +89,20 @@ describe("old and new Feature Bag schemas accept the same values", () => {
 		);
 	});
 
-	test("German Construction/Fusion", () => {
-		expectSameAcceptance(
-			OldDeConstructionFusionFeatureBagsSchema,
-			DeConstructionFusionFeatureBagsSchema,
-			[
-				{ core: {}, inflectional: {} },
-				{ core: {} },
-				{ core: { unexpected: true }, inflectional: {} },
-				{ core: {}, inflectional: { unexpected: true } },
-			],
-		);
+	test("German Construction/Fusion omits inapplicable inflectional features", () => {
+		expect(
+			DeConstructionFusionFeatureBagsSchema.safeParse({ core: {} })
+				.success,
+		).toBe(true);
+		for (const value of [
+			{ core: {}, inflectional: {} },
+			{ core: {}, inflectional: null },
+			{ core: { unexpected: true } },
+			{ core: {}, inflectional: { unexpected: true } },
+		])
+			expect(
+				DeConstructionFusionFeatureBagsSchema.safeParse(value).success,
+			).toBe(false);
 	});
 
 	test("Hebrew Lexeme/ADJ", () => {

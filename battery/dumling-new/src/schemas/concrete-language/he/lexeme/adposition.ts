@@ -9,7 +9,6 @@ export const HeAdpositionFeatureBagsSchema = z.strictObject({
 		abbr: HE_FEATURE_SCHEMA.abbr,
 		case: HE_FEATURE_SCHEMA.case.extract(["Acc", "Gen"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type HeAdpositionFeatureBags = z.infer<

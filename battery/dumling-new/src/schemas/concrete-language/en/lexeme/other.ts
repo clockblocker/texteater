@@ -9,7 +9,6 @@ export const EnOtherFeatureBagsSchema = z.strictObject({
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["PROPN"]),
 		foreign: EN_FEATURE_SCHEMA.foreign,
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnOtherFeatureBags = z.infer<typeof EnOtherFeatureBagsSchema>;

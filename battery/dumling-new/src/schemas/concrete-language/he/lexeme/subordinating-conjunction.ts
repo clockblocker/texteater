@@ -8,7 +8,6 @@ export const HeSubordinatingConjunctionFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		case: HE_FEATURE_SCHEMA.case.extract(["Tem"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type HeSubordinatingConjunctionFeatureBags = z.infer<

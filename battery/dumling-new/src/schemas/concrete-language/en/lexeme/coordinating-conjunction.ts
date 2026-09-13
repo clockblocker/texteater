@@ -9,7 +9,6 @@ export const EnCoordinatingConjunctionFeatureBagsSchema = z.strictObject({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		polarity: EN_FEATURE_SCHEMA.polarity.extract(["Neg"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnCoordinatingConjunctionFeatureBags = z.infer<

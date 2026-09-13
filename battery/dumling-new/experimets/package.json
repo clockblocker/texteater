@@ -1,0 +1,17 @@
+{
+  "name": "dumling-schema-experiments",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun comparison/generate.ts",
+    "bench": "bun comparison/benchmark.ts",
+    "verify": "bun comparison/verify.ts",
+    "legacy:runtime": "bun previous/runtime/build.ts && bun previous/runtime/measure.ts"
+  },
+  "dependencies": {
+    "@arrirpc/schema": "0.84.1",
+    "arktype": "2.2.3",
+    "valibot": "1.5.0",
+    "zod": "4.4.3"
+  }
+}

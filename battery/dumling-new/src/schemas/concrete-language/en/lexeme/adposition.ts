@@ -9,7 +9,6 @@ export const EnAdpositionFeatureBagsSchema = z.strictObject({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADP", "ADV", "SCONJ"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnAdpositionFeatureBags = z.infer<

@@ -45,7 +45,7 @@ const oldRoot = path.resolve(
 const newRoot = path.resolve(packageRoot, "src/schemas/concrete-language");
 
 const schemaPaths = (
-	await readdir(oldRoot, { recursive: true, withFileTypes: true })
+	await readdir(newRoot, { recursive: true, withFileTypes: true })
 )
 	.filter(
 		(entry) =>
@@ -54,11 +54,12 @@ const schemaPaths = (
 			!entry.name.endsWith("-subtree.ts"),
 	)
 	.map((entry) =>
-		path.relative(oldRoot, path.join(entry.parentPath, entry.name)),
+		path.relative(newRoot, path.join(entry.parentPath, entry.name)),
 	)
+	.filter((schemaPath) => schemaPath.split(path.sep).length === 3)
 	.sort();
 
-describe("all old and new per-Kind Feature Bag schemas", () => {
+describe("supported Feature Bag fields preserve legacy validation", () => {
 	for (const schemaPath of schemaPaths) {
 		test(schemaPath, async () => {
 			const oldModule = await import(
@@ -69,15 +70,26 @@ describe("all old and new per-Kind Feature Bag schemas", () => {
 			);
 			const oldSchema = Object.values(oldModule).find(
 				(value) => value instanceof z.ZodObject,
-			) as z.ZodType;
+			);
 			const newSchema = Object.values(newModule).find(
 				(value) => value instanceof z.ZodObject,
-			) as z.ZodType;
+			);
+			if (!oldSchema || !newSchema)
+				throw Error(`Missing schema: ${schemaPath}`);
+			// The rewrite deliberately removes inapplicable inflectional fields.
+			const retainedLegacySchema = Object.hasOwn(
+				newSchema.shape,
+				"inflectional",
+			)
+				? oldSchema
+				: oldSchema.omit({ inflectional: true });
 			const validExample = exampleFrom(
-				z.toJSONSchema(oldSchema) as unknown as JsonSchema,
+				z.toJSONSchema(retainedLegacySchema) as unknown as JsonSchema,
 			);
 
-			expect(oldSchema.safeParse(validExample).success).toBe(true);
+			expect(retainedLegacySchema.safeParse(validExample).success).toBe(
+				true,
+			);
 			for (const value of [
 				validExample,
 				null,
@@ -87,7 +99,7 @@ describe("all old and new per-Kind Feature Bag schemas", () => {
 				{ ...(validExample as object), unexpected: true },
 			]) {
 				expect(newSchema.safeParse(value).success).toBe(
-					oldSchema.safeParse(value).success,
+					retainedLegacySchema.safeParse(value).success,
 				);
 			}
 		});

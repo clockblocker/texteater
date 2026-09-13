@@ -1,0 +1,402 @@
+[
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/construction/fusion.ts",
+    "name": "DeConstructionFusionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/adjective.ts",
+    "name": "DeAdjectiveFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/adposition.ts",
+    "name": "DeAdpositionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/adverb.ts",
+    "name": "DeAdverbFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/auxiliary.ts",
+    "name": "DeAuxiliaryFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/coordinating-conjunction.ts",
+    "name": "DeCoordinatingConjunctionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/determiner.ts",
+    "name": "DeDeterminerFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/interjection.ts",
+    "name": "DeInterjectionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/noun.ts",
+    "name": "DeNounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/numeral.ts",
+    "name": "DeNumeralFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/other.ts",
+    "name": "DeOtherFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/particle.ts",
+    "name": "DeParticleFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/pronoun.ts",
+    "name": "DePronounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/proper-noun.ts",
+    "name": "DeProperNounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/punctuation.ts",
+    "name": "DePunctuationFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/subordinating-conjunction.ts",
+    "name": "DeSubordinatingConjunctionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/symbol.ts",
+    "name": "DeSymbolFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/lexeme/verb.ts",
+    "name": "DeVerbFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/circumfix.ts",
+    "name": "DeCircumfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/clitic.ts",
+    "name": "DeCliticMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/duplifix.ts",
+    "name": "DeDuplifixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/infix.ts",
+    "name": "DeInfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/interfix.ts",
+    "name": "DeInterfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/prefix.ts",
+    "name": "DePrefixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/root.ts",
+    "name": "DeRootMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/suffix.ts",
+    "name": "DeSuffixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/suffixoid.ts",
+    "name": "DeSuffixoidMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/tone-marking.ts",
+    "name": "DeToneMarkingMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/morpheme/transfix.ts",
+    "name": "DeTransfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/phraseme/aphorism.ts",
+    "name": "DeAphorismPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/phraseme/collocation.ts",
+    "name": "DeCollocationPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/phraseme/discourse-formula.ts",
+    "name": "DeDiscourseFormulaPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/phraseme/idiom.ts",
+    "name": "DeIdiomPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/de/phraseme/proverb.ts",
+    "name": "DeProverbPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/construction/fusion.ts",
+    "name": "EnConstructionFusionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/adjective.ts",
+    "name": "EnAdjectiveFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/adposition.ts",
+    "name": "EnAdpositionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/adverb.ts",
+    "name": "EnAdverbFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/auxiliary.ts",
+    "name": "EnAuxiliaryFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/coordinating-conjunction.ts",
+    "name": "EnCoordinatingConjunctionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/determiner.ts",
+    "name": "EnDeterminerFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/interjection.ts",
+    "name": "EnInterjectionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/noun.ts",
+    "name": "EnNounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/numeral.ts",
+    "name": "EnNumeralFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/other.ts",
+    "name": "EnOtherFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/particle.ts",
+    "name": "EnParticleFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/pronoun.ts",
+    "name": "EnPronounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/proper-noun.ts",
+    "name": "EnProperNounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/punctuation.ts",
+    "name": "EnPunctuationFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/subordinating-conjunction.ts",
+    "name": "EnSubordinatingConjunctionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/symbol.ts",
+    "name": "EnSymbolFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/lexeme/verb.ts",
+    "name": "EnVerbFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/circumfix.ts",
+    "name": "EnCircumfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/clitic.ts",
+    "name": "EnCliticMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/duplifix.ts",
+    "name": "EnDuplifixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/infix.ts",
+    "name": "EnInfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/interfix.ts",
+    "name": "EnInterfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/prefix.ts",
+    "name": "EnPrefixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/root.ts",
+    "name": "EnRootMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/suffix.ts",
+    "name": "EnSuffixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/suffixoid.ts",
+    "name": "EnSuffixoidMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/tone-marking.ts",
+    "name": "EnToneMarkingMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/morpheme/transfix.ts",
+    "name": "EnTransfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/phraseme/aphorism.ts",
+    "name": "EnAphorismPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/phraseme/discourse-formula.ts",
+    "name": "EnDiscourseFormulaPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/phraseme/idiom.ts",
+    "name": "EnIdiomPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/en/phraseme/proverb.ts",
+    "name": "EnProverbPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/construction/fusion.ts",
+    "name": "HeConstructionFusionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/adjective.ts",
+    "name": "HeAdjectiveFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/adposition.ts",
+    "name": "HeAdpositionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/adverb.ts",
+    "name": "HeAdverbFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/auxiliary.ts",
+    "name": "HeAuxiliaryFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/coordinating-conjunction.ts",
+    "name": "HeCoordinatingConjunctionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/determiner.ts",
+    "name": "HeDeterminerFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/interjection.ts",
+    "name": "HeInterjectionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/noun.ts",
+    "name": "HeNounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/numeral.ts",
+    "name": "HeNumeralFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/other.ts",
+    "name": "HeOtherFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/particle.ts",
+    "name": "HeParticleFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/pronoun.ts",
+    "name": "HePronounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/proper-noun.ts",
+    "name": "HeProperNounFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/punctuation.ts",
+    "name": "HePunctuationFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/subordinating-conjunction.ts",
+    "name": "HeSubordinatingConjunctionFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/symbol.ts",
+    "name": "HeSymbolFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/lexeme/verb.ts",
+    "name": "HeVerbFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/circumfix.ts",
+    "name": "HeCircumfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/clitic.ts",
+    "name": "HeCliticMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/duplifix.ts",
+    "name": "HeDuplifixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/infix.ts",
+    "name": "HeInfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/interfix.ts",
+    "name": "HeInterfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/prefix.ts",
+    "name": "HePrefixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/root.ts",
+    "name": "HeRootMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/suffix.ts",
+    "name": "HeSuffixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/suffixoid.ts",
+    "name": "HeSuffixoidMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/tone-marking.ts",
+    "name": "HeToneMarkingMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/morpheme/transfix.ts",
+    "name": "HeTransfixMorphemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/phraseme/aphorism.ts",
+    "name": "HeAphorismPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/phraseme/discourse-formula.ts",
+    "name": "HeDiscourseFormulaPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/phraseme/idiom.ts",
+    "name": "HeIdiomPhrasemeFeatureBagsSchema"
+  },
+  {
+    "path": "/Users/annagorelova/work/textfresser-batteries/battery/dumling-new/src/schemas/concrete-language/he/phraseme/proverb.ts",
+    "name": "HeProverbPhrasemeFeatureBagsSchema"
+  }
+]

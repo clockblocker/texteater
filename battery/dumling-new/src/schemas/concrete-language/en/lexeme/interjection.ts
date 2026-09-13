@@ -11,7 +11,6 @@ export const EnInterjectionFeatureBagsSchema = z.strictObject({
 		polarity: EN_FEATURE_SCHEMA.polarity.extract(["Neg", "Pos"]),
 		style: EN_FEATURE_SCHEMA.style.extract(["Expr"]),
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type EnInterjectionFeatureBags = z.infer<

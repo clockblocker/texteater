@@ -8,7 +8,6 @@ export const DePrefixMorphemeFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		hasSepPrefix: DE_FEATURE_SCHEMA.hasSepPrefix,
 	}),
-	[FeatureBagKind.Inflectional]: featureBagSchema({}),
 });
 
 export type DePrefixMorphemeFeatureBags = z.infer<

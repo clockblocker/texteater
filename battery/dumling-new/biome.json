@@ -1,10 +1,18 @@
 {
 	"extends": "//",
 	"files": {
-		"includes": ["!!dist", "!!node_modules", "!!.astro", "!src/lu/test.ts"]
+		"includes": [
+			"!!dist",
+			"!!node_modules",
+			"!!.astro",
+			"!src/lu/test.ts",
+			"!!experimets"
+		]
 	},
 	"formatter": {
 		"includes": ["**", "!src/generated/.validation-artifacts.json"]
 	},
-	"linter": { "includes": ["**"] }
+	"linter": {
+		"includes": ["**"]
+	}
 }

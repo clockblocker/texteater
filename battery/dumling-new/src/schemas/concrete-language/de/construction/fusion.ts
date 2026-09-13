@@ -11,7 +11,6 @@ const EmptyFeatureBagSchema = z.strictObject({}) as z.ZodType<
 
 export const DeConstructionFusionFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: EmptyFeatureBagSchema,
-	[FeatureBagKind.Inflectional]: EmptyFeatureBagSchema,
 });
 
 export type DeConstructionFusionFeatureBags = z.infer<

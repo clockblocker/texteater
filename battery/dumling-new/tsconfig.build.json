@@ -7,13 +7,8 @@
 		"outDir": "./dist",
 		"rootDir": "./src",
 		"paths": {
-			"common-utils": ["../common-utils/dist/index.d.ts"],
-			"dumling": ["./src/index.ts"],
-			"dumling/schema": ["./src/schema.ts"],
-			"dumling/types": ["./src/types.ts"],
-			"dumling/vocabulary": ["./src/vocabulary.ts"]
+			"common-utils": ["../common-utils/dist/index.d.ts"]
 		}
 	},
-	"include": ["src/**/*.ts"],
-	"exclude": ["src/operations/parsing/validation-route-proofs.ts"]
+	"include": ["src/index.ts", "src/types.ts"]
 }

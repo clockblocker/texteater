@@ -36,8 +36,11 @@ _Avoid_: Inherent Features
 
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
-It carries its normalized form, spelling status, Surface Kind, and applicable
-inflectional features.
+It carries its normalized form, spelling status, and applicable inflectional
+features.
+
+**Surface Kind**:
+An assessment of a Surface as Citation or Inflection.
 
 **Attestation**:
 A fleeting occurrence of one Surface, represented by ordered attested members
