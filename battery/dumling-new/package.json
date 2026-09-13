@@ -43,6 +43,7 @@
 	},
 	"files": [
 		"dist",
+		"README.md",
 		"LICENSE"
 	],
 	"engines": {
@@ -58,12 +59,13 @@
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
-		"generate": "bun run generate:validation",
+		"generate": "bun run generate:validation && bun run generate:readme",
+		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"generate:validation": "bun codegen/generate.ts",
 		"generate:validation:check": "bun codegen/generate.ts --check",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",
-		"prepack": "bun run build",
+		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun test ./tests",
 		"test:package": "bun test ./tests/package.test.ts",
 		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config dependency-cruiser.cjs --ts-config tsconfig.json -- src",

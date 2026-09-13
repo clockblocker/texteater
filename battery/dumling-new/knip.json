@@ -4,8 +4,14 @@
 		"src/index.ts",
 		"src/types.ts",
 		"codegen/generate.ts",
+		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"
 	],
-	"project": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
+	"project": [
+		"codegen/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	],
 	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
 }

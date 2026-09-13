@@ -11,5 +11,10 @@
 			"dumling/schema/*": ["./src/generated/schemas/*"]
 		}
 	},
-	"include": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+	"include": [
+		"codegen/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	]
 }

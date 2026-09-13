@@ -60,6 +60,7 @@ test("named blocks retain actionable source diagnostics", async () => {
 for (const [packageName, command] of [
 	["dumdict", "bun"],
 	["dumgen", "bun"],
+	["dumling-new", "bun"],
 	["dumling-old", "npm"],
 ] as const) {
 	test(`${packageName} README remains byte-for-byte generated`, async () => {
