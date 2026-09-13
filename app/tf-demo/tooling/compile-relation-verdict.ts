@@ -3,9 +3,10 @@ import { resolve } from "node:path";
 const workspace = resolve(import.meta.dir, "../../..");
 const gateDirectory = resolve(
 	workspace,
-	"battery/gumgen-old/docs/prototypes/german-relation-human-gate",
+	"battery/dumgen-new/docs/prototypes/german-relation-human-gate",
 );
 const manifestPath = resolve(gateDirectory, "candidate-manifest.json");
+const locationsPath = resolve(gateDirectory, "artifact-locations.json");
 const verdictPath = resolve(gateDirectory, "verdict.json");
 const acceptancePath = resolve(gateDirectory, "acceptance-result.json");
 const outputPath = resolve(
@@ -156,6 +157,54 @@ export function compileReviewedVerdict(args: {
 	};
 }
 
+/** Hash current source contracts separately from immutable historical model exchanges. */
+export async function currentRelationFingerprints() {
+	async function digest(paths: readonly string[]) {
+		const hash = new Bun.CryptoHasher("sha256");
+		for (const path of [...paths].sort()) {
+			hash.update(path).update("\0");
+			hash.update(
+				await Bun.file(resolve(workspace, path)).arrayBuffer(),
+			).update("\0");
+		}
+		return `sha256:${hash.digest("hex")}`;
+	}
+	async function sources(directory: string) {
+		const paths = [];
+		for await (const path of new Bun.Glob("**/*.{ts,json}").scan(
+			resolve(workspace, directory),
+		))
+			paths.push(`${directory}/${path}`);
+		return paths;
+	}
+	const dumgen = "battery/dumgen-new/src";
+	return {
+		prompt: await digest([`${dumgen}/generated/prompts.ts`]),
+		schema: await digest([
+			`${dumgen}/generated/model-schemas.ts`,
+			`${dumgen}/generated/validation.ts`,
+		]),
+		evaluator: await digest([
+			...(await sources(
+				`${dumgen}/concrete-lang/de/knowledge-production/evaluation`,
+			)),
+			...(await sources("battery/promptsmith/src")),
+			`${dumgen}/development.ts`,
+		]),
+		model: await digest([
+			`${dumgen}/universal/model.ts`,
+			"app/tf-demo/server/modelExecution.ts",
+		]),
+		// Cover route dispatch, projection, corpus selections and foundational contracts.
+		policy: await digest([
+			...(await sources(dumgen)),
+			...(await sources("battery/dumrel-new/src")),
+			...(await sources("battery/dumling-new/src")),
+			"app/tf-demo/server/generatedKnowledgeRequest.ts",
+		]),
+	};
+}
+
 export async function compileRelationVerdict(
 	checkOnly = process.argv.includes("--check"),
 ) {
@@ -163,6 +212,13 @@ export async function compileRelationVerdict(
 	if (manifest.formatVersion !== "german-relation-human-gate-candidate-v1")
 		throw new Error("Unsupported relation candidate manifest format.");
 	const candidateId = string(manifest.candidateId, "candidateId");
+	const relocation = record(
+		await readJson(locationsPath),
+		"artifact locations",
+	);
+	if (relocation.candidateId !== candidateId)
+		throw new Error("Relocated evidence belongs to a different candidate.");
+	const locations = record(relocation.artifacts, "relocated artifacts");
 	const artifacts = manifest.artifacts;
 	if (!Array.isArray(artifacts) || artifacts.length === 0)
 		throw new Error("Candidate manifest has no frozen artifacts.");
@@ -179,29 +235,27 @@ export async function compileRelationVerdict(
 			path: string(artifact.path, "artifact path"),
 			sha256: string(artifact.sha256, "artifact sha256"),
 		};
+		const relocatedPath = string(
+			locations[normalized.role],
+			"relocated artifact path",
+		);
 		const contents = new Uint8Array(
-			await Bun.file(
-				resolve(
-					workspace,
-					normalized.path.startsWith("battery/dumgen/src/")
-						? "battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/" +
-								normalized.path.slice(
-									"battery/dumgen/src/".length,
-								) +
-								".txt"
-						: normalized.path.replace(
-								/^battery\/dumgen\//,
-								"battery/gumgen-old/",
-							),
-				),
-			).arrayBuffer(),
+			await Bun.file(resolve(gateDirectory, relocatedPath)).arrayBuffer(),
 		);
 		if (sha256(contents) !== normalized.sha256)
 			throw new Error(
 				`Frozen relation artifact drifted: ${normalized.path}.`,
 			);
+		if (artifactByRole.has(normalized.role))
+			throw new Error(
+				`Duplicate frozen artifact role: ${normalized.role}.`,
+			);
 		artifactByRole.set(normalized.role, normalized);
 	}
+	if (Object.keys(locations).length !== artifactByRole.size)
+		throw new Error(
+			"Relocated evidence inventory does not match its candidate.",
+		);
 	const calculatedCandidateId = sha256(
 		[...artifactByRole.values()]
 			.map(({ issue, role, path, sha256: digest }) =>
@@ -231,10 +285,12 @@ export async function compileRelationVerdict(
 		manifest.acceptanceReservation,
 		"acceptance reservation",
 	);
-	const verdictArtifactPath = string(
+	const historicalVerdictArtifactPath = string(
 		verdictContract.path,
 		"verdict artifact path",
 	);
+	const verdictArtifactPath =
+		"battery/dumgen-new/docs/prototypes/german-relation-human-gate/verdict.json";
 
 	let compiledVerdict: JsonRecord | null = null;
 	const invalidationReasons: string[] = [];
@@ -266,19 +322,36 @@ export async function compileRelationVerdict(
 		}
 	}
 
+	const historicalFingerprints = {
+		prompt: `sha256:${artifactDigest("prompt-source")}`,
+		schema: `sha256:${artifactDigest("model-facing-schema")}`,
+		evaluator: `sha256:${artifactDigest("semantic-evaluator")}`,
+		model: `openai:${candidateModel}:sha256:${artifactDigest("model-policy")}`,
+		policy: `candidate:${candidateId}:sha256:${artifactDigest("candidate-policy")}`,
+	};
+	const fingerprints = await currentRelationFingerprints();
+	const candidateMatchesCurrentModel = Object.entries(fingerprints).every(
+		([role, fingerprint]) =>
+			historicalFingerprints[
+				role as keyof typeof historicalFingerprints
+			] === fingerprint,
+	);
+	if (!candidateMatchesCurrentModel)
+		invalidationReasons.push("historicalCandidateRequiresReevaluation");
+
 	const compiled = {
-		formatVersion: "tf-demo-compiled-relation-verdict-v1",
+		formatVersion: "tf-demo-compiled-relation-verdict-v2",
 		candidateId,
 		verdictArtifactPath,
-		fingerprints: {
-			prompt: `sha256:${artifactDigest("prompt-source")}`,
-			schema: `sha256:${artifactDigest("model-facing-schema")}`,
-			evaluator: `sha256:${artifactDigest("semantic-evaluator")}`,
-			model: `openai:${candidateModel}:sha256:${artifactDigest("model-policy")}`,
-			policy: `candidate:${candidateId}:sha256:${artifactDigest("candidate-policy")}`,
+		fingerprints,
+		historicalCandidate: {
+			candidateId,
+			originalVerdictArtifactPath: historicalVerdictArtifactPath,
+			fingerprints: historicalFingerprints,
+			verdict: compiledVerdict,
 		},
 		invalidationReasons,
-		verdict: compiledVerdict,
+		verdict: candidateMatchesCurrentModel ? compiledVerdict : null,
 	};
 
 	const source = `/** Generated by tooling/compile-relation-verdict.ts. Do not edit. */\nexport const COMPILED_RELATION_VERDICT = ${JSON.stringify(compiled, null, "\t")} as const;\n`;

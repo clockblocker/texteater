@@ -18,9 +18,12 @@ and records. Its interactive workbench uses these same production operations
 and session-scoped Dumdict storage.
 
 Routine output belongs in the untracked `.runs/` directory, or the directory
-selected by `DUMGEN_RUN_DIRECTORY`. For evidence worth retaining, deliberately
-choose a tracked output directory and commit the complete run. Existing expensive
-evidence remains in `battery/gumgen-old/docs/prototypes/**/runs/`; its paths and
-contents are preserved. Frozen source inputs for the relation review live in
-that review’s `frozen-source/` directory as non-executable text, with their
-original manifest hashes.
+selected by `DUMGEN_RUN_DIRECTORY`. Retained historical evaluations live in
+`docs/prototypes/**/runs/`. Their original outputs, scores and hashes are
+preserved; adjacent `.ts.txt` files are frozen source, not runnable commands.
+Current experiments use the migrated corpora and evaluators through
+`dumgen/development` and produce new Promptsmith Evaluation Runs.
+
+The [historical relation review](docs/prototypes/german-relation-human-gate/README.md)
+keeps an explicit artifact-location map and cannot qualify the replacement
+pipeline without new evaluation and review.

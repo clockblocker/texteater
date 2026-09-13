@@ -16,7 +16,7 @@ export type RelationKindVerdict = Readonly<{
 }>;
 
 /**
- * Deliberately narrow seam for the retained, human-reviewed #193 artifact.
+ * A reviewed verdict must qualify the current generation contracts.
  * The artifact is data, not executable policy: every field is checked against
  * the running code before a relation kind is requested or published.
  */
@@ -42,14 +42,14 @@ const compiled = COMPILED_RELATION_VERDICT as Readonly<{
 	verdict: CompiledVerdict | null;
 }>;
 
-/** Frozen identifiers mechanically compiled from #193's candidate manifest. */
+/** Current source fingerprints; archived candidates retain their own fingerprints separately. */
 export const RELATION_PUBLICATION_FINGERPRINTS = Object.freeze({
 	...compiled.fingerprints,
 } satisfies RelationPublicationFingerprints);
 
 /**
- * #193 has not emitted a signed human verdict yet. Keeping this seam null is
- * fail-closed: no relation kind is implicitly promoted by model quality,
+ * The retained #193 candidate predates the current contracts. Its historical
+ * verdict cannot qualify this pipeline: no relation kind is promoted by model quality,
  * Dumrel applicability, or successful Unit Shadow resolution.
  */
 export const REVIEWED_RELATION_VERDICT: ReviewedRelationVerdictArtifact | null =

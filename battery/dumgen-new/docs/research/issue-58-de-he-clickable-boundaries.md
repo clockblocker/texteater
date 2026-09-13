@@ -1,6 +1,12 @@
 # DE/HE learner-clickable boundary research
 
-Status: fact-finding for [texteater#58](https://github.com/clockblocker/texteater/issues/58), not product policy.
+Retained fact-finding for [texteater#58](https://github.com/clockblocker/texteater/issues/58).
+Tool observations and open questions below describe that investigation. Current
+batch Intake and local segmentation policy is recorded in
+[ADR 0001](../adr/0001-batch-intake-and-local-source-segmentation.md).
+Current inputs use Segmented Sentences and Analysis Targets; Hebrew joint
+segmentation/classification remains deferred in #426. The research does not
+certify the replacement model or override that decision.
 
 ## Scope and method
 

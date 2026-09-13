@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import esbuild from "esbuild";
-
+import { COMPILED_RELATION_VERDICT } from "../convex/model/compiledRelationVerdict";
 import {
 	effectiveRelationPublicationPolicy,
 	GENERATED_SEMANTIC_RELATION_POLICY,
@@ -20,7 +20,10 @@ import {
 	setRollback,
 } from "../convex/relationPublication";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
-import { compileReviewedVerdict } from "../tooling/compile-relation-verdict";
+import {
+	compileReviewedVerdict,
+	currentRelationFingerprints,
+} from "../tooling/compile-relation-verdict";
 import {
 	IndexedTestDb,
 	runTestMutation,
@@ -55,7 +58,7 @@ test("the isolate publication policy does not bundle Dumling's schema graph", as
 
 const reviewedArtifact: ReviewedRelationVerdictArtifact = {
 	artifactPath:
-		"battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json",
+		"battery/dumgen-new/docs/prototypes/german-relation-human-gate/verdict.json",
 	status: "reviewed",
 	reviewedBy: "semantic-reviewer",
 	reviewedAt: "2026-08-20T12:00:00.000Z",
@@ -184,35 +187,54 @@ test("the compiler accepts only complete, execution-aware per-kind acceptance ev
 	).toThrow("Verdict candidate binding is invalid");
 });
 
-test("runtime fingerprints stay bound to the frozen candidate sources", async () => {
+test("historical fingerprints remain bound to the relocated frozen sources", async () => {
+	const historicalFingerprints =
+		COMPILED_RELATION_VERDICT.historicalCandidate.fingerprints;
 	const sha256 = async (path: string) =>
 		new Bun.CryptoHasher("sha256")
 			.update(
 				await Bun.file(new URL(path, import.meta.url)).arrayBuffer(),
 			)
 			.digest("hex");
-	expect(RELATION_PUBLICATION_FINGERPRINTS.prompt).toBe(
-		`sha256:${await sha256("../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt")}`,
+	expect(historicalFingerprints.prompt).toBe(
+		`sha256:${await sha256("../../../battery/dumgen-new/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt")}`,
 	);
-	expect(RELATION_PUBLICATION_FINGERPRINTS.schema).toBe(
-		`sha256:${await sha256("../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/knowledge-generation/de/schemas.ts.txt")}`,
+	expect(historicalFingerprints.schema).toBe(
+		`sha256:${await sha256("../../../battery/dumgen-new/docs/prototypes/german-relation-human-gate/frozen-source/knowledge-generation/de/schemas.ts.txt")}`,
 	);
-	expect(RELATION_PUBLICATION_FINGERPRINTS.evaluator).toBe(
-		`sha256:${await sha256("../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt")}`,
+	expect(historicalFingerprints.evaluator).toBe(
+		`sha256:${await sha256("../../../battery/dumgen-new/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt")}`,
 	);
 	const modelPolicy = await Bun.file(
 		new URL(
-			"../../../battery/gumgen-old/docs/prototypes/german-relation-human-gate/frozen-source/ai-sdk/model-policy.ts.txt",
+			"../../../battery/dumgen-new/docs/prototypes/german-relation-human-gate/frozen-source/ai-sdk/model-policy.ts.txt",
 			import.meta.url,
 		),
 	).text();
 	expect(modelPolicy).toContain('DUMGEN_GENERATION_MODEL = "gpt-5.6-luna"');
-	expect(RELATION_PUBLICATION_FINGERPRINTS.model).toContain(
+	expect(historicalFingerprints.model).toContain(
 		"openai:gpt-5.6-luna:sha256:",
 	);
-	expect(RELATION_PUBLICATION_FINGERPRINTS.policy).toMatch(
+	expect(historicalFingerprints.policy).toMatch(
 		/^candidate:[a-f0-9]{64}:sha256:[a-f0-9]{64}$/,
 	);
+});
+
+test("the current model cannot be qualified by a signed historical candidate", async () => {
+	expect(RELATION_PUBLICATION_FINGERPRINTS).toEqual(
+		await currentRelationFingerprints(),
+	);
+	expect(COMPILED_RELATION_VERDICT.verdict).toBeNull();
+	expect(
+		effectiveRelationPublicationPolicy({
+			...reviewedArtifact,
+			fingerprints:
+				COMPILED_RELATION_VERDICT.historicalCandidate.fingerprints,
+		}),
+	).toMatchObject({
+		qualifiedKinds: [],
+		invalidationReasons: ["candidateFingerprintMismatch"],
+	});
 });
 
 test("only an explicitly signed, fingerprint-matched promote verdict enters the allowlist", () => {
@@ -222,7 +244,10 @@ test("only an explicitly signed, fingerprint-matched promote verdict enters the 
 	});
 	expect(effectiveRelationPublicationPolicy()).toMatchObject({
 		qualifiedKinds: [],
-		invalidationReasons: ["missingReviewedVerdictArtifact"],
+		invalidationReasons: [
+			"missingReviewedVerdictArtifact",
+			"historicalCandidateRequiresReevaluation",
+		],
 	});
 	expect(effectiveRelationPublicationPolicy(reviewedArtifact)).toMatchObject({
 		artifactPath: reviewedArtifact.artifactPath,

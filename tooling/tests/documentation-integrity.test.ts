@@ -47,11 +47,16 @@ test("reproduces the #307 baseline from the pinned pre-migration commit", async 
 });
 
 test("uses role-specific #307 census exclusions", () => {
+	expect(
+		isDeveloperDocumentationPath(
+			".runs/dumgen/historical-learning/note.md",
+		),
+	).toBeFalse();
 	expect(isDeveloperDocumentationPath("README.md")).toBeTrue();
 	expect(isDeveloperDocumentationPath("app/tf-demo/README.md")).toBeTrue();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/gumgen-old/docs/research/evidence.md",
+			"battery/dumgen-new/docs/research/evidence.md",
 		),
 	).toBeTrue();
 	expect(
@@ -67,7 +72,7 @@ test("uses role-specific #307 census exclusions", () => {
 	).toBeFalse();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/gumgen-old/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
+			"battery/dumgen-new/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
 		),
 	).toBeFalse();
 });
@@ -97,25 +102,25 @@ test("enforces canonical developer-documentation paths", () => {
 test("allows only the exact retained evidence companions outside canonical paths", () => {
 	expect(
 		auditAllowedPaths([
-			"battery/gumgen-old/docs/prototypes/german-relation-human-gate/README.md",
-			"battery/gumgen-old/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-			"battery/gumgen-old/docs/prototypes/knowledge-analysis-combined/README.md",
-			"battery/gumgen-old/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-			"battery/gumgen-old/docs/research/issue-58-de-he-clickable-boundaries.md",
+			"battery/dumgen-new/docs/prototypes/german-relation-human-gate/README.md",
+			"battery/dumgen-new/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
+			"battery/dumgen-new/docs/prototypes/knowledge-analysis-combined/README.md",
+			"battery/dumgen-new/docs/prototypes/reading-resolution-meaning-isolation/README.md",
+			"battery/dumgen-new/docs/research/issue-58-de-he-clickable-boundaries.md",
 		]),
 	).toEqual([]);
 	expect(
 		auditAllowedPaths([
-			"battery/gumgen-old/docs/research/another-investigation.md",
-			"battery/gumgen-old/docs/prototypes/another-experiment/README.md",
+			"battery/dumgen-new/docs/research/another-investigation.md",
+			"battery/dumgen-new/docs/prototypes/another-experiment/README.md",
 		]),
 	).toMatchObject([
 		{
-			file: "battery/gumgen-old/docs/research/another-investigation.md",
+			file: "battery/dumgen-new/docs/research/another-investigation.md",
 			kind: "allowed-path",
 		},
 		{
-			file: "battery/gumgen-old/docs/prototypes/another-experiment/README.md",
+			file: "battery/dumgen-new/docs/prototypes/another-experiment/README.md",
 			kind: "allowed-path",
 		},
 	]);

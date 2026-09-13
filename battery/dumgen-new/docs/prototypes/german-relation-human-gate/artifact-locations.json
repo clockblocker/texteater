@@ -1,0 +1,17 @@
+{
+	"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",
+	"artifacts": {
+		"corpus-reservation": "frozen-source/promptsmith/production/knowledge-analysis/de/acceptance-reservation.ts.txt",
+		"adjudicated-development-corpus": "frozen-source/promptsmith/production/knowledge-analysis/de/retained-cases.ts.txt",
+		"semantic-evaluator": "frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt",
+		"thresholds-and-report": "frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/relation-report.ts.txt",
+		"candidate-policy": "../german-relation-prompt-iteration-lab/logic.ts.txt",
+		"retained-runner": "../german-relation-prompt-iteration-lab/run.ts.txt",
+		"prompt-source": "frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt",
+		"generated-system-prompt": "frozen-source/promptsmith/production/generated-system-prompt/knowledge-analysis/de/lexeme.ts.txt",
+		"model-facing-schema": "frozen-source/knowledge-generation/de/schemas.ts.txt",
+		"model-policy": "frozen-source/ai-sdk/model-policy.ts.txt",
+		"retained-result": "../german-relation-prompt-iteration-lab/runs/2026-08-20T17-05-28-531Z/results.json",
+		"human-review-development-gate": "../german-relation-human-gate/review.ts.txt"
+	}
+}
