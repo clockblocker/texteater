@@ -8,7 +8,7 @@ import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import { Effect } from "effect";
 import { stableJson } from "promptsmith";
-import { authoredMembers } from "../src/concrete-lang/de/authored/inventory.js";
+import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 
 test("reviewed member bundles have distinct identities and valid semantic endpoints", () => {
 	expect(

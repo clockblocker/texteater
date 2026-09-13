@@ -9,7 +9,7 @@ import type { Encounter, GenerationInput, ModelRequest } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
-import { authoredMembers } from "../src/concrete-lang/de/authored/inventory.js";
+import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
 

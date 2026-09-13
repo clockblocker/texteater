@@ -4,7 +4,7 @@ import type * as Dumrel from "dumrel/types";
 import type { KnowledgeProduction, KnowledgeRequest } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { parse } from "../../../universal/validation.js";
-import type { AuthoredMember } from "../authored/member.js";
+import type { AuthoredMember } from "../authored-closed-sets/member.js";
 import { assertRequestShape } from "./request-shape.js";
 
 export function validateRequest(

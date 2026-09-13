@@ -4,7 +4,7 @@ import { getExperiment, listExperiments } from "dumgen/development";
 import { generationInputSchema } from "dumgen/schemas";
 import { Effect } from "effect";
 import { z } from "zod";
-import { authoredMembers } from "../src/concrete-lang/de/authored/inventory.js";
+import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import pronounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
 import { grammarSchemas } from "../src/generated/schemas.js";
 

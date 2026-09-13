@@ -1,4 +1,4 @@
-export { selectGrammaticalAlternatives } from "./concrete-lang/de/authored/select.js";
+export { selectGrammaticalAlternatives } from "./concrete-lang/de/authored-closed-sets/select.js";
 export type * from "./types.js";
 export { createDumgen } from "./universal/dumgen.js";
 export { DumgenFailure, type DumgenFailureTag } from "./universal/failure.js";

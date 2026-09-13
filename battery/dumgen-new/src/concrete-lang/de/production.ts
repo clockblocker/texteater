@@ -17,7 +17,11 @@ import {
 	parse,
 	validateEncounter,
 } from "../../universal/validation.js";
-import { authoredFor, closedRoute, sameValue } from "./authored/select.js";
+import {
+	authoredFor,
+	closedRoute,
+	sameValue,
+} from "./authored-closed-sets/select.js";
 import {
 	type GrammarOutput,
 	normalizeGrammarSurface,
