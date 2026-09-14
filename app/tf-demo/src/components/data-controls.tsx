@@ -2,27 +2,24 @@ import { useMutation } from "@tanstack/react-query";
 import { useAction } from "convex/react";
 import type { FunctionArgs } from "convex/server";
 import {
+	Button,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+	Field,
+	FieldContent,
+	FieldDescription,
+	FieldLabel,
+} from "lego";
+import {
 	BookOpenIcon,
 	DatabaseZapIcon,
 	EraserIcon,
 	UserRoundXIcon,
 } from "lucide-react";
 import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import {
-	Field,
-	FieldContent,
-	FieldDescription,
-	FieldLabel,
-} from "@/components/ui/field";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useRouteNotePreference } from "@/lib/route-note-preference";

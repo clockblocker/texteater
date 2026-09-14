@@ -31,14 +31,14 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	);
 
 	expect(markup).toContain("sich ");
-	expect(markup).toContain("reading-note__ipa");
+	expect(markup).toContain('data-slot="ipa"');
 	expect(markup).toContain("/zɪç/");
 	expect(markup).toContain("de");
 	expect(markup).toContain("A source sentence.");
 	expect(markup).toContain("relation to Unit Shadow traurig");
 	expect(markup).toContain("en: to be happy");
 	expect(markup).toContain("To experience happiness.");
-	expect(markup.match(/<button type="button"/g)).toHaveLength(2);
+	expect(markup.match(/<button[^>]*type="button"/g)).toHaveLength(2);
 	expect(markup).not.toContain("href=");
 	expect(markup.indexOf('data-reading-title=""')).toBeLessThan(
 		markup.indexOf('aria-label="Source Contexts"'),

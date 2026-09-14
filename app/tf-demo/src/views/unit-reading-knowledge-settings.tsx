@@ -1,14 +1,8 @@
 import { useMutation } from "convex/react";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "lego";
 import { useEffect, useState } from "react";
-import {
-	Field,
-	FieldGroup,
-	FieldLabel,
-	FieldLegend,
-	FieldSet,
-} from "@/components/ui/field";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
 

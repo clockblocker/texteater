@@ -1,9 +1,14 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
-import { useEffect, useRef, useState } from "react";
+import {
+	ReaderPlainSegment,
+	ReaderSegment,
+	type ReaderSegmentTone,
+	Skeleton,
+} from "lego";
+import { type ComponentProps, useEffect, useRef, useState } from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { SentenceView } from "@/lib/action-results";
 import type { TextTarget } from "@/lib/navigation";
@@ -19,7 +24,6 @@ import { NotFoundView } from "@/views/not-found-view";
 import { segmentSelectionDeckCards } from "@/views/segment-selection-deck";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
-import "./text-view.css";
 
 type InteractionTarget = {
 	readonly segmentKey: string;
@@ -36,6 +40,10 @@ type SegmentDisplayState =
 	| "known-preview"
 	| "selected"
 	| "retained";
+
+/** The reading column: shared with Reading Notes, padded so the last sentence clears the deck. */
+const READER_BODY_CLASS =
+	"mx-auto w-full max-w-note px-note-gutter pt-[var(--reading-top,5rem)] pb-[max(5rem,calc(100cqh-var(--reading-deck-top,10.25rem)+0.875rem))] @max-md:pt-8";
 
 export function TextView({ target }: { target: TextTarget }) {
 	const { presentCards } = useWorkspaceInteraction();
@@ -161,8 +169,11 @@ export function TextPresentation({
 	readonly error?: string | null;
 }) {
 	return (
-		<div className="text-reader">
-			<div className="text-reader__body">
+		<div
+			data-slot="text-reader"
+			className="w-full min-h-full flex-auto bg-paper text-ink motion-reduce:[&_*]:transition-none"
+		>
+			<div className={READER_BODY_CLASS}>
 				<SentenceList
 					sentences={sentences}
 					focus={focus}
@@ -171,27 +182,31 @@ export function TextPresentation({
 				/>
 
 				{focus.kind === "Missing" ? (
-					<p className="text-reader__status" role="status">
+					<ReaderStatus role="status">
 						This Source Context is no longer available. The Text is
 						still open, and no new resolution was started.
-					</p>
+					</ReaderStatus>
 				) : null}
 
 				{notice ? (
-					<p className="text-reader__status" aria-live="polite">
-						{notice}
-					</p>
+					<ReaderStatus aria-live="polite">{notice}</ReaderStatus>
 				) : null}
 				{error ? (
-					<p
-						className="text-reader__status text-reader__status--error"
-						role="alert"
-					>
+					<ReaderStatus role="alert" className="text-destructive">
 						{error}
-					</p>
+					</ReaderStatus>
 				) : null}
 			</div>
 		</div>
+	);
+}
+
+function ReaderStatus({ className = "", ...props }: ComponentProps<"p">) {
+	return (
+		<p
+			className={`mt-8 text-xs leading-snug text-ink-muted ${className}`}
+			{...props}
+		/>
 	);
 }
 
@@ -259,11 +274,13 @@ export function SentenceList({
 	}, [focusKey]);
 
 	return (
-		<article className="text-reader__passage" aria-label="Text">
+		<article
+			className="space-y-7 text-lg leading-[1.52] font-[430] tracking-[-0.015em] @max-md:space-y-6 @max-md:text-base"
+			aria-label="Text"
+		>
 			{sentences.map((sentence) => (
 				<p
 					key={sentence.sentenceId}
-					className="text-reader__sentence"
 					ref={(element) => {
 						if (element) {
 							sentenceElements.current.set(
@@ -290,6 +307,24 @@ export function SentenceList({
 							sentence.sentenceId,
 							segment.index,
 						);
+						const trackElement = (element: HTMLElement | null) => {
+							if (element) {
+								segmentElements.current.set(key, element);
+							} else {
+								segmentElements.current.delete(key);
+							}
+						};
+						if (segment.kind !== "ResolvableText") {
+							return (
+								<ReaderPlainSegment
+									key={segment.index}
+									ref={trackElement}
+									highlighted={isSourceContextMember}
+								>
+									{segment.text}
+								</ReaderPlainSegment>
+							);
+						}
 						const isPreviewed = previewTarget?.attestationId
 							? segment.attestationId ===
 								previewTarget.attestationId
@@ -303,26 +338,21 @@ export function SentenceList({
 							isPreviewed,
 							isSelected,
 						);
+						const interactionTarget: InteractionTarget = {
+							segmentKey: key,
+							...(segment.attestationId
+								? { attestationId: segment.attestationId }
+								: {}),
+						};
 
-						return segment.kind === "ResolvableText" ? (
-							<button
+						return (
+							<ReaderSegment
 								key={segment.index}
-								type="button"
-								className="text-reader__segment"
+								ref={trackElement}
 								data-state={displayState}
-								data-source-context-member={
-									isSourceContextMember || undefined
-								}
-								ref={(element) => {
-									if (element) {
-										segmentElements.current.set(
-											key,
-											element,
-										);
-									} else {
-										segmentElements.current.delete(key);
-									}
-								}}
+								highlighted={isSourceContextMember}
+								tone={segmentTone(displayState)}
+								underlined={isPreviewState(displayState)}
 								disabled={
 									sentence.language !== "de" ||
 									segment.resolutionState === "Active"
@@ -331,26 +361,10 @@ export function SentenceList({
 								aria-label={segmentAccessibleLabel(segment)}
 								onBlur={() => setFocusedTarget(null)}
 								onFocus={() =>
-									setFocusedTarget({
-										segmentKey: key,
-										...(segment.attestationId
-											? {
-													attestationId:
-														segment.attestationId,
-												}
-											: {}),
-									})
+									setFocusedTarget(interactionTarget)
 								}
 								onMouseEnter={() =>
-									setHoveredTarget({
-										segmentKey: key,
-										...(segment.attestationId
-											? {
-													attestationId:
-														segment.attestationId,
-												}
-											: {}),
-									})
+									setHoveredTarget(interactionTarget)
 								}
 								onMouseLeave={() => setHoveredTarget(null)}
 								onClick={(event) =>
@@ -363,31 +377,7 @@ export function SentenceList({
 								}
 							>
 								{segment.text}
-							</button>
-						) : (
-							<span
-								key={segment.index}
-								className="text-reader__plain-segment"
-								data-source-context-member={
-									isSourceContextMember || undefined
-								}
-								ref={(element) => {
-									const key = segmentKey(
-										sentence.sentenceId,
-										segment.index,
-									);
-									if (element) {
-										segmentElements.current.set(
-											key,
-											element,
-										);
-									} else {
-										segmentElements.current.delete(key);
-									}
-								}}
-							>
-								{segment.text}
-							</span>
+							</ReaderSegment>
 						);
 					})}
 				</p>
@@ -398,9 +388,9 @@ export function SentenceList({
 
 function TextViewSkeleton() {
 	return (
-		<div className="text-reader text-reader--loading">
+		<div className="w-full min-h-full flex-auto bg-paper">
 			<div
-				className="mx-auto w-full max-w-5xl"
+				className={READER_BODY_CLASS}
 				role="status"
 				aria-label="Loading text"
 			>
@@ -443,6 +433,38 @@ function displayStateForSegment(
 	return segment.encountered && segment.attestationId
 		? "retained"
 		: undefined;
+}
+
+function segmentTone(
+	state: SegmentDisplayState | undefined,
+): ReaderSegmentTone {
+	switch (state) {
+		case "unknown-preview":
+		case "resolving":
+			return "unknown";
+		case "unresolved":
+		case "unresolved-preview":
+			return "unresolved";
+		case "failed":
+		case "failed-preview":
+			return "failed";
+		case "known-preview":
+		case "selected":
+		case "retained":
+			return "known";
+		default:
+			return "plain";
+	}
+}
+
+function isPreviewState(state: SegmentDisplayState | undefined): boolean {
+	return (
+		state === "unknown-preview" ||
+		state === "resolving" ||
+		state === "unresolved-preview" ||
+		state === "failed-preview" ||
+		state === "known-preview"
+	);
 }
 
 function segmentAccessibleLabel(

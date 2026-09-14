@@ -1,3 +1,4 @@
+import { LinkButton, NoteRule, NoteSection } from "lego";
 import { useId, useLayoutEffect, useRef, useState } from "react";
 import { normalizeReadingDefinition } from "@/lib/reading-definition";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
@@ -83,10 +84,8 @@ function DefinitionEditor({
 		}
 	}
 	return (
-		<section
-			className="reading-note__section reading-note__definition"
-			aria-label="Definition"
-		>
+		<NoteSection aria-label="Definition" className="compact:before:hidden">
+			<NoteRule className="mb-3" />
 			<label className="sr-only" htmlFor={id}>
 				Definition of {title}
 			</label>
@@ -117,18 +116,25 @@ function DefinitionEditor({
 				aria-describedby={
 					error || capability.error ? `${id}-error` : undefined
 				}
+				className="block min-h-11 w-full resize-none overflow-hidden rounded-none border-0 bg-transparent px-2 py-1 leading-relaxed text-ink placeholder:text-ink-muted placeholder:italic focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-primary"
 			/>
 			{saving || capability.isSaving ? (
-				<p role="status">Saving…</p>
+				<p role="status" className="text-xs text-ink-muted">
+					Saving…
+				</p>
 			) : null}
 			{error || capability.error ? (
-				<div id={`${id}-error`} role="alert">
+				<div
+					id={`${id}-error`}
+					role="alert"
+					className="flex flex-col items-start gap-1 text-destructive"
+				>
 					<p>{error ?? capability.error}</p>
-					<button type="button" onClick={() => void save()}>
+					<LinkButton onClick={() => void save()}>
 						Retry saving
-					</button>
+					</LinkButton>
 				</div>
 			) : null}
-		</section>
+		</NoteSection>
 	);
 }

@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
+import { Skeleton } from "lego";
 import { useCallback } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ReadingNoteTarget } from "@/lib/navigation";
 import {
@@ -148,14 +148,7 @@ function ReadingNoteContainer({
 		follow,
 	};
 
-	return (
-		<div
-			className="reading-note-container"
-			data-note-presentation={presentation}
-		>
-			{renderNote({ noteData: pagination.note, capabilities })}
-		</div>
-	);
+	return renderNote({ noteData: pagination.note, capabilities });
 }
 
 export function readingDefinitionMutationArgs(

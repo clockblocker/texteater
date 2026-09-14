@@ -1,4 +1,4 @@
-import "./reading-note.css";
+import { DensityScope } from "lego";
 import { createElement, type ReactElement } from "react";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../../shared/knowledge-preferences";
 import type { NoteBlockKind } from "../blocks/kind";
@@ -81,12 +81,15 @@ export function renderUniversalNote({
 				(renderCapabilities as ReadingPresentationCapabilities)
 					.presentation ?? "Sheet";
 			return (
-				<div
-					className="reading-note"
+				<DensityScope
+					density={
+						presentation === "Card" ? "compact" : "comfortable"
+					}
 					data-note-presentation={presentation}
+					className="min-h-full bg-paper text-base text-ink compact:text-sm"
 				>
 					<article
-						className="reading-note__article"
+						className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
 						aria-label="Reading Note"
 					>
 						{blocks}
@@ -96,7 +99,7 @@ export function renderUniversalNote({
 							<ReadingMetadata lemma={noteData.reading.lemma} />
 						) : null}
 					</article>
-				</div>
+				</DensityScope>
 			);
 		}
 		return (

@@ -1,6 +1,14 @@
 {
 	"extends": "//",
 	"files": {
-		"includes": ["**", "!dist", "!lib", "!vitest.d.ts", "!vitest.setup.ts"]
+		"includes": [
+			"**",
+			"!dist",
+			"!lib",
+			"!vitest.d.ts",
+			"!vitest.setup.ts",
+			"!playwright-report",
+			"!test-results"
+		]
 	}
 }

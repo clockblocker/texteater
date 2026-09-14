@@ -2,9 +2,8 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
+import { Skeleton } from "lego";
 import { useCallback } from "react";
-
-import { Skeleton } from "@/components/ui/skeleton";
 import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";

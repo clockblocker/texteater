@@ -1,10 +1,8 @@
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ThemeProvider, TooltipProvider } from "lego";
 import type { ReactNode } from "react";
-
-import { ThemeProvider } from "@/components/theme-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 function requireConvexUrl() {
 	const convexUrl = import.meta.env.VITE_CONVEX_URL;

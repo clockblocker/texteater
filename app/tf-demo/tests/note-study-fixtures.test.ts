@@ -7,7 +7,6 @@ import {
 	NOTE_STUDY_RELATED_DATABASE,
 	NOTE_STUDY_RESOLVED_RELATIONS,
 } from "../shared/notes-study/note-study-dummy-database";
-import { NOTE_STUDY_PRESENTATION_BY_READING_KEY } from "../src/playground/notes-study/note-study-presentation";
 
 const routeKey = ({ family, kind }: { family: string; kind: string }) =>
 	`${family}/${kind}`;
@@ -21,12 +20,11 @@ const nonGermanReadingKinds = new Set([
 ]);
 
 describe("German note-study fixtures", () => {
-	test("normalizes identity, bilingual Knowledge, occurrences, and presentation", () => {
+	test("normalizes identity, bilingual Knowledge, and occurrences", () => {
 		expect(NOTE_STUDY_DATABASE).toHaveLength(28);
 		expect(NOTE_STUDY_RELATED_DATABASE).toHaveLength(46);
 		expect(NOTE_STUDY_RESOLVED_RELATIONS).toHaveLength(46);
 		expect(NOTE_STUDY_PENDING_RELATIONS).toHaveLength(9);
-		expect(NOTE_STUDY_PRESENTATION_BY_READING_KEY.size).toBe(28);
 
 		for (const unit of NOTE_STUDY_DATABASE) {
 			expect(unit.reading.lemma.language).toBe("de");

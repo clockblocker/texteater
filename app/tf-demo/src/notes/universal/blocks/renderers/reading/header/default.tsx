@@ -1,7 +1,13 @@
+import {
+	Ipa,
+	NoteTags,
+	NoteTitle,
+	NoteTitleRow,
+	type NoteTitleTone,
+} from "lego";
 import { type ReactNode, useId } from "react";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
-import { Ipa } from "../../common/ipa";
 
 export const renderDefaultReadingHeader = (({
 	noteData,
@@ -9,6 +15,12 @@ export const renderDefaultReadingHeader = (({
 }) => (
 	<ReadingHeader note={noteData} capabilities={PresentationCapabilities} />
 )) satisfies ReadingDefaultRenderer;
+
+const GENDER_TONES: Readonly<Record<string, NoteTitleTone>> = {
+	Fem: "feminine",
+	Masc: "masculine",
+	Neut: "neuter",
+};
 
 export function ReadingHeader({
 	note,
@@ -33,28 +45,32 @@ export function ReadingHeader({
 }) {
 	const id = useId();
 	const { lemma } = note.reading;
+	const gender = lemma.coreFeatures.gender;
 	return (
-		<header className="reading-note__header">
-			<div className="reading-note__title-row">
-				<h1
+		<header>
+			<NoteTitleRow>
+				<NoteTitle
 					id={id}
 					data-reading-title=""
 					data-gender={
-						typeof lemma.coreFeatures.gender === "string"
-							? lemma.coreFeatures.gender
+						typeof gender === "string" ? gender : undefined
+					}
+					tone={
+						typeof gender === "string"
+							? GENDER_TONES[gender]
 							: undefined
 					}
 				>
-					<span className="reading-note__emoji">
+					<span className="text-ink">
 						{note.reading.emojiDescription}{" "}
 					</span>
 					{title ?? lemma.canonicalForm}
-				</h1>
+				</NoteTitle>
 				{capabilities.knowledgeSettings.transcription &&
 				note.knowledge.transcription ? (
 					<Ipa transcription={note.knowledge.transcription} />
 				) : null}
-			</div>
+			</NoteTitleRow>
 		</header>
 	);
 }
@@ -70,7 +86,7 @@ export function ReadingMetadata({
 	};
 }) {
 	return (
-		<footer className="reading-note__tags">
+		<NoteTags>
 			<span>{lemma.language}</span>
 			<span>{lemma.family}</span>
 			<span>{lemma.kind}</span>
@@ -83,6 +99,6 @@ export function ReadingMetadata({
 							</span>,
 						],
 			)}
-		</footer>
+		</NoteTags>
 	);
 }

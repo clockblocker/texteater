@@ -42,6 +42,7 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumgen#build",
 		"dumling#build",
 		"dumrel#build",
+		"lego#build",
 		"promptsmith#build",
 		"react-resizable-panels#build",
 	]);
@@ -54,6 +55,7 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumling#build",
 		"dumrel#build",
 		"dumval#build",
+		"lego#build",
 		"promptsmith#build",
 		"react-resizable-panels#build",
 	]);

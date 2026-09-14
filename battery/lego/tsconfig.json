@@ -1,0 +1,10 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"noUncheckedIndexedAccess": false,
+		"types": ["node", "bun-types"]
+	},
+	"include": ["src"]
+}

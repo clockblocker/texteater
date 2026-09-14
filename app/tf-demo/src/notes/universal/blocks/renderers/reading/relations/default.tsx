@@ -1,4 +1,5 @@
 import type * as Dumrel from "dumrel/types";
+import { LinkButton, Mark, NoteSection } from "lego";
 import { LockIcon } from "lucide-react";
 import { relationPreference } from "../../../../../../../shared/knowledge-preferences";
 
@@ -30,16 +31,9 @@ export const renderDefaultReadingRelations = (({
 	}
 
 	return (
-		<section
-			className="reading-note__section reading-note__relations"
-			aria-label="Relations"
-		>
-			<h2 className="reading-note__section-label">Relations</h2>
+		<NoteSection aria-label="Relations" label="Relations">
 			{relations.length > 0 || pendingRelations.length > 0 ? (
-				<ul
-					className="reading-note__relation-list"
-					aria-label="Semantic relations"
-				>
+				<ul className="grid gap-2" aria-label="Semantic relations">
 					{relations.map((relation) => (
 						<li
 							key={`${relation.relation}:${
@@ -48,62 +42,47 @@ export const renderDefaultReadingRelations = (({
 									: relation.target.lemmaId
 							}`}
 						>
-							<button
-								type="button"
+							<LinkButton
 								onClick={() =>
 									PresentationCapabilities.follow(
 										relation.target,
 									)
 								}
-								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
-								<span>
-									<RelationMark
-										relation={relation.relation}
-									/>{" "}
-									{relation.targetCanonicalForm}
-								</span>
-							</button>
+								<RelationMark relation={relation.relation} />
+								{relation.targetCanonicalForm}
+							</LinkButton>
 						</li>
 					))}
 					{pendingRelations.map((relation) => (
 						<li key={relation.locatorKey}>
-							<button
-								type="button"
+							<LinkButton
+								tone="pending"
 								onClick={() =>
 									PresentationCapabilities.follow(
 										relation.target,
 									)
 								}
 								aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
-								className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
-								<span>
-									<LockIcon
-										data-icon="inline-start"
-										aria-hidden="true"
-									/>
-									<RelationMark
-										relation={relation.relation}
-									/>{" "}
-									{relation.targetCanonicalForm}
-								</span>
-							</button>
+								<LockIcon aria-hidden="true" />
+								<RelationMark relation={relation.relation} />
+								{relation.targetCanonicalForm}
+							</LinkButton>
 						</li>
 					))}
 				</ul>
 			) : null}
 			{grammaticalAlternatives.length > 0 ? (
 				<ul
-					className="reading-note__relation-list"
+					className="grid gap-2 [ul+&]:mt-2"
 					aria-label="Grammatical alternatives"
 				>
 					{grammaticalAlternatives.map((alternative) => (
 						<li
 							key={`${alternative.feature}:${alternative.readingKey}`}
 						>
-							<button
-								type="button"
+							<LinkButton
 								disabled={
 									!PresentationCapabilities.grammaticalAlternatives ||
 									PresentationCapabilities
@@ -114,23 +93,22 @@ export const renderDefaultReadingRelations = (({
 										?.follow(alternative.readingKey)
 										.catch(() => {});
 								}}
-								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
 								{alternative.canonicalForm}{" "}
 								<span className="sr-only">
 									— vary {alternative.feature}
 								</span>
-							</button>
+							</LinkButton>
 						</li>
 					))}
 				</ul>
 			) : null}
 			{PresentationCapabilities.grammaticalAlternatives?.error ? (
-				<p role="alert">
+				<p role="alert" className="mt-2 text-sm text-destructive">
 					{PresentationCapabilities.grammaticalAlternatives.error}
 				</p>
 			) : null}
-		</section>
+		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;
 
@@ -149,13 +127,8 @@ function RelationMark({ relation }: { relation: string }) {
 		? RELATION_MARKS[relation as Dumrel.SemanticRelation]
 		: relation;
 	return (
-		<span
-			className="reading-note__relation-mark"
-			role="img"
-			aria-label={relation}
-			title={relation}
-		>
+		<Mark role="img" aria-label={relation} title={relation}>
 			{mark}
-		</span>
+		</Mark>
 	);
 }
