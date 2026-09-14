@@ -72,18 +72,6 @@ test("Settings is shell state and never changes the workspace URL", async ({
 	await expect(page).toHaveURL("/");
 });
 
-test("Playground is linked from the primary navigation", async ({ page }) => {
-	await page.goto("/");
-	await page.getByRole("link", { name: "Playground" }).click();
-
-	await expect(page).toHaveURL("/playground");
-	await expect(
-		page.getByRole("heading", {
-			name: "Experiments need a room of their own.",
-		}),
-	).toBeVisible();
-});
-
 test("a stored Text opens a segment deck, splits, reloads, and collapses", async ({
 	page,
 }) => {
@@ -92,11 +80,11 @@ test("a stored Text opens a segment deck, splits, reloads, and collapses", async
 	await storedText.click();
 
 	const textSheet = workspace(page).locator(".workspace__sheet", {
-		has: page.locator(".text-reader"),
+		has: page.locator('[data-slot="text-reader"]'),
 	});
 	await expect(textSheet).toBeVisible();
 	const segment = textSheet
-		.locator(".text-reader__segment:not([disabled])")
+		.locator('[data-slot="reader-segment"]:not([disabled])')
 		.first();
 	await expect(segment).toBeVisible();
 	await segment.click();
@@ -137,6 +125,8 @@ test("a stored Text opens a segment deck, splits, reloads, and collapses", async
 	await expect(workspace(page).locator("[data-workspace-pane]")).toHaveCount(
 		1,
 	);
-	await expect(workspace(page).locator(".text-reader")).toBeVisible();
+	await expect(
+		workspace(page).locator('[data-slot="text-reader"]'),
+	).toBeVisible();
 	await expect(workspace(page).locator("[data-card-layer]")).toHaveCount(0);
 });

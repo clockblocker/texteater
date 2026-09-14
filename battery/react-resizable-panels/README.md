@@ -8,4 +8,4 @@ Build output is written to `dist/`; the package root preserves the upstream `Gro
 
 Biome excludes the imported `lib/` tree and copied Vitest setup so upstream style and import order remain comparable during future updates. Put locally authored extensions outside `lib/`.
 
-The local `react-resizable-panels/workspace` entry point supplies the Card/Sheet state model and controlled React renderer. Import `react-resizable-panels/workspace.css` for its presentation styles. The playground in tf-demo exercises this API; terminology lives in [CONTEXT.md](./CONTEXT.md).
+The local `react-resizable-panels/workspace` entry point supplies the Card/Sheet state model and controlled React renderer. Import `react-resizable-panels/workspace.css` for its presentation styles. The stylesheet reads the shared `lego` tokens when they are present and falls back to its own literals otherwise; tf-demo's application workspace exercises this API. Terminology lives in [CONTEXT.md](./CONTEXT.md).

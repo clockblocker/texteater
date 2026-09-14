@@ -1,12 +1,9 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
+import { Badge, Button, Skeleton } from "lego";
 import { LoaderCircleIcon } from "lucide-react";
 import { useEffect } from "react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";

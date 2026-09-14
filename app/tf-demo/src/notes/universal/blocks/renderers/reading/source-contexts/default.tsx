@@ -1,3 +1,4 @@
+import { Button, NoteSection, QuoteButton } from "lego";
 import { LoaderCircleIcon } from "lucide-react";
 
 import type { ReadingDefaultRenderer } from "../../../renderer";
@@ -15,34 +16,33 @@ export const renderDefaultReadingSourceContexts = (({
 	}
 
 	return (
-		<section
-			className="reading-note__section reading-note__contexts"
+		<NoteSection
 			aria-label="Source Contexts"
+			label="Source Contexts"
+			className="compact:before:hidden"
 		>
-			<h2 className="reading-note__section-label">Source Contexts</h2>
 			{sourceContexts.items.length > 0 ? (
-				<ul className="reading-note__context-list">
+				<ul className="grid gap-5 compact:gap-3">
 					{sourceContexts.items.map((sourceContext) => (
 						<li key={sourceContext.attestationId}>
-							<button
-								type="button"
+							<QuoteButton
 								onClick={() =>
 									PresentationCapabilities.follow(
 										sourceContext.target,
 									)
 								}
-								className="reading-note__context"
 							>
-								<span>{sourceContext.sentenceSnippet}</span>
-							</button>
+								{sourceContext.sentenceSnippet}
+							</QuoteButton>
 						</li>
 					))}
 				</ul>
 			) : null}
 			{sourceContexts.hasMore ? (
-				<button
-					type="button"
-					className="inline-flex w-fit items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
+				<Button
+					variant="outline"
+					size="sm"
+					className="mt-4 w-fit"
 					disabled={
 						sourceContexts.isLoading ||
 						sourceContexts.loadMore === null
@@ -50,18 +50,18 @@ export const renderDefaultReadingSourceContexts = (({
 					onClick={() => void sourceContexts.loadMore?.()}
 				>
 					{sourceContexts.isLoading ? (
-						<LoaderCircleIcon className="size-4 animate-spin" />
+						<LoaderCircleIcon className="animate-spin" />
 					) : null}
 					{sourceContexts.isLoading
 						? "Loading…"
 						: "Load more Source Contexts"}
-				</button>
+				</Button>
 			) : null}
 			{sourceContexts.error ? (
-				<p className="text-sm text-destructive" role="alert">
+				<p className="mt-2 text-sm text-destructive" role="alert">
 					{sourceContexts.error}
 				</p>
 			) : null}
-		</section>
+		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;

@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+/* Utility classes used inside lego live next to this file, outside any
+   consumer's automatic source detection. */
+@source "./";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Density is set by a presentation container (`group/density` with
+   `data-density`) so molecules can tighten themselves inside a Card. */
+@custom-variant compact (&:is([data-density="compact"] *));
+
+@theme inline {
+	--font-sans: "Geist Variable", sans-serif;
+	--font-heading: var(--font-sans);
+	--font-mono:
+		ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+
+	/* shadcn semantic palette */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+
+	/* Ink: four steps from body text to the faintest legible mark. */
+	--color-ink: var(--ink);
+	--color-ink-soft: var(--ink-soft);
+	--color-ink-muted: var(--ink-muted);
+	--color-ink-faint: var(--ink-faint);
+
+	/* Surfaces: the canvas behind Panes, the paper a Sheet or Card rests on,
+	   and one raised step for hover and popups. */
+	--color-canvas: var(--canvas);
+	--color-paper: var(--paper);
+	--color-raised: var(--raised);
+	--color-scrim: var(--scrim);
+
+	/* Lines: hairline rules and the stronger edge of a separator or Card. */
+	--color-line: var(--line);
+	--color-line-strong: var(--line-strong);
+
+	/* Linguistic tones: grammatical gender of a headword. */
+	--color-gender-feminine: var(--gender-feminine);
+	--color-gender-masculine: var(--gender-masculine);
+	--color-gender-neuter: var(--gender-neuter);
+
+	/* Reader segment states. */
+	--color-segment-unknown: var(--segment-unknown);
+	--color-segment-known: var(--segment-known);
+	--color-segment-unresolved: var(--segment-unresolved);
+	--color-segment-failed: var(--segment-failed);
+	--color-highlight: var(--highlight);
+
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+
+	/* One reading column shared by Texts and Notes. */
+	--container-note: 48rem;
+	--spacing-note-gutter: 2.5rem;
+	--spacing-note-top: 3.5rem;
+}
+
+/* One palette for now. The light theme deliberately reuses these values
+   until a light appearance is designed; `.dark` therefore adds nothing. */
+:root {
+	--canvas: #141920;
+	--paper: #1c2128;
+	--raised: #283342;
+	--scrim: #06080c;
+	--ink: #e2e5e9;
+	--ink-soft: #a3aab4;
+	--ink-muted: #8c95a1;
+	--ink-faint: #5f6774;
+	--line: #383e47;
+	--line-strong: #56657a;
+
+	--gender-feminine: #e69a9d;
+	--gender-masculine: #aab2d8;
+	--gender-neuter: #a3c39f;
+	--segment-unknown: #5d89c7;
+	--segment-known: #7aaef7;
+	--segment-unresolved: #c7a467;
+	--segment-failed: #db7777;
+	--highlight: #4d8ce6;
+
+	--background: var(--canvas);
+	--foreground: var(--ink);
+	--card: var(--paper);
+	--card-foreground: var(--ink);
+	--popover: var(--paper);
+	--popover-foreground: var(--ink);
+	--primary: #8eb4f0;
+	--primary-foreground: #111824;
+	--secondary: var(--raised);
+	--secondary-foreground: #d7e8ff;
+	--muted: #232932;
+	--muted-foreground: var(--ink-muted);
+	--accent: var(--raised);
+	--accent-foreground: #d7e8ff;
+	--destructive: var(--segment-failed);
+	--border: var(--line);
+	--input: var(--line);
+	--ring: var(--primary);
+	--chart-1: #8eb4f0;
+	--chart-2: #a3c39f;
+	--chart-3: #c7a467;
+	--chart-4: #e69a9d;
+	--chart-5: #aab2d8;
+	--radius: 0.625rem;
+	--sidebar: #0f131b;
+	--sidebar-foreground: var(--ink);
+	--sidebar-primary: var(--primary);
+	--sidebar-primary-foreground: var(--primary-foreground);
+	--sidebar-accent: var(--raised);
+	--sidebar-accent-foreground: #d7e8ff;
+	--sidebar-border: var(--line);
+	--sidebar-ring: var(--primary);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	html {
+		@apply font-sans;
+		color-scheme: dark;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	::selection {
+		@apply bg-primary text-primary-foreground;
+	}
+}

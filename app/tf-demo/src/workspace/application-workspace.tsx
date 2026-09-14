@@ -15,7 +15,6 @@ import {
 	type WorkspaceCommand,
 	type WorkspaceRenderContext,
 } from "react-resizable-panels/workspace";
-import "react-resizable-panels/workspace.css";
 import {
 	type ApplicationWorkspaceStorage,
 	loadApplicationWorkspace,
@@ -38,7 +37,22 @@ import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "./workspace-controller";
-import "./workspace-reading-layout.css";
+
+/**
+ * Reading geometry shared by Texts and Reading Notes. The Card Layer top sits
+ * three text lines below the reading top, and its left edge lines up with the
+ * inner reading column (half the leftover width, plus the gutter, minus the
+ * Card's own padding and border).
+ */
+const READING_LAYOUT_CLASS = [
+	"flex h-full min-h-0 [--reading-top:5rem] [--reading-deck-top:calc(var(--reading-top)+3*1.71rem)]",
+	"[--workspace-cards-top:var(--reading-deck-top)]",
+	"[--workspace-cards-height:min(calc(100%-var(--reading-deck-top)-12px),34rem)]",
+	"[--workspace-cards-left:calc(max(0px,50%-24rem)+var(--spacing-note-gutter)-0.9rem-1px)]",
+	"[--workspace-cards-transform:none]",
+	"[&>.workspace]:min-w-0 [&>.workspace]:flex-1",
+	"[&_.workspace\\_\\_sheet>*]:min-h-full",
+].join(" ");
 
 type Runtime = {
 	session: ApplicationWorkspaceSession;
@@ -147,7 +161,7 @@ function ApplicationWorkspaceCanvas({
 		[dispatch],
 	);
 	return (
-		<div ref={root} className="workspace-reading-layout">
+		<div ref={root} className={READING_LAYOUT_CLASS}>
 			<Workspace
 				state={session.workspace}
 				dispatch={dispatchCommand}
@@ -231,7 +245,7 @@ function ApplicationPresentation({
 			{subject.kind === "Library" ? (
 				renderLibrary()
 			) : subject.kind === "Note" && subject.target.kind !== "Reading" ? (
-				<div className="application-workspace__note">
+				<div className="[&>*>*]:max-w-note">
 					{renderSubject(subject, context.presentation)}
 				</div>
 			) : (

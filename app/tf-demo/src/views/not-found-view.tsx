@@ -1,12 +1,5 @@
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "lego";
 import { LibraryIcon } from "lucide-react";
-
-import {
-	Card,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 
 export function NotFoundView({

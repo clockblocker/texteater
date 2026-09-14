@@ -2,17 +2,10 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
 import {
-	ArrowRightIcon,
-	BookOpenIcon,
-	LibraryIcon,
-	PlusIcon,
-} from "lucide-react";
-import { type FormEvent, useState } from "react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
+	Badge,
+	Button,
+	Card,
+	CardContent,
 	Dialog,
 	DialogContent,
 	DialogDescription,
@@ -20,15 +13,20 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog";
-import {
 	Field,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
-} from "@/components/ui/field";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
+	Skeleton,
+	Textarea,
+} from "lego";
+import {
+	ArrowRightIcon,
+	BookOpenIcon,
+	LibraryIcon,
+	PlusIcon,
+} from "lucide-react";
+import { type FormEvent, useState } from "react";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";

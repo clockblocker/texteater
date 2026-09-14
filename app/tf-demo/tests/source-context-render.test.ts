@@ -32,16 +32,12 @@ test("renders focus markers on all and only discontinuous occurrence members", (
 		}),
 	);
 
-	expect(markup.match(/data-source-context-member="true"/g)).toHaveLength(2);
-	expect(buttonMarkup(markup, "eins")).toContain(
-		'data-source-context-member="true"',
-	);
+	expect(markup.match(/data-highlighted="true"/g)).toHaveLength(2);
+	expect(buttonMarkup(markup, "eins")).toContain('data-highlighted="true"');
 	expect(buttonMarkup(markup, "dazwischen")).not.toContain(
-		"data-source-context-member",
+		"data-highlighted",
 	);
-	expect(buttonMarkup(markup, "vier")).toContain(
-		'data-source-context-member="true"',
-	);
+	expect(buttonMarkup(markup, "vier")).toContain('data-highlighted="true"');
 });
 
 test("renders visitor-filtered terminal states with distinct failure color hooks", () => {

@@ -1,4 +1,5 @@
 import { translationLanguageValues } from "dumrel";
+import { NoteSection } from "lego";
 
 import type { ReadingDefaultRenderer } from "../../../renderer";
 
@@ -19,8 +20,7 @@ export const renderDefaultReadingTranslations = (({
 	if (translations.length === 0) return null;
 
 	return (
-		<section className="reading-note__section" aria-label="Translations">
-			<h2 className="reading-note__section-label">Translations</h2>
+		<NoteSection aria-label="Translations" label="Translations">
 			<div className="flex flex-wrap gap-2">
 				{translations.map(({ language, value }) => (
 					<span key={`${language}:${value}`} lang={language}>
@@ -28,6 +28,6 @@ export const renderDefaultReadingTranslations = (({
 					</span>
 				))}
 			</div>
-		</section>
+		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;

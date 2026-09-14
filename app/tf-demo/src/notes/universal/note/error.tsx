@@ -1,11 +1,5 @@
+import { Card, CardDescription, CardHeader, CardTitle } from "lego";
 import type { ReactElement } from "react";
-
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 
 export function renderErrorNote(
 	cause: unknown,

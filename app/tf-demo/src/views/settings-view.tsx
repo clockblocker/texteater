@@ -1,24 +1,21 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-
-import { DataControls } from "@/components/data-controls";
-import { useTheme } from "@/components/theme-provider";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import {
 	Field,
 	FieldContent,
 	FieldDescription,
 	FieldLabel,
 	FieldTitle,
-} from "@/components/ui/field";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
+	Skeleton,
+	Switch,
+	useTheme,
+} from "lego";
+import { DataControls } from "@/components/data-controls";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { SettingsTarget } from "@/lib/navigation";
 import { api } from "../../convex/_generated/api";

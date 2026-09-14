@@ -1,11 +1,6 @@
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "lego";
 import { useState } from "react";
-
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger,
-} from "@/components/ui/sidebar";
 import { LibraryView } from "@/views/library-view";
 import {
 	ResolutionNoteView,
@@ -25,7 +20,6 @@ import type {
 	WorkspaceSubject,
 } from "@/workspace/sheet-workspace";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
-import "@/workspace/application-workspace.css";
 
 export function App() {
 	return (
@@ -65,7 +59,7 @@ function ApplicationShell() {
 				) : (
 					<section
 						aria-label="Workspace"
-						className="application-workspace"
+						className="h-svh min-h-0 min-w-0 flex-1 bg-canvas p-3 max-md:h-[calc(100svh-3rem)] max-md:p-0"
 					>
 						<ApplicationWorkspace
 							renderLibrary={() => <LibraryView />}

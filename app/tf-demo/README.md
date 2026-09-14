@@ -26,12 +26,11 @@ The dictionary starts empty. Dumgen supplies reviewed Units and Knowledge on
 demand; grammatical navigation adds only the selected Reading.
 
 Load the local Notes Study user and its normalized Dumling/Dumrel graph with
-`bun run load:notes-study`. This explicit playground seed is idempotent and is
-never loaded by a deployment automatically.
+`bun run load:notes-study`. This explicit seed is idempotent and is never
+loaded by a deployment automatically.
 
-The application uses `/` as its canonical workspace URL. Deterministic UI
-fixtures are available under `/playground`; Notes Study reads from the selected
-local Convex deployment while keeping its extra presentation metadata in code.
+The application uses `/` as its canonical workspace URL. Shared tokens, theme
+machinery, and presentation components come from the `lego` battery.
 
 ## Reset and validate
 
