@@ -22,8 +22,8 @@ export type GermanKnowledgeFamily = (typeof germanKnowledgeFamilies)[number];
  */
 export const germanRelationTargetKindsByFamily: Readonly<
 	Record<"Lexeme" | "Phraseme", readonly string[]>
-> = {
-	Lexeme: [
+> = Object.freeze({
+	Lexeme: Object.freeze([
 		"ADJ",
 		"ADP",
 		"ADV",
@@ -41,15 +41,15 @@ export const germanRelationTargetKindsByFamily: Readonly<
 		"SYM",
 		"VERB",
 		"X",
-	],
-	Phraseme: [
+	]),
+	Phraseme: Object.freeze([
 		"Aphorism",
 		"Collocation",
 		"DiscourseFormula",
 		"Idiom",
 		"Proverb",
-	],
-};
+	]),
+});
 
 export function isRelationBearingKnowledgeFamily(
 	family: string,

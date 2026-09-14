@@ -15,13 +15,9 @@ import {
 	type EntrypointReachability,
 } from "./reachability";
 
-import {
-	formatSharedRss,
-	measureSharedRss,
-	type SharedRssReport,
-} from "./shared";
-
 export const SAMPLE_COUNT = 5;
+const IMPORT_BUDGET_MIB = 5;
+const OPERATION_BUDGET_MIB = 5.3;
 const packages = Object.keys(
 	DUM_PACKAGE_PATHS,
 ) as (keyof typeof DUM_PACKAGE_PATHS)[];
@@ -35,14 +31,14 @@ export type MeasuredOperationalEntryPoint = OperationalEntryPoint & {
 };
 
 export type Report = {
-	readonly shared: SharedRssReport;
 	readonly baseline: {
 		readonly medianBytes: number;
 		readonly samplesBytes: readonly number[];
 	};
 	readonly contract: {
 		readonly baseline: string;
-		readonly isolatedRss: "diagnostic";
+		readonly importBudgetMiB: number;
+		readonly operationBudgetMiB: number;
 		readonly processesPerMeasurement: number;
 		readonly statistic: string;
 	};
@@ -140,11 +136,7 @@ export function markdownFor(report: Report): string {
 		"",
 		`Captured ${report.environment.capturedAt} from \`${report.environment.sourceCommit}\` with Bun ${report.environment.bunVersion} on ${report.environment.platform}/${report.environment.arch}.`,
 		"",
-		"Contract: the whole Dum chain must add at most 30 MiB peak RSS after Effect is loaded, using seven fresh processes and the median of within-process deltas. Isolated entrypoint measurements below are diagnostic. Raw samples are retained in the adjacent JSON artifact.",
-		"",
-		"```text",
-		formatSharedRss(report.shared).trimEnd(),
-		"```",
+		`Contract: five fresh Bun processes per measurement; median max RSS delta over an empty imported module. Strict surfaces must keep import-only below ${report.contract.importBudgetMiB} MiB and import-plus-operation at or below ${report.contract.operationBudgetMiB} MiB. Effect workflows are measured and reported without an RSS cap. Raw byte samples are retained in the adjacent JSON artifact.`,
 		"",
 		"Each probe runs against staged package manifests and built JavaScript, outside development TypeScript path aliases. Bun reports maxRSS in KiB; raw samples convert that value to bytes before calculating deltas.",
 		"",
@@ -180,7 +172,7 @@ export function markdownFor(report: Report): string {
 		"",
 		"## Interpretation",
 		"",
-		"The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime → Dumgen after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.",
+		"The user-approved 5.3 MiB operation ceiling is one global allowance for observed five-process median measurement noise around 5 MiB, not a per-package waiver. It applies only to strict surfaces. Effect workflow RSS is retained as an observation because its runtime cost is no longer a proxy for schema loading. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.",
 		"",
 		`The explicit schema/model-authoring escape hatches are ${schemaAuthoringSurfaces}. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.`,
 		"",
@@ -191,12 +183,11 @@ export function markdownFor(report: Report): string {
 		"## Reproduce",
 		"",
 		"```sh",
-		"bun run benchmark:dum-shared",
 		"bun run benchmark:dum-entrypoints",
 		"bun run benchmark:dum-entrypoints --write",
 		"```",
 		"",
-		"`benchmark:dum-shared` rebuilds the packages and checks only the shared import budget. `benchmark:dum-entrypoints` also reports isolated diagnostics; `--write` replaces this Markdown file and its JSON companion.",
+		"The first command rebuilds the four packages and prints the report. `--write` also replaces this Markdown file and its JSON companion.",
 		"",
 	);
 	return lines.join("\n");
@@ -266,14 +257,14 @@ export async function createReport(root: string): Promise<Report> {
 			entries.map((entrypoint) => [entrypoint.specifier, entrypoint]),
 		);
 		return {
-			shared: await measureSharedRss(runtimeRoot),
 			baseline: {
 				medianBytes: baselineMedianBytes,
 				samplesBytes: baselineSamplesBytes,
 			},
 			contract: {
 				baseline: "empty imported Bun module",
-				isolatedRss: "diagnostic",
+				importBudgetMiB: IMPORT_BUDGET_MIB,
+				operationBudgetMiB: OPERATION_BUDGET_MIB,
 				processesPerMeasurement: SAMPLE_COUNT,
 				statistic: "median max RSS delta",
 			},

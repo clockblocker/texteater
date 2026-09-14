@@ -1,7 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import {
 	compileZodValidationArtifacts,
-	emitLazyValidationRegistry,
 	emitValidationOutputTypes,
 } from "codegen";
 import { z } from "zod";
@@ -9,8 +8,6 @@ import { registrations as dumlingOperations } from "../../dumling/codegen/operat
 import { loadRoutes } from "../../dumling/codegen/routes.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
 import { normalizeText } from "../../dumrel/src/semantics.js";
-import { generateAuthoredCatalog } from "./generate-authored-catalog.js";
-import { validationGroup } from "./validation-groups.js";
 
 const check = process.argv.includes("--check");
 async function emit(name: string, source: string) {
@@ -75,10 +72,6 @@ const operations = [
 ] as const;
 const compiled = compileZodValidationArtifacts({ schemas, operations });
 await emit(
-	"validation-runtime.ts",
-	emitLazyValidationRegistry(compiled, validationGroup).source,
-);
-await emit(
 	"validation.ts",
 	`// Generated canonical validation.\nexport const encodedValidation:string=${JSON.stringify(JSON.stringify(compiled))};\n`,
 );
@@ -117,5 +110,3 @@ await emit(
 	"prompts.ts",
 	`// Generated from explicitly selected demonstrations, never held-out cases.\nexport const prompts:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(promptRegistrations.filter(({ promptSource }) => !promptSource.route.startsWith("knowledge-analysis/") || promptSource.route.startsWith("knowledge-analysis/de/")).map(({ promptSource }) => [promptSource.route, assembleSystemPrompt(promptSource)])))};\nexport const grammarPromptRoutes:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(routes.filter((route) => route.language === "de").map((route) => [route.key, `grammatical-resolution/${route.modulePath.replace(/\.js$/, "")}`])))};`,
 );
-
-await generateAuthoredCatalog(check);

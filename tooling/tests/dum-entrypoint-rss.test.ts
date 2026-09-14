@@ -108,13 +108,12 @@ test("the frozen baseline retains five raw processes for both operational measur
 
 	expect(report.contract).toMatchObject({
 		baseline: "empty imported Bun module",
-		isolatedRss: "diagnostic",
+		importBudgetMiB: 5,
+		operationBudgetMiB: 5.3,
 		processesPerMeasurement: 5,
 		statistic: "median max RSS delta",
 	});
 	expect(report.baseline.samplesBytes).toHaveLength(5);
-	expect(report.shared.samples).toHaveLength(7);
-	expect(report.shared.budgetBytes).toBe(30 * 1024 * 1024);
 	const measured = report.entrypoints.filter(
 		(entrypoint: { classification: string }) =>
 			entrypoint.classification === "operational",

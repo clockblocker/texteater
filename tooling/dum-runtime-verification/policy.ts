@@ -1,37 +1,37 @@
-/** Whole-chain import headroom over preloaded Effect; observed baseline is about 22 MiB. */
-export const RSS_SHARED_BUDGET_BYTES = 30 * 1024 * 1024;
+/**
+ * Import cost remains strictly below the original 5 MiB target. The user
+ * approved one repository-wide 5.3 MiB operation ceiling after repeated
+ * five-process medians showed small run-to-run variation around 5 MiB. This
+ * is measurement headroom, not a package-specific waiver; reachability stays
+ * strict for every operational entrypoint.
+ */
+export const RSS_IMPORT_BUDGET_BYTES = 5 * 1024 * 1024;
+export const RSS_OPERATION_BUDGET_BYTES = 5.3 * 1024 * 1024;
 
-/** Isolated entrypoint RSS is diagnostic; schema isolation is always enforced. */
-export type RssPolicy = { readonly status: "diagnostic" };
+export type StrictRssPolicy = {
+	readonly status: "strict";
+};
+
+/** Effect workflow memory is measured, not judged against the old schema-loading proxy. */
+export type RssPolicy =
+	| StrictRssPolicy
+	| { readonly status: "effect-workflow" };
+
 const MiB = 1024 * 1024;
-const diagnostic = { status: "diagnostic" } as const;
+const strict = { status: "strict" } as const;
+const workflow = { status: "effect-workflow" } as const;
 
-export function evaluateSharedRss(addedPeakMedianBytes: number) {
-	const passed =
-		Number.isFinite(addedPeakMedianBytes) &&
-		addedPeakMedianBytes >= 0 &&
-		addedPeakMedianBytes <= RSS_SHARED_BUDGET_BYTES;
-	return {
-		passed,
-		violations: passed
-			? []
-			: [
-					"shared import peak delta is invalid or exceeds 30 MiB after Effect",
-				],
-	};
-}
-
-/** Every operational export retains schema isolation; isolated RSS remains diagnostic. */
+/** Every operational export retains schema isolation; Effect workflows report measured RSS. */
 export const RSS_ENTRYPOINT_POLICIES = {
-	dumling: diagnostic,
-	"dumling/validation": diagnostic,
-	dumrel: diagnostic,
-	dumdict: diagnostic,
-	"dumdict/runtime": diagnostic,
-	"dumdict/relations": diagnostic,
-	"dumdict/pending": diagnostic,
-	"dumdict/memory": diagnostic,
-	dumgen: diagnostic,
+	dumling: strict,
+	"dumling/validation": strict,
+	dumrel: strict,
+	dumdict: workflow,
+	"dumdict/runtime": workflow,
+	"dumdict/relations": strict,
+	"dumdict/pending": strict,
+	"dumdict/memory": workflow,
+	dumgen: workflow,
 } as const satisfies Record<string, RssPolicy>;
 
 export interface RssObservation {
@@ -54,6 +54,16 @@ export function evaluateEntrypointRss(
 	observation: RssObservation,
 ): RssPolicyResult {
 	const violations: string[] = [];
+	if (
+		policy.status === "strict" &&
+		observation.importOnlyDeltaBytes >= RSS_IMPORT_BUDGET_BYTES
+	)
+		violations.push("import-only delta is not below 5 MiB");
+	if (
+		policy.status === "strict" &&
+		observation.importPlusOperationDeltaBytes > RSS_OPERATION_BUDGET_BYTES
+	)
+		violations.push("import+operation delta exceeds 5.3 MiB");
 	if (observation.reachability.heavyweightDependencies.length > 0)
 		violations.push("operational surface reaches a heavyweight dependency");
 	if (observation.reachability.schemaEntrypoints.length > 0)

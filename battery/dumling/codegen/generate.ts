@@ -1,15 +1,11 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import {
-	compileZodValidationArtifacts,
-	emitLazyValidationRegistry,
-} from "codegen";
+import { compileZodValidationArtifacts } from "codegen";
 import { UnitKindSchema } from "../src/schemas/units.js";
 import { validationOperations } from "../src/validation/operations.js";
 import { outputType } from "./emit-types.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";
-import { validationGroup } from "./validation-groups.js";
 
 const kinds = UnitKindSchema.options;
 const routes = await loadRoutes();
@@ -46,10 +42,6 @@ export type ParsedUnit<R extends UnitRoute=UnitRoute>=R extends UnitRoute ? { [U
 `;
 const outputs = {
 	"units.ts": types,
-	"validation-runtime.ts": emitLazyValidationRegistry(
-		compiled,
-		validationGroup,
-	).source,
 	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
 	"vocabulary.ts": `// Generated from canonical Zod enums. Run bun run generate.\nexport const UnitKind = ${JSON.stringify(UnitKindSchema.enum)} as const;\nexport type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];\n`,
 	...Object.fromEntries(

@@ -3,7 +3,7 @@
  * Canonical inputs and ideal outputs remain owned by the Golden Corpus.
  */
 export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
-	{
+	Object.freeze({
 		"target-de-demo-perfect-arbeiten-click-habe":
 			"habe + gearbeitet = one perfect verb. Take both. gestern is extra. VERB.",
 		"target-de-demo-governed-rechnen-click-rechnet":
@@ -60,4 +60,4 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 			"The marked string has no defensible German Family/Kind route in this context. Return Unresolved with both nullable fields null.",
 		"target-de-diagnostic-idiom-oel-click-ins":
 			"The marked function token is a fixed realized member of the Idiom. Its click selects the complete Idiom, while the inserted descriptive modifier remains outside membership.",
-	};
+	});

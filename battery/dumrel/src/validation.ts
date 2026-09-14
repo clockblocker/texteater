@@ -5,7 +5,7 @@ import {
 	type ValidationOperations,
 } from "common-utils";
 import { validationOperations as dumlingValidationOperations } from "dumling/validation";
-import { validationRegistry } from "./generated/validation-runtime.js";
+import { encodedValidation } from "./generated/validation.js";
 import { normalizeText } from "./semantics.js";
 import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
 
@@ -22,7 +22,7 @@ type Registry = {
 	>;
 	definitions: Record<string, Constraint>;
 };
-const registry: Registry = /* @__PURE__ */ validationRegistry;
+const registry: Registry = /* @__PURE__ */ JSON.parse(encodedValidation);
 const operations: ValidationOperations = {
 	...dumlingValidationOperations,
 	"dumrel.normalize-text": (value) => ({

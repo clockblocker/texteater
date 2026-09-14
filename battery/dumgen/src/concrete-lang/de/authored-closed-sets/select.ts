@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
-import { membersFor } from "../../../generated/catalog.js";
 import { DumgenFailure } from "../../../universal/failure.js";
+import { authoredMembers } from "./inventory.js";
 
 export function sameValue(left: unknown, right: unknown): boolean {
 	if (left === right) return true;
@@ -23,7 +23,7 @@ export function sameValue(left: unknown, right: unknown): boolean {
 	);
 }
 export function authoredFor(lemma: Dumling.Lemma) {
-	return membersFor(lemma).find((member) => sameValue(member.lemma, lemma));
+	return authoredMembers.find((member) => sameValue(member.lemma, lemma));
 }
 export function closedRoute(lemma: {
 	language: string;
@@ -61,7 +61,7 @@ export function selectGrammaticalAlternatives(input: {
 			"Unknown feature coordinate",
 		);
 	const varied = new Set(input.vary);
-	return membersFor(input.source)
+	return authoredMembers
 		.filter(
 			(member) =>
 				member.lemma.kind === "PRON" &&
