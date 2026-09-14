@@ -71,9 +71,7 @@ export function createGermanHighLevelTargetClassificationProjection(
 				compactToOriginal.push(originalIndex);
 				originalToCompact.set(originalIndex, compactIndex);
 				if (segment.kind === "ResolvableText")
-					candidates.push(
-						Object.freeze({ i: compactIndex, s: segment.text }),
-					);
+					candidates.push({ i: compactIndex, s: segment.text });
 			}
 			const escaped = escapeXmlText(segment.text);
 			return originalIndex === input.clickedSegmentIndex
@@ -87,17 +85,17 @@ export function createGermanHighLevelTargetClassificationProjection(
 			"The clicked canonical segment is not a ResolvableText candidate.",
 		);
 
-	const modelInput = Object.freeze({
+	const modelInput = {
 		clickedIndex,
 		markedSentence,
-		segments: Object.freeze(candidates),
-	});
+		segments: candidates,
+	};
 
-	return Object.freeze({
+	return {
 		modelInput,
 		canonicalize(output) {
 			if (output.decision === "Unresolved")
-				return Object.freeze({ decision: "Unresolved" as const });
+				return { decision: "Unresolved" as const };
 			return canonicalAnalysisTarget(
 				input,
 				compactToOriginal,
@@ -108,27 +106,27 @@ export function createGermanHighLevelTargetClassificationProjection(
 		},
 		materialize(result) {
 			if ("decision" in result)
-				return Object.freeze({
+				return {
 					additionalMemberIndices: null,
 					decision: "Unresolved" as const,
 					target: null,
-				});
+				};
 			const additionalMemberIndices = compactAdditionalMembers(
 				input,
 				originalToCompact,
 				clickedIndex,
 				result.memberSegmentIndices,
 			);
-			return Object.freeze({
-				additionalMemberIndices: Object.freeze(additionalMemberIndices),
+			return {
+				additionalMemberIndices: additionalMemberIndices,
 				decision: "Resolved" as const,
-				target: Object.freeze({
+				target: {
 					family: result.family,
 					kind: result.kind,
-				}) as GermanHighLevelTargetClassificationRoute,
-			});
+				} as GermanHighLevelTargetClassificationRoute,
+			};
 		},
-	});
+	};
 }
 
 function canonicalAnalysisTarget(
@@ -157,10 +155,10 @@ function canonicalAnalysisTarget(
 				throw new Error("Membership must reference ResolvableText.");
 			return originalIndex;
 		});
-	return Object.freeze({
+	return {
 		...route,
-		memberSegmentIndices: Object.freeze(memberSegmentIndices),
-	}) as GermanHighLevelTargetClassificationTarget;
+		memberSegmentIndices: memberSegmentIndices,
+	} as GermanHighLevelTargetClassificationTarget;
 }
 
 function compactAdditionalMembers(

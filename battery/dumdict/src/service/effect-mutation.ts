@@ -11,20 +11,6 @@ import type {
 } from "../public";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-function freeze<T>(value: T): T {
-	if (Array.isArray(value)) return Object.freeze(value.map(freeze)) as T;
-	if (value !== null && typeof value === "object")
-		return Object.freeze(
-			Object.fromEntries(
-				Object.entries(value).map(([key, member]) => [
-					key,
-					freeze(member),
-				]),
-			),
-		) as T;
-	return value;
-}
-
 export function prepared<L extends Dumling.Language>(
 	options: DumdictServiceRuntimeOptions<L>,
 	plan:
@@ -46,7 +32,7 @@ export function prepared<L extends Dumling.Language>(
 			baseRevision: plan.baseRevision,
 			changes: plan.changes,
 		});
-		return freeze({
+		return structuredClone({
 			plan: parsed,
 			affected: plan.affected,
 			summary: plan.summary,

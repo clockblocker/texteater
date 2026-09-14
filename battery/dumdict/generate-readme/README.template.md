@@ -32,7 +32,7 @@ The runtime service exposes Effect workflows:
 - `getInfoForRelationsCleanup`: inspect unresolved relation targets
 - `cleanupRelations`: retry unresolved targets through deterministic Lemma resolution
 
-Each mutation also has a `prepare` variant that returns an immutable plan
+Each mutation also has a `prepare` variant that returns a detached plan
 without writing. The host can commit that plan together with related writes
 in one transaction; standalone methods prepare and commit through storage.
 `createDumdictLayer(language)` exposes language-bound service and storage tags

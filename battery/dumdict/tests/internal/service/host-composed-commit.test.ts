@@ -9,19 +9,13 @@ import {
 } from "./helpers";
 
 describe("host-composed Dumdict commits", () => {
-	test("prepares an immutable plan without publishing dictionary changes", async () => {
+	test("prepares a plan without publishing dictionary changes", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 		const dictionaryBefore = storage.loadAll();
 		const prepared = await Effect.runPromise(
 			dict.prepare.addNewNote({ draft: englishRunDraft }),
 		);
-		expect(Object.isFrozen(prepared)).toBe(true);
-		expect(Object.isFrozen(prepared.plan)).toBe(true);
-		expect(Object.isFrozen(prepared.plan.changes)).toBe(true);
-		expect(Object.isFrozen(prepared.plan.changes[0])).toBe(true);
-		expect(Object.isFrozen(prepared.plan.changes[0]?.preconditions)).toBe(
-			true,
-		);
+		expect(prepared.plan.changes.length).toBeGreaterThan(0);
 		expect(storage.loadAll()).toEqual(dictionaryBefore);
 	});
 });

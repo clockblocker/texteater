@@ -35,7 +35,7 @@ export function assertStitchedText(text: string): void {
 	}
 }
 
-export function freezeSegmentation(
+export function finalizeSegmentation(
 	stitchedText: string,
 	segments: readonly Segment[],
 	trace: readonly SourceSegmentationTraceEntry[],
@@ -62,12 +62,10 @@ export function freezeSegmentation(
 		throw new Error("Every Segment must have exactly one trace rule.");
 	}
 
-	return Object.freeze({
-		segments: Object.freeze(
-			segments.map((segment) => Object.freeze(segment)),
-		),
-		trace: Object.freeze(trace.map((entry) => Object.freeze(entry))),
-	});
+	return {
+		segments: [...segments],
+		trace: [...trace],
+	};
 }
 
 export function pushSegment(

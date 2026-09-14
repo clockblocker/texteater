@@ -1,7 +1,7 @@
 import type { Segment, SegmentKind } from "../../../types.js";
 import {
 	assertStitchedText,
-	freezeSegmentation,
+	finalizeSegmentation,
 	pushSegment,
 	type SourceSegmentation,
 	type SourceSegmentationTraceEntry,
@@ -81,7 +81,7 @@ export function segmentHebrew(stitchedText: string): SourceSegmentation {
 		}
 	}
 
-	return freezeSegmentation(stitchedText, segments, trace);
+	return finalizeSegmentation(stitchedText, segments, trace);
 }
 
 function segmentGuarded(stitchedText: string): SourceSegmentation {
@@ -108,7 +108,7 @@ function segmentGuarded(stitchedText: string): SourceSegmentation {
 		}
 		splitRun(run, segments, trace);
 	}
-	return freezeSegmentation(stitchedText, segments, trace);
+	return finalizeSegmentation(stitchedText, segments, trace);
 }
 
 function splitRun(

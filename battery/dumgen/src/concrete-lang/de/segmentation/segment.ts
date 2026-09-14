@@ -1,7 +1,7 @@
 import type { Segment, SegmentKind } from "../../../types.js";
 import {
 	assertStitchedText,
-	freezeSegmentation,
+	finalizeSegmentation,
 	pushSegment,
 	type SourceSegmentation,
 	type SourceSegmentationTraceEntry,
@@ -303,7 +303,7 @@ export function segmentGerman(stitchedText: string): SourceSegmentation {
 		offset += grapheme.length;
 	}
 
-	return freezeSegmentation(stitchedText, segments, trace);
+	return finalizeSegmentation(stitchedText, segments, trace);
 }
 
 function detachTrailingPunctuation(value: string): {

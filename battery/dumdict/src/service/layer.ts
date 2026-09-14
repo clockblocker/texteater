@@ -23,5 +23,5 @@ export function createDumdictLayer<const L extends Dumling.Language>(
 			createDumdictService({ language, storage }),
 		),
 	);
-	return Object.freeze({ Service, Storage, Live });
+	return { Service, Storage, Live };
 }

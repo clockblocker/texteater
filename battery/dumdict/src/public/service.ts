@@ -81,7 +81,7 @@ export type DumdictPreparationFailure =
  *
  * @remarks Mutations validate an operation-shaped storage slice, plan direct
  * changes with preconditions, and commit the complete plan atomically through
- * the configured storage port. `prepare` exposes the immutable plan for host
+ * the configured storage port. `prepare` exposes a detached plan for host
  * inspection before a separate host-owned atomic commit.
  */
 export type DumdictService<L extends Dumling.Language> = {
