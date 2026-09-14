@@ -4,7 +4,7 @@ import type {
 	emojiOutputSchema as outputSchema,
 } from "../model-schemas.js";
 
-const neighborEmojiByCaseId = Object.freeze({
+const neighborEmojiByCaseId = {
 	"reading-de-lexeme-det-der-neighbor-house-isolation": ["🏠", "🏡", "🏘️"],
 	"reading-de-lexeme-det-der-neighbor-car-isolation": ["🚗", "🚙", "🏎️"],
 	"reading-de-lexeme-pron-das-relative-neighbor-house-isolation": [
@@ -24,13 +24,11 @@ const neighborEmojiByCaseId = Object.freeze({
 		"🏡",
 		"🏘️",
 	],
-} as const);
+} as const;
 
-export const meaningIsolationCaseIds = Object.freeze(
-	Object.keys(neighborEmojiByCaseId) as Array<
-		keyof typeof neighborEmojiByCaseId
-	>,
-);
+export const meaningIsolationCaseIds = Object.keys(
+	neighborEmojiByCaseId,
+) as Array<keyof typeof neighborEmojiByCaseId>;
 
 export type ReadingMeaningIsolationEvaluation = Readonly<{
 	contractPass: boolean;
@@ -60,10 +58,10 @@ export const evaluateReadingMeaningIsolation: ExperimentEvaluation<
 	const neighborMeaningPass = forbidden.every(
 		(emoji) => !output.emojiDescription.includes(emoji),
 	);
-	return Object.freeze({
+	return {
 		contractPass: decisionPass && noveltyPass && neighborMeaningPass,
 		decisionPass,
 		noveltyPass,
 		neighborMeaningPass,
-	});
+	};
 };

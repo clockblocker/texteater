@@ -11,11 +11,14 @@
 			"@testing-library/jest-dom/vitest"
 		],
 		"paths": {
-			"react-resizable-panels": ["./lib/index.ts"]
+			"react-resizable-panels": ["./lib/index.ts"],
+			"react-resizable-panels/workspace": ["./workspace/index.ts"]
 		}
 	},
 	"include": [
+		"e2e",
 		"lib",
+		"playwright.config.ts",
 		"vitest.config.ts",
 		"vitest.d.ts",
 		"vitest.setup.ts",

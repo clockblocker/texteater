@@ -5,6 +5,7 @@ export {
 	CodegenOwnershipError,
 	CodegenPlanError,
 } from "./errors.js";
+export { emitLazyValidationRegistry } from "./lazy-validation-registry.js";
 export { namedBlockMarkdown } from "./named-block-markdown.js";
 export { defineCodegen } from "./recipe.js";
 export { runCodegen } from "./runner.js";

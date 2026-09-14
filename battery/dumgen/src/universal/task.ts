@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import * as Effect from "effect/Effect";
 import { DumgenFailure } from "./failure.js";
 export function task<T>(
 	stage: string,

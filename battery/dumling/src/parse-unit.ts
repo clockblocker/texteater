@@ -3,7 +3,7 @@ import {
 	ParsingError,
 	parseValidationArtifact,
 } from "common-utils";
-import { encodedValidation } from "./generated/validation.js";
+import { validationRegistry } from "./generated/validation-runtime.js";
 import type { ParsedUnit, UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";
 
@@ -12,7 +12,7 @@ interface Registry {
 	roots: Readonly<Record<string, Constraint>>;
 	definitions: Readonly<Record<string, Constraint>>;
 }
-const registry: Registry = /* @__PURE__ */ JSON.parse(encodedValidation);
+const registry: Registry = /* @__PURE__ */ validationRegistry;
 export type ParseResult<T> =
 	| { success: true; chain: T }
 	| { success: false; error: ParsingError };

@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import {
 	compileZodValidationArtifacts,
+	emitLazyValidationRegistry,
 	emitValidationOutputTypes,
 } from "codegen";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
@@ -25,6 +26,7 @@ import {
 } from "../src/selection-schemas.js";
 import { normalizeText } from "../src/semantics.js";
 import { formatTypeScript } from "./format-typescript.js";
+import { validationGroup } from "./validation-groups.js";
 
 const operations = [
 	...dumlingOperations,
@@ -56,6 +58,10 @@ const compiled = compileZodValidationArtifacts({
 	operations,
 });
 const outputs = {
+	"validation-runtime.ts": emitLazyValidationRegistry(
+		compiled,
+		validationGroup,
+	).source,
 	"types.ts": `// Generated from canonical Dumrel Zod schemas. Run bun run generate.\n${emitValidationOutputTypes(
 		{
 			artifact: compiled,

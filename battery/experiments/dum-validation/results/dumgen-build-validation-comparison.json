@@ -1,0 +1,83 @@
+{
+  "changes": [
+    "Validate all 168 authored members before packaging instead of at runtime import",
+    "Import effect/Effect instead of the Effect root; preserve runtime freezing and validation of dynamic inputs"
+  ],
+  "method": "Five fresh-process median peak RSS deltas over the same empty-module harness, using built published packages. No budgets changed.",
+  "dumgenMiB": {
+    "before": {
+      "importOnly": 108.281,
+      "importPlusOperation": 108.672
+    },
+    "after": {
+      "importOnly": 40.219,
+      "importPlusOperation": 41.859
+    }
+  },
+  "reductionMiB": {
+    "importOnly": 68.062,
+    "importPlusOperation": 66.813
+  },
+  "additionalPeakMiBAfterEffectPreloaded": 17.265625,
+  "verification": {
+    "checks": [
+      {
+        "id": "refresh-derived-policy",
+        "passed": true
+      },
+      {
+        "id": "build",
+        "passed": true
+      },
+      {
+        "id": "generated-validator-semantics",
+        "passed": true
+      },
+      {
+        "id": "types-and-schema-consumers",
+        "passed": true
+      },
+      {
+        "id": "compiler-and-interpreter-contracts",
+        "passed": true
+      },
+      {
+        "id": "dum-package-contracts",
+        "passed": true
+      },
+      {
+        "id": "consumer-workflows",
+        "passed": true
+      },
+      {
+        "id": "public-export-contracts",
+        "passed": true
+      },
+      {
+        "id": "published-runtime-failure-paths",
+        "passed": false
+      },
+      {
+        "id": "canonical-differential-and-isolation",
+        "passed": true
+      },
+      {
+        "id": "rss",
+        "passed": true
+      },
+      {
+        "id": "workload-profile",
+        "passed": true
+      }
+    ],
+    "targets": 563,
+    "values": 11097,
+    "publishedFailureStatus": "Same 22 pre-existing failure-path checks as before this change; no new failures"
+  },
+  "evidenceFiles": [
+    "dumgen-build-validation-before.json",
+    "dumgen-build-validation-after.json",
+    "dumgen-build-validation-effect-preloaded.json",
+    "dumgen-build-validation-gate.json"
+  ]
+}

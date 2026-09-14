@@ -1,0 +1,306 @@
+{
+  "metadata": {
+    "commit": "eb7ebd84b973ea7e586f591117e06d2bcfc81aca",
+    "sourceSha256": "ae6bdeb51ee0715fab23db4b3f701d1bd505f5a71f2dc498a97bc2fa30a17f3b",
+    "experimentSha256": "aaaf8c8368d8e6b080aabf61856b95e7ef57bbc94ad961fbcda7339875e3f8d9",
+    "trackedDiffSha256": "68940a7afb6e372274b38d10731cfba9259ccbfb63df89d8d474a092d602ea9d",
+    "startedAt": "2026-09-14T04-00-09.184Z",
+    "bun": "1.4.2",
+    "platform": "darwin",
+    "arch": "arm64",
+    "variants": [
+      "aot-validators"
+    ],
+    "mode": "gate-only",
+    "gateAdjustment": "The relation-entrypoint test runs its unchanged bundle from a temporary file, avoiding the OS argument-size limit. Assertions are unchanged."
+  },
+  "supplementalStress": null,
+  "method": {
+    "productionChanged": false,
+    "budgetsChanged": false,
+    "measuredRuntime": "Fresh processes loading staged built packages, outside development aliases",
+    "rss": "Five-process median delta over the empty-module baseline; raw bytes retained",
+    "profiles": "Five fresh processes per workload; cold and warm timings, peak RSS, and post-GC heap",
+    "gate": "Builds, type/schema consumers, compiler/interpreter tests, generated-validator semantics when present, Dum package contracts, consumer workflows, exported interfaces, published-package failure paths and shared error identity, canonical differential results and exact issues, adversarial cases, and runtime/declaration isolation",
+    "limitations": [
+      "No live models or deployed Convex state",
+      "One machine and Bun version",
+      "Host load is not controlled; overlapping work can confound wall-clock timings",
+      "Projection profiles use a synthetic Synonym chain whose inferred relations become dense; they are not representative of every graph with that many Readings",
+      "Mutable artifact stress is stricter than the readonly TypeScript artifact contract",
+      "No alternative is adopted into production by this experiment"
+    ]
+  },
+  "evidence": [
+    {
+      "gateVersion": 3,
+      "mode": "gate-only",
+      "id": "aot-validators",
+      "question": "Does ahead-of-time JavaScript validation reduce interpretation costs while preserving exact semantics?",
+      "tradeoff": "Direct node calls and unrolled object/union checks replace three internal registries; more generated code may cost memory. Compare with external-runtime, which shares the same packaging correction.",
+      "dxPassed": true,
+      "eligibleForReview": true,
+      "limitation": null,
+      "checks": [
+        {
+          "id": "refresh-derived-policy",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 44.14366599999994,
+          "log": "aot-validators/refresh-derived-policy.log"
+        },
+        {
+          "id": "build",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 21985.321334,
+          "log": "aot-validators/build.log"
+        },
+        {
+          "id": "generated-validator-semantics",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 1536.9466670000002,
+          "log": "aot-validators/generated-validator-semantics.log"
+        },
+        {
+          "id": "types-and-schema-consumers",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 18699.510417,
+          "log": "aot-validators/types-and-schema-consumers.log"
+        },
+        {
+          "id": "compiler-and-interpreter-contracts",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 239.14329200000066,
+          "log": "aot-validators/compiler-and-interpreter-contracts.log"
+        },
+        {
+          "id": "dum-package-contracts",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 13036.896625000001,
+          "log": "aot-validators/dum-package-contracts.log"
+        },
+        {
+          "id": "consumer-workflows",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 2570.5182499999937,
+          "log": "aot-validators/consumer-workflows.log"
+        },
+        {
+          "id": "public-export-contracts",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 370.00887499999953,
+          "log": "aot-validators/public-export-contracts.log"
+        },
+        {
+          "id": "published-runtime-failure-paths",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 147.95266600001196,
+          "log": "aot-validators/published-runtime-failure-paths.log"
+        },
+        {
+          "id": "canonical-differential-and-isolation",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 1593.494292000003,
+          "log": "aot-validators/canonical-differential-and-isolation.log"
+        }
+      ],
+      "sourceGatePassed": true,
+      "publishedRuntimeGate": {
+        "passed": true,
+        "checks": 27,
+        "failures": []
+      },
+      "eligibleForAdoption": false,
+      "adoptionStatus": "Experimental only; existing RSS policy and implementation review remain separate.",
+      "gate": {
+        "passed": true,
+        "negativeControls": {
+          "acceptEverythingIsRejected": true,
+          "erasedErrorsAreRejected": true
+        },
+        "targetCount": 563,
+        "valueCount": 11097,
+        "differentialFailures": [],
+        "adversarial": {
+          "comparisons": 15,
+          "failures": [],
+          "mutableArtifactStress": "pass"
+        },
+        "declarationFailures": [],
+        "runtime": [
+          {
+            "specifier": "dumling",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumling"
+            ]
+          },
+          {
+            "specifier": "dumling/validation",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "dumling/validation"
+            ]
+          },
+          {
+            "specifier": "dumrel",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "common-utils/workflow",
+              "dumdict",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict/runtime",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "common-utils/workflow",
+              "dumdict/runtime",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict/relations",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumdict/relations",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict/pending",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumdict/pending",
+              "dumling"
+            ]
+          },
+          {
+            "specifier": "dumdict/memory",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumdict/memory",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumgen",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumgen",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          }
+        ]
+      },
+      "compilation": {
+        "mode": "ahead-of-time JavaScript functions; original branch order; exact diagnostics; no runtime compiler or interpreter fallback",
+        "baseline": "external-runtime",
+        "scope": "Dumling, Dumrel and Dumgen internal registries. Dumdict consumes those packages but retains its own artifact parser. Public parseValidationArtifact and mutable caller-supplied artifacts are unchanged.",
+        "packages": [
+          {
+            "package": "dumling",
+            "roots": 396,
+            "nodes": 2986,
+            "sourceBytes": 1363057,
+            "sourceSha256": "6d424b19b3eb7c2e6a5ffe4d5c668d7e0f3142732888e299101aad75a185087b"
+          },
+          {
+            "package": "dumrel",
+            "roots": 15,
+            "nodes": 2225,
+            "sourceBytes": 1217873,
+            "sourceSha256": "183f53a59bacefa8e19bb99d4ded97bcbd4e2a8c4ed3780a1e01db82d1f9b216"
+          },
+          {
+            "package": "dumgen",
+            "roots": 121,
+            "nodes": 6852,
+            "sourceBytes": 3875103,
+            "sourceSha256": "b256bd22189c47f23a882dae095c46bbc5096f5c2a50bbb2dd54fcfbeba1d4ec"
+          }
+        ]
+      },
+      "measurements": null,
+      "profiles": null,
+      "comparison": {}
+    }
+  ]
+}

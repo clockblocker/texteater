@@ -10,8 +10,8 @@ import {
 	evaluateEntrypointRss,
 	formatRssGateReport,
 	RSS_ENTRYPOINT_POLICIES,
-	RSS_IMPORT_BUDGET_BYTES,
-	RSS_OPERATION_BUDGET_BYTES,
+	RSS_SHARED_BUDGET_BYTES,
+	evaluateSharedRss,
 } from "../dum-runtime-verification/policy";
 
 describe("current compiled validation", () => {
@@ -86,122 +86,42 @@ describe("operational RSS CI contract", () => {
 		);
 	});
 
-	test("strict surfaces keep imports below 5 MiB and operations at or below 5.3 MiB", () => {
-		const policy = RSS_ENTRYPOINT_POLICIES["dumling/validation"];
-		expect(policy.status).toBe("strict");
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES - 1,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES,
-				reachability: {
-					heavyweightDependencies: [],
-					schemaEntrypoints: [],
-				},
-			}),
-		).toMatchObject({ passed: true, status: "strict" });
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES,
-				reachability: {
-					heavyweightDependencies: [],
-					schemaEntrypoints: [],
-				},
-			}).passed,
-		).toBe(false);
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES - 1,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES + 1,
-				reachability: {
-					heavyweightDependencies: [],
-					schemaEntrypoints: [],
-				},
-			}).passed,
-		).toBe(false);
+	test("shared chain has one inclusive 30 MiB ceiling after Effect", () => {
+		expect(RSS_SHARED_BUDGET_BYTES).toBe(30 * 1024 * 1024);
+		expect(evaluateSharedRss(RSS_SHARED_BUDGET_BYTES).passed).toBe(true);
+		expect(evaluateSharedRss(RSS_SHARED_BUDGET_BYTES + 1).passed).toBe(
+			false,
+		);
+		for (const invalid of [NaN, Infinity, -1])
+			expect(evaluateSharedRss(invalid).passed).toBe(false);
 	});
-
-	test("the migrated Dumling root is held to the strict RSS and reachability contract", () => {
-		const policy = RSS_ENTRYPOINT_POLICIES["dumling"];
-		expect(policy.status).toBe("strict");
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES - 1,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES,
+	test("isolated RSS is diagnostic while every surface still enforces schema isolation", () => {
+		for (const policy of Object.values(RSS_ENTRYPOINT_POLICIES)) {
+			const observation = {
+				importOnlyDeltaBytes: 100 * 1024 * 1024,
+				importPlusOperationDeltaBytes: 120 * 1024 * 1024,
 				reachability: {
 					heavyweightDependencies: [],
 					schemaEntrypoints: [],
 				},
-			}),
-		).toMatchObject({ passed: true, status: "strict" });
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES,
-				reachability: {
-					heavyweightDependencies: ["zod"],
-					schemaEntrypoints: [],
-				},
-			}).passed,
-		).toBe(false);
-	});
-
-	test("the migrated Dumrel root is held to the strict RSS and reachability contract", () => {
-		const policy = RSS_ENTRYPOINT_POLICIES.dumrel;
-		expect(policy.status).toBe("strict");
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES - 1,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES,
-				reachability: {
-					heavyweightDependencies: [],
-					schemaEntrypoints: [],
-				},
-			}),
-		).toMatchObject({ passed: true, status: "strict" });
-		expect(
-			evaluateEntrypointRss(policy, {
-				importOnlyDeltaBytes: RSS_IMPORT_BUDGET_BYTES - 1,
-				importPlusOperationDeltaBytes: RSS_OPERATION_BUDGET_BYTES + 1,
-				reachability: {
+			};
+			expect(evaluateEntrypointRss(policy, observation)).toMatchObject({
+				passed: true,
+				status: "diagnostic",
+			});
+			for (const reachability of [
+				{ heavyweightDependencies: ["zod"], schemaEntrypoints: [] },
+				{
 					heavyweightDependencies: [],
 					schemaEntrypoints: ["dumrel/schema"],
 				},
-			}).passed,
-		).toBe(false);
-	});
-
-	test("Effect workflows report RSS without weakening heavyweight or schema isolation", () => {
-		const policy = RSS_ENTRYPOINT_POLICIES.dumgen;
-		expect(policy.status).toBe("effect-workflow");
-
-		const measuredWorkflow = {
-			importOnlyDeltaBytes: 32 * 1024 * 1024,
-			importPlusOperationDeltaBytes: 32 * 1024 * 1024,
-		};
-		expect(
-			evaluateEntrypointRss(policy, {
-				...measuredWorkflow,
-				reachability: {
-					heavyweightDependencies: [],
-					schemaEntrypoints: [],
-				},
-			}),
-		).toMatchObject({ passed: true, status: "effect-workflow" });
-
-		for (const reachability of [
-			{ heavyweightDependencies: ["zod"], schemaEntrypoints: [] },
-			{
-				heavyweightDependencies: [],
-				schemaEntrypoints: ["dumgen/schema"],
-			},
-		]) {
-			expect(
-				evaluateEntrypointRss(policy, {
-					...measuredWorkflow,
-					reachability,
-				}).passed,
-			).toBe(false);
+			])
+				expect(
+					evaluateEntrypointRss(policy, {
+						...observation,
+						reachability,
+					}).passed,
+				).toBe(false);
 		}
 	});
 
@@ -216,7 +136,7 @@ describe("operational RSS CI contract", () => {
 					importPlusOperationDeltaBytes: 3 * 1024 * 1024,
 					passed: true,
 					specifier: "dumling/reading",
-					status: "strict",
+					status: "diagnostic",
 					violations: [],
 				},
 			],

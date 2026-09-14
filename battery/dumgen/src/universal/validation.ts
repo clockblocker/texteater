@@ -4,11 +4,11 @@ import {
 	parseValidationArtifact,
 } from "common-utils";
 import { validationOperations } from "dumling/validation";
-import { encodedValidation } from "../generated/validation.js";
+import { validationRegistry } from "../generated/validation-runtime.js";
 import type { Encounter } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 
-const registry = JSON.parse(encodedValidation) as {
+const registry = validationRegistry as {
 	roots: Record<string, Constraint>;
 	definitions: Record<string, Constraint>;
 };
