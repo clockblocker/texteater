@@ -1,6 +1,6 @@
 import { v } from "convex/values";
+import { createPendingSemanticRelationRecord } from "dumdict/pending";
 import { makeSurfaceId } from "dumdict/runtime";
-
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
@@ -14,12 +14,15 @@ import {
 } from "../shared/notes-study/note-study-dummy-database";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalMutation, type MutationCtx, query } from "./_generated/server";
+import { pendingRecordLocatorIndexKey } from "./model/dumdictPendingIndexes";
+import { requireRecord } from "./model/readingKnowledge";
 import { shadowKeyFor } from "./model/shadows";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
 import {
 	loadUnitReadingNote,
 	readingNoteValidator,
 } from "./modules/notes/readingNote";
+import { consolidateExampleTexts } from "./modules/text/exampleCollection";
 import { persistSubmittedText } from "./modules/text/submission";
 
 const listItemValidator = v.object({
@@ -105,12 +108,24 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 		.unique();
 	if (readingEntry) {
 		await ctx.db.patch(readingEntry._id, {
-			record: { knowledge: unit.knowledge },
+			record: {
+				attestedTranslations: [],
+				notes: "",
+				...requireRecord(
+					readingEntry.record,
+					"Notes Study Reading Entry",
+				),
+				knowledge: unit.knowledge,
+			},
 		});
 	} else {
 		await ctx.db.insert("readingEntries", {
 			readingId: reading._id,
-			record: { knowledge: unit.knowledge },
+			record: {
+				attestedTranslations: [],
+				notes: "",
+				knowledge: unit.knowledge,
+			},
 		});
 	}
 	const accumulated = await ctx.db
@@ -162,7 +177,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 	if (!ownedSurface) {
 		await ctx.db.insert("ownedSurfaces", {
 			surfaceId: surface._id,
-			record: {},
+			record: { attestedTranslations: [], notes: "" },
 		});
 	}
 	for (const value of unit.presentationSurfaces) {
@@ -201,7 +216,11 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 		if (!owned) {
 			await ctx.db.insert("ownedSurfaces", {
 				surfaceId: presentationSurface._id,
-				record: { presentationRole: "notes-study-form" },
+				record: {
+					attestedTranslations: [],
+					notes: "",
+					presentationRole: "notes-study-form",
+				},
 			});
 		}
 	}
@@ -224,19 +243,31 @@ async function ensureOccurrence(
 ) {
 	for (const [occurrenceIndex, occurrence] of unit.occurrences.entries()) {
 		const sourceText = occurrence.segments.map(({ text }) => text).join("");
-		const persisted = await persistSubmittedText(ctx, {
-			submissionKey: occurrence.submissionKey,
-			sourceText,
-			sentences: [
-				{
-					segmentedSentenceId: occurrence.segmentedSentenceId,
-					position: 0,
-					language: "de",
-					stitchedText: sourceText,
-					segments: [...occurrence.segments],
-				},
-			],
-		});
+		const existingSentence = await ctx.db
+			.query("sentences")
+			.withIndex("by_segmented_sentence_id", (q) =>
+				q.eq("segmentedSentenceId", occurrence.segmentedSentenceId),
+			)
+			.unique();
+		if (existingSentence?.heading) continue;
+		const persisted = existingSentence
+			? {
+					textId: existingSentence.textId,
+					sentenceIds: [existingSentence._id],
+				}
+			: await persistSubmittedText(ctx, {
+					submissionKey: occurrence.submissionKey,
+					sourceText,
+					sentences: [
+						{
+							segmentedSentenceId: occurrence.segmentedSentenceId,
+							position: 0,
+							language: "de",
+							stitchedText: sourceText,
+							segments: [...occurrence.segments],
+						},
+					],
+				});
 		const sentenceId = persisted.sentenceIds[0];
 		if (!sentenceId)
 			throw new Error("Notes Study sentence was not persisted.");
@@ -344,10 +375,7 @@ export const load = internalMutation({
 			}
 		}
 
-		for (const [
-			pendingIndex,
-			pending,
-		] of NOTE_STUDY_PENDING_RELATIONS.entries()) {
+		for (const pending of NOTE_STUDY_PENDING_RELATIONS) {
 			if (pending.target.language !== "de")
 				throw new Error("Expected German fixture target.");
 			const shadowKey = shadowKeyFor(pending.target);
@@ -364,12 +392,16 @@ export const load = internalMutation({
 			}
 			if (!shadow)
 				throw new Error("Failed to create Notes Study Shadow.");
-			const targetPendingId = `notes-study:${pendingIndex}`;
-			const locatorKey = JSON.stringify([
-				pending.sourceReadingKey,
-				pending.relation,
-				targetPendingId,
-			]);
+			const source = NOTE_STUDY_DATABASE.find(
+				(unit) => unit.readingKey === pending.sourceReadingKey,
+			);
+			if (!source)
+				throw new Error("Missing Notes Study pending relation source.");
+			const record = createPendingSemanticRelationRecord(source.reading, {
+				relation: pending.relation,
+				target: { ...pending.target, language: "de" },
+			});
+			const locatorKey = pendingRecordLocatorIndexKey(record);
 			const existing = await ctx.db
 				.query("pendingSemanticRelations")
 				.withIndex("by_locator_key", (q) =>
@@ -382,21 +414,12 @@ export const load = internalMutation({
 					sourceReadingKey: pending.sourceReadingKey,
 					targetCanonicalForm: pending.target.canonicalForm,
 					shadowId: shadow._id,
-					record: {
-						locator: {
-							sourceReadingKey: pending.sourceReadingKey,
-							relation: pending.relation,
-							targetPendingId,
-						},
-						pending: {
-							relation: pending.relation,
-							target: pending.target,
-						},
-					},
+					record,
 				});
 			}
 		}
 
+		await consolidateExampleTexts(ctx);
 		return {
 			primaryReadings: NOTE_STUDY_DATABASE.length,
 			relatedReadings: NOTE_STUDY_RELATED_DATABASE.length,
@@ -542,4 +565,14 @@ export const playground = query({
 			),
 		};
 	},
+});
+
+export const consolidateExamples = internalMutation({
+	args: {},
+	returns: v.object({
+		textId: v.id("texts"),
+		cases: v.number(),
+		movedTexts: v.number(),
+	}),
+	handler: (ctx) => consolidateExampleTexts(ctx),
 });

@@ -279,108 +279,117 @@ export function SentenceList({
 			aria-label="Text"
 		>
 			{sentences.map((sentence) => (
-				<p
-					key={sentence.sentenceId}
-					ref={(element) => {
-						if (element) {
-							sentenceElements.current.set(
-								sentence.sentenceId,
-								element,
-							);
-						} else {
-							sentenceElements.current.delete(
-								sentence.sentenceId,
-							);
-						}
-					}}
-				>
-					{sentence.segments.length === 0 ? (
-						<span>{sentence.stitchedText}</span>
+				<section key={sentence.sentenceId}>
+					{sentence.heading ? (
+						<h2 className="mb-2 text-base font-semibold tracking-normal">
+							{sentence.heading}
+						</h2>
 					) : null}
-					{sentence.segments.map((segment) => {
-						const isSourceContextMember = isFocusedOccurrenceMember(
-							focus,
-							sentence.sentenceId,
-							segment.index,
-						);
-						const key = segmentKey(
-							sentence.sentenceId,
-							segment.index,
-						);
-						const trackElement = (element: HTMLElement | null) => {
+					<p
+						ref={(element) => {
 							if (element) {
-								segmentElements.current.set(key, element);
+								sentenceElements.current.set(
+									sentence.sentenceId,
+									element,
+								);
 							} else {
-								segmentElements.current.delete(key);
+								sentenceElements.current.delete(
+									sentence.sentenceId,
+								);
 							}
-						};
-						if (segment.kind !== "ResolvableText") {
+						}}
+					>
+						{sentence.segments.length === 0 ? (
+							<span>{sentence.stitchedText}</span>
+						) : null}
+						{sentence.segments.map((segment) => {
+							const isSourceContextMember =
+								isFocusedOccurrenceMember(
+									focus,
+									sentence.sentenceId,
+									segment.index,
+								);
+							const key = segmentKey(
+								sentence.sentenceId,
+								segment.index,
+							);
+							const trackElement = (
+								element: HTMLElement | null,
+							) => {
+								if (element) {
+									segmentElements.current.set(key, element);
+								} else {
+									segmentElements.current.delete(key);
+								}
+							};
+							if (segment.kind !== "ResolvableText") {
+								return (
+									<ReaderPlainSegment
+										key={segment.index}
+										ref={trackElement}
+										highlighted={isSourceContextMember}
+									>
+										{segment.text}
+									</ReaderPlainSegment>
+								);
+							}
+							const isPreviewed = previewTarget?.attestationId
+								? segment.attestationId ===
+									previewTarget.attestationId
+								: previewTarget?.segmentKey === key;
+							const isSelected = selectedSegment?.attestationId
+								? segment.attestationId ===
+									selectedSegment.attestationId
+								: selectedSegmentKey === key;
+							const displayState = displayStateForSegment(
+								segment,
+								isPreviewed,
+								isSelected,
+							);
+							const interactionTarget: InteractionTarget = {
+								segmentKey: key,
+								...(segment.attestationId
+									? { attestationId: segment.attestationId }
+									: {}),
+							};
+
 							return (
-								<ReaderPlainSegment
+								<ReaderSegment
 									key={segment.index}
 									ref={trackElement}
+									data-state={displayState}
 									highlighted={isSourceContextMember}
+									tone={segmentTone(displayState)}
+									underlined={isPreviewState(displayState)}
+									disabled={
+										sentence.language !== "de" ||
+										segment.resolutionState === "Active"
+									}
+									aria-pressed={isSelected}
+									aria-label={segmentAccessibleLabel(segment)}
+									onBlur={() => setFocusedTarget(null)}
+									onFocus={() =>
+										setFocusedTarget(interactionTarget)
+									}
+									onMouseEnter={() =>
+										setHoveredTarget(interactionTarget)
+									}
+									onMouseLeave={() => setHoveredTarget(null)}
+									onClick={(event) =>
+										void onSegmentClick(
+											sentence,
+											segment.index,
+											event.altKey,
+											event.currentTarget,
+										)
+									}
 								>
 									{segment.text}
-								</ReaderPlainSegment>
+								</ReaderSegment>
 							);
-						}
-						const isPreviewed = previewTarget?.attestationId
-							? segment.attestationId ===
-								previewTarget.attestationId
-							: previewTarget?.segmentKey === key;
-						const isSelected = selectedSegment?.attestationId
-							? segment.attestationId ===
-								selectedSegment.attestationId
-							: selectedSegmentKey === key;
-						const displayState = displayStateForSegment(
-							segment,
-							isPreviewed,
-							isSelected,
-						);
-						const interactionTarget: InteractionTarget = {
-							segmentKey: key,
-							...(segment.attestationId
-								? { attestationId: segment.attestationId }
-								: {}),
-						};
-
-						return (
-							<ReaderSegment
-								key={segment.index}
-								ref={trackElement}
-								data-state={displayState}
-								highlighted={isSourceContextMember}
-								tone={segmentTone(displayState)}
-								underlined={isPreviewState(displayState)}
-								disabled={
-									sentence.language !== "de" ||
-									segment.resolutionState === "Active"
-								}
-								aria-pressed={isSelected}
-								aria-label={segmentAccessibleLabel(segment)}
-								onBlur={() => setFocusedTarget(null)}
-								onFocus={() =>
-									setFocusedTarget(interactionTarget)
-								}
-								onMouseEnter={() =>
-									setHoveredTarget(interactionTarget)
-								}
-								onMouseLeave={() => setHoveredTarget(null)}
-								onClick={(event) =>
-									void onSegmentClick(
-										sentence,
-										segment.index,
-										event.altKey,
-										event.currentTarget,
-									)
-								}
-							>
-								{segment.text}
-							</ReaderSegment>
-						);
-					})}
-				</p>
+						})}
+					</p>
+				</section>
 			))}
 		</article>
 	);

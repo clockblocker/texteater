@@ -1,3 +1,4 @@
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import type {
 	ResolutionCheckpoints,
@@ -222,7 +223,9 @@ export function executeResolutionSession({
 			}),
 		);
 	}).pipe(
-		Effect.catchAll((error) => {
+		Effect.catchAllCause((cause) => {
+			if (Cause.isInterruptedOnly(cause)) return Effect.failCause(cause);
+			const error = Cause.squash(cause);
 			const classified = classifyResolutionFailure(error);
 			const diagnosticId = createDiagnosticId();
 			if (classified.kind === "Generation") {

@@ -120,7 +120,8 @@ export function LibraryView() {
 										<div className="flex items-start justify-between gap-4">
 											<div className="flex min-w-0 flex-col gap-2">
 												<p className="line-clamp-3 text-base leading-relaxed font-medium">
-													{text.sourceText}
+													{text.title ??
+														text.sourceText}
 												</p>
 												<p className="text-xs text-muted-foreground">
 													Added{" "}

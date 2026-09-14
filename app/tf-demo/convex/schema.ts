@@ -33,11 +33,13 @@ import {
 
 export default defineSchema({
 	texts: defineTable({
+		title: v.optional(v.string()),
 		submissionKey: v.string(),
 		sourceText: v.string(),
 	}).index("by_submission_key", ["submissionKey"]),
 
 	sentences: defineTable({
+		heading: v.optional(v.string()),
 		segmentedSentenceId: v.string(),
 		textId: v.id("texts"),
 		position: v.number(),

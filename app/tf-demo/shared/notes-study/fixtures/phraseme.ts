@@ -124,12 +124,6 @@ export const phrasemeFixtures = [
 				mark: "≈",
 				content: [
 					noteToken(
-						"sich entscheiden",
-						"reference",
-						"reflexives Verb",
-					),
-					", ",
-					noteToken(
 						"zu einem Entschluss kommen",
 						"shadow",
 						"Unit Shadow, verwandte Wendung",
@@ -208,8 +202,6 @@ export const phrasemeFixtures = [
 				label: "Nahes Synonym",
 				mark: "≈",
 				content: [
-					noteToken("jedenfalls", "reference", "Satzadverb"),
-					", ",
 					noteToken(
 						"sei's drum",
 						"shadow",
@@ -281,8 +273,6 @@ export const phrasemeFixtures = [
 						"reference",
 						"Idiom",
 					),
-					", ",
-					noteToken("etwas glatt übersehen", "reference", "Wendung"),
 				],
 			},
 			{

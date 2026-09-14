@@ -111,44 +111,58 @@ describe("Resolution Session execution", () => {
 		expect(wrote).toBe(false);
 	});
 
-	test.each(["failure", "defect"])("unexpected %s is fingerprinted and recorded without its message", async (kind) => {
-		const records: ResolutionSessionRunRecord[] = [];
-		const errors: string[] = [];
-		await Effect.runPromise(
-			executeResolutionSession({
-				identity,
-				lifecycle: {
-					begin: async () => ({ selection, checkpoints: {} }),
-					advance: async () => {},
-					settle: async () => {},
-					record: async (record) => {
-						records.push(record);
+	test.each(["failure", "defect", "thrown parser error"])(
+		"unexpected %s is fingerprinted and recorded without its message",
+		async (kind) => {
+			const records: ResolutionSessionRunRecord[] = [];
+			const errors: string[] = [];
+			await Effect.runPromise(
+				executeResolutionSession({
+					identity,
+					lifecycle: {
+						begin: async () => ({ selection, checkpoints: {} }),
+						advance: async () => {},
+						settle: async () => {},
+						record: async (record) => {
+							records.push(record);
+						},
 					},
-				},
-				resolve: () =>
-					(kind === "failure" ? Effect.fail : Effect.die)(
-						new TypeError("secret checkpoint payload"),
-					),
-				diagnostics: {
-					info: () => {},
-					error: (message) => errors.push(message),
-				},
-				createDiagnosticId: () => "diagnostic-1",
-			}),
-		);
+					resolve: () => {
+						const error = new TypeError(
+							"secret checkpoint payload",
+						);
+						if (kind === "thrown parser error")
+							return Effect.gen(function* () {
+								yield* Effect.void;
+								throw error;
+							});
+						return (kind === "failure" ? Effect.fail : Effect.die)(
+							error,
+						);
+					},
+					diagnostics: {
+						info: () => {},
+						error: (message) => errors.push(message),
+					},
+					createDiagnosticId: () => "diagnostic-1",
+				}),
+			);
 
-		expect(records).toEqual([
-			expect.objectContaining({
-				kind: "InternalFailed",
-				phase: "Grammar",
-				diagnosticId: "diagnostic-1",
-				errorName: "TypeError",
-				errorFingerprint: expect.stringContaining("fnv1a-"),
-			}),
-		]);
-		expect(errors.join("\n")).toContain("ResolutionRunInternalFailure");
-		expect(errors.join("\n")).not.toContain("secret checkpoint payload");
-	});
+			expect(records).toEqual([
+				expect.objectContaining({
+					kind: "InternalFailed",
+					phase: "Grammar",
+					diagnosticId: "diagnostic-1",
+					errorName: "TypeError",
+					errorFingerprint: expect.stringContaining("fnv1a-"),
+				}),
+			]);
+			expect(errors.join("\n")).toContain("ResolutionRunInternalFailure");
+			expect(errors.join("\n")).not.toContain(
+				"secret checkpoint payload",
+			);
+		},
+	);
 });
 
 function grammaticalInput(canonicalForm = "Bank") {

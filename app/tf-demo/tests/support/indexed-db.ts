@@ -57,17 +57,37 @@ export class IndexedTestDb {
 		return null;
 	}
 
+	normalizeId(table: string, id: string): string | null {
+		return id.startsWith(`${table}-`) ? id : null;
+	}
+
 	query(table: string) {
+		let descending = false;
 		const predicates: Array<(row: TestRow) => boolean> = [];
 		const range = {
 			eq(field: string, value: unknown) {
 				predicates.push((row) => nestedValue(row, field) === value);
 				return range;
 			},
-			gte(field: string, value: number) {
+			gte(field: string, value: number | string) {
 				predicates.push((row) => {
 					const member = nestedValue(row, field);
-					return typeof member === "number" && member >= value;
+					return (
+						(typeof member === "number" ||
+							typeof member === "string") &&
+						member >= value
+					);
+				});
+				return range;
+			},
+			lt(field: string, value: number | string) {
+				predicates.push((row) => {
+					const member = nestedValue(row, field);
+					return (
+						(typeof member === "number" ||
+							typeof member === "string") &&
+						member < value
+					);
 				});
 				return range;
 			},
@@ -79,11 +99,21 @@ export class IndexedTestDb {
 				return range;
 			},
 		};
-		const matches = () =>
-			this.rows(table).filter((row) =>
+		const matches = () => {
+			const rows = this.rows(table).filter((row) =>
 				predicates.every((predicate) => predicate(row)),
 			);
+			if (table === "segments")
+				rows.sort((a, b) => Number(a.index) - Number(b.index));
+			if (table === "sentences")
+				rows.sort((a, b) => Number(a.position) - Number(b.position));
+			return descending ? rows.reverse() : rows;
+		};
 		const selection = {
+			order(direction: "asc" | "desc") {
+				descending = direction === "desc";
+				return selection;
+			},
 			async first() {
 				return matches()[0] ?? null;
 			},

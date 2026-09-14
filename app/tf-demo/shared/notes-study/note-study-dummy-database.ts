@@ -338,23 +338,106 @@ function databaseUnitFor(fixture: NoteStudyFixture): NoteStudyDatabaseUnit {
 /** Committed, runtime-validated Dumling/Dumrel values used by the local seed. */
 export const NOTE_STUDY_DATABASE = NOTE_STUDY_FIXTURES.map(databaseUnitFor);
 
-function relatedUnitFor(token: NoteStudyToken): NoteStudyDatabaseUnit {
+/** Explicit target routes; missing identities fail instead of defaulting to Lexeme/X. */
+const RELATED_ROUTES = {
+	still: { family: "Lexeme", kind: "ADJ" },
+	gelassen: { family: "Lexeme", kind: "ADJ" },
+	unruhig: { family: "Lexeme", kind: "ADJ" },
+	hektisch: { family: "Lexeme", kind: "ADJ" },
+	ungeachtet: { family: "Lexeme", kind: "ADP" },
+	unbeschadet: { family: "Lexeme", kind: "ADP" },
+	trotzdem: { family: "Lexeme", kind: "ADV" },
+	gleichwohl: { family: "Lexeme", kind: "ADV" },
+	doch: { family: "Lexeme", kind: "CCONJ" },
+	der: { family: "Lexeme", kind: "DET" },
+	jener: { family: "Lexeme", kind: "DET" },
+	oh: { family: "Lexeme", kind: "INTJ" },
+	oje: { family: "Lexeme", kind: "INTJ" },
+	Abendlicht: { family: "Lexeme", kind: "NOUN" },
+	Tageshelle: { family: "Lexeme", kind: "NOUN" },
+	Dunkelheit: { family: "Lexeme", kind: "NOUN" },
+	Abenddämmerung: { family: "Lexeme", kind: "NOUN" },
+	Morgendämmerung: { family: "Lexeme", kind: "NOUN" },
+	"Blaue Stunde": { family: "Lexeme", kind: "NOUN" },
+	Bundeshauptstadt: { family: "Lexeme", kind: "NOUN" },
+	Stadt: { family: "Lexeme", kind: "NOUN" },
+	Prozentsymbol: { family: "Lexeme", kind: "NOUN" },
+	Prozentzeichen: { family: "Lexeme", kind: "NOUN" },
+	Zwielicht: { family: "Lexeme", kind: "NOUN" },
+	Sonnenuntergang: { family: "Lexeme", kind: "NOUN" },
+	Tageslicht: { family: "Lexeme", kind: "NOUN" },
+	Lichtzustand: { family: "Lexeme", kind: "NOUN" },
+	Tageslauf: { family: "Lexeme", kind: "NOUN" },
+	nein: { family: "Lexeme", kind: "PART" },
+	"sich gegenseitig": { family: "Lexeme", kind: "PRON" },
+	sich: { family: "Lexeme", kind: "PRON" },
+	"sich selbst": { family: "Lexeme", kind: "PRON" },
+	Deutschland: { family: "Lexeme", kind: "PROPN" },
+	obgleich: { family: "Lexeme", kind: "SCONJ" },
+	obschon: { family: "Lexeme", kind: "SCONJ" },
+	wenngleich: { family: "Lexeme", kind: "SCONJ" },
+	"auch wenn": { family: "Lexeme", kind: "SCONJ" },
+	"v. H.": { family: "Lexeme", kind: "SYM" },
+	durchklingeln: { family: "Lexeme", kind: "VERB" },
+	kontaktieren: { family: "Lexeme", kind: "VERB" },
+	"3": { family: "Lexeme", kind: "NUM" },
+	"Der Zweck heiligt die Mittel": { family: "Phraseme", kind: "Aphorism" },
+	"Der Weg ist wichtiger als das Ziel": {
+		family: "Phraseme",
+		kind: "Aphorism",
+	},
+	"eine Entscheidung fällen": { family: "Phraseme", kind: "Collocation" },
+	"eine Entscheidung aufschieben": {
+		family: "Phraseme",
+		kind: "Collocation",
+	},
+	"zu einem Entschluss kommen": { family: "Phraseme", kind: "Collocation" },
+	"wie auch immer": { family: "Phraseme", kind: "DiscourseFormula" },
+	"sei's drum": { family: "Phraseme", kind: "DiscourseFormula" },
+	"den Wald vor lauter Bäumen nicht sehen": {
+		family: "Phraseme",
+		kind: "Idiom",
+	},
+	"den Durchblick haben": { family: "Phraseme", kind: "Idiom" },
+	"Der frühe Vogel fängt den Wurm": { family: "Phraseme", kind: "Proverb" },
+	"Gut Ding will Weile haben": { family: "Phraseme", kind: "Proverb" },
+} as const satisfies Record<
+	string,
+	Pick<Dumling.Lemma<"de">, "family" | "kind">
+>;
+
+function relatedRoute(canonicalForm: string, source: Dumling.Reading<"de">) {
+	const route = RELATED_ROUTES[canonicalForm as keyof typeof RELATED_ROUTES];
+	if (!route)
+		throw new Error(
+			`Missing Notes Study relation identity ${canonicalForm}.`,
+		);
+	if (route.family !== source.lemma.family)
+		throw new Error(
+			`Notes Study relation from ${source.lemma.canonicalForm} to ${canonicalForm} crosses Families.`,
+		);
+	return route;
+}
+
+function relatedUnitFor(
+	token: NoteStudyToken,
+	source: Dumling.Reading<"de">,
+): NoteStudyDatabaseUnit {
+	const route = relatedRoute(token.text, source);
 	const reading = parseGermanReading({
 		unitKind: "Reading",
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			family: "Lexeme",
-			kind: "X",
+			...route,
 			canonicalForm: token.text,
-			coreFeatures: NULL_CORE_FEATURES_BY_KIND.X,
+			coreFeatures: NULL_CORE_FEATURES_BY_KIND[route.kind],
 		},
 		emojiDescription: "🔗",
 	});
 	const fixture = {
 		presentationKey: `related-${encodeURIComponent(token.text)}`,
-		family: "Lexeme" as const,
-		kind: "X" as const,
+		...route,
 		emoji: "🔗",
 		title: [token],
 		titleText: token.text,
@@ -377,10 +460,14 @@ function relatedUnitFor(token: NoteStudyToken): NoteStudyDatabaseUnit {
 }
 
 const RELATED_UNIT_BY_CANONICAL_FORM = new Map<string, NoteStudyDatabaseUnit>();
-function resolveRelatedUnit(token: NoteStudyToken) {
+function resolveRelatedUnit(
+	token: NoteStudyToken,
+	source: Dumling.Reading<"de">,
+) {
+	relatedRoute(token.text, source);
 	const existing = RELATED_UNIT_BY_CANONICAL_FORM.get(token.text);
 	if (existing) return existing;
-	const created = relatedUnitFor(token);
+	const created = relatedUnitFor(token, source);
 	RELATED_UNIT_BY_CANONICAL_FORM.set(token.text, created);
 	return created;
 }
@@ -398,7 +485,10 @@ export const NOTE_STUDY_RESOLVED_RELATIONS: readonly NoteStudyResolvedRelation[]
 								{
 									sourceReadingKey: source.readingKey,
 									relation,
-									target: resolveRelatedUnit(part),
+									target: resolveRelatedUnit(
+										part,
+										source.reading,
+									),
 								},
 							],
 				),
@@ -427,8 +517,10 @@ export const NOTE_STUDY_PENDING_RELATIONS: readonly NoteStudyPendingRelation[] =
 									target: {
 										language: "de",
 										canonicalForm: part.text,
-										family: "Lexeme",
-										kind: "X",
+										...relatedRoute(
+											part.text,
+											source.reading,
+										),
 									},
 								},
 							],

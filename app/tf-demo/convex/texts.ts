@@ -7,6 +7,7 @@ const MAX_LIBRARY_TEXTS = 100;
 const libraryTextValidator = v.object({
 	textId: v.id("texts"),
 	sourceText: v.string(),
+	title: v.optional(v.string()),
 	createdAt: v.number(),
 });
 
@@ -22,6 +23,7 @@ export const list = query({
 		return texts.map((text) => ({
 			textId: text._id,
 			sourceText: text.sourceText,
+			...(text.title ? { title: text.title } : {}),
 			createdAt: text._creationTime,
 		}));
 	},

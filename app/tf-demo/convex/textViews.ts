@@ -6,7 +6,7 @@ import { loadCompleteOccurrenceMembers } from "./model/occurrenceAttestations";
 import { languageValidator, segmentKindValidator } from "./model/validators";
 import { findVisitorEncounter } from "./model/visitorClicks";
 
-const MAX_SENTENCES_PER_TEXT = 9;
+const MAX_SENTENCES_PER_TEXT = 256;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 
 const presentedSegmentResolutionStateValidator = v.union(
@@ -46,6 +46,7 @@ const textViewValidator = v.object({
 			position: v.number(),
 			language: languageValidator,
 			stitchedText: v.string(),
+			heading: v.optional(v.string()),
 			segments: v.array(
 				v.object({
 					index: v.number(),
@@ -133,6 +134,7 @@ export const get = query({
 				position: sentence.position,
 				language: sentence.language,
 				stitchedText: sentence.stitchedText,
+				...(sentence.heading ? { heading: sentence.heading } : {}),
 				segments: (segmentsBySentence[index] ?? []).map(
 					(segment, segmentPosition) => {
 						const attestationId =

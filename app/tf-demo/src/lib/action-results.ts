@@ -20,6 +20,7 @@ export type SentenceView = {
 	readonly position: number;
 	readonly language: "de" | "he";
 	readonly stitchedText: string;
+	readonly heading?: string;
 	readonly sourceText: string;
 	readonly segments: readonly SentenceSegmentView[];
 };
