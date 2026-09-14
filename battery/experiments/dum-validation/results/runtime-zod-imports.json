@@ -1,0 +1,134 @@
+{
+  "capturedAt": "2026-09-14T05:29:59.852Z",
+  "bun": "1.4.2",
+  "method": "Seven fresh processes, preloaded Effect/Dumling/Dumrel/Dumdict runtime; current published schema bundles. Probe source retained.",
+  "probeSource": "for(const name of [\"effect/Effect\",\"dumling\",\"dumrel\",\"dumdict/runtime\"])await import(name);const before=process.resourceUsage().maxRSS*1024;const start=performance.now();await import(process.argv[2]);console.log(JSON.stringify({before,after:process.resourceUsage().maxRSS*1024,ms:performance.now()-start}));",
+  "results": [
+    {
+      "specifier": "zod",
+      "addedPeakMiB": 4.15625,
+      "importMs": 6.943792000000002,
+      "samples": [
+        {
+          "before": 46743552,
+          "after": 51429376,
+          "ms": 9.716792000000005
+        },
+        {
+          "before": 46006272,
+          "after": 49807360,
+          "ms": 7.290749999999996
+        },
+        {
+          "before": 45678592,
+          "after": 49790976,
+          "ms": 6.890416000000002
+        },
+        {
+          "before": 45973504,
+          "after": 51019776,
+          "ms": 7.684624999999997
+        },
+        {
+          "before": 46137344,
+          "after": 50495488,
+          "ms": 6.943792000000002
+        },
+        {
+          "before": 45858816,
+          "after": 48398336,
+          "ms": 6.856332999999999
+        },
+        {
+          "before": 45629440,
+          "after": 50479104,
+          "ms": 6.906416
+        }
+      ]
+    },
+    {
+      "specifier": "dumling/schema/de/lexeme/noun",
+      "addedPeakMiB": 9.796875,
+      "importMs": 13.769582999999997,
+      "samples": [
+        {
+          "before": 46055424,
+          "after": 55918592,
+          "ms": 15.661917000000003
+        },
+        {
+          "before": 45891584,
+          "after": 56180736,
+          "ms": 14.101166999999997
+        },
+        {
+          "before": 46120960,
+          "after": 56459264,
+          "ms": 13.8215
+        },
+        {
+          "before": 45580288,
+          "after": 55738368,
+          "ms": 13.581709000000004
+        },
+        {
+          "before": 45498368,
+          "after": 55771136,
+          "ms": 13.769582999999997
+        },
+        {
+          "before": 45924352,
+          "after": 56197120,
+          "ms": 13.29475
+        },
+        {
+          "before": 46268416,
+          "after": 56393728,
+          "ms": 12.984583999999998
+        }
+      ]
+    },
+    {
+      "specifier": "dumrel/schema",
+      "addedPeakMiB": 122.53125,
+      "importMs": 121.764084,
+      "samples": [
+        {
+          "before": 46104576,
+          "after": 172474368,
+          "ms": 128.361916
+        },
+        {
+          "before": 46137344,
+          "after": 177569792,
+          "ms": 141.10616699999997
+        },
+        {
+          "before": 45596672,
+          "after": 174473216,
+          "ms": 122.138666
+        },
+        {
+          "before": 46055424,
+          "after": 173195264,
+          "ms": 121.764084
+        },
+        {
+          "before": 46268416,
+          "after": 175063040,
+          "ms": 119.110167
+        },
+        {
+          "before": 45776896,
+          "after": 173817856,
+          "ms": 119.80875
+        },
+        {
+          "before": 45989888,
+          "after": 174473216,
+          "ms": 119.362916
+        }
+      ]
+    }
+  ]
+}

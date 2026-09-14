@@ -1,0 +1,2689 @@
+{
+  "capturedAt": "2026-09-14T05:30:32.222Z",
+  "zodMode": true,
+  "bun": "1.4.2",
+  "platform": "darwin",
+  "arch": "arm64",
+  "sourceHashes": {
+    "battery/dumling/src/index.ts": "96ef4fd64de75463454b7508a92c4a61ac59a877f001974f9bccb4137d935387",
+    "battery/dumling/src/parse-unit.ts": "87f5f2deb98019b17703717dd77902a0a23b95c1b149c38fd28f02a41b11d018",
+    "battery/dumrel/src/index.ts": "425368cfa308c971a9a5f6cbeb84930c9b48a5b9997baaa6af0e7d9ac793db26",
+    "battery/dumrel/src/validation.ts": "4c12d58d4d41403789724d2e7cb89f83c6eccd7639594d461824b2b8b299027a",
+    "battery/dumgen/src/index.ts": "73b6774f66c295e25536a6bf9e26e3b1ac14252765843e744eeae91bd9c7f7e6",
+    "battery/dumgen/src/universal/validation.ts": "3353333afe7fc4cdce50be8fdcc32ff2e00c270ecb7c7b73d58fd190f766ab0d"
+  },
+  "method": "Seven fresh processes per variant. Effect -> Dumling -> Dumrel -> Dumdict/runtime -> Dumgen -> segmentation -> grammar -> Reading -> empty Knowledge request, then 20 warm calls each and a malformed Lemma to exercise exact-error fallback. Deterministic injected model responses; no network. Peak deltas are paired within each process. GC occurs after all measurements.",
+  "limitations": "Counterfactual Zod runtime experiment, not eligible under the current schema-free operational policy. Both Zod variants replace Dumgen's compiled registry with canonical Zod schemas; shared-schemas also rebuilds Dumrel/schema with external Dumling schema imports to avoid bundling duplicate copies. Other batteries keep their compiled runtime APIs. Only representative workflow assertions run here, not the full DX gate. Catalog, prompts, and model-output JSON Schemas are unchanged. Not deployed Convex memory.",
+  "results": [
+    {
+      "variant": "external-runtime",
+      "builtHashes": {
+        "dumling": "00e0209478f5b86bedb2186449050695a957ee23b2b1b7ea80e99bd308733e76",
+        "dumrel": "10d0fde87e6e92f2e340e0a350920c87801aa683a3c7821502d154d5824b0a7a",
+        "dumgen": "33bcd0bc89e902b9dc5e8cbe74e89b91bb7c5eb7c6507206fddeac815e7195fd"
+      },
+      "statistics": null,
+      "stages": [
+        {
+          "label": "effect",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "heapMiB": 3.9970703125,
+          "coldMs": 0
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 2.671875,
+          "addedPeakMiB": 2.671875,
+          "heapMiB": 4.486328125,
+          "coldMs": 4.810957999999999
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 3.8125,
+          "addedPeakMiB": 1.09375,
+          "heapMiB": 4.8955078125,
+          "coldMs": 4.505875000000003
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 6.03125,
+          "addedPeakMiB": 2.140625,
+          "heapMiB": 5.4931640625,
+          "coldMs": 6.999333000000007
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 16.296875,
+          "addedPeakMiB": 10.34375,
+          "heapMiB": 7.864856719970703,
+          "coldMs": 29.181707999999986
+        },
+        {
+          "label": "segmentation",
+          "cumulativePeakMiB": 17.84375,
+          "addedPeakMiB": 1.25,
+          "heapMiB": 7.864856719970703,
+          "coldMs": 3.758125000000007
+        },
+        {
+          "label": "grammar",
+          "cumulativePeakMiB": 18.5625,
+          "addedPeakMiB": 0.75,
+          "heapMiB": 7.864856719970703,
+          "coldMs": 2.038459000000003
+        },
+        {
+          "label": "reading",
+          "cumulativePeakMiB": 22.359375,
+          "addedPeakMiB": 3.484375,
+          "heapMiB": 7.864856719970703,
+          "coldMs": 2.553042000000005
+        },
+        {
+          "label": "knowledge",
+          "cumulativePeakMiB": 22.890625,
+          "addedPeakMiB": 0.578125,
+          "heapMiB": 7.864856719970703,
+          "coldMs": 1.448791
+        },
+        {
+          "label": "warm",
+          "cumulativePeakMiB": 49.734375,
+          "addedPeakMiB": 26.5,
+          "heapMiB": 10.53565788269043,
+          "coldMs": 0
+        },
+        {
+          "label": "invalid-unit",
+          "cumulativePeakMiB": 50.359375,
+          "addedPeakMiB": 0.65625,
+          "heapMiB": 10.53565788269043,
+          "coldMs": 0
+        },
+        {
+          "label": "after-gc",
+          "cumulativePeakMiB": 51.03125,
+          "addedPeakMiB": 0.109375,
+          "heapMiB": 10.762093544006348,
+          "coldMs": 0
+        }
+      ],
+      "warm": [
+        {
+          "label": "segmentation",
+          "msPerCall": 0.18872295000000036
+        },
+        {
+          "label": "grammar",
+          "msPerCall": 1.1156062500000004
+        },
+        {
+          "label": "reading",
+          "msPerCall": 0.3727103999999997
+        },
+        {
+          "label": "knowledge",
+          "msPerCall": 0.47501664999999915
+        }
+      ],
+      "trace": [
+        {
+          "label": "import",
+          "state": {}
+        },
+        {
+          "label": "segmentation",
+          "state": {}
+        },
+        {
+          "label": "grammar",
+          "state": {}
+        },
+        {
+          "label": "reading",
+          "state": {}
+        },
+        {
+          "label": "knowledge",
+          "state": {}
+        },
+        {
+          "label": "invalid-unit",
+          "state": {}
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 39583744,
+              "heap": 4092928,
+              "rss": 39567360
+            },
+            {
+              "label": "dumling",
+              "ms": 6.283625000000001,
+              "peak": 42385408,
+              "heap": 4606976,
+              "rss": 42385408
+            },
+            {
+              "label": "dumrel",
+              "ms": 3.5755829999999946,
+              "peak": 43581440,
+              "heap": 5036032,
+              "rss": 43581440
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 4.916124999999994,
+              "peak": 46055424,
+              "heap": 5662720,
+              "rss": 46055424
+            },
+            {
+              "label": "dumgen",
+              "ms": 24.703292000000005,
+              "peak": 56672256,
+              "heap": 8246623,
+              "rss": 56672256
+            },
+            {
+              "label": "segmentation",
+              "ms": 6.048833999999999,
+              "peak": 58294272,
+              "heap": 8246623,
+              "rss": 58294272
+            },
+            {
+              "label": "grammar",
+              "ms": 5.967458000000022,
+              "peak": 59047936,
+              "heap": 8246623,
+              "rss": 59047936
+            },
+            {
+              "label": "reading",
+              "ms": 2.553042000000005,
+              "peak": 62046208,
+              "heap": 8246623,
+              "rss": 62046208
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.635916999999978,
+              "peak": 62832640,
+              "heap": 8246623,
+              "rss": 62832640
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 90275840,
+              "heap": 11059888,
+              "rss": 90275840
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 90800128,
+              "heap": 11059888,
+              "rss": 90800128
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 90882048,
+              "heap": 11281568,
+              "rss": 90882048
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.3174604500000001
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 1.8902187499999996
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.2046062500000005
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.2436104499999999
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 39305216,
+              "heap": 4191232,
+              "rss": 39288832
+            },
+            {
+              "label": "dumling",
+              "ms": 6.616624999999999,
+              "peak": 41484288,
+              "heap": 4705280,
+              "rss": 41484288
+            },
+            {
+              "label": "dumrel",
+              "ms": 5.799000000000007,
+              "peak": 42893312,
+              "heap": 5134336,
+              "rss": 42893312
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 6.999333000000007,
+              "peak": 45219840,
+              "heap": 5761024,
+              "rss": 45219840
+            },
+            {
+              "label": "dumgen",
+              "ms": 29.345416,
+              "peak": 56000512,
+              "heap": 8246900,
+              "rss": 56000512
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.942542000000003,
+              "peak": 57556992,
+              "heap": 8246900,
+              "rss": 57556992
+            },
+            {
+              "label": "grammar",
+              "ms": 1.8766660000000002,
+              "peak": 58736640,
+              "heap": 8246900,
+              "rss": 58736640
+            },
+            {
+              "label": "reading",
+              "ms": 1.8951250000000073,
+              "peak": 62291968,
+              "heap": 8246900,
+              "rss": 62291968
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.186791999999997,
+              "peak": 62488576,
+              "heap": 8246900,
+              "rss": 62488576
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 90669056,
+              "heap": 11009442,
+              "rss": 90669056
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 91783168,
+              "heap": 11009442,
+              "rss": 91783168
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 91848704,
+              "heap": 11285185,
+              "rss": 91848704
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.18872295000000036
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 1.1156062500000004
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.1878687499999998
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.4634687499999998
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 39419904,
+              "heap": 4206592,
+              "rss": 39403520
+            },
+            {
+              "label": "dumling",
+              "ms": 4.645542000000006,
+              "peak": 42221568,
+              "heap": 4704256,
+              "rss": 42221568
+            },
+            {
+              "label": "dumrel",
+              "ms": 4.505875000000003,
+              "peak": 43368448,
+              "heap": 5133312,
+              "rss": 43368448
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 7.711167000000003,
+              "peak": 45334528,
+              "heap": 5760000,
+              "rss": 45334528
+            },
+            {
+              "label": "dumgen",
+              "ms": 29.181707999999986,
+              "peak": 56098816,
+              "heap": 8246511,
+              "rss": 56098816
+            },
+            {
+              "label": "segmentation",
+              "ms": 3.635415999999992,
+              "peak": 57262080,
+              "heap": 8246511,
+              "rss": 57262080
+            },
+            {
+              "label": "grammar",
+              "ms": 1.8653750000000002,
+              "peak": 57753600,
+              "heap": 8246511,
+              "rss": 57753600
+            },
+            {
+              "label": "reading",
+              "ms": 4.265792000000005,
+              "peak": 62144512,
+              "heap": 8246511,
+              "rss": 62144512
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.639792,
+              "peak": 62357504,
+              "heap": 8246511,
+              "rss": 62357504
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 91570176,
+              "heap": 11047438,
+              "rss": 91570176
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 92225536,
+              "heap": 11047438,
+              "rss": 92225536
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 93011968,
+              "heap": 11265006,
+              "rss": 93011968
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.07164999999999963
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 1.0781104
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.4301167000000007
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.49260625
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 37208064,
+              "heap": 4222976,
+              "rss": 37158912
+            },
+            {
+              "label": "dumling",
+              "ms": 4.60304099999999,
+              "peak": 40599552,
+              "heap": 4720640,
+              "rss": 40599552
+            },
+            {
+              "label": "dumrel",
+              "ms": 4.331999999999994,
+              "peak": 41533440,
+              "heap": 5149696,
+              "rss": 41533440
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 6.598957999999996,
+              "peak": 43532288,
+              "heap": 5792768,
+              "rss": 43532288
+            },
+            {
+              "label": "dumgen",
+              "ms": 30.630667000000003,
+              "peak": 56442880,
+              "heap": 9292548,
+              "rss": 56442880
+            },
+            {
+              "label": "segmentation",
+              "ms": 6.453458999999995,
+              "peak": 57540608,
+              "heap": 9292548,
+              "rss": 57540608
+            },
+            {
+              "label": "grammar",
+              "ms": 2.038459000000003,
+              "peak": 58294272,
+              "heap": 9292548,
+              "rss": 58294272
+            },
+            {
+              "label": "reading",
+              "ms": 2.2031670000000076,
+              "peak": 60768256,
+              "heap": 9292548,
+              "rss": 60768256
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.1844999999999999,
+              "peak": 61374464,
+              "heap": 9292548,
+              "rss": 61374464
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 89767936,
+              "heap": 11012103,
+              "rss": 89767936
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 89915392,
+              "heap": 11012103,
+              "rss": 89915392
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 90718208,
+              "heap": 11284873,
+              "rss": 90718208
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.15701249999999972
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.9028583500000004
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.3727103999999997
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.567106249999999
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 38010880,
+              "heap": 4206592,
+              "rss": 37978112
+            },
+            {
+              "label": "dumling",
+              "ms": 4.810957999999999,
+              "peak": 41353216,
+              "heap": 4704256,
+              "rss": 41353216
+            },
+            {
+              "label": "dumrel",
+              "ms": 6.379917000000006,
+              "peak": 42467328,
+              "heap": 5149696,
+              "rss": 42467328
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 8.468250000000012,
+              "peak": 44482560,
+              "heap": 5760000,
+              "rss": 44482560
+            },
+            {
+              "label": "dumgen",
+              "ms": 57.18475000000001,
+              "peak": 58245120,
+              "heap": 8219906,
+              "rss": 58245120
+            },
+            {
+              "label": "segmentation",
+              "ms": 3.6114169999999888,
+              "peak": 59965440,
+              "heap": 8219906,
+              "rss": 59965440
+            },
+            {
+              "label": "grammar",
+              "ms": 2.3952079999999967,
+              "peak": 61620224,
+              "heap": 8219906,
+              "rss": 61603840
+            },
+            {
+              "label": "reading",
+              "ms": 3.055374999999998,
+              "peak": 65273856,
+              "heap": 8219906,
+              "rss": 65273856
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.0208330000000103,
+              "peak": 65945600,
+              "heap": 8219906,
+              "rss": 65945600
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 91914240,
+              "heap": 11102751,
+              "rss": 91881472
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 92700672,
+              "heap": 11102751,
+              "rss": 92700672
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 92815360,
+              "heap": 11286640,
+              "rss": 92815360
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.2013958500000001
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 1.1841353999999995
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.526829149999999
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.7614000000000004
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 39272448,
+              "heap": 4142080,
+              "rss": 39256064
+            },
+            {
+              "label": "dumling",
+              "ms": 2.9525000000000006,
+              "peak": 43384832,
+              "heap": 4638720,
+              "rss": 43384832
+            },
+            {
+              "label": "dumrel",
+              "ms": 3.1675419999999974,
+              "peak": 44302336,
+              "heap": 5067776,
+              "rss": 44302336
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 5.259625,
+              "peak": 46546944,
+              "heap": 5710848,
+              "rss": 46546944
+            },
+            {
+              "label": "dumgen",
+              "ms": 24.986665999999992,
+              "peak": 60047360,
+              "heap": 8339148,
+              "rss": 60047360
+            },
+            {
+              "label": "segmentation",
+              "ms": 3.758125000000007,
+              "peak": 61325312,
+              "heap": 8339148,
+              "rss": 61325312
+            },
+            {
+              "label": "grammar",
+              "ms": 2.055125000000004,
+              "peak": 62111744,
+              "heap": 8339148,
+              "rss": 62111744
+            },
+            {
+              "label": "reading",
+              "ms": 1.9144170000000003,
+              "peak": 65798144,
+              "heap": 8339148,
+              "rss": 65798144
+            },
+            {
+              "label": "knowledge",
+              "ms": 3.481415999999996,
+              "peak": 67190784,
+              "heap": 8339148,
+              "rss": 67190784
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 94142464,
+              "heap": 10977113,
+              "rss": 94142464
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 94830592,
+              "heap": 10977113,
+              "rss": 94830592
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 95027200,
+              "heap": 11285158,
+              "rss": 95027200
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.2734895999999999
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.8865457999999997
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.38218539999999945
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.3487958499999991
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 37486592,
+              "heap": 4125696,
+              "rss": 37470208
+            },
+            {
+              "label": "dumling",
+              "ms": 9.172208999999995,
+              "peak": 39993344,
+              "heap": 4622336,
+              "rss": 39993344
+            },
+            {
+              "label": "dumrel",
+              "ms": 9.317833000000007,
+              "peak": 41156608,
+              "heap": 5067776,
+              "rss": 41156608
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 8.317082999999997,
+              "peak": 43663360,
+              "heap": 5694464,
+              "rss": 43663360
+            },
+            {
+              "label": "dumgen",
+              "ms": 28.390083000000004,
+              "peak": 54509568,
+              "heap": 8450516,
+              "rss": 54509568
+            },
+            {
+              "label": "segmentation",
+              "ms": 3.5960000000000036,
+              "peak": 55820288,
+              "heap": 8450516,
+              "rss": 55820288
+            },
+            {
+              "label": "grammar",
+              "ms": 1.8609160000000031,
+              "peak": 56803328,
+              "heap": 8450516,
+              "rss": 56803328
+            },
+            {
+              "label": "reading",
+              "ms": 5.385333000000003,
+              "peak": 60932096,
+              "heap": 8450516,
+              "rss": 60932096
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.448791,
+              "peak": 61489152,
+              "heap": 8450516,
+              "rss": 61489152
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 89276416,
+              "heap": 11095232,
+              "rss": 89276416
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 90537984,
+              "heap": 11095232,
+              "rss": 90537984
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 90619904,
+              "heap": 11279707,
+              "rss": 90619904
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06851249999999993
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 1.66469375
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.19157289999999988
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.47501664999999915
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "runtime-zod",
+      "builtHashes": {
+        "dumling": "00e0209478f5b86bedb2186449050695a957ee23b2b1b7ea80e99bd308733e76",
+        "dumrel": "10d0fde87e6e92f2e340e0a350920c87801aa683a3c7821502d154d5824b0a7a",
+        "dumgen": "3b8566dfc2be492124eec073d8a1c2f4a2a99365b4445013c5277ffd2f79959b"
+      },
+      "statistics": null,
+      "stages": [
+        {
+          "label": "effect",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "heapMiB": 4.01171875,
+          "coldMs": 0
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 2.265625,
+          "addedPeakMiB": 2.265625,
+          "heapMiB": 4.486328125,
+          "coldMs": 2.474375000000002
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 3.5,
+          "addedPeakMiB": 1.140625,
+          "heapMiB": 4.8955078125,
+          "coldMs": 1.6365839999999992
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 5.484375,
+          "addedPeakMiB": 1.984375,
+          "heapMiB": 5.4931640625,
+          "coldMs": 2.975709000000002
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 268.078125,
+          "addedPeakMiB": 262.9375,
+          "heapMiB": 83.56783962249756,
+          "coldMs": 285.351792
+        },
+        {
+          "label": "segmentation",
+          "cumulativePeakMiB": 269.234375,
+          "addedPeakMiB": 1.46875,
+          "heapMiB": 83.56783962249756,
+          "coldMs": 4.435374999999965
+        },
+        {
+          "label": "grammar",
+          "cumulativePeakMiB": 273.109375,
+          "addedPeakMiB": 3.609375,
+          "heapMiB": 83.56783962249756,
+          "coldMs": 6.3423329999999964
+        },
+        {
+          "label": "reading",
+          "cumulativePeakMiB": 275.09375,
+          "addedPeakMiB": 1.984375,
+          "heapMiB": 83.56783962249756,
+          "coldMs": 2.0838749999999777
+        },
+        {
+          "label": "knowledge",
+          "cumulativePeakMiB": 276.625,
+          "addedPeakMiB": 1.1875,
+          "heapMiB": 83.56783962249756,
+          "coldMs": 2.3296659999999747
+        },
+        {
+          "label": "warm",
+          "cumulativePeakMiB": 300.234375,
+          "addedPeakMiB": 25.140625,
+          "heapMiB": 85.38444423675537,
+          "coldMs": 0
+        },
+        {
+          "label": "invalid-unit",
+          "cumulativePeakMiB": 304.1875,
+          "addedPeakMiB": 6.59375,
+          "heapMiB": 125.34085464477539,
+          "coldMs": 0
+        },
+        {
+          "label": "after-gc",
+          "cumulativePeakMiB": 304.28125,
+          "addedPeakMiB": 0.15625,
+          "heapMiB": 75.6704626083374,
+          "coldMs": 0
+        }
+      ],
+      "warm": [
+        {
+          "label": "segmentation",
+          "msPerCall": 0.07008749999999964
+        },
+        {
+          "label": "grammar",
+          "msPerCall": 0.404249999999999
+        },
+        {
+          "label": "reading",
+          "msPerCall": 0.18311874999999986
+        },
+        {
+          "label": "knowledge",
+          "msPerCall": 0.29552080000000275
+        }
+      ],
+      "trace": [
+        {
+          "label": "import",
+          "state": {}
+        },
+        {
+          "label": "segmentation",
+          "state": {}
+        },
+        {
+          "label": "grammar",
+          "state": {}
+        },
+        {
+          "label": "reading",
+          "state": {}
+        },
+        {
+          "label": "knowledge",
+          "state": {}
+        },
+        {
+          "label": "invalid-unit",
+          "state": {}
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 36765696,
+              "heap": 4206592,
+              "rss": 36749312
+            },
+            {
+              "label": "dumling",
+              "ms": 19.028500000000008,
+              "peak": 39075840,
+              "heap": 4704256,
+              "rss": 39075840
+            },
+            {
+              "label": "dumrel",
+              "ms": 28.017167,
+              "peak": 40435712,
+              "heap": 5133312,
+              "rss": 40435712
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 14.365875000000017,
+              "peak": 45432832,
+              "heap": 5776384,
+              "rss": 45432832
+            },
+            {
+              "label": "dumgen",
+              "ms": 880.962292,
+              "peak": 292405248,
+              "heap": 87627231,
+              "rss": 292405248
+            },
+            {
+              "label": "segmentation",
+              "ms": 9.062750000000051,
+              "peak": 293879808,
+              "heap": 87627231,
+              "rss": 293879808
+            },
+            {
+              "label": "grammar",
+              "ms": 15.263250000000198,
+              "peak": 298074112,
+              "heap": 87627231,
+              "rss": 298074112
+            },
+            {
+              "label": "reading",
+              "ms": 2.3252500000000964,
+              "peak": 300810240,
+              "heap": 87627231,
+              "rss": 300810240
+            },
+            {
+              "label": "knowledge",
+              "ms": 9.996249999999918,
+              "peak": 302120960,
+              "heap": 87627231,
+              "rss": 302120960
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 329629696,
+              "heap": 87627231,
+              "rss": 329629696
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 342769664,
+              "heap": 87627231,
+              "rss": 342769664
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 343785472,
+              "heap": 79300057,
+              "rss": 343785472
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.18288539999999784
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.46118750000000547
+            },
+            {
+              "label": "reading",
+              "msPerCall": 1.3251583000000096
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.2990062500000022
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 39698432,
+              "heap": 4256768,
+              "rss": 39682048
+            },
+            {
+              "label": "dumling",
+              "ms": 4.081417000000002,
+              "peak": 42287104,
+              "heap": 4769792,
+              "rss": 42287104
+            },
+            {
+              "label": "dumrel",
+              "ms": 4.218875000000004,
+              "peak": 43483136,
+              "heap": 5198848,
+              "rss": 43483136
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 6.188625000000002,
+              "peak": 45449216,
+              "heap": 5825536,
+              "rss": 45449216
+            },
+            {
+              "label": "dumgen",
+              "ms": 359.77154199999995,
+              "peak": 303267840,
+              "heap": 91200867,
+              "rss": 303267840
+            },
+            {
+              "label": "segmentation",
+              "ms": 8.118625000000009,
+              "peak": 305463296,
+              "heap": 91200867,
+              "rss": 305463296
+            },
+            {
+              "label": "grammar",
+              "ms": 11.700249999999983,
+              "peak": 310820864,
+              "heap": 91200867,
+              "rss": 310820864
+            },
+            {
+              "label": "reading",
+              "ms": 2.084583000000009,
+              "peak": 312573952,
+              "heap": 91200867,
+              "rss": 312573952
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.3296659999999747,
+              "peak": 313655296,
+              "heap": 91200867,
+              "rss": 313655296
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 340426752,
+              "heap": 91200867,
+              "rss": 340426752
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 352337920,
+              "heap": 91200867,
+              "rss": 352337920
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 352632832,
+              "heap": 79348504,
+              "rss": 352632832
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.07008749999999964
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.42471669999999906
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.2830166999999989
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.2797104500000017
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 35143680,
+              "heap": 4206592,
+              "rss": 35127296
+            },
+            {
+              "label": "dumling",
+              "ms": 18.55550000000001,
+              "peak": 41189376,
+              "heap": 4704256,
+              "rss": 41189376
+            },
+            {
+              "label": "dumrel",
+              "ms": 12.208875000000006,
+              "peak": 42500096,
+              "heap": 5133312,
+              "rss": 42500096
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 16.775707999999995,
+              "peak": 44646400,
+              "heap": 5760000,
+              "rss": 44646400
+            },
+            {
+              "label": "dumgen",
+              "ms": 432.0505,
+              "peak": 333152256,
+              "heap": 120686865,
+              "rss": 333152256
+            },
+            {
+              "label": "segmentation",
+              "ms": 7.925375000000031,
+              "peak": 334200832,
+              "heap": 120686865,
+              "rss": 334200832
+            },
+            {
+              "label": "grammar",
+              "ms": 7.341458999999986,
+              "peak": 335118336,
+              "heap": 120686865,
+              "rss": 335118336
+            },
+            {
+              "label": "reading",
+              "ms": 2.2450000000000045,
+              "peak": 336429056,
+              "heap": 120686865,
+              "rss": 336429056
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.3939169999999876,
+              "peak": 336969728,
+              "heap": 120686865,
+              "rss": 336969728
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 341852160,
+              "heap": 120686865,
+              "rss": 341852160
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 348520448,
+              "heap": 120686865,
+              "rss": 348520448
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 348684288,
+              "heap": 79311794,
+              "rss": 348684288
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.07426874999999881
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.4668187499999988
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.6023916999999983
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.29552080000000275
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40615936,
+              "heap": 4158464,
+              "rss": 40599552
+            },
+            {
+              "label": "dumling",
+              "ms": 2.474375000000002,
+              "peak": 42991616,
+              "heap": 4671488,
+              "rss": 42991616
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.6365839999999992,
+              "peak": 43925504,
+              "heap": 5100544,
+              "rss": 43925504
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.975709000000002,
+              "peak": 46006272,
+              "heap": 5727232,
+              "rss": 46006272
+            },
+            {
+              "label": "dumgen",
+              "ms": 234.711792,
+              "peak": 321716224,
+              "heap": 89532079,
+              "rss": 321716224
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.398249999999962,
+              "peak": 322895872,
+              "heap": 89532079,
+              "rss": 322895872
+            },
+            {
+              "label": "grammar",
+              "ms": 6.335208000000023,
+              "peak": 326516736,
+              "heap": 89532079,
+              "rss": 326516736
+            },
+            {
+              "label": "reading",
+              "ms": 2.0838749999999777,
+              "peak": 328515584,
+              "heap": 89532079,
+              "rss": 328515584
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.2751250000000027,
+              "peak": 330137600,
+              "heap": 89532079,
+              "rss": 330137600
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 356499456,
+              "heap": 89532079,
+              "rss": 356499456
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 368967680,
+              "heap": 138386764,
+              "rss": 368967680
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 369115136,
+              "heap": 79346231,
+              "rss": 369115136
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06462919999999883
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.404249999999999
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.17795209999999884
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.24223335000000076
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40583168,
+              "heap": 4206592,
+              "rss": 40566784
+            },
+            {
+              "label": "dumling",
+              "ms": 2.083624999999998,
+              "peak": 42893312,
+              "heap": 4704256,
+              "rss": 42893312
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2322909999999965,
+              "peak": 43941888,
+              "heap": 5149696,
+              "rss": 43941888
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.419958000000001,
+              "peak": 46055424,
+              "heap": 5760000,
+              "rss": 46055424
+            },
+            {
+              "label": "dumgen",
+              "ms": 233.75729200000004,
+              "peak": 321355776,
+              "heap": 86414462,
+              "rss": 321355776
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.184166000000005,
+              "peak": 322895872,
+              "heap": 86414462,
+              "rss": 322895872
+            },
+            {
+              "label": "grammar",
+              "ms": 5.669167000000016,
+              "peak": 326959104,
+              "heap": 86414462,
+              "rss": 326959104
+            },
+            {
+              "label": "reading",
+              "ms": 1.910665999999992,
+              "peak": 329039872,
+              "heap": 86414462,
+              "rss": 329039872
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.4454170000000204,
+              "peak": 330956800,
+              "heap": 86414462,
+              "rss": 330956800
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 355401728,
+              "heap": 131668078,
+              "rss": 355401728
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 359546880,
+              "heap": 131668078,
+              "rss": 359546880
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 359645184,
+              "heap": 79348217,
+              "rss": 359645184
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.09175835000000063
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.38901670000000194
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.18311874999999986
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.7086979000000013
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41009152,
+              "heap": 4206592,
+              "rss": 40992768
+            },
+            {
+              "label": "dumling",
+              "ms": 2.1506670000000057,
+              "peak": 43384832,
+              "heap": 4704256,
+              "rss": 43384832
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2540419999999983,
+              "peak": 44367872,
+              "heap": 5133312,
+              "rss": 44367872
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.428291999999999,
+              "peak": 46284800,
+              "heap": 5760000,
+              "rss": 46284800
+            },
+            {
+              "label": "dumgen",
+              "ms": 226.51487500000002,
+              "peak": 322682880,
+              "heap": 87597775,
+              "rss": 322682880
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.261415999999997,
+              "peak": 324288512,
+              "heap": 87597775,
+              "rss": 324288512
+            },
+            {
+              "label": "grammar",
+              "ms": 5.858291000000008,
+              "peak": 327680000,
+              "heap": 87597775,
+              "rss": 327680000
+            },
+            {
+              "label": "reading",
+              "ms": 1.9165419999999926,
+              "peak": 329826304,
+              "heap": 87597775,
+              "rss": 329826304
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.895208000000025,
+              "peak": 331071488,
+              "heap": 87597775,
+              "rss": 331055104
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 357400576,
+              "heap": 87597775,
+              "rss": 357400576
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 364314624,
+              "heap": 134614332,
+              "rss": 364314624
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 364396544,
+              "heap": 79340491,
+              "rss": 364396544
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06228125000000091
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.36328125
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.1735312499999992
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.2378875000000022
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 39223296,
+              "heap": 4206592,
+              "rss": 39206912
+            },
+            {
+              "label": "dumling",
+              "ms": 2.355083999999991,
+              "peak": 41811968,
+              "heap": 4704256,
+              "rss": 41811968
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.421999999999997,
+              "peak": 43188224,
+              "heap": 5133312,
+              "rss": 43188224
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.6334169999999943,
+              "peak": 45187072,
+              "heap": 5760000,
+              "rss": 45187072
+            },
+            {
+              "label": "dumgen",
+              "ms": 285.351792,
+              "peak": 323731456,
+              "heap": 85977324,
+              "rss": 323731456
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.435374999999965,
+              "peak": 325615616,
+              "heap": 85977324,
+              "rss": 325615616
+            },
+            {
+              "label": "grammar",
+              "ms": 6.3423329999999964,
+              "peak": 329400320,
+              "heap": 85977324,
+              "rss": 329400320
+            },
+            {
+              "label": "reading",
+              "ms": 1.9582919999999717,
+              "peak": 331530240,
+              "heap": 85977324,
+              "rss": 331530240
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.9185410000000047,
+              "peak": 332693504,
+              "heap": 85977324,
+              "rss": 332693504
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 359645184,
+              "heap": 85977324,
+              "rss": 359645184
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 364036096,
+              "heap": 131429412,
+              "rss": 364036096
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 364199936,
+              "heap": 79349932,
+              "rss": 364199936
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06987080000000105
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.36506669999999986
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.1639208499999995
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.40451040000000094
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "runtime-zod-shared-schemas",
+      "builtHashes": {
+        "dumling": "00e0209478f5b86bedb2186449050695a957ee23b2b1b7ea80e99bd308733e76",
+        "dumrel": "10d0fde87e6e92f2e340e0a350920c87801aa683a3c7821502d154d5824b0a7a",
+        "dumgen": "3b8566dfc2be492124eec073d8a1c2f4a2a99365b4445013c5277ffd2f79959b"
+      },
+      "statistics": null,
+      "stages": [
+        {
+          "label": "effect",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "heapMiB": 3.9658203125,
+          "coldMs": 0
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 2.21875,
+          "addedPeakMiB": 2.21875,
+          "heapMiB": 4.4716796875,
+          "coldMs": 2.1664169999999956
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 3.328125,
+          "addedPeakMiB": 1.046875,
+          "heapMiB": 4.8955078125,
+          "coldMs": 1.274916999999995
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 5.109375,
+          "addedPeakMiB": 1.8125,
+          "heapMiB": 5.494140625,
+          "coldMs": 2.40775
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 86.234375,
+          "addedPeakMiB": 81.3125,
+          "heapMiB": 46.41202926635742,
+          "coldMs": 136.530042
+        },
+        {
+          "label": "segmentation",
+          "cumulativePeakMiB": 87.484375,
+          "addedPeakMiB": 1.21875,
+          "heapMiB": 46.41202926635742,
+          "coldMs": 4.132959
+        },
+        {
+          "label": "grammar",
+          "cumulativePeakMiB": 91.21875,
+          "addedPeakMiB": 3.34375,
+          "heapMiB": 46.41202926635742,
+          "coldMs": 5.902000000000015
+        },
+        {
+          "label": "reading",
+          "cumulativePeakMiB": 93.171875,
+          "addedPeakMiB": 2.25,
+          "heapMiB": 46.41202926635742,
+          "coldMs": 1.9775840000000073
+        },
+        {
+          "label": "knowledge",
+          "cumulativePeakMiB": 94.140625,
+          "addedPeakMiB": 0.96875,
+          "heapMiB": 46.41202926635742,
+          "coldMs": 1.9657909999999958
+        },
+        {
+          "label": "warm",
+          "cumulativePeakMiB": 112.875,
+          "addedPeakMiB": 18.6875,
+          "heapMiB": 51.94876194000244,
+          "coldMs": 0
+        },
+        {
+          "label": "invalid-unit",
+          "cumulativePeakMiB": 118.640625,
+          "addedPeakMiB": 5.265625,
+          "heapMiB": 51.94876194000244,
+          "coldMs": 0
+        },
+        {
+          "label": "after-gc",
+          "cumulativePeakMiB": 118.765625,
+          "addedPeakMiB": 0.140625,
+          "heapMiB": 57.13100337982178,
+          "coldMs": 0
+        }
+      ],
+      "warm": [
+        {
+          "label": "segmentation",
+          "msPerCall": 0.06395624999999967
+        },
+        {
+          "label": "grammar",
+          "msPerCall": 0.4793312499999999
+        },
+        {
+          "label": "reading",
+          "msPerCall": 0.38432499999999975
+        },
+        {
+          "label": "knowledge",
+          "msPerCall": 0.267547900000001
+        }
+      ],
+      "trace": [
+        {
+          "label": "import",
+          "state": {}
+        },
+        {
+          "label": "segmentation",
+          "state": {}
+        },
+        {
+          "label": "grammar",
+          "state": {}
+        },
+        {
+          "label": "reading",
+          "state": {}
+        },
+        {
+          "label": "knowledge",
+          "state": {}
+        },
+        {
+          "label": "invalid-unit",
+          "state": {}
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40927232,
+              "heap": 4256768,
+              "rss": 40910848
+            },
+            {
+              "label": "dumling",
+              "ms": 2.169084000000005,
+              "peak": 43204608,
+              "heap": 4753408,
+              "rss": 43204608
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2863749999999996,
+              "peak": 44367872,
+              "heap": 5182464,
+              "rss": 44367872
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.402957999999998,
+              "peak": 46284800,
+              "heap": 5825536,
+              "rss": 46284800
+            },
+            {
+              "label": "dumgen",
+              "ms": 136.17095799999998,
+              "peak": 130711552,
+              "heap": 47185068,
+              "rss": 130711552
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.155124999999998,
+              "peak": 132087808,
+              "heap": 47185068,
+              "rss": 132087808
+            },
+            {
+              "label": "grammar",
+              "ms": 5.875957999999997,
+              "peak": 135544832,
+              "heap": 47185068,
+              "rss": 135544832
+            },
+            {
+              "label": "reading",
+              "ms": 2.0267920000000004,
+              "peak": 137953280,
+              "heap": 47185068,
+              "rss": 137953280
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.9657909999999958,
+              "peak": 138723328,
+              "heap": 47185068,
+              "rss": 138723328
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 159285248,
+              "heap": 54482915,
+              "rss": 159285248
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 165199872,
+              "heap": 54482915,
+              "rss": 165199872
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 165314560,
+              "heap": 59984840,
+              "rss": 165314560
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06375625000000014
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.4793312499999999
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.3977354000000005
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.2829666500000002
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40976384,
+              "heap": 4158464,
+              "rss": 40960000
+            },
+            {
+              "label": "dumling",
+              "ms": 2.1351670000000027,
+              "peak": 43384832,
+              "heap": 4655104,
+              "rss": 43384832
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2584170000000015,
+              "peak": 44466176,
+              "heap": 5084160,
+              "rss": 44466176
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.40775,
+              "peak": 46366720,
+              "heap": 5727232,
+              "rss": 46366720
+            },
+            {
+              "label": "dumgen",
+              "ms": 138.58808299999998,
+              "peak": 133464064,
+              "heap": 49225567,
+              "rss": 133464064
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.140333999999996,
+              "peak": 134414336,
+              "heap": 49225567,
+              "rss": 134414336
+            },
+            {
+              "label": "grammar",
+              "ms": 6.288999999999987,
+              "peak": 137150464,
+              "heap": 49225567,
+              "rss": 137150464
+            },
+            {
+              "label": "reading",
+              "ms": 1.992291999999992,
+              "peak": 139509760,
+              "heap": 49225567,
+              "rss": 139509760
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.0078750000000127,
+              "peak": 140279808,
+              "heap": 49225567,
+              "rss": 140279808
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 160104448,
+              "heap": 54474943,
+              "rss": 160104448
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 165625856,
+              "heap": 54474943,
+              "rss": 165625856
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 165773312,
+              "heap": 59906199,
+              "rss": 165773312
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06550209999999908
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.3836187499999994
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.38432499999999975
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.44147079999999905
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40566784,
+              "heap": 4158464,
+              "rss": 40550400
+            },
+            {
+              "label": "dumling",
+              "ms": 2.107958999999994,
+              "peak": 42745856,
+              "heap": 4671488,
+              "rss": 42745856
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2580840000000038,
+              "peak": 43794432,
+              "heap": 5100544,
+              "rss": 43794432
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.425875000000005,
+              "peak": 45694976,
+              "heap": 5727232,
+              "rss": 45694976
+            },
+            {
+              "label": "dumgen",
+              "ms": 136.02504199999998,
+              "peak": 130957312,
+              "heap": 49357738,
+              "rss": 130957312
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.1220830000000035,
+              "peak": 132235264,
+              "heap": 49357738,
+              "rss": 132235264
+            },
+            {
+              "label": "grammar",
+              "ms": 6.020958000000007,
+              "peak": 135741440,
+              "heap": 49357738,
+              "rss": 135741440
+            },
+            {
+              "label": "reading",
+              "ms": 1.9716669999999965,
+              "peak": 137936896,
+              "heap": 49357738,
+              "rss": 137936896
+            },
+            {
+              "label": "knowledge",
+              "ms": 2.025958000000003,
+              "peak": 139182080,
+              "heap": 49357738,
+              "rss": 139182080
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 158466048,
+              "heap": 54472225,
+              "rss": 158466048
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 163905536,
+              "heap": 54472225,
+              "rss": 163905536
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 164085760,
+              "heap": 59903405,
+              "rss": 164085760
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06591664999999977
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.38346460000000065
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.5826104000000001
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.267547900000001
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40648704,
+              "heap": 4206592,
+              "rss": 40632320
+            },
+            {
+              "label": "dumling",
+              "ms": 2.1717920000000035,
+              "peak": 43089920,
+              "heap": 4704256,
+              "rss": 43089920
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2860000000000014,
+              "peak": 44187648,
+              "heap": 5133312,
+              "rss": 44187648
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.409374999999997,
+              "peak": 46153728,
+              "heap": 5776384,
+              "rss": 46153728
+            },
+            {
+              "label": "dumgen",
+              "ms": 137.16725,
+              "peak": 129794048,
+              "heap": 44088552,
+              "rss": 129794048
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.109542000000005,
+              "peak": 131121152,
+              "heap": 44088552,
+              "rss": 131121152
+            },
+            {
+              "label": "grammar",
+              "ms": 5.856750000000005,
+              "peak": 135069696,
+              "heap": 44088552,
+              "rss": 135069696
+            },
+            {
+              "label": "reading",
+              "ms": 1.9775840000000073,
+              "peak": 137527296,
+              "heap": 44088552,
+              "rss": 137527296
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.906499999999994,
+              "peak": 138706944,
+              "heap": 44088552,
+              "rss": 138706944
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 156745728,
+              "heap": 53282657,
+              "rss": 156745728
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 164855808,
+              "heap": 53282657,
+              "rss": 164855808
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 165003264,
+              "heap": 59912276,
+              "rss": 165003264
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06167499999999961
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.8136250000000004
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.17865000000000036
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.24043750000000016
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40910848,
+              "heap": 4158464,
+              "rss": 40894464
+            },
+            {
+              "label": "dumling",
+              "ms": 2.1754159999999985,
+              "peak": 43237376,
+              "heap": 4688896,
+              "rss": 43237376
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.3104999999999976,
+              "peak": 44400640,
+              "heap": 5134336,
+              "rss": 44400640
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.3871250000000046,
+              "peak": 46268416,
+              "heap": 5761024,
+              "rss": 46268416
+            },
+            {
+              "label": "dumgen",
+              "ms": 136.530042,
+              "peak": 132169728,
+              "heap": 42938690,
+              "rss": 132169728
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.132959,
+              "peak": 133070848,
+              "heap": 42938690,
+              "rss": 133070848
+            },
+            {
+              "label": "grammar",
+              "ms": 5.902000000000015,
+              "peak": 137134080,
+              "heap": 42938690,
+              "rss": 137134080
+            },
+            {
+              "label": "reading",
+              "ms": 1.9490000000000123,
+              "peak": 139476992,
+              "heap": 42938690,
+              "rss": 139476992
+            },
+            {
+              "label": "knowledge",
+              "ms": 3.2424170000000174,
+              "peak": 140492800,
+              "heap": 42938690,
+              "rss": 140492800
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 159186944,
+              "heap": 53049318,
+              "rss": 159186944
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 166821888,
+              "heap": 53049318,
+              "rss": 166821888
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 167002112,
+              "heap": 59891703,
+              "rss": 167002112
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.07775419999999969
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.6821375000000003
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.1828104500000009
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.24644375000000024
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41140224,
+              "heap": 4158464,
+              "rss": 41123840
+            },
+            {
+              "label": "dumling",
+              "ms": 2.1664169999999956,
+              "peak": 43384832,
+              "heap": 4671488,
+              "rss": 43384832
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.274916999999995,
+              "peak": 44466176,
+              "heap": 5100544,
+              "rss": 44466176
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.4264170000000007,
+              "peak": 46333952,
+              "heap": 5727232,
+              "rss": 46333952
+            },
+            {
+              "label": "dumgen",
+              "ms": 138.283208,
+              "peak": 132874240,
+              "heap": 48741460,
+              "rss": 132874240
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.206666999999982,
+              "peak": 133808128,
+              "heap": 48741460,
+              "rss": 133808128
+            },
+            {
+              "label": "grammar",
+              "ms": 5.9002909999999815,
+              "peak": 137281536,
+              "heap": 48741460,
+              "rss": 137281536
+            },
+            {
+              "label": "reading",
+              "ms": 1.995834000000002,
+              "peak": 139755520,
+              "heap": 48741460,
+              "rss": 139755520
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.946708000000001,
+              "peak": 140574720,
+              "heap": 48741460,
+              "rss": 140574720
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 160169984,
+              "heap": 54414919,
+              "rss": 160169984
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 165675008,
+              "heap": 54414919,
+              "rss": 165675008
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 165822464,
+              "heap": 59908731,
+              "rss": 165822464
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06276040000000052
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.4866646000000003
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.46664790000000095
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.2567916999999994
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40697856,
+              "heap": 4224000,
+              "rss": 40681472
+            },
+            {
+              "label": "dumling",
+              "ms": 2.1240409999999983,
+              "peak": 43139072,
+              "heap": 4720640,
+              "rss": 43139072
+            },
+            {
+              "label": "dumrel",
+              "ms": 1.2620840000000015,
+              "peak": 44335104,
+              "heap": 5149696,
+              "rss": 44335104
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 2.400750000000002,
+              "peak": 46137344,
+              "heap": 5792768,
+              "rss": 46137344
+            },
+            {
+              "label": "dumgen",
+              "ms": 136.343459,
+              "peak": 131121152,
+              "heap": 48666540,
+              "rss": 131121152
+            },
+            {
+              "label": "segmentation",
+              "ms": 4.098083000000003,
+              "peak": 132431872,
+              "heap": 48666540,
+              "rss": 132431872
+            },
+            {
+              "label": "grammar",
+              "ms": 5.92266699999999,
+              "peak": 136347648,
+              "heap": 48666540,
+              "rss": 136347648
+            },
+            {
+              "label": "reading",
+              "ms": 1.942083000000025,
+              "peak": 138395648,
+              "heap": 48666540,
+              "rss": 138395648
+            },
+            {
+              "label": "knowledge",
+              "ms": 1.937958000000009,
+              "peak": 139411456,
+              "heap": 48666540,
+              "rss": 139411456
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 160022528,
+              "heap": 54492385,
+              "rss": 160022528
+            },
+            {
+              "label": "invalid-unit",
+              "ms": 0,
+              "peak": 165101568,
+              "heap": 54492385,
+              "rss": 165101568
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 165232640,
+              "heap": 59904235,
+              "rss": 165232640
+            }
+          ],
+          "trace": [],
+          "warm": [
+            {
+              "label": "segmentation",
+              "msPerCall": 0.06395624999999967
+            },
+            {
+              "label": "grammar",
+              "msPerCall": 0.4722375
+            },
+            {
+              "label": "reading",
+              "msPerCall": 0.23686455000000137
+            },
+            {
+              "label": "knowledge",
+              "msPerCall": 0.4737270999999993
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
