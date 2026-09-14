@@ -1,0 +1,4683 @@
+{
+  "capturedAt": "2026-09-14T04:38:46.987Z",
+  "bun": "1.4.2",
+  "platform": "darwin",
+  "arch": "arm64",
+  "sourceHashes": {
+    "battery/dumling/src/index.ts": "96ef4fd64de75463454b7508a92c4a61ac59a877f001974f9bccb4137d935387",
+    "battery/dumling/src/parse-unit.ts": "87f5f2deb98019b17703717dd77902a0a23b95c1b149c38fd28f02a41b11d018",
+    "battery/dumrel/src/index.ts": "425368cfa308c971a9a5f6cbeb84930c9b48a5b9997baaa6af0e7d9ac793db26",
+    "battery/dumrel/src/validation.ts": "4c12d58d4d41403789724d2e7cb89f83c6eccd7639594d461824b2b8b299027a",
+    "battery/dumgen/src/index.ts": "73b6774f66c295e25536a6bf9e26e3b1ac14252765843e744eeae91bd9c7f7e6",
+    "battery/dumgen/src/universal/validation.ts": "3353333afe7fc4cdce50be8fdcc32ff2e00c270ecb7c7b73d58fd190f766ab0d",
+    "battery/dumgen/src/concrete-lang/de/authored-closed-sets/select.ts": "70fd0502152b1a71cdf00282f65296240be1b11600b37563ed203b32bc272434"
+  },
+  "method": "Seven fresh published-runtime processes per variant. Preload Effect -> Dumling -> Dumrel -> Dumdict -> Dumgen. Bank grammar -> sein authored Reading -> pronoun navigation -> determiner (all catalog groups), then 20 warm calls each. Separate exhaustive 168-member contract process. Deterministic injected model; no network. GC only at end.",
+  "limitations": "Synchronous lazy module initialization; code still ships upfront. Current baseline already removed freezing. Freeze state is preserved, not newly guaranteed. Identical package externalization in every variant. Diagnostic private exports only in profiling builds. Full DX gate is separate. Local Bun replay, not deployed Convex.",
+  "results": [
+    {
+      "variant": "external-runtime",
+      "builtHashes": {
+        "dumling": "00e0209478f5b86bedb2186449050695a957ee23b2b1b7ea80e99bd308733e76",
+        "dumrel": "10d0fde87e6e92f2e340e0a350920c87801aa683a3c7821502d154d5824b0a7a",
+        "dumgen": "c76e7b37e1acefb126d42a64850c248243b147303b645aa940c4f375b422cd71"
+      },
+      "statistics": null,
+      "contract": {
+        "passed": true,
+        "members": 168,
+        "modelCalls": 21,
+        "state": {
+          "groups": [
+            "AUX",
+            "DET",
+            "PRON"
+          ],
+          "members": 168
+        }
+      },
+      "stages": [
+        {
+          "label": "effect",
+          "state": null,
+          "peakAboveEffectMiB": 0,
+          "coldMs": 0,
+          "heapMiB": 3.998046875
+        },
+        {
+          "label": "dumling",
+          "state": null,
+          "peakAboveEffectMiB": 2.203125,
+          "coldMs": 0,
+          "heapMiB": 4.4873046875
+        },
+        {
+          "label": "dumrel",
+          "state": null,
+          "peakAboveEffectMiB": 3.171875,
+          "coldMs": 0,
+          "heapMiB": 4.896484375
+        },
+        {
+          "label": "dumdict/runtime",
+          "state": null,
+          "peakAboveEffectMiB": 4.671875,
+          "coldMs": 0,
+          "heapMiB": 5.494140625
+        },
+        {
+          "label": "dumgen-import",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 17.171875,
+          "coldMs": 16.021791,
+          "heapMiB": 7.890690803527832
+        },
+        {
+          "label": "Bank",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 19.8125,
+          "coldMs": 3.6029589999999985,
+          "heapMiB": 7.890690803527832
+        },
+        {
+          "label": "sein-AUX",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 19.9375,
+          "coldMs": 0.35924999999999585,
+          "heapMiB": 7.890690803527832
+        },
+        {
+          "label": "pronoun-navigation",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 20.671875,
+          "coldMs": 0.3586249999999964,
+          "heapMiB": 7.890690803527832
+        },
+        {
+          "label": "determiner-all-groups",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 20.96875,
+          "coldMs": 0.2836250000000007,
+          "heapMiB": 7.890690803527832
+        },
+        {
+          "label": "warm",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 44.109375,
+          "coldMs": 0,
+          "heapMiB": 10.28860092163086
+        },
+        {
+          "label": "after-gc",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 44.28125,
+          "coldMs": 0,
+          "heapMiB": 10.676448822021484
+        }
+      ],
+      "warm": [
+        {
+          "label": "Bank",
+          "ms": 0.4523271000000001
+        },
+        {
+          "label": "sein-AUX",
+          "ms": 0.10020205000000004
+        },
+        {
+          "label": "pronoun-navigation",
+          "ms": 0.13260000000000005
+        },
+        {
+          "label": "determiner-all-groups",
+          "ms": 0.09955624999999983
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40255488,
+              "heap": 4192256,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43499520,
+              "heap": 4705280,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44728320,
+              "heap": 5135360,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 48168960,
+              "heap": 5762048,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 31.355874999999997,
+              "peak": 70057984,
+              "heap": 8252687,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 5.902791999999991,
+              "peak": 72368128,
+              "heap": 8252687,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.37966700000001197,
+              "peak": 72728576,
+              "heap": 8252687,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3558749999999975,
+              "peak": 73121792,
+              "heap": 8252687,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.6333329999999933,
+              "peak": 73465856,
+              "heap": 8252687,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 94371840,
+              "heap": 10784754,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 95961088,
+              "heap": 10860335,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.5336000000000005
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.11633960000000058
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.19162914999999997
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.13298750000000012
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40583168,
+              "heap": 4044800,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43008000,
+              "heap": 4556800,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43663360,
+              "heap": 4970496,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45629440,
+              "heap": 5629952,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 16.488500000000002,
+              "peak": 58720256,
+              "heap": 8308266,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.6029589999999985,
+              "peak": 61505536,
+              "heap": 8308266,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.3486249999999984,
+              "peak": 61784064,
+              "heap": 8308266,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3662089999999978,
+              "peak": 62521344,
+              "heap": 8308266,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.2836250000000007,
+              "peak": 63143936,
+              "heap": 8308266,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 88686592,
+              "heap": 10777007,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 88883200,
+              "heap": 11195068,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.4523271000000001
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.09940414999999944
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.14335419999999957
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.1000854000000004
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40583168,
+              "heap": 4207616,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42876928,
+              "heap": 4720640,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43925504,
+              "heap": 5134336,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45449216,
+              "heap": 5761024,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 16.133875000000003,
+              "peak": 58589184,
+              "heap": 8238300,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.5402090000000044,
+              "peak": 61358080,
+              "heap": 8238300,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.34575000000000244,
+              "peak": 61734912,
+              "heap": 8238300,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.34833399999999415,
+              "peak": 62390272,
+              "heap": 8238300,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.2858330000000038,
+              "peak": 62570496,
+              "heap": 8238300,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 85917696,
+              "heap": 10789696,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 86196224,
+              "heap": 11192132,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.4645603999999999
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.09600415000000026
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.1276021
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09015210000000025
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41123840,
+              "heap": 4241408,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43450368,
+              "heap": 4753408,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44728320,
+              "heap": 5167104,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 46284800,
+              "heap": 5810176,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 15.859875000000002,
+              "peak": 58834944,
+              "heap": 8401139,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.606042000000002,
+              "peak": 60882944,
+              "heap": 8401139,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.35924999999999585,
+              "peak": 61620224,
+              "heap": 8401139,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3706249999999969,
+              "peak": 62357504,
+              "heap": 8401139,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.27737499999999926,
+              "peak": 62537728,
+              "heap": 8401139,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 86556672,
+              "heap": 10798454,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 86687744,
+              "heap": 11195161,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.4175604
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.10020205000000004
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.1278020500000004
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10400210000000029
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41189376,
+              "heap": 4159488,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43384832,
+              "heap": 4704256,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44400640,
+              "heap": 5117952,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45907968,
+              "heap": 5761024,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 15.696292,
+              "peak": 58736640,
+              "heap": 8273989,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.6278329999999954,
+              "peak": 61390848,
+              "heap": 8273989,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.3633749999999978,
+              "peak": 61784064,
+              "heap": 8273989,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3586249999999964,
+              "peak": 62177280,
+              "heap": 8273989,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.32816700000000054,
+              "peak": 62881792,
+              "heap": 8273989,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 86523904,
+              "heap": 10788380,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 86720512,
+              "heap": 11196410,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.43328539999999977
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.10121460000000013
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.13260000000000005
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.08569999999999993
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40878080,
+              "heap": 4125696,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43188224,
+              "heap": 4638720,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43761664,
+              "heap": 5052416,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45678592,
+              "heap": 5695488,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 16.021791,
+              "peak": 59097088,
+              "heap": 8243668,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.5107500000000016,
+              "peak": 61210624,
+              "heap": 8243668,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.3589580000000012,
+              "peak": 61620224,
+              "heap": 8243668,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3564579999999964,
+              "peak": 62275584,
+              "heap": 8243668,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.2647499999999994,
+              "peak": 62488576,
+              "heap": 8243668,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 87130112,
+              "heap": 10782150,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 87310336,
+              "heap": 11197109,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.44565415
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.09662295000000043
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.12549165
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.0855792000000001
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40566784,
+              "heap": 4225024,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42876928,
+              "heap": 4737024,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43892736,
+              "heap": 5150720,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45465600,
+              "heap": 5793792,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 15.710999999999999,
+              "peak": 58359808,
+              "heap": 8332071,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.5060000000000002,
+              "peak": 61390848,
+              "heap": 8332071,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.37058300000000344,
+              "peak": 61472768,
+              "heap": 8332071,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3946669999999983,
+              "peak": 62242816,
+              "heap": 8332071,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.266416999999997,
+              "peak": 62603264,
+              "heap": 8332071,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 88031232,
+              "heap": 10794586,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 88211456,
+              "heap": 11189899,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.47742080000000015
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.1328791500000001
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.13457080000000018
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09955624999999983
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "operation-split-chain",
+      "builtHashes": {
+        "dumling": "05ce112663b91266e7ce7b4e47a40e96a8e9263ca470ad5a65a581163fc30ffd",
+        "dumrel": "dc939a0f507ffce33fc78939afa33792a47a79579069656f510ce4f69474dac7",
+        "dumgen": "cdfaddbf54ea8481f071829f6983e18d6fe7927cbcabf9b47b8acaca5052fe90"
+      },
+      "statistics": null,
+      "contract": {
+        "passed": true,
+        "members": 168,
+        "modelCalls": 21,
+        "state": {
+          "groups": [
+            "AUX",
+            "DET",
+            "PRON"
+          ],
+          "members": 168
+        }
+      },
+      "stages": [
+        {
+          "label": "effect",
+          "state": null,
+          "peakAboveEffectMiB": 0,
+          "coldMs": 0,
+          "heapMiB": 3.966796875
+        },
+        {
+          "label": "dumling",
+          "state": null,
+          "peakAboveEffectMiB": 1.765625,
+          "coldMs": 0,
+          "heapMiB": 4.251953125
+        },
+        {
+          "label": "dumrel",
+          "state": null,
+          "peakAboveEffectMiB": 2.265625,
+          "coldMs": 0,
+          "heapMiB": 4.31640625
+        },
+        {
+          "label": "dumdict/runtime",
+          "state": null,
+          "peakAboveEffectMiB": 4.125,
+          "coldMs": 0,
+          "heapMiB": 4.9462890625
+        },
+        {
+          "label": "dumgen-import",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 15.03125,
+          "coldMs": 13.979624999999999,
+          "heapMiB": 5.583984375
+        },
+        {
+          "label": "Bank",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 18.828125,
+          "coldMs": 6.643166999999998,
+          "heapMiB": 7.694611549377441
+        },
+        {
+          "label": "sein-AUX",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 19.234375,
+          "coldMs": 0.7312909999999988,
+          "heapMiB": 7.694611549377441
+        },
+        {
+          "label": "pronoun-navigation",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 19.90625,
+          "coldMs": 0.4067919999999958,
+          "heapMiB": 7.694611549377441
+        },
+        {
+          "label": "determiner-all-groups",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 20.6875,
+          "coldMs": 0.347999999999999,
+          "heapMiB": 7.694611549377441
+        },
+        {
+          "label": "warm",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 44.3125,
+          "coldMs": 0,
+          "heapMiB": 9.46270751953125
+        },
+        {
+          "label": "after-gc",
+          "state": {
+            "groups": [
+              "AUX",
+              "DET",
+              "PRON"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 44.96875,
+          "coldMs": 0,
+          "heapMiB": 9.837008476257324
+        }
+      ],
+      "warm": [
+        {
+          "label": "Bank",
+          "ms": 0.5096812499999999
+        },
+        {
+          "label": "sein-AUX",
+          "ms": 0.10274580000000029
+        },
+        {
+          "label": "pronoun-navigation",
+          "ms": 0.1406916500000001
+        },
+        {
+          "label": "determiner-all-groups",
+          "ms": 0.09884585000000001
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41074688,
+              "heap": 4224000,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 44056576,
+              "heap": 4507648,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44711936,
+              "heap": 4574208,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 46219264,
+              "heap": 5236736,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 27.444916999999997,
+              "peak": 68583424,
+              "heap": 5921792,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.415917000000007,
+              "peak": 71106560,
+              "heap": 8038315,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.8799999999999955,
+              "peak": 71286784,
+              "heap": 8038315,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.4281660000000045,
+              "peak": 71745536,
+              "heap": 8038315,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.4282079999999979,
+              "peak": 71909376,
+              "heap": 8038315,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 97157120,
+              "heap": 9888845,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 97304576,
+              "heap": 10313601,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.5449687499999996
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.22644795
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.13693124999999995
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09884585000000001
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41091072,
+              "heap": 4224000,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43106304,
+              "heap": 4507648,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43433984,
+              "heap": 4574208,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45219840,
+              "heap": 5235712,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 14.755499999999998,
+              "peak": 56803328,
+              "heap": 5920768,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.643166999999998,
+              "peak": 60833792,
+              "heap": 8066213,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7433750000000003,
+              "peak": 61259776,
+              "heap": 8066213,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.3954999999999984,
+              "peak": 61882368,
+              "heap": 8066213,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.29204199999999503,
+              "peak": 62095360,
+              "heap": 8066213,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 86769664,
+              "heap": 9922368,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 87080960,
+              "heap": 10316446,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.4847041499999996
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.11220624999999984
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.14157709999999996
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10044164999999979
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40697856,
+              "heap": 4159488,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42549248,
+              "heap": 4459520,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43401216,
+              "heap": 4526080,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45121536,
+              "heap": 5187584,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.979624999999999,
+              "peak": 56541184,
+              "heap": 5889024,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 7.636707999999992,
+              "peak": 61128704,
+              "heap": 8029391,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.9144170000000003,
+              "peak": 61587456,
+              "heap": 8029391,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 1.0668750000000102,
+              "peak": 62291968,
+              "heap": 8029391,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.6998340000000098,
+              "peak": 62603264,
+              "heap": 8029391,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 88539136,
+              "heap": 9891524,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 88801280,
+              "heap": 10311905,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.5096812499999999
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.12349790000000027
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.14449375000000017
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09787914999999998
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40747008,
+              "heap": 4126720,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42434560,
+              "heap": 4425728,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 42811392,
+              "heap": 4493312,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 44810240,
+              "heap": 5137408,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.981875000000002,
+              "peak": 55984128,
+              "heap": 5822464,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.584500000000006,
+              "peak": 60276736,
+              "heap": 8198022,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.6767919999999918,
+              "peak": 60899328,
+              "heap": 8198022,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.39408299999999485,
+              "peak": 61620224,
+              "heap": 8198022,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.8513749999999902,
+              "peak": 62439424,
+              "heap": 8198022,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 85770240,
+              "heap": 9950383,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 85999616,
+              "heap": 10312452,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.5100957999999999
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.09873545000000021
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.1406916500000001
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09648540000000025
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40730624,
+              "heap": 4126720,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42663936,
+              "heap": 4425728,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43106304,
+              "heap": 4493312,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45056000,
+              "heap": 5137408,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.810625000000002,
+              "peak": 55902208,
+              "heap": 5822464,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.997500000000002,
+              "peak": 59949056,
+              "heap": 8149187,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.6862090000000052,
+              "peak": 60571648,
+              "heap": 8149187,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.4067919999999958,
+              "peak": 60981248,
+              "heap": 8149187,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.347999999999999,
+              "peak": 61440000,
+              "heap": 8149187,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 87588864,
+              "heap": 9928866,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 87883776,
+              "heap": 10315359,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.4921729499999998
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.10151874999999962
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.14523335000000018
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10435414999999963
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40730624,
+              "heap": 4159488,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42582016,
+              "heap": 4458496,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43515904,
+              "heap": 4526080,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45154304,
+              "heap": 5186560,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.834874999999997,
+              "peak": 56885248,
+              "heap": 5855232,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 7.281416999999998,
+              "peak": 61882368,
+              "heap": 8068385,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7312909999999988,
+              "peak": 62324736,
+              "heap": 8068385,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.40800000000000125,
+              "peak": 62980096,
+              "heap": 8068385,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.31383300000000247,
+              "peak": 63209472,
+              "heap": 8068385,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 86933504,
+              "heap": 9904237,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 87228416,
+              "heap": 10314851,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.5161417
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.09822084999999987
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.13517289999999987
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.11508334999999974
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41189376,
+              "heap": 4126720,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42795008,
+              "heap": 4425728,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43335680,
+              "heap": 4493312,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45449216,
+              "heap": 5137408,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.628540999999998,
+              "peak": 56950784,
+              "heap": 5822464,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.616125000000004,
+              "peak": 60735488,
+              "heap": 8157400,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.6699999999999946,
+              "peak": 61358080,
+              "heap": 8157400,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.38795899999999506,
+              "peak": 62046208,
+              "heap": 8157400,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.2820000000000107,
+              "peak": 62275584,
+              "heap": 8157400,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 87654400,
+              "heap": 9933633,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 88571904,
+              "heap": 10320605,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "DET",
+                  "PRON"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.4586833499999997
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.10274580000000029
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.13492919999999983
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09344375000000013
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "catalog-lazy",
+      "builtHashes": {
+        "dumling": "00e0209478f5b86bedb2186449050695a957ee23b2b1b7ea80e99bd308733e76",
+        "dumrel": "10d0fde87e6e92f2e340e0a350920c87801aa683a3c7821502d154d5824b0a7a",
+        "dumgen": "463eec7d021b8370efb3c247dcb24432fa5c82b941a0891dca4b94e14f6bfb30"
+      },
+      "statistics": {
+        "groups": {
+          "DET": 43,
+          "AUX": 14,
+          "PRON": 111
+        },
+        "memberCount": 168,
+        "mode": "Synchronous lazy module initialization by grammatical Kind. Code remains in the initial bundle; objects initialize on first group access. Public APIs and authored build validation remain unchanged."
+      },
+      "contract": {
+        "passed": true,
+        "members": 168,
+        "modelCalls": 21,
+        "state": {
+          "groups": [
+            "AUX",
+            "PRON",
+            "DET"
+          ],
+          "members": 168
+        }
+      },
+      "stages": [
+        {
+          "label": "effect",
+          "state": null,
+          "peakAboveEffectMiB": 0,
+          "coldMs": 0,
+          "heapMiB": 4.0126953125
+        },
+        {
+          "label": "dumling",
+          "state": null,
+          "peakAboveEffectMiB": 2.15625,
+          "coldMs": 0,
+          "heapMiB": 4.501953125
+        },
+        {
+          "label": "dumrel",
+          "state": null,
+          "peakAboveEffectMiB": 3.171875,
+          "coldMs": 0,
+          "heapMiB": 4.896484375
+        },
+        {
+          "label": "dumdict/runtime",
+          "state": null,
+          "peakAboveEffectMiB": 4.703125,
+          "coldMs": 0,
+          "heapMiB": 5.494140625
+        },
+        {
+          "label": "dumgen-import",
+          "state": {
+            "groups": [],
+            "members": 0
+          },
+          "peakAboveEffectMiB": 14.953125,
+          "coldMs": 13.432541999999998,
+          "heapMiB": 7.959898948669434
+        },
+        {
+          "label": "Bank",
+          "state": {
+            "groups": [],
+            "members": 0
+          },
+          "peakAboveEffectMiB": 16.5625,
+          "coldMs": 3.5144170000000017,
+          "heapMiB": 7.959898948669434
+        },
+        {
+          "label": "sein-AUX",
+          "state": {
+            "groups": [
+              "AUX"
+            ],
+            "members": 14
+          },
+          "peakAboveEffectMiB": 17.15625,
+          "coldMs": 0.7466670000000022,
+          "heapMiB": 7.959898948669434
+        },
+        {
+          "label": "pronoun-navigation",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON"
+            ],
+            "members": 125
+          },
+          "peakAboveEffectMiB": 18.671875,
+          "coldMs": 4.604125000000003,
+          "heapMiB": 7.959898948669434
+        },
+        {
+          "label": "determiner-all-groups",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON",
+              "DET"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 19.078125,
+          "coldMs": 1.1032090000000068,
+          "heapMiB": 7.959898948669434
+        },
+        {
+          "label": "warm",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON",
+              "DET"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 39.625,
+          "coldMs": 0,
+          "heapMiB": 10.768853187561035
+        },
+        {
+          "label": "after-gc",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON",
+              "DET"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 39.890625,
+          "coldMs": 0,
+          "heapMiB": 11.078153610229492
+        }
+      ],
+      "warm": [
+        {
+          "label": "Bank",
+          "ms": 0.2868312499999995
+        },
+        {
+          "label": "sein-AUX",
+          "ms": 0.21538125000000008
+        },
+        {
+          "label": "pronoun-navigation",
+          "ms": 0.12216459999999998
+        },
+        {
+          "label": "determiner-all-groups",
+          "ms": 0.10168125000000003
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40828928,
+              "heap": 4159488,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42958848,
+              "heap": 4687872,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44154880,
+              "heap": 5101568,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45776896,
+              "heap": 5728256,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 28.042125,
+              "peak": 69124096,
+              "heap": 8346559,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.5515000000000043,
+              "peak": 70975488,
+              "heap": 8346559,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.9484580000000022,
+              "peak": 71254016,
+              "heap": 8346559,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.877499999999998,
+              "peak": 72450048,
+              "heap": 8346559,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.3361670000000032,
+              "peak": 72810496,
+              "heap": 8346559,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 90275840,
+              "heap": 11279771,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 90570752,
+              "heap": 11614109,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.3279562499999997
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.2590499999999999
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.12216459999999998
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10781875000000056
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40697856,
+              "heap": 4126720,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43139072,
+              "heap": 4638720,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44204032,
+              "heap": 5068800,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45694976,
+              "heap": 5711872,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.851332999999997,
+              "peak": 56442880,
+              "heap": 8123704,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.5144170000000017,
+              "peak": 57917440,
+              "heap": 8123704,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7376250000000013,
+              "peak": 58687488,
+              "heap": 8123704,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.637957999999998,
+              "peak": 60276736,
+              "heap": 8123704,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.1227499999999964,
+              "peak": 60702720,
+              "heap": 8123704,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 82722816,
+              "heap": 11299514,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 82968576,
+              "heap": 11610907,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.3413208000000004
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.17536249999999995
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.12234584999999995
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09536039999999986
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41025536,
+              "heap": 4225024,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43286528,
+              "heap": 4753408,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44302336,
+              "heap": 5167104,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45957120,
+              "heap": 5810176,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.432541999999998,
+              "peak": 56705024,
+              "heap": 8456381,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.452542000000001,
+              "peak": 58392576,
+              "heap": 8456381,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7513329999999954,
+              "peak": 58785792,
+              "heap": 8456381,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.654458999999996,
+              "peak": 59899904,
+              "heap": 8456381,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.1032090000000068,
+              "peak": 60243968,
+              "heap": 8456381,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 80478208,
+              "heap": 11294381,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 80855040,
+              "heap": 11619308,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.2415728999999999
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.21538125000000008
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.1242750000000001
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09327499999999986
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40566784,
+              "heap": 4126720,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42795008,
+              "heap": 4638720,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43761664,
+              "heap": 5052416,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45334528,
+              "heap": 5695488,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.390833,
+              "peak": 56082432,
+              "heap": 8462215,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.582584000000004,
+              "peak": 57769984,
+              "heap": 8462215,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7466670000000022,
+              "peak": 58638336,
+              "heap": 8462215,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.604125000000003,
+              "peak": 60162048,
+              "heap": 8462215,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.1405839999999898,
+              "peak": 60571648,
+              "heap": 8462215,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 81346560,
+              "heap": 11256052,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 81510400,
+              "heap": 11576633,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.25137085
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.3219312500000001
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.16616459999999975
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10480414999999965
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40714240,
+              "heap": 4207616,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42876928,
+              "heap": 4720640,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43843584,
+              "heap": 5134336,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45465600,
+              "heap": 5777408,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.509917000000002,
+              "peak": 56098816,
+              "heap": 8018541,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 4.199083000000002,
+              "peak": 57655296,
+              "heap": 8018541,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7526659999999978,
+              "peak": 58474496,
+              "heap": 8018541,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.586750000000002,
+              "peak": 59981824,
+              "heap": 8018541,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.0243750000000063,
+              "peak": 60211200,
+              "heap": 8018541,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 82264064,
+              "heap": 11287714,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 82493440,
+              "heap": 11616286,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.3635291499999994
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.09345830000000035
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11791874999999977
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10168125000000003
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40730624,
+              "heap": 4207616,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43204608,
+              "heap": 4720640,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44171264,
+              "heap": 5134336,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45744128,
+              "heap": 5761024,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.008167,
+              "peak": 56573952,
+              "heap": 8392423,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.4451660000000004,
+              "peak": 58540032,
+              "heap": 8392423,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.7156670000000034,
+              "peak": 58900480,
+              "heap": 8392423,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.3672909999999945,
+              "peak": 60440576,
+              "heap": 8392423,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.9678750000000065,
+              "peak": 61276160,
+              "heap": 8392423,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 82755584,
+              "heap": 11291961,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 83165184,
+              "heap": 11618368,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.22491249999999993
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.22773330000000058
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.12029374999999973
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.10558125000000018
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40992768,
+              "heap": 4241408,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43352064,
+              "heap": 4753408,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44367872,
+              "heap": 5167104,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45858816,
+              "heap": 5810176,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 13.300874999999998,
+              "peak": 56475648,
+              "heap": 8100589,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 3.328165999999996,
+              "peak": 58425344,
+              "heap": 8100589,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.6989590000000021,
+              "peak": 58802176,
+              "heap": 8100589,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.3203749999999985,
+              "peak": 60309504,
+              "heap": 8100589,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.9402919999999995,
+              "peak": 61095936,
+              "heap": 8100589,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 82362368,
+              "heap": 11300810,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 82821120,
+              "heap": 11620680,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.2868312499999995
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.17309164999999993
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.1178583500000002
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.08723959999999949
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "catalog-and-registries",
+      "builtHashes": {
+        "dumling": "05ce112663b91266e7ce7b4e47a40e96a8e9263ca470ad5a65a581163fc30ffd",
+        "dumrel": "dc939a0f507ffce33fc78939afa33792a47a79579069656f510ce4f69474dac7",
+        "dumgen": "3c78de11c4ee674dc7bca60d4724e6c78986a20d29eed32cee7f83c7db82f289"
+      },
+      "statistics": {
+        "groups": {
+          "DET": 43,
+          "AUX": 14,
+          "PRON": 111
+        },
+        "memberCount": 168,
+        "mode": "Synchronous lazy module initialization by grammatical Kind. Code remains in the initial bundle; objects initialize on first group access. Public APIs and authored build validation remain unchanged."
+      },
+      "contract": {
+        "passed": true,
+        "members": 168,
+        "modelCalls": 21,
+        "state": {
+          "groups": [
+            "AUX",
+            "PRON",
+            "DET"
+          ],
+          "members": 168
+        }
+      },
+      "stages": [
+        {
+          "label": "effect",
+          "state": null,
+          "peakAboveEffectMiB": 0,
+          "coldMs": 0,
+          "heapMiB": 4.029296875
+        },
+        {
+          "label": "dumling",
+          "state": null,
+          "peakAboveEffectMiB": 2.078125,
+          "coldMs": 0,
+          "heapMiB": 4.314453125
+        },
+        {
+          "label": "dumrel",
+          "state": null,
+          "peakAboveEffectMiB": 2.53125,
+          "coldMs": 0,
+          "heapMiB": 4.37890625
+        },
+        {
+          "label": "dumdict/runtime",
+          "state": null,
+          "peakAboveEffectMiB": 4.21875,
+          "coldMs": 0,
+          "heapMiB": 4.9931640625
+        },
+        {
+          "label": "dumgen-import",
+          "state": {
+            "groups": [],
+            "members": 0
+          },
+          "peakAboveEffectMiB": 12.75,
+          "coldMs": 10.044125000000001,
+          "heapMiB": 5.5234375
+        },
+        {
+          "label": "Bank",
+          "state": {
+            "groups": [],
+            "members": 0
+          },
+          "peakAboveEffectMiB": 15.921875,
+          "coldMs": 6.242250000000006,
+          "heapMiB": 7.46906852722168
+        },
+        {
+          "label": "sein-AUX",
+          "state": {
+            "groups": [
+              "AUX"
+            ],
+            "members": 14
+          },
+          "peakAboveEffectMiB": 16.1875,
+          "coldMs": 0.9677080000000018,
+          "heapMiB": 7.46906852722168
+        },
+        {
+          "label": "pronoun-navigation",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON"
+            ],
+            "members": 125
+          },
+          "peakAboveEffectMiB": 17.71875,
+          "coldMs": 4.377082999999999,
+          "heapMiB": 7.46906852722168
+        },
+        {
+          "label": "determiner-all-groups",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON",
+              "DET"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 18.265625,
+          "coldMs": 0.992999999999995,
+          "heapMiB": 7.46906852722168
+        },
+        {
+          "label": "warm",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON",
+              "DET"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 38.265625,
+          "coldMs": 0,
+          "heapMiB": 10.022602081298828
+        },
+        {
+          "label": "after-gc",
+          "state": {
+            "groups": [
+              "AUX",
+              "PRON",
+              "DET"
+            ],
+            "members": 168
+          },
+          "peakAboveEffectMiB": 38.6875,
+          "coldMs": 0,
+          "heapMiB": 10.239126205444336
+        }
+      ],
+      "warm": [
+        {
+          "label": "Bank",
+          "ms": 0.23349794999999957
+        },
+        {
+          "label": "sein-AUX",
+          "ms": 0.2175708
+        },
+        {
+          "label": "pronoun-navigation",
+          "ms": 0.11777500000000032
+        },
+        {
+          "label": "determiner-all-groups",
+          "ms": 0.0893499999999996
+        }
+      ],
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40763392,
+              "heap": 4225024,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42516480,
+              "heap": 4524032,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43253760,
+              "heap": 4591616,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 44957696,
+              "heap": 5235712,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 24.449917,
+              "peak": 67272704,
+              "heap": 5791744,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.1213340000000045,
+              "peak": 69861376,
+              "heap": 7802917,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.9618750000000063,
+              "peak": 70123520,
+              "heap": 7802917,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.260750000000002,
+              "peak": 71221248,
+              "heap": 7802917,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.958083000000002,
+              "peak": 71860224,
+              "heap": 7802917,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 88752128,
+              "heap": 10546177,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 89063424,
+              "heap": 10733710,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.23438124999999985
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.22841875000000017
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11777500000000032
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.12743749999999993
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41009152,
+              "heap": 4257792,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43483136,
+              "heap": 4556800,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43974656,
+              "heap": 4624384,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45760512,
+              "heap": 5284864,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 9.957999999999998,
+              "peak": 54738944,
+              "heap": 5824512,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.2648750000000035,
+              "peak": 58261504,
+              "heap": 7831886,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.9627499999999998,
+              "peak": 58654720,
+              "heap": 7831886,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.377082999999999,
+              "peak": 60112896,
+              "heap": 7831886,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.9744579999999985,
+              "peak": 60915712,
+              "heap": 7831886,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 82280448,
+              "heap": 10417637,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 82477056,
+              "heap": 10736667,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.23349794999999957
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.2175708
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11695419999999998
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.0933937499999999
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41156608,
+              "heap": 4207616,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43188224,
+              "heap": 4491264,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 44089344,
+              "heap": 4557824,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45776896,
+              "heap": 5235712,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 10.106541999999997,
+              "peak": 54525952,
+              "heap": 5791744,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.0135000000000005,
+              "peak": 57851904,
+              "heap": 7804388,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.9795000000000016,
+              "peak": 58130432,
+              "heap": 7804388,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.505833000000003,
+              "peak": 59621376,
+              "heap": 7804388,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.0174999999999983,
+              "peak": 60145664,
+              "heap": 7804388,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 81231872,
+              "heap": 10509460,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 81723392,
+              "heap": 10694669,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.24844374999999985
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.2095083499999994
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11987499999999969
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.08781454999999952
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40763392,
+              "heap": 4126720,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 42549248,
+              "heap": 4425728,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 42942464,
+              "heap": 4493312,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 44990464,
+              "heap": 5137408,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 10.073375000000006,
+              "peak": 53657600,
+              "heap": 5693440,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.395083999999997,
+              "peak": 56688640,
+              "heap": 7889663,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 1.0077499999999944,
+              "peak": 57524224,
+              "heap": 7889663,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.555584000000003,
+              "peak": 58966016,
+              "heap": 7889663,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.0607499999999916,
+              "peak": 59867136,
+              "heap": 7889663,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 80543744,
+              "heap": 10543154,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 80773120,
+              "heap": 10738883,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.22880625000000024
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.20418544999999994
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11615000000000038
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.0887042000000001
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40878080,
+              "heap": 4257792,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43220992,
+              "heap": 4557824,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43810816,
+              "heap": 4624384,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45498368,
+              "heap": 5318656,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 10.024166000000001,
+              "peak": 54525952,
+              "heap": 5858304,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.246834,
+              "peak": 57819136,
+              "heap": 7907157,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.9677080000000018,
+              "peak": 58621952,
+              "heap": 7907157,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.322583000000002,
+              "peak": 60112896,
+              "heap": 7907157,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.9457500000000039,
+              "peak": 60407808,
+              "heap": 7907157,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 82116608,
+              "heap": 10507837,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 82575360,
+              "heap": 10709071,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.22898335000000003
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.20994579999999985
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11985625000000014
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.08829165000000003
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 41074688,
+              "heap": 4225024,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43253760,
+              "heap": 4524032,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43532288,
+              "heap": 4591616,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45498368,
+              "heap": 5235712,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 9.956040999999999,
+              "peak": 54181888,
+              "heap": 5791744,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.113374999999998,
+              "peak": 57573376,
+              "heap": 7755293,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 1.327292,
+              "peak": 57999360,
+              "heap": 7755293,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 5.078290999999993,
+              "peak": 59408384,
+              "heap": 7755293,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 1.1453329999999937,
+              "peak": 60211200,
+              "heap": 7755293,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 81199104,
+              "heap": 10425520,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 81330176,
+              "heap": 10737574,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.23520625000000023
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.23850624999999964
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11970415000000045
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.09179375000000008
+            }
+          ]
+        },
+        {
+          "points": [
+            {
+              "label": "effect",
+              "ms": 0,
+              "peak": 40976384,
+              "heap": 4257792,
+              "state": null
+            },
+            {
+              "label": "dumling",
+              "ms": 0,
+              "peak": 43155456,
+              "heap": 4556800,
+              "state": null
+            },
+            {
+              "label": "dumrel",
+              "ms": 0,
+              "peak": 43630592,
+              "heap": 4624384,
+              "state": null
+            },
+            {
+              "label": "dumdict/runtime",
+              "ms": 0,
+              "peak": 45367296,
+              "heap": 5284864,
+              "state": null
+            },
+            {
+              "label": "dumgen-import",
+              "ms": 10.044125000000001,
+              "peak": 54149120,
+              "heap": 5824512,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "Bank",
+              "ms": 6.242250000000006,
+              "peak": 57573376,
+              "heap": 7947953,
+              "state": {
+                "groups": [],
+                "members": 0
+              }
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.966667000000001,
+              "peak": 57917440,
+              "heap": 7947953,
+              "state": {
+                "groups": [
+                  "AUX"
+                ],
+                "members": 14
+              }
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 4.3735,
+              "peak": 59555840,
+              "heap": 7947953,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON"
+                ],
+                "members": 125
+              }
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.992999999999995,
+              "peak": 60129280,
+              "heap": 7947953,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "warm",
+              "ms": 0,
+              "peak": 80969728,
+              "heap": 10534121,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            },
+            {
+              "label": "after-gc",
+              "ms": 0,
+              "peak": 81084416,
+              "heap": 10736502,
+              "state": {
+                "groups": [
+                  "AUX",
+                  "PRON",
+                  "DET"
+                ],
+                "members": 168
+              }
+            }
+          ],
+          "warm": [
+            {
+              "label": "Bank",
+              "ms": 0.2273812499999998
+            },
+            {
+              "label": "sein-AUX",
+              "ms": 0.2251937500000004
+            },
+            {
+              "label": "pronoun-navigation",
+              "ms": 0.11591670000000036
+            },
+            {
+              "label": "determiner-all-groups",
+              "ms": 0.0893499999999996
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

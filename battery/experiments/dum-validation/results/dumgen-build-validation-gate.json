@@ -1,0 +1,1878 @@
+{
+  "metadata": {
+    "commit": "eb7ebd84b973ea7e586f591117e06d2bcfc81aca",
+    "sourceSha256": "ae6bdeb51ee0715fab23db4b3f701d1bd505f5a71f2dc498a97bc2fa30a17f3b",
+    "experimentSha256": "96d6a30083ba80fb6345ab6167bc613b4ebdfa372127ed8a6647c6bf01a95894",
+    "trackedDiffSha256": "68940a7afb6e372274b38d10731cfba9259ccbfb63df89d8d474a092d602ea9d",
+    "startedAt": "2026-09-14T03-58-51.848Z",
+    "bun": "1.4.2",
+    "platform": "darwin",
+    "arch": "arm64",
+    "variants": [
+      "baseline"
+    ]
+  },
+  "supplementalStress": null,
+  "method": {
+    "productionChanged": false,
+    "budgetsChanged": false,
+    "measuredRuntime": "Fresh processes loading staged built packages, outside development aliases",
+    "rss": "Five-process median delta over the empty-module baseline; raw bytes retained",
+    "profiles": "Five fresh processes per workload; cold and warm timings, peak RSS, and post-GC heap",
+    "gate": "Builds, type/schema consumers, compiler/interpreter tests, generated-validator semantics when present, Dum package contracts, consumer workflows, exported interfaces, published-package failure paths and shared error identity, canonical differential results and exact issues, adversarial cases, and runtime/declaration isolation",
+    "limitations": [
+      "No live models or deployed Convex state",
+      "One machine and Bun version",
+      "Host load is not controlled; overlapping work can confound wall-clock timings",
+      "Projection profiles use a synthetic Synonym chain whose inferred relations become dense; they are not representative of every graph with that many Readings",
+      "Mutable artifact stress is stricter than the readonly TypeScript artifact contract",
+      "No alternative is adopted into production by this experiment"
+    ]
+  },
+  "evidence": [
+    {
+      "gateVersion": 3,
+      "id": "baseline",
+      "question": "What does the current implementation cost under the same workload?",
+      "tradeoff": "Reference behavior; existing RSS caps are reported, not silently changed.",
+      "dxPassed": false,
+      "eligibleForReview": false,
+      "limitation": null,
+      "checks": [
+        {
+          "id": "refresh-derived-policy",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 47.66020800000024,
+          "log": "baseline/refresh-derived-policy.log"
+        },
+        {
+          "id": "build",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 20823.905875,
+          "log": "baseline/build.log"
+        },
+        {
+          "id": "generated-validator-semantics",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 1522.1457499999997,
+          "log": "baseline/generated-validator-semantics.log"
+        },
+        {
+          "id": "types-and-schema-consumers",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 15929.527833,
+          "log": "baseline/types-and-schema-consumers.log"
+        },
+        {
+          "id": "compiler-and-interpreter-contracts",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 241.46966699999757,
+          "log": "baseline/compiler-and-interpreter-contracts.log"
+        },
+        {
+          "id": "dum-package-contracts",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 11140.067292,
+          "log": "baseline/dum-package-contracts.log"
+        },
+        {
+          "id": "consumer-workflows",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 2469.5149999999994,
+          "log": "baseline/consumer-workflows.log"
+        },
+        {
+          "id": "public-export-contracts",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 484.0205419999984,
+          "log": "baseline/public-export-contracts.log"
+        },
+        {
+          "id": "published-runtime-failure-paths",
+          "passed": false,
+          "exitCode": 1,
+          "milliseconds": 105.70362499999464,
+          "log": "baseline/published-runtime-failure-paths.log"
+        },
+        {
+          "id": "canonical-differential-and-isolation",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 1741.5903749999998,
+          "log": "baseline/canonical-differential-and-isolation.log"
+        },
+        {
+          "id": "rss",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 3613.9159170000057,
+          "log": "baseline/rss.log"
+        },
+        {
+          "id": "workload-profile",
+          "passed": true,
+          "exitCode": 0,
+          "milliseconds": 71648.24000000002,
+          "log": "baseline/workload-profile.log"
+        }
+      ],
+      "sourceGatePassed": true,
+      "publishedRuntimeGate": {
+        "passed": false,
+        "checks": 27,
+        "failures": [
+          "Dumling exports the shared ParsingError constructor",
+          "parseUnit rejects invalid source 0",
+          "parseReadingKnowledge rejects invalid source 0",
+          "applyKnowledgeChange rejects invalid source 0",
+          "parseUnit rejects invalid source 1",
+          "parseReadingKnowledge rejects invalid source 1",
+          "applyKnowledgeChange rejects invalid source 1",
+          "parseUnit rejects invalid source 2",
+          "parseReadingKnowledge rejects invalid source 2",
+          "applyKnowledgeChange rejects invalid source 2",
+          "parseUnit rejects invalid source 3",
+          "parseReadingKnowledge rejects invalid source 3",
+          "applyKnowledgeChange rejects invalid source 3",
+          "parseUnit rejects invalid source 4",
+          "parseReadingKnowledge rejects invalid source 4",
+          "applyKnowledgeChange rejects invalid source 4",
+          "parseUnit rejects invalid source 5",
+          "parseReadingKnowledge rejects invalid source 5",
+          "applyKnowledgeChange rejects invalid source 5",
+          "parseUnit rejects invalid source 6",
+          "parseReadingKnowledge rejects invalid source 6",
+          "applyKnowledgeChange rejects invalid source 6"
+        ]
+      },
+      "eligibleForAdoption": false,
+      "adoptionStatus": "Experimental only; existing RSS policy and implementation review remain separate.",
+      "gate": {
+        "passed": true,
+        "negativeControls": {
+          "acceptEverythingIsRejected": true,
+          "erasedErrorsAreRejected": true
+        },
+        "targetCount": 563,
+        "valueCount": 11097,
+        "differentialFailures": [],
+        "adversarial": {
+          "comparisons": 15,
+          "failures": [],
+          "mutableArtifactStress": "pass"
+        },
+        "declarationFailures": [],
+        "runtime": [
+          {
+            "specifier": "dumling",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "dumling"
+            ]
+          },
+          {
+            "specifier": "dumling/validation",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "dumling/validation"
+            ]
+          },
+          {
+            "specifier": "dumrel",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "common-utils/workflow",
+              "dumdict",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict/runtime",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "common-utils/workflow",
+              "dumdict/runtime",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict/relations",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumdict/relations",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumdict/pending",
+            "externalPackages": [
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "dumdict/pending",
+              "dumling"
+            ]
+          },
+          {
+            "specifier": "dumdict/memory",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumdict/memory",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          },
+          {
+            "specifier": "dumgen",
+            "externalPackages": [
+              "effect",
+              "emoji-regex"
+            ],
+            "heavyweightDependencies": [],
+            "schemaEntrypoints": [],
+            "workspaceEntrypoints": [
+              "common-utils",
+              "dumgen",
+              "dumling",
+              "dumling/validation",
+              "dumrel"
+            ]
+          }
+        ]
+      },
+      "measurements": {
+        "baseline": {
+          "medianBytes": 17203200,
+          "samplesBytes": [
+            17203200,
+            17203200,
+            17203200,
+            17170432,
+            17154048
+          ]
+        },
+        "contract": {
+          "baseline": "empty imported Bun module",
+          "importBudgetMiB": 5,
+          "operationBudgetMiB": 5.3,
+          "processesPerMeasurement": 5,
+          "statistic": "median max RSS delta"
+        },
+        "entrypoints": [
+          {
+            "specifier": "dumling",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumling.parse-unit",
+              "description": "parse unit"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 3014656,
+              "deltaMiB": 2.875,
+              "medianBytes": 20217856,
+              "samplesBytes": [
+                20299776,
+                20217856,
+                20627456,
+                20168704,
+                20217856
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 3588096,
+              "deltaMiB": 3.422,
+              "medianBytes": 20791296,
+              "samplesBytes": [
+                20758528,
+                20873216,
+                20840448,
+                20725760,
+                20791296
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "dumling"
+              ]
+            }
+          },
+          {
+            "specifier": "dumling/types",
+            "classification": "type-only",
+            "rationale": "Structural declarations, with empty JavaScript."
+          },
+          {
+            "specifier": "dumling/validation",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumling.validate-feature-bag",
+              "description": "validate feature bag"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 1523712,
+              "deltaMiB": 1.453,
+              "medianBytes": 18726912,
+              "samplesBytes": [
+                18694144,
+                18726912,
+                18726912,
+                18743296,
+                18644992
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 1835008,
+              "deltaMiB": 1.75,
+              "medianBytes": 19038208,
+              "samplesBytes": [
+                19038208,
+                18939904,
+                19038208,
+                19005440,
+                19365888
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "dumling/validation"
+              ]
+            }
+          },
+          {
+            "specifier": "dumling/package.json",
+            "classification": "metadata",
+            "rationale": "Package metadata."
+          },
+          {
+            "specifier": "dumling/schema/*",
+            "classification": "schema-authoring-exempt",
+            "rationale": "Explicit schema or experiment authoring surface."
+          },
+          {
+            "specifier": "dumrel",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumrel.knowledge-projection",
+              "description": "knowledge projection"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 5193728,
+              "deltaMiB": 4.953,
+              "medianBytes": 22396928,
+              "samplesBytes": [
+                22757376,
+                22396928,
+                22265856,
+                22462464,
+                22265856
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 13860864,
+              "deltaMiB": 13.219,
+              "medianBytes": 31064064,
+              "samplesBytes": [
+                31064064,
+                31096832,
+                31031296,
+                31014912,
+                31309824
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "common-utils",
+                "dumling",
+                "dumling/validation",
+                "dumrel"
+              ]
+            }
+          },
+          {
+            "specifier": "dumrel/types",
+            "classification": "type-only",
+            "rationale": "Structural declarations, with empty JavaScript."
+          },
+          {
+            "specifier": "dumrel/schema",
+            "classification": "schema-authoring-exempt",
+            "rationale": "Explicit schema or experiment authoring surface."
+          },
+          {
+            "specifier": "dumrel/package.json",
+            "classification": "metadata",
+            "rationale": "Package metadata."
+          },
+          {
+            "specifier": "dumdict",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumdict.parse-record",
+              "description": "parse record"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 28639232,
+              "deltaMiB": 27.313,
+              "medianBytes": 45842432,
+              "samplesBytes": [
+                46481408,
+                46366720,
+                45596672,
+                45662208,
+                45842432
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 29458432,
+              "deltaMiB": 28.094,
+              "medianBytes": 46661632,
+              "samplesBytes": [
+                47153152,
+                46186496,
+                46661632,
+                46350336,
+                47104000
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "effect",
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "common-utils",
+                "common-utils/workflow",
+                "dumdict",
+                "dumling",
+                "dumling/validation",
+                "dumrel"
+              ]
+            }
+          },
+          {
+            "specifier": "dumdict/schema",
+            "classification": "schema-authoring-exempt",
+            "rationale": "Explicit schema or experiment authoring surface."
+          },
+          {
+            "specifier": "dumdict/runtime",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumdict.identity",
+              "description": "parse record"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 28573696,
+              "deltaMiB": 27.25,
+              "medianBytes": 45776896,
+              "samplesBytes": [
+                47529984,
+                45776896,
+                45826048,
+                45662208,
+                45236224
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 28901376,
+              "deltaMiB": 27.563,
+              "medianBytes": 46104576,
+              "samplesBytes": [
+                46448640,
+                45875200,
+                46333952,
+                45645824,
+                46104576
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "effect",
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "common-utils",
+                "common-utils/workflow",
+                "dumdict/runtime",
+                "dumling",
+                "dumling/validation",
+                "dumrel"
+              ]
+            }
+          },
+          {
+            "specifier": "dumdict/relations",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumdict.project-relations",
+              "description": "project relations"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 5701632,
+              "deltaMiB": 5.438,
+              "medianBytes": 22904832,
+              "samplesBytes": [
+                22855680,
+                22970368,
+                22757376,
+                23166976,
+                22904832
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 6471680,
+              "deltaMiB": 6.172,
+              "medianBytes": 23674880,
+              "samplesBytes": [
+                23576576,
+                23511040,
+                23756800,
+                23855104,
+                23674880
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "common-utils",
+                "dumdict/relations",
+                "dumling",
+                "dumling/validation",
+                "dumrel"
+              ]
+            }
+          },
+          {
+            "specifier": "dumdict/pending",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumdict.pending-identity",
+              "description": "pending identity"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 3473408,
+              "deltaMiB": 3.313,
+              "medianBytes": 20676608,
+              "samplesBytes": [
+                20643840,
+                20676608,
+                20692992,
+                20643840,
+                20676608
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 3981312,
+              "deltaMiB": 3.797,
+              "medianBytes": 21184512,
+              "samplesBytes": [
+                21200896,
+                21151744,
+                21184512,
+                21135360,
+                21184512
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "dumdict/pending",
+                "dumling"
+              ]
+            }
+          },
+          {
+            "specifier": "dumdict/package.json",
+            "classification": "metadata",
+            "rationale": "Package metadata."
+          },
+          {
+            "specifier": "dumdict/memory",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumdict.session-storage",
+              "description": "session storage"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 26411008,
+              "deltaMiB": 25.188,
+              "medianBytes": 43614208,
+              "samplesBytes": [
+                44040192,
+                43253760,
+                43630592,
+                43614208,
+                43335680
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 26902528,
+              "deltaMiB": 25.656,
+              "medianBytes": 44105728,
+              "samplesBytes": [
+                43630592,
+                44367872,
+                43925504,
+                44154880,
+                44105728
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "effect",
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "common-utils",
+                "dumdict/memory",
+                "dumling",
+                "dumling/validation",
+                "dumrel"
+              ]
+            }
+          },
+          {
+            "specifier": "dumgen",
+            "classification": "operational",
+            "rationale": "Published application runtime; must exclude schema authoring.",
+            "operation": {
+              "id": "dumgen.resolve-supplied-target",
+              "description": "resolve supplied target"
+            },
+            "importOnly": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 41943040,
+              "deltaMiB": 40,
+              "medianBytes": 59146240,
+              "samplesBytes": [
+                67436544,
+                58900480,
+                59441152,
+                59146240,
+                58703872
+              ]
+            },
+            "importPlusOperation": {
+              "baselineMedianBytes": 17203200,
+              "deltaBytes": 43892736,
+              "deltaMiB": 41.859,
+              "medianBytes": 61095936,
+              "samplesBytes": [
+                61177856,
+                61964288,
+                60702720,
+                60653568,
+                61095936
+              ]
+            },
+            "reachability": {
+              "externalPackages": [
+                "effect",
+                "emoji-regex"
+              ],
+              "heavyweightDependencies": [],
+              "schemaEntrypoints": [],
+              "workspaceEntrypoints": [
+                "common-utils",
+                "dumgen",
+                "dumling",
+                "dumling/validation",
+                "dumrel"
+              ]
+            }
+          },
+          {
+            "specifier": "dumgen/types",
+            "classification": "type-only",
+            "rationale": "Structural declarations, with empty JavaScript."
+          },
+          {
+            "specifier": "dumgen/schemas",
+            "classification": "schema-authoring-exempt",
+            "rationale": "Explicit schema or experiment authoring surface."
+          },
+          {
+            "specifier": "dumgen/development",
+            "classification": "schema-authoring-exempt",
+            "rationale": "Explicit schema or experiment authoring surface."
+          },
+          {
+            "specifier": "dumgen/package.json",
+            "classification": "metadata",
+            "rationale": "Package metadata."
+          }
+        ],
+        "environment": {
+          "arch": "arm64",
+          "bunVersion": "1.4.2",
+          "capturedAt": "2026-09-14T03:59:56.634Z",
+          "packageSourcesDirty": false,
+          "platform": "darwin",
+          "sourceCommit": "c020e206b39438876988e07a01b6bfbe611ddc86"
+        },
+        "budgetResults": [
+          {
+            "specifier": "dumling",
+            "passed": true,
+            "status": "strict",
+            "violations": []
+          },
+          {
+            "specifier": "dumling/validation",
+            "passed": true,
+            "status": "strict",
+            "violations": []
+          },
+          {
+            "specifier": "dumrel",
+            "passed": false,
+            "status": "strict",
+            "violations": [
+              "import+operation delta exceeds 5.3 MiB"
+            ]
+          },
+          {
+            "specifier": "dumdict",
+            "passed": true,
+            "status": "effect-workflow",
+            "violations": []
+          },
+          {
+            "specifier": "dumdict/runtime",
+            "passed": true,
+            "status": "effect-workflow",
+            "violations": []
+          },
+          {
+            "specifier": "dumdict/relations",
+            "passed": false,
+            "status": "strict",
+            "violations": [
+              "import-only delta is not below 5 MiB",
+              "import+operation delta exceeds 5.3 MiB"
+            ]
+          },
+          {
+            "specifier": "dumdict/pending",
+            "passed": true,
+            "status": "strict",
+            "violations": []
+          },
+          {
+            "specifier": "dumdict/memory",
+            "passed": true,
+            "status": "effect-workflow",
+            "violations": []
+          },
+          {
+            "specifier": "dumgen",
+            "passed": true,
+            "status": "effect-workflow",
+            "violations": []
+          }
+        ]
+      },
+      "profiles": {
+        "note": "Sequential fresh processes. Forced GC is diagnostic only and is not part of the official RSS gate.",
+        "profiles": [
+          {
+            "workload": "change",
+            "size": 1,
+            "iterations": 1000,
+            "samples": [
+              {
+                "coldMs": 3.452167000000001,
+                "totalMs": 19.544082999999997,
+                "msPerOperation": 0.019544082999999997,
+                "peakRssBytes": 57458688,
+                "imported": {
+                  "rss": 20201472,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 57049088,
+                  "heapTotal": 10555392,
+                  "heapUsed": 2115003,
+                  "external": 1017515,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 55410688,
+                  "heapTotal": 1921024,
+                  "heapUsed": 2124568,
+                  "external": 1035560,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 3.7910830000000004,
+                "totalMs": 22.720625,
+                "msPerOperation": 0.022720624999999998,
+                "peakRssBytes": 58441728,
+                "imported": {
+                  "rss": 20054016,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 57737216,
+                  "heapTotal": 10571776,
+                  "heapUsed": 2109584,
+                  "external": 1010864,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 56541184,
+                  "heapTotal": 1921024,
+                  "heapUsed": 2124597,
+                  "external": 1035589,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 4.102833,
+                "totalMs": 24.408875000000002,
+                "msPerOperation": 0.024408875000000003,
+                "peakRssBytes": 57131008,
+                "imported": {
+                  "rss": 20201472,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 56901632,
+                  "heapTotal": 10539008,
+                  "heapUsed": 2109051,
+                  "external": 1014347,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 55083008,
+                  "heapTotal": 1904640,
+                  "heapUsed": 2123577,
+                  "external": 1035497,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 3.9279170000000008,
+                "totalMs": 24.129792000000002,
+                "msPerOperation": 0.024129792,
+                "peakRssBytes": 57360384,
+                "imported": {
+                  "rss": 20004864,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 57065472,
+                  "heapTotal": 10539008,
+                  "heapUsed": 2121126,
+                  "external": 1024694,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 56573952,
+                  "heapTotal": 1904640,
+                  "heapUsed": 2124757,
+                  "external": 1035781,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 4.028416,
+                "totalMs": 23.668082999999996,
+                "msPerOperation": 0.023668082999999996,
+                "peakRssBytes": 57491456,
+                "imported": {
+                  "rss": 20054016,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 57344000,
+                  "heapTotal": 10555392,
+                  "heapUsed": 2111744,
+                  "external": 1014480,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 55394304,
+                  "heapTotal": 1921024,
+                  "heapUsed": 2119922,
+                  "external": 1030914,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              }
+            ]
+          },
+          {
+            "workload": "select",
+            "size": 1,
+            "iterations": 1000,
+            "samples": [
+              {
+                "coldMs": 0.4754579999999997,
+                "totalMs": 12.208583,
+                "msPerOperation": 0.012208583,
+                "peakRssBytes": 43925504,
+                "imported": {
+                  "rss": 20037632,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 42942464,
+                  "heapTotal": 10456064,
+                  "heapUsed": 1754450,
+                  "external": 686674,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 43909120,
+                  "heapTotal": 2067456,
+                  "heapUsed": 1757718,
+                  "external": 697494,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 0.43454200000000043,
+                "totalMs": 10.102208999999998,
+                "msPerOperation": 0.010102209,
+                "peakRssBytes": 43581440,
+                "imported": {
+                  "rss": 20201472,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 43352064,
+                  "heapTotal": 10456064,
+                  "heapUsed": 1758708,
+                  "external": 688596,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 43565056,
+                  "heapTotal": 2100224,
+                  "heapUsed": 1759659,
+                  "external": 700251,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 0.4331250000000004,
+                "totalMs": 9.777666,
+                "msPerOperation": 0.009777666,
+                "peakRssBytes": 42991616,
+                "imported": {
+                  "rss": 20037632,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 42352640,
+                  "heapTotal": 10456064,
+                  "heapUsed": 1754439,
+                  "external": 688055,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 42975232,
+                  "heapTotal": 2100224,
+                  "heapUsed": 1758251,
+                  "external": 699739,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 0.4373749999999994,
+                "totalMs": 10.408375,
+                "msPerOperation": 0.010408375,
+                "peakRssBytes": 43450368,
+                "imported": {
+                  "rss": 19922944,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 42401792,
+                  "heapTotal": 10472448,
+                  "heapUsed": 1758464,
+                  "external": 688400,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 43433984,
+                  "heapTotal": 2001920,
+                  "heapUsed": 1760326,
+                  "external": 700246,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 0.46987500000000004,
+                "totalMs": 9.916833,
+                "msPerOperation": 0.009916833,
+                "peakRssBytes": 43712512,
+                "imported": {
+                  "rss": 20037632,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 43270144,
+                  "heapTotal": 10456064,
+                  "heapUsed": 1756510,
+                  "external": 691102,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 43696128,
+                  "heapTotal": 1887232,
+                  "heapUsed": 1766518,
+                  "external": 707302,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              }
+            ]
+          },
+          {
+            "workload": "projection",
+            "size": 1,
+            "iterations": 1000,
+            "samples": [
+              {
+                "coldMs": 3.7218339999999994,
+                "totalMs": 63.942291999999995,
+                "msPerOperation": 0.063942292,
+                "peakRssBytes": 68796416,
+                "imported": {
+                  "rss": 20152320,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 68648960,
+                  "heapTotal": 11406336,
+                  "heapUsed": 2198509,
+                  "external": 1005181,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 68583424,
+                  "heapTotal": 1920000,
+                  "heapUsed": 2068146,
+                  "external": 984690,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 0
+              },
+              {
+                "coldMs": 3.6509169999999997,
+                "totalMs": 64.714125,
+                "msPerOperation": 0.064714125,
+                "peakRssBytes": 71090176,
+                "imported": {
+                  "rss": 20185088,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 70926336,
+                  "heapTotal": 11406336,
+                  "heapUsed": 2185878,
+                  "external": 993382,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 70041600,
+                  "heapTotal": 1920000,
+                  "heapUsed": 2067507,
+                  "external": 983827,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 0
+              },
+              {
+                "coldMs": 3.6677079999999993,
+                "totalMs": 65.660083,
+                "msPerOperation": 0.065660083,
+                "peakRssBytes": 68321280,
+                "imported": {
+                  "rss": 19939328,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 68255744,
+                  "heapTotal": 11422720,
+                  "heapUsed": 2176311,
+                  "external": 991671,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 67272704,
+                  "heapTotal": 1920000,
+                  "heapUsed": 2064219,
+                  "external": 980987,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 0
+              },
+              {
+                "coldMs": 3.716583,
+                "totalMs": 66.219833,
+                "msPerOperation": 0.06621983299999999,
+                "peakRssBytes": 66486272,
+                "imported": {
+                  "rss": 20086784,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 66355200,
+                  "heapTotal": 11389952,
+                  "heapUsed": 2206214,
+                  "external": 1002326,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 66469888,
+                  "heapTotal": 1920000,
+                  "heapUsed": 2063624,
+                  "external": 980392,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 0
+              },
+              {
+                "coldMs": 3.7756670000000003,
+                "totalMs": 67.712375,
+                "msPerOperation": 0.06771237499999999,
+                "peakRssBytes": 69238784,
+                "imported": {
+                  "rss": 20086784,
+                  "heapTotal": 1902592,
+                  "heapUsed": 1902592,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 69074944,
+                  "heapTotal": 11373568,
+                  "heapUsed": 2201905,
+                  "external": 1008481,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 69222400,
+                  "heapTotal": 1920000,
+                  "heapUsed": 2062299,
+                  "external": 979067,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 0
+              }
+            ]
+          },
+          {
+            "workload": "projection",
+            "size": 16,
+            "iterations": 40,
+            "samples": [
+              {
+                "coldMs": 81.002959,
+                "totalMs": 2899.639375,
+                "msPerOperation": 72.49098437500001,
+                "peakRssBytes": 86081536,
+                "imported": {
+                  "rss": 19890176,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 85983232,
+                  "heapTotal": 19502080,
+                  "heapUsed": 8392189,
+                  "external": 5013501,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 86065152,
+                  "heapTotal": 2380800,
+                  "heapUsed": 2420402,
+                  "external": 1286066,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 240
+              },
+              {
+                "coldMs": 80.195209,
+                "totalMs": 2665.365375,
+                "msPerOperation": 66.634134375,
+                "peakRssBytes": 87130112,
+                "imported": {
+                  "rss": 20070400,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 87015424,
+                  "heapTotal": 20124672,
+                  "heapUsed": 8867654,
+                  "external": 5264662,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 87113728,
+                  "heapTotal": 2380800,
+                  "heapUsed": 2422718,
+                  "external": 1289406,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 240
+              },
+              {
+                "coldMs": 77.30633300000001,
+                "totalMs": 2403.885709,
+                "msPerOperation": 60.097142725000005,
+                "peakRssBytes": 84328448,
+                "imported": {
+                  "rss": 19922944,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 84213760,
+                  "heapTotal": 19436544,
+                  "heapUsed": 8524660,
+                  "external": 5018004,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 84312064,
+                  "heapTotal": 2380800,
+                  "heapUsed": 2422294,
+                  "external": 1288118,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 240
+              },
+              {
+                "coldMs": 67.522333,
+                "totalMs": 3695.6073749999996,
+                "msPerOperation": 92.39018437499999,
+                "peakRssBytes": 86638592,
+                "imported": {
+                  "rss": 20086784,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 81756160,
+                  "heapTotal": 20763648,
+                  "heapUsed": 8977260,
+                  "external": 5278074,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 83410944,
+                  "heapTotal": 2364416,
+                  "heapUsed": 2421212,
+                  "external": 1287820,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 240
+              },
+              {
+                "coldMs": 75.721458,
+                "totalMs": 2662.9851249999997,
+                "msPerOperation": 66.57462812499999,
+                "peakRssBytes": 86573056,
+                "imported": {
+                  "rss": 20119552,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 86425600,
+                  "heapTotal": 20714496,
+                  "heapUsed": 8173730,
+                  "external": 5015106,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 86556672,
+                  "heapTotal": 2397184,
+                  "heapUsed": 2419887,
+                  "external": 1286463,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 240
+              }
+            ]
+          },
+          {
+            "workload": "projection",
+            "size": 64,
+            "iterations": 1,
+            "samples": [
+              {
+                "coldMs": 3505.700417,
+                "totalMs": 4278.400625,
+                "msPerOperation": 4278.400625,
+                "peakRssBytes": 95485952,
+                "imported": {
+                  "rss": 20430848,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 95371264,
+                  "heapTotal": 18355200,
+                  "heapUsed": 13801997,
+                  "external": 9755997,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 95469568,
+                  "heapTotal": 2675712,
+                  "heapUsed": 2625824,
+                  "external": 1237904,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 4032
+              },
+              {
+                "coldMs": 3952.995292,
+                "totalMs": 5454.159875000001,
+                "msPerOperation": 5454.159875000001,
+                "peakRssBytes": 93618176,
+                "imported": {
+                  "rss": 21413888,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 93519872,
+                  "heapTotal": 18617344,
+                  "heapUsed": 14162051,
+                  "external": 9817811,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 93601792,
+                  "heapTotal": 2626560,
+                  "heapUsed": 2622264,
+                  "external": 1236504,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 4032
+              },
+              {
+                "coldMs": 6095.7366250000005,
+                "totalMs": 7292.606665999999,
+                "msPerOperation": 7292.606665999999,
+                "peakRssBytes": 93077504,
+                "imported": {
+                  "rss": 20037632,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 73891840,
+                  "heapTotal": 19076096,
+                  "heapUsed": 14231407,
+                  "external": 9792815,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 78249984,
+                  "heapTotal": 2626560,
+                  "heapUsed": 2627516,
+                  "external": 1239740,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 4032
+              },
+              {
+                "coldMs": 5423.628,
+                "totalMs": 5780.830749999999,
+                "msPerOperation": 5780.830749999999,
+                "peakRssBytes": 94224384,
+                "imported": {
+                  "rss": 21430272,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 94093312,
+                  "heapTotal": 18584576,
+                  "heapUsed": 14124335,
+                  "external": 9886879,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 94208000,
+                  "heapTotal": 2593792,
+                  "heapUsed": 2617620,
+                  "external": 1230532,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 4032
+              },
+              {
+                "coldMs": 5282.993959,
+                "totalMs": 3786.657124999999,
+                "msPerOperation": 3786.657124999999,
+                "peakRssBytes": 92274688,
+                "imported": {
+                  "rss": 20185088,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 92192768,
+                  "heapTotal": 18469888,
+                  "heapUsed": 13748940,
+                  "external": 9534764,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 92258304,
+                  "heapTotal": 2642944,
+                  "heapUsed": 2628052,
+                  "external": 1240052,
+                  "arrayBuffers": 0
+                },
+                "resultSize": 4032
+              }
+            ]
+          },
+          {
+            "workload": "invalid-projection",
+            "size": 16,
+            "iterations": 40,
+            "samples": [
+              {
+                "coldMs": 11.262042,
+                "totalMs": 137.200834,
+                "msPerOperation": 3.4300208499999996,
+                "peakRssBytes": 70434816,
+                "imported": {
+                  "rss": 20938752,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 70221824,
+                  "heapTotal": 14684160,
+                  "heapUsed": 5340813,
+                  "external": 1150781,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 70418432,
+                  "heapTotal": 2265088,
+                  "heapUsed": 2102951,
+                  "external": 1002071,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 10.824333999999999,
+                "totalMs": 143.71033400000002,
+                "msPerOperation": 3.5927583500000004,
+                "peakRssBytes": 70238208,
+                "imported": {
+                  "rss": 19922944,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 70090752,
+                  "heapTotal": 14749696,
+                  "heapUsed": 5292887,
+                  "external": 1149735,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 70221824,
+                  "heapTotal": 2248704,
+                  "heapUsed": 2103463,
+                  "external": 1001671,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 11.517500000000002,
+                "totalMs": 143.27837499999998,
+                "msPerOperation": 3.5819593749999994,
+                "peakRssBytes": 68141056,
+                "imported": {
+                  "rss": 20070400,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 67977216,
+                  "heapTotal": 14782464,
+                  "heapUsed": 5393093,
+                  "external": 1160821,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 68124672,
+                  "heapTotal": 2265088,
+                  "heapUsed": 2103459,
+                  "external": 1001667,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 11.287500000000001,
+                "totalMs": 142.017709,
+                "msPerOperation": 3.550442725,
+                "peakRssBytes": 69156864,
+                "imported": {
+                  "rss": 19906560,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 68976640,
+                  "heapTotal": 14897152,
+                  "heapUsed": 5508782,
+                  "external": 1159342,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 69140480,
+                  "heapTotal": 2265088,
+                  "heapUsed": 2104579,
+                  "external": 1002803,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              },
+              {
+                "coldMs": 11.512374999999999,
+                "totalMs": 139.840375,
+                "msPerOperation": 3.496009375,
+                "peakRssBytes": 69681152,
+                "imported": {
+                  "rss": 19906560,
+                  "heapTotal": 1920000,
+                  "heapUsed": 1920000,
+                  "external": 0,
+                  "arrayBuffers": 0
+                },
+                "beforeGc": {
+                  "rss": 69484544,
+                  "heapTotal": 14946304,
+                  "heapUsed": 5556278,
+                  "external": 1155158,
+                  "arrayBuffers": 0
+                },
+                "afterGc": {
+                  "rss": 69664768,
+                  "heapTotal": 2248704,
+                  "heapUsed": 2098619,
+                  "external": 998635,
+                  "arrayBuffers": 0
+                },
+                "resultSize": null
+              }
+            ]
+          }
+        ]
+      },
+      "comparison": {
+        "rss": [
+          {
+            "entrypoint": "dumling",
+            "importMiB": 2.875,
+            "operationMiB": 3.422
+          },
+          {
+            "entrypoint": "dumling/validation",
+            "importMiB": 1.453,
+            "operationMiB": 1.75
+          },
+          {
+            "entrypoint": "dumrel",
+            "importMiB": 4.953,
+            "operationMiB": 13.219
+          },
+          {
+            "entrypoint": "dumdict",
+            "importMiB": 27.313,
+            "operationMiB": 28.094
+          },
+          {
+            "entrypoint": "dumdict/runtime",
+            "importMiB": 27.25,
+            "operationMiB": 27.563
+          },
+          {
+            "entrypoint": "dumdict/relations",
+            "importMiB": 5.438,
+            "operationMiB": 6.172
+          },
+          {
+            "entrypoint": "dumdict/pending",
+            "importMiB": 3.313,
+            "operationMiB": 3.797
+          },
+          {
+            "entrypoint": "dumdict/memory",
+            "importMiB": 25.188,
+            "operationMiB": 25.656
+          },
+          {
+            "entrypoint": "dumgen",
+            "importMiB": 40,
+            "operationMiB": 41.859
+          }
+        ],
+        "workloads": [
+          {
+            "workload": "change",
+            "size": 1,
+            "coldMs": 3.9279170000000008,
+            "warmMsPerOperation": 0.023668082999999996,
+            "peakMiB": 54.796875,
+            "postGcHeapMiB": 2.0261459350585938
+          },
+          {
+            "workload": "select",
+            "size": 1,
+            "coldMs": 0.4373749999999994,
+            "warmMsPerOperation": 0.010102209,
+            "peakMiB": 41.5625,
+            "postGcHeapMiB": 1.6781415939331055
+          },
+          {
+            "workload": "projection",
+            "size": 1,
+            "coldMs": 3.716583,
+            "warmMsPerOperation": 0.065660083,
+            "peakMiB": 65.609375,
+            "postGcHeapMiB": 1.968592643737793
+          },
+          {
+            "workload": "projection",
+            "size": 16,
+            "coldMs": 77.30633300000001,
+            "warmMsPerOperation": 66.634134375,
+            "peakMiB": 82.5625,
+            "postGcHeapMiB": 2.3090476989746094
+          },
+          {
+            "workload": "projection",
+            "size": 64,
+            "coldMs": 5282.993959,
+            "warmMsPerOperation": 5454.159875000001,
+            "peakMiB": 89.28125,
+            "postGcHeapMiB": 2.504180908203125
+          },
+          {
+            "workload": "invalid-projection",
+            "size": 16,
+            "coldMs": 11.287500000000001,
+            "warmMsPerOperation": 3.550442725,
+            "peakMiB": 66.453125,
+            "postGcHeapMiB": 2.006014823913574
+          }
+        ]
+      }
+    }
+  ]
+}

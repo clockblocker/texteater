@@ -1,0 +1,33 @@
+{
+  "capturedAt": "2026-09-14T03:59:34.809Z",
+  "bun": "1.4.2",
+  "method": "Five fresh processes: preload effect/Effect, then import built Dumgen in the same process; median increase in peak RSS. Not a deployed tf-demo measurement.",
+  "samples": [
+    {
+      "before": 40681472,
+      "after": 59555840,
+      "additionalPeakBytes": 18874368
+    },
+    {
+      "before": 40075264,
+      "after": 59047936,
+      "additionalPeakBytes": 18972672
+    },
+    {
+      "before": 39731200,
+      "after": 57835520,
+      "additionalPeakBytes": 18104320
+    },
+    {
+      "before": 39878656,
+      "after": 53592064,
+      "additionalPeakBytes": 13713408
+    },
+    {
+      "before": 39337984,
+      "after": 55066624,
+      "additionalPeakBytes": 15728640
+    }
+  ],
+  "additionalPeakMiB": 17.265625
+}

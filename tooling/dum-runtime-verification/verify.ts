@@ -3,6 +3,7 @@ import {
 	formatDumDeclarationReachabilityIssues,
 } from "../dum-declaration-reachability";
 import { buildPackages, createReport } from "../dum-entrypoint-rss/benchmark";
+import { formatSharedRss } from "../dum-entrypoint-rss/shared";
 import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
 import { findRepositoryRoot } from "../lib/workspaces";
 import { compareDifferentialTarget } from "./differential";
@@ -108,8 +109,11 @@ async function verifyRss(): Promise<boolean> {
 			entries,
 		}),
 	);
+	process.stdout.write(formatSharedRss(report.shared));
 	return (
-		declarationIssues.length === 0 && entries.every(({ passed }) => passed)
+		report.shared.passed &&
+		declarationIssues.length === 0 &&
+		entries.every(({ passed }) => passed)
 	);
 }
 

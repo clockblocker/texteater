@@ -184,7 +184,7 @@ export function analyzeCombinedGermanKnowledgeCase(args: {
 		harmfulTargetsPass &&
 		unclassifiedTargetsPass;
 
-	return deepFreeze({
+	return {
 		caseId: args.caseId,
 		requestShapePass,
 		transcriptionPass,
@@ -203,7 +203,7 @@ export function analyzeCombinedGermanKnowledgeCase(args: {
 		unclassifiedTargetsPass,
 		contractPass,
 		relations,
-	});
+	};
 }
 
 function analyzeRelations(args: {
@@ -222,7 +222,7 @@ function analyzeRelations(args: {
 		if (!requested.has(relation)) continue;
 		result[relation] = analyzeRelationLeaf({ ...args, relation });
 	}
-	return deepFreeze(result);
+	return result;
 }
 
 function analyzeRelationLeaf(args: {
@@ -326,7 +326,7 @@ function analyzeRelationLeaf(args: {
 		relationValueEquals(actualValue, variant),
 	);
 
-	return deepFreeze({
+	return {
 		relation: args.relation,
 		requested: expectedValue !== undefined,
 		expectedNull,
@@ -353,7 +353,7 @@ function analyzeRelationLeaf(args: {
 		recall: ratio(matchedRequiredTargetCount, requiredTargets.length, 1),
 		confusions,
 		actualSignature: relationValueSignature(actualValue),
-	});
+	};
 }
 
 function acceptedTargetsByRelation(
@@ -429,7 +429,7 @@ function targetKey(target: Target): string {
 function booleanDiagnostics(
 	analysis: CombinedGermanKnowledgeCaseAnalysis,
 ): CombinedGermanKnowledgeEvaluation {
-	return Object.freeze({
+	return {
 		contractPass: analysis.contractPass,
 		requestShapePass: analysis.requestShapePass,
 		crossAspectConsistencyPass: analysis.crossAspectConsistencyPass,
@@ -443,7 +443,7 @@ function booleanDiagnostics(
 		kindConfusionPass: analysis.kindConfusionPass,
 		harmfulTargetsPass: analysis.harmfulTargetsPass,
 		unclassifiedTargetsPass: analysis.unclassifiedTargetsPass,
-	});
+	};
 }
 
 function nullableCandidatePass(
@@ -472,16 +472,4 @@ function relationTargets(
 
 function ratio(numerator: number, denominator: number, empty: number): number {
 	return denominator === 0 ? empty : numerator / denominator;
-}
-
-function deepFreeze<Value>(value: Value): Value {
-	if (
-		value !== null &&
-		typeof value === "object" &&
-		!Object.isFrozen(value)
-	) {
-		for (const nested of Object.values(value)) deepFreeze(nested);
-		Object.freeze(value);
-	}
-	return value;
 }

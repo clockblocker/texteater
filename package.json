@@ -10,6 +10,7 @@
 		"battery/*"
 	],
 	"scripts": {
+		"benchmark:dum-shared": "bun tooling/dum-entrypoint-rss/shared.ts",
 		"benchmark:dum-entrypoints": "bun tooling/dum-entrypoint-rss/benchmark.ts",
 		"build": "bun tooling/manifest-policy.ts repository && turbo run build",
 		"check": "bun tooling/run-workspaces.ts check --if-present",

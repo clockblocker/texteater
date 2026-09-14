@@ -1,0 +1,2228 @@
+{
+  "capturedAt": "2026-09-14T04:02:09.907Z",
+  "bun": "1.4.2",
+  "platform": "darwin",
+  "arch": "arm64",
+  "builtArtifactHashes": {
+    "node_modules/common-utils/dist/workflow.d.ts": "0768180365992f31b34aaebca5cbce0b95e8b0643e4973abfa24cc53e33a7d0c",
+    "node_modules/common-utils/dist/total-typescript-helpers.d.ts": "45224e30abda4bb927988ec058ad67ddbdb3596b3a89c7cd4ed994f0ef5cc3fd",
+    "node_modules/common-utils/dist/index.js": "a13095531e28e9e671474439f7c686acca6251d0fadbe9aed233e75d2d2408d2",
+    "node_modules/common-utils/dist/validation-artifact.d.ts": "74cbc25859f8f618bc4f4c3bfe196cd38bacc4919d3b9a31d505ea51c759d656",
+    "node_modules/common-utils/dist/workflow.js": "5e1c555b18af491e911f815126d93c0c1e2b9dadf722294cca5595c27d2aafb6",
+    "node_modules/common-utils/dist/index.d.ts": "58b62968c425853e661bc03e5f91fe2fd0e208bba57f5548d6448207ab727adb",
+    "node_modules/common-utils/dist/parsing-error.d.ts": "f366a1852710c4388ee2fa7a6453de48d69fbfaae078ac18b1dc26cb092b92f0",
+    "node_modules/common-utils/package.json": "6678303a2809892aec70391a777282446905fadbb9d880043e7c543674381b85",
+    "node_modules/dumling/dist/generated/vocabulary.d.ts": "554c7d6134a4dd9f33ca6badc75554cf1cbb54bc586d182eeb884a56aa6ca3a4",
+    "node_modules/dumling/dist/generated/units.d.ts": "9399a5695a1781d1ee15cb0cb2bf5e4bd9359bfc6b8b24fdc9be85aa208bfa92",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/infix.d.ts": "8645e62101509614b3f26697f931111d160a5502bf6a3ea8353071c161239204",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/circumfix.js": "9b0c41e7614c3f357f05747ccfef7cbe0ee45af2f6eac45f3f67740d5980c5fd",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/suffix.d.ts": "7155a56f61edd81f45aa6734b9c64c78f6d6173a282c60dfc1afdee97dda9449",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/circumfix.d.ts": "d5452bf0aa315121de1a63855903a472149cdfac186a7f85cb18ad5bc87bfab0",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/duplifix.js": "6575a4699052e797f58c63dff483ba6ca70f356031cf7b0669d6dc32fc4ed4a8",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/prefix.js": "ba59c2ab0f0287880096532653b62f7067d825c249fdfa28c2ae14183ca5c968",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/infix.js": "ef1a643e21c0b497007826a431167f4fe9495aec8934bb2bdc9dd2eeeed1037a",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/interfix.d.ts": "be9e144b8530945b7eaadba3a4af418a84852ba11be152c7dd343c3666062416",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/transfix.js": "2875c88e9371f901b7356e7cd9381a97c9499d7e23b255b0d2fe7a56310d9bfc",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/duplifix.d.ts": "8bcb7422494d119609584d8200614e62da4fa6b53c63711fa92ebad498ec4800",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/tone-marking.js": "9c9dd4ac5cc4bbeadc662651fdae24b6fbe5d42b58260a07994c979702f85d69",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/interfix.js": "f0c2638ae04b241d773b96df8cc07f4359ff17c446e96501b3cce33cdbdff66b",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/suffixoid.d.ts": "172e603fe730817d96d2995903a897d8e163d6f89bceb2f11c9aea0db939d0ec",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/suffix.js": "2284870b3a15950e151c8f0de7d010198f6222cf198cc3a5c458040b039ae133",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/root.js": "03a2da1f4d098a840bb708b91e87cc86d1a6193c3d4b1b2e01b4b854a4976d12",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/suffixoid.js": "7dc77fc0447776ea6f42313ba5cb10efa8a984a0df50bf0d6eb738a9ba12321d",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/tone-marking.d.ts": "82cc73a84752b00f575425501b05a08aa06a326e3d6114e1ac8b506b7f9c0fd9",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/clitic.d.ts": "ed9464305b8cfab3994e04bc9306087ff7aebd22260f3bc766d13921e1bd0a95",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/prefix.d.ts": "7ba5d4ddcd0c0108cea23842f0c66526dbe1ab3b2071e2d15abeb4d323d24875",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/clitic.js": "9417fc49da751f828f62e398a52399873d0bc09eae335c5bae3786b7d211be3b",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/root.d.ts": "7103b198cd43987a73942dda20c9ad36e9f8e9566395be879de4ed11125c432d",
+    "node_modules/dumling/dist/generated/schemas/he/morpheme/transfix.d.ts": "7ead91ed12efe931f303395fb2571439a231931db0dda9438620b9b4d35a3b34",
+    "node_modules/dumling/dist/generated/schemas/he/construction/fusion.d.ts": "d2604ad90b871a98f81d5faf7613a946a27324e41e43d47302b2ace0e229f805",
+    "node_modules/dumling/dist/generated/schemas/he/construction/fusion.js": "a49ec351413165f0386c1bb06e15b59de9e60d4fd47fae3d5d9e8bc0d7180a0b",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/proverb.d.ts": "63b93a59fc7727bb06e4d82617402fcdb1e91bb8c1d1b817a0719a61eece7767",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/proverb.js": "0b243ef2c3cbe4773366d3fcf0fd225501dcbef84b13b385406f1bcf534690b3",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/aphorism.d.ts": "fd3a1f3069e3c61294aaa8574266471932ccde449b42f605732a6be8354d94a2",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/aphorism.js": "2e70090c797f42e5cb8a18f43aba4822084c9eac0a18d6d8151057152ceafd4d",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/idiom.d.ts": "200e1693e94c58aae3a1523b75dc055ce0946f1fc2a956ca390b01d54c2f8e66",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/discourse-formula.js": "4a293e7e7331e08639dfd58405556818d64c92c884b3fbf8c5b15917cb58acef",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/discourse-formula.d.ts": "23736be4d8c1ce7390262be49b551002008b698553fb6d1be0f20a0e3957fe12",
+    "node_modules/dumling/dist/generated/schemas/he/phraseme/idiom.js": "fa755aa2b86e3a4a4c7707ed6f1135e0e6afcc1ca857a9fae917c989689125c3",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/pronoun.js": "34685f007ad63a091639eaf2fd6ec1e714c604c0908878864df6a1943c41dd7b",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/proper-noun.d.ts": "aaf47fbb1fc7b0b6ea2ef1200e3b223c30a4defd83a2d782d7f3f8393ec25796",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/adposition.d.ts": "ad3123974e3d42f22474c1686874d606cf11eb9f15563e2cdf53096b65e319b0",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/particle.d.ts": "f28abbe8e4a135e81339f3c05f77e2d7c5423c1d67ce55142a2cbe7dbd7c1df5",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/adverb.d.ts": "9f0100a0cf054f754340b6041276d10cd705d1a19eb0d556987e30101cd71782",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/punctuation.js": "b3ebce9897437b330dedeb5bc72b0e9e37744e43a0a493fd65cce0691b224995",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/determiner.js": "2a033ceedfc4c6917ecc34ddecfb8913e84a5bf930daad8b6f69645ce3c4f741",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/symbol.js": "2ac00ad86c968d95535b0b2f42580b55d7838a06d2e9dc6a9c032c012e690d8b",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/subordinating-conjunction.js": "8a23f038ce2b7ab6bd6e957a3c35a1d2972fc52364b9c6fce75360eea3f4c4e6",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/other.js": "9c2577d229eb94d732c0ec4a1539feaaeb32adbcc4781991012359aaad1a079d",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/determiner.d.ts": "7653c2fdc7dbd1fb71c0f540d8133a4cd924fa98c9f1fef6997fc3a1bf5ce3a5",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/noun.d.ts": "418ebbc1ca8b716ad3846023a490fd76229a1ede36acf925e68defd417afd30f",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/other.d.ts": "3e6dd45aaa14aae0a9895015f8724dec85315619dddec75b4f66547039383c9b",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/interjection.d.ts": "398e31ead156f01b0441bf1b0abfc3474020c8eacf131cd6666351097424e5f1",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/numeral.js": "909ed58d7d679e99778b4028e5a52fb3854c07aad2b8a560d4dc387818c68407",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/symbol.d.ts": "849ce69b0a5552e2acfe0794a7454b5fba27a05d26f38faacdfe8faf8eff2c7a",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/coordinating-conjunction.js": "48966cefe263bc04e61ea454da8d59f4d7f51f45d6a0537c13f43c15157b8270",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/verb.js": "6475fbbd211f1af93e31f8c852ac5f5e17f2032239c0deff20976cc2a077bbf5",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/adjective.js": "61d8fde548668e6790de71d7af15e9e746ef2cdd27b9a1f10e4a2a81375f914f",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/proper-noun.js": "b69f88b701b52e8cf41ecca521f9c6c2a24fd7a5e2c289e072a617ac9374d16f",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/verb.d.ts": "0d1a9c775a97a1a3eb4c501bc839228152d002c1db9c99ad4d0a6e5689b006ba",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/auxiliary.js": "d6d29e37b95890d9e80164ba76fa5bc7624b18f0437b89344565d37528a455e9",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/adverb.js": "c8450c41173bbc2b691ab4deb0b0e8d834f9004cae36e047dcb05f7b1bd5e384",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/noun.js": "396f8d1b6d8b12e68d50afde3820f77dce47dd10bdc96953952dff0c1252add5",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/numeral.d.ts": "853c0f338d926c1e8a1254d5b519e712c372701ef5a9da8b8f6ad162658ef7e8",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/auxiliary.d.ts": "5cccc4fa90c6770b444f8f7a225d689af4a901b31a973b81de2be4d6af96f2c1",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/interjection.js": "bf0b57af2d946d4b1537eeeb13a185a1504e41c82be9c9dd2e3baf2c4eaa51f2",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/adjective.d.ts": "396317120d867be70de878335d9ae8a0c04643fc41fa7c8052af258f42ebfab3",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/punctuation.d.ts": "1f3aa6ec9baba2d60291f8c42ccb0a45f5a8a316c596b6c257fa241b0f69da2f",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/adposition.js": "c0a868ae084e960c93c2b7c54d5f48e9a8596dc9a8dc48cfa055c80e4dd26f15",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/coordinating-conjunction.d.ts": "48b7001ff292e5adf0f3dd53e42d7f2e27449f8789dd2ecef69edca74c7f7232",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/subordinating-conjunction.d.ts": "ca8c2afb6e8efc01037f4ade782f608d1b4853b1e4f9cda0de0fb0b0dbfc1b9d",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/pronoun.d.ts": "b46b5e3f51f1230607aadecbab547d8937bdd29768359832720c682783e58100",
+    "node_modules/dumling/dist/generated/schemas/he/lexeme/particle.js": "6d2affeec63d0d3e707751b53da122035f22439c35a04bc65c8ae4b2a18850e8",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/infix.d.ts": "32e9eb037e4ba99b1976e77a18a938951f8160e07a3e69cecdd37205ac6575a7",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/circumfix.js": "c59ed7f016cd3689c34b1f5e49779fded2ff216da0040397869e824f0f6c86ec",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/suffix.d.ts": "066fbd332b4a025a86b673571613572536750b4352c6fc078c54e625d284b79d",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/circumfix.d.ts": "502628b6a5b1f6027a7520edc0280cd56070f8ec48aeed482107326591622c04",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/duplifix.js": "6878940a0af2fb90ec4bcb7a1cecfd59f675dcdfd9d75fb5fd9e9c4b06e36f3c",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/prefix.js": "40c7b1ed45359b11b932bb561d5dfb6d95fff6acffadc4e9ad246587dec35d77",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/infix.js": "407b6352cf58be7dc5f99e817a4913474ec6dbd651e9540211fd9c0357bc0bd2",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/interfix.d.ts": "ccce7a675a42decfc31173ef1533ded4294bbd1df5ad451c424c1021e4a51ed5",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/transfix.js": "6fa91e92eb828ea63e866798b83cf6b36ca70e5c5f491ef338d41ee37f564155",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/duplifix.d.ts": "94132b432b7b04f5b0ddada8b13c3ef45a6f2259bbc99a5572a81e7eb6b2811f",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/interfix.js": "a1cc6099918f7062af121ae96f95e23dcd8a9c6e4b9d6559cf6d8f7c4aa8fb97",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/suffixoid.d.ts": "0b1699206596888dc0a4a4fdb818ccb6ea3145637f863cfd7d3818856d19718b",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/suffix.js": "9b1264c51ac12d91b3f079f1f5b52824b1fef7aaa72f02cbec411f21365de900",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/root.js": "fa6960c1fa80b63303d8e0038487f61dd76b78f633dbc750dabb6e00c1c474c2",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/suffixoid.js": "0a7bf650f757b686d0ef861d470ab036f05fb8b684fd20b6708e514082841a5c",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/clitic.d.ts": "8b9eb1112b6532319c8c89fb8f3160241ea203bb56790f5b26064082dd6dae38",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/prefix.d.ts": "15cce07be8a8b6a4ca3cf4e79e78d00b063c01796efdbe843c560698eae54db8",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/clitic.js": "712949aa584d0eaec3d7a12c491d1d9e17509a6ca3688550cabc5b362da9e064",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/root.d.ts": "ff0ea16028a671ae2a89e665b49403138a2eab42092b49bc9f2f6aa4ee2b2626",
+    "node_modules/dumling/dist/generated/schemas/de/morpheme/transfix.d.ts": "0276ea982f650c03d47611412e59b0070ea6d5528289bddf76825d89c8e2f8e9",
+    "node_modules/dumling/dist/generated/schemas/de/construction/fusion.d.ts": "016e377a182a2442ffec824f0d05ba8981c8c718371f5916a20a13e848fbfe3b",
+    "node_modules/dumling/dist/generated/schemas/de/construction/fusion.js": "4884e121bdca1836d077bf44f1c68b58feca65cb7531c01573ae0460e921a320",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/proverb.d.ts": "31871385ee9ededfc02837579794adf0052eb1caf6dee4936d6d3042ad21cc3c",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/collocation.js": "bbf3b6152afeda59d599f7c562f52b92b58e32a56b67d8ec122d93795f3ab79e",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/proverb.js": "436f42392118abb402c7b981929989f0136e7464e523c2a1eaddff870316db3b",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/aphorism.d.ts": "dbe0cd94b671688086ca4a198e6262ce75af37dedf366a2668b693c1746a6353",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/aphorism.js": "6fea5c1d4a2fe174eed594136fd83e6e2bea94f921b2a2235b0714487ec2b12c",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/collocation.d.ts": "a657992b8f6cfdfc6a3f06bcaa32d635a3eebb7a814b05652acb6010c8f294d0",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/idiom.d.ts": "0126ad4a2a040bd81153defd5e57e0e845d52267f303ae044f8939f248dab13d",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/discourse-formula.js": "6e14cbe2be591b70f6bf880a1f87bf99d50a76acb2b2672a531ae6a8a328b8fa",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/discourse-formula.d.ts": "dbf36a5418b44eb7035c9f5acf7b423916657f9d34ed138f40b61153ec83af00",
+    "node_modules/dumling/dist/generated/schemas/de/phraseme/idiom.js": "6cf4ae4ad128f81cdb810bc3cb7ea5ebc4cc0fdd7c47b43285f3e6894fc5f86b",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/pronoun.js": "7a869ec422e6ad00a136f1dfe264e23a203caea17ecf83c3570f890c3c856d20",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/proper-noun.d.ts": "dcf6249ad986ac7afaf94a938b87ceaa994047066ceed4c2d414459c69e5c8bf",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/adposition.d.ts": "6d4b22b18bfab138ff7f0b4cec1ae8e39ed496f764a4ccb8a30ff573674cf657",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/particle.d.ts": "78d9629d3dc0ed13b03e2f0453f3dba3c8e136fc34b84bb2f6d536decff865a3",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/adverb.d.ts": "0fdb3e2aeb13885f53a6c4379285fbd38c8bd6a1be4cba9675b4a8339abaed10",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/punctuation.js": "d4fca03bc01d09ccbde7686f97be0cfff5eb5b177584dbac7e286d23759ca0ee",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/determiner.js": "7c0840c423e64d8f6efa8d794219828139654c170198f43c46b9e2caf863417d",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/symbol.js": "e192c65d5e4aff061b8c0798df0b8989336112a904eb93d7c8631de844330a97",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/subordinating-conjunction.js": "d49c21214e9f63fbad305b31a46287e28b789cddc97fb5d16b85acff67b59dd8",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/other.js": "ee542773e67835d740e2a13c69bad16cadacf90c347062b9c5d93dafb1d7c306",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/determiner.d.ts": "0363c3693d82a24848632016714f58008b6cbe263dcc6e9d793db32716067e47",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/noun.d.ts": "6651136e4bd36062c5316894c4ec086bc6bcd3d4d954876ac201cdcb307cdce1",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/other.d.ts": "a354463c378feec62800c89ebf60676a6519625a169bf7c5161ee2c5531af84e",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/interjection.d.ts": "814d163a551c4a46a628d49d6d8e04a3a06748bfc51e301bc2646f92fa7cae83",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/numeral.js": "3f63b9920c37d6f8d59032eeb64d7814a196943af583f0e9efe562b89697fe2c",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/symbol.d.ts": "f40699bcf2008175ed28568985eb0aff64a2f771e99cf9d2953b28cc0a4a64e2",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/coordinating-conjunction.js": "43748704fdaa24b90fcddf650c0f6f6c1a42fa34eea23a255fc3cec4559ff3e0",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/verb.js": "56eec74d5065641f5a5c53144e759a08c706adbc37ce5bf7f718da257c1e661c",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/adjective.js": "909a4d69738fc16d27a79bf5764118205f1063d13ea24c6adab2a4e044c87682",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/proper-noun.js": "79d7b9af742027bb0669577a04a7a528095b79e1b5cb72d337d173f6e6c715c9",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/verb.d.ts": "2dea299aebf58551760f292a19d077d79c079cae0cc314a9dbe1061d2351b3b5",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/auxiliary.js": "31ebbd518813d7f852f515ed795c180a17f34c9ae8fdaa86ca801a673ffd09d0",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/adverb.js": "ea21302c134946dbd2116880aff6509d3b0c1e00c6d3c7eef6a725d2c25ec98e",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/noun.js": "83dafd6a8d4ceaba73b3d5944b4cc0fa86e67931506b1ce66e4a7be95a377021",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/numeral.d.ts": "d478f00ac7eba585ad1104bd9c3b3ce1532b25886c22fb1b64c099b75cc2fe12",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/auxiliary.d.ts": "7531c8954848f5d0255f5d3e76b558aad41d8abf6237f3054dfaa77056f5fa97",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/interjection.js": "8bf9144d6eb63b19ff8bf8f9f2acea52ba0053c93210a7264f08cec547476dae",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/adjective.d.ts": "a14d0bb3b39e87cbe678b4c1871428d2749103ce9e29ef4c6e35323e2b80a9fb",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/punctuation.d.ts": "6f92fb64dc3bdd22d5fd769c6269bfdcaaeaf71db2a0c830a05bd9185e4ffb5e",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/adposition.js": "710c63f19082f56599da7d769e2dc98b3839ce304443ea413946780d1f50d1f9",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/coordinating-conjunction.d.ts": "06925b4668843eab741dd7dfa76f2e589a055aa4b8976bdebafb26eead6bd186",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/subordinating-conjunction.d.ts": "9ffbaed322027db4d9b6d581d3651f4b77f5919c6a9da045cddf6419df12db19",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/pronoun.d.ts": "b488509081fa45ce666a967c953e1918e09b1c9f33a411538daa181dc23ada34",
+    "node_modules/dumling/dist/generated/schemas/de/lexeme/particle.js": "9eba05ec5bf1eaa8e5eff006f70c93c25643e089b937e5f55f580769cd485e76",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/infix.d.ts": "c2dc700d654992697c32b7edea1e660f14dfccccb30eebefe1226e8837ed4230",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/circumfix.js": "f879da4e9bbc7835d06725de7151a4366e1f6ec02b5fdba38a40d52e696162a1",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/suffix.d.ts": "c8444879945bfad3f9d3518d0a2073a9d8f620e37df5a3ed63d4107e03e75874",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/circumfix.d.ts": "983ae7459253a92f6d20159ee4860ac428773753449314dac09c818ed0e784c3",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/duplifix.js": "8a746832233f638e4c9012340d7fea08141e763838d08bf3158eb4bc91eb4138",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/prefix.js": "feb6114d825f5aaf81c5a1018359dbba7aee67429bbfa3a357b533530a06392d",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/infix.js": "f6f3a30dbb018650acc219c40af2e5e27b025093e98adc182cd067cfd4955d77",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/interfix.d.ts": "a1ca9ae3311449e68e09ed71b68d3a0072ce51347430b6dd91026b975fb864b2",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/transfix.js": "6fcb540c6ae6bb772066c4e12711608c941ced4c6c7fdd378f4f03db820fb91c",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/duplifix.d.ts": "2119ea85d967774101c6e7bce33d686c4ca829cac1514edc0e42c421954b4011",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/tone-marking.js": "a3fae516525f3c9408ced1330d1749224d8584a65eac1a3503d01ef4d1940568",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/interfix.js": "d2b282c1f82f20dbeda23000d8c4e36fb79b27746f5665ad913269157a7099eb",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/suffixoid.d.ts": "e5b86bad1386a26daebb5e977ab6f35b6a39f36044bce3e61adcb483c152fb48",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/suffix.js": "9439159b8aa89c6e8d96ddcf6fad60151b416c5c38a44c82db8afedfc3a1106d",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/root.js": "95896d3b2df6f8f63910aa28a0389731f1e76472c84ae0b32ab4b0a3513e64e2",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/suffixoid.js": "4eb872a5c6ce4832cfdc2c3e242106d6367794b29fa28519f2e4b06f6a246491",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/tone-marking.d.ts": "0e8f0cfc9b03e24e214a7f45c782860cd6d036ea182519684fe16d5054f3a0c9",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/clitic.d.ts": "872fb8fe963163bc08e52601300a519f69bc0ba9ada3f9855fd2b334d4b73835",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/prefix.d.ts": "7f8aeab42d1f6aeca0a431c0700ca3b7fcf84dd9e3adaa1d877e510982c417a4",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/clitic.js": "53591dc1f687f2f7f1935adfe28908bedbab5c3b6c8b7a5361b7e78eb62c61b3",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/root.d.ts": "25e3116dafedf5aae9049cb3574c867e5d8ac7931ea8a751a4a88e5a05a7ae3f",
+    "node_modules/dumling/dist/generated/schemas/en/morpheme/transfix.d.ts": "88428dbd298de5210ad8829dd9a471ccde513b5271218d7f38d31e7941eafc6d",
+    "node_modules/dumling/dist/generated/schemas/en/construction/fusion.d.ts": "a28638b742d441259d1e571c4f7a6aa5f5cb6fbaf912549129038ace6a790f1d",
+    "node_modules/dumling/dist/generated/schemas/en/construction/fusion.js": "4e179ac398581aa005321c4c88d3e05c99425615fd76c4bcae255f169d804986",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/proverb.d.ts": "86902e8e41be4cad9c97fb744466778bf6a5503ac7f32eb2172cb54e46a8c8d9",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/proverb.js": "d1eb022482661d83aa966d8e899d85840831f3a7cbc5ae9e2feecb8cafd0b274",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/aphorism.d.ts": "dc79fa0a2f911055d900f33abbd674b8a28c9ffe371c18022c7a76f981664106",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/aphorism.js": "769798e2df285824d70a467daa075e5d2c2b6c8894bf3008b044473c50baa310",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/idiom.d.ts": "3fce975d5650c065eeff9ce0789e9ec81f1080756c93005a5ffb8da9dc27669c",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/discourse-formula.js": "7c92dd75cdc3df874649abe9bc2cafcd56d0fb27e51cecaa5a3b080db39acbe3",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/discourse-formula.d.ts": "b019057d0da7849ae7fb429393609cfd1e7cd91064a2227f0b406537ce5094ec",
+    "node_modules/dumling/dist/generated/schemas/en/phraseme/idiom.js": "019137740a8be2463d3878529bbce36b8d1545327a2d18a443d7cf13f0954c9e",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/pronoun.js": "df3063478029c7b8b65681ff702e40f1218d2c9fb2f4a566316cc4a84281fa31",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/proper-noun.d.ts": "d67352b31167dadf4b37fc8f3ddf3819d9c8def68c4ff17ac68b958a41c0fed5",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/adposition.d.ts": "09a3caab778b2cdd63cfac8484713b942c6156d9719f1530f5f7464852b5176c",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/particle.d.ts": "d71ebccea5c5333eb61169faa6e4a15e5a05fcfcdfdbcce60ddf1b11b4c3e99a",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/adverb.d.ts": "f57a7ad979a0ece82c681c143bce7b9ee7dae1338ea5d6b86ccad01db7b9ce62",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/punctuation.js": "16cb84d3ec2f3d17bf0be65efdf6574eae1d80a2401a66730d154b817674d72b",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/determiner.js": "752b7c2130643e0035acd0ca67a16498cb430ec3c21edd220efc2e47cdf8e84d",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/symbol.js": "20d4ed91ad1dbadd0189d612fe996917a6e1e72696288499b43e4f05b10e45cc",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/subordinating-conjunction.js": "9b9930b5ac69a7e06d9558d833c320e6061f4db06252ad7fd37a66cc9a41fcec",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/other.js": "5dd16a68eba587ad6c83ab4963e66e3f823221f4ed6a16b75af7b64e3dc2cd90",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/determiner.d.ts": "5a9ab98000dae4a4cd1217940b23eca7dcd188d52769591977ed81adf3dfedf4",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/noun.d.ts": "fd36e6398466b11ea5a94eaa75d3dfe3ca8b4f38a50606f9ecf7637cd2814582",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/other.d.ts": "78bfb005f4d6ae24b0097850c35821583d2f64f53a54a3cece9826ef7bc08720",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/interjection.d.ts": "946d6379c4e7e19fcf4120530e0bf4756b2647ee0cdfb9ee8cbd0d518165d5ac",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/numeral.js": "9525c7bce516782122816479e300abfad17fca099a5ac720d472580afc418b15",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/symbol.d.ts": "ac2050421b3946f5f0ae1867cbcc672756d3a08a56e8c9dddb479142f04fa300",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/coordinating-conjunction.js": "43c3fc8782a8d4cf583b1e3b512a1ca4fbea5e69fc8d1b09bd706cee227f70c8",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/verb.js": "89497bfde0435caa6231c21b52fddf4639143815bd876b083b3b337fc6904c59",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/adjective.js": "8de42dbe79f7b694d62e858a523c714585f50d56c4cff7b344c58c5ff20d4240",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/proper-noun.js": "43f32f4ca173ac24835551a1869c8568901262cd342f818e7068370bdd10198c",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/verb.d.ts": "dff2b57559006bdb2f1802a438a5b0f622abed9c2b36ecb22bc9b2c27f19c082",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/auxiliary.js": "b1622c2e7193fc9c65c1ca230327a071857e026be6939e3184765433b936905e",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/adverb.js": "8313d88e91db98cd0852d49306b17b72ff98f2f9e4d3b98c9282b7be51e512f2",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/noun.js": "be8f4a8e9acbcafd143291953b6e9802320a2034799cc4b8467b82506431fa99",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/numeral.d.ts": "c1a8ba81756527f8ac80b6081703924e0cb5f5336fbcc3164fa1c7b9163c779a",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/auxiliary.d.ts": "f01f0474c5987302efc7327bf78df90bd4c3acd191f65e7d438e7789596de430",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/interjection.js": "1ece1052e44f41b32796fbb6213f836e1d0d13310e6b2479d6099f9fee58c950",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/adjective.d.ts": "6eb86b725201f895a06fb8f9186d389d66acd7efe730d116d79bcc45f6d3bc8d",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/punctuation.d.ts": "15803aca228e32a61bcef6cb9bcfe0e281bd27f86df2a361953221f5e3c86236",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/adposition.js": "b3b1905675e7cd91fa90b4438a4d69c72886a955dc2459901b540baad31c1353",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/coordinating-conjunction.d.ts": "a4b1be509744abf92b9a048ee880eb9ef54b29a105dca310641d959cba9c1479",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/subordinating-conjunction.d.ts": "458bac0b22ce7340263865679ec006c825f7d6010e3083c44da25ea69580c90f",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/pronoun.d.ts": "ee5189a6ebfffa7d52f73fce6458a2cfbfc381b662a014b891ca03010e5749ad",
+    "node_modules/dumling/dist/generated/schemas/en/lexeme/particle.js": "34b8dffa2d77dbff614bfb873dad85b604b15e0456282ee765866e1b306a2393",
+    "node_modules/dumling/dist/generated/validation.d.ts": "eef4af8096f5584f18c9041ae46cda29ae539ed0618220b7e21741cb1ab37ddf",
+    "node_modules/dumling/dist/types.js": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node_modules/dumling/dist/types.d.ts": "5fd57379bd633cdcd15f741d4acc7ba7593159de69aedad7bc023299e233d048",
+    "node_modules/dumling/dist/check-if-grundform.d.ts": "0173c237288e29b91da4e4e628dd3c9dae63b8b4820a33181be947ddc421efac",
+    "node_modules/dumling/dist/index.js": "541d917dbd80f5c4504f7849033746538e1534e19fdf1627e0a76d530f84e698",
+    "node_modules/dumling/dist/parse-unit.d.ts": "b8665b1d079c22e60b3a7878c319b021f5e002d76e04634e595b48943e124d4e",
+    "node_modules/dumling/dist/schemas/universal/core/pos.d.ts": "fe48f437a245d46178867e4b66288fd93ee160c4673ac5bfa726f9873238eb40",
+    "node_modules/dumling/dist/schemas/universal/core/unit-kind/lemma-kind.d.ts": "8ff7ab4640628551350fe355a796f1c5f6d652dbc528a5a57059772a867c6a96",
+    "node_modules/dumling/dist/schemas/universal/core/unit-kind/morpheme-kind.d.ts": "21a28ac27e882128b6c74dbee6ababfad1fd5752d2991df70ee8c9a9f6ff08f8",
+    "node_modules/dumling/dist/schemas/universal/core/unit-kind/phraseme-kind.d.ts": "4f5542744c37b455f321b24fda502de62bab3718b105dcb3d8dab7bdb559a306",
+    "node_modules/dumling/dist/schemas/universal/core/unit-kind/construction-kind.d.ts": "36f8fa066c07cc9e9701333d044dc63be5284cc689eee29fa8a9ade65604d57e",
+    "node_modules/dumling/dist/schemas/universal/core/supported-language.d.ts": "439b4fd3ae152e108b10752aac02588178c98ea59967780b1225de17afa77900",
+    "node_modules/dumling/dist/schemas/universal/core/lemma-family.d.ts": "68b56546ff1b7049e7c7c7e46452c450310c1ff2d0024a0e0f936cf657d90fbd",
+    "node_modules/dumling/dist/schemas/universal/features/feature-bag-kind.d.ts": "26606ba63062f6065e6fdd830f804fe3b9ea05538487f2f300de41c7f82ad975",
+    "node_modules/dumling/dist/schemas/universal/features/feature-bag-schema.d.ts": "3bf2f20dfc1d996525282f4ef19ab03ac2bbcbf49dc3f58c5c942a5183ff9cfb",
+    "node_modules/dumling/dist/schemas/universal/features/feature-value-set.d.ts": "2ce19864f0609520cb6e539432e72e46b98673fb29d07c2d1139c05d7b00d11b",
+    "node_modules/dumling/dist/schemas/universal/features/ud/definite.d.ts": "00e1c81e30f46dc524e4e9048c8a953c0a24ab49b8e85c5d1ead4e2c828cf196",
+    "node_modules/dumling/dist/schemas/universal/features/ud/ext-pos.d.ts": "7458f51c6cb998314cb121645c130aed0de71e80b968342c67ab3746ca08ff69",
+    "node_modules/dumling/dist/schemas/universal/features/ud/mood.d.ts": "03a24fffa8914e07332cbbbc32f265e37297af02017cb27c92ee94547bfd3751",
+    "node_modules/dumling/dist/schemas/universal/features/ud/foreign.d.ts": "03d323c470e9c35867a784c5a61a582743ef4a0344d56245b7c91b36d839ea55",
+    "node_modules/dumling/dist/schemas/universal/features/ud/punct-type.d.ts": "0ac860849752fc183cd5371e1545f3ffd85afb299bcb8bbbc46431fe07a3b066",
+    "node_modules/dumling/dist/schemas/universal/features/ud/aspect.d.ts": "8d6ad0eb11361b96254f5d1a915b6207bf431ceac2769b15cd9e392484548245",
+    "node_modules/dumling/dist/schemas/universal/features/ud/evident.d.ts": "677e495d79325fdac8dddf26e34ba3281a8f9671c3635bf7af3cb944efe4c0f4",
+    "node_modules/dumling/dist/schemas/universal/features/ud/degree.d.ts": "e914c5a1906b7db7e7ac26af0d9ccbacf8366c1658369adab7a41621779b8d06",
+    "node_modules/dumling/dist/schemas/universal/features/ud/abbr.d.ts": "03166fcb927349b933e8dcd7657cfa3c79aa1d408e93e7c3e713fc27f3bf9e4f",
+    "node_modules/dumling/dist/schemas/universal/features/ud/heb-binyan.d.ts": "2377d2313596ae43d03f9069d200c5a95c3995a303a3324cf40c1322f80640d6",
+    "node_modules/dumling/dist/schemas/universal/features/ud/clusivity.d.ts": "e586e8b3db24e0ea0330275096702320e230eca2e19a51ed2ad288109c8f527d",
+    "node_modules/dumling/dist/schemas/universal/features/ud/reflex.d.ts": "3fe45e2085d811234c4a5c75306996022a55874f942e51c549598ab6c11f68f4",
+    "node_modules/dumling/dist/schemas/universal/features/ud/gender.d.ts": "8be48f5e37c9f0197bf460bcd49c64c78087468dc268686d01359d7c1603fe0b",
+    "node_modules/dumling/dist/schemas/universal/features/ud/adp-type.d.ts": "ab13af3b7a81c04e7d4256ace27f2a30c58f47fdb034e0d5632e4fa0a3614afd",
+    "node_modules/dumling/dist/schemas/universal/features/ud/conj-type.d.ts": "5f44f106e27e08309eb87486c7d29fef1e8edc220a035e53808b0ebc9b67b730",
+    "node_modules/dumling/dist/schemas/universal/features/ud/polite.d.ts": "1a7ac8063860e313f2caf25e5a4cde803d4397db58986297e6fb07eac4851b15",
+    "node_modules/dumling/dist/schemas/universal/features/ud/tense.d.ts": "6250a2617c155db88563f863121414a6a0892d0ef3d75851aa5428c18ec590f4",
+    "node_modules/dumling/dist/schemas/universal/features/ud/style.d.ts": "e066177fe82564cdb698affcb901a986e591b6f0cf53d373e5c7792a4206e21e",
+    "node_modules/dumling/dist/schemas/universal/features/ud/animacy.d.ts": "023488d923eb72e91991f7757d4c7d22fd14ddd56ce87765e01bf70e885fed77",
+    "node_modules/dumling/dist/schemas/universal/features/ud/person.d.ts": "c58bc7d277a69b6a5e2c39b03ca0feaa8bb7f771214f04f1dcea10ce9050c4a7",
+    "node_modules/dumling/dist/schemas/universal/features/ud/number.d.ts": "f5352b7fc0b506c495b82d1dc699e8419e317b1f7b2c48900493c66153340830",
+    "node_modules/dumling/dist/schemas/universal/features/ud/num-form.d.ts": "d11f50365c6e400e9e887f4c45741f990cb29d46a9ef44fad338e4ef42a69417",
+    "node_modules/dumling/dist/schemas/universal/features/ud/noun-class.d.ts": "06d5fe3f066ffb3f9f1bb9591985c87c1c8f91bbe12b715bbcf0e191fd4f4a33",
+    "node_modules/dumling/dist/schemas/universal/features/ud/poss.d.ts": "3c839aa09156cf9d9205f3d4d9288b1a12bf5e5672b5ca625f26608a60b5f3d4",
+    "node_modules/dumling/dist/schemas/universal/features/ud/part-type.d.ts": "11da719c69555d78627784330a8bd9ed0df9dcf3b2b0f845723fc0bb1b053c8b",
+    "node_modules/dumling/dist/schemas/universal/features/ud/deixis-ref.d.ts": "1dcccc34a6fb1778c9062562c6dea9acb5569b8bf7c220e4b44bf7432411f7d5",
+    "node_modules/dumling/dist/schemas/universal/features/ud/num-type.d.ts": "a19b1fab87a2ea062e5254d4e9915d86138a21583d0cf696e28d6b7a5446df5a",
+    "node_modules/dumling/dist/schemas/universal/features/ud/polarity.d.ts": "b4e6bedd594b886f3104bcc191e7c459328862e8805d63a6b6eeaefd0f8dc6b9",
+    "node_modules/dumling/dist/schemas/universal/features/ud/verb-form.d.ts": "37a8eb52bc9ebafbf9ebe1fe6865f60bb3193c9ae3e3391d396219dc4d1cd2a3",
+    "node_modules/dumling/dist/schemas/universal/features/ud/pron-type.d.ts": "8d03a29dc73834dd352d4cd2a9a8873ef3dbe1997f7f27f805f78b72f8502e91",
+    "node_modules/dumling/dist/schemas/universal/features/ud/deixis.d.ts": "1ac17a14dfa38bd05299f190fc7bd4b0cb86fab95a83aa70ead5f0872ce4a46e",
+    "node_modules/dumling/dist/schemas/universal/features/ud/variant.d.ts": "bafea305e56cd8e37a9e31054688f9ae460320d2840d8edd62bd6bbba43ecae4",
+    "node_modules/dumling/dist/schemas/universal/features/ud/prefix.d.ts": "eb5ad06298d8c6ccde9e3eefc93834b46c1ea10d6a1ac75bd6bed1f922c2bbf5",
+    "node_modules/dumling/dist/schemas/universal/features/ud/heb-existential.d.ts": "b20c577a788d5c15eada64a247d327991bd91f767837ffc390b724d3f12c5e20",
+    "node_modules/dumling/dist/schemas/universal/features/ud/voice.d.ts": "2406a0051c8905029311bd7c97fe2bd63adde8cd0c6913f638ab3d5278b6edc3",
+    "node_modules/dumling/dist/schemas/universal/features/ud/hyph.d.ts": "c725b72d9ae70fcfe5b6ef9e0932513d551588f73c60e0a345345c45093bb9f1",
+    "node_modules/dumling/dist/schemas/universal/features/ud/verb-type.d.ts": "38eaf884c70ef32899a4ecb973e836511cf0cd3a21e389bbde778850e3fd032c",
+    "node_modules/dumling/dist/schemas/universal/features/ud/case.d.ts": "8ad447193516e48a454da6c485aab9c8cf332c93f8d6326e41a366ab105991a5",
+    "node_modules/dumling/dist/schemas/universal/features/catalog.d.ts": "5826e6431544188d124d6e9e462ded07849c33a14ab0634bb668bfbc54c84b55",
+    "node_modules/dumling/dist/schemas/universal/features/custom/lexically-reflexive.d.ts": "5b8374ecf02fb8e1134421cad7d457a7f3de355c79f31eff7166efbaf6236b5f",
+    "node_modules/dumling/dist/schemas/universal/features/custom/phrasal.d.ts": "f63e37191edf4728b2c92399a19182ce4fa2a8691bce9f28f40f7afb1fa5615c",
+    "node_modules/dumling/dist/schemas/universal/features/custom/governed-preposition.d.ts": "c825f64126ec005de8142530ad9143eb454969e018c98dc102c55816d0e66c5c",
+    "node_modules/dumling/dist/schemas/universal/features/custom/separable.d.ts": "b8408610106588da912ecc79971260f3b447c139a7f221a28f93bedfe33cd175",
+    "node_modules/dumling/dist/schemas/universal/features/custom/discourse-formula-role.d.ts": "35007f66efe1229bfdddd3c67f9975abccf8613d7f832215fb04a3b747b6f293",
+    "node_modules/dumling/dist/schemas/universal/features/custom/governed-case.d.ts": "0dfd417235e2665cf63974fe5ae9fad134d847d8652b4807d4d257c53b587cf1",
+    "node_modules/dumling/dist/schemas/universal/features/non-empty-feature-bag.d.ts": "7db9d6a8cb82f5495a303c5633560cf791fff0b675b2fda2e40d09b877eb9ec2",
+    "node_modules/dumling/dist/schemas/universal/index.d.ts": "6f93fe0361fc6af8a6c90f1b097dbc6d9baddb94e066fcc6691b9a8170168671",
+    "node_modules/dumling/dist/schemas/units.d.ts": "f3ef9ea13ec1befaed5df3d63e769c82f3562debca6af252ed3768133d78720b",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/infix.d.ts": "51e87377e9b62534f5742e1c2644cd8e802d38efe8881a287f24b3b9bf600ddd",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/suffix.d.ts": "f654c5ad2aa947e2421c122b7bd7dc9abcce6c12e4f4e5b50893b31ab9bc5b5c",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/circumfix.d.ts": "79198df4fa99ad96599fcca43860e4611b28fbe0f6693cad78274db290274542",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/interfix.d.ts": "e3db4b1c0a433fc6baaf68e4186022655a85151600a09c7002b62be8188a2c9f",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/duplifix.d.ts": "cc2a12b09616bd0c93fa15fd9081c6e307a796c9641a45685467f4fc5ccaebeb",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/suffixoid.d.ts": "d47471d71ab001c50ed937aecb603ad72f7442047de5d50ac80f1fc28bcbfcea",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/tone-marking.d.ts": "f63811bb4975843e07d890b580b61febd0c38483af608d856e32f31280d735c6",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/clitic.d.ts": "5438cfa9e3ef8616f450afddbad056fa1bd553d445d0115ff355debac4dc5675",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/prefix.d.ts": "f50f19f161575565e1780327c36d66289bbeb491ebc4c1659c2be101ebe65e7b",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/root.d.ts": "cd1862ca0c03ccbb51981d7700261dac9c6c4e9edb1493b7df69cfb06de5e112",
+    "node_modules/dumling/dist/schemas/concrete-language/he/morpheme/transfix.d.ts": "a0ead3dc21e9b0eedf6279ca0147aa6760b89cbc5021adc45d983bad796f4778",
+    "node_modules/dumling/dist/schemas/concrete-language/he/construction/fusion.d.ts": "91158425e7cac279ffb853741de5c91c16c6a66b132a9ca27a7872e413a8678c",
+    "node_modules/dumling/dist/schemas/concrete-language/he/he-feature-catalog.d.ts": "c4003d4296a3e5b5f3f370e94a3dba0d16c4879edd4a7e314780c194ac909ffb",
+    "node_modules/dumling/dist/schemas/concrete-language/he/phraseme/proverb.d.ts": "9ceb3032485b5183dbf566ab099ff0eec16d77b8d5f5c72983b11b2bad6910e5",
+    "node_modules/dumling/dist/schemas/concrete-language/he/phraseme/aphorism.d.ts": "7c8a838db22f7f6d9b2cddb5e21b892eaecfcbafa115de069320b27e5ccba770",
+    "node_modules/dumling/dist/schemas/concrete-language/he/phraseme/idiom.d.ts": "f92073166e3fb2e60fdc766954b6293f9f15823bc7c51be76f5916cd1f5b4f6a",
+    "node_modules/dumling/dist/schemas/concrete-language/he/phraseme/discourse-formula.d.ts": "643646419fa356edddfdf96196428e455ba66d80debffeb1853a7f1fa467c77d",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/proper-noun.d.ts": "49d48b50217df5172d9a2f62dae549e6262a37505e784b06ddb18c4f0ea3c9a1",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/adposition.d.ts": "54a917dafa180420dba41b90a4f97ad7d0653e3de47d2aa2470571a9e99a0666",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/particle.d.ts": "803d680ace7c59c38610e23ed4a06c061734b2c08afac387bf404676217e6a5a",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/adverb.d.ts": "d57a96d1f94b0b2bb013807d08b0322f560216a6bfaa98cc7446a69b2979f1a2",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/determiner.d.ts": "625f48ccf99be6fc94e9032a10a746fdfe9395936de4474b3c1671720ef3895d",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/noun.d.ts": "f47f169dd4b037d2568d0da1ebde0e5291b0a9ef925302958e67af77d4531660",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/other.d.ts": "83f41712daee5170d88977126cd30888561ecabe0c2cfb398c3678b716dbf030",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/interjection.d.ts": "f224f3f53aaeaf97cb3f05cd864234f218c9d6015938184d072d2f4d992f3335",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/symbol.d.ts": "0f9b2eb0b6493d1b868d317a50ddda20396642dbc2c02b9d5de037889eeeae62",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/verb.d.ts": "e999691703afce559b5bcf7344beff20b3be44615459d92621ee6254bcde01fa",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/numeral.d.ts": "893d02e7028a5b2207020a7b4356cc287cb03f4a816a345367e11356fa53a3a1",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/auxiliary.d.ts": "eaf0c35bf528fd16dc166794fa1a68bd1bfb41b22abbfdb8ab1ab4c2c8ef2024",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/adjective.d.ts": "533f3e5d6bff00fe41b5f8eca93df5a3e30b728c5ea2b5c56929630be4d03bb7",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/punctuation.d.ts": "675d56b621775007f8959dc8eb2019cbdce5696f14fedfdf4ea9eea3717ee8d5",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/coordinating-conjunction.d.ts": "908cc37796b4f8005828ec891cfd39aa2f61aaf9cb4290152b9c90ab30eccc34",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/subordinating-conjunction.d.ts": "c4863e4a317fe6ea412d0afb37bd6ef6c4202fb32b21f4f79312e7d7e74e94be",
+    "node_modules/dumling/dist/schemas/concrete-language/he/lexeme/pronoun.d.ts": "b56194a24c040582e739d2a32d4a9a4807c573fe5a6d44317c8004c872888243",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/infix.d.ts": "6607cccadcf937db2322f451a7c9f9741bf01e821efdfee1bc4c4c997564418a",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/suffix.d.ts": "4ed264a0c6fa5bdcb6054a145efd7a7cc2e9b2c666ea0a0c7db06c4333e02650",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/circumfix.d.ts": "d773977b9324ac66e37e46574743b400f41390b0ded3138131821f221c41c7ef",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/interfix.d.ts": "d1c73e7a73a70109de653028136c772a4e83439eba0c7626f9e27708b68e6222",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/duplifix.d.ts": "4d05d8c17668827faef75083f4fd2774ae7e928fea4519a8edc9814ab06471e9",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/suffixoid.d.ts": "1dceeca15b9907504111751252b57ffb32949f961ca73976cb785bec52ebd58f",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/clitic.d.ts": "610a482eb6c0c98b776e3f2760c2773f3784c4f21c4702f31e73a0f9ae17ef5c",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/prefix.d.ts": "c9569c090f08397c93d2671cc18991426e93da25425002791f0d6f0bec9da234",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/root.d.ts": "a3c794df11a79792888250f13ba2237ce290c8114ec20cea6930db12423594c9",
+    "node_modules/dumling/dist/schemas/concrete-language/de/morpheme/transfix.d.ts": "252c77c2c91d945f78df57a36358aff2d9278eba306dd8d877d8e5fc5013a26a",
+    "node_modules/dumling/dist/schemas/concrete-language/de/construction/fusion.d.ts": "4cf67641e1981bd479d45adcbaa1c559ecbcb36f28761709fd72d42de3b60b82",
+    "node_modules/dumling/dist/schemas/concrete-language/de/phraseme/proverb.d.ts": "b4238ac7e9dfdcbd1b8aff6f00e90a00a4d5c40cae53cea43d3d75d8ca9e8232",
+    "node_modules/dumling/dist/schemas/concrete-language/de/phraseme/aphorism.d.ts": "4c1c98f83a78d1c4a1de8bd3ccd13f1c1d46ac7bb28f977debe2759a4e95bf6c",
+    "node_modules/dumling/dist/schemas/concrete-language/de/phraseme/collocation.d.ts": "0244857dd76475b33d56d53b6b4e8467d1ad418ad8f54cbb5fd3b123de3660d6",
+    "node_modules/dumling/dist/schemas/concrete-language/de/phraseme/idiom.d.ts": "646a9adab57f0b75c6dacc127d7330708757fc00517ad2e0ba673c8bcd535269",
+    "node_modules/dumling/dist/schemas/concrete-language/de/phraseme/discourse-formula.d.ts": "dbe98ce1c29da34b8847bf1eecf96b3562a6477f9d2fcd7b69653753cbf4b4d5",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/proper-noun.d.ts": "2929cd1b7fc6f1bf3edc1688145f70b1dabf609521c30e85628942ddfbebe287",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/adposition.d.ts": "950fcca2cbcbbab0afc8eadd257bee3ae5961931b1dfecc22b10cadca5aca972",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/particle.d.ts": "193bf7405e711c41ac25dd2882da377ea1ac528b44cbe96f8d4caf6612214c16",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/adverb.d.ts": "dc590bbe2ea88340b086999cb4b8600149471ea9cd01f4f09e02556c329c359b",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/determiner.d.ts": "6d8dca8a9061c37b7d833449c39bf09b324182b2909c50dc0980a7c4cd51a392",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/noun.d.ts": "5ba08f08c5553baf10947cfe83513c863305ee45e9058b8c916d0fd6a0771129",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/other.d.ts": "37b5efa92bd2c12a33f9ef4ed411165d5a06b3d7bfcfb46056bc5b83608cd595",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/interjection.d.ts": "5e71091073ef7f9aef9d7280b8e50b5e09901e0ea934af59f9e720e295e4d632",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/symbol.d.ts": "a2c3811ceafba685544e33295dfed01127c76feb95df29bac93a4f0310a8a4db",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/verb.d.ts": "1ed246dcb54d74dff6e93c29e14ebe03e4ed79f83aa4c81935106fe81d996417",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/numeral.d.ts": "fc30bb3eb08562175bc7d3edb8e4b5d071946795d13327dae09d7fe8fd5a4c9f",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/auxiliary.d.ts": "b0502a686c63d419a1f430c2a35c761ececdc17881b8e04b0c026f6960d2d126",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/adjective.d.ts": "66b47f00d1552b0ffd9edf2c77c6a307f88b6308bcfce1b30c21a9ef1e91f65e",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/punctuation.d.ts": "cd1af2e2d9c351f583bf7e34b909951795200fcd130b28ff4dc74a1b027e8a60",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/coordinating-conjunction.d.ts": "7d6c7c80b8dfad8085031f9e655654bce6df5f3c9844d329394e487a0ae31e10",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/subordinating-conjunction.d.ts": "4d66d692bec3201344685c9583779bb4020078029f7f2946dab8fed2d76288f3",
+    "node_modules/dumling/dist/schemas/concrete-language/de/lexeme/pronoun.d.ts": "97213ead75040112ee58cf3e021275d90c592c2bc47e8624d6e3e8db47782518",
+    "node_modules/dumling/dist/schemas/concrete-language/de/de-feature-catalog.d.ts": "ee2a3c49a88d262ccf039c06d02b3e1dbdd6a1a1ffd4c27c2923736269ee8093",
+    "node_modules/dumling/dist/schemas/concrete-language/en/en-feature-catalog.d.ts": "f6d84352db80289e995aa29fc33983e9deac67058dd0bc001872c914a8a653fa",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/infix.d.ts": "353ed7aee964f2aff0390e34f9144d04cf92768d8b38d69cb564aaa8f04c2fad",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/suffix.d.ts": "0930afaf50777b1e93a11d5a51cbd7712f3538bc52c14e08c274cbabb7d76a41",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/circumfix.d.ts": "a5f2d95204aca1a0dc86083cbff66774075dec31289c12c5aa19022b3f71db55",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/interfix.d.ts": "b136f3ea4e081e6937e8520ea860e75bd7425ff3bde1f7d51988e637c3f08ce0",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/duplifix.d.ts": "311f9c24157f4cdfed6c7238b0e0d499c611318d888fd02ed17402244d79d5ca",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/suffixoid.d.ts": "e6e6d03bcf9d3431febfecf25d52b1ae726fd1cd07275550fb9b3c118a15de96",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/tone-marking.d.ts": "0e6a183ab55acdf982167bc67d966ed00a33bc4f510591a4e5b3efdc05a205e0",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/clitic.d.ts": "ad79f97ef3db8aa6319cd5263ad0ddfb89041fc898e879dc1b8188adbdbe8686",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/prefix.d.ts": "29ea98c260f728ec2a763bbd4e5939d509440d81694850f680232f9929f8eb8b",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/root.d.ts": "5cc33fc74ae3d3651036348599640cfade7e99908904202c580ff922c14dba3b",
+    "node_modules/dumling/dist/schemas/concrete-language/en/morpheme/transfix.d.ts": "e440962b64fcb78f33938d1c385805ab23d10a53c35b77faf8d1a8b41620032a",
+    "node_modules/dumling/dist/schemas/concrete-language/en/construction/fusion.d.ts": "9dee2dba71112cbeae0e97e8291bbcf880e88e3c908eec2a6975a386c59372c7",
+    "node_modules/dumling/dist/schemas/concrete-language/en/phraseme/proverb.d.ts": "fcf54efb52cfdef1fac32248f9e8d6432d6d98cae51f0ab012e45e685761b757",
+    "node_modules/dumling/dist/schemas/concrete-language/en/phraseme/aphorism.d.ts": "b6bd2d0306abe4ed98596c507bc0d5de6ed1facefb8dde809ed2cc158035e1a5",
+    "node_modules/dumling/dist/schemas/concrete-language/en/phraseme/idiom.d.ts": "669ccbd065b4f10bb212314916460c4fbb045523a7a1b0f27cd1e9943d3daaec",
+    "node_modules/dumling/dist/schemas/concrete-language/en/phraseme/discourse-formula.d.ts": "67f5a76852f6b33092f009078927a86ac5fc2113d1d4b570acdfe0b67d8eb340",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/proper-noun.d.ts": "ee8e55feadc640ec03d07eafec86cd00af2f56a79861e47c2c785e67d0dcf29f",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/adposition.d.ts": "09f7fa49670831e377bfb464bd8aa314f9520bf70b75ede1726eea639ba4ec8b",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/particle.d.ts": "a72575d590f7f663b1d9f7d138d5c5269558340ffe7521f19775c4e8cebfb879",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/adverb.d.ts": "898f386fc21fa58aba25ce85b1ca35b07c31c0687f65e06a22be5a16d3bc5ec3",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/determiner.d.ts": "e3c4f810f949cde69e1c89a31b933930b4e4f74c2acb76523f864d3fd5c8878a",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/noun.d.ts": "fca6dc38ce6b8e4c50adf1af12bf133cfbb426851bf714839959c96375a9d49b",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/other.d.ts": "cc262bb5ee2c4abdd870fe021995b6f895746a9f924d900b14f9624d00c57b7c",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/interjection.d.ts": "543b6797bc1a1176958b48d3685bf2be58d1ed3d0b5212525817e2c92b4a8c04",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/symbol.d.ts": "41653bff0932defb72f9116b0bac403f5c40811f772be263c928205eb8b6c49a",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/verb.d.ts": "faef375d475079f80c177fb26b56223d57cf86d5c2d2bca27c2924af5a51b0da",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/numeral.d.ts": "d3b69271eed83c21b7d50d08dfedb28975f3a107adda4cdc517ec4926623fbf5",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/auxiliary.d.ts": "2090e80be2645a27cbac141368b910f94bcd68feb5c1f0a35890c09ec76b2284",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/adjective.d.ts": "ed25a32464a924a78d6476561913ccd371f59f378f83d9abd16e8f9b9bf37d45",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/punctuation.d.ts": "faebcacfc429f4f333c558148807093f139aa2f1d76e497c85e5d5c062f50cff",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/coordinating-conjunction.d.ts": "57bed038e8e9f9aee57a9bcadcf74435165bdca291c538e17b0dff16cfef9871",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/subordinating-conjunction.d.ts": "41943384b0cb14811cf3d9ef8be570454d811d1940832f277910ba48b01eb61f",
+    "node_modules/dumling/dist/schemas/concrete-language/en/lexeme/pronoun.d.ts": "c142275b85e3431f510f207e12197fa71c3b0121ab34002c402d5993236d3c2b",
+    "node_modules/dumling/dist/index.d.ts": "bf9345afc211c7893f38f394b304f082273be8a28004db0043b6730f1a893e83",
+    "node_modules/dumling/dist/validation/semantics.d.ts": "35826104d76e3f59029db9e7801895549da97025ac2a9eb0aa102c8aaf7f3482",
+    "node_modules/dumling/dist/validation/operations.js": "fcc75e6e83d5ea93d92f7ac711de76e8b5c551ac853e4a1717c3f1630eeb2744",
+    "node_modules/dumling/dist/validation/operations.d.ts": "8d89157998179e566101e494b23f14bf8113613e009125f407a0f424d60b8322",
+    "node_modules/dumling/dist/grundform/features.d.ts": "1e6266802eaadc5d0fba05f0efffca04cfb8ee16e9867fa5203ad8dab22d22c5",
+    "node_modules/dumling/dist/grundform/result.d.ts": "f6cd211aa802387d87d716bf92639bc29b7d98c6703ad94a35d8505afeae0d1a",
+    "node_modules/dumling/dist/grundform/de.d.ts": "5618fcbe93b6f3b7fe0b4761bd0a1587a1e7e2b32d73798fccc5ac603fc9c542",
+    "node_modules/dumling/dist/grundform/en.d.ts": "93182fc37af818e2ed37f988c398b3fd75a77a46ea66322f4f72301c09d4d571",
+    "node_modules/dumling/dist/grundform/lemma-rule.d.ts": "35c993db0cf8ed6a19cace714cca330dcaf04093b0a195b9004f268bf58ff8ba",
+    "node_modules/dumling/dist/grundform/rules.d.ts": "843da437cb9efff85d92e59708956ed6bd93dfb3faba7611370d4e9e4792d7f2",
+    "node_modules/dumling/dist/grundform/he.d.ts": "e3076387f8d4e6669e5388e76488e9ea335de04b0e2e9ed240b7a6f19397fdc3",
+    "node_modules/dumling/package.json": "67d2aade0b0b60e366695e2bb12907b430821b379221c6f22ee6db6d6f24b905",
+    "node_modules/dumrel/dist/generated/types.d.ts": "659dbe8d6ceac116bf88e47dcbdd855cedb07b1122eb3cb11bc79c3b94577933",
+    "node_modules/dumrel/dist/generated/validation.d.ts": "eef4af8096f5584f18c9041ae46cda29ae539ed0618220b7e21741cb1ab37ddf",
+    "node_modules/dumrel/dist/generated/dumling-schemas.d.ts": "9288e9f15c90a38da145ecafa62fac4f0dd492a1ea2c7597a87e99c09158376b",
+    "node_modules/dumrel/dist/types.js": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node_modules/dumrel/dist/vocabulary.d.ts": "5b69d7edbf2d12a480d4c12570b710276212202e19b47c2ee8f2bcc4910e6f84",
+    "node_modules/dumrel/dist/project-semantic-relations.d.ts": "27529cea98585ba31276a99c26dc81dad77a9b616c34626335c05d0da8ff23b4",
+    "node_modules/dumrel/dist/types.d.ts": "2067fea923971e3b636c4b7055fca927aac5ad2242005d6cf74bf4bc6d265982",
+    "node_modules/dumrel/dist/parse-reading-knowledge.d.ts": "ad7f7dd0ef6a449db05a37272d07fc9f53658ecc95c33fa192e1ef9ed7c60bd9",
+    "node_modules/dumrel/dist/index.js": "07c79796a3cc89c622f98dfd777d94884e53d80d6c247cef22038d95cd68b49b",
+    "node_modules/dumrel/dist/selection-schemas.d.ts": "53892da090bf07ebd211e2c178f26e55405e74ccac03a922ff92c942a3e8ccdd",
+    "node_modules/dumrel/dist/apply-knowledge-change.d.ts": "493c19ea7d53ef506f0aa41e7d5883ab8645aba45bf9204cd194a8df105d5039",
+    "node_modules/dumrel/dist/select-knowledge.d.ts": "9b0ca5cd2a77bae8424d8096499c81bc69d41153ccbba3e78dbdb55e2a1097b0",
+    "node_modules/dumrel/dist/context.d.ts": "1d36d491049ffa91d2729f68859978ffd6d992499cb6a6fa4e3b8917b3a276cb",
+    "node_modules/dumrel/dist/validation.d.ts": "e29e3e91925f71efba83d1d1a10b0ffc486f7e110e48608e4a99db0bb0cad023",
+    "node_modules/dumrel/dist/semantics.d.ts": "18db035ee0c5fc79303f9245fa8d37757e9d5c7ad3439d64ad8c5880c21b1c31",
+    "node_modules/dumrel/dist/schemas.d.ts": "ffe0a919c537e43ee7670e1d1dd757e3d81b425090f2283e39e4775a22d59522",
+    "node_modules/dumrel/dist/selection-policy-de.d.ts": "64e76b99c9fde70ee0ab56e792694f3bd65856c8b10ad96f2a51312cbbc745ca",
+    "node_modules/dumrel/dist/schemas.js": "7fcacdc5de8a2d7beba30f1dfd3e98ad9c62b14277d0a439f98adccf99c3104d",
+    "node_modules/dumrel/dist/index.d.ts": "78bc00027aad3957b5a59ce14e7a40ce217e18c2da876e45726e213e54ebd9bb",
+    "node_modules/dumrel/package.json": "4d23c7848f1e81ab47c526dfe0a29c994ab706dc2014085e48f26afe3f5c473a",
+    "node_modules/dumdict/dist/generated/validation-artifacts.d.ts": "a1059ef7188e573a3c79146ba6ee4946c3fbe42ac4a987fc743b193b818f488c",
+    "node_modules/dumdict/dist/generated/unit-schemas.d.ts": "35c4bcb0f5c0e02cd8b18434ffe16a641eb6f9d61c20e77ccb88df19a67365ab",
+    "node_modules/dumdict/dist/dto/revisions.d.ts": "09651450a6b8e95960976140ddd31f793172aeadd7057471cf59ee95bcab15c2",
+    "node_modules/dumdict/dist/dto/drafts.d.ts": "58820029a39dd574d9a7186b6e97f1bc89ecb63e0d045326d2de1319e1ae7bae",
+    "node_modules/dumdict/dist/dto/serialized-note.d.ts": "ee381a2c7292d97a78031b0c855fdd002b210a1d45a95bdef23cfc9b3e815298",
+    "node_modules/dumdict/dist/dto/entries.d.ts": "41bfd88fee7087913bd559838fd1ff375f522b1f4329b1fd7f203468daa670c9",
+    "node_modules/dumdict/dist/dto/notes.d.ts": "13e59bd49ea1d6db47e7a16c0b3b1a73718c869242bf38f7a3542a28fe2160c7",
+    "node_modules/dumdict/dist/dto/pending.d.ts": "7facc991de2f7d7ab543714e9b498ac40e019ee2ca61a9ddcdb32dd99eb3724a",
+    "node_modules/dumdict/dist/dto/knowledge.d.ts": "ec23c767e6c4e6aaab58470b1d1c1c35921a10c6a463948ba6324d7bdabc420c",
+    "node_modules/dumdict/dist/dto/index.d.ts": "3665720853b6a7790ba0a39b35fafc6d8c7766625db7e820e73fdddfcd8f61a2",
+    "node_modules/dumdict/dist/relations.js": "4e0277b863a497713a8f52e5f138bcfaaffa497905cfc98c436e67c162ae3bd5",
+    "node_modules/dumdict/dist/domain-types.d.ts": "c5e1dc9f8a3f0183f1e53e5398225e6b5dc2f2effc865c05340841c2e067b285",
+    "node_modules/dumdict/dist/relations.d.ts": "0e5bdd5353ae4d746a2e30ab89a97a9b81d47ad14987b9ff89cdea8853965666",
+    "node_modules/dumdict/dist/runtime.d.ts": "31915925ac325be7d3573d3b2ca2c2b175901786675168c55cab446a127a9990",
+    "node_modules/dumdict/dist/pending.js": "6e028e0e38a06e710365d3791c6174198551d1e3523508a39f9c64fed61d9fcd",
+    "node_modules/dumdict/dist/runtime.js": "e946203237b64cc2f8723399f39921e8be576f2a5889f43783455fd07cb31eb3",
+    "node_modules/dumdict/dist/core/project-semantic-relations.d.ts": "f34be05911bb9d0375b9136b1d12872a7d16fa6cd28ec371f7d47a5ff5004a83",
+    "node_modules/dumdict/dist/core/plan-relation-maintenance.d.ts": "114bcc0b75b9d376bfcdd278dd4e3144ccd7ed32f0ccc59b1d5b5e9f5135097a",
+    "node_modules/dumdict/dist/core/identity.d.ts": "890af33c99bb0f6a0a86933d3404849bb13068d0db43a23fc481fbd2523b9980",
+    "node_modules/dumdict/dist/core/apply-reading-knowledge-change.d.ts": "36ade6e46062194da87f70108d61f15bd54195f117c49f8cc7175fd61bc24cba",
+    "node_modules/dumdict/dist/core/lookup.d.ts": "ef2ed86dc7f419e0dcfeeea9028425431e0ebdf6c7a58b3a521db3d4e0859fbe",
+    "node_modules/dumdict/dist/core/planned-changes.d.ts": "938bc2eac5629bb87db89a85c8665bf89c13c6d4d31c6575db9bf568f301dab3",
+    "node_modules/dumdict/dist/core/validate-slice.d.ts": "23a9a56b29090c6ebf5fde671dd3e596cbde190b88e3f4fa046486ebc0cc62ae",
+    "node_modules/dumdict/dist/core/plan-mutation/ensure-owned-surface.d.ts": "ae336215e1ca627e1ce04718e28ec561369c65395ab279fa8123a25b6cf6aeec",
+    "node_modules/dumdict/dist/core/plan-mutation/result.d.ts": "c7f6fd21d54d882580896fcdb66fa1efdb6a4ad05f1db6da77f3e747722f11d8",
+    "node_modules/dumdict/dist/core/plan-mutation/ensure-reading-entry.d.ts": "f9a8f921a383667758bcd0bc1e6222562c63b554077e51038ae246c70cfe93e8",
+    "node_modules/dumdict/dist/core/plan-mutation/relation-removals-to-patches.d.ts": "96c3877519e9215ce5bc62feb9b2b9911e75d154ba9b38c8f628b122579c5b1b",
+    "node_modules/dumdict/dist/core/plan-mutation/apply-generated-knowledge.d.ts": "407b4db87157db454b40936676018b842e2b8f664c5b2f431deda47fe58d0ca7",
+    "node_modules/dumdict/dist/core/plan-mutation/relation-additions-to-patches.d.ts": "34464cac979386696f700d4600c67c3c8018450aa4d341e7019fd09de33474fe",
+    "node_modules/dumdict/dist/core/plan-mutation/cleanup-relations.d.ts": "4c71f6b857c367f63da0381892a2592f84e1ca750157da0af9d5a39fb9fd4a80",
+    "node_modules/dumdict/dist/core/plan-mutation/add-new-note.d.ts": "36658386db9dde2888cc25b4efe658b4c91b1e5116f92efba8137be44b3f5560",
+    "node_modules/dumdict/dist/core/plan-mutation/append-reading-attestation.d.ts": "bcf38cbacd0b42ee8744be5a8262e77d2e89bf8155eb1110b2034647508b47aa",
+    "node_modules/dumdict/dist/core/plan-mutation/index.d.ts": "3f68142ed26cf3d9170b65a7fb1463bca96078553210158c8bfd966c6c66190f",
+    "node_modules/dumdict/dist/core/pending/index.d.ts": "6ac8d073570344e8bf2d0b8a5685a16ffb6b3a78a58b54c3ae1f21b46e69d4a7",
+    "node_modules/dumdict/dist/public-schema.d.ts": "094a31e8499b045f761fbdacaf974ba65eabef64c5514d46528ff88356bfde57",
+    "node_modules/dumdict/dist/validation-semantics.d.ts": "34ec1e8b6d6423ee6c4ae109d0f3b51f7b837e1681582e4c0e1f96451cd3d1e2",
+    "node_modules/dumdict/dist/memory.d.ts": "a57a5d21d44af85813177821c6e75a55b31d8c8cd9440d2a0219e056cc1676d5",
+    "node_modules/dumdict/dist/memory.js": "500664f9a5ee058999b17ef518fd61ef04681d1689aedbf855ee8c42421fe098",
+    "node_modules/dumdict/dist/index.js": "c91d0b652e6ca59c0f1d09847286d03bdb35d205ae971180b45a2db03b949cbd",
+    "node_modules/dumdict/dist/dumling-id.d.ts": "365994f965eb7aa792c0bb6496d9dfd6a6085eb3b0094f9cc2038e375d67d42f",
+    "node_modules/dumdict/dist/storage/commit.d.ts": "28e3d533ae688bc129b603ab5da16bb56a068afa2dc50181bb95149985bcaf55",
+    "node_modules/dumdict/dist/storage/port.d.ts": "5cb666341b4202ccde7240c77d4813220fd775abb6132ae5231d780c41acddbd",
+    "node_modules/dumdict/dist/storage/slices.d.ts": "b0fb2337c71c799ded62a7ba1863ad898f3f2fe255a8fd7f5b48dd667f76a697",
+    "node_modules/dumdict/dist/storage/index.d.ts": "5565dee0bc2461af5fb804ba5d5727a5cd399808d73bb76b9262a1760e93250b",
+    "node_modules/dumdict/dist/testing/boot.d.ts": "bb9a6d1078b1f893d5039587aa967cedce3f676808b1932c4c0afc587fee7540",
+    "node_modules/dumdict/dist/testing/in-memory-storage/state.d.ts": "772efa6c13787e02733972685b698a902f1ccb7dad1d0540b640d949580cfe4e",
+    "node_modules/dumdict/dist/testing/in-memory-storage/commit.d.ts": "1785cd1bdd1c0a4d5959bc0b6f377100b3b55c8ff633ced5742e38113f2fdcf6",
+    "node_modules/dumdict/dist/testing/in-memory-storage/apply-change.d.ts": "c2c0046ff3bf448c80a2a3372cad4eda95ba18f939c4c4438f9cdef37449b3d1",
+    "node_modules/dumdict/dist/testing/in-memory-storage/index.d.ts": "255ed06d211562c2887daeb5065cc499bdd28528743c86c20b08cac4533e4c99",
+    "node_modules/dumdict/dist/testing/in-memory-storage/load-slices.d.ts": "8eb44038f73b8322e397e68f1d34383141a9a78bfd3bad814703d95bd293f3e7",
+    "node_modules/dumdict/dist/testing/in-memory-storage/preconditions.d.ts": "501db97aba7883a8922f41b6d97cb48063445f16d60e59df0ba03653810d957f",
+    "node_modules/dumdict/dist/public/errors.d.ts": "8e9244e825fd88eaa7b5b0aea252083a4ee5cdc73fee77e0fb3aece453a7d574",
+    "node_modules/dumdict/dist/public/service.d.ts": "325e0e5f2a20427861c6424d1151598bd2a85313634430e9ee556553699be3f3",
+    "node_modules/dumdict/dist/public/results.d.ts": "4f4a50ba9fd95579d56fd7e8e2a52a17c9b87a6bff8a5fa5010dc603a2873d3c",
+    "node_modules/dumdict/dist/public/diagnostics.d.ts": "e612eaf82ef3573b3667396eab67207ed6739cd00d2a3b166389c34bf58535a3",
+    "node_modules/dumdict/dist/public/index.d.ts": "1991c2c90a4f5aa3713f14a3a3f0ee15b533775042f400652d044ce192d78bee",
+    "node_modules/dumdict/dist/schema.js": "5885fa037c3831de70ee2f327374e1abd6424868cb63f5f6ebe3be3722b62fcb",
+    "node_modules/dumdict/dist/schema.d.ts": "885f8b0a65b5f585a50e4136512c39c10184eb360dfb4883e0eb09f464f286c0",
+    "node_modules/dumdict/dist/pending.d.ts": "53d00aeb2dde1bb1abd579e493da5a0571ebff1a697fc13451c216dcd6ce0a15",
+    "node_modules/dumdict/dist/public-schema.js": "d92088a8820b79c16971a2b21cc5e7892de6cb754c6653d8218a5b5207c99ad1",
+    "node_modules/dumdict/dist/parsing/validation-operations.d.ts": "e823f77ffdc753f0a16423d1b3471794bc830b606eeca9ecada54dc97683aa85",
+    "node_modules/dumdict/dist/parsing/validation-route-types.d.ts": "741aca41560467a15b6a07a36e2dcf15753e38c18678d2c2993bb847feb499f4",
+    "node_modules/dumdict/dist/parsing/lightweight-parsers.d.ts": "7754f0d4db470c23e1efdefbd66c18c9aba5053e466387892bc711a6aaa933bf",
+    "node_modules/dumdict/dist/service/runtime-options.d.ts": "cb0cee1f387b1737bc85db98a075c58ed0038f3324b776701b3f4414adaf54d0",
+    "node_modules/dumdict/dist/service/load-reading-entry-context.d.ts": "f7b265be7265533262495f8e97389ecc1bbfe2e86622bf65fd5b7052ed23d3f8",
+    "node_modules/dumdict/dist/service/layer.d.ts": "dfa0f09ac34c9651f63c5c80475866681d85e08641baeabd9e7baaf6defb840a",
+    "node_modules/dumdict/dist/service/full-slice-validation.d.ts": "1369906b8923ad0683b6075bd2e1c72a9e46b20ebb01aeda8591bbcc24cc11bf",
+    "node_modules/dumdict/dist/service/ensure-owned-surface.d.ts": "247320e934f39ab893170163f2bb994918b8e86884ce31fee30d186a49c81dd6",
+    "node_modules/dumdict/dist/service/create-dumdict-service.d.ts": "1190c9c871bb537a7fd8a5c4c03c0f8bb58fb54708ee9839520e1100f478484c",
+    "node_modules/dumdict/dist/service/ensure-reading-entry.d.ts": "0786d9071858e38c709b54d2515c825e50145a88a22ad2af204975622072b1a6",
+    "node_modules/dumdict/dist/service/apply-generated-knowledge.d.ts": "b0cd2fcadba793621edb3f2ac4f240786426803f0b45b18b40cf02a1df19a0ec",
+    "node_modules/dumdict/dist/service/create-dumdict-service-implementation.d.ts": "2077e981af5fcbaf9bfad243dc005bba174bdf0fa1729331d1ce72e159a2fc89",
+    "node_modules/dumdict/dist/service/get-info-for-relations-cleanup.d.ts": "fa4001827d0ee19b46da0cb1cc691c8a3546df4c6e1fc636c43a797722558203",
+    "node_modules/dumdict/dist/service/effect-mutation.d.ts": "23db2ab3c3fa2009fd64fa22d49587e273d967ae8f31e0ec35bd191ae944fed2",
+    "node_modules/dumdict/dist/service/cleanup-relations.d.ts": "0489c2bff3720b8efe8bc2ef8e79492015d27c4c888271c9a4d0175c31b6dfe9",
+    "node_modules/dumdict/dist/service/add-new-note.d.ts": "895a6bafd1a31fed797da3c148fc8f2efdaca63fcb3d7dcdcc29b2bcf66695f0",
+    "node_modules/dumdict/dist/service/find-stored-readings.d.ts": "f16bd8b8caa8cd8161473eb22d77781798a7af430a26caec01e9cbf58647365d",
+    "node_modules/dumdict/dist/service/add-attestation.d.ts": "4f239c5a68384f9b004f82fa2c992a5e839ebd215da0fa94f34979e616985576",
+    "node_modules/dumdict/dist/index.d.ts": "1967911cda21061c5ff3fca91534b08b0165a7c9ff3f7a3f6794a6397833dcf6",
+    "node_modules/dumdict/package.json": "ccbe8f2b609399ad1a3d57b9dbef103f2475601726f372662de5f441f31c1b8e",
+    "node_modules/dumgen/dist/generated/types.d.ts": "f4f93666d27d86d435eca4a52ea127512f33e51333b70c3db1318227fb8f309a",
+    "node_modules/dumgen/dist/generated/prompts.d.ts": "172aa8823c394ff44dcafa4a109a247a9f7a46b3e395244d2d0fba94e2a1aaf0",
+    "node_modules/dumgen/dist/generated/validation.d.ts": "eef4af8096f5584f18c9041ae46cda29ae539ed0618220b7e21741cb1ab37ddf",
+    "node_modules/dumgen/dist/generated/schemas.d.ts": "fb0e6f19349afe6805b8ac002273be8820902b4149781025bd5b26a490dc75df",
+    "node_modules/dumgen/dist/generated/model-schemas.d.ts": "78be5030295a91e39c9a9a7a95c53e38729c41287eb4bcf762c4d9f2a6d4132f",
+    "node_modules/dumgen/dist/development.js": "30dcda04bf2148deeb7dbb49876d099065d292fe6a7e8b9b4b46f985dfb0b01c",
+    "node_modules/dumgen/dist/types.js": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node_modules/dumgen/dist/universal/model.d.ts": "8369b9f68850e26b62ebd1cdfbacd7dc7b8ee06b7f29d11738c04abe13577fff",
+    "node_modules/dumgen/dist/universal/task.d.ts": "e37a531c89a1c6281eee43235cd373824c64d24fa619976768bc9c342b914692",
+    "node_modules/dumgen/dist/universal/dumgen.d.ts": "c064e2dcb028705c52713a23af114a859e0498a3c12b746b4de41a390a24c352",
+    "node_modules/dumgen/dist/universal/segmentation.d.ts": "9ee217c1d1a37becfc8a4b8040699aa46d79439f873c47e9337dd6a57c5b3905",
+    "node_modules/dumgen/dist/universal/validation.d.ts": "2e3086b04d837ff120bc4a5186f8a1ad2baa42d482129975cf8cd5ea2de8b7c5",
+    "node_modules/dumgen/dist/universal/schemas.d.ts": "5d7efe916ab4f566e48339b63a3f817fd2c76ed8a4f52b15642240099c2822da",
+    "node_modules/dumgen/dist/universal/segment.d.ts": "81d0545febf99fe1b965dfecc746d0a6a285a01804a7ea64d884efc30eed3098",
+    "node_modules/dumgen/dist/universal/failure.d.ts": "fa89b0d8486d37d021d9654047f2f33bf666247125aec10e0171bd8207ad9a07",
+    "node_modules/dumgen/dist/types.d.ts": "0fb6cd5c852e76877731d13141eabbbe6ae362ebbedc8caee19145c8d5acfa04",
+    "node_modules/dumgen/dist/development.d.ts": "fa1de876f08b9f1c0da3fb54f3353d646b73ea6d43590d26451f7441ff2dadcd",
+    "node_modules/dumgen/dist/concrete-lang/he/segmentation/segment.d.ts": "11f85581151863a07c9b8260b79dfde27d27d0c046c4a38bc93b6e49e4c9c3c0",
+    "node_modules/dumgen/dist/concrete-lang/de/target-classification/evaluation-ids.d.ts": "019e532fc3582c53610b26368e34383041af7898bdce991e906f7dbc53fdacdf",
+    "node_modules/dumgen/dist/concrete-lang/de/target-classification/prompt.d.ts": "6b483def67780612f079763ee4444ede1d4c7a0dbf8bff73faa947d181d51ce4",
+    "node_modules/dumgen/dist/concrete-lang/de/target-classification/projection.d.ts": "511bc1b32bd5cf2a6beabc146a53464d51de93f385a0a8a4d27f60af953113e1",
+    "node_modules/dumgen/dist/concrete-lang/de/target-classification/guidance.d.ts": "a5301e0d8660e56f203ece12bcd0348e4e6f650f31bb72095369387c3938572a",
+    "node_modules/dumgen/dist/concrete-lang/de/segmentation/evaluation-ids.d.ts": "cb995b1bd03bbdeb1f1ba6d999d12a2531880d582d8f321ddc55b85360547001",
+    "node_modules/dumgen/dist/concrete-lang/de/segmentation/prompt.d.ts": "144106f3184682a9731a16c0fad2822e332a070b2127ccda3623e838eaa248d6",
+    "node_modules/dumgen/dist/concrete-lang/de/segmentation/segment.d.ts": "a2bdf8df6ab78e8c5620ef7ff64c63967acfbe02af091349dcebbb6b0629186d",
+    "node_modules/dumgen/dist/concrete-lang/de/production.d.ts": "d98263d8d7836b3d99c35bf929031186a763c048ad00ce22cfe9172c17404933",
+    "node_modules/dumgen/dist/concrete-lang/de/authoring.d.ts": "5c01753b8eb79b4691f014cbb9525c75fd1336c59b669ba4fd24d8958033770f",
+    "node_modules/dumgen/dist/concrete-lang/de/reading-emoji-description/resolve/evaluation-ids.d.ts": "ed2f65c73330e3c617ad8548d1187ff6584aea2b7aa78a2c57321d54781ea191",
+    "node_modules/dumgen/dist/concrete-lang/de/reading-emoji-description/resolve/prompt.d.ts": "670aebc0283d0e9141876e71ab3e646ed449d2bd6ee6a3928121932dca429583",
+    "node_modules/dumgen/dist/concrete-lang/de/reading-emoji-description/evaluator.d.ts": "2f8d4fe67e8143f80d2256f5d96974dc5cb165e13e85354d2ffaf8a81c3772de",
+    "node_modules/dumgen/dist/concrete-lang/de/reading-emoji-description/generate/evaluation-ids.d.ts": "1536a3da9cf4f2067c2b80af78e0fdec47af6bd17d47ce18db6c80479b97c45c",
+    "node_modules/dumgen/dist/concrete-lang/de/reading-emoji-description/generate/prompt.d.ts": "a186ff557fd465c8c07bc433b657615b1bfa55f830d65d4ba8c2925258f001fa",
+    "node_modules/dumgen/dist/concrete-lang/de/experiments.d.ts": "7472bd7f8522170ac73b91045386e2d3a321c36db9a44f9e3f88464c0af5ba81",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/member.d.ts": "26fcdc4a300c8e2fa9d76c6500685c7e8f4c389275bb8f13bf407fd522a5606a",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-second-person-formal-singular-reference-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihnen-second-person-formal-singular-reference-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/wir-first-person-plural-reference-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/du-second-person-informal-singular-reference-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihrer-third-person-plural-reference-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-third-person-singular-reference-feminine-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/es-third-person-singular-reference-neuter-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-third-person-plural-reference-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihn-third-person-singular-reference-masculine-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/euch-second-person-informal-plural-reference-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/mir-first-person-singular-reference-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihrer-second-person-formal-plural-reference-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-second-person-formal-plural-reference-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/dir-second-person-informal-singular-reference-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/meiner-first-person-singular-reference-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihr-second-person-informal-plural-reference-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihnen-third-person-plural-reference-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihr-third-person-singular-reference-feminine-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/seiner-third-person-singular-reference-neuter-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/uns-first-person-plural-reference-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/er-third-person-singular-reference-masculine-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/dich-second-person-informal-singular-reference-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/deiner-second-person-informal-singular-reference-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-second-person-formal-singular-reference-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/mich-first-person-singular-reference-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihm-third-person-singular-reference-masculine-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/uns-first-person-plural-reference-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-third-person-plural-reference-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-third-person-singular-reference-feminine-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/es-third-person-singular-reference-neuter-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ich-first-person-singular-reference-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/seiner-third-person-singular-reference-masculine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/sie-second-person-formal-plural-reference-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihrer-second-person-formal-singular-reference-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/unser-first-person-plural-reference-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/euer-second-person-informal-plural-reference-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/euch-second-person-informal-plural-reference-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihrer-third-person-singular-reference-feminine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihnen-second-person-formal-plural-reference-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/ihm-third-person-singular-reference-neuter-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/seines-third-person-singular-reference-neuter-singular-nominative-masculine-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/euer-second-person-informal-plural-reference.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/ihr-third-person-singular-reference-feminine-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/dein-second-person-informal-singular-reference.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/seines-third-person-singular-reference-neuter-singular-nominative-neuter-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/sein-third-person-singular-reference-neuter-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/seiner-third-person-singular-reference-masculine-singular-nominative-neuter-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/mein-first-person-singular-reference.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/ihr-third-person-plural-reference.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/unser-first-person-plural-reference.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/ihr-second-person-formal.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/seiner-third-person-singular-reference-masculine-singular-nominative-masculine-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/possessive/sein-third-person-singular-reference-masculine-possessor.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/negative/niemandem-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/negative/keiner.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/negative/niemand-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/negative/nichts.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/negative/niemanden-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/reflexive/sich-third-person-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/reflexive/sich-third-person-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/die-feminine-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/der-masculine-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/der-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/dessen-masculine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/die-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/dem-masculine-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/dem-neuter-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/deren-feminine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/die-feminine-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/der-feminine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/der-feminine-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/die-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/den-masculine-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/dessen-neuter-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/denen-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/demonstrative/deren-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/die-feminine-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/der-masculine-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/der-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/dessen-masculine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/die-plural-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/dem-masculine-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/das-neuter-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/dem-neuter-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/deren-feminine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/die-feminine-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/der-feminine-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/der-feminine-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/die-plural-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/den-masculine-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/das-neuter-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/dessen-neuter-singular-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/denen-plural-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/relative/deren-plural-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/indefinite/jemandem-singular-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/indefinite/jemand-singular-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/indefinite/jemanden-singular-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/mancher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/alles.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/alle.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/jeder.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/jeglicher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/jedermann.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/jedweder.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/total/mehrere.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/interrogative/wer-nominative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/interrogative/wem-dative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/interrogative/wessen-genitive.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/interrogative/wen-accusative.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/mancher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/lauter.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/meist.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/manch.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/etliche.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/wenig.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/viel.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/irgendein.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/einige.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/irgendwelcher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/etwelcher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/mehrere.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/quantifying/mehr.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/unser-first-person.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/dein-second-person.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/sein-third-person.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/ihr-third-person.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/mein-first-person.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/ihr-second-person-formal.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/possessive/euer-second-person.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/exclamative/welch.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/negative/kein.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/emphatic/selber.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/demonstrative/jener.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/demonstrative/dieser.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/demonstrative/derlei.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/demonstrative/solcher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/demonstrative/derselbe.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/demonstrative/derjenige.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/relative/welcher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/total/samtlich.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/total/alle.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/total/jeder.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/total/jedweder.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/total/beide.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/article/ein-indefinite.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/article/der-definite.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/article/das-definite.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/article/die-definite.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/interrogative/was-fur-ein.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/interrogative/welcher.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/interrogative/wieviel.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/determiner/interrogative/wievielte.d.ts": "4ab3b1460345f0caa9b47b3f62dbed265e11b52355c15ad4e6c8bc09fd953933",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/bin-first-person-singular-of-sein.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/moegen-preference-possibility-modal.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/muessen-necessity-modal.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/sein-infinitive.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/sind-first-third-person-plural-of-sein.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/wollen-intention-modal.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/duerfen-permission-modal.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/haben-perfect-auxiliary.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/seid-second-person-plural-of-sein.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/ist-third-person-singular-of-sein.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/sollen-obligation-modal.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/werden-future-passive.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/bist-second-person-singular-of-sein.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/members/lexeme/auxiliary/koennen-ability-modal.d.ts": "c286037a648490a7da914b7dbe67bc87d84d816e6c42363f3e3ad91750df53c7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/inventory.d.ts": "195cfb46fc945503ab998c0105deb7e210a06eadf6a8807e6fbdc0a469e044b7",
+    "node_modules/dumgen/dist/concrete-lang/de/authored-closed-sets/select.d.ts": "4425bf08c79d3b25062078fc447b57308f4d64343f8e2e1bdf83fcd6d4a50df5",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/project.d.ts": "552fe162004093695bc9f47d52c0425abfcb2af0b20792062e2dbda2fc5540a9",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/translation/evaluation-ids.d.ts": "798a2c78878990030d4db09e9fae5643570a7f51114263c6a232242573d6b4e7",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/translation/prompt.d.ts": "f4a6a05e53c959bdf0adce21eacb93e8d24ed2810147dbccf362e3e32eb1749d",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/structured-schemas.d.ts": "16f9c10329d5864578f4587ccb7421fc86e3e1d126ef77562f3eb7413840d8e5",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/morpheme/evaluation-ids.d.ts": "aea24b830b2b6c87c339baebd72fbf2e493d54821025a5fbafd51c7e1e5b015d",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/morpheme/prompt.d.ts": "b0583fc1b67883d4cd79ba76edc33a7b46fb0f86fe21023b773fd8408a950f10",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/morphological-tree/segmentation/evaluation-ids.d.ts": "d896c833acdcf4fa2ef06ac301ae24edcd4ea09bfb2638acc3d22073be07a11a",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/morphological-tree/segmentation/prompt.d.ts": "51f282299cda1d28d32574b061538915a2f70c5a396c8d38566f56965d1213f4",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/morphological-tree/resolution/evaluation-ids.d.ts": "aecfb8b1c965e12d4faf7edd45bac154585e624b70883918bd665401ff0dae73",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/morphological-tree/resolution/prompt.d.ts": "9a1f216d4564339844b1a8afa6b22664d28dffcec8d04a9d247aea3d64f22114",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/construction/evaluation-ids.d.ts": "2996afdc784b632d034993811ea4ae61ddd21dfa43016c5c3104ce5203e5d509",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/construction/prompt.d.ts": "b0583fc1b67883d4cd79ba76edc33a7b46fb0f86fe21023b773fd8408a950f10",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/evaluation/request.d.ts": "a555beec290c34e5d3c8bdcfb1c7abeb9d0157f4a94541db777ca294525706bc",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/evaluation/families.d.ts": "53a6d13b18cf2187d4e01cbcc2d5d355227873daec8ab8ce867ca81e959a3779",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/evaluation/adjudications.d.ts": "eb049caa1528b64875208897e46e347de38a9c8e0462fc96094b4194e7e65746",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/evaluation/evaluator.d.ts": "bef552101280f0ddc42ef37019db7e9d3c774e1d032c0c22c501841672cff32b",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/phraseme/evaluation-ids.d.ts": "5ccfd1270fbd7b04f39d20b3ec2ae12e9bc9b421f1b615781325fa59eb4fe223",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/phraseme/prompt.d.ts": "b0583fc1b67883d4cd79ba76edc33a7b46fb0f86fe21023b773fd8408a950f10",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/evaluation-ids.d.ts": "28c14d322f6158431b0fd30e0195f1d20ecea3b72b75000bb1690786fddba962",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/prompt.d.ts": "084b602c654a2478eaceda42933995a08a398700ec0fd6cbda85d49c12c9f913",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/evaluation-ids.d.ts": "1408ff28c24be3b27f32d7ed19c183c447dab908d8dbbbfcbe94c8304e3866f1",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/prompt.d.ts": "da6860cb635f726eee7b3b31e851e5e3ab21127fe7faf96da1a2e87add0e9bb3",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/request-shape.d.ts": "e7706821ccc00bccf19be7fd32abfc16f0653530db5f4d5cfee760f9e2f2e804",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/lexeme/evaluation-ids.d.ts": "3030db65d1dd7191a73739cdfd78f0bac9acb56c2e1b8474973b24b5ea00a816",
+    "node_modules/dumgen/dist/concrete-lang/de/knowledge-production/lexeme/prompt.d.ts": "b0583fc1b67883d4cd79ba76edc33a7b46fb0f86fe21023b773fd8408a950f10",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/project.d.ts": "8f8663d4490b4102081d78576730430e1a0d934b375401c21759edc58211708b",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/construction/fusion/evaluation-ids.d.ts": "684916a65eba52b6f16dea5d9572a14dd58030e68a77b85a502e63409eafd3d3",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/construction/fusion/prompt.d.ts": "5a4db08445efb966783ed4a89c4813167c1d305af19078e92e901df0c41a0bec",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/proverb/evaluation-ids.d.ts": "36318738fa3d580e79963b746f82a696abd5cd2cfc97bf39a66bd3398b5b278b",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/proverb/prompt.d.ts": "5a4db08445efb966783ed4a89c4813167c1d305af19078e92e901df0c41a0bec",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/collocation/evaluation-ids.d.ts": "3a72bec80755c47be51f585f6f0efe5551fb40fa0c504a0a1aac86c539536e90",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/collocation/prompt.d.ts": "e959b2ab62ba68e9a52b0c435a63d2afe7e92020b6551d29cf84f1652bc919ed",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/discourse-formula/evaluation-ids.d.ts": "8ba388a9504131201e6407bfc6b4c74eb720475d85885c108324e8b69e485de8",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/discourse-formula/prompt.d.ts": "7dbad6d6616027865f2d34c6e4af29d42b4f2aefb2e4830ba3385dd9b29285ff",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/aphorism/evaluation-ids.d.ts": "a9ad5a2f3bb7c9f64dfba9972861fdadd90e72dfc764a4f56f15065fd9819616",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/aphorism/prompt.d.ts": "5a4db08445efb966783ed4a89c4813167c1d305af19078e92e901df0c41a0bec",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/idiom/evaluation-ids.d.ts": "8c3ba2e5eb0b87e6b9f2bc7f12992b4e1a915b746e0a4595e4726d7c19904627",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/phraseme/idiom/prompt.d.ts": "e959b2ab62ba68e9a52b0c435a63d2afe7e92020b6551d29cf84f1652bc919ed",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/other/evaluation-ids.d.ts": "b8749e33ab3c8de43fcbe6e5e1eb04187e0d08db3cd306dab18ca8cd744ae6d7",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/other/prompt.d.ts": "e0a2de4ca8ad0118066c1b1fc6aa0551ebcb730e956547ad2157fed1f9fec118",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/noun/evaluation-ids.d.ts": "501a2f2110cc999b75f0fd25a70d957e75fbd1c4114862795f3f38e3ad24eb88",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/noun/prompt.d.ts": "aabce133dff65b9aee4f58ebbb132f693dfb438de5f349ae55f9b7455d7930c8",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/numeral/evaluation-ids.d.ts": "c0df7c9130e39532cbe4e91caac05ffa854e6bfaa2ed86905ca74ff8a39b0ded",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/numeral/prompt.d.ts": "87f3e9574e42d22dd1b2e251383b6d32b5bc56a61b8b7dcce5cd897156f89626",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/symbol/evaluation-ids.d.ts": "dc766acfbe84a77bbef9cb818fa050f1ade84ef77d4ca359539b856e4dc4dc06",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/symbol/prompt.d.ts": "cf0e7a8d653c1ed706524a827741c9b715d41df734fa9f7fff3e97b2c0acf1a2",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/verb/evaluation-ids.d.ts": "330cbbef364a15304d3aaf06be5d74bf4a86f32273e4b65cf9bde7ab1f497c98",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/verb/prompt.d.ts": "c7de44b34dde56daff3999cee31defc8b2f4eab6fab620ebfb833f1970b728f9",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/interjection/evaluation-ids.d.ts": "4c8b19bdbb9756423af4dc20daea7dd96a5eb8fb5ac83ff631fef7ef56141b47",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/interjection/prompt.d.ts": "1ea19b1e69b069de98ae829f5a34fd44db7fb7a108983cddb32b4d64f5d353db",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/adjective/evaluation-ids.d.ts": "278aa1b5983e8d995bfe70669380303b9eb06bb34f912918cb505b467d18aac3",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/adjective/prompt.d.ts": "1b0fc78cc375a19672359ce9bc0c033d481c956a215a91c42150169efcec10e9",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluation-ids.d.ts": "f10172eaf69ade798fa6de853574ce120548183c370e584bda9e04c88e3db3c1",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/pronoun/prompt.d.ts": "c25860be2e616a535b6f9234bfb4b51d71d7891d08253c585d33f1af3dfa8be7",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/coordinating-conjunction/evaluation-ids.d.ts": "141cb024cb805ff5b3936b2c809dd51523fd61c8e6b1d7d8b1bdc50984f02f6d",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/coordinating-conjunction/prompt.d.ts": "2ba775895b1e8a84571bf7b802565c458f6e2daa44a258b4049d10152bd822b4",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/adverb/evaluation-ids.d.ts": "f7b0a47225475a2e416053a28b6a8152d4135591c9f1cc666dd0b94a6af0ef0a",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/adverb/prompt.d.ts": "27d0689023dd4d09903b973dbb4d8a1b7f11332428a07eab9d4257c62a6039cd",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/adposition/evaluation-ids.d.ts": "e90bf8344dd4f2742f9e940c9bae5b983f66ced55018a45bf1b7bdefcd90cefa",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/adposition/prompt.d.ts": "1c17a864d78e2339ae02de34ddab132858a091222a12efab575f4c10dc5a4719",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/particle/evaluation-ids.d.ts": "dad1ef36fd0e506a3b750258e3c4c728e18e22ade3c780a934a0961a9c403296",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/particle/prompt.d.ts": "e735151f8b7b5574fb0ec8b63ecd2b4a9f6e529d51aea96f1a56f8bac23b1c48",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/subordinating-conjunction/evaluation-ids.d.ts": "aad59bef9659e9bf11c9120fe23757a7110ec39eb5e14eb9bcfcdd15979943c5",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/subordinating-conjunction/prompt.d.ts": "2ba775895b1e8a84571bf7b802565c458f6e2daa44a258b4049d10152bd822b4",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/determiner/evaluation-ids.d.ts": "38c067c588c346f9e39fe58646c0a18d10012cb56d936a4f8883c212feb12d2f",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/determiner/prompt.d.ts": "5b283e6202061b2140879928b9edaaad6000db6457182853bbec042096f6b55e",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/evaluation-ids.d.ts": "418e6159285333748843026ce8e0c4d2516c86595cb1e475058c432f4965ea6a",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/prompt.d.ts": "543b2ac45ff9dae13c6cae3d3cd144ca0dfc8d95f0c59699fd7bd198c716d65f",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/evaluation-ids.d.ts": "e5f191f2bec3faef38f651c806cf2885426af7a449877e1bb1518d025d2a533f",
+    "node_modules/dumgen/dist/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/prompt.d.ts": "20b8139c132858b41c7820f917050a82016926bd2f9c017b217249212ae61493",
+    "node_modules/dumgen/dist/concrete-lang/de/model-schemas.d.ts": "d1bae103228d87998659843a14b8b6811ab013ad01fa84aa56241aac6c7d97af",
+    "node_modules/dumgen/dist/index.js": "88f9699ed281aecf020f803fcc2d67c3659a01d69a19297064768c379f9404ec",
+    "node_modules/dumgen/dist/schemas.d.ts": "ecd0856876bf0f4f30233812935e133c3d7ab7ab39551de24d0660cde8048b37",
+    "node_modules/dumgen/dist/schemas.js": "11f6670f513d8d6afcb585b271baf56ea43d70267625fa3004e54338dd730ee3",
+    "node_modules/dumgen/dist/index.d.ts": "b9a71e62c766e0a323165e00454283e677a4ff3f3fdc53da4aad0781c82414f7",
+    "node_modules/dumgen/package.json": "6e4b059c404febaaa1966bed0bd937b6df351216ec0cb54daf518c2698983f82"
+  },
+  "method": "Seven fresh processes per case; sequential imports within each process. Stage increments and cumulative increments are medians of paired measurements. Their medians need not add exactly. No forced GC. Peak RSS increments measure new high-water marks, not all allocations or retained heap.",
+  "limitations": "Local staged-package replay of tf-demo library imports, not a deployed Convex or whole-app measurement. Excludes provider SDK and app initialization. Previous startup is reconstructed from the current build by restoring broad Effect import and catalog validation only. Current packages include concurrent uncommitted work; artifacts are fingerprinted.",
+  "cases": [
+    {
+      "variant": "previous-startup-reconstructed",
+      "order": "dumling-first",
+      "stages": [
+        {
+          "label": "empty",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "currentRssMiB": 10.515625,
+          "heapMiB": 0.515625
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 5.296875,
+          "addedPeakMiB": 5.296875,
+          "currentRssMiB": 15.84375,
+          "heapMiB": 1.1630859375
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 7.71875,
+          "addedPeakMiB": 2.4375,
+          "currentRssMiB": 18.28125,
+          "heapMiB": 1.6826171875
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 32.140625,
+          "addedPeakMiB": 24.40625,
+          "currentRssMiB": 42.6875,
+          "heapMiB": 5.556640625
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 119.8125,
+          "addedPeakMiB": 87.796875,
+          "currentRssMiB": 130.390625,
+          "heapMiB": 12.822453498840332
+        },
+        {
+          "label": "repeat all imports",
+          "cumulativePeakMiB": 119.8125,
+          "addedPeakMiB": 0,
+          "currentRssMiB": 130.390625,
+          "heapMiB": 12.822453498840332
+        }
+      ],
+      "allRepeatedImportsReused": true,
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11026432,
+              "rss": 10993664,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16564224,
+              "rss": 16564224,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19955712,
+              "rss": 19939328,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46137344,
+              "rss": 46137344,
+              "heap": 5793792
+            },
+            {
+              "label": "dumgen",
+              "peak": 145145856,
+              "rss": 145145856,
+              "heap": 13439122
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 145145856,
+              "rss": 145145856,
+              "heap": 13439122
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19120128,
+              "rss": 19103744,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44630016,
+              "rss": 44630016,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 136691712,
+              "rss": 136691712,
+              "heap": 13452509
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 136691712,
+              "rss": 136691712,
+              "heap": 13452509
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19021824,
+              "rss": 19021824,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44974080,
+              "rss": 44974080,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 137183232,
+              "rss": 137183232,
+              "heap": 13447921
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 137183232,
+              "rss": 137183232,
+              "heap": 13447921
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19169280,
+              "rss": 19169280,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44761088,
+              "rss": 44761088,
+              "heap": 5793792
+            },
+            {
+              "label": "dumgen",
+              "peak": 136101888,
+              "rss": 136101888,
+              "heap": 13429156
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 136101888,
+              "rss": 136101888,
+              "heap": 13429156
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19087360,
+              "rss": 19087360,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44662784,
+              "rss": 44662784,
+              "heap": 5793792
+            },
+            {
+              "label": "dumgen",
+              "peak": 136724480,
+              "rss": 136724480,
+              "heap": 13453450
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 136724480,
+              "rss": 136724480,
+              "heap": 13453450
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11157504,
+              "rss": 11124736,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16678912,
+              "rss": 16678912,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19251200,
+              "rss": 19218432,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45154304,
+              "rss": 45154304,
+              "heap": 5892096
+            },
+            {
+              "label": "dumgen",
+              "peak": 136790016,
+              "rss": 136790016,
+              "heap": 13445317
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 136790016,
+              "rss": 136790016,
+              "heap": 13445317
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16596992,
+              "rss": 16596992,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19300352,
+              "rss": 19300352,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44597248,
+              "rss": 44597248,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 136134656,
+              "rss": 136134656,
+              "heap": 13434973
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 136134656,
+              "rss": 136134656,
+              "heap": 13434973
+            }
+          ],
+          "reused": true
+        }
+      ]
+    },
+    {
+      "variant": "previous-startup-reconstructed",
+      "order": "effect-first",
+      "stages": [
+        {
+          "label": "empty",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "currentRssMiB": 10.515625,
+          "heapMiB": 0.515625
+        },
+        {
+          "label": "effect/Effect",
+          "cumulativePeakMiB": 28.234375,
+          "addedPeakMiB": 28.234375,
+          "currentRssMiB": 38.78125,
+          "heapMiB": 3.966796875
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 30.328125,
+          "addedPeakMiB": 2.296875,
+          "currentRssMiB": 40.875,
+          "heapMiB": 4.455078125
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 31.546875,
+          "addedPeakMiB": 1.078125,
+          "currentRssMiB": 42.09375,
+          "heapMiB": 4.865234375
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 33.390625,
+          "addedPeakMiB": 1.890625,
+          "currentRssMiB": 43.9375,
+          "heapMiB": 5.478515625
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 117.515625,
+          "addedPeakMiB": 84.15625,
+          "currentRssMiB": 128.0625,
+          "heapMiB": 12.811083793640137
+        },
+        {
+          "label": "repeat all imports",
+          "cumulativePeakMiB": 117.515625,
+          "addedPeakMiB": 0,
+          "currentRssMiB": 128.0625,
+          "heapMiB": 12.811083793640137
+        }
+      ],
+      "allRepeatedImportsReused": true,
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40779776,
+              "rss": 40779776,
+              "heap": 4192256
+            },
+            {
+              "label": "dumling",
+              "peak": 43270144,
+              "rss": 43270144,
+              "heap": 4705280
+            },
+            {
+              "label": "dumrel",
+              "peak": 44138496,
+              "rss": 44138496,
+              "heap": 5135360
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46137344,
+              "rss": 46137344,
+              "heap": 5762048
+            },
+            {
+              "label": "dumgen",
+              "peak": 133595136,
+              "rss": 133595136,
+              "heap": 13414222
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 133595136,
+              "rss": 133595136,
+              "heap": 13414222
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11124736,
+              "rss": 11091968,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 39829504,
+              "rss": 39829504,
+              "heap": 4159488
+            },
+            {
+              "label": "dumling",
+              "peak": 42598400,
+              "rss": 42598400,
+              "heap": 4671488
+            },
+            {
+              "label": "dumrel",
+              "peak": 43974656,
+              "rss": 43974656,
+              "heap": 5101568
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45858816,
+              "rss": 45858816,
+              "heap": 5728256
+            },
+            {
+              "label": "dumgen",
+              "peak": 136151040,
+              "rss": 135561216,
+              "heap": 13410855
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 136151040,
+              "rss": 135561216,
+              "heap": 13410855
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40665088,
+              "rss": 40665088,
+              "heap": 4159488
+            },
+            {
+              "label": "dumling",
+              "peak": 43057152,
+              "rss": 43057152,
+              "heap": 4655104
+            },
+            {
+              "label": "dumrel",
+              "peak": 44187648,
+              "rss": 44187648,
+              "heap": 5085184
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46284800,
+              "rss": 46284800,
+              "heap": 5728256
+            },
+            {
+              "label": "dumgen",
+              "peak": 137691136,
+              "rss": 137691136,
+              "heap": 13458429
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 137691136,
+              "rss": 137691136,
+              "heap": 13458429
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40681472,
+              "rss": 40681472,
+              "heap": 4159488
+            },
+            {
+              "label": "dumling",
+              "peak": 42860544,
+              "rss": 42860544,
+              "heap": 4671488
+            },
+            {
+              "label": "dumrel",
+              "peak": 44040192,
+              "rss": 44040192,
+              "heap": 5101568
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46039040,
+              "rss": 46039040,
+              "heap": 5744640
+            },
+            {
+              "label": "dumgen",
+              "peak": 134283264,
+              "rss": 134283264,
+              "heap": 13443558
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 134283264,
+              "rss": 134283264,
+              "heap": 13443558
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 39960576,
+              "rss": 39960576,
+              "heap": 4257792
+            },
+            {
+              "label": "dumling",
+              "peak": 42696704,
+              "rss": 42696704,
+              "heap": 4753408
+            },
+            {
+              "label": "dumrel",
+              "peak": 44204032,
+              "rss": 44204032,
+              "heap": 5183488
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46071808,
+              "rss": 46071808,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 133693440,
+              "rss": 133693440,
+              "heap": 13404772
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 133693440,
+              "rss": 133693440,
+              "heap": 13404772
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40288256,
+              "rss": 40288256,
+              "heap": 4126720
+            },
+            {
+              "label": "dumling",
+              "peak": 42483712,
+              "rss": 42483712,
+              "heap": 4622336
+            },
+            {
+              "label": "dumrel",
+              "peak": 43581440,
+              "rss": 43581440,
+              "heap": 5052416
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45547520,
+              "rss": 45547520,
+              "heap": 5695488
+            },
+            {
+              "label": "dumgen",
+              "peak": 133332992,
+              "rss": 133332992,
+              "heap": 13433395
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 133332992,
+              "rss": 133332992,
+              "heap": 13433395
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40910848,
+              "rss": 40910848,
+              "heap": 4207616
+            },
+            {
+              "label": "dumling",
+              "peak": 43319296,
+              "rss": 43319296,
+              "heap": 4704256
+            },
+            {
+              "label": "dumrel",
+              "peak": 44335104,
+              "rss": 44335104,
+              "heap": 5134336
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46317568,
+              "rss": 46317568,
+              "heap": 5761024
+            },
+            {
+              "label": "dumgen",
+              "peak": 134807552,
+              "rss": 134807552,
+              "heap": 13446846
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 134807552,
+              "rss": 134807552,
+              "heap": 13446846
+            }
+          ],
+          "reused": true
+        }
+      ]
+    },
+    {
+      "variant": "current-built-packages",
+      "order": "dumling-first",
+      "stages": [
+        {
+          "label": "empty",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "currentRssMiB": 10.53125,
+          "heapMiB": 0.515625
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 5.265625,
+          "addedPeakMiB": 5.265625,
+          "currentRssMiB": 15.84375,
+          "heapMiB": 1.1630859375
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 7.609375,
+          "addedPeakMiB": 2.3125,
+          "currentRssMiB": 18.15625,
+          "heapMiB": 1.6826171875
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 32.359375,
+          "addedPeakMiB": 24.78125,
+          "currentRssMiB": 42.9375,
+          "heapMiB": 5.556640625
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 48.03125,
+          "addedPeakMiB": 15.828125,
+          "currentRssMiB": 58.640625,
+          "heapMiB": 7.849068641662598
+        },
+        {
+          "label": "repeat all imports",
+          "cumulativePeakMiB": 48.078125,
+          "addedPeakMiB": 0.03125,
+          "currentRssMiB": 58.671875,
+          "heapMiB": 7.849068641662598
+        }
+      ],
+      "allRepeatedImportsReused": true,
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11141120,
+              "rss": 11108352,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16580608,
+              "rss": 16580608,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 18972672,
+              "rss": 18972672,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45072384,
+              "rss": 45072384,
+              "heap": 5810176
+            },
+            {
+              "label": "dumgen",
+              "peak": 61472768,
+              "rss": 61472768,
+              "heap": 8241362
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 61489152,
+              "rss": 61489152,
+              "heap": 8241362
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19185664,
+              "rss": 19185664,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44941312,
+              "rss": 44941312,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 62832640,
+              "rss": 62832640,
+              "heap": 8230921
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 62849024,
+              "rss": 62849024,
+              "heap": 8230921
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19038208,
+              "rss": 19038208,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45023232,
+              "rss": 45023232,
+              "heap": 5810176
+            },
+            {
+              "label": "dumgen",
+              "peak": 61423616,
+              "rss": 61423616,
+              "heap": 8216658
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 61472768,
+              "rss": 61472768,
+              "heap": 8216658
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16498688,
+              "rss": 16498688,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 18874368,
+              "rss": 18874368,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45350912,
+              "rss": 45350912,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 60817408,
+              "rss": 60817408,
+              "heap": 8213562
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 60932096,
+              "rss": 60932096,
+              "heap": 8213562
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11124736,
+              "rss": 11091968,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16646144,
+              "rss": 16646144,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19415040,
+              "rss": 19398656,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45023232,
+              "rss": 45023232,
+              "heap": 5859328
+            },
+            {
+              "label": "dumgen",
+              "peak": 63143936,
+              "rss": 63143936,
+              "heap": 8240895
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 63160320,
+              "rss": 63160320,
+              "heap": 8240895
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11206656,
+              "rss": 11173888,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16580608,
+              "rss": 16580608,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19005440,
+              "rss": 19005440,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 44892160,
+              "rss": 44892160,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 61489152,
+              "rss": 61489152,
+              "heap": 8230345
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 61521920,
+              "rss": 61521920,
+              "heap": 8230345
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11075584,
+              "rss": 11042816,
+              "heap": 540672
+            },
+            {
+              "label": "dumling",
+              "peak": 16613376,
+              "rss": 16613376,
+              "heap": 1219584
+            },
+            {
+              "label": "dumrel",
+              "peak": 19169280,
+              "rss": 19152896,
+              "heap": 1764352
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45252608,
+              "rss": 45252608,
+              "heap": 5826560
+            },
+            {
+              "label": "dumgen",
+              "peak": 62767104,
+              "rss": 62767104,
+              "heap": 8228498
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 62816256,
+              "rss": 62816256,
+              "heap": 8228498
+            }
+          ],
+          "reused": true
+        }
+      ]
+    },
+    {
+      "variant": "current-built-packages",
+      "order": "effect-first",
+      "stages": [
+        {
+          "label": "empty",
+          "cumulativePeakMiB": 0,
+          "addedPeakMiB": 0,
+          "currentRssMiB": 10.53125,
+          "heapMiB": 0.515625
+        },
+        {
+          "label": "effect/Effect",
+          "cumulativePeakMiB": 28.3125,
+          "addedPeakMiB": 28.3125,
+          "currentRssMiB": 38.859375,
+          "heapMiB": 3.966796875
+        },
+        {
+          "label": "dumling",
+          "cumulativePeakMiB": 30.4375,
+          "addedPeakMiB": 2.125,
+          "currentRssMiB": 40.984375,
+          "heapMiB": 4.455078125
+        },
+        {
+          "label": "dumrel",
+          "cumulativePeakMiB": 31.421875,
+          "addedPeakMiB": 1.015625,
+          "currentRssMiB": 42,
+          "heapMiB": 4.865234375
+        },
+        {
+          "label": "dumdict/runtime",
+          "cumulativePeakMiB": 33.28125,
+          "addedPeakMiB": 1.859375,
+          "currentRssMiB": 43.859375,
+          "heapMiB": 5.4638671875
+        },
+        {
+          "label": "dumgen",
+          "cumulativePeakMiB": 50.40625,
+          "addedPeakMiB": 17.015625,
+          "currentRssMiB": 60.96875,
+          "heapMiB": 7.844596862792969
+        },
+        {
+          "label": "repeat all imports",
+          "cumulativePeakMiB": 50.421875,
+          "addedPeakMiB": 0.015625,
+          "currentRssMiB": 60.984375,
+          "heapMiB": 7.844596862792969
+        }
+      ],
+      "allRepeatedImportsReused": true,
+      "samples": [
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40747008,
+              "rss": 40747008,
+              "heap": 4125696
+            },
+            {
+              "label": "dumling",
+              "peak": 42975232,
+              "rss": 42975232,
+              "heap": 4622336
+            },
+            {
+              "label": "dumrel",
+              "peak": 43974656,
+              "rss": 43974656,
+              "heap": 5052416
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45907968,
+              "rss": 45907968,
+              "heap": 5695488
+            },
+            {
+              "label": "dumgen",
+              "peak": 63766528,
+              "rss": 63766528,
+              "heap": 8255384
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 63815680,
+              "rss": 63815680,
+              "heap": 8255384
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11108352,
+              "rss": 11075584,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 41058304,
+              "rss": 41058304,
+              "heap": 4126720
+            },
+            {
+              "label": "dumling",
+              "peak": 43270144,
+              "rss": 43270144,
+              "heap": 4622336
+            },
+            {
+              "label": "dumrel",
+              "peak": 44335104,
+              "rss": 44335104,
+              "heap": 5052416
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46268416,
+              "rss": 46268416,
+              "heap": 5695488
+            },
+            {
+              "label": "dumgen",
+              "peak": 64110592,
+              "rss": 64110592,
+              "heap": 8233766
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 64126976,
+              "rss": 64126976,
+              "heap": 8233766
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11091968,
+              "rss": 11059200,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40419328,
+              "rss": 40419328,
+              "heap": 4159488
+            },
+            {
+              "label": "dumling",
+              "peak": 42598400,
+              "rss": 42598400,
+              "heap": 4671488
+            },
+            {
+              "label": "dumrel",
+              "peak": 43679744,
+              "rss": 43679744,
+              "heap": 5101568
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45842432,
+              "rss": 45842432,
+              "heap": 5728256
+            },
+            {
+              "label": "dumgen",
+              "peak": 63045632,
+              "rss": 63045632,
+              "heap": 8213481
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 63062016,
+              "rss": 63062016,
+              "heap": 8213481
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 41238528,
+              "rss": 41238528,
+              "heap": 4192256
+            },
+            {
+              "label": "dumling",
+              "peak": 43483136,
+              "rss": 43483136,
+              "heap": 4705280
+            },
+            {
+              "label": "dumrel",
+              "peak": 44449792,
+              "rss": 44449792,
+              "heap": 5135360
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46530560,
+              "rss": 46530560,
+              "heap": 5762048
+            },
+            {
+              "label": "dumgen",
+              "peak": 64536576,
+              "rss": 64520192,
+              "heap": 8252921
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 64651264,
+              "rss": 64651264,
+              "heap": 8252921
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11091968,
+              "rss": 11059200,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40681472,
+              "rss": 40681472,
+              "heap": 4207616
+            },
+            {
+              "label": "dumling",
+              "peak": 42876928,
+              "rss": 42876928,
+              "heap": 4704256
+            },
+            {
+              "label": "dumrel",
+              "peak": 44040192,
+              "rss": 44040192,
+              "heap": 5134336
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45989888,
+              "rss": 45989888,
+              "heap": 5761024
+            },
+            {
+              "label": "dumgen",
+              "peak": 64241664,
+              "rss": 64241664,
+              "heap": 8220697
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 64258048,
+              "rss": 64258048,
+              "heap": 8220697
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11059200,
+              "rss": 11026432,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40517632,
+              "rss": 40517632,
+              "heap": 4143104
+            },
+            {
+              "label": "dumling",
+              "peak": 42762240,
+              "rss": 42762240,
+              "heap": 4638720
+            },
+            {
+              "label": "dumrel",
+              "peak": 43827200,
+              "rss": 43827200,
+              "heap": 5085184
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 45776896,
+              "rss": 45776896,
+              "heap": 5729280
+            },
+            {
+              "label": "dumgen",
+              "peak": 63455232,
+              "rss": 63455232,
+              "heap": 8225656
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 63471616,
+              "rss": 63471616,
+              "heap": 8225656
+            }
+          ],
+          "reused": true
+        },
+        {
+          "points": [
+            {
+              "label": "empty",
+              "peak": 11075584,
+              "rss": 11042816,
+              "heap": 540672
+            },
+            {
+              "label": "effect/Effect",
+              "peak": 40992768,
+              "rss": 40992768,
+              "heap": 4175872
+            },
+            {
+              "label": "dumling",
+              "peak": 43220992,
+              "rss": 43220992,
+              "heap": 4688896
+            },
+            {
+              "label": "dumrel",
+              "peak": 44285952,
+              "rss": 44285952,
+              "heap": 5118976
+            },
+            {
+              "label": "dumdict/runtime",
+              "peak": 46268416,
+              "rss": 46268416,
+              "heap": 5762048
+            },
+            {
+              "label": "dumgen",
+              "peak": 63930368,
+              "rss": 63930368,
+              "heap": 8219529
+            },
+            {
+              "label": "repeat all imports",
+              "peak": 63946752,
+              "rss": 63946752,
+              "heap": 8219529
+            }
+          ],
+          "reused": true
+        }
+      ]
+    }
+  ]
+}
