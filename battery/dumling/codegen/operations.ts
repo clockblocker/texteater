@@ -1,4 +1,4 @@
-import type { ZodValidationOperationRegistration } from "codegen";
+import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
 	emojiDescriptionError,
 	germanPronounCoreError,

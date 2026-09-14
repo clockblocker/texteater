@@ -46,7 +46,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/runtime.ts src/memory.ts src/relations.ts src/pending.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/runtime.ts src/memory.ts src/relations.ts src/pending.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
@@ -66,7 +66,8 @@
 		"dumrel": "workspace:^",
 		"zod": "^4.4.0",
 		"effect": "3.22.1",
-		"dumling": "workspace:^"
+		"dumling": "workspace:^",
+		"dumval": "workspace:^"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

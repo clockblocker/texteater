@@ -1,11 +1,10 @@
+import type * as Dumling from "dumling/types";
 import {
-	type Constraint,
+	type CompiledValidationRegistry,
 	ParsingError,
 	type ParsingIssue,
-	parseValidationArtifact,
-	type ValidationArtifact,
-} from "common-utils";
-import type * as Dumling from "dumling/types";
+	parseCompiledValidation,
+} from "dumval/runtime";
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,
@@ -19,7 +18,7 @@ import type {
 	ReadingPatchOp,
 	SurfaceEntry,
 } from "../domain-types.js";
-import { encodedDumdictValidationArtifacts } from "../generated/validation-artifacts.js";
+import { validationRegistry } from "../generated/linked-validation.js";
 import { dumdictValidationOperations } from "./validation-operations.js";
 import type {
 	DumdictValidationRouteKey,
@@ -35,18 +34,7 @@ export function unwrapDumdictParse<T>(parsed: Parsed<T>): T {
 	if (parsed instanceof ParsingError) throw parsed;
 	return parsed;
 }
-const registry: {
-	version: 1;
-	roots: Record<string, Constraint>;
-	definitions: Record<string, Constraint>;
-} = JSON.parse(encodedDumdictValidationArtifacts);
-export function decodeDumdictValidationArtifact<
-	Key extends DumdictValidationRouteKey,
->(key: Key): ValidationArtifact<DumdictValidationRouteOutput<Key>> {
-	const root = registry.roots[key];
-	if (!root) throw Error(`Unknown Dumdict validation route ${key}`);
-	return { version: 1, root, definitions: registry.definitions };
-}
+const registry: CompiledValidationRegistry = validationRegistry;
 function parseRoute<T>(
 	input: unknown,
 	key: DumdictValidationRouteKey | InternalDumdictValidationRouteKey,
@@ -62,8 +50,9 @@ function parseRoute<T>(
 		]);
 	const recursiveIssue = recursiveInputIssueForRoute(input, key);
 	if (recursiveIssue) return new ParsingError([recursiveIssue]);
-	return parseValidationArtifact<T>(
-		{ version: 1, root, definitions: registry.definitions },
+	return parseCompiledValidation<T>(
+		registry,
+		key,
 		input,
 		dumdictValidationOperations,
 	);

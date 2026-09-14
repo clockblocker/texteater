@@ -123,6 +123,29 @@ test("dangling dependencies fail generation rather than weaken validation", () =
 	).toThrow("Missing definition missing");
 });
 
+test("compact shared block identifiers preserve the same decoding and validation", async () => {
+	const generated = emitSplitRegistry(fixture, (name) => name, true);
+	const js = new Bun.Transpiler({ loader: "ts" }).transformSync(
+		generated.source,
+	);
+	const { operationRegistry: registry, operationRegistryState: state } =
+		await import(
+			`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`
+		);
+	const first = registry.roots.first;
+	expect(
+		parseValidationArtifact<unknown>(
+			{ version: 1, root: first, definitions: registry.definitions },
+			{ value: "ok" },
+		),
+	).toEqual({ value: "ok" });
+	expect(state().blocks).toEqual(["0"]);
+	const shared = registry.definitions.shared;
+	void registry.roots.second;
+	expect(registry.definitions.shared).toBe(shared);
+	expect(state().blocks).toEqual(["0"]);
+});
+
 test("shared buckets exclude definitions used only by unrelated operations", async () => {
 	const registry: Registry = {
 		roots: {

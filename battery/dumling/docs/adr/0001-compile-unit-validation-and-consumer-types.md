@@ -20,7 +20,8 @@ retain their own tags. Expected coordinates reject mismatches.
 
 This replaces ADR 0014's parser inventory and ADR 0013's direct value-or-error
 return convention for Dumling. Zod remains the authoring
-source and the compiled artifacts remain private, as required by ADR 0013.
+source. ADR 0013 now permits a readonly compiled provider for downstream
+validation; `parseUnit` and that provider share the same generated rules.
 
 Surface has no Citation/Inflection type branch. A route with Inflectional
 Features exposes a nullable `inflectionalFeatures` field. Omitting the

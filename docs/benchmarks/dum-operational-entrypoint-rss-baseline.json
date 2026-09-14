@@ -4,96 +4,162 @@
 		"metric": "Median of paired final peak RSS minus post-Effect peak RSS; sequential imports, no forced GC",
 		"limitations": "Local published-package import replay, not deployed tf-demo memory; excludes provider SDK, app initialization, and operations. Stage medians need not sum to the total median.",
 		"budgetBytes": 31457280,
-		"addedPeakMedianBytes": 22446080,
+		"addedPeakMedianBytes": 12828672,
 		"passed": true,
 		"violations": [],
 		"stages": [
 			{
 				"specifier": "dumling",
-				"addedPeakMedianBytes": 2179072,
-				"cumulativePeakMedianBytes": 2179072
+				"addedPeakMedianBytes": 2572288,
+				"cumulativePeakMedianBytes": 2572288
 			},
 			{
 				"specifier": "dumrel",
-				"addedPeakMedianBytes": 1081344,
-				"cumulativePeakMedianBytes": 3325952
+				"addedPeakMedianBytes": 360448,
+				"cumulativePeakMedianBytes": 3080192
 			},
 			{
 				"specifier": "dumdict/runtime",
-				"addedPeakMedianBytes": 1589248,
-				"cumulativePeakMedianBytes": 4866048
+				"addedPeakMedianBytes": 983040,
+				"cumulativePeakMedianBytes": 4079616
 			},
 			{
 				"specifier": "dumgen",
-				"addedPeakMedianBytes": 17530880,
-				"cumulativePeakMedianBytes": 22446080
+				"addedPeakMedianBytes": 8536064,
+				"cumulativePeakMedianBytes": 12828672
 			}
 		],
 		"samples": [
 			[
 				{
 					"specifier": "effect/Effect",
-					"peakBytes": 40927232
+					"peakBytes": 40697856
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 43220992
+					"peakBytes": 43040768
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 44253184
+					"peakBytes": 43352064
 				},
 				{
 					"specifier": "dumdict/runtime",
-					"peakBytes": 45793280
+					"peakBytes": 45400064
 				},
 				{
 					"specifier": "dumgen",
-					"peakBytes": 63209472
+					"peakBytes": 53641216
 				}
 			],
 			[
 				{
 					"specifier": "effect/Effect",
-					"peakBytes": 41238528
+					"peakBytes": 40894464
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 43335680
+					"peakBytes": 43466752
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 44449792
+					"peakBytes": 44171264
 				},
 				{
 					"specifier": "dumdict/runtime",
-					"peakBytes": 46006272
+					"peakBytes": 44941312
 				},
 				{
 					"specifier": "dumgen",
-					"peakBytes": 64028672
+					"peakBytes": 54181888
 				}
 			],
 			[
 				{
 					"specifier": "effect/Effect",
-					"peakBytes": 41238528
+					"peakBytes": 40894464
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 43384832
+					"peakBytes": 43483136
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 44580864
+					"peakBytes": 44138496
 				},
 				{
 					"specifier": "dumdict/runtime",
-					"peakBytes": 46301184
+					"peakBytes": 44974080
 				},
 				{
 					"specifier": "dumgen",
-					"peakBytes": 62849024
+					"peakBytes": 53936128
+				}
+			],
+			[
+				{
+					"specifier": "effect/Effect",
+					"peakBytes": 40665088
+				},
+				{
+					"specifier": "dumling",
+					"peakBytes": 42926080
+				},
+				{
+					"specifier": "dumrel",
+					"peakBytes": 43286528
+				},
+				{
+					"specifier": "dumdict/runtime",
+					"peakBytes": 45154304
+				},
+				{
+					"specifier": "dumgen",
+					"peakBytes": 53067776
+				}
+			],
+			[
+				{
+					"specifier": "effect/Effect",
+					"peakBytes": 40943616
+				},
+				{
+					"specifier": "dumling",
+					"peakBytes": 43302912
+				},
+				{
+					"specifier": "dumrel",
+					"peakBytes": 43646976
+				},
+				{
+					"specifier": "dumdict/runtime",
+					"peakBytes": 44630016
+				},
+				{
+					"specifier": "dumgen",
+					"peakBytes": 53723136
+				}
+			],
+			[
+				{
+					"specifier": "effect/Effect",
+					"peakBytes": 40665088
+				},
+				{
+					"specifier": "dumling",
+					"peakBytes": 43548672
+				},
+				{
+					"specifier": "dumrel",
+					"peakBytes": 43958272
+				},
+				{
+					"specifier": "dumdict/runtime",
+					"peakBytes": 44957696
+				},
+				{
+					"specifier": "dumgen",
+					"peakBytes": 53493760
 				}
 			],
 			[
@@ -103,92 +169,26 @@
 				},
 				{
 					"specifier": "dumling",
-					"peakBytes": 43057152
+					"peakBytes": 43515904
 				},
 				{
 					"specifier": "dumrel",
-					"peakBytes": 44105728
+					"peakBytes": 43859968
 				},
 				{
 					"specifier": "dumdict/runtime",
-					"peakBytes": 45694976
+					"peakBytes": 44826624
 				},
 				{
 					"specifier": "dumgen",
-					"peakBytes": 63225856
-				}
-			],
-			[
-				{
-					"specifier": "effect/Effect",
-					"peakBytes": 41091072
-				},
-				{
-					"specifier": "dumling",
-					"peakBytes": 43155456
-				},
-				{
-					"specifier": "dumrel",
-					"peakBytes": 44220416
-				},
-				{
-					"specifier": "dumdict/runtime",
-					"peakBytes": 45875200
-				},
-				{
-					"specifier": "dumgen",
-					"peakBytes": 62226432
-				}
-			],
-			[
-				{
-					"specifier": "effect/Effect",
-					"peakBytes": 40501248
-				},
-				{
-					"specifier": "dumling",
-					"peakBytes": 42795008
-				},
-				{
-					"specifier": "dumrel",
-					"peakBytes": 44007424
-				},
-				{
-					"specifier": "dumdict/runtime",
-					"peakBytes": 45531136
-				},
-				{
-					"specifier": "dumgen",
-					"peakBytes": 63160320
-				}
-			],
-			[
-				{
-					"specifier": "effect/Effect",
-					"peakBytes": 40583168
-				},
-				{
-					"specifier": "dumling",
-					"peakBytes": 42762240
-				},
-				{
-					"specifier": "dumrel",
-					"peakBytes": 43843584
-				},
-				{
-					"specifier": "dumdict/runtime",
-					"peakBytes": 45449216
-				},
-				{
-					"specifier": "dumgen",
-					"peakBytes": 63356928
+					"peakBytes": 53215232
 				}
 			]
 		]
 	},
 	"baseline": {
-		"medianBytes": 17154048,
-		"samplesBytes": [17203200, 17170432, 17121280, 17154048, 17154048]
+		"medianBytes": 17039360,
+		"samplesBytes": [16924672, 17186816, 17039360, 17121280, 16728064]
 	},
 	"contract": {
 		"baseline": "empty imported Bun module",
@@ -206,28 +206,32 @@
 				"description": "parse unit"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 3031040,
-				"deltaMiB": 2.891,
-				"medianBytes": 20185088,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 5423104,
+				"deltaMiB": 5.172,
+				"medianBytes": 22462464,
 				"samplesBytes": [
-					20135936, 20152320, 20217856, 20185088, 20185088
+					22347776, 22724608, 22462464, 22740992, 22233088
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 3620864,
-				"deltaMiB": 3.453,
-				"medianBytes": 20774912,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 6094848,
+				"deltaMiB": 5.813,
+				"medianBytes": 23134208,
 				"samplesBytes": [
-					20791296, 20742144, 20791296, 20774912, 20774912
+					23347200, 23134208, 23052288, 23019520, 23166976
 				]
 			},
 			"reachability": {
 				"externalPackages": ["emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumling"]
+				"workspaceEntrypoints": [
+					"common-utils",
+					"dumling",
+					"dumval/runtime"
+				]
 			}
 		},
 		{
@@ -244,21 +248,21 @@
 				"description": "validate feature bag"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
+				"baselineMedianBytes": 17039360,
 				"deltaBytes": 1589248,
 				"deltaMiB": 1.516,
-				"medianBytes": 18743296,
+				"medianBytes": 18628608,
 				"samplesBytes": [
-					18743296, 18759680, 18710528, 18726912, 18759680
+					18628608, 18595840, 18644992, 18595840, 18628608
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 1818624,
-				"deltaMiB": 1.734,
-				"medianBytes": 18972672,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 1900544,
+				"deltaMiB": 1.813,
+				"medianBytes": 18939904,
 				"samplesBytes": [
-					18972672, 18939904, 18939904, 18972672, 18972672
+					18939904, 18939904, 18939904, 18939904, 18907136
 				]
 			},
 			"reachability": {
@@ -287,21 +291,21 @@
 				"description": "knowledge projection"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 5210112,
-				"deltaMiB": 4.969,
-				"medianBytes": 22364160,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 7143424,
+				"deltaMiB": 6.813,
+				"medianBytes": 24182784,
 				"samplesBytes": [
-					22708224, 22298624, 22429696, 22364160, 22265856
+					25034752, 24182784, 24952832, 24002560, 23707648
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 13582336,
-				"deltaMiB": 12.953,
-				"medianBytes": 30736384,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 15581184,
+				"deltaMiB": 14.859,
+				"medianBytes": 32620544,
 				"samplesBytes": [
-					31080448, 30605312, 30982144, 30736384, 30670848
+					32620544, 32440320, 32800768, 32735232, 31899648
 				]
 			},
 			"reachability": {
@@ -311,8 +315,10 @@
 				"workspaceEntrypoints": [
 					"common-utils",
 					"dumling",
+					"dumling/compiled-validation",
 					"dumling/validation",
-					"dumrel"
+					"dumrel",
+					"dumval/runtime"
 				]
 			}
 		},
@@ -340,21 +346,21 @@
 				"description": "parse record"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 28590080,
-				"deltaMiB": 27.266,
-				"medianBytes": 45744128,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 27754496,
+				"deltaMiB": 26.469,
+				"medianBytes": 44793856,
 				"samplesBytes": [
-					48955392, 45744128, 45793280, 45662208, 45334528
+					44154880, 44793856, 45154304, 44220416, 45383680
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 28164096,
-				"deltaMiB": 26.859,
-				"medianBytes": 45318144,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 27787264,
+				"deltaMiB": 26.5,
+				"medianBytes": 44826624,
 				"samplesBytes": [
-					45858816, 45760512, 45318144, 44744704, 42991616
+					44826624, 45432832, 43728896, 46301184, 44826624
 				]
 			},
 			"reachability": {
@@ -366,8 +372,11 @@
 					"common-utils/workflow",
 					"dumdict",
 					"dumling",
+					"dumling/compiled-validation",
 					"dumling/validation",
-					"dumrel"
+					"dumrel",
+					"dumrel/compiled-validation",
+					"dumval/runtime"
 				]
 			}
 		},
@@ -385,21 +394,21 @@
 				"description": "parse record"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 28213248,
-				"deltaMiB": 26.906,
-				"medianBytes": 45367296,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 27312128,
+				"deltaMiB": 26.047,
+				"medianBytes": 44351488,
 				"samplesBytes": [
-					45367296, 44646400, 45907968, 45350912, 45613056
+					43204608, 43958272, 44859392, 44351488, 44466176
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 29048832,
-				"deltaMiB": 27.703,
-				"medianBytes": 46202880,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 27443200,
+				"deltaMiB": 26.172,
+				"medianBytes": 44482560,
 				"samplesBytes": [
-					46202880, 45826048, 45744128, 46219264, 47661056
+					43515904, 45236224, 44482560, 44417024, 45170688
 				]
 			},
 			"reachability": {
@@ -411,8 +420,11 @@
 					"common-utils/workflow",
 					"dumdict/runtime",
 					"dumling",
+					"dumling/compiled-validation",
 					"dumling/validation",
-					"dumrel"
+					"dumrel",
+					"dumrel/compiled-validation",
+					"dumval/runtime"
 				]
 			}
 		},
@@ -425,21 +437,21 @@
 				"description": "project relations"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 5914624,
-				"deltaMiB": 5.641,
-				"medianBytes": 23068672,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 7782400,
+				"deltaMiB": 7.422,
+				"medianBytes": 24821760,
 				"samplesBytes": [
-					22970368, 23314432, 23429120, 22790144, 23068672
+					25116672, 25001984, 24526848, 24821760, 24182784
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 6488064,
-				"deltaMiB": 6.188,
-				"medianBytes": 23642112,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 8421376,
+				"deltaMiB": 8.031,
+				"medianBytes": 25460736,
 				"samplesBytes": [
-					23101440, 23560192, 23642112, 23724032, 23822336
+					24854528, 25460736, 25575424, 25477120, 24838144
 				]
 			},
 			"reachability": {
@@ -450,8 +462,10 @@
 					"common-utils",
 					"dumdict/relations",
 					"dumling",
+					"dumling/compiled-validation",
 					"dumling/validation",
-					"dumrel"
+					"dumrel",
+					"dumval/runtime"
 				]
 			}
 		},
@@ -464,28 +478,33 @@
 				"description": "pending identity"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 3588096,
-				"deltaMiB": 3.422,
-				"medianBytes": 20742144,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 5521408,
+				"deltaMiB": 5.266,
+				"medianBytes": 22560768,
 				"samplesBytes": [
-					20709376, 20742144, 20709376, 20774912, 20742144
+					22495232, 22347776, 22560768, 22953984, 22642688
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 4079616,
-				"deltaMiB": 3.891,
-				"medianBytes": 21233664,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 6111232,
+				"deltaMiB": 5.828,
+				"medianBytes": 23150592,
 				"samplesBytes": [
-					21331968, 21168128, 21233664, 21233664, 21315584
+					22724608, 23265280, 23150592, 22577152, 23527424
 				]
 			},
 			"reachability": {
 				"externalPackages": ["emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumdict/pending", "dumling"]
+				"workspaceEntrypoints": [
+					"common-utils",
+					"dumdict/pending",
+					"dumling",
+					"dumval/runtime"
+				]
 			}
 		},
 		{
@@ -502,21 +521,21 @@
 				"description": "session storage"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 26312704,
-				"deltaMiB": 25.094,
-				"medianBytes": 43466752,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 25051136,
+				"deltaMiB": 23.891,
+				"medianBytes": 42090496,
 				"samplesBytes": [
-					42991616, 43745280, 43827200, 43286528, 43466752
+					43040768, 42090496, 42205184, 41713664, 41582592
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 26673152,
-				"deltaMiB": 25.438,
-				"medianBytes": 43827200,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 26132480,
+				"deltaMiB": 24.922,
+				"medianBytes": 43171840,
 				"samplesBytes": [
-					43892736, 43614208, 42631168, 43827200, 43991040
+					39174144, 42991616, 43171840, 44040192, 44810240
 				]
 			},
 			"reachability": {
@@ -527,8 +546,10 @@
 					"common-utils",
 					"dumdict/memory",
 					"dumling",
+					"dumling/compiled-validation",
 					"dumling/validation",
-					"dumrel"
+					"dumrel",
+					"dumval/runtime"
 				]
 			}
 		},
@@ -541,21 +562,21 @@
 				"description": "resolve supplied target"
 			},
 			"importOnly": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 41304064,
-				"deltaMiB": 39.391,
-				"medianBytes": 58458112,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 34537472,
+				"deltaMiB": 32.938,
+				"medianBytes": 51576832,
 				"samplesBytes": [
-					58392576, 58343424, 58556416, 58458112, 59621376
+					51101696, 51363840, 51576832, 51838976, 51642368
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 17154048,
-				"deltaBytes": 44384256,
-				"deltaMiB": 42.328,
-				"medianBytes": 61538304,
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 38420480,
+				"deltaMiB": 36.641,
+				"medianBytes": 55459840,
 				"samplesBytes": [
-					61538304, 61898752, 60620800, 62226432, 61456384
+					55459840, 54935552, 55574528, 54902784, 55590912
 				]
 			},
 			"reachability": {
@@ -566,8 +587,11 @@
 					"common-utils",
 					"dumgen",
 					"dumling",
+					"dumling/compiled-validation",
 					"dumling/validation",
-					"dumrel"
+					"dumrel",
+					"dumrel/compiled-validation",
+					"dumval/runtime"
 				]
 			}
 		},
@@ -590,14 +614,130 @@
 			"specifier": "dumgen/package.json",
 			"classification": "metadata",
 			"rationale": "Package metadata."
+		},
+		{
+			"specifier": "dumling/compiled-validation",
+			"classification": "operational",
+			"rationale": "Shared compiled validation; runtime must remain schema-free.",
+			"operation": {
+				"id": "dumling.compiled-validation",
+				"description": "Validate through the shared rule protocol"
+			},
+			"importOnly": {
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 3244032,
+				"deltaMiB": 3.094,
+				"medianBytes": 20283392,
+				"samplesBytes": [
+					20152320, 20283392, 20267008, 20398080, 20348928
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 5013504,
+				"deltaMiB": 4.781,
+				"medianBytes": 22052864,
+				"samplesBytes": [
+					22036480, 22003712, 22528000, 22052864, 22495232
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": [
+					"dumling/compiled-validation",
+					"dumval/runtime"
+				]
+			}
+		},
+		{
+			"specifier": "dumrel/compiled-validation",
+			"classification": "operational",
+			"rationale": "Shared compiled validation; runtime must remain schema-free.",
+			"operation": {
+				"id": "dumrel.compiled-validation",
+				"description": "Validate through the shared rule protocol"
+			},
+			"importOnly": {
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 4390912,
+				"deltaMiB": 4.188,
+				"medianBytes": 21430272,
+				"samplesBytes": [
+					21446656, 21430272, 21430272, 21381120, 21463040
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 6062080,
+				"deltaMiB": 5.781,
+				"medianBytes": 23101440,
+				"samplesBytes": [
+					23101440, 23068672, 23085056, 23298048, 23117824
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": [
+					"dumling/compiled-validation",
+					"dumrel/compiled-validation",
+					"dumval/runtime"
+				]
+			}
+		},
+		{
+			"specifier": "dumval/runtime",
+			"classification": "operational",
+			"rationale": "Shared compiled validation; runtime must remain schema-free.",
+			"operation": {
+				"id": "dumval.validate",
+				"description": "Validate through the shared rule protocol"
+			},
+			"importOnly": {
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 1294336,
+				"deltaMiB": 1.234,
+				"medianBytes": 18333696,
+				"samplesBytes": [
+					18317312, 18350080, 18284544, 18448384, 18333696
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 17039360,
+				"deltaBytes": 2031616,
+				"deltaMiB": 1.938,
+				"medianBytes": 19070976,
+				"samplesBytes": [
+					19070976, 19120128, 19136512, 19021824, 19021824
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumval/runtime"]
+			}
+		},
+		{
+			"specifier": "dumval/compiler",
+			"classification": "schema-authoring-exempt",
+			"rationale": "Build-time Zod compilation and rule linking."
+		},
+		{
+			"specifier": "dumval/package.json",
+			"classification": "metadata",
+			"rationale": "Package metadata."
 		}
 	],
 	"environment": {
 		"arch": "arm64",
 		"bunVersion": "1.4.2",
-		"capturedAt": "2026-09-14T04:13:20.199Z",
+		"capturedAt": "2026-09-14T05:58:24.592Z",
 		"packageSourcesDirty": true,
 		"platform": "darwin",
-		"sourceCommit": "eb7ebd84b973ea7e586f591117e06d2bcfc81aca"
+		"sourceCommit": "33a8cbd70e0db77f6383f504729442a18cd2af83"
 	}
 }

@@ -30,6 +30,7 @@ export const DUM_PACKAGE_PATHS = {
 	dumrel: "dumrel",
 	dumdict: "dumdict",
 	dumgen: "dumgen",
+	dumval: "dumval",
 } as const;
 export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 	{
@@ -179,6 +180,46 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 	},
 	{
 		specifier: "dumgen/package.json",
+		classification: "metadata",
+		rationale: "Package metadata.",
+	},
+	{
+		specifier: "dumling/compiled-validation",
+		classification: "operational",
+		rationale:
+			"Shared compiled validation; runtime must remain schema-free.",
+		operation: {
+			id: "dumling.compiled-validation",
+			description: "Validate through the shared rule protocol",
+		},
+	},
+	{
+		specifier: "dumrel/compiled-validation",
+		classification: "operational",
+		rationale:
+			"Shared compiled validation; runtime must remain schema-free.",
+		operation: {
+			id: "dumrel.compiled-validation",
+			description: "Validate through the shared rule protocol",
+		},
+	},
+	{
+		specifier: "dumval/runtime",
+		classification: "operational",
+		rationale:
+			"Shared compiled validation; runtime must remain schema-free.",
+		operation: {
+			id: "dumval.validate",
+			description: "Validate through the shared rule protocol",
+		},
+	},
+	{
+		specifier: "dumval/compiler",
+		classification: "schema-authoring-exempt",
+		rationale: "Build-time Zod compilation and rule linking.",
+	},
+	{
+		specifier: "dumval/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",
 	},

@@ -7,7 +7,7 @@ import { z } from "zod";
 import {
 	compileZodValidationArtifacts,
 	emitValidationOutputTypes,
-} from "../src/index.js";
+} from "../src/compiler.js";
 
 test("emitted types preserve recursive, optional, tuple, and empty-object values", async () => {
 	const text = z.string();

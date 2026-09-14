@@ -24,6 +24,48 @@ export async function runRepresentativeOperation(
 	module: PublicModule,
 ): Promise<void> {
 	switch (id) {
+		case "dumval.validate": {
+			assert.equal(
+				call(
+					module,
+					"parseValidationArtifact",
+					{ version: 1, root: ["string"] },
+					"value",
+				),
+				"value",
+			);
+			assert.ok(
+				call(
+					module,
+					"parseValidationArtifact",
+					{ version: 1, root: ["string"] },
+					42,
+				) instanceof (module.ParsingError as typeof Error),
+			);
+			break;
+		}
+		case "dumling.compiled-validation":
+		case "dumrel.compiled-validation": {
+			const { parseCompiledValidation, ParsingError } = await import(
+				"dumval/runtime"
+			);
+			const registry =
+				module.validationRegistry as import("dumval/runtime").CompiledValidationRegistry;
+			const { validationOperations } = await import("dumling/validation");
+			const key = id.startsWith("dumling")
+				? "Lemma/de/Lexeme/NOUN"
+				: "readingKnowledge";
+			const parsed = parseCompiledValidation(
+				registry,
+				key,
+				id.startsWith("dumling") ? lemma : {},
+				validationOperations,
+			);
+			assert.ok(!(parsed instanceof ParsingError));
+			assert.equal(Object.isFrozen(registry), true);
+			break;
+		}
+
 		case "dumling.parse-unit":
 			assert.equal(call(module, "parseUnit", lemma).success, true);
 			break;

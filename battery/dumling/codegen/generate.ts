@@ -1,6 +1,9 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { compileZodValidationArtifacts } from "codegen";
+import {
+	compileZodValidationArtifacts,
+	emitLinkedValidationRegistry,
+} from "dumval/compiler";
 import { UnitKindSchema } from "../src/schemas/units.js";
 import { validationOperations } from "../src/validation/operations.js";
 import { outputType } from "./emit-types.js";
@@ -41,6 +44,9 @@ export type UnitRoute={ [R in keyof UnitMap]: Pick<UnitMap[R]["Lemma"],"language
 export type ParsedUnit<R extends UnitRoute=UnitRoute>=R extends UnitRoute ? { [U in R["unitKind"]]: {unitKind:U;language:R["language"];family:R["family"];kind:R["kind"];value:UnitMap[Extract<\`\${R["language"]}/\${R["family"]}/\${R["kind"]}\`,keyof UnitMap>][U]} }[R["unitKind"]] : never;
 `;
 const outputs = {
+	"linked-validation.ts": emitLinkedValidationRegistry([
+		{ owner: "dumling", registry: compiled },
+	]),
 	"units.ts": types,
 	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
 	"vocabulary.ts": `// Generated from canonical Zod enums. Run bun run generate.\nexport const UnitKind = ${JSON.stringify(UnitKindSchema.enum)} as const;\nexport type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];\n`,

@@ -1,12 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import {
 	compileZodValidationArtifacts,
+	emitLinkedValidationRegistry,
 	emitValidationOutputTypes,
-} from "codegen";
+} from "dumval/compiler";
 import { z } from "zod";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
 import { loadRoutes } from "../../dumling/codegen/routes.js";
+import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
+import { encodedValidation as dumrelValidation } from "../../dumrel/src/generated/validation.js";
 import { normalizeText } from "../../dumrel/src/semantics.js";
 
 const check = process.argv.includes("--check");
@@ -71,6 +74,14 @@ const operations = [
 	},
 ] as const;
 const compiled = compileZodValidationArtifacts({ schemas, operations });
+await emit(
+	"linked-validation.ts",
+	emitLinkedValidationRegistry([
+		{ owner: "dumling", registry: JSON.parse(dumlingValidation) },
+		{ owner: "dumrel", registry: JSON.parse(dumrelValidation) },
+		{ owner: "dumgen", registry: compiled },
+	]),
+);
 await emit(
 	"validation.ts",
 	`// Generated canonical validation.\nexport const encodedValidation:string=${JSON.stringify(JSON.stringify(compiled))};\n`,

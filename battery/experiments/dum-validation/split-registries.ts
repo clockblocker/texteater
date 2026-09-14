@@ -92,8 +92,12 @@ export function splitRegistry(
 export function emitSplitRegistry(
 	registry: Registry,
 	groupFor: (root: string) => string,
+	compactBlockNames = false,
 ) {
 	const split = splitRegistry(registry, groupFor);
+	if (compactBlockNames)
+		for (const [index, block] of split.sharedBlocks.entries())
+			block.name = String(index);
 	const rootGroups = Object.fromEntries(
 		split.partitions.flatMap((part) =>
 			Object.keys(part.roots).map((name) => [name, part.name]),

@@ -1,18 +1,13 @@
 import {
-	type Constraint,
+	type CompiledValidationRegistry,
 	ParsingError,
-	parseValidationArtifact,
-} from "common-utils";
-import { encodedValidation } from "./generated/validation.js";
+	parseCompiledValidation,
+} from "dumval/runtime";
+import { validationRegistry } from "./generated/linked-validation.js";
 import type { ParsedUnit, UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";
 
-interface Registry {
-	version: 1;
-	roots: Readonly<Record<string, Constraint>>;
-	definitions: Readonly<Record<string, Constraint>>;
-}
-const registry: Registry = /* @__PURE__ */ JSON.parse(encodedValidation);
+const registry: CompiledValidationRegistry = validationRegistry;
 export type ParseResult<T> =
 	| { success: true; chain: T }
 	| { success: false; error: ParsingError };
@@ -82,8 +77,9 @@ export function parseUnit(
 					`${field} does not match expected coordinates`,
 				);
 	}
-	const value = parseValidationArtifact(
-		{ version: 1, root, definitions: registry.definitions },
+	const value = parseCompiledValidation(
+		registry,
+		key,
 		input,
 		validationOperations,
 	);

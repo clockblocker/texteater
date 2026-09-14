@@ -97,7 +97,7 @@ export async function auditEntrypointReachability(
 			const packageName = packageNameFor(specifier);
 			if (workspacePackages.has(packageName)) {
 				workspaceEntrypoints.add(specifier);
-				if (/\/(?:schema(?:s)?)(?:\/|$)/.test(specifier))
+				if (/\/(?:schema(?:s)?|compiler)(?:\/|$)/.test(specifier))
 					schemaEntrypoints.add(specifier);
 				await visitFile(await resolveWorkspaceEntrypoint(specifier));
 				continue;

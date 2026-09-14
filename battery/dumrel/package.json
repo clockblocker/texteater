@@ -24,7 +24,12 @@
 			"import": "./dist/schemas.js",
 			"default": "./dist/schemas.js"
 		},
-		"./package.json": "./package.json"
+		"./package.json": "./package.json",
+		"./compiled-validation": {
+			"types": "./dist/generated/linked-validation.d.ts",
+			"import": "./dist/generated/linked-validation.js",
+			"default": "./dist/generated/linked-validation.js"
+		}
 	},
 	"files": [
 		"dist",
@@ -39,7 +44,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/generated/linked-validation.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
@@ -56,7 +61,8 @@
 	"dependencies": {
 		"common-utils": "workspace:^",
 		"dumling": "workspace:^",
-		"zod": "^4.4.0"
+		"zod": "^4.4.0",
+		"dumval": "workspace:^"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

@@ -1,15 +1,18 @@
 import { readFile, writeFile } from "node:fs/promises";
 import {
-	compileZodValidationArtifacts,
-	type ZodValidationOperationRegistration,
-} from "codegen";
-import {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 } from "dumrel/schema";
+import {
+	compileZodValidationArtifacts,
+	emitLinkedValidationRegistry,
+	type ZodValidationOperationRegistration,
+} from "dumval/compiler";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
+import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
+import { encodedValidation as dumrelValidation } from "../../dumrel/src/generated/validation.js";
 import { normalizeText } from "../../dumrel/src/semantics.js";
 import { unitSchemas } from "../src/generated/unit-schemas.js";
 import {
@@ -102,6 +105,25 @@ export async function generateValidation(check: boolean) {
 		schemas: allSchemas,
 		operations,
 	});
+	const linkedPath = new URL(
+		"../src/generated/linked-validation.ts",
+		import.meta.url,
+	);
+	const linkedOutput = await formatTypeScript(
+		emitLinkedValidationRegistry([
+			{ owner: "dumling", registry: JSON.parse(dumlingValidation) },
+			{ owner: "dumrel", registry: JSON.parse(dumrelValidation) },
+			{ owner: "dumdict", registry: artifact },
+		]),
+		linkedPath,
+	);
+	if (check) {
+		if (
+			(await readFile(linkedPath, "utf8").catch(() => "")) !==
+			linkedOutput
+		)
+			throw Error("Stale Dumdict linked validation");
+	} else await writeFile(linkedPath, linkedOutput);
 	const path = new URL(
 		"../src/generated/validation-artifacts.ts",
 		import.meta.url,

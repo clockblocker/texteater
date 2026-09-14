@@ -22,9 +22,7 @@ import {
 } from "./shared";
 
 export const SAMPLE_COUNT = 5;
-const packages = Object.keys(
-	DUM_PACKAGE_PATHS,
-) as (keyof typeof DUM_PACKAGE_PATHS)[];
+const packages = ["dumval", "dumling", "dumrel", "dumdict", "dumgen"] as const;
 
 type MeasurementMode = "baseline" | "import-only" | "import-plus-operation";
 
@@ -89,15 +87,18 @@ function processEnvWithoutBunInspect(): Record<string, string | undefined> {
 }
 
 export async function buildPackages(root: string): Promise<void> {
-	for (const packageName of packages) {
-		process.stderr.write(
-			`Building ${packageName} for the published-entrypoint audit…\n`,
-		);
-		await run(
-			[process.execPath, "run", "build"],
-			join(root, "battery", DUM_PACKAGE_PATHS[packageName]),
-		);
-	}
+	process.stderr.write(
+		"Building Dum packages and their workspace dependencies for the published-entrypoint audit…\n",
+	);
+	await run(
+		[
+			join(root, "node_modules/.bin/turbo"),
+			"run",
+			"build",
+			...packages.map((name) => `--filter=${name}`),
+		],
+		root,
+	);
 }
 
 async function sample(

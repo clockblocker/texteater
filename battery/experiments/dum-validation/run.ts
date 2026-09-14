@@ -28,9 +28,13 @@ if (Bun.argv.includes("--help")) {
   bun ${relativeExperiment}/run.ts --variants external-runtime,aot-validators
   bun ${relativeExperiment}/run.ts --verify-only aot-validators
   bun ${relativeExperiment}/run.ts --verify-only operation-split-chain
+  bun ${relativeExperiment}/run.ts --verify-only linked-rules
+  bun ${relativeExperiment}/run.ts --verify-only external-runtime,required-rule-groups,required-rules-and-reuse
   bun ${relativeExperiment}/run.ts --verify-only external-runtime,operation-split-chain,catalog-lazy,catalog-and-registries
   bun ${relativeExperiment}/catalog-loading-profile.ts /absolute/path/to/catalog-results.json
   bun ${relativeExperiment}/operation-loading-profile.ts /absolute/path/to/profile.json
+  bun ${relativeExperiment}/rule-loading-profile.ts /absolute/path/to/rule-profile.json
+  bun ${relativeExperiment}/linked-rules-profile.ts /absolute/path/to/linked-profile.json
   bun test ${relativeExperiment}/compilation.test.ts
   bun ${relativeExperiment}/run.ts --output /absolute/path/to/results
 
@@ -105,6 +109,7 @@ async function command(
 			...process.env,
 			PATH: `${snapshot}/node_modules/node/bin:${snapshot}/node_modules/.bin:${process.env.PATH ?? ""}`,
 			CI: "1",
+			DUM_RULE_REUSE_REPORT: join(directory, "rule-reuse-gate.json"),
 		},
 		stdout: "pipe",
 		stderr: "pipe",
@@ -285,9 +290,39 @@ try {
 			join(snapshot, relativeExperiment, "compilation-statistics.json"),
 			{ force: true },
 		);
+		await rm(
+			join(snapshot, "battery/dumgen/src/experiment-linguistic-reuse.ts"),
+			{ force: true },
+		);
+		for (const owner of ["dumling", "dumrel", "dumgen"])
+			await rm(
+				join(
+					snapshot,
+					`battery/${owner}/src/experiment-linked-registry.ts`,
+				),
+				{ force: true },
+			);
 		await variant.apply(snapshot);
 		const directory = join(output, variant.id);
 		await mkdir(directory, { recursive: true });
+		if (variant.id === "linked-rules")
+			await cp(
+				join(
+					snapshot,
+					relativeExperiment,
+					"linked-rules-statistics.json",
+				),
+				join(directory, "linked-rules-statistics.json"),
+			);
+		if (variant.id.startsWith("required-rule"))
+			await cp(
+				join(
+					snapshot,
+					relativeExperiment,
+					"rule-reuse-statistics.json",
+				),
+				join(directory, "rule-reuse-statistics.json"),
+			);
 		if (variant.id.startsWith("operation-split-"))
 			await cp(
 				join(
@@ -337,12 +372,22 @@ try {
 						join(
 							snapshot,
 							relativeExperiment,
+							"link-registries.test.ts",
+						),
+						join(
+							snapshot,
+							relativeExperiment,
 							"compilation.test.ts",
 						),
 						join(
 							snapshot,
 							relativeExperiment,
 							"split-registries.test.ts",
+						),
+						join(
+							snapshot,
+							relativeExperiment,
+							"rule-reuse.test.ts",
 						),
 					],
 				],

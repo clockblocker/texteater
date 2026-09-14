@@ -24,6 +24,9 @@ export function evaluateSharedRss(addedPeakMedianBytes: number) {
 /** Every operational export retains schema isolation; isolated RSS remains diagnostic. */
 export const RSS_ENTRYPOINT_POLICIES = {
 	dumling: diagnostic,
+	"dumling/compiled-validation": diagnostic,
+	"dumrel/compiled-validation": diagnostic,
+	"dumval/runtime": diagnostic,
 	"dumling/validation": diagnostic,
 	dumrel: diagnostic,
 	dumdict: diagnostic,

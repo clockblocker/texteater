@@ -1,0 +1,56 @@
+{
+	"name": "dumval",
+	"version": "0.1.0",
+	"description": "Zod validation compilation, shared rule linking, compatibility checks and lightweight parsing.",
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"sideEffects": false,
+	"main": "./dist/runtime.js",
+	"types": "./dist/runtime.d.ts",
+	"exports": {
+		"./compiler": {
+			"types": "./dist/compiler.d.ts",
+			"import": "./dist/compiler.js",
+			"default": "./dist/compiler.js"
+		},
+		"./runtime": {
+			"types": "./dist/runtime.d.ts",
+			"import": "./dist/runtime.js",
+			"default": "./dist/runtime.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"engines": {
+		"node": "24.x"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "bun ../../tooling/manifest-policy.ts package && rm -rf dist && bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"fix": "bun run --silent biome check --write .",
+		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
+		"lint": "bun run --silent biome check .",
+		"prepack": "bun run build",
+		"test": "bun test",
+		"validate": "bun ../../tooling/validate-package.ts"
+	},
+	"dependencies": {
+		"zod": "^4.4.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"bun-types": "1.4.2",
+		"dependency-cruiser": "^18.1.0",
+		"knip": "^6.29.0",
+		"typescript": "^7.0.2"
+	}
+}

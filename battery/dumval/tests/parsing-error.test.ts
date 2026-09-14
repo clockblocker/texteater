@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { ParsingError } from "../src";
+import { ParsingError } from "../src/runtime";
 
 test("ParsingError exposes Zod-familiar issues without Zod runtime identity", () => {
 	const issues = [

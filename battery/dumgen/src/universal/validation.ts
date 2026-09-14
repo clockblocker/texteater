@@ -1,17 +1,14 @@
-import {
-	type Constraint,
-	ParsingError,
-	parseValidationArtifact,
-} from "common-utils";
 import { validationOperations } from "dumling/validation";
-import { encodedValidation } from "../generated/validation.js";
+import {
+	type CompiledValidationRegistry,
+	ParsingError,
+	parseCompiledValidation,
+} from "dumval/runtime";
+import { validationRegistry } from "../generated/linked-validation.js";
 import type { Encounter } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 
-const registry = JSON.parse(encodedValidation) as {
-	roots: Record<string, Constraint>;
-	definitions: Record<string, Constraint>;
-};
+const registry: CompiledValidationRegistry = validationRegistry;
 export function parse<T>(
 	name: string,
 	input: unknown,
@@ -20,16 +17,12 @@ export function parse<T>(
 ): T {
 	const root = registry.roots[name];
 	if (!root) throw Error(`Missing validator ${name}`);
-	const parsed = parseValidationArtifact<T>(
-		{ version: 1, root, definitions: registry.definitions },
-		input,
-		{
-			...validationOperations,
-			"dumrel.normalize-text": (value) => ({
-				value: (value as string).trim().normalize("NFC"),
-			}),
-		},
-	);
+	const parsed = parseCompiledValidation<T>(registry, name, input, {
+		...validationOperations,
+		"dumrel.normalize-text": (value) => ({
+			value: (value as string).trim().normalize("NFC"),
+		}),
+	});
 	if (parsed instanceof ParsingError)
 		throw new DumgenFailure(
 			output ? "InvalidModelOutput" : "InvalidInput",

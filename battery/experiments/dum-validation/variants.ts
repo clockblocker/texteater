@@ -2,6 +2,8 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { applyCompilation, compiledConsumers } from "./apply-compilation";
 import { applyOperationSplitting } from "./apply-operation-splitting";
+import { applyRuleReuse } from "./apply-rule-reuse";
+import { applyLinkedRules } from "./apply-linked-rules";
 import {
 	applyCatalogSplitting,
 	catalogSelector,
@@ -197,6 +199,39 @@ async function externalRuntime(root: string) {
 }
 
 export const variants: readonly Variant[] = [
+	{
+		id: "linked-rules",
+		question:
+			"Can a compiler link pass eliminate duplicate rules across Dumling, Dumrel, and Dumgen without changing validation?",
+		tradeoff:
+			"Experimental compiled-artifact subpaths, split bundles, and exact provider fingerprints. No parser delegation or duplicate fallback. Recursive graphs are linked by ordered graph equivalence.",
+		apply: async (root) => {
+			await externalRuntime(root);
+			await applyLinkedRules(root);
+		},
+	},
+	{
+		id: "required-rule-groups",
+		question:
+			"What does decoding only the requested Dumgen validation root and its shared rules save?",
+		tradeoff:
+			"Synchronous decoding; encoded strings still ship upfront. Same explicit dependency externalization as the reference.",
+		apply: async (root) => {
+			await externalRuntime(root);
+			await applyRuleReuse(root, false);
+		},
+	},
+	{
+		id: "required-rules-and-reuse",
+		question:
+			"Can successful unit validation reuse equivalent Dumling validators while preserving exact invalid-input diagnostics?",
+		tradeoff:
+			"Build-time structural equivalence proof; plain-data successful paths delegate to Dumling. Original rules remain as an exact-error fallback.",
+		apply: async (root) => {
+			await externalRuntime(root);
+			await applyRuleReuse(root, true);
+		},
+	},
 	{
 		id: "catalog-lazy",
 		question:

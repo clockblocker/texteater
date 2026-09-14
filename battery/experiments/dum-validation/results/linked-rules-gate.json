@@ -1,0 +1,315 @@
+{
+  "variant": "linked-rules",
+  "source": {
+    "commit": "262be446a2082caa3f0b121f8d65ccdbd5f3584f",
+    "sourceSha256": "54121c8065a742adcc04671cda371429f2ce5b6276421cfa441b1b90f4a01fbf",
+    "experimentSha256": "e883e847e165f7e0220823d27e9662022fb44ed0eff3ec8f2e575c8d0dbe4466",
+    "trackedDiffSha256": "dc7947febff60279290b2c46e6ebaa23e17938968a22e3b78eb56ca838e18e7a",
+    "startedAt": "2026-09-14T05-34-45.961Z",
+    "bun": "1.4.2",
+    "platform": "darwin",
+    "arch": "arm64",
+    "variants": [
+      "linked-rules"
+    ],
+    "mode": "gate-only",
+    "gateAdjustment": "The relation-entrypoint test runs its unchanged bundle from a temporary file, avoiding the OS argument-size limit. Assertions are unchanged."
+  },
+  "gate": {
+    "gateVersion": 3,
+    "mode": "gate-only",
+    "id": "linked-rules",
+    "question": "Can a compiler link pass eliminate duplicate rules across Dumling, Dumrel, and Dumgen without changing validation?",
+    "tradeoff": "Experimental compiled-artifact subpaths, split bundles, and exact provider fingerprints. No parser delegation or duplicate fallback. Recursive graphs are linked by ordered graph equivalence.",
+    "dxPassed": true,
+    "eligibleForReview": true,
+    "limitation": null,
+    "checks": [
+      {
+        "id": "refresh-derived-policy",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 50.75245799999993,
+        "log": "linked-rules/refresh-derived-policy.log"
+      },
+      {
+        "id": "build",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 22031.078125,
+        "log": "linked-rules/build.log"
+      },
+      {
+        "id": "generated-validator-semantics",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 3319.2891659999987,
+        "log": "linked-rules/generated-validator-semantics.log"
+      },
+      {
+        "id": "types-and-schema-consumers",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 17996.322792000003,
+        "log": "linked-rules/types-and-schema-consumers.log"
+      },
+      {
+        "id": "compiler-and-interpreter-contracts",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 225.29329100000177,
+        "log": "linked-rules/compiler-and-interpreter-contracts.log"
+      },
+      {
+        "id": "dum-package-contracts",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 9248.954459,
+        "log": "linked-rules/dum-package-contracts.log"
+      },
+      {
+        "id": "consumer-workflows",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 2339.418082999997,
+        "log": "linked-rules/consumer-workflows.log"
+      },
+      {
+        "id": "public-export-contracts",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 297.53366700000333,
+        "log": "linked-rules/public-export-contracts.log"
+      },
+      {
+        "id": "published-runtime-failure-paths",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 91.55112500000541,
+        "log": "linked-rules/published-runtime-failure-paths.log"
+      },
+      {
+        "id": "canonical-differential-and-isolation",
+        "passed": true,
+        "exitCode": 0,
+        "milliseconds": 1081.2649170000004,
+        "log": "linked-rules/canonical-differential-and-isolation.log"
+      }
+    ]
+  },
+  "canonical": {
+    "passed": true,
+    "negativeControls": {
+      "acceptEverythingIsRejected": true,
+      "erasedErrorsAreRejected": true
+    },
+    "targetCount": 563,
+    "valueCount": 11097,
+    "differentialFailures": [],
+    "adversarial": {
+      "comparisons": 15,
+      "failures": [],
+      "mutableArtifactStress": "pass"
+    },
+    "declarationFailures": [],
+    "runtime": [
+      {
+        "specifier": "dumling",
+        "externalPackages": [
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "dumling"
+        ]
+      },
+      {
+        "specifier": "dumling/validation",
+        "externalPackages": [
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "dumling/validation"
+        ]
+      },
+      {
+        "specifier": "dumrel",
+        "externalPackages": [
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "dumling",
+          "dumling/compiled-validation",
+          "dumling/validation",
+          "dumrel"
+        ]
+      },
+      {
+        "specifier": "dumdict",
+        "externalPackages": [
+          "effect",
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "common-utils/workflow",
+          "dumdict",
+          "dumling",
+          "dumling/compiled-validation",
+          "dumling/validation",
+          "dumrel"
+        ]
+      },
+      {
+        "specifier": "dumdict/runtime",
+        "externalPackages": [
+          "effect",
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "common-utils/workflow",
+          "dumdict/runtime",
+          "dumling",
+          "dumling/compiled-validation",
+          "dumling/validation",
+          "dumrel"
+        ]
+      },
+      {
+        "specifier": "dumdict/relations",
+        "externalPackages": [
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "dumdict/relations",
+          "dumling",
+          "dumling/compiled-validation",
+          "dumling/validation",
+          "dumrel"
+        ]
+      },
+      {
+        "specifier": "dumdict/pending",
+        "externalPackages": [
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "dumdict/pending",
+          "dumling"
+        ]
+      },
+      {
+        "specifier": "dumdict/memory",
+        "externalPackages": [
+          "effect",
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "dumdict/memory",
+          "dumling",
+          "dumling/compiled-validation",
+          "dumling/validation",
+          "dumrel"
+        ]
+      },
+      {
+        "specifier": "dumgen",
+        "externalPackages": [
+          "effect",
+          "emoji-regex"
+        ],
+        "heavyweightDependencies": [],
+        "schemaEntrypoints": [],
+        "workspaceEntrypoints": [
+          "common-utils",
+          "dumgen",
+          "dumling",
+          "dumling/compiled-validation",
+          "dumling/validation",
+          "dumrel",
+          "dumrel/compiled-validation"
+        ]
+      }
+    ]
+  },
+  "actualDumgenConsumer": {
+    "comparisons": 3728,
+    "failures": 0,
+    "passed": true
+  },
+  "publishedFailures": {
+    "passed": true,
+    "checks": 27,
+    "failures": []
+  },
+  "tables": [
+    {
+      "owner": "dumling",
+      "fingerprint": "b084cbe4f65953dc855f8a2b027a6634398e1ac15df146a3ebb84b13f3486bf1",
+      "originalDefinitions": 2106,
+      "ownedDefinitions": 728,
+      "originalBytes": 146924,
+      "linkedBytes": 101532,
+      "refinementRounds": 6
+    },
+    {
+      "owner": "dumrel",
+      "fingerprint": "f987b93a66f49d260693d821823870b710e05fb9432b0c977f5eedfc227d7af2",
+      "requiredFingerprint": "b084cbe4f65953dc855f8a2b027a6634398e1ac15df146a3ebb84b13f3486bf1",
+      "originalDefinitions": 1471,
+      "ownedDefinitions": 280,
+      "originalBytes": 113486,
+      "linkedBytes": 38314,
+      "refinementRounds": 6
+    },
+    {
+      "owner": "dumgen",
+      "fingerprint": "2df5f952067458c9c46c0fa131ac45c6bae3fc5b454f3b2889e1e0652149231a",
+      "requiredFingerprint": "f987b93a66f49d260693d821823870b710e05fb9432b0c977f5eedfc227d7af2",
+      "originalDefinitions": 4446,
+      "ownedDefinitions": 668,
+      "originalBytes": 339921,
+      "linkedBytes": 78459,
+      "refinementRounds": 6
+    }
+  ],
+  "linkedComparisons": {
+    "targets": 532,
+    "values": 10591,
+    "exactOutputsAndIssues": true
+  },
+  "publishedProviderChecks": {
+    "passed": true,
+    "sharedObjectIdentity": true,
+    "schemaFreeRuntimeAndDeclarations": true,
+    "dumlingVersionMismatchRejected": true,
+    "dumrelVersionMismatchRejected": true
+  },
+  "supplementalLocalCheck": "Provider generation is identical with or without downstream packages; passed. Experiment TypeScript check and git diff --check passed.",
+  "commands": {
+    "gate": "bun battery/experiments/dum-validation/run.ts --verify-only linked-rules",
+    "measure": "bun battery/experiments/dum-validation/linked-rules-profile.ts battery/experiments/dum-validation/results/linked-rules-loading.json"
+  },
+  "scope": "Experiment-only compiler link pass. No production source, public API, ADR or RSS budget changed. Shares generated definitions across Dumling, Dumrel and Dumgen; Dumdict remains unchanged. Existing public root contracts pass. Proposed compiled-validation subpaths need an ADR-0013 change and production inventory/RSS policy integration before adoption. Exact provider fingerprints currently require rebuilding downstream consumers on artifact changes."
+}

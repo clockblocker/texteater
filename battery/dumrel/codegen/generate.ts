@@ -1,9 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import {
 	compileZodValidationArtifacts,
+	emitLinkedValidationRegistry,
 	emitValidationOutputTypes,
-} from "codegen";
+} from "dumval/compiler";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
+import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import {
 	directSemanticRelationSchema,
 	knowledgeChangeSchema,
@@ -56,6 +58,10 @@ const compiled = compileZodValidationArtifacts({
 	operations,
 });
 const outputs = {
+	"linked-validation.ts": emitLinkedValidationRegistry([
+		{ owner: "dumling", registry: JSON.parse(dumlingValidation) },
+		{ owner: "dumrel", registry: compiled },
+	]),
 	"types.ts": `// Generated from canonical Dumrel Zod schemas. Run bun run generate.\n${emitValidationOutputTypes(
 		{
 			artifact: compiled,

@@ -7,7 +7,7 @@ import {
 	parseValidationArtifact,
 	type ValidationArtifact,
 	type ValidationOperations,
-} from "../src";
+} from "../src/runtime";
 
 const canonicalProfileSchema = z
 	.object({

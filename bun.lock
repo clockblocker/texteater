@@ -127,6 +127,7 @@
       "name": "codegen",
       "version": "0.1.0",
       "dependencies": {
+        "dumval": "workspace:^",
         "zod": "^4.4.0",
       },
       "devDependencies": {
@@ -143,6 +144,7 @@
       "name": "common-utils",
       "version": "0.1.0",
       "dependencies": {
+        "dumval": "workspace:^",
         "effect": "3.22.1",
       },
       "devDependencies": {
@@ -163,6 +165,7 @@
         "common-utils": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
+        "dumval": "workspace:^",
         "effect": "3.22.1",
         "zod": "^4.4.0",
       },
@@ -186,6 +189,7 @@
         "common-utils": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
+        "dumval": "workspace:^",
         "effect": "3.22.1",
         "promptsmith": "workspace:^",
         "zod": "^4.4.0",
@@ -206,6 +210,7 @@
       "version": "0.1.12",
       "dependencies": {
         "common-utils": "workspace:^",
+        "dumval": "workspace:^",
         "emoji-regex": "^10.6.0",
         "zod": "^4.4.0",
       },
@@ -227,6 +232,7 @@
       "dependencies": {
         "common-utils": "workspace:^",
         "dumling": "workspace:^",
+        "dumval": "workspace:^",
         "zod": "^4.4.0",
       },
       "devDependencies": {
@@ -238,6 +244,21 @@
         "esbuild": "^0.28.1",
         "knip": "^6.29.0",
         "prinfer": "^2.3.0",
+        "typescript": "^7.0.2",
+      },
+    },
+    "battery/dumval": {
+      "name": "dumval",
+      "version": "0.1.0",
+      "dependencies": {
+        "zod": "^4.4.0",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "2.5.13",
+        "@types/node": "^24.13.3",
+        "bun-types": "1.4.2",
+        "dependency-cruiser": "^18.1.0",
+        "knip": "^6.29.0",
         "typescript": "^7.0.2",
       },
     },
@@ -1208,6 +1229,8 @@
     "dumling": ["dumling@workspace:battery/dumling"],
 
     "dumrel": ["dumrel@workspace:battery/dumrel"],
+
+    "dumval": ["dumval@workspace:battery/dumval"],
 
     "dunder-proto": ["dunder-proto@1.0.1", "", { "dependencies": { "call-bind-apply-helpers": "^1.0.1", "es-errors": "^1.3.0", "gopd": "^1.2.0" } }, "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A=="],
 
