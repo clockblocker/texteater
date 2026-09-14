@@ -129,11 +129,9 @@ function TextSubject({
 				<p key={sentence}>
 					{sentence.split(/(\s+)/).map((part, index) =>
 						/^\s+$/.test(part) ? (
-							// biome-ignore lint/suspicious/noArrayIndexKey: whitespace runs have no identity
 							<span key={index}>{part}</span>
 						) : (
 							<button
-								// biome-ignore lint/suspicious/noArrayIndexKey: words repeat within a sentence
 								key={index}
 								type="button"
 								className="harness-word"

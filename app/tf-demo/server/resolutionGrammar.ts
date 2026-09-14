@@ -29,13 +29,14 @@ export function parseResolvedGrammar(input: {
 		attestation.surface.lemma.kind !== encounter.target.kind ||
 		attestation.members.length !==
 			encounter.target.memberSegmentIndices.length ||
-		attestation.members.some(
-			(member, index) =>
+		attestation.members.some((member, index) => {
+			const segmentIndex = encounter.target.memberSegmentIndices[index];
+			return (
+				segmentIndex === undefined ||
 				member.attested !==
-				encounter.sentence.segments[
-					encounter.target.memberSegmentIndices[index]!
-				]?.text,
-		)
+					encounter.sentence.segments[segmentIndex]?.text
+			);
+		})
 	)
 		throw new Error("Grammar checkpoint does not match its Encounter.");
 	return {

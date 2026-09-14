@@ -78,7 +78,13 @@ export function reduceShadowControls(
 	return { ...state, ...shadowCleanupFeedback(event.result) };
 }
 
-export function ShadowNoteView({ target }: { target: ShadowNoteTarget }) {
+export function ShadowNoteView({
+	target,
+	presentation = "Sheet",
+}: {
+	target: ShadowNoteTarget;
+	presentation?: "Card" | "Sheet";
+}) {
 	const noteQuery = useQuery({
 		...convexQuery(api.shadowNotes.get, {
 			shadowId: target.shadowId,
@@ -97,6 +103,7 @@ export function ShadowNoteView({ target }: { target: ShadowNoteTarget }) {
 	return (
 		<ShadowNoteContainer
 			note={noteQuery.data}
+			presentation={presentation}
 			onRefresh={() => noteQuery.refetch().then(() => undefined)}
 		/>
 	);
@@ -104,9 +111,11 @@ export function ShadowNoteView({ target }: { target: ShadowNoteTarget }) {
 
 function ShadowNoteContainer({
 	note,
+	presentation,
 	onRefresh,
 }: {
 	note: ShadowNote;
+	presentation: "Card" | "Sheet";
 	onRefresh: () => Promise<void>;
 }) {
 	const { follow } = useWorkspaceInteraction();
@@ -180,6 +189,7 @@ function ShadowNoteContainer({
 	}
 
 	const capabilities = {
+		presentation,
 		references: {
 			items: pagination.note.references.page,
 			hasMore: pagination.hasMore,
@@ -200,9 +210,9 @@ function ShadowNoteContainer({
 
 function ShadowNoteSkeleton() {
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="min-h-full bg-paper px-note-gutter pt-note-top">
 			<div
-				className="mx-auto flex w-full max-w-4xl flex-col gap-3"
+				className="mx-auto flex w-full max-w-note flex-col gap-3"
 				role="status"
 			>
 				<Skeleton className="h-7 w-48" />

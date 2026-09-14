@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { type LinkInput, linkRegistries } from "../src/compiler";
+import { required } from "../src/required.js";
 import {
 	bindValidationRegistry,
 	ParsingError,
@@ -46,12 +47,20 @@ test("recursive rules and aliases share across owners without changing enum payl
 		{ owner: "a", registry: a },
 		{ owner: "b", registry: b },
 	]);
-	expect(second!.statistics.ownedDefinitions).toBe(0);
-	const provider = bindValidationRegistry(first!.encoded, first!.fingerprint);
+	const firstLink = required(first);
+	const secondLink = required(second);
+	expect(secondLink.statistics.ownedDefinitions).toBe(0);
+	const provider = bindValidationRegistry(
+		firstLink.encoded,
+		firstLink.fingerprint,
+	);
 	const consumer = bindValidationRegistry(
-		second!.encoded,
-		second!.fingerprint,
-		{ registry: provider, fingerprint: second!.requiredFingerprint! },
+		secondLink.encoded,
+		secondLink.fingerprint,
+		{
+			registry: provider,
+			fingerprint: required(secondLink.requiredFingerprint),
+		},
 	);
 	const input = { tag: "ref", next: { tag: "missing" } };
 	expect(parseCompiledValidation<unknown>(consumer, "x", input)).toEqual(
@@ -65,9 +74,9 @@ test("recursive rules and aliases share across owners without changing enum payl
 	expect(() => parseCompiledValidation({ ...provider }, "x", input)).toThrow(
 		"Unknown compiled validation provider",
 	);
-	expect(linkRegistries([{ owner: "a", registry: a }])[0]!.fingerprint).toBe(
-		first!.fingerprint,
-	);
+	expect(
+		required(linkRegistries([{ owner: "a", registry: a }])[0]).fingerprint,
+	).toBe(firstLink.fingerprint);
 });
 
 test("incompatible providers, operations, protocols, dangling refs and unproductive cycles fail closed", () => {
@@ -87,7 +96,7 @@ test("incompatible providers, operations, protocols, dangling refs and unproduct
 			{ owner: "bad", registry: fixture({ n: ["ref", "n"] }) },
 		]),
 	).toThrow("Unproductive reference cycle");
-	const first = linkRegistries([{ owner: "a", registry: a }])[0]!;
+	const first = required(linkRegistries([{ owner: "a", registry: a }])[0]);
 	const provider = bindValidationRegistry(first.encoded, first.fingerprint);
 	expect(() =>
 		bindValidationRegistry(first.encoded, "consumer", {
@@ -111,23 +120,29 @@ test("linking preserves inline-versus-referenced string checks and exact diagnos
 		{ owner: "b", registry: b },
 	]);
 	for (const [index, original] of [a, b].entries()) {
-		const r = linked[index]!.runtime;
+		const r = required(linked[index]).runtime;
 		const expected = parseValidationArtifact(
 			{
 				version: 1,
-				root: original.roots.x!,
+				root: required(original.roots.x),
 				definitions: original.definitions,
 			},
 			[],
 		);
 		const actual = parseValidationArtifact(
-			{ version: 1, root: r.roots.x!, definitions: r.definitions },
+			{
+				version: 1,
+				root: required(r.roots.x),
+				definitions: r.definitions,
+			},
 			[],
 		);
 		expect(actual).toBeInstanceOf(ParsingError);
 		expect(actual).toEqual(expected);
 	}
-	expect(linked[0]!.runtime.roots.x).not.toEqual(linked[1]!.runtime.roots.x);
+	expect(required(linked[0]).runtime.roots.x).not.toEqual(
+		required(linked[1]).runtime.roots.x,
+	);
 	const ordered = fixture({
 		n: ["object", { a: ["string"], b: ["number"] }, "strip"],
 	});
@@ -138,7 +153,7 @@ test("linking preserves inline-versus-referenced string checks and exact diagnos
 		linkRegistries([
 			{ owner: "a", registry: ordered },
 			{ owner: "b", registry: reordered },
-		])[1]!.statistics.ownedDefinitions,
+		]).at(1)?.statistics.ownedDefinitions,
 	).toBe(1);
 });
 
@@ -148,7 +163,7 @@ test("runtime bundles for browser and isolate consumers without compiler or exte
 		target: "browser",
 	});
 	expect(result.success).toBe(true);
-	const source = await result.outputs[0]!.text();
+	const source = await required(result.outputs[0]).text();
 	expect(new Bun.Transpiler({ loader: "js" }).scanImports(source)).toEqual(
 		[],
 	);

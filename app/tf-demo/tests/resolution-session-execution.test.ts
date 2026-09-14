@@ -111,7 +111,7 @@ describe("Resolution Session execution", () => {
 		expect(wrote).toBe(false);
 	});
 
-	test("unexpected failures are fingerprinted and recorded without their message", async () => {
+	test.each(["failure", "defect"])("unexpected %s is fingerprinted and recorded without its message", async (kind) => {
 		const records: ResolutionSessionRunRecord[] = [];
 		const errors: string[] = [];
 		await Effect.runPromise(
@@ -126,7 +126,9 @@ describe("Resolution Session execution", () => {
 					},
 				},
 				resolve: () =>
-					Effect.fail(new TypeError("secret checkpoint payload")),
+					(kind === "failure" ? Effect.fail : Effect.die)(
+						new TypeError("secret checkpoint payload"),
+					),
 				diagnostics: {
 					info: () => {},
 					error: (message) => errors.push(message),

@@ -60,7 +60,13 @@ export function createSegmentation(options: DumgenOptions) {
 						"Intake must return one ordered decision per input",
 					);
 				for (const [index, item] of result.items.entries()) {
-					const source = items[index]!;
+					const source = items[index];
+					if (!source)
+						throw new DumgenFailure(
+							"InvalidModelOutput",
+							"segment",
+							"Intake returned an unexpected item position",
+						);
 					if (
 						item.id !== source.id ||
 						item.stitchedText.replaceAll(/\s/gu, "") !==

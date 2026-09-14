@@ -14,15 +14,15 @@ export async function saveRun(
 	await mkdir(directory);
 	await writeFile(
 		join(directory, "manifest.json"),
-		JSON.stringify(parsed.manifest, null, 2) + "\n",
+		`${JSON.stringify(parsed.manifest, null, 2)}\n`,
 	);
 	await writeFile(
 		join(directory, "cases.jsonl"),
-		parsed.cases.map((value) => JSON.stringify(value)).join("\n") + "\n",
+		`${parsed.cases.map((value) => JSON.stringify(value)).join("\n")}\n`,
 	);
 	await writeFile(
 		join(directory, "summary.json"),
-		JSON.stringify(parsed.summary, null, 2) + "\n",
+		`${JSON.stringify(parsed.summary, null, 2)}\n`,
 	);
 	return directory;
 }
@@ -32,19 +32,19 @@ export async function loadRun(
 ): Promise<EvaluationRun> {
 	runManifestSchema.shape.runId.parse(runId);
 	const directory = join(outputDirectory, runId);
-	const [manifest, cases, summary] = await Promise.all(
-		["manifest.json", "cases.jsonl", "summary.json"].map((name) =>
-			readFile(join(directory, name), "utf8"),
-		),
-	);
+	const [manifest, cases, summary] = await Promise.all([
+		readFile(join(directory, "manifest.json"), "utf8"),
+		readFile(join(directory, "cases.jsonl"), "utf8"),
+		readFile(join(directory, "summary.json"), "utf8"),
+	]);
 	const parsed = evaluationRunSchema.parse({
-		manifest: JSON.parse(manifest!),
-		cases: cases!
+		manifest: JSON.parse(manifest),
+		cases: cases
 			.trim()
 			.split("\n")
 			.filter(Boolean)
 			.map((line) => JSON.parse(line)),
-		summary: JSON.parse(summary!),
+		summary: JSON.parse(summary),
 	});
 	if (
 		parsed.manifest.runId !== runId ||

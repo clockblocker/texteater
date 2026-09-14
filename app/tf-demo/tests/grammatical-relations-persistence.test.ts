@@ -103,21 +103,22 @@ test("reviewed alternatives are visible without preloading and only the selected
 	const mir = alternatives.find(
 		(value) => value.canonicalForm === "mir" && value.feature === "case",
 	);
-	expect(mir).toBeDefined();
+	if (!mir) throw Error("Expected a case alternative for mir");
 	expect(
 		alternatives.some(
 			(value) =>
 				value.canonicalForm === "uns" && value.feature === "number",
 		),
 	).toBe(true);
-	const destination = await follow(db, mir!.readingKey);
+	const destination = await follow(db, mir.readingKey);
 	expect(db.rows("readings")).toHaveLength(2);
 	expect(db.rows("lemmas")).toHaveLength(2);
 	expect(db.rows("surfaces")).toHaveLength(0);
 	expect(db.rows("accumulatedKnowledge")).toHaveLength(0);
 	const entry = db
 		.rows("readingEntries")
-		.find((row) => row.readingId === destination)!;
+		.find((row) => row.readingId === destination);
+	if (!entry) throw Error("Expected the destination reading entry");
 	await db.patch(entry._id, {
 		record: {
 			...(entry.record as object),
@@ -125,7 +126,7 @@ test("reviewed alternatives are visible without preloading and only the selected
 		},
 	});
 	const stored = db.snapshot();
-	expect(await follow(db, mir!.readingKey)).toBe(destination);
+	expect(await follow(db, mir.readingKey)).toBe(destination);
 	expect(db.snapshot()).toEqual(stored);
 });
 

@@ -151,20 +151,22 @@ export class GermanClassificationResolver {
 				const attestation = yield* dumgen.resolveGrammar(encounter);
 				const parsed = parseUnit(attestation);
 				if (!parsed.success) return yield* Effect.fail(parsed.error);
+				const targetMemberSegmentIndices = target.memberSegmentIndices;
 				if (
 					parsed.chain.unitKind !== "Attestation" ||
 					parsed.chain.language !== "de" ||
 					attestation.surface.lemma.family !== target.family ||
 					attestation.surface.lemma.kind !== target.kind ||
 					attestation.members.length !==
-						target.memberSegmentIndices.length ||
-					attestation.members.some(
-						(member, index) =>
+						targetMemberSegmentIndices.length ||
+					attestation.members.some((member, index) => {
+						const segmentIndex = targetMemberSegmentIndices[index];
+						return (
+							segmentIndex === undefined ||
 							member.attested !==
-							sentence.segments[
-								target!.memberSegmentIndices[index]!
-							]?.text,
-					)
+								sentence.segments[segmentIndex]?.text
+						);
+					})
 				)
 					return yield* Effect.fail(
 						new DumgenFailure(
@@ -190,12 +192,13 @@ export class GermanClassificationResolver {
 				({ reading }) => reading.emojiDescription,
 			);
 			const base = { encounter: grammatical.encounter, lemma };
+			const firstCandidate = candidates[0];
 			const resolution =
-				candidates.length > 0
+				firstCandidate !== undefined
 					? yield* dumgen.resolveOrGenerateReadingEmojiDescription({
 							...base,
 							candidates: [
-								candidates[0]!,
+								firstCandidate,
 								...candidates.slice(1),
 							],
 						} as ComparisonInput<"de">)

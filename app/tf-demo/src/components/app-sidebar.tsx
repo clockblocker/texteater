@@ -9,18 +9,23 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "lego";
-import { LibraryIcon, SettingsIcon } from "lucide-react";
+import { FlaskConicalIcon, LibraryIcon, SettingsIcon } from "lucide-react";
 
 export function AppSidebar({
 	libraryActive,
 	settingsActive,
 	onShowLibrary,
 	onShowSettings,
+	onShowPlayground = null,
+	playgroundActive = false,
 }: {
 	readonly libraryActive: boolean;
 	readonly settingsActive: boolean;
 	readonly onShowLibrary: () => void;
 	readonly onShowSettings: () => void;
+	/** Present only in development builds. */
+	readonly onShowPlayground?: (() => void) | null;
+	readonly playgroundActive?: boolean;
 }) {
 	const { setOpenMobile } = useSidebar();
 	const runAndClose = (command: () => void) => {
@@ -55,6 +60,20 @@ export function AppSidebar({
 			<SidebarFooter>
 				<nav aria-label="Preferences">
 					<SidebarMenu>
+						{onShowPlayground ? (
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									isActive={playgroundActive}
+									onClick={() =>
+										runAndClose(onShowPlayground)
+									}
+									tooltip="Playground"
+								>
+									<FlaskConicalIcon />
+									<span>Playground</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						) : null}
 						<SidebarMenuItem>
 							<SidebarMenuButton
 								isActive={settingsActive}

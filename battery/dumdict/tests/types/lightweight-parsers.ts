@@ -65,7 +65,8 @@ type _NarrowedActualSchemaMustFail = Expect<
 	ProveCanonicalDumdictValidationSchemaRoute<
 		"parseAsLemmaRecord:de",
 		typeof narrowedGermanLemmaRecordSchema
-	>>;
+	>
+>;
 
 declare const actualGermanLemmaRecordSchema: CanonicalDumdictValidationSchemaForRoute<"parseAsLemmaRecord:de">;
 void actualGermanLemmaRecordSchema;

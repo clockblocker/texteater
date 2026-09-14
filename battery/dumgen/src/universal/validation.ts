@@ -69,8 +69,10 @@ export function markedContext(encounter: Encounter): {
 					: escapeText(segment.text),
 			)
 			.join(""),
-		members: encounter.target.memberSegmentIndices.map(
-			(index) => encounter.sentence.segments[index]!.text,
-		),
+		members: encounter.target.memberSegmentIndices.map((index) => {
+			const segment = encounter.sentence.segments[index];
+			if (!segment) throw Error(`Missing target segment: ${index}`);
+			return segment.text;
+		}),
 	};
 }

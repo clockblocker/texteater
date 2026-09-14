@@ -1,9 +1,8 @@
-import type * as Dumrel from "dumrel/types";
-import { LinkButton, Mark, NoteSection } from "lego";
+import { LinkButton, NoteSection } from "lego";
 import { LockIcon } from "lucide-react";
 import { relationPreference } from "../../../../../../../shared/knowledge-preferences";
-
 import type { ReadingDefaultRenderer } from "../../../renderer";
+import { RelationMark } from "../../common/relation-mark";
 
 export const renderDefaultReadingRelations = (({
 	noteData,
@@ -111,24 +110,3 @@ export const renderDefaultReadingRelations = (({
 		</NoteSection>
 	);
 }) satisfies ReadingDefaultRenderer;
-
-const RELATION_MARKS: Record<Dumrel.SemanticRelation, string> = {
-	synonym: "=",
-	nearSynonym: "≈",
-	antonym: "≠",
-	nearAntonym: "≉",
-	hypernym: "↑",
-	hyponym: "↓",
-	holonym: "⊂",
-	meronym: "⊃",
-};
-function RelationMark({ relation }: { relation: string }) {
-	const mark = Object.hasOwn(RELATION_MARKS, relation)
-		? RELATION_MARKS[relation as Dumrel.SemanticRelation]
-		: relation;
-	return (
-		<Mark role="img" aria-label={relation} title={relation}>
-			{mark}
-		</Mark>
-	);
-}

@@ -1,4 +1,4 @@
-import { DensityScope } from "lego";
+import { DensityScope, NoteTags } from "lego";
 import { createElement, type ReactElement } from "react";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../../shared/knowledge-preferences";
 import type { NoteBlockKind } from "../blocks/kind";
@@ -76,41 +76,72 @@ export function renderUniversalNote({
 				),
 			];
 		});
-		if (noteData.kind === "Reading") {
-			const presentation =
-				(renderCapabilities as ReadingPresentationCapabilities)
-					.presentation ?? "Sheet";
-			return (
-				<DensityScope
-					density={
-						presentation === "Card" ? "compact" : "comfortable"
-					}
-					data-note-presentation={presentation}
-					className="min-h-full bg-paper text-base text-ink compact:text-sm"
-				>
-					<article
-						className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
-						aria-label="Reading Note"
-					>
-						{blocks}
-						{plan.some(
-							({ blockKind }) => blockKind === "Header",
-						) ? (
-							<ReadingMetadata lemma={noteData.reading.lemma} />
-						) : null}
-					</article>
-				</DensityScope>
-			);
-		}
+		const presentation =
+			(renderCapabilities as { presentation?: "Card" | "Sheet" })
+				.presentation ?? "Sheet";
+		const hasHeader = plan.some(({ blockKind }) => blockKind === "Header");
 		return (
-			<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
-				<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+			<DensityScope
+				density={presentation === "Card" ? "compact" : "comfortable"}
+				data-note-presentation={presentation}
+				data-note-kind={noteData.kind}
+				className="min-h-full bg-paper text-base text-ink compact:text-sm"
+			>
+				<article
+					className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
+					aria-label={`${noteData.kind} Note`}
+				>
 					{blocks}
-				</div>
-			</div>
+					{hasHeader ? renderNoteMetadata(noteData) : null}
+				</article>
+			</DensityScope>
 		);
 	} catch (cause) {
 		return renderErrorNote(cause, `${safeKind(noteData)} Note unavailable`);
+	}
+}
+
+/** The quiet tag row that closes every Note and names what it is. */
+function renderNoteMetadata(note: NoteData): ReactElement {
+	switch (note.kind) {
+		case "Reading":
+			return <ReadingMetadata lemma={note.reading.lemma} />;
+		case "Lemma":
+			return <ReadingMetadata lemma={note.presented} />;
+		case "Surface":
+			return (
+				<NoteTags>
+					<span>{note.target.language}</span>
+					<span>Surface</span>
+				</NoteTags>
+			);
+		case "Attestation": {
+			const { surface, members, realizationCoverage } = note.presented;
+			const orthographies = [
+				...new Set(members.map(({ orthography }) => orthography)),
+			].filter((orthography) => orthography !== "Standard");
+			return (
+				<NoteTags>
+					<span>{surface.language}</span>
+					<span>Attestation</span>
+					{orthographies.map((orthography) => (
+						<span key={orthography}>{orthography}</span>
+					))}
+					{realizationCoverage !== "Full" ? (
+						<span>{realizationCoverage}</span>
+					) : null}
+				</NoteTags>
+			);
+		}
+		case "Shadow":
+			return (
+				<NoteTags>
+					<span>{note.descriptor.language}</span>
+					<span>Shadow</span>
+					<span>{note.descriptor.family}</span>
+					<span>{note.descriptor.kind}</span>
+				</NoteTags>
+			);
 	}
 }
 

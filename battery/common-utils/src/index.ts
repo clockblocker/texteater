@@ -19,6 +19,7 @@ export {
 	type TooSmallIssue,
 	type UnrecognizedKeysIssue,
 } from "./parsing-error.js";
+export { required } from "./required.js";
 export type {
 	Assert,
 	Brand,

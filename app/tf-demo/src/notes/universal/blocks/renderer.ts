@@ -259,3 +259,17 @@ export type SurfaceAnalysisDescriptionRendererRegistry<
 		>;
 	}>;
 }>;
+
+/** A default renderer usable for every family and kind of one route Note. */
+export type GrammaticalDefaultRenderer<
+	N extends Exclude<GrammaticalNoteKind, "Reading">,
+> = <
+	L extends SupportedTargetLanguage,
+	F extends NoteFamilyFor<L>,
+	K extends NoteLemmaKindFor<L, F>,
+>(
+	context: GrammaticalRenderContext<L, N, F, K>,
+) => ReactElement | null;
+export type SurfaceDefaultRenderer = <L extends SupportedTargetLanguage>(
+	context: SurfaceRenderContext<L>,
+) => ReactElement | null;

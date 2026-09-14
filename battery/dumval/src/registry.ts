@@ -72,10 +72,12 @@ export function parseCompiledValidation<Output>(
 		);
 	if (!Object.hasOwn(artifact.roots, root))
 		throw Error(`Missing validator ${root}`);
+	const rootConstraint = artifact.roots[root];
+	if (!rootConstraint) throw Error(`Missing validator ${root}`);
 	return parseValidationArtifact<Output>(
 		{
 			version: 1,
-			root: artifact.roots[root]!,
+			root: rootConstraint,
 			definitions: artifact.definitions,
 		},
 		input,

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { required } from "common-utils";
 import {
 	createDumgen,
 	selectGrammaticalAlternatives,
@@ -247,9 +248,10 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 	).toBe("InvalidInput");
 });
 test("Closed Catalogs resolve internally and never fall through; Open population misses generate", async () => {
-	const member = authoredMembers.find(
-		(member) => member.lemma.kind === "DET",
-	)!;
+	const member = required(
+		authoredMembers.find((member) => member.lemma.kind === "DET"),
+		"Expected an authored determiner",
+	);
 	const fixedEncounter = validateEncounter({
 		...encounter,
 		target: { family: "Lexeme", kind: "DET", memberSegmentIndices: [0] },
@@ -277,9 +279,10 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 		),
 	).toBe("CatalogMiss");
 	expect(calls).toHaveLength(0);
-	const pron = authoredMembers.find(
-		(member) => member.lemma.kind === "PRON",
-	)!;
+	const pron = required(
+		authoredMembers.find((member) => member.lemma.kind === "PRON"),
+		"Expected an authored pronoun",
+	);
 	const openEncounter = validateEncounter({
 		...encounter,
 		target: { family: "Lexeme", kind: "PRON", memberSegmentIndices: [0] },
@@ -298,12 +301,15 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 });
 test("feature navigation preserves Case and compares unmarked values literally", () => {
 	const find = (form: string, grammaticalCase: string) =>
-		authoredMembers.find(
-			(member) =>
-				member.lemma.kind === "PRON" &&
-				member.lemma.canonicalForm === form &&
-				member.lemma.coreFeatures.case === grammaticalCase,
-		)!.lemma as Dumling.Lemma<"de", "Lexeme", "PRON">;
+		required(
+			authoredMembers.find(
+				(member) =>
+					member.lemma.kind === "PRON" &&
+					member.lemma.canonicalForm === form &&
+					member.lemma.coreFeatures.case === grammaticalCase,
+			),
+			`Expected authored pronoun ${form}/${grammaticalCase}`,
+		).lemma as Dumling.Lemma<"de", "Lexeme", "PRON">;
 	const mich = find("mich", "Acc");
 	expect(
 		selectGrammaticalAlternatives({ source: mich, vary: ["case"] }).some(
@@ -376,7 +382,7 @@ test("segmentation preserves ordered inputs, supports existing Hebrew, and rejec
 			throw Error("Expected accepted input");
 		expect(
 			decision.sentence.segments.map((segment) => segment.text).join(""),
-		).toBe(sentences[index]!);
+		).toBe(required(sentences[index], "Expected source sentence"));
 	}
 	expect(await tag(dumgen.segment({ sourceSentences: ["   "] }))).toBe(
 		"InvalidInput",

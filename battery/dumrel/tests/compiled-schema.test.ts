@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import {
 	ParsingError,
 	parseValidationArtifact,
+	required,
 	type ValidationArtifact,
 } from "common-utils";
 import { validationOperations } from "dumling/validation";
@@ -21,6 +22,7 @@ test("every generated root agrees with its public canonical schema, including no
 		Object.keys(registry.roots).sort(),
 	);
 	for (const [root, examples] of Object.entries(samples)) {
+		// biome-ignore lint/performance/noDynamicNamespaceImportAccess: generated root names intentionally select their matching public schemas
 		const schema = schemas[`${root}Schema` as keyof typeof schemas];
 		for (const input of [
 			...examples,
@@ -38,7 +40,10 @@ test("every generated root agrees with its public canonical schema, including no
 			const compiled = parseValidationArtifact(
 				{
 					version: 1,
-					root: registry.roots[root]!,
+					root: required(
+						registry.roots[root],
+						`Missing generated root: ${root}`,
+					),
 					definitions: registry.definitions,
 				},
 				input,

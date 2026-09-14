@@ -242,15 +242,9 @@ function ApplicationPresentation({
 	);
 	return (
 		<WorkspaceInteractionProvider interaction={interaction}>
-			{subject.kind === "Library" ? (
-				renderLibrary()
-			) : subject.kind === "Note" && subject.target.kind !== "Reading" ? (
-				<div className="[&>*>*]:max-w-note">
-					{renderSubject(subject, context.presentation)}
-				</div>
-			) : (
-				renderSubject(subject, context.presentation)
-			)}
+			{subject.kind === "Library"
+				? renderLibrary()
+				: renderSubject(subject, context.presentation)}
 		</WorkspaceInteractionProvider>
 	);
 }

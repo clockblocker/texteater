@@ -57,10 +57,13 @@ export function RouteNoteView({
 	return noteQuery.data.kind === "Attestation" ? (
 		renderNote({
 			noteData: noteQuery.data,
-			capabilities: routeNoteCapabilities(follow),
+			capabilities: routeNoteCapabilities(follow, presentation),
 		})
 	) : (
-		<PaginatedRouteNote initialNote={noteQuery.data} />
+		<PaginatedRouteNote
+			initialNote={noteQuery.data}
+			presentation={presentation}
+		/>
 	);
 }
 
@@ -110,8 +113,10 @@ function PaginatedSurfaceNote({
 
 function PaginatedRouteNote({
 	initialNote,
+	presentation,
 }: {
 	initialNote: PaginatedRouteNote;
+	presentation: "Card" | "Sheet";
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
@@ -132,7 +137,7 @@ function PaginatedRouteNote({
 
 	return renderNote({
 		noteData: pagination.note,
-		capabilities: routeNoteCapabilities(follow, {
+		capabilities: routeNoteCapabilities(follow, presentation, {
 			hasMore: pagination.hasMore,
 			isLoading: pagination.isLoading,
 			error: pagination.error,
@@ -178,6 +183,7 @@ function routeNoteCapabilities(
 	follow: (
 		target: import("@/workspace/sheet-workspace").WorkspaceTarget,
 	) => void,
+	presentation: "Card" | "Sheet",
 	pagination: {
 		hasMore: boolean;
 		isLoading: boolean;
@@ -190,17 +196,18 @@ function routeNoteCapabilities(
 		loadMore: null,
 	},
 ): {
+	readonly presentation: "Card" | "Sheet";
 	readonly pagination: typeof pagination;
 	readonly follow: typeof follow;
 } {
-	return { pagination, follow };
+	return { presentation, pagination, follow };
 }
 
 function RouteNoteSkeleton() {
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="min-h-full bg-paper px-note-gutter pt-note-top">
 			<div
-				className="mx-auto flex w-full max-w-5xl flex-col gap-5"
+				className="mx-auto flex w-full max-w-note flex-col gap-5"
 				role="status"
 			>
 				<Skeleton className="h-8 w-56" />

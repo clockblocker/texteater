@@ -288,11 +288,13 @@ async function loadLemmaRouteNote(
 			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 			.take(1),
 	]);
+	// Readings come first: they are what a Lemma Note is for, and a Card
+	// shows nothing else.
 	const initialPhase =
-		firstSurfaces.length > 0
-			? "surfaces"
-			: firstReadings.length > 0
-				? "readings"
+		firstReadings.length > 0
+			? "readings"
+			: firstSurfaces.length > 0
+				? "surfaces"
 				: "sameWrittenForm";
 	const cursor = parseRouteConnectionCursor(
 		contextCursor,
@@ -314,21 +316,9 @@ async function loadLemmaRouteNote(
 				numItems: ROUTE_CONNECTION_PAGE_SIZE,
 			});
 		surfaces = page.page;
-		if (!page.isDone) {
-			continueCursor = routeConnectionCursor(
-				"Lemma",
-				"surfaces",
-				page.continueCursor,
-			);
-		} else if (firstReadings.length > 0) {
-			continueCursor = routeConnectionCursor("Lemma", "readings", null);
-		} else {
-			continueCursor = routeConnectionCursor(
-				"Lemma",
-				"sameWrittenForm",
-				null,
-			);
-		}
+		continueCursor = page.isDone
+			? routeConnectionCursor("Lemma", "sameWrittenForm", null)
+			: routeConnectionCursor("Lemma", "surfaces", page.continueCursor);
 	} else if (cursor.phase === "readings") {
 		const page = await ctx.db
 			.query("readings")
@@ -344,6 +334,8 @@ async function loadLemmaRouteNote(
 				"readings",
 				page.continueCursor,
 			);
+		} else if (firstSurfaces.length > 0) {
+			continueCursor = routeConnectionCursor("Lemma", "surfaces", null);
 		} else {
 			continueCursor = routeConnectionCursor(
 				"Lemma",

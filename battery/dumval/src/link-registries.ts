@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { required } from "./required.js";
 import type { Constraint } from "./validation-artifact.js";
 
 type Registry = {
@@ -90,7 +91,10 @@ export function linkRegistries(
 				while (true) {
 					if (!Object.hasOwn(registry.definitions, id))
 						throw Error(`Missing definition: ${owner}/${id}`);
-					const target = registry.definitions[id]!;
+					const target = required(
+						registry.definitions[id],
+						`Missing definition: ${owner}/${id}`,
+					);
 					if (target[0] !== "ref") break;
 					if (aliases.has(id))
 						throw Error(
@@ -99,11 +103,21 @@ export function linkRegistries(
 					aliases.add(id);
 					id = target[1];
 				}
-				if (memo.has(id)) return ["ref", String(memo.get(id)!)];
+				if (memo.has(id))
+					return [
+						"ref",
+						String(required(memo.get(id), "Missing memoized node")),
+					];
 				const index = nodes.length;
 				memo.set(id, index);
 				nodes.push({ owner: ownerIndex, body: ["unknown"] });
-				nodes[index]!.body = children(registry.definitions[id]!, graph);
+				required(nodes[index], "Missing graph node").body = children(
+					required(
+						registry.definitions[id],
+						`Missing definition: ${owner}/${id}`,
+					),
+					graph,
+				);
 				return ["ref", String(index)];
 			}
 			return children(c, graph);
@@ -111,7 +125,15 @@ export function linkRegistries(
 		return Object.fromEntries(
 			Object.keys(registry.roots)
 				.sort()
-				.map((name) => [name, graph(registry.roots[name]!)]),
+				.map((name) => [
+					name,
+					graph(
+						required(
+							registry.roots[name],
+							`Missing root: ${owner}/${name}`,
+						),
+					),
+				]),
 		);
 	});
 	let colors = nodes.map(() => 0),
@@ -126,7 +148,7 @@ export function linkRegistries(
 				]),
 			);
 			if (!classes.has(key)) classes.set(key, classes.size);
-			return classes.get(key)!;
+			return required(classes.get(key), "Missing refinement class");
 		});
 		rounds++;
 		if (refined.every((color, index) => color === colors[index])) break;
@@ -140,33 +162,43 @@ export function linkRegistries(
 	}));
 	const classIds = new Map<number, string>();
 	for (const [index, node] of nodes.entries()) {
-		const color = colors[index]!;
+		const color = required(colors[index], "Missing node color");
 		if (!classIds.has(color))
-			classIds.set(color, `${node.owner}:${owners[node.owner]!.next++}`);
+			classIds.set(
+				color,
+				`${node.owner}:${required(owners[node.owner], "Missing owner").next++}`,
+			);
 	}
-	const remap = (c: Constraint): Constraint => [
-		"ref",
-		classIds.get(colors[Number(c[1])]!)!,
-	];
+	const remap = (c: Constraint): Constraint => {
+		const color = required(
+			colors[Number(c[1])],
+			"Missing referenced color",
+		);
+		return [
+			"ref",
+			required(classIds.get(color), "Missing referenced class"),
+		];
+	};
 	const emitted = new Set<number>();
 	for (const [index, node] of nodes.entries()) {
-		const color = colors[index]!;
+		const color = required(colors[index], "Missing node color");
 		if (emitted.has(color)) continue;
 		emitted.add(color);
-		owners[node.owner]!.definitions[classIds.get(color)!] = mapRefs(
-			node.body,
-			remap,
-		);
+		required(owners[node.owner], "Missing owner").definitions[
+			required(classIds.get(color), "Missing class identifier")
+		] = mapRefs(node.body, remap);
 	}
 	let inherited: Record<string, Constraint> = Object.create(null);
 	let previousFingerprint: string | undefined;
 	return inputs.map(({ owner, registry }, index) => {
-		const definitions = owners[index]!.definitions;
+		const definitions = required(
+			owners[index],
+			"Missing owner",
+		).definitions;
 		const roots = Object.fromEntries(
-			Object.entries(rootGraphs[index]!).map(([name, ref]) => [
-				name,
-				mapRefs(ref, remap),
-			]),
+			Object.entries(
+				required(rootGraphs[index], "Missing root graph"),
+			).map(([name, ref]) => [name, mapRefs(ref, remap)]),
 		);
 		const artifact = { version: 1 as const, roots, definitions };
 		const encoded = JSON.stringify(artifact);
@@ -224,7 +256,10 @@ export function emitLinkedValidationRegistry(
 ): string {
 	if (!inputs.length) throw Error("A validation owner is required");
 	const linked = linkRegistries(inputs);
-	const current = linked.at(-1)!;
+	const current = required(
+		linked.at(-1),
+		"A linked validation owner is required",
+	);
 	const provider = linked.at(-2);
 	return `// Generated shared validation. Run the owning package's generator.\nimport {bindValidationRegistry} from "dumval/runtime";\n${provider ? `import {validationRegistry as provider} from ${JSON.stringify(`${provider.owner}/compiled-validation`)};\n` : ""}export const validationRegistry=bindValidationRegistry<${
 		Object.keys(current.artifact.roots)

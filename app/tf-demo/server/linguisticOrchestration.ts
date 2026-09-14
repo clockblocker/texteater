@@ -284,10 +284,13 @@ export function createTfDemoOrchestrator(options: {
 
 			const sourceSentences = splitInSentences(input.sourceText);
 			assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
+			const firstSourceSentence = sourceSentences[0];
+			if (firstSourceSentence === undefined)
+				throw new Error("Text submission contains no sentences.");
 			const segmentation = yield* effectFrom(
 				options.dumgen.segment({
 					sourceSentences: [
-						sourceSentences[0]!,
+						firstSourceSentence,
 						...sourceSentences.slice(1),
 					],
 				}),
@@ -576,8 +579,9 @@ export function createTfDemoOrchestrator(options: {
 						encounter: resolved.encounter,
 						lemma: resolvedLemma,
 					};
+					const firstCandidate = candidates[0];
 					const operation =
-						candidates.length === 0
+						firstCandidate === undefined
 							? options.dumgen
 									.generateReadingEmojiDescription(
 										base as GenerationInput<"de">,
@@ -592,7 +596,7 @@ export function createTfDemoOrchestrator(options: {
 									{
 										...base,
 										candidates: [
-											candidates[0]!,
+											firstCandidate,
 											...candidates.slice(1),
 										],
 									} as ComparisonInput<"de">,

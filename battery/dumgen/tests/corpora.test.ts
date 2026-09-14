@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { required } from "common-utils";
 import { createDumgen, validateEncounter } from "dumgen";
 import { getExperiment, listExperiments } from "dumgen/development";
 import { Effect } from "effect";
@@ -37,13 +38,13 @@ const kinds: Record<string, string> = {
 test("all development selections are disjoint and production assembly uses only demonstrations", () => {
 	for (const item of listExperiments()) {
 		const experiment = getExperiment(item.id);
-		const corpus = experiment.promptSource.goldenCorpus!;
+		const corpus = required(experiment.promptSource.goldenCorpus);
 		const demos = experiment.promptSource.demonstrations;
 		const toUse = corpus.select(demos && "ids" in demos ? demos.ids : []);
 		expect(toUse.isDisjointFrom(experiment.evaluation)).toBe(true);
 		if (prompts[item.id])
 			expect(assembleSystemPrompt(experiment.promptSource)).toBe(
-				prompts[item.id]!,
+				required(prompts[item.id]),
 			);
 	}
 	expect(
@@ -81,11 +82,16 @@ test("all 1060 retained grammar answers project through public operations", asyn
 		item.id.startsWith("grammatical-resolution/"),
 	)) {
 		const [, language, familyName, kindName] = spec.id.split("/");
-		const family = familyName![0]!.toUpperCase() + familyName!.slice(1),
-			kind = kinds[kindName!]!;
+		const safeFamilyName = required(familyName);
+		const family =
+				required(safeFamilyName[0]).toUpperCase() +
+				safeFamilyName.slice(1),
+			kind = required(kinds[required(kindName)]);
 		const route =
 			`${language}/${family}/${kind}` as keyof typeof grammarSchemas;
-		const corpus = getExperiment(spec.id).promptSource.goldenCorpus!;
+		const corpus = required(
+			getExperiment(spec.id).promptSource.goldenCorpus,
+		);
 		for (const [id, golden] of Object.entries(corpus.cases)) {
 			const input = golden.input as {
 				markedContext: string;
@@ -140,7 +146,9 @@ test("all 1060 retained grammar answers project through public operations", asyn
 				expect([...result.right.members]).toEqual(
 					input.members.map((attested, index) => ({
 						attested,
-						orthography: output.memberOrthographies[index]!,
+						orthography: required(
+							output.memberOrthographies[index],
+						),
 					})),
 				);
 				expect(result.right.surface.lemma.coreFeatures).toEqual(

@@ -16,7 +16,7 @@ test("rendered unit and API examples compile against the published package", asy
 			.map((path) => join(entities, path));
 		paths.push(
 			...["general/api", "lang/de", "lang/en", "lang/he"].map((path) =>
-				join(root, "public", path + ".md"),
+				join(root, "public", `${path}.md`),
 			),
 		);
 		let count = 0;

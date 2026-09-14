@@ -12,7 +12,7 @@ import {
 	type NoteStudyDatabaseUnit,
 	storedRelation,
 } from "../shared/notes-study/note-study-dummy-database";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { internalMutation, type MutationCtx, query } from "./_generated/server";
 import { shadowKeyFor } from "./model/shadows";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
@@ -33,6 +33,32 @@ const listItemValidator = v.object({
 });
 
 const NOTE_STUDY_KNOWLEDGE_UPDATED_AT = Date.UTC(2026, 8, 4);
+
+/**
+ * Kinds whose Surfaces carry inflection need the key present even when it
+ * is null; Dumling rejects a missing key for them.
+ */
+function inflectionalFeaturesOf(
+	value: NoteStudyDatabaseUnit["citationSurface"],
+) {
+	return "inflectionalFeatures" in value
+		? { inflectionalFeatures: value.inflectionalFeatures ?? null }
+		: {};
+}
+
+async function ensureInflectionalFeatures(
+	ctx: MutationCtx,
+	surface: Doc<"surfaces">,
+	value: NoteStudyDatabaseUnit["citationSurface"],
+) {
+	const expected = inflectionalFeaturesOf(value);
+	if (
+		"inflectionalFeatures" in expected &&
+		surface.inflectionalFeatures === undefined
+	) {
+		await ctx.db.patch(surface._id, expected);
+	}
+}
 
 async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 	let lemma = await ctx.db
@@ -121,11 +147,13 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 			language: value.language,
 			normalizedSurface: value.normalizedSurface,
 			spelling: value.spelling,
-
 			surfaceFeatures: value.surfaceFeatures,
+			...inflectionalFeaturesOf(value),
 		});
 		surface = await ctx.db.get(surfaceId);
 		if (!surface) throw new Error("Failed to create Notes Study Surface.");
+	} else {
+		await ensureInflectionalFeatures(ctx, surface, unit.citationSurface);
 	}
 	const ownedSurface = await ctx.db
 		.query("ownedSurfaces")
@@ -152,10 +180,12 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 				language: value.language,
 				normalizedSurface: value.normalizedSurface,
 				spelling: value.spelling,
-
 				surfaceFeatures: value.surfaceFeatures,
+				...inflectionalFeaturesOf(value),
 			});
 			presentationSurface = await ctx.db.get(id);
+		} else {
+			await ensureInflectionalFeatures(ctx, presentationSurface, value);
 		}
 		if (!presentationSurface) {
 			throw new Error(
@@ -423,5 +453,93 @@ export const get = query({
 		return reading
 			? loadUnitReadingNote(ctx, reading._id, NOTE_STUDY_VISITOR_ID)
 			: null;
+	},
+});
+
+const playgroundEntryValidator = v.object({
+	readingKey: v.string(),
+	canonicalForm: v.string(),
+	emojiDescription: v.string(),
+	family: v.string(),
+	kind: v.string(),
+	readingId: v.id("readings"),
+	lemmaId: v.id("lemmas"),
+	normalizedSurface: v.string(),
+	attestationId: v.union(v.null(), v.id("attestations")),
+});
+
+const playgroundShadowValidator = v.object({
+	shadowId: v.id("shadows"),
+	canonicalForm: v.string(),
+});
+
+/** Dev-only: every Note target the Notes Study fake db can open. */
+export const playground = query({
+	args: {},
+	returns: v.object({
+		entries: v.array(playgroundEntryValidator),
+		shadows: v.array(playgroundShadowValidator),
+	}),
+	handler: async (ctx) => {
+		const entries = await Promise.all(
+			NOTE_STUDY_DATABASE.map(async (unit) => {
+				const reading = await ctx.db
+					.query("readings")
+					.withIndex("by_reading_key", (q) =>
+						q.eq("readingKey", unit.readingKey),
+					)
+					.unique();
+				if (!reading) return null;
+				const lemma = await ctx.db.get(reading.lemmaId);
+				if (!lemma) return null;
+				const attestation = await ctx.db
+					.query("attestations")
+					.withIndex("by_reading_id", (q) =>
+						q.eq("readingId", reading._id),
+					)
+					.first();
+				return {
+					readingKey: unit.readingKey,
+					canonicalForm: lemma.canonicalForm,
+					emojiDescription: reading.emojiDescription,
+					family: lemma.family,
+					kind: lemma.kind,
+					readingId: reading._id,
+					lemmaId: lemma._id,
+					normalizedSurface: unit.citationSurface.normalizedSurface,
+					attestationId: attestation?._id ?? null,
+				};
+			}),
+		);
+		const shadowKeys = [
+			...new Set(
+				NOTE_STUDY_PENDING_RELATIONS.map((pending) =>
+					shadowKeyFor(pending.target),
+				),
+			),
+		];
+		const shadows = await Promise.all(
+			shadowKeys.map((shadowKey) =>
+				ctx.db
+					.query("shadows")
+					.withIndex("by_shadow_key", (q) =>
+						q.eq("shadowKey", shadowKey),
+					)
+					.unique(),
+			),
+		);
+		return {
+			entries: entries.flatMap((entry) => (entry ? [entry] : [])),
+			shadows: shadows.flatMap((shadow) =>
+				shadow
+					? [
+							{
+								shadowId: shadow._id,
+								canonicalForm: shadow.canonicalForm,
+							},
+						]
+					: [],
+			),
+		};
 	},
 });

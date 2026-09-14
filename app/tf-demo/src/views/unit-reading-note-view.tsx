@@ -171,9 +171,9 @@ export function readingDefinitionMutationArgs(
 
 function ReadingNoteSkeleton() {
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="min-h-full bg-paper px-note-gutter pt-note-top">
 			<div
-				className="mx-auto flex w-full max-w-5xl flex-col gap-3"
+				className="mx-auto flex w-full max-w-note flex-col gap-3"
 				role="status"
 				aria-label="Loading Reading note"
 			>

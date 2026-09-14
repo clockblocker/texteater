@@ -2,7 +2,8 @@ import { expect, test } from "bun:test";
 import { validateAuthoredCatalog } from "../codegen/validate-authored-catalog.js";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 
-const member = authoredMembers[0]!;
+const member = authoredMembers[0];
+if (!member) throw Error("Expected the authored catalog to contain a member");
 
 test("the build accepts the complete authored catalog without changing its data", () => {
 	const before = JSON.stringify(authoredMembers);
