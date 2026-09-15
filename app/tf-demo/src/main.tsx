@@ -1,6 +1,7 @@
 import { initializeTheme } from "lego";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { initializeMotionPreference } from "@/lib/motion-preference";
 
 import "./index.css";
 
@@ -11,6 +12,7 @@ if (!rootElement) {
 }
 
 initializeTheme({ defaultTheme: "dark", storageKey: "tf-demo-theme" });
+initializeMotionPreference();
 
 if (
 	window.location.pathname !== "/" ||

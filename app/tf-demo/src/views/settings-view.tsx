@@ -17,6 +17,7 @@ import {
 } from "lego";
 import { DataControls } from "@/components/data-controls";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { useMotionPreference } from "@/lib/motion-preference";
 import type { SettingsTarget } from "@/lib/navigation";
 import { api } from "../../convex/_generated/api";
 import { KnowledgeSettingsForm } from "./unit-reading-knowledge-settings";
@@ -44,8 +45,9 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 							Choose how tf-demo looks in this browser.
 						</CardDescription>
 					</CardHeader>
-					<CardContent>
+					<CardContent className="grid gap-4">
 						<ThemeSettings />
+						<MotionSettings />
 					</CardContent>
 				</Card>
 
@@ -99,6 +101,31 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 				)}
 			</div>
 		</div>
+	);
+}
+
+function MotionSettings() {
+	const { preference, setPreference } = useMotionPreference();
+
+	return (
+		<FieldLabel htmlFor="always-play-animations">
+			<Field orientation="horizontal">
+				<FieldContent>
+					<FieldTitle>Always play animations</FieldTitle>
+					<FieldDescription>
+						Ignore your system’s Reduce Motion preference throughout
+						tf-demo.
+					</FieldDescription>
+				</FieldContent>
+				<Switch
+					id="always-play-animations"
+					checked={preference === "ignore"}
+					onCheckedChange={(checked) =>
+						setPreference(checked ? "ignore" : "respect")
+					}
+				/>
+			</Field>
+		</FieldLabel>
 	);
 }
 
