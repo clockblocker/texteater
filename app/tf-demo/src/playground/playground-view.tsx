@@ -53,7 +53,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck models",
 		icon: LayersIcon,
 		description:
-			"The Flick closing algebra for decks, Cards and Sheets on dummy subjects. Run the flow, read the log.",
+			"Compass: what a drag means for a deck of Cards. The first direction names the intent; a held gesture relaxes into a plain drag.",
 		render: () => <DeckModelsGallery />,
 	},
 	{

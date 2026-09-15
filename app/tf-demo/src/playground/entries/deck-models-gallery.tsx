@@ -1,10 +1,10 @@
-import { FlickModel } from "./deck-models/flick-model";
+import { CompassModel } from "./deck-models/drag-deck";
 
 /**
- * The Flick answer to "what does closing mean" for decks, Cards and Sheets,
- * on dummy subjects. Benchmark flow: select a word, deal a deck, open one,
- * follow a link, return to the Text, select another word.
+ * Compass: what a drag means for a deck of Cards on dummy subjects. The first
+ * direction of the gesture names the intent; a held gesture relaxes into a
+ * plain drag with drop zones.
  */
 export function DeckModelsGallery() {
-	return <FlickModel />;
+	return <CompassModel />;
 }

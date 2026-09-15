@@ -220,28 +220,3 @@ export function NoteBody({
 		</div>
 	);
 }
-
-export function CloseGlyph({
-	label,
-	onClick,
-	className = "",
-}: {
-	label: string;
-	onClick: () => void;
-	className?: string;
-}) {
-	return (
-		<button
-			type="button"
-			aria-label={label}
-			title={label}
-			onClick={(event) => {
-				event.stopPropagation();
-				onClick();
-			}}
-			className={`grid size-7 place-items-center rounded-md text-[1rem] leading-none text-ink-muted hover:bg-raised hover:text-ink ${className}`}
-		>
-			×
-		</button>
-	);
-}
