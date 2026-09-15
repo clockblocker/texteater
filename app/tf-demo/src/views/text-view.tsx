@@ -461,8 +461,9 @@ function segmentTone(
 ): ReaderSegmentTone {
 	switch (state) {
 		case "unknown-preview":
-		case "resolving":
 			return "unknown";
+		case "resolving":
+			return "resolving";
 		case "unresolved":
 		case "unresolved-preview":
 			return "unresolved";
@@ -481,7 +482,6 @@ function segmentTone(
 function isPreviewState(state: SegmentDisplayState | undefined): boolean {
 	return (
 		state === "unknown-preview" ||
-		state === "resolving" ||
 		state === "unresolved-preview" ||
 		state === "failed-preview" ||
 		state === "known-preview"

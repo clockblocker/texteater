@@ -1,7 +1,14 @@
 import { useMutation } from "convex/react";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "lego";
+import {
+	Checkbox,
+	Field,
+	FieldGroup,
+	FieldLabel,
+	FieldLegend,
+	FieldSet,
+} from "lego";
 import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
@@ -98,17 +105,15 @@ export function KnowledgeSettingsChecklist({
 			<FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 				{KNOWLEDGE_SETTING_LABELS.map(({ path, label }) => (
 					<Field key={path} orientation="horizontal">
-						<input
+						<Checkbox
 							id={`knowledge-setting-${path}`}
-							type="checkbox"
-							className="size-4 shrink-0 accent-primary"
 							checked={knowledgeSettingValue(settings, path)}
-							onChange={(event) =>
+							onCheckedChange={(checked) =>
 								onChange?.(
 									withKnowledgeSetting(
 										settings,
 										path,
-										event.currentTarget.checked,
+										checked,
 									),
 								)
 							}

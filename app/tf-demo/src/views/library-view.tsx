@@ -115,7 +115,7 @@ export function LibraryView() {
 												textId: text.textId,
 											})
 										}
-										className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+										className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-[background-color,scale] duration-150 ease-out hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
 									>
 										<div className="flex items-start justify-between gap-4">
 											<div className="flex min-w-0 flex-col gap-2">
@@ -136,7 +136,10 @@ export function LibraryView() {
 						) : (
 							<Card size="sm">
 								<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
-									<LibraryIcon className="size-5" />
+									<LibraryIcon
+										className="size-5"
+										strokeWidth={1.5}
+									/>
 									<p className="text-pretty">
 										No stored texts yet. Add one with the
 										plus button.
@@ -153,7 +156,7 @@ export function LibraryView() {
 					render={
 						<Button
 							size="icon-lg"
-							className="absolute end-4 bottom-6 z-10 size-14 rounded-full shadow-lg sm:end-6"
+							className="absolute end-4 bottom-6 z-10 size-14 rounded-full shadow-lg ring-1 ring-white/10 sm:end-6"
 						/>
 					}
 				>

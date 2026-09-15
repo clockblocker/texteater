@@ -79,6 +79,7 @@ body:has(.workspace) {
 .workspace__separator {
 	z-index: 4;
 	background: var(--line-strong, #435064);
+	transition: background-color 150ms ease-out;
 }
 .workspace__separator:hover,
 .workspace__separator:focus-visible {
@@ -150,6 +151,15 @@ body:has(.workspace) {
 	background: var(--canvas, #141920);
 	color: var(--ink, #e2e5e9);
 	font-size: 1rem;
+	transition:
+		background-color 100ms ease-out,
+		scale 150ms ease-out;
+}
+.workspace__pane-actions button:hover {
+	background: var(--raised, #283342);
+}
+.workspace__pane-actions button:active {
+	scale: 0.96;
 }
 /* Applications may place the Card Layer through these custom properties. */
 .workspace__cards {
@@ -168,21 +178,49 @@ body:has(.workspace) {
 	border: 2px solid transparent;
 	border-radius: calc(var(--workspace-card-radius) + 12px);
 	pointer-events: none;
+	transition: border-color 150ms ease-out;
 }
 .workspace__cards[data-return-target="true"] > .workspace__return-zone {
 	border-color: var(--primary, #8eb4f0);
 }
+/* A Card floats: a hairline of light on its edge and a deep shadow beneath,
+   no border. It arrives from slightly below and leaves slightly upward. The
+   enter transition starts from `@starting-style`, so closing mid-arrival
+   simply reverses the same transition. */
 .workspace__card {
 	position: absolute;
 	right: 0;
 	left: 0;
 	overflow: hidden;
-	border: 1px solid var(--line-strong, #56657a);
 	border-radius: var(--workspace-card-radius);
 	padding-block: 1.5rem var(--workspace-card-tail-height);
 	background: var(--paper, #1c2128);
-	box-shadow: 0 1rem 2rem #0005;
+	box-shadow:
+		0 0 0 1px oklch(1 0 0 / 0.1),
+		0 1rem 2rem oklch(0 0 0 / 0.5);
 	pointer-events: auto;
+	opacity: 1;
+	translate: 0 0;
+	filter: blur(0);
+	transition:
+		opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+		translate 300ms cubic-bezier(0.2, 0, 0, 1),
+		filter 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+@starting-style {
+	.workspace__card {
+		opacity: 0;
+		translate: 0 12px;
+		filter: blur(4px);
+	}
+}
+.workspace__card[data-leaving="true"] {
+	opacity: 0;
+	translate: 0 -12px;
+	pointer-events: none;
+	transition:
+		opacity 150ms ease-out,
+		translate 150ms ease-out;
 }
 .workspace__card-content {
 	height: 100%;
@@ -216,6 +254,9 @@ body:has(.workspace) {
 	font-size: 0.7rem;
 	touch-action: none;
 	cursor: grab;
+	transition:
+		background-color 150ms ease-out,
+		color 150ms ease-out;
 }
 .workspace__drop {
 	position: absolute;
@@ -240,11 +281,12 @@ body:has(.workspace) {
 	width: min(25.775rem, calc(100vw - 3rem));
 	height: min(34rem, 70vh);
 	overflow: hidden;
-	border: 1px solid var(--line-strong, #657994);
 	border-radius: var(--workspace-card-radius, 0.7rem);
 	padding-block: 1.5rem;
 	background: var(--paper, #1c2128);
-	box-shadow: 0 1.75rem 2.8rem #0007;
+	box-shadow:
+		0 0 0 1px oklch(1 0 0 / 0.1),
+		0 1.75rem 2.8rem oklch(0 0 0 / 0.5);
 	pointer-events: none;
 	transform: translate(-50%, -1.15rem);
 }
@@ -258,6 +300,9 @@ body:has(.workspace) {
 
 .workspace__lift span {
 	opacity: 0.35;
+	transition:
+		opacity 150ms ease-out,
+		background-color 150ms ease-out;
 }
 .workspace__lift:hover span,
 .workspace__lift:focus-visible span {

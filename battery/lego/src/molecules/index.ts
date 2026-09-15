@@ -1,4 +1,5 @@
 export * from "./density";
+export * from "./icon-swap";
 export * from "./ipa";
 export * from "./link-button";
 export * from "./mark";

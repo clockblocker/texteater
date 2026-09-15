@@ -1,5 +1,5 @@
-import { Button, NoteSection, QuoteButton } from "lego";
-import { LoaderCircleIcon } from "lucide-react";
+import { Button, IconSwap, NoteSection, QuoteButton } from "lego";
+import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 
 import type { ReadingDefaultRenderer } from "../../../renderer";
 
@@ -49,9 +49,12 @@ export const renderDefaultReadingSourceContexts = (({
 					}
 					onClick={() => void sourceContexts.loadMore?.()}
 				>
-					{sourceContexts.isLoading ? (
-						<LoaderCircleIcon className="animate-spin" />
-					) : null}
+					<IconSwap
+						data-icon="inline-start"
+						active={sourceContexts.isLoading}
+						idle={<ChevronDownIcon />}
+						busy={<LoaderCircleIcon className="animate-spin" />}
+					/>
 					{sourceContexts.isLoading
 						? "Loading…"
 						: "Load more Source Contexts"}

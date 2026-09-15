@@ -3,6 +3,7 @@ import { describe, expect, test } from "bun:test";
 import {
 	actuateSourceContextFocus,
 	isFocusedOccurrenceMember,
+	prefersReducedMotion,
 	SOURCE_CONTEXT_EMPHASIS_COLOR,
 } from "../src/lib/source-context-focus";
 
@@ -36,11 +37,52 @@ describe("Source Context focus", () => {
 					{ backgroundColor: SOURCE_CONTEXT_EMPHASIS_COLOR },
 					{ backgroundColor: "transparent" },
 				],
-				{ duration: 900, easing: "ease-out", iterations: 1 },
+				{ duration: 600, easing: "ease-out", iterations: 1 },
 			]);
 		}
 		for (const animation of animations) animation.cancel();
 		expect(cancellations).toEqual([1, 1]);
+	});
+
+	test("still centers the Sentence but skips the flash when motion is reduced", () => {
+		const scrollCalls: unknown[] = [];
+		let animateCalls = 0;
+		const animations = actuateSourceContextFocus(
+			{
+				scrollIntoView(options) {
+					scrollCalls.push(options);
+				},
+			},
+			[
+				{
+					animate() {
+						animateCalls += 1;
+						return {} as Animation;
+					},
+				},
+			],
+			true,
+		);
+
+		expect(scrollCalls).toEqual([{ block: "center", behavior: "auto" }]);
+		expect(animateCalls).toBe(0);
+		expect(animations).toEqual([]);
+	});
+
+	test("reads the system preference unless the app ignores it", () => {
+		const view = (matches: boolean, preference?: string) => ({
+			matchMedia: () => ({ matches }) as MediaQueryList,
+			document: {
+				documentElement: {
+					dataset: preference ? { motionPreference: preference } : {},
+				},
+			} as unknown as Document,
+		});
+		expect(prefersReducedMotion(null)).toBe(false);
+		expect(prefersReducedMotion(view(false))).toBe(false);
+		expect(prefersReducedMotion(view(true))).toBe(true);
+		expect(prefersReducedMotion(view(true, "ignore"))).toBe(false);
+		expect(prefersReducedMotion(view(true, "respect"))).toBe(true);
 	});
 
 	test("matches discontinuous members without matching intervening Segments", () => {

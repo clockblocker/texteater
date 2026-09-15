@@ -1,4 +1,11 @@
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "lego";
+import {
+	Button,
+	Card,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "lego";
 import { LibraryIcon } from "lucide-react";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 
@@ -19,14 +26,10 @@ export function NotFoundView({
 						<CardDescription>{description}</CardDescription>
 					</CardHeader>
 					<CardFooter className="justify-end">
-						<button
-							type="button"
-							onClick={revealLibrary}
-							className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-						>
-							<LibraryIcon className="size-4" />
+						<Button onClick={revealLibrary}>
+							<LibraryIcon data-icon="inline-start" />
 							Back to library
-						</button>
+						</Button>
 					</CardFooter>
 				</Card>
 			</div>

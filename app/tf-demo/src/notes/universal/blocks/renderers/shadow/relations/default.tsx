@@ -1,5 +1,9 @@
-import { Button, LinkButton, NoteSection } from "lego";
-import { LoaderCircleIcon } from "lucide-react";
+import { Button, IconSwap, LinkButton, NoteSection } from "lego";
+import {
+	BrushCleaningIcon,
+	ChevronDownIcon,
+	LoaderCircleIcon,
+} from "lucide-react";
 
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { RouteAside } from "../../common/features";
@@ -76,10 +80,18 @@ export const renderDefaultShadowRelations = (({
 																)
 															}
 														>
-															{cleanup.activeLocator ===
-															pending.locatorKey ? (
-																<LoaderCircleIcon className="animate-spin" />
-															) : null}
+															<IconSwap
+																active={
+																	cleanup.activeLocator ===
+																	pending.locatorKey
+																}
+																idle={
+																	<BrushCleaningIcon />
+																}
+																busy={
+																	<LoaderCircleIcon className="animate-spin" />
+																}
+															/>
 															Clean up
 														</LinkButton>
 													) : null}
@@ -113,9 +125,14 @@ export const renderDefaultShadowRelations = (({
 							}
 							onClick={() => void references.loadMore?.()}
 						>
-							{references.isLoading ? (
-								<LoaderCircleIcon className="animate-spin" />
-							) : null}
+							<IconSwap
+								data-icon="inline-start"
+								active={references.isLoading}
+								idle={<ChevronDownIcon />}
+								busy={
+									<LoaderCircleIcon className="animate-spin" />
+								}
+							/>
 							{references.isLoading
 								? "Loading…"
 								: "Load more references"}

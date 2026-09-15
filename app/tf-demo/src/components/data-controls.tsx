@@ -8,6 +8,7 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
+	Checkbox,
 	Field,
 	FieldContent,
 	FieldDescription,
@@ -141,15 +142,11 @@ export function DataControls({
 				</CardHeader>
 				<CardContent>
 					<Field orientation="horizontal">
-						<input
+						<Checkbox
 							id="open-route-notes"
-							type="checkbox"
-							className="mt-0.5 size-4 shrink-0 accent-primary"
 							checked={routeNotesEnabled}
-							onChange={(event) =>
-								setRouteNotesEnabled(
-									event.currentTarget.checked,
-								)
+							onCheckedChange={(checked) =>
+								setRouteNotesEnabled(checked)
 							}
 						/>
 						<FieldContent>

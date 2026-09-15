@@ -15,6 +15,7 @@ import {
 	selectCardLayersForPane,
 	selectLayout,
 	selectLiftedPresentation,
+	selectPanes,
 	selectVisibleCards,
 	selectVisibleSheets,
 	type WorkspaceCardLayer,
@@ -38,6 +39,37 @@ type PanePointer = {
 	moved: boolean;
 	scrolled: boolean;
 };
+/** Where a Card sat the last time it was drawn, kept while it fades out. */
+type CardPlacement<S> = {
+	presentation: WorkspacePresentation<S>;
+	paneId: string;
+	layerId: string;
+	index: number;
+	total: number;
+};
+
+/** How long a closed Card stays mounted for its exit; matches `workspace.css`. */
+const CARD_EXIT_MS = 150;
+
+function collectCardPlacements<S>(
+	state: WorkspaceState<S>,
+): Map<string, CardPlacement<S>> {
+	const placements = new Map<string, CardPlacement<S>>();
+	for (const pane of selectPanes(state)) {
+		for (const layer of selectCardLayersForPane(state, pane.id)) {
+			for (const presentation of selectVisibleCards(state, layer.id)) {
+				placements.set(presentation.id, {
+					presentation,
+					paneId: pane.id,
+					layerId: layer.id,
+					index: layer.memberIds.indexOf(presentation.id),
+					total: layer.memberIds.length,
+				});
+			}
+		}
+	}
+	return placements;
+}
 
 const DISMISS_EXEMPT_SELECTOR = [
 	"button",
@@ -184,6 +216,51 @@ export function Workspace<S>({
 	} | null>(null);
 	const layout = selectLayout(state);
 	const lifted = selectLiftedPresentation(state);
+	/* Cards that just left the state stay drawn for one short exit. A lifted
+	   Card is not leaving: it turns into the drag ghost instead. */
+	const [leavingCards, setLeavingCards] = useState<CardPlacement<S>[]>([]);
+	const cardPlacementsRef = useRef<Map<string, CardPlacement<S>>>(new Map());
+	const exitTimeoutsRef = useRef(new Set<number>());
+	useEffect(() => {
+		const timeouts = exitTimeoutsRef.current;
+		return () => {
+			for (const timeout of timeouts) window.clearTimeout(timeout);
+			timeouts.clear();
+		};
+	}, []);
+	useEffect(() => {
+		const previous = cardPlacementsRef.current;
+		const current = collectCardPlacements(state);
+		cardPlacementsRef.current = current;
+		const liftedId = state.gesture?.presentationId;
+		const gone = [...previous.values()].filter(
+			(placement) =>
+				!current.has(placement.presentation.id) &&
+				placement.presentation.id !== liftedId &&
+				state.presentations[placement.presentation.id]?.form !==
+					"Sheet",
+		);
+		if (!gone.length) return;
+		setLeavingCards((cards) => [
+			...cards.filter(
+				(card) =>
+					!gone.some(
+						(placement) =>
+							placement.presentation.id === card.presentation.id,
+					),
+			),
+			...gone,
+		]);
+		/* Each batch removes itself; a later state change must not cut the
+		   exit short, so the timer is only cleared when the Workspace unmounts. */
+		const timeout = window.setTimeout(() => {
+			exitTimeoutsRef.current.delete(timeout);
+			setLeavingCards((cards) =>
+				cards.filter((card) => !gone.includes(card)),
+			);
+		}, CARD_EXIT_MS);
+		exitTimeoutsRef.current.add(timeout);
+	}, [state]);
 
 	useEffect(() => {
 		const element = root.current;
@@ -585,10 +662,56 @@ export function Workspace<S>({
 		}
 	}
 
+	function renderCard(
+		{ presentation: card, paneId, index, total }: CardPlacement<S>,
+		leaving: boolean,
+	) {
+		return (
+			<article
+				key={card.id}
+				className="workspace__card"
+				onDoubleClick={(event) => toggleBody(event, card, paneId)}
+				data-presentation-id={card.id}
+				data-presentation-form="Card"
+				data-leaving={leaving ? "true" : undefined}
+				inert={leaving}
+				style={{
+					top: `calc(${index} * var(--workspace-card-step))`,
+					zIndex: total - index,
+					height: `calc(100% - ${total - 1} * var(--workspace-card-step))`,
+				}}
+			>
+				<div className="workspace__card-content" inert={index !== 0}>
+					{renderSubject(card.subject, {
+						presentationId: card.id,
+						presentation: "Card",
+						subject: card.subject,
+						selectAnchor: (anchor) => selectAnchor(card.id, anchor),
+					})}
+				</div>
+				{index === 0 && !leaving ? renderLiftHandle(card, "top") : null}
+				<button
+					type="button"
+					className="workspace__card-tail"
+					aria-label={`Lift ${labelSubject(card.subject)} Card`}
+					{...liftHandlers(card)}
+				>
+					{labelSubject(card.subject)}
+				</button>
+			</article>
+		);
+	}
+
 	function renderPane(paneId: string) {
 		const sheets = selectVisibleSheets(state, paneId);
 		const top = sheets.at(-1);
 		const cardLayers = selectCardLayersForPane(state, paneId);
+		const leavingHere = leavingCards.filter(
+			(card) => card.paneId === paneId,
+		);
+		const leavingLayerIds = [
+			...new Set(leavingHere.map((card) => card.layerId)),
+		];
 		const isTarget = destination?.paneId === paneId ? destination : null;
 		return (
 			<section
@@ -682,11 +805,30 @@ export function Workspace<S>({
 						</button>
 					) : null}
 				</div>
-				{cardLayers.map((layer) => {
+				{[
+					...cardLayers,
+					...leavingLayerIds
+						.filter(
+							(layerId) =>
+								!cardLayers.some(
+									(layer) => layer.id === layerId,
+								),
+						)
+						.map((id) => ({ id, memberIds: [] as string[] })),
+				].map((layer) => {
 					const cards = selectVisibleCards(state, layer.id);
 					const holdsMember =
 						lifted?.presentation.layerId === layer.id;
-					if (!cards.length && !holdsMember) return null;
+					const leaving = leavingHere.filter(
+						(card) =>
+							card.layerId === layer.id &&
+							!cards.some(
+								(visible) =>
+									visible.id === card.presentation.id,
+							),
+					);
+					if (!cards.length && !holdsMember && !leaving.length)
+						return null;
 					return (
 						<div
 							key={layer.id}
@@ -708,53 +850,19 @@ export function Workspace<S>({
 									aria-hidden="true"
 								/>
 							) : null}
-							{cards.map((card) => {
-								const index = layer.memberIds.indexOf(card.id);
-								const total = layer.memberIds.length;
-								return (
-									<article
-										key={card.id}
-										className="workspace__card"
-										onDoubleClick={(event) =>
-											toggleBody(event, card, paneId)
-										}
-										data-presentation-id={card.id}
-										data-presentation-form="Card"
-										style={{
-											top: `calc(${index} * var(--workspace-card-step))`,
-											zIndex: total - index,
-											height: `calc(100% - ${total - 1} * var(--workspace-card-step))`,
-										}}
-									>
-										<div
-											className="workspace__card-content"
-											inert={index !== 0}
-										>
-											{renderSubject(card.subject, {
-												presentationId: card.id,
-												presentation: "Card",
-												subject: card.subject,
-												selectAnchor: (anchor) =>
-													selectAnchor(
-														card.id,
-														anchor,
-													),
-											})}
-										</div>
-										{index === 0
-											? renderLiftHandle(card, "top")
-											: null}
-										<button
-											type="button"
-											className="workspace__card-tail"
-											aria-label={`Lift ${labelSubject(card.subject)} Card`}
-											{...liftHandlers(card)}
-										>
-											{labelSubject(card.subject)}
-										</button>
-									</article>
-								);
-							})}
+							{cards.map((card) =>
+								renderCard(
+									{
+										presentation: card,
+										paneId,
+										layerId: layer.id,
+										index: layer.memberIds.indexOf(card.id),
+										total: layer.memberIds.length,
+									},
+									false,
+								),
+							)}
+							{leaving.map((card) => renderCard(card, true))}
 						</div>
 					);
 				})}

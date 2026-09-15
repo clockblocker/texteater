@@ -48,7 +48,7 @@ export function AppSidebar({
 										}
 										tooltip="Library"
 									>
-										<LibraryIcon />
+										<LibraryIcon strokeWidth={1.5} />
 										<span>Library</span>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
@@ -69,7 +69,7 @@ export function AppSidebar({
 									}
 									tooltip="Playground"
 								>
-									<FlaskConicalIcon />
+									<FlaskConicalIcon strokeWidth={1.5} />
 									<span>Playground</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -80,7 +80,7 @@ export function AppSidebar({
 								onClick={() => runAndClose(onShowSettings)}
 								tooltip="Settings"
 							>
-								<SettingsIcon />
+								<SettingsIcon strokeWidth={1.5} />
 								<span>Settings</span>
 							</SidebarMenuButton>
 						</SidebarMenuItem>

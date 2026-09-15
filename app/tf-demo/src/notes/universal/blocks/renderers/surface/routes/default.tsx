@@ -1,5 +1,5 @@
-import { Button, LinkButton, NoteSection } from "lego";
-import { LoaderCircleIcon } from "lucide-react";
+import { Button, IconSwap, LinkButton, NoteSection } from "lego";
+import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 
 import type { SurfaceDefaultRenderer } from "../../../renderer";
 import { featureSummary, genderTone, RouteAside } from "../../common/features";
@@ -98,9 +98,12 @@ export const renderDefaultSurfaceRoutes = (({
 					}
 					onClick={() => void pagination.loadMore?.()}
 				>
-					{pagination.isLoading ? (
-						<LoaderCircleIcon className="animate-spin" />
-					) : null}
+					<IconSwap
+						data-icon="inline-start"
+						active={pagination.isLoading}
+						idle={<ChevronDownIcon />}
+						busy={<LoaderCircleIcon className="animate-spin" />}
+					/>
 					{pagination.isLoading ? "Loading…" : "Load more analyses"}
 				</Button>
 			) : null}

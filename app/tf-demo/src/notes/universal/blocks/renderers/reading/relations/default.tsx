@@ -64,7 +64,10 @@ export const renderDefaultReadingRelations = (({
 								}
 								aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
 							>
-								<LockIcon aria-hidden="true" />
+								<LockIcon
+									aria-hidden="true"
+									strokeWidth={1.5}
+								/>
 								<RelationMark relation={relation.relation} />
 								{relation.targetCanonicalForm}
 							</LinkButton>
