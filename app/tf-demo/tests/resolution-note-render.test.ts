@@ -5,6 +5,7 @@ import { resolutionDeckCards } from "../src/views/resolution-deck";
 import {
 	completionTarget,
 	ResolutionNoteFrame,
+	ResolutionStepNoteFrame,
 } from "../src/views/resolution-note-view";
 import { segmentSelectionDeckCards } from "../src/views/segment-selection-deck";
 
@@ -34,7 +35,7 @@ const reading = {
 	kind: "NOUN",
 };
 
-test("renders learner-safe Resolution sections in lifecycle order", () => {
+test("active Resolution presentations use final-Note skeletons instead of WIP content", () => {
 	const markup = renderToStaticMarkup(
 		createElement(ResolutionNoteFrame, {
 			note: {
@@ -47,19 +48,36 @@ test("renders learner-safe Resolution sections in lifecycle order", () => {
 				reading,
 				updatedAt: 1,
 			},
+			presentation: "Card",
 		}),
 	);
 
-	expect(markup.indexOf('aria-label="Source"')).toBeLessThan(
-		markup.indexOf('aria-label="Grammar"'),
-	);
-	expect(markup.indexOf('aria-label="Grammar"')).toBeLessThan(
-		markup.indexOf('aria-label="Reading"'),
-	);
-	expect(markup).toContain("Die Banken.");
-	expect(markup).toContain("🏦 Bank");
-	expect(markup).not.toContain("visitor");
-	expect(markup).not.toContain("provider");
+	expect(markup).toContain('data-slot="note-skeleton"');
+	expect(markup).toContain('aria-label="Loading Attestation Note"');
+	expect(markup).not.toContain("Die Banken.");
+	expect(markup).not.toContain("Reading Available");
+});
+
+test("each Resolution step uses the skeleton of its eventual Note", () => {
+	const expected = {
+		Attestation: "Loading Attestation Note",
+		Surface: "Loading Surface Note",
+		Lemma: "Loading Lemma Note",
+		Reading: "Loading Reading Note",
+	} as const;
+
+	for (const [stepKind, label] of Object.entries(expected)) {
+		const markup = renderToStaticMarkup(
+			createElement(ResolutionStepNoteFrame, {
+				stepKind: stepKind as keyof typeof expected,
+				presentation: "Card",
+			}),
+		);
+
+		expect(markup).toContain('data-slot="note-skeleton"');
+		expect(markup).toContain(`aria-label="${label}"`);
+		expect(markup).not.toContain("Die Banken.");
+	}
 });
 
 test("projects each available Resolution step onto the front of one deck", () => {

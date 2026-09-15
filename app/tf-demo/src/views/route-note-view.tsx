@@ -2,11 +2,11 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { Skeleton } from "lego";
 import { useCallback } from "react";
 import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
+import { renderNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -36,7 +36,8 @@ export function RouteNoteView({
 		),
 		gcTime: 10_000,
 	});
-	if (noteQuery.isPending) return <RouteNoteSkeleton />;
+	if (noteQuery.isPending)
+		return renderNoteSkeleton(target.kind, presentation);
 	if (noteQuery.data?.kind !== target.kind) {
 		return (
 			<NotFoundView
@@ -201,18 +202,4 @@ function routeNoteCapabilities(
 	readonly follow: typeof follow;
 } {
 	return { presentation, pagination, follow };
-}
-
-function RouteNoteSkeleton() {
-	return (
-		<div className="min-h-full bg-paper px-note-gutter pt-note-top">
-			<div
-				className="mx-auto flex w-full max-w-note flex-col gap-5"
-				role="status"
-			>
-				<Skeleton className="h-8 w-56" />
-				<Skeleton className="h-28 w-full" />
-			</div>
-		</div>
-	);
 }

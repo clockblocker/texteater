@@ -60,13 +60,18 @@ export function renderApplicationSubject(
 			);
 		case "Resolution":
 			return (
-				<ResolutionNoteView key={target.requestId} target={target} />
+				<ResolutionNoteView
+					key={target.requestId}
+					target={target}
+					presentation={presentation}
+				/>
 			);
 		case "ResolutionStep":
 			return (
 				<ResolutionStepNoteView
 					key={`${target.requestId}:${target.stepKind}`}
 					target={target}
+					presentation={presentation}
 				/>
 			);
 	}

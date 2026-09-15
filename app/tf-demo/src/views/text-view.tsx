@@ -2,10 +2,10 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
 import {
+	NoteLinesSkeleton,
 	ReaderPlainSegment,
 	ReaderSegment,
 	type ReaderSegmentTone,
-	Skeleton,
 } from "lego";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
 
@@ -395,15 +395,27 @@ export function SentenceList({
 	);
 }
 
-function TextViewSkeleton() {
+/** The reading column before its sentences arrive: two passages of bones set on the passage leading. */
+export function TextViewSkeleton() {
 	return (
-		<div className="w-full min-h-full flex-auto bg-paper">
+		<div
+			className="w-full min-h-full flex-auto bg-paper"
+			role="status"
+			aria-busy="true"
+			aria-label="Loading Text"
+		>
 			<div
-				className={READER_BODY_CLASS}
-				role="status"
-				aria-label="Loading text"
+				aria-hidden="true"
+				className={`${READER_BODY_CLASS} space-y-7 text-lg leading-[1.52] @max-md:space-y-6 @max-md:text-base`}
 			>
-				<Skeleton className="h-9 w-96 max-w-full" />
+				<NoteLinesSkeleton
+					className="leading-[inherit]"
+					widths={["w-full", "w-11/12", "w-full", "w-3/5"]}
+				/>
+				<NoteLinesSkeleton
+					className="leading-[inherit]"
+					widths={["w-full", "w-4/5", "w-2/5"]}
+				/>
 			</div>
 		</div>
 	);

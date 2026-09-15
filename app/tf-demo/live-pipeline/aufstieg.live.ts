@@ -146,7 +146,7 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 				.locator('[data-note-kind="Reading"]')
 				.filter({ hasText: "Aufstieg" }),
 		).toBeVisible();
-		await expect(page.getByLabel("Loading Reading note")).toHaveCount(0);
+		await expect(page.getByLabel("Loading Reading Note")).toHaveCount(0);
 		expect(browserErrors).toEqual([]);
 	} finally {
 		await testInfo.attach("pipeline-result", {

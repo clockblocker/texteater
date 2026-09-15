@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from "react";
 
+import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 
 type PlaygroundEntry = {
@@ -17,6 +18,13 @@ const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"Every Note kind from the Notes Study fake db, as a Card and as a Sheet. Links navigate inside the gallery.",
 		render: () => <NotesGallery />,
+	},
+	{
+		key: "loading",
+		title: "Loading",
+		description:
+			"Every Note kind while its data is still on the way, as a Card and as a Sheet.",
+		render: () => <LoadingGallery />,
 	},
 ];
 

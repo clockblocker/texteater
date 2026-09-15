@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { ReadingNoteSkeleton } from "@/views/note-skeletons";
 import { api } from "../../convex/_generated/api";
 import { registeredBlockMap } from "./renderer-registry";
 import type { NoteBlockKind } from "./universal/blocks/kind";
@@ -108,10 +109,8 @@ function ReadingWithConfiguredLayout({
 	});
 	if (layoutQuery.isPending) {
 		return (
-			<div
-				className="reading-note"
-				role="status"
-				aria-label="Loading Reading note"
+			<ReadingNoteSkeleton
+				presentation={input.capabilities?.presentation ?? "Sheet"}
 			/>
 		);
 	}

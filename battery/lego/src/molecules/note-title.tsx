@@ -3,7 +3,7 @@ import type * as React from "react";
 
 import { cn } from "../utils";
 
-const noteTitleVariants = cva(
+export const noteTitleVariants = cva(
 	"m-0 text-base leading-[1.4] font-[570] tracking-[-0.025em] [overflow-wrap:anywhere]",
 	{
 		variants: {

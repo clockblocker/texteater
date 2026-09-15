@@ -13,12 +13,23 @@ const RELATION_MARKS: Record<Dumrel.SemanticRelation, string> = {
 };
 
 /** The glyph a Reading Note uses for one semantic relation. */
-export function RelationMark({ relation }: { relation: string }) {
+export function RelationMark({
+	relation,
+	className,
+}: {
+	relation: string;
+	className?: string;
+}) {
 	const mark = Object.hasOwn(RELATION_MARKS, relation)
 		? RELATION_MARKS[relation as Dumrel.SemanticRelation]
 		: relation;
 	return (
-		<Mark role="img" aria-label={relation} title={relation}>
+		<Mark
+			role="img"
+			aria-label={relation}
+			title={relation}
+			className={className}
+		>
 			{mark}
 		</Mark>
 	);

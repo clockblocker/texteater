@@ -5,7 +5,6 @@ import {
 } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { Skeleton } from "lego";
 import { useCallback } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ReadingNoteTarget } from "@/lib/navigation";
@@ -15,6 +14,7 @@ import {
 } from "@/lib/reading-definition";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
+import { ReadingNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -46,7 +46,7 @@ export function UnitReadingNoteView({
 	});
 
 	if (noteQuery.isPending || settingsQuery.isPending) {
-		return <ReadingNoteSkeleton />;
+		return <ReadingNoteSkeleton presentation={presentation} />;
 	}
 	if (noteQuery.data?.kind !== "Reading" || !settingsQuery.data) {
 		return (
@@ -167,21 +167,6 @@ export function readingDefinitionMutationArgs(
 		ownerReadingKey: note.reading.ownerKey,
 		change,
 	};
-}
-
-function ReadingNoteSkeleton() {
-	return (
-		<div className="min-h-full bg-paper px-note-gutter pt-note-top">
-			<div
-				className="mx-auto flex w-full max-w-note flex-col gap-3"
-				role="status"
-				aria-label="Loading Reading note"
-			>
-				<Skeleton className="h-7 w-48" />
-				<Skeleton className="h-20 w-full" />
-			</div>
-		</div>
-	);
 }
 
 function mutationMessage(error: unknown): string {

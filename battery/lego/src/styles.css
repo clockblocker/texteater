@@ -93,6 +93,32 @@
 	--container-note: 48rem;
 	--spacing-note-gutter: 2.5rem;
 	--spacing-note-top: 3.5rem;
+
+	/* One band of light crossing a Note that is still on its way. The band
+	   is fixed to the viewport, so every bone shows the same sweep. */
+	--animate-bone: bone 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+	@keyframes bone {
+		from {
+			background-position: -60vw 0;
+		}
+		to {
+			background-position: 110vw 0;
+		}
+	}
+}
+
+/* A bone's sheen: a soft highlight drawn over the bone's own colour. */
+@utility bone-sheen {
+	background-image: linear-gradient(
+		100deg,
+		transparent 30%,
+		color-mix(in srgb, var(--ink) 18%, transparent) 50%,
+		transparent 70%
+	);
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: 50vw 100vh;
+	animation: var(--animate-bone);
 }
 
 /* One palette for now. The light theme deliberately reuses these values

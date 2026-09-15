@@ -2,11 +2,11 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { Skeleton } from "lego";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ShadowNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
+import { ShadowNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -91,7 +91,8 @@ export function ShadowNoteView({
 		}),
 		gcTime: 10_000,
 	});
-	if (noteQuery.isPending) return <ShadowNoteSkeleton />;
+	if (noteQuery.isPending)
+		return <ShadowNoteSkeleton presentation={presentation} />;
 	if (noteQuery.data?.kind !== "Shadow") {
 		return (
 			<NotFoundView
@@ -206,18 +207,4 @@ function ShadowNoteContainer({
 		follow,
 	};
 	return renderNote({ noteData: pagination.note, capabilities });
-}
-
-function ShadowNoteSkeleton() {
-	return (
-		<div className="min-h-full bg-paper px-note-gutter pt-note-top">
-			<div
-				className="mx-auto flex w-full max-w-note flex-col gap-3"
-				role="status"
-			>
-				<Skeleton className="h-7 w-48" />
-				<Skeleton className="h-20 w-full" />
-			</div>
-		</div>
-	);
 }

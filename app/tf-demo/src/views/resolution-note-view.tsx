@@ -1,27 +1,27 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
-import { Badge, Button, Skeleton } from "lego";
-import { LoaderCircleIcon } from "lucide-react";
+import { Button } from "lego";
 import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
+import { renderNoteSkeleton } from "@/views/note-skeletons";
 import { resolutionDeckCards } from "@/views/resolution-deck";
 import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 
-const progressPosition = {
-	Starting: 0,
-	RouteAvailable: 1,
-	GrammarAvailable: 2,
-	ReadingAvailable: 3,
-	Committing: 4,
-} as const;
+type Presentation = "Card" | "Sheet";
 
-export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
+export function ResolutionNoteView({
+	target,
+	presentation = "Sheet",
+}: {
+	target: ResolutionTarget;
+	presentation?: Presentation;
+}) {
 	const { presentCards } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
 	const retryResolution = useConvexMutation(
@@ -37,7 +37,8 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 
 	useResolutionDeck(note, presentCards);
 
-	if (noteQuery.isPending) return <ResolutionNoteSkeleton />;
+	if (noteQuery.isPending)
+		return renderNoteSkeleton("Attestation", presentation);
 	if (!note) {
 		return (
 			<NotFoundView
@@ -49,6 +50,7 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 	return (
 		<ResolutionNoteFrame
 			note={note}
+			presentation={presentation}
 			onRetry={() =>
 				retryResolution({ requestId: target.requestId, visitorId })
 			}
@@ -58,8 +60,10 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 
 export function ResolutionStepNoteView({
 	target,
+	presentation = "Sheet",
 }: {
 	target: ResolutionStepTarget;
+	presentation?: Presentation;
 }) {
 	const { presentCards } = useWorkspaceInteraction();
 	const noteQuery = useQuery({
@@ -71,7 +75,8 @@ export function ResolutionStepNoteView({
 	const note: ResolutionNote | null = noteQuery.data ?? null;
 	useResolutionDeck(note, presentCards);
 
-	if (noteQuery.isPending) return <ResolutionNoteSkeleton />;
+	if (noteQuery.isPending)
+		return renderNoteSkeleton(target.stepKind, presentation);
 	if (!note) {
 		return (
 			<NotFoundView
@@ -80,7 +85,12 @@ export function ResolutionStepNoteView({
 			/>
 		);
 	}
-	return <ResolutionStepNoteFrame note={note} stepKind={target.stepKind} />;
+	return (
+		<ResolutionStepNoteFrame
+			stepKind={target.stepKind}
+			presentation={presentation}
+		/>
+	);
 }
 
 function useResolutionDeck(
@@ -99,302 +109,60 @@ export function completionTarget(note: ResolutionNote | null) {
 
 export function ResolutionNoteFrame({
 	note,
+	presentation,
 	onRetry,
 }: {
 	note: ResolutionNote;
+	presentation: Presentation;
 	onRetry?: () => Promise<unknown>;
 }) {
-	const position = progressPosition[note.progress];
-	const isWorking = note.activity !== "Terminal";
+	if (note.activity !== "Terminal" || note.terminal?.kind === "Complete") {
+		return renderNoteSkeleton("Attestation", presentation);
+	}
+
+	const title = note.reading
+		? `${note.reading.emojiDescription} ${note.reading.canonicalForm}`
+		: (note.grammar?.canonicalForm ?? note.route.selectedSegment);
 	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-				<header>
-					<div className="flex flex-col gap-3">
-						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-							{note.reading
-								? `${note.reading.emojiDescription} ${note.reading.canonicalForm}`
-								: (note.grammar?.canonicalForm ??
-									note.route.selectedSegment)}
-						</h1>
-						<div className="flex flex-wrap items-center gap-2">
-							<Badge variant="secondary">
-								{note.activity === "WaitingForRetry"
-									? "Waiting for retry"
-									: lifecycleLabel(note)}
-							</Badge>
-							{isWorking ? (
-								<LoaderCircleIcon
-									className="size-4 animate-spin text-muted-foreground"
-									aria-label="Resolution in progress"
-								/>
-							) : null}
-						</div>
-					</div>
-				</header>
-
-				<article
-					className="flex flex-col gap-5"
-					aria-label="Resolution note"
-				>
-					<ResolutionSection title="Source" available={position >= 1}>
-						<p className="text-base leading-relaxed">
-							{note.route.stitchedText}
+		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">
+			<div className="mx-auto flex w-full max-w-note flex-col gap-5">
+				<h1 className="text-xl font-semibold tracking-tight">
+					{title}
+				</h1>
+				{note.terminal?.kind === "Unresolved" ? (
+					<p className="text-sm text-muted-foreground" role="status">
+						This Segment could not be resolved. This Resolution URL
+						remains available.
+					</p>
+				) : note.terminal?.kind === "PermanentFailure" ? (
+					<div className="flex flex-col items-start gap-3">
+						<p className="text-sm text-destructive" role="alert">
+							{note.terminal.message}
 						</p>
-					</ResolutionSection>
-
-					<ResolutionSection
-						title="Grammar"
-						available={Boolean(note.grammar)}
-					>
-						{note.grammar ? (
-							<div className="flex flex-col gap-2">
-								<p className="font-medium">
-									{note.grammar.normalizedSurface} →{" "}
-									{note.grammar.canonicalForm}
-								</p>
-								<div className="flex flex-wrap gap-2">
-									<Badge variant="outline">
-										{note.grammar.family}
-									</Badge>
-									<Badge variant="outline">
-										{note.grammar.kind}
-									</Badge>
-									<Badge variant="outline">
-										{note.grammar.realizationCoverage}
-									</Badge>
-								</div>
-							</div>
-						) : null}
-					</ResolutionSection>
-
-					{note.progress === "GrammarAvailable" &&
-					note.activity === "WaitingForRetry" ? (
-						<p
-							className="text-sm text-muted-foreground"
-							role="status"
-						>
-							Reading is temporarily unavailable; retrying.
+						<p className="text-xs text-muted-foreground">
+							Diagnostic reference: {note.terminal.diagnosticId}
 						</p>
-					) : null}
-
-					<ResolutionSection
-						title="Reading"
-						available={Boolean(note.reading)}
-					>
-						{note.reading ? (
-							<p className="text-lg font-medium">
-								{note.reading.emojiDescription}{" "}
-								{note.reading.canonicalForm}
-							</p>
-						) : null}
-					</ResolutionSection>
-
-					{note.terminal?.kind === "Unresolved" ? (
-						<p
-							className="text-sm text-muted-foreground"
-							role="status"
-						>
-							This Segment could not be resolved. This Resolution
-							URL remains available.
-						</p>
-					) : note.terminal?.kind === "PermanentFailure" ? (
-						<div className="flex flex-col items-start gap-3">
-							<p
-								className="text-sm text-destructive"
-								role="alert"
+						{onRetry ? (
+							<Button
+								type="button"
+								onClick={() => void onRetry()}
 							>
-								{note.terminal.message}
-							</p>
-							<p className="text-xs text-muted-foreground">
-								Diagnostic reference:{" "}
-								{note.terminal.diagnosticId}
-							</p>
-							{onRetry ? (
-								<Button
-									type="button"
-									onClick={() => void onRetry()}
-								>
-									Retry resolution
-								</Button>
-							) : null}
-						</div>
-					) : null}
-				</article>
+								Retry resolution
+							</Button>
+						) : null}
+					</div>
+				) : null}
 			</div>
 		</div>
 	);
 }
 
 export function ResolutionStepNoteFrame({
-	note,
 	stepKind,
+	presentation,
 }: {
-	note: ResolutionNote;
 	stepKind: ResolutionStepTarget["stepKind"];
+	presentation: Presentation;
 }) {
-	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-				<header className="flex flex-col gap-3">
-					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-						{stepTitle(note, stepKind)}
-					</h1>
-					<div className="flex flex-wrap items-center gap-2">
-						<Badge variant="secondary">{stepKind}</Badge>
-						{note.activity !== "Terminal" ? (
-							<LoaderCircleIcon
-								className="size-4 animate-spin text-muted-foreground"
-								aria-label="Resolution in progress"
-							/>
-						) : null}
-					</div>
-				</header>
-				<ResolutionStepBody note={note} stepKind={stepKind} />
-			</div>
-		</div>
-	);
-}
-
-function ResolutionStepBody({
-	note,
-	stepKind,
-}: {
-	note: ResolutionNote;
-	stepKind: ResolutionStepTarget["stepKind"];
-}) {
-	switch (stepKind) {
-		case "Attestation":
-			return (
-				<article aria-label="Attestation resolution step">
-					<ResolutionSection title="Source" available>
-						<p className="text-base leading-relaxed">
-							{note.route.stitchedText}
-						</p>
-					</ResolutionSection>
-				</article>
-			);
-		case "Surface":
-			return (
-				<article aria-label="Surface resolution step">
-					<ResolutionSection
-						title="Surface"
-						available={Boolean(note.grammar)}
-					>
-						{note.grammar ? (
-							<div className="flex flex-wrap gap-2">
-								<Badge variant="outline">
-									{note.grammar.spelling}
-								</Badge>
-								<Badge variant="outline">
-									{note.grammar.grundform === null
-										? "Undetermined"
-										: note.grammar.grundform
-											? "Grundform"
-											: "Not Grundform"}
-								</Badge>
-								<Badge variant="outline">
-									{note.grammar.realizationCoverage}
-								</Badge>
-							</div>
-						) : null}
-					</ResolutionSection>
-				</article>
-			);
-		case "Lemma":
-			return (
-				<article aria-label="Lemma resolution step">
-					<ResolutionSection
-						title="Lemma"
-						available={Boolean(note.grammar)}
-					>
-						{note.grammar ? (
-							<div className="flex flex-wrap gap-2">
-								<Badge variant="outline">
-									{note.grammar.family}
-								</Badge>
-								<Badge variant="outline">
-									{note.grammar.kind}
-								</Badge>
-							</div>
-						) : null}
-					</ResolutionSection>
-				</article>
-			);
-		case "Reading":
-			return (
-				<article aria-label="Reading resolution step">
-					<ResolutionSection
-						title="Reading"
-						available={Boolean(note.reading)}
-					>
-						{note.reading ? (
-							<p className="text-lg font-medium">
-								{note.reading.emojiDescription}{" "}
-								{note.reading.canonicalForm}
-							</p>
-						) : null}
-					</ResolutionSection>
-				</article>
-			);
-	}
-}
-
-function stepTitle(
-	note: ResolutionNote,
-	stepKind: ResolutionStepTarget["stepKind"],
-): string {
-	switch (stepKind) {
-		case "Attestation":
-			return note.route.selectedSegment;
-		case "Surface":
-			return (
-				note.grammar?.normalizedSurface ?? note.route.selectedSegment
-			);
-		case "Lemma":
-			return note.grammar?.canonicalForm ?? note.route.selectedSegment;
-		case "Reading":
-			return note.reading
-				? `${note.reading.emojiDescription} ${note.reading.canonicalForm}`
-				: (note.grammar?.canonicalForm ?? note.route.selectedSegment);
-	}
-}
-
-function ResolutionSection({
-	title,
-	available,
-	children,
-}: {
-	title: string;
-	available: boolean;
-	children: React.ReactNode;
-}) {
-	return (
-		<section className="rounded-xl border bg-card p-4" aria-label={title}>
-			<h2 className="mb-3 text-sm font-medium">{title}</h2>
-			{available ? children : <Skeleton className="h-6 w-3/5" />}
-		</section>
-	);
-}
-
-function ResolutionNoteSkeleton() {
-	return (
-		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div
-				className="mx-auto flex w-full max-w-5xl flex-col gap-5"
-				role="status"
-			>
-				<Skeleton className="h-8 w-56" />
-				<Skeleton className="h-24 w-full" />
-			</div>
-		</div>
-	);
-}
-
-function lifecycleLabel(note: ResolutionNote): string {
-	const label =
-		note.outcome === "PermanentFailure"
-			? "Failed"
-			: (note.outcome ?? note.progress);
-	return label.replace(/([a-z])([A-Z])/g, "$1 $2");
+	return renderNoteSkeleton(stepKind, presentation);
 }
