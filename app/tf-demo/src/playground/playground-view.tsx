@@ -2,6 +2,7 @@ import { type ReactNode, useState } from "react";
 
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
+import { PaletteGallery } from "./entries/palette-gallery";
 
 type PlaygroundEntry = {
 	readonly key: string;
@@ -25,6 +26,13 @@ const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"Every Note kind while its data is still on the way, as a Card and as a Sheet.",
 		render: () => <LoadingGallery />,
+	},
+	{
+		key: "palette",
+		title: "Palette",
+		description:
+			"Every colour a word or link can wear: knowledge states by interaction states on each surface, and one meaning shown across reader, Quote, title and link.",
+		render: () => <PaletteGallery />,
 	},
 ];
 

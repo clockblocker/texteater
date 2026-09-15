@@ -122,6 +122,7 @@ type LemmaWithNoteIdentity<
 			coreFeatures: Value["coreFeatures"];
 			ownerKind: NoteDataFor<"Reading">["reading"]["lemma"]["ownerKind"];
 			ownerKey: NoteDataFor<"Reading">["reading"]["lemma"]["ownerKey"];
+			lemmaId: NoteDataFor<"Reading">["reading"]["lemma"]["lemmaId"];
 		}>
 	: never;
 

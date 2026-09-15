@@ -60,6 +60,7 @@ const readingNoteLemmaValidator = v.object({
 	unitKind: v.literal("Lemma"),
 	ownerKind: v.literal("Lemma"),
 	ownerKey: v.string(),
+	lemmaId: v.id("lemmas"),
 	language: v.string(),
 	family: v.string(),
 	kind: v.string(),
@@ -343,6 +344,7 @@ type ReadingNoteIdentity<Value extends Dumling.Reading<"de">> =
 					coreFeatures: Value["lemma"]["coreFeatures"];
 					ownerKind: "Lemma";
 					ownerKey: string;
+					lemmaId: Id<"lemmas">;
 				}>;
 				unitKind: "Reading";
 				emojiDescription: Value["emojiDescription"];
@@ -358,6 +360,7 @@ function withReadingNoteIdentity<Value extends Dumling.Reading<"de">>(
 		readonly readingId: Id<"readings">;
 		readonly readingKey: string;
 		readonly lemmaKey: string;
+		readonly lemmaId: Id<"lemmas">;
 	},
 ): ReadingNoteIdentity<Value> {
 	return {
@@ -368,6 +371,7 @@ function withReadingNoteIdentity<Value extends Dumling.Reading<"de">>(
 		lemma: {
 			ownerKind: "Lemma",
 			ownerKey: identity.lemmaKey,
+			lemmaId: identity.lemmaId,
 			...value.lemma,
 		},
 	} as unknown as ReadingNoteIdentity<Value>;
@@ -380,6 +384,7 @@ function projectReadingIdentity(
 		readonly emojiDescription: string;
 	},
 	lemma: {
+		readonly _id: Id<"lemmas">;
 		readonly lemmaKey: string;
 		readonly language: string;
 		readonly family: string;
@@ -396,6 +401,7 @@ function projectReadingIdentity(
 		readingId: reading._id,
 		readingKey: reading.readingKey,
 		lemmaKey: lemma.lemmaKey,
+		lemmaId: lemma._id,
 	});
 }
 

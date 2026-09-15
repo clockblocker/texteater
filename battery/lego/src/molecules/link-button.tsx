@@ -7,9 +7,11 @@ const linkButtonVariants = cva(
 	"inline-flex cursor-pointer items-baseline rounded-md text-start transition-colors hover:underline hover:underline-offset-[0.16em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-50 disabled:hover:no-underline [&_svg]:me-[0.3em] [&_svg]:inline [&_svg]:size-[0.85em] [&_svg]:self-center",
 	{
 		variants: {
+			/* A link is a known Unit; a shadow link points at a Unit that has
+			   no Note yet and wears the dimmer step of the same hue. */
 			tone: {
-				link: "text-primary",
-				pending: "text-primary opacity-70",
+				link: "text-link",
+				shadow: "text-link-shadow",
 				quiet: "text-ink-soft",
 			},
 		},

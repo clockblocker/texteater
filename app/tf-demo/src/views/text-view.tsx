@@ -5,6 +5,7 @@ import {
 	NoteLinesSkeleton,
 	ReaderPlainSegment,
 	ReaderSegment,
+	type ReaderSegmentInteraction,
 	type ReaderSegmentTone,
 } from "lego";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
@@ -361,10 +362,14 @@ export function SentenceList({
 									data-state={displayState}
 									highlighted={isSourceContextMember}
 									tone={segmentTone(displayState)}
-									underlined={isPreviewState(displayState)}
+									interaction={segmentInteraction(
+										displayState,
+									)}
 									disabled={
 										sentence.language !== "de" ||
-										segment.resolutionState === "Active"
+										segment.resolutionState === "Active" ||
+										segment.resolutionState ===
+											"PermanentFailure"
 									}
 									aria-pressed={isSelected}
 									aria-label={segmentAccessibleLabel(segment)}
@@ -470,12 +475,11 @@ function segmentTone(
 			return "resolving";
 		case "unresolved":
 		case "unresolved-preview":
-			return "unresolved";
+			return "unknown";
 		case "failed":
 		case "failed-preview":
 			return "failed";
 		case "selected":
-			return "selected";
 		case "known-preview":
 		case "retained":
 			return "known";
@@ -484,13 +488,20 @@ function segmentTone(
 	}
 }
 
-function isPreviewState(state: SegmentDisplayState | undefined): boolean {
-	return (
-		state === "unknown-preview" ||
-		state === "unresolved-preview" ||
-		state === "failed-preview" ||
-		state === "known-preview"
-	);
+function segmentInteraction(
+	state: SegmentDisplayState | undefined,
+): ReaderSegmentInteraction {
+	switch (state) {
+		case "unknown-preview":
+		case "unresolved-preview":
+		case "failed-preview":
+		case "known-preview":
+			return "previewed";
+		case "selected":
+			return "selected";
+		default:
+			return "idle";
+	}
 }
 
 function segmentAccessibleLabel(
@@ -505,7 +516,7 @@ function segmentAccessibleLabel(
 		case "Unresolved":
 			return `${segment.text}, unresolved, click to try again`;
 		case "PermanentFailure":
-			return `${segment.text}, resolution failed, click to try again`;
+			return `${segment.text}, could not be resolved`;
 		default:
 			return `${segment.text}, click to resolve`;
 	}

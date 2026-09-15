@@ -130,7 +130,7 @@ export function ResolutionNoteFrame({
 					{title}
 				</h1>
 				{note.terminal?.kind === "Unresolved" ? (
-					<p className="text-sm text-muted-foreground" role="status">
+					<p className="text-sm text-ink-muted" role="status">
 						This Segment could not be resolved. This Resolution URL
 						remains available.
 					</p>
@@ -139,7 +139,7 @@ export function ResolutionNoteFrame({
 						<p className="text-sm text-destructive" role="alert">
 							{note.terminal.message}
 						</p>
-						<p className="text-xs text-muted-foreground">
+						<p className="text-xs text-ink-muted">
 							Diagnostic reference: {note.terminal.diagnosticId}
 						</p>
 						{onRetry ? (

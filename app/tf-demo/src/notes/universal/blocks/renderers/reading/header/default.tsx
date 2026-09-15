@@ -2,10 +2,12 @@ import {
 	Ipa,
 	NoteTags,
 	NoteTitle,
+	NoteTitleLink,
 	NoteTitleRow,
 	type NoteTitleTone,
 } from "lego";
 import { type ReactNode, useId } from "react";
+import type { Id } from "../../../../../../../convex/_generated/dataModel";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 
@@ -31,6 +33,7 @@ export function ReadingHeader({
 		reading: {
 			emojiDescription: string;
 			lemma: {
+				lemmaId: Id<"lemmas">;
 				canonicalForm: string;
 				language: string;
 				family: string;
@@ -64,7 +67,17 @@ export function ReadingHeader({
 					<span className="text-ink">
 						{note.reading.emojiDescription}{" "}
 					</span>
-					{title ?? lemma.canonicalForm}
+					<NoteTitleLink
+						aria-label={`${lemma.canonicalForm}, open its Lemma`}
+						onClick={() =>
+							capabilities.follow({
+								kind: "Lemma",
+								lemmaId: lemma.lemmaId,
+							})
+						}
+					>
+						{title ?? lemma.canonicalForm}
+					</NoteTitleLink>
 				</NoteTitle>
 				{capabilities.knowledgeSettings.transcription &&
 				note.knowledge.transcription ? (

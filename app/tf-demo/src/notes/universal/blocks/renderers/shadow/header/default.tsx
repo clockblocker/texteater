@@ -5,7 +5,7 @@ import type { GrammaticalDefaultRenderer } from "../../../renderer";
 
 /**
  * A Shadow is a word other Readings point at that the dictionary does not
- * hold yet. It wears the same lock and dimmed tone a pending relation wears
+ * hold yet. It wears the same lock and shadow tone a relation to it wears
  * inside a Reading Note.
  */
 export const renderDefaultShadowHeader = (({ noteData }) => {
@@ -15,7 +15,7 @@ export const renderDefaultShadowHeader = (({ noteData }) => {
 			<NoteTitleRow>
 				<NoteTitle
 					data-shadow-title=""
-					className="flex items-center gap-2 opacity-70"
+					className="flex items-center gap-2 text-link-shadow"
 				>
 					<LockIcon
 						aria-label="Not in the dictionary yet"

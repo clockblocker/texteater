@@ -56,7 +56,7 @@ export const renderDefaultReadingRelations = (({
 					{pendingRelations.map((relation) => (
 						<li key={relation.locatorKey}>
 							<LinkButton
-								tone="pending"
+								tone="shadow"
 								onClick={() =>
 									PresentationCapabilities.follow(
 										relation.target,

@@ -123,19 +123,19 @@ export function LibraryView() {
 													{text.title ??
 														text.sourceText}
 												</p>
-												<p className="text-xs text-muted-foreground tabular-nums">
+												<p className="text-xs text-ink-muted tabular-nums">
 													Added{" "}
 													{formatDate(text.createdAt)}
 												</p>
 											</div>
-											<ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+											<ArrowRightIcon className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5" />
 										</div>
 									</button>
 								))}
 							</div>
 						) : (
 							<Card size="sm">
-								<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
+								<CardContent className="flex items-center gap-3 py-3 text-ink-muted">
 									<LibraryIcon
 										className="size-5"
 										strokeWidth={1.5}
@@ -156,7 +156,7 @@ export function LibraryView() {
 					render={
 						<Button
 							size="icon-lg"
-							className="absolute end-4 bottom-6 z-10 size-14 rounded-full shadow-lg ring-1 ring-white/10 sm:end-6"
+							className="absolute end-4 bottom-6 z-10 size-14 rounded-full shadow-lg ring-1 ring-foreground/10 sm:end-6"
 						/>
 					}
 				>

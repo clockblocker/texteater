@@ -30,7 +30,7 @@ function verbCanonicalForm(
 	if (isLexicallyReflexive && canonicalForm.startsWith("sich ")) {
 		return (
 			<>
-				<span className="text-muted-foreground">sich </span>
+				<span className="text-ink-muted">sich </span>
 				{canonicalForm.slice("sich ".length)}
 			</>
 		);
@@ -43,7 +43,7 @@ function verbCanonicalForm(
 		return (
 			<>
 				{separablePrefix}
-				<span className="text-muted-foreground">|</span>
+				<span className="text-ink-muted">|</span>
 				{canonicalForm.slice(separablePrefix.length)}
 			</>
 		);

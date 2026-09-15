@@ -13,7 +13,7 @@ export function Quote({ className, ...props }: React.ComponentProps<"p">) {
 		<p
 			data-slot="quote"
 			className={cn(
-				"border-s-[3px] border-line py-1 ps-[clamp(1rem,2.5cqi,2.5rem)] text-start leading-[1.55] font-[430] tracking-[-0.012em] transition-colors duration-150 has-[[data-slot=reader-segment]:hover]:border-primary has-[[data-slot=reader-segment]:focus-visible]:border-primary motion-reduce:transition-none compact:ps-3",
+				"border-s-[3px] border-line py-1 ps-[clamp(1rem,2.5cqi,2.5rem)] text-start leading-[1.55] font-[430] tracking-[-0.012em] transition-colors duration-150 has-[[data-slot=reader-segment]:hover]:border-link has-[[data-slot=reader-segment]:focus-visible]:border-link motion-reduce:transition-none compact:ps-3",
 				className,
 			)}
 			{...props}

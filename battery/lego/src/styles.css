@@ -69,18 +69,33 @@
 	--color-line: var(--line);
 	--color-line-strong: var(--line-strong);
 
-	/* Linguistic tones: grammatical gender of a headword. */
+	/* Linguistic tones: grammatical gender of a headword. Each sits at the
+	   link's lightness and chroma on its own hue, so a gendered title reads
+	   exactly as loudly as a plain one. */
 	--color-gender-feminine: var(--gender-feminine);
 	--color-gender-masculine: var(--gender-masculine);
 	--color-gender-neuter: var(--gender-neuter);
 
-	/* Reader segment states. */
-	--color-segment-unknown: var(--segment-unknown);
-	--color-segment-known: var(--segment-known);
-	--color-segment-selected: var(--segment-selected);
-	--color-segment-unresolved: var(--segment-unresolved);
-	--color-segment-failed: var(--segment-failed);
+	/* Word knowledge states. Colour answers one question only: what does
+	   the dictionary know about this word? Blue means "a Unit"; the shadow
+	   step is a Unit that has no Note yet; everything else is ink. Hover,
+	   focus and selection never change the colour, only the underline (see
+	   ReaderSegment). */
+	--color-word-unknown: var(--word-unknown);
+	--color-word-resolving: var(--word-resolving);
+	--color-word-known: var(--word-known);
+	--color-word-shadow: var(--word-shadow);
+
+	/* A link is a known Unit wherever it appears: reader, Quote, Note body. */
+	--color-link: var(--link);
+	--color-link-shadow: var(--link-shadow);
+
+	/* The wash behind every member of the focused occurrence, and the
+	   browser text selection. Two jobs, two tokens, so the Playground can
+	   try them on different hues. */
 	--color-highlight: var(--highlight);
+	--color-selection: var(--selection);
+	--color-selection-foreground: var(--selection-foreground);
 
 	--radius-sm: calc(var(--radius) * 0.6);
 	--radius-md: calc(var(--radius) * 0.8);
@@ -122,6 +137,24 @@
 	animation: var(--animate-bone);
 }
 
+/* A word being resolved: the same band of light as a bone, but clipped to
+   the glyphs, sweeping the text from plain ink towards the known blue. Pair
+   it with `text-transparent bg-ink bg-clip-text`; the rule under it keeps a
+   colour of its own because the text is transparent. */
+@utility word-sheen {
+	background-image: linear-gradient(
+		100deg,
+		transparent 30%,
+		var(--word-known) 50%,
+		transparent 70%
+	);
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: 50vw 100vh;
+	text-decoration-color: var(--word-resolving);
+	animation: var(--animate-bone);
+}
+
 /* One palette for now. The light theme deliberately reuses these values
    until a light appearance is designed; `.dark` therefore adds nothing. */
 :root {
@@ -136,17 +169,36 @@
 	--line: oklch(36.2% 0.018 258.4);
 	--line-strong: oklch(50.2% 0.038 256.8);
 
-	--gender-feminine: oklch(76.2% 0.091 16.8);
-	--gender-masculine: oklch(77% 0.055 275.7);
-	--gender-neuter: oklch(78.4% 0.061 142);
-	--segment-unknown: oklch(62.5% 0.106 257.1);
-	/* Known and selected share a hue; the selected word is the brighter,
-	   more saturated step, so words resolved earlier recede beside it. */
-	--segment-known: oklch(76% 0.075 257);
-	--segment-selected: oklch(84% 0.14 257);
-	--segment-unresolved: oklch(73.7% 0.089 80.6);
-	--segment-failed: oklch(68.1% 0.125 20.9);
-	--highlight: oklch(64.1% 0.15 257.5);
+	/* Primitives. One accent ramp on hue 257, plus one step per status hue.
+	   The link and the three gender hues share one lightness (82%) and
+	   chroma (0.08), the most any of those hues can carry at that
+	   lightness inside sRGB, so a gendered headword is exactly as bright as
+	   a link. Never used in a component; roles below point here. */
+	--blue-600: oklch(72% 0.075 257);
+	--blue-500: oklch(82% 0.08 257);
+	--blue-400: oklch(88% 0.05 257);
+	--amber-500: oklch(76% 0.09 80);
+	--red-500: oklch(71% 0.13 22);
+	--rose-500: oklch(82% 0.08 17);
+	--violet-500: oklch(82% 0.08 305);
+	--green-500: oklch(82% 0.08 142);
+
+	--gender-feminine: var(--rose-500);
+	--gender-masculine: var(--violet-500);
+	--gender-neuter: var(--green-500);
+
+	/* Words the dictionary holds nothing about stay ink: a hovered unknown
+	   word and a word being resolved are not Units yet. A word that could
+	   not be resolved, whether retryable or final, is simply unknown too. */
+	--word-unknown: var(--ink-soft);
+	--word-resolving: var(--ink-muted);
+	--word-known: var(--blue-500);
+	--word-shadow: var(--blue-600);
+	--link: var(--word-known);
+	--link-shadow: var(--word-shadow);
+	--highlight: var(--blue-500);
+	--selection: var(--raised);
+	--selection-foreground: var(--ink);
 
 	--background: var(--canvas);
 	--foreground: var(--ink);
@@ -154,7 +206,7 @@
 	--card-foreground: var(--ink);
 	--popover: var(--paper);
 	--popover-foreground: var(--ink);
-	--primary: oklch(76.5% 0.096 259.3);
+	--primary: var(--link);
 	--primary-foreground: oklch(20.8% 0.026 260.9);
 	--secondary: var(--raised);
 	--secondary-foreground: oklch(92.5% 0.036 256);
@@ -162,15 +214,15 @@
 	--muted-foreground: var(--ink-muted);
 	--accent: var(--raised);
 	--accent-foreground: oklch(92.5% 0.036 256);
-	--destructive: var(--segment-failed);
+	--destructive: var(--red-500);
 	--border: var(--line);
 	--input: var(--line);
 	--ring: var(--primary);
-	--chart-1: oklch(76.5% 0.096 259.3);
-	--chart-2: oklch(78.4% 0.061 142);
-	--chart-3: oklch(73.7% 0.089 80.6);
-	--chart-4: oklch(76.2% 0.091 16.8);
-	--chart-5: oklch(77% 0.055 275.7);
+	--chart-1: var(--blue-500);
+	--chart-2: var(--green-500);
+	--chart-3: var(--amber-500);
+	--chart-4: var(--rose-500);
+	--chart-5: var(--violet-500);
 	--radius: 0.625rem;
 	--sidebar: oklch(18.6% 0.018 264);
 	--sidebar-foreground: var(--ink);
@@ -199,6 +251,6 @@
 		@apply bg-background text-foreground;
 	}
 	::selection {
-		@apply bg-primary text-primary-foreground;
+		@apply bg-selection text-selection-foreground;
 	}
 }

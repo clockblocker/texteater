@@ -8,7 +8,7 @@ export const noteTitleVariants = cva(
 	{
 		variants: {
 			tone: {
-				default: "text-primary",
+				default: "text-link",
 				feminine: "text-gender-feminine",
 				masculine: "text-gender-masculine",
 				neuter: "text-gender-neuter",
@@ -32,6 +32,29 @@ export function NoteTitle({
 		<h1
 			data-slot="note-title"
 			className={cn(noteTitleVariants({ tone }), className)}
+			{...props}
+		/>
+	);
+}
+
+/**
+ * A headword that leads somewhere. It is a known Unit and wears the same
+ * rule family as one in the reader: nothing idle, a hairline while hovered
+ * or focused, in whatever hue the title around it chose.
+ */
+export function NoteTitleLink({
+	className,
+	type = "button",
+	...props
+}: React.ComponentProps<"button">) {
+	return (
+		<button
+			data-slot="note-title-link"
+			type={type}
+			className={cn(
+				"cursor-pointer appearance-none rounded-sm border-0 bg-transparent p-0 text-start font-[inherit] tracking-[inherit] text-[inherit] leading-[inherit] text-balance decoration-current/40 decoration-[0.06em] underline-offset-[0.18em] hover:underline focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+				className,
+			)}
 			{...props}
 		/>
 	);

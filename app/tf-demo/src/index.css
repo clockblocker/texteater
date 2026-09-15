@@ -15,7 +15,8 @@
 
 	/* Lego's local reduced-motion guards predate the app-level preference.
 	   Restore their ordinary motion when tf-demo explicitly ignores the system. */
-	:root[data-motion-preference="ignore"] .bone-sheen {
+	:root[data-motion-preference="ignore"] .bone-sheen,
+	:root[data-motion-preference="ignore"] .word-sheen {
 		animation: var(--animate-bone);
 	}
 

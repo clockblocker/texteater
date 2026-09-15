@@ -26,7 +26,7 @@ export function linkMembers(
 				{
 					key: `${at}:${member}`,
 					tone: "known",
-					underlined: "hover",
+					interaction: "hover",
 					"aria-label": `${member}, open in the source Text`,
 					onClick: (event: MouseEvent<HTMLButtonElement>) => {
 						if (event.detail > 0) event.currentTarget.blur();

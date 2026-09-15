@@ -92,7 +92,7 @@ body:has(.workspace) {
 .workspace__separator:hover,
 .workspace__separator:focus-visible,
 .workspace__separator[data-separator="active"] {
-	background: var(--primary, #8eb4f0);
+	background: var(--primary, #a3c6f8);
 	outline: none;
 }
 .workspace__lift {
@@ -137,10 +137,10 @@ body:has(.workspace) {
 	height: 6px;
 	transform: rotate(45deg);
 	background: var(--paper, #1c2128);
-	border: 1px solid var(--primary, #8eb4f0);
+	border: 1px solid var(--primary, #a3c6f8);
 }
 .workspace__lift:hover span {
-	background: var(--primary, #8eb4f0);
+	background: var(--primary, #a3c6f8);
 }
 .workspace__pane-actions {
 	position: absolute;
@@ -191,7 +191,7 @@ body:has(.workspace) {
 	transition: border-color 150ms ease-out;
 }
 .workspace__cards[data-return-target="true"] > .workspace__return-zone {
-	border-color: var(--primary, #8eb4f0);
+	border-color: var(--primary, #a3c6f8);
 }
 /* A Card floats: a hairline of light on its edge, a one-pixel highlight
    along its top, and a shadow beneath, no border. The shadow is three layers, all tinted with the palette's scrim
@@ -261,7 +261,7 @@ body:has(.workspace) {
 	border-bottom: 1px solid var(--line-strong, #56657a);
 }
 .workspace__card > .workspace__lift:hover span::after {
-	border-color: var(--primary, #8eb4f0);
+	border-color: var(--primary, #a3c6f8);
 }
 .workspace__card-tail {
 	position: absolute;
@@ -285,8 +285,8 @@ body:has(.workspace) {
 	position: absolute;
 	z-index: 15;
 	inset: 0;
-	border: 2px solid var(--primary, #8eb4f0);
-	background: color-mix(in srgb, var(--highlight, #4d8ce6) 28%, transparent);
+	border: 2px solid var(--primary, #a3c6f8);
+	background: color-mix(in srgb, var(--highlight, #a3c6f8) 28%, transparent);
 	pointer-events: none;
 }
 .workspace__drop[data-edge="left"] {
@@ -322,7 +322,7 @@ body:has(.workspace) {
 	transform: translate(-50%, calc(-100% + 1.15rem));
 }
 .workspace button:focus-visible {
-	outline: 2px solid var(--primary, #8eb4f0);
+	outline: 2px solid var(--primary, #a3c6f8);
 	outline-offset: -2px;
 }
 
@@ -350,7 +350,7 @@ body:has(.workspace) {
 
 [data-workspace-selected="true"] {
 	text-decoration: underline;
-	text-decoration-color: var(--primary, #8eb4f0);
+	text-decoration-color: var(--primary, #a3c6f8);
 	text-underline-offset: 0.2em;
 }
 .workspace__drop-label {
@@ -368,9 +368,9 @@ body:has(.workspace) {
 	position: absolute;
 	z-index: 14;
 	pointer-events: none;
-	background: color-mix(in srgb, var(--primary, #8eb4f0) 6%, transparent);
+	background: color-mix(in srgb, var(--primary, #a3c6f8) 6%, transparent);
 	border: 1px solid
-		color-mix(in srgb, var(--primary, #8eb4f0) 31%, transparent);
+		color-mix(in srgb, var(--primary, #a3c6f8) 31%, transparent);
 	color: var(--ink-soft, #a5bddf);
 	display: grid;
 	place-items: center;

@@ -3,51 +3,75 @@ import type * as React from "react";
 
 import { cn } from "../utils";
 
+/**
+ * Two independent axes describe a word in running text.
+ *
+ * `tone` is what the dictionary knows about it. It sets the colour and the
+ * shape its underline would take: a hairline for a Unit or an unknown word,
+ * a dashed rule while resolving. Idle words carry no rule at all; colour
+ * alone marks them. A resolving word is not a colour but a motion: the
+ * skeleton's band of light sweeping it from ink to blue. Its background is
+ * clipped to the glyphs, so the occurrence wash moves to the `before`
+ * pseudo-element behind it. A word whose resolution failed for good is dead
+ * text: unknown ink, no rule, no pointer, whatever the interaction says.
+ *
+ * `interaction` is what the reader is doing with it. Previewed (hover or
+ * focus) draws the tone's rule; selected firms it up to a solid weight.
+ * `hover` lets CSS `:hover` and `:focus-visible` draw the previewed rule
+ * where no React state tracks it, such as the members of a Quote.
+ *
+ * `highlighted` is orthogonal: a wash behind every member of the focused
+ * occurrence.
+ */
 const readerSegmentVariants = cva(
-	"relative cursor-pointer appearance-none border-0 bg-transparent p-0 font-[inherit] tracking-[inherit] text-[inherit] leading-[inherit] transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-[0.2em] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-segment-known disabled:cursor-wait motion-reduce:transition-none data-[highlighted=true]:bg-highlight/25",
+	"relative cursor-pointer appearance-none border-0 bg-transparent p-0 font-[inherit] tracking-[inherit] text-[inherit] leading-[inherit] underline-offset-[0.18em] transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-[0.2em] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-link disabled:cursor-wait motion-reduce:transition-none data-[highlighted=true]:bg-highlight/25",
 	{
 		variants: {
-			/* Each tone carries a cue besides colour: known words keep a hairline,
-			   the selected word a firmer one in a brighter blue, unresolved ones a
-			   dotted rule, failed ones a wavy rule, and a word whose resolution is
-			   in flight a dashed one, dimmed. Unknown words only appear while
-			   previewed, where the solid underline marks them. */
 			tone: {
-				plain: "",
-				unknown: "text-segment-unknown",
+				plain: "decoration-current/40 decoration-[0.06em]",
+				unknown:
+					"text-word-unknown decoration-current/40 decoration-[0.06em]",
 				resolving:
-					"text-segment-unknown underline decoration-dashed decoration-current decoration-[0.09em] underline-offset-[0.18em] opacity-80",
-				known: "text-segment-known underline decoration-current/40 decoration-[0.06em] underline-offset-[0.18em]",
-				selected:
-					"text-segment-selected underline decoration-current/70 decoration-[0.06em] underline-offset-[0.18em]",
-				unresolved:
-					"text-segment-unresolved underline decoration-dotted decoration-current decoration-[0.09em] underline-offset-[0.18em]",
-				failed: "text-segment-failed underline decoration-wavy decoration-current decoration-[0.07em] underline-offset-[0.18em]",
+					"word-sheen isolate bg-ink bg-clip-text text-transparent decoration-dashed decoration-[0.09em] before:-z-10 data-[highlighted=true]:bg-ink data-[highlighted=true]:before:inset-y-0 data-[highlighted=true]:before:bg-highlight/25 motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-word-resolving",
+				known: "text-word-known decoration-current/40 decoration-[0.06em]",
+				shadow: "text-word-shadow decoration-current/40 decoration-[0.06em]",
+				failed: "text-word-unknown cursor-default disabled:cursor-default",
 			},
-			underlined: {
-				true: "underline decoration-current decoration-[0.11em] underline-offset-[0.18em]",
-				/* The previewed underline, but driven by hover and focus alone. */
-				hover: "hover:decoration-current hover:decoration-[0.11em] focus-visible:decoration-current focus-visible:decoration-[0.11em]",
-				false: "",
+			interaction: {
+				idle: "",
+				previewed: "underline",
+				selected: "underline decoration-current decoration-[0.11em]",
+				hover: "hover:underline focus-visible:underline",
 			},
 		},
-		defaultVariants: { tone: "plain", underlined: false },
+		compoundVariants: [
+			{
+				tone: "failed",
+				className:
+					"no-underline hover:no-underline focus-visible:no-underline",
+			},
+		],
+		defaultVariants: { tone: "plain", interaction: "idle" },
 	},
 );
 
 export type ReaderSegmentTone = NonNullable<
 	VariantProps<typeof readerSegmentVariants>["tone"]
 >;
+export type ReaderSegmentInteraction = NonNullable<
+	VariantProps<typeof readerSegmentVariants>["interaction"]
+>;
 
 /**
  * One selectable word inside continuous reading text. It inherits the
- * passage typography and only adds colour, an optional underline, and a
- * highlight for members of the focused occurrence.
+ * passage typography and only adds a colour for its knowledge state, an
+ * underline for its interaction state, and a highlight for members of the
+ * focused occurrence.
  */
 export function ReaderSegment({
 	className,
 	tone,
-	underlined,
+	interaction,
 	highlighted = false,
 	type = "button",
 	...props
@@ -61,7 +85,7 @@ export function ReaderSegment({
 			data-highlighted={highlighted || undefined}
 			type={type}
 			className={cn(
-				readerSegmentVariants({ tone, underlined }),
+				readerSegmentVariants({ tone, interaction }),
 				className,
 			)}
 			{...props}
