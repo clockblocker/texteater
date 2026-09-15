@@ -1,6 +1,12 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "lego";
 import { useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
+import {
+	isPlaygroundPath,
+	navigate,
+	PLAYGROUND_BASE,
+	usePathname,
+} from "@/playground/playground-router";
 import { PlaygroundView } from "@/playground/playground-view";
 import { LibraryView } from "@/views/library-view";
 import { SettingsView } from "@/views/settings-view";
@@ -23,26 +29,35 @@ export function App() {
 }
 
 function ApplicationShell() {
-	const [shell, setShell] = useState<"workspace" | "settings" | "playground">(
-		"workspace",
-	);
-	const settingsOpen = shell === "settings";
-	const playgroundOpen = shell === "playground";
+	// Library and Settings are shell state and never change the URL. The
+	// dev-only Playground is the opposite: it is open exactly when the URL says
+	// so, so Back/Forward and reload behave.
+	const [shell, setShell] = useState<"workspace" | "settings">("workspace");
+	const playgroundOpen =
+		import.meta.env.DEV && isPlaygroundPath(usePathname());
+	const settingsOpen = !playgroundOpen && shell === "settings";
 	const { activeTextId, isLibraryVisible, revealLibrary } =
 		useWorkspaceController();
+	const leavePlayground = () => {
+		if (playgroundOpen) navigate("/");
+	};
 
 	return (
 		<SidebarProvider open={false}>
 			<AppSidebar
 				libraryActive={!settingsOpen && isLibraryVisible}
 				onShowLibrary={() => {
+					leavePlayground();
 					setShell("workspace");
 					revealLibrary();
 				}}
-				onShowSettings={() => setShell("settings")}
+				onShowSettings={() => {
+					leavePlayground();
+					setShell("settings");
+				}}
 				settingsActive={settingsOpen}
 				onShowPlayground={
-					import.meta.env.DEV ? () => setShell("playground") : null
+					import.meta.env.DEV ? () => navigate(PLAYGROUND_BASE) : null
 				}
 				playgroundActive={playgroundOpen}
 			/>

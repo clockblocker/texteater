@@ -2,13 +2,14 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import type { FunctionReturnType } from "convex/server";
 import { Skeleton } from "lego";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useMemo } from "react";
 
 import {
 	renderApplicationSubject,
 	renderCardTail,
 } from "@/views/subject-presentation";
 import type {
+	ResolutionStepKind,
 	WorkspaceSubject,
 	WorkspaceTarget,
 } from "@/workspace/sheet-workspace";
@@ -17,6 +18,8 @@ import {
 	WorkspaceInteractionProvider,
 } from "@/workspace/workspace-controller";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
+import type { EntryRoute } from "../playground-router";
 import { CardFrame, SheetFrame, Stage } from "./frames";
 
 type PlaygroundCatalog = FunctionReturnType<
@@ -27,20 +30,27 @@ type PlaygroundCatalog = FunctionReturnType<
  * One Note at a time, shown in both forms. Following any link inside a Note
  * replaces the shown Note, so the route from an Attestation up to its Reading
  * can be walked exactly as the deck would walk it.
+ *
+ * The shown Note is the route: `/playground/notes/<kind>/<id>`, so every step
+ * of that walk is a history entry and can be reloaded or linked to.
  */
-export function NotesGallery() {
+export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 	const catalog = useQuery({
 		...convexQuery(api.notesStudyFixtures.playground, {}),
 		gcTime: 10_000,
 	});
-	const [target, setTarget] = useState<WorkspaceTarget | null>(null);
+	const target = useMemo(
+		() => targetFromSegments(route.segments),
+		[route.segments],
+	);
+	const setTarget = route.setSegments;
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
-			follow: (next) => setTarget(next),
+			follow: (next) => setTarget(segmentsFromTarget(next)),
 			presentCards: () => {},
 			reconcile: () => {},
 		}),
-		[],
+		[setTarget],
 	);
 
 	if (catalog.isPending) {
@@ -75,7 +85,7 @@ export function NotesGallery() {
 			<Catalog
 				catalog={catalog.data}
 				target={target}
-				onSelect={setTarget}
+				onSelect={(next) => setTarget(segmentsFromTarget(next))}
 			/>
 			<div className="min-w-0 flex-1 overflow-auto p-6">
 				{subject ? (
@@ -109,6 +119,62 @@ export function NotesGallery() {
 			</div>
 		</div>
 	);
+}
+
+/** `["lemma", id]` and friends. Ids are trusted: this is a dev-only surface. */
+function targetFromSegments(
+	segments: readonly string[],
+): WorkspaceTarget | null {
+	const [kind, id, step] = segments;
+	if (!kind || !id) return null;
+	switch (kind) {
+		case "attestation":
+			return {
+				kind: "Attestation",
+				attestationId: id as Id<"attestations">,
+			};
+		case "surface":
+			return { kind: "Surface", language: "de", normalizedSurface: id };
+		case "lemma":
+			return { kind: "Lemma", lemmaId: id as Id<"lemmas"> };
+		case "reading":
+			return { kind: "Reading", readingId: id };
+		case "shadow":
+			return { kind: "Shadow", shadowId: id };
+		case "text":
+			return { kind: "Text", textId: id };
+		case "resolution":
+			return step
+				? {
+						kind: "ResolutionStep",
+						requestId: id,
+						stepKind: step as ResolutionStepKind,
+					}
+				: { kind: "Resolution", requestId: id };
+		default:
+			return null;
+	}
+}
+
+function segmentsFromTarget(target: WorkspaceTarget): readonly string[] {
+	switch (target.kind) {
+		case "Attestation":
+			return ["attestation", target.attestationId];
+		case "Surface":
+			return ["surface", target.normalizedSurface];
+		case "Lemma":
+			return ["lemma", target.lemmaId];
+		case "Reading":
+			return ["reading", target.readingId];
+		case "Shadow":
+			return ["shadow", target.shadowId];
+		case "Text":
+			return ["text", target.textId];
+		case "Resolution":
+			return ["resolution", target.requestId];
+		case "ResolutionStep":
+			return ["resolution", target.requestId, target.stepKind];
+	}
 }
 
 function subjectFor(target: WorkspaceTarget): WorkspaceSubject {
