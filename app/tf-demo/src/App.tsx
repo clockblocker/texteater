@@ -4,10 +4,15 @@ import { AppSidebar } from "@/components/app-sidebar";
 import {
 	isPlaygroundPath,
 	navigate,
+	navigatePlayground,
 	PLAYGROUND_BASE,
+	playgroundSegments,
 	usePathname,
 } from "@/playground/playground-router";
-import { PlaygroundView } from "@/playground/playground-view";
+import {
+	PLAYGROUND_ENTRIES,
+	PlaygroundView,
+} from "@/playground/playground-view";
 import { LibraryView } from "@/views/library-view";
 import { SettingsView } from "@/views/settings-view";
 import {
@@ -33,8 +38,9 @@ function ApplicationShell() {
 	// dev-only Playground is the opposite: it is open exactly when the URL says
 	// so, so Back/Forward and reload behave.
 	const [shell, setShell] = useState<"workspace" | "settings">("workspace");
-	const playgroundOpen =
-		import.meta.env.DEV && isPlaygroundPath(usePathname());
+	const pathname = usePathname();
+	const playgroundOpen = import.meta.env.DEV && isPlaygroundPath(pathname);
+	const [playgroundEntryKey] = playgroundSegments(pathname);
 	const settingsOpen = !playgroundOpen && shell === "settings";
 	const { activeTextId, isLibraryVisible, revealLibrary } =
 		useWorkspaceController();
@@ -60,6 +66,17 @@ function ApplicationShell() {
 					import.meta.env.DEV ? () => navigate(PLAYGROUND_BASE) : null
 				}
 				playgroundActive={playgroundOpen}
+				playgroundPages={
+					playgroundOpen
+						? PLAYGROUND_ENTRIES.map((entry) => ({
+								key: entry.key,
+								title: entry.title,
+								icon: entry.icon,
+								active: entry.key === playgroundEntryKey,
+								onShow: () => navigatePlayground([entry.key]),
+							}))
+						: []
+				}
 			/>
 			<SidebarInset className="min-h-svh min-w-0 overflow-hidden">
 				<header className="flex h-12 shrink-0 items-center border-b px-3 md:hidden">
