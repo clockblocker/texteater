@@ -39,14 +39,14 @@ export const renderDefaultShadowRelations = (({
 									}
 								>
 									<RouteMark hop="reachedFrom" />
-									<span className="mr-[0.35em] text-ink">
+									<span className="me-[0.35em] text-ink">
 										{referrer.reading.emojiDescription}
 									</span>
 									{referrer.reading.canonicalForm}
 								</LinkButton>
 								{referrer.pendingRelations.length > 0 ||
 								referrer.structuralReferences.length > 0 ? (
-									<ul className="ml-7 grid gap-1 text-sm text-ink-soft">
+									<ul className="ms-7 grid gap-1 text-sm text-ink-soft">
 										{referrer.pendingRelations.map(
 											(pending) => (
 												<li
@@ -65,7 +65,7 @@ export const renderDefaultShadowRelations = (({
 													!isCard ? (
 														<LinkButton
 															tone="quiet"
-															className="ml-3 text-xs"
+															className="ms-3 text-xs"
 															disabled={
 																cleanup.activeLocator !==
 																null

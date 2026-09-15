@@ -20,6 +20,7 @@ import {
 	UserRoundXIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
@@ -65,13 +66,6 @@ export function DataControls({
 		mutationMessage(analyzeText.error);
 
 	async function handleClearVisitorData() {
-		if (
-			!window.confirm(
-				"Clear this visitor's data? This removes only your Encounter history; shared resolutions and Knowledge stay available.",
-			)
-		) {
-			return;
-		}
 		setNotice(null);
 		setInteractionError(null);
 		try {
@@ -86,13 +80,6 @@ export function DataControls({
 
 	async function handleStripTextAnalysis() {
 		if (!text) return;
-		if (
-			!window.confirm(
-				`Strip the analysis from “${text.sourceText}”? The Text and its Sentences will remain. Segments, resolutions, Clicks, and Readings with no other source will be removed.`,
-			)
-		) {
-			return;
-		}
 		setNotice(null);
 		setInteractionError(null);
 		try {
@@ -131,13 +118,6 @@ export function DataControls({
 	}
 
 	async function handleClearSharedData() {
-		if (
-			!window.confirm(
-				"Clear shared data for every visitor? This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge.",
-			)
-		) {
-			return;
-		}
 		setNotice(null);
 		setInteractionError(null);
 		try {
@@ -190,35 +170,52 @@ export function DataControls({
 				<CardHeader>
 					<CardTitle>Demo data</CardTitle>
 					{text ? (
-						<CardDescription className="truncate">
+						<CardDescription
+							className="truncate"
+							title={text.sourceText}
+						>
 							{text.sourceText}
 						</CardDescription>
 					) : null}
 				</CardHeader>
 				<CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-					<Button
-						type="button"
-						variant="outline"
-						disabled={isBusy}
-						onClick={() => void handleClearVisitorData()}
+					<ConfirmDialog
+						trigger={
+							<Button
+								type="button"
+								variant="outline"
+								disabled={isBusy}
+							/>
+						}
+						title="Clear your data?"
+						description="This removes only your Encounter history. Shared resolutions and Knowledge stay available."
+						confirmLabel="Clear my data"
+						onConfirm={() => void handleClearVisitorData()}
 					>
 						<UserRoundXIcon data-icon="inline-start" />
 						{clearVisitorData.isPending
 							? "Clearing your data…"
 							: "Clear my data"}
-					</Button>
+					</ConfirmDialog>
 					{text?.isAnalyzed ? (
-						<Button
-							type="button"
-							variant="destructive"
-							disabled={isBusy}
-							onClick={() => void handleStripTextAnalysis()}
+						<ConfirmDialog
+							trigger={
+								<Button
+									type="button"
+									variant="destructive"
+									disabled={isBusy}
+								/>
+							}
+							title="Strip the analysis from this text?"
+							description="The Text and its Sentences remain. Segments, resolutions, Clicks, and Readings with no other source are removed."
+							confirmLabel="Strip analysis"
+							onConfirm={() => void handleStripTextAnalysis()}
 						>
 							<EraserIcon data-icon="inline-start" />
 							{stripTextAnalysis.isPending
 								? "Stripping analysis…"
 								: "Strip analysis"}
-						</Button>
+						</ConfirmDialog>
 					) : text ? (
 						<Button
 							type="button"
@@ -231,17 +228,24 @@ export function DataControls({
 								: "Analyze text"}
 						</Button>
 					) : null}
-					<Button
-						type="button"
-						variant="destructive"
-						disabled={isBusy}
-						onClick={() => void handleClearSharedData()}
+					<ConfirmDialog
+						trigger={
+							<Button
+								type="button"
+								variant="destructive"
+								disabled={isBusy}
+							/>
+						}
+						title="Clear shared data for every visitor?"
+						description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
+						confirmLabel="Clear shared data"
+						onConfirm={() => void handleClearSharedData()}
 					>
 						<DatabaseZapIcon data-icon="inline-start" />
 						{clearSharedData.isPending
 							? "Clearing shared data…"
 							: "Clear shared data"}
-					</Button>
+					</ConfirmDialog>
 				</CardContent>
 				{notice ? (
 					<CardContent>

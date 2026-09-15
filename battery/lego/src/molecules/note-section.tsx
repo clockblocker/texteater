@@ -36,7 +36,7 @@ export function NoteSectionLabel({
 		<h2
 			data-slot="note-section-label"
 			className={cn(
-				"mb-3 flex items-center font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase before:mr-1.5 before:flex-1 before:border-t before:border-dashed before:border-line before:content-[''] after:ml-1.5 after:w-1.5 after:border-t after:border-dashed after:border-line after:content-[''] compact:hidden",
+				"mb-3 flex items-center font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase before:me-1.5 before:flex-1 before:border-t before:border-dashed before:border-line before:content-[''] after:ms-1.5 after:w-1.5 after:border-t after:border-dashed after:border-line after:content-[''] compact:hidden",
 				className,
 			)}
 			{...props}

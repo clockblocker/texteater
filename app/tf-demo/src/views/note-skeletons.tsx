@@ -70,7 +70,7 @@ export function ReadingNoteSkeleton({
 			label="Loading Reading Note"
 		>
 			<NoteTitleSkeleton>
-				<NoteBone className="mr-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
+				<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
 				<NoteBone tone="headword" className="h-[0.8em] w-28" />
 			</NoteTitleSkeleton>
 			<NoteSection className="compact:before:hidden">
@@ -215,7 +215,7 @@ export function ShadowNoteSkeleton({
 			<NoteTitleSkeleton className="opacity-70">
 				<LockIcon
 					aria-hidden="true"
-					className="mr-2 inline size-[0.8em] align-middle text-ink-faint"
+					className="me-2 inline size-[0.8em] align-middle text-ink-faint"
 				/>
 				<NoteBone tone="headword" className="h-[0.8em] w-24" />
 			</NoteTitleSkeleton>

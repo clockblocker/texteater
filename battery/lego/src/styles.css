@@ -185,6 +185,11 @@
 	html {
 		@apply font-sans;
 		color-scheme: dark;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		/* Underlines sit below descenders in German and Hebrew prose alike. */
+		text-underline-position: from-font;
+		text-decoration-skip-ink: auto;
 	}
 	body {
 		@apply bg-background text-foreground;

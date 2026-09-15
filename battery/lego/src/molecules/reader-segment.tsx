@@ -4,15 +4,19 @@ import type * as React from "react";
 import { cn } from "../utils";
 
 const readerSegmentVariants = cva(
-	"cursor-pointer appearance-none border-0 bg-transparent p-0 font-[inherit] tracking-[inherit] text-[inherit] leading-[inherit] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-segment-known disabled:cursor-wait motion-reduce:transition-none data-[highlighted=true]:bg-highlight/25",
+	"relative cursor-pointer appearance-none border-0 bg-transparent p-0 font-[inherit] tracking-[inherit] text-[inherit] leading-[inherit] transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-[0.2em] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-segment-known disabled:cursor-wait motion-reduce:transition-none data-[highlighted=true]:bg-highlight/25",
 	{
 		variants: {
+			/* Each tone carries a cue besides colour: known words keep a hairline,
+			   unresolved ones a dotted rule, failed ones a wavy rule. Unknown words
+			   only appear while previewed, where the solid underline marks them. */
 			tone: {
 				plain: "",
 				unknown: "text-segment-unknown",
-				known: "text-segment-known",
-				unresolved: "text-segment-unresolved",
-				failed: "text-segment-failed",
+				known: "text-segment-known underline decoration-current/40 decoration-[0.06em] underline-offset-[0.18em]",
+				unresolved:
+					"text-segment-unresolved underline decoration-dotted decoration-current decoration-[0.09em] underline-offset-[0.18em]",
+				failed: "text-segment-failed underline decoration-wavy decoration-current decoration-[0.07em] underline-offset-[0.18em]",
 			},
 			underlined: {
 				true: "underline decoration-current decoration-[0.11em] underline-offset-[0.18em]",

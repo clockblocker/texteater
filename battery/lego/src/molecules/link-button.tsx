@@ -4,7 +4,7 @@ import type * as React from "react";
 import { cn } from "../utils";
 
 const linkButtonVariants = cva(
-	"inline-flex cursor-pointer items-baseline rounded-md text-left transition-colors hover:underline hover:underline-offset-[0.16em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-50 disabled:hover:no-underline [&_svg]:mr-[0.3em] [&_svg]:inline [&_svg]:size-[0.85em] [&_svg]:self-center",
+	"inline-flex cursor-pointer items-baseline rounded-md text-start transition-colors hover:underline hover:underline-offset-[0.16em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-50 disabled:hover:no-underline [&_svg]:me-[0.3em] [&_svg]:inline [&_svg]:size-[0.85em] [&_svg]:self-center",
 	{
 		variants: {
 			tone: {

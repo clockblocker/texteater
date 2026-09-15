@@ -34,7 +34,7 @@ export const renderDefaultLemmaRoutes = (({
 								}
 							>
 								<RouteMark hop="leadsTo" />
-								<span className="mr-[0.35em] text-ink">
+								<span className="me-[0.35em] text-ink">
 									{reading.emojiDescription}
 								</span>
 								{presented.canonicalForm}
@@ -65,7 +65,7 @@ export const renderDefaultLemmaRoutes = (({
 							>
 								<RouteMark
 									hop="reachedFrom"
-									className="mr-1.5"
+									className="me-1.5"
 								/>
 								{surface.normalizedSurface}
 							</LinkButton>

@@ -130,11 +130,11 @@ function Catalog({
 						className="grid gap-0.5 px-4 py-1.5"
 					>
 						<span className="truncate text-ink">
-							<span className="mr-1.5">
+							<span className="me-1.5">
 								{entry.emojiDescription}
 							</span>
 							{entry.canonicalForm}
-							<span className="ml-2 text-xs text-ink-muted">
+							<span className="ms-2 text-xs text-ink-muted">
 								{entry.kind}
 							</span>
 						</span>

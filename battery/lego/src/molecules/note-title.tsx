@@ -4,7 +4,7 @@ import type * as React from "react";
 import { cn } from "../utils";
 
 export const noteTitleVariants = cva(
-	"m-0 text-base leading-[1.4] font-[570] tracking-[-0.025em] [overflow-wrap:anywhere]",
+	"m-0 text-base leading-[1.4] font-[570] tracking-[-0.025em] text-balance [overflow-wrap:anywhere]",
 	{
 		variants: {
 			tone: {

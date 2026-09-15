@@ -126,7 +126,7 @@ export function ResolutionNoteFrame({
 	return (
 		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">
 			<div className="mx-auto flex w-full max-w-note flex-col gap-5">
-				<h1 className="text-xl font-semibold tracking-tight">
+				<h1 className="text-xl font-semibold tracking-tight text-balance">
 					{title}
 				</h1>
 				{note.terminal?.kind === "Unresolved" ? (

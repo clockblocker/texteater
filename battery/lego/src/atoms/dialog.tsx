@@ -62,7 +62,7 @@ function DialogContent({
 						render={
 							<Button
 								variant="ghost"
-								className="absolute top-2 right-2"
+								className="absolute top-2 end-2 before:absolute before:-inset-1.5"
 								size="icon-sm"
 							/>
 						}
@@ -118,7 +118,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
 		<DialogPrimitive.Title
 			data-slot="dialog-title"
 			className={cn(
-				"font-heading text-base leading-none font-medium",
+				"font-heading text-base leading-none font-medium text-balance",
 				className,
 			)}
 			{...props}
@@ -134,7 +134,7 @@ function DialogDescription({
 		<DialogPrimitive.Description
 			data-slot="dialog-description"
 			className={cn(
-				"text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+				"text-sm text-pretty text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
 				className,
 			)}
 			{...props}

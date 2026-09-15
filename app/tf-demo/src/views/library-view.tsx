@@ -78,7 +78,7 @@ export function LibraryView() {
 			<div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-24">
 				<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
 					<header>
-						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+						<h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
 							Library
 						</h1>
 					</header>
@@ -90,7 +90,7 @@ export function LibraryView() {
 						<div className="flex items-center justify-between gap-4">
 							<h2
 								id="library-title"
-								className="text-lg font-semibold"
+								className="text-lg font-semibold text-balance"
 							>
 								Stored texts
 							</h2>
@@ -115,7 +115,7 @@ export function LibraryView() {
 												textId: text.textId,
 											})
 										}
-										className="group rounded-xl bg-card p-4 text-left text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+										className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
 									>
 										<div className="flex items-start justify-between gap-4">
 											<div className="flex min-w-0 flex-col gap-2">
@@ -123,7 +123,7 @@ export function LibraryView() {
 													{text.title ??
 														text.sourceText}
 												</p>
-												<p className="text-xs text-muted-foreground">
+												<p className="text-xs text-muted-foreground tabular-nums">
 													Added{" "}
 													{formatDate(text.createdAt)}
 												</p>
@@ -137,7 +137,7 @@ export function LibraryView() {
 							<Card size="sm">
 								<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
 									<LibraryIcon className="size-5" />
-									<p>
+									<p className="text-pretty">
 										No stored texts yet. Add one with the
 										plus button.
 									</p>
@@ -153,7 +153,7 @@ export function LibraryView() {
 					render={
 						<Button
 							size="icon-lg"
-							className="absolute right-4 bottom-6 z-10 size-14 rounded-full shadow-lg sm:right-6"
+							className="absolute end-4 bottom-6 z-10 size-14 rounded-full shadow-lg sm:end-6"
 						/>
 					}
 				>

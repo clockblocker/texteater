@@ -27,12 +27,12 @@ export const renderDefaultAttestationHeader = (({
 						PresentationCapabilities.follow(noteData.reading.target)
 					}
 				>
-					<RouteMark hop="leadsTo" className="mr-1.5 min-w-0" />
+					<RouteMark hop="leadsTo" className="me-1.5 min-w-0" />
 					<span
 						className={
 							attested === surface.lemma.canonicalForm
 								? "text-ink"
-								: "mr-[0.35em] text-ink"
+								: "me-[0.35em] text-ink"
 						}
 					>
 						{noteData.reading.emojiDescription}

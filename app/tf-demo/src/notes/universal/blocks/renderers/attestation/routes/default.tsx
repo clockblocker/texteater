@@ -52,7 +52,7 @@ export const renderDefaultAttestationRoutes = (({
 						}
 					>
 						<RouteMark hop="leadsTo" />
-						<span className="mr-[0.35em] text-ink">
+						<span className="me-[0.35em] text-ink">
 							{noteData.reading.emojiDescription}
 						</span>
 						{surface.lemma.canonicalForm}

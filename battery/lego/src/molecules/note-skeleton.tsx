@@ -185,7 +185,7 @@ export function NoteQuoteSkeleton({
 		<div
 			data-slot="note-quote-skeleton"
 			className={cn(
-				"border-l-[3px] border-line py-1 pl-[clamp(1rem,2.5cqi,2.5rem)] compact:pl-3",
+				"border-s-[3px] border-line py-1 ps-[clamp(1rem,2.5cqi,2.5rem)] compact:ps-3",
 				className,
 			)}
 			{...props}
