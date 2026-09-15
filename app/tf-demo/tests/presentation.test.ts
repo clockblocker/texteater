@@ -9,7 +9,11 @@ import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
 import { projectResolvedRelationTargets } from "../convex/modules/notes/relations";
 import { isUnitReadingFamily } from "../convex/modules/notes/unitReadingFamilies";
 import { get as getReadingNote } from "../convex/readingNotes";
-import { get as getTextView, loadTextFocus } from "../convex/textViews";
+import {
+	get as getTextView,
+	loadTextFocus,
+	occurrenceFocus,
+} from "../convex/textViews";
 import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
 
 const getReadingNoteHandler = queryHandler<{
@@ -20,7 +24,6 @@ const getReadingNoteHandler = queryHandler<{
 const getTextViewHandler = queryHandler<{
 	textId: string;
 	visitorId: string;
-	focusAttestationId?: string;
 }>(getTextView);
 
 test("projects Dumling feature values for learner inspection", () => {
@@ -311,12 +314,16 @@ test("projects stored semantic endpoints as Lemma Route Note targets", () => {
 test("note and text queries expose target-specific interfaces", () => {
 	const textArgs = getTextView.exportArgs();
 	const textReturns = getTextView.exportReturns();
+	const focusArgs = occurrenceFocus.exportArgs();
+	const focusReturns = occurrenceFocus.exportReturns();
 	const noteArgs = getReadingNote.exportArgs();
 	const noteReturns = getReadingNote.exportReturns();
 
 	expect(textArgs).toContain('"textId"');
-	expect(textArgs).toContain('"focusAttestationId"');
+	expect(textArgs).not.toContain('"focusAttestationId"');
 	expect(textArgs).not.toContain('"target"');
+	expect(focusArgs).toContain('"textId"');
+	expect(focusArgs).toContain('"attestationId"');
 	expect(noteArgs).toContain('"readingId"');
 	expect(noteArgs).toContain('"contextCursor"');
 	expect(noteArgs).toContain('"visitorId"');
@@ -327,9 +334,10 @@ test("note and text queries expose target-specific interfaces", () => {
 	expect(noteReturns).toContain('"sentenceSnippet"');
 	expect(noteReturns).not.toContain("targetReadingKey");
 	expect(noteReturns).toContain('"value":"Lemma"');
-	expect(textReturns).toContain('"value":"None"');
-	expect(textReturns).toContain('"value":"Missing"');
-	expect(textReturns).toContain('"value":"Occurrence"');
+	// Landing on an occurrence never changes the Text query's shape.
+	expect(textReturns).not.toContain('"value":"Occurrence"');
+	expect(focusReturns).toContain('"value":"Missing"');
+	expect(focusReturns).toContain('"value":"Occurrence"');
 });
 
 test("Text projection shares current truth through Visitor Encounter history", async () => {

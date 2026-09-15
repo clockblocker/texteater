@@ -63,5 +63,10 @@ export function useSegmentSelection(visitorId: string) {
 		}
 	}
 
-	return { select, selectedSegmentKey, error } as const;
+	/** Marks a Segment selected without a Segment Selection, as an arrival does. */
+	function markSelected(sentenceId: string, segmentIndex: number): void {
+		setSelectedSegmentKey(segmentKey(sentenceId, segmentIndex));
+	}
+
+	return { select, markSelected, selectedSegmentKey, error } as const;
 }

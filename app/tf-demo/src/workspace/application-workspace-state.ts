@@ -25,10 +25,21 @@ export type ApplicationCardCandidate = {
 	readonly presentationContext?: SurfaceNotePresentationContext;
 };
 
+/**
+ * A one-shot arrival gesture for a Text Sheet: scroll to one occurrence and
+ * select its members. It is never persisted, and the Sheet acknowledges it
+ * once consumed, after which the Text behaves as if opened from the Library.
+ */
+export type OccurrenceReveal = {
+	readonly presentationId: string;
+	readonly attestationId: string;
+};
+
 export type ApplicationWorkspaceSession = {
 	readonly workspace: WorkspaceState<ApplicationWorkspaceSubject>;
 	/** Stable caller keys let a live Card retain its Presentation across refreshes. */
 	readonly candidateKeyByPresentationId: Readonly<Record<string, string>>;
+	readonly pendingReveal?: OccurrenceReveal;
 };
 
 export type ApplicationWorkspaceAction =
@@ -54,6 +65,10 @@ export type ApplicationWorkspaceAction =
 			readonly type: "ReconcilePresentation";
 			readonly presentationId: string;
 			readonly target: WorkspaceTarget;
+	  }
+	| {
+			readonly type: "AcknowledgeReveal";
+			readonly presentationId: string;
 	  };
 
 export function createApplicationWorkspaceSession(): ApplicationWorkspaceSession {
@@ -83,6 +98,11 @@ export function reduceApplicationWorkspaceSession(
 			return reconcileCardLayer(session, action);
 		case "ReconcilePresentation":
 			return reconcilePresentation(session, action);
+		case "AcknowledgeReveal":
+			return session.pendingReveal?.presentationId ===
+				action.presentationId
+				? withoutReveal(session)
+				: session;
 	}
 }
 
@@ -95,15 +115,64 @@ function follow(
 		? activePaneForPresentation(session.workspace, originPresentationId)
 		: session.workspace.activePaneId;
 	if (!paneId) return session;
-	return withWorkspace(
-		session,
-		workspaceReducer(session.workspace, {
-			type: "OpenSheet",
-			paneId,
-			subject: workspaceSubjectFor(target),
-			locked: target.kind === "Text",
-		}),
+	if (target.kind !== "Text") {
+		return withWorkspace(
+			session,
+			workspaceReducer(session.workspace, {
+				type: "OpenSheet",
+				paneId,
+				subject: workspaceSubjectFor(target),
+				locked: false,
+			}),
+		);
+	}
+	/* A Text the Pane already holds is returned to, not opened twice:
+	   whatever covers it goes, and the reader keeps its place. */
+	const existingId = findTextSheet(session.workspace, paneId, target.textId);
+	const workspace = workspaceReducer(
+		session.workspace,
+		existingId
+			? { type: "RevealSheet", presentationId: existingId }
+			: {
+					type: "OpenSheet",
+					paneId,
+					subject: workspaceSubjectFor(target),
+					locked: true,
+				},
 	);
+	if (!existingId && workspace === session.workspace) return session;
+	const presentationId =
+		existingId ?? selectVisibleSheets(workspace, paneId).at(-1)?.id;
+	const next = withoutReveal(withWorkspace(session, workspace));
+	return target.focusAttestationId && presentationId
+		? {
+				...next,
+				pendingReveal: {
+					presentationId,
+					attestationId: target.focusAttestationId,
+				},
+			}
+		: next;
+}
+
+/** The topmost Sheet in the Pane that presents this Text, if any. */
+function findTextSheet(
+	workspace: WorkspaceState<ApplicationWorkspaceSubject>,
+	paneId: string,
+	textId: string,
+): string | undefined {
+	return selectVisibleSheets(workspace, paneId).findLast(
+		({ subject }) =>
+			subject.kind === "Text" && subject.target.textId === textId,
+	)?.id;
+}
+
+function withoutReveal(
+	session: ApplicationWorkspaceSession,
+): ApplicationWorkspaceSession {
+	if (!session.pendingReveal) return session;
+	const { pendingReveal: _consumed, ...rest } = session;
+	return rest;
 }
 
 function revealLibrary(
@@ -328,7 +397,16 @@ function withWorkspace(
 				Boolean(workspace.presentations[presentationId]?.layerId),
 		),
 	);
-	return { workspace, candidateKeyByPresentationId };
+	const pendingReveal =
+		session.pendingReveal &&
+		workspace.presentations[session.pendingReveal.presentationId]
+			? session.pendingReveal
+			: undefined;
+	return {
+		workspace,
+		candidateKeyByPresentationId,
+		...(pendingReveal ? { pendingReveal } : {}),
+	};
 }
 
 function subjectsEqual(

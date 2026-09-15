@@ -49,8 +49,11 @@ type ContextFreeNoteSubject = {
 	readonly presentationContext?: never;
 };
 
+/** A Text as a workspace Subject: which Text, and nothing about how it was reached. */
+export type TextSubjectTarget = Omit<TextTarget, "focusAttestationId">;
+
 export type WorkspaceSubject =
-	| { readonly kind: "Text"; readonly target: TextTarget }
+	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
 	| ContextualSurfaceNoteSubject
 	| ContextFreeNoteSubject;
 
@@ -72,7 +75,7 @@ export function workspaceSubjectFor(
 	presentationContext?: SurfaceNotePresentationContext,
 ): WorkspaceSubject {
 	return target.kind === "Text"
-		? { kind: "Text", target }
+		? { kind: "Text", target: { kind: "Text", textId: target.textId } }
 		: target.kind === "Surface"
 			? {
 					kind: "Note",
@@ -110,8 +113,7 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 	if (value.kind === "Text" && target.kind === "Text") {
 		return (
 			typeof target.textId === "string" &&
-			(target.focusAttestationId === undefined ||
-				typeof target.focusAttestationId === "string") &&
+			target.focusAttestationId === undefined &&
 			value.presentationContext === undefined
 		);
 	}
@@ -192,11 +194,6 @@ export function workspaceSubjectsEqual(
 	right: WorkspaceSubject,
 ): boolean {
 	if (workspaceSubjectKey(left) !== workspaceSubjectKey(right)) return false;
-	if (left.target.kind === "Text" && right.target.kind === "Text") {
-		return (
-			left.target.focusAttestationId === right.target.focusAttestationId
-		);
-	}
 	if (left.target.kind === "Reading" && right.target.kind === "Reading") {
 		return (
 			left.target.focus?.attestationId ===

@@ -41,7 +41,8 @@ The exposed lower portion of an occluded Card. It identifies the Card and
 provides its lift handle.
 
 **Locked Sheet**:
-A Sheet protected from Collapse. It may still be covered.
+A Sheet protected from Collapse. It may still be covered, and a Reveal of a
+Sheet beneath it drops it.
 _Avoid_: pinned Note, locked Pane
 
 **Active Pane**:

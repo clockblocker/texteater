@@ -1,7 +1,6 @@
 import { NoteLinesSkeleton, NoteSection } from "lego";
 import { useEffect, useRef } from "react";
 
-import { segmentKey } from "@/hooks/use-segment-selection";
 import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { ReaderSentence } from "@/views/reader-sentence";
 import type { DefinitionCapabilities } from "../../../../note/capabilities";
@@ -100,7 +99,6 @@ function DefinitionSentence({
 	readonly capabilities: DefinitionCapabilities;
 }) {
 	const sentenceElement = useRef<HTMLParagraphElement | null>(null);
-	const segmentElements = useRef(new Map<string, HTMLElement>());
 	const focusAttestationId = capabilities.focus?.attestationId ?? null;
 	const focusMemberIndices = focusAttestationId
 		? sentence.segments
@@ -113,22 +111,11 @@ function DefinitionSentence({
 
 	useEffect(() => {
 		if (!focused) return;
-		let animations: Animation[] = [];
 		const frame = window.requestAnimationFrame(() => {
 			const paragraph = sentenceElement.current;
-			if (!paragraph) return;
-			const members = focusMemberIndices.flatMap((index) => {
-				const element = segmentElements.current.get(
-					segmentKey(sentence.sentenceId, index),
-				);
-				return element ? [element] : [];
-			});
-			animations = actuateSourceContextFocus(paragraph, members);
+			if (paragraph) actuateSourceContextFocus(paragraph);
 		});
-		return () => {
-			window.cancelAnimationFrame(frame);
-			for (const animation of animations) animation.cancel();
-		};
+		return () => window.cancelAnimationFrame(frame);
 		// The focus is fixed for the life of this Presentation.
 	}, [focused, focusAttestationId, sentence.sentenceId]);
 
@@ -153,11 +140,6 @@ function DefinitionSentence({
 				}
 				onSentenceElement={(element) => {
 					sentenceElement.current = element;
-				}}
-				onSegmentElement={(index, element) => {
-					const key = segmentKey(sentence.sentenceId, index);
-					if (element) segmentElements.current.set(key, element);
-					else segmentElements.current.delete(key);
 				}}
 			/>
 			{capabilities.error ? (

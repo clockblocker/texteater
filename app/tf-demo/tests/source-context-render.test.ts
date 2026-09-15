@@ -4,7 +4,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { SentenceList } from "../src/views/text-view";
 
-test("renders focus markers on all and only discontinuous occurrence members", () => {
+test("a revealed occurrence selects all and only its discontinuous members", () => {
+	// An arrival selects one member; the rest of the occurrence follows by attestation.
 	const markup = renderToStaticMarkup(
 		createElement(SentenceList, {
 			sentences: [
@@ -15,29 +16,21 @@ test("renders focus markers on all and only discontinuous occurrence members", (
 					stitchedText: "eins dazwischen vier",
 					sourceText: "eins dazwischen vier",
 					segments: [
-						segment(1, "eins"),
+						segment(1, "eins", { attestationId: "attestation_1" }),
 						segment(2, "dazwischen"),
-						segment(4, "vier"),
+						segment(4, "vier", { attestationId: "attestation_1" }),
 					],
 				},
 			],
-			focus: {
-				kind: "Occurrence",
-				attestationId: "attestation_1",
-				sentenceId: "sentence_1",
-				memberSegmentIndices: [1, 4],
-			},
-			selectedSegmentKey: null,
+			selectedSegmentKey: "sentence_1:1",
 			onSegmentClick: async () => {},
 		}),
 	);
 
-	expect(markup.match(/data-highlighted="true"/g)).toHaveLength(2);
-	expect(buttonMarkup(markup, "eins")).toContain('data-highlighted="true"');
-	expect(buttonMarkup(markup, "dazwischen")).not.toContain(
-		"data-highlighted",
-	);
-	expect(buttonMarkup(markup, "vier")).toContain('data-highlighted="true"');
+	expect(markup.match(/data-state="selected"/g)).toHaveLength(2);
+	expect(buttonMarkup(markup, "eins")).toContain('data-state="selected"');
+	expect(buttonMarkup(markup, "dazwischen")).not.toContain("data-state");
+	expect(buttonMarkup(markup, "vier")).toContain('data-state="selected"');
 });
 
 test("renders visitor-filtered terminal states with distinct failure color hooks", () => {
@@ -106,7 +99,6 @@ test("selecting one known member colors the complete occurrence", () => {
 					],
 				},
 			],
-			focus: { kind: "None" },
 			selectedSegmentKey: "sentence_1:2",
 			onSegmentClick: async () => {},
 		}),

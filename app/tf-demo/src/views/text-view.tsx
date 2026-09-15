@@ -4,31 +4,37 @@ import { NoteLinesSkeleton } from "lego";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { segmentKey, useSegmentSelection } from "@/hooks/use-segment-selection";
+import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import type { SentenceView } from "@/lib/action-results";
-import type { TextTarget } from "@/lib/navigation";
 import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
+import type { TextSubjectTarget } from "@/workspace/sheet-workspace";
+import {
+	type OccurrenceRevealHandle,
+	useOccurrenceReveal,
+} from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 /** The reading column: shared with Reading Notes, padded so the last sentence clears the deck. */
 const READER_BODY_CLASS =
 	"mx-auto w-full max-w-note px-note-gutter pt-[var(--reading-top,5rem)] pb-[max(5rem,calc(100cqh-var(--reading-deck-top,10.25rem)+0.875rem))] @max-md:pt-8";
 
-export function TextView({ target }: { target: TextTarget }) {
+const MISSING_SOURCE_CONTEXT_NOTICE =
+	"This Source Context is no longer available. The Text is still open, and no new resolution was started.";
+
+export function TextView({ target }: { target: TextSubjectTarget }) {
 	const visitorId = useAnonymousVisitorId();
 	const [notice, setNotice] = useState<string | null>(null);
 	const selection = useSegmentSelection(visitorId);
+	const reveal = useOccurrenceReveal();
+	const revealSentenceId = useOccurrenceArrival(target.textId, reveal, {
+		onOccurrence: selection.markSelected,
+		onMissing: () => setNotice(MISSING_SOURCE_CONTEXT_NOTICE),
+	});
 
 	const textQuery = useQuery({
-		...convexQuery(api.textViews.get, {
-			textId: target.textId,
-			visitorId,
-			...(target.focusAttestationId
-				? { focusAttestationId: target.focusAttestationId }
-				: {}),
-		}),
+		...convexQuery(api.textViews.get, { textId: target.textId, visitorId }),
 		gcTime: 10_000,
 	});
 
@@ -68,32 +74,84 @@ export function TextView({ target }: { target: TextTarget }) {
 	return (
 		<TextPresentation
 			error={error}
-			focus={textDetail.focus}
 			notice={notice}
 			onSegmentClick={handleSegmentSelection}
+			revealSentenceId={revealSentenceId}
+			onRevealed={reveal?.acknowledge}
 			selectedSegmentKey={selection.selectedSegmentKey}
 			sentences={sentences}
 		/>
 	);
 }
 
+/**
+ * Consumes a pending occurrence reveal once. The occurrence is looked up
+ * apart from the Text, its members are selected exactly as a click would
+ * select them, and its Sentence is handed back for one scroll. A reveal
+ * that no longer resolves leaves a notice instead. Either way the gesture
+ * is acknowledged, and from then on the Text is an ordinary open Text.
+ */
+function useOccurrenceArrival(
+	textId: string,
+	reveal: OccurrenceRevealHandle | null,
+	handlers: {
+		readonly onOccurrence: (
+			sentenceId: string,
+			segmentIndex: number,
+		) => void;
+		readonly onMissing: () => void;
+	},
+): string | null {
+	const attestationId = reveal?.attestationId ?? null;
+	const focusQuery = useQuery(
+		convexQuery(
+			api.textViews.occurrenceFocus,
+			attestationId ? { textId, attestationId } : "skip",
+		),
+	);
+	const focus = focusQuery.data;
+	const [revealSentenceId, setRevealSentenceId] = useState<string | null>(
+		null,
+	);
+	const consumedAttestationId = useRef<string | null>(null);
+	const latestHandlers = useRef(handlers);
+	latestHandlers.current = handlers;
+
+	useEffect(() => {
+		if (!reveal || !focus) return;
+		if (consumedAttestationId.current === reveal.attestationId) return;
+		consumedAttestationId.current = reveal.attestationId;
+		if (focus.kind === "Occurrence") {
+			const [firstMember] = focus.memberSegmentIndices;
+			if (firstMember !== undefined)
+				latestHandlers.current.onOccurrence(
+					focus.sentenceId,
+					firstMember,
+				);
+			setRevealSentenceId(focus.sentenceId);
+			return;
+		}
+		latestHandlers.current.onMissing();
+		reveal.acknowledge();
+	}, [reveal, focus]);
+
+	useEffect(() => {
+		if (!reveal) setRevealSentenceId(null);
+	}, [reveal]);
+
+	return revealSentenceId;
+}
+
 export function TextPresentation({
 	sentences,
-	focus,
 	selectedSegmentKey,
 	onSegmentClick,
+	revealSentenceId = null,
+	onRevealed,
 	notice = null,
 	error = null,
 }: {
 	readonly sentences: readonly SentenceView[];
-	readonly focus:
-		| { readonly kind: "None" | "Missing" }
-		| {
-				readonly kind: "Occurrence";
-				readonly attestationId: string;
-				readonly sentenceId: string;
-				readonly memberSegmentIndices: readonly number[];
-		  };
 	readonly selectedSegmentKey: string | null;
 	readonly onSegmentClick: (
 		sentence: SentenceView,
@@ -101,6 +159,8 @@ export function TextPresentation({
 		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
+	readonly revealSentenceId?: string | null;
+	readonly onRevealed?: () => void;
 	readonly notice?: string | null;
 	readonly error?: string | null;
 }) {
@@ -112,17 +172,11 @@ export function TextPresentation({
 			<div className={READER_BODY_CLASS}>
 				<SentenceList
 					sentences={sentences}
-					focus={focus}
 					selectedSegmentKey={selectedSegmentKey}
 					onSegmentClick={onSegmentClick}
+					revealSentenceId={revealSentenceId}
+					onRevealed={onRevealed}
 				/>
-
-				{focus.kind === "Missing" ? (
-					<ReaderStatus role="status">
-						This Source Context is no longer available. The Text is
-						still open, and no new resolution was started.
-					</ReaderStatus>
-				) : null}
 
 				{notice ? (
 					<ReaderStatus aria-live="polite">{notice}</ReaderStatus>
@@ -148,19 +202,12 @@ function ReaderStatus({ className = "", ...props }: ComponentProps<"p">) {
 
 export function SentenceList({
 	sentences,
-	focus,
 	selectedSegmentKey,
 	onSegmentClick,
+	revealSentenceId = null,
+	onRevealed,
 }: {
 	sentences: readonly SentenceView[];
-	focus:
-		| { readonly kind: "None" | "Missing" }
-		| {
-				readonly kind: "Occurrence";
-				readonly attestationId: string;
-				readonly sentenceId: string;
-				readonly memberSegmentIndices: readonly number[];
-		  };
 	selectedSegmentKey: string | null;
 	onSegmentClick: (
 		sentence: SentenceView,
@@ -168,29 +215,23 @@ export function SentenceList({
 		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
+	/** A Sentence to scroll to once it is on screen; reported back through `onRevealed`. */
+	revealSentenceId?: string | null;
+	onRevealed?: () => void;
 }) {
 	const sentenceElements = useRef(new Map<string, HTMLParagraphElement>());
-	const segmentElements = useRef(new Map<string, HTMLElement>());
+	const latestOnRevealed = useRef(onRevealed);
+	latestOnRevealed.current = onRevealed;
 
 	useEffect(() => {
-		if (focus.kind !== "Occurrence") return;
-		let animations: Animation[] = [];
+		if (!revealSentenceId) return;
 		const frame = window.requestAnimationFrame(() => {
-			const sentence = sentenceElements.current.get(focus.sentenceId);
-			if (!sentence) return;
-			const members = focus.memberSegmentIndices.flatMap((index) => {
-				const element = segmentElements.current.get(
-					segmentKey(focus.sentenceId, index),
-				);
-				return element ? [element] : [];
-			});
-			animations = actuateSourceContextFocus(sentence, members);
+			const sentence = sentenceElements.current.get(revealSentenceId);
+			if (sentence) actuateSourceContextFocus(sentence);
+			latestOnRevealed.current?.();
 		});
-		return () => {
-			window.cancelAnimationFrame(frame);
-			for (const animation of animations) animation.cancel();
-		};
-	}, [focus]);
+		return () => window.cancelAnimationFrame(frame);
+	}, [revealSentenceId]);
 
 	return (
 		<article
@@ -206,12 +247,6 @@ export function SentenceList({
 					) : null}
 					<ReaderSentence
 						sentence={sentence}
-						focusMemberIndices={
-							focus.kind === "Occurrence" &&
-							focus.sentenceId === sentence.sentenceId
-								? focus.memberSegmentIndices
-								: []
-						}
 						selectedSegmentKey={selectedSegmentKey}
 						onSegmentClick={onSegmentClick}
 						onSentenceElement={(element) => {
@@ -225,12 +260,6 @@ export function SentenceList({
 									sentence.sentenceId,
 								);
 							}
-						}}
-						onSegmentElement={(index, element) => {
-							const key = segmentKey(sentence.sentenceId, index);
-							if (element)
-								segmentElements.current.set(key, element);
-							else segmentElements.current.delete(key);
 						}}
 					/>
 				</section>

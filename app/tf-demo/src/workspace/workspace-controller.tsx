@@ -25,6 +25,12 @@ export type WorkspaceInteraction = {
 	readonly reconcile: (target: WorkspaceTarget) => void;
 };
 
+/** A pending arrival gesture for the current Presentation, acknowledged once consumed. */
+export type OccurrenceRevealHandle = {
+	readonly attestationId: string;
+	readonly acknowledge: () => void;
+};
+
 type WorkspaceController = {
 	readonly activeTextId: string | null;
 	readonly isLibraryVisible: boolean;
@@ -37,6 +43,28 @@ const WorkspaceControllerContext = createContext<WorkspaceController | null>(
 const WorkspaceInteractionContext = createContext<WorkspaceInteraction | null>(
 	null,
 );
+const OccurrenceRevealContext = createContext<OccurrenceRevealHandle | null>(
+	null,
+);
+
+export function OccurrenceRevealProvider({
+	reveal,
+	children,
+}: {
+	readonly reveal: OccurrenceRevealHandle | null;
+	readonly children: ReactNode;
+}) {
+	return (
+		<OccurrenceRevealContext.Provider value={reveal}>
+			{children}
+		</OccurrenceRevealContext.Provider>
+	);
+}
+
+/** Null when nothing is pending, or outside a workspace Presentation. */
+export function useOccurrenceReveal(): OccurrenceRevealHandle | null {
+	return useContext(OccurrenceRevealContext);
+}
 
 /** Shares shell navigation with the workspace renderer. */
 export function WorkspaceControllerProvider({

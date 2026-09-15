@@ -26,6 +26,7 @@ import {
 	type ApplicationWorkspaceSession,
 	type ApplicationWorkspaceSubject,
 	createApplicationWorkspaceSession,
+	type OccurrenceReveal,
 	reduceApplicationWorkspaceSession,
 } from "./application-workspace-state";
 import type {
@@ -34,6 +35,8 @@ import type {
 } from "./sheet-workspace";
 import { useWorkspaceSentenceReveal } from "./useWorkspaceSentenceReveal";
 import {
+	type OccurrenceRevealHandle,
+	OccurrenceRevealProvider,
 	WorkspaceControllerProvider,
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
@@ -177,6 +180,12 @@ function ApplicationWorkspaceCanvas({
 						subject={subject}
 						context={context}
 						dispatch={dispatch}
+						pendingReveal={
+							session.pendingReveal?.presentationId ===
+							context.presentationId
+								? session.pendingReveal
+								: null
+						}
 						queueReveal={queueReveal}
 						renderSubject={renderSubject}
 						renderLibrary={renderLibrary}
@@ -191,6 +200,7 @@ function ApplicationPresentation({
 	subject,
 	context,
 	dispatch,
+	pendingReveal,
 	queueReveal,
 	renderSubject,
 	renderLibrary,
@@ -198,6 +208,7 @@ function ApplicationPresentation({
 	subject: ApplicationWorkspaceSubject;
 	context: WorkspaceRenderContext<ApplicationWorkspaceSubject>;
 	dispatch: Dispatch<ApplicationWorkspaceAction>;
+	pendingReveal: OccurrenceReveal | null;
 	queueReveal(anchor: HTMLElement, presentationId: string): void;
 }) {
 	// Content effects (in particular live resolution) need stable interaction callbacks.
@@ -206,6 +217,20 @@ function ApplicationPresentation({
 		selectAnchor.current = context.selectAnchor;
 	}, [context.selectAnchor]);
 	const presentationId = context.presentationId;
+	const reveal = useMemo<OccurrenceRevealHandle | null>(
+		() =>
+			pendingReveal
+				? {
+						attestationId: pendingReveal.attestationId,
+						acknowledge: () =>
+							dispatch({
+								type: "AcknowledgeReveal",
+								presentationId,
+							}),
+					}
+				: null,
+		[dispatch, pendingReveal, presentationId],
+	);
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
 			follow: (target) =>
@@ -246,9 +271,11 @@ function ApplicationPresentation({
 	);
 	return (
 		<WorkspaceInteractionProvider interaction={interaction}>
-			{subject.kind === "Library"
-				? renderLibrary()
-				: renderSubject(subject, context.presentation)}
+			<OccurrenceRevealProvider reveal={reveal}>
+				{subject.kind === "Library"
+					? renderLibrary()
+					: renderSubject(subject, context.presentation)}
+			</OccurrenceRevealProvider>
 		</WorkspaceInteractionProvider>
 	);
 }

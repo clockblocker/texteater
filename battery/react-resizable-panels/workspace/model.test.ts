@@ -286,4 +286,41 @@ describe("workspace algebra", () => {
 		expect(closed.layers["layer-3"]).toBeUndefined();
 		expect(closed.presentations[memberId]).toBeUndefined();
 	});
+	test("reveals a covered Sheet by dropping what is above it and its own Card Layer", () => {
+		const covered = reduce(
+			createWorkspace(source),
+			{
+				type: "OpenLayer",
+				originPresentationId: "presentation-1",
+				subjects: [note],
+			},
+			{ type: "OpenSheet", paneId: "pane-1", subject: anotherNote },
+			{
+				type: "OpenSheet",
+				paneId: "pane-1",
+				subject: { name: "locked" },
+				locked: true,
+			},
+		);
+		expect(
+			selectVisibleSheets(covered, "pane-1").map((sheet) => sheet.id),
+		).toEqual(["presentation-1", "presentation-4", "presentation-5"]);
+
+		const revealed = reduce(covered, {
+			type: "RevealSheet",
+			presentationId: "presentation-1",
+		});
+		expect(
+			selectVisibleSheets(revealed, "pane-1").map((sheet) => sheet.id),
+		).toEqual(["presentation-1"]);
+		expect(Object.keys(revealed.presentations)).toEqual(["presentation-1"]);
+		expect(revealed.layers).toEqual({});
+		expect(revealed.activePaneId).toBe("pane-1");
+		expect(
+			reduce(revealed, {
+				type: "RevealSheet",
+				presentationId: "presentation-1",
+			}),
+		).toBe(revealed);
+	});
 });

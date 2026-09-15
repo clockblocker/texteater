@@ -45,7 +45,6 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 	selectedSegmentKey,
 	onSegmentClick,
 	onSentenceElement,
-	onSegmentElement,
 	className = "text-reader__sentence",
 }: {
 	readonly sentence: S;
@@ -58,10 +57,6 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 		anchorElement: HTMLElement,
 	) => Promise<void> | void;
 	readonly onSentenceElement?: (element: HTMLParagraphElement | null) => void;
-	readonly onSegmentElement?: (
-		segmentIndex: number,
-		element: HTMLElement | null,
-	) => void;
 	readonly className?: string;
 }) {
 	const [hoveredTarget, setHoveredTarget] =
@@ -85,14 +80,9 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 					segment.index,
 				);
 				const key = segmentKey(sentence.sentenceId, segment.index);
-				const trackElement = (element: HTMLElement | null) =>
-					onSegmentElement?.(segment.index, element);
 				if (segment.kind !== "ResolvableText") {
 					return (
-						<ReaderPlainSegment
-							key={segment.index}
-							ref={trackElement}
-						>
+						<ReaderPlainSegment key={segment.index}>
 							{segment.text}
 						</ReaderPlainSegment>
 					);
@@ -123,7 +113,6 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				return (
 					<ReaderSegment
 						key={segment.index}
-						ref={trackElement}
 						data-state={displayState}
 						tone={segmentTone(displayState)}
 						interaction={segmentInteraction(displayState)}

@@ -9,6 +9,12 @@ export type SettingsTarget = {
 	readonly textId?: string;
 };
 
+/**
+ * A Text to open. `focusAttestationId` is a one-shot arrival gesture: on
+ * landing, the reader scrolls to that occurrence's Sentence and selects its
+ * members, exactly as a click would. It is presentation state and adds no
+ * identity: the workspace Subject keeps only the Text.
+ */
 export type TextTarget = {
 	readonly kind: "Text";
 	readonly textId: string;

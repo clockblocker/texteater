@@ -73,6 +73,7 @@ export type WorkspaceCommand<S> =
 	| { type: "CancelGesture" }
 	| { type: "CloseLayer"; layerId: string }
 	| { type: "ClosePresentation"; presentationId: string }
+	| { type: "RevealSheet"; presentationId: string }
 	| { type: "ActivatePane"; paneId: string };
 
 export type WorkspaceTransition = {
@@ -176,6 +177,8 @@ export function workspaceReducer<S>(
 			return closeLayer(state, command.layerId);
 		case "ClosePresentation":
 			return closePresentation(state, command.presentationId);
+		case "RevealSheet":
+			return revealSheet(state, command.presentationId);
 		case "ActivatePane":
 			return state.panes[command.paneId]
 				? { ...state, activePaneId: command.paneId }
@@ -568,6 +571,44 @@ function closePresentation<S>(
 ): WorkspaceState<S> {
 	const presentation = state.presentations[presentationId];
 	if (!presentation || presentation.locked || state.gesture) return state;
+	return removePresentation(state, presentationId);
+}
+
+/**
+ * Returns a covered Sheet to the top of its Pane and activates the Pane.
+ * Every Sheet above it goes, together with their Card Layers and its own.
+ * A Locked Sheet is protected from Collapse, not from a navigation that
+ * lands beneath it, so locks above the revealed Sheet do not hold.
+ */
+function revealSheet<S>(
+	state: WorkspaceState<S>,
+	presentationId: string,
+): WorkspaceState<S> {
+	const presentation = state.presentations[presentationId];
+	if (presentation?.form !== "Sheet" || state.gesture) return state;
+	const paneId = paneContaining(state, presentationId);
+	if (!paneId) return state;
+	const pane = state.panes[paneId];
+	const above = pane.presentationIds.slice(
+		pane.presentationIds.indexOf(presentationId) + 1,
+	);
+	let next = state;
+	for (const id of [...above].reverse()) next = removePresentation(next, id);
+	for (const layer of Object.values(next.layers)) {
+		if (layer.originPresentationId === presentationId)
+			next = closeLayer(next, layer.id);
+	}
+	return next.activePaneId === paneId
+		? next
+		: { ...next, activePaneId: paneId };
+}
+
+/** Drops a Presentation regardless of its lock, with the Card Layers it opened. */
+function removePresentation<S>(
+	state: WorkspaceState<S>,
+	presentationId: string,
+): WorkspaceState<S> {
+	if (!state.presentations[presentationId]) return state;
 	const withoutSheet = removeSheet(state, presentationId);
 	let detached = withoutSheet;
 	for (const layer of Object.values(withoutSheet.layers)) {

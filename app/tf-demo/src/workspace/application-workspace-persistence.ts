@@ -156,18 +156,19 @@ function parseV2(value: unknown): ApplicationWorkspaceSession | null {
 		WorkspacePresentation<ApplicationWorkspaceSubject>
 	> = {};
 	for (const persistedPresentation of value.presentations) {
+		if (!isRecord(persistedPresentation)) return null;
+		const subject = restoredSubject(persistedPresentation.subject);
 		if (
-			!isRecord(persistedPresentation) ||
 			typeof persistedPresentation.id !== "string" ||
 			typeof persistedPresentation.locked !== "boolean" ||
-			!isApplicationSubject(persistedPresentation.subject) ||
+			!isApplicationSubject(subject) ||
 			(persistedPresentation.layerId !== undefined &&
 				typeof persistedPresentation.layerId !== "string")
 		)
 			return null;
 		presentations[persistedPresentation.id] = {
 			id: persistedPresentation.id,
-			subject: persistedPresentation.subject,
+			subject,
 			locked: persistedPresentation.locked,
 			form: "Sheet",
 			...(typeof persistedPresentation.layerId === "string"
@@ -322,9 +323,11 @@ function migrateV1(
 		for (const sheet of oldPane.sheets) {
 			const presentationId = `presentation-${nextId++}`;
 			presentationIds.push(presentationId);
+			const subject = restoredSubject(sheet.subject);
+			if (!isWorkspaceSubject(subject)) return null;
 			presentations[presentationId] = {
 				id: presentationId,
-				subject: sheet.subject,
+				subject,
 				form: "Sheet",
 				locked: sheet.locked,
 			};
@@ -397,7 +400,7 @@ function isValidV1(value: unknown): value is {
 				!isRecord(sheet) ||
 				typeof sheet.instanceId !== "string" ||
 				typeof sheet.locked !== "boolean" ||
-				!isWorkspaceSubject(sheet.subject) ||
+				!isWorkspaceSubject(restoredSubject(sheet.subject)) ||
 				sheetIds.has(sheet.instanceId)
 			)
 				return false;
@@ -415,6 +418,22 @@ function browserStorage(): ApplicationWorkspaceStorage | null {
 	} catch {
 		return null;
 	}
+}
+
+/**
+ * Earlier sessions stored a Text's arrival focus inside its Subject. The
+ * focus was never identity, so it is dropped rather than replayed.
+ */
+function restoredSubject(value: unknown): unknown {
+	if (
+		!isRecord(value) ||
+		value.kind !== "Text" ||
+		!isRecord(value.target) ||
+		!("focusAttestationId" in value.target)
+	)
+		return value;
+	const { focusAttestationId: _dropped, ...target } = value.target;
+	return { ...value, target };
 }
 
 function isApplicationSubject(

@@ -20,12 +20,7 @@ export function renderApplicationSubject(
 	const { target } = subject;
 	switch (target.kind) {
 		case "Text":
-			return (
-				<TextView
-					key={`${target.textId}:${target.focusAttestationId ?? ""}`}
-					target={target}
-				/>
-			);
+			return <TextView key={target.textId} target={target} />;
 		case "Reading":
 			return (
 				<UnitReadingNoteView

@@ -240,6 +240,136 @@ describe("application workspace state", () => {
 		).toBe(session);
 	});
 
+	test("returns to an open Text on follow and carries the occurrence as a one-shot reveal", () => {
+		let session = createApplicationWorkspaceSession();
+		const libraryId = Object.keys(session.workspace.presentations)[0];
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			target: {
+				kind: "Text",
+				textId: "text-1",
+				focusAttestationId: "attestation-1",
+			},
+			originPresentationId: libraryId,
+		});
+		const textId = Object.values(session.workspace.presentations).find(
+			(presentation) => presentation.subject.kind === "Text",
+		)?.id;
+		if (!textId) throw new Error("Expected a Text Presentation.");
+		// The Subject knows only the Text; the arrival rides alongside.
+		expect(session.workspace.presentations[textId]?.subject).toEqual({
+			kind: "Text",
+			target: { kind: "Text", textId: "text-1" },
+		});
+		expect(session.pendingReveal).toEqual({
+			presentationId: textId,
+			attestationId: "attestation-1",
+		});
+
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "AcknowledgeReveal",
+			presentationId: textId,
+		});
+		expect(session.pendingReveal).toBeUndefined();
+
+		// From a Note Sheet covering the Text: the Sheet goes, the Text stays put.
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			target: { kind: "Reading", readingId: "reading-2" },
+			originPresentationId: textId,
+		});
+		const noteSheetId = Object.values(session.workspace.presentations).find(
+			(presentation) =>
+				presentation.form === "Sheet" &&
+				presentation.subject.kind === "Note",
+		)?.id;
+		expect(noteSheetId).toBeDefined();
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			target: {
+				kind: "Text",
+				textId: "text-1",
+				focusAttestationId: "attestation-2",
+			},
+			originPresentationId: noteSheetId,
+		});
+		expect(Object.keys(session.workspace.presentations).sort()).toEqual(
+			[libraryId, textId].sort(),
+		);
+		expect(session.pendingReveal).toEqual({
+			presentationId: textId,
+			attestationId: "attestation-2",
+		});
+
+		// From a Card in the Text's own deck: the deck closes, nothing stacks.
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "ReconcileCardLayer",
+			originPresentationId: textId,
+			candidates: [
+				{
+					key: "request-1:Reading",
+					target: { kind: "Reading", readingId: "reading-1" },
+				},
+			],
+		});
+		const cardId = Object.values(session.workspace.presentations).find(
+			(presentation) => presentation.form === "Card",
+		)?.id;
+		expect(cardId).toBeDefined();
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			target: {
+				kind: "Text",
+				textId: "text-1",
+				focusAttestationId: "attestation-3",
+			},
+			originPresentationId: cardId,
+		});
+		expect(Object.keys(session.workspace.presentations).sort()).toEqual(
+			[libraryId, textId].sort(),
+		);
+		expect(session.workspace.layers).toEqual({});
+		expect(session.pendingReveal).toEqual({
+			presentationId: textId,
+			attestationId: "attestation-3",
+		});
+
+		const storage = memoryStorage();
+		saveApplicationWorkspace(session, storage);
+		expect(loadApplicationWorkspace(undefined, storage).pendingReveal).toBe(
+			undefined,
+		);
+	});
+
+	test("drops an arrival focus stored inside a Text Subject by an earlier session", () => {
+		let session = createApplicationWorkspaceSession();
+		const libraryId = Object.keys(session.workspace.presentations)[0];
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			target: { kind: "Text", textId: "text-1" },
+			originPresentationId: libraryId,
+		});
+		const storage = memoryStorage();
+		saveApplicationWorkspace(session, storage);
+		const stored = storage.read("tf-demo.workspace.v2");
+		if (!stored) throw new Error("Expected a persisted workspace.");
+		storage.setItem(
+			"tf-demo.workspace.v2",
+			stored.replace(
+				'"textId":"text-1"',
+				'"textId":"text-1","focusAttestationId":"attestation-1"',
+			),
+		);
+		const restored = loadApplicationWorkspace(undefined, storage);
+		const text = Object.values(restored.workspace.presentations).find(
+			(presentation) => presentation.subject.kind === "Text",
+		);
+		expect(text?.subject).toEqual({
+			kind: "Text",
+			target: { kind: "Text", textId: "text-1" },
+		});
+	});
+
 	test("reconciles a Resolution Card in place by candidate key", () => {
 		let session = createApplicationWorkspaceSession();
 		const originPresentationId = Object.keys(
