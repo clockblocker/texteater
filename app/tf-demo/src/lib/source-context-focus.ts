@@ -1,4 +1,4 @@
-export const SOURCE_CONTEXT_EMPHASIS_COLOR = "#4d8ce6";
+export const SOURCE_CONTEXT_EMPHASIS_COLOR = "oklch(64.1% 0.15 257.5)";
 
 type ScrollTarget = {
 	scrollIntoView(options?: ScrollIntoViewOptions): void;

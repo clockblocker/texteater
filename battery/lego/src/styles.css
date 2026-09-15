@@ -124,25 +124,25 @@
 /* One palette for now. The light theme deliberately reuses these values
    until a light appearance is designed; `.dark` therefore adds nothing. */
 :root {
-	--canvas: #141920;
-	--paper: #1c2128;
-	--raised: #283342;
-	--scrim: #06080c;
-	--ink: #e2e5e9;
-	--ink-soft: #a3aab4;
-	--ink-muted: #8c95a1;
-	--ink-faint: #5f6774;
-	--line: #383e47;
-	--line-strong: #56657a;
+	--canvas: oklch(21.2% 0.016 256.8);
+	--paper: oklch(24.6% 0.015 256.8);
+	--raised: oklch(31.8% 0.031 256.3);
+	--scrim: oklch(13.4% 0.01 260.6);
+	--ink: oklch(92.1% 0.006 255.5);
+	--ink-soft: oklch(73.6% 0.016 257.2);
+	--ink-muted: oklch(66.6% 0.021 255.6);
+	--ink-faint: oklch(51.2% 0.023 260.1);
+	--line: oklch(36.2% 0.018 258.4);
+	--line-strong: oklch(50.2% 0.038 256.8);
 
-	--gender-feminine: #e69a9d;
-	--gender-masculine: #aab2d8;
-	--gender-neuter: #a3c39f;
-	--segment-unknown: #5d89c7;
-	--segment-known: #7aaef7;
-	--segment-unresolved: #c7a467;
-	--segment-failed: #db7777;
-	--highlight: #4d8ce6;
+	--gender-feminine: oklch(76.2% 0.091 16.8);
+	--gender-masculine: oklch(77% 0.055 275.7);
+	--gender-neuter: oklch(78.4% 0.061 142);
+	--segment-unknown: oklch(62.5% 0.106 257.1);
+	--segment-known: oklch(74.4% 0.12 257);
+	--segment-unresolved: oklch(73.7% 0.089 80.6);
+	--segment-failed: oklch(68.1% 0.125 20.9);
+	--highlight: oklch(64.1% 0.15 257.5);
 
 	--background: var(--canvas);
 	--foreground: var(--ink);
@@ -150,30 +150,30 @@
 	--card-foreground: var(--ink);
 	--popover: var(--paper);
 	--popover-foreground: var(--ink);
-	--primary: #8eb4f0;
-	--primary-foreground: #111824;
+	--primary: oklch(76.5% 0.096 259.3);
+	--primary-foreground: oklch(20.8% 0.026 260.9);
 	--secondary: var(--raised);
-	--secondary-foreground: #d7e8ff;
-	--muted: #232932;
+	--secondary-foreground: oklch(92.5% 0.036 256);
+	--muted: oklch(27.9% 0.019 258.4);
 	--muted-foreground: var(--ink-muted);
 	--accent: var(--raised);
-	--accent-foreground: #d7e8ff;
+	--accent-foreground: oklch(92.5% 0.036 256);
 	--destructive: var(--segment-failed);
 	--border: var(--line);
 	--input: var(--line);
 	--ring: var(--primary);
-	--chart-1: #8eb4f0;
-	--chart-2: #a3c39f;
-	--chart-3: #c7a467;
-	--chart-4: #e69a9d;
-	--chart-5: #aab2d8;
+	--chart-1: oklch(76.5% 0.096 259.3);
+	--chart-2: oklch(78.4% 0.061 142);
+	--chart-3: oklch(73.7% 0.089 80.6);
+	--chart-4: oklch(76.2% 0.091 16.8);
+	--chart-5: oklch(77% 0.055 275.7);
 	--radius: 0.625rem;
-	--sidebar: #0f131b;
+	--sidebar: oklch(18.6% 0.018 264);
 	--sidebar-foreground: var(--ink);
 	--sidebar-primary: var(--primary);
 	--sidebar-primary-foreground: var(--primary-foreground);
 	--sidebar-accent: var(--raised);
-	--sidebar-accent-foreground: #d7e8ff;
+	--sidebar-accent-foreground: oklch(92.5% 0.036 256);
 	--sidebar-border: var(--line);
 	--sidebar-ring: var(--primary);
 }
