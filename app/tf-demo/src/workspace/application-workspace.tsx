@@ -40,12 +40,13 @@ import {
 
 /**
  * Reading geometry shared by Texts and Reading Notes. The Card Layer top sits
- * three text lines below the reading top, and its left edge lines up with the
- * inner reading column (half the leftover width, plus the gutter, minus the
- * Card's own padding and border).
+ * below the first two sentences (two text lines plus one paragraph gap) with a
+ * line of breathing room, and its left edge lines up with the inner reading
+ * column (half the leftover width, plus the gutter, minus the Card's own
+ * padding and border).
  */
 const READING_LAYOUT_CLASS = [
-	"flex h-full min-h-0 [--reading-top:5rem] [--reading-deck-top:calc(var(--reading-top)+3*1.71rem)]",
+	"flex h-full min-h-0 [--reading-top:5rem] [--reading-deck-top:calc(var(--reading-top)+2*1.71rem+1.75rem+1rem)]",
 	"[--workspace-cards-top:var(--reading-deck-top)]",
 	"[--workspace-cards-height:min(calc(100%-var(--reading-deck-top)-12px),34rem)]",
 	"[--workspace-cards-left:calc(max(0px,50%-24rem)+var(--spacing-note-gutter)-0.9rem-1px)]",

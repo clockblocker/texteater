@@ -77,6 +77,7 @@
 	/* Reader segment states. */
 	--color-segment-unknown: var(--segment-unknown);
 	--color-segment-known: var(--segment-known);
+	--color-segment-selected: var(--segment-selected);
 	--color-segment-unresolved: var(--segment-unresolved);
 	--color-segment-failed: var(--segment-failed);
 	--color-highlight: var(--highlight);
@@ -139,7 +140,10 @@
 	--gender-masculine: oklch(77% 0.055 275.7);
 	--gender-neuter: oklch(78.4% 0.061 142);
 	--segment-unknown: oklch(62.5% 0.106 257.1);
-	--segment-known: oklch(74.4% 0.12 257);
+	/* Known and selected share a hue; the selected word is the brighter,
+	   more saturated step, so words resolved earlier recede beside it. */
+	--segment-known: oklch(76% 0.075 257);
+	--segment-selected: oklch(84% 0.14 257);
 	--segment-unresolved: oklch(73.7% 0.089 80.6);
 	--segment-failed: oklch(68.1% 0.125 20.9);
 	--highlight: oklch(64.1% 0.15 257.5);

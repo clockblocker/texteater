@@ -675,11 +675,14 @@ export function Workspace<S>({
 				data-presentation-form="Card"
 				data-leaving={leaving ? "true" : undefined}
 				inert={leaving}
-				style={{
-					top: `calc(${index} * var(--workspace-card-step))`,
-					zIndex: total - index,
-					height: `calc(100% - ${total - 1} * var(--workspace-card-step))`,
-				}}
+				style={
+					{
+						"--workspace-card-depth": index,
+						top: `calc(${index} * var(--workspace-card-step))`,
+						zIndex: total - index,
+						height: `calc(100% - ${total - 1} * var(--workspace-card-step))`,
+					} as CSSProperties
+				}
 			>
 				<div className="workspace__card-content" inert={index !== 0}>
 					{renderSubject(card.subject, {

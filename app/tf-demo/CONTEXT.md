@@ -63,6 +63,11 @@ no identity.
 The learner-facing Note for one Unit Reading, combining its Knowledge, Lemma,
 and source Occurrence Attestations.
 
+**Personal Annotation**:
+A Visitor-specific freeform text about one exact Reading. It is presented with
+a Reading Note but remains separate from the Reading's shared Knowledge.
+_Avoid_: User Note, Knowledge Note
+
 **Source Context**:
 A projection of one Occurrence Attestation inside its source Sentence and Text.
 Its return locator and highlighting add no linguistic identity. A Reading
@@ -91,8 +96,8 @@ A projection of one Unit Shadow and the pending references to it. It does not
 turn that Shadow into a provisional Reading.
 
 **Visitor**:
-A stable anonymous interaction identity that owns only Visitor Encounter
-history.
+A stable anonymous interaction identity that owns Visitor Encounter history
+and Personal Annotations.
 _Avoid_: Learner, User, account
 
 **Segment Selection**:

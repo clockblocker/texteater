@@ -3,7 +3,8 @@
 ## Contexts
 
 - [tf-demo](./app/tf-demo/CONTEXT.md): presents one shared linguistic graph and
-  records occurrence-specific Attestations and Visitor Encounter history.
+  records occurrence-specific Attestations, Visitor Encounter history, and
+  Personal Annotations.
 - [react-resizable-panels](./battery/react-resizable-panels/CONTEXT.md): owns
   workspace Presentation, Card, Sheet, and gesture terminology.
 - [lego](./battery/lego/CONTEXT.md): owns the shared token palette, theme

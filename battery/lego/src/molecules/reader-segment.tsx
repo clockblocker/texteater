@@ -8,15 +8,18 @@ const readerSegmentVariants = cva(
 	{
 		variants: {
 			/* Each tone carries a cue besides colour: known words keep a hairline,
-			   unresolved ones a dotted rule, failed ones a wavy rule, and a word
-			   whose resolution is in flight a dashed one, dimmed. Unknown words
-			   only appear while previewed, where the solid underline marks them. */
+			   the selected word a firmer one in a brighter blue, unresolved ones a
+			   dotted rule, failed ones a wavy rule, and a word whose resolution is
+			   in flight a dashed one, dimmed. Unknown words only appear while
+			   previewed, where the solid underline marks them. */
 			tone: {
 				plain: "",
 				unknown: "text-segment-unknown",
 				resolving:
 					"text-segment-unknown underline decoration-dashed decoration-current decoration-[0.09em] underline-offset-[0.18em] opacity-80",
 				known: "text-segment-known underline decoration-current/40 decoration-[0.06em] underline-offset-[0.18em]",
+				selected:
+					"text-segment-selected underline decoration-current/70 decoration-[0.06em] underline-offset-[0.18em]",
 				unresolved:
 					"text-segment-unresolved underline decoration-dotted decoration-current decoration-[0.09em] underline-offset-[0.18em]",
 				failed: "text-segment-failed underline decoration-wavy decoration-current decoration-[0.07em] underline-offset-[0.18em]",

@@ -27,8 +27,9 @@ A hairline rule. The strong line marks a separator or a Card edge.
 The colour of a headword by grammatical gender: feminine, masculine, neuter.
 
 **Segment tone**:
-The colour of a reader segment by its state: unknown, known, unresolved,
-failed.
+The colour of a reader segment by its state: unknown, known, selected,
+unresolved, failed. Selected is the word whose Cards are open; known words
+resolved earlier sit one chroma step below it.
 
 **Atom**:
 A shadcn-derived primitive with no product opinion, such as `Button` or

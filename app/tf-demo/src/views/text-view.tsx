@@ -286,6 +286,7 @@ export function SentenceList({
 						</h2>
 					) : null}
 					<p
+						className="text-reader__sentence"
 						ref={(element) => {
 							if (element) {
 								sentenceElements.current.set(
@@ -375,14 +376,17 @@ export function SentenceList({
 										setHoveredTarget(interactionTarget)
 									}
 									onMouseLeave={() => setHoveredTarget(null)}
-									onClick={(event) =>
+									onClick={(event) => {
+										// A pointer click leaves no focus ring behind; keyboard activation keeps its ring.
+										if (event.detail > 0)
+											event.currentTarget.blur();
 										void onSegmentClick(
 											sentence,
 											segment.index,
 											event.altKey,
 											event.currentTarget,
-										)
-									}
+										);
+									}}
 								>
 									{segment.text}
 								</ReaderSegment>
@@ -470,8 +474,9 @@ function segmentTone(
 		case "failed":
 		case "failed-preview":
 			return "failed";
-		case "known-preview":
 		case "selected":
+			return "selected";
+		case "known-preview":
 		case "retained":
 			return "known";
 		default:
