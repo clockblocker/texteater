@@ -81,7 +81,7 @@ type KnowledgeInput = {
 /** German owns its dispatch and model-call grouping behind the shared encounter contract. */
 export function createGermanOperations(
 	options: DumgenOptions,
-): Omit<Dumgen, "segment"> {
+): Omit<Dumgen, "segment" | "segmentSentence"> {
 	const call = modelCaller(options);
 	async function emoji(
 		raw: EmojiInput,

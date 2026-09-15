@@ -38,12 +38,6 @@ const WorkspaceInteractionContext = createContext<WorkspaceInteraction | null>(
 	null,
 );
 
-export const PASSIVE_WORKSPACE_INTERACTION: WorkspaceInteraction = {
-	follow: () => {},
-	presentCards: () => {},
-	reconcile: () => {},
-};
-
 /** Shares shell navigation with the workspace renderer. */
 export function WorkspaceControllerProvider({
 	controller,

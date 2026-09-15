@@ -241,16 +241,19 @@ export const setLanguageBlockOrder = mutation({
 			nextLanguage,
 			updatedAt,
 		);
-		for (const current of await loadStoredFamilyKindLayouts(
+		const familyKindLayouts = await loadStoredFamilyKindLayouts(
 			ctx,
 			visitorId,
 			targetLanguage,
-		)) {
-			await ctx.db.patch(current._id, {
-				order: [...nextLanguage.order],
-				updatedAt,
-			});
-		}
+		);
+		await Promise.all(
+			familyKindLayouts.map((current) =>
+				ctx.db.patch(current._id, {
+					order: [...nextLanguage.order],
+					updatedAt,
+				}),
+			),
+		);
 		return cloneLayout(nextLanguage);
 	},
 });
@@ -285,17 +288,24 @@ export const setLanguageBlockVisibility = mutation({
 			nextLanguage,
 			updatedAt,
 		);
-		for (const current of await loadStoredFamilyKindLayouts(
+		const familyKindLayouts = await loadStoredFamilyKindLayouts(
 			ctx,
 			visitorId,
 			targetLanguage,
-		)) {
-			const nextRoute = setBlockVisibility(current, blockKind, visible);
-			await ctx.db.patch(current._id, {
-				hidden: [...nextRoute.hidden],
-				updatedAt,
-			});
-		}
+		);
+		await Promise.all(
+			familyKindLayouts.map((current) => {
+				const nextRoute = setBlockVisibility(
+					current,
+					blockKind,
+					visible,
+				);
+				return ctx.db.patch(current._id, {
+					hidden: [...nextRoute.hidden],
+					updatedAt,
+				});
+			}),
+		);
 		return cloneLayout(nextLanguage);
 	},
 });

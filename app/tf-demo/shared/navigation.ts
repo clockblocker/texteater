@@ -15,9 +15,16 @@ export type TextTarget = {
 	readonly focusAttestationId?: string;
 };
 
+/** Lands on the Definition block and lights the members of one occurrence inside it. */
+export type DefinitionFocus = {
+	readonly kind: "Definition";
+	readonly attestationId: string;
+};
+
 export type ReadingNoteTarget = {
 	readonly kind: "Reading";
 	readonly readingId: string;
+	readonly focus?: DefinitionFocus;
 };
 
 export type LemmaNoteTarget = {

@@ -39,7 +39,7 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	expect(markup).toContain("/zɪç/");
 	expect(markup).toContain("de");
 	expect(markup).toMatch(
-		/A <button data-slot="reader-segment"[^>]*>source<\/button> sentence\./,
+		/<span data-slot="reader-plain-segment"[^>]*>A <\/span><button data-slot="reader-segment"[^>]*>source<\/button><span data-slot="reader-plain-segment"[^>]*> sentence\.<\/span>/,
 	);
 	expect(markup).not.toMatch(/<button[^>]*>A <\/button>/);
 	expect(markup).toContain("relation to Unit Shadow traurig");
@@ -47,7 +47,8 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	expect(markup).toContain("To experience happiness.");
 	expect(markup).toContain("Remember the reflexive form.");
 	expect(markup.match(/<textarea/g)).toHaveLength(1);
-	expect(markup.match(/<button[^>]*type="button"/g)).toHaveLength(2);
+	// The title link, the quote surface, the quoted member, and the Shadow relation.
+	expect(markup.match(/<button[^>]*type="button"/g)).toHaveLength(4);
 	expect(markup).not.toContain("href=");
 	expect(markup.indexOf('data-reading-title=""')).toBeLessThan(
 		markup.indexOf('aria-label="Source Contexts"'),
@@ -131,6 +132,7 @@ function readingNote(): ReadingNote {
 			definition: "To experience happiness.",
 		},
 		knowledgeUpdatedAt: null,
+		definitionText: { state: "Plain" },
 		relations: [],
 		pendingRelations: [
 			{
@@ -150,8 +152,17 @@ function readingNote(): ReadingNote {
 					textId: "text-1",
 					sentencePosition: 0,
 					sentenceSnippet: "A source sentence.",
-					memberSegmentIndices: [1],
+					segments: [
+						{ kind: "ResolvableText", text: "A" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "source" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "sentence" },
+						{ kind: "Punctuation", text: "." },
+					],
+					memberSegmentIndices: [2],
 					memberTexts: ["source"],
+					origin: { kind: "Text" },
 					target: {
 						kind: "Text",
 						textId: "text-1",

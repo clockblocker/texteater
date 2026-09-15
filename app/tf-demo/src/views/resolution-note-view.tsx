@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
-import { renderNoteSkeleton } from "@/views/note-skeletons";
+import { NoteSkeletonFor } from "@/views/note-skeletons";
 import { resolutionDeckCards } from "@/views/resolution-deck";
 import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
@@ -38,7 +38,9 @@ export function ResolutionNoteView({
 	useResolutionDeck(note, presentCards);
 
 	if (noteQuery.isPending)
-		return renderNoteSkeleton("Attestation", presentation);
+		return (
+			<NoteSkeletonFor kind="Attestation" presentation={presentation} />
+		);
 	if (!note) {
 		return (
 			<NotFoundView
@@ -76,7 +78,12 @@ export function ResolutionStepNoteView({
 	useResolutionDeck(note, presentCards);
 
 	if (noteQuery.isPending)
-		return renderNoteSkeleton(target.stepKind, presentation);
+		return (
+			<NoteSkeletonFor
+				kind={target.stepKind}
+				presentation={presentation}
+			/>
+		);
 	if (!note) {
 		return (
 			<NotFoundView
@@ -103,10 +110,6 @@ function useResolutionDeck(
 	}, [note, presentCards]);
 }
 
-export function completionTarget(note: ResolutionNote | null) {
-	return note?.terminal?.kind === "Complete" ? note.terminal.target : null;
-}
-
 export function ResolutionNoteFrame({
 	note,
 	presentation,
@@ -117,7 +120,9 @@ export function ResolutionNoteFrame({
 	onRetry?: () => Promise<unknown>;
 }) {
 	if (note.activity !== "Terminal" || note.terminal?.kind === "Complete") {
-		return renderNoteSkeleton("Attestation", presentation);
+		return (
+			<NoteSkeletonFor kind="Attestation" presentation={presentation} />
+		);
 	}
 
 	const title = note.reading
@@ -164,5 +169,5 @@ export function ResolutionStepNoteFrame({
 	stepKind: ResolutionStepTarget["stepKind"];
 	presentation: Presentation;
 }) {
-	return renderNoteSkeleton(stepKind, presentation);
+	return <NoteSkeletonFor kind={stepKind} presentation={presentation} />;
 }

@@ -27,7 +27,25 @@ export type ReadingPresentationCapabilities = {
 		readonly error: string | null;
 		readonly save: ((text: string) => Promise<void>) | null;
 	};
+	/**
+	 * Makes the Definition block read like a Sentence: its Segments select
+	 * like the reader's, and a focus lights the members of one occurrence
+	 * inside it. Only a Sheet offers this; a Card leaves it undefined.
+	 */
+	readonly definition?: DefinitionCapabilities;
 	readonly follow: (target: WorkspaceTarget) => void;
+};
+
+export type DefinitionCapabilities = {
+	readonly focus: { readonly attestationId: string } | null;
+	readonly selectedSegmentKey: string | null;
+	readonly error: string | null;
+	readonly selectSegment: (
+		sentenceId: Id<"sentences">,
+		clickedSegmentIndex: number,
+		altKey: boolean,
+		anchorElement: HTMLElement,
+	) => Promise<void>;
 };
 
 export type RoutePresentationCapabilities = {

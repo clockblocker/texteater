@@ -1,5 +1,3 @@
-import { useMutation } from "@tanstack/react-query";
-import { useAction } from "convex/react";
 import type { FunctionArgs } from "convex/server";
 import {
 	Button,
@@ -23,6 +21,7 @@ import {
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { usePendingAction } from "@/hooks/use-pending-action";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
@@ -35,42 +34,46 @@ export function DataControls({
 }: {
 	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
 }) {
+	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
+	const demoData = useDemoDataControls(text);
+	return (
+		<div className="flex flex-col gap-6">
+			<ReadingBehaviorCard
+				enabled={routeNotesEnabled}
+				onEnabledChange={setRouteNotesEnabled}
+			/>
+			<DemoDataCard text={text} {...demoData} />
+		</div>
+	);
+}
+
+function useDemoDataControls(
+	text:
+		| { textId: TextId; sourceText: string; isAnalyzed: boolean }
+		| undefined,
+) {
 	const { revealLibrary } = useWorkspaceController();
 	const visitorId = useAnonymousVisitorId();
-	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const [notice, setNotice] = useState<string | null>(null);
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
 	);
-	const clearSharedData = useMutation({
-		mutationFn: useAction(api.demoReset.clearSharedData),
-	});
-	const clearVisitorData = useMutation({
-		mutationFn: useAction(api.demoReset.clearVisitorData),
-	});
-	const stripTextAnalysis = useMutation({
-		mutationFn: useAction(api.demoReset.stripTextAnalysis),
-	});
-	const analyzeText = useMutation({
-		mutationFn: useAction(api.orchestration.submitText),
-	});
+	const clearSharedData = usePendingAction(api.demoReset.clearSharedData);
+	const clearVisitorData = usePendingAction(api.demoReset.clearVisitorData);
+	const stripTextAnalysis = usePendingAction(api.demoReset.stripTextAnalysis);
+	const analyzeText = usePendingAction(api.orchestration.submitText);
 	const isBusy =
 		clearSharedData.isPending ||
 		clearVisitorData.isPending ||
 		stripTextAnalysis.isPending ||
 		analyzeText.isPending;
-	const error =
-		interactionError ??
-		mutationMessage(clearSharedData.error) ??
-		mutationMessage(clearVisitorData.error) ??
-		mutationMessage(stripTextAnalysis.error) ??
-		mutationMessage(analyzeText.error);
+	const error = interactionError;
 
 	async function handleClearVisitorData() {
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			const result = await clearVisitorData.mutateAsync({ visitorId });
+			const result = await clearVisitorData.run({ visitorId });
 			setNotice(`Cleared ${result.deleted} visitor-owned records.`);
 		} catch (cause) {
 			setInteractionError(
@@ -84,7 +87,7 @@ export function DataControls({
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			const result = await stripTextAnalysis.mutateAsync({
+			const result = await stripTextAnalysis.run({
 				textId: text.textId,
 			});
 			setNotice(
@@ -102,7 +105,7 @@ export function DataControls({
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			const result = await analyzeText.mutateAsync({
+			const result = await analyzeText.run({
 				submissionKey: submissionKeyFor(text.sourceText),
 				sourceText: text.sourceText,
 			});
@@ -122,7 +125,7 @@ export function DataControls({
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			const result = await clearSharedData.mutateAsync({});
+			const result = await clearSharedData.run({});
 			revealLibrary();
 			setNotice(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
@@ -134,97 +137,116 @@ export function DataControls({
 		}
 	}
 
-	return (
-		<div className="flex flex-col gap-6">
-			<Card>
-				<CardHeader>
-					<CardTitle>Reading behavior</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<Field orientation="horizontal">
-						<Checkbox
-							id="open-route-notes"
-							checked={routeNotesEnabled}
-							onCheckedChange={(checked) =>
-								setRouteNotesEnabled(checked)
-							}
-						/>
-						<FieldContent>
-							<FieldLabel htmlFor="open-route-notes">
-								Open resolution Notes
-							</FieldLabel>
-							<FieldDescription>
-								Start Segment selections at the Attestation
-								Note. Hold Alt/Option for one selection without
-								changing this setting.
-							</FieldDescription>
-						</FieldContent>
-					</Field>
-				</CardContent>
-			</Card>
+	return {
+		notice,
+		error,
+		isBusy,
+		isClearingSharedData: clearSharedData.isPending,
+		isClearingVisitorData: clearVisitorData.isPending,
+		isStrippingTextAnalysis: stripTextAnalysis.isPending,
+		isAnalyzingText: analyzeText.isPending,
+		handleClearVisitorData,
+		handleStripTextAnalysis,
+		handleAnalyzeText,
+		handleClearSharedData,
+	};
+}
 
-			<Card>
-				<CardHeader>
-					<CardTitle>Demo data</CardTitle>
-					{text ? (
-						<CardDescription
-							className="truncate"
-							title={text.sourceText}
-						>
-							{text.sourceText}
-						</CardDescription>
-					) : null}
-				</CardHeader>
-				<CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-					<ConfirmDialog
-						trigger={
-							<Button
-								type="button"
-								variant="outline"
-								disabled={isBusy}
-							/>
-						}
-						title="Clear your data?"
-						description="This removes only your Encounter history. Shared resolutions and Knowledge stay available."
-						confirmLabel="Clear my data"
-						onConfirm={() => void handleClearVisitorData()}
+function ReadingBehaviorCard({
+	enabled,
+	onEnabledChange,
+}: {
+	enabled: boolean;
+	onEnabledChange(enabled: boolean): void;
+}) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Reading behavior</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<Field orientation="horizontal">
+					<Checkbox
+						id="open-route-notes"
+						checked={enabled}
+						onCheckedChange={onEnabledChange}
+					/>
+					<FieldContent>
+						<FieldLabel htmlFor="open-route-notes">
+							Open resolution Notes
+						</FieldLabel>
+						<FieldDescription>
+							Start Segment selections at the Attestation Note.
+							Hold Alt/Option for one selection without changing
+							this setting.
+						</FieldDescription>
+					</FieldContent>
+				</Field>
+			</CardContent>
+		</Card>
+	);
+}
+
+function DemoDataCard({
+	text,
+	notice,
+	error,
+	isBusy,
+	isClearingSharedData,
+	isClearingVisitorData,
+	isStrippingTextAnalysis,
+	isAnalyzingText,
+	handleClearVisitorData,
+	handleStripTextAnalysis,
+	handleAnalyzeText,
+	handleClearSharedData,
+}: {
+	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
+	notice: string | null;
+	error: string | null;
+	isBusy: boolean;
+	isClearingSharedData: boolean;
+	isClearingVisitorData: boolean;
+	isStrippingTextAnalysis: boolean;
+	isAnalyzingText: boolean;
+	handleClearVisitorData(): Promise<void>;
+	handleStripTextAnalysis(): Promise<void>;
+	handleAnalyzeText(): Promise<void>;
+	handleClearSharedData(): Promise<void>;
+}) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Demo data</CardTitle>
+				{text ? (
+					<CardDescription
+						className="truncate"
+						title={text.sourceText}
 					>
-						<UserRoundXIcon data-icon="inline-start" />
-						{clearVisitorData.isPending
-							? "Clearing your data…"
-							: "Clear my data"}
-					</ConfirmDialog>
-					{text?.isAnalyzed ? (
-						<ConfirmDialog
-							trigger={
-								<Button
-									type="button"
-									variant="destructive"
-									disabled={isBusy}
-								/>
-							}
-							title="Strip the analysis from this text?"
-							description="The Text and its Sentences remain. Segments, resolutions, Clicks, and Readings with no other source are removed."
-							confirmLabel="Strip analysis"
-							onConfirm={() => void handleStripTextAnalysis()}
-						>
-							<EraserIcon data-icon="inline-start" />
-							{stripTextAnalysis.isPending
-								? "Stripping analysis…"
-								: "Strip analysis"}
-						</ConfirmDialog>
-					) : text ? (
+						{text.sourceText}
+					</CardDescription>
+				) : null}
+			</CardHeader>
+			<CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+				<ConfirmDialog
+					trigger={
 						<Button
 							type="button"
+							variant="outline"
 							disabled={isBusy}
-							onClick={() => void handleAnalyzeText()}
-						>
-							<BookOpenIcon data-icon="inline-start" />
-							{analyzeText.isPending
-								? "Analyzing…"
-								: "Analyze text"}
-						</Button>
-					) : null}
+						/>
+					}
+					title="Clear your data?"
+					description="This removes only your Encounter history. Shared resolutions and Knowledge stay available."
+					confirmLabel="Clear my data"
+					onConfirm={() => void handleClearVisitorData()}
+				>
+					<UserRoundXIcon data-icon="inline-start" />
+					{isClearingVisitorData
+						? "Clearing your data…"
+						: "Clear my data"}
+				</ConfirmDialog>
+				{text?.isAnalyzed ? (
 					<ConfirmDialog
 						trigger={
 							<Button
@@ -233,36 +255,60 @@ export function DataControls({
 								disabled={isBusy}
 							/>
 						}
-						title="Clear shared data for every visitor?"
-						description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
-						confirmLabel="Clear shared data"
-						onConfirm={() => void handleClearSharedData()}
+						title="Strip the analysis from this text?"
+						description="The Text and its Sentences remain. Segments, resolutions, Clicks, and Readings with no other source are removed."
+						confirmLabel="Strip analysis"
+						onConfirm={() => void handleStripTextAnalysis()}
 					>
-						<DatabaseZapIcon data-icon="inline-start" />
-						{clearSharedData.isPending
-							? "Clearing shared data…"
-							: "Clear shared data"}
+						<EraserIcon data-icon="inline-start" />
+						{isStrippingTextAnalysis
+							? "Stripping analysis…"
+							: "Strip analysis"}
 					</ConfirmDialog>
+				) : text ? (
+					<Button
+						type="button"
+						disabled={isBusy}
+						onClick={() => void handleAnalyzeText()}
+					>
+						<BookOpenIcon data-icon="inline-start" />
+						{isAnalyzingText ? "Analyzing…" : "Analyze text"}
+					</Button>
+				) : null}
+				<ConfirmDialog
+					trigger={
+						<Button
+							type="button"
+							variant="destructive"
+							disabled={isBusy}
+						/>
+					}
+					title="Clear shared data for every visitor?"
+					description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
+					confirmLabel="Clear shared data"
+					onConfirm={() => void handleClearSharedData()}
+				>
+					<DatabaseZapIcon data-icon="inline-start" />
+					{isClearingSharedData
+						? "Clearing shared data…"
+						: "Clear shared data"}
+				</ConfirmDialog>
+			</CardContent>
+			{notice ? (
+				<CardContent>
+					<p className="text-sm text-ink-muted" aria-live="polite">
+						{notice}
+					</p>
 				</CardContent>
-				{notice ? (
-					<CardContent>
-						<p
-							className="text-sm text-muted-foreground"
-							aria-live="polite"
-						>
-							{notice}
-						</p>
-					</CardContent>
-				) : null}
-				{error ? (
-					<CardContent>
-						<p className="text-sm text-destructive" role="alert">
-							{error}
-						</p>
-					</CardContent>
-				) : null}
-			</Card>
-		</div>
+			) : null}
+			{error ? (
+				<CardContent>
+					<p className="text-sm text-destructive" role="alert">
+						{error}
+					</p>
+				</CardContent>
+			) : null}
+		</Card>
 	);
 }
 

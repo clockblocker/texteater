@@ -2,7 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useReducer, useRef, useState } from "react";
 import type { ShadowNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -10,74 +10,15 @@ import { ShadowNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import {
+	isCurrentShadowAction,
+	reduceShadowControls,
+} from "./shadow-note-controls";
 
 export type ShadowNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
 	{ readonly kind: "Shadow" }
 >;
-type ShadowCleanupResult = FunctionReturnType<
-	typeof api.orchestration.cleanupPendingRelation
->;
-
-export function isCurrentShadowAction(
-	attempt: number,
-	currentEpoch: number,
-): boolean {
-	return attempt === currentEpoch;
-}
-
-export function shadowCleanupFeedback(result: ShadowCleanupResult): {
-	actionError: string | null;
-	outcome: string | null;
-} {
-	if (result.status === "applied") {
-		return { actionError: null, outcome: result.message };
-	}
-	return {
-		actionError:
-			result.status === "conflict"
-				? `${result.message} The Shadow Note was refreshed.`
-				: result.message,
-		outcome: null,
-	};
-}
-
-export type ShadowControlState = {
-	targetShadowId: string;
-	actionError: string | null;
-	outcome: string | null;
-};
-
-export type ShadowControlEvent =
-	| { type: "begin" }
-	| { type: "settled"; result: ShadowCleanupResult }
-	| { type: "failed"; message: string }
-	| { type: "targetChanged"; targetShadowId: string }
-	| { type: "refreshed"; targetShadowId: string };
-
-export function reduceShadowControls(
-	state: ShadowControlState,
-	event: ShadowControlEvent,
-): ShadowControlState {
-	if (event.type === "targetChanged") {
-		return event.targetShadowId === state.targetShadowId
-			? state
-			: {
-					targetShadowId: event.targetShadowId,
-					actionError: null,
-					outcome: null,
-				};
-	}
-	if (event.type === "refreshed") return state;
-	if (event.type === "begin") {
-		return { ...state, actionError: null, outcome: null };
-	}
-	if (event.type === "failed") {
-		return { ...state, actionError: event.message, outcome: null };
-	}
-	return { ...state, ...shadowCleanupFeedback(event.result) };
-}
-
 export function ShadowNoteView({
 	target,
 	presentation = "Sheet",
@@ -103,6 +44,7 @@ export function ShadowNoteView({
 	}
 	return (
 		<ShadowNoteContainer
+			key={`${noteQuery.data.target.shadowId}:${noteQuery.data.inspection.revision}`}
 			note={noteQuery.data}
 			presentation={presentation}
 			onRefresh={() => noteQuery.refetch().then(() => undefined)}
@@ -142,21 +84,6 @@ function ShadowNoteContainer({
 		outcome: null,
 	});
 	const actionEpoch = useRef(0);
-
-	useEffect(() => {
-		setActiveLocator(null);
-		dispatchControls({
-			type: "refreshed",
-			targetShadowId: note.target.shadowId,
-		});
-	}, [note]);
-	useEffect(() => {
-		actionEpoch.current += 1;
-		dispatchControls({
-			type: "targetChanged",
-			targetShadowId: note.target.shadowId,
-		});
-	}, [note.target.shadowId]);
 
 	async function cleanUp(locatorKey: string) {
 		if (activeLocator) return;

@@ -568,6 +568,7 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	const first = await loadSourceContextPage(
 		fixture.ctx as never,
 		"reading_shared" as never,
+		"reading-key-shared",
 		"visitor-1",
 	);
 	expect(first.page.map(({ attestationId }) => attestationId)).toEqual([
@@ -580,6 +581,7 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	]);
 	expect(first.page[0]?.memberSegmentIndices).toEqual([1, 4]);
 	expect(first.page[0]?.memberTexts).toEqual(["steht", "dazwischen"]);
+	expect(first.page[0]?.origin).toEqual({ kind: "Text" });
 	expect(first.page[0]?.target).toEqual({
 		kind: "Text",
 		textId: "text_b",
@@ -591,6 +593,7 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	const continuation = await loadSourceContextPage(
 		fixture.ctx as never,
 		"reading_shared" as never,
+		"reading-key-shared",
 		"visitor-1",
 		"cursor_1",
 	);

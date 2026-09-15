@@ -1,7 +1,7 @@
 import { NoteTitle, NoteTitleRow } from "lego";
 
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
-import { genderTone } from "../../common/features";
+import { genderTone } from "../../common/feature-values";
 
 /**
  * A Lemma collects Readings. It takes the gender tone of its headword but

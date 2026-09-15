@@ -114,6 +114,26 @@ export class IndexedTestDb {
 				descending = direction === "desc";
 				return selection;
 			},
+			/** Supports only `q.eq(q.field(path), value)` predicates. */
+			filter(
+				build: (q: {
+					field(path: string): { path: string };
+					eq(left: { path: string }, value: unknown): boolean;
+				}) => boolean,
+			) {
+				const rules: Array<(row: TestRow) => boolean> = [];
+				build({
+					field: (path) => ({ path }),
+					eq(left, value) {
+						rules.push(
+							(row) => nestedValue(row, left.path) === value,
+						);
+						return true;
+					},
+				});
+				predicates.push(...rules);
+				return selection;
+			},
 			async first() {
 				return matches()[0] ?? null;
 			},

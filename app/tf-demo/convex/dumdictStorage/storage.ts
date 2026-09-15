@@ -315,21 +315,33 @@ export async function loadCanonicalReadingKnowledge(
 			: "lemma";
 	const semanticRelations: AnyRecord = {};
 	if (targetKind === "reading") semanticRelations.targetKind = "reading";
-	for (const edge of edges) {
-		let targetValue: unknown;
-		if (targetKind === "reading") {
-			if (!edge.targetReadingId) continue;
-			const targetReading = await ctx.db.get(edge.targetReadingId);
-			if (!targetReading) continue;
-			const targetLemma = await ctx.db.get(targetReading.lemmaId);
-			if (!targetLemma) continue;
-			targetValue = readingValue(targetReading, targetLemma);
-		} else {
-			if (!edge.targetLemmaId) continue;
+	const resolvedTargets = await Promise.all(
+		edges.map(async (edge) => {
+			if (targetKind === "reading") {
+				if (!edge.targetReadingId) return null;
+				const targetReading = await ctx.db.get(edge.targetReadingId);
+				if (!targetReading) return null;
+				const targetLemma = await ctx.db.get(targetReading.lemmaId);
+				return targetLemma
+					? {
+							edge,
+							targetValue: readingValue(
+								targetReading,
+								targetLemma,
+							),
+						}
+					: null;
+			}
+			if (!edge.targetLemmaId) return null;
 			const targetLemma = await ctx.db.get(edge.targetLemmaId);
-			if (!targetLemma) continue;
-			targetValue = lemmaValue(targetLemma);
-		}
+			return targetLemma
+				? { edge, targetValue: lemmaValue(targetLemma) }
+				: null;
+		}),
+	);
+	for (const resolved of resolvedTargets) {
+		if (!resolved) continue;
+		const { edge, targetValue } = resolved;
 		const bucket = (semanticRelations[edge.relation] ?? []) as unknown[];
 		bucket.push(targetValue);
 		semanticRelations[edge.relation] = bucket;

@@ -1,7 +1,8 @@
 import { LinkButton, NoteSection } from "lego";
 
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
-import { featureSummary, RouteAside } from "../../common/features";
+import { featureSummary } from "../../common/feature-values";
+import { RouteAside } from "../../common/features";
 import { RouteMark } from "../../common/route-mark";
 
 /**

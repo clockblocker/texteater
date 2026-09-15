@@ -147,35 +147,48 @@ async function loadShadowInspection(
 		);
 	}
 
-	const candidates: {
-		lemmaId: Id<"lemmas">;
-		canonicalForm: string;
-		family: string;
-		kind: string;
-		coreFeatures: { name: string; value: string }[];
-		target: {
-			kind: "Lemma";
+	const candidates = (
+		await Promise.all(
+			lemmas.map(async (lemma) => {
+				const dictionaryLemma = await ctx.db
+					.query("dictionaryLemmas")
+					.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+					.unique();
+				return dictionaryLemma ? lemma : null;
+			}),
+		)
+	).flatMap(
+		(
+			lemma,
+		): {
 			lemmaId: Id<"lemmas">;
-		};
-	}[] = [];
-	for (const lemma of lemmas) {
-		const dictionaryLemma = await ctx.db
-			.query("dictionaryLemmas")
-			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-			.unique();
-		if (!dictionaryLemma) continue;
-		candidates.push({
-			lemmaId: lemma._id,
-			canonicalForm: lemma.canonicalForm,
-			family: lemma.family,
-			kind: lemma.kind,
-			coreFeatures: projectFeaturesForPresentation(lemma.coreFeatures),
+			canonicalForm: string;
+			family: string;
+			kind: string;
+			coreFeatures: { name: string; value: string }[];
 			target: {
-				kind: "Lemma",
-				lemmaId: lemma._id,
-			},
-		});
-	}
+				kind: "Lemma";
+				lemmaId: Id<"lemmas">;
+			};
+		}[] =>
+			lemma
+				? [
+						{
+							lemmaId: lemma._id,
+							canonicalForm: lemma.canonicalForm,
+							family: lemma.family,
+							kind: lemma.kind,
+							coreFeatures: projectFeaturesForPresentation(
+								lemma.coreFeatures,
+							),
+							target: {
+								kind: "Lemma",
+								lemmaId: lemma._id,
+							},
+						},
+					]
+				: [],
+	);
 
 	return {
 		revision: `convex-${state?.revision ?? 0}`,

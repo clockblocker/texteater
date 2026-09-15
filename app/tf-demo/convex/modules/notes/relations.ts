@@ -412,9 +412,11 @@ async function loadTargetedRelationProjections(
 	}
 	await expandSynonymComponent([...targetSeeds]);
 
-	for (const reading of neighborhood.readings.values()) {
-		await rememberLemma(reading.lemmaId);
-	}
+	await Promise.all(
+		[...neighborhood.readings.values()].map((reading) =>
+			rememberLemma(reading.lemmaId),
+		),
+	);
 	const units = new Map(
 		[...neighborhood.readings.values()].map((reading) => {
 			const lemma = neighborhood.lemmas.get(reading.lemmaId);
@@ -430,53 +432,56 @@ async function loadTargetedRelationProjections(
 			] as const;
 		}),
 	);
-	const entries: Dumrel.ReadingWithKnowledge[] = [];
-	for (const [id, reading] of units) {
-		const accumulated = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_reading_key", (q) =>
-				q.eq("ownerReadingKey", readingFingerprint(reading)),
-			)
-			.unique();
-		const stored = parseReadingKnowledge({
-			source: reading,
-			knowledge: accumulated?.knowledge ?? {},
-		});
-		if (!stored.success) throw stored.error;
-		const readingMode =
-			stored.value.semanticRelations?.targetKind === "reading" ||
-			[...neighborhood.edges.values()].some(
-				(edge) =>
-					edge.sourceReadingId === id &&
-					edge.targetKind === "reading",
-			);
-		const relations: Record<string, unknown> = readingMode
-			? { targetKind: "reading" }
-			: {};
-		for (const edge of neighborhood.edges.values()) {
-			if (edge.sourceReadingId !== id) continue;
-			const target = edge.targetReadingId
-				? units.get(edge.targetReadingId)
-				: edge.targetLemmaId
-					? neighborhood.lemmas.get(edge.targetLemmaId)
-					: undefined;
-			if (!target)
-				throw new Error("Relation neighborhood has a missing target.");
-			const value =
-				"emojiDescription" in target
-					? target
-					: parseStoredGermanLemma(target);
-			const bucket = relations[edge.relation];
-			if (Array.isArray(bucket)) bucket.push(value);
-			else relations[edge.relation] = [value];
-		}
-		const knowledge = parseReadingKnowledge({
-			source: reading,
-			knowledge: { semanticRelations: relations },
-		});
-		if (!knowledge.success) throw knowledge.error;
-		entries.push({ reading, knowledge: knowledge.value });
-	}
+	const entries: Dumrel.ReadingWithKnowledge[] = await Promise.all(
+		[...units].map(async ([id, reading]) => {
+			const accumulated = await ctx.db
+				.query("accumulatedKnowledge")
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", readingFingerprint(reading)),
+				)
+				.unique();
+			const stored = parseReadingKnowledge({
+				source: reading,
+				knowledge: accumulated?.knowledge ?? {},
+			});
+			if (!stored.success) throw stored.error;
+			const readingMode =
+				stored.value.semanticRelations?.targetKind === "reading" ||
+				[...neighborhood.edges.values()].some(
+					(edge) =>
+						edge.sourceReadingId === id &&
+						edge.targetKind === "reading",
+				);
+			const relations: Record<string, unknown> = readingMode
+				? { targetKind: "reading" }
+				: {};
+			for (const edge of neighborhood.edges.values()) {
+				if (edge.sourceReadingId !== id) continue;
+				const target = edge.targetReadingId
+					? units.get(edge.targetReadingId)
+					: edge.targetLemmaId
+						? neighborhood.lemmas.get(edge.targetLemmaId)
+						: undefined;
+				if (!target)
+					throw new Error(
+						"Relation neighborhood has a missing target.",
+					);
+				const value =
+					"emojiDescription" in target
+						? target
+						: parseStoredGermanLemma(target);
+				const bucket = relations[edge.relation];
+				if (Array.isArray(bucket)) bucket.push(value);
+				else relations[edge.relation] = [value];
+			}
+			const knowledge = parseReadingKnowledge({
+				source: reading,
+				knowledge: { semanticRelations: relations },
+			});
+			if (!knowledge.success) throw knowledge.error;
+			return { reading, knowledge: knowledge.value };
+		}),
+	);
 	const projected = projectSemanticRelations(entries);
 	if (!projected.success) throw projected.error;
 	return projected.value

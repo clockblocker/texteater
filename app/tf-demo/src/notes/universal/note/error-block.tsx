@@ -1,11 +1,14 @@
-import { Component, type ReactElement, type ReactNode } from "react";
+import { Component, type ReactNode } from "react";
 
 import type { NoteBlockKind } from "../blocks/kind";
 
-export function renderErrorBlock(
-	blockKind: NoteBlockKind,
-	cause: unknown,
-): ReactElement {
+export function ErrorBlock({
+	blockKind,
+	cause,
+}: {
+	blockKind: NoteBlockKind;
+	cause: unknown;
+}) {
 	const message =
 		cause instanceof Error
 			? cause.message
@@ -66,8 +69,13 @@ export class NoteBlockErrorBoundary extends Component<
 	}
 
 	render(): ReactNode {
-		return this.state.hasError
-			? renderErrorBlock(this.props.blockKind, this.state.cause)
-			: this.props.children;
+		return this.state.hasError ? (
+			<ErrorBlock
+				blockKind={this.props.blockKind}
+				cause={this.state.cause}
+			/>
+		) : (
+			this.props.children
+		);
 	}
 }

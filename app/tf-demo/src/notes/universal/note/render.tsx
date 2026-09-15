@@ -11,7 +11,7 @@ import type {
 } from "./capabilities";
 import { describeNote, type NoteCoordinates, type NoteData } from "./data";
 import { renderErrorNote } from "./error";
-import { NoteBlockErrorBoundary, renderErrorBlock } from "./error-block";
+import { ErrorBlock, NoteBlockErrorBoundary } from "./error-block";
 import type { NoteKind } from "./kind";
 import { noteKindSchema } from "./kind";
 import type { NoteBlockLayout } from "./layout";
@@ -61,7 +61,7 @@ export function renderUniversalNote({
 			try {
 				rendered = renderer(context as never);
 			} catch (cause) {
-				rendered = renderErrorBlock(blockKind, cause);
+				rendered = <ErrorBlock blockKind={blockKind} cause={cause} />;
 			}
 			if (rendered === null) return [];
 			return [

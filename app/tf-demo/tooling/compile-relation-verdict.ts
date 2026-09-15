@@ -161,11 +161,15 @@ export function compileReviewedVerdict(args: {
 export async function currentRelationFingerprints() {
 	async function digest(paths: readonly string[]) {
 		const hash = new Bun.CryptoHasher("sha256");
-		for (const path of [...paths].sort()) {
+		const sortedPaths = [...paths].sort();
+		const contents = await Promise.all(
+			sortedPaths.map((path) =>
+				Bun.file(resolve(workspace, path)).arrayBuffer(),
+			),
+		);
+		for (const [index, path] of sortedPaths.entries()) {
 			hash.update(path).update("\0");
-			hash.update(
-				await Bun.file(resolve(workspace, path)).arrayBuffer(),
-			).update("\0");
+			hash.update(contents[index] ?? new ArrayBuffer(0)).update("\0");
 		}
 		return `sha256:${hash.digest("hex")}`;
 	}
@@ -237,6 +241,7 @@ export async function compileRelationVerdict(
 		string,
 		{ issue: number; role: string; path: string; sha256: string }
 	>();
+	const localArtifactChecks: Promise<void>[] = [];
 	for (const rawArtifact of artifacts) {
 		const artifact = record(rawArtifact, "frozen artifact");
 		const normalized = {
@@ -270,15 +275,18 @@ export async function compileRelationVerdict(
 				locations[normalized.role],
 				"relocated artifact path",
 			);
-			const contents = new Uint8Array(
-				await Bun.file(
-					resolve(gateDirectory, relocatedPath),
-				).arrayBuffer(),
+			localArtifactChecks.push(
+				Bun.file(resolve(gateDirectory, relocatedPath))
+					.arrayBuffer()
+					.then((buffer) => {
+						if (
+							sha256(new Uint8Array(buffer)) !== normalized.sha256
+						)
+							throw new Error(
+								`Frozen relation artifact drifted: ${normalized.path}.`,
+							);
+					}),
 			);
-			if (sha256(contents) !== normalized.sha256)
-				throw new Error(
-					`Frozen relation artifact drifted: ${normalized.path}.`,
-				);
 		}
 		if (artifactByRole.has(normalized.role))
 			throw new Error(
@@ -286,6 +294,7 @@ export async function compileRelationVerdict(
 			);
 		artifactByRole.set(normalized.role, normalized);
 	}
+	await Promise.all(localArtifactChecks);
 	if (
 		Object.keys(locations).length +
 			Object.keys(archivedLocations).length !==

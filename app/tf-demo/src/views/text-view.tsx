@@ -1,62 +1,25 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useMutation as useConvexMutation } from "convex/react";
-import {
-	NoteLinesSkeleton,
-	ReaderPlainSegment,
-	ReaderSegment,
-	type ReaderSegmentInteraction,
-	type ReaderSegmentTone,
-} from "lego";
+import { useQuery } from "@tanstack/react-query";
+import { NoteLinesSkeleton } from "lego";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { segmentKey, useSegmentSelection } from "@/hooks/use-segment-selection";
 import type { SentenceView } from "@/lib/action-results";
 import type { TextTarget } from "@/lib/navigation";
-import {
-	shouldRequestRouteNote,
-	useRouteNotePreference,
-} from "@/lib/route-note-preference";
-import {
-	actuateSourceContextFocus,
-	isFocusedOccurrenceMember,
-} from "@/lib/source-context-focus";
+import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { NotFoundView } from "@/views/not-found-view";
-import { segmentSelectionDeckCards } from "@/views/segment-selection-deck";
-import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
+import { ReaderSentence } from "@/views/reader-sentence";
 import { api } from "../../convex/_generated/api";
-
-type InteractionTarget = {
-	readonly segmentKey: string;
-	readonly attestationId?: string;
-};
-
-type SegmentDisplayState =
-	| "unknown-preview"
-	| "resolving"
-	| "unresolved"
-	| "unresolved-preview"
-	| "failed"
-	| "failed-preview"
-	| "known-preview"
-	| "selected"
-	| "retained";
 
 /** The reading column: shared with Reading Notes, padded so the last sentence clears the deck. */
 const READER_BODY_CLASS =
 	"mx-auto w-full max-w-note px-note-gutter pt-[var(--reading-top,5rem)] pb-[max(5rem,calc(100cqh-var(--reading-deck-top,10.25rem)+0.875rem))] @max-md:pt-8";
 
 export function TextView({ target }: { target: TextTarget }) {
-	const { presentCards } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
-	const [routeNotesEnabled] = useRouteNotePreference();
-	const [selectedSegmentKey, setSelectedSegmentKey] = useState<string | null>(
-		null,
-	);
 	const [notice, setNotice] = useState<string | null>(null);
-	const [interactionError, setInteractionError] = useState<string | null>(
-		null,
-	);
+	const selection = useSegmentSelection(visitorId);
 
 	const textQuery = useQuery({
 		...convexQuery(api.textViews.get, {
@@ -68,12 +31,6 @@ export function TextView({ target }: { target: TextTarget }) {
 		}),
 		gcTime: 10_000,
 	});
-	const selectSegmentMutation = useConvexMutation(
-		api.resolutionSessions.selectSegment,
-	);
-	const selectSegment = useMutation({
-		mutationFn: selectSegmentMutation,
-	});
 
 	const textDetail = textQuery.data;
 	const sentences: readonly SentenceView[] =
@@ -81,10 +38,7 @@ export function TextView({ target }: { target: TextTarget }) {
 			...sentence,
 			sourceText: textDetail.sourceText,
 		})) ?? [];
-	const error =
-		interactionError ??
-		mutationMessage(selectSegment.error) ??
-		mutationMessage(textQuery.error);
+	const error = selection.error ?? mutationMessage(textQuery.error);
 
 	async function handleSegmentSelection(
 		sentence: SentenceView,
@@ -93,31 +47,12 @@ export function TextView({ target }: { target: TextTarget }) {
 		anchorElement: HTMLElement,
 	) {
 		setNotice(null);
-		setInteractionError(null);
-		setSelectedSegmentKey(
-			segmentKey(sentence.sentenceId, clickedSegmentIndex),
+		await selection.select(
+			sentence.sentenceId,
+			clickedSegmentIndex,
+			altKey,
+			anchorElement,
 		);
-		try {
-			const requestId = crypto.randomUUID();
-			const result = await selectSegment.mutateAsync({
-				requestId,
-				visitorId,
-				sentenceId: sentence.sentenceId,
-				clickedSegmentIndex,
-				routeNoteRequested: shouldRequestRouteNote(
-					routeNotesEnabled,
-					altKey,
-				),
-			});
-			presentCards(segmentSelectionDeckCards(requestId, result), {
-				anchor: anchorElement,
-			});
-		} catch (cause) {
-			setSelectedSegmentKey(null);
-			setInteractionError(
-				mutationMessage(cause) ?? "Segment resolution failed.",
-			);
-		}
 	}
 
 	if (textQuery.isPending) return <TextViewSkeleton />;
@@ -136,7 +71,7 @@ export function TextView({ target }: { target: TextTarget }) {
 			focus={textDetail.focus}
 			notice={notice}
 			onSegmentClick={handleSegmentSelection}
-			selectedSegmentKey={selectedSegmentKey}
+			selectedSegmentKey={selection.selectedSegmentKey}
 			sentences={sentences}
 		/>
 	);
@@ -236,23 +171,6 @@ export function SentenceList({
 }) {
 	const sentenceElements = useRef(new Map<string, HTMLParagraphElement>());
 	const segmentElements = useRef(new Map<string, HTMLElement>());
-	const [hoveredTarget, setHoveredTarget] =
-		useState<InteractionTarget | null>(null);
-	const [focusedTarget, setFocusedTarget] =
-		useState<InteractionTarget | null>(null);
-	const previewTarget = hoveredTarget ?? focusedTarget;
-	const focusKey =
-		focus.kind === "Occurrence"
-			? `${focus.attestationId}:${focus.sentenceId}:${focus.memberSegmentIndices.join(",")}`
-			: focus.kind;
-	const selectedSegment = sentences
-		.flatMap((sentence) =>
-			sentence.segments.map((segment) => ({
-				segment,
-				key: segmentKey(sentence.sentenceId, segment.index),
-			})),
-		)
-		.find(({ key }) => key === selectedSegmentKey)?.segment;
 
 	useEffect(() => {
 		if (focus.kind !== "Occurrence") return;
@@ -272,7 +190,7 @@ export function SentenceList({
 			window.cancelAnimationFrame(frame);
 			for (const animation of animations) animation.cancel();
 		};
-	}, [focusKey]);
+	}, [focus]);
 
 	return (
 		<article
@@ -286,9 +204,17 @@ export function SentenceList({
 							{sentence.heading}
 						</h2>
 					) : null}
-					<p
-						className="text-reader__sentence"
-						ref={(element) => {
+					<ReaderSentence
+						sentence={sentence}
+						focusMemberIndices={
+							focus.kind === "Occurrence" &&
+							focus.sentenceId === sentence.sentenceId
+								? focus.memberSegmentIndices
+								: []
+						}
+						selectedSegmentKey={selectedSegmentKey}
+						onSegmentClick={onSegmentClick}
+						onSentenceElement={(element) => {
 							if (element) {
 								sentenceElements.current.set(
 									sentence.sentenceId,
@@ -300,104 +226,13 @@ export function SentenceList({
 								);
 							}
 						}}
-					>
-						{sentence.segments.length === 0 ? (
-							<span>{sentence.stitchedText}</span>
-						) : null}
-						{sentence.segments.map((segment) => {
-							const isSourceContextMember =
-								isFocusedOccurrenceMember(
-									focus,
-									sentence.sentenceId,
-									segment.index,
-								);
-							const key = segmentKey(
-								sentence.sentenceId,
-								segment.index,
-							);
-							const trackElement = (
-								element: HTMLElement | null,
-							) => {
-								if (element) {
-									segmentElements.current.set(key, element);
-								} else {
-									segmentElements.current.delete(key);
-								}
-							};
-							if (segment.kind !== "ResolvableText") {
-								return (
-									<ReaderPlainSegment
-										key={segment.index}
-										ref={trackElement}
-										highlighted={isSourceContextMember}
-									>
-										{segment.text}
-									</ReaderPlainSegment>
-								);
-							}
-							const isPreviewed = previewTarget?.attestationId
-								? segment.attestationId ===
-									previewTarget.attestationId
-								: previewTarget?.segmentKey === key;
-							const isSelected = selectedSegment?.attestationId
-								? segment.attestationId ===
-									selectedSegment.attestationId
-								: selectedSegmentKey === key;
-							const displayState = displayStateForSegment(
-								segment,
-								isPreviewed,
-								isSelected,
-							);
-							const interactionTarget: InteractionTarget = {
-								segmentKey: key,
-								...(segment.attestationId
-									? { attestationId: segment.attestationId }
-									: {}),
-							};
-
-							return (
-								<ReaderSegment
-									key={segment.index}
-									ref={trackElement}
-									data-state={displayState}
-									highlighted={isSourceContextMember}
-									tone={segmentTone(displayState)}
-									interaction={segmentInteraction(
-										displayState,
-									)}
-									disabled={
-										sentence.language !== "de" ||
-										segment.resolutionState === "Active" ||
-										segment.resolutionState ===
-											"PermanentFailure"
-									}
-									aria-pressed={isSelected}
-									aria-label={segmentAccessibleLabel(segment)}
-									onBlur={() => setFocusedTarget(null)}
-									onFocus={() =>
-										setFocusedTarget(interactionTarget)
-									}
-									onMouseEnter={() =>
-										setHoveredTarget(interactionTarget)
-									}
-									onMouseLeave={() => setHoveredTarget(null)}
-									onClick={(event) => {
-										// A pointer click leaves no focus ring behind; keyboard activation keeps its ring.
-										if (event.detail > 0)
-											event.currentTarget.blur();
-										void onSegmentClick(
-											sentence,
-											segment.index,
-											event.altKey,
-											event.currentTarget,
-										);
-									}}
-								>
-									{segment.text}
-								</ReaderSegment>
-							);
-						})}
-					</p>
+						onSegmentElement={(index, element) => {
+							const key = segmentKey(sentence.sentenceId, index);
+							if (element)
+								segmentElements.current.set(key, element);
+							else segmentElements.current.delete(key);
+						}}
+					/>
 				</section>
 			))}
 		</article>
@@ -432,92 +267,4 @@ export function TextViewSkeleton() {
 
 function mutationMessage(error: unknown): string | null {
 	return error instanceof Error ? error.message : null;
-}
-
-function segmentKey(sentenceId: string, segmentIndex: number): string {
-	return `${sentenceId}:${segmentIndex}`;
-}
-
-function displayStateForSegment(
-	segment: SentenceView["segments"][number],
-	isPreviewed: boolean,
-	isSelected: boolean,
-): SegmentDisplayState | undefined {
-	if (isPreviewed && segment.attestationId) return "known-preview";
-	if (isPreviewed) {
-		switch (segment.resolutionState) {
-			case "Active":
-				return "resolving";
-			case "Unresolved":
-				return "unresolved-preview";
-			case "PermanentFailure":
-				return "failed-preview";
-			default:
-				return "unknown-preview";
-		}
-	}
-	if (segment.resolutionState === "Active") return "resolving";
-	if (segment.resolutionState === "Unresolved") return "unresolved";
-	if (segment.resolutionState === "PermanentFailure") return "failed";
-	if (isSelected) return segment.attestationId ? "selected" : "resolving";
-	return segment.encountered && segment.attestationId
-		? "retained"
-		: undefined;
-}
-
-function segmentTone(
-	state: SegmentDisplayState | undefined,
-): ReaderSegmentTone {
-	switch (state) {
-		case "unknown-preview":
-			return "unknown";
-		case "resolving":
-			return "resolving";
-		case "unresolved":
-		case "unresolved-preview":
-			return "unknown";
-		case "failed":
-		case "failed-preview":
-			return "failed";
-		case "selected":
-		case "known-preview":
-		case "retained":
-			return "known";
-		default:
-			return "plain";
-	}
-}
-
-function segmentInteraction(
-	state: SegmentDisplayState | undefined,
-): ReaderSegmentInteraction {
-	switch (state) {
-		case "unknown-preview":
-		case "unresolved-preview":
-		case "failed-preview":
-		case "known-preview":
-			return "previewed";
-		case "selected":
-			return "selected";
-		default:
-			return "idle";
-	}
-}
-
-function segmentAccessibleLabel(
-	segment: SentenceView["segments"][number],
-): string {
-	if (segment.attestationId) {
-		return `${segment.text}, part of a known occurrence`;
-	}
-	switch (segment.resolutionState) {
-		case "Active":
-			return `${segment.text}, resolution in progress`;
-		case "Unresolved":
-			return `${segment.text}, unresolved, click to try again`;
-		case "PermanentFailure":
-			return `${segment.text}, could not be resolved`;
-		default:
-			return `${segment.text}, click to resolve`;
-	}
 }

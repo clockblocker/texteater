@@ -1,7 +1,4 @@
-import {
-	type NoteSkeletonKind,
-	renderNoteSkeleton,
-} from "@/views/note-skeletons";
+import { NoteSkeletonFor, type NoteSkeletonKind } from "@/views/note-skeletons";
 import { TextViewSkeleton } from "@/views/text-view";
 import { CardFrame, SheetFrame, Stage } from "./frames";
 
@@ -25,12 +22,12 @@ export function LoadingGallery() {
 				>
 					<Stage label={`${kind} · Card`}>
 						<CardFrame tail={kind}>
-							{renderNoteSkeleton(kind, "Card")}
+							<NoteSkeletonFor kind={kind} presentation="Card" />
 						</CardFrame>
 					</Stage>
 					<Stage label={`${kind} · Sheet`} className="min-w-0 flex-1">
 						<SheetFrame>
-							{renderNoteSkeleton(kind, "Sheet")}
+							<NoteSkeletonFor kind={kind} presentation="Sheet" />
 						</SheetFrame>
 					</Stage>
 				</section>

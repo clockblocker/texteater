@@ -49,6 +49,19 @@ export const segmentResolutionStateValidator = v.union(
 	v.object({ kind: v.literal("PermanentFailure") }),
 );
 
+/** A hidden Text that holds one Reading's Knowledge definition as a Sentence. */
+export const textOriginValidator = v.object({
+	kind: v.literal("Definition"),
+	readingKey: v.string(),
+});
+
+export const definitionTextStateValidator = v.union(
+	v.literal("Scheduled"),
+	v.literal("Running"),
+	v.literal("Ready"),
+	v.literal("Failed"),
+);
+
 export const segmentInputValidator = v.object({
 	kind: segmentKindValidator,
 	text: v.string(),

@@ -109,17 +109,20 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 		const result = await ctx.db
 			.query("accumulatedKnowledge")
 			.paginate(paginationOpts);
-		let changed = 0;
-		let malformed = 0;
-		for (const knowledge of result.page) {
+		async function backfillOwner(index: number): Promise<{
+			changed: number;
+			malformed: number;
+		}> {
+			const knowledge = result.page[index];
+			if (!knowledge) return { changed: 0, malformed: 0 };
 			let expected: ReturnType<typeof collectStructuralShadowReferences>;
 			try {
 				expected = collectStructuralShadowReferences(
 					knowledge.knowledge,
 				);
 			} catch {
-				malformed += 1;
-				continue;
+				const rest = await backfillOwner(index + 1);
+				return { changed: rest.changed, malformed: rest.malformed + 1 };
 			}
 			const before = await ctx.db
 				.query("structuralShadowReferences")
@@ -146,13 +149,16 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 				.map(({ locatorKey, shadowId }) => `${locatorKey}:${shadowId}`)
 				.sort()
 				.join("\n");
-			if (
+			const currentChanged =
 				beforeFingerprint !== afterFingerprint ||
-				before.length !== expected.length
-			) {
-				changed += 1;
-			}
+				before.length !== expected.length;
+			const rest = await backfillOwner(index + 1);
+			return {
+				changed: rest.changed + Number(currentChanged),
+				malformed: rest.malformed,
+			};
 		}
+		const { changed, malformed } = await backfillOwner(0);
 		return {
 			continueCursor: result.continueCursor,
 			isDone: result.isDone,
@@ -192,37 +198,37 @@ export const auditPendingShadowReferencesPage = internalQuery({
 		const result = await ctx.db
 			.query("pendingSemanticRelations")
 			.paginate(paginationOpts);
-		let valid = 0;
-		let missing = 0;
-		let mismatched = 0;
-		let malformed = 0;
-		for (const pending of result.page) {
-			try {
-				const descriptor = pendingShadowDescriptor(pending.record);
-				if (!pending.shadowId) {
-					missing += 1;
-					continue;
+		const audited = await Promise.all(
+			result.page.map(async (pending) => {
+				try {
+					const descriptor = pendingShadowDescriptor(pending.record);
+					if (!pending.shadowId) {
+						return "missing" as const;
+					}
+					const shadow = await ctx.db.get(pending.shadowId);
+					if (
+						!shadow ||
+						!shadowIsCompatible(shadow, descriptor) ||
+						pending.targetCanonicalForm !== descriptor.canonicalForm
+					) {
+						return "mismatched" as const;
+					}
+					return "valid" as const;
+				} catch {
+					return "malformed" as const;
 				}
-				const shadow = await ctx.db.get(pending.shadowId);
-				if (
-					!shadow ||
-					!shadowIsCompatible(shadow, descriptor) ||
-					pending.targetCanonicalForm !== descriptor.canonicalForm
-				) {
-					mismatched += 1;
-				} else valid += 1;
-			} catch {
-				malformed += 1;
-			}
-		}
+			}),
+		);
 		return {
 			continueCursor: result.continueCursor,
 			isDone: result.isDone,
 			visited: result.page.length,
-			valid,
-			missing,
-			mismatched,
-			malformed,
+			valid: audited.filter((status) => status === "valid").length,
+			missing: audited.filter((status) => status === "missing").length,
+			mismatched: audited.filter((status) => status === "mismatched")
+				.length,
+			malformed: audited.filter((status) => status === "malformed")
+				.length,
 		};
 	},
 });

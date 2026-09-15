@@ -3,6 +3,7 @@ import { v } from "convex/values";
 
 import {
 	catalogMissStageValidator,
+	definitionTextStateValidator,
 	directSemanticRelationValidator,
 	knowledgeGenerationAttemptStateValidator,
 	knowledgeStatusValidator,
@@ -29,6 +30,7 @@ import {
 	segmentResolutionStateValidator,
 	storedKnowledgeSettingsValidator,
 	surfaceSpellingValidator,
+	textOriginValidator,
 	translationLanguageValidator,
 } from "./model/validators";
 
@@ -37,7 +39,29 @@ export default defineSchema({
 		title: v.optional(v.string()),
 		submissionKey: v.string(),
 		sourceText: v.string(),
+		/** Absent for a Visitor-submitted Text; set for a hidden Definition Text. */
+		origin: v.optional(textOriginValidator),
 	}).index("by_submission_key", ["submissionKey"]),
+
+	/**
+	 * One row per Reading whose Knowledge definition is being turned into a
+	 * hidden Definition Text. It is the single live Definition Text pointer and
+	 * the source of the Definition block's loading state.
+	 */
+	definitionTexts: defineTable({
+		ownerReadingKey: v.string(),
+		/** The definition Knowledge currently asks for; absent once Retracted. */
+		definition: v.optional(v.string()),
+		/** The definition the live Definition Text was segmented from. */
+		materializedDefinition: v.optional(v.string()),
+		state: definitionTextStateValidator,
+		textId: v.optional(v.id("texts")),
+		sentenceId: v.optional(v.id("sentences")),
+		failureMessage: v.optional(v.string()),
+		updatedAt: v.number(),
+	})
+		.index("by_owner_reading_key", ["ownerReadingKey"])
+		.index("by_text_id", ["textId"]),
 
 	sentences: defineTable({
 		heading: v.optional(v.string()),

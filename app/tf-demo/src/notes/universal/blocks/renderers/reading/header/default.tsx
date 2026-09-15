@@ -11,7 +11,7 @@ import type { Id } from "../../../../../../../convex/_generated/dataModel";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 
-export const renderDefaultReadingHeader = (({
+export const DefaultReadingHeaderRenderer = (({
 	noteData,
 	PresentationCapabilities,
 }) => (

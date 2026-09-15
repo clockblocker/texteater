@@ -1,6 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useAction } from "convex/react";
+import { useQuery } from "@tanstack/react-query";
 import {
 	Badge,
 	Button,
@@ -27,6 +26,7 @@ import {
 	PlusIcon,
 } from "lucide-react";
 import { type FormEvent, useState } from "react";
+import { usePendingAction } from "@/hooks/use-pending-action";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -46,8 +46,7 @@ export function LibraryView() {
 		...convexQuery(api.texts.list, {}),
 		gcTime: 10_000,
 	});
-	const submitTextAction = useAction(api.orchestration.submitText);
-	const submitText = useMutation({ mutationFn: submitTextAction });
+	const submitText = usePendingAction(api.orchestration.submitText);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -56,7 +55,7 @@ export function LibraryView() {
 		if (!normalized) return;
 
 		try {
-			const result = await submitText.mutateAsync({
+			const result = await submitText.run({
 				submissionKey: submissionKeyFor(normalized),
 				sourceText: normalized,
 			});

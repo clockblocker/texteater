@@ -14,6 +14,7 @@ import {
 } from "../shared/notes-study/note-study-dummy-database";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalMutation, type MutationCtx, query } from "./_generated/server";
+import { ensureInlineDefinitionText } from "./model/definitionTexts";
 import { pendingRecordLocatorIndexKey } from "./model/dumdictPendingIndexes";
 import { requireRecord } from "./model/readingKnowledge";
 import { shadowKeyFor } from "./model/shadows";
@@ -22,7 +23,10 @@ import {
 	loadUnitReadingNote,
 	readingNoteValidator,
 } from "./modules/notes/readingNote";
-import { consolidateExampleTexts } from "./modules/text/exampleCollection";
+import {
+	consolidateExampleTexts,
+	proseSegments,
+} from "./modules/text/exampleCollection";
 import { persistSubmittedText } from "./modules/text/submission";
 
 const listItemValidator = v.object({
@@ -150,6 +154,12 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 			updatedAt: NOTE_STUDY_KNOWLEDGE_UPDATED_AT,
 		});
 	}
+	await ensureInlineDefinitionText(ctx, {
+		ownerReadingKey: unit.readingKey,
+		knowledge: unit.knowledge,
+		language: "de",
+		segment: proseSegments,
+	});
 	const personalAnnotation = await ctx.db
 		.query("personalAnnotations")
 		.withIndex("by_visitor_id_and_reading_id", (q) =>
@@ -310,20 +320,26 @@ async function ensureOccurrence(
 		let attestationId =
 			memberSegments[0]?.attestationMembership?.attestationId;
 		if (!attestationId) {
-			attestationId = await ctx.db.insert("attestations", {
+			const createdAttestationId = await ctx.db.insert("attestations", {
 				surfaceId: ids.surfaceId,
 				readingId: ids.readingId,
 				realizationCoverage: occurrence.attestation.realizationCoverage,
 			});
-			for (const segment of memberSegments) {
-				if (!segment) continue;
-				await ctx.db.patch(segment._id, {
-					attestationMembership: {
-						attestationId,
-						orthography: "Standard",
-					},
-				});
-			}
+			await Promise.all(
+				memberSegments.flatMap((segment) =>
+					segment
+						? [
+								ctx.db.patch(segment._id, {
+									attestationMembership: {
+										attestationId: createdAttestationId,
+										orthography: "Standard",
+									},
+								}),
+							]
+						: [],
+				),
+			);
+			attestationId = createdAttestationId;
 		}
 		if (visible) {
 			const clicked = memberSegments[0];
@@ -367,36 +383,60 @@ export const load = internalMutation({
 			);
 		}
 
-		for (const relation of NOTE_STUDY_RESOLVED_RELATIONS) {
-			const stored = storedRelation(relation);
-			const source = idsByReadingKey.get(stored.sourceReadingKey);
-			const targetLemma = await ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) =>
-					q.eq("lemmaKey", stored.targetLemmaKey),
-				)
-				.unique();
-			if (!source || !targetLemma) continue;
-			const existing = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex(
-					"by_source_reading_id_and_relation_and_target_lemma_id",
-					(q) =>
-						q
-							.eq("sourceReadingId", source.readingId)
-							.eq("relation", stored.relation)
-							.eq("targetLemmaId", targetLemma._id),
-				)
-				.unique();
-			if (!existing) {
-				await ctx.db.insert("semanticRelationEdges", {
-					sourceReadingId: source.readingId,
-					targetKind: "lemma",
-					targetLemmaId: targetLemma._id,
-					relation: stored.relation,
-				});
-			}
-		}
+		const storedRelations = NOTE_STUDY_RESOLVED_RELATIONS.map(
+			(relation) => ({
+				stored: storedRelation(relation),
+			}),
+		);
+		const targetLemmas = await Promise.all(
+			storedRelations.map(({ stored }) =>
+				ctx.db
+					.query("lemmas")
+					.withIndex("by_lemma_key", (q) =>
+						q.eq("lemmaKey", stored.targetLemmaKey),
+					)
+					.unique(),
+			),
+		);
+		const resolvedRelations = storedRelations.flatMap(
+			({ stored }, index) => {
+				const source = idsByReadingKey.get(stored.sourceReadingKey);
+				const targetLemma = targetLemmas[index];
+				return source && targetLemma
+					? [{ stored, source, targetLemma }]
+					: [];
+			},
+		);
+		const existingEdges = await Promise.all(
+			resolvedRelations.map(({ stored, source, targetLemma }) =>
+				ctx.db
+					.query("semanticRelationEdges")
+					.withIndex(
+						"by_source_reading_id_and_relation_and_target_lemma_id",
+						(q) =>
+							q
+								.eq("sourceReadingId", source.readingId)
+								.eq("relation", stored.relation)
+								.eq("targetLemmaId", targetLemma._id),
+					)
+					.unique(),
+			),
+		);
+		await Promise.all(
+			resolvedRelations.flatMap(
+				({ stored, source, targetLemma }, index) =>
+					existingEdges[index]
+						? []
+						: [
+								ctx.db.insert("semanticRelationEdges", {
+									sourceReadingId: source.readingId,
+									targetKind: "lemma",
+									targetLemmaId: targetLemma._id,
+									relation: stored.relation,
+								}),
+							],
+			),
+		);
 
 		for (const pending of NOTE_STUDY_PENDING_RELATIONS) {
 			if (pending.target.language !== "de")

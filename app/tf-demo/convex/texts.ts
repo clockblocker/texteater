@@ -15,9 +15,11 @@ export const list = query({
 	args: {},
 	returns: v.array(libraryTextValidator),
 	handler: async (ctx) => {
+		// Definition Texts are reached through their Reading Note, never listed.
 		const texts = await ctx.db
 			.query("texts")
 			.order("desc")
+			.filter((q) => q.eq(q.field("origin"), undefined))
 			.take(MAX_LIBRARY_TEXTS);
 
 		return texts.map((text) => ({

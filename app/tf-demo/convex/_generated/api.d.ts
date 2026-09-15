@@ -9,6 +9,8 @@
  */
 
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
+import type * as definitionTextActions from "../definitionTextActions.js";
+import type * as definitionTexts from "../definitionTexts.js";
 import type * as demoReset from "../demoReset.js";
 import type * as dumdictActionStorage from "../dumdictActionStorage.js";
 import type * as dumdictStorage from "../dumdictStorage.js";
@@ -24,6 +26,7 @@ import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as migrations from "../migrations.js";
 import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_compiledRelationVerdict from "../model/compiledRelationVerdict.js";
+import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
@@ -32,6 +35,7 @@ import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_segmentResolutionState from "../model/segmentResolutionState.js";
 import type * as model_shadows from "../model/shadows.js";
+import type * as model_textAnalysisStripping from "../model/textAnalysisStripping.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorClicks from "../model/visitorClicks.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
@@ -41,8 +45,10 @@ import type * as modules_notes_readingNote from "../modules/notes/readingNote.js
 import type * as modules_notes_relations from "../modules/notes/relations.js";
 import type * as modules_notes_routeNotes from "../modules/notes/routeNotes.js";
 import type * as modules_notes_shadowNote from "../modules/notes/shadowNote.js";
+import type * as modules_notes_sourceOrigin from "../modules/notes/sourceOrigin.js";
 import type * as modules_notes_unitReadingFamilies from "../modules/notes/unitReadingFamilies.js";
 import type * as modules_text_exampleCollection from "../modules/text/exampleCollection.js";
+import type * as modules_text_sentenceView from "../modules/text/sentenceView.js";
 import type * as modules_text_submission from "../modules/text/submission.js";
 import type * as notesStudyFixtures from "../notesStudyFixtures.js";
 import type * as orchestration from "../orchestration.js";
@@ -68,6 +74,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   catalogGrowthSignals: typeof catalogGrowthSignals;
+  definitionTextActions: typeof definitionTextActions;
+  definitionTexts: typeof definitionTexts;
   demoReset: typeof demoReset;
   dumdictActionStorage: typeof dumdictActionStorage;
   dumdictStorage: typeof dumdictStorage;
@@ -83,6 +91,7 @@ declare const fullApi: ApiFromModules<{
   migrations: typeof migrations;
   "model/canonicalJson": typeof model_canonicalJson;
   "model/compiledRelationVerdict": typeof model_compiledRelationVerdict;
+  "model/definitionTexts": typeof model_definitionTexts;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
@@ -91,6 +100,7 @@ declare const fullApi: ApiFromModules<{
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/segmentResolutionState": typeof model_segmentResolutionState;
   "model/shadows": typeof model_shadows;
+  "model/textAnalysisStripping": typeof model_textAnalysisStripping;
   "model/validators": typeof model_validators;
   "model/visitorClicks": typeof model_visitorClicks;
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
@@ -100,8 +110,10 @@ declare const fullApi: ApiFromModules<{
   "modules/notes/relations": typeof modules_notes_relations;
   "modules/notes/routeNotes": typeof modules_notes_routeNotes;
   "modules/notes/shadowNote": typeof modules_notes_shadowNote;
+  "modules/notes/sourceOrigin": typeof modules_notes_sourceOrigin;
   "modules/notes/unitReadingFamilies": typeof modules_notes_unitReadingFamilies;
   "modules/text/exampleCollection": typeof modules_text_exampleCollection;
+  "modules/text/sentenceView": typeof modules_text_sentenceView;
   "modules/text/submission": typeof modules_text_submission;
   notesStudyFixtures: typeof notesStudyFixtures;
   orchestration: typeof orchestration;

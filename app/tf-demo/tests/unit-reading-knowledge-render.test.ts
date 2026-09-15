@@ -3,10 +3,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 
-import {
-	KnowledgeSettingsChecklist,
-	withKnowledgeSetting,
-} from "../src/views/unit-reading-knowledge-settings";
+import { withKnowledgeSetting } from "../src/views/knowledge-settings";
+import { KnowledgeSettingsChecklist } from "../src/views/unit-reading-knowledge-settings";
 
 test("renders every global setting and reflects disabled leaves", () => {
 	const settings = withKnowledgeSetting(

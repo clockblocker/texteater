@@ -90,10 +90,7 @@
 	--color-link: var(--link);
 	--color-link-shadow: var(--link-shadow);
 
-	/* The wash behind every member of the focused occurrence, and the
-	   browser text selection. Two jobs, two tokens, so the Playground can
-	   try them on different hues. */
-	--color-highlight: var(--highlight);
+	/* The browser text selection: the only background running text gets. */
 	--color-selection: var(--selection);
 	--color-selection-foreground: var(--selection-foreground);
 
@@ -196,7 +193,6 @@
 	--word-shadow: var(--blue-600);
 	--link: var(--word-known);
 	--link-shadow: var(--word-shadow);
-	--highlight: var(--blue-500);
 	--selection: var(--raised);
 	--selection-foreground: var(--ink);
 

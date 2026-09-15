@@ -10,6 +10,10 @@ import {
 	type MutationCtx,
 } from "./_generated/server";
 import { finishSegmentResolution } from "./model/segmentResolutionState";
+import {
+	type StripTextAnalysisResult,
+	stripTextAnalysisGraph,
+} from "./model/textAnalysisStripping";
 
 const BATCH_SIZE = 400;
 const CLEANUP_DELETE_BUDGET = BATCH_SIZE - 1;
@@ -34,6 +38,7 @@ export const resetDemoTableNames = [
 	"readingFamilyKindLayouts",
 	"structuralShadowReferences",
 	"knowledgeChanges",
+	"definitionTexts",
 	"accumulatedKnowledge",
 	"pendingSemanticRelations",
 	"shadows",
@@ -91,7 +96,7 @@ async function clearTableBatch(
 	const tableName = resetDemoTableNames[tableIndex];
 	if (!tableName) throw new Error("Reset table index is invalid.");
 	const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
-	for (const document of documents) await ctx.db.delete(document._id);
+	await Promise.all(documents.map((document) => ctx.db.delete(document._id)));
 	const nextTableIndex =
 		documents.length === BATCH_SIZE ? tableIndex : tableIndex + 1;
 	return {
@@ -153,16 +158,25 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) {
-					if (row.lifecycle?.state === "Active") {
-						await finishSegmentResolution(
+				const activeSegmentIds = [
+					...new Set(
+						rows.flatMap((row) =>
+							row.lifecycle?.state === "Active"
+								? [row.segmentId]
+								: [],
+						),
+					),
+				];
+				await Promise.all(
+					activeSegmentIds.map((segmentId) =>
+						finishSegmentResolution(
 							ctx,
-							row.segmentId,
+							segmentId,
 							"PermanentFailure",
-						);
-					}
-					await ctx.db.delete(row._id);
-				}
+						),
+					),
+				);
+				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -177,7 +191,7 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) await ctx.db.delete(row._id);
+				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -206,7 +220,7 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) await ctx.db.delete(row._id);
+				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -221,7 +235,7 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) await ctx.db.delete(row._id);
+				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -237,7 +251,7 @@ export const clearVisitorDataBatch = internalMutation({
 						(q) => q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) await ctx.db.delete(row._id);
+				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -252,7 +266,7 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				for (const row of rows) await ctx.db.delete(row._id);
+				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE ? "VisitorClicks" : "Done";
@@ -297,14 +311,18 @@ export const getTextAnalysisCandidates = internalQuery({
 				`Analysis stripping supports at most ${MAX_SENTENCES_PER_TEXT} Sentences per Text.`,
 			);
 		}
+		const segmentsBySentence = await Promise.all(
+			sentences.map((sentence) =>
+				ctx.db
+					.query("segments")
+					.withIndex("by_sentence_id_and_index", (q) =>
+						q.eq("sentenceId", sentence._id),
+					)
+					.take(MAX_SEGMENTS_PER_SENTENCE + 1),
+			),
+		);
 		const attestationIds = new Set<Id<"attestations">>();
-		for (const sentence of sentences) {
-			const segments = await ctx.db
-				.query("segments")
-				.withIndex("by_sentence_id_and_index", (q) =>
-					q.eq("sentenceId", sentence._id),
-				)
-				.take(MAX_SEGMENTS_PER_SENTENCE + 1);
+		for (const segments of segmentsBySentence) {
 			if (segments.length > MAX_SEGMENTS_PER_SENTENCE) {
 				throw new Error(
 					`Analysis stripping supports at most ${MAX_SEGMENTS_PER_SENTENCE} Segments per Sentence.`,
@@ -346,67 +364,77 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 			);
 		}
 
-		for (const sentence of sentences) {
-			const sessions = await ctx.db
-				.query("resolutionSessions")
-				.withIndex("by_sentence_id", (q) =>
-					q.eq("sentenceId", sentence._id),
-				)
-				.take(BATCH_SIZE);
-			if (sessions.length > 0) {
-				for (const session of sessions) {
-					if (session.lifecycle?.state === "Active") {
-						await finishSegmentResolution(
-							ctx,
-							session.segmentId,
-							"PermanentFailure",
-						);
-					}
-					await ctx.db.delete(session._id);
-				}
-				return { deleted: sessions.length, hasMore: true };
-			}
-			const segments = await ctx.db
-				.query("segments")
-				.withIndex("by_sentence_id_and_index", (q) =>
-					q.eq("sentenceId", sentence._id),
-				)
-				.take(BATCH_SIZE);
-			for (const segment of segments) {
-				const clicks = await ctx.db
-					.query("visitorClicks")
-					.withIndex("by_segment_id", (q) =>
-						q.eq("segmentId", segment._id),
-					)
-					.take(BATCH_SIZE);
-				if (clicks.length > 0) {
-					for (const click of clicks) await ctx.db.delete(click._id);
-					return { deleted: clicks.length, hasMore: true };
-				}
-
-				const attestationId =
-					segment.attestationMembership?.attestationId;
-				await ctx.db.delete(segment._id);
-				let deleted = 1;
-				if (attestationId) {
-					const survivor = await ctx.db
-						.query("segments")
-						.withIndex("by_attestation_id", (q) =>
-							q.eq(
-								"attestationMembership.attestationId",
-								attestationId,
-							),
+		const workBySentence = await Promise.all(
+			sentences.map(async (sentence) => {
+				const [sessions, segments] = await Promise.all([
+					ctx.db
+						.query("resolutionSessions")
+						.withIndex("by_sentence_id", (q) =>
+							q.eq("sentenceId", sentence._id),
 						)
-						.first();
-					if (!survivor && (await ctx.db.get(attestationId))) {
-						await ctx.db.delete(attestationId);
-						deleted += 1;
-					}
-				}
-				return { deleted, hasMore: true };
+						.take(BATCH_SIZE),
+					ctx.db
+						.query("segments")
+						.withIndex("by_sentence_id_and_index", (q) =>
+							q.eq("sentenceId", sentence._id),
+						)
+						.take(BATCH_SIZE),
+				]);
+				return { sessions, segments };
+			}),
+		);
+		const next = workBySentence.find(
+			({ sessions, segments }) =>
+				sessions.length > 0 || segments.length > 0,
+		);
+		if (!next) return { deleted: 0, hasMore: false };
+		if (next.sessions.length > 0) {
+			const activeSegmentIds = [
+				...new Set(
+					next.sessions.flatMap((session) =>
+						session.lifecycle?.state === "Active"
+							? [session.segmentId]
+							: [],
+					),
+				),
+			];
+			await Promise.all(
+				activeSegmentIds.map((segmentId) =>
+					finishSegmentResolution(ctx, segmentId, "PermanentFailure"),
+				),
+			);
+			await Promise.all(
+				next.sessions.map((session) => ctx.db.delete(session._id)),
+			);
+			return { deleted: next.sessions.length, hasMore: true };
+		}
+		const segment = next.segments[0];
+		if (!segment) return { deleted: 0, hasMore: false };
+		const clicks = await ctx.db
+			.query("visitorClicks")
+			.withIndex("by_segment_id", (q) => q.eq("segmentId", segment._id))
+			.take(BATCH_SIZE);
+		if (clicks.length > 0) {
+			await Promise.all(clicks.map((click) => ctx.db.delete(click._id)));
+			return { deleted: clicks.length, hasMore: true };
+		}
+
+		const attestationId = segment.attestationMembership?.attestationId;
+		await ctx.db.delete(segment._id);
+		let deleted = 1;
+		if (attestationId) {
+			const survivor = await ctx.db
+				.query("segments")
+				.withIndex("by_attestation_id", (q) =>
+					q.eq("attestationMembership.attestationId", attestationId),
+				)
+				.first();
+			if (!survivor && (await ctx.db.get(attestationId))) {
+				await ctx.db.delete(attestationId);
+				deleted += 1;
 			}
 		}
-		return { deleted: 0, hasMore: false };
+		return { deleted, hasMore: true };
 	},
 });
 
@@ -419,29 +447,32 @@ export const describeReadingCleanupCandidates = internalQuery({
 				`Describe at most ${DESCRIPTOR_PAGE_SIZE} Readings per call.`,
 			);
 		}
-		const descriptors = [];
-		for (const readingId of readingIds) {
-			const reading = await ctx.db.get(readingId);
-			if (!reading) continue;
-			const [lemma, attestation] = await Promise.all([
-				ctx.db.get(reading.lemmaId),
-				ctx.db
-					.query("attestations")
-					.withIndex("by_reading_id", (q) =>
-						q.eq("readingId", readingId),
-					)
-					.first(),
-			]);
-			if (!lemma) continue;
-			descriptors.push({
-				readingId,
-				readingKey: reading.readingKey,
-				lemmaId: lemma._id,
-				lemmaKey: lemma.lemmaKey,
-				hasRemainingSource: Boolean(attestation),
-			});
-		}
-		return descriptors;
+		const descriptors = await Promise.all(
+			readingIds.map(async (readingId) => {
+				const reading = await ctx.db.get(readingId);
+				if (!reading) return null;
+				const [lemma, attestation] = await Promise.all([
+					ctx.db.get(reading.lemmaId),
+					ctx.db
+						.query("attestations")
+						.withIndex("by_reading_id", (q) =>
+							q.eq("readingId", readingId),
+						)
+						.first(),
+				]);
+				if (!lemma) return null;
+				return {
+					readingId,
+					readingKey: reading.readingKey,
+					lemmaId: lemma._id,
+					lemmaKey: lemma.lemmaKey,
+					hasRemainingSource: Boolean(attestation),
+				};
+			}),
+		);
+		return descriptors.flatMap((descriptor) =>
+			descriptor ? [descriptor] : [],
+		);
 	},
 });
 
@@ -537,7 +568,9 @@ export const clearReadingDataBatch = internalMutation({
 							q.eq("sourceReadingKey", readingKey),
 						)
 						.take(remaining);
-					for (const row of rows) await ctx.db.delete(row._id);
+					await Promise.all(
+						rows.map((row) => ctx.db.delete(row._id)),
+					);
 					deleted += rows.length;
 					phaseComplete = rows.length < remaining;
 					break;
@@ -549,7 +582,9 @@ export const clearReadingDataBatch = internalMutation({
 							q.eq("ownerReadingKey", readingKey),
 						)
 						.take(remaining);
-					for (const row of rows) await ctx.db.delete(row._id);
+					await Promise.all(
+						rows.map((row) => ctx.db.delete(row._id)),
+					);
 					deleted += rows.length;
 					phaseComplete = rows.length < remaining;
 					break;
@@ -561,7 +596,9 @@ export const clearReadingDataBatch = internalMutation({
 							q.eq("ownerReadingKey", readingKey),
 						)
 						.take(remaining);
-					for (const row of rows) await ctx.db.delete(row._id);
+					await Promise.all(
+						rows.map((row) => ctx.db.delete(row._id)),
+					);
 					deleted += rows.length;
 					phaseComplete = rows.length < remaining;
 					break;
@@ -595,7 +632,9 @@ export const clearReadingDataBatch = internalMutation({
 								q.eq("sourceReadingId", reading._id),
 							)
 							.take(remaining);
-						for (const row of rows) await ctx.db.delete(row._id);
+						await Promise.all(
+							rows.map((row) => ctx.db.delete(row._id)),
+						);
 						deleted += rows.length;
 						phaseComplete = rows.length < remaining;
 					} else if (cursor.phase === "IncomingSemanticEdges") {
@@ -605,7 +644,9 @@ export const clearReadingDataBatch = internalMutation({
 								q.eq("targetReadingId", reading._id),
 							)
 							.take(remaining);
-						for (const row of rows) await ctx.db.delete(row._id);
+						await Promise.all(
+							rows.map((row) => ctx.db.delete(row._id)),
+						);
 						deleted += rows.length;
 						phaseComplete = rows.length < remaining;
 					}
@@ -630,8 +671,10 @@ export const clearReadingDataBatch = internalMutation({
 							phaseComplete = false;
 							break;
 						}
-						if (entry) await ctx.db.delete(entry._id);
-						await ctx.db.delete(reading._id);
+						await Promise.all([
+							...(entry ? [ctx.db.delete(entry._id)] : []),
+							ctx.db.delete(reading._id),
+						]);
 						deleted += required;
 						deletedReadings += 1;
 					}
@@ -749,30 +792,43 @@ export const clearLemmaDataBatch = internalMutation({
 							q.eq("lemmaId", lemmaId),
 						)
 						.take(limit);
-					for (const surface of surfaces) {
-						const attestation = await ctx.db
-							.query("attestations")
-							.withIndex("by_surface_id", (q) =>
-								q.eq("surfaceId", surface._id),
-							)
-							.first();
-						if (attestation) {
-							skipLemma = true;
-							break;
-						}
-						const entry = await ctx.db
-							.query("ownedSurfaces")
-							.withIndex("by_surface_id", (q) =>
-								q.eq("surfaceId", surface._id),
-							)
-							.unique();
-						if (entry) {
-							await ctx.db.delete(entry._id);
-							deleted += 1;
-						}
-						await ctx.db.delete(surface._id);
-						deleted += 1;
-					}
+					const surfaceState = await Promise.all(
+						surfaces.map(async (surface) => {
+							const [attestation, entry] = await Promise.all([
+								ctx.db
+									.query("attestations")
+									.withIndex("by_surface_id", (q) =>
+										q.eq("surfaceId", surface._id),
+									)
+									.first(),
+								ctx.db
+									.query("ownedSurfaces")
+									.withIndex("by_surface_id", (q) =>
+										q.eq("surfaceId", surface._id),
+									)
+									.unique(),
+							]);
+							return { surface, attestation, entry };
+						}),
+					);
+					const protectedIndex = surfaceState.findIndex(
+						({ attestation }) => Boolean(attestation),
+					);
+					skipLemma = protectedIndex !== -1;
+					const deletable =
+						protectedIndex === -1
+							? surfaceState
+							: surfaceState.slice(0, protectedIndex);
+					await Promise.all(
+						deletable.flatMap(({ surface, entry }) => [
+							...(entry ? [ctx.db.delete(entry._id)] : []),
+							ctx.db.delete(surface._id),
+						]),
+					);
+					deleted += deletable.reduce(
+						(count, { entry }) => count + (entry ? 2 : 1),
+						0,
+					);
 					phaseComplete = !skipLemma && surfaces.length < limit;
 					break;
 				}
@@ -783,7 +839,9 @@ export const clearLemmaDataBatch = internalMutation({
 							q.eq("targetLemmaId", lemmaId),
 						)
 						.take(remaining);
-					for (const row of rows) await ctx.db.delete(row._id);
+					await Promise.all(
+						rows.map((row) => ctx.db.delete(row._id)),
+					);
 					deleted += rows.length;
 					phaseComplete = rows.length < remaining;
 					break;
@@ -800,9 +858,12 @@ export const clearLemmaDataBatch = internalMutation({
 						phaseComplete = false;
 						break;
 					}
-					if (dictionaryLemma)
-						await ctx.db.delete(dictionaryLemma._id);
-					await ctx.db.delete(lemmaId);
+					await Promise.all([
+						...(dictionaryLemma
+							? [ctx.db.delete(dictionaryLemma._id)]
+							: []),
+						ctx.db.delete(lemmaId),
+					]);
 					deleted += required;
 					deletedLemmas += 1;
 					break;
@@ -877,94 +938,8 @@ export const stripTextAnalysis = action({
 		deletedReadings: v.number(),
 		deletedLemmas: v.number(),
 	}),
-	handler: async (ctx, { textId }) => {
-		const candidates = await ctx.runQuery(
-			internal.demoReset.getTextAnalysisCandidates,
-			{ textId },
-		);
-		if (!candidates) {
-			return { removed: 0, deletedReadings: 0, deletedLemmas: 0 };
-		}
-		let removed = 0;
-		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-			const result = await ctx.runMutation(
-				internal.demoReset.stripTextAnalysisGraphBatch,
-				{ textId },
-			);
-			removed += result.deleted;
-			if (!result.hasMore) break;
-			if (batch === MAX_BATCHES - 1) {
-				throw new Error(
-					"Analysis stripping exceeded its graph batch limit.",
-				);
-			}
-		}
-
-		const descriptors = [];
-		for (
-			let offset = 0;
-			offset < candidates.readingIds.length;
-			offset += DESCRIPTOR_PAGE_SIZE
-		) {
-			descriptors.push(
-				...(await ctx.runQuery(
-					internal.demoReset.describeReadingCleanupCandidates,
-					{
-						readingIds: candidates.readingIds.slice(
-							offset,
-							offset + DESCRIPTOR_PAGE_SIZE,
-						),
-					},
-				)),
-			);
-		}
-		const doomed = descriptors.filter(({ hasRemainingSource }) =>
-			Boolean(!hasRemainingSource),
-		);
-		const doomedReadingKeys = doomed.map(({ readingKey }) => readingKey);
-		let deletedReadings = 0;
-		let readingCursor: ReadingCleanupCursor = {
-			itemIndex: 0,
-			phase: "PendingRelations",
-		};
-		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-			const result = await ctx.runMutation(
-				internal.demoReset.clearReadingDataBatch,
-				{ readingKeys: doomedReadingKeys, cursor: readingCursor },
-			);
-			removed += result.deleted;
-			deletedReadings += result.deletedReadings;
-			if (!result.nextCursor) break;
-			readingCursor = result.nextCursor;
-			if (batch === MAX_BATCHES - 1) {
-				throw new Error(
-					"Analysis stripping exceeded its Reading cleanup batch limit.",
-				);
-			}
-		}
-
-		const lemmaIds = [...new Set(doomed.map(({ lemmaId }) => lemmaId))];
-		let deletedLemmas = 0;
-		let lemmaCursor: LemmaCleanupCursor = {
-			itemIndex: 0,
-			phase: "Surfaces",
-		};
-		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-			const result = await ctx.runMutation(
-				internal.demoReset.clearLemmaDataBatch,
-				{ lemmaIds, cursor: lemmaCursor },
-			);
-			removed += result.deleted;
-			deletedLemmas += result.deletedLemmas;
-			if (!result.nextCursor) break;
-			lemmaCursor = result.nextCursor;
-			if (batch === MAX_BATCHES - 1) {
-				throw new Error(
-					"Analysis stripping exceeded its Lemma cleanup batch limit.",
-				);
-			}
-		}
-		return { removed, deletedReadings, deletedLemmas };
+	handler: async (ctx, { textId }): Promise<StripTextAnalysisResult> => {
+		return stripTextAnalysisGraph(ctx, textId);
 	},
 });
 

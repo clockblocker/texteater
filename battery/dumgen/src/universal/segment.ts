@@ -1,6 +1,10 @@
 import { segmentGerman } from "../concrete-lang/de/segmentation/segment.js";
 import { segmentHebrew } from "../concrete-lang/he/segmentation/segment.js";
-import type { DumgenOptions, SegmentationDecision } from "../types.js";
+import type {
+	DumgenOptions,
+	SegmentationDecision,
+	SegmentedSentence,
+} from "../types.js";
 import { DumgenFailure } from "./failure.js";
 import { modelCaller } from "./model.js";
 import { task } from "./task.js";
@@ -117,6 +121,43 @@ export function createSegmentation(options: DumgenOptions) {
 				}
 			}
 			return decisions;
+		});
+	};
+}
+
+/** Collapse every whitespace run to one ASCII space so Source Segmentation accepts it. */
+function stitchTrustedText(text: string): string {
+	return text.replaceAll(/\s+/gu, " ").trim();
+}
+
+export function createTrustedSegmentation() {
+	return function segmentSentence<L extends "de" | "he">(input: {
+		readonly language: L;
+		readonly stitchedText: string;
+	}) {
+		return task("segmentSentence", async () => {
+			if (input.language !== "de" && input.language !== "he")
+				throw new DumgenFailure(
+					"InvalidInput",
+					"segmentSentence",
+					"Trusted segmentation supports only de and he",
+				);
+			const stitchedText = stitchTrustedText(input.stitchedText);
+			if (stitchedText.length === 0)
+				throw new DumgenFailure(
+					"InvalidInput",
+					"segmentSentence",
+					"Stitched Text must contain text",
+				);
+			const segmented =
+				input.language === "de"
+					? segmentGerman(stitchedText)
+					: segmentHebrew(stitchedText);
+			return {
+				id: crypto.randomUUID(),
+				language: input.language,
+				segments: [...segmented.segments],
+			} satisfies SegmentedSentence<L>;
 		});
 	};
 }

@@ -171,14 +171,22 @@ export async function persistSubmittedText(
 				"Existing Sentences do not match the submitted analysis.",
 			);
 		}
-		for (const submitted of submittedSentences) {
+		const collisions = await Promise.all(
+			submittedSentences.map((submitted) =>
+				ctx.db
+					.query("sentences")
+					.withIndex("by_segmented_sentence_id", (q) =>
+						q.eq(
+							"segmentedSentenceId",
+							submitted.segmentedSentenceId,
+						),
+					)
+					.unique(),
+			),
+		);
+		for (const [index, submitted] of submittedSentences.entries()) {
 			const existing = existingByPosition.get(submitted.position);
-			const collision = await ctx.db
-				.query("sentences")
-				.withIndex("by_segmented_sentence_id", (q) =>
-					q.eq("segmentedSentenceId", submitted.segmentedSentenceId),
-				)
-				.unique();
+			const collision = collisions[index];
 			if (collision && collision._id !== existing?._id) {
 				throw new Error(
 					"Segmented Sentence ID already belongs to another submission.",
@@ -186,29 +194,32 @@ export async function persistSubmittedText(
 			}
 		}
 
-		const sentenceIds: Array<Id<"sentences">> = [];
-		for (const submitted of submittedSentences) {
-			const existing = existingByPosition.get(submitted.position);
-			const sentenceValue = {
-				segmentedSentenceId: submitted.segmentedSentenceId,
-				textId: existingText._id,
-				position: submitted.position,
-				language: submitted.language,
-				stitchedText: submitted.stitchedText,
-			};
-			const sentenceId =
-				existing?._id ??
-				(await ctx.db.insert("sentences", sentenceValue));
-			if (existing) await ctx.db.replace(existing._id, sentenceValue);
-			sentenceIds.push(sentenceId);
-			for (const [index, segment] of submitted.segments.entries()) {
-				await ctx.db.insert("segments", {
-					sentenceId,
-					index,
-					...segment,
-				});
-			}
-		}
+		const sentenceIds = await Promise.all(
+			submittedSentences.map(async (submitted) => {
+				const existing = existingByPosition.get(submitted.position);
+				const sentenceValue = {
+					segmentedSentenceId: submitted.segmentedSentenceId,
+					textId: existingText._id,
+					position: submitted.position,
+					language: submitted.language,
+					stitchedText: submitted.stitchedText,
+				};
+				const sentenceId =
+					existing?._id ??
+					(await ctx.db.insert("sentences", sentenceValue));
+				if (existing) await ctx.db.replace(existing._id, sentenceValue);
+				await Promise.all(
+					submitted.segments.map((segment, index) =>
+						ctx.db.insert("segments", {
+							sentenceId,
+							index,
+							...segment,
+						}),
+					),
+				);
+				return sentenceId;
+			}),
+		);
 		return {
 			textId: existingText._id,
 			sentenceIds,
@@ -216,43 +227,48 @@ export async function persistSubmittedText(
 		};
 	}
 
-	for (const sentence of input.sentences) {
-		const collision = await ctx.db
-			.query("sentences")
-			.withIndex("by_segmented_sentence_id", (q) =>
-				q.eq("segmentedSentenceId", sentence.segmentedSentenceId),
-			)
-			.unique();
-		if (collision) {
-			throw new Error(
-				"Segmented Sentence ID already belongs to another submission.",
-			);
-		}
+	const collisions = await Promise.all(
+		input.sentences.map((sentence) =>
+			ctx.db
+				.query("sentences")
+				.withIndex("by_segmented_sentence_id", (q) =>
+					q.eq("segmentedSentenceId", sentence.segmentedSentenceId),
+				)
+				.unique(),
+		),
+	);
+	if (collisions.some(Boolean)) {
+		throw new Error(
+			"Segmented Sentence ID already belongs to another submission.",
+		);
 	}
 
 	const textId = await ctx.db.insert("texts", {
 		submissionKey: input.submissionKey,
 		sourceText: input.sourceText,
 	});
-	const sentenceIds: Array<Id<"sentences">> = [];
-	for (const sentence of [...input.sentences].sort(
-		(left, right) => left.position - right.position,
-	)) {
-		const sentenceId = await ctx.db.insert("sentences", {
-			segmentedSentenceId: sentence.segmentedSentenceId,
-			textId,
-			position: sentence.position,
-			language: sentence.language,
-			stitchedText: sentence.stitchedText,
-		});
-		sentenceIds.push(sentenceId);
-		for (const [index, segment] of sentence.segments.entries()) {
-			await ctx.db.insert("segments", {
-				sentenceId,
-				index,
-				...segment,
-			});
-		}
-	}
+	const sentenceIds = await Promise.all(
+		[...input.sentences]
+			.sort((left, right) => left.position - right.position)
+			.map(async (sentence) => {
+				const sentenceId = await ctx.db.insert("sentences", {
+					segmentedSentenceId: sentence.segmentedSentenceId,
+					textId,
+					position: sentence.position,
+					language: sentence.language,
+					stitchedText: sentence.stitchedText,
+				});
+				await Promise.all(
+					sentence.segments.map((segment, index) =>
+						ctx.db.insert("segments", {
+							sentenceId,
+							index,
+							...segment,
+						}),
+					),
+				);
+				return sentenceId;
+			}),
+	);
 	return { textId, sentenceIds, deduplicated: false };
 }

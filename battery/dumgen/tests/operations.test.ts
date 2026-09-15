@@ -419,3 +419,33 @@ test("segmentation preserves ordered inputs, supports existing Hebrew, and rejec
 		),
 	).toMatchObject([{ decision: "Accepted", language: "he" }]);
 });
+
+test("segmentSentence trusts the caller's language and skips intake", async () => {
+	const { calls, dumgen } = controlled({});
+	const sentence = await Effect.runPromise(
+		dumgen.segmentSentence({
+			language: "de",
+			stitchedText: "  Ein Gebäude,\n in dem   Menschen wohnen.  ",
+		}),
+	);
+	expect(calls).toHaveLength(0);
+	expect(sentence.language).toBe("de");
+	expect(sentence.segments.map((segment) => segment.text).join("")).toBe(
+		"Ein Gebäude, in dem Menschen wohnen.",
+	);
+	expect(
+		sentence.segments.filter(
+			(segment) => segment.kind === "ResolvableText",
+		),
+	).toHaveLength(6);
+	expect(
+		await tag(
+			dumgen.segmentSentence({ language: "de", stitchedText: " " }),
+		),
+	).toBe("InvalidInput");
+	const hebrew = await Effect.runPromise(
+		dumgen.segmentSentence({ language: "he", stitchedText: "שלום עולם!" }),
+	);
+	expect(hebrew.language).toBe("he");
+	expect(hebrew.segments.length).toBeGreaterThan(1);
+});

@@ -5,7 +5,7 @@ import { renderDefaultAttestationSource } from "../universal/blocks/renderers/at
 import { renderDefaultLemmaHeader } from "../universal/blocks/renderers/lemma/header/default";
 import { renderDefaultLemmaRoutes } from "../universal/blocks/renderers/lemma/routes/default";
 import { renderReadingDefinition } from "../universal/blocks/renderers/reading/definition/static";
-import { renderDefaultReadingHeader } from "../universal/blocks/renderers/reading/header/default";
+import { DefaultReadingHeaderRenderer } from "../universal/blocks/renderers/reading/header/default";
 import { renderReadingPersonalAnnotation } from "../universal/blocks/renderers/reading/personal-annotation/default";
 import { renderDefaultReadingRelations } from "../universal/blocks/renderers/reading/relations/default";
 import { renderDefaultReadingSourceContexts } from "../universal/blocks/renderers/reading/source-contexts/default";
@@ -17,7 +17,7 @@ import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surfac
 import { renderHeaderDeLexemeVerb } from "./block-renderer-overrides/reading/header/lexeme-verb";
 
 const READING_BASE = {
-	Header: renderDefaultReadingHeader,
+	Header: DefaultReadingHeaderRenderer,
 	SourceContexts: renderDefaultReadingSourceContexts,
 	Definition: renderReadingDefinition,
 	Translations: renderDefaultReadingTranslations,

@@ -2,7 +2,8 @@ import { Button, IconSwap, LinkButton, NoteSection } from "lego";
 import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 
 import type { SurfaceDefaultRenderer } from "../../../renderer";
-import { featureSummary, genderTone, RouteAside } from "../../common/features";
+import { featureSummary, genderTone } from "../../common/feature-values";
+import { RouteAside } from "../../common/features";
 import { RouteMark } from "../../common/route-mark";
 
 const TONE_CLASS = {

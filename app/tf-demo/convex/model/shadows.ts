@@ -1,5 +1,6 @@
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+import { syncDefinitionText } from "./definitionTexts";
 
 const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
 const descriptorKeys = ["canonicalForm", "family", "kind", "language"];
@@ -328,16 +329,20 @@ export async function syncStructuralShadowReferences(
 	}
 
 	const existingByLocator = new Map<string, (typeof existing)[number]>();
+	const duplicateIds: Id<"structuralShadowReferences">[] = [];
 	for (const reference of existing) {
 		const duplicate = existingByLocator.get(reference.locatorKey);
 		if (duplicate) {
-			await ctx.db.delete(reference._id);
+			duplicateIds.push(reference._id);
 			continue;
 		}
 		existingByLocator.set(reference.locatorKey, reference);
 	}
+	await Promise.all(duplicateIds.map((id) => ctx.db.delete(id)));
 
-	for (const reference of desired) {
+	async function syncDesiredReference(index: number): Promise<void> {
+		const reference = desired[index];
+		if (!reference) return;
 		const locatorKey = structuralShadowLocatorKey(
 			ownerReadingKey,
 			reference.aspect,
@@ -350,7 +355,7 @@ export async function syncStructuralShadowReferences(
 			if (stored.shadowId !== shadowId) {
 				await ctx.db.patch(stored._id, { shadowId });
 			}
-			continue;
+			return syncDesiredReference(index + 1);
 		}
 		await ctx.db.insert("structuralShadowReferences", {
 			shadowId,
@@ -359,11 +364,15 @@ export async function syncStructuralShadowReferences(
 			path: reference.path,
 			locatorKey,
 		});
+		return syncDesiredReference(index + 1);
 	}
+	await syncDesiredReference(0);
 
-	for (const obsolete of existingByLocator.values()) {
-		await ctx.db.delete(obsolete._id);
-	}
+	await Promise.all(
+		[...existingByLocator.values()].map((obsolete) =>
+			ctx.db.delete(obsolete._id),
+		),
+	);
 }
 
 /**
@@ -390,6 +399,7 @@ export async function replaceAccumulatedKnowledge(
 	if (knowledge === undefined) {
 		if (!existing) return null;
 		await syncStructuralShadowReferences(ctx, ownerReadingKey, {});
+		await syncDefinitionText(ctx, ownerReadingKey, {});
 		await ctx.db.replace(existing._id, {
 			ownerReadingKey,
 			knowledge: {},
@@ -405,6 +415,7 @@ export async function replaceAccumulatedKnowledge(
 		return existing._id;
 	}
 	await syncStructuralShadowReferences(ctx, ownerReadingKey, knowledge);
+	await syncDefinitionText(ctx, ownerReadingKey, knowledge);
 	const value = {
 		ownerReadingKey,
 		knowledge,

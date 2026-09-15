@@ -15,6 +15,13 @@ import {
 	presentLemma,
 	presentSurface,
 } from "../../model/presentedDumling";
+import {
+	projectSourceOrigin,
+	sourceOriginValidator,
+	sourceSegmentValidator,
+	sourceTargetFor,
+	sourceTargetValidator,
+} from "./sourceOrigin";
 import { isUnitReadingFamily } from "./unitReadingFamilies";
 
 const ROUTE_CONNECTION_PAGE_SIZE = 25;
@@ -48,12 +55,10 @@ const attestationRouteNoteValidator = v.object({
 		textId: v.id("texts"),
 		sentencePosition: v.number(),
 		sentenceSnippet: v.string(),
+		segments: v.array(sourceSegmentValidator),
 		memberSegmentIndices: v.array(v.number()),
-		target: v.object({
-			kind: v.literal("Text"),
-			textId: v.id("texts"),
-			focusAttestationId: v.id("attestations"),
-		}),
+		origin: sourceOriginValidator,
+		target: sourceTargetValidator,
 	}),
 	presented: presentedAttestationValidator,
 	surfaceTarget: surfaceTargetValidator,
@@ -169,6 +174,8 @@ async function loadAttestationRouteNote(
 	}
 	const text = await ctx.db.get(occurrence.sentence.textId);
 	if (!text) return null;
+	const origin = await projectSourceOrigin(ctx, text);
+	if (!origin) return null;
 	return {
 		kind: "Attestation" as const,
 		target: {
@@ -179,12 +186,19 @@ async function loadAttestationRouteNote(
 			textId: text._id,
 			sentencePosition: occurrence.sentence.position,
 			sentenceSnippet: occurrence.sentence.stitchedText,
+			segments: occurrence.segments.map(
+				({ kind, text: segmentText }) => ({
+					kind,
+					text: segmentText,
+				}),
+			),
 			memberSegmentIndices: occurrence.memberSegmentIndices,
-			target: {
-				kind: "Text" as const,
-				textId: text._id,
-				focusAttestationId: occurrence.attestation._id,
-			},
+			origin,
+			target: sourceTargetFor(
+				origin,
+				text._id,
+				occurrence.attestation._id,
+			),
 		},
 		presented: presentAttestation(occurrence.publicAttestation),
 		surfaceTarget: {

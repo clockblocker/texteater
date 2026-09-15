@@ -9,7 +9,7 @@ import {
 	isCurrentShadowAction,
 	reduceShadowControls,
 	shadowCleanupFeedback,
-} from "../src/views/shadow-note-view";
+} from "../src/views/shadow-note-controls";
 
 type ShadowNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,

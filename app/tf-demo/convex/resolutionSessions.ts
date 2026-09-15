@@ -809,43 +809,54 @@ export const cleanup = mutation({
 			.withIndex("by_expires_at", (q) => q.lte("expiresAt", Date.now()))
 			.take(CLEANUP_BATCH_SIZE);
 		if (expiredRuns.length > 0) {
-			for (const run of expiredRuns) await ctx.db.delete(run._id);
+			await Promise.all(expiredRuns.map((run) => ctx.db.delete(run._id)));
 			return {
 				deleted: expiredRuns.length,
 				hasMore: expiredRuns.length === CLEANUP_BATCH_SIZE,
 			};
 		}
-		let deleted = 0;
-		for (const state of ["Active", "Terminal"] as const) {
-			const cutoff =
-				state === "Terminal" ? args.terminalBefore : args.staleBefore;
-			const rows = await ctx.db
-				.query("resolutionSessions")
-				.withIndex("by_lifecycle_state_and_updated_at", (q) =>
-					q.eq("lifecycle.state", state).lte("updatedAt", cutoff),
-				)
-				.take(CLEANUP_BATCH_SIZE - deleted);
-			for (const row of rows) {
-				if (
-					row.lifecycle.state === "Terminal" &&
-					row.lifecycle.outcome === "Complete"
-				) {
-					if (!row.readingId || !(await ctx.db.get(row.readingId))) {
-						continue;
-					}
-				}
-				if (row.lifecycle.state === "Active") {
-					await finishSegmentResolution(
-						ctx,
-						row.segmentId,
-						"PermanentFailure",
-					);
-				}
-				await ctx.db.delete(row._id);
-				deleted += 1;
-			}
-			if (deleted === CLEANUP_BATCH_SIZE) break;
-		}
+		const activeRows = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+				q
+					.eq("lifecycle.state", "Active")
+					.lte("updatedAt", args.staleBefore),
+			)
+			.take(CLEANUP_BATCH_SIZE);
+		const terminalRows =
+			activeRows.length === CLEANUP_BATCH_SIZE
+				? []
+				: await ctx.db
+						.query("resolutionSessions")
+						.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+							q
+								.eq("lifecycle.state", "Terminal")
+								.lte("updatedAt", args.terminalBefore),
+						)
+						.take(CLEANUP_BATCH_SIZE - activeRows.length);
+		const terminalReadingExists = await Promise.all(
+			terminalRows.map((row) =>
+				row.lifecycle.state === "Terminal" &&
+				row.lifecycle.outcome === "Complete" &&
+				row.readingId
+					? ctx.db.get(row.readingId).then(Boolean)
+					: Promise.resolve(true),
+			),
+		);
+		const deletableTerminalRows = terminalRows.filter(
+			(_row, index) => terminalReadingExists[index],
+		);
+		const activeSegmentIds = [
+			...new Set(activeRows.map((row) => row.segmentId)),
+		];
+		await Promise.all(
+			activeSegmentIds.map((segmentId) =>
+				finishSegmentResolution(ctx, segmentId, "PermanentFailure"),
+			),
+		);
+		const rowsToDelete = [...activeRows, ...deletableTerminalRows];
+		await Promise.all(rowsToDelete.map((row) => ctx.db.delete(row._id)));
+		const deleted = rowsToDelete.length;
 		return {
 			deleted,
 			hasMore: deleted === CLEANUP_BATCH_SIZE,

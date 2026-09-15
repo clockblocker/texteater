@@ -34,7 +34,7 @@ export function actuateSourceContextFocus(
 	reduceMotion: boolean = prefersReducedMotion(),
 ): Animation[] {
 	sentence.scrollIntoView({ block: "center", behavior: "auto" });
-	/* The static highlight already marks the members; the flash only adds
+	/* The selected rule already marks the members; the flash only adds
 	   motion, so it is skipped entirely when motion is turned off. */
 	if (reduceMotion) return [];
 	return members.map((member) =>

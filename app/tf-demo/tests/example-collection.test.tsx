@@ -17,9 +17,19 @@ import {
 test("the seed presents all cases in one titled Text, including cases beyond the old nine-Sentence limit", async () => {
 	const db = new IndexedTestDb();
 	await runTestMutation(db, load, {});
-	const texts = db.rows("texts");
+	const texts = db.rows("texts").filter((text) => !text.origin);
 	expect(texts).toHaveLength(1);
 	expect(texts[0]?.title).toBe(EXAMPLES_TEXT_TITLE);
+	const definedUnits = [
+		...NOTE_STUDY_DATABASE,
+		...NOTE_STUDY_RELATED_DATABASE,
+	].filter((unit) => unit.knowledge.definition);
+	expect(db.rows("texts").filter((text) => text.origin)).toHaveLength(
+		definedUnits.length,
+	);
+	expect(
+		db.rows("definitionTexts").every((row) => row.state === "Ready"),
+	).toBeTrue();
 	const expected = [
 		...NOTE_STUDY_DATABASE,
 		...NOTE_STUDY_RELATED_DATABASE,

@@ -3,13 +3,12 @@ import {
 	NoteTitle,
 	NoteTitleLink,
 	Quote,
-	ReaderPlainSegment,
 	ReaderSegment,
 	type ReaderSegmentInteraction,
 	type ReaderSegmentTone,
 } from "lego";
 import { LockIcon } from "lucide-react";
-import { type CSSProperties, Fragment, type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 
 import { Stage } from "./frames";
 
@@ -35,14 +34,11 @@ const TONES: readonly {
 
 const INTERACTIONS: readonly {
 	readonly interaction: ReaderSegmentInteraction;
-	readonly highlighted: boolean;
 	readonly label: string;
 }[] = [
-	{ interaction: "idle", highlighted: false, label: "idle" },
-	{ interaction: "previewed", highlighted: false, label: "previewed" },
-	{ interaction: "selected", highlighted: false, label: "selected" },
-	{ interaction: "idle", highlighted: true, label: "occurrence member" },
-	{ interaction: "selected", highlighted: true, label: "selected member" },
+	{ interaction: "idle", label: "idle" },
+	{ interaction: "previewed", label: "previewed" },
+	{ interaction: "selected", label: "selected" },
 ];
 
 const SURFACES = [
@@ -106,13 +102,8 @@ const ROLES: readonly Swatch[] = [
 		className: "bg-link-shadow",
 	},
 	{
-		token: "highlight",
-		role: "occurrence wash at 25%",
-		className: "bg-highlight",
-	},
-	{
 		token: "selection",
-		role: "browser text selection",
+		role: "browser text selection, the only wash",
 		className: "bg-selection",
 	},
 	{
@@ -132,73 +123,16 @@ const ROLES: readonly Swatch[] = [
 	},
 ];
 
-/* ---------- Highlight vs selection ---------- */
-
-type HighlightScheme = "wash-blue" | "wash-neutral";
-
-const SCHEMES: readonly {
-	readonly key: HighlightScheme;
-	readonly title: string;
-	readonly detail: string;
-	readonly style: CSSProperties;
-}[] = [
-	{
-		key: "wash-blue",
-		title: "Blue wash, neutral selection",
-		detail: "Occurrence members sit on a blue wash; dragging a text selection shows the raised surface tone.",
-		style: {},
-	},
-	{
-		key: "wash-neutral",
-		title: "Neutral wash, blue selection",
-		detail: "Occurrence members sit on an ink wash; dragging a text selection shows the link blue.",
-		style: {
-			"--highlight": "var(--ink)",
-			"--selection": "var(--blue-500)",
-			"--selection-foreground": "var(--primary-foreground)",
-		} as CSSProperties,
-	},
-];
-
 /**
  * Every colour a word or link can wear, laid out so that one meaning shows
  * one colour across the reader, a Quote, a Note title and a link list.
- * Rows are knowledge states, columns are interaction states.
+ * Rows are knowledge states, columns are interaction states. No word ever
+ * has a background: the only wash in the reader is the browser's own text
+ * selection.
  */
 export function PaletteGallery() {
-	const [scheme, setScheme] = useState<HighlightScheme>("wash-blue");
-	const active = SCHEMES.find((entry) => entry.key === scheme) ?? SCHEMES[0];
 	return (
-		<div className="grid gap-10 px-6 py-6 text-ink" style={active?.style}>
-			<Stage label="Highlight vs selection">
-				<div className="flex flex-wrap items-center gap-2">
-					{SCHEMES.map((entry) => (
-						<button
-							key={entry.key}
-							type="button"
-							aria-pressed={entry.key === scheme}
-							onClick={() => setScheme(entry.key)}
-							className="rounded-md border border-line px-2.5 py-1 text-sm text-ink-soft transition-colors hover:bg-raised hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 aria-pressed:border-line-strong aria-pressed:bg-raised aria-pressed:text-ink"
-						>
-							{entry.title}
-						</button>
-					))}
-					<p className="text-sm text-ink-muted">{active?.detail}</p>
-				</div>
-				<p className="max-w-note text-lg leading-[1.52] font-[430] tracking-[-0.015em]">
-					Select this sentence with the mouse to see the selection
-					colour next to an{" "}
-					<ReaderSegment tone="known" highlighted>
-						occurrence
-					</ReaderSegment>{" "}
-					<ReaderPlainSegment highlighted>member </ReaderPlainSegment>
-					<ReaderSegment tone="known" highlighted>
-						wash
-					</ReaderSegment>
-					.
-				</p>
-			</Stage>
-
+		<div className="grid gap-10 px-6 py-6 text-ink">
 			<Stage label="Word states × interaction">
 				<div className="grid gap-4">
 					{SURFACES.map((surface) => (
@@ -242,9 +176,6 @@ export function PaletteGallery() {
 													tone={row.tone}
 													interaction={
 														column.interaction
-													}
-													highlighted={
-														column.highlighted
 													}
 												>
 													bleiben
@@ -324,6 +255,19 @@ export function PaletteGallery() {
 								<LinkButton disabled>schließen</LinkButton>
 							</li>
 						</ul>
+					</Labeled>
+					<Labeled label="selection">
+						<p className="text-lg leading-[1.52] font-[430] tracking-[-0.015em]">
+							Drag across this sentence: the only background a
+							word ever gets is the browser's{" "}
+							<ReaderSegment tone="known" interaction="hover">
+								text
+							</ReaderSegment>{" "}
+							<ReaderSegment tone="known" interaction="hover">
+								selection
+							</ReaderSegment>
+							.
+						</p>
 					</Labeled>
 				</div>
 			</Stage>

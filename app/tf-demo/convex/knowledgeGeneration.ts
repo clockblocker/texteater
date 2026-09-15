@@ -129,8 +129,10 @@ export async function scheduleKnowledgeGeneration(
 		);
 	}
 	const ownerReadingKey = occurrence.reading.readingKey;
-	const accumulated = await findAccumulatedKnowledge(ctx, ownerReadingKey);
-	const settings = await loadKnowledgeSettings(ctx, input.visitorId);
+	const [accumulated, settings] = await Promise.all([
+		findAccumulatedKnowledge(ctx, ownerReadingKey),
+		loadKnowledgeSettings(ctx, input.visitorId),
+	]);
 	const translationLanguages = translationLanguageValues.filter(
 		(language) => settings.translations[language],
 	);
@@ -425,14 +427,16 @@ export const commitGenerated = internalMutation({
 					{ changes: args.generatedChanges, pendingRelations: [] },
 					[],
 				).changes;
-		for (const [index, change] of committedGeneratedChanges.entries()) {
-			await ctx.db.insert("knowledgeChanges", {
-				knowledgeChangeKey: `${attempt.attemptKey}:${index}`,
-				ownerReadingKey: attempt.ownerReadingKey,
-				change,
-				createdAt: Date.now(),
-			});
-		}
+		await Promise.all(
+			committedGeneratedChanges.map((change, index) =>
+				ctx.db.insert("knowledgeChanges", {
+					knowledgeChangeKey: `${attempt.attemptKey}:${index}`,
+					ownerReadingKey: attempt.ownerReadingKey,
+					change,
+					createdAt: Date.now(),
+				}),
+			),
+		);
 		await recordCommittedRelationRun(
 			ctx,
 			attempt,

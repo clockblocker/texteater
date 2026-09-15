@@ -668,13 +668,11 @@ export const applyGeneratedKnowledgePlan = internalAction({
 				args,
 				args.relationPublication.requestedKinds,
 			);
-			const request = JSON.parse(
-				JSON.stringify({
-					reading: args.reading,
-					changes: publishable.changes,
-					pendingRelations: publishable.pendingRelations,
-				}),
-			) as ApplyGeneratedKnowledgeRequest<"de">;
+			const request = structuredClone({
+				reading: args.reading,
+				changes: publishable.changes,
+				pendingRelations: publishable.pendingRelations,
+			}) as ApplyGeneratedKnowledgeRequest<"de">;
 			for (
 				let index = 0;
 				index < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
@@ -906,12 +904,11 @@ export const followGrammaticalAlternative = action({
 		ctx,
 		{ sourceReadingId, readingKey },
 	): Promise<Id<"readings">> => {
-		const { reviewedAlternatives } = await import(
-			"./modules/notes/relations"
-		);
-		const { readingIdentityKey } = await import(
-			"../server/linguisticIdentity"
-		);
+		const [{ reviewedAlternatives }, { readingIdentityKey }] =
+			await Promise.all([
+				import("./modules/notes/relations"),
+				import("../server/linguisticIdentity"),
+			]);
 		const source = parseGermanReading(
 			await ctx.runQuery(internal.reviewedNavigation.source, {
 				readingId: sourceReadingId,

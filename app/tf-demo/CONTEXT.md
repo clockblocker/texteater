@@ -69,11 +69,25 @@ a Reading Note but remains separate from the Reading's shared Knowledge.
 _Avoid_: User Note, Knowledge Note
 
 **Source Context**:
-A projection of one Occurrence Attestation inside its source Sentence and Text.
-Its return locator and highlighting add no linguistic identity. A Reading
-Note includes it only when the current Visitor has encountered one of the
-occurrence's member Segments.
+A projection of one Occurrence Attestation inside its source Sentence, whether
+that Sentence belongs to a Visitor-submitted Text or to a Definition Text. Its
+return locator and highlighting add no linguistic identity. A Reading Note
+includes it only when the current Visitor has encountered one of the
+occurrence's member Segments, and never includes the Reading's own Definition
+Text.
 _Avoid_: clicked context, Reading identity evidence
+
+**Definition Text**:
+The hidden Text that holds one Reading's Knowledge definition as a single
+Sentence so its Segments can be selected. At most one is live per Reading; a
+Corrected or Retracted definition strips and replaces it. It is never listed
+in the Library.
+_Avoid_: definition sentence row, synthetic text
+
+**Definition Focus**:
+The part of a Reading Note target that lands on the Definition block and
+lights the members of one occurrence inside it. It is presentation state and
+adds no identity.
 
 **Lemma Note**:
 A projection of one Lemma and its Readings. It adds no identity beyond the

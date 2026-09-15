@@ -1,9 +1,10 @@
 import type { Prettify } from "common-utils";
-import { v } from "convex/values";
+import { type Infer, v } from "convex/values";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
+import { findDefinitionText } from "../../model/definitionTexts";
 import { loadCompleteOccurrenceMembers } from "../../model/occurrenceAttestations";
 import {
 	descriptorFromStoredShadow,
@@ -12,6 +13,11 @@ import {
 } from "../../model/shadows";
 import { findVisitorEncounter } from "../../model/visitorClicks";
 import { loadPersonalAnnotation } from "../../personalAnnotations";
+import {
+	loadSentenceSegments,
+	projectSentenceView,
+	sentenceViewValidator,
+} from "../text/sentenceView";
 import {
 	pendingRelationProjectionValidator,
 	projectPendingRelations,
@@ -28,6 +34,15 @@ import {
 	loadRelationProjections,
 	relationProjectionValidator,
 } from "./relations";
+import {
+	projectSourceOrigin,
+	type SourceOrigin,
+	type SourceTarget,
+	sourceOriginValidator,
+	sourceSegmentValidator,
+	sourceTargetFor,
+	sourceTargetValidator,
+} from "./sourceOrigin";
 import type { UnitReadingFamily } from "./unitReadingFamilies";
 
 const MAX_PENDING_RELATIONS_PER_READING_NOTE = 100;
@@ -156,6 +171,19 @@ export const readingNoteValidator = v.object({
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
+	definitionText: v.union(
+		v.object({ state: v.literal("Absent") }),
+		v.object({ state: v.literal("Pending") }),
+		v.object({ state: v.literal("Plain") }),
+		v.object({
+			state: v.literal("Failed"),
+			failureMessage: v.optional(v.string()),
+		}),
+		v.object({
+			state: v.literal("Ready"),
+			sentence: sentenceViewValidator,
+		}),
+	),
 	sourceContexts: v.object({
 		page: v.array(
 			v.object({
@@ -163,13 +191,11 @@ export const readingNoteValidator = v.object({
 				textId: v.id("texts"),
 				sentencePosition: v.number(),
 				sentenceSnippet: v.string(),
+				segments: v.array(sourceSegmentValidator),
 				memberSegmentIndices: v.array(v.number()),
 				memberTexts: v.array(v.string()),
-				target: v.object({
-					kind: v.literal("Text"),
-					textId: v.id("texts"),
-					focusAttestationId: v.id("attestations"),
-				}),
+				origin: sourceOriginValidator,
+				target: sourceTargetValidator,
 			}),
 		),
 		continueCursor: v.string(),
@@ -177,22 +203,18 @@ export const readingNoteValidator = v.object({
 	}),
 });
 
-export type SourceContextProjection<
-	AttestationId extends string = string,
-	TextId extends string = string,
-> = {
-	readonly attestationId: AttestationId;
-	readonly textId: TextId;
+export type SourceContextProjection = {
+	readonly attestationId: Id<"attestations">;
+	readonly textId: Id<"texts">;
 	readonly sentencePosition: number;
 	readonly sentenceSnippet: string;
+	/** Every Segment of the source Sentence, in order, so members render by index. */
+	readonly segments: Infer<typeof sourceSegmentValidator>[];
 	readonly memberSegmentIndices: number[];
 	/** Attested text of each member Segment, in sentence order. */
 	readonly memberTexts: string[];
-	readonly target: {
-		readonly kind: "Text";
-		readonly textId: TextId;
-		readonly focusAttestationId: AttestationId;
-	};
+	readonly origin: SourceOrigin;
+	readonly target: SourceTarget;
 };
 
 export async function loadUnitReadingNote(
@@ -217,6 +239,7 @@ export async function loadUnitReadingNote(
 		sourceContexts,
 		attempts,
 		personalAnnotation,
+		definitionTextRow,
 	] = await Promise.all([
 		ctx.db
 			.query("accumulatedKnowledge")
@@ -233,7 +256,13 @@ export async function loadUnitReadingNote(
 			)
 			.take(MAX_PENDING_RELATIONS_PER_READING_NOTE + 1),
 		loadStructuralReferencesForReading(ctx, reading.readingKey),
-		loadSourceContextPage(ctx, reading._id, visitorId, contextCursor),
+		loadSourceContextPage(
+			ctx,
+			reading._id,
+			reading.readingKey,
+			visitorId,
+			contextCursor,
+		),
 		ctx.db
 			.query("knowledgeGenerationAttempts")
 			.withIndex("by_owner_reading_key_and_updated_at", (q) =>
@@ -242,6 +271,7 @@ export async function loadUnitReadingNote(
 			.order("desc")
 			.take(20),
 		loadPersonalAnnotation(ctx, visitorId, reading._id),
+		findDefinitionText(ctx, reading.readingKey),
 	]);
 	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
 		throw new Error(
@@ -287,6 +317,12 @@ export async function loadUnitReadingNote(
 			relationProjections.knowledge,
 		),
 		personalAnnotation,
+		definitionText: await projectDefinitionText(
+			ctx,
+			knowledge.definition,
+			definitionTextRow,
+			visitorId,
+		),
 		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 		relations: relationProjections.resolved,
 		grammaticalAlternatives,
@@ -296,9 +332,46 @@ export async function loadUnitReadingNote(
 	};
 }
 
+/**
+ * The Definition block's data: the definition as a clickable Sentence once
+ * its Definition Text exists, a pending state while it is generated or
+ * segmented, and the bare string when segmentation failed or never ran.
+ */
+async function projectDefinitionText(
+	ctx: QueryCtx,
+	definition: string | undefined,
+	row: Awaited<ReturnType<typeof findDefinitionText>>,
+	visitorId: string,
+) {
+	if (definition === undefined) return { state: "Absent" as const };
+	if (!row) return { state: "Plain" as const };
+	if (row.state === "Failed") {
+		return {
+			state: "Failed" as const,
+			...(row.failureMessage
+				? { failureMessage: row.failureMessage }
+				: {}),
+		};
+	}
+	if (
+		row.state !== "Ready" ||
+		row.materializedDefinition !== definition.trim().normalize("NFC") ||
+		!row.sentenceId
+	) {
+		return { state: "Pending" as const };
+	}
+	const sentence = await ctx.db.get(row.sentenceId);
+	if (!sentence) return { state: "Pending" as const };
+	return {
+		state: "Ready" as const,
+		sentence: await projectSentenceView(ctx, sentence, visitorId),
+	};
+}
+
 export async function loadSourceContextPage(
 	ctx: QueryCtx,
 	readingId: Id<"readings">,
+	readingKey: string,
 	visitorId: string,
 	contextCursor?: string,
 ) {
@@ -312,7 +385,7 @@ export async function loadSourceContextPage(
 		});
 	const projected = await Promise.all(
 		result.page.map((attestation) =>
-			projectSourceContext(ctx, attestation._id, visitorId),
+			projectSourceContext(ctx, attestation._id, visitorId, readingKey),
 		),
 	);
 	const seen = new Set<Id<"attestations">>();
@@ -467,11 +540,17 @@ async function loadStructuralReferencesForReading(
 	});
 }
 
+/**
+ * One occurrence inside its source Sentence. A Reading's own Definition
+ * Text never counts as a Source Context for that Reading, so a definition
+ * that mentions its headword does not cite itself.
+ */
 async function projectSourceContext(
 	ctx: QueryCtx,
 	attestationId: Id<"attestations">,
 	visitorId: string,
-): Promise<SourceContextProjection<Id<"attestations">, Id<"texts">> | null> {
+	ownerReadingKey: string,
+): Promise<SourceContextProjection | null> {
 	const members = await loadCompleteOccurrenceMembers(ctx, attestationId);
 	if (!members) return null;
 	const encounters = await Promise.all(
@@ -484,17 +563,24 @@ async function projectSourceContext(
 	if (!sentence) return null;
 	const text = await ctx.db.get(sentence.textId);
 	if (!text) return null;
+	if (text.origin?.readingKey === ownerReadingKey) return null;
+	const [origin, segments] = await Promise.all([
+		projectSourceOrigin(ctx, text),
+		loadSentenceSegments(ctx, sentence._id),
+	]);
+	if (!origin) return null;
 	return {
 		attestationId,
 		textId: text._id,
 		sentencePosition: sentence.position,
 		sentenceSnippet: sentence.stitchedText,
+		segments: segments.map(({ kind, text: segmentText }) => ({
+			kind,
+			text: segmentText,
+		})),
 		memberSegmentIndices: members.memberSegmentIndices,
 		memberTexts: members.memberTexts,
-		target: {
-			kind: "Text",
-			textId: text._id,
-			focusAttestationId: attestationId,
-		},
+		origin,
+		target: sourceTargetFor(origin, text._id, attestationId),
 	};
 }

@@ -1,5 +1,5 @@
 import { LinkButton, NoteSection } from "lego";
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
@@ -24,14 +24,10 @@ function PersonalAnnotationEditor({
 }) {
 	const id = useId();
 	const editor = useRef<HTMLTextAreaElement>(null);
-	const [draft, setDraft] = useState(value);
-	const [baseline, setBaseline] = useState(value);
+	const [draftOverride, setDraftOverride] = useState<string | null>(null);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	useEffect(() => {
-		setBaseline(value);
-		setDraft((current) => (current === baseline ? value : current));
-	}, [baseline, value]);
+	const draft = draftOverride ?? value;
 	useLayoutEffect(() => {
 		const element = editor.current;
 		if (!element) return;
@@ -58,6 +54,7 @@ function PersonalAnnotationEditor({
 		setError(null);
 		try {
 			await capability.save(draft);
+			setDraftOverride(null);
 		} catch (cause) {
 			setError(
 				cause instanceof Error
@@ -83,12 +80,12 @@ function PersonalAnnotationEditor({
 				placeholder="…"
 				readOnly={!capability.save}
 				disabled={saving || capability.isSaving}
-				onChange={(event) => setDraft(event.target.value)}
+				onChange={(event) => setDraftOverride(event.target.value)}
 				onBlur={() => void save()}
 				onKeyDown={(event) => {
 					if (event.key === "Escape") {
 						event.stopPropagation();
-						setDraft(value);
+						setDraftOverride(null);
 						setError(null);
 					}
 					if (

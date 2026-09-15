@@ -5,6 +5,7 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useLayoutEffect,
 	useMemo,
 	useReducer,
 	useRef,
@@ -201,7 +202,9 @@ function ApplicationPresentation({
 }) {
 	// Content effects (in particular live resolution) need stable interaction callbacks.
 	const selectAnchor = useRef(context.selectAnchor);
-	selectAnchor.current = context.selectAnchor;
+	useLayoutEffect(() => {
+		selectAnchor.current = context.selectAnchor;
+	}, [context.selectAnchor]);
 	const presentationId = context.presentationId;
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({

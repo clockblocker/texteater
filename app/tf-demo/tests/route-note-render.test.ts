@@ -38,7 +38,16 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 			textId: "text-1",
 			sentencePosition: 0,
 			sentenceSnippet: "Er steht auf.",
-			memberSegmentIndices: [1, 2],
+			segments: [
+				{ kind: "ResolvableText", text: "Er" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "steht" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "auf" },
+				{ kind: "Punctuation", text: "." },
+			],
+			memberSegmentIndices: [2, 4],
+			origin: { kind: "Text" },
 			target: {
 				kind: "Text",
 				textId: "text-1",

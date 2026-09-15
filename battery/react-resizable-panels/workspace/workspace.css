@@ -286,7 +286,7 @@ body:has(.workspace) {
 	z-index: 15;
 	inset: 0;
 	border: 2px solid var(--primary, #a3c6f8);
-	background: color-mix(in srgb, var(--highlight, #a3c6f8) 28%, transparent);
+	background: color-mix(in srgb, var(--primary, #a3c6f8) 28%, transparent);
 	pointer-events: none;
 }
 .workspace__drop[data-edge="left"] {

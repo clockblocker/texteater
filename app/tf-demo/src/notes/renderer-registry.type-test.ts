@@ -5,7 +5,7 @@ import type {
 	ReadingRenderContext,
 } from "./universal/blocks/renderer";
 import type { RendererRegistry } from "./universal/blocks/renderer-registry";
-import { renderDefaultReadingHeader } from "./universal/blocks/renderers/reading/header/default";
+import { DefaultReadingHeaderRenderer } from "./universal/blocks/renderers/reading/header/default";
 
 DE_RENDERER_REGISTRY satisfies RendererRegistry<"de">;
 RENDERER_REGISTRY satisfies RendererRegistry;
@@ -34,7 +34,7 @@ DE_RENDERER_REGISTRY.Reading.Lexeme.VERB satisfies RendererRegistry<
 	"VERB"
 >;
 
-renderDefaultReadingHeader satisfies NoteBlockRenderer<
+DefaultReadingHeaderRenderer satisfies NoteBlockRenderer<
 	"de",
 	"Reading",
 	"Lexeme",
@@ -80,8 +80,8 @@ const verbRoute = {
 void verbRoute;
 
 const invalidBlock = {
-	Header: renderDefaultReadingHeader,
+	Header: DefaultReadingHeaderRenderer,
 	// @ts-expect-error Unknown Blocks cannot enter a route map.
-	PronunciationGuide: renderDefaultReadingHeader,
+	PronunciationGuide: DefaultReadingHeaderRenderer,
 } satisfies RendererRegistry<"de", "Reading", "Lexeme", "NOUN">;
 void invalidBlock;

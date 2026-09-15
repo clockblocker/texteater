@@ -1,7 +1,7 @@
-import { NoteSection, Quote } from "lego";
+import { NoteSection } from "lego";
 
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
-import { linkMembers } from "../../common/link-members";
+import { SourceQuote } from "../../common/source-quote";
 
 /** The one Sentence this Attestation lives in, with its members lit. */
 export const renderDefaultAttestationSource = (({
@@ -16,13 +16,12 @@ export const renderDefaultAttestationSource = (({
 			label="Source"
 			className="compact:before:hidden"
 		>
-			<Quote>
-				{linkMembers(
-					source.sentenceSnippet,
-					noteData.presented.members.map(({ attested }) => attested),
-					() => PresentationCapabilities.follow(source.target),
-				)}
-			</Quote>
+			<SourceQuote
+				segments={source.segments}
+				memberSegmentIndices={source.memberSegmentIndices}
+				origin={source.origin}
+				follow={() => PresentationCapabilities.follow(source.target)}
+			/>
 		</NoteSection>
 	);
 }) satisfies GrammaticalDefaultRenderer<"Attestation">;

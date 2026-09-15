@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
-import { renderNoteSkeleton } from "@/views/note-skeletons";
+import { NoteSkeletonFor } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -37,7 +37,9 @@ export function RouteNoteView({
 		gcTime: 10_000,
 	});
 	if (noteQuery.isPending)
-		return renderNoteSkeleton(target.kind, presentation);
+		return (
+			<NoteSkeletonFor kind={target.kind} presentation={presentation} />
+		);
 	if (noteQuery.data?.kind !== target.kind) {
 		return (
 			<NotFoundView

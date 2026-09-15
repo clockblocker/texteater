@@ -120,6 +120,7 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 		case "Reading":
 			return (
 				typeof target.readingId === "string" &&
+				isDefinitionFocus(target.focus) &&
 				value.presentationContext === undefined
 			);
 		case "Lemma":
@@ -159,6 +160,15 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 	}
 }
 
+function isDefinitionFocus(value: unknown): boolean {
+	return (
+		value === undefined ||
+		(isRecord(value) &&
+			value.kind === "Definition" &&
+			typeof value.attestationId === "string")
+	);
+}
+
 function isSurfaceNotePresentationContext(
 	value: unknown,
 ): value is SurfaceNotePresentationContext | undefined {
@@ -185,6 +195,12 @@ export function workspaceSubjectsEqual(
 	if (left.target.kind === "Text" && right.target.kind === "Text") {
 		return (
 			left.target.focusAttestationId === right.target.focusAttestationId
+		);
+	}
+	if (left.target.kind === "Reading" && right.target.kind === "Reading") {
+		return (
+			left.target.focus?.attestationId ===
+			right.target.focus?.attestationId
 		);
 	}
 	if (

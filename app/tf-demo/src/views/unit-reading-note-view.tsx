@@ -7,6 +7,7 @@ import { useAction, useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import type { ReadingNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -63,6 +64,7 @@ export function UnitReadingNoteView({
 			presentation={presentation}
 			note={noteQuery.data}
 			knowledgeSettings={settingsQuery.data}
+			focus={target.focus ?? null}
 		/>
 	);
 }
@@ -72,13 +74,16 @@ function ReadingNoteContainer({
 	visitorId,
 	note,
 	knowledgeSettings,
+	focus,
 }: {
 	presentation: "Card" | "Sheet";
 	visitorId: string;
 	note: UnitReadingNote;
 	knowledgeSettings: KnowledgePreferences;
+	focus: ReadingNoteTarget["focus"] | null;
 }) {
 	const { follow } = useWorkspaceInteraction();
+	const definitionSelection = useSegmentSelection(visitorId);
 	const convex = useConvex();
 	const updatePersonalAnnotation = useMutation(
 		api.personalAnnotations.update,
@@ -162,6 +167,21 @@ function ReadingNoteContainer({
 				: null,
 			save: savePersonalAnnotation,
 		},
+		// Only a Sheet reads the definition as a Sentence; a Card keeps prose.
+		...(presentation === "Sheet"
+			? {
+					definition: {
+						focus:
+							focus?.kind === "Definition"
+								? { attestationId: focus.attestationId }
+								: null,
+						selectedSegmentKey:
+							definitionSelection.selectedSegmentKey,
+						error: definitionSelection.error,
+						selectSegment: definitionSelection.select,
+					},
+				}
+			: {}),
 		follow,
 	};
 

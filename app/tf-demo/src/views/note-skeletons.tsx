@@ -30,10 +30,13 @@ type Presentation = "Card" | "Sheet";
  * the blocks its loaded form will have, in the density its Presentation
  * gives it: a Card shows the first block only, a Sheet the whole route.
  */
-export function renderNoteSkeleton(
-	kind: NoteSkeletonKind,
-	presentation: Presentation,
-) {
+export function NoteSkeletonFor({
+	kind,
+	presentation,
+}: {
+	kind: NoteSkeletonKind;
+	presentation: Presentation;
+}) {
 	switch (kind) {
 		case "Reading":
 			return <ReadingNoteSkeleton presentation={presentation} />;

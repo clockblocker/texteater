@@ -174,14 +174,18 @@ async function recordClickAgainstCommittedAttestation(
 		attestationId: Id<"attestations">;
 	},
 ) {
-	const { value: occurrence } = await reconstructReusableAttestation(
-		ctx,
-		input.attestationId,
-		input.clickedSegmentIndex,
+	const [{ value: occurrence }, attestation, { clickId }] = await Promise.all(
+		[
+			reconstructReusableAttestation(
+				ctx,
+				input.attestationId,
+				input.clickedSegmentIndex,
+			),
+			ctx.db.get(input.attestationId),
+			ensureVisitorEncounter(ctx, input),
+		],
 	);
-	const attestation = await ctx.db.get(input.attestationId);
 	if (!attestation) throw new Error("Attestation does not exist.");
-	const { clickId } = await ensureVisitorEncounter(ctx, input);
 	await scheduleKnowledgeGeneration(ctx, {
 		attemptKey: input.requestId,
 		visitorId: input.visitorId,
@@ -364,17 +368,15 @@ export const persistUnresolvedClick = internalMutation({
 	returns: unresolvedClickPersistenceResultValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
-		const session = await requireMatchingActiveSession(
-			ctx,
-			args,
-			args.sessionGuard,
-		);
-		const { sentence, segment } = await requireClickableSegment(
-			ctx,
-			args.sentenceId,
-			args.clickedSegmentIndex,
-		);
-		const existing = await findClickByRequestId(ctx, args.requestId);
+		const [session, { sentence, segment }, existing] = await Promise.all([
+			requireMatchingActiveSession(ctx, args, args.sessionGuard),
+			requireClickableSegment(
+				ctx,
+				args.sentenceId,
+				args.clickedSegmentIndex,
+			),
+			findClickByRequestId(ctx, args.requestId),
+		]);
 		if (existing) {
 			assertMatchingRetry(existing, {
 				visitorId: args.visitorId,
@@ -631,21 +633,27 @@ export const persistResolvedClick = internalMutation({
 				"Attestation members must match member Segment indices.",
 			);
 		}
-		const members = [];
 		let previous = -1;
-		for (const [memberPosition, index] of memberIndices.entries()) {
+		for (const index of memberIndices) {
 			assertIndex(index, "memberSegmentIndex");
 			if (index <= previous) {
 				throw new Error(
 					"Attestation member Segment indices must be ordered and unique.",
 				);
 			}
-			const member = await ctx.db
-				.query("segments")
-				.withIndex("by_sentence_id_and_index", (q) =>
-					q.eq("sentenceId", args.sentenceId).eq("index", index),
-				)
-				.unique();
+			previous = index;
+		}
+		const queriedMembers = await Promise.all(
+			memberIndices.map((index) =>
+				ctx.db
+					.query("segments")
+					.withIndex("by_sentence_id_and_index", (q) =>
+						q.eq("sentenceId", args.sentenceId).eq("index", index),
+					)
+					.unique(),
+			),
+		);
+		const members = queriedMembers.map((member, memberPosition) => {
 			if (member?.kind !== "ResolvableText") {
 				throw new Error(
 					"Attestation members must refer to ResolvableText Segments.",
@@ -656,9 +664,8 @@ export const persistResolvedClick = internalMutation({
 					"Attestation member text must equal its Segment text.",
 				);
 			}
-			members.push(member);
-			previous = index;
-		}
+			return member;
+		});
 		if (!memberIndices.includes(args.clickedSegmentIndex)) {
 			throw new Error(
 				"The Attestation must contain the clicked Segment.",
@@ -760,18 +767,20 @@ export const persistResolvedClick = internalMutation({
 			realizationCoverage:
 				args.occurrence.attestation.realizationCoverage,
 		});
-		for (const [memberPosition, member] of members.entries()) {
-			const attested = attestedMembers[memberPosition];
-			if (!attested)
-				throw new Error("Missing Attestation member evidence.");
-			await ctx.db.patch(member._id, {
-				resolutionState: undefined,
-				attestationMembership: {
-					attestationId,
-					orthography: attested.orthography,
-				},
-			});
-		}
+		await Promise.all(
+			members.map((member, memberPosition) => {
+				const attested = attestedMembers[memberPosition];
+				if (!attested)
+					throw new Error("Missing Attestation member evidence.");
+				return ctx.db.patch(member._id, {
+					resolutionState: undefined,
+					attestationMembership: {
+						attestationId,
+						orthography: attested.orthography,
+					},
+				});
+			}),
+		);
 		const { clickId } = await ensureVisitorEncounter(ctx, {
 			requestId: args.requestId,
 			visitorId: args.visitorId,

@@ -82,6 +82,16 @@ export interface Dumgen {
 	segment(input: {
 		readonly sourceSentences: readonly [string, ...string[]];
 	}): Task<readonly SegmentationDecision[]>;
+	/**
+	 * Segments one sentence whose language the caller already trusts, such as
+	 * authored dictionary prose. Intake, language detection, and stitching are
+	 * skipped; only the per-language Source Segmentation runs. Kept as a Task
+	 * so a language whose segmentation needs a model call fits unchanged.
+	 */
+	segmentSentence<L extends "de" | "he">(input: {
+		readonly language: L;
+		readonly stitchedText: string;
+	}): Task<SegmentedSentence<L>>;
 	classifyTarget<L extends DumgenLanguage>(input: {
 		readonly sentence: SegmentedSentence<L>;
 		readonly clickedSegmentIndex: number;

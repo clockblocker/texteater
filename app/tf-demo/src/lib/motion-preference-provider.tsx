@@ -1,9 +1,11 @@
 import * as React from "react";
-
-export type MotionPreference = "respect" | "ignore";
-
-const STORAGE_KEY = "tf-demo-motion-preference";
-const MOTION_PREFERENCES: readonly MotionPreference[] = ["respect", "ignore"];
+import {
+	applyMotionPreference,
+	isMotionPreference,
+	MOTION_PREFERENCE_STORAGE_KEY,
+	type MotionPreference,
+	readMotionPreference,
+} from "./motion-preference-state";
 
 type MotionPreferenceContextValue = {
 	preference: MotionPreference;
@@ -12,41 +14,6 @@ type MotionPreferenceContextValue = {
 
 const MotionPreferenceContext =
 	React.createContext<MotionPreferenceContextValue | null>(null);
-
-export function isMotionPreference(
-	value: string | null,
-): value is MotionPreference {
-	return (
-		value !== null && MOTION_PREFERENCES.includes(value as MotionPreference)
-	);
-}
-
-export function readMotionPreference(
-	storage: Pick<Storage, "getItem"> | null = browserStorage(),
-): MotionPreference {
-	try {
-		const stored = storage?.getItem(STORAGE_KEY) ?? null;
-		return isMotionPreference(stored) ? stored : "respect";
-	} catch {
-		return "respect";
-	}
-}
-
-export function applyMotionPreference(
-	preference: MotionPreference,
-	documentOverride?: Document,
-): void {
-	const target =
-		documentOverride ?? (typeof document === "undefined" ? null : document);
-	if (!target) return;
-	target.documentElement.dataset.motionPreference = preference;
-}
-
-export function initializeMotionPreference(documentOverride?: Document) {
-	const preference = readMotionPreference();
-	applyMotionPreference(preference, documentOverride);
-	return preference;
-}
 
 export function MotionPreferenceProvider({
 	children,
@@ -69,7 +36,7 @@ export function MotionPreferenceProvider({
 	React.useEffect(() => {
 		const handleStorageChange = (event: StorageEvent) => {
 			if (event.storageArea !== localStorage) return;
-			if (event.key !== STORAGE_KEY) return;
+			if (event.key !== MOTION_PREFERENCE_STORAGE_KEY) return;
 			const next = isMotionPreference(event.newValue)
 				? event.newValue
 				: "respect";
@@ -105,12 +72,8 @@ export function useMotionPreference() {
 
 function writeMotionPreference(preference: MotionPreference): void {
 	try {
-		localStorage.setItem(STORAGE_KEY, preference);
+		localStorage.setItem(MOTION_PREFERENCE_STORAGE_KEY, preference);
 	} catch {
 		// Storage can be unavailable in privacy modes; the live preference still applies.
 	}
-}
-
-function browserStorage(): Pick<Storage, "getItem"> | null {
-	return typeof window === "undefined" ? null : window.localStorage;
 }

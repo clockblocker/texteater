@@ -2,8 +2,8 @@ import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { resolutionDeckCards } from "../src/views/resolution-deck";
+import { completionTarget } from "../src/views/resolution-note-state";
 import {
-	completionTarget,
 	ResolutionNoteFrame,
 	ResolutionStepNoteFrame,
 } from "../src/views/resolution-note-view";
