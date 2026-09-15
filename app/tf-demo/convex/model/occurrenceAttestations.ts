@@ -68,6 +68,7 @@ export async function loadCompleteOccurrenceMembers(
 	readonly sentenceId: Id<"sentences">;
 	readonly memberSegmentIndices: number[];
 	readonly memberSegmentIds: Id<"segments">[];
+	readonly memberTexts: string[];
 } | null> {
 	const segments = await ctx.db
 		.query("segments")
@@ -93,6 +94,7 @@ export async function loadCompleteOccurrenceMembers(
 		sentenceId,
 		memberSegmentIndices: orderedSegments.map(({ index }) => index),
 		memberSegmentIds: orderedSegments.map(({ _id }) => _id),
+		memberTexts: orderedSegments.map(({ text }) => text),
 	};
 }
 

@@ -175,7 +175,7 @@ export function NoteRouteRowsSkeleton({
 	);
 }
 
-/** A quoted passage before its words arrive. Mirrors `QuoteButton`. */
+/** A quoted passage before its words arrive. Mirrors `Quote`. */
 export function NoteQuoteSkeleton({
 	widths = ["w-full", "w-3/4"],
 	className,

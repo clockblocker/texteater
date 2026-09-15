@@ -1,7 +1,8 @@
-import { Button, IconSwap, NoteSection, QuoteButton } from "lego";
+import { Button, IconSwap, NoteSection, Quote } from "lego";
 import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 
 import type { ReadingDefaultRenderer } from "../../../renderer";
+import { linkMembers } from "../../common/link-members";
 
 export const renderDefaultReadingSourceContexts = (({
 	PresentationCapabilities,
@@ -25,15 +26,16 @@ export const renderDefaultReadingSourceContexts = (({
 				<ul className="grid gap-5 compact:gap-3">
 					{sourceContexts.items.map((sourceContext) => (
 						<li key={sourceContext.attestationId}>
-							<QuoteButton
-								onClick={() =>
-									PresentationCapabilities.follow(
-										sourceContext.target,
-									)
-								}
-							>
-								{sourceContext.sentenceSnippet}
-							</QuoteButton>
+							<Quote>
+								{linkMembers(
+									sourceContext.sentenceSnippet,
+									sourceContext.memberTexts,
+									() =>
+										PresentationCapabilities.follow(
+											sourceContext.target,
+										),
+								)}
+							</Quote>
 						</li>
 					))}
 				</ul>

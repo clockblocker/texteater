@@ -38,7 +38,10 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	expect(markup).toContain('data-slot="ipa"');
 	expect(markup).toContain("/zɪç/");
 	expect(markup).toContain("de");
-	expect(markup).toContain("A source sentence.");
+	expect(markup).toMatch(
+		/A <button data-slot="reader-segment"[^>]*>source<\/button> sentence\./,
+	);
+	expect(markup).not.toMatch(/<button[^>]*>A <\/button>/);
 	expect(markup).toContain("relation to Unit Shadow traurig");
 	expect(markup).toContain("en: to be happy");
 	expect(markup).toContain("To experience happiness.");
@@ -148,6 +151,7 @@ function readingNote(): ReadingNote {
 					sentencePosition: 0,
 					sentenceSnippet: "A source sentence.",
 					memberSegmentIndices: [1],
+					memberTexts: ["source"],
 					target: {
 						kind: "Text",
 						textId: "text-1",

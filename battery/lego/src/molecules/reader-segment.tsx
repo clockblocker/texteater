@@ -26,6 +26,8 @@ const readerSegmentVariants = cva(
 			},
 			underlined: {
 				true: "underline decoration-current decoration-[0.11em] underline-offset-[0.18em]",
+				/* The previewed underline, but driven by hover and focus alone. */
+				hover: "hover:decoration-current hover:decoration-[0.11em] focus-visible:decoration-current focus-visible:decoration-[0.11em]",
 				false: "",
 			},
 		},

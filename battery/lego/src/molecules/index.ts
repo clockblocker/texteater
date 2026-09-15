@@ -8,5 +8,5 @@ export * from "./note-section";
 export * from "./note-skeleton";
 export * from "./note-tags";
 export * from "./note-title";
-export * from "./quote-button";
+export * from "./quote";
 export * from "./reader-segment";

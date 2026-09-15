@@ -535,8 +535,8 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		},
 		segmentsByAttestation: {
 			attestation_new_b: [
-				{ sentenceId: "sentence_b", index: 4 },
-				{ sentenceId: "sentence_b", index: 1 },
+				{ sentenceId: "sentence_b", index: 4, text: "dazwischen" },
+				{ sentenceId: "sentence_b", index: 1, text: "steht" },
 			],
 			attestation_new_a: [{ sentenceId: "sentence_a", index: 2 }],
 			attestation_old: [{ sentenceId: "sentence_old", index: 0 }],
@@ -579,6 +579,7 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		"text_a",
 	]);
 	expect(first.page[0]?.memberSegmentIndices).toEqual([1, 4]);
+	expect(first.page[0]?.memberTexts).toEqual(["steht", "dazwischen"]);
 	expect(first.page[0]?.target).toEqual({
 		kind: "Text",
 		textId: "text_b",
@@ -718,7 +719,7 @@ function presentationFixture({
 	pages?: Record<string, string[]>;
 	segmentsByAttestation?: Record<
 		string,
-		{ sentenceId: string; index: number }[]
+		{ sentenceId: string; index: number; text?: string }[]
 	>;
 	documents?: Record<string, Record<string, unknown>>;
 	malformedIds?: Set<string>;

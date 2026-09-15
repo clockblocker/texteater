@@ -163,6 +163,7 @@ export const readingNoteValidator = v.object({
 				sentencePosition: v.number(),
 				sentenceSnippet: v.string(),
 				memberSegmentIndices: v.array(v.number()),
+				memberTexts: v.array(v.string()),
 				target: v.object({
 					kind: v.literal("Text"),
 					textId: v.id("texts"),
@@ -184,6 +185,8 @@ export type SourceContextProjection<
 	readonly sentencePosition: number;
 	readonly sentenceSnippet: string;
 	readonly memberSegmentIndices: number[];
+	/** Attested text of each member Segment, in sentence order. */
+	readonly memberTexts: string[];
 	readonly target: {
 		readonly kind: "Text";
 		readonly textId: TextId;
@@ -481,6 +484,7 @@ async function projectSourceContext(
 		sentencePosition: sentence.position,
 		sentenceSnippet: sentence.stitchedText,
 		memberSegmentIndices: members.memberSegmentIndices,
+		memberTexts: members.memberTexts,
 		target: {
 			kind: "Text",
 			textId: text._id,
