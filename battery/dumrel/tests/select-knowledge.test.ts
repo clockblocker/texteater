@@ -13,12 +13,13 @@ test("Knowledge settings default to enabled and filter only applicable aspects",
 	if (!all.success) return;
 	expect(all.value).toHaveProperty("definition", null);
 	expect(all.value).toHaveProperty("translations.en", null);
+	expect(all.value).toHaveProperty("translations.ru", null);
 	expect(all.value).not.toHaveProperty("lexicalBreakdown");
 	const filtered = selectKnowledge({
 		route,
 		settings: {
 			definition: false,
-			translations: { en: false },
+			translations: { en: false, ru: false },
 			semanticRelations: { synonym: false },
 		},
 	});

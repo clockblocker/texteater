@@ -3,7 +3,6 @@ import {
 	NoteLinesSkeleton,
 	NoteQuoteSkeleton,
 	NoteRouteRowsSkeleton,
-	NoteRule,
 	NoteSection,
 	NoteSectionSkeleton,
 	NoteSkeleton,
@@ -73,8 +72,7 @@ export function ReadingNoteSkeleton({
 				<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
 				<NoteBone tone="headword" className="h-[0.8em] w-28" />
 			</NoteTitleSkeleton>
-			<NoteSection className="compact:before:hidden">
-				<NoteRule className="mb-3" />
+			<NoteSection label="">
 				<NoteLinesSkeleton
 					className="px-2"
 					widths={

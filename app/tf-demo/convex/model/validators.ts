@@ -1,5 +1,8 @@
 import { v } from "convex/values";
-import { directSemanticRelationValues } from "dumrel";
+import {
+	directSemanticRelationValues,
+	translationLanguageValues,
+} from "dumrel";
 
 const enabledSegmentationLanguageValues = ["de", "he"] as const;
 const grammaticalResolutionLanguageValues = ["de"] as const;
@@ -58,6 +61,10 @@ export const realizationCoverageValidator = literalUnion(
 );
 
 export const surfaceSpellingValidator = literalUnion(surfaceSpellingValues);
+
+export const translationLanguageValidator = literalUnion(
+	translationLanguageValues,
+);
 
 export const grundformValidator = v.union(v.boolean(), v.null());
 
@@ -155,18 +162,6 @@ export const relationPublicationRunValidator = v.object({
 export const knowledgeStatusValidator = v.union(
 	v.literal("Partial"),
 	v.literal("Full"),
-);
-
-export const readingDefinitionChangeValidator = v.union(
-	v.object({
-		kind: v.union(v.literal("Contribute"), v.literal("Correct")),
-		aspect: v.literal("definition"),
-		value: v.string(),
-	}),
-	v.object({
-		kind: v.literal("Retract"),
-		aspect: v.literal("definition"),
-	}),
 );
 
 export const knowledgeGenerationAttemptStateValidator = v.union(

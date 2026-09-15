@@ -110,7 +110,10 @@ export const runKnowledgeGeneration = internalAction({
 				? []
 				: authorization.qualifiedKinds;
 			const generationRequestFor = await getGenerationRequestBuilder();
-			const request = generationRequestFor(reading, qualifiedKinds);
+			const request = generationRequestFor(reading, qualifiedKinds, {
+				translationLanguages: input.translationLanguages,
+				translationsOnly: input.translationsOnly,
+			});
 			const requestedKinds = requestedRelationKinds(
 				"semanticRelations" in request ? request : {},
 			);

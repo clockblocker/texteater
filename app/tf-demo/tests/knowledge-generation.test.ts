@@ -19,11 +19,7 @@ import {
 	RELATION_PUBLICATION_FINGERPRINTS,
 } from "../convex/model/generatedKnowledgeContainment";
 import { replaceAccumulatedKnowledge } from "../convex/model/shadows";
-import {
-	applyGeneratedKnowledgePlan as applyGeneratedPlan,
-	applyReadingKnowledgeChange,
-} from "../convex/orchestration";
-import { persistKnowledgeChange } from "../convex/persistence";
+import { applyGeneratedKnowledgePlan as applyGeneratedPlan } from "../convex/orchestration";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
 
 type Row = Record<string, unknown> & { _id: string };
@@ -427,92 +423,6 @@ test("manual writes never downgrade Full and failures persist only a safe catego
 	});
 });
 
-test("a manual write applies to Knowledge committed after the action started", async () => {
-	const rows = occurrenceRows();
-	const lemma = rows.lemmas?.[0];
-	if (!lemma) throw new Error("Missing test Lemma.");
-	const reading = {
-		unitKind: "Reading",
-		lemma: {
-			unitKind: "Lemma",
-			language: lemma.language,
-			family: lemma.family,
-			kind: lemma.kind,
-			canonicalForm: lemma.canonicalForm,
-			coreFeatures: lemma.coreFeatures,
-		},
-		emojiDescription: "🏦",
-	};
-	const db = new GenerationDb({
-		...rows,
-		readingEntries: [
-			{
-				_id: "entry-1",
-				readingId: "reading-1",
-				record: {
-					knowledge: {
-						definition: "generated definition",
-						translations: { en: ["bank"] },
-					},
-				},
-			},
-		],
-		accumulatedKnowledge: [
-			{
-				_id: "knowledge-1",
-				ownerReadingKey: "reading-key",
-				knowledge: {
-					definition: "generated definition",
-					translations: { en: ["bank"] },
-				},
-				status: "Full",
-				updatedAt: 2,
-			},
-		],
-	});
-
-	await handler<
-		{
-			knowledgeChangeKey: string;
-			ownerReadingKey: string;
-			change: unknown;
-		},
-		unknown
-	>(applyReadingKnowledgeChange)(
-		{
-			async runQuery() {
-				return {
-					reading,
-					knowledge: { definition: "stale definition" },
-				};
-			},
-			async runMutation(_reference: unknown, args: unknown) {
-				return handler<unknown, unknown>(persistKnowledgeChange)(
-					{ db },
-					args,
-				);
-			},
-		},
-		{
-			knowledgeChangeKey: "manual-1",
-			ownerReadingKey: "reading-key",
-			change: {
-				kind: "Correct",
-				aspect: "definition",
-				value: "manual definition",
-			},
-		},
-	);
-
-	expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
-		knowledge: {
-			definition: "manual definition",
-			translations: { en: ["bank"] },
-		},
-		status: "Full",
-	});
-});
-
 test("Full is a zero-call cache hit and generation keeps the complete German base mask", async () => {
 	let actionCalls = 0;
 	const result = await handler<{ attemptKey: string }, null>(runGeneration)(
@@ -551,8 +461,29 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 	expect(request).toEqual({
 		transcription: null,
 		definition: null,
-		translations: { en: null },
+		translations: { en: null, ru: null },
 	});
+	expect(
+		generationRequestFor(
+			{
+				unitKind: "Reading",
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm: "Bank",
+					coreFeatures: { gender: "Fem", hyph: null },
+				},
+				emojiDescription: "🏦",
+			},
+			[],
+			{
+				translationLanguages: ["ru"],
+				translationsOnly: true,
+			},
+		),
+	).toEqual({ translations: { ru: null } });
 });
 
 test("production publication remains empty without a reviewed verdict", () => {
@@ -794,6 +725,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 				ownerReadingKey: "reading-key",
 				knowledge: {},
 				status: "Full",
+				coveredTranslationLanguages: ["en", "ru"],
 				updatedAt: 1,
 			},
 		],
@@ -812,6 +744,36 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	);
 	expect(fullSchedules).toEqual([]);
 	expect(fullDb.rows("knowledgeGenerationAttempts")).toEqual([]);
+
+	const supplementDb = new GenerationDb({
+		...occurrenceRows(),
+		accumulatedKnowledge: [
+			{
+				_id: "knowledge-english",
+				ownerReadingKey: "reading-key",
+				knowledge: { translations: { en: ["bank"] } },
+				status: "Full",
+				coveredTranslationLanguages: ["en"],
+				updatedAt: 1,
+			},
+		],
+	});
+	await scheduleKnowledgeGeneration(
+		{ db: supplementDb, scheduler: { async runAfter() {} } } as never,
+		{ ...input, attemptKey: "russian-supplement" } as never,
+	);
+	expect(
+		await handler<{ attemptKey: string }, unknown>(loadInput)(
+			{ db: supplementDb },
+			{ attemptKey: "russian-supplement" },
+		),
+	).toEqual(
+		expect.objectContaining({
+			kind: "Generate",
+			translationLanguages: ["ru"],
+			translationsOnly: true,
+		}),
+	);
 
 	const retryDb = new GenerationDb({
 		...occurrenceRows(),

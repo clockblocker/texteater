@@ -41,6 +41,7 @@ const LANGUAGE_ORDER: readonly ReadingBlockKind[] = [
 	"Translations",
 	"SourceContexts",
 	"Header",
+	"PersonalAnnotation",
 ];
 const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
 	"Translations",
@@ -48,6 +49,7 @@ const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
 	"SourceContexts",
 	"Definition",
 	"Relations",
+	"PersonalAnnotation",
 ];
 
 describe("Reading Block layout persistence", () => {

@@ -4,8 +4,9 @@ import { renderDefaultAttestationRoutes } from "../universal/blocks/renderers/at
 import { renderDefaultAttestationSource } from "../universal/blocks/renderers/attestation/source-contexts/default";
 import { renderDefaultLemmaHeader } from "../universal/blocks/renderers/lemma/header/default";
 import { renderDefaultLemmaRoutes } from "../universal/blocks/renderers/lemma/routes/default";
-import { renderReadingDefinition } from "../universal/blocks/renderers/reading/definition/default";
+import { renderReadingDefinition } from "../universal/blocks/renderers/reading/definition/static";
 import { renderDefaultReadingHeader } from "../universal/blocks/renderers/reading/header/default";
+import { renderReadingPersonalAnnotation } from "../universal/blocks/renderers/reading/personal-annotation/default";
 import { renderDefaultReadingRelations } from "../universal/blocks/renderers/reading/relations/default";
 import { renderDefaultReadingSourceContexts } from "../universal/blocks/renderers/reading/source-contexts/default";
 import { renderDefaultReadingTranslations } from "../universal/blocks/renderers/reading/translations/default";
@@ -20,6 +21,7 @@ const READING_BASE = {
 	SourceContexts: renderDefaultReadingSourceContexts,
 	Definition: renderReadingDefinition,
 	Translations: renderDefaultReadingTranslations,
+	PersonalAnnotation: renderReadingPersonalAnnotation,
 };
 const READING_RELATIONAL = {
 	...READING_BASE,

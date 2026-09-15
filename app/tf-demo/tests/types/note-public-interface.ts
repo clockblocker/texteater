@@ -36,7 +36,7 @@ renderNote({
 			error: null,
 			loadMore: null,
 		},
-		definition: { isSaving: false, error: null, save: null },
+		personalAnnotation: { isSaving: false, error: null, save: null },
 		follow: () => {},
 	},
 });

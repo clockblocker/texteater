@@ -12,7 +12,7 @@ function request(relations: readonly SemanticRelation[]): KnowledgeRequestMask {
 	const base = {
 		transcription: null,
 		definition: null,
-		translations: { en: null },
+		translations: { en: null, ru: null },
 	} as const;
 	if (relations.length === 0) return base;
 	return {

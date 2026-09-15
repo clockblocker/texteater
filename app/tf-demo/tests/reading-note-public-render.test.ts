@@ -24,7 +24,11 @@ test("the public renderer preserves ordered German Reading output, workspace com
 					error: null,
 					loadMore: null,
 				},
-				definition: { isSaving: false, error: null, save: null },
+				personalAnnotation: {
+					isSaving: false,
+					error: null,
+					save: null,
+				},
 				follow: () => {},
 			},
 		}),
@@ -38,6 +42,8 @@ test("the public renderer preserves ordered German Reading output, workspace com
 	expect(markup).toContain("relation to Unit Shadow traurig");
 	expect(markup).toContain("en: to be happy");
 	expect(markup).toContain("To experience happiness.");
+	expect(markup).toContain("Remember the reflexive form.");
+	expect(markup.match(/<textarea/g)).toHaveLength(1);
 	expect(markup.match(/<button[^>]*type="button"/g)).toHaveLength(2);
 	expect(markup).not.toContain("href=");
 	expect(markup.indexOf('data-reading-title=""')).toBeLessThan(
@@ -74,7 +80,11 @@ test("the public renderer applies capability visibility without reshaping NoteDa
 					error: null,
 					loadMore: null,
 				},
-				definition: { isSaving: false, error: null, save: null },
+				personalAnnotation: {
+					isSaving: false,
+					error: null,
+					save: null,
+				},
 				follow: () => {},
 			},
 		}),
@@ -111,6 +121,7 @@ function readingNote(): ReadingNote {
 			},
 		},
 		knowledgeState: { status: "Full", activity: "Idle" },
+		personalAnnotation: "Remember the reflexive form.",
 		knowledge: {
 			transcription: "zɪç",
 			translations: { en: ["to be happy"] },

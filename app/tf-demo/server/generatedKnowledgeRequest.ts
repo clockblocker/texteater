@@ -5,6 +5,10 @@ import type * as Dumrel from "dumrel/types";
 export function generationRequestFor(
 	reading: Dumling.Reading<"de">,
 	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[],
+	options: {
+		readonly translationLanguages?: readonly Dumrel.TranslationLanguage[];
+		readonly translationsOnly?: boolean;
+	} = {},
 ) {
 	const {
 		unitKind: _unitKind,
@@ -12,9 +16,24 @@ export function generationRequestFor(
 		coreFeatures: _coreFeatures,
 		...route
 	} = reading.lemma;
-	const selected = selectKnowledge({ route });
+	const selected = selectKnowledge({
+		route,
+		settings: {
+			translations: Object.fromEntries(
+				(["en", "ru"] as const).map((language) => [
+					language,
+					options.translationLanguages?.includes(language) ?? true,
+				]),
+			),
+		},
+	});
 	if (!selected.success) throw selected.error;
 	const applicable = selected.value;
+	if (options.translationsOnly) {
+		return applicable.translations
+			? { translations: applicable.translations }
+			: {};
+	}
 	const {
 		morphologicalTree: _morphologicalTree,
 		lexicalBreakdown: _lexicalBreakdown,

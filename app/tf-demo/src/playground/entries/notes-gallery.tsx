@@ -83,12 +83,20 @@ export function NotesGallery() {
 						<div className="flex flex-wrap items-start gap-8">
 							<Stage label="Card">
 								<CardFrame tail={renderCardTail(subject)}>
-									{renderApplicationSubject(subject, "Card")}
+									{renderApplicationSubject(subject, "Card", {
+										visitorId: catalog.data.visitorId,
+									})}
 								</CardFrame>
 							</Stage>
 							<Stage label="Sheet" className="min-w-0 flex-1">
 								<SheetFrame>
-									{renderApplicationSubject(subject, "Sheet")}
+									{renderApplicationSubject(
+										subject,
+										"Sheet",
+										{
+											visitorId: catalog.data.visitorId,
+										},
+									)}
 								</SheetFrame>
 							</Stage>
 						</div>

@@ -66,6 +66,12 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
+					ru: {
+						anyOf: [
+							{ type: "string", minLength: 1 },
+							{ type: "null" },
+						],
+					},
 				},
 				additionalProperties: false,
 			},

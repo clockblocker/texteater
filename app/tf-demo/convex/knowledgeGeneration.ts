@@ -1,5 +1,7 @@
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
+import { translationLanguageValues } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 
 import type { Id } from "./_generated/dataModel";
 import {
@@ -10,6 +12,7 @@ import {
 	type QueryCtx,
 } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";
+import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
@@ -69,6 +72,41 @@ function findAccumulatedKnowledge(
 		.unique();
 }
 
+function coveredTranslationLanguages(
+	accumulated: {
+		readonly knowledge: unknown;
+		readonly coveredTranslationLanguages?: readonly string[];
+	} | null,
+): Set<Dumrel.TranslationLanguage> {
+	const covered = new Set<Dumrel.TranslationLanguage>();
+	for (const language of accumulated?.coveredTranslationLanguages ?? []) {
+		if (language === "en" || language === "ru") covered.add(language);
+	}
+	const knowledge = accumulated?.knowledge;
+	if (
+		!knowledge ||
+		typeof knowledge !== "object" ||
+		Array.isArray(knowledge)
+	) {
+		return covered;
+	}
+	const translations = Reflect.get(knowledge, "translations");
+	if (!translations || typeof translations !== "object") return covered;
+	for (const language of translationLanguageValues) {
+		if (Reflect.get(translations, language) !== undefined)
+			covered.add(language);
+	}
+	return covered;
+}
+
+function missingTranslationLanguages(
+	accumulated: Parameters<typeof coveredTranslationLanguages>[0],
+	requested: readonly Dumrel.TranslationLanguage[],
+): Dumrel.TranslationLanguage[] {
+	const covered = coveredTranslationLanguages(accumulated);
+	return requested.filter((language) => !covered.has(language));
+}
+
 export async function scheduleKnowledgeGeneration(
 	ctx: MutationCtx,
 	input: {
@@ -92,7 +130,17 @@ export async function scheduleKnowledgeGeneration(
 	}
 	const ownerReadingKey = occurrence.reading.readingKey;
 	const accumulated = await findAccumulatedKnowledge(ctx, ownerReadingKey);
-	if (accumulated?.status === "Full") return;
+	const settings = await loadKnowledgeSettings(ctx, input.visitorId);
+	const translationLanguages = translationLanguageValues.filter(
+		(language) => settings.translations[language],
+	);
+	if (
+		accumulated?.status === "Full" &&
+		missingTranslationLanguages(accumulated, translationLanguages)
+			.length === 0
+	) {
+		return;
+	}
 
 	const existing = await findGenerationAttempt(ctx, input.attemptKey);
 	if (existing) {
@@ -121,6 +169,7 @@ export async function scheduleKnowledgeGeneration(
 	await ctx.db.insert("knowledgeGenerationAttempts", {
 		...input,
 		ownerReadingKey,
+		translationLanguages,
 		state: "Scheduled",
 		createdAt: now,
 		updatedAt: now,
@@ -149,6 +198,38 @@ export const retry = mutation({
 	},
 });
 
+export const ensureForReading = mutation({
+	args: {
+		visitorId: v.string(),
+		readingId: v.id("readings"),
+		attestationId: v.id("attestations"),
+	},
+	returns: v.boolean(),
+	handler: async (ctx, { visitorId, readingId, attestationId }) => {
+		assertKey(visitorId, "visitorId");
+		const attestation = await ctx.db.get(attestationId);
+		if (!attestation || attestation.readingId !== readingId) return false;
+		const encounter = await ctx.db
+			.query("visitorClicks")
+			.withIndex("by_visitor_id_and_attestation_id", (q) =>
+				q.eq("visitorId", visitorId).eq("attestationId", attestationId),
+			)
+			.first();
+		if (!encounter) return false;
+		const settings = await loadKnowledgeSettings(ctx, visitorId);
+		const languages = translationLanguageValues.filter(
+			(language) => settings.translations[language],
+		);
+		await scheduleKnowledgeGeneration(ctx, {
+			attemptKey: `coverage:${encounter._id}:${languages.join(",") || "none"}`,
+			visitorId,
+			readingId,
+			attestationId,
+		});
+		return true;
+	},
+});
+
 export const loadInput = internalQuery({
 	args: { attemptKey: v.string() },
 	returns: v.any(),
@@ -159,7 +240,17 @@ export const loadInput = internalQuery({
 			ctx,
 			attempt.ownerReadingKey,
 		);
-		if (accumulated?.status === "Full") return { kind: "Full" as const };
+		const translationLanguages = attempt.translationLanguages ?? ["en"];
+		const missingTranslations = missingTranslationLanguages(
+			accumulated,
+			translationLanguages,
+		);
+		if (
+			accumulated?.status === "Full" &&
+			missingTranslations.length === 0
+		) {
+			return { kind: "Full" as const };
+		}
 		const occurrence = await loadOccurrenceAttestation(
 			ctx,
 			attempt.attestationId,
@@ -179,6 +270,8 @@ export const loadInput = internalQuery({
 			encounter: occurrence.encounter,
 			attestation: occurrence.publicAttestation,
 			runNumber: attempt.runNumber ?? 1,
+			translationLanguages: missingTranslations,
+			translationsOnly: accumulated?.status === "Full",
 		};
 	},
 });
@@ -193,7 +286,12 @@ export const markRunning = internalMutation({
 			ctx,
 			attempt.ownerReadingKey,
 		);
-		if (accumulated?.status === "Full") {
+		const requestedTranslations = attempt.translationLanguages ?? ["en"];
+		if (
+			accumulated?.status === "Full" &&
+			missingTranslationLanguages(accumulated, requestedTranslations)
+				.length === 0
+		) {
 			await ctx.db.patch(attempt._id, {
 				state: "LostRace",
 				updatedAt: Date.now(),
@@ -259,7 +357,12 @@ export const commitGenerated = internalMutation({
 			ctx,
 			attempt.ownerReadingKey,
 		);
-		if (accumulated?.status === "Full") {
+		const requestedTranslations = attempt.translationLanguages ?? ["en"];
+		if (
+			accumulated?.status === "Full" &&
+			missingTranslationLanguages(accumulated, requestedTranslations)
+				.length === 0
+		) {
 			await ctx.db.patch(attempt._id, {
 				state: "LostRace",
 				updatedAt: Date.now(),
@@ -302,6 +405,20 @@ export const commitGenerated = internalMutation({
 				status: "Full",
 			},
 		);
+		const refreshed = await findAccumulatedKnowledge(
+			ctx,
+			attempt.ownerReadingKey,
+		);
+		if (refreshed) {
+			await ctx.db.patch(refreshed._id, {
+				coveredTranslationLanguages: [
+					...new Set([
+						...coveredTranslationLanguages(refreshed),
+						...requestedTranslations,
+					]),
+				],
+			});
+		}
 		const committedGeneratedChanges = publishRelations
 			? args.generatedChanges
 			: generatedKnowledgeAllowedForPublication(

@@ -1,37 +1,26 @@
-import { LinkButton, NoteRule, NoteSection } from "lego";
-import { useId, useLayoutEffect, useRef, useState } from "react";
-import { normalizeReadingDefinition } from "@/lib/reading-definition";
+import { LinkButton, NoteSection } from "lego";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 
-export const renderReadingDefinition = (({
+export const renderReadingPersonalAnnotation = (({
 	noteData,
 	PresentationCapabilities,
-}) => {
-	if (!PresentationCapabilities.knowledgeSettings.definition) return null;
-	if (
-		!noteData.knowledge.definition &&
-		!PresentationCapabilities.definition.save
-	)
-		return null;
-	return (
-		<DefinitionEditor
-			key={noteData.reading.ownerKey}
-			value={noteData.knowledge.definition ?? ""}
-			title={noteData.reading.lemma.canonicalForm}
-			capability={PresentationCapabilities.definition}
-		/>
-	);
-}) satisfies ReadingDefaultRenderer;
+}) => (
+	<PersonalAnnotationEditor
+		key={noteData.reading.ownerKey}
+		value={noteData.personalAnnotation}
+		capability={PresentationCapabilities.personalAnnotation}
+	/>
+)) satisfies ReadingDefaultRenderer;
 
-function DefinitionEditor({
+function PersonalAnnotationEditor({
 	value,
-	title,
 	capability,
 }: {
 	value: string;
-	title: string;
-	capability: ReadingPresentationCapabilities["definition"];
+	capability: ReadingPresentationCapabilities["personalAnnotation"];
 }) {
 	const id = useId();
 	const editor = useRef<HTMLTextAreaElement>(null);
@@ -39,10 +28,10 @@ function DefinitionEditor({
 	const [baseline, setBaseline] = useState(value);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	if (value !== baseline) {
+	useEffect(() => {
 		setBaseline(value);
-		if (draft === baseline) setDraft(value);
-	}
+		setDraft((current) => (current === baseline ? value : current));
+	}, [baseline, value]);
 	useLayoutEffect(() => {
 		const element = editor.current;
 		if (!element) return;
@@ -51,48 +40,45 @@ function DefinitionEditor({
 			element.style.height = `${element.scrollHeight}px`;
 		};
 		fit();
-		let width = element.clientWidth;
-		const observer = new ResizeObserver(() => {
-			if (element.clientWidth === width) return;
-			width = element.clientWidth;
-			fit();
-		});
+		const observer = new ResizeObserver(fit);
 		observer.observe(element);
 		return () => observer.disconnect();
 	}, [draft]);
+
 	async function save() {
 		if (
 			!capability.save ||
 			saving ||
 			capability.isSaving ||
-			normalizeReadingDefinition(draft) ===
-				normalizeReadingDefinition(value)
-		)
+			draft === value
+		) {
 			return;
+		}
 		setSaving(true);
 		setError(null);
 		try {
-			await capability.save(normalizeReadingDefinition(draft));
+			await capability.save(draft);
 		} catch (cause) {
 			setError(
 				cause instanceof Error
 					? cause.message
-					: "Definition could not be saved.",
+					: "Personal Annotation could not be saved.",
 			);
 		} finally {
 			setSaving(false);
 		}
 	}
+
 	return (
-		<NoteSection aria-label="Definition" className="compact:before:hidden">
-			<NoteRule className="mb-3" />
-			<label className="sr-only" htmlFor={id}>
-				Definition of {title}
-			</label>
+		<NoteSection
+			aria-label="Personal Annotation"
+			label="Personal Annotation"
+			labelFor={id}
+		>
 			<textarea
 				id={id}
 				ref={editor}
-				rows={1}
+				rows={2}
 				value={draft}
 				placeholder="…"
 				readOnly={!capability.save}
@@ -116,10 +102,10 @@ function DefinitionEditor({
 				aria-describedby={
 					error || capability.error ? `${id}-error` : undefined
 				}
-				className="block min-h-11 w-full resize-none overflow-hidden rounded-none border-0 bg-transparent px-2 py-1 leading-relaxed text-ink placeholder:text-ink-muted placeholder:italic focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-primary"
+				className="block min-h-20 w-full resize-none overflow-hidden rounded-lg border border-input bg-background px-3 py-2 leading-relaxed text-foreground placeholder:text-ink-muted placeholder:italic focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
 			/>
 			{saving || capability.isSaving ? (
-				<p role="status" className="text-xs text-ink-muted">
+				<p role="status" className="mt-2 px-2 text-xs text-ink-muted">
 					Saving…
 				</p>
 			) : null}
@@ -127,7 +113,7 @@ function DefinitionEditor({
 				<div
 					id={`${id}-error`}
 					role="alert"
-					className="flex flex-col items-start gap-1 text-destructive"
+					className="mt-2 flex flex-col items-start gap-1 px-2 text-destructive"
 				>
 					<p>{error ?? capability.error}</p>
 					<LinkButton onClick={() => void save()}>

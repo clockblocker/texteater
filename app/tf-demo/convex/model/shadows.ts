@@ -394,12 +394,29 @@ export async function replaceAccumulatedKnowledge(
 			ownerReadingKey,
 			knowledge: {},
 			status,
+			...(existing.coveredTranslationLanguages
+				? {
+						coveredTranslationLanguages:
+							existing.coveredTranslationLanguages,
+					}
+				: {}),
 			updatedAt: Date.now(),
 		});
 		return existing._id;
 	}
 	await syncStructuralShadowReferences(ctx, ownerReadingKey, knowledge);
-	const value = { ownerReadingKey, knowledge, status, updatedAt: Date.now() };
+	const value = {
+		ownerReadingKey,
+		knowledge,
+		status,
+		...(existing?.coveredTranslationLanguages
+			? {
+					coveredTranslationLanguages:
+						existing.coveredTranslationLanguages,
+				}
+			: {}),
+		updatedAt: Date.now(),
+	};
 	if (existing) {
 		await ctx.db.replace(existing._id, value);
 		return existing._id;

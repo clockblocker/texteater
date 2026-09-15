@@ -34,7 +34,6 @@ import type * as model_segmentResolutionState from "../model/segmentResolutionSt
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorClicks from "../model/visitorClicks.js";
-import type * as modules_knowledge_changes from "../modules/knowledge/changes.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
 import type * as modules_notes_pendingRelations from "../modules/notes/pendingRelations.js";
 import type * as modules_notes_projections from "../modules/notes/projections.js";
@@ -48,6 +47,7 @@ import type * as modules_text_submission from "../modules/text/submission.js";
 import type * as notesStudyFixtures from "../notesStudyFixtures.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
+import type * as personalAnnotations from "../personalAnnotations.js";
 import type * as readingBlockLayouts from "../readingBlockLayouts.js";
 import type * as readingNotes from "../readingNotes.js";
 import type * as relationPublication from "../relationPublication.js";
@@ -93,7 +93,6 @@ declare const fullApi: ApiFromModules<{
   "model/shadows": typeof model_shadows;
   "model/validators": typeof model_validators;
   "model/visitorClicks": typeof model_visitorClicks;
-  "modules/knowledge/changes": typeof modules_knowledge_changes;
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
   "modules/notes/pendingRelations": typeof modules_notes_pendingRelations;
   "modules/notes/projections": typeof modules_notes_projections;
@@ -107,6 +106,7 @@ declare const fullApi: ApiFromModules<{
   notesStudyFixtures: typeof notesStudyFixtures;
   orchestration: typeof orchestration;
   persistence: typeof persistence;
+  personalAnnotations: typeof personalAnnotations;
   readingBlockLayouts: typeof readingBlockLayouts;
   readingNotes: typeof readingNotes;
   relationPublication: typeof relationPublication;

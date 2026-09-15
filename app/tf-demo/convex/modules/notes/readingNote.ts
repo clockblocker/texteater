@@ -11,6 +11,7 @@ import {
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
 import { findVisitorEncounter } from "../../model/visitorClicks";
+import { loadPersonalAnnotation } from "../../personalAnnotations";
 import {
 	pendingRelationProjectionValidator,
 	projectPendingRelations,
@@ -148,6 +149,7 @@ export const readingNoteValidator = v.object({
 		failureMessage: v.optional(v.string()),
 	}),
 	knowledge: readingKnowledgeValidator,
+	personalAnnotation: v.string(),
 	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 	relations: v.array(relationProjectionValidator),
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
@@ -210,6 +212,7 @@ export async function loadUnitReadingNote(
 		structuralReferences,
 		sourceContexts,
 		attempts,
+		personalAnnotation,
 	] = await Promise.all([
 		ctx.db
 			.query("accumulatedKnowledge")
@@ -234,6 +237,7 @@ export async function loadUnitReadingNote(
 			)
 			.order("desc")
 			.take(20),
+		loadPersonalAnnotation(ctx, visitorId, reading._id),
 	]);
 	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
 		throw new Error(
@@ -278,6 +282,7 @@ export async function loadUnitReadingNote(
 			knowledge,
 			relationProjections.knowledge,
 		),
+		personalAnnotation,
 		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 		relations: relationProjections.resolved,
 		grammaticalAlternatives,

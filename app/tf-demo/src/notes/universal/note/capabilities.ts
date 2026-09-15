@@ -22,10 +22,10 @@ export type ReadingPresentationCapabilities = {
 		readonly error: string | null;
 		readonly loadMore: (() => Promise<void>) | null;
 	};
-	readonly definition: {
+	readonly personalAnnotation: {
 		readonly isSaving: boolean;
 		readonly error: string | null;
-		readonly save: ((definition: string | null) => Promise<void>) | null;
+		readonly save: ((text: string) => Promise<void>) | null;
 	};
 	readonly follow: (target: WorkspaceTarget) => void;
 };

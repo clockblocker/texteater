@@ -46,7 +46,6 @@ import {
 } from "./model/resolutionSessions";
 import {
 	type nonResolvedGrammaticalValidator,
-	readingDefinitionChangeValidator,
 	relationPublicationRunValidator,
 	type resolvedGrammaticalValidator,
 	resolveSegmentResultValidator,
@@ -548,24 +547,6 @@ function createConvexResolutionSessionLifecycle(
 		},
 	};
 }
-
-export const applyReadingKnowledgeChange = action({
-	args: {
-		knowledgeChangeKey: v.string(),
-		ownerReadingKey: v.string(),
-		change: readingDefinitionChangeValidator,
-	},
-	returns: v.null(),
-	handler: async (ctx, args): Promise<null> => {
-		const change = args.change;
-
-		await ctx.runMutation(internal.persistence.persistKnowledgeChange, {
-			...args,
-			change,
-		});
-		return null;
-	},
-});
 
 function orchestratorFor(
 	ctx: ActionCtx,

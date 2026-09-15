@@ -50,7 +50,7 @@ export function validateRequest(
 export type KnowledgeAnalysis = {
 	transcription?: string | null;
 	definition?: string | null;
-	translations?: { en?: string | null };
+	translations?: Partial<Record<Dumrel.TranslationLanguage, string | null>>;
 	semanticRelations?: Partial<
 		Record<
 			Dumrel.DirectSemanticRelation,

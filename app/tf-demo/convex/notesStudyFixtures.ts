@@ -138,6 +138,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 		await ctx.db.patch(accumulated._id, {
 			knowledge: unit.knowledge,
 			status: "Full",
+			coveredTranslationLanguages: ["en", "ru"],
 			updatedAt: NOTE_STUDY_KNOWLEDGE_UPDATED_AT,
 		});
 	} else {
@@ -145,8 +146,30 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 			ownerReadingKey: unit.readingKey,
 			knowledge: unit.knowledge,
 			status: "Full",
+			coveredTranslationLanguages: ["en", "ru"],
 			updatedAt: NOTE_STUDY_KNOWLEDGE_UPDATED_AT,
 		});
+	}
+	const personalAnnotation = await ctx.db
+		.query("personalAnnotations")
+		.withIndex("by_visitor_id_and_reading_id", (q) =>
+			q
+				.eq("visitorId", NOTE_STUDY_VISITOR_ID)
+				.eq("readingId", reading._id),
+		)
+		.unique();
+	const personalAnnotationValue = {
+		visitorId: NOTE_STUDY_VISITOR_ID,
+		readingId: reading._id,
+		text: unit.personalAnnotation,
+		updatedAt: NOTE_STUDY_KNOWLEDGE_UPDATED_AT,
+	};
+	if (unit.personalAnnotation && personalAnnotation) {
+		await ctx.db.replace(personalAnnotation._id, personalAnnotationValue);
+	} else if (unit.personalAnnotation) {
+		await ctx.db.insert("personalAnnotations", personalAnnotationValue);
+	} else if (personalAnnotation) {
+		await ctx.db.delete(personalAnnotation._id);
 	}
 
 	const surfaceKey = makeSurfaceId("de", unit.citationSurface);
@@ -500,6 +523,7 @@ const playgroundShadowValidator = v.object({
 export const playground = query({
 	args: {},
 	returns: v.object({
+		visitorId: v.string(),
 		entries: v.array(playgroundEntryValidator),
 		shadows: v.array(playgroundShadowValidator),
 	}),
@@ -552,6 +576,7 @@ export const playground = query({
 			),
 		);
 		return {
+			visitorId: NOTE_STUDY_VISITOR_ID,
 			entries: entries.flatMap((entry) => (entry ? [entry] : [])),
 			shadows: shadows.flatMap((shadow) =>
 				shadow

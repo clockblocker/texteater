@@ -3,15 +3,11 @@ import {
 	useQuery,
 	useMutation as useReactQueryMutation,
 } from "@tanstack/react-query";
-import { useAction, useConvex } from "convex/react";
+import { useAction, useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ReadingNoteTarget } from "@/lib/navigation";
-import {
-	normalizeReadingDefinition,
-	readingDefinitionChange,
-} from "@/lib/reading-definition";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReadingNoteSkeleton } from "@/views/note-skeletons";
@@ -28,11 +24,14 @@ export type UnitReadingNote = Extract<
 export function UnitReadingNoteView({
 	target,
 	presentation = "Sheet",
+	visitorId: visitorIdOverride,
 }: {
 	presentation?: "Card" | "Sheet";
 	target: ReadingNoteTarget;
+	visitorId?: string;
 }) {
-	const visitorId = useAnonymousVisitorId();
+	const anonymousVisitorId = useAnonymousVisitorId();
+	const visitorId = visitorIdOverride ?? anonymousVisitorId;
 	const noteQuery = useQuery({
 		...convexQuery(api.readingNotes.get, {
 			readingId: target.readingId,
@@ -81,8 +80,11 @@ function ReadingNoteContainer({
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
-	const applyKnowledgeChangeAction = useAction(
-		api.orchestration.applyReadingKnowledgeChange,
+	const updatePersonalAnnotation = useMutation(
+		api.personalAnnotations.update,
+	);
+	const ensureKnowledge = useMutation(
+		api.knowledgeGeneration.ensureForReading,
 	);
 	const followAlternative = useAction(
 		api.orchestration.followGrammaticalAlternative,
@@ -96,8 +98,8 @@ function ReadingNoteContainer({
 			follow({ kind: "Reading", readingId });
 		},
 	});
-	const definitionMutation = useReactQueryMutation({
-		mutationFn: applyKnowledgeChangeAction,
+	const personalAnnotationMutation = useReactQueryMutation({
+		mutationFn: updatePersonalAnnotation,
 	});
 	const loadSourceContextPage = useCallback(
 		async (cursor: string): Promise<UnitReadingNote | null> => {
@@ -111,14 +113,29 @@ function ReadingNoteContainer({
 		[convex, note.target.readingId, visitorId],
 	);
 	const pagination = usePaginatedNoteLoading(note, loadSourceContextPage);
+	const attestationId = note.sourceContexts.page[0]?.attestationId;
+	useEffect(() => {
+		if (!attestationId) return;
+		void ensureKnowledge({
+			visitorId,
+			readingId: note.target.readingId,
+			attestationId,
+		});
+	}, [
+		attestationId,
+		ensureKnowledge,
+		knowledgeSettings.translations.en,
+		knowledgeSettings.translations.ru,
+		note.target.readingId,
+		visitorId,
+	]);
 
-	async function saveDefinition(definition: string | null) {
-		const args = readingDefinitionMutationArgs(
-			note,
-			definition,
-			crypto.randomUUID(),
-		);
-		if (args) await definitionMutation.mutateAsync(args);
+	async function savePersonalAnnotation(text: string) {
+		await personalAnnotationMutation.mutateAsync({
+			visitorId,
+			readingId: note.target.readingId,
+			text,
+		});
 	}
 	const capabilities = {
 		grammaticalAlternatives: {
@@ -138,35 +155,17 @@ function ReadingNoteContainer({
 			error: pagination.error,
 			loadMore: pagination.hasMore ? pagination.loadMore : null,
 		},
-		definition: {
-			isSaving: definitionMutation.isPending,
-			error: definitionMutation.error
-				? mutationMessage(definitionMutation.error)
+		personalAnnotation: {
+			isSaving: personalAnnotationMutation.isPending,
+			error: personalAnnotationMutation.error
+				? mutationMessage(personalAnnotationMutation.error)
 				: null,
-			save: saveDefinition,
+			save: savePersonalAnnotation,
 		},
 		follow,
 	};
 
 	return renderNote({ noteData: pagination.note, capabilities });
-}
-
-export function readingDefinitionMutationArgs(
-	note: UnitReadingNote,
-	definition: string | null,
-	knowledgeChangeKey: string,
-) {
-	const normalized = normalizeReadingDefinition(definition);
-	const change = readingDefinitionChange(
-		normalizeReadingDefinition(note.knowledge.definition ?? null),
-		normalized,
-	);
-	if (!change) return null;
-	return {
-		knowledgeChangeKey,
-		ownerReadingKey: note.reading.ownerKey,
-		change,
-	};
 }
 
 function mutationMessage(error: unknown): string {

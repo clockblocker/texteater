@@ -8,6 +8,7 @@ export const READING_BLOCK_KIND_VALUES = [
 	"Definition",
 	"Translations",
 	"Relations",
+	"PersonalAnnotation",
 	"MorphologicalTree",
 	"LexicalBreakdown",
 ] as const;
@@ -40,6 +41,7 @@ export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 		"Relations",
 		"Translations",
 		"Definition",
+		"PersonalAnnotation",
 	],
 	hidden: [],
 } as const satisfies SerializedReadingBlockLayout;

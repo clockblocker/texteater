@@ -5,7 +5,7 @@ import {
 } from "dumdict/pending";
 import { createDumdictService } from "dumdict/runtime";
 import * as Effect from "effect/Effect";
-import { load } from "../convex/notesStudyFixtures";
+import { load, playground } from "../convex/notesStudyFixtures";
 import { get } from "../convex/readingNotes";
 import {
 	NOTE_STUDY_DATABASE,
@@ -71,11 +71,19 @@ test("every seeded primary and related Reading can be opened through readingNote
 		});
 		expect(note).toMatchObject({
 			kind: "Reading",
+			personalAnnotation: unit.personalAnnotation,
 			reading: {
 				lemma: { canonicalForm: unit.reading.lemma.canonicalForm },
 			},
 		});
 	}
+});
+
+test("the playground catalog exposes its fixture Visitor", async () => {
+	const db = new IndexedTestDb();
+	await runTestMutation(db, load, {});
+	const catalog = await runTestQuery(db, playground, {});
+	expect(catalog).toMatchObject({ visitorId: NOTE_STUDY_VISITOR_ID });
 });
 
 test("seeded pending relations use Dumdict identities and source-aware targets", async () => {

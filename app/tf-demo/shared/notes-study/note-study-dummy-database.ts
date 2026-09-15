@@ -40,6 +40,7 @@ export type NoteStudyDatabaseUnit = {
 	readonly citationSurface: Dumling.Surface<"de">;
 	readonly presentationSurfaces: readonly Dumling.Surface<"de">[];
 	readonly knowledge: Dumrel.ReadingKnowledge;
+	readonly personalAnnotation: string;
 	readonly occurrences: readonly NoteStudyOccurrence[];
 };
 
@@ -329,6 +330,7 @@ function databaseUnitFor(fixture: NoteStudyFixture): NoteStudyDatabaseUnit {
 			(text) => fixtureSurface(reading.lemma, text),
 		),
 		knowledge: knowledgeFor(fixture),
+		personalAnnotation: fixture.summary,
 		occurrences: fixture.contexts.map((context, index) =>
 			occurrenceFor(fixture, reading, context, index),
 		),
@@ -455,6 +457,7 @@ function relatedUnitFor(
 		citationSurface: fixtureSurface(reading.lemma),
 		presentationSurfaces: [],
 		knowledge: { definition: fixture.definition },
+		personalAnnotation: "",
 		occurrences: [occurrenceFor(fixture, reading, fixture.contexts[0], 0)],
 	};
 }

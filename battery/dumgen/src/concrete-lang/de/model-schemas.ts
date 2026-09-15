@@ -98,7 +98,10 @@ export const knowledgeOutputSchema = z.strictObject({
 	transcription: z.string().min(1).nullable().optional(),
 	definition: z.string().min(1).nullable().optional(),
 	translations: z
-		.strictObject({ en: z.string().min(1).nullable().optional() })
+		.strictObject({
+			en: z.string().min(1).nullable().optional(),
+			ru: z.string().min(1).nullable().optional(),
+		})
 		.optional(),
 	semanticRelations: z
 		.strictObject({

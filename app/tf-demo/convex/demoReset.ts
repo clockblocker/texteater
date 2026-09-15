@@ -29,6 +29,7 @@ export const resetDemoTableNames = [
 	"knowledgeGenerationAttempts",
 	"relationPublicationControls",
 	"knowledgeSettings",
+	"personalAnnotations",
 	"readingLanguageLayouts",
 	"readingFamilyKindLayouts",
 	"structuralShadowReferences",
@@ -110,6 +111,7 @@ const visitorResetPhaseValidator = v.union(
 	v.literal("ResolutionSessions"),
 	v.literal("GenerationAttempts"),
 	v.literal("KnowledgeSettings"),
+	v.literal("PersonalAnnotations"),
 	v.literal("ReadingLanguageLayouts"),
 	v.literal("ReadingFamilyKindLayouts"),
 	v.literal("VisitorClicks"),
@@ -120,6 +122,7 @@ type VisitorResetPhase =
 	| "ResolutionSessions"
 	| "GenerationAttempts"
 	| "KnowledgeSettings"
+	| "PersonalAnnotations"
 	| "ReadingLanguageLayouts"
 	| "ReadingFamilyKindLayouts"
 	| "VisitorClicks"
@@ -193,7 +196,22 @@ export const clearVisitorDataBatch = internalMutation({
 					await ctx.db.delete(row._id);
 					deleted = 1;
 				}
-				nextPhase = "ReadingLanguageLayouts";
+				nextPhase = "PersonalAnnotations";
+				break;
+			}
+			case "PersonalAnnotations": {
+				const rows = await ctx.db
+					.query("personalAnnotations")
+					.withIndex("by_visitor_id_and_reading_id", (q) =>
+						q.eq("visitorId", visitorId),
+					)
+					.take(BATCH_SIZE);
+				for (const row of rows) await ctx.db.delete(row._id);
+				deleted = rows.length;
+				nextPhase =
+					rows.length === BATCH_SIZE
+						? "PersonalAnnotations"
+						: "ReadingLanguageLayouts";
 				break;
 			}
 			case "ReadingLanguageLayouts": {

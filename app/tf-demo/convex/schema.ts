@@ -29,6 +29,7 @@ import {
 	segmentResolutionStateValidator,
 	storedKnowledgeSettingsValidator,
 	surfaceSpellingValidator,
+	translationLanguageValidator,
 } from "./model/validators";
 
 export default defineSchema({
@@ -208,6 +209,9 @@ export default defineSchema({
 		ownerReadingKey: v.string(),
 		knowledge: v.any(),
 		status: knowledgeStatusValidator,
+		coveredTranslationLanguages: v.optional(
+			v.array(translationLanguageValidator),
+		),
 		updatedAt: v.number(),
 	}).index("by_owner_reading_key", ["ownerReadingKey"]),
 
@@ -217,6 +221,7 @@ export default defineSchema({
 		ownerReadingKey: v.string(),
 		readingId: v.id("readings"),
 		attestationId: v.id("attestations"),
+		translationLanguages: v.optional(v.array(translationLanguageValidator)),
 		state: knowledgeGenerationAttemptStateValidator,
 		runNumber: v.optional(v.number()),
 		failureCode: v.optional(v.string()),
@@ -314,6 +319,13 @@ export default defineSchema({
 		settings: storedKnowledgeSettingsValidator,
 		updatedAt: v.number(),
 	}).index("by_visitor_id", ["visitorId"]),
+
+	personalAnnotations: defineTable({
+		visitorId: v.string(),
+		readingId: v.id("readings"),
+		text: v.string(),
+		updatedAt: v.number(),
+	}).index("by_visitor_id_and_reading_id", ["visitorId", "readingId"]),
 
 	readingLanguageLayouts: defineTable({
 		visitorId: v.string(),

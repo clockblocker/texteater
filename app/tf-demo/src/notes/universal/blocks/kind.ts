@@ -5,6 +5,7 @@ export const noteBlockKindSchema = z.enum([
 	"SourceContexts",
 	"Definition",
 	"Translations",
+	"PersonalAnnotation",
 	"Relations",
 	"MorphologicalTree",
 	"LexicalBreakdown",

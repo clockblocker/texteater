@@ -6,7 +6,8 @@ export const WEIGHT_FOR_NOTE_BLOCK_KIND = {
 	Relations: 2,
 	Translations: 3,
 	Definition: 4,
-	MorphologicalTree: 5,
-	LexicalBreakdown: 6,
-	Routes: 7,
+	PersonalAnnotation: 5,
+	MorphologicalTree: 6,
+	LexicalBreakdown: 7,
+	Routes: 8,
 } as const satisfies Record<NoteBlockKind, number>;

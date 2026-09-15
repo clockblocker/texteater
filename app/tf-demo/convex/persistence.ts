@@ -27,7 +27,6 @@ import {
 	dictionaryPlanValidator,
 	languageValidator,
 	occurrenceAttestationInputValidator,
-	readingDefinitionChangeValidator,
 	readingValueValidator,
 	recordedClickValidator,
 	resolutionSessionGuardValidator,
@@ -39,7 +38,6 @@ import {
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
-import { persistKnowledgeChange as persistKnowledgeChangeImplementation } from "./modules/knowledge/changes";
 import { persistSubmittedText as persistSubmittedTextImplementation } from "./modules/text/submission";
 
 const MAX_SEGMENTS_PER_SENTENCE = 512;
@@ -804,20 +802,4 @@ export const persistResolvedClick = internalMutation({
 		});
 		return result;
 	},
-});
-
-export const persistKnowledgeChange = internalMutation({
-	args: {
-		knowledgeChangeKey: v.string(),
-		ownerReadingKey: v.string(),
-		change: readingDefinitionChangeValidator,
-	},
-	returns: v.object({
-		knowledgeChangeId: v.id("knowledgeChanges"),
-		accumulatedKnowledgeId: v.id("accumulatedKnowledge"),
-		deduplicated: v.boolean(),
-		change: v.any(),
-		knowledge: v.any(),
-	}),
-	handler: persistKnowledgeChangeImplementation,
 });

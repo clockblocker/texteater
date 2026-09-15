@@ -15,6 +15,7 @@ import type {
 export function renderApplicationSubject(
 	subject: WorkspaceSubject,
 	presentation: WorkspacePresentation,
+	options: { readonly visitorId?: string } = {},
 ) {
 	const { target } = subject;
 	switch (target.kind) {
@@ -31,6 +32,7 @@ export function renderApplicationSubject(
 					key={target.readingId}
 					target={target}
 					presentation={presentation}
+					visitorId={options.visitorId}
 				/>
 			);
 		case "Lemma":
