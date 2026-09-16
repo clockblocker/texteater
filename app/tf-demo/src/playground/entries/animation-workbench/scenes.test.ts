@@ -5,8 +5,10 @@ import {
 	CSS_EASE,
 	cubicBezier,
 	DEFAULT_PARAMS,
+	SPRING_SCAN_MS,
 	springAt,
 	springLength,
+	springSettle,
 } from "./motion";
 import { groupLength } from "./scene";
 import { SCENE_GROUPS } from "./scenes";
@@ -54,6 +56,17 @@ describe("browser curves", () => {
 			1,
 			2,
 		);
+		expect(springSettle({ stiffness: 520, damping: 42 }).settled).toBe(
+			true,
+		);
+	});
+
+	test("a spring still moving at the scan's end is reported cut short, not settled", () => {
+		const loose = { stiffness: 50, damping: 1 };
+		const settle = springSettle(loose);
+		expect(settle.settled).toBe(false);
+		expect(settle.ms).toBe(SPRING_SCAN_MS);
+		expect(Math.abs(springAt(settle.ms, loose) - 1)).toBeGreaterThan(1e-3);
 	});
 });
 
@@ -71,6 +84,20 @@ describe("scenes", () => {
 				);
 			}
 		}
+	});
+
+	test("a cut-short spring preview says so and never snaps to its target", () => {
+		const loose = { ...params, stiffness: 50, damping: 1 };
+		const drag = SCENE_GROUPS.find((g) => g.key === "drag");
+		const snap = drag?.scenes.find((s) => s.key === "snap-back");
+		if (!snap) throw new Error("snap-back missing");
+		expect(snap.caveat?.(loose)).toMatch(/cut short/i);
+		expect(snap.caveat?.(params)).toBeNull();
+		const length = snap.length(loose);
+		expect(length).toBe(SPRING_SCAN_MS);
+		expect(snap.frame(length, loose)).not.toEqual(
+			snap.frame(length + 1000, loose),
+		);
 	});
 
 	test("a frame is a pure function of t: stepping and seeking agree", () => {

@@ -6,6 +6,7 @@ import {
 	type SpringSpec,
 	springAt,
 	springLength,
+	springSettle,
 } from "../motion";
 import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
 
@@ -26,12 +27,20 @@ function springOf(params: Params): SpringSpec {
 }
 
 /**
- * The spring's progress at `t`, pinned to 1 once its timeline is over, the
- * way Motion snaps a value to its target when it comes to rest.
+ * The spring's progress at `t`, pinned to 1 once it has settled, the way
+ * Motion snaps a value to its target when it comes to rest. A spring the
+ * preview cut short is never pinned: its last frame is wherever it was.
  */
 function springProgress(t: number, params: Params): number {
 	const spec = springOf(params);
-	return t >= springLength(spec) ? 1 : springAt(t, spec);
+	const settle = springSettle(spec);
+	return settle.settled && t >= settle.ms ? 1 : springAt(t, spec);
+}
+
+function springCaveat(params: Params): string | null {
+	return springSettle(springOf(params)).settled
+		? null
+		: "Cut short at 5 s: this spring has not settled. The last frame is not its rest.";
 }
 
 type Label = {
@@ -89,6 +98,7 @@ const snapBack: GhostScene = {
 	where: "playground",
 	knobs: ["stiffness", "damping"],
 	length: (params) => springLength(springOf(params)),
+	caveat: springCaveat,
 	frame: (t, params) => {
 		const p = springProgress(t, params);
 		return {
@@ -111,6 +121,7 @@ const tilt: GhostScene = {
 	where: "playground",
 	knobs: ["stiffness", "damping"],
 	length: (params) => springLength(springOf(params)),
+	caveat: springCaveat,
 	frame: (t, params) => ({
 		...REST,
 		x: OVER_REMOVE.x,

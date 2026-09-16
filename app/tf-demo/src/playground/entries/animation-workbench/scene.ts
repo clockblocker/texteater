@@ -9,8 +9,8 @@ import { clamp01 } from "./motion";
  * scene's `Render` draws that frame with inline styles and no CSS
  * transitions, so a scrubbed instant is exactly what playback shows.
  *
- * Scenes are grouped by what moves. The deck tap lives in `variants.ts`
- * and keeps its own tap-driven Move; every other group is a list of scenes
+ * Scenes are grouped by what moves. The deck tap lives in `swap.ts`
+ * and keeps its own tap-driven Move and its own spec; every other group is a list of scenes
  * on the shared clock, each replayed from `t = 0`. Only animations that are
  * in use belong here; `where` says whether that is the main app or the
  * playground prototypes.
@@ -32,6 +32,11 @@ export type Scene<F> = {
 	readonly knobs: readonly Knob[];
 	/** The timeline, in ms. */
 	readonly length: (params: Params) => number;
+	/**
+	 * A caveat about the preview at these params, or null: for instance
+	 * that a spring was cut short before it settled.
+	 */
+	readonly caveat?: (params: Params) => string | null;
 	readonly frame: (t: number, params: Params) => F;
 	readonly Render: ComponentType<{ readonly frame: F }>;
 };
@@ -54,12 +59,7 @@ export function groupLength(group: SceneGroup, params: Params): number {
 	return Math.max(0, ...group.scenes.map((s) => s.length(params)));
 }
 
-const KNOB_ORDER: readonly Knob[] = [
-	"duration",
-	"accent",
-	"stiffness",
-	"damping",
-];
+const KNOB_ORDER: readonly Knob[] = ["duration", "stiffness", "damping"];
 
 export function groupKnobs(group: SceneGroup): readonly Knob[] {
 	const used = new Set(group.scenes.flatMap((s) => s.knobs));

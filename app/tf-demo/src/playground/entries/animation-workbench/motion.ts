@@ -1,12 +1,15 @@
+import type { SwapEase, SwapSpec } from "../deck-models/swap-pulse";
+
 /**
  * ANIMATION WORKBENCH — the deterministic core.
  *
  * Nothing here knows about React or the DOM. A move is a pair of open Card
- * indices; a variant is a pure function from (move, time, params, layout) to
- * the geometry of every Card. Playback, scrubbing and frame stepping all
- * call that one function with a different `t`, so they cannot disagree.
+ * indices; the Swap variant is a pure function from (move, time, spec,
+ * layout) to the geometry of every Card. Playback, scrubbing and frame
+ * stepping all call that one function with a different `t`, so they
+ * cannot disagree.
  *
- * The clock only owns time. Durations, accents and spring response are
+ * The clock only owns time. Durations, pulse shape and spring response are
  * parameters of the calculation, so a parameter change re-evaluates the
  * frozen frame in place.
  */
@@ -35,11 +38,10 @@ export function layoutFor(count: number, px: number): Layout {
 
 /* --------------------------------------------------------------- params */
 
+/** The knobs the scene tabs read. Swap has its own: `SwapSpec`. */
 export type Params = {
-	/** The tap pulse's length, in ms. */
+	/** A scene's main tween, in ms. */
 	readonly duration: number;
-	/** How much the tap pulse shows, 0 to 1. */
-	readonly accent: number;
 	/** The physical spring the drag ghost settles on, as Motion takes it. */
 	readonly stiffness: number;
 	readonly damping: number;
@@ -47,7 +49,6 @@ export type Params = {
 
 export const DEFAULT_PARAMS: Params = {
 	duration: 420,
-	accent: 1,
 	stiffness: 520,
 	damping: 42,
 };
@@ -107,6 +108,14 @@ export const MOTION_EASE_IN = cubicBezier(0.42, 0, 1, 1);
 export const MOTION_EASE_OUT = cubicBezier(0, 0, 0.58, 1);
 export const MOTION_EASE_IN_OUT = cubicBezier(0.42, 0, 0.58, 1);
 
+/** Motion's named easings, as the workbench models them. */
+export const SWAP_EASE: Record<SwapEase, (p: number) => number> = {
+	linear: clamp01,
+	easeIn: MOTION_EASE_IN,
+	easeOut: MOTION_EASE_OUT,
+	easeInOut: MOTION_EASE_IN_OUT,
+};
+
 export type SpringSpec = {
 	readonly stiffness: number;
 	readonly damping: number;
@@ -153,17 +162,36 @@ export function springAt(ms: number, spec: SpringSpec): number {
 	);
 }
 
+/** The preview gives a spring this long to come to rest. */
+export const SPRING_SCAN_MS = 5000;
+
+export type SpringSettle = {
+	/** The timeline, in ms. */
+	readonly ms: number;
+	/**
+	 * False when the spring is still moving at the scan's end: the preview
+	 * is cut short there, and must not pretend it settled.
+	 */
+	readonly settled: boolean;
+};
+
 /**
  * How long the spring takes to come within a thousandth of its target and
- * stay there, in ms. Found by scanning, so it holds for any damping.
+ * stay there. Found by scanning, so it holds for any damping.
  */
-export function springLength(spec: SpringSpec): number {
+export function springSettle(spec: SpringSpec): SpringSettle {
 	const tolerance = 1e-3;
 	let settled = 0;
-	for (let ms = 0; ms <= 5000; ms += 1) {
+	for (let ms = 0; ms <= SPRING_SCAN_MS; ms += 1) {
 		if (Math.abs(springAt(ms, spec) - 1) > tolerance) settled = ms + 1;
 	}
-	return settled;
+	return settled > SPRING_SCAN_MS
+		? { ms: SPRING_SCAN_MS, settled: false }
+		: { ms: settled, settled: true };
+}
+
+export function springLength(spec: SpringSpec): number {
+	return springSettle(spec).ms;
 }
 
 /* ----------------------------------------------------------------- move */
@@ -187,14 +215,33 @@ export function rest(open: number): Move {
 }
 
 /** The whole timeline of a move, in ms. */
-export function moveLength(move: Move, params: Params): number {
+export function moveLength(move: Move, spec: SwapSpec): number {
 	if (move.from === move.to && !move.seed) return 0;
-	return params.duration;
+	return spec.duration;
 }
 
 /** The move's raw progress at `t`. */
-export function progress(t: number, params: Params): number {
-	return clamp01(t / params.duration);
+export function progress(t: number, spec: SwapSpec): number {
+	return clamp01(t / spec.duration);
+}
+
+/**
+ * What a tap on `index` does to the move in flight (or at rest), given the
+ * frame on screen. A tap on the Card already in front is redundant and
+ * leaves the current pulse alone, whether it is playing or paused: it
+ * must never collapse the timeline. A tap elsewhere mid-flight retargets
+ * from the seed frame; at rest it starts clean.
+ */
+export function tapMove(
+	move: Move,
+	index: number,
+	inFlight: boolean,
+	onScreen: Frame,
+): Move | null {
+	if (index === move.to) return null;
+	return inFlight
+		? { from: move.to, to: index, seed: onScreen }
+		: { from: move.to, to: index };
 }
 
 /* ---------------------------------------------------------------- frame */
@@ -215,7 +262,7 @@ export type Frame = {
 export type Variant = (
 	move: Move,
 	t: number,
-	params: Params,
+	spec: SwapSpec,
 	layout: Layout,
 ) => Frame;
 
@@ -229,11 +276,11 @@ const NUMERIC_KEYS = ["y", "height", "scale"] as const;
  * an ease-out over the whole timeline.
  */
 export function withSeed(variant: Variant): Variant {
-	return (move, t, params, layout) => {
-		const frame = variant(move, t, params, layout);
+	return (move, t, spec, layout) => {
+		const frame = variant(move, t, spec, layout);
 		if (!move.seed) return frame;
-		const first = variant(move, 0, params, layout);
-		const length = moveLength(move, params);
+		const first = variant(move, 0, spec, layout);
+		const length = moveLength(move, spec);
 		const keep = 1 - easeOut(length > 0 ? t / length : 1);
 		if (keep <= 0) return frame;
 		const seed = move.seed;

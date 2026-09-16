@@ -18,6 +18,7 @@ import {
 
 import { type DummyNote, deckFor, type NoteLink, noteById } from "./dummy";
 import { DummyReader, ModelShell, NoteBody, useEventLog } from "./shared";
+import { SWAP, swapKeyframes } from "./swap-pulse";
 
 /**
  * COMPASS — the drag deck.
@@ -94,11 +95,6 @@ const PILE_HEIGHT_REM = 30;
 const HEADER_REM = 2.75;
 const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
 const HEADER_HEIGHT = `${HEADER_REM.toString()}rem`;
-/**
- * The brief pulse a Card gets when it is pulled to the front: a quick rise,
- * then a slow settle, after the Animation workbench's Swap.
- */
-const LIFT_MS = 420;
 /** How far the return zone reaches past the pile's cards. */
 const PILE_PAD = "0.75rem";
 /** Travel before a gesture has a direction at all. */
@@ -371,11 +367,10 @@ export function CompassModel() {
 			'[data-deck-column] article[data-place="open"]',
 		);
 		if (!front) return;
-		const controls = animate(
-			front,
-			{ scale: [1, 1.02, 1] },
-			{ duration: LIFT_MS / 1000, times: [0, 0.22, 1], ease: "easeOut" },
-		);
+		// The pulse a Card gets when pulled to the front: Swap, as the
+		// Animation workbench tunes it.
+		const pulse = swapKeyframes(SWAP);
+		const controls = animate(front, pulse.keyframes, pulse.options);
 		return () => controls.stop();
 	}, [expandedId]);
 	function reset() {

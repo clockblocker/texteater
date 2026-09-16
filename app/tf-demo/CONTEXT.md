@@ -18,7 +18,28 @@ A Locked Sheet containing a Text Subject.
 
 **Note Presentation**:
 A Reading, Lemma, Surface, Attestation, Shadow, Resolution, or Resolution Step
-Subject in Card or Sheet form.
+Subject in Card or Sheet form. One element in every form; its Blocks adapt.
+
+**Deck**:
+The Cards dealt for one selection, attached to the Sheet they were dealt from.
+A Sheet has at most one Deck.
+_Avoid_: pile
+
+**Block**:
+One ordered member of a Note's content. It reads the Presentation's form and
+renders accordingly.
+
+**Heading Block**:
+The pinned first Block naming the Note's Subject. It is the lift handle in
+every form.
+
+**Source Contexts Block**:
+The pinned Block listing where the Subject was met, most recent first.
+
+**Anchor Blocks**:
+The Heading and Source Contexts, which stay visible across every form so the
+Presentation reads as one thing while it changes.
+_Avoid_: header, card tail content
 
 **Workspace Persistence**:
 The placed Sheet composition and the Card Layer membership needed to return an
