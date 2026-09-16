@@ -1,4 +1,5 @@
 import {
+	ClapperboardIcon,
 	LayersIcon,
 	LoaderIcon,
 	type LucideIcon,
@@ -6,7 +7,7 @@ import {
 	StickyNoteIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
-
+import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
@@ -55,6 +56,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"Compass: what a drag means for a deck of Cards. The first direction names the intent; a held gesture relaxes into a plain drag.",
 		render: () => <DeckModelsGallery />,
+	},
+	{
+		key: "animation-workbench",
+		title: "Animation workbench",
+		icon: ClapperboardIcon,
+		description:
+			"One tap on a folded Card, drawn six ways on one scrubbable clock. Pause, step a frame, replay, and turn the knobs on the frozen frame.",
+		render: () => <AnimationWorkbench />,
 	},
 	{
 		key: "palette",

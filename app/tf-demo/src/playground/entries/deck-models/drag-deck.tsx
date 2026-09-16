@@ -75,6 +75,12 @@ type Drag = {
 	free: boolean;
 	/** Lifted out of a Sheet: a release in place leaves it on the pile. */
 	lifted: boolean;
+	/**
+	 * The pointer has travelled past the slop. Until then the Card stays on
+	 * the pile untouched, so a tap is only a tap: no ghost, no jump of the
+	 * header row.
+	 */
+	moved: boolean;
 	/** The pointer is over the remove zone; the Card is tilted. */
 	overRemove: boolean;
 	v: { vx: number; vy: number };
@@ -88,8 +94,11 @@ const PILE_HEIGHT_REM = 30;
 const HEADER_REM = 2.75;
 const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
 const HEADER_HEIGHT = `${HEADER_REM.toString()}rem`;
-/** The brief lift a Card gets when it is pulled to the front. */
-const LIFT_MS = 220;
+/**
+ * The brief pulse a Card gets when it is pulled to the front: a quick rise,
+ * then a slow settle, after the Animation workbench's Swap.
+ */
+const LIFT_MS = 420;
 /** How far the return zone reaches past the pile's cards. */
 const PILE_PAD = "0.75rem";
 /** Travel before a gesture has a direction at all. */
@@ -365,7 +374,7 @@ export function CompassModel() {
 		const controls = animate(
 			front,
 			{ scale: [1, 1.02, 1] },
-			{ duration: LIFT_MS / 1000, ease: "easeOut" },
+			{ duration: LIFT_MS / 1000, times: [0, 0.22, 1], ease: "easeOut" },
 		);
 		return () => controls.stop();
 	}, [expandedId]);
@@ -469,6 +478,7 @@ export function CompassModel() {
 			armedAt: 0,
 			free: false,
 			lifted: false,
+			moved: false,
 			overRemove: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: event.clientX, y: event.clientY, t: now },
@@ -527,6 +537,7 @@ export function CompassModel() {
 			armedAt: 0,
 			free: true,
 			lifted: true,
+			moved: true,
 			overRemove: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: lift.x, y: lift.y, t: now },
@@ -558,6 +569,7 @@ export function CompassModel() {
 		y.set(dy);
 
 		if (!d.arm && !d.free && Math.hypot(dx, dy) > ARM_SLOP) {
+			d.moved = true;
 			if (Math.abs(dx) > Math.abs(dy)) {
 				if (dx < 0) {
 					d.arm = "remove";
@@ -810,7 +822,8 @@ export function CompassModel() {
 							: index > open
 								? "below"
 								: "open";
-					const lifted = drag?.card.id === card.id;
+					const lifted =
+						drag?.moved === true && drag.card.id === card.id;
 					/*
 					 * Every Card is the same size in the same slot, one header
 					 * row below the last. The expanded one sits in front; the
@@ -995,7 +1008,7 @@ export function CompassModel() {
 				{renderLayout(layout)}
 
 				{/* the drag ghost: the lifted Card, following the pointer */}
-				{drag ? (
+				{drag?.moved ? (
 					<motion.div
 						aria-hidden="true"
 						className="pointer-events-none absolute z-40 flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper"
