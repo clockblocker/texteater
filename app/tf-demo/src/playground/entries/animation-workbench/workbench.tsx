@@ -592,11 +592,19 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 	const [move, setMove] = useState<Move>(() => rest(cards.length - 1));
 	const [seeds, setSeeds] = useState<Seeds>({});
 
-	// The tab is the URL: `/playground/animation-workbench/<group>`.
-	const groupKey = route.segments[0] ?? TAP_GROUP;
+	// The tab is the URL: `/playground/animation-workbench/<group>`, where
+	// `<group>` is `tap` or a scene group's key. The bare path and unknown
+	// keys canonicalise to Tap, so every tab has exactly one address.
+	const requestedKey = route.segments[0];
 	const group: SceneGroup | null =
-		SCENE_GROUPS.find((g) => g.key === groupKey) ?? null;
+		SCENE_GROUPS.find((g) => g.key === requestedKey) ?? null;
 	const isTap = group === null;
+	const groupKey = isTap ? TAP_GROUP : group.key;
+	useEffect(() => {
+		if (requestedKey !== groupKey) {
+			route.setSegments([groupKey], { replace: true });
+		}
+	}, [requestedKey, groupKey, route]);
 
 	const candidateMove: Move = seeds.candidate
 		? { ...move, seed: seeds.candidate }
@@ -630,7 +638,7 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 
 	function show(key: string) {
 		if (key === groupKey) return;
-		route.setSegments(key === TAP_GROUP ? [] : [key]);
+		route.setSegments([key]);
 		clock.restart();
 	}
 

@@ -27,6 +27,8 @@ export type DummyNote = {
 	readonly links: readonly NoteLink[];
 	/** The one-line footer a covered Card shows: its form, then a gloss. */
 	readonly tail: { readonly form: string; readonly gloss: string };
+	/** Source Contexts: sentences the word was met in, most recent first. */
+	readonly contexts: readonly string[];
 };
 
 export type DummySubject =
@@ -118,6 +120,26 @@ const LINE_POOL = [
 	"Der Rest ist Füllung mit Absicht.",
 ];
 
+const CONTEXT_POOL = [
+	"Am Morgen fiel das Wort {w} zum ersten Mal.",
+	"Später stand {w} noch einmal in der Zeitung.",
+	"Niemand fragte, was {w} hier bedeuten sollte.",
+	"Im Brief war {w} gleich zweimal unterstrichen.",
+	"Die Kinder riefen {w} über den Hof.",
+	"Ein Schild am Zaun sagte nur: {w}.",
+	"Zuletzt hörte sie {w} im Radio.",
+];
+
+/** The Text's own sentences with the word first, then filler, most recent first. */
+function contextsFor(word: string): readonly string[] {
+	const clean = cleanWord(word);
+	const own = TEXT_SENTENCES.filter((sentence) =>
+		sentence.some((token) => cleanWord(token) === clean),
+	).map((sentence) => sentence.join(" "));
+	const filler = CONTEXT_POOL.map((line) => line.replace("{w}", clean));
+	return [...own, ...filler];
+}
+
 function linesFor(kind: NoteKind, word: string): readonly string[] {
 	const seed = (kind.length + word.length) % LINE_POOL.length;
 	const count = 3 + ((word.length + kind.length) % 4);
@@ -204,6 +226,7 @@ export function noteFor(kind: NoteKind, word: string): DummyNote {
 		lines: linesFor(kind, word),
 		links,
 		tail,
+		contexts: contextsFor(word),
 	};
 }
 
