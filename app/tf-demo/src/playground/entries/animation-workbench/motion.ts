@@ -6,7 +6,7 @@
  * the geometry of every Card. Playback, scrubbing and frame stepping all
  * call that one function with a different `t`, so they cannot disagree.
  *
- * The clock only owns time. Easing, spring response and per-Card stagger are
+ * The clock only owns time. Durations, accents and spring response are
  * parameters of the calculation, so a parameter change re-evaluates the
  * frozen frame in place.
  */
@@ -35,26 +35,21 @@ export function layoutFor(count: number, px: number): Layout {
 
 /* --------------------------------------------------------------- params */
 
-export type Easing = "linear" | "easeOut" | "easeInOut" | "spring";
-
 export type Params = {
-	/** One Card's travel, in ms. */
+	/** The tap pulse's length, in ms. */
 	readonly duration: number;
-	readonly easing: Easing;
-	/** Spring overshoot, 0 (critically damped) to 0.9. Only for `spring`. */
-	readonly bounce: number;
-	/** Delay between neighbouring Cards, in ms, counted from the tapped Card. */
-	readonly stagger: number;
-	/** How much the accents (scale, shadow, fold) show, 0 to 1. */
+	/** How much the tap pulse shows, 0 to 1. */
 	readonly accent: number;
+	/** The physical spring the drag ghost settles on, as Motion takes it. */
+	readonly stiffness: number;
+	readonly damping: number;
 };
 
 export const DEFAULT_PARAMS: Params = {
 	duration: 420,
-	easing: "spring",
-	bounce: 0.15,
-	stagger: 0,
 	accent: 1,
+	stiffness: 520,
+	damping: 42,
 };
 
 /* --------------------------------------------------------------- easing */
@@ -68,58 +63,107 @@ export function easeOut(p: number): number {
 	return 1 - (1 - x) ** 3;
 }
 
-export function easeInOut(p: number): number {
-	const x = clamp01(p);
-	return x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
-}
+/* --------------------------------------------------- browser curves */
 
 /**
- * A damped spring normalised to settle by progress 1. `bounce` is
- * 1 − damping ratio: 0 is critically damped, higher overshoots more. The
- * natural frequency is chosen so the envelope has decayed to 0.1% at p = 1,
- * which keeps the same choreography at any duration.
+ * A CSS `cubic-bezier(x1, y1, x2, y2)` as a function of progress, solved
+ * by bisection to a millionth. This is what every `transition`,
+ * `animation` and Motion tween in the app runs on.
  */
-export function spring(p: number, bounce: number): number {
-	const x = clamp01(p);
-	if (x >= 1) return 1;
-	const zeta = 1 - Math.min(0.9, Math.max(0, bounce));
-	const settle = Math.log(1000);
-	if (zeta >= 0.999) {
-		// Critically damped: (1 + ωx)e^(−ωx); ω ≈ 9.2 reaches 0.1% at x = 1.
-		const omega = 9.233;
-		return 1 - (1 + omega * x) * Math.exp(-omega * x);
+export function cubicBezier(
+	x1: number,
+	y1: number,
+	x2: number,
+	y2: number,
+): (p: number) => number {
+	const at = (a: number, b: number, t: number) =>
+		3 * a * (1 - t) * (1 - t) * t + 3 * b * (1 - t) * t * t + t * t * t;
+	return (p) => {
+		const x = clamp01(p);
+		if (x <= 0) return 0;
+		if (x >= 1) return 1;
+		let low = 0;
+		let high = 1;
+		let t = x;
+		for (let i = 0; i < 40; i += 1) {
+			const guess = at(x1, x2, t);
+			if (Math.abs(guess - x) < 1e-6) break;
+			if (guess < x) low = t;
+			else high = t;
+			t = (low + high) / 2;
+		}
+		return at(y1, y2, t);
+	};
+}
+
+/** The browser's named timing functions. */
+export const CSS_EASE = cubicBezier(0.25, 0.1, 0.25, 1);
+/** Tailwind's `ease-in`, `ease-out`, `ease-in-out` and its transition default. */
+export const TW_EASE_IN = cubicBezier(0.4, 0, 1, 1);
+export const TW_EASE_OUT = cubicBezier(0, 0, 0.2, 1);
+export const TW_EASE_IN_OUT = cubicBezier(0.4, 0, 0.2, 1);
+/** Motion's named tween easings ("easeIn", "easeOut", "easeInOut"). */
+export const MOTION_EASE_IN = cubicBezier(0.42, 0, 1, 1);
+export const MOTION_EASE_OUT = cubicBezier(0, 0, 0.58, 1);
+export const MOTION_EASE_IN_OUT = cubicBezier(0.42, 0, 0.58, 1);
+
+export type SpringSpec = {
+	readonly stiffness: number;
+	readonly damping: number;
+	readonly mass?: number;
+	/** Initial velocity, in units per second, positive toward the target. */
+	readonly velocity?: number;
+};
+
+/**
+ * Motion's spring, closed form: the position at `ms` of a unit travelling
+ * from 0 to 1, exactly as `animate(value, target, { type: "spring" })`
+ * resolves it. Scale the result by the real travel.
+ */
+export function springAt(ms: number, spec: SpringSpec): number {
+	const mass = spec.mass ?? 1;
+	const t = Math.max(0, ms);
+	const zeta = spec.damping / (2 * Math.sqrt(spec.stiffness * mass));
+	const omega0 = Math.sqrt(spec.stiffness / mass) / 1000;
+	const delta = 1;
+	const v0 = spec.velocity ? -(spec.velocity / 1000) : 0;
+	if (zeta < 1) {
+		const omegaD = omega0 * Math.sqrt(1 - zeta * zeta);
+		const envelope = Math.exp(-zeta * omega0 * t);
+		return (
+			1 -
+			envelope *
+				(((v0 + zeta * omega0 * delta) / omegaD) *
+					Math.sin(omegaD * t) +
+					delta * Math.cos(omegaD * t))
+		);
 	}
-	const omega = settle / zeta;
-	const damped = omega * Math.sqrt(1 - zeta * zeta);
-	const envelope = Math.exp(-zeta * omega * x);
+	if (zeta === 1) {
+		return 1 - Math.exp(-omega0 * t) * (delta + (v0 + omega0 * delta) * t);
+	}
+	const omegaD = omega0 * Math.sqrt(zeta * zeta - 1);
+	const envelope = Math.exp(-zeta * omega0 * t);
+	const x = Math.min(omegaD * t, 300);
 	return (
 		1 -
-		envelope *
-			(Math.cos(damped * x) +
-				((zeta * omega) / damped) * Math.sin(damped * x))
+		(envelope *
+			((v0 + zeta * omega0 * delta) * Math.sinh(x) +
+				omegaD * delta * Math.cosh(x))) /
+			omegaD
 	);
 }
 
-export function ease(p: number, params: Params): number {
-	switch (params.easing) {
-		case "linear":
-			return clamp01(p);
-		case "easeOut":
-			return easeOut(p);
-		case "easeInOut":
-			return easeInOut(p);
-		case "spring":
-			return spring(p, params.bounce);
+/**
+ * How long the spring takes to come within a thousandth of its target and
+ * stay there, in ms. Found by scanning, so it holds for any damping.
+ */
+export function springLength(spec: SpringSpec): number {
+	const tolerance = 1e-3;
+	let settled = 0;
+	for (let ms = 0; ms <= 5000; ms += 1) {
+		if (Math.abs(springAt(ms, spec) - 1) > tolerance) settled = ms + 1;
 	}
-}
-
-/** 0 → 1 → 0 over a local progress: the shape of a lift or a pulse. */
-export function pulse(p: number): number {
-	return Math.sin(Math.PI * clamp01(p));
-}
-
-export function lerp(a: number, b: number, t: number): number {
-	return a + (b - a) * t;
+	return settled;
 }
 
 /* ----------------------------------------------------------------- move */
@@ -142,41 +186,15 @@ export function rest(open: number): Move {
 	return { from: open, to: open };
 }
 
-/** The Cards that travel for this move: strictly between, plus the far one. */
-export function moving(move: Move, index: number): boolean {
-	const low = Math.min(move.from, move.to);
-	const high = Math.max(move.from, move.to);
-	return index > low && index <= high;
-}
-
-/** Each Card starts `stagger` ms later per step it sits from the tapped Card. */
-export function delayFor(move: Move, index: number, params: Params): number {
-	return Math.abs(index - move.to) * params.stagger;
-}
-
-export function maxDelay(move: Move, params: Params, count: number): number {
-	let max = 0;
-	for (let index = 0; index < count; index += 1) {
-		max = Math.max(max, delayFor(move, index, params));
-	}
-	return max;
-}
-
 /** The whole timeline of a move, in ms. */
-export function moveLength(move: Move, params: Params, count: number): number {
+export function moveLength(move: Move, params: Params): number {
 	if (move.from === move.to && !move.seed) return 0;
-	return params.duration + maxDelay(move, params, count);
+	return params.duration;
 }
 
-/** A Card's own eased progress at `t`, after its stagger delay. */
-export function localProgress(
-	move: Move,
-	index: number,
-	t: number,
-	params: Params,
-): number {
-	const delay = delayFor(move, index, params);
-	return clamp01((t - delay) / params.duration);
+/** The move's raw progress at `t`. */
+export function progress(t: number, params: Params): number {
+	return clamp01(t / params.duration);
 }
 
 /* ---------------------------------------------------------------- frame */
@@ -186,60 +204,13 @@ export type CardFrame = {
 	readonly height: number;
 	readonly z: number;
 	readonly scale: number;
-	/** 0 flat on the pile, 1 fully lifted (shadow). */
-	readonly lift: number;
-	readonly opacity: number;
 	/** Where the header row sits inside the Card. */
 	readonly headerAt: "top" | "bottom";
-	/** Whether the Card draws its border and paper, 0 or 1. */
-	readonly chrome: number;
-	/** Fold: the body's hinge angle in degrees and its opacity. */
-	readonly bodyRotate: number;
-	readonly bodyOpacity: number;
-};
-
-/** Crossfade's single body panel and the two texts inside it. */
-export type PanelFrame = {
-	readonly y: number;
-	readonly height: number;
-	readonly texts: readonly {
-		readonly index: number;
-		readonly opacity: number;
-		readonly y: number;
-	}[];
 };
 
 export type Frame = {
 	readonly cards: readonly CardFrame[];
-	readonly panel?: PanelFrame;
 };
-
-export const CARD_DEFAULTS: Omit<CardFrame, "y" | "height" | "z"> = {
-	scale: 1,
-	lift: 0,
-	opacity: 1,
-	headerAt: "top",
-	chrome: 1,
-	bodyRotate: 0,
-	bodyOpacity: 1,
-};
-
-/**
- * The geometry the travelling variants share at rest. A Card at or above
- * the open one is full height, its body hidden behind the next Card; a Card
- * below is only its header, pushed down by one body.
- */
-export function slotAtRest(
-	index: number,
-	open: number,
-	layout: Layout,
-): { readonly y: number; readonly height: number } {
-	const above = index <= open;
-	return {
-		y: index * layout.header + (above ? 0 : layout.body),
-		height: above ? layout.card : layout.header,
-	};
-}
 
 export type Variant = (
 	move: Move,
@@ -250,15 +221,7 @@ export type Variant = (
 
 /* ------------------------------------------------------------- retarget */
 
-const NUMERIC_KEYS = [
-	"y",
-	"height",
-	"scale",
-	"lift",
-	"opacity",
-	"bodyRotate",
-	"bodyOpacity",
-] as const;
+const NUMERIC_KEYS = ["y", "height", "scale"] as const;
 
 /**
  * Wrap a variant so a mid-flight tap starts from what is on screen. The
@@ -270,7 +233,7 @@ export function withSeed(variant: Variant): Variant {
 		const frame = variant(move, t, params, layout);
 		if (!move.seed) return frame;
 		const first = variant(move, 0, params, layout);
-		const length = moveLength(move, params, layout.count);
+		const length = moveLength(move, params);
 		const keep = 1 - easeOut(length > 0 ? t / length : 1);
 		if (keep <= 0) return frame;
 		const seed = move.seed;
@@ -285,13 +248,6 @@ export function withSeed(variant: Variant): Variant {
 			}
 			return next;
 		});
-		let panel = frame.panel;
-		if (panel && seed.panel && first.panel) {
-			panel = {
-				...panel,
-				y: panel.y + (seed.panel.y - first.panel.y) * keep,
-			};
-		}
-		return { cards, panel };
+		return { cards };
 	};
 }

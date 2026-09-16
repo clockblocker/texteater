@@ -1,112 +1,68 @@
 import { describe, expect, test } from "bun:test";
 
-import {
-	DEFAULT_PARAMS,
-	ease,
-	layoutFor,
-	moveLength,
-	type Params,
-	slotAtRest,
-	spring,
-} from "./motion";
+import { DEFAULT_PARAMS, layoutFor, moveLength, type Params } from "./motion";
 import { VARIANTS } from "./variants";
 
 const layout = layoutFor(4, 16);
 const FRAME = 1000 / 60;
 
-describe("easing", () => {
-	test("every easing starts at 0 and settles at 1", () => {
-		for (const easing of [
-			"linear",
-			"easeOut",
-			"easeInOut",
-			"spring",
-		] as const) {
-			const params: Params = { ...DEFAULT_PARAMS, easing };
-			expect(ease(0, params)).toBeCloseTo(0, 6);
-			expect(ease(1, params)).toBeCloseTo(1, 6);
-		}
-	});
-
-	test("a spring is within 0.1% of rest by progress 1, at any bounce", () => {
-		for (const bounce of [0, 0.15, 0.5, 0.9]) {
-			expect(Math.abs(spring(0.999, bounce) - 1)).toBeLessThan(0.002);
-		}
-	});
-
-	test("bounce overshoots, no bounce never does", () => {
-		const overshoot = Math.max(
-			...Array.from({ length: 200 }, (_, i) => spring(i / 200, 0.5)),
-		);
-		expect(overshoot).toBeGreaterThan(1);
-		for (let i = 0; i <= 200; i += 1) {
-			expect(spring(i / 200, 0)).toBeLessThanOrEqual(1 + 1e-9);
-		}
-	});
-});
-
-describe("variants", () => {
+describe("tap", () => {
 	const move = { from: 3, to: 1 };
-	const params: Params = { ...DEFAULT_PARAMS, stagger: 30 };
-	const length = moveLength(move, params, layout.count);
+	const params: Params = DEFAULT_PARAMS;
+	const length = moveLength(move, params);
+	const swap = VARIANTS.find((spec) => spec.key === "swap");
+	if (!swap) throw new Error("swap missing");
 
 	test("a frame is a pure function of t: stepping and seeking agree", () => {
-		for (const spec of VARIANTS) {
-			for (let t = 0; t <= length; t += FRAME) {
-				const seek = spec.variant(move, t, params, layout);
-				const step = spec.variant(move, t, params, layout);
-				expect(step).toEqual(seek);
-			}
+		for (let t = 0; t <= length; t += FRAME) {
+			expect(swap.variant(move, t, params, layout)).toEqual(
+				swap.variant(move, t, params, layout),
+			);
 		}
 	});
 
-	test("the travelling variants start at rest(from) and end at rest(to)", () => {
-		for (const spec of VARIANTS) {
-			if (spec.key === "swap" || spec.key === "crossfade") continue;
-			const first = spec.variant(move, 0, params, layout);
-			const last = spec.variant(move, length, params, layout);
-			first.cards.forEach((card, index) => {
-				const slot = slotAtRest(index, move.from, layout);
-				expect(card.y).toBeCloseTo(slot.y, 6);
-				expect(card.height).toBeCloseTo(slot.height, 6);
-			});
-			last.cards.forEach((card, index) => {
-				const slot = slotAtRest(index, move.to, layout);
-				expect(card.y).toBeCloseTo(slot.y, 6);
-				expect(card.height).toBeCloseTo(slot.height, 6);
-			});
+	test("the tapped Card pulses to 1.02 at 22 % and is back at rest by the end", () => {
+		const at = (t: number) =>
+			swap.variant(move, t, params, layout).cards[move.to]?.scale ??
+			Number.NaN;
+		expect(at(0)).toBeCloseTo(1, 6);
+		expect(at(0.22 * length)).toBeCloseTo(1.02, 6);
+		expect(at(length)).toBeCloseTo(1, 6);
+		for (let t = 0; t <= length; t += FRAME) {
+			expect(at(t)).toBeGreaterThanOrEqual(1);
+			expect(at(t)).toBeLessThanOrEqual(1.02 + 1e-9);
 		}
 	});
 
 	test("a parameter change redraws the same t without touching the clock", () => {
-		const slide = VARIANTS.find((spec) => spec.key === "slide");
-		if (!slide) throw new Error("slide missing");
-		const t = 120;
-		const a = slide.variant(move, t, params, layout);
-		const b = slide.variant(
-			move,
-			t,
-			{ ...params, easing: "linear" },
-			layout,
-		);
-		expect(a.cards[2]?.y).not.toBeCloseTo(b.cards[2]?.y ?? Number.NaN, 3);
+		const t = 60;
+		const a = swap.variant(move, t, params, layout);
+		const b = swap.variant(move, t, { ...params, accent: 0 }, layout);
+		expect(a.cards[move.to]?.scale).toBeGreaterThan(1);
+		expect(b.cards[move.to]?.scale).toBe(1);
 	});
 
 	test("a mid-flight retarget starts from the seed frame", () => {
-		const slide = VARIANTS.find((spec) => spec.key === "slide");
-		if (!slide) throw new Error("slide missing");
-		const seed = slide.variant(move, 90, params, layout);
+		const seed = swap.variant(move, 40, params, layout);
 		const next = { from: move.to, to: 3, seed };
-		const first = slide.variant(next, 0, params, layout);
-		expect(first).toEqual(seed);
-		const settled = slide.variant(
+		// The geometry carries over; z-order and header side are the new
+		// move's at once.
+		const first = swap.variant(next, 0, params, layout);
+		first.cards.forEach((card, index) => {
+			expect(card.y).toBeCloseTo(seed.cards[index]?.y ?? Number.NaN, 6);
+			expect(card.scale).toBeCloseTo(
+				seed.cards[index]?.scale ?? Number.NaN,
+				6,
+			);
+		});
+		const settled = swap.variant(
 			next,
-			moveLength(next, params, layout.count),
+			moveLength(next, params),
 			params,
 			layout,
 		);
-		settled.cards.forEach((card, index) => {
-			expect(card.y).toBeCloseTo(slotAtRest(index, 3, layout).y, 6);
-		});
+		expect(settled).toEqual(
+			swap.variant({ from: 1, to: 3 }, length, params, layout),
+		);
 	});
 });
