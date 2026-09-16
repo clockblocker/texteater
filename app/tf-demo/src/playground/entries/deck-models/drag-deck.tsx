@@ -22,16 +22,21 @@ import { DummyReader, ModelShell, NoteBody, useEventLog } from "./shared";
 /**
  * COMPASS — the drag deck.
  *
- * Every Card in the pile is draggable on its own; a tap on a covered Card
- * still floats it up. The first direction of a drag names its intent: left
- * arms "Remove" (the Card tilts), up arms "Open as sheet". Hold an armed
- * Card longer than a beat and the arm relaxes into a plain drag.
+ * The pile is one column: every Card shows its header row, and the
+ * expanded Card takes the rest of the height. The written form sits on top,
+ * the meaning at the bottom, and the meaning opens by default. Every Card
+ * is draggable on its own; a tap on a folded Card expands it, and a tap on
+ * the expanded Card does nothing: only the "up" gestures open a Sheet.
+ * The first direction of a drag names its intent: left arms "Remove" (the
+ * Card tilts), up arms "Open as sheet". Hold an armed Card longer than a
+ * beat and the arm relaxes into a plain drag.
  *
  * A plain drag drops inside a pane to open the Card as a Sheet there, on a
  * pane edge to split a new pane (after the production Workspace), on the
- * left gutter to remove, or back on its own slot. A fast throw left or up
- * still removes or opens without a zone. Sheets collapse back to Cards by
- * holding a corner.
+ * strip left of the pile to remove, or back on the pile. A fast throw left or up
+ * still removes or opens without a zone. A Sheet lifts back into a dragged
+ * Card straight from its header, or after holding one of its margins: the
+ * Sheet shrinks a touch and its border turns blue while the hold runs.
  */
 
 type DeckCard = { readonly id: number; readonly note: DummyNote };
@@ -68,16 +73,25 @@ type Drag = {
 	arm: Arm | null;
 	armedAt: number;
 	free: boolean;
+	/** Lifted out of a Sheet: a release in place leaves it on the pile. */
+	lifted: boolean;
+	/** The pointer is over the remove zone; the Card is tilted. */
+	overRemove: boolean;
 	v: { vx: number; vy: number };
 	last: { x: number; y: number; t: number };
 };
 
 const ROOT_PANE = "text";
 const CARD_WIDTH = "26rem";
-const CARD_HEIGHT = "22rem";
-const FOOTER_HEIGHT = "2.75rem";
-const STEP_X = "0.5rem";
-const LIFT = "0.75rem";
+/** The whole column: the expanded Card plus one header row per folded Card. */
+const PILE_HEIGHT_REM = 30;
+const HEADER_REM = 2.75;
+const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
+const HEADER_HEIGHT = `${HEADER_REM.toString()}rem`;
+/** The brief lift a Card gets when it is pulled to the front. */
+const LIFT_MS = 220;
+/** How far the return zone reaches past the pile's cards. */
+const PILE_PAD = "0.75rem";
 /** Travel before a gesture has a direction at all. */
 const ARM_SLOP = 8;
 /** Travel past which an armed gesture commits on release. */
@@ -93,7 +107,9 @@ const LONG_PRESS_MS = 500;
 const SETTLE_TIMEOUT_MS = 400;
 const CLICK_SLOP = 4;
 const EDGE_BAND = 80;
-const REMOVE_GUTTER = 64;
+/** The remove zone's width, and the gap between it and the pile. */
+const REMOVE_WIDTH = "5rem";
+const ZONE_GAP = "0.75rem";
 const SPRING = { type: "spring", stiffness: 520, damping: 42 } as const;
 
 const DISMISS_EXEMPT_SELECTOR = [
@@ -110,8 +126,9 @@ const DISMISS_EXEMPT_SELECTOR = [
 	"[role=tab]",
 	"[role=checkbox]",
 	"[role=radio]",
+	/* a Card in the pile, or the dragged ghost */
 	"article",
-	"section",
+	"[data-return-zone]",
 ].join(", ");
 
 const RULES = [
@@ -125,7 +142,7 @@ const RULES = [
 	},
 	{
 		move: "Plain drag",
-		means: "Drop in a pane to open as a Sheet, on an edge for a new pane, on the left gutter to remove, or back on its slot.",
+		means: "Drop in a pane to open as a Sheet, on an edge for a new pane, left of the pile to remove, or back on the pile.",
 	},
 	{
 		move: "Throw ← / ↑",
@@ -133,15 +150,19 @@ const RULES = [
 	},
 	{
 		move: "Tap card",
-		means: "Floats a covered Card up. Tapping the floating one opens it.",
+		means: "Expands a folded Card; the rest fold to their header rows. Tapping the expanded one does nothing; only ↑ opens.",
 	},
 	{
-		move: "Hold a corner",
-		means: "Collapses the Sheet back to a Card on the pile.",
+		move: "Drag header",
+		means: "Lifts the Sheet straight into a dragged Card.",
+	},
+	{
+		move: "Hold a margin",
+		means: "The Sheet shrinks and blues, then lifts as a dragged Card. ← collapses it to the pile.",
 	},
 	{
 		move: "Esc",
-		means: "Cancels a drag; else collapses the top Sheet; else removes the floating Card.",
+		means: "Cancels a drag; else collapses the top Sheet; else removes the expanded Card.",
 	},
 	{ move: "Follow link", means: "Opens a Sheet on top, in the same pane." },
 	{ move: "New word", means: "Sweeps the pile and deals four fresh Cards." },
@@ -152,6 +173,17 @@ const RULES = [
 ];
 
 /* -------------------------------------------------------------- layout */
+
+function remPx(): number {
+	return Number.parseFloat(
+		getComputedStyle(document.documentElement).fontSize,
+	);
+}
+
+/** The expanded Card's height, in px, for a pile of `count` Cards. */
+function cardHeightPx(count: number): number {
+	return (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * remPx();
+}
 
 function panesOf(node: LayoutNode): readonly PaneNode[] {
 	return node.kind === "Pane"
@@ -199,7 +231,7 @@ export function CompassModel() {
 	const { entries, log, clear } = useEventLog();
 	const [selected, setSelected] = useState<string | null>(null);
 	const [deck, setDeck] = useState<readonly DeckCard[]>([]);
-	const [floatingId, setFloatingId] = useState<number | null>(null);
+	const [expandedId, setExpandedId] = useState<number | null>(null);
 	const [layout, setLayout] = useState<LayoutNode>({
 		kind: "Pane",
 		id: ROOT_PANE,
@@ -209,6 +241,8 @@ export function CompassModel() {
 	const [drag, setDrag] = useState<Drag | null>(null);
 	const [destination, setDestination] = useState<Destination | null>(null);
 	const [pastCommit, setPastCommit] = useState(false);
+	/** Drop zones stay in the DOM for hit-testing; this only shows them. */
+	const [zonesVisible, setZonesVisible] = useState(false);
 	const dragRef = useRef<Drag | null>(null);
 	const settlingRef = useRef(false);
 	const root = useRef<HTMLDivElement>(null);
@@ -229,7 +263,7 @@ export function CompassModel() {
 	const scale = useMotionValue(1);
 	const ghostOpacity = useMotionValue(1);
 
-	const floating = deck.find((c) => c.id === floatingId) ?? deck[0] ?? null;
+	const expanded = deck.find((c) => c.id === expandedId) ?? deck[0] ?? null;
 	const rootPane = findPane(layout, ROOT_PANE);
 
 	useMotionValueEvent(x, "change", (value) => {
@@ -247,7 +281,7 @@ export function CompassModel() {
 
 	function deal(word: string, element: HTMLElement) {
 		setSelected(word);
-		setFloatingId(null);
+		setExpandedId(null);
 		const rootBox = root.current?.getBoundingClientRect();
 		const stageBox = element
 			.closest("[data-deck-pane]")
@@ -301,7 +335,7 @@ export function CompassModel() {
 			return replacePane(node, paneId, { ...pane, sheets }) ?? node;
 		});
 		setDeck((d) => (d.some((c) => c.id === card.id) ? d : [...d, card]));
-		setFloatingId(card.id);
+		setExpandedId(card.id);
 	}
 	function follow(paneId: string, link: NoteLink) {
 		if (link.kind === "Text") {
@@ -318,14 +352,27 @@ export function CompassModel() {
 			})),
 		);
 	}
-	function floatUp(card: DeckCard) {
-		log(`Tap covered: ${card.note.kind} floats up`);
-		setFloatingId(card.id);
+	function expand(card: DeckCard) {
+		log(`Tap folded: ${card.note.kind} expands`);
+		setExpandedId(card.id);
 	}
+	useEffect(() => {
+		if (expandedId === null) return;
+		const front = root.current?.querySelector<HTMLElement>(
+			'[data-deck-column] article[data-place="open"]',
+		);
+		if (!front) return;
+		const controls = animate(
+			front,
+			{ scale: [1, 1.02, 1] },
+			{ duration: LIFT_MS / 1000, ease: "easeOut" },
+		);
+		return () => controls.stop();
+	}, [expandedId]);
 	function reset() {
 		setSelected(null);
 		setDeck([]);
-		setFloatingId(null);
+		setExpandedId(null);
 		setLayout({ kind: "Pane", id: ROOT_PANE, sheets: [] });
 		dragRef.current = null;
 		setDrag(null);
@@ -421,12 +468,72 @@ export function CompassModel() {
 			arm: null,
 			armedAt: 0,
 			free: false,
+			lifted: false,
+			overRemove: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: event.clientX, y: event.clientY, t: now },
 		};
 		dragRef.current = d;
 		setDrag(d);
 		setDestination(null);
+	}
+	/** A Sheet collapses onto the pile and its Card is at once mid-drag. */
+	function liftSheet(
+		paneId: string,
+		card: DeckCard,
+		lift: Lift,
+		reason: string,
+	) {
+		if (dragRef.current || settlingRef.current) return;
+		const frame = root.current;
+		if (!frame) return;
+		try {
+			frame.setPointerCapture(lift.pointerId);
+		} catch {
+			/* a pointer the browser is not tracking; the frame still hears it */
+		}
+		pagePointer.current = null;
+		collapseSheet(paneId, card, reason);
+		const frameBox = frame.getBoundingClientRect();
+		const width = Number.parseFloat(CARD_WIDTH) * remPx();
+		const count = deck.some((c) => c.id === card.id)
+			? deck.length
+			: deck.length + 1;
+		const height = cardHeightPx(count);
+		x.set(0);
+		y.set(0);
+		rotate.set(0);
+		scale.set(1);
+		ghostOpacity.set(1);
+		setPastCommit(false);
+		const now = performance.now();
+		const d: Drag = {
+			card,
+			pointerId: lift.pointerId,
+			start: { x: lift.x, y: lift.y, t: now },
+			origin: {
+				left: Math.max(
+					0,
+					Math.min(
+						frameBox.width - width,
+						lift.x - frameBox.left - width / 2,
+					),
+				),
+				top: lift.y - frameBox.top - 24,
+				width,
+				height,
+			},
+			arm: null,
+			armedAt: 0,
+			free: true,
+			lifted: true,
+			overRemove: false,
+			v: { vx: 0, vy: 0 },
+			last: { x: lift.x, y: lift.y, t: now },
+		};
+		dragRef.current = d;
+		setDrag(d);
+		setDestination(destinationAt(lift.x, lift.y));
 	}
 	function release(d: Drag, reason: string) {
 		d.arm = null;
@@ -481,6 +588,12 @@ export function CompassModel() {
 		const next = d.free
 			? destinationAt(event.clientX, event.clientY)
 			: null;
+		/* over the remove zone the Card tilts as if swiped left */
+		const overRemove = next?.kind === "remove";
+		if (overRemove !== d.overRemove) {
+			d.overRemove = overRemove;
+			animate(rotate, overRemove ? -20 : 0, SPRING);
+		}
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
 		);
@@ -549,10 +662,15 @@ export function CompassModel() {
 		const travelled = Math.hypot(dx, dy);
 
 		if (travelled < CLICK_SLOP + 2) {
+			if (d.lifted) {
+				log("Released in place: stays on the pile");
+				snapBack();
+				return;
+			}
 			setDrag(null);
-			if (floating && card.id === floating.id)
-				openSheet(card, ROOT_PANE, "Tap");
-			else floatUp(card);
+			if (expanded && card.id === expanded.id)
+				log("Tap expanded: nothing; drag ↑ to open");
+			else expand(card);
 			return;
 		}
 		if (d.arm === "remove") {
@@ -582,7 +700,7 @@ export function CompassModel() {
 			snapBack();
 			return;
 		}
-		if (target.kind === "remove") flyAway(card, "Drop on gutter");
+		if (target.kind === "remove") flyAway(card, "Drop on Remove");
 		else if (target.kind === "sheet")
 			dissolveInto(() => openSheet(card, target.paneId, "Drop in pane"));
 		else dissolveInto(() => splitPane(card, target.paneId, target.edge));
@@ -607,7 +725,7 @@ export function CompassModel() {
 				collapseSheet(ROOT_PANE, top, "Esc");
 				return;
 			}
-			if (floating) removeCard(floating, "Esc");
+			if (expanded) removeCard(expanded, "Esc");
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
@@ -656,7 +774,7 @@ export function CompassModel() {
 			return;
 		log(`Click page: sweep ${deck.length.toString()}`);
 		setDeck([]);
-		setFloatingId(null);
+		setExpandedId(null);
 	}
 
 	/* --- render --- */
@@ -671,64 +789,101 @@ export function CompassModel() {
 				: null;
 
 	function renderPile() {
+		const count = deck.length;
+		/* written form on top, meaning at the bottom */
+		const order = [...deck].reverse();
+		const open = expanded ? order.indexOf(expanded) : count - 1;
 		return (
 			<div
+				data-deck-column=""
 				className="pointer-events-none absolute left-1/2 -translate-x-1/2"
-				style={{ top: anchorTop, width: CARD_WIDTH }}
+				style={{
+					top: anchorTop,
+					width: CARD_WIDTH,
+					height: PILE_HEIGHT,
+				}}
 			>
-				{[...deck].reverse().map((card) => {
-					const index = deck.indexOf(card);
-					const floatingIndex = floating
-						? deck.indexOf(floating)
-						: -1;
-					const isFloating = card === floating;
+				{order.map((card, index) => {
+					const place: Place =
+						index < open
+							? "above"
+							: index > open
+								? "below"
+								: "open";
 					const lifted = drag?.card.id === card.id;
+					/*
+					 * Every Card is the same size in the same slot, one header
+					 * row below the last. The expanded one sits in front; the
+					 * ones above it show their header, the ones below their
+					 * footer, and expanding only changes who is in front.
+					 */
 					const style: CSSProperties = {
-						insetInlineStart: `calc(${index.toString()} * ${STEP_X})`,
-						top: `calc(${index.toString()} * ${FOOTER_HEIGHT})`,
+						insetInlineStart: 0,
 						width: "100%",
-						height: CARD_HEIGHT,
-						transform: isFloating
-							? `translateY(calc(-1 * ${LIFT}))`
-							: undefined,
-						zIndex: isFloating ? 20 : 10 - index,
+						top: `calc(${index.toString()} * ${HEADER_HEIGHT})`,
+						height: `calc(${PILE_HEIGHT} - ${(count - 1).toString()} * ${HEADER_HEIGHT})`,
+						/* z rises toward the expanded Card from both sides */
+						zIndex:
+							place === "open"
+								? 10
+								: place === "above"
+									? 1 + index
+									: count - index,
 						visibility: lifted ? "hidden" : undefined,
+						transformOrigin: "50% 50%",
 					};
 					return (
 						<article
 							key={card.id}
 							aria-label={`${card.note.kind} card`}
-							data-covered={!isFloating}
+							data-place={place}
 							style={style}
 							onPointerDown={(event) => cardDown(event, card)}
-							className="pointer-events-auto absolute flex cursor-grab touch-none flex-col justify-end overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper transition-transform duration-200 select-none active:cursor-grabbing"
+							className="pointer-events-auto absolute flex cursor-grab touch-none flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper select-none active:cursor-grabbing"
 						>
-							{isFloating ? (
-								<CardFace note={card.note} />
-							) : (
-								<div
-									data-above={index < floatingIndex}
-									className="flex h-full w-full flex-col justify-end text-start data-[above=true]:justify-start"
-								>
-									<CardTail note={card.note} />
-								</div>
-							)}
+							<CardFace note={card.note} place={place} />
 						</article>
 					);
 				})}
-				{drag ? (
+				{/* the remove zone: a strip just left of the pile, same height */}
+				{showZones ? (
+					<div
+						aria-hidden="true"
+						data-remove-zone=""
+						data-active={destination?.kind === "remove"}
+						data-shown={zonesVisible}
+						className="pointer-events-none absolute z-[35] grid data-[shown=false]:invisible place-items-center rounded-[1.1rem] border border-dashed border-destructive/50 bg-destructive/5 transition-colors data-[active=true]:border-destructive data-[active=true]:bg-destructive/15"
+						style={{
+							insetInlineStart: `calc(-1 * ${PILE_PAD} - ${ZONE_GAP} - ${REMOVE_WIDTH})`,
+							top: `calc(-1 * ${PILE_PAD})`,
+							width: REMOVE_WIDTH,
+							height: `calc(${PILE_HEIGHT} + 2 * ${PILE_PAD})`,
+						}}
+					>
+						<span className="rotate-180 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-destructive uppercase [writing-mode:vertical-rl]">
+							Remove
+						</span>
+					</div>
+				) : null}
+				{/* the return zone: the whole pile's footprint, above the pane wash */}
+				{showZones ? (
 					<div
 						aria-hidden="true"
 						data-return-zone=""
 						data-active={destination?.kind === "return"}
-						className="pointer-events-none absolute rounded-[0.9rem] border border-dashed border-line-strong transition-colors data-[active=true]:border-link data-[active=true]:bg-link/5"
+						data-shown={zonesVisible}
+						className="pointer-events-none absolute z-[35] flex data-[shown=false]:invisible items-end justify-center pb-3 rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15"
 						style={{
-							insetInlineStart: `calc(${deck.indexOf(drag.card).toString()} * ${STEP_X})`,
-							top: `calc(${deck.indexOf(drag.card).toString()} * ${FOOTER_HEIGHT})`,
-							width: "100%",
-							height: CARD_HEIGHT,
+							insetInlineStart: `calc(-1 * ${PILE_PAD})`,
+							top: `calc(-1 * ${PILE_PAD})`,
+							width: `calc(100% + 2 * ${PILE_PAD})`,
+							height: `calc(${PILE_HEIGHT} + 2 * ${PILE_PAD})`,
 						}}
-					/>
+					>
+						<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
+							Back on the pile
+						</span>
+					</div>
 				) : null}
 			</div>
 		);
@@ -776,12 +931,19 @@ export function CompassModel() {
 							onCollapse={(reason) =>
 								collapseSheet(pane.id, top, reason)
 							}
+							onLift={(lift, reason) =>
+								liftSheet(pane.id, top, lift, reason)
+							}
 							onFollow={(link) => follow(pane.id, link)}
 						/>
 					) : null}
 				</AnimatePresence>
 				{showZones ? (
-					<DropZones paneId={pane.id} destination={destination} />
+					<DropZones
+						paneId={pane.id}
+						destination={destination}
+						shown={zonesVisible}
+					/>
 				) : null}
 			</section>
 		);
@@ -804,7 +966,24 @@ export function CompassModel() {
 	}
 
 	return (
-		<ModelShell rules={RULES} entries={entries} onReset={reset}>
+		<ModelShell
+			rules={RULES}
+			entries={entries}
+			onReset={reset}
+			toolbar={
+				<label className="flex cursor-pointer items-center justify-between gap-3 text-[0.8rem] text-ink select-none">
+					<span>Show drop zones</span>
+					<input
+						type="checkbox"
+						checked={zonesVisible}
+						onChange={(event) =>
+							setZonesVisible(event.target.checked)
+						}
+						className="accent-link"
+					/>
+				</label>
+			}
+		>
 			<div
 				ref={root}
 				data-deck-frame=""
@@ -815,26 +994,11 @@ export function CompassModel() {
 			>
 				{renderLayout(layout)}
 
-				{/* the remove gutter, along the frame's left edge */}
-				{showZones ? (
-					<div
-						aria-hidden="true"
-						data-remove-zone=""
-						data-active={destination?.kind === "remove"}
-						className="pointer-events-none absolute inset-y-0 left-0 z-30 grid place-items-center border-e border-dashed border-destructive/50 bg-destructive/5 transition-colors data-[active=true]:bg-destructive/15"
-						style={{ width: REMOVE_GUTTER }}
-					>
-						<span className="rotate-180 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-destructive uppercase [writing-mode:vertical-rl]">
-							Remove
-						</span>
-					</div>
-				) : null}
-
 				{/* the drag ghost: the lifted Card, following the pointer */}
 				{drag ? (
 					<motion.div
 						aria-hidden="true"
-						className="pointer-events-none absolute z-40 overflow-hidden rounded-[0.9rem] border bg-paper"
+						className="pointer-events-none absolute z-40 flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper"
 						data-arm={drag.arm ?? undefined}
 						data-past={pastCommit}
 						style={{
@@ -851,12 +1015,12 @@ export function CompassModel() {
 							borderColor:
 								drag.arm === "remove"
 									? "var(--destructive)"
-									: drag.arm === "expand"
+									: drag.arm === "expand" || drag.free
 										? "var(--link)"
 										: "var(--line-strong)",
 						}}
 					>
-						<CardFace note={drag.card.note} />
+						<CardFace note={drag.card.note} place="open" />
 						<AnimatePresence>
 							{armLabel ? (
 								<motion.div
@@ -883,22 +1047,41 @@ export function CompassModel() {
 
 /* -------------------------------------------------------------- pieces */
 
-function CardFace({ note }: { note: DummyNote }) {
+type Place = "above" | "open" | "below";
+
+/**
+ * A whole Card: its info row and the Note's lines. The row sits at the top
+ * while the Card is expanded or peeks out above the expanded one, and at
+ * the bottom while it peeks out below, so a Card names itself exactly once.
+ */
+function CardFace({ note, place }: { note: DummyNote; place: Place }) {
+	const below = place === "below";
 	return (
 		<>
-			<div className="pointer-events-none min-h-0 flex-1 overflow-hidden">
-				<NoteBody note={note} compact onFollow={() => {}} />
+			{below ? null : <CardTail note={note} />}
+			<div className="pointer-events-none relative min-h-0 flex-1 overflow-hidden">
+				<div
+					className={`space-y-1.5 px-4 text-[0.85rem] leading-relaxed text-ink-soft ${below ? "pt-3" : "pb-3"}`}
+				>
+					{note.lines.map((line, index) => (
+						<p key={`${index.toString()}-${line}`}>{line}</p>
+					))}
+				</div>
+				{below ? null : (
+					<div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-paper to-transparent" />
+				)}
 			</div>
-			<div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-paper to-transparent" />
+			{below ? <CardTail note={note} /> : null}
 		</>
 	);
 }
 
+/** A Card's info row: its form, then a gloss. */
 function CardTail({ note }: { note: DummyNote }) {
 	return (
 		<span
-			className="flex w-full items-center justify-between gap-4 px-4"
-			style={{ height: FOOTER_HEIGHT }}
+			className="flex w-full shrink-0 items-center justify-between gap-4 px-4"
+			style={{ height: HEADER_HEIGHT }}
 		>
 			<span className="truncate font-serif text-[1rem] text-ink">
 				{note.tail.form}
@@ -913,9 +1096,12 @@ function CardTail({ note }: { note: DummyNote }) {
 function DropZones({
 	paneId,
 	destination,
+	shown,
 }: {
 	paneId: string;
 	destination: Destination | null;
+	/** Hidden zones still light the pane; only the outlines are hidden. */
+	shown: boolean;
 }) {
 	const here =
 		destination && "paneId" in destination && destination.paneId === paneId
@@ -930,7 +1116,8 @@ function DropZones({
 					aria-hidden="true"
 					data-edge={edge}
 					data-active={here?.kind === "pane" && here.edge === edge}
-					className="pointer-events-none absolute z-30 grid place-items-center border border-dashed border-link/40 bg-link/5 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15 data-[edge=bottom]:inset-x-0 data-[edge=bottom]:bottom-0 data-[edge=left]:inset-y-0 data-[edge=left]:left-0 data-[edge=right]:inset-y-0 data-[edge=right]:right-0"
+					data-shown={shown}
+					className="pointer-events-none absolute z-30 grid place-items-center border border-dashed border-link/40 bg-link/5 transition-colors data-[shown=false]:invisible data-[active=true]:border-link data-[active=true]:bg-link/15 data-[edge=bottom]:inset-x-0 data-[edge=bottom]:bottom-0 data-[edge=left]:inset-y-0 data-[edge=left]:left-0 data-[edge=right]:inset-y-0 data-[edge=right]:right-0"
 					style={
 						edge === "bottom"
 							? { height: `min(${EDGE_BAND.toString()}px, 23%)` }
@@ -947,7 +1134,8 @@ function DropZones({
 			{here?.kind === "sheet" ? (
 				<div
 					aria-hidden="true"
-					className="pointer-events-none absolute inset-0 z-30 grid place-items-center bg-link/5"
+					data-shown={shown}
+					className="pointer-events-none absolute inset-0 z-30 grid place-items-center bg-link/5 data-[shown=false]:invisible"
 				>
 					<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
 						Open as sheet
@@ -958,30 +1146,109 @@ function DropZones({
 	);
 }
 
+type Lift = {
+	readonly pointerId: number;
+	readonly x: number;
+	readonly y: number;
+};
+
 function SheetView({
 	card,
 	trail,
 	framed,
 	onCollapse,
+	onLift,
 	onFollow,
 }: {
 	card: DeckCard;
 	trail: readonly string[];
 	framed: boolean;
 	onCollapse: (reason: string) => void;
+	onLift: (lift: Lift, reason: string) => void;
 	onFollow: (link: NoteLink) => void;
 }) {
+	const [holding, setHolding] = useState(false);
+	/** Where the hold is: the Sheet shrinks toward this point. */
+	const [origin, setOrigin] = useState("50% 50%");
+	const section = useRef<HTMLElement>(null);
+	const hold = useRef<{ timer: number; pointer: Lift } | null>(null);
+
+	function headerDown(event: ReactPointerEvent<HTMLElement>) {
+		if (event.button !== 0) return;
+		if ((event.target as HTMLElement).closest("button")) return;
+		event.preventDefault();
+		onLift(
+			{ pointerId: event.pointerId, x: event.clientX, y: event.clientY },
+			"Drag header",
+		);
+	}
+	function marginDown(event: ReactPointerEvent<HTMLElement>) {
+		if (event.button !== 0 || hold.current) return;
+		event.preventDefault();
+		const pointer = {
+			pointerId: event.pointerId,
+			x: event.clientX,
+			y: event.clientY,
+		};
+		const box = section.current?.getBoundingClientRect();
+		if (box)
+			setOrigin(
+				`${(((pointer.x - box.left) / box.width) * 100).toFixed(1)}% ${(((pointer.y - box.top) / box.height) * 100).toFixed(1)}%`,
+			);
+		setHolding(true);
+		hold.current = {
+			pointer,
+			timer: window.setTimeout(() => {
+				const current = hold.current;
+				hold.current = null;
+				setHolding(false);
+				if (current) onLift(current.pointer, "Hold margin");
+			}, LONG_PRESS_MS),
+		};
+	}
+	function marginMove(event: ReactPointerEvent<HTMLElement>) {
+		const current = hold.current;
+		if (!current || current.pointer.pointerId !== event.pointerId) return;
+		if (
+			Math.hypot(
+				event.clientX - current.pointer.x,
+				event.clientY - current.pointer.y,
+			) > CLICK_SLOP
+		)
+			stopHold();
+	}
+	function stopHold() {
+		if (hold.current) window.clearTimeout(hold.current.timer);
+		hold.current = null;
+		setHolding(false);
+	}
+	useEffect(() => stopHold, []);
+
 	return (
 		<motion.section
+			ref={section}
 			aria-label={`${card.note.kind} sheet`}
+			style={{ transformOrigin: origin }}
 			initial={{ opacity: 0, scale: 0.98 }}
-			animate={{ opacity: 1, scale: 1 }}
+			animate={{
+				opacity: 1,
+				scale: holding ? 0.95 : 1,
+				borderColor: holding ? "var(--link)" : "var(--line-strong)",
+			}}
 			exit={{ opacity: 0, scale: 0.98 }}
-			transition={{ duration: 0.16 }}
+			transition={
+				holding
+					? { duration: LONG_PRESS_MS / 1000, ease: "linear" }
+					: { duration: 0.16 }
+			}
 			data-framed={framed}
-			className="absolute inset-0 z-20 flex flex-col overflow-hidden bg-paper data-[framed=true]:inset-x-6 data-[framed=true]:inset-y-4 data-[framed=true]:rounded-[0.9rem] data-[framed=true]:border data-[framed=true]:border-line-strong"
+			data-holding={holding}
+			className="absolute inset-0 z-20 flex flex-col overflow-hidden border border-transparent bg-paper data-[framed=true]:inset-x-6 data-[framed=true]:inset-y-4 data-[framed=true]:rounded-[0.9rem] data-[framed=true]:border-line-strong"
 		>
-			<header className="flex shrink-0 items-center gap-2 border-b border-line ps-2 pe-3 py-1 select-none">
+			<header
+				onPointerDown={headerDown}
+				className="flex shrink-0 cursor-grab touch-none items-center gap-2 border-b border-line ps-2 pe-3 py-1 select-none active:cursor-grabbing"
+			>
 				<button
 					type="button"
 					aria-label="Collapse back to card"
@@ -1019,99 +1286,27 @@ function SheetView({
 			<div className="min-h-0 flex-1 overflow-auto">
 				<NoteBody note={card.note} onFollow={onFollow} />
 			</div>
-			{(["tl", "tr", "bl", "br"] as const).map((corner) => (
-				<CornerHold
-					key={corner}
-					corner={corner}
-					onHold={() => onCollapse("Hold corner")}
+			{/* the Sheet's own margins: hold one to lift the Sheet as a Card */}
+			{MARGINS.map((margin) => (
+				<div
+					key={margin}
+					aria-hidden="true"
+					data-sheet-margin={margin}
+					onPointerDown={marginDown}
+					onPointerMove={marginMove}
+					onPointerUp={stopHold}
+					onPointerCancel={stopHold}
+					onPointerLeave={stopHold}
+					className={`absolute z-10 touch-none select-none ${MARGIN_CLASS[margin]}`}
 				/>
 			))}
 		</motion.section>
 	);
 }
 
-const CORNER_CLASS: Record<"tl" | "tr" | "bl" | "br", string> = {
-	tl: "top-0 left-0 rounded-tl-[0.9rem]",
-	tr: "top-0 right-0 rounded-tr-[0.9rem]",
-	bl: "bottom-0 left-0 rounded-bl-[0.9rem]",
-	br: "bottom-0 right-0 rounded-br-[0.9rem]",
+const MARGINS = ["left", "right", "bottom"] as const;
+const MARGIN_CLASS: Record<(typeof MARGINS)[number], string> = {
+	left: "inset-y-0 left-0 w-6",
+	right: "inset-y-0 right-0 w-6",
+	bottom: "inset-x-0 bottom-0 h-5",
 };
-const CORNER_BRACKET: Record<"tl" | "tr" | "bl" | "br", string> = {
-	tl: "top-2 left-2 border-t border-l",
-	tr: "top-2 right-2 border-t border-r",
-	bl: "bottom-2 left-2 border-b border-l",
-	br: "bottom-2 right-2 border-b border-r",
-};
-
-/**
- * A corner of a Sheet. Press and hold it to collapse the Sheet back to a
- * Card; the fill shows how far along the hold is.
- */
-function CornerHold({
-	corner,
-	onHold,
-}: {
-	corner: "tl" | "tr" | "bl" | "br";
-	onHold: () => void;
-}) {
-	const [holding, setHolding] = useState(false);
-	const timer = useRef<number | null>(null);
-	function start(event: ReactPointerEvent<HTMLButtonElement>) {
-		if (event.button !== 0) return;
-		try {
-			event.currentTarget.setPointerCapture(event.pointerId);
-		} catch {
-			/* a pointer the browser is not tracking; the hold still counts */
-		}
-		setHolding(true);
-		timer.current = window.setTimeout(() => {
-			timer.current = null;
-			setHolding(false);
-			onHold();
-		}, LONG_PRESS_MS);
-	}
-	function stop() {
-		if (timer.current !== null) window.clearTimeout(timer.current);
-		timer.current = null;
-		setHolding(false);
-	}
-	useEffect(() => stop, []);
-	return (
-		<button
-			type="button"
-			aria-label="Hold to collapse back to card"
-			title="Hold to collapse"
-			onPointerDown={start}
-			onPointerUp={stop}
-			onPointerCancel={stop}
-			onPointerLeave={stop}
-			className={`group/corner absolute z-10 size-8 touch-none overflow-hidden select-none ${CORNER_CLASS[corner]}`}
-		>
-			<motion.span
-				aria-hidden="true"
-				className="absolute inset-0 bg-link/25"
-				initial={false}
-				animate={{ scale: holding ? 1 : 0, opacity: holding ? 1 : 0 }}
-				transition={
-					holding
-						? { duration: LONG_PRESS_MS / 1000, ease: "linear" }
-						: { duration: 0.12 }
-				}
-				style={{ transformOrigin: originOf(corner) }}
-			/>
-			<span
-				aria-hidden="true"
-				className={`absolute size-3 border-line-strong transition-colors group-hover/corner:border-link ${CORNER_BRACKET[corner]}`}
-			/>
-		</button>
-	);
-}
-
-function originOf(corner: "tl" | "tr" | "bl" | "br"): string {
-	return {
-		tl: "0% 0%",
-		tr: "100% 0%",
-		bl: "0% 100%",
-		br: "100% 100%",
-	}[corner];
-}

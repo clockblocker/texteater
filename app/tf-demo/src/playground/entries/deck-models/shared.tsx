@@ -38,11 +38,14 @@ export function ModelShell({
 	rules,
 	entries,
 	onReset,
+	toolbar,
 	children,
 }: {
 	rules: readonly { readonly move: string; readonly means: string }[];
 	entries: readonly LogEntry[];
 	onReset: () => void;
+	/** Controls shown above the rules, e.g. a model's own switches. */
+	toolbar?: ReactNode;
 	children: ReactNode;
 }) {
 	const logEnd = useRef<HTMLLIElement>(null);
@@ -55,6 +58,11 @@ export function ModelShell({
 				{children}
 			</div>
 			<aside className="flex w-72 shrink-0 flex-col gap-4">
+				{toolbar ? (
+					<section className="rounded-[0.7rem] border border-line bg-paper px-3 py-2">
+						{toolbar}
+					</section>
+				) : null}
 				<section className="rounded-[0.7rem] border border-line bg-paper p-3">
 					<h3 className="mb-2 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
 						Closing rules
