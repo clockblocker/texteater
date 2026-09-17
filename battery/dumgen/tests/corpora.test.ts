@@ -123,7 +123,7 @@ test("all 1060 retained grammar answers project through public operations", asyn
 			const result = await Effect.runPromise(
 				Effect.either(
 					createDumgen(
-						["VERB", "AUX"].includes(kind)
+						["VERB", "AUX", "DET", "PRON"].includes(kind)
 							? grammarFixture(golden.idealOutput)
 							: {
 									judge: rejectJudgment,

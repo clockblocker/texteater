@@ -1,0 +1,161 @@
+import type * as Dumling from "dumling/types";
+import { authoredMembers } from "./inventory.js";
+import type { AuthoredMember } from "./member.js";
+import { sameValue } from "./select.js";
+
+export type AuthoredRealization = {
+	readonly member: AuthoredMember;
+	readonly spelled: string;
+	/** Additional occurrence coordinates needed to distinguish a syncretic realization. */
+	readonly inflection?: Readonly<Record<string, string | null>>;
+};
+const declined = (stem: string) =>
+	["", "e", "er", "es", "em", "en"].map((ending) => stem + ending);
+const strong = (stem: string) =>
+	["e", "er", "es", "em", "en"].map((ending) => stem + ending);
+/** Reviewed realization paradigms for existing identities, independent of evaluation corpora. */
+const determinerForms: Readonly<Record<string, readonly string[]>> = {
+	ein: [...declined("ein"), "ne", "nen", "nem"],
+	mein: declined("mein"),
+	dein: declined("dein"),
+	sein: declined("sein"),
+	ihr: declined("ihr"),
+	Ihr: declined("Ihr"),
+	unser: declined("unser"),
+	euer: ["euer", ...strong("eur")],
+	derjenige: [
+		"derjenige",
+		"diejenige",
+		"dasjenige",
+		"denjenigen",
+		"demjenigen",
+		"desjenigen",
+		"derjenigen",
+		"diejenigen",
+	],
+	derselbe: [
+		"derselbe",
+		"dieselbe",
+		"dasselbe",
+		"denselben",
+		"demselben",
+		"desselben",
+		"derselben",
+		"dieselben",
+	],
+	dieser: strong("dies"),
+	jener: strong("jen"),
+	solcher: strong("solch"),
+	welcher: strong("welch"),
+	mancher: strong("manch"),
+	etwelcher: strong("etwelch"),
+	irgendwelcher: strong("irgendwelch"),
+	wieviel: declined("wieviel"),
+	wievielte: declined("wievielt"),
+	"was für ein": declined("was für ein"),
+	einige: declined("einig"),
+	etliche: declined("etlich"),
+	irgendein: declined("irgendein"),
+	mehrere: ["mehrere", "mehreren", "mehrerer"],
+	viel: declined("viel"),
+	wenig: [...declined("wenig"), ...declined("weniger")],
+	meist: declined("meist"),
+	kein: declined("kein"),
+	alle: declined("all"),
+	jeder: declined("jed"),
+	jedweder: declined("jedwed"),
+	sämtlich: declined("sämtlich"),
+	beide: declined("beid"),
+	selber: ["selber", "selben"],
+};
+const pronounAliases: Readonly<Record<string, readonly string[]>> = {
+	nichts: ["nix"],
+	es: ["s"],
+	jemanden: ["jemand"],
+	jemandem: ["jemand"],
+	niemanden: ["niemand"],
+	niemandem: ["niemand"],
+};
+export const authoredRealizations: readonly AuthoredRealization[] =
+	authoredMembers.flatMap((member) => {
+		const { lemma } = member;
+		if (lemma.kind !== "DET" && lemma.kind !== "PRON") return [];
+		const forms =
+			lemma.kind === "DET"
+				? (determinerForms[lemma.canonicalForm] ?? [])
+				: (pronounAliases[lemma.canonicalForm] ?? []);
+		return [...new Set([lemma.canonicalForm, ...forms])].map((spelled) => ({
+			member,
+			spelled,
+		}));
+	});
+
+/** Core nulls compare literally; no missing spelling map is interpreted as catalog absence. */
+export function locateAuthoredIdentity(
+	input: {
+		kind: "DET" | "PRON";
+		spelled: string;
+		core: Record<string, unknown>;
+		inflection: unknown;
+	},
+	mappings: readonly AuthoredRealization[] = authoredRealizations,
+) {
+	const compatible = authoredMembers.filter(
+		(member) =>
+			member.lemma.kind === input.kind &&
+			sameValue(member.lemma.coreFeatures, input.core),
+	);
+	const matches = [
+		...new Set(
+			mappings
+				.filter(
+					(mapping) =>
+						compatible.includes(mapping.member) &&
+						mapping.spelled.normalize("NFC") ===
+							input.spelled.normalize("NFC") &&
+						Object.entries(mapping.inflection ?? {}).every(
+							([key, value]) =>
+								input.inflection !== null &&
+								typeof input.inflection === "object" &&
+								sameValue(
+									(
+										input.inflection as Record<
+											string,
+											unknown
+										>
+									)[key],
+									value,
+								),
+						),
+				)
+				.map((mapping) => mapping.member),
+		),
+	];
+	return {
+		matches,
+		compatible,
+		status:
+			matches.length === 1
+				? ("Hit" as const)
+				: matches.length
+					? ("Ambiguous" as const)
+					: ("Gap" as const),
+	};
+}
+
+export function validateAuthoredRealizations(
+	mappings: readonly AuthoredRealization[] = authoredRealizations,
+): void {
+	for (const mapping of mappings) {
+		if (!authoredMembers.includes(mapping.member))
+			throw Error("Realization refers to an unauthored identity");
+		if (
+			!mapping.spelled.trim() ||
+			mapping.spelled !== mapping.spelled.trim()
+		)
+			throw Error("Invalid authored realization text");
+		const lemma: Dumling.Lemma = mapping.member.lemma;
+		if (lemma.kind !== "DET" && lemma.kind !== "PRON")
+			throw Error("Unsupported authored realization route");
+	}
+}

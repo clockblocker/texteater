@@ -162,7 +162,9 @@ export function createGermanOperations(
 				supported(encounter, "resolveGrammar");
 				const route = routeOf(encounter),
 					input = markedContext(encounter);
-				const output = ["VERB", "AUX"].includes(encounter.target.kind)
+				const output = ["VERB", "AUX", "DET", "PRON"].includes(
+					encounter.target.kind,
+				)
 					? await resolveGrammarJudgments(options, encounter, signal)
 					: await call<GrammarOutput | { decision: "Unresolved" }>(
 							"resolveGrammar",

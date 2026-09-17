@@ -2,10 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
 import type { ModelExchange, SegmentedSentence } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import {
-	executeOutput,
-	queuedTargetJudgment,
-} from "../../../battery/dumgen/tests/execution-fixture.js";
+import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import { GermanClassificationResolver } from "../src/classification";
 
 const sentence: SegmentedSentence<"de"> = {
@@ -43,17 +40,12 @@ function harness(outputs: unknown[]) {
 	const resolver = new GermanClassificationResolver(
 		(onModelExchange, onOperation) =>
 			createDumgen({
-				judge: queuedTargetJudgment(outputs),
+				...pipelineFixture(outputs),
 				onModelExchange: (exchange) => {
 					requests.push(exchange.request);
 					onModelExchange?.(exchange);
 				},
 				onOperation,
-				execute: executeOutput(async (request) => {
-					const output = outputs.shift();
-					if (output instanceof Error) throw output;
-					return output;
-				}),
 			}),
 	);
 	return {

@@ -11,7 +11,9 @@ import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
+import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import type { GrammarOutput } from "./project.js";
+import { routeGuidance } from "./route-guidance.js";
 import { verbalCompositionGuidance } from "./verbal-guidance.js";
 
 type Scalar = string | number | boolean | null;
@@ -133,6 +135,8 @@ export async function resolveGrammarJudgments(
 		encounter.target.kind,
 	);
 	const auxiliary = encounter.target.kind === "AUX";
+	const mapped =
+		encounter.target.kind === "DET" || encounter.target.kind === "PRON";
 	const identities = auxiliary
 		? authoredMembers.filter((member) => member.lemma.kind === "AUX")
 		: [];
@@ -235,7 +239,7 @@ export async function resolveGrammarJudgments(
 				Unresolved: "Cannot choose a defensible identity",
 			},
 		);
-	else
+	else if (encounter.target.kind !== "DET")
 		questions.canonical = choice(
 			"Is the exact dictionary Canonical Form already one of these copied source candidates? Inflection or Canonical spelling does not establish this. Select only exact available text; otherwise Generate.",
 			{
@@ -253,7 +257,10 @@ export async function resolveGrammarJudgments(
 	const state = {
 		...input,
 		route,
-		criteria: baseGuidance + (verbal ? verbalCompositionGuidance : ""),
+		criteria:
+			baseGuidance +
+			(verbal ? verbalCompositionGuidance : "") +
+			(routeGuidance[encounter.target.kind] ?? ""),
 		canonicalCandidates,
 		reviewedIdentities: identities.map((member) => member.lemma),
 	};
@@ -363,16 +370,40 @@ export async function resolveGrammarJudgments(
 		};
 		recordEvent(signal, "AuthoredIdentity", { lemma: member.lemma });
 	} else {
-		const canonical = selected("canonical");
-		lemma = {
-			canonicalForm:
-				canonicalCandidates[Number(canonical.slice("copy_".length))],
-			coreFeatures: core,
-		};
-		if (canonical === "Generate")
-			needed.canonicalForm =
-				"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
+		const member = mapped
+			? await resolveAuthoredGrammarIdentity(
+					options,
+					{
+						kind: encounter.target.kind as "DET" | "PRON",
+						spelled: normalizedMembers.join(" "),
+						core,
+						inflection: surface.inflectionalFeatures,
+						markedContext: input.markedContext,
+					},
+					signal,
+				)
+			: null;
+		if (member) {
+			lemma = {
+				canonicalForm: member.lemma.canonicalForm,
+				coreFeatures: member.lemma.coreFeatures,
+			};
+			recordEvent(signal, "AuthoredIdentity", { lemma: member.lemma });
+		} else {
+			const canonical = selected("canonical");
+			lemma = {
+				canonicalForm:
+					canonicalCandidates[
+						Number(canonical.slice("copy_".length))
+					],
+				coreFeatures: core,
+			};
+			if (canonical === "Generate")
+				needed.canonicalForm =
+					"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
+		}
 	}
+
 	const coverage = partial
 		? (selected("coverage") as "Full" | "Partial")
 		: "Full";

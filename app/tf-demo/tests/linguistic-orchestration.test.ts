@@ -9,10 +9,7 @@ import { createDumgen } from "dumgen";
 import type { Encounter, ModelExchange } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import {
-	executeOutput,
-	queuedTargetJudgment,
-} from "../../../battery/dumgen/tests/execution-fixture.js";
+import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import {
 	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
@@ -242,13 +239,8 @@ function setup(
 		...overrides,
 	};
 	const dumgen = createDumgen({
-		judge: queuedTargetJudgment(outputs),
+		...pipelineFixture(outputs),
 		onModelExchange: (exchange) => requests.push(exchange.request),
-		execute: executeOutput(async (request) => {
-			const next = outputs.shift();
-			if (next instanceof Error) throw next;
-			return next;
-		}),
 	});
 	return {
 		orchestrator: createTfDemoOrchestrator({
@@ -506,7 +498,7 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 	).toMatchObject({
 		catalogMiss: { decision: "CatalogMiss", stage: "resolveGrammar" },
 	});
-	expect(run.requests).toHaveLength(2);
+	expect(run.requests).toHaveLength(3);
 	expect(run.writes).toHaveLength(0);
 	expect(run.commits).toHaveLength(0);
 });
