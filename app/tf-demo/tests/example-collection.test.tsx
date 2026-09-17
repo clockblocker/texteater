@@ -14,9 +14,10 @@ import {
 	runTestQuery,
 } from "./support/indexed-db";
 
-test("the seed presents all cases in one titled Text, including cases beyond the old nine-Sentence limit", async () => {
+test("the two-stage seed presents all cases in one titled Text, including cases beyond the old nine-Sentence limit", async () => {
 	const db = new IndexedTestDb();
 	await runTestMutation(db, load, {});
+	await runTestMutation(db, consolidateExamples, {});
 	const texts = db.rows("texts").filter((text) => !text.origin);
 	expect(texts).toHaveLength(1);
 	expect(texts[0]?.title).toBe(EXAMPLES_TEXT_TITLE);

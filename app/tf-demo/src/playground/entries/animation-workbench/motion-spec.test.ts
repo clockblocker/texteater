@@ -6,7 +6,12 @@ import { keyframes as motionKeyframes } from "motion-dom";
 import { parseSync, Visitor } from "oxc-parser";
 
 import * as SPEC from "../deck-models/motion-spec";
-import { motionOf, spanOf, type Tween } from "../deck-models/motion-spec";
+import {
+	isBezier,
+	motionOf,
+	spanOf,
+	type Tween,
+} from "../deck-models/motion-spec";
 import { lengthOf, progressOf } from "./motion";
 
 /**
@@ -37,28 +42,42 @@ describe("a spec evaluated two ways", () => {
 	});
 
 	/**
-	 * Three decimal places, not more, and the slack is Motion's. Its bézier
-	 * solver stops after twelve binary subdivisions
-	 * (`motion-utils/…/cubic-bezier.mjs`), which leaves about 1e-4 of error
-	 * in `t`; `cubicBezier` here bisects to a billionth. So the preview is
-	 * the more accurate of the two, by a few hundred-thousandths of
-	 * progress — far under a pixel of travel on any of these. What the
-	 * test is for is a curve that is wrong, not a curve that is rounded.
+	 * The slack is Motion's, not ours. Its bézier solver stops after twelve
+	 * binary subdivisions (`motion-utils/…/cubic-bezier.mjs`), leaving
+	 * about 1e-4 of error in `t`; `cubicBezier` here bisects to a
+	 * billionth. So the preview is the more accurate of the two, and this
+	 * bound measures how far Motion strays from it.
+	 *
+	 * It used to be three decimal places, which held while every spec ran
+	 * on one of the browser's built-in curves. `EASE_OUT` is deliberately
+	 * steeper than those — that is what makes it read as a decision rather
+	 * than a default — and a steep start amplifies the error in `t` into
+	 * `y`. The worst case across the file is 6.6e-4 of progress, inside the
+	 * first 10 ms, which is under half a pixel even on `FLY_DISTANCE`, the
+	 * longest travel here. What the test is for is a curve that is wrong,
+	 * not a curve that is rounded.
 	 */
+	const SOLVER_SLACK = 1e-3;
+
 	test("progressOf matches Motion's own generator, curve for curve", () => {
 		for (const [name, spec] of TWEENS) {
 			const theirs = motionKeyframes({
 				duration: spec.ms,
 				keyframes: [0, 1],
-				ease: spec.ease,
+				ease: isBezier(spec.ease) ? [...spec.ease] : spec.ease,
 			});
 			for (let ms = 0; ms <= spec.ms; ms += 4) {
+				const ours = progressOf(spec, ms + spec.delayMs);
 				expect(
-					progressOf(spec, ms + spec.delayMs),
+					Math.abs(ours - Number(theirs.next(ms).value)),
 					`${name} at ${ms.toString()}ms`,
-				).toBeCloseTo(theirs.next(ms).value, 3);
+				).toBeLessThan(SOLVER_SLACK);
 			}
 		}
+	});
+
+	test("the slack is worth less than a pixel of the longest travel", () => {
+		expect(SOLVER_SLACK * SPEC.FLY_DISTANCE).toBeLessThan(1);
 	});
 
 	test("a tween holds still through its delay, then finishes at its end", () => {
@@ -216,14 +235,40 @@ const MOTION_SOURCES = readdirSync(join(HERE, "../deck-models"))
 	);
 
 /** A transition the spec owns: `MORPH`, or `motionOf(NOTE_BORDER)`. */
+/**
+ * A transition the spec declares: a named export, `motionOf(SOME_SPEC)`,
+ * or an object built out of nothing but those.
+ *
+ * The composed form is for a transition that has to say two things at
+ * once — Motion takes `{ ...spec, layout: otherSpec }` to give a layout
+ * animation its own timing. Every value in it still has to be a spec, so
+ * `{ ...MORPH, layout: { duration: 0.14 } }` is refused exactly as the
+ * bare literal is. Binding the same literal to a `const` first would slip
+ * past a rule that only looked at the attribute, which is why this walks
+ * into the object rather than trusting the identifier.
+ */
 function isSpecTransition(node: { type: string } | null | undefined): boolean {
 	if (!node) return false;
 	if (node.type === "Identifier") return true;
 	const call = node as { callee?: { type: string; name?: string } };
-	return (
+	if (
 		node.type === "CallExpression" &&
 		call.callee?.type === "Identifier" &&
 		call.callee.name === "motionOf"
+	)
+		return true;
+	if (node.type !== "ObjectExpression") return false;
+	const object = node as {
+		properties: {
+			type: string;
+			value?: { type: string };
+			argument?: { type: string };
+		}[];
+	};
+	return object.properties.every((property) =>
+		property.type === "SpreadElement"
+			? isSpecTransition(property.argument)
+			: isSpecTransition(property.value),
 	);
 }
 
@@ -343,6 +388,15 @@ describe("nothing animates that the spec does not declare", () => {
 				`const A = () => <motion.li initial={{ height: 0 }} animate={{ height: "auto", transition: { duration: 0.2 } }} />;`,
 			),
 		).toEqual(["a transition is written out rather than named"]);
+
+		/* a composed transition is only as declared as its parts */
+		expect(
+			refused(
+				`const A = () => <motion.div initial={false} animate={{ y: 0 }} transition={{ ...MORPH, layout: { duration: 0.14 } }} />;`,
+			),
+		).toEqual([
+			"<motion.div> is given a transition the spec does not declare",
+		]);
 
 		expect(refused(`animate(value, 1, { duration: 0.2 });`)).toEqual([
 			"animate() is given a transition the spec does not declare",

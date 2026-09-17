@@ -5,6 +5,8 @@ import {
 	CARD_TITLE_REM,
 	CLIP_FADE,
 	CONTEXT_ITEM,
+	CONTEXT_PAGE,
+	contextDelayFor,
 	HEADER_REM,
 	KIND_LABEL,
 	KIND_LABEL_Y,
@@ -142,7 +144,6 @@ const clipLifts = scene<FadeFrame>({
  * distance to travel. The duration and curve are the shipped ones.
  */
 const ITEM_HEIGHT = 22;
-const PAGE = 3;
 
 export type ContextsFrame = {
 	/** Each arriving item's height and opacity. */
@@ -158,16 +159,14 @@ const contextsUnfold = scene<ContextsFrame>({
 	source: "drag-deck.tsx · ContextsBlock · AnimatePresence · height auto",
 	where: "playground",
 	knobs: [],
-	length: () => CONTEXT_ITEM.ms,
-	frame: (t) => {
-		const p = progressOf(CONTEXT_ITEM, t);
-		return {
-			items: Array.from({ length: PAGE }, () => ({
-				height: mix(0, ITEM_HEIGHT, p),
-				opacity: p,
-			})),
-		};
-	},
+	/* a whole page arrives, so the timeline is the last item's turn */
+	length: () => contextDelayFor(CONTEXT_PAGE - 1) + CONTEXT_ITEM.ms,
+	frame: (t) => ({
+		items: Array.from({ length: CONTEXT_PAGE }, (_, index) => {
+			const p = progressOf(CONTEXT_ITEM, t, contextDelayFor(index));
+			return { height: mix(0, ITEM_HEIGHT, p), opacity: p };
+		}),
+	}),
 	Render: ({ frame }) => (
 		<Stage>
 			<div className="w-[20rem] rounded-[0.9rem] border border-line-strong bg-paper px-4 py-3">
@@ -176,21 +175,21 @@ const contextsUnfold = scene<ContextsFrame>({
 					<span>{NOTE?.contexts.length}</span>
 				</div>
 				<ul className="flex flex-col gap-0.5 text-[0.8rem] leading-relaxed text-ink-soft">
-					{NOTE?.contexts.slice(0, 2).map((line) => (
+					{NOTE?.contexts.slice(0, 1).map((line) => (
 						<li key={line} className="truncate">
 							{line}
 						</li>
 					))}
 					{frame.items.map((item, index) => (
 						<li
-							key={NOTE?.contexts[2 + index] ?? index.toString()}
+							key={NOTE?.contexts[1 + index] ?? index.toString()}
 							className="truncate overflow-hidden"
 							style={{
 								height: item.height,
 								opacity: item.opacity,
 							}}
 						>
-							{NOTE?.contexts[2 + index]}
+							{NOTE?.contexts[1 + index]}
 						</li>
 					))}
 				</ul>

@@ -482,7 +482,6 @@ export const load = internalMutation({
 			}
 		}
 
-		await consolidateExampleTexts(ctx);
 		return {
 			primaryReadings: NOTE_STUDY_DATABASE.length,
 			relatedReadings: NOTE_STUDY_RELATED_DATABASE.length,

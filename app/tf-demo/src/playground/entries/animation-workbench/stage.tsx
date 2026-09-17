@@ -350,10 +350,9 @@ function SceneStage({
 
 	const patch = (part: Partial<Params>) =>
 		setParams((current) => ({ ...current, ...part }));
-	const tuned =
-		params.duration !== DEFAULT_PARAMS.duration ||
-		params.stiffness !== DEFAULT_PARAMS.stiffness ||
-		params.damping !== DEFAULT_PARAMS.damping;
+	const tuned = (Object.keys(params) as (keyof Params)[]).some(
+		(knob) => params[knob] !== DEFAULT_PARAMS[knob],
+	);
 
 	return (
 		<StageFrame
@@ -404,6 +403,21 @@ function SceneStage({
 									max={120}
 									step={1}
 									onChange={(damping) => patch({ damping })}
+								/>
+							) : null}
+							{/* A release is never a spring from rest; see
+							    `Params.velocity`. `THROW` in drag-deck.tsx
+							    is 1 px/ms, so the range brackets it. */}
+							{entry.knobs.includes("velocity") ? (
+								<Knob
+									label="Release"
+									value={params.velocity}
+									baseline={DEFAULT_PARAMS.velocity}
+									min={0}
+									max={3}
+									step={0.1}
+									unit="px/ms"
+									onChange={(velocity) => patch({ velocity })}
 								/>
 							) : null}
 							<Row label="">

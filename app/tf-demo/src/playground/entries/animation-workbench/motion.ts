@@ -1,9 +1,12 @@
 import {
+	type Bezier,
 	DRAG_SPRING,
 	type Ease,
 	HEADER_REM,
+	isBezier,
 	MORPH,
 	PILE_HEIGHT_REM,
+	SETTLE_TIMEOUT_MS,
 	type Spec,
 	spanOf,
 } from "../deck-models/motion-spec";
@@ -55,14 +58,39 @@ export type Params = {
 	/** The physical spring the drag ghost settles on, as Motion takes it. */
 	readonly stiffness: number;
 	readonly damping: number;
+	/**
+	 * How fast the pointer was still travelling when it let go, in px/ms,
+	 * away from where the Card is going.
+	 *
+	 * The shipped snap-back is never a spring from rest. `h.x.set(dx)` on
+	 * every pointermove leaves the motion value with a live velocity, and
+	 * Motion hands that to the spring — `growFromHand` in `drag-deck.tsx`
+	 * uses `.jump()` precisely to avoid it. A preview at rest therefore
+	 * draws a curve the deck never plays, and bounce is exactly the thing
+	 * it hides: at rest this spring overshoots by 0.1 %, so tuning damping
+	 * against the still frame is guesswork.
+	 */
+	readonly velocity: number;
 };
 
-/** The knobs start where the shipped drag spring is. */
+/** The knobs start where the shipped drag spring is, at a plain release. */
 export const DEFAULT_PARAMS: Params = {
 	duration: 420,
 	stiffness: DRAG_SPRING.stiffness,
 	damping: DRAG_SPRING.damping,
+	velocity: 0,
 };
+
+/**
+ * The deck gives a settling animation `SETTLE_TIMEOUT_MS` and then treats
+ * the gesture as over. A spring tuned past that looks right on the stage
+ * and is cut off in the deck, so the stage says so.
+ */
+export function settleCaveat(ms: number): string | null {
+	return ms <= SETTLE_TIMEOUT_MS
+		? null
+		: `${Math.round(ms).toString()} ms outlasts the deck's ${SETTLE_TIMEOUT_MS.toString()} ms settle timeout: drag-deck.tsx tears the gesture down before this spring comes to rest.`;
+}
 
 /* --------------------------------------------------------------- easing */
 
@@ -222,12 +250,19 @@ export function springLength(spec: SpringSpec): number {
  * the prototype already declares.
  */
 
-const CURVE: Record<Ease, (p: number) => number> = {
+const NAMED: Record<Exclude<Ease, Bezier>, (p: number) => number> = {
 	linear: clamp01,
 	easeIn: MOTION_EASE_IN,
 	easeOut: MOTION_EASE_OUT,
 	easeInOut: MOTION_EASE_IN_OUT,
 };
+
+/** A spec's curve as a function of progress, named or given outright. */
+export function curveOf(ease: Ease): (p: number) => number {
+	return isBezier(ease)
+		? cubicBezier(ease[0], ease[1], ease[2], ease[3])
+		: NAMED[ease];
+}
 
 /**
  * The spec's whole timeline, in ms: a tween's delay plus its duration, or
@@ -248,7 +283,7 @@ export function lengthOf(spec: Spec): number {
  */
 export function progressOf(spec: Spec, t: number, from = 0): number {
 	if (spec.kind === "tween")
-		return segmentAt(t, from + spec.delayMs, spec.ms, CURVE[spec.ease]);
+		return segmentAt(t, from + spec.delayMs, spec.ms, curveOf(spec.ease));
 	const settle = springSettle(spec);
 	const elapsed = t - from;
 	if (elapsed <= 0) return 0;
