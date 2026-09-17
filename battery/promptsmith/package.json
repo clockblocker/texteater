@@ -33,6 +33,10 @@
 		"./openai": {
 			"types": "./dist/openai.d.ts",
 			"import": "./dist/openai.js"
+		},
+		"./typesafe": {
+			"types": "./dist/typesafe.d.ts",
+			"import": "./dist/typesafe.js"
 		}
 	},
 	"files": [
@@ -45,7 +49,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/codegen.ts src/evaluation.ts src/storage.ts src/openai.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/codegen.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
@@ -57,8 +61,9 @@
 		"validate:test": "bun run test"
 	},
 	"dependencies": {
-		"zod": "^4.4.0",
-		"codegen": "workspace:^"
+		"@typesafe-ai/sdk": "^0.6.0",
+		"codegen": "workspace:^",
+		"zod": "^4.4.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",
