@@ -4,6 +4,7 @@ import {
 	defineLinguisticPrompt,
 	grammarInputSchema,
 } from "../../../authoring.js";
+import { verbalCompositionGuidance } from "../../verbal-guidance.js";
 import cases from "./corpus.json";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
@@ -76,30 +77,7 @@ no supported inflectional evidence. Thus partial was zum … has null inflection
 its missing Teufel is represented only by realizationCoverage Partial and the
 complete canonicalForm. Ordinary verbal clause uses have marked inflectionalFeatures.
 
-For inflectionalFeatures, describe the route-owning lexical verbal head, not an analytic
-auxiliary. A finite head uses verbForm Fin. Indicative and subjunctive finite
-forms use mood Ind or Sub with recoverable person, number, and tense; German
-Konjunktiv I maps to Pres and Konjunktiv II to Past. Imperatives use mood Imp,
-verbForm Fin, tense null, and recoverable person and number. An infinitive uses
-verbForm Inf with mood, person, and tense null. A Partizip II uses verbForm Part
-with aspect, gender, mood, number, person, and tense null unless the form itself
-settles one of those values. Do not copy perfect, future, or passive auxiliary
-tense onto an infinitive or participle. Set voice Pass only when the Idiom
-Surface itself is grammatically passive.
-
-Decide lexical head before recognizing an auxiliary. A finite form of haben,
-sein, or werden is the lexical head when the Idiom Lemma itself is headed by
-that verb, and therefore stays Fin. It is analytic only when a different
-selected lexical infinitive or participle heads the Idiom.
-
-Aspect=Perf does not mean German perfect tense and is not licensed merely by a
-Partizip II or a selected perfect auxiliary. For an ordinary unagreed German
-Partizip II, aspect is null along with gender, mood, number, person, and tense.
-
-The codec also permits the fifth, underspecified verbal branch:
-{number,tense,verbForm:null,voice}. Use it only when contextual evidence cannot
-classify the verbal head as Fin, Inf, or Part. Do not use it merely to avoid a
-recoverable analysis.
+${verbalCompositionGuidance}
 
 Perfect, future, and passive auxiliaries supplied in members remain projected
 members because classification already owns membership. Infinitival zu that is

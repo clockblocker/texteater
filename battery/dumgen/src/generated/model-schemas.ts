@@ -859,55 +859,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -934,20 +896,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -955,7 +939,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -1015,13 +1002,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -1031,14 +1038,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -1051,21 +1064,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -1073,84 +1234,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -3120,55 +3386,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -3195,20 +3423,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -3216,7 +3466,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -3276,13 +3529,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -3292,14 +3565,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -3312,21 +3591,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -3334,84 +3761,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -4459,55 +4991,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -4534,20 +5028,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -4555,7 +5071,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -4615,13 +5134,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -4631,14 +5170,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -4651,21 +5196,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -4673,84 +5366,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -4962,55 +5760,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -5037,20 +5797,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -5058,7 +5840,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -5118,13 +5903,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -5134,14 +5939,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -5154,21 +5965,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -5176,84 +6135,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},

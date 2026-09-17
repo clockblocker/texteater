@@ -10,7 +10,6 @@ import {
 	GrammaticalNumber,
 	Mood,
 	NumType,
-	nonEmptyFeatureBagSchema,
 	Person,
 	Polite,
 	PronType,
@@ -131,61 +130,51 @@ export const DE_FEATURE_SCHEMA = {
 	determinerPronType: DeDeterminerPronTypeSchema,
 } as const;
 
-// Verbal
-const DeVerbalUnspecifiedFormFeatureBagSchema = nonEmptyFeatureBagSchema(
-	z.strictObject({
-		number: DE_FEATURE_SCHEMA.number.nullable(),
-		tense: DE_FEATURE_SCHEMA.tense.nullable(),
-		verbForm: z.null(),
-		voice: DE_FEATURE_SCHEMA.voice.nullable(),
-	}),
-);
-
-const DeVerbalImperativeFeatureBagSchema = z.strictObject({
-	mood: DE_FEATURE_SCHEMA.imperativeMood,
-	number: DE_FEATURE_SCHEMA.number.nullable(),
-	person: DE_FEATURE_SCHEMA.person.nullable(),
-	tense: z.null(),
-	verbForm: DE_FEATURE_SCHEMA.finiteForm,
-	voice: DE_FEATURE_SCHEMA.voice.nullable(),
-});
-
-const DeVerbalFiniteFeatureBagSchema = z.strictObject({
+// Whole-Surface form and finite coordinates are independent of construction.
+const composition = {
+	perfect: UNIVERSAL_FEATURE_SCHEMA.perfect.nullable(),
+	future: UNIVERSAL_FEATURE_SCHEMA.future.nullable(),
+};
+const finite = {
 	mood: DE_FEATURE_SCHEMA.finiteMood.nullable(),
 	number: DE_FEATURE_SCHEMA.number.nullable(),
 	person: DE_FEATURE_SCHEMA.person.nullable(),
 	tense: DE_FEATURE_SCHEMA.tense.nullable(),
 	verbForm: DE_FEATURE_SCHEMA.finiteForm,
-	voice: DE_FEATURE_SCHEMA.voice.nullable(),
-});
-
-const DeVerbalInfinitiveFeatureBagSchema = z.strictObject({
+};
+const nonfinite = {
 	mood: z.null(),
-	number: DE_FEATURE_SCHEMA.number.nullable(),
+	number: z.null(),
 	person: z.null(),
 	tense: z.null(),
-	verbForm: DE_FEATURE_SCHEMA.infinitiveForm,
-	voice: DE_FEATURE_SCHEMA.voice.nullable(),
-});
-
-const DeVerbalParticipleFeatureBagSchema = z.strictObject({
-	aspect: DE_FEATURE_SCHEMA.aspect.nullable(),
-	gender: DE_FEATURE_SCHEMA.gender.nullable(),
-	mood: z.null(),
-	number: DE_FEATURE_SCHEMA.number.nullable(),
-	person: z.null(),
-	tense: DE_FEATURE_SCHEMA.tense.nullable(),
-	verbForm: DE_FEATURE_SCHEMA.participleForm,
-	voice: DE_FEATURE_SCHEMA.voice.nullable(),
-});
-
-export const DeVerbalInflectionalFeatureBagSchema = z.union([
-	DeVerbalUnspecifiedFormFeatureBagSchema,
-	DeVerbalImperativeFeatureBagSchema,
-	DeVerbalFiniteFeatureBagSchema,
-	DeVerbalInfinitiveFeatureBagSchema,
-	DeVerbalParticipleFeatureBagSchema,
-]);
+};
+const forms = [
+	finite,
+	{ ...finite, mood: DE_FEATURE_SCHEMA.imperativeMood, tense: z.null() },
+	{ ...nonfinite, verbForm: DE_FEATURE_SCHEMA.infinitiveForm },
+	{
+		...nonfinite,
+		verbForm: DE_FEATURE_SCHEMA.participleForm,
+		participleForm: UNIVERSAL_FEATURE_SCHEMA.participleForm.nullable(),
+	},
+] as const;
+// Branches enforce voice/subtype consistency in both Zod and compiled validators.
+export const DeVerbalInflectionalFeatureBagSchema = z.union(
+	forms.flatMap((form) => [
+		z.strictObject({
+			...form,
+			...composition,
+			voice: z.null(),
+			passive: z.null(),
+		}),
+		z.strictObject({
+			...form,
+			...composition,
+			voice: DE_FEATURE_SCHEMA.voice,
+			passive: UNIVERSAL_FEATURE_SCHEMA.passive,
+		}),
+	]),
+);
 
 export type DeVerbalInflectionalFeatureBag = z.infer<
 	typeof DeVerbalInflectionalFeatureBagSchema

@@ -38,6 +38,12 @@ export function featurePairs(
 /** Feature values alone, for a one-line summary such as `Dat · Sg`. */
 export function featureSummary(features: PresentedFeatures): string {
 	return featurePairs(features)
-		.map(({ value }) => value)
+		.map(({ name, value }) =>
+			(name === "perfect" || name === "future") && value === "Yes"
+				? name
+				: name === "passive"
+					? `${value.toLowerCase()} passive`
+					: value,
+		)
 		.join(" · ");
 }

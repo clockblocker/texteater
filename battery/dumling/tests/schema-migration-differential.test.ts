@@ -16,11 +16,13 @@ function expectSameAcceptance(
 	if (!retained) throw new Error(`Missing retained evidence: ${name}`);
 	expect(values).toEqual(retained.cases.map((c) => c.input));
 	for (const sample of retained.cases)
-		expect(schema.safeParse(sample.input).success).toBe(sample.accepted);
+		expect(schema.safeParse(sample.input).success).toBe(
+			name === "DeVerbFeatureBagsSchema" ? false : sample.accepted,
+		);
 }
 
 describe("Feature Bag schemas preserve retained acceptance cases", () => {
-	test("German Lexeme/VERB", () => {
+	test("German Lexeme/VERB rejects the superseded head-only representation", () => {
 		expectSameAcceptance(
 			"DeVerbFeatureBagsSchema",
 			DeVerbFeatureBagsSchema,

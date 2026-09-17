@@ -4,6 +4,7 @@ import {
 	defineLinguisticPrompt,
 	grammarInputSchema,
 } from "../../../authoring.js";
+import { verbalCompositionGuidance } from "../../verbal-guidance.js";
 import cases from "./corpus.json";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
@@ -62,66 +63,9 @@ unless the attested use itself is archaic; then use
 without making the use archaic.
 </surface_inflection>
 
-<finite_inflection>
-For an ordinary finite indicative or subjunctive use, emit:
-{
-  mood: "Ind" | "Sub" | null,
-  number: "Plur" | "Sing" | null,
-  person: "1" | "2" | "3" | null,
-  tense: "Past" | "Pres" | null,
-  verbForm: "Fin",
-  voice: "Pass" | null
-}
+${verbalCompositionGuidance}
 
-Fill only features established by form and context. Use null for genuine
-syncretism or damaged context. Konjunktiv I uses tense Pres; Konjunktiv II uses
-tense Past. In present-day modal use, möchte is the Konjunktiv-II form of mögen:
-use mood Sub and tense Past, not indicative present. A form such as wir sollen
-is syncretic between indicative and subjunctive; if a damaged fragment provides
-no disambiguating syntax or report context, use mood null rather than guessing
-Ind or Sub. Null mood does not erase other evidence: an overt subject such as
-wir still establishes person 1 and number Plur independently. For an imperative
-use:
-{
-  mood: "Imp",
-  number: "Plur" | "Sing" | null,
-  person: "1" | "2" | "3" | null,
-  tense: null,
-  verbForm: "Fin",
-  voice: "Pass" | null
-}
-</finite_inflection>
 
-<nonfinite_inflection>
-For an infinitive use:
-{
-  mood: null,
-  number: "Plur" | "Sing" | null,
-  person: null,
-  tense: null,
-  verbForm: "Inf",
-  voice: "Pass" | null
-}
-
-For a participial use:
-{
-  aspect: "Perf" | null,
-  gender: "Fem" | "Masc" | "Neut" | null,
-  mood: null,
-  number: "Plur" | "Sing" | null,
-  person: null,
-  tense: "Past" | "Pres" | null,
-  verbForm: "Part",
-  voice: "Pass" | null
-}
-
-Ordinary German AUX infinitives and participles have null agreement. Do not
-infer Aspect Perf or Tense merely from Partizip II shape. The codec also admits
-a compatibility feature bag with verbForm null and at least one of number,
-tense, or voice non-null. Use it only when the representation genuinely
-establishes such a feature but does not establish Fin, Inf, or Part; never use
-it for a normal identifiable German verb form.
-</nonfinite_inflection>
 
 <voice_policy>
 Voice belongs to the marked AUX Surface. Use Pass when werden itself forms the

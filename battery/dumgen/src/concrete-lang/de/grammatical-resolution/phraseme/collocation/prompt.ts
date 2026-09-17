@@ -4,6 +4,7 @@ import {
 	defineLinguisticPrompt,
 	grammarInputSchema,
 } from "../../../authoring.js";
+import { verbalCompositionGuidance } from "../../verbal-guidance.js";
 import cases from "./corpus.json";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
@@ -77,26 +78,7 @@ policy resolves only an established canonical component inventory. Return
 Unresolved rather than guessing whether a replaced determiner, a bare or plural
 nominal, or a different support verb belongs to the same Lemma.
 
-Treat as a citation only for an explicitly identified dictionary or citation entry.
-An ordinary clause use has contextual inflection and carries the marked support verb's own
-contextual morphology even though the whole Surface has several members and
-may include a finite analytic auxiliary.
-Analyze the support verb as attested in this occurrence; never replace a past
-form with present features. Never borrow grammatical features from an unmarked
-verb or another occurrence. Finite indicative and subjunctive forms use
-verbForm Fin with every established mood, number, person, and tense.
-Imperatives use mood Imp, verbForm Fin, and tense null; retain recoverable
-number and person, so a singular second-person imperative has number Sing and
-person 2. A marked
-contextual infinitive remains resolvable when infinitival zu is unmarked: use
-verbForm Inf with mood, number, person, and tense null. A marked Partizip II
-remains the route-owning head when its auxiliary is also marked. For an ordinary unagreed
-Partizip II, emit exactly
-{"aspect":null,"gender":null,"mood":null,"number":null,"person":null,"tense":null,"verbForm":"Part","voice":null}.
-Never use Aspect=Perf merely for Partizip II and never copy tense from its
-auxiliary. The finite analytic auxiliary is a member but never donates head
-inflectional-feature values. Keep voice null unless the
-marked collocation Surface itself has a settled grammatically passive analysis.
+${verbalCompositionGuidance}
 
 Standard is the exact conventional spelling or ordinary sentence-initial
 capitalization of that marked member. Typo means a real spelling error in that

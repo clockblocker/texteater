@@ -4,6 +4,7 @@ import {
 	defineLinguisticPrompt,
 	grammarInputSchema,
 } from "../../../authoring.js";
+import { verbalCompositionGuidance } from "../../verbal-guidance.js";
 import cases from "./corpus.json";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
@@ -38,7 +39,7 @@ The supplied members together realize one lexical verb. Besides its lexical head
 1. Identify the lexical VERB head realized by the supplied members. Perfect-forming haben or sein and future/passive werden belong to the realization but never replace the lexical head.
 2. Normalize every member positionally. Preserve source order, repetitions, and morphology.
 3. Decide null versus marked inflectionalFeatures from the occurrence. A form used in a clause has marked inflectionalFeatures even when its spelling equals the infinitive.
-4. Resolve inflection from the lexical head, not from a finite auxiliary. Do not project the auxiliary's tense, mood, person, number, or voice onto a non-finite lexical head.
+4. Resolve the complete verbal Surface, including its scoped grammatical auxiliaries.
 5. Resolve the dictionary infinitive and the three lexical core features independently.
 6. Verify that both member arrays have exactly members.length entries and that the response contains only the five requested top-level fields.
 </decision_procedure>
@@ -51,35 +52,9 @@ normalizedMembers copies each Standard member exactly, except ordinary sentence-
 Use spelling Canonical unless the attested form is a recognized standard variant. surfaceFeatures is null unless the occurrence is archaic, in which case use { historicalStatus: "Archaic" }.
 </surface_model>
 
-<lexical_head_repairs>
-- Finite lexical verb: the lexical head is Fin even when a detached prefix or governed material follows later.
-- Perfect: the lexical head is normally Part. haben or sein remains a member, but its finite features do not become head features.
-- Future: the lexical head remains Inf. werden remains a member.
-- Passive: the lexical head is normally Part. A passive werden member does not by itself make the head's voice Pass.
-- Productive state passive: sein plus Partizip II can be supplied together after TIGER-style Target Classification. The participle remains the Part head under the base VERB Lemma; finite sein remains a member and contributes no head features.
-- Perfect passive: analyze the lexical participle as Part through stacks such as ist ... aufgefunden worden or war ... verschifft worden.
-- Modal plus passive: a modal such as soll stays unmarked context because it is a separate AUX target; passive werden can still be a supplied VERB member.
-- Lexical haben, werden, or modal-shaped verbs routed here as singleton VERBs are ordinary lexical heads. Analyze their own finite form.
-</lexical_head_repairs>
+${verbalCompositionGuidance}
 
-<inflection_decision_order>
-For inflectionalFeatures, choose exactly one feature shape:
 
-1. Finite indicative or subjunctive:
-{ mood: "Ind" | "Sub" | null, number: "Plur" | "Sing" | null, person: "1" | "2" | "3" | null, tense: "Past" | "Pres" | null, verbForm: "Fin", voice: "Pass" | null }
-Use Pres for Konjunktiv I and Past for Konjunktiv II.
-
-2. Imperative:
-{ mood: "Imp", number: "Plur" | "Sing" | null, person: "1" | "2" | "3" | null, tense: null, verbForm: "Fin", voice: "Pass" | null }
-
-3. Infinitive:
-{ mood: null, number: "Plur" | "Sing" | null, person: null, tense: null, verbForm: "Inf", voice: "Pass" | null }
-Normally number and voice are null.
-
-4. Participle:
-{ aspect: "Perf" | null, gender: "Fem" | "Masc" | "Neut" | null, mood: null, number: "Plur" | "Sing" | null, person: null, tense: "Past" | "Pres" | null, verbForm: "Part", voice: "Pass" | null }
-For an ordinary unagreed German Partizip II lexical head, set aspect, gender, number, tense, and voice to null. Do not infer aspect Perf from the name Partizip II. Fill agreement or voice only when the lexical head itself overtly establishes it.
-</inflection_decision_order>
 
 <member_boundary_repairs>
 - Produce one orthography label and one normalized string for every supplied member. Never collapse a verb complex into one string.

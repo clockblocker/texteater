@@ -16,7 +16,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -29,7 +32,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-citation-arbeiten": {
 		"input": {
@@ -73,7 +77,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -86,7 +93,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-imperative-lauf": {
 		"input": {
@@ -105,7 +113,10 @@
 					"person": "2",
 					"tense": null,
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -118,7 +129,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-infinitive-hinauszulaufen": {
 		"input": {
@@ -137,7 +149,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -150,7 +165,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-participle-mitgebracht": {
 		"input": {
@@ -164,14 +180,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -184,7 +201,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-participle-gesungen": {
 		"input": {
@@ -198,14 +216,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -218,7 +237,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-separable-imperative-aufpassen": {
 		"input": {
@@ -237,7 +257,10 @@
 					"person": "2",
 					"tense": null,
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -251,7 +274,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Two auf. First governed preposition. Second separable prefix. dich free."
+		"explanation": "Two auf. First governed preposition. Second separable prefix. dich free. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-reflexive-erinnert": {
 		"input": {
@@ -270,7 +293,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -284,7 +310,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "sich inherent. an governed. Both members."
+		"explanation": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-governed-preposition-wartet": {
 		"input": {
@@ -303,7 +329,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -316,7 +345,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-separable-finite-aufstehen": {
 		"input": {
@@ -335,7 +365,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -348,7 +381,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-reflexive-schaemt": {
 		"input": {
@@ -367,7 +401,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -380,7 +417,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-future-wird-reisen": {
 		"input": {
@@ -394,12 +432,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Inf",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": "Yes",
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -413,7 +454,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "wird member. reisen head. Head stays Inf."
+		"explanation": "wird member. reisen head. Head stays Inf. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-passive-wurde-gebeten": {
 		"input": {
@@ -427,14 +468,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -448,7 +490,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "wurde and um members. gebeten head. Head stays Part; voice null."
+		"explanation": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-full-modal-mag": {
 		"input": {
@@ -467,7 +509,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -480,7 +525,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-elliptical-modal-kann": {
 		"input": {
@@ -499,7 +545,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -513,7 +562,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB."
+		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-full-werden": {
 		"input": {
@@ -532,7 +581,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -545,7 +597,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-full-hat": {
 		"input": {
@@ -564,7 +617,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -577,7 +633,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-typo-tanzd": {
 		"input": {
@@ -596,7 +653,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -609,7 +669,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-passive-participle-geschlossen": {
 		"input": {
@@ -623,14 +684,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -644,7 +706,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part."
+		"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-state-passive-geschlossen": {
 		"input": {
@@ -658,14 +720,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "State"
 				}
 			},
 			"lemma": {
@@ -679,7 +742,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "TIGER productive state passive. ist member. geschlossen head stays Part under schließen."
+		"explanation": "TIGER productive state passive. ist member. geschlossen head stays Part under schließen. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-provisional-zu-infinitive-warten": {
 		"input": {
@@ -698,7 +761,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -711,7 +777,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-future-beteiligen": {
 		"input": {
@@ -730,12 +797,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Inf",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": "Yes",
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -751,7 +821,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-separable-aufsetzen": {
 		"input": {
@@ -770,7 +841,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -784,7 +858,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "sich ordinary object. Not member.",
+		"explanation": "sich ordinary object. Not member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/krieg-im-sudan-gesundheitsversorgung-im-exil/a-75817375"
 		]
@@ -801,14 +875,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -824,7 +899,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-perfect-eingependelt": {
 		"input": {
@@ -838,14 +914,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -861,7 +938,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-perfect-ausgeschlossen": {
 		"input": {
@@ -875,14 +953,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -898,7 +977,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-separable-nachwirken": {
 		"input": {
@@ -917,7 +997,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -933,7 +1016,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-passive-weitergeleitet": {
 		"input": {
@@ -947,14 +1031,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Plur",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -970,7 +1055,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-future-finden": {
 		"input": {
@@ -984,12 +1070,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Inf",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": "Yes",
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1003,7 +1092,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "First wird member. Last wird other verb.",
+		"explanation": "First wird member. Last wird other verb. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/zukunft-stadtplanung-wie-werden-wir-leben-transport-nahrung-stadtentwicklung/a-74137152"
 		]
@@ -1020,14 +1109,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
+					"verbForm": "Inf",
 					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"mood": null,
+					"person": null,
+					"number": null,
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -1041,7 +1131,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "soll modal. Not member. werden passive member.",
+		"explanation": "soll modal. Not member. werden passive member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/eu-sichert-sich-300-millionen-biontech-impfdosen-f%C3%BCr-europa/a-55566897"
 		]
@@ -1058,14 +1148,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Plur",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1081,7 +1172,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-passive-aufgefressen": {
 		"input": {
@@ -1095,14 +1187,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Plur",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -1118,7 +1211,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-perfect-ausgesprochen": {
 		"input": {
@@ -1137,14 +1231,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1160,7 +1255,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-perfect-passive-aufgefunden": {
 		"input": {
@@ -1174,14 +1270,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -1197,7 +1294,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-pluperfect-passive-verschifft": {
 		"input": {
@@ -1211,14 +1309,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -1234,7 +1333,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-dw-separable-vorbereiten": {
 		"input": {
@@ -1258,7 +1358,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1274,7 +1377,8 @@
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
-		]
+		],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-governed-warten-auf": {
 		"input": {
@@ -1293,7 +1397,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1306,7 +1413,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-free-warten-im": {
 		"input": {
@@ -1325,7 +1433,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1338,7 +1449,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-governed-verzichten-auf": {
 		"input": {
@@ -1357,7 +1469,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1370,7 +1485,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-free-sprechen-im": {
 		"input": {
@@ -1389,7 +1505,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1402,7 +1521,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-governed-reflexive-erinnern-an": {
 		"input": {
@@ -1421,7 +1541,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1434,7 +1557,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-governed-reflexive-sehnen-nach": {
 		"input": {
@@ -1453,7 +1577,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1466,7 +1593,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-free-reflexive-erholen-im": {
 		"input": {
@@ -1485,7 +1613,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1498,7 +1629,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-governed-warnen-vor": {
 		"input": {
@@ -1517,7 +1649,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1530,7 +1665,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-free-arbeiten-mit": {
 		"input": {
@@ -1549,7 +1685,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1562,7 +1701,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-prep-free-spielen-auf": {
 		"input": {
@@ -1581,7 +1721,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1594,6 +1737,7 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	}
 }

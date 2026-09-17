@@ -5,6 +5,12 @@ import { HasGovPrepSchema } from "./custom/governed-preposition.js";
 import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
+import {
+	FutureConstructionSchema,
+	ParticipleFormSchema,
+	PassiveConstructionSchema,
+	PerfectConstructionSchema,
+} from "./custom/verbal-composition.js";
 import { FeatureBagKind } from "./feature-bag-kind.js";
 import { AbbrSchema } from "./ud/abbr.js";
 import { AdpTypeSchema } from "./ud/adp-type.js";
@@ -61,6 +67,7 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	evident: EvidentSchema,
 	extPos: ExtPosSchema,
 	foreign: ForeignSchema,
+	future: FutureConstructionSchema,
 	gender: GenderSchema,
 	"gender[psor]": GenderSchema,
 	governedCase: GovernedCaseSchema,
@@ -78,6 +85,9 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	referenceNumber: GrammaticalNumberSchema,
 	numType: NumTypeSchema,
 	partType: PartTypeSchema,
+	participleForm: ParticipleFormSchema,
+	passive: PassiveConstructionSchema,
+	perfect: PerfectConstructionSchema,
 	person: PersonSchema,
 	phrasal: PhrasalSchema,
 	polarity: PolaritySchema,

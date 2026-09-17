@@ -506,18 +506,15 @@ export interface UnitMap {
 			inflectionalFeatures:
 				| (
 						| {
-								number: ("Plur" | "Sing") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: null;
-								voice: "Pass" | null;
-						  }
-						| {
-								mood: "Imp";
+								mood: ("Ind" | "Sub") | null;
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
-								tense: null;
+								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
 								mood: ("Ind" | "Sub") | null;
@@ -525,25 +522,78 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Inf";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
-								aspect: "Perf" | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
-								tense: ("Past" | "Pres") | null;
+								tense: null;
+								verbForm: "Inf";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
-								voice: "Pass" | null;
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 				  )
 				| null;
@@ -579,18 +629,15 @@ export interface UnitMap {
 				inflectionalFeatures:
 					| (
 							| {
-									number: ("Plur" | "Sing") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: null;
-									voice: "Pass" | null;
-							  }
-							| {
-									mood: "Imp";
+									mood: ("Ind" | "Sub") | null;
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
-									tense: null;
+									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
 									mood: ("Ind" | "Sub") | null;
@@ -598,25 +645,78 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Inf";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
-									aspect: "Perf" | null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
-									tense: ("Past" | "Pres") | null;
+									tense: null;
+									verbForm: "Inf";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
-									voice: "Pass" | null;
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 					  )
 					| null;
@@ -1839,18 +1939,15 @@ export interface UnitMap {
 			inflectionalFeatures:
 				| (
 						| {
-								number: ("Plur" | "Sing") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: null;
-								voice: "Pass" | null;
-						  }
-						| {
-								mood: "Imp";
+								mood: ("Ind" | "Sub") | null;
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
-								tense: null;
+								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
 								mood: ("Ind" | "Sub") | null;
@@ -1858,25 +1955,78 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Inf";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
-								aspect: "Perf" | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
-								tense: ("Past" | "Pres") | null;
+								tense: null;
+								verbForm: "Inf";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
-								voice: "Pass" | null;
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 				  )
 				| null;
@@ -1922,18 +2072,15 @@ export interface UnitMap {
 				inflectionalFeatures:
 					| (
 							| {
-									number: ("Plur" | "Sing") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: null;
-									voice: "Pass" | null;
-							  }
-							| {
-									mood: "Imp";
+									mood: ("Ind" | "Sub") | null;
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
-									tense: null;
+									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
 									mood: ("Ind" | "Sub") | null;
@@ -1941,25 +2088,78 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Inf";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
-									aspect: "Perf" | null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
-									tense: ("Past" | "Pres") | null;
+									tense: null;
+									verbForm: "Inf";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
-									voice: "Pass" | null;
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 					  )
 					| null;
@@ -2693,18 +2893,15 @@ export interface UnitMap {
 			inflectionalFeatures:
 				| (
 						| {
-								number: ("Plur" | "Sing") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: null;
-								voice: "Pass" | null;
-						  }
-						| {
-								mood: "Imp";
+								mood: ("Ind" | "Sub") | null;
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
-								tense: null;
+								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
 								mood: ("Ind" | "Sub") | null;
@@ -2712,25 +2909,78 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Inf";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
-								aspect: "Perf" | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
-								tense: ("Past" | "Pres") | null;
+								tense: null;
+								verbForm: "Inf";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
-								voice: "Pass" | null;
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 				  )
 				| null;
@@ -2766,18 +3016,15 @@ export interface UnitMap {
 				inflectionalFeatures:
 					| (
 							| {
-									number: ("Plur" | "Sing") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: null;
-									voice: "Pass" | null;
-							  }
-							| {
-									mood: "Imp";
+									mood: ("Ind" | "Sub") | null;
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
-									tense: null;
+									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
 									mood: ("Ind" | "Sub") | null;
@@ -2785,25 +3032,78 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Inf";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
-									aspect: "Perf" | null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
-									tense: ("Past" | "Pres") | null;
+									tense: null;
+									verbForm: "Inf";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
-									voice: "Pass" | null;
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 					  )
 					| null;
@@ -2967,18 +3267,15 @@ export interface UnitMap {
 			inflectionalFeatures:
 				| (
 						| {
-								number: ("Plur" | "Sing") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: null;
-								voice: "Pass" | null;
-						  }
-						| {
-								mood: "Imp";
+								mood: ("Ind" | "Sub") | null;
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
-								tense: null;
+								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
 								mood: ("Ind" | "Sub") | null;
@@ -2986,25 +3283,78 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Inf";
-								voice: "Pass" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
 						  }
 						| {
-								aspect: "Perf" | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
-								tense: ("Past" | "Pres") | null;
+								tense: null;
+								verbForm: "Inf";
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
-								voice: "Pass" | null;
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "State";
 						  }
 				  )
 				| null;
@@ -3040,18 +3390,15 @@ export interface UnitMap {
 				inflectionalFeatures:
 					| (
 							| {
-									number: ("Plur" | "Sing") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: null;
-									voice: "Pass" | null;
-							  }
-							| {
-									mood: "Imp";
+									mood: ("Ind" | "Sub") | null;
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
-									tense: null;
+									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
 									mood: ("Ind" | "Sub") | null;
@@ -3059,25 +3406,78 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Inf";
-									voice: "Pass" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
 							  }
 							| {
-									aspect: "Perf" | null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
-									tense: ("Past" | "Pres") | null;
+									tense: null;
+									verbForm: "Inf";
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
-									voice: "Pass" | null;
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "State";
 							  }
 					  )
 					| null;

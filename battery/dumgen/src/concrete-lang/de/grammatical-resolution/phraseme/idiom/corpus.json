@@ -23,7 +23,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -31,7 +34,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:flinte-ins-korn-werfen"]
+		"contaminationKeys": ["de-idiom-lemma:flinte-ins-korn-werfen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-grass-citation": {
 		"input": {
@@ -77,7 +81,10 @@
 					"person": "2",
 					"tense": null,
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -85,7 +92,7 @@
 				"coreFeatures": {}
 			}
 		},
-		"explanation": "Heult starts sentence. Standard spelling. Normalize verb to heult.",
+		"explanation": "Heult starts sentence. Standard spelling. Normalize verb to heult. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:mit-den-woelfen-heulen"]
 	},
 	"grammar-de-idiom-teufel-wand-full": {
@@ -120,7 +127,10 @@
 					"person": "1",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -128,7 +138,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:teufel-an-die-wand-malen"]
+		"contaminationKeys": ["de-idiom-lemma:teufel-an-die-wand-malen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-nase-typo-full": {
 		"input": {
@@ -154,7 +165,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -162,7 +176,7 @@
 				"coreFeatures": {}
 			}
 		},
-		"explanation": "dem Chef is free argument. Do not add jemandem to canonicalForm.",
+		"explanation": "dem Chef is free argument. Do not add jemandem to canonicalForm. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:auf-der-nase-herumtanzen"]
 	},
 	"grammar-de-idiom-handtuch-ellipsis-partial": {
@@ -178,14 +192,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -193,7 +208,7 @@
 				"coreFeatures": {}
 			}
 		},
-		"explanation": "Second occurrence. Fixed object omitted by coordination. Meaning stays clear.",
+		"explanation": "Second occurrence. Fixed object omitted by coordination. Meaning stays clear. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:das-handtuch-werfen"]
 	},
 	"grammar-de-idiom-was-zum-truncation-partial": {
@@ -237,14 +252,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -252,7 +268,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:sich-ins-faeustchen-lachen"]
+		"contaminationKeys": ["de-idiom-lemma:sich-ins-faeustchen-lachen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-truebsal-imperative-full": {
 		"input": {
@@ -272,7 +289,10 @@
 					"person": "2",
 					"tense": null,
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -280,7 +300,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:truebsal-blasen"]
+		"contaminationKeys": ["de-idiom-lemma:truebsal-blasen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-hand-fuss-subjunctive-full": {
 		"input": {
@@ -305,7 +326,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -313,7 +337,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:hand-und-fuss-haben"]
+		"contaminationKeys": ["de-idiom-lemma:hand-und-fuss-haben"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-schneider-past-full": {
 		"input": {
@@ -338,7 +363,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -346,7 +374,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:frieren-wie-ein-schneider"]
+		"contaminationKeys": ["de-idiom-lemma:frieren-wie-ein-schneider"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-fliegen-present-full": {
 		"input": {
@@ -380,7 +409,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -388,7 +420,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:zwei-fliegen-eine-klappe"]
+		"contaminationKeys": ["de-idiom-lemma:zwei-fliegen-eine-klappe"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-loeffel-typo-full": {
 		"input": {
@@ -408,7 +441,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -416,7 +452,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:den-loeffel-abgeben"]
+		"contaminationKeys": ["de-idiom-lemma:den-loeffel-abgeben"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-kalte-schulter-future-full": {
 		"input": {
@@ -437,12 +474,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Inf",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": "Yes",
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -450,7 +490,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:kalte-schulter-zeigen"]
+		"contaminationKeys": ["de-idiom-lemma:kalte-schulter-zeigen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-fettnaepfchen-infinitive-full": {
 		"input": {
@@ -470,7 +511,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -478,7 +522,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:ins-fettnaepfchen-treten"]
+		"contaminationKeys": ["de-idiom-lemma:ins-fettnaepfchen-treten"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-tomaten-present-full": {
 		"input": {
@@ -504,7 +549,10 @@
 					"person": "2",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -512,7 +560,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:tomaten-auf-den-augen-haben"]
+		"contaminationKeys": ["de-idiom-lemma:tomaten-auf-den-augen-haben"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-nagel-passive-full": {
 		"input": {
@@ -551,14 +600,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": "Pass"
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -566,7 +616,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:nagel-auf-den-kopf-treffen"]
+		"contaminationKeys": ["de-idiom-lemma:nagel-auf-den-kopf-treffen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-zunge-im-zaum-infinitive-full": {
 		"input": {
@@ -592,7 +643,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -600,7 +654,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:zunge-im-zaum-halten"]
+		"contaminationKeys": ["de-idiom-lemma:zunge-im-zaum-halten"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-dick-duenn-past-full": {
 		"input": {
@@ -626,7 +681,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -634,7 +692,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:durch-dick-und-duenn-gehen"]
+		"contaminationKeys": ["de-idiom-lemma:durch-dick-und-duenn-gehen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-faden-perfect-full": {
 		"input": {
@@ -654,14 +713,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -669,7 +729,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:den-faden-verlieren"]
+		"contaminationKeys": ["de-idiom-lemma:den-faden-verlieren"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-ohr-present-full": {
 		"input": {
@@ -689,7 +750,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -697,7 +761,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:uebers-ohr-hauen"]
+		"contaminationKeys": ["de-idiom-lemma:uebers-ohr-hauen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-kuerzeren-ellipsis-partial": {
 		"input": {
@@ -712,14 +777,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -727,7 +793,7 @@
 				"coreFeatures": {}
 			}
 		},
-		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom.",
+		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:den-kuerzeren-ziehen"]
 	},
 	"grammar-de-idiom-bett-literal-figurative-full": {
@@ -748,7 +814,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -756,7 +825,7 @@
 				"coreFeatures": {}
 			}
 		},
-		"explanation": "First phrase literal. Marked second phrase means staying in bed ill.",
+		"explanation": "First phrase literal. Marked second phrase means staying in bed ill. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:das-bett-hueten"]
 	},
 	"grammar-de-idiom-wolke-present-full": {
@@ -782,7 +851,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -790,7 +862,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:auf-wolke-sieben-schweben"]
+		"contaminationKeys": ["de-idiom-lemma:auf-wolke-sieben-schweben"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-wolken-past-full": {
 		"input": {
@@ -815,7 +888,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -823,7 +899,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:aus-allen-wolken-fallen"]
+		"contaminationKeys": ["de-idiom-lemma:aus-allen-wolken-fallen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-katze-perfect-full": {
 		"input": {
@@ -852,14 +929,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -867,7 +945,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:katze-im-sack-kaufen"]
+		"contaminationKeys": ["de-idiom-lemma:katze-im-sack-kaufen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-kirche-imperative-full": {
 		"input": {
@@ -893,7 +972,10 @@
 					"person": "2",
 					"tense": null,
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -901,7 +983,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:kirche-im-dorf-lassen"]
+		"contaminationKeys": ["de-idiom-lemma:kirche-im-dorf-lassen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-blatt-future-full": {
 		"input": {
@@ -932,12 +1015,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Inf",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": "Yes",
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -945,7 +1031,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:kein-blatt-vor-den-mund-nehmen"]
+		"contaminationKeys": ["de-idiom-lemma:kein-blatt-vor-den-mund-nehmen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-kopf-sand-typo-perfect": {
 		"input": {
@@ -976,14 +1063,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -991,7 +1079,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:kopf-in-den-sand-stecken"]
+		"contaminationKeys": ["de-idiom-lemma:kopf-in-den-sand-stecken"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-licht-passive-full": {
 		"input": {
@@ -1018,14 +1107,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": "Pass"
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -1033,7 +1123,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:licht-ins-dunkel-bringen"]
+		"contaminationKeys": ["de-idiom-lemma:licht-ins-dunkel-bringen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-haende-present-full": {
 		"input": {
@@ -1054,12 +1145,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Inf",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1067,7 +1161,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:alle-haende-voll-zu-tun-haben"]
+		"contaminationKeys": ["de-idiom-lemma:alle-haende-voll-zu-tun-haben"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-schlauch-present-full": {
 		"input": {
@@ -1092,7 +1187,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1100,7 +1198,8 @@
 				"coreFeatures": {}
 			}
 		},
-		"contaminationKeys": ["de-idiom-lemma:auf-dem-schlauch-stehen"]
+		"contaminationKeys": ["de-idiom-lemma:auf-dem-schlauch-stehen"],
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-idiom-segel-ellipsis-partial": {
 		"input": {
@@ -1115,14 +1214,15 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1130,7 +1230,7 @@
 				"coreFeatures": {}
 			}
 		},
-		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom.",
+		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:die-segel-streichen"]
 	}
 }

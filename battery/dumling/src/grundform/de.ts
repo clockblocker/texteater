@@ -14,6 +14,9 @@ const infinitive: GrundformRule = {
 		tense: [null],
 		number: [null],
 		voice: [null, "Act"],
+		perfect: [null],
+		future: [null],
+		passive: [null],
 	},
 };
 const adjective: GrundformRule = {
