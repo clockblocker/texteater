@@ -53,8 +53,6 @@ import {
 	MORPH as MORPH_SPEC,
 	motionOf,
 	NOTE_BORDER,
-	NOTE_ENTER,
-	NOTE_EXIT,
 	OPEN_SCALE,
 	PILE_HEIGHT_REM,
 	SHEET_HEADER_REM,
@@ -1242,12 +1240,15 @@ export function CompassModel() {
 				onPointerCancel={frameUp}
 			>
 				{renderLayout(layout)}
-				{/* every Note, in every form, placed over the Panes */}
+				{/* every Note, in every form, placed over the Panes.
+				    No AnimatePresence: nothing here has an exit to play, and
+				    holding a swept Note for the frame it takes to find that
+				    out leaves the old deck standing over the new one. */}
 				<div
 					data-deck-notes=""
 					className="pointer-events-none absolute inset-0"
 				>
-					<AnimatePresence>{renderNotes()}</AnimatePresence>
+					{renderNotes()}
 				</div>
 			</div>
 		</ModelShell>
@@ -1306,7 +1307,8 @@ function NoteView({
 	const y = useMotionValue(0);
 	const rotate = useMotionValue(0);
 	const scale = useMotionValue(1);
-	const opacity = useMotionValue(0);
+	/* A dealt Note is simply there: opaque on its first frame, never faded. */
+	const opacity = useMotionValue(1);
 	const handle = useRef<NoteHandle>({
 		left,
 		top,
@@ -1333,9 +1335,7 @@ function NoteView({
 
 	useEffect(() => {
 		register(card.id, handle.current);
-		const fade = animate(opacity, 1, motionOf(NOTE_ENTER));
 		return () => {
-			fade.stop();
 			register(card.id, null);
 		};
 		/* register is a fresh closure every render; the handle is not */
@@ -1439,7 +1439,9 @@ function NoteView({
 			data-past={pastCommit}
 			data-holding={holding}
 			data-pane={paneId ?? undefined}
-			exit={{ opacity: 0, transition: motionOf(NOTE_EXIT) }}
+			/* The border is the arm state. A Note is dealt wearing its
+			   resting colour; only arming changes it. */
+			initial={false}
 			animate={{ borderColor }}
 			transition={motionOf(NOTE_BORDER)}
 			style={{
@@ -1483,6 +1485,7 @@ function NoteView({
 					{/* the Card's clip fades its content out; the Sheet lifts the fade */}
 					<motion.div
 						aria-hidden="true"
+						initial={false}
 						animate={{ opacity: sheet || below ? 0 : 1 }}
 						transition={motionOf(CLIP_FADE)}
 						className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-gradient-to-t from-paper to-transparent"
@@ -1557,6 +1560,15 @@ function HeadingBlock({
 	return (
 		<motion.div
 			data-heading=""
+			/*
+			 * `initial={false}` is the whole of it: without it Motion has no
+			 * first value for a height it was never given in CSS, so on mount
+			 * it measures the row it just rendered — the title's own line box —
+			 * and springs from there to `HEADER_REM`, carrying the Blocks below
+			 * down with it. A Card is dealt at its size; only a change of form
+			 * is a move.
+			 */
+			initial={false}
 			layout={layout ? "position" : false}
 			layoutDependency={form}
 			transition={MORPH}
@@ -1565,6 +1577,10 @@ function HeadingBlock({
 			className={`relative flex w-full shrink-0 items-end gap-4 px-4 ${sheet ? "cursor-grab touch-none active:cursor-grabbing" : ""} ${atBottom ? "" : "pb-2"}`}
 		>
 			<motion.span
+				/* Card form hides it. Without this the label is painted
+				   first and then fades out, so a dealt Card flashes its
+				   kind and slides it away. Same mount rule as the row. */
+				initial={false}
 				animate={{
 					opacity: sheet ? 1 : 0,
 					y: sheet ? 0 : KIND_LABEL_Y,
@@ -1575,6 +1591,7 @@ function HeadingBlock({
 				{note.kind}
 			</motion.span>
 			<motion.span
+				initial={false}
 				animate={{ fontSize: (sheet ? 1.5 : 1) * rem }}
 				transition={MORPH}
 				className={`min-w-0 flex-1 truncate font-serif leading-tight text-ink ${atBottom ? "pb-3" : ""}`}

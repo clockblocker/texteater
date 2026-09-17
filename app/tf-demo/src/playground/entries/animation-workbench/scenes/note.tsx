@@ -8,8 +8,6 @@ import {
 	HEADER_REM,
 	KIND_LABEL,
 	KIND_LABEL_Y,
-	NOTE_ENTER,
-	NOTE_EXIT,
 	SHEET_HEADER_REM,
 	SHEET_TITLE_REM,
 } from "../../deck-models/motion-spec";
@@ -20,7 +18,8 @@ import { mix, type SceneGroup, scene } from "../scene";
  * NOTE & BLOCKS — the smaller motions inside and around a Compass Note,
  * each on its own so it can be judged apart from the box morph it usually
  * runs under. All in `deck-models/drag-deck.tsx`: the Heading Block, the
- * Source Contexts Block, the Note's own fade in and out.
+ * Source Contexts Block, the Pane bar above a Sheet. The Note itself
+ * neither fades in nor out: it is dealt whole and swept whole.
  *
  * Every duration, curve and distance below comes from
  * `deck-models/motion-spec.ts`, which `drag-deck.tsx` reads too. The only
@@ -244,58 +243,12 @@ const paneBar = scene<BarFrame>({
 	),
 });
 
-/* --------------------------------------------------- note in and out */
-
-/** A preview beat: how long the Note sits before it is removed. */
-const LEAVE_AT = 500;
-
-export type PresenceFrame = { readonly opacity: number };
-
-const notePresence = scene<PresenceFrame>({
-	key: "note-presence",
-	title: "Note appears, then leaves",
-	source: "drag-deck.tsx · NoteView · opacity on mount · exit",
-	where: "playground",
-	knobs: [],
-	length: () => LEAVE_AT + NOTE_EXIT.ms,
-	frame: (t) => ({
-		opacity: mix(
-			progressOf(NOTE_ENTER, t),
-			0,
-			progressOf(NOTE_EXIT, t, LEAVE_AT),
-		),
-	}),
-	Render: ({ frame }) => (
-		<Stage>
-			<article
-				data-note
-				className="flex h-[8rem] w-[20rem] flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper"
-				style={{ opacity: frame.opacity }}
-			>
-				<span className="flex h-[2.75rem] w-full shrink-0 items-center justify-between gap-4 px-4">
-					<span className="truncate font-serif text-[1rem] text-ink">
-						{NOTE?.tail.form}
-					</span>
-					<span className="shrink-0 text-[0.72rem] text-ink-muted">
-						{NOTE?.tail.gloss}
-					</span>
-				</span>
-				<div className="space-y-1.5 px-4 text-[0.85rem] leading-relaxed text-ink-soft">
-					{NOTE?.lines.slice(0, 2).map((line) => (
-						<p key={line}>{line}</p>
-					))}
-				</div>
-			</article>
-		</Stage>
-	),
-});
-
 /* --------------------------------------------------------------- group */
 
 export const NOTE_GROUP: SceneGroup = {
 	key: "note",
 	title: "Note & blocks",
-	scenes: [headingGrows, clipLifts, contextsUnfold, paneBar, notePresence],
+	scenes: [headingGrows, clipLifts, contextsUnfold, paneBar],
 };
 
 export { NOTE_GROUP as NOTE };

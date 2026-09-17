@@ -140,9 +140,13 @@ export const DRAG_SPRING = spring(520, 42);
 
 /* --------------------------------------------------------- note tweens */
 
-/** A Note fading in on mount, and out when it leaves. */
-export const NOTE_ENTER = tween(160);
-export const NOTE_EXIT = tween(120);
+/*
+ * A Note does not fade in when it is dealt, and does not fade out when it
+ * is swept: a tap on a word puts four Cards on the page at once, and the
+ * ones they replace are gone in the same frame. There is no spec for it
+ * because there is no animation in it.
+ */
+
 /** The Note's border colour following its arm state. */
 export const NOTE_BORDER = tween(160);
 /** The Card's clip gradient; a Sheet lifts it. */
