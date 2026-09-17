@@ -400,6 +400,18 @@ function CompassRuntime({
 	 * this turns on is what the snap-back models disagree about.
 	 */
 	const [landed, setLanded] = useState(false);
+	/**
+	 * The gesture is over and the Note is on its way home. It stops being
+	 * boxed at the hand from this frame: the release is where it learns
+	 * its slot, not the teardown. For a Card the two are the same box and
+	 * nothing changes — but a Sheet lifted by its Heading is held in a
+	 * hand box nowhere near its slot, and used to settle there, wait out
+	 * the settle timeout and only then travel down to the Deck. One
+	 * release, two motions and a stop in between. Now the box morphs to
+	 * the slot while the drag offset unwinds on its own spring: both end
+	 * at the same place, so they read as one move.
+	 */
+	const [returning, setReturning] = useState(false);
 	/** Drop zones stay in the DOM for hit-testing; this only shows them. */
 	const [zonesVisible, setZonesVisible] = useState(initialZones);
 	/** Every Pane's box, relative to the frame; Notes are placed from these. */
@@ -649,6 +661,7 @@ function CompassRuntime({
 		returnRun.current = [];
 		landedRef.current = false;
 		setLanded(false);
+		setReturning(false);
 	}
 	function currentBox(h: NoteHandle): Box {
 		return {
@@ -865,6 +878,7 @@ function CompassRuntime({
 			returnRun.current = [];
 			landedRef.current = false;
 			setLanded(false);
+			setReturning(false);
 			setDrag(null);
 			setDestination(null);
 			setPastCommit(false);
@@ -894,7 +908,12 @@ function CompassRuntime({
 		landedRef.current = true;
 		setLanded(true);
 	}
-	/** Rejoin the stack once the Card is within `SNAP_LAND_PX` of its slot. */
+	/**
+	 * Rejoin the stack once the drag offset is within `SNAP_LAND_PX` of
+	 * nothing. That is the gesture unwinding, which for a Card is the
+	 * whole of its journey home; a Sheet's box is still morphing to the
+	 * slot beside it, and these models do not speak for that.
+	 */
 	function watchForLanding(h: NoteHandle) {
 		const check = () => {
 			if (Math.hypot(h.x.get(), h.y.get()) > SNAP_LAND_PX) return;
@@ -909,6 +928,7 @@ function CompassRuntime({
 	 * Deck closes over it — see `SNAP_BACK_MODELS`.
 	 */
 	function snapBack(h: NoteHandle) {
+		setReturning(true);
 		if (reduce) {
 			for (const [value, rest] of [
 				[h.x, 0],
@@ -1380,7 +1400,7 @@ function CompassRuntime({
 					card={card}
 					form="card"
 					place={place}
-					box={held && drag ? drag.origin : slot}
+					box={held && drag && !returning ? drag.origin : slot}
 					z={z}
 					held={held}
 					arm={held ? (drag?.arm ?? null) : null}

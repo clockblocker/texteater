@@ -402,6 +402,42 @@ test("the snap-back model decides when the deck closes over a returning card", a
 	expect(candidate.closedFrom).toBeLessThan(8);
 });
 
+test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
+	await page.goto("/playground/animation-workbench/sheet-lift");
+	const frame = page.locator("[data-deck-frame]");
+	const sheet = frame.locator('[data-form="sheet"]');
+	const id = await sheet.getAttribute("data-card-id");
+	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
+	/* lift it by the Heading and let go without going anywhere: the Note
+	   is in the hand, and its slot is a whole Sheet's height away */
+	await startDrag(page, sheet, 3, 3);
+	const samples = note.evaluate(async (element) => {
+		const taken: { y: number; held: boolean }[] = [];
+		const start = performance.now();
+		while (performance.now() - start < 900) {
+			await new Promise<void>((resolve) =>
+				requestAnimationFrame(() => resolve()),
+			);
+			taken.push({
+				y: element.getBoundingClientRect().y,
+				held: element.dataset.held === "true",
+			});
+		}
+		return taken;
+	});
+	await page.mouse.up();
+	const taken = await samples;
+	const lastHeld = taken.map((sample) => sample.held).lastIndexOf(true);
+	expect(lastHeld).toBeGreaterThan(0);
+	const after = taken.slice(lastHeld + 1).map((sample) => sample.y);
+	expect(after.length).toBeGreaterThan(0);
+	/* the travel belongs to the gesture: by the time the drag state tears
+	   down there is nothing left to do. The Note used to settle in the
+	   hand, wait the timeout out and only then drop to the Deck, which
+	   put its whole journey on the far side of this line. */
+	expect(Math.max(...after) - Math.min(...after)).toBeLessThan(3);
+});
+
 test("a held card is drawn where it rests, whatever its resting scale", async ({
 	page,
 }) => {
