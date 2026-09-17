@@ -177,4 +177,8 @@ export type DumgenOptions = {
 	>;
 	readonly onModelExchange?: (exchange: ModelExchange) => void;
 	readonly onOperation?: (trace: OperationTrace) => void;
+	/** Validated text contributions as they finish. The caller owns publication. */
+	readonly onKnowledgeContribution?: (
+		changes: KnowledgeProduction["changes"],
+	) => void;
 };

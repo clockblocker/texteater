@@ -14,6 +14,7 @@ export function createOpenAIExecutor(
 		const { $defs, $schema, ...outputSchema } = request.outputSchema;
 		const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
 		if (!apiKey) throw Error("OPENAI_API_KEY is not configured");
+		const started = performance.now();
 		const response = await (options.fetch ?? globalThis.fetch)(
 			`${options.baseUrl ?? "https://api.openai.com/v1"}/responses`,
 			{
@@ -51,6 +52,10 @@ export function createOpenAIExecutor(
 				}),
 			},
 		);
+		const headersMs = performance.now() - started;
+		const processingHeader = response.headers.get("openai-processing-ms");
+		const processingMs =
+			processingHeader === null ? null : Number(processingHeader);
 		if (!response.ok)
 			throw Error(
 				`OpenAI HTTP ${response.status}: ${await response.text()}`,
@@ -62,6 +67,7 @@ export function createOpenAIExecutor(
 			id?: string;
 			model?: string;
 		};
+		const bodyMs = performance.now() - started - headersMs;
 		if (payload.status !== "completed")
 			throw Error(
 				`OpenAI response ${payload.status ?? "missing status"}`,
@@ -74,6 +80,18 @@ export function createOpenAIExecutor(
 		return {
 			output: JSON.parse(outputText).value,
 			metadata: {
+				requestId: response.headers.get("x-request-id"),
+				timing: {
+					headersMs,
+					bodyMs,
+					totalMs: performance.now() - started,
+					providerProcessingMs:
+						processingMs !== null &&
+						Number.isFinite(processingMs) &&
+						processingMs >= 0
+							? processingMs
+							: null,
+				},
 				responseId: payload.id ?? null,
 				model: payload.model ?? null,
 				usage: payload.usage ?? null,

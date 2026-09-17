@@ -9,21 +9,29 @@ test("Responses adapter transports arbitrary output shapes, settings, cancellati
 		fetch: async (_url, init) => {
 			body = JSON.parse(String(init?.body));
 			expect(init?.signal).toBe(controller.signal);
-			return Response.json({
-				status: "completed",
-				id: "response",
-				usage: { total_tokens: 12 },
-				output: [
-					{
-						content: [
-							{
-								type: "output_text",
-								text: JSON.stringify({ value: ["a", "b"] }),
-							},
-						],
+			return Response.json(
+				{
+					status: "completed",
+					id: "response",
+					usage: { total_tokens: 12 },
+					output: [
+						{
+							content: [
+								{
+									type: "output_text",
+									text: JSON.stringify({ value: ["a", "b"] }),
+								},
+							],
+						},
+					],
+				},
+				{
+					headers: {
+						"x-request-id": "request",
+						"openai-processing-ms": "12.5",
 					},
-				],
-			});
+				},
+			);
 		},
 	});
 	const result = await execute({
@@ -34,7 +42,14 @@ test("Responses adapter transports arbitrary output shapes, settings, cancellati
 		signal: controller.signal,
 	});
 	expect(result.output).toEqual(["a", "b"]);
-	expect(result.metadata).toEqual({
+	expect(result.metadata).toMatchObject({
+		requestId: "request",
+		timing: {
+			headersMs: expect.any(Number),
+			bodyMs: expect.any(Number),
+			totalMs: expect.any(Number),
+			providerProcessingMs: 12.5,
+		},
 		responseId: "response",
 		model: null,
 		usage: { total_tokens: 12 },

@@ -2,8 +2,9 @@
 
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
-import type { KnowledgeInput } from "dumgen/types";
+import type { KnowledgeInput, KnowledgeProduction } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 import { createProductionDumgen } from "../server/modelExecution";
 import { parseGermanReading } from "../server/operationalParsing";
 import {
@@ -109,12 +110,39 @@ export const runKnowledgeGeneration = internalAction({
 				| undefined;
 			let generationCompleted = false;
 			const operationTraces: string[] = [];
+			let publicationQueue = Promise.resolve();
+			const pendingContributions: KnowledgeProduction["changes"][number][] =
+				[];
+			let publicationSequence = 0;
+			const publishedChanges = new Set<string>();
+			let publishContribution: (
+				changes: KnowledgeProduction["changes"],
+			) => Promise<void> = async () => {};
 			const knowledgeDumgen = createProductionDumgen(
 				(event) => {
 					if (event.kind === "TraceRecorded")
 						operationTraces.push(event.traceJson);
 				},
-				{},
+				{
+					onKnowledgeContribution: (changes) => {
+						pendingContributions.push(...structuredClone(changes));
+						publicationQueue = publicationQueue
+							.then(async () => {
+								// Coalesce siblings that finish while a commit is in flight.
+								const contribution =
+									pendingContributions.splice(0);
+								if (contribution.length)
+									await publishContribution(contribution);
+							})
+							.catch((error) => {
+								// Keep generation running; the final commit retries unsaved text.
+								console.error(
+									"Incremental Knowledge publication failed",
+									error,
+								);
+							});
+					},
+				},
 				inspection,
 			);
 			let requested: unknown = {};
@@ -154,6 +182,35 @@ export const runKnowledgeGeneration = internalAction({
 					artifactPath: authorization.artifactPath,
 					fingerprints: authorization.fingerprints,
 				};
+				publishContribution = async (changes) => {
+					await ctx.runAction(
+						internal.orchestration.applyGeneratedKnowledgePlan,
+						{
+							attemptKey,
+							publication: {
+								sequence: ++publicationSequence,
+								final: false,
+							},
+							reading,
+							changes: [...changes],
+							pendingRelations: [],
+							productionEvidence: {
+								request,
+								failures: [],
+								operationTraces: [],
+							},
+							relationPublication: {
+								runNumber: input.runNumber,
+								requestedKinds: [],
+								artifactPath: authorization.artifactPath,
+								fingerprints: authorization.fingerprints,
+								proposals: [],
+							},
+						},
+					);
+					for (const change of changes)
+						publishedChanges.add(JSON.stringify(change));
+				};
 				const generated = await Effect.runPromise(
 					knowledgeDumgen
 						.produceKnowledge({
@@ -162,7 +219,10 @@ export const runKnowledgeGeneration = internalAction({
 								attestation: input.attestation,
 							}).encounter,
 							reading,
-							request,
+							request: missingKnowledgeRequest(
+								request,
+								input.existingKnowledge,
+							),
 						} as KnowledgeInput<"de">)
 						.pipe(
 							Effect.catchTag("CatalogMiss", (failure) =>
@@ -175,6 +235,7 @@ export const runKnowledgeGeneration = internalAction({
 							),
 						),
 				);
+				await publicationQueue;
 				if ("decision" in generated) {
 					generationCompleted = true;
 					await ctx.runMutation(recordKnowledgeCatalogMiss, {
@@ -197,8 +258,15 @@ export const runKnowledgeGeneration = internalAction({
 					internal.orchestration.applyGeneratedKnowledgePlan,
 					{
 						attemptKey,
+						publication: {
+							sequence: ++publicationSequence,
+							final: true,
+						},
 						reading,
-						changes: publishable.changes,
+						changes: publishable.changes.filter(
+							(change) =>
+								!publishedChanges.has(JSON.stringify(change)),
+						),
 						pendingRelations: publishable.pendingRelations,
 						productionEvidence: {
 							request,
@@ -221,6 +289,7 @@ export const runKnowledgeGeneration = internalAction({
 				);
 				return null;
 			} catch (error) {
+				await publicationQueue;
 				inspection?.failure(
 					"Knowledge generation failed",
 					"app/tf-demo · knowledgeGenerationActions",

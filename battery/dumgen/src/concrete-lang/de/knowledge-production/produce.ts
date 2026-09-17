@@ -119,8 +119,7 @@ export async function produceKnowledge(
 	snapshot();
 	const state = {
 		reading,
-		encounter: input.encounter,
-		...markedContext(input.encounter),
+		markedContext: markedContext(input.encounter).markedContext,
 	};
 	type TextOutcome = {
 		changes: readonly Dumrel.KnowledgeChange[];
@@ -242,7 +241,7 @@ export async function produceKnowledge(
 									options,
 									route,
 								),
-								systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Write one concise contextual translation in ${leaf}, preserving meaningful case and punctuation.`} ${reading.lemma.kind === "Fusion" && aspect === "definition" ? "Explain the expanded preposition plus contextual article and its Case (im = in dem, Dativ; zum = zu dem, Dativ; ins = in das, Akkusativ). These expanded components are an explanation, not separately attested words." : ""} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+								systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} ${reading.lemma.kind === "Fusion" && aspect === "definition" ? "Explain the expanded preposition plus contextual article and its Case (im = in dem, Dativ; zum = zu dem, Dativ; ins = in das, Akkusativ). These expanded components are an explanation, not separately attested words." : ""} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
 								outputSchema: {
 									type: "object",
 									properties: {
@@ -298,6 +297,10 @@ export async function produceKnowledge(
 					}
 					textOutcomes[outcomeIndex] = outcome;
 					publishOutcomes();
+					if (outcome.changes.length) {
+						signal.throwIfAborted();
+						options.onKnowledgeContribution?.(outcome.changes);
+					}
 				})(),
 			);
 		}

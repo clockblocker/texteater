@@ -289,6 +289,7 @@ export default defineSchema({
 		translationLanguages: v.optional(v.array(translationLanguageValidator)),
 		state: knowledgeGenerationAttemptStateValidator,
 		runNumber: v.optional(v.number()),
+		publicationSequence: v.optional(v.number()),
 		failureCode: v.optional(v.string()),
 		failureMessage: v.optional(v.string()),
 		createdAt: v.number(),

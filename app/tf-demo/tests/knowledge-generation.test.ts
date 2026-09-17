@@ -22,12 +22,32 @@ import {
 import { replaceAccumulatedKnowledge } from "../convex/model/shadows";
 import { applyGeneratedKnowledgePlan as applyGeneratedPlan } from "../convex/orchestration";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
+import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 
 const PRODUCTION_EVIDENCE = {
 	request: { definition: null },
 	failures: [],
 	operationTraces: [],
 };
+
+test("retry requests skip saved text and covered translations but retain missing leaves", () => {
+	expect(
+		missingKnowledgeRequest(
+			{
+				definition: null,
+				transcription: null,
+				translations: { en: null, ru: null },
+			},
+			{
+				definition: "Ein Geldinstitut.",
+				translations: { en: ["bank"], ru: [] },
+			},
+		),
+	).toEqual({ transcription: null, translations: { ru: null } });
+	expect(missingKnowledgeRequest({ definition: null }, {})).toEqual({
+		definition: null,
+	});
+});
 type Row = Record<string, unknown> & { _id: string };
 
 class GenerationDb {
@@ -982,95 +1002,268 @@ test("Knowledge settings default enabled and persist independently per visitor",
 	).toBeNull();
 });
 
-test("partial generation commits valid changes without completing a failed translation and retains its trace", async () => {
-	const rows = occurrenceRows();
-	const db = new GenerationDb({
-		...rows,
-		knowledgeGenerationAttempts: [attempt("partial", "partial")],
-	});
-	const lemma = {
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "NOUN",
-		canonicalForm: "Bank",
-		coreFeatures: { gender: "Fem", hyph: null },
-	};
-	const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
-	const { lemmaIdentityKey, readingIdentityKey } = await import(
-		"../server/linguisticIdentity"
-	);
-	await db.patch("lemma-1", { lemmaKey: lemmaIdentityKey(lemma) });
-	const readingKey = readingIdentityKey(reading);
-	await db.patch("reading-1", { readingKey });
-	await db.patch("partial", { ownerReadingKey: readingKey });
-	await db.insert("readingEntries", {
-		readingId: "reading-1",
-		record: { attestedTranslations: [], attestations: [], notes: "" },
-	});
-
-	const change = {
-		kind: "Contribute",
-		aspect: "definition",
-		value: "Ein Geldinstitut.",
-	};
-	const plan = {
-		baseRevision: "convex-0",
-		changes: [
-			{
-				type: "patchReading",
-				reading,
-				ops: [
+test.each([false, true])(
+	"the generation action publishes before a slow translation and retries failed publication (failure=%s)",
+	async (failFirstPublication) => {
+		const db = new GenerationDb({
+			...occurrenceRows(),
+			knowledgeGenerationAttempts: [attempt("progress", "progress")],
+		});
+		await db.patch("segment-2", { kind: "OpaqueText" });
+		const input = await handler<{ attemptKey: string }, unknown>(loadInput)(
+			{ db },
+			{ attemptKey: "progress" },
+		);
+		const slow = Promise.withResolvers<void>();
+		const published = Promise.withResolvers<void>();
+		const publications: Array<{
+			publication: { final: boolean };
+			changes: unknown[];
+		}> = [];
+		const previousFetch = globalThis.fetch;
+		const previousKey = process.env.OPENAI_API_KEY;
+		process.env.OPENAI_API_KEY = "fixture";
+		globalThis.fetch = (async (_url, init) => {
+			const body = JSON.parse(String(init?.body));
+			const modelInput = JSON.parse(body.input[1].content);
+			if (modelInput.language === "en") await slow.promise;
+			return Response.json({
+				status: "completed",
+				output: [
 					{
-						kind: "applyKnowledgeChange",
-						envelope: { reading, change },
+						content: [
+							{
+								type: "output_text",
+								text: JSON.stringify({
+									value: {
+										text:
+											modelInput.aspect === "definition"
+												? "Ein Geldinstitut."
+												: modelInput.language === "ru"
+													? "банк"
+													: "bank",
+									},
+								}),
+							},
+						],
 					},
 				],
-				preconditions: [],
-			},
-		],
-	};
-	const evidence = {
-		request: { definition: null, translations: { ru: null } },
-		failures: [
+			});
+		}) as typeof fetch;
+		let finished = false;
+		try {
+			const running = handler<{ attemptKey: string }, null>(
+				runGeneration,
+			)(
+				{
+					async runQuery(reference: FunctionReference<"query">) {
+						const name = getFunctionName(reference);
+						if (name === "resolutionInspection:enabled")
+							return false;
+						if (name === "knowledgeGeneration:loadInput")
+							return input;
+						if (name === "relationPublication:getAuthorization")
+							return {
+								rollbackStopped: false,
+								qualifiedKinds: [],
+								artifactPath: null,
+								fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
+							};
+						throw Error(`Unexpected query ${name}`);
+					},
+					async runMutation() {
+						return null;
+					},
+					async runAction(
+						_reference: unknown,
+						args: (typeof publications)[number],
+					) {
+						publications.push(args);
+						if (!args.publication.final) published.resolve();
+						if (failFirstPublication && publications.length === 1)
+							throw Error("Simulated transient commit failure");
+						return null;
+					},
+				},
+				{ attemptKey: "progress" },
+			).then(() => {
+				finished = true;
+			});
+			await published.promise;
+			expect(finished).toBe(false);
+			expect(publications[0]?.publication.final).toBe(false);
+			slow.resolve();
+			await running;
+			expect(publications.at(-1)?.publication.final).toBe(true);
+			if (failFirstPublication)
+				expect(publications.at(-1)?.changes).toEqual(
+					publications[0]?.changes,
+				);
+			else expect(publications.at(-1)?.changes).toEqual([]);
+			expect(
+				publications
+					.slice(failFirstPublication ? 1 : 0)
+					.flatMap((item) => item.changes),
+			).toHaveLength(3);
+		} finally {
+			slow.resolve();
+			globalThis.fetch = previousFetch;
+			if (previousKey === undefined) delete process.env.OPENAI_API_KEY;
+			else process.env.OPENAI_API_KEY = previousKey;
+		}
+	},
+);
+
+test.each([false, true])(
+	"partial generation commits valid changes and retains its final trace (incremental=%s)",
+	async (incremental) => {
+		const rows = occurrenceRows();
+		const db = new GenerationDb({
+			...rows,
+			knowledgeGenerationAttempts: [attempt("partial", "partial")],
+		});
+		const lemma = {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Bank",
+			coreFeatures: { gender: "Fem", hyph: null },
+		};
+		const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
+		const { lemmaIdentityKey, readingIdentityKey } = await import(
+			"../server/linguisticIdentity"
+		);
+		await db.patch("lemma-1", { lemmaKey: lemmaIdentityKey(lemma) });
+		const readingKey = readingIdentityKey(reading);
+		await db.patch("reading-1", { readingKey });
+		await db.patch("partial", { ownerReadingKey: readingKey });
+		await db.insert("readingEntries", {
+			readingId: "reading-1",
+			record: { attestedTranslations: [], attestations: [], notes: "" },
+		});
+
+		const change = {
+			kind: "Contribute",
+			aspect: "definition",
+			value: "Ein Geldinstitut.",
+		};
+		const plan = {
+			baseRevision: "convex-0",
+			changes: [
+				{
+					type: "patchReading",
+					reading,
+					ops: [
+						{
+							kind: "applyKnowledgeChange",
+							envelope: { reading, change },
+						},
+					],
+					preconditions: [],
+				},
+			],
+		};
+		const evidence = {
+			request: { definition: null, translations: { ru: null } },
+			failures: [
+				{
+					aspect: "translations",
+					leaf: "ru",
+					code: "ProviderFailure",
+					message: "offline",
+				},
+			],
+			operationTraces: [
+				JSON.stringify({
+					operation: "produceKnowledge",
+					outcome: "Partial",
+					calls: [],
+				}),
+			],
+		};
+		if (incremental) {
+			const commit = handler<unknown, { status: string }>(
+				commitGenerated,
+			);
+			const intermediate = {
+				attemptKey: "partial",
+				publication: { sequence: 1, final: false },
+				plan,
+				baseKnowledgePlan: plan,
+				generatedChanges: [change],
+				relationPublication: EMPTY_RELATION_RUN,
+				productionEvidence: {
+					...evidence,
+					failures: [],
+					operationTraces: [],
+				},
+			};
+			expect(await commit({ db }, intermediate)).toEqual({
+				status: "Committed",
+			});
+			expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+				knowledge: { definition: "Ein Geldinstitut." },
+				status: "Partial",
+			});
+			expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+				state: "Running",
+				publicationSequence: 1,
+			});
+			expect(db.rows("knowledgeProductionRuns")).toEqual([]);
+			expect(await commit({ db }, intermediate)).toEqual({
+				status: "Ignored",
+			});
+			expect(
+				await commit(
+					{ db },
+					{
+						...intermediate,
+						publication: { sequence: 2, final: false },
+						relationPublication: {
+							...EMPTY_RELATION_RUN,
+							runNumber: 999,
+						},
+					},
+				),
+			).toEqual({ status: "Ignored" });
+			expect(db.rows("knowledgeChanges")).toHaveLength(1);
+		}
+		const finalPlan = incremental
+			? {
+					baseRevision: `convex-${db.rows("dictionaryState")[0]?.revision ?? 0}`,
+					changes: [],
+				}
+			: plan;
+		const result = await handler<unknown, { status: string }>(
+			commitGenerated,
+		)(
+			{ db },
 			{
-				aspect: "translations",
-				leaf: "ru",
-				code: "ProviderFailure",
-				message: "offline",
+				attemptKey: "partial",
+				...(incremental
+					? { publication: { sequence: 2, final: true } }
+					: {}),
+				plan: finalPlan,
+				baseKnowledgePlan: finalPlan,
+				generatedChanges: incremental ? [] : [change],
+				relationPublication: EMPTY_RELATION_RUN,
+				productionEvidence: evidence,
 			},
-		],
-		operationTraces: [
-			JSON.stringify({
-				operation: "produceKnowledge",
-				outcome: "Partial",
-				calls: [],
-			}),
-		],
-	};
-	const result = await handler<unknown, { status: string }>(commitGenerated)(
-		{ db },
-		{
-			attemptKey: "partial",
-			plan,
-			baseKnowledgePlan: plan,
-			generatedChanges: [change],
-			relationPublication: EMPTY_RELATION_RUN,
-			productionEvidence: evidence,
-		},
-	);
-	expect(result.status).toBe("Committed");
-	expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
-		status: "Partial",
-		knowledge: { definition: "Ein Geldinstitut." },
-		coveredTranslationLanguages: [],
-	});
-	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
-		state: "Failed",
-		failureCode: "partialKnowledge",
-	});
-	expect(db.rows("knowledgeProductionRuns")[0]).toMatchObject({
-		outcome: "Partial",
-		evidence,
-	});
-});
+		);
+		expect(result.status).toBe("Committed");
+		expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+			status: "Partial",
+			knowledge: { definition: "Ein Geldinstitut." },
+			coveredTranslationLanguages: [],
+		});
+		expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+			state: "Failed",
+			failureCode: "partialKnowledge",
+		});
+		expect(db.rows("knowledgeProductionRuns")[0]).toMatchObject({
+			outcome: "Partial",
+			evidence,
+		});
+	},
+);

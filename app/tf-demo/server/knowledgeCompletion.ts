@@ -1,5 +1,38 @@
 import type { KnowledgeFailure, KnowledgeRequest } from "dumgen/types";
 
+/** Retry only uncovered leaves; already committed contributions need no model call. */
+export function missingKnowledgeRequest(
+	request: KnowledgeRequest,
+	knowledge: unknown,
+): KnowledgeRequest {
+	return Object.fromEntries(
+		Object.entries(request).flatMap<[string, null | Record<string, null>]>(
+			([aspect, selection]) => {
+				if (selection === null)
+					return knowledgeRequestComplete(
+						knowledge,
+						{ [aspect]: null } as KnowledgeRequest,
+						[],
+					)
+						? []
+						: [[aspect, null]];
+				const leaves = Object.fromEntries(
+					Object.keys(selection).flatMap((leaf) =>
+						knowledgeRequestComplete(
+							knowledge,
+							{ [aspect]: { [leaf]: null } } as KnowledgeRequest,
+							[],
+						)
+							? []
+							: [[leaf, null]],
+					),
+				);
+				return Object.keys(leaves).length ? [[aspect, leaves]] : [];
+			},
+		),
+	) as KnowledgeRequest;
+}
+
 /** Only validated content covers a request; discovery and omitted leaves do not. */
 export function knowledgeRequestComplete(
 	knowledge: unknown,

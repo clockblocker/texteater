@@ -11,7 +11,7 @@ export function createProductionDumgen(
 	onEvent?: (event: GenerationEvent) => void,
 	configuration: Pick<
 		DumgenOptions,
-		"configuration" | "judgmentConfiguration"
+		"configuration" | "judgmentConfiguration" | "onKnowledgeContribution"
 	> = {},
 	inspection?: InspectionCapture,
 ) {

@@ -815,6 +815,9 @@ function convexSegmentSelectionArgs(input: ResolveSegmentInput) {
 export const applyGeneratedKnowledgePlan = internalAction({
 	args: {
 		attemptKey: v.string(),
+		publication: v.optional(
+			v.object({ sequence: v.number(), final: v.boolean() }),
+		),
 		reading: v.any(),
 		changes: v.array(v.any()),
 		pendingRelations: v.array(v.any()),
@@ -861,6 +864,9 @@ export const applyGeneratedKnowledgePlan = internalAction({
 					const fullPlan = dictionaryPlanResult(prepared.plan);
 					const commitInput = {
 						attemptKey: args.attemptKey,
+						...(args.publication
+							? { publication: args.publication }
+							: {}),
 						plan: fullPlan,
 						baseKnowledgePlan:
 							withoutGeneratedRelationPlan(fullPlan),
@@ -892,6 +898,8 @@ export const applyGeneratedKnowledgePlan = internalAction({
 					error,
 				);
 				console.error("Generated Knowledge planning failed", error);
+				// The final publication retries any contribution that failed here.
+				if (args.publication && !args.publication.final) throw error;
 				if (args.relationPublication.requestedKinds.length > 0) {
 					await ctx.runMutation(recordRelationPublicationFailure, {
 						attemptKey: args.attemptKey,

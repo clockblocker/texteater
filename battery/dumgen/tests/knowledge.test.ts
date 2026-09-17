@@ -2,7 +2,11 @@ import { expect, test } from "bun:test";
 import { Effect, Fiber } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import expectedOutcomes from "../src/concrete-lang/de/knowledge-production/evaluation/operation-outcomes.json";
-import type { KnowledgeInput, OperationTrace } from "../src/types.js";
+import type {
+	KnowledgeInput,
+	KnowledgeProduction,
+	OperationTrace,
+} from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { choiceAnswers } from "./execution-fixture.js";
 
@@ -220,6 +224,63 @@ test("independent text generation starts concurrently", async () => {
 	await production;
 	expect(startedTogether).toBe(true);
 	expect(enteredCalls).toBe(expectedCalls);
+});
+
+test("validated text is emitted while a sibling is still pending, with only projected model context", async () => {
+	const contributions: KnowledgeProduction["changes"][number][] = [];
+	const slow = Promise.withResolvers<void>();
+	const emitted = Promise.withResolvers<void>();
+	const dumgen = createDumgen({
+		execute: async (request) => {
+			const state = request.input as { aspect: string };
+			expect(request.input).not.toHaveProperty("encounter");
+			expect(request.input).not.toHaveProperty("members");
+			expect(request.input).toHaveProperty(
+				"markedContext",
+				"<TARGET>Bank</TARGET>",
+			);
+			if (state.aspect === "translations") {
+				expect(request.systemPrompt).toContain(
+					"Translate only the unit marked by <TARGET>",
+				);
+				await slow.promise;
+				return { output: { text: "bank", unexpected: true } };
+			}
+			return { output: { text: "Ein Geldinstitut." } };
+		},
+		judge: async () => {
+			throw Error("Unexpected judgment");
+		},
+		onKnowledgeContribution: (changes) => {
+			contributions.push(...changes);
+			emitted.resolve();
+		},
+	});
+	let completed = false;
+	const production = Effect.runPromise(
+		dumgen.produceKnowledge({
+			...input,
+			request: { definition: null, translations: { en: null } },
+		}),
+	).then((result) => {
+		completed = true;
+		return result;
+	});
+	await emitted.promise;
+	expect(completed).toBe(false);
+	expect(contributions).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "definition",
+			value: "Ein Geldinstitut.",
+		},
+	]);
+	slow.resolve();
+	const result = await production;
+	expect(contributions).toEqual([...result.changes]);
+	expect(result.failures).toMatchObject([
+		{ aspect: "translations", code: "InvalidModelOutput" },
+	]);
 });
 test("Closed missing leaves retain reviewed independent contributions without generation", async () => {
 	const member = authoredMembers.find(

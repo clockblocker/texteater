@@ -274,6 +274,7 @@ export const loadInput = internalQuery({
 			reading: occurrence.publicReading,
 			encounter: occurrence.encounter,
 			attestation: occurrence.publicAttestation,
+			existingKnowledge: accumulated?.knowledge ?? {},
 			runNumber: attempt.runNumber ?? 1,
 			translationLanguages: missingTranslations,
 			translationsOnly: accumulated?.status === "Full",
@@ -307,6 +308,7 @@ export const markRunning = internalMutation({
 			await ctx.db.patch(attempt._id, {
 				state: "Running",
 				runNumber: (attempt.runNumber ?? 0) + 1,
+				publicationSequence: undefined,
 				failureCode: undefined,
 				failureMessage: undefined,
 				updatedAt: Date.now(),
@@ -352,6 +354,9 @@ export const fail = internalMutation({
 export const commitGenerated = internalMutation({
 	args: {
 		attemptKey: v.string(),
+		publication: v.optional(
+			v.object({ sequence: v.number(), final: v.boolean() }),
+		),
 		plan: dictionaryPlanValidator,
 		baseKnowledgePlan: dictionaryPlanValidator,
 		generatedChanges: v.array(v.any()),
@@ -362,17 +367,51 @@ export const commitGenerated = internalMutation({
 		v.object({ status: v.literal("Committed") }),
 		v.object({ status: v.literal("AlreadyFull") }),
 		v.object({ status: v.literal("DictionaryConflict") }),
+		v.object({ status: v.literal("Ignored") }),
 	),
 	handler: async (ctx, args) => {
 		const attempt = await findGenerationAttempt(ctx, args.attemptKey);
 		if (!attempt)
 			throw new Error("Knowledge generation attempt does not exist.");
+		const publication = args.publication;
+		if (publication) {
+			if (
+				!Number.isSafeInteger(publication.sequence) ||
+				publication.sequence < 1
+			)
+				throw new Error("Invalid Knowledge publication sequence.");
+			if (
+				attempt.state !== "Running" ||
+				(attempt.runNumber ?? 1) !==
+					args.relationPublication.runNumber ||
+				(attempt.publicationSequence ?? 0) >= publication.sequence
+			)
+				return { status: "Ignored" as const };
+			if (
+				!publication.final &&
+				(args.relationPublication.requestedKinds.length ||
+					args.relationPublication.proposals.length ||
+					args.generatedChanges.some(
+						(change) =>
+							!change ||
+							![
+								"definition",
+								"transcription",
+								"translations",
+							].includes(change.aspect),
+					))
+			)
+				throw new Error(
+					"Incremental publication accepts only base text.",
+				);
+		}
 		const accumulated = await findAccumulatedKnowledge(
 			ctx,
 			attempt.ownerReadingKey,
 		);
 		const requestedTranslations = attempt.translationLanguages ?? ["en"];
 		if (
+			!(publication && attempt.publicationSequence) &&
 			accumulated?.status === "Full" &&
 			missingTranslationLanguages(accumulated, requestedTranslations)
 				.length === 0
@@ -416,18 +455,24 @@ export const commitGenerated = internalMutation({
 			args.productionEvidence.request as KnowledgeRequest,
 			args.productionEvidence.failures as KnowledgeFailure[],
 		);
-		await recordKnowledgeProductionRun(
-			ctx,
-			attempt,
-			args.productionEvidence,
-			args.productionEvidence.failures.length ? "Partial" : "Success",
-		);
+		if (!publication || publication.final)
+			await recordKnowledgeProductionRun(
+				ctx,
+				attempt,
+				args.productionEvidence,
+				args.productionEvidence.failures.length ? "Partial" : "Success",
+			);
 		await replaceAccumulatedKnowledge(
 			ctx,
 			attempt.ownerReadingKey,
 			knowledge,
 			{
-				status: complete ? "Full" : "Partial",
+				status:
+					publication && !publication.final
+						? (accumulated?.status ?? "Partial")
+						: complete
+							? "Full"
+							: "Partial",
 			},
 		);
 		const refreshed = await findAccumulatedKnowledge(
@@ -450,13 +495,22 @@ export const commitGenerated = internalMutation({
 		await Promise.all(
 			committedGeneratedChanges.map((change, index) =>
 				ctx.db.insert("knowledgeChanges", {
-					knowledgeChangeKey: `${attempt.attemptKey}:${index}`,
+					knowledgeChangeKey: publication
+						? `${attempt.attemptKey}:${args.relationPublication.runNumber}:${publication.sequence}:${index}`
+						: `${attempt.attemptKey}:${index}`,
 					ownerReadingKey: attempt.ownerReadingKey,
 					change,
 					createdAt: Date.now(),
 				}),
 			),
 		);
+		if (publication && !publication.final) {
+			await ctx.db.patch(attempt._id, {
+				publicationSequence: publication.sequence,
+				updatedAt: Date.now(),
+			});
+			return { status: "Committed" as const };
+		}
 		await recordCommittedRelationRun(
 			ctx,
 			attempt,
@@ -464,6 +518,9 @@ export const commitGenerated = internalMutation({
 			!publishRelations,
 		);
 		await ctx.db.patch(attempt._id, {
+			...(publication
+				? { publicationSequence: publication.sequence }
+				: {}),
 			state: args.productionEvidence.failures.length
 				? "Failed"
 				: "Committed",
