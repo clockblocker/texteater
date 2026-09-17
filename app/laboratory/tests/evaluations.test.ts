@@ -3,23 +3,42 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { getExperiment } from "dumgen/development";
-import { stableJson } from "promptsmith";
-import type { OperationEvaluationRun } from "promptsmith/evaluation";
+import type {
+	EvaluationExecutor,
+	OperationEvaluationRun,
+} from "promptsmith/evaluation";
+import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import { runEvaluationCli } from "../../../battery/dumgen/cli/evaluate";
+import { grammarFixture } from "../../../battery/dumgen/tests/grammar-fixture.js";
 import { createEvaluationService } from "../src/evaluations";
 
 test("CLI and Laboratory share cases, evaluation records and configured storage", async () => {
 	const experimentId = "grammatical-resolution/de/lexeme/noun";
 	const experiment = getExperiment(experimentId);
 	let calls = 0;
-	const execute = async ({ input }: { input: unknown }) => {
-		calls++;
+	const fixture = (input: unknown) => {
+		const context = (input as { markedContext: string }).markedContext;
 		const golden = experiment.evaluation.cases.find(
-			(golden) => stableJson(golden.input) === stableJson(input),
+			(golden) =>
+				(golden.input as { markedContext: string }).markedContext ===
+				context,
 		);
 		if (!golden) throw Error("Unknown fixture");
-		return { output: golden.idealOutput };
+		return grammarFixture(golden.idealOutput);
 	};
+	const execute: EvaluationExecutor = async (request) => {
+		calls++;
+		return fixture(request.input).execute({
+			...request,
+			stage: "resolveGrammar",
+			route: "de/Lexeme/NOUN",
+		});
+	};
+	const judge: TypeSafeExecutor = async (request, options) => {
+		calls++;
+		return fixture(request.state).judge(request, options);
+	};
+
 	const directory = await mkdtemp(join(tmpdir(), "dumgen-runs-"));
 	try {
 		const cli = (await runEvaluationCli(
@@ -33,11 +52,12 @@ test("CLI and Laboratory share cases, evaluation records and configured storage"
 				"--model",
 				"fixture",
 			],
-			{ execute, write: () => {} },
+			{ execute, judge, write: () => {} },
 		)) as OperationEvaluationRun;
 		const laboratory = createEvaluationService({
 			outputDirectory: directory,
 			execute,
+			judge,
 		});
 		const app = await laboratory.run({
 			experimentId,
@@ -68,7 +88,10 @@ test("CLI and Laboratory share cases, evaluation records and configured storage"
 				.sameCorpus,
 		).toBe(true);
 		expect(await laboratory.list()).toHaveLength(2);
-		expect(calls).toBe(experiment.evaluation.ids.length * 2);
+		expect(calls).toBe(
+			cli.cases.reduce((sum, record) => sum + record.calls, 0) * 2,
+		);
+		expect(cli.summary.succeeded).toBe(cli.summary.total);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

@@ -11,6 +11,19 @@ export function grammarFixture(
 	const output = expected as GrammarOutput;
 	return {
 		judge: async (request) => {
+			if (expected instanceof Error) throw expected;
+			if (
+				!output ||
+				typeof output !== "object" ||
+				(!("decision" in output) && (!output.lemma || !output.surface))
+			)
+				return {
+					model: "malformed",
+					usage: { input_tokens: 0, output_tokens: 0 },
+					answers: {},
+				} as import("promptsmith/typesafe").SystemOneResult<
+					typeof request.questions
+				>;
 			const state = request.state as {
 				members: string[];
 				canonicalCandidates: string[];

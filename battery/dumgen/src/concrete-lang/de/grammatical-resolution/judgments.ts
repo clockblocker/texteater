@@ -58,6 +58,7 @@ function fields(
 	}
 	return output;
 }
+const fieldCatalogs = new Map<string, Map<string, Field>>();
 const unmarked = "Unmarked";
 function token(value: Scalar): string {
 	return value === null ? unmarked : String(value);
@@ -93,17 +94,25 @@ function transformed(text: string, mode: string): string {
 		return text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1);
 	return text;
 }
-function textCandidates(members: readonly string[]): string[] {
+function textCandidates(members: readonly string[], source: string): string[] {
+	const quoted = Array.from(
+		source.matchAll(/[„“"«]([^“”"»]+)[“”"»]/gu),
+		(match) => match[1]!,
+	).filter(Boolean);
+	const words = source.match(/[\p{L}\p{N}]+(?:[-’'][\p{L}\p{N}]+)*/gu) ?? [];
 	return [
-		...new Set(
-			[members.join(" "), ...members].flatMap((text) => [
+		...new Set([
+			...[members.join(" "), ...members].flatMap((text) => [
 				text,
 				transformed(text, "LowerInitial"),
 				transformed(text, "UpperInitial"),
 			]),
-		),
+			...words,
+			...quoted,
+		]),
 	];
 }
+
 const baseGuidance = `The classified route and ordered membership are fixed. Analyze only this whole target in full sentence context. Do not repair membership or reclassify. Return Unresolved when a valid analysis is not defensible.
 Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical. Canonical Form is the exact dictionary headword, not necessarily a copied Surface. Copy an available headword only when the exact candidate already is that headword; otherwise request text.
 Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.
@@ -118,6 +127,16 @@ export async function resolveGrammarJudgments(
 	signal: AbortSignal,
 ): Promise<GrammarOutput> {
 	const route = `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
+	if (
+		encounter.target.family === "Morpheme" ||
+		encounter.target.kind === "PUNCT"
+	)
+		throw new DumgenFailure(
+			"NotImplemented",
+			"resolveGrammar",
+			"Production is not enabled for this grammar route",
+			route,
+		);
 	const fail = (message: string): never => {
 		throw new DumgenFailure("Unresolved", "resolveGrammar", message, route);
 	};
@@ -130,7 +149,8 @@ export async function resolveGrammarJudgments(
 			"No grammatical route",
 			route,
 		);
-	const catalog = fields(schema as Schema);
+	const catalog = fieldCatalogs.get(route) ?? fields(schema as Schema);
+	fieldCatalogs.set(route, catalog);
 	const verbal = ["VERB", "AUX", "Idiom", "Collocation"].includes(
 		encounter.target.kind,
 	);
@@ -140,7 +160,14 @@ export async function resolveGrammarJudgments(
 	const identities = auxiliary
 		? authoredMembers.filter((member) => member.lemma.kind === "AUX")
 		: [];
-	const canonicalCandidates = textCandidates(input.members);
+	const canonicalCandidates = textCandidates(
+		input.members,
+		input.markedContext.replaceAll(/<\/?TARGET>/gu, ""),
+	);
+	if (canonicalCandidates.length > 253)
+		return fail(
+			"Too many complete source-copy candidates for one bounded judgment",
+		);
 	const questions: Questions = {
 		support: choice(
 			"Can this fixed target support a coherent analysis on its supplied route?",
@@ -352,6 +379,19 @@ export async function resolveGrammarJudgments(
 		if (mode === "Generate")
 			needed[`member_${index}`] =
 				`Required normalized text for supplied member ${index}; preserve its inflection and position. Correct only the judged typo or licensed constrained noun suspension.`;
+	const coverage = partial
+		? (selected("coverage") as "Full" | "Partial")
+		: "Full";
+	const mechanicalCanonical =
+		coverage === "Full" &&
+		surface.spelling === "Canonical" &&
+		["DiscourseFormula", "Proverb", "Aphorism", "Fusion"].includes(
+			encounter.target.kind,
+		);
+	const copiedCanonical = () =>
+		encounter.target.kind === "DiscourseFormula"
+			? normalizedMembers.join(" ").toLocaleLowerCase("de")
+			: normalizedMembers.join(" ");
 	let lemma: GrammarOutput["lemma"];
 	if (auxiliary) {
 		const identity = selected("identity");
@@ -389,6 +429,8 @@ export async function resolveGrammarJudgments(
 				coreFeatures: member.lemma.coreFeatures,
 			};
 			recordEvent(signal, "AuthoredIdentity", { lemma: member.lemma });
+		} else if (mechanicalCanonical) {
+			lemma = { canonicalForm: copiedCanonical(), coreFeatures: core };
 		} else {
 			const canonical = selected("canonical");
 			lemma = {
@@ -404,9 +446,6 @@ export async function resolveGrammarJudgments(
 		}
 	}
 
-	const coverage = partial
-		? (selected("coverage") as "Full" | "Partial")
-		: "Full";
 	try {
 		parse(
 			`grammar/${route}`,
@@ -439,6 +478,9 @@ export async function resolveGrammarJudgments(
 					...input,
 					route,
 					needed,
+					textPolicy:
+						routeGuidance[encounter.target.kind] ??
+						verbalCompositionGuidance,
 					judgedSurface: surface,
 					judgedCore: core,
 					memberOrthographies,
@@ -485,6 +527,7 @@ export async function resolveGrammarJudgments(
 			if (generated[`member_${index}`])
 				normalizedMembers[index] = generated[`member_${index}`]!;
 	}
+	if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
 	if (openFeatures.length) {
 		const words = [
 			...normalizedMembers,

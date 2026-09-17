@@ -10,7 +10,6 @@ import { createGermanHighLevelTargetClassificationProjection } from "../src/conc
 import targetData from "../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
-import { executeOutput, rejectJudgment } from "./execution-fixture.js";
 import { grammarFixture } from "./grammar-fixture.js";
 
 const kinds: Record<string, string> = {
@@ -80,6 +79,7 @@ test("canonical target corpus survives compact representation round-trips", () =
 });
 test("all 1060 retained grammar answers project through public operations", async () => {
 	let count = 0;
+	const verifiedRoutes = new Set<string>();
 	for (const spec of listExperiments().filter((item) =>
 		item.id.startsWith("grammatical-resolution/"),
 	)) {
@@ -120,17 +120,11 @@ test("all 1060 retained grammar answers project through public operations", asyn
 				sentence: { id, language, segments },
 				target: { family, kind, memberSegmentIndices },
 			});
+			verifiedRoutes.add(route);
 			const result = await Effect.runPromise(
 				Effect.either(
 					createDumgen(
-						["VERB", "AUX", "DET", "PRON"].includes(kind)
-							? grammarFixture(golden.idealOutput)
-							: {
-									judge: rejectJudgment,
-									execute: executeOutput(
-										async () => golden.idealOutput,
-									),
-								},
+						grammarFixture(golden.idealOutput),
 					).resolveGrammar(encounter),
 				),
 			);
@@ -173,4 +167,5 @@ test("all 1060 retained grammar answers project through public operations", asyn
 		}
 	}
 	expect(count).toBe(1060);
-});
+	expect(verifiedRoutes.size).toBe(22);
+}, 30_000);

@@ -80,11 +80,12 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 				reading: { unitKind: "Reading", emojiDescription: "🏦" },
 				attestation: { unitKind: "Attestation" },
 			},
-			generation: { modelCalls: 4 },
+			generation: { modelCalls: 5 },
 		});
 		expect(run.requests.map((value) => value.stage)).toEqual([
 			"classifyTarget",
 			"classifyTarget",
+			"resolveGrammar",
 			"resolveGrammar",
 			"generateReadingEmojiDescription",
 		]);
@@ -100,7 +101,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 			generation: { cache: "member-hit", modelCalls: 0 },
 			stages: { target: { traceOrigin: "cached" } },
 		});
-		expect(run.requests).toHaveLength(4);
+		expect(run.requests).toHaveLength(5);
 	});
 	test("a supplied target bypasses classification and stays separate from whole-unit caches", async () => {
 		const run = harness([
@@ -115,6 +116,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 			stages: { target: { traceOrigin: "supplied" } },
 		});
 		expect(run.requests.map((value) => value.stage)).toEqual([
+			"resolveGrammar",
 			"resolveGrammar",
 			"generateReadingEmojiDescription",
 		]);

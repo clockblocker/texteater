@@ -117,7 +117,7 @@ export function judgmentCaller(options: DumgenOptions) {
 			executor: "TypeSafe" as const,
 			request,
 			dependsOn: context.calls.map((call) => call.id),
-			fingerprint: await fingerprint(questions),
+			fingerprint: await fingerprint({ questions, state }),
 		};
 		const start = performance.now();
 		let output: unknown;

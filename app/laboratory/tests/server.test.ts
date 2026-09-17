@@ -2,21 +2,36 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-	executeOutput,
-	rejectJudgment,
-} from "../../../battery/dumgen/tests/execution-fixture.js";
+import { executeOutput } from "../../../battery/dumgen/tests/execution-fixture.js";
+import { grammarFixture } from "../../../battery/dumgen/tests/grammar-fixture.js";
 import { startLaboratoryServer } from "../src/server";
 
 test("HTTP workbench retains session isolation, supplied targets, retry diagnostics and current logs", async () => {
 	const directory = await mkdtemp(join(tmpdir(), "laboratory-http-"));
 	const stages: string[] = [];
 	let failReading = true;
+	const grammar = {
+		memberOrthographies: ["Standard"],
+		normalizedMembers: ["Bank"],
+		surface: {
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: { case: "Nom", number: "Sing" },
+		},
+		lemma: {
+			canonicalForm: "Bank",
+			coreFeatures: { gender: "Fem", hyph: null },
+		},
+		realizationCoverage: "Full",
+	};
 	const server = startLaboratoryServer({
 		port: 0,
 		sessionDirectory: directory,
 		configuration: { model: "controlled" },
-		judge: rejectJudgment,
+		judge: (request, options) => {
+			stages.push("resolveGrammar");
+			return grammarFixture(grammar).judge(request, options);
+		},
 		execute: executeOutput(async (request) => {
 			stages.push(request.stage);
 			if (request.stage === "segment")
@@ -31,21 +46,7 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 						},
 					],
 				};
-			if (request.stage === "resolveGrammar")
-				return {
-					memberOrthographies: ["Standard"],
-					normalizedMembers: ["Bank"],
-					surface: {
-						spelling: "Canonical",
-						surfaceFeatures: null,
-						inflectionalFeatures: { case: "Nom", number: "Sing" },
-					},
-					lemma: {
-						canonicalForm: "Bank",
-						coreFeatures: { gender: "Fem", hyph: null },
-					},
-					realizationCoverage: "Full",
-				};
+
 			if (request.stage === "generateReadingEmojiDescription") {
 				if (failReading) {
 					failReading = false;

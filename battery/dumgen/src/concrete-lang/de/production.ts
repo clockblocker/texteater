@@ -1,5 +1,4 @@
 import type * as Dumling from "dumling/types";
-import { grammarPromptRoutes } from "../../generated/prompts.js";
 import type {
 	AnalysisTarget,
 	Dumgen,
@@ -24,10 +23,7 @@ import {
 	sameValue,
 } from "./authored-closed-sets/select.js";
 import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
-import {
-	type GrammarOutput,
-	normalizeGrammarSurface,
-} from "./grammatical-resolution/project.js";
+import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
 import {
 	authoredKnowledge,
 	type KnowledgeAnalysis,
@@ -162,18 +158,11 @@ export function createGermanOperations(
 				supported(encounter, "resolveGrammar");
 				const route = routeOf(encounter),
 					input = markedContext(encounter);
-				const output = ["VERB", "AUX", "DET", "PRON"].includes(
-					encounter.target.kind,
-				)
-					? await resolveGrammarJudgments(options, encounter, signal)
-					: await call<GrammarOutput | { decision: "Unresolved" }>(
-							"resolveGrammar",
-							route,
-							grammarPromptRoutes[route] ?? "",
-							`grammar/${route}`,
-							input,
-							signal,
-						);
+				const output = await resolveGrammarJudgments(
+					options,
+					encounter,
+					signal,
+				);
 				if ("decision" in output)
 					throw new DumgenFailure(
 						"Unresolved",

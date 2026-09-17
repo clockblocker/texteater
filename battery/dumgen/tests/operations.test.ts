@@ -18,6 +18,7 @@ import {
 	queuedTargetJudgment,
 	rejectJudgment,
 } from "./execution-fixture.js";
+import { grammarFixture } from "./grammar-fixture.js";
 
 const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
@@ -37,14 +38,16 @@ const encounter = {
 	target: { family: "Lexeme", kind: "NOUN", memberSegmentIndices: [0] },
 } as const satisfies Encounter<"de">;
 function controlled(output: unknown) {
-	const calls: ModelRequest[] = [];
+	const calls: import("dumgen/types").ModelExchange["request"][] = [];
 	return {
 		calls,
 		dumgen: createDumgen({
-			judge: rejectJudgment,
+			judge: grammarFixture(output).judge,
+			onModelExchange: (exchange) => calls.push(exchange.request),
 			execute: executeOutput(async (request) => {
-				calls.push(request);
-				return output;
+				return request.stage === "resolveGrammar"
+					? (await grammarFixture(output).execute(request)).output
+					: output;
 			}),
 		}),
 	};
@@ -58,7 +61,10 @@ async function tag(task: Effect.Effect<unknown, unknown>) {
 test("direct targets and classified targets share one grammar path", async () => {
 	const calls: import("dumgen/types").ModelExchange["request"][] = [];
 	const dumgen = createDumgen({
-		judge: queuedTargetJudgment([encounter.target]),
+		judge: (request, options) =>
+			Object.hasOwn(request.questions, "route")
+				? queuedTargetJudgment([encounter.target])(request, options)
+				: grammarFixture(nounOutput).judge(request, options),
 		onModelExchange: (exchange) => calls.push(exchange.request),
 		execute: executeOutput(async (request) => {
 			return request.stage === "classifyTarget"

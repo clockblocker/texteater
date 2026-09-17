@@ -298,7 +298,7 @@ test("real segmentation, classification, grammar and emoji production reach an a
 	).toHaveLength(1);
 	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
 	expect(run.writes).toHaveLength(1);
-	expect(run.requests).toHaveLength(4);
+	expect(run.requests).toHaveLength(5);
 });
 
 test("retry uses its exact Grammar checkpoint and skips classification and grammar", async () => {

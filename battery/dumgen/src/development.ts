@@ -7,7 +7,6 @@ import {
 	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
-import { createTypeSafeExecutor } from "promptsmith/typesafe";
 import { promptRegistrations } from "./concrete-lang/de/experiments.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
@@ -112,7 +111,7 @@ export function getExperiment(id: string) {
 export async function evaluateExperiment(args: {
 	experimentId: string;
 	execute: EvaluationExecutor;
-	judge?: DumgenOptions["judge"];
+	judge: DumgenOptions["judge"];
 	judgmentConfiguration?: DumgenOptions["judgmentConfiguration"];
 	sourceRevision: string;
 	configuration?: ModelConfiguration;
@@ -124,16 +123,17 @@ export async function evaluateExperiment(args: {
 			"target-classification/de/high-level-whole-unit" ||
 		args.experimentId.startsWith("grammatical-resolution/")
 	) {
+		if (!args.judge)
+			throw Error(
+				"Operation evaluation requires an explicit judgment executor",
+			);
 		const options: DumgenOptions = {
 			execute: (request) =>
 				args.execute({
 					...request,
 					configuration: request.configuration as ModelConfiguration,
 				}),
-			judge:
-				args.judge ??
-				((request, requestOptions) =>
-					createTypeSafeExecutor()(request, requestOptions)),
+			judge: args.judge,
 			configuration: args.configuration,
 			judgmentConfiguration: args.judgmentConfiguration,
 		};
