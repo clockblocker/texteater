@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { consolidateExamples, load } from "../convex/notesStudyFixtures";
+import { consolidateExamples, load } from "../tooling/playground-fixtures";
 import { get } from "../convex/textViews";
 import { EXAMPLES_TEXT_TITLE } from "../shared/notes-study/example-contexts";
 import {

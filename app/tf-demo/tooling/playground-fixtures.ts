@@ -1,6 +1,22 @@
 import { v } from "convex/values";
 import { createPendingSemanticRelationRecord } from "dumdict/pending";
 import { makeSurfaceId } from "dumdict/runtime";
+import type { Doc, Id } from "../convex/_generated/dataModel";
+import {
+	internalMutation,
+	type MutationCtx,
+	query,
+} from "../convex/_generated/server";
+import { ensureInlineDefinitionText } from "../convex/model/definitionTexts";
+import { pendingRecordLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
+import { requireRecord } from "../convex/model/readingKnowledge";
+import { shadowKeyFor } from "../convex/model/shadows";
+import { ensureVisitorEncounter } from "../convex/model/visitorClicks";
+import {
+	loadUnitReadingNote,
+	readingNoteValidator,
+} from "../convex/modules/notes/readingNote";
+import { persistSubmittedText } from "../convex/modules/text/submission";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
@@ -12,22 +28,10 @@ import {
 	type NoteStudyDatabaseUnit,
 	storedRelation,
 } from "../shared/notes-study/note-study-dummy-database";
-import type { Doc, Id } from "./_generated/dataModel";
-import { internalMutation, type MutationCtx, query } from "./_generated/server";
-import { ensureInlineDefinitionText } from "./model/definitionTexts";
-import { pendingRecordLocatorIndexKey } from "./model/dumdictPendingIndexes";
-import { requireRecord } from "./model/readingKnowledge";
-import { shadowKeyFor } from "./model/shadows";
-import { ensureVisitorEncounter } from "./model/visitorClicks";
-import {
-	loadUnitReadingNote,
-	readingNoteValidator,
-} from "./modules/notes/readingNote";
 import {
 	consolidateExampleTexts,
 	proseSegments,
-} from "./modules/text/exampleCollection";
-import { persistSubmittedText } from "./modules/text/submission";
+} from "./playground-example-collection";
 
 const listItemValidator = v.object({
 	path: v.string(),

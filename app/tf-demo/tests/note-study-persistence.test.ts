@@ -5,7 +5,7 @@ import {
 } from "dumdict/pending";
 import { createDumdictService } from "dumdict/runtime";
 import * as Effect from "effect/Effect";
-import { load, playground } from "../convex/notesStudyFixtures";
+import { load, playground } from "../tooling/playground-fixtures";
 import { get } from "../convex/readingNotes";
 import {
 	NOTE_STUDY_DATABASE,

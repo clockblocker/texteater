@@ -145,7 +145,7 @@ function renderNoteMetadata(note: NoteData): ReactElement {
 	}
 }
 
-function defaultCapabilities(
+export function defaultCapabilities(
 	note: NoteData,
 ):
 	| ReadingPresentationCapabilities

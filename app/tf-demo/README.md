@@ -25,9 +25,8 @@ bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
 The dictionary starts empty. Dumgen supplies reviewed Units and Knowledge on
 demand; grammatical navigation adds only the selected Reading.
 
-Load the local Notes Study user and its normalized Dumling/Dumrel graph with
-`bun run load:notes-study`. This explicit seed is idempotent and is never
-loaded by a deployment automatically.
+The Notes playground uses an isolated in-memory fixture database. Fixtures
+are never loaded into the application’s Convex deployment.
 
 The application uses `/` as its canonical workspace URL. Shared tokens, theme
 machinery, and presentation components come from the `lego` battery.

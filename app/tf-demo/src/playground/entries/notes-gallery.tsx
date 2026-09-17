@@ -1,13 +1,8 @@
-import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import type { FunctionReturnType } from "convex/server";
 import { Skeleton } from "lego";
 import { type ReactNode, useMemo } from "react";
 
-import {
-	renderApplicationSubject,
-	renderCardTail,
-} from "@/views/subject-presentation";
+import { renderCardTail } from "@/views/subject-presentation";
 import type {
 	ResolutionStepKind,
 	WorkspaceSubject,
@@ -17,14 +12,13 @@ import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "@/workspace/workspace-controller";
-import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 import type { EntryRoute } from "../playground-router";
 import { CardFrame, SheetFrame, Stage } from "./frames";
+import { PlaygroundNote } from "./playground-note";
 
-type PlaygroundCatalog = FunctionReturnType<
-	typeof api.notesStudyFixtures.playground
->;
+type PlaygroundCatalog = PlaygroundSnapshot["catalog"];
 
 /**
  * One Note at a time, shown in both forms. Following any link inside a Note
@@ -36,7 +30,13 @@ type PlaygroundCatalog = FunctionReturnType<
  */
 export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 	const catalog = useQuery({
-		...convexQuery(api.notesStudyFixtures.playground, {}),
+		queryKey: ["playground-notes"],
+		queryFn: async (): Promise<PlaygroundSnapshot> => {
+			const response = await fetch("/__playground/notes");
+			if (!response.ok)
+				throw new Error("Could not load playground fixtures.");
+			return response.json();
+		},
 		gcTime: 10_000,
 	});
 	const target = useMemo(
@@ -63,18 +63,15 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 	if (catalog.isError || !catalog.data) {
 		return (
 			<p className="p-6 text-sm text-destructive" role="alert">
-				The Notes Study fake db could not be read. Run{" "}
-				<code className="font-mono">bun run load:notes-study</code> and
-				reload.
+				The playground fixtures could not be built. Check the Vite
+				terminal and reload.
 			</p>
 		);
 	}
-	if (catalog.data.entries.length === 0) {
+	if (catalog.data.catalog.entries.length === 0) {
 		return (
 			<p className="p-6 text-sm text-ink-soft">
-				The fake db is empty. Run{" "}
-				<code className="font-mono">bun run load:notes-study</code> and
-				reload.
+				The playground fixture catalog is empty.
 			</p>
 		);
 	}
@@ -83,7 +80,7 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 	return (
 		<div className="flex h-full min-h-0">
 			<Catalog
-				catalog={catalog.data}
+				catalog={catalog.data.catalog}
 				target={target}
 				onSelect={(next) => setTarget(segmentsFromTarget(next))}
 			/>
@@ -93,20 +90,22 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 						<div className="flex flex-wrap items-start gap-8">
 							<Stage label="Card">
 								<CardFrame tail={renderCardTail(subject)}>
-									{renderApplicationSubject(subject, "Card", {
-										visitorId: catalog.data.visitorId,
-									})}
+									<PlaygroundNote
+										target={subject.target}
+										presentation="Card"
+										snapshot={catalog.data}
+										follow={interaction.follow}
+									/>
 								</CardFrame>
 							</Stage>
 							<Stage label="Sheet" className="min-w-0 flex-1">
 								<SheetFrame>
-									{renderApplicationSubject(
-										subject,
-										"Sheet",
-										{
-											visitorId: catalog.data.visitorId,
-										},
-									)}
+									<PlaygroundNote
+										target={subject.target}
+										presentation="Sheet"
+										snapshot={catalog.data}
+										follow={interaction.follow}
+									/>
 								</SheetFrame>
 							</Stage>
 						</div>

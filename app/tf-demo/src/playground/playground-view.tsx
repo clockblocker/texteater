@@ -76,8 +76,8 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 ];
 
 /**
- * Development-only prototyping surface. It reads the Notes Study fake db
- * (`bun run load:notes-study`) and never touches Visitor history.
+ * Development-only prototyping surface. Notes fixtures live in a disposable
+ * in-memory database and never touch the application deployment.
  *
  * The URL is the state: `/playground/<entry>/<entry's own segments>`, so
  * reload, Back/Forward and deep links all work. Entries are switched from the

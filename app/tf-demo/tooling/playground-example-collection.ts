@@ -1,11 +1,11 @@
+import type { Doc } from "../convex/_generated/dataModel";
+import type { MutationCtx } from "../convex/_generated/server";
 import {
 	EXAMPLES_SUBMISSION_KEY,
 	EXAMPLES_TEXT_TITLE,
 	exampleContext,
-} from "../../../shared/notes-study/example-contexts";
-import { NOTE_STUDY_DATABASE } from "../../../shared/notes-study/note-study-dummy-database";
-import type { Doc } from "../../_generated/dataModel";
-import type { MutationCtx } from "../../_generated/server";
+} from "../shared/notes-study/example-contexts";
+import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 
 const LIMIT = 256;
 const SEGMENT_LIMIT = 512;
