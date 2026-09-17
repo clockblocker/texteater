@@ -1,6 +1,7 @@
 import type { SceneGroup } from "../scene";
 import { CHROME } from "./chrome";
 import { DRAG } from "./drag";
+import { NOTE } from "./note";
 import { READING } from "./reading";
 import { SHEET } from "./sheet";
 
@@ -12,6 +13,7 @@ import { SHEET } from "./sheet";
 export const SCENE_GROUPS: readonly SceneGroup[] = [
 	DRAG,
 	SHEET,
+	NOTE,
 	READING,
 	CHROME,
 ];

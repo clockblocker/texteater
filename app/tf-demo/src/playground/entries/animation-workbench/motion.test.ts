@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { SWAP, swapKeyframes } from "../deck-models/swap-pulse";
-import { layoutFor, moveLength, rest, tapMove } from "./motion";
+import { layoutFor, MORPH_MS, moveLength, rest, tapMove } from "./motion";
 import { peakMs, pulseAt, swap } from "./swap";
 
 const layout = layoutFor(4, 16);
@@ -80,7 +80,14 @@ describe("taps", () => {
 
 	test("a tap at rest starts a clean move with a full timeline", () => {
 		expect(first).toEqual({ from: 3, to: 1 });
-		expect(moveLength(first, SWAP)).toBe(SWAP.duration);
+		// The old front Card is now below: its Heading travels to the
+		// bottom edge and is there once MORPH settles.
+		const start = swap(first, 0, SWAP, layout).cards[3];
+		const end = swap(first, moveLength(first, SWAP), SWAP, layout).cards[3];
+		expect(start?.headerAt).toBe("bottom");
+		expect(start?.headerY).toBeCloseTo(-(layout.card - layout.header), 6);
+		expect(end?.headerY).toBe(0);
+		expect(moveLength(first, SWAP)).toBe(Math.max(SWAP.duration, MORPH_MS));
 	});
 
 	test("a redundant tap leaves the pulse alone, playing or paused", () => {
@@ -88,7 +95,7 @@ describe("taps", () => {
 		expect(tapMove(first, first.to, true, onScreen)).toBeNull();
 		expect(tapMove(first, first.to, false, onScreen)).toBeNull();
 		// The move in flight keeps its timeline; nothing collapses to 0.
-		expect(moveLength(first, SWAP)).toBe(SWAP.duration);
+		expect(moveLength(first, SWAP)).toBe(Math.max(SWAP.duration, MORPH_MS));
 	});
 
 	test("a tap elsewhere mid-flight retargets from the frame on screen", () => {
@@ -96,7 +103,7 @@ describe("taps", () => {
 		const next = tapMove(first, 2, true, onScreen);
 		expect(next).toEqual({ from: 1, to: 2, seed: onScreen });
 		if (!next) return;
-		expect(moveLength(next, SWAP)).toBe(SWAP.duration);
+		expect(moveLength(next, SWAP)).toBe(Math.max(SWAP.duration, MORPH_MS));
 		expect(swap(next, 0, SWAP, layout).cards[1]?.scale).toBeCloseTo(
 			onScreen.cards[1]?.scale ?? Number.NaN,
 			6,
@@ -109,7 +116,12 @@ describe("taps", () => {
 		if (!next) throw new Error("expected a retarget");
 		const end = swap(next, moveLength(next, SWAP), SWAP, layout);
 		expect(end).toEqual(
-			swap({ from: 1, to: 2 }, SWAP.duration, SWAP, layout),
+			swap(
+				{ from: 1, to: 2 },
+				moveLength({ from: 1, to: 2 }, SWAP),
+				SWAP,
+				layout,
+			),
 		);
 	});
 });

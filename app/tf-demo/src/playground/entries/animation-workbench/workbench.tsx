@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { EntryRoute } from "../../playground-router";
 import { type DummyNote, deckFor } from "../deck-models/dummy";
 import {
@@ -9,6 +9,13 @@ import {
 	type SwapSpec,
 	swapEquals,
 } from "../deck-models/swap-pulse";
+import {
+	deriveKeyframes,
+	describeHits,
+	formatSample,
+	type Keyframes,
+	keyAt,
+} from "./keyframes";
 import {
 	DEFAULT_PARAMS,
 	type Frame,
@@ -45,6 +52,12 @@ import { peakMs, SWAP_SOURCE, swap } from "./swap";
  * pulse is carried over by changing that file's `SWAP`. The other tabs are
  * the scenes in `scenes/`, each one shipped motion replayed from `t = 0`;
  * they are reference, with only the knobs they already had.
+ *
+ * Every tile carries its own keyframes, derived from its frame function
+ * (`keyframes.ts`) and declared nowhere: each table lists the channels that
+ * move against the instants where one of them starts, turns, settles or
+ * changes. A whole tab is read at once; a column seeks the clock to that
+ * instant, and the keys of every table show as ticks on the timeline.
  */
 
 const TAP_GROUP = "tap";
@@ -471,6 +484,60 @@ function TileHeader({
 	);
 }
 
+/**
+ * A tile: a preview, and under it that animation's keyframes, derived from
+ * the very function the preview draws. Every tile shows them, so a tab is
+ * read as one sheet; the footer folds one away.
+ */
+function Tile({
+	open,
+	onToggle,
+	keyframes,
+	t,
+	seek,
+	data,
+	children,
+}: {
+	open: boolean;
+	onToggle: () => void;
+	keyframes: Keyframes | null;
+	t: number;
+	seek: (t: number) => void;
+	data: Record<string, string | number>;
+	children: React.ReactNode;
+}) {
+	return (
+		<section
+			{...data}
+			data-open={open || undefined}
+			className="flex flex-col gap-4 rounded-[0.7rem] border border-line p-4"
+		>
+			{children}
+			<button
+				type="button"
+				aria-pressed={open}
+				onClick={onToggle}
+				title={
+					open
+						? "Fold this animation's keyframes away"
+						: "Show this animation's keyframes"
+				}
+				className="mt-auto flex items-center justify-between rounded-[0.4rem] border border-line px-2 py-1 font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase hover:border-link hover:text-ink aria-pressed:text-ink"
+			>
+				<span>
+					{!keyframes || keyframes.channels.length === 0
+						? "Keyframes"
+						: `${count(keyframes.keys.length, "key")} · ${count(keyframes.channels.length, "channel")}`}
+				</span>
+				<span aria-hidden="true">{open ? "▾" : "▸"}</span>
+			</button>
+			{open && keyframes ? (
+				<KeyframeTable keyframes={keyframes} t={t} seek={seek} />
+			) : null}
+		</section>
+	);
+}
+
 /** One Swap preview: a spec, a move, and the deck at `t`. */
 function SwapTile({
 	kind,
@@ -480,6 +547,10 @@ function SwapTile({
 	t,
 	frame,
 	tap,
+	open,
+	onToggle,
+	keyframes,
+	seek,
 }: {
 	kind: "candidate" | "baseline";
 	spec: SwapSpec;
@@ -488,20 +559,27 @@ function SwapTile({
 	t: number;
 	frame: Frame;
 	tap: (index: number) => void;
+	open: boolean;
+	onToggle: () => void;
+	keyframes: Keyframes | null;
+	seek: (t: number) => void;
 }) {
 	const length = moveLength(move, spec);
 	return (
-		<section
-			data-swap={kind}
-			data-swap-t={Math.min(t, length)}
-			className="flex flex-col gap-4 rounded-[0.7rem] border border-line p-4"
+		<Tile
+			open={open}
+			onToggle={onToggle}
+			keyframes={keyframes}
+			t={t}
+			seek={seek}
+			data={{ "data-swap": kind, "data-swap-t": Math.min(t, length) }}
 		>
 			<TileHeader
 				title={kind === "baseline" ? "Swap · baseline" : "Swap"}
 				blurb={
 					kind === "baseline"
 						? `The accepted pulse, locked: ${describeSwap(spec)}.`
-						: `The tapped Card comes to the front at once; nothing travels. The new front Card pulses: ${describeSwap(spec)}.${move.seed ? " Retargeted mid-flight from the frame on screen." : ""}`
+						: `The tapped Card comes to the front at once; only the one Heading that changed edges travels there, on MORPH. The new front Card pulses: ${describeSwap(spec)}.${move.seed ? " Retargeted mid-flight from the frame on screen." : ""}`
 				}
 				source={SWAP_SOURCE}
 				where="playground"
@@ -509,7 +587,7 @@ function SwapTile({
 				length={length}
 			/>
 			<Pile cards={cards} frame={frame} tap={tap} />
-		</section>
+		</Tile>
 	);
 }
 
@@ -517,19 +595,30 @@ function SceneTile({
 	scene,
 	t,
 	params,
+	open,
+	onToggle,
+	keyframes,
+	seek,
 }: {
 	scene: AnyScene;
 	t: number;
 	params: Params;
+	open: boolean;
+	onToggle: () => void;
+	keyframes: Keyframes | null;
+	seek: (t: number) => void;
 }) {
 	const length = scene.length(params);
 	const local = Math.min(t, length);
 	const frame = scene.frame(local, params);
 	return (
-		<section
-			data-scene={scene.key}
-			data-scene-t={local}
-			className="flex flex-col gap-4 rounded-[0.7rem] border border-line p-4"
+		<Tile
+			open={open}
+			onToggle={onToggle}
+			keyframes={keyframes}
+			t={local}
+			seek={seek}
+			data={{ "data-scene": scene.key, "data-scene-t": local }}
 		>
 			<TileHeader
 				title={scene.title}
@@ -541,7 +630,110 @@ function SceneTile({
 				note={scene.caveat?.(params)}
 			/>
 			<scene.Render frame={frame} />
-		</section>
+		</Tile>
+	);
+}
+
+/* ------------------------------------------------------------ keyframes */
+
+/** `3 keys`, `1 channel`. */
+function count(many: number, what: string): string {
+	return `${many.toString()} ${what}${many === 1 ? "" : "s"}`;
+}
+
+/**
+ * One animation's keyframes: channels down, keys across. A column header
+ * seeks the clock to that instant; the column the clock is in is lit. A
+ * cell is strong where its channel does something at that key.
+ */
+function KeyframeTable({
+	keyframes,
+	t,
+	seek,
+}: {
+	keyframes: Keyframes;
+	t: number;
+	seek: (t: number) => void;
+}) {
+	const { channels, keys } = keyframes;
+	const current = keyAt(keys, t);
+	if (channels.length === 0) {
+		return (
+			<p data-keyframes="still" className="text-[0.72rem] text-ink-muted">
+				Nothing moves in this preview.
+			</p>
+		);
+	}
+	return (
+		<div data-keyframes className="max-h-[16rem] overflow-auto">
+			<table className="border-separate border-spacing-0 font-mono text-[0.68rem] tabular-nums">
+				<thead>
+					<tr>
+						<th className="sticky start-0 top-0 z-20 bg-canvas pe-3 text-start font-normal text-ink-faint">
+							ms
+						</th>
+						{keys.map((key, index) => (
+							<th
+								key={key.at}
+								data-key={index}
+								data-current={index === current || undefined}
+								className={`sticky top-0 z-10 px-2 pb-1 text-end align-bottom font-normal ${index === current ? "rounded-t-[0.4rem] bg-paper" : "bg-canvas"}`}
+							>
+								<button
+									type="button"
+									onClick={() => seek(key.at)}
+									title={
+										describeHits(key.hits) ||
+										"The timeline's edge"
+									}
+									className={`rounded-[0.3rem] px-1 hover:text-link ${index === current ? "font-bold text-ink" : "text-ink-soft"}`}
+								>
+									{Math.round(key.at).toString()}
+								</button>
+								<div className="text-[0.56rem] font-normal text-ink-faint">
+									{key.hits
+										.map((hit) => hit.event)
+										.filter(
+											(event, i, all) =>
+												all.indexOf(event) === i,
+										)
+										.join(" · ") || "\u00a0"}
+								</div>
+							</th>
+						))}
+					</tr>
+				</thead>
+				<tbody>
+					{channels.map((channel) => (
+						<tr key={channel.path}>
+							<th className="sticky start-0 z-10 bg-canvas pe-3 text-start font-normal whitespace-nowrap text-ink-soft">
+								{channel.path}
+							</th>
+							{keys.map((key, index) => {
+								const hit = key.hits.find(
+									(h) => h.path === channel.path,
+								);
+								return (
+									<td
+										key={key.at}
+										title={
+											hit
+												? describeHits([hit])
+												: undefined
+										}
+										className={`px-2 py-px text-end whitespace-nowrap ${index === current ? "bg-paper" : ""} ${hit ? "font-bold text-ink" : "text-ink-muted"}`}
+									>
+										{formatSample(
+											key.values[channel.path] ?? "",
+										)}
+									</td>
+								);
+							})}
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
 	);
 }
 
@@ -582,15 +774,27 @@ function Markers({
 
 type Seeds = { readonly candidate?: Frame; readonly baseline?: Frame };
 
+/** One tile's derived keyframes, with the tile's own name for them. */
+type Table = { readonly title: string; readonly keyframes: Keyframes };
+
 export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 	const px = useRemPx();
 	const [cards] = useState(() => [...deckFor(WORD)].reverse());
-	const layout = layoutFor(cards.length, px);
+	const layout = useMemo(
+		() => layoutFor(cards.length, px),
+		[cards.length, px],
+	);
 	const [params, setParams] = useState<Params>(DEFAULT_PARAMS);
 	const [spec, setSpec] = useState<SwapSpec>(SWAP);
 	const [compare, setCompare] = useState(false);
 	const [move, setMove] = useState<Move>(() => rest(cards.length - 1));
 	const [seeds, setSeeds] = useState<Seeds>({});
+	/**
+	 * Every tile shows its keyframes; this is the set that has been folded
+	 * away, by tile key (a scene's key, or a Swap kind). Empty means all of
+	 * them are open, which is how a tab first reads.
+	 */
+	const [folded, setFolded] = useState<ReadonlySet<string>>(new Set());
 
 	// The tab is the URL: `/playground/animation-workbench/<group>`, where
 	// `<group>` is `tap` or a scene group's key. The bare path and unknown
@@ -606,12 +810,14 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 		}
 	}, [requestedKey, groupKey, route]);
 
-	const candidateMove: Move = seeds.candidate
-		? { ...move, seed: seeds.candidate }
-		: move;
-	const baselineMove: Move = seeds.baseline
-		? { ...move, seed: seeds.baseline }
-		: move;
+	const candidateMove = useMemo<Move>(
+		() => (seeds.candidate ? { ...move, seed: seeds.candidate } : move),
+		[move, seeds.candidate],
+	);
+	const baselineMove = useMemo<Move>(
+		() => (seeds.baseline ? { ...move, seed: seeds.baseline } : move),
+		[move, seeds.baseline],
+	);
 	const candidateLength = moveLength(candidateMove, spec);
 	const baselineLength = moveLength(baselineMove, SWAP);
 	const length = isTap
@@ -635,6 +841,97 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 		SWAP,
 		layout,
 	);
+
+	/*
+	 * Every open tile's keyframes. Sampling a scene a few hundred times is
+	 * cheap, and `springSettle` is cached, so this is redone only when a
+	 * knob, the move or the folds change.
+	 */
+	const tiles: readonly string[] = isTap
+		? compare
+			? ["candidate", "baseline"]
+			: ["candidate"]
+		: group.scenes.map((scene) => scene.key);
+	const shown = tiles.filter((key) => !folded.has(key));
+	const shownId = shown.join(" ");
+	const tables = useMemo(() => {
+		const open = new Set(shownId ? shownId.split(" ") : []);
+		const out = new Map<string, Table>();
+		if (isTap) {
+			if (open.has("candidate")) {
+				out.set("candidate", {
+					title: "Swap",
+					keyframes: deriveKeyframes(
+						(t) => swap(candidateMove, t, spec, layout),
+						candidateLength,
+					),
+				});
+			}
+			if (open.has("baseline")) {
+				out.set("baseline", {
+					title: "Swap · baseline",
+					keyframes: deriveKeyframes(
+						(t) => swap(baselineMove, t, SWAP, layout),
+						baselineLength,
+					),
+				});
+			}
+			return out;
+		}
+		for (const scene of group.scenes) {
+			if (!open.has(scene.key)) continue;
+			out.set(scene.key, {
+				title: scene.title,
+				keyframes: deriveKeyframes(
+					(t) => scene.frame(t, params),
+					scene.length(params),
+				),
+			});
+		}
+		return out;
+	}, [
+		isTap,
+		group,
+		shownId,
+		params,
+		spec,
+		layout,
+		candidateMove,
+		baselineMove,
+		candidateLength,
+		baselineLength,
+	]);
+
+	/**
+	 * Every instant at which anything on this tab does something, with what
+	 * does it: the timeline's ticks, and what key-to-key steps through.
+	 */
+	const moments = useMemo(() => {
+		const found = new Map<number, string[]>();
+		for (const table of tables.values()) {
+			for (const key of table.keyframes.keys) {
+				const said = describeHits(key.hits);
+				if (!said) continue;
+				const at = Math.round(key.at);
+				found.set(at, [
+					...(found.get(at) ?? []),
+					`${table.title}: ${said}`,
+				]);
+			}
+		}
+		return [...found.entries()]
+			.sort(([a], [b]) => a - b)
+			.map(([at, said]) => ({ at, label: said.join(" — ") }));
+	}, [tables]);
+
+	const foldAll = (all: boolean) =>
+		setFolded(all ? new Set() : new Set(tiles));
+	const fold = (key: string) =>
+		setFolded((current) => {
+			const next = new Set(current);
+			if (!next.delete(key)) next.add(key);
+			return next;
+		});
 
 	function show(key: string) {
 		if (key === groupKey) return;
@@ -676,6 +973,10 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 		setSpec((current) => ({ ...current, ...part }));
 	const tuned = !swapEquals(spec, SWAP);
 
+	/* the moment before and after the clock, for key-to-key stepping */
+	const previous = [...moments].reverse().find((m) => m.at < clock.t - 1e-6);
+	const following = moments.find((m) => m.at > clock.t + 1e-6);
+
 	const mark = (at: number, label: string, tone: Marker["tone"]): Marker => ({
 		at,
 		label,
@@ -694,6 +995,11 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 					: []),
 			].filter((marker) => marker.at <= length)
 		: [mark(0, "Start", "strong"), mark(length, "End", "strong")];
+	for (const moment of moments) {
+		if (moment.at > 0 && moment.at < length) {
+			markers.push(mark(moment.at, moment.label, "soft"));
+		}
+	}
 	if (clock.range) {
 		markers.push(
 			{ at: clock.range.from, label: "Loop in", tone: "soft" },
@@ -788,6 +1094,11 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 						checked={clock.loop}
 						onChange={clock.setLoop}
 					/>
+					<Switch
+						label="Keyframes"
+						checked={shown.length === tiles.length}
+						onChange={foldAll}
+					/>
 				</div>
 			</header>
 
@@ -806,6 +1117,30 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 				>
 					›
 				</Button>
+				<div className="flex items-center gap-1">
+					<Button
+						onClick={() => previous && clock.seek(previous.at)}
+						disabled={!previous}
+						title={
+							previous
+								? `${previous.label} · ${previous.at.toString()} ms`
+								: "No key before this instant"
+						}
+					>
+						‹ key
+					</Button>
+					<Button
+						onClick={() => following && clock.seek(following.at)}
+						disabled={!following}
+						title={
+							following
+								? `${following.label} · ${following.at.toString()} ms`
+								: "No key after this instant"
+						}
+					>
+						key ›
+					</Button>
+				</div>
 				<div className="flex min-w-[16rem] flex-1 flex-col">
 					<input
 						type="range"
@@ -1010,6 +1345,12 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 							t={clock.t}
 							frame={candidateFrame}
 							tap={tap}
+							open={!folded.has("candidate")}
+							onToggle={() => fold("candidate")}
+							keyframes={
+								tables.get("candidate")?.keyframes ?? null
+							}
+							seek={clock.seek}
 						/>
 						{compare ? (
 							<SwapTile
@@ -1020,17 +1361,29 @@ export function AnimationWorkbench({ route }: { route: EntryRoute }) {
 								t={clock.t}
 								frame={baselineFrame}
 								tap={tap}
+								open={!folded.has("baseline")}
+								onToggle={() => fold("baseline")}
+								keyframes={
+									tables.get("baseline")?.keyframes ?? null
+								}
+								seek={clock.seek}
 							/>
 						) : null}
 					</div>
 				) : (
-					<div className="grid grid-cols-[repeat(auto-fill,minmax(21rem,1fr))] gap-6">
+					<div className="grid grid-cols-[repeat(auto-fill,minmax(24rem,1fr))] gap-6">
 						{group.scenes.map((scene) => (
 							<SceneTile
 								key={scene.key}
 								scene={scene}
 								t={clock.t}
 								params={params}
+								open={!folded.has(scene.key)}
+								onToggle={() => fold(scene.key)}
+								keyframes={
+									tables.get(scene.key)?.keyframes ?? null
+								}
+								seek={clock.seek}
 							/>
 						))}
 					</div>

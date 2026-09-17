@@ -11,17 +11,18 @@ import {
 import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
 
 /**
- * DRAG — what the Compass ghost does once the pointer lets go, or when it
- * crosses a zone. Shipped in `deck-models/drag-deck.tsx`: `snapBack`,
- * `flyAway`, `dissolveInto`, the remove-zone tilt and the arm label.
+ * DRAG — what the Compass Held Card does once the pointer lets go, or when
+ * it crosses a zone. Shipped in `deck-models/drag-deck.tsx`: `snapBack`,
+ * `flyAway`, the remove-zone tilt and the arm label. A release that opens
+ * a Sheet is not here: the Note grows from the hand, in the Sheet tab.
  *
- * The ghost is drawn at rest in the middle of a stage; `x` and `y` are its
- * offsets from that rest, as Motion holds them.
+ * The Card is drawn at rest in the middle of a stage; `x` and `y` are its
+ * offsets from that rest, as Motion holds them on the Note itself.
  */
 
 const NOTE = deckFor("noch")[0];
 
-/** The drag ghost's spring: `SPRING` in drag-deck.tsx, from the knobs. */
+/** The drag spring: `SPRING` in drag-deck.tsx, from the knobs. */
 function springOf(params: Params): SpringSpec {
 	return { stiffness: params.stiffness, damping: params.damping };
 }
@@ -75,12 +76,6 @@ const REST: GhostFrame = {
 const REMOVE: Label = {
 	text: "Remove",
 	side: "end",
-	opacity: 1,
-	scale: 1,
-};
-const OPEN: Label = {
-	text: "Open as sheet",
-	side: "start",
 	opacity: 1,
 	scale: 1,
 };
@@ -156,34 +151,6 @@ const flyAway: GhostScene = {
 			opacity: mix(1, 0, rest),
 			border: "destructive",
 			label: REMOVE,
-		};
-	},
-};
-
-/**
- * An armed Open past the commit line. While armed the ghost grows with the
- * pull, −dy / 800 up to 5 %, so here it starts a touch large.
- */
-const ARMED_OPEN = { y: -100, scale: 1.05 };
-const DISSOLVE_MS = 160;
-
-const dissolve: GhostScene = {
-	key: "dissolve",
-	title: "Dissolve",
-	blurb: "Open as sheet, or drop into a pane: the ghost rises 20 px, grows to 1.04 and fades in 160 ms, and the Sheet enters underneath.",
-	source: "drag-deck.tsx · dissolveInto",
-	where: "playground",
-	knobs: [],
-	length: () => DISSOLVE_MS,
-	frame: (t) => {
-		const p = segment(t, 0, DISSOLVE_MS, MOTION_EASE_IN_OUT);
-		return {
-			...REST,
-			y: mix(ARMED_OPEN.y, ARMED_OPEN.y - 20, p),
-			scale: mix(ARMED_OPEN.scale, 1.04, p),
-			opacity: mix(1, 0, p),
-			border: "link",
-			label: OPEN,
 		};
 	},
 };
@@ -278,6 +245,6 @@ const withGhost = (spec: GhostScene) =>
 export const DRAG: SceneGroup = {
 	key: "drag",
 	title: "Drag",
-	blurb: "The Compass ghost after the pointer lets go, or as it crosses a zone. Springs are Motion's own, in closed form, so they scrub.",
-	scenes: [snapBack, tilt, flyAway, dissolve, armLabel].map(withGhost),
+	blurb: "The Compass Held Card after the pointer lets go, or as it crosses a zone. Springs are Motion's own, in closed form, so they scrub.",
+	scenes: [snapBack, tilt, flyAway, armLabel].map(withGhost),
 };

@@ -23,6 +23,7 @@ import {
 	type NoteLink,
 	noteById,
 } from "./dummy";
+import { MORPH } from "./morph";
 import { DummyReader, ModelShell, useEventLog } from "./shared";
 import { SWAP, swapKeyframes } from "./swap-pulse";
 
@@ -157,8 +158,6 @@ const EDGE_BAND = 80;
 const REMOVE_WIDTH = "5rem";
 const ZONE_GAP = "0.75rem";
 const SPRING = { type: "spring", stiffness: 520, damping: 42 } as const;
-/** The box morph between forms: a touch softer than the drag spring. */
-const MORPH = { type: "spring", stiffness: 380, damping: 38 } as const;
 
 const DISMISS_EXEMPT_SELECTOR = [
 	"button",

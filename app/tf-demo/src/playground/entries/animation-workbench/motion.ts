@@ -1,3 +1,4 @@
+import { MORPH } from "../deck-models/morph";
 import type { SwapEase, SwapSpec } from "../deck-models/swap-pulse";
 
 /**
@@ -16,8 +17,9 @@ import type { SwapEase, SwapSpec } from "../deck-models/swap-pulse";
 
 /* --------------------------------------------------------------- layout */
 
-export const PILE_REM = 22;
-export const HEADER_REM = 2.5;
+/** The deck column and its Heading row, as Compass ships them. */
+export const PILE_REM = 30;
+export const HEADER_REM = 2.75;
 
 export type Layout = {
 	readonly count: number;
@@ -179,20 +181,56 @@ export type SpringSettle = {
  * How long the spring takes to come within a thousandth of its target and
  * stay there. Found by scanning, so it holds for any damping.
  */
+/**
+ * The scan is 5000 steps, and a scene asks for it once per frame with the
+ * same spec, so the answer is kept. A spec is four numbers; the cache is
+ * bounded by how many the knobs can produce in a session.
+ */
+const SETTLED = new Map<string, SpringSettle>();
+
 export function springSettle(spec: SpringSpec): SpringSettle {
+	const id = `${spec.stiffness.toString()}/${spec.damping.toString()}/${(spec.mass ?? 1).toString()}/${(spec.velocity ?? 0).toString()}`;
+	const known = SETTLED.get(id);
+	if (known) return known;
 	const tolerance = 1e-3;
 	let settled = 0;
 	for (let ms = 0; ms <= SPRING_SCAN_MS; ms += 1) {
 		if (Math.abs(springAt(ms, spec) - 1) > tolerance) settled = ms + 1;
 	}
-	return settled > SPRING_SCAN_MS
-		? { ms: SPRING_SCAN_MS, settled: false }
-		: { ms: settled, settled: true };
+	const found: SpringSettle =
+		settled > SPRING_SCAN_MS
+			? { ms: SPRING_SCAN_MS, settled: false }
+			: { ms: settled, settled: true };
+	SETTLED.set(id, found);
+	return found;
 }
 
 export function springLength(spec: SpringSpec): number {
 	return springSettle(spec).ms;
 }
+
+/* ---------------------------------------------------------------- morph */
+
+/** The spring a Note's box and Heading ride between forms: `MORPH`. */
+export const MORPH_SPEC: SpringSpec = {
+	stiffness: MORPH.stiffness,
+	damping: MORPH.damping,
+};
+const MORPH_SETTLE = springSettle(MORPH_SPEC);
+
+/** The MORPH spring's progress at `t`, pinned to 1 once it has settled. */
+export function morphProgress(t: number): number {
+	return MORPH_SETTLE.settled && t >= MORPH_SETTLE.ms
+		? 1
+		: springAt(t, MORPH_SPEC);
+}
+
+/** How long MORPH takes to settle, in ms. */
+export const MORPH_MS = MORPH_SETTLE.ms;
+
+export const MORPH_CAVEAT: string | null = MORPH_SETTLE.settled
+	? null
+	: "Cut short at 5 s: the MORPH spring has not settled.";
 
 /* ----------------------------------------------------------------- move */
 
@@ -217,7 +255,8 @@ export function rest(open: number): Move {
 /** The whole timeline of a move, in ms. */
 export function moveLength(move: Move, spec: SwapSpec): number {
 	if (move.from === move.to && !move.seed) return 0;
-	return spec.duration;
+	/* the pulse, and the Heading that travels to the other edge on MORPH */
+	return Math.max(spec.duration, MORPH_MS);
 }
 
 /** The move's raw progress at `t`. */
@@ -251,8 +290,13 @@ export type CardFrame = {
 	readonly height: number;
 	readonly z: number;
 	readonly scale: number;
-	/** Where the header row sits inside the Card. */
+	/** Where the Heading row sits inside the Card. */
 	readonly headerAt: "top" | "bottom";
+	/**
+	 * The Heading's offset from that edge, px: a Heading that has just
+	 * changed edges is still travelling there on MORPH.
+	 */
+	readonly headerY: number;
 };
 
 export type Frame = {
@@ -268,7 +312,7 @@ export type Variant = (
 
 /* ------------------------------------------------------------- retarget */
 
-const NUMERIC_KEYS = ["y", "height", "scale"] as const;
+const NUMERIC_KEYS = ["y", "height", "scale", "headerY"] as const;
 
 /**
  * Wrap a variant so a mid-flight tap starts from what is on screen. The

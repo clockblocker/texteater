@@ -1,116 +1,276 @@
 import { deckFor } from "../../deck-models/dummy";
-import { CSS_EASE, cubicBezier, MOTION_EASE_IN_OUT } from "../motion";
+import {
+	CSS_EASE,
+	cubicBezier,
+	MORPH_CAVEAT,
+	MORPH_MS,
+	MOTION_EASE_IN_OUT,
+	morphProgress,
+} from "../motion";
 import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
 
 /**
- * SHEET & DIALOG — surfaces that come and go. The Compass Sheet is a Motion
- * tween in `deck-models/drag-deck.tsx`; the Dialog is tw-animate keyframes
- * in `battery/lego/src/atoms/dialog.tsx`, used by the app's confirm dialog.
+ * SHEET & DIALOG — a Note changing form, and the app's Dialog. In the
+ * Compass prototype a Note is one element in every form (ADR 0006): its
+ * box (left, top, width, height) rides the `MORPH` spring from the deck
+ * slot to the Pane's Sheet box and back, or into the hand, and its Heading
+ * grows and shrinks with it. The Dialog is tw-animate keyframes in
+ * `battery/lego/src/atoms/dialog.tsx`.
  */
 
 const NOTE = deckFor("noch")[0];
 
-/* ------------------------------------------------------ compass sheet */
+/* ------------------------------------------------------------- morph */
 
-export type SheetFrame = {
-	readonly opacity: number;
-	readonly scale: number;
-	/** `transform-origin`, set to the pressed corner while holding. */
-	readonly origin: string;
-	readonly border: "line" | "link";
+type Box = {
+	readonly left: number;
+	readonly top: number;
+	readonly width: number;
+	readonly height: number;
 };
 
-type SheetScene = Omit<Scene<SheetFrame>, "Render">;
+function mixBox(a: Box, b: Box, p: number): Box {
+	return {
+		left: mix(a.left, b.left, p),
+		top: mix(a.top, b.top, p),
+		width: mix(a.width, b.width, p),
+		height: mix(a.height, b.height, p),
+	};
+}
 
-const SHEET_MS = 160;
+/*
+ * The stage: a 24 × 13 rem Pane at 16 px. The Pane bar is 2.25 rem; the
+ * Sheet box is the Pane under it, inset 1.5 rem × 1 rem. The deck slot is
+ * a small Card at the lower right; the hand is where an Open ↑ let go.
+ */
+const STAGE = { width: 384, height: 208 };
+const BAR = 36;
+const SHEET_BOX: Box = {
+	left: 24,
+	top: BAR + 16,
+	width: STAGE.width - 48,
+	height: STAGE.height - BAR - 32,
+};
+const SLOT: Box = { left: 232, top: 100, width: 128, height: 92 };
+const HAND: Box = { ...SLOT, top: SLOT.top - 64 };
+const LIFTED: Box = { left: 120, top: 70, width: 128, height: 92 };
+
+/** The Heading row: 2.75 rem and 1 rem type as a Card, 4.25 rem and 1.5 rem as a Sheet. */
+const HEADING = { card: 44, sheet: 68, cardType: 16, sheetType: 24 };
+const KIND_MS = 160;
+const FADE_MS = 200;
 const LONG_PRESS_MS = 500;
 const LINEAR = cubicBezier(0, 0, 1, 1);
 
-const sheetEnter: SheetScene = {
-	key: "sheet-enter",
+export type MorphFrame = {
+	readonly box: Box;
+	readonly scale: number;
+	/** `transform-origin`, the pressed corner while holding. */
+	readonly origin: string;
+	readonly border: "line" | "link";
+	readonly heading: {
+		readonly height: number;
+		readonly fontSize: number;
+		/** The kind label above the title: Sheet only. */
+		readonly kind: number;
+		readonly kindY: number;
+	};
+	/** The Card's clip gradient; a Sheet lifts it. */
+	readonly fade: number;
+	/** The Pane bar's opacity. */
+	readonly bar: number;
+};
+
+type MorphScene = Omit<Scene<MorphFrame>, "Render">;
+
+const morphCaveat = () => MORPH_CAVEAT;
+
+/** The Heading and clip at `toSheet` progress `p`, the kind label at tween `k`. */
+function blocks(p: number, k: number, fade: number) {
+	return {
+		heading: {
+			height: mix(HEADING.card, HEADING.sheet, p),
+			fontSize: mix(HEADING.cardType, HEADING.sheetType, p),
+			kind: k,
+			kindY: mix(4, 0, k),
+		},
+		fade,
+	};
+}
+
+const BAR_DELAY_MS = 180;
+const BAR_MS = 160;
+
+const grow: MorphScene = {
+	key: "note-grows",
 	where: "playground",
-	title: "Sheet enters",
-	blurb: "A Card opens as a Sheet: it fades in and grows from 0.98 in 160 ms, Motion's default ease-in-out.",
-	source: "drag-deck.tsx · SheetView · initial/animate",
+	title: "Card grows into a Sheet",
+	blurb: "Open ↑ let go: the Note's drag offset is folded into its box, then left, top, width and height spring (MORPH, 380/38) from the hand to the Sheet box while scale springs back from 1.05. The Heading grows on the same spring, the kind label fades in over 160 ms, the clip fade lifts in 200 ms, and the Pane bar arrives 180 ms later.",
+	source: "drag-deck.tsx · growFromHand · NoteView box effect · MORPH",
 	knobs: [],
-	length: () => SHEET_MS,
+	length: () => Math.max(MORPH_MS, BAR_DELAY_MS + BAR_MS),
+	caveat: morphCaveat,
 	frame: (t) => {
-		const p = segment(t, 0, SHEET_MS, MOTION_EASE_IN_OUT);
+		const p = morphProgress(t);
+		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
 		return {
-			opacity: mix(0, 1, p),
-			scale: mix(0.98, 1, p),
+			box: mixBox(HAND, SHEET_BOX, p),
+			scale: mix(1.05, 1, p),
 			origin: "50% 50%",
-			border: "line",
+			border: "link",
+			...blocks(p, k, 1 - segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT)),
+			bar: segment(t, BAR_DELAY_MS, BAR_MS, MOTION_EASE_IN_OUT),
 		};
 	},
 };
 
-const sheetExit: SheetScene = {
-	key: "sheet-exit",
+const BAR_EXIT_MS = 100;
+
+const collapse: MorphScene = {
+	key: "sheet-collapses",
 	where: "playground",
-	title: "Sheet leaves",
-	blurb: "The Sheet collapses back to a Card, or is dismissed: the enter, run backwards, in 160 ms.",
-	source: "drag-deck.tsx · SheetView · exit",
+	title: "Sheet shrinks to a Card",
+	blurb: "← or Esc: the same element springs from the Sheet box back into its deck slot (MORPH). The Heading shrinks with it, the kind label fades in 160 ms, the clip fade returns in 200 ms, and the Pane bar is gone in 100 ms.",
+	source: "drag-deck.tsx · collapseSheet · NoteView box effect · MORPH",
 	knobs: [],
-	length: () => SHEET_MS,
+	length: () => MORPH_MS,
+	caveat: morphCaveat,
 	frame: (t) => {
-		const p = segment(t, 0, SHEET_MS, MOTION_EASE_IN_OUT);
+		const p = morphProgress(t);
+		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
 		return {
-			opacity: mix(1, 0, p),
-			scale: mix(1, 0.98, p),
+			box: mixBox(SHEET_BOX, SLOT, p),
+			scale: 1,
 			origin: "50% 50%",
 			border: "line",
+			...blocks(1 - p, 1 - k, segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT)),
+			bar: 1 - segment(t, 0, BAR_EXIT_MS, MOTION_EASE_IN_OUT),
 		};
 	},
 };
 
-const sheetHold: SheetScene = {
+const lift: MorphScene = {
+	key: "sheet-lifts",
+	where: "playground",
+	title: "Sheet lifts into the hand",
+	blurb: "Dragging the Heading, or a margin hold completing: the Sheet is at once a Held Card. Its box springs (MORPH) to Card size centred under the pointer; from there the drag offset moves it. Border link-blue: a free drag.",
+	source: "drag-deck.tsx · liftSheet · Drag.origin · MORPH",
+	knobs: [],
+	length: () => MORPH_MS,
+	caveat: morphCaveat,
+	frame: (t) => {
+		const p = morphProgress(t);
+		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
+		return {
+			box: mixBox(SHEET_BOX, LIFTED, p),
+			scale: 1,
+			origin: "50% 100%",
+			border: "link",
+			...blocks(1 - p, 1 - k, segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT)),
+			bar: 1 - segment(t, 0, BAR_EXIT_MS, MOTION_EASE_IN_OUT),
+		};
+	},
+};
+
+const hold: MorphScene = {
 	key: "sheet-hold",
 	where: "playground",
 	title: "Sheet held",
-	blurb: "A long press on the Sheet's margin: it shrinks toward the pressed corner and its edge turns link-blue over the 500 ms it takes to lift. Letting go early snaps it back in 160 ms.",
-	source: "drag-deck.tsx · SheetView · holding",
+	blurb: "A long press on a Sheet margin: the Note shrinks toward the pressed corner to 0.95, linearly over the 500 ms it takes to lift, and its edge turns link-blue. Letting go early springs it back in 160 ms.",
+	source: "drag-deck.tsx · NoteView · holding · LONG_PRESS_MS",
 	knobs: [],
 	length: () => LONG_PRESS_MS,
 	frame: (t) => {
 		const p = segment(t, 0, LONG_PRESS_MS, LINEAR);
 		return {
-			opacity: 1,
+			box: SHEET_BOX,
 			scale: mix(1, 0.95, p),
 			origin: "84% 88%",
 			border: p > 0 ? "link" : "line",
+			...blocks(1, 1, 0),
+			bar: 1,
 		};
 	},
 };
 
-function CompassSheet({ frame }: { readonly frame: SheetFrame }) {
+function NoteStage({ frame }: { readonly frame: MorphFrame }) {
+	const { box, heading } = frame;
 	return (
-		<div className="relative h-[13rem] overflow-hidden rounded-[0.7rem] bg-canvas">
-			<section
-				data-sheet
-				className="absolute inset-x-6 inset-y-4 flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper"
-				style={{
-					opacity: frame.opacity,
-					transform: `scale(${frame.scale.toFixed(4)})`,
-					transformOrigin: frame.origin,
-					borderColor:
-						frame.border === "link"
-							? "var(--link)"
-							: "var(--line-strong)",
-				}}
+		<div className="relative flex h-[13rem] justify-center overflow-hidden rounded-[0.7rem] bg-canvas">
+			<div
+				className="relative bg-paper"
+				style={{ width: STAGE.width, height: STAGE.height }}
 			>
-				<header className="flex h-8 shrink-0 items-center gap-2 border-b border-line ps-3 pe-3 text-[0.8rem] text-ink-muted">
-					<span aria-hidden="true">←</span>
-					<span className="font-serif text-[0.95rem] text-ink">
-						{NOTE?.title}
-					</span>
-				</header>
-				<div className="space-y-1.5 px-4 py-3 text-[0.85rem] leading-relaxed text-ink-soft">
-					{NOTE?.lines.slice(0, 3).map((line) => (
-						<p key={line}>{line}</p>
-					))}
+				{/* the Pane bar */}
+				<div
+					aria-hidden="true"
+					className="absolute inset-x-0 top-0 flex items-center gap-2 ps-2 font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase"
+					style={{ height: BAR, opacity: frame.bar }}
+				>
+					<span className="text-link">←</span>
+					<span>Text</span>
+					<span>›</span>
+					<span className="text-ink">{NOTE?.kind}</span>
 				</div>
-			</section>
+				{/* the deck slot the Card came from */}
+				<div
+					aria-hidden="true"
+					className="absolute rounded-[0.9rem] border border-dashed border-line"
+					style={SLOT}
+				/>
+				<article
+					data-note
+					className="absolute flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper"
+					style={{
+						left: box.left,
+						top: box.top,
+						width: box.width,
+						height: box.height,
+						transform: `scale(${frame.scale.toFixed(4)})`,
+						transformOrigin: frame.origin,
+						borderColor:
+							frame.border === "link"
+								? "var(--link)"
+								: "var(--line-strong)",
+					}}
+				>
+					<div
+						className="relative flex w-full shrink-0 items-end gap-3 px-3 pb-1.5"
+						style={{ height: heading.height }}
+					>
+						<span
+							className="pointer-events-none absolute top-2 left-3 font-mono text-[0.58rem] font-bold tracking-[0.12em] text-ink-muted uppercase"
+							style={{
+								opacity: heading.kind,
+								transform: `translateY(${heading.kindY.toFixed(2)}px)`,
+							}}
+						>
+							{NOTE?.kind}
+						</span>
+						<span
+							className="min-w-0 flex-1 truncate font-serif leading-tight text-ink"
+							style={{ fontSize: heading.fontSize }}
+						>
+							{NOTE?.tail.form}
+						</span>
+						<span className="shrink-0 text-[0.65rem] text-ink-muted">
+							{NOTE?.tail.gloss}
+						</span>
+					</div>
+					<div className="relative min-h-0 flex-1 overflow-hidden">
+						<div className="space-y-1 px-3 text-[0.75rem] leading-relaxed text-ink-soft">
+							{NOTE?.lines.slice(0, 4).map((line) => (
+								<p key={line}>{line}</p>
+							))}
+						</div>
+						<div
+							aria-hidden="true"
+							className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-paper to-transparent"
+							style={{ opacity: frame.fade }}
+						/>
+					</div>
+				</article>
+			</div>
 		</div>
 	);
 }
@@ -178,10 +338,10 @@ function DialogPanel({ frame }: { readonly frame: PanelFrame }) {
 export const SHEET: SceneGroup = {
 	key: "sheet",
 	title: "Sheet & dialog",
-	blurb: "Surfaces coming and going: the Compass Sheet's Motion tweens, and the app's Dialog on CSS.",
+	blurb: "A Note changing form: one element, its box on the MORPH spring, its Blocks adapting. And the app's Dialog on CSS.",
 	scenes: [
-		...[sheetEnter, sheetExit, sheetHold].map((spec) =>
-			scene<SheetFrame>({ ...spec, Render: CompassSheet }),
+		...[grow, collapse, lift, hold].map((spec) =>
+			scene<MorphFrame>({ ...spec, Render: NoteStage }),
 		),
 		scene<PanelFrame>({ ...dialog, Render: DialogPanel }),
 	],

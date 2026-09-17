@@ -1,57 +1,121 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
-import type { DummyNote } from "../deck-models/dummy";
+import { cleanWord, type DummyNote } from "../deck-models/dummy";
 import { type CardFrame, type Frame, HEADER_REM, PILE_REM } from "./motion";
 
 /**
  * Draws one Frame. No Motion, no CSS transitions: every style is the number
  * the variant computed for this instant, so what you see at a scrubbed `t`
  * is exactly what playback shows when it passes `t`.
+ *
+ * A Card is the Compass Note in Card form (ADR 0006): the Heading Block,
+ * then Source Contexts (two), the Body and the Links, clipped by the box
+ * under a fade. A Card covered from below keeps the same Blocks and its
+ * Heading sits at the bottom edge, offset by `headerY` while it travels.
  */
 
 const CARD_CLASS =
 	"absolute inset-x-0 flex cursor-pointer select-none flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper outline-none focus-visible:ring-2 focus-visible:ring-link";
 
+const CARD_CONTEXTS = 2;
+
 function rem(value: number): string {
 	return `${value.toString()}rem`;
 }
 
-export function Header({ note }: { note: DummyNote }) {
+function Heading({
+	note,
+	atBottom,
+	y,
+}: {
+	note: DummyNote;
+	atBottom: boolean;
+	y: number;
+}) {
 	return (
-		<span
-			className="flex w-full shrink-0 items-center justify-between gap-4 px-4"
-			style={{ height: rem(HEADER_REM) }}
+		<div
+			data-heading
+			className={`relative flex w-full shrink-0 items-end gap-4 bg-paper px-4 ${atBottom ? "" : "pb-2"}`}
+			style={{
+				height: rem(HEADER_REM),
+				order: atBottom ? 2 : 0,
+				transform: `translateY(${y.toFixed(2)}px)`,
+			}}
 		>
-			<span className="truncate font-serif text-[1rem] text-ink">
+			<span
+				className={`min-w-0 flex-1 truncate font-serif text-[1rem] leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
+			>
 				{note.tail.form}
 			</span>
-			<span className="shrink-0 text-[0.72rem] text-ink-muted">
+			<span
+				className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
+			>
 				{note.tail.gloss}
 			</span>
-		</span>
+		</div>
 	);
 }
 
-export function Body({
-	note,
-	below = false,
-}: {
-	note: DummyNote;
-	below?: boolean;
-}) {
+function Blocks({ note, below }: { note: DummyNote; below: boolean }) {
+	const word = cleanWord(note.word);
 	return (
-		<div className="pointer-events-none relative min-h-0 flex-1 overflow-hidden">
+		<div className="relative order-1 min-h-0 flex-1 overflow-hidden">
 			<div
-				className={`space-y-1.5 px-4 text-[0.85rem] leading-relaxed text-ink-soft ${below ? "pt-3" : "pb-3"}`}
+				className={`flex flex-col gap-3 px-4 ${below ? "pt-3" : "pb-4"}`}
 			>
-				{note.lines.map((line, index) => (
-					<p key={`${index.toString()}-${line}`}>{line}</p>
-				))}
+				<div data-block="contexts" className="flex flex-col gap-1">
+					<div className="flex items-baseline justify-between font-mono text-[0.58rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
+						<span>Source contexts</span>
+						<span>{note.contexts.length.toString()}</span>
+					</div>
+					<ul className="flex flex-col gap-0.5 text-[0.8rem] leading-relaxed text-ink-soft">
+						{note.contexts.slice(0, CARD_CONTEXTS).map((line) => (
+							<li key={line}>{highlight(line, word)}</li>
+						))}
+					</ul>
+				</div>
+				<div
+					data-block="body"
+					className="space-y-1.5 text-[0.85rem] leading-relaxed text-ink-soft"
+				>
+					{note.lines.map((line, index) => (
+						<p key={`${index.toString()}-${line}`}>{line}</p>
+					))}
+				</div>
+				<ul
+					data-block="links"
+					className="flex flex-wrap gap-x-4 gap-y-1 text-[0.85rem] text-link"
+				>
+					{note.links.map((link) => (
+						<li key={link.label}>
+							{link.kind === "Text"
+								? `↩ ${link.label} (${cleanWord(link.word)})`
+								: link.label}
+						</li>
+					))}
+				</ul>
 			</div>
 			{below ? null : (
-				<div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-paper to-transparent" />
+				<div
+					aria-hidden="true"
+					className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-paper to-transparent"
+				/>
 			)}
 		</div>
+	);
+}
+
+function highlight(line: string, word: string) {
+	const index = line.toLowerCase().indexOf(word.toLowerCase());
+	if (index < 0) return line;
+	return (
+		<>
+			{line.slice(0, index)}
+			<span className="text-ink">
+				{line.slice(index, index + word.length)}
+			</span>
+			{line.slice(index + word.length)}
+		</>
 	);
 }
 
@@ -94,9 +158,8 @@ function Card({
 				transform: `translateY(${frame.y.toFixed(2)}px) scale(${frame.scale.toFixed(4)})`,
 			}}
 		>
-			{below ? null : <Header note={note} />}
-			<Body note={note} below={below} />
-			{below ? <Header note={note} /> : null}
+			<Heading note={note} atBottom={below} y={frame.headerY} />
+			<Blocks note={note} below={below} />
 		</article>
 	);
 }
