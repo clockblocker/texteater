@@ -391,11 +391,7 @@ export async function replaceAccumulatedKnowledge(
 			q.eq("ownerReadingKey", ownerReadingKey),
 		)
 		.unique();
-	const requestedStatus = options.status ?? "Partial";
-	const status: "Partial" | "Full" =
-		existing?.status === "Full" || requestedStatus === "Full"
-			? "Full"
-			: "Partial";
+	const status = options.status ?? existing?.status ?? "Partial";
 	if (knowledge === undefined) {
 		if (!existing) return null;
 		await syncStructuralShadowReferences(ctx, ownerReadingKey, {});

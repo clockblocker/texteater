@@ -2,18 +2,14 @@ import { expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
 import type { ModelExchange } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import {
-	executeOutput,
-	rejectJudgment,
-} from "../../../battery/dumgen/tests/execution-fixture.js";
+import { intakeFixture } from "../../../battery/dumgen/tests/intake-fixture.js";
 import { segmentForLaboratory } from "../src/segmentation";
 
-test("published segmentation retains generated intake and deterministic segmentation evidence", async () => {
+test("published segmentation retains bounded intake and deterministic segmentation evidence", async () => {
 	const exchanges: ModelExchange[] = [];
 	const dumgen = createDumgen({
-		judge: rejectJudgment,
 		onModelExchange: (value) => exchanges.push(value),
-		execute: executeOutput(async () => ({
+		...intakeFixture({
 			language: "de",
 			items: [
 				{
@@ -23,7 +19,7 @@ test("published segmentation retains generated intake and deterministic segmenta
 					stitchedText: "Die Bank",
 				},
 			],
-		})),
+		}),
 	});
 	const response = await Effect.runPromise(
 		segmentForLaboratory(dumgen, "Die Bank", exchanges),
@@ -49,9 +45,8 @@ test("published segmentation retains generated intake and deterministic segmenta
 test("unavailable intake is retained without a segmentation stage", async () => {
 	const exchanges: ModelExchange[] = [];
 	const dumgen = createDumgen({
-		judge: rejectJudgment,
 		onModelExchange: (value) => exchanges.push(value),
-		execute: executeOutput(async () => ({
+		...intakeFixture({
 			language: null,
 			items: [
 				{
@@ -61,7 +56,7 @@ test("unavailable intake is retained without a segmentation stage", async () => 
 					stitchedText: "Bonjour",
 				},
 			],
-		})),
+		}),
 	});
 	const response = await Effect.runPromise(
 		segmentForLaboratory(dumgen, "Bonjour", exchanges),
@@ -76,12 +71,14 @@ test("invalid input fails before execution and provider errors retain the failed
 	const exchanges: ModelExchange[] = [];
 	let calls = 0;
 	const dumgen = createDumgen({
-		judge: rejectJudgment,
 		onModelExchange: (value) => exchanges.push(value),
-		execute: executeOutput(async () => {
+		judge: async () => {
 			calls++;
 			throw new Error("offline");
-		}),
+		},
+		execute: async () => {
+			throw Error("Unexpected stitching");
+		},
 	});
 	await expect(
 		Effect.runPromise(segmentForLaboratory(dumgen, "", exchanges)),

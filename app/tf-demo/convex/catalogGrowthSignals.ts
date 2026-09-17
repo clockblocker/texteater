@@ -2,12 +2,14 @@ import { type Infer, v } from "convex/values";
 import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 import { canonicalJson } from "./model/canonicalJson";
+import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import {
 	requireActiveResolutionSession,
 	settleFailed,
 } from "./model/resolutionSessions";
 import {
 	catalogMissValidator,
+	knowledgeProductionEvidenceValidator,
 	resolutionSessionGuardValidator,
 } from "./model/validators";
 
@@ -114,14 +116,25 @@ export const recordAndSettleCatalogMiss = internalMutation({
 });
 
 export const recordKnowledgeCatalogMiss = internalMutation({
-	args: { attemptKey: v.string(), miss: catalogMissValidator },
+	args: {
+		attemptKey: v.string(),
+		miss: catalogMissValidator,
+		productionEvidence: v.optional(knowledgeProductionEvidenceValidator),
+	},
 	returns: v.null(),
-	handler: async (ctx, { attemptKey, miss }) => {
+	handler: async (ctx, { attemptKey, miss, productionEvidence }) => {
 		const attempt = await ctx.db
 			.query("knowledgeGenerationAttempts")
 			.withIndex("by_attempt_key", (q) => q.eq("attemptKey", attemptKey))
 			.unique();
 		if (attempt?.state !== "Running") return null;
+		if (productionEvidence)
+			await recordKnowledgeProductionRun(
+				ctx,
+				attempt,
+				productionEvidence,
+				"Failure",
+			);
 		await recordCatalogGrowthSignal(ctx, miss, attemptKey);
 		await ctx.db.patch(attempt._id, {
 			state: "Failed",

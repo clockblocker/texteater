@@ -116,7 +116,7 @@ export function projectKnowledge(
 	}
 	const result = parse<KnowledgeProduction>(
 		"knowledgeProductionSchema",
-		{ changes, pendingRelations },
+		{ changes, pendingRelations, failures: [] },
 		"produceKnowledge",
 		true,
 	);
@@ -200,7 +200,7 @@ export function authoredKnowledge(
 	return {
 		production: parse<KnowledgeProduction>(
 			"knowledgeProductionSchema",
-			{ changes, pendingRelations: [] },
+			{ changes, pendingRelations: [], failures: [] },
 			"produceKnowledge",
 			true,
 		),

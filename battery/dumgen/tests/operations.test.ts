@@ -20,6 +20,7 @@ import {
 	rejectJudgment,
 } from "./execution-fixture.js";
 import { grammarFixture } from "./grammar-fixture.js";
+import { knowledgeFixture } from "./knowledge-fixture.js";
 
 const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
@@ -44,14 +45,20 @@ function controlled(output: unknown) {
 		calls,
 		dumgen: createDumgen({
 			judge: (request, options) =>
-				Object.hasOwn(request.questions, "reading")
-					? readingJudgment(output)(request, options)
-					: grammarFixture(output).judge(request, options),
+				Object.keys(request.questions).some((key) =>
+					key.startsWith("relation_"),
+				)
+					? knowledgeFixture(output).judge(request, options)
+					: Object.hasOwn(request.questions, "reading")
+						? readingJudgment(output)(request, options)
+						: grammarFixture(output).judge(request, options),
 			onModelExchange: (exchange) => calls.push(exchange.request),
 			execute: executeOutput(async (request) => {
-				return request.stage === "resolveGrammar"
-					? (await grammarFixture(output).execute(request)).output
-					: output;
+				return request.stage === "produceKnowledge"
+					? (await knowledgeFixture(output).execute(request)).output
+					: request.stage === "resolveGrammar"
+						? (await grammarFixture(output).execute(request)).output
+						: output;
 			}),
 		}),
 	};
@@ -241,7 +248,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 			kind: "PROPN",
 		},
 	]);
-	expect(calls).toHaveLength(1);
+	expect(calls).toHaveLength(2);
 	expect(
 		await tag(
 			dumgen.produceKnowledge({ reading, request } as Parameters<
@@ -249,7 +256,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 			>[0]),
 		),
 	).toBe("InvalidInput");
-	expect(calls).toHaveLength(1);
+	expect(calls).toHaveLength(2);
 	expect(
 		await tag(
 			controlled({
@@ -258,7 +265,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 				},
 			}).dumgen.produceKnowledge({ encounter, reading, request }),
 		),
-	).toBe("InvalidModelOutput");
+	).toBe("Success");
 	expect(
 		await tag(
 			dumgen.produceKnowledge({

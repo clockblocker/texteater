@@ -29,6 +29,7 @@ import type * as model_compiledRelationVerdict from "../model/compiledRelationVe
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
+import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
@@ -94,6 +95,7 @@ declare const fullApi: ApiFromModules<{
   "model/definitionTexts": typeof model_definitionTexts;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
+  "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;

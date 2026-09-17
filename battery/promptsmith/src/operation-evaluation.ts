@@ -22,6 +22,7 @@ export type OperationEvaluationRun = z.infer<
 >;
 export type StoredRun = z.infer<typeof storedRunSchema>;
 export type OperationEvidence = {
+	readonly outcome?: string;
 	readonly calls: readonly {
 		readonly executor: "TypeSafe" | "Luna";
 		readonly output?: unknown;
@@ -158,7 +159,9 @@ export async function runOperationExperiment<
 				idealOutput: golden.idealOutput,
 				output: parsed.data,
 			});
-			status = "Success";
+			status = traces.some((trace) => trace.outcome === "Partial")
+				? "Partial"
+				: "Success";
 		} catch (error) {
 			errorMessage =
 				error instanceof Error ? error.message : String(error);

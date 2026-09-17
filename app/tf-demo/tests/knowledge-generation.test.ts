@@ -22,6 +22,11 @@ import { replaceAccumulatedKnowledge } from "../convex/model/shadows";
 import { applyGeneratedKnowledgePlan as applyGeneratedPlan } from "../convex/orchestration";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
 
+const PRODUCTION_EVIDENCE = {
+	request: { definition: null },
+	failures: [],
+	operationTraces: [],
+};
 type Row = Record<string, unknown> & { _id: string };
 
 class GenerationDb {
@@ -230,7 +235,7 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 	};
 }
 
-test("an empty generated batch commits Full and the first Full writer wins", async () => {
+test("existing requested content completes an empty generated batch and the first complete writer wins", async () => {
 	const db = new GenerationDb({
 		readings: [
 			{
@@ -244,7 +249,12 @@ test("an empty generated batch commits Full and the first Full writer wins", asy
 			{
 				_id: "entry-1",
 				readingId: "reading-1",
-				record: { knowledge: { definition: "canonical" } },
+				record: {
+					knowledge: {
+						definition: "canonical",
+						translations: { en: ["bank"] },
+					},
+				},
 			},
 		],
 		knowledgeGenerationAttempts: [
@@ -259,6 +269,7 @@ test("an empty generated batch commits Full and the first Full writer wins", asy
 			baseKnowledgePlan: unknown;
 			generatedChanges: unknown[];
 			relationPublication: typeof EMPTY_RELATION_RUN;
+			productionEvidence: typeof PRODUCTION_EVIDENCE;
 		},
 		{ status: string }
 	>(commitGenerated);
@@ -271,6 +282,7 @@ test("an empty generated batch commits Full and the first Full writer wins", asy
 			baseKnowledgePlan: { baseRevision: "convex-0", changes: [] },
 			generatedChanges: [],
 			relationPublication: EMPTY_RELATION_RUN,
+			productionEvidence: PRODUCTION_EVIDENCE,
 		}),
 	).toEqual({ status: "Committed" });
 	expect(
@@ -280,12 +292,16 @@ test("an empty generated batch commits Full and the first Full writer wins", asy
 			baseKnowledgePlan: { baseRevision: "convex-0", changes: [] },
 			generatedChanges: [],
 			relationPublication: EMPTY_RELATION_RUN,
+			productionEvidence: PRODUCTION_EVIDENCE,
 		}),
 	).toEqual({ status: "AlreadyFull" });
 	expect(db.rows("accumulatedKnowledge")).toEqual([
 		expect.objectContaining({
 			ownerReadingKey: "reading-key",
-			knowledge: { definition: "canonical" },
+			knowledge: {
+				definition: "canonical",
+				translations: { en: ["bank"] },
+			},
 			status: "Full",
 		}),
 	]);
@@ -341,6 +357,7 @@ test("commit-time relation blocking keeps base evidence and records publication 
 			baseKnowledgePlan: unknown;
 			generatedChanges: unknown[];
 			relationPublication: typeof relationPublication;
+			productionEvidence: typeof PRODUCTION_EVIDENCE;
 		},
 		{ status: string }
 	>(commitGenerated)(
@@ -364,6 +381,7 @@ test("commit-time relation blocking keeps base evidence and records publication 
 				},
 			],
 			relationPublication,
+			productionEvidence: PRODUCTION_EVIDENCE,
 		},
 	);
 	expect(result).toEqual({ status: "Committed" });
@@ -575,6 +593,7 @@ test("the production application path keeps generated relations outside Dumdict"
 			changes: unknown[];
 			pendingRelations: unknown[];
 			relationPublication: typeof EMPTY_RELATION_RUN;
+			productionEvidence: typeof PRODUCTION_EVIDENCE;
 		},
 		null
 	>(applyGeneratedPlan)(
@@ -628,6 +647,7 @@ test("the production application path keeps generated relations outside Dumdict"
 				},
 			],
 			relationPublication: EMPTY_RELATION_RUN,
+			productionEvidence: PRODUCTION_EVIDENCE,
 		},
 	);
 
@@ -723,7 +743,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			{
 				_id: "knowledge-full",
 				ownerReadingKey: "reading-key",
-				knowledge: {},
+				knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
 				status: "Full",
 				coveredTranslationLanguages: ["en", "ru"],
 				updatedAt: 1,
@@ -855,6 +875,7 @@ test("dictionary conflict rolls back the generated commit", async () => {
 			baseKnowledgePlan: unknown;
 			generatedChanges: unknown[];
 			relationPublication: typeof EMPTY_RELATION_RUN;
+			productionEvidence: typeof PRODUCTION_EVIDENCE;
 		},
 		{ status: string }
 	>(commitGenerated)(
@@ -865,6 +886,7 @@ test("dictionary conflict rolls back the generated commit", async () => {
 			baseKnowledgePlan: { baseRevision: "convex-0", changes: [{}] },
 			generatedChanges: [{ kind: "SetDefinition" }],
 			relationPublication: EMPTY_RELATION_RUN,
+			productionEvidence: PRODUCTION_EVIDENCE,
 		},
 	);
 	expect(result).toEqual({ status: "DictionaryConflict" });
@@ -927,4 +949,97 @@ test("Knowledge settings default enabled and persist independently per visitor",
 			[],
 		).definition,
 	).toBeNull();
+});
+
+test("partial generation commits valid changes without completing a failed translation and retains its trace", async () => {
+	const rows = occurrenceRows();
+	const db = new GenerationDb({
+		...rows,
+		knowledgeGenerationAttempts: [attempt("partial", "partial")],
+	});
+	const lemma = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Bank",
+		coreFeatures: { gender: "Fem", hyph: null },
+	};
+	const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
+	const { lemmaIdentityKey, readingIdentityKey } = await import(
+		"../server/linguisticIdentity"
+	);
+	await db.patch("lemma-1", { lemmaKey: lemmaIdentityKey(lemma) });
+	const readingKey = readingIdentityKey(reading);
+	await db.patch("reading-1", { readingKey });
+	await db.patch("partial", { ownerReadingKey: readingKey });
+	await db.insert("readingEntries", {
+		readingId: "reading-1",
+		record: { attestedTranslations: [], attestations: [], notes: "" },
+	});
+
+	const change = {
+		kind: "Contribute",
+		aspect: "definition",
+		value: "Ein Geldinstitut.",
+	};
+	const plan = {
+		baseRevision: "convex-0",
+		changes: [
+			{
+				type: "patchReading",
+				reading,
+				ops: [
+					{
+						kind: "applyKnowledgeChange",
+						envelope: { reading, change },
+					},
+				],
+				preconditions: [],
+			},
+		],
+	};
+	const evidence = {
+		request: { definition: null, translations: { ru: null } },
+		failures: [
+			{
+				aspect: "translations",
+				leaf: "ru",
+				code: "ProviderFailure",
+				message: "offline",
+			},
+		],
+		operationTraces: [
+			JSON.stringify({
+				operation: "produceKnowledge",
+				outcome: "Partial",
+				calls: [],
+			}),
+		],
+	};
+	const result = await handler<unknown, { status: string }>(commitGenerated)(
+		{ db },
+		{
+			attemptKey: "partial",
+			plan,
+			baseKnowledgePlan: plan,
+			generatedChanges: [change],
+			relationPublication: EMPTY_RELATION_RUN,
+			productionEvidence: evidence,
+		},
+	);
+	expect(result.status).toBe("Committed");
+	expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+		status: "Partial",
+		knowledge: { definition: "Ein Geldinstitut." },
+		coveredTranslationLanguages: [],
+	});
+	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "partialKnowledge",
+	});
+	expect(db.rows("knowledgeProductionRuns")[0]).toMatchObject({
+		outcome: "Partial",
+		evidence,
+	});
 });

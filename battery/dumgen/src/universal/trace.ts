@@ -105,7 +105,13 @@ export function operationTask(options: DumgenOptions) {
 						? "Interrupted"
 						: failure
 							? "Failure"
-							: "Success",
+							: output &&
+									typeof output === "object" &&
+									"failures" in output &&
+									Array.isArray(output.failures) &&
+									output.failures.length
+								? "Partial"
+								: "Success",
 					durationMs: performance.now() - start,
 				});
 				contexts.delete(signal);

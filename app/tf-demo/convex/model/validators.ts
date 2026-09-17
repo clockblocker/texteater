@@ -633,3 +633,17 @@ export const resolveSegmentResultValidator = v.union(
 		persisted: committedOccurrenceValidator,
 	}),
 );
+
+export const knowledgeProductionEvidenceValidator = v.object({
+	request: v.any(),
+	failures: v.array(
+		v.object({
+			aspect: v.string(),
+			leaf: v.optional(v.string()),
+			candidate: v.optional(v.string()),
+			code: v.string(),
+			message: v.string(),
+		}),
+	),
+	operationTraces: v.array(v.string()),
+});

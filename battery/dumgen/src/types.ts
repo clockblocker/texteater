@@ -63,7 +63,9 @@ export type ReadingEmojiDescriptionResolution = {
 	readonly emojiDescription: EmojiDescription;
 };
 export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
+export type KnowledgeFailure = Generated.KnowledgeProduction["failures"][number];
 export type KnowledgeProduction<L extends DumgenLanguage = DumgenLanguage> = {
+	readonly failures: readonly KnowledgeFailure[];
 	readonly changes: readonly Dumrel.KnowledgeChange<Dumling.Reading<L>>[];
 	readonly pendingRelations: readonly (Dumrel.PendingSemanticRelation & {
 		target: {
@@ -155,7 +157,7 @@ export type OperationTrace = {
 	}[];
 	readonly output?: unknown;
 	readonly failure?: { readonly tag: string; readonly message: string };
-	readonly outcome: "Success" | "Failure" | "Interrupted";
+	readonly outcome: "Success" | "Partial" | "Failure" | "Interrupted";
 	readonly durationMs: number;
 };
 export type DumgenOptions = {

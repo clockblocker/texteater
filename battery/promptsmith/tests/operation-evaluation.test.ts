@@ -136,3 +136,26 @@ test("operation selection contamination and cancellation never start dependent o
 		"Interrupted",
 	]);
 });
+
+test("partial domain outcomes retain validated output without counting complete success", async () => {
+	const run = await runOperationExperiment({
+		...settings,
+		experiment: experiment(async (input, { recordTrace }) => {
+			recordTrace({
+				outcome: input.value === 1 ? "Partial" : "Success",
+				calls: [],
+			});
+			return input;
+		}),
+	});
+	expect(run.cases.map((item) => item.status)).toEqual([
+		"Partial",
+		"Success",
+	]);
+	expect(run.cases[0]?.output).toEqual({ value: 1 });
+	expect(run.summary).toMatchObject({
+		succeeded: 1,
+		failed: 1,
+		status: "Failed",
+	});
+});

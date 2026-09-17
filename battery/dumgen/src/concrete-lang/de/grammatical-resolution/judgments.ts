@@ -298,7 +298,9 @@ export async function resolveGrammarJudgments(
 		questions,
 		signal,
 	);
+	const consumed = new Set<string>();
 	function selected(id: string): string {
+		consumed.add(id);
 		const answer = result.answers[id];
 		if (
 			!answer ||
@@ -308,304 +310,331 @@ export async function resolveGrammarJudgments(
 			return fail(`Unresolved applicable question ${id}`);
 		return answer.choice;
 	}
-	selected("support");
-	const core: Record<string, unknown> = {};
-	const openFeatures: string[] = [];
-	for (const [path, field] of catalog)
-		if (path.startsWith("lemma.coreFeatures.") && !auxiliary) {
-			const key = path.slice("lemma.coreFeatures.".length),
-				answer = selected(path);
-			if (field.open) {
-				core[key] = null;
-				if (answer === "Present") openFeatures.push(key);
-			} else core[key] = answer === unmarked ? null : answer;
-		}
-	const surface: Record<string, unknown> = {
-		spelling: selected("spelling"),
-		surfaceFeatures:
-			selected("historicalStatus") === "Archaic"
-				? { historicalStatus: "Archaic" }
-				: null,
-	};
-	if (questions.inflection) {
-		surface.inflectionalFeatures = null;
-		if (selected("inflection") === "Marked") {
-			const bag: Record<string, unknown> = {};
-			const form = verbal
-				? selected("surface.inflectionalFeatures.verbForm")
-				: undefined;
-			for (const [path] of catalog)
-				if (path.startsWith("surface.inflectionalFeatures.")) {
-					const key = path.slice(
-						"surface.inflectionalFeatures.".length,
-					);
-					if (verbal && key === "voice") continue;
-					if (verbal && key === "participleForm" && form !== "Part")
-						continue;
-					if (
-						verbal &&
-						["tense", "mood", "person", "number"].includes(key) &&
-						form !== "Fin"
-					) {
-						bag[key] = null;
-						continue;
-					}
-					if (
-						verbal &&
-						key === "tense" &&
-						selected("surface.inflectionalFeatures.mood") === "Imp"
-					) {
-						bag[key] = null;
-						continue;
-					}
-					const answer = selected(path);
-					bag[key] = answer === unmarked ? null : answer;
-				}
-			if (verbal) bag.voice = bag.passive === null ? null : "Pass";
-			surface.inflectionalFeatures = bag;
-		}
-	}
-	const memberOrthographies = input.members.map(
-		(_, index) => selected(`orthography_${index}`) as "Standard" | "Typo",
-	);
-	const normalizationModes = input.members.map((_, index) =>
-		selected(`normalization_${index}`),
-	);
-	const normalizedMembers = input.members.map((text, index) =>
-		transformed(text, normalizationModes[index]!),
-	);
-	const needed: Record<string, string> = {};
-	for (const [index, mode] of normalizationModes.entries())
-		if (mode === "Generate")
-			needed[`member_${index}`] =
-				`Required normalized text for supplied member ${index}; preserve its inflection and position. Correct only the judged typo or licensed constrained noun suspension.`;
-	const coverage = partial
-		? (selected("coverage") as "Full" | "Partial")
-		: "Full";
-	const mechanicalCanonical =
-		coverage === "Full" &&
-		surface.spelling === "Canonical" &&
-		["DiscourseFormula", "Proverb", "Aphorism", "Fusion"].includes(
-			encounter.target.kind,
-		);
-	const copiedCanonical = () =>
-		encounter.target.kind === "DiscourseFormula"
-			? normalizedMembers.join(" ").toLocaleLowerCase("de")
-			: normalizedMembers.join(" ");
-	let lemma: GrammarOutput["lemma"];
-	if (auxiliary) {
-		const identity = selected("identity");
-		if (identity === "NoMatch")
-			throw new DumgenFailure(
-				"CatalogMiss",
-				"resolveGrammar",
-				"Required AUX identity is absent from the reviewed catalog",
-				route,
-			);
-		const member = identities[Number(identity.slice("identity_".length))];
-		if (!member) return fail("Missing selected AUX identity");
-		lemma = {
-			canonicalForm: member.lemma.canonicalForm,
-			coreFeatures: member.lemma.coreFeatures,
+	try {
+		selected("support");
+		const core: Record<string, unknown> = {};
+		const openFeatures: string[] = [];
+		for (const [path, field] of catalog)
+			if (path.startsWith("lemma.coreFeatures.") && !auxiliary) {
+				const key = path.slice("lemma.coreFeatures.".length),
+					answer = selected(path);
+				if (field.open) {
+					core[key] = null;
+					if (answer === "Present") openFeatures.push(key);
+				} else core[key] = answer === unmarked ? null : answer;
+			}
+		const surface: Record<string, unknown> = {
+			spelling: selected("spelling"),
+			surfaceFeatures:
+				selected("historicalStatus") === "Archaic"
+					? { historicalStatus: "Archaic" }
+					: null,
 		};
-		recordEvent(signal, "AuthoredIdentity", { lemma: member.lemma });
-	} else {
-		const member = mapped
-			? await resolveAuthoredGrammarIdentity(
-					options,
-					{
-						kind: encounter.target.kind as "DET" | "PRON",
-						spelled: normalizedMembers.join(" "),
-						core,
-						inflection: surface.inflectionalFeatures,
-						markedContext: input.markedContext,
-					},
-					signal,
-				)
-			: null;
-		if (member) {
+		if (questions.inflection) {
+			surface.inflectionalFeatures = null;
+			if (selected("inflection") === "Marked") {
+				const bag: Record<string, unknown> = {};
+				const form = verbal
+					? selected("surface.inflectionalFeatures.verbForm")
+					: undefined;
+				for (const [path] of catalog)
+					if (path.startsWith("surface.inflectionalFeatures.")) {
+						const key = path.slice(
+							"surface.inflectionalFeatures.".length,
+						);
+						if (verbal && key === "voice") continue;
+						if (
+							verbal &&
+							key === "participleForm" &&
+							form !== "Part"
+						)
+							continue;
+						if (
+							verbal &&
+							["tense", "mood", "person", "number"].includes(
+								key,
+							) &&
+							form !== "Fin"
+						) {
+							bag[key] = null;
+							continue;
+						}
+						if (
+							verbal &&
+							key === "tense" &&
+							selected("surface.inflectionalFeatures.mood") ===
+								"Imp"
+						) {
+							bag[key] = null;
+							continue;
+						}
+						const answer = selected(path);
+						bag[key] = answer === unmarked ? null : answer;
+					}
+				if (verbal) bag.voice = bag.passive === null ? null : "Pass";
+				surface.inflectionalFeatures = bag;
+			}
+		}
+		const memberOrthographies = input.members.map(
+			(_, index) =>
+				selected(`orthography_${index}`) as "Standard" | "Typo",
+		);
+		const normalizationModes = input.members.map((_, index) =>
+			selected(`normalization_${index}`),
+		);
+		const normalizedMembers = input.members.map((text, index) =>
+			transformed(text, normalizationModes[index]!),
+		);
+		const needed: Record<string, string> = {};
+		for (const [index, mode] of normalizationModes.entries())
+			if (mode === "Generate")
+				needed[`member_${index}`] =
+					`Required normalized text for supplied member ${index}; preserve its inflection and position. Correct only the judged typo or licensed constrained noun suspension.`;
+		const coverage = partial
+			? (selected("coverage") as "Full" | "Partial")
+			: "Full";
+		const mechanicalCanonical =
+			coverage === "Full" &&
+			surface.spelling === "Canonical" &&
+			["DiscourseFormula", "Proverb", "Aphorism", "Fusion"].includes(
+				encounter.target.kind,
+			);
+		const copiedCanonical = () =>
+			encounter.target.kind === "DiscourseFormula"
+				? normalizedMembers.join(" ").toLocaleLowerCase("de")
+				: normalizedMembers.join(" ");
+		let lemma: GrammarOutput["lemma"];
+		if (auxiliary) {
+			const identity = selected("identity");
+			if (identity === "NoMatch")
+				throw new DumgenFailure(
+					"CatalogMiss",
+					"resolveGrammar",
+					"Required AUX identity is absent from the reviewed catalog",
+					route,
+				);
+			const member =
+				identities[Number(identity.slice("identity_".length))];
+			if (!member) return fail("Missing selected AUX identity");
 			lemma = {
 				canonicalForm: member.lemma.canonicalForm,
 				coreFeatures: member.lemma.coreFeatures,
 			};
 			recordEvent(signal, "AuthoredIdentity", { lemma: member.lemma });
-		} else if (mechanicalCanonical) {
-			lemma = { canonicalForm: copiedCanonical(), coreFeatures: core };
 		} else {
-			const canonical = selected("canonical");
-			lemma = {
-				canonicalForm:
-					canonicalCandidates[
-						Number(canonical.slice("copy_".length))
-					],
-				coreFeatures: core,
-			};
-			if (canonical === "Generate")
-				needed.canonicalForm =
-					"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
-		}
-	}
-
-	try {
-		parse(
-			`grammar/${route}`,
-			{
-				lemma: {
-					...lemma,
-					canonicalForm: lemma.canonicalForm ?? "pending",
-				},
-				surface,
-				memberOrthographies,
-				normalizedMembers,
-				realizationCoverage: coverage,
-			},
-			"resolveGrammar",
-			true,
-		);
-	} catch {
-		recordEvent(signal, "IncoherentApplicableFeatures", { lemma, surface });
-		return fail(
-			"Applicable grammatical answers do not compose into a legal analysis",
-		);
-	}
-	if (Object.keys(needed).length) {
-		const generated = await executeGeneration(
-			options,
-			{
-				stage: "resolveGrammar",
-				route: `${route}/text`,
-				input: {
-					...input,
-					route,
-					needed,
-					textPolicy:
-						routeGuidance[encounter.target.kind] ??
-						verbalCompositionGuidance,
-					judgedSurface: surface,
-					judgedCore: core,
-					memberOrthographies,
-				},
-				systemPrompt:
-					"Supply exactly the requested missing German text fields. All grammatical judgments and target membership are fixed. Never emit bounded labels, add attested members, modernize a licensed variant, or use a different identity. Canonical Form is the dictionary headword; normalized member text retains occurrence morphology. For verbal headwords use the lexical infinitive with required reflexive/preposition/prefix material, not the whole auxiliary chain. For proverbial/aphoristic canonical wording omit punctuation. Noun suspension completion must preserve the literal shared suffix from the binary right conjunct.",
-				outputSchema: {
-					type: "object",
-					properties: Object.fromEntries(
-						Object.keys(needed).map((key) => [
-							key,
-							{ type: "string", minLength: 1 },
-						]),
-					),
-					required: Object.keys(needed),
-					additionalProperties: false,
-				},
-				configuration: effectiveConfiguration(options, route),
-				signal,
-			},
-			(raw) => {
-				if (!raw || typeof raw !== "object" || Array.isArray(raw))
-					throw Error("Expected requested text fields");
-				const values = raw as Record<string, unknown>;
-				if (
-					Object.keys(values).length !== Object.keys(needed).length ||
-					Object.keys(needed).some(
-						(key) =>
-							typeof values[key] !== "string" ||
-							!(values[key] as string).trim() ||
-							(key.startsWith("member_") &&
-								/\s/u.test(values[key] as string)),
+			const member = mapped
+				? await resolveAuthoredGrammarIdentity(
+						options,
+						{
+							kind: encounter.target.kind as "DET" | "PRON",
+							spelled: normalizedMembers.join(" "),
+							core,
+							inflection: surface.inflectionalFeatures,
+							markedContext: input.markedContext,
+						},
+						signal,
 					)
-				)
-					throw Error(
-						"Generated text does not match the requested fields",
-					);
-				return values as Record<string, string>;
-			},
-		);
-		if (generated.canonicalForm)
-			lemma.canonicalForm = generated.canonicalForm;
-		for (const [index] of normalizedMembers.entries())
-			if (generated[`member_${index}`])
-				normalizedMembers[index] = generated[`member_${index}`]!;
-	}
-	if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
-	if (openFeatures.length) {
-		const words = [
-			...normalizedMembers,
-			...String(lemma.canonicalForm).split(/\s+|\.\.\./u),
-		].filter(Boolean);
-		const followup: Questions = {};
-		const candidates: Record<string, string[]> = {};
-		for (const key of openFeatures) {
-			candidates[key] = [
-				...new Set(
-					key === "hasSepPrefix"
-						? words.flatMap((word) =>
-								Array.from(
-									{ length: word.length },
-									(_, index) => word.slice(0, index + 1),
-								),
-							)
-						: words,
-				),
-			];
-			if (candidates[key]!.length > 254)
-				return fail("Too many complete lexical-string candidates");
-			followup[key] = choice(
-				`Choose the exact ${key} established by the lexical feature judgment. Prefixes are separable prefixes; governed prepositions must be lexically selected and cannot be a detached prefix or adjunct.`,
+				: null;
+			if (member) {
+				lemma = {
+					canonicalForm: member.lemma.canonicalForm,
+					coreFeatures: member.lemma.coreFeatures,
+				};
+				recordEvent(signal, "AuthoredIdentity", {
+					lemma: member.lemma,
+				});
+			} else if (mechanicalCanonical) {
+				lemma = {
+					canonicalForm: copiedCanonical(),
+					coreFeatures: core,
+				};
+			} else {
+				const canonical = selected("canonical");
+				lemma = {
+					canonicalForm:
+						canonicalCandidates[
+							Number(canonical.slice("copy_".length))
+						],
+					coreFeatures: core,
+				};
+				if (canonical === "Generate")
+					needed.canonicalForm =
+						"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
+			}
+		}
+
+		try {
+			parse(
+				`grammar/${route}`,
 				{
-					...Object.fromEntries(
-						candidates[key]!.map((text, index) => [
-							`text_${index}`,
-							text,
-						]),
-					),
-					Unresolved:
-						"None is defensible; do not revise the prior feature judgment",
+					lemma: {
+						...lemma,
+						canonicalForm: lemma.canonicalForm ?? "pending",
+					},
+					surface,
+					memberOrthographies,
+					normalizedMembers,
+					realizationCoverage: coverage,
 				},
+				"resolveGrammar",
+				true,
+			);
+		} catch {
+			recordEvent(signal, "IncoherentApplicableFeatures", {
+				lemma,
+				surface,
+			});
+			return fail(
+				"Applicable grammatical answers do not compose into a legal analysis",
 			);
 		}
-		const resolved = await judge(
-			"resolveGrammar",
-			`${route}/lexical-strings`,
-			{
-				...state,
-				lemma: JSON.stringify(lemma),
-				normalizedMembers,
-				candidates,
-			},
-			followup,
-			signal,
-		);
-		for (const key of openFeatures) {
-			const answer = resolved.answers[key];
-			if (
-				!answer ||
-				answer.type !== "choice" ||
-				answer.choice === "Unresolved"
-			)
-				return fail(`Unresolved ${key}`);
-			core[key] =
-				candidates[key]![Number(answer.choice.slice("text_".length))];
+		if (Object.keys(needed).length) {
+			const generated = await executeGeneration(
+				options,
+				{
+					stage: "resolveGrammar",
+					route: `${route}/text`,
+					input: {
+						...input,
+						route,
+						needed,
+						textPolicy:
+							routeGuidance[encounter.target.kind] ??
+							verbalCompositionGuidance,
+						judgedSurface: surface,
+						judgedCore: core,
+						memberOrthographies,
+					},
+					systemPrompt:
+						"Supply exactly the requested missing German text fields. All grammatical judgments and target membership are fixed. Never emit bounded labels, add attested members, modernize a licensed variant, or use a different identity. Canonical Form is the dictionary headword; normalized member text retains occurrence morphology. For verbal headwords use the lexical infinitive with required reflexive/preposition/prefix material, not the whole auxiliary chain. For proverbial/aphoristic canonical wording omit punctuation. Noun suspension completion must preserve the literal shared suffix from the binary right conjunct.",
+					outputSchema: {
+						type: "object",
+						properties: Object.fromEntries(
+							Object.keys(needed).map((key) => [
+								key,
+								{ type: "string", minLength: 1 },
+							]),
+						),
+						required: Object.keys(needed),
+						additionalProperties: false,
+					},
+					configuration: effectiveConfiguration(options, route),
+					signal,
+				},
+				(raw) => {
+					if (!raw || typeof raw !== "object" || Array.isArray(raw))
+						throw Error("Expected requested text fields");
+					const values = raw as Record<string, unknown>;
+					if (
+						Object.keys(values).length !==
+							Object.keys(needed).length ||
+						Object.keys(needed).some(
+							(key) =>
+								typeof values[key] !== "string" ||
+								!(values[key] as string).trim() ||
+								(key.startsWith("member_") &&
+									/\s/u.test(values[key] as string)),
+						)
+					)
+						throw Error(
+							"Generated text does not match the requested fields",
+						);
+					return values as Record<string, string>;
+				},
+			);
+			if (generated.canonicalForm)
+				lemma.canonicalForm = generated.canonicalForm;
+			for (const [index] of normalizedMembers.entries())
+				if (generated[`member_${index}`])
+					normalizedMembers[index] = generated[`member_${index}`]!;
 		}
-	}
-	const output = {
-		lemma,
-		surface,
-		memberOrthographies,
-		normalizedMembers,
-		realizationCoverage: coverage,
-	};
-	try {
-		return parse<GrammarOutput>(
-			`grammar/${route}`,
-			output,
-			"resolveGrammar",
-			true,
-		);
-	} catch {
-		recordEvent(signal, "IncoherentApplicableFeatures", output);
-		return fail(
-			"Applicable grammatical answers do not compose into a legal analysis",
-		);
+		if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
+		if (openFeatures.length) {
+			const words = [
+				...normalizedMembers,
+				...String(lemma.canonicalForm).split(/\s+|\.\.\./u),
+			].filter(Boolean);
+			const followup: Questions = {};
+			const candidates: Record<string, string[]> = {};
+			for (const key of openFeatures) {
+				candidates[key] = [
+					...new Set(
+						key === "hasSepPrefix"
+							? words.flatMap((word) =>
+									Array.from(
+										{ length: word.length },
+										(_, index) => word.slice(0, index + 1),
+									),
+								)
+							: words,
+					),
+				];
+				if (candidates[key]!.length > 254)
+					return fail("Too many complete lexical-string candidates");
+				followup[key] = choice(
+					`Choose the exact ${key} established by the lexical feature judgment. Prefixes are separable prefixes; governed prepositions must be lexically selected and cannot be a detached prefix or adjunct.`,
+					{
+						...Object.fromEntries(
+							candidates[key]!.map((text, index) => [
+								`text_${index}`,
+								text,
+							]),
+						),
+						Unresolved:
+							"None is defensible; do not revise the prior feature judgment",
+					},
+				);
+			}
+			const resolved = await judge(
+				"resolveGrammar",
+				`${route}/lexical-strings`,
+				{
+					...state,
+					lemma: JSON.stringify(lemma),
+					normalizedMembers,
+					candidates,
+				},
+				followup,
+				signal,
+			);
+			for (const key of openFeatures) {
+				const answer = resolved.answers[key];
+				if (
+					!answer ||
+					answer.type !== "choice" ||
+					answer.choice === "Unresolved"
+				)
+					return fail(`Unresolved ${key}`);
+				core[key] =
+					candidates[key]![
+						Number(answer.choice.slice("text_".length))
+					];
+			}
+		}
+		const output = {
+			lemma,
+			surface,
+			memberOrthographies,
+			normalizedMembers,
+			realizationCoverage: coverage,
+		};
+		try {
+			return parse<GrammarOutput>(
+				`grammar/${route}`,
+				output,
+				"resolveGrammar",
+				true,
+			);
+		} catch {
+			recordEvent(signal, "IncoherentApplicableFeatures", output);
+			return fail(
+				"Applicable grammatical answers do not compose into a legal analysis",
+			);
+		}
+	} finally {
+		recordEvent(signal, "JudgmentApplicability", {
+			consumed: [...consumed],
+			ignored: Object.keys(questions).filter((id) => !consumed.has(id)),
+		});
 	}
 }

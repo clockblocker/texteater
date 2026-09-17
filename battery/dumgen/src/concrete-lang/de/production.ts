@@ -10,26 +10,16 @@ import type {
 	SegmentedSentence,
 } from "../../types.js";
 import { DumgenFailure } from "../../universal/failure.js";
-import { modelCaller } from "../../universal/model.js";
 import { operationTask } from "../../universal/trace.js";
 import {
 	markedContext,
 	parse,
 	validateEncounter,
 } from "../../universal/validation.js";
-import {
-	authoredFor,
-	closedRoute,
-	sameValue,
-} from "./authored-closed-sets/select.js";
+import { authoredFor, closedRoute } from "./authored-closed-sets/select.js";
 import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
 import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
-import {
-	authoredKnowledge,
-	type KnowledgeAnalysis,
-	projectKnowledge,
-	validateRequest,
-} from "./knowledge-production/project.js";
+import { produceKnowledge } from "./knowledge-production/produce.js";
 import { resolveReading } from "./reading-emoji-description/resolve.js";
 import { classifyGermanTarget } from "./target-classification/judgments.js";
 
@@ -77,7 +67,6 @@ type KnowledgeInput = {
 export function createGermanOperations(
 	options: DumgenOptions,
 ): Omit<Dumgen, "segment" | "segmentSentence"> {
-	const call = modelCaller(options);
 	const task = operationTask(options);
 	const operations = {
 		classifyTarget<L extends Dumling.Language>(raw: {
@@ -222,69 +211,11 @@ export function createGermanOperations(
 				);
 				agreement(encounter, input.reading.lemma, "produceKnowledge");
 				supported(encounter, "produceKnowledge");
-				validateRequest(input.reading, input.request);
-				const member = authoredFor(input.reading.lemma),
-					closed = closedRoute(input.reading.lemma);
-				const exact =
-					member && sameValue(member.reading, input.reading)
-						? member
-						: undefined;
-				if (closed && !exact)
-					throw new DumgenFailure(
-						"CatalogMiss",
-						"produceKnowledge",
-						"Reading is absent from the Fixed Catalog",
-						routeOf(encounter),
-					);
-				const authored = exact
-					? authoredKnowledge(exact, input.request)
-					: {
-							production: {
-								changes: [],
-								pendingRelations: [],
-							} as KnowledgeProduction,
-							missing: input.request,
-						};
-				if (!Object.keys(authored.missing).length)
-					return authored.production as KnowledgeProduction<
-						I["reading"]["lemma"]["language"]
-					>;
-				if (closed)
-					throw new DumgenFailure(
-						"CatalogMiss",
-						"produceKnowledge",
-						"Requested Knowledge has not been authored",
-						routeOf(encounter),
-					);
-				const analysis = await call<KnowledgeAnalysis>(
-					"produceKnowledge",
-					routeOf(encounter),
-					`knowledge-analysis/de/${input.reading.lemma.family.toLowerCase()}`,
-					"knowledgeOutput",
-					{
-						markedContext: markedContext(encounter).markedContext,
-						reading: input.reading,
-						request: authored.missing,
-					},
+				return (await produceKnowledge(
+					options,
+					{ ...input, encounter },
 					signal,
-				);
-				const generated = projectKnowledge(
-					input.reading,
-					authored.missing,
-					analysis,
-				);
-				return {
-					changes: [
-						...authored.production.changes,
-						...generated.changes,
-					],
-					pendingRelations: [
-						...authored.production.pendingRelations,
-						...generated.pendingRelations,
-					],
-				} as unknown as KnowledgeProduction<
-					I["reading"]["lemma"]["language"]
-				>;
+				)) as KnowledgeProduction<I["reading"]["lemma"]["language"]>;
 			});
 		},
 	};

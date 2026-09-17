@@ -14,7 +14,7 @@ import {
 import {
 	germanRelationTargetKindsByFamily,
 	isRelationBearingKnowledgeFamily,
-} from "./families.js";
+} from "../families.js";
 import { assertGermanKnowledgeAnalysisMirrorsRequest } from "./request.js";
 
 type RequestableRelation = Dumrel.DirectSemanticRelation;

@@ -55,18 +55,32 @@ const recordRejectedRelationOutput = makeFunctionReference<
 
 const recordKnowledgeCatalogMiss = makeFunctionReference<
 	"mutation",
-	{ attemptKey: string; miss: CatalogMissSignal },
+	{
+		attemptKey: string;
+		miss: CatalogMissSignal;
+		productionEvidence?: {
+			request: unknown;
+			failures: [];
+			operationTraces: string[];
+		};
+	},
 	null
 >(
 	"catalogGrowthSignals:recordKnowledgeCatalogMiss",
 ) as unknown as FunctionReference<
 	"mutation",
 	"internal",
-	{ attemptKey: string; miss: CatalogMissSignal },
+	{
+		attemptKey: string;
+		miss: CatalogMissSignal;
+		productionEvidence?: {
+			request: unknown;
+			failures: [];
+			operationTraces: string[];
+		};
+	},
 	null
 >;
-
-const knowledgeDumgen = createProductionDumgen();
 
 function getGenerationRequestBuilder() {
 	return import("../server/generatedKnowledgeRequest").then(
@@ -89,6 +103,12 @@ export const runKnowledgeGeneration = internalAction({
 			  }
 			| undefined;
 		let generationCompleted = false;
+		const operationTraces: string[] = [];
+		const knowledgeDumgen = createProductionDumgen((event) => {
+			if (event.kind === "TraceRecorded")
+				operationTraces.push(event.traceJson);
+		});
+		let requested: unknown = {};
 		await ctx.runMutation(internal.knowledgeGeneration.markRunning, {
 			attemptKey,
 		});
@@ -114,6 +134,7 @@ export const runKnowledgeGeneration = internalAction({
 				translationLanguages: input.translationLanguages,
 				translationsOnly: input.translationsOnly,
 			});
+			requested = request;
 			const requestedKinds = requestedRelationKinds(
 				"semanticRelations" in request ? request : {},
 			);
@@ -149,6 +170,11 @@ export const runKnowledgeGeneration = internalAction({
 				await ctx.runMutation(recordKnowledgeCatalogMiss, {
 					attemptKey,
 					miss: generated,
+					productionEvidence: {
+						request,
+						failures: [],
+						operationTraces,
+					},
 				});
 				return null;
 			}
@@ -164,6 +190,11 @@ export const runKnowledgeGeneration = internalAction({
 					reading,
 					changes: publishable.changes,
 					pendingRelations: publishable.pendingRelations,
+					productionEvidence: {
+						request,
+						failures: [...generated.failures],
+						operationTraces,
+					},
 					relationPublication: {
 						runNumber: input.runNumber,
 						requestedKinds,
@@ -194,6 +225,11 @@ export const runKnowledgeGeneration = internalAction({
 			await ctx.runMutation(internal.knowledgeGeneration.fail, {
 				attemptKey,
 				failureCode: "generationFailed",
+				productionEvidence: {
+					request: requested,
+					failures: [],
+					operationTraces,
+				},
 				failureMessage: "Knowledge generation failed. Please retry.",
 			});
 			return null;

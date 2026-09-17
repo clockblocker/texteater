@@ -6631,7 +6631,38 @@ type _Output2057 =
 	| _Output2156;
 type _Output2056 = { relation: _Output1900; target: _Output2057 };
 type _Output2055 = Array<_Output2056>;
-type _Output1876 = { changes: _Output1877; pendingRelations: _Output2055 };
+type _Output2159 =
+	| "transcription"
+	| "definition"
+	| "translations"
+	| "semanticRelations"
+	| "morphologicalTree"
+	| "lexicalBreakdown";
+type _Output2161 = string;
+type _Output2160 = _Output2161 | undefined;
+type _Output2163 = string;
+type _Output2162 = _Output2163 | undefined;
+type _Output2164 =
+	| "InvalidInput"
+	| "ProviderFailure"
+	| "InvalidModelOutput"
+	| "Unresolved"
+	| "NotImplemented"
+	| "CatalogMiss";
+type _Output2165 = string;
+type _Output2158 = {
+	aspect: _Output2159;
+	leaf?: _Output2160;
+	candidate?: _Output2162;
+	code: _Output2164;
+	message: _Output2165;
+};
+type _Output2157 = Array<_Output2158>;
+type _Output1876 = {
+	changes: _Output1877;
+	pendingRelations: _Output2055;
+	failures: _Output2157;
+};
 export type Segment = _Output0;
 export type SegmentedSentence = _Output3;
 export type SegmentationDecision = _Output7;

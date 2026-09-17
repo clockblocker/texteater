@@ -1,3 +1,7 @@
+import { knowledgeOperationExperiment } from "./evaluation/knowledge-operation.js";
+
+export { resolveOrGenerateTranslation } from "./concrete-lang/de/knowledge-production/translation/operation.js";
+
 import { fileURLToPath } from "node:url";
 import { defineExperiment, type PromptSource, stableJson } from "promptsmith";
 import {
@@ -11,6 +15,7 @@ import { promptRegistrations } from "./concrete-lang/de/experiments.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
 import phases from "./concrete-lang/de/knowledge-production/evaluation/phases.json";
+import { translationOperationExperiment } from "./concrete-lang/de/knowledge-production/translation/experiment.js";
 import {
 	evaluateReadingMeaningIsolation,
 	meaningIsolationCaseIds,
@@ -110,6 +115,20 @@ export function getExperiment(id: string) {
 		},
 	});
 }
+/** Every in-scope evaluation runs the same staged operation as production. */
+export function operationExperiment(id: string, options: DumgenOptions) {
+	if (id.startsWith("grammatical-resolution/"))
+		return grammarOperationExperiment(getExperiment(id), options);
+	if (id.startsWith("reading-")) return readingOperationExperiment(id, options);
+	if (id === "intake") return intakeOperationExperiment(options);
+	if (id === "knowledge-analysis/translation") return translationOperationExperiment(options);
+	if (id.startsWith("knowledge-analysis/de/"))
+		return knowledgeOperationExperiment(getExperiment(id), options);
+	if (id === "target-classification/de/high-level-whole-unit")
+		return targetOperationExperiment(options);
+	throw Error(`No production operation for ${id}`);
+}
+
 export async function evaluateExperiment(args: {
 	experimentId: string;
 	execute: EvaluationExecutor;
@@ -125,7 +144,9 @@ export async function evaluateExperiment(args: {
 			"target-classification/de/high-level-whole-unit" ||
 		args.experimentId.startsWith("grammatical-resolution/") ||
 		args.experimentId.startsWith("reading-") ||
-		args.experimentId === "intake"
+		args.experimentId === "intake" ||
+		args.experimentId === "knowledge-analysis/translation" ||
+		args.experimentId.startsWith("knowledge-analysis/de/")
 	) {
 		if (!args.judge)
 			throw Error(
@@ -142,17 +163,7 @@ export async function evaluateExperiment(args: {
 			judgmentConfiguration: args.judgmentConfiguration,
 		};
 		const run = await runOperationExperiment({
-			experiment: args.experimentId.startsWith("grammatical-resolution/")
-				? grammarOperationExperiment(
-						getExperiment(args.experimentId),
-						options,
-					)
-				: args.experimentId.startsWith("reading-") ||
-						args.experimentId === "intake"
-					? readingOperationExperiment(args.experimentId, options)
-					: args.experimentId === "intake"
-						? intakeOperationExperiment(options)
-						: targetOperationExperiment(options),
+			experiment: operationExperiment(args.experimentId, options),
 			experimentId: args.experimentId,
 			operationVersion: "judgments-2",
 			evaluatorVersion: "canonical-operation-2",

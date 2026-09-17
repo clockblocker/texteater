@@ -66,6 +66,7 @@ export const operationManifestSchema = runManifestSchema
 export const operationCaseRecordSchema = caseRecordSchema.extend({
 	status: z.enum([
 		"Success",
+		"Partial",
 		"InvalidOutput",
 		"ProviderFailure",
 		"EvaluationFailure",
