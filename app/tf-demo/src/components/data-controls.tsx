@@ -15,6 +15,7 @@ import {
 	BookOpenIcon,
 	DatabaseZapIcon,
 	EraserIcon,
+	PanelTopCloseIcon,
 	UserRoundXIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -35,6 +36,7 @@ export function DataControls({
 	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
 }) {
 	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
+	const { canCloseAllSheets, closeAllSheets } = useWorkspaceController();
 	const demoData = useDemoDataControls(text);
 	return (
 		<div className="flex flex-col gap-6">
@@ -42,8 +44,42 @@ export function DataControls({
 				enabled={routeNotesEnabled}
 				onEnabledChange={setRouteNotesEnabled}
 			/>
+			<WorkspaceCard
+				canCloseAllSheets={canCloseAllSheets}
+				onCloseAllSheets={closeAllSheets}
+			/>
 			<DemoDataCard text={text} {...demoData} />
 		</div>
+	);
+}
+
+function WorkspaceCard({
+	canCloseAllSheets,
+	onCloseAllSheets,
+}: {
+	canCloseAllSheets: boolean;
+	onCloseAllSheets(): void;
+}) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Workspace</CardTitle>
+				<CardDescription>
+					Return to the Library and discard the current Sheet layout.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Button
+					type="button"
+					variant="outline"
+					disabled={!canCloseAllSheets}
+					onClick={onCloseAllSheets}
+				>
+					<PanelTopCloseIcon data-icon="inline-start" />
+					Close all sheets
+				</Button>
+			</CardContent>
+		</Card>
 	);
 }
 

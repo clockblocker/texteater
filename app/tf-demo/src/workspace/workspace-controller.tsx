@@ -35,6 +35,8 @@ type WorkspaceController = {
 	readonly activeTextId: string | null;
 	readonly isLibraryVisible: boolean;
 	readonly revealLibrary: () => void;
+	readonly canCloseAllSheets: boolean;
+	readonly closeAllSheets: () => void;
 };
 
 const WorkspaceControllerContext = createContext<WorkspaceController | null>(

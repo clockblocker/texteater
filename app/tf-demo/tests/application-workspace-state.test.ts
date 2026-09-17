@@ -240,6 +240,51 @@ describe("application workspace state", () => {
 		).toBe(session);
 	});
 
+	test("closes every Sheet and Card Layer back to the Library base", () => {
+		let session = createApplicationWorkspaceSession();
+		const libraryId = Object.keys(session.workspace.presentations)[0];
+		if (!libraryId) throw new Error("Expected Library Presentation.");
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "Follow",
+			originPresentationId: libraryId,
+			target: {
+				kind: "Text",
+				textId: "text-1",
+				focusAttestationId: "attestation-1",
+			},
+		});
+		const textId = Object.values(session.workspace.presentations).find(
+			(presentation) => presentation.subject.kind === "Text",
+		)?.id;
+		if (!textId) throw new Error("Expected Text Presentation.");
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "ReconcileCardLayer",
+			originPresentationId: textId,
+			candidates: [
+				{
+					key: "reading-1",
+					target: { kind: "Reading", readingId: "reading-1" },
+				},
+			],
+		});
+
+		session = reduceApplicationWorkspaceSession(session, {
+			type: "CloseAllSheets",
+		});
+
+		expect(session.pendingReveal).toBeUndefined();
+		expect(session.candidateKeyByPresentationId).toEqual({});
+		expect(Object.keys(session.workspace.layers)).toEqual([]);
+		expect(Object.keys(session.workspace.panes)).toHaveLength(1);
+		expect(Object.values(session.workspace.presentations)).toEqual([
+			expect.objectContaining({
+				subject: { kind: "Library" },
+				form: "Sheet",
+				locked: true,
+			}),
+		]);
+	});
+
 	test("returns to an open Text on follow and carries the occurrence as a one-shot reveal", () => {
 		let session = createApplicationWorkspaceSession();
 		const libraryId = Object.keys(session.workspace.presentations)[0];

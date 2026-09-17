@@ -56,6 +56,7 @@ export type ApplicationWorkspaceAction =
 			readonly type: "RevealLibrary";
 			readonly originPresentationId?: string;
 	  }
+	| { readonly type: "CloseAllSheets" }
 	| {
 			readonly type: "ReconcileCardLayer";
 			readonly originPresentationId: string;
@@ -94,6 +95,8 @@ export function reduceApplicationWorkspaceSession(
 			return follow(session, action.target, action.originPresentationId);
 		case "RevealLibrary":
 			return revealLibrary(session, action.originPresentationId);
+		case "CloseAllSheets":
+			return createApplicationWorkspaceSession();
 		case "ReconcileCardLayer":
 			return reconcileCardLayer(session, action);
 		case "ReconcilePresentation":

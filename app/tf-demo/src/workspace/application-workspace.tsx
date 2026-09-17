@@ -96,6 +96,15 @@ export function ApplicationWorkspaceProvider({
 		() => dispatch({ type: "RevealLibrary" }),
 		[],
 	);
+	const closeAllSheets = useCallback(
+		() => dispatch({ type: "CloseAllSheets" }),
+		[],
+	);
+	const canCloseAllSheets =
+		Object.keys(workspace.presentations).length > 1 ||
+		Object.keys(workspace.layers).length > 0 ||
+		Object.keys(workspace.panes).length > 1 ||
+		visible.at(-1)?.subject.kind !== "Library";
 	const controller = useMemo(
 		() => ({
 			activeTextId:
@@ -104,8 +113,10 @@ export function ApplicationWorkspaceProvider({
 					: null,
 			isLibraryVisible: visible.at(-1)?.subject.kind === "Library",
 			revealLibrary,
+			canCloseAllSheets,
+			closeAllSheets,
 		}),
-		[activeText, visible, revealLibrary],
+		[activeText, visible, revealLibrary, canCloseAllSheets, closeAllSheets],
 	);
 	const runtime = useMemo(() => ({ session, dispatch }), [session]);
 	return (
