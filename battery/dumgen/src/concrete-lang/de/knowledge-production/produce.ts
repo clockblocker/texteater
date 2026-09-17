@@ -86,11 +86,11 @@ export async function produceKnowledge(
 	};
 	const snapshot = () =>
 		recordEvent(signal, "KnowledgeContributions", structuredClone(result));
-	const failed = (
+	const failureFor = (
 		aspect: KnowledgeFailure["aspect"],
 		error: unknown,
 		detail: Pick<KnowledgeFailure, "leaf" | "candidate"> = {},
-	) => {
+	): KnowledgeFailure => {
 		signal.throwIfAborted();
 		const failure =
 			error instanceof DumgenFailure
@@ -101,12 +101,19 @@ export async function produceKnowledge(
 						error instanceof Error ? error.message : String(error),
 						route,
 					);
-		result.failures.push({
+		return {
 			aspect,
 			...detail,
 			code: failure._tag,
 			message: failure.message,
-		});
+		};
+	};
+	const failed = (
+		aspect: KnowledgeFailure["aspect"],
+		error: unknown,
+		detail: Pick<KnowledgeFailure, "leaf" | "candidate"> = {},
+	) => {
+		result.failures.push(failureFor(aspect, error, detail));
 		snapshot();
 	};
 	snapshot();
@@ -115,6 +122,12 @@ export async function produceKnowledge(
 		encounter: input.encounter,
 		...markedContext(input.encounter),
 	};
+	type TextOutcome = {
+		changes: readonly Dumrel.KnowledgeChange[];
+		failures: KnowledgeFailure[];
+	};
+	const textOutcomes: Array<TextOutcome | undefined> = [];
+	const textJobs: Array<Promise<void>> = [];
 	for (const [aspect, selection] of Object.entries(authored.missing)) {
 		if (aspect === "semanticRelations") continue;
 		const leaves =
@@ -122,91 +135,118 @@ export async function produceKnowledge(
 				? Object.keys(selection ?? {})
 				: [undefined];
 		for (const leaf of leaves) {
-			signal.throwIfAborted();
-			const targetAspect = aspect as KnowledgeFailure["aspect"];
-			if (closed) {
-				failed(
-					targetAspect,
-					new DumgenFailure(
-						"CatalogMiss",
-						stage,
-						"Requested Knowledge has not been authored",
-						route,
-					),
-					{ ...(leaf ? { leaf } : {}) },
-				);
-				continue;
-			}
-			if (
-				aspect !== "definition" &&
-				aspect !== "transcription" &&
-				aspect !== "translations"
-			) {
-				failed(
-					targetAspect,
-					new DumgenFailure(
-						"NotImplemented",
-						stage,
-						"Structured Knowledge generation is deferred",
-						route,
-					),
-				);
-				continue;
-			}
-			try {
-				const requestMask = leaf
-					? { translations: { [leaf]: null } }
-					: { [aspect]: null };
-				const contribution = await executeGeneration(
-					options,
-					{
-						stage,
-						route,
-						input: {
-							...state,
-							aspect,
-							...(leaf ? { language: leaf } : {}),
-						},
-						signal,
-						configuration: effectiveConfiguration(options, route),
-						systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Write one concise contextual translation in ${leaf}, preserving meaningful case and punctuation.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
-						outputSchema: {
-							type: "object",
-							properties: { text: { type: ["string", "null"] } },
-							required: ["text"],
-							additionalProperties: false,
-						},
-					},
-					(output) => {
+			const outcomeIndex = textOutcomes.length;
+			textOutcomes.push(undefined);
+			textJobs.push(
+				(async () => {
+					signal.throwIfAborted();
+					const targetAspect = aspect as KnowledgeFailure["aspect"];
+					let outcome: TextOutcome;
+					try {
+						if (closed)
+							throw new DumgenFailure(
+								"CatalogMiss",
+								stage,
+								"Requested Knowledge has not been authored",
+								route,
+							);
 						if (
-							!output ||
-							typeof output !== "object" ||
-							Object.keys(output).length !== 1 ||
-							!("text" in output) ||
-							(output.text !== null &&
-								typeof output.text !== "string")
+							aspect !== "definition" &&
+							aspect !== "transcription" &&
+							aspect !== "translations"
 						)
-							throw Error("Expected only text or null");
-						if (output.text === null) return null;
-						const analysis = leaf
-							? { translations: { [leaf]: output.text } }
-							: { [aspect]: output.text };
-						return projectKnowledge(reading, requestMask, analysis);
-					},
-					[],
-				);
-				if (contribution) result.changes.push(...contribution.changes);
-				else
-					recordEvent(signal, "NoKnowledgeContribution", {
-						aspect,
-						leaf: leaf ?? null,
-					});
-				snapshot();
-			} catch (error) {
-				failed(targetAspect, error, { ...(leaf ? { leaf } : {}) });
-			}
+							throw new DumgenFailure(
+								"NotImplemented",
+								stage,
+								"Structured Knowledge generation is deferred",
+								route,
+							);
+						const requestMask = leaf
+							? { translations: { [leaf]: null } }
+							: { [aspect]: null };
+						const contribution = await executeGeneration(
+							options,
+							{
+								stage,
+								route,
+								input: {
+									...state,
+									aspect,
+									...(leaf ? { language: leaf } : {}),
+								},
+								signal,
+								configuration: effectiveConfiguration(
+									options,
+									route,
+								),
+								systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Write one concise contextual translation in ${leaf}, preserving meaningful case and punctuation.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+								outputSchema: {
+									type: "object",
+									properties: {
+										text: { type: ["string", "null"] },
+									},
+									required: ["text"],
+									additionalProperties: false,
+								},
+							},
+							(output) => {
+								if (
+									!output ||
+									typeof output !== "object" ||
+									Object.keys(output).length !== 1 ||
+									!("text" in output) ||
+									(output.text !== null &&
+										typeof output.text !== "string")
+								)
+									throw Error("Expected only text or null");
+								if (output.text === null) return null;
+								const analysis = leaf
+									? { translations: { [leaf]: output.text } }
+									: { [aspect]: output.text };
+								return projectKnowledge(
+									reading,
+									requestMask,
+									analysis,
+								);
+							},
+							[],
+						);
+						if (contribution)
+							outcome = {
+								changes: contribution.changes,
+								failures: [],
+							};
+						else {
+							recordEvent(signal, "NoKnowledgeContribution", {
+								aspect,
+								leaf: leaf ?? null,
+							});
+							outcome = { changes: [], failures: [] };
+						}
+					} catch (error) {
+						outcome = {
+							changes: [],
+							failures: [
+								failureFor(targetAspect, error, {
+									...(leaf ? { leaf } : {}),
+								}),
+							],
+						};
+					}
+					textOutcomes[outcomeIndex] = outcome;
+					result.changes = [
+						...authored.production.changes,
+						...textOutcomes.flatMap((item) => item?.changes ?? []),
+					];
+					result.failures = textOutcomes.flatMap(
+						(item) => item?.failures ?? [],
+					);
+					snapshot();
+				})(),
+			);
 		}
 	}
+	await Promise.all(textJobs);
 	const requestedRelations = Object.keys(
 		authored.missing.semanticRelations ?? {},
 	) as Dumrel.DirectSemanticRelation[];

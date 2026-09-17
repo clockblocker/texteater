@@ -180,6 +180,47 @@ test("malformed text leaf is not salvaged and valid independent translation surv
 		{ aspect: "definition", code: "InvalidModelOutput" },
 	]);
 });
+test("independent text generation starts concurrently", async () => {
+	const expectedCalls = 4;
+	let enteredCalls = 0;
+	let releaseCalls: () => void = () => {};
+	const release = new Promise<void>((resolve) => (releaseCalls = resolve));
+	let allEntered: () => void = () => {};
+	const entered = new Promise<void>((resolve) => (allEntered = resolve));
+	const dumgen = createDumgen({
+		execute: async (request) => {
+			enteredCalls++;
+			if (enteredCalls === expectedCalls) allEntered();
+			await release;
+			const { aspect, language } = request.input as {
+				aspect: string;
+				language?: string;
+			};
+			return { output: { text: language ?? aspect } };
+		},
+		judge: async () => {
+			throw Error("Unexpected judgment");
+		},
+	});
+	const production = Effect.runPromise(
+		dumgen.produceKnowledge({
+			...input,
+			request: {
+				definition: null,
+				transcription: null,
+				translations: { en: null, ru: null },
+			},
+		}),
+	);
+	const startedTogether = await Promise.race([
+		entered.then(() => true),
+		new Promise<false>((resolve) => setTimeout(() => resolve(false), 25)),
+	]);
+	releaseCalls();
+	await production;
+	expect(startedTogether).toBe(true);
+	expect(enteredCalls).toBe(expectedCalls);
+});
 test("Closed missing leaves retain reviewed independent contributions without generation", async () => {
 	const member = authoredMembers.find(
 		(member) =>
