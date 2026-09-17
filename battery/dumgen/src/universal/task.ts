@@ -4,15 +4,27 @@ export function task<T>(
 	stage: string,
 	run: (signal: AbortSignal) => Promise<T>,
 ) {
-	return Effect.tryPromise({
-		try: run,
-		catch: (error) =>
-			error instanceof DumgenFailure
-				? (error as DumgenFailure)
-				: new DumgenFailure(
-						"InvalidModelOutput",
-						stage,
-						error instanceof Error ? error.message : String(error),
+	return Effect.async<T, DumgenFailure>((resume, signal) => {
+		const pending = Promise.resolve()
+			.then(() => run(signal))
+			.then(
+				(value) => resume(Effect.succeed(value)),
+				(error) =>
+					resume(
+						Effect.fail(
+							error instanceof DumgenFailure
+								? (error as DumgenFailure)
+								: new DumgenFailure(
+										"InvalidModelOutput",
+										stage,
+										error instanceof Error
+											? error.message
+											: String(error),
+									),
+						),
 					),
+			);
+		// Interruption aborts the transport, then waits for its trace finalizers.
+		return Effect.promise(() => pending);
 	});
 }

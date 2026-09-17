@@ -522,7 +522,7 @@ function Segments({ state }: { state: LaboratoryState }) {
 				/>
 				<RouteIcon className="mx-auto hidden size-4 text-muted-foreground sm:block" />
 				<PipelineStage
-					name={`2. Segmentation<${sentence?.language ?? "de|he"}>`}
+					name={`2. Segmentation<${sentence?.language ?? "de|en|he"}>`}
 					stage={segmentation}
 					status={
 						segmentation

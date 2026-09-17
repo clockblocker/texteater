@@ -61,9 +61,15 @@ const infinitive = {
 
 describe("Grundform assessment", () => {
 	test("uses infinitive features and rejects finite grammar even with identical spelling", () => {
+		const germanInfinitive = {
+			...infinitive,
+			perfect: null,
+			future: null,
+			passive: null,
+		};
 		const value = surface("de/Lexeme/VERB", {
 			canonical: "laufen",
-			features: infinitive,
+			features: germanInfinitive,
 		});
 		const before = structuredClone(value);
 		expect(checkIfGrundform(value)).toEqual({ success: true, value: true });
@@ -73,7 +79,7 @@ describe("Grundform assessment", () => {
 				surface("de/Lexeme/VERB", {
 					canonical: "laufen",
 					features: {
-						...infinitive,
+						...germanInfinitive,
 						verbForm: "Fin",
 						mood: "Ind",
 						number: "Plur",

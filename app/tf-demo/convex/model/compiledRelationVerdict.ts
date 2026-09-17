@@ -4,11 +4,11 @@ export const COMPILED_RELATION_VERDICT = {
 	"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",
 	"verdictArtifactPath": "battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json",
 	"fingerprints": {
-		"prompt": "sha256:1fe69b7606dda05c9cae3ea1a07c0ef8bd5e03007ee444d5565eb174fec1af76",
-		"schema": "sha256:ce3a21b132e66165ed25b274eb098d645437a904bca4890aefdfa367af365a4f",
-		"evaluator": "sha256:986ded077e0d93f11eed9e2e6c4a00d0f7de97e555df466f19cff5f853201576",
-		"model": "sha256:de1af433bc0ca1af7d910387aaf53cc8a751c3add5002ef671f71b37cf788b17",
-		"policy": "sha256:45126f8d622f2d2df64109ba2eb0fed6b36be07aafeeef33dde6267627a87afa"
+		"prompt": "sha256:e143f28238f35c1c89274b55895b2087bc4f22460ecbae92d42b7bdd794b52fa",
+		"schema": "sha256:56ff86a19d066d7cf4586f084f28665093340cf5bca78f625b5c1f4be8f7c397",
+		"evaluator": "sha256:f0621ef08571243a53625918ab2e89248ee0e94e1dc8e26b2a03511efb7b01dd",
+		"model": "sha256:95e449c5fa8af54b1952cbb112b08bf904148988daef71c9b52b40487ee5dfeb",
+		"policy": "sha256:1d3f005dec584f64f2d579387108a02021c224d0052f6a73bb39ceeaa217ce45"
 	},
 	"historicalCandidate": {
 		"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",

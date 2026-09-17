@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "question": "Correct the review runner forwarding Reading candidates into the strict classifyTarget input. The original attempt failed InvalidInput before any model call; retry this one unchanged held-out input after removing the extra property. No linguistic tuning.",
+  "policy": {
+    "attemptsPerEntry": 1,
+    "automaticRetries": 0,
+    "tuning": false,
+    "heldOutUsedForTuning": false,
+    "deterministicOnlyEdges": [
+      "Unresolved injection",
+      "exact generated collision injection",
+      "partial failure injection",
+      "cancellation"
+    ]
+  },
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  },
+  "entries": [
+    {
+      "id": "held-reading",
+      "role": "held-out",
+      "kind": "reading",
+      "input": {
+        "sentence": {
+          "id": "d74e51b7-606b-4f5c-affa-31ed5b17fb80",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "ResolvableText",
+              "text": "Die"
+            },
+            {
+              "kind": "Whitespace",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Birne"
+            },
+            {
+              "kind": "Whitespace",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "in"
+            },
+            {
+              "kind": "Whitespace",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "der"
+            },
+            {
+              "kind": "Whitespace",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Lampe"
+            },
+            {
+              "kind": "Whitespace",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "flackert"
+            },
+            {
+              "kind": "Punctuation",
+              "text": "."
+            }
+          ]
+        },
+        "clickedSegmentIndex": 2,
+        "candidates": [
+          "🍐"
+        ]
+      },
+      "expected": {
+        "humanReviewRequired": true
+      }
+    }
+  ],
+  "fingerprint": "bd09f2ceac0f964ab31d3e203a1bf5b1a982ed12f6b1d3d6247de822a8cbc7a6",
+  "supersedesMechanicalAttempt": "06529bb3-6234-4c4a-93c6-cae9445b0010"
+}

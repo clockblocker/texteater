@@ -10,6 +10,7 @@ import { createGermanHighLevelTargetClassificationProjection } from "../src/conc
 import targetData from "../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
+import { grammarFixture } from "./grammar-fixture.js";
 
 const kinds: Record<string, string> = {
 	"proper-noun": "PROPN",
@@ -38,14 +39,16 @@ const kinds: Record<string, string> = {
 test("all development selections are disjoint and production assembly uses only demonstrations", () => {
 	for (const item of listExperiments()) {
 		const experiment = getExperiment(item.id);
-		const corpus = required(experiment.promptSource.goldenCorpus);
-		const demos = experiment.promptSource.demonstrations;
+		const corpus = required(experiment.source.goldenCorpus);
+		const demos = experiment.source.demonstrations;
 		const toUse = corpus.select(demos && "ids" in demos ? demos.ids : []);
 		expect(toUse.isDisjointFrom(experiment.evaluation)).toBe(true);
-		if (prompts[item.id])
-			expect(assembleSystemPrompt(experiment.promptSource)).toBe(
-				required(prompts[item.id]),
-			);
+		if (prompts[item.id] && "body" in experiment.source)
+			expect(
+				assembleSystemPrompt(
+					experiment.source as import("promptsmith").PromptSource,
+				),
+			).toBe(required(prompts[item.id]));
 	}
 	expect(
 		listExperiments().find(
@@ -53,9 +56,9 @@ test("all development selections are disjoint and production assembly uses only 
 				item.id === "target-classification/de/high-level-whole-unit",
 		),
 	).toMatchObject({
-		caseCount: 397,
+		caseCount: 445,
 		demonstrationCount: 28,
-		evaluationCount: 105,
+		evaluationCount: 153,
 	});
 	expect(
 		Object.keys(prompts).some((route) =>
@@ -78,6 +81,7 @@ test("canonical target corpus survives compact representation round-trips", () =
 });
 test("all 1060 retained grammar answers project through public operations", async () => {
 	let count = 0;
+	const verifiedRoutes = new Set<string>();
 	for (const spec of listExperiments().filter((item) =>
 		item.id.startsWith("grammatical-resolution/"),
 	)) {
@@ -89,9 +93,7 @@ test("all 1060 retained grammar answers project through public operations", asyn
 			kind = required(kinds[required(kindName)]);
 		const route =
 			`${language}/${family}/${kind}` as keyof typeof grammarSchemas;
-		const corpus = required(
-			getExperiment(spec.id).promptSource.goldenCorpus,
-		);
+		const corpus = required(getExperiment(spec.id).source.goldenCorpus);
 		for (const [id, golden] of Object.entries(corpus.cases)) {
 			const input = golden.input as {
 				markedContext: string;
@@ -118,11 +120,12 @@ test("all 1060 retained grammar answers project through public operations", asyn
 				sentence: { id, language, segments },
 				target: { family, kind, memberSegmentIndices },
 			});
+			verifiedRoutes.add(route);
 			const result = await Effect.runPromise(
 				Effect.either(
-					createDumgen({
-						execute: async () => golden.idealOutput,
-					}).resolveGrammar(encounter),
+					createDumgen(
+						grammarFixture(golden.idealOutput),
+					).resolveGrammar(encounter),
 				),
 			);
 			if (
@@ -164,4 +167,5 @@ test("all 1060 retained grammar answers project through public operations", asyn
 		}
 	}
 	expect(count).toBe(1060);
-});
+	expect(verifiedRoutes.size).toBe(22);
+}, 30_000);

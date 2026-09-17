@@ -1,19 +1,21 @@
-import type { EvaluationRun } from "promptsmith/evaluation";
+import type { StoredRun } from "promptsmith/evaluation";
 import type { compareRuns } from "promptsmith/storage";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { OperationEvidence } from "./OperationEvidence";
 
 type Experiment = {
 	id: string;
+	mode?: "Operation" | "Deferred";
 	caseCount: number;
 	demonstrationCount: number;
 	evaluationCount: number;
 };
 type SavedRun = {
 	runId: string;
-	manifest?: EvaluationRun["manifest"];
-	summary?: EvaluationRun["summary"];
+	manifest?: StoredRun["manifest"];
+	summary?: StoredRun["summary"];
 	error?: string;
 };
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
@@ -30,9 +32,10 @@ export function Evaluations() {
 	const [experiment, setExperiment] = useState(""),
 		[directory, setDirectory] = useState(""),
 		[model, setModel] = useState(""),
+		[judgmentModel, setJudgmentModel] = useState(""),
 		[settings, setSettings] = useState("{}"),
 		[revision, setRevision] = useState("");
-	const [run, setRun] = useState<EvaluationRun | null>(null),
+	const [run, setRun] = useState<StoredRun | null>(null),
 		[comparison, setComparison] = useState<ReturnType<
 			typeof compareRuns
 		> | null>(null),
@@ -87,7 +90,8 @@ export function Evaluations() {
 							Evaluation runs
 						</h1>
 						<p className="mt-1 text-sm text-muted-foreground">
-							Run held-out cases and compare saved results.
+							Review saved operation results and compare
+							experiments.
 						</p>
 					</div>
 					<a className="underline underline-offset-4" href="/">
@@ -114,7 +118,7 @@ export function Evaluations() {
 								throw Error(
 									"Enter a model to use custom settings",
 								);
-							const result = await request<EvaluationRun>(
+							const result = await request<StoredRun>(
 								"/api/evaluations/runs",
 								{
 									method: "POST",
@@ -125,6 +129,9 @@ export function Evaluations() {
 										experimentId: experiment,
 										sourceRevision: revision,
 										configuration,
+										judgmentConfiguration: judgmentModel
+											? { model: judgmentModel }
+											: undefined,
 										outputDirectory: directory || undefined,
 									}),
 								},
@@ -145,12 +152,17 @@ export function Evaluations() {
 							}
 						>
 							{experiments.map((item) => (
-								<option key={item.id}>{item.id}</option>
+								<option key={item.id} value={item.id}>
+									{item.id}
+									{item.mode === "Deferred"
+										? " (deferred prototype)"
+										: ""}
+								</option>
 							))}
 						</select>
 						<span className="block text-sm tabular-nums text-muted-foreground">
 							{selected
-								? `${selected.demonstrationCount} demonstrations · ${selected.evaluationCount} test cases · ${selected.caseCount} total corpus cases`
+								? `${selected.demonstrationCount} reserved examples · ${selected.evaluationCount} test cases · ${selected.caseCount} total corpus cases`
 								: "Loading experiments…"}
 						</span>
 					</label>
@@ -178,12 +190,23 @@ export function Evaluations() {
 						/>
 					</label>
 					<label className="space-y-2">
-						<span>Model override</span>
+						<span>Generation model override</span>
 						<input
 							className={control}
 							placeholder="Dumgen default"
 							value={model}
 							onChange={(event) => setModel(event.target.value)}
+						/>
+					</label>
+					<label className="space-y-2">
+						<span>Judgment model override</span>
+						<input
+							className={control}
+							placeholder="jev-latest"
+							value={judgmentModel}
+							onChange={(event) =>
+								setJudgmentModel(event.target.value)
+							}
 						/>
 					</label>
 					<label htmlFor="model-settings" className="space-y-2">
@@ -258,7 +281,7 @@ export function Evaluations() {
 														void action(
 															async () => {
 																setRun(
-																	await request<EvaluationRun>(
+																	await request<StoredRun>(
 																		`/api/evaluations/runs/${encodeURIComponent(item.runId)}${query}`,
 																	),
 																);
@@ -269,16 +292,21 @@ export function Evaluations() {
 														)
 													}
 												>
-													{item.runId}
+													{item.manifest?.corpus
+														.caseIds.length === 1
+														? item.manifest.corpus
+																.caseIds[0]
+														: item.runId}
 												</button>
 											</td>
 											<td className="p-3">
 												{item.manifest?.experimentId}
 												<br />
-												{
-													item.manifest?.configuration
-														.model
-												}
+												{item.manifest?.version === 2
+													? `${item.manifest.configurations.judgment.model} + ${item.manifest.configurations.generation.model}`
+													: item.manifest
+															?.configuration
+															.model}
 											</td>
 											<td className="p-3">
 												{item.error ??
@@ -368,9 +396,7 @@ export function Evaluations() {
 									{record.caseId} · {record.status} ·{" "}
 									{Math.round(record.durationMs)} ms
 								</summary>
-								<pre className="overflow-auto whitespace-pre-wrap break-words text-xs">
-									{JSON.stringify(record, null, 2)}
-								</pre>
+								<OperationEvidence record={record} />
 							</details>
 						))}
 					</section>

@@ -13,18 +13,17 @@ export const grammarInputSchema = z.strictObject({
 	members: z.array(z.string().min(1)).min(1),
 });
 /** Source-local schemas validate every retained answer before demonstrations are assembled. */
-export function defineLinguisticPrompt<
+export function defineLinguisticCorpus<
 	I extends z.ZodType,
 	O extends z.ZodType,
 >(args: {
 	route: string;
 	inputSchema: I;
 	outputSchema: O;
-	body: string;
 	cases: unknown;
 	demonstrationIds: readonly string[];
 	source: string;
-}): PromptSource<I, O> {
+}): Omit<PromptSource<I, O>, "body"> {
 	const cases = args.cases as GoldenCaseRegistry<I, O>;
 	const corpus = defineGoldenCorpus({
 		route: args.route,
@@ -45,12 +44,25 @@ export function defineLinguisticPrompt<
 				: stableJson(input);
 		},
 	});
-	return definePromptSource({
+	return {
 		route: args.route,
 		inputSchema: args.inputSchema,
 		outputSchema: args.outputSchema,
-		body: args.body,
 		goldenCorpus: corpus,
 		demonstrations: corpus.select(args.demonstrationIds),
+	};
+}
+
+export type LinguisticCorpus = Omit<PromptSource, "body">;
+/** Only active text generation and deferred prototypes have prompt bodies. */
+export function defineLinguisticPrompt<
+	I extends z.ZodType,
+	O extends z.ZodType,
+>(
+	args: Parameters<typeof defineLinguisticCorpus<I, O>>[0] & { body: string },
+): PromptSource<I, O> {
+	return definePromptSource({
+		...defineLinguisticCorpus(args),
+		body: args.body,
 	});
 }

@@ -1,14 +1,14 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { EvaluationRun } from "./evaluation.js";
-import { evaluationRunSchema, runManifestSchema } from "./schemas.js";
+import type { StoredRun } from "./evaluation.js";
+import { runManifestSchema, storedRunSchema } from "./schemas.js";
 
 /** Creates a new run directory; existing evidence is never overwritten. */
 export async function saveRun(
 	outputDirectory: string,
-	run: EvaluationRun,
+	run: StoredRun,
 ): Promise<string> {
-	const parsed = evaluationRunSchema.parse(run);
+	const parsed = storedRunSchema.parse(run);
 	await mkdir(outputDirectory, { recursive: true });
 	const directory = join(outputDirectory, parsed.manifest.runId);
 	await mkdir(directory);
@@ -29,7 +29,7 @@ export async function saveRun(
 export async function loadRun(
 	outputDirectory: string,
 	runId: string,
-): Promise<EvaluationRun> {
+): Promise<StoredRun> {
 	runManifestSchema.shape.runId.parse(runId);
 	const directory = join(outputDirectory, runId);
 	const [manifest, cases, summary] = await Promise.all([
@@ -37,7 +37,7 @@ export async function loadRun(
 		readFile(join(directory, "cases.jsonl"), "utf8"),
 		readFile(join(directory, "summary.json"), "utf8"),
 	]);
-	const parsed = evaluationRunSchema.parse({
+	const parsed = storedRunSchema.parse({
 		manifest: JSON.parse(manifest),
 		cases: cases
 			.trim()
@@ -107,9 +107,9 @@ export async function listRuns(outputDirectory: string) {
 			}),
 	);
 }
-export function compareRuns(left: EvaluationRun, right: EvaluationRun) {
-	const a = evaluationRunSchema.parse(left),
-		b = evaluationRunSchema.parse(right);
+export function compareRuns(left: StoredRun, right: StoredRun) {
+	const a = storedRunSchema.parse(left),
+		b = storedRunSchema.parse(right);
 	const bCases = new Map(b.cases.map((record) => [record.caseId, record]));
 	const ids = [
 		...a.cases.map((record) => record.caseId),

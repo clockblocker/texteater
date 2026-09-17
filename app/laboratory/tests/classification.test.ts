@@ -1,11 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
-import type {
-	ModelExchange,
-	ModelRequest,
-	SegmentedSentence,
-} from "dumgen/types";
+import type { ModelExchange, SegmentedSentence } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import { GermanClassificationResolver } from "../src/classification";
 
 const sentence: SegmentedSentence<"de"> = {
@@ -22,11 +19,7 @@ const target = {
 	kind: "NOUN",
 	memberSegmentIndices: [0, 2],
 } as const;
-const classification = {
-	decision: "Resolved",
-	target: { family: "Lexeme", kind: "NOUN" },
-	additionalMemberIndices: [1],
-};
+const classification = target;
 const grammar = {
 	memberOrthographies: ["Typo", "Standard"],
 	normalizedMembers: ["Bank", "Bank"],
@@ -42,18 +35,18 @@ const grammar = {
 	realizationCoverage: "Full",
 };
 function harness(outputs: unknown[]) {
-	const requests: ModelRequest[] = [];
+	const requests: ModelExchange["request"][] = [];
 	const exchanges: ModelExchange[] = [];
-	const resolver = new GermanClassificationResolver((onModelExchange) =>
-		createDumgen({
-			onModelExchange,
-			execute: async (request) => {
-				requests.push(request);
-				const output = outputs.shift();
-				if (output instanceof Error) throw output;
-				return output;
-			},
-		}),
+	const resolver = new GermanClassificationResolver(
+		(onModelExchange, onOperation) =>
+			createDumgen({
+				...pipelineFixture(outputs),
+				onModelExchange: (exchange) => {
+					requests.push(exchange.request);
+					onModelExchange?.(exchange);
+				},
+				onOperation,
+			}),
 	);
 	return {
 		resolver,
@@ -87,12 +80,14 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 				reading: { unitKind: "Reading", emojiDescription: "🏦" },
 				attestation: { unitKind: "Attestation" },
 			},
-			generation: { modelCalls: 3 },
+			generation: { modelCalls: 5 },
 		});
 		expect(run.requests.map((value) => value.stage)).toEqual([
 			"classifyTarget",
+			"classifyTarget",
 			"resolveGrammar",
-			"generateReadingEmojiDescription",
+			"resolveGrammar",
+			"resolveOrGenerateReadingEmojiDescription",
 		]);
 		expect(run.resolver.snapshot()).toHaveLength(1);
 		expect(run.resolver.snapshot()[0]?.readingEntries).toHaveLength(1);
@@ -106,7 +101,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 			generation: { cache: "member-hit", modelCalls: 0 },
 			stages: { target: { traceOrigin: "cached" } },
 		});
-		expect(run.requests).toHaveLength(3);
+		expect(run.requests).toHaveLength(5);
 	});
 	test("a supplied target bypasses classification and stays separate from whole-unit caches", async () => {
 		const run = harness([
@@ -122,7 +117,8 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		});
 		expect(run.requests.map((value) => value.stage)).toEqual([
 			"resolveGrammar",
-			"generateReadingEmojiDescription",
+			"resolveGrammar",
+			"resolveOrGenerateReadingEmojiDescription",
 		]);
 		expect(await run.resolve()).toMatchObject({ decision: "Resolved" });
 		expect(run.requests.at(-1)?.stage).toBe(
@@ -151,7 +147,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		});
 		expect(
 			run.requests.filter((value) => value.stage === "classifyTarget"),
-		).toHaveLength(1);
+		).toHaveLength(2);
 	});
 	test("different occurrences compare stored Reading candidates through Dumdict", async () => {
 		const run = harness([

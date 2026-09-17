@@ -45,6 +45,7 @@ import {
 	type ResolutionSessionGuard,
 } from "./model/resolutionSessions";
 import {
+	knowledgeProductionEvidenceValidator,
 	type nonResolvedGrammaticalValidator,
 	relationPublicationRunValidator,
 	type resolvedGrammaticalValidator,
@@ -659,6 +660,7 @@ export const applyGeneratedKnowledgePlan = internalAction({
 		reading: v.any(),
 		changes: v.array(v.any()),
 		pendingRelations: v.array(v.any()),
+		productionEvidence: knowledgeProductionEvidenceValidator,
 		relationPublication: relationPublicationRunValidator,
 	},
 	returns: v.null(),
@@ -693,6 +695,7 @@ export const applyGeneratedKnowledgePlan = internalAction({
 						baseKnowledgePlan:
 							withoutGeneratedRelationPlan(fullPlan),
 						generatedChanges: publishable.changes,
+						productionEvidence: args.productionEvidence,
 						relationPublication: args.relationPublication,
 					},
 				);
@@ -710,6 +713,7 @@ export const applyGeneratedKnowledgePlan = internalAction({
 			await ctx.runMutation(internal.knowledgeGeneration.fail, {
 				attemptKey: args.attemptKey,
 				failureCode: "generationFailed",
+				productionEvidence: args.productionEvidence,
 				failureMessage: "Knowledge generation failed. Please retry.",
 			});
 			return null;

@@ -6,6 +6,7 @@ import {
 	definitionTextStateValidator,
 	directSemanticRelationValidator,
 	knowledgeGenerationAttemptStateValidator,
+	knowledgeProductionEvidenceValidator,
 	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
@@ -239,6 +240,18 @@ export default defineSchema({
 		updatedAt: v.number(),
 	}).index("by_owner_reading_key", ["ownerReadingKey"]),
 
+	knowledgeProductionRuns: defineTable({
+		attemptKey: v.string(),
+		runNumber: v.number(),
+		evidence: knowledgeProductionEvidenceValidator,
+		outcome: v.union(
+			v.literal("Success"),
+			v.literal("Partial"),
+			v.literal("Failure"),
+			v.literal("Interrupted"),
+		),
+		createdAt: v.number(),
+	}).index("by_attempt_key_and_run", ["attemptKey", "runNumber"]),
 	knowledgeGenerationAttempts: defineTable({
 		attemptKey: v.string(),
 		visitorId: v.string(),

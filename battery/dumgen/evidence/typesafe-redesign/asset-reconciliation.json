@@ -1,0 +1,358 @@
+{
+  "version": 1,
+  "baselineRevision": "b68732504442f7a5a3bdae3c8df6d2c4a7db2e67",
+  "inScope": 31,
+  "deferred": 4,
+  "assets": [
+    {
+      "id": "grammatical-resolution/de/construction/fusion",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/construction/fusion/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/construction/fusion/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "2095e6133d6dec5777c0589ee15979ef368656c92302e8b052172d76a7f980ec",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/adjective",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adjective/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adjective/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "4773be8f3dd38c26bf99af5a7ef7f391cb30a491755211876130f0109211d90e",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/adposition",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adposition/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adposition/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "9d7811973191918bf5231631420989580cd66203dc434a8025d5058b8e189d22",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/adverb",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adverb/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adverb/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "b1cbe9ee072d8a17018fa65fcd11e8ed2265bc11ce3f843b14acd2e47e0699b7",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/auxiliary",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "8f30a24f1e55ac6af455541156b8df28cddd1ac3c117785ab2bd0fda34598bde",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/coordinating-conjunction",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/coordinating-conjunction/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/coordinating-conjunction/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "6aec7a68235f27f5eaba49912674becf0ebbbd71602e7faeb5147a5af2c07edf",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/determiner",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/determiner/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/determiner/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "508e597a6ace0c53d0f86a442de54a1adae0718d82f274f1308fa50d2705f4a8",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/interjection",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/interjection/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/interjection/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "a18b2789a2ff1bdc5216deaaf88693ffccb57d6a1ef0be903d7758dae2a2be32",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/noun",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/noun/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "b96c6dcfc5a685aba3848448f8531c4b7ef5fe9f774ab97553b9f2dddf45ef23",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/numeral",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/numeral/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/numeral/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "c15cc278342ca8e29aad51351d9563b8bb3fc19c37dc85fde3ed1886a139c5b7",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/other",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/other/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/other/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "e718be69f8861b66c42797b37680f03bbcdcc26d38db4a302a184c115d82726b",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/particle",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/particle/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/particle/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "26b5ec10341c38bc4f1bb4e42d54f31b8635a2f90baf9080a1c69fac75605f9b",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/pronoun",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "87ac26dca41063527340626833cf510d5cc02989c1b038ee8333ef7aebf81515",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/proper-noun",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "1d4e7cba06b452219d27fbe4d7d79fcfafc355bea0be92b42402f3c56e7ce044",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/subordinating-conjunction",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/subordinating-conjunction/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/subordinating-conjunction/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "8414140e7ca8c22e23c0259ebe99b05070d4ef7a84286066e12abf736d2d2943",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/symbol",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/symbol/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/symbol/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "a6ab2b68bac8f9cec4d4bd3fdebf957715210205c3a9b7f9ddce9bb9d062e137",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/lexeme/verb",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/verb/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "6d3ff34a0fa364ee858e57d08280676eccbd2140d23677e6d5bb036279e7048c",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/phraseme/aphorism",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/aphorism/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/aphorism/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "45624d504646de863ccf98d3baa85fb5808c90b22a9ffc8a9edcfc964cfde928",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/phraseme/collocation",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/collocation/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/collocation/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "53b20320ef0b6c072523fe8478f784ae77c1f830ee4e6eba50b91be6e4f31843",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/phraseme/discourse-formula",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/discourse-formula/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/discourse-formula/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "4860dfcb75f4d8162fc6ddf2c768345a64f2d4dca13687b9b1d5aa2b70edd431",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/phraseme/idiom",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/idiom/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/idiom/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "6649741279fb396658fe72f8a178931e5e06020369a2381a7e286f1bfecf90fa",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "grammatical-resolution/de/phraseme/proverb",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/proverb/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/proverb/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/judgments.ts",
+      "disposition": "Bounded judgments and missing-text generation; old prompt retired",
+      "currentCorpusSourceSha256": "f71bee52c73c03fac8876bfb519e0c0249e35004ac52ea0926aa9ae6c32f0836",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "knowledge-analysis/de/construction",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/construction/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/construction/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/produce.ts",
+      "disposition": "Independent text contributions and bounded direct relation judgments",
+      "currentCorpusSourceSha256": "59388b13814d7268422c1e106aab980ae3879ec427c2e31704bb8121901272f1",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "knowledge-analysis/de/lexeme",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/produce.ts",
+      "disposition": "Independent text contributions and bounded direct relation judgments",
+      "currentCorpusSourceSha256": "59388b13814d7268422c1e106aab980ae3879ec427c2e31704bb8121901272f1",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "knowledge-analysis/de/morpheme",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/morpheme/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/morpheme/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/produce.ts",
+      "disposition": "Independent text contributions and bounded direct relation judgments",
+      "currentCorpusSourceSha256": "59388b13814d7268422c1e106aab980ae3879ec427c2e31704bb8121901272f1",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "knowledge-analysis/de/phraseme",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/produce.ts",
+      "disposition": "Independent text contributions and bounded direct relation judgments",
+      "currentCorpusSourceSha256": "59388b13814d7268422c1e106aab980ae3879ec427c2e31704bb8121901272f1",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "reading-generation/de",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/prompt.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve.ts",
+      "disposition": "Unified operation; text-only generation prompt retained",
+      "currentCorpusSourceSha256": "4dd751a864d656b8f02f2db9f869225ddfaa5ef89f09519338385260834e78d0",
+      "oldBodyPresent": true
+    },
+    {
+      "id": "reading-resolution/de",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve.ts",
+      "disposition": "Retired resolution prompt; bounded candidate selection in unified operation",
+      "currentCorpusSourceSha256": "7ebcf70fffeecc8e6cf007bcad591884fe8ef7d440b9f25450fea42829de4e8f",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "intake",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/segmentation/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/segmentation/corpus.ts",
+      "implementation": "battery/dumgen/src/universal/segment.ts",
+      "disposition": "Independent per-sentence questions and whitespace-only generation",
+      "currentCorpusSourceSha256": "b752336d344fa1347b04119e18b964963bc5d4dfac330cc6494e679c1f67faf7",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "target-classification/de/high-level-whole-unit",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/target-classification/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/target-classification/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/target-classification/judgments.ts",
+      "disposition": "Per-occurrence membership then whole-group route judgments; compact prototype retained only as corpus evidence",
+      "currentCorpusSourceSha256": "ac26f3f3d88f4597f8f8f9820daee4735c5a653a21f22473c05f98c83786a4ca",
+      "oldBodyPresent": false
+    },
+    {
+      "id": "knowledge-analysis/lexical-breakdown/resolution",
+      "scope": "deferred",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/prompt.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/prompt.ts",
+      "disposition": "Deferred development-only prototype",
+      "currentCorpusSourceSha256": "2d60268cc20958ac1ec1fc747a87edbaf3bab37345cbc3c542e062e31a8c1ad3",
+      "oldBodyPresent": true
+    },
+    {
+      "id": "knowledge-analysis/lexical-breakdown/segmentation",
+      "scope": "deferred",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/prompt.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/prompt.ts",
+      "disposition": "Deferred development-only prototype",
+      "currentCorpusSourceSha256": "e01b669d3316c749e2ae423c8bc71389ae84e3f0801fb645cf4d172b4d6a5079",
+      "oldBodyPresent": true
+    },
+    {
+      "id": "knowledge-analysis/morphological-tree/resolution",
+      "scope": "deferred",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/prompt.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/prompt.ts",
+      "disposition": "Deferred development-only prototype",
+      "currentCorpusSourceSha256": "aa3097969dcd38fb37b2e63f9b7020ea9429d5eb6d3b12c951166c6255cefe27",
+      "oldBodyPresent": true
+    },
+    {
+      "id": "knowledge-analysis/morphological-tree/segmentation",
+      "scope": "deferred",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/prompt.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/prompt.ts",
+      "disposition": "Deferred development-only prototype",
+      "currentCorpusSourceSha256": "88a8338c0ff72127a18e4dd9afea69c727e82ab025bd97fb9fc47fb55d5cf405",
+      "oldBodyPresent": true
+    },
+    {
+      "id": "knowledge-analysis/translation",
+      "scope": "in-scope",
+      "baselineSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/prompt.ts",
+      "currentCorpusSource": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/corpus.ts",
+      "implementation": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/operation.ts",
+      "disposition": "Bounded coverage and missing-text generation; development-only",
+      "currentCorpusSourceSha256": "af0b87c5d62b05f020041573a92a19c5a8df7969bc999fece7662aed69796782",
+      "oldBodyPresent": false
+    }
+  ]
+}

@@ -1,0 +1,6308 @@
+{
+	"version": 1,
+	"question": "Evaluate integrated production behavior across all 22 grammar routes, every member click of 16 selected IDS constructions, stage edge paths, and the eight reserved held-out cases.",
+	"policy": {
+		"attemptsPerEntry": 1,
+		"automaticRetries": 0,
+		"tuning": false,
+		"heldOutUsedForTuning": false,
+		"deterministicOnlyEdges": [
+			"Unresolved injection",
+			"exact generated collision injection",
+			"partial failure injection",
+			"cancellation"
+		]
+	},
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	},
+	"entries": [
+		{
+			"id": "grammar-de-fusion-dev-am-bahnhof",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/construction/fusion",
+			"input": {
+				"markedContext": "Wir treffen uns morgen <TARGET>am</TARGET> Bahnhof neben dem Kiosk.",
+				"members": ["am"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "am",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["am"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-fusion-dev-beim-umzug",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/construction/fusion",
+			"input": {
+				"markedContext": "Die Nachbarn halfen uns <TARGET>beim</TARGET> Umzug in den dritten Stock.",
+				"members": ["beim"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "beim",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["beim"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-adj-accept-citation-mild",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/adjective",
+			"input": {
+				"markedContext": "Als Grundform wird <TARGET>mild</TARGET> angegeben.",
+				"members": ["mild"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "mild",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["mild"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-adj-dev-attributive-acc-fem-rot",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/adjective",
+			"input": {
+				"markedContext": "Sie trägt die <TARGET>rote</TARGET> Tasche.",
+				"members": ["rote"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "rot",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["rote"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-adp-dev-prep-durch-acc",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/adposition",
+			"input": {
+				"markedContext": "Wir gehen <TARGET>durch</TARGET> den Park nach Hause.",
+				"members": ["durch"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "durch",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"governedCase": "Acc",
+						"partType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["durch"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-adp-dev-prep-zu-dat",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/adposition",
+			"input": {
+				"markedContext": "Sie geht <TARGET>zu</TARGET> ihrer Ärztin.",
+				"members": ["zu"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "zu",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"governedCase": "Dat",
+						"partType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["zu"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-adv-dev-temporal-morgen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/adverb",
+			"input": {
+				"markedContext": "Der Nachtzug fährt <TARGET>morgen</TARGET> um sechs Uhr ab.",
+				"members": ["morgen"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "morgen",
+					"coreFeatures": {
+						"foreign": null,
+						"numType": null,
+						"pronType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["morgen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-adv-dev-initial-vielleicht",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/adverb",
+			"input": {
+				"markedContext": "<TARGET>Vielleicht</TARGET> endet die Sitzung etwas früher.",
+				"members": ["Vielleicht"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "vielleicht",
+					"coreFeatures": {
+						"foreign": null,
+						"numType": null,
+						"pronType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["vielleicht"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-aux-dev-perfect-hat-gegessen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/auxiliary",
+			"input": {
+				"markedContext": "Nora <TARGET>hat</TARGET> bereits gegessen.",
+				"members": ["hat"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "haben",
+					"coreFeatures": {
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-aux-dev-perfect-waren-gegangen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/auxiliary",
+			"input": {
+				"markedContext": "Die Gäste <TARGET>waren</TARGET> schon gegangen.",
+				"members": ["waren"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["waren"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-cconj-dev-ordinary-oder-nouns",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/coordinating-conjunction",
+			"input": {
+				"markedContext": "Zum Frühstück gibt es Müsli <TARGET>oder</TARGET> Brot.",
+				"members": ["oder"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "oder",
+					"coreFeatures": {
+						"conjType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["oder"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-cconj-dev-adversative-aber-clauses",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/coordinating-conjunction",
+			"input": {
+				"markedContext": "Sie ist müde, <TARGET>aber</TARGET> sie arbeitet weiter.",
+				"members": ["aber"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "aber",
+					"coreFeatures": {
+						"conjType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["aber"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-det-dev-indefinite-article-einen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/determiner",
+			"input": {
+				"markedContext": "Er zählt eins und kauft danach <TARGET>einen</TARGET> Mantel.",
+				"members": ["einen"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "ein",
+					"coreFeatures": {
+						"definite": "Ind",
+						"extPos": null,
+						"foreign": null,
+						"numType": "Card",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["einen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-det-dev-demonstrative-diesem",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/determiner",
+			"input": {
+				"markedContext": "Mit <TARGET>diesem</TARGET> Plan schaffen wir den Termin.",
+				"members": ["diesem"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "dieser",
+					"coreFeatures": {
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["diesem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-intj-dev-wupp-onomatopoeia",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/interjection",
+			"input": {
+				"markedContext": "Fort geht nun die Mutter und <TARGET>wupp</TARGET>! den Daumen in den Mund.",
+				"members": ["wupp"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "wupp",
+					"coreFeatures": {
+						"partType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["wupp"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-intj-dev-hallo-greeting",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/interjection",
+			"input": {
+				"markedContext": "Am Gartentor rief sie <TARGET>hallo</TARGET> zu den Nachbarn.",
+				"members": ["hallo"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "hallo",
+					"coreFeatures": {
+						"partType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["hallo"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-noun-dev-nom-plur-banken",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/noun",
+			"input": {
+				"markedContext": "Die <TARGET>Banken</TARGET> öffnen um neun Uhr.",
+				"members": ["Banken"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Bank",
+					"coreFeatures": {
+						"gender": "Fem",
+						"hyph": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Banken"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-noun-dev-dat-sing-bibliothek",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/noun",
+			"input": {
+				"markedContext": "Wir sitzen in der <TARGET>Bibliothek</TARGET>.",
+				"members": ["Bibliothek"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Bibliothek",
+					"coreFeatures": {
+						"gender": "Fem",
+						"hyph": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Bibliothek"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-num-dev-initial-fuenf",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/numeral",
+			"input": {
+				"markedContext": "<TARGET>Fünf</TARGET> Gäste warten bereits im Foyer.",
+				"members": ["Fünf"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "fünf",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": "Card"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["fünf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-num-dev-decimal-drei-komma-vierzehn",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/numeral",
+			"input": {
+				"markedContext": "Der gemessene Wert beträgt <TARGET>drei</TARGET> <TARGET>Komma</TARGET> <TARGET>vierzehn</TARGET>.",
+				"members": ["drei", "Komma", "vierzehn"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "drei Komma vierzehn",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": "Card"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["drei", "Komma", "vierzehn"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-x-dev-unknown-blarg-nom",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/other",
+			"input": {
+				"markedContext": "Der <TARGET>Blarg</TARGET> tauchte ohne Erklärung im Bericht auf.",
+				"members": ["Blarg"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Blarg",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"mood": null,
+						"number": "Sing",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Blarg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-x-dev-unknown-glorps-acc",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/other",
+			"input": {
+				"markedContext": "Die Prüfer markierten die <TARGET>Glorps</TARGET> im letzten Absatz.",
+				"members": ["Glorps"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Glorp",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"mood": null,
+						"number": "Plur",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Glorps"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-part-dev-negative-initial",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/particle",
+			"input": {
+				"markedContext": "<TARGET>Nicht</TARGET> jeder Vorschlag wurde angenommen.",
+				"members": ["Nicht"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "nicht",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"partType": null,
+						"polarity": "Neg"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["nicht"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-part-dev-answer-ja",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/particle",
+			"input": {
+				"markedContext": "Auf die Kontrollfrage antwortete sie klar mit <TARGET>ja</TARGET>.",
+				"members": ["ja"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "ja",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"partType": null,
+						"polarity": "Pos"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["ja"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-pron-fixed-mir",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/pronoun",
+			"input": {
+				"markedContext": "Bitte gib <TARGET>mir</TARGET> den Schlüssel.",
+				"members": ["mir"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "mir",
+					"coreFeatures": {
+						"case": "Dat",
+						"number": "Sing",
+						"gender[psor]": null,
+						"extPos": null,
+						"foreign": null,
+						"person": "1",
+						"polite": null,
+						"poss": null,
+						"pronType": "Prs",
+						"gender": null,
+						"referenceNumber": "Sing"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["mir"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-pron-fixed-du",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/pronoun",
+			"input": {
+				"markedContext": "Heute kochst <TARGET>du</TARGET> das Abendessen.",
+				"members": ["du"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "du",
+					"coreFeatures": {
+						"case": "Nom",
+						"number": "Sing",
+						"gender[psor]": null,
+						"extPos": null,
+						"foreign": null,
+						"person": "2",
+						"polite": "Infm",
+						"poss": null,
+						"pronType": "Prs",
+						"gender": null,
+						"referenceNumber": "Sing"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["du"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-propn-dev-person-anna-acc",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/proper-noun",
+			"input": {
+				"markedContext": "Die Redaktion interviewt <TARGET>Anna</TARGET> am Freitag.",
+				"members": ["Anna"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Anna",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Anna"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-propn-dev-person-peters-gen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/proper-noun",
+			"input": {
+				"markedContext": "<TARGET>Peters</TARGET> neuer Roman erscheint im Herbst.",
+				"members": ["Peters"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Peter",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Peters"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-sconj-dev-complement-dass",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/subordinating-conjunction",
+			"input": {
+				"markedContext": "Mara weiß, <TARGET>dass</TARGET> Ben morgen kommt.",
+				"members": ["dass"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "dass",
+					"coreFeatures": {
+						"conjType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["dass"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-sconj-dev-conditional-wenn",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/subordinating-conjunction",
+			"input": {
+				"markedContext": "Wir gehen los, <TARGET>wenn</TARGET> der Regen aufhört.",
+				"members": ["wenn"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "wenn",
+					"coreFeatures": {
+						"conjType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["wenn"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-sym-dev-math-plus",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/symbol",
+			"input": {
+				"markedContext": "Die Rechnung lautet zwei <TARGET>+</TARGET> drei.",
+				"members": ["+"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "+",
+					"coreFeatures": {
+						"foreign": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["+"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-sym-dev-math-minus",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/symbol",
+			"input": {
+				"markedContext": "Auf der Tafel steht neun <TARGET>−</TARGET> vier.",
+				"members": ["−"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "−",
+					"coreFeatures": {
+						"foreign": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["−"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-verb-finite-liest",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/verb",
+			"input": {
+				"markedContext": "Sie <TARGET>liest</TARGET> leise.",
+				"members": ["liest"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "lesen",
+					"coreFeatures": {
+						"hasGovPrep": null,
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["liest"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-verb-past-ging",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/lexeme/verb",
+			"input": {
+				"markedContext": "Er <TARGET>ging</TARGET> nach Hause.",
+				"members": ["ging"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "gehen",
+					"coreFeatures": {
+						"hasGovPrep": null,
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["ging"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-aphorism-nachahmer",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/aphorism",
+			"input": {
+				"markedContext": "Ebner-Eschenbach schrieb: „<TARGET>Die</TARGET> <TARGET>meisten</TARGET> <TARGET>Nachahmer</TARGET> <TARGET>lockt</TARGET> <TARGET>das</TARGET> <TARGET>Unnachahmliche</TARGET>.“",
+				"members": [
+					"Die",
+					"meisten",
+					"Nachahmer",
+					"lockt",
+					"das",
+					"Unnachahmliche"
+				]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Die meisten Nachahmer lockt das Unnachahmliche",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": [
+					"Die",
+					"meisten",
+					"Nachahmer",
+					"lockt",
+					"das",
+					"Unnachahmliche"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-aphorism-nachsicht",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/aphorism",
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>meiste</TARGET> <TARGET>Nachsicht</TARGET> <TARGET>übt</TARGET> <TARGET>der</TARGET>, <TARGET>der</TARGET> <TARGET>die</TARGET> <TARGET>wenigste</TARGET> <TARGET>braucht</TARGET>.",
+				"members": [
+					"Die",
+					"meiste",
+					"Nachsicht",
+					"übt",
+					"der",
+					"der",
+					"die",
+					"wenigste",
+					"braucht"
+				]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Die meiste Nachsicht übt der der die wenigste braucht",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": [
+					"Die",
+					"meiste",
+					"Nachsicht",
+					"übt",
+					"der",
+					"der",
+					"die",
+					"wenigste",
+					"braucht"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-coll-antrag-present-full",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/collocation",
+			"input": {
+				"markedContext": "Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>.",
+				"members": ["stellt", "einen", "Antrag"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "einen Antrag stellen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["stellt", "einen", "Antrag"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-coll-antrag-past-full",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/collocation",
+			"input": {
+				"markedContext": "Gestern <TARGET>stellte</TARGET> sie <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>.",
+				"members": ["stellte", "einen", "Antrag"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "einen Antrag stellen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["stellte", "einen", "Antrag"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-discourse-formula-dev-auf-wiedersehen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/discourse-formula",
+			"input": {
+				"markedContext": "Als der letzte Zug einfuhr, verabschiedete sich Mira mit „<TARGET>Auf</TARGET> <TARGET>Wiedersehen</TARGET>“.",
+				"members": ["Auf", "Wiedersehen"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "auf wiedersehen",
+					"coreFeatures": {
+						"discourseFormulaRole": "Farewell"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["auf", "Wiedersehen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-discourse-formula-dev-gern-geschehen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/discourse-formula",
+			"input": {
+				"markedContext": "Auf den Dank des Nachbarn antwortete sie: „<TARGET>Gern</TARGET> <TARGET>geschehen</TARGET>.“",
+				"members": ["Gern", "geschehen"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "gern geschehen",
+					"coreFeatures": {
+						"discourseFormulaRole": "Acknowledgment"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["gern", "geschehen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-idiom-was-zum-truncation-partial",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/idiom",
+			"input": {
+				"markedContext": "<TARGET>Was</TARGET> <TARGET>zum</TARGET> …?",
+				"members": ["Was", "zum"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "was zum Teufel",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["was", "zum"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Partial"
+			}
+		},
+		{
+			"id": "grammar-de-idiom-faeustchen-perfect-full",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/idiom",
+			"input": {
+				"markedContext": "Nach der überraschenden Nachricht <TARGET>hat</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
+				"members": ["hat", "sich", "ins", "Fäustchen", "gelacht"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "sich ins Fäustchen lachen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"hat",
+					"sich",
+					"ins",
+					"Fäustchen",
+					"gelacht"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-proverb-dev-andere-laender",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/proverb",
+			"input": {
+				"markedContext": "Nachdem die Reisenden über ungewohnte Essenszeiten gesprochen hatten, sagte ihre Begleiterin: „<TARGET>Andere</TARGET> <TARGET>Länder</TARGET>, <TARGET>andere</TARGET> <TARGET>Sitten</TARGET>.“",
+				"members": ["Andere", "Länder", "andere", "Sitten"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Andere Länder andere Sitten",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["Andere", "Länder", "andere", "Sitten"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "grammar-de-proverb-dev-ende-gut",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "grammatical-resolution/de/phraseme/proverb",
+			"input": {
+				"markedContext": "Als die Aufführung trotz der Panne gelang, fasste der Regisseur den Abend zusammen: „<TARGET>Ende</TARGET> <TARGET>gut</TARGET>, <TARGET>alles</TARGET> <TARGET>gut</TARGET>.“",
+				"members": ["Ende", "gut", "alles", "gut"]
+			},
+			"expected": {
+				"lemma": {
+					"canonicalForm": "Ende gut alles gut",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"normalizedMembers": ["Ende", "gut", "alles", "gut"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"id": "knowledge-demo-construction-fusion-ans",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/construction",
+			"input": {
+				"markedContext": "Er schwamm <TARGET>ans</TARGET> Ufer.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Construction",
+						"kind": "Fusion",
+						"canonicalForm": "ans",
+						"coreFeatures": {}
+					},
+					"emojiDescription": "🌊"
+				},
+				"request": {}
+			},
+			"expected": {
+				"failures": []
+			}
+		},
+		{
+			"id": "relation-basic-01-hubschrauber",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/lexeme",
+			"input": {
+				"markedContext": "Der <TARGET>Hubschrauber</TARGET> landete sicher.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Hubschrauber",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"emojiDescription": "🚁"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"expected": {
+				"semanticRelations": {
+					"synonym": [
+						{
+							"canonicalForm": "Helikopter",
+							"kind": "NOUN"
+						}
+					],
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Luftfahrzeug",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				},
+				"failures": []
+			}
+		},
+		{
+			"id": "relation-basic-02-sichtbar",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/lexeme",
+			"input": {
+				"markedContext": "Der Fleck ist deutlich <TARGET>sichtbar</TARGET>.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "sichtbar",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"emojiDescription": "👁️"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"expected": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": [
+						{
+							"canonicalForm": "unsichtbar",
+							"kind": "ADJ"
+						}
+					],
+					"nearAntonym": null
+				},
+				"failures": []
+			}
+		},
+		{
+			"id": "relation-basic-03-pudel",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/lexeme",
+			"input": {
+				"markedContext": "Der <TARGET>Pudel</TARGET> wartet vor der Tür.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Pudel",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"emojiDescription": "🐩"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null,
+						"holonym": null
+					}
+				}
+			},
+			"expected": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null,
+					"hypernym": [
+						{
+							"canonicalForm": "Hund",
+							"kind": "NOUN"
+						}
+					],
+					"holonym": null
+				},
+				"failures": []
+			}
+		},
+		{
+			"id": "knowledge-demo-morpheme-suffix-heit",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/morpheme",
+			"input": {
+				"markedContext": "Die Schön<TARGET>heit</TARGET> der Landschaft.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Morpheme",
+						"kind": "Suffix",
+						"canonicalForm": "-heit",
+						"coreFeatures": {}
+					},
+					"emojiDescription": "📦"
+				},
+				"request": {}
+			},
+			"expected": {
+				"failures": []
+			}
+		},
+		{
+			"id": "relation-adv-07-ins-gras-beissen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/phraseme",
+			"input": {
+				"markedContext": "Der Tyrann <TARGET>biss endlich ins Gras</TARGET>.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "ins Gras beißen",
+						"coreFeatures": {}
+					},
+					"emojiDescription": "☠️"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"expected": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				},
+				"failures": []
+			}
+		},
+		{
+			"id": "relation-adv-34-aphorism-null",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/phraseme",
+			"input": {
+				"markedContext": "Es gilt: <TARGET>Der Weg ist das Ziel</TARGET>.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Der Weg ist das Ziel",
+						"coreFeatures": {}
+					},
+					"emojiDescription": "🛤️"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"expected": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				},
+				"failures": []
+			}
+		},
+		{
+			"id": "relation-adv-35-in-betracht-ziehen",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/de/phraseme",
+			"input": {
+				"markedContext": "Wir müssen den Einwand <TARGET>in Betracht ziehen</TARGET>.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Collocation",
+						"canonicalForm": "in Betracht ziehen",
+						"coreFeatures": {}
+					},
+					"emojiDescription": "🤔"
+				},
+				"request": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				}
+			},
+			"expected": {
+				"semanticRelations": {
+					"synonym": null,
+					"nearSynonym": null,
+					"antonym": null,
+					"nearAntonym": null
+				},
+				"failures": []
+			}
+		},
+		{
+			"id": "reading-generation-bank-seat",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "reading-generation/de",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "reading-generation-bank-seat",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "OpaqueText",
+								"text": "Wir sitzen auf einer "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Bank"
+							},
+							{
+								"kind": "OpaqueText",
+								"text": " im Park."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"memberSegmentIndices": [1]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Bank",
+					"coreFeatures": {
+						"gender": "Fem",
+						"hyph": null
+					}
+				},
+				"candidates": []
+			},
+			"expected": {
+				"decision": "New",
+				"emojiDescription": "🪑"
+			}
+		},
+		{
+			"id": "reading-generation-maus-computer",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "reading-generation/de",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "reading-generation-maus-computer",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "OpaqueText",
+								"text": "Klicke mit der "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Maus"
+							},
+							{
+								"kind": "OpaqueText",
+								"text": " auf das Symbol."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"memberSegmentIndices": [1]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Maus",
+					"coreFeatures": {
+						"gender": "Fem",
+						"hyph": null
+					}
+				},
+				"candidates": []
+			},
+			"expected": {
+				"decision": "New",
+				"emojiDescription": "🖱️"
+			}
+		},
+		{
+			"id": "reading-de-adj-sauer-acidic",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "reading-resolution/de",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "reading-de-adj-sauer-acidic",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "OpaqueText",
+								"text": "Die Zitronenlimonade schmeckt "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "sauer"
+							},
+							{
+								"kind": "OpaqueText",
+								"text": "."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"memberSegmentIndices": [1]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "sauer",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"candidates": []
+			},
+			"expected": {
+				"decision": "New",
+				"emojiDescription": "🍋"
+			}
+		},
+		{
+			"id": "reading-de-adj-sauer-acidic-reuse",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "reading-resolution/de",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "reading-de-adj-sauer-acidic-reuse",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "OpaqueText",
+								"text": "Wir pflücken die "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "sauren"
+							},
+							{
+								"kind": "OpaqueText",
+								"text": " Äpfel später."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"memberSegmentIndices": [1]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "sauer",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"candidates": ["🍋"]
+			},
+			"expected": {
+				"decision": "Reuse",
+				"emojiDescription": "🍋"
+			}
+		},
+		{
+			"id": "reading-de-adj-sauer-angry",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "reading-resolution/de",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "reading-de-adj-sauer-angry",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "OpaqueText",
+								"text": "Nach der Absage war Lea "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "sauer"
+							},
+							{
+								"kind": "OpaqueText",
+								"text": " auf ihren Chef."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"memberSegmentIndices": [1]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "sauer",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"candidates": ["🍋"]
+			},
+			"expected": {
+				"decision": "New",
+				"emojiDescription": "😠"
+			}
+		},
+		{
+			"id": "translation-cover-near-equivalent",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/translation",
+			"input": {
+				"markedContext": "Die Sitzung <TARGET>beginnt</TARGET> um neun.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "beginnen",
+						"family": "Lexeme",
+						"kind": "VERB"
+					},
+					"emojiDescription": "▶️"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["start", "commence"]
+			},
+			"expected": {
+				"decision": "Covered",
+				"existingIndex": 0,
+				"translation": "start"
+			}
+		},
+		{
+			"id": "translation-cover-concise-paraphrase",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/translation",
+			"input": {
+				"markedContext": "Wir müssen diesen Faktor <TARGET>in Betracht ziehen</TARGET>.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "in Betracht ziehen",
+						"family": "Phraseme",
+						"kind": "Collocation"
+					},
+					"emojiDescription": "🤔"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["consider"]
+			},
+			"expected": {
+				"decision": "Covered",
+				"existingIndex": 0,
+				"translation": "consider"
+			}
+		},
+		{
+			"id": "translation-add-register-distinction",
+			"role": "review",
+			"kind": "corpus",
+			"experiment": "knowledge-analysis/translation",
+			"input": {
+				"markedContext": "Der <TARGET>Knirps</TARGET> ist schon wieder draußen.",
+				"sourceReading": {
+					"lemmaDescriptor": {
+						"language": "de",
+						"canonicalForm": "Knirps",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					"emojiDescription": "🧒"
+				},
+				"targetLanguage": "en",
+				"existingTranslations": ["child"]
+			},
+			"expected": {
+				"decision": "Add",
+				"translation": "kid"
+			}
+		},
+		{
+			"id": "ids-verbal-01-target-0-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "8422e1cc-b4ee-4fd9-b68c-e7ae62a85d13",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreibt"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["schreibt"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-02-target-0-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "5d016c79-85b4-4aa3-884d-680b8841212d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["hat", "geschrieben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-02-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "5d016c79-85b4-4aa3-884d-680b8841212d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["hat", "geschrieben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-03-target-0-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "7d5610cb-95d5-4747-a842-ec63b49435a7",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "schreiben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-03-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "7d5610cb-95d5-4747-a842-ec63b49435a7",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "schreiben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-04-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "c2c4716a-67e9-4045-ac5d-46c95b34e19e",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["schreiben"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-04-target-1-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "c2c4716a-67e9-4045-ac5d-46c95b34e19e",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["muss"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-05-target-0-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "5ae92514-645f-4b59-8403-a0e5642dc370",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "haben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-05-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "5ae92514-645f-4b59-8403-a0e5642dc370",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "haben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-05-target-0-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "5ae92514-645f-4b59-8403-a0e5642dc370",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "haben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-06-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "58805aa1-8e3e-4ef1-b302-9704b6801741",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "haben"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-06-target-0-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "58805aa1-8e3e-4ef1-b302-9704b6801741",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "haben"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-06-target-1-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "58805aa1-8e3e-4ef1-b302-9704b6801741",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["muss"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-07-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e3fab3af-733b-47c6-977b-7568b6df2873",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["schreiben"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-07-target-1-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e3fab3af-733b-47c6-977b-7568b6df2873",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["hat", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-07-target-1-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e3fab3af-733b-47c6-977b-7568b6df2873",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "schreiben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["hat", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [2, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-08-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "27db29e9-f3b3-4dc6-bcba-4965a71aa4f0",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "haben"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-08-target-0-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "27db29e9-f3b3-4dc6-bcba-4965a71aa4f0",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "haben"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-08-target-1-click-2",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "27db29e9-f3b3-4dc6-bcba-4965a71aa4f0",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["wird", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 12],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-08-target-1-click-12",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "27db29e9-f3b3-4dc6-bcba-4965a71aa4f0",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "haben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 12
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["wird", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [2, 12],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-09-target-0-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "4057af71-3ed7-473d-965d-fdfdca210cc6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-09-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "4057af71-3ed7-473d-965d-fdfdca210cc6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-10-target-0-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e522b0a7-33e9-42ac-a4c1-a06d00be8a3e",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "ist"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["ist", "geschrieben", "worden"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-10-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e522b0a7-33e9-42ac-a4c1-a06d00be8a3e",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "ist"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["ist", "geschrieben", "worden"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-10-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e522b0a7-33e9-42ac-a4c1-a06d00be8a3e",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "ist"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["ist", "geschrieben", "worden"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-11-target-0-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "88918bc7-1341-4fce-846a-f965ea5067c8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "werden"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-11-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "88918bc7-1341-4fce-846a-f965ea5067c8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "werden"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-11-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "88918bc7-1341-4fce-846a-f965ea5067c8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "werden"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-12-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e9ed87f2-42d0-4a4b-aacd-2d4b4b66d256",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "werden"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": false,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-12-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e9ed87f2-42d0-4a4b-aacd-2d4b4b66d256",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "werden"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": false,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-12-target-1-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "e9ed87f2-42d0-4a4b-aacd-2d4b4b66d256",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["muss"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [4],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-13-target-0-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "68f40aac-f636-4529-9e20-5f0dd13ca2a8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "worden", "sein"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-13-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "68f40aac-f636-4529-9e20-5f0dd13ca2a8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "worden", "sein"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-13-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "68f40aac-f636-4529-9e20-5f0dd13ca2a8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "worden", "sein"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-13-target-0-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "68f40aac-f636-4529-9e20-5f0dd13ca2a8",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["wird", "geschrieben", "worden", "sein"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": true,
+				"passive": "Process",
+				"memberSegmentIndices": [4, 6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-14-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "14ca99d2-9e76-43e0-9972-f94a87374b34",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "worden", "sein"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-14-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "14ca99d2-9e76-43e0-9972-f94a87374b34",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "worden", "sein"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-14-target-0-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "14ca99d2-9e76-43e0-9972-f94a87374b34",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "worden", "sein"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-14-target-1-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "14ca99d2-9e76-43e0-9972-f94a87374b34",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "muss"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["muss"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [4],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-15-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "d93ae016-2c15-40e3-a36f-d616ee583dc6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "werden"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": false,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-15-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "d93ae016-2c15-40e3-a36f-d616ee583dc6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "werden"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": false,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-15-target-1-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "d93ae016-2c15-40e3-a36f-d616ee583dc6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["hat", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [4, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-15-target-1-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "d93ae016-2c15-40e3-a36f-d616ee583dc6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "werden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["hat", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": true,
+				"future": false,
+				"passive": null,
+				"memberSegmentIndices": [4, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-16-target-0-click-6",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "f9be5b01-9685-46a2-9910-d2d60a783d8d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 6
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "worden", "sein"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-16-target-0-click-8",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "f9be5b01-9685-46a2-9910-d2d60a783d8d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 8
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "worden", "sein"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-16-target-0-click-10",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "f9be5b01-9685-46a2-9910-d2d60a783d8d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"kind": "VERB",
+				"canonicalForm": "schreiben",
+				"members": ["geschrieben", "worden", "sein"],
+				"form": "Inf",
+				"finiteTense": null,
+				"perfect": true,
+				"future": false,
+				"passive": "Process",
+				"memberSegmentIndices": [6, 8, 10],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-16-target-1-click-4",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "f9be5b01-9685-46a2-9910-d2d60a783d8d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 4
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["wird", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [4, 12],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "ids-verbal-16-target-1-click-12",
+			"role": "review",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "f9be5b01-9685-46a2-9910-d2d60a783d8d",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Brief"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wird"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "geschrieben"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "sein"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 12
+			},
+			"expected": {
+				"kind": "AUX",
+				"canonicalForm": "müssen",
+				"members": ["wird", "müssen"],
+				"form": "Fin",
+				"finiteTense": "Pres",
+				"perfect": false,
+				"future": true,
+				"passive": null,
+				"memberSegmentIndices": [4, 12],
+				"realizationCoverage": "Full",
+				"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853"
+			}
+		},
+		{
+			"id": "rewrite-intake-mixed",
+			"role": "review",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": [
+					"Das Fenster ist offen.",
+					"The door is open.",
+					"החלון פתוח."
+				]
+			},
+			"expected": {
+				"id": "rewrite-intake-mixed",
+				"sourceSentences": [
+					"Das Fenster ist offen.",
+					"The door is open.",
+					"החלון פתוח."
+				],
+				"expectedLanguages": ["de", "en", "he"],
+				"stitching": [false, false, false]
+			}
+		},
+		{
+			"id": "rewrite-intake-en-stitch",
+			"role": "review",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["The win dow is open."]
+			},
+			"expected": {
+				"id": "rewrite-intake-en-stitch",
+				"sourceSentences": ["The win dow is open."],
+				"expectedTexts": ["The window is open."],
+				"expectedLanguages": ["en"],
+				"stitching": [true]
+			}
+		},
+		{
+			"id": "rewrite-intake-he-stitch",
+			"role": "review",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["הח לון פתוח."]
+			},
+			"expected": {
+				"id": "rewrite-intake-he-stitch",
+				"sourceSentences": ["הח לון פתוח."],
+				"expectedTexts": ["החלון פתוח."],
+				"expectedLanguages": ["he"],
+				"stitching": [true]
+			}
+		},
+		{
+			"id": "rewrite-intake-de-stitch",
+			"role": "review",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["Das Fen ster ist offen."]
+			},
+			"expected": {
+				"id": "rewrite-intake-de-stitch",
+				"sourceSentences": ["Das Fen ster ist offen."],
+				"expectedTexts": ["Das Fenster ist offen."],
+				"expectedLanguages": ["de"],
+				"stitching": [true]
+			}
+		},
+		{
+			"id": "rewrite-intake-rejection",
+			"role": "review",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["%$#@ !!!"]
+			},
+			"expected": {
+				"id": "rewrite-intake-rejection",
+				"sourceSentences": ["%$#@ !!!"],
+				"expectedDecision": "Unintelligible",
+				"generationCalls": 0
+			}
+		},
+		{
+			"id": "rewrite-intake-unsupported",
+			"role": "review",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["La fenêtre est ouverte."]
+			},
+			"expected": {
+				"id": "rewrite-intake-unsupported",
+				"sourceSentences": ["La fenêtre est ouverte."],
+				"expectedDecision": "UnsupportedLanguage",
+				"generationCalls": 0
+			}
+		},
+		{
+			"id": "rewrite-reading-empty",
+			"role": "review",
+			"kind": "reading",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "aa21b79b-fd26-41f4-b79c-6f99403c5a95",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "ResolvableText",
+								"text": "Das"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Schloss"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "steht"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "auf"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "dem"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Hügel"
+							},
+							{
+								"kind": "Punctuation",
+								"text": "."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"memberSegmentIndices": [2]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Schloss",
+					"coreFeatures": {
+						"gender": "Neut",
+						"hyph": null
+					}
+				},
+				"candidates": []
+			},
+			"expected": {
+				"id": "rewrite-reading-empty",
+				"markedContext": "Das <TARGET>Schloss</TARGET> steht auf dem Hügel.",
+				"lemma": "Schloss",
+				"candidates": [],
+				"expectedDecision": "New",
+				"generationCalls": 1
+			}
+		},
+		{
+			"id": "rewrite-reading-reuse",
+			"role": "review",
+			"kind": "reading",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "d02e0fe2-e79d-4255-8bac-f4c64b869501",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "ResolvableText",
+								"text": "Der"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Schlüssel"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "steckt"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "im"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Schloss"
+							},
+							{
+								"kind": "Punctuation",
+								"text": "."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"memberSegmentIndices": [8]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Schloss",
+					"coreFeatures": {
+						"gender": "Neut",
+						"hyph": null
+					}
+				},
+				"candidates": ["🏰", "🔒"]
+			},
+			"expected": {
+				"id": "rewrite-reading-reuse",
+				"markedContext": "Der Schlüssel steckt im <TARGET>Schloss</TARGET>.",
+				"lemma": "Schloss",
+				"candidates": ["🏰", "🔒"],
+				"expectedDecision": "Reuse",
+				"expectedEmojiDescription": "🔒",
+				"generationCalls": 0
+			}
+		},
+		{
+			"id": "rewrite-reading-no-match",
+			"role": "review",
+			"kind": "reading",
+			"input": {
+				"encounter": {
+					"sentence": {
+						"id": "5c017809-00e0-4147-b8a1-2b01af684ba8",
+						"language": "de",
+						"segments": [
+							{
+								"kind": "ResolvableText",
+								"text": "Das"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Schloss"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "steht"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "auf"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "dem"
+							},
+							{
+								"kind": "Whitespace",
+								"text": " "
+							},
+							{
+								"kind": "ResolvableText",
+								"text": "Hügel"
+							},
+							{
+								"kind": "Punctuation",
+								"text": "."
+							}
+						]
+					},
+					"target": {
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"memberSegmentIndices": [2]
+					}
+				},
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Schloss",
+					"coreFeatures": {
+						"gender": "Neut",
+						"hyph": null
+					}
+				},
+				"candidates": ["🔒"]
+			},
+			"expected": {
+				"id": "rewrite-reading-no-match",
+				"markedContext": "Das <TARGET>Schloss</TARGET> steht auf dem Hügel.",
+				"lemma": "Schloss",
+				"candidates": ["🔒"],
+				"expectedDecision": "New",
+				"generationCalls": 1
+			}
+		},
+		{
+			"id": "held-recognition-passive",
+			"role": "held-out",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "9abf7c35-fc92-48b8-8f15-6a648351d7f6",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Das"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Paket"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "ist"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "gestern"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "versehentlich"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "umgeleitet"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "worden"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 10
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-recognition-modal",
+			"role": "held-out",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "d1571a87-09bd-42e6-baeb-35e27b54966c",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Mira"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "hat"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "die"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Rechnung"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "erneut"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "prüfen"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "müssen"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 12
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-recognition-pronoun",
+			"role": "held-out",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "eca4dc07-bc57-4ee9-914c-d39de7b3a176",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Diesen"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "beiden"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "vertraue"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "ich"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 0
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-recognition-det",
+			"role": "held-out",
+			"kind": "recognition",
+			"input": {
+				"sentence": {
+					"id": "5727a15b-a2b7-4c32-a6b2-b0d47afbdafb",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Jenes"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "kleine"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Segelboot"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "gehört"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "uns"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 0
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-intake-en",
+			"role": "held-out",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["The lantern flick ered twice."]
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-intake-he",
+			"role": "held-out",
+			"kind": "intake",
+			"input": {
+				"sourceSentences": ["הספרייה נס גרת מוקדם."]
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-reading",
+			"role": "held-out",
+			"kind": "reading",
+			"input": {
+				"sentence": {
+					"id": "d74e51b7-606b-4f5c-affa-31ed5b17fb80",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Die"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Birne"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "in"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "der"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Lampe"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "flackert"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2,
+				"candidates": ["🍐"]
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		},
+		{
+			"id": "held-knowledge",
+			"role": "held-out",
+			"kind": "knowledge",
+			"input": {
+				"sentence": {
+					"id": "01c19c0e-9883-4d45-bc26-1b04b7527723",
+					"language": "de",
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Ein"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Dachs"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "verschwindet"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "im"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Gebüsch"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"clickedSegmentIndex": 2
+			},
+			"expected": {
+				"humanReviewRequired": true
+			}
+		}
+	],
+	"fingerprint": "1bb699e1461617dd791995aca1624a8a62403f0df55b9ad62810ae13b358d307"
+}

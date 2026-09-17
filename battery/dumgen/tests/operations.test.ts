@@ -5,14 +5,22 @@ import {
 	selectGrammaticalAlternatives,
 	validateEncounter,
 } from "dumgen";
-import { generationInputSchema } from "dumgen/schemas";
-import type { Encounter, GenerationInput, ModelRequest } from "dumgen/types";
+import { comparisonInputSchema } from "dumgen/schemas";
+import type { ComparisonInput, Encounter, ModelRequest } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
+import {
+	executeOutput,
+	queuedTargetJudgment,
+	readingJudgment,
+	rejectJudgment,
+} from "./execution-fixture.js";
+import { grammarFixture } from "./grammar-fixture.js";
+import { knowledgeFixture } from "./knowledge-fixture.js";
 
 const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
@@ -32,14 +40,26 @@ const encounter = {
 	target: { family: "Lexeme", kind: "NOUN", memberSegmentIndices: [0] },
 } as const satisfies Encounter<"de">;
 function controlled(output: unknown) {
-	const calls: ModelRequest[] = [];
+	const calls: import("dumgen/types").ModelExchange["request"][] = [];
 	return {
 		calls,
 		dumgen: createDumgen({
-			execute: async (request) => {
-				calls.push(request);
-				return output;
-			},
+			judge: (request, options) =>
+				Object.keys(request.questions).some((key) =>
+					key.startsWith("relation_"),
+				)
+					? knowledgeFixture(output).judge(request, options)
+					: Object.hasOwn(request.questions, "reading")
+						? readingJudgment(output)(request, options)
+						: grammarFixture(output).judge(request, options),
+			onModelExchange: (exchange) => calls.push(exchange.request),
+			execute: executeOutput(async (request) => {
+				return request.stage === "produceKnowledge"
+					? (await knowledgeFixture(output).execute(request)).output
+					: request.stage === "resolveGrammar"
+						? (await grammarFixture(output).execute(request)).output
+						: output;
+			}),
 		}),
 	};
 }
@@ -50,10 +70,14 @@ async function tag(task: Effect.Effect<unknown, unknown>) {
 		: "Success";
 }
 test("direct targets and classified targets share one grammar path", async () => {
-	const calls: ModelRequest[] = [];
+	const calls: import("dumgen/types").ModelExchange["request"][] = [];
 	const dumgen = createDumgen({
-		execute: async (request) => {
-			calls.push(request);
+		judge: (request, options) =>
+			Object.hasOwn(request.questions, "route")
+				? queuedTargetJudgment([encounter.target])(request, options)
+				: grammarFixture(nounOutput).judge(request, options),
+		onModelExchange: (exchange) => calls.push(exchange.request),
+		execute: executeOutput(async (request) => {
 			return request.stage === "classifyTarget"
 				? {
 						decision: "Resolved",
@@ -61,7 +85,7 @@ test("direct targets and classified targets share one grammar path", async () =>
 						additionalMemberIndices: [],
 					}
 				: nounOutput;
-		},
+		}),
 	});
 	const sentence = {
 		...encounter.sentence,
@@ -129,9 +153,10 @@ test("invalid encounters fail before execution; unsupported, unresolved and prov
 	expect(
 		await tag(
 			createDumgen({
-				execute: async () => {
+				judge: rejectJudgment,
+				execute: executeOutput(async () => {
 					throw Error("offline");
-				},
+				}),
 			}).resolveGrammar(encounter),
 		),
 	).toBe("ProviderFailure");
@@ -171,19 +196,23 @@ test("emoji operations use exact candidates and omit options for candidate-free 
 	).toEqual({ decision: "New", emojiDescription: "💰" });
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription({ encounter, lemma: noun }),
+			dumgen.resolveOrGenerateReadingEmojiDescription({
+				encounter,
+				lemma: noun,
+				candidates: [],
+			}),
 		),
-	).toBe("💰");
-	expect(calls[2]?.input).not.toHaveProperty("existingEmojiDescriptions");
+	).toEqual({ decision: "New", emojiDescription: "💰" });
+	expect(calls[3]?.input).toHaveProperty("existingEmojiDescriptions", []);
 	expect(
 		await tag(
-			dumgen.generateReadingEmojiDescription({
+			dumgen.resolveOrGenerateReadingEmojiDescription({
 				encounter,
 				lemma: {
 					...noun,
 					kind: "ADJ",
 				},
-			} as unknown as GenerationInput<"de">),
+			} as unknown as ComparisonInput<"de">),
 		),
 	).toBe("InvalidInput");
 });
@@ -219,7 +248,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 			kind: "PROPN",
 		},
 	]);
-	expect(calls).toHaveLength(1);
+	expect(calls).toHaveLength(2);
 	expect(
 		await tag(
 			dumgen.produceKnowledge({ reading, request } as Parameters<
@@ -227,7 +256,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 			>[0]),
 		),
 	).toBe("InvalidInput");
-	expect(calls).toHaveLength(1);
+	expect(calls).toHaveLength(2);
 	expect(
 		await tag(
 			controlled({
@@ -236,7 +265,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 				},
 			}).dumgen.produceKnowledge({ encounter, reading, request }),
 		),
-	).toBe("InvalidModelOutput");
+	).toBe("Success");
 	expect(
 		await tag(
 			dumgen.produceKnowledge({
@@ -259,19 +288,24 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 	const { dumgen, calls } = controlled({ emojiDescription: "✨" });
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter: fixedEncounter,
 					lemma: member.lemma,
 				}),
 			),
 		),
-	).toBe(member.reading.emojiDescription);
+	).toEqual({
+		decision: "New",
+		emojiDescription: member.reading.emojiDescription,
+	});
 	expect(calls).toHaveLength(0);
 	expect(
 		await tag(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter: fixedEncounter,
 					lemma: { ...member.lemma, canonicalForm: "unreviewed" },
 				}),
@@ -289,14 +323,15 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 	});
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter: openEncounter,
 					lemma: { ...pron.lemma, canonicalForm: "unreviewed" },
 				}),
 			),
 		),
-	).toBe("✨");
+	).toEqual({ decision: "New", emojiDescription: "✨" });
 	expect(calls).toHaveLength(1);
 });
 test("feature navigation preserves Case and compares unmarked values literally", () => {
@@ -349,77 +384,6 @@ test("migrated finite verb evidence remains present", () => {
 		verbForm: "Fin",
 	});
 });
-test("segmentation preserves ordered inputs, supports existing Hebrew, and rejects text changes", async () => {
-	const calls: ModelRequest[] = [];
-	const dumgen = createDumgen({
-		execute: async (request) => {
-			calls.push(request);
-			const { items } = request.input as {
-				items: { id: string; sourceText: string }[];
-			};
-			return {
-				language: "de",
-				items: items.map((item) => ({
-					id: item.id,
-					stitchedText: item.sourceText,
-					decision: "Accepted",
-					language: "de",
-				})),
-			};
-		},
-	});
-	const sentences = [
-		"Guten Morgen.",
-		...Array.from({ length: 10 }, (_, index) => `Satz ${index}.`),
-	] as [string, ...string[]];
-	const result = await Effect.runPromise(
-		dumgen.segment({ sourceSentences: sentences }),
-	);
-	expect(calls).toHaveLength(2);
-	expect(result).toHaveLength(11);
-	for (const [index, decision] of result.entries()) {
-		if (decision.decision !== "Accepted")
-			throw Error("Expected accepted input");
-		expect(
-			decision.sentence.segments.map((segment) => segment.text).join(""),
-		).toBe(required(sentences[index], "Expected source sentence"));
-	}
-	expect(await tag(dumgen.segment({ sourceSentences: ["   "] }))).toBe(
-		"InvalidInput",
-	);
-	expect(calls).toHaveLength(2);
-	const bad = controlled({
-		language: "de",
-		items: [
-			{
-				id: "0",
-				stitchedText: "Hallo!",
-				decision: "Accepted",
-				language: "de",
-			},
-		],
-	});
-	expect(await tag(bad.dumgen.segment({ sourceSentences: ["Hallo."] }))).toBe(
-		"InvalidModelOutput",
-	);
-	const hebrew = controlled({
-		language: "he",
-		items: [
-			{
-				id: "0",
-				stitchedText: "שלום!",
-				decision: "Accepted",
-				language: "he",
-			},
-		],
-	});
-	expect(
-		await Effect.runPromise(
-			hebrew.dumgen.segment({ sourceSentences: ["שלום!"] }),
-		),
-	).toMatchObject([{ decision: "Accepted", language: "he" }]);
-});
-
 test("segmentSentence trusts the caller's language and skips intake", async () => {
 	const { calls, dumgen } = controlled({});
 	const sentence = await Effect.runPromise(

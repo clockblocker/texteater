@@ -1,5 +1,4 @@
 import type * as Dumling from "dumling/types";
-import { grammarPromptRoutes } from "../../generated/prompts.js";
 import type {
 	AnalysisTarget,
 	Dumgen,
@@ -11,32 +10,18 @@ import type {
 	SegmentedSentence,
 } from "../../types.js";
 import { DumgenFailure } from "../../universal/failure.js";
-import { modelCaller } from "../../universal/model.js";
-import { task } from "../../universal/task.js";
+import { operationTask } from "../../universal/trace.js";
 import {
 	markedContext,
 	parse,
 	validateEncounter,
 } from "../../universal/validation.js";
-import {
-	authoredFor,
-	closedRoute,
-	sameValue,
-} from "./authored-closed-sets/select.js";
-import {
-	type GrammarOutput,
-	normalizeGrammarSurface,
-} from "./grammatical-resolution/project.js";
-import {
-	authoredKnowledge,
-	type KnowledgeAnalysis,
-	projectKnowledge,
-	validateRequest,
-} from "./knowledge-production/project.js";
-import {
-	createGermanHighLevelTargetClassificationProjection,
-	type GermanHighLevelTargetClassificationModelOutput,
-} from "./target-classification/projection.js";
+import { authoredFor, closedRoute } from "./authored-closed-sets/select.js";
+import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
+import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
+import { produceKnowledge } from "./knowledge-production/produce.js";
+import { resolveReading } from "./reading-emoji-description/resolve.js";
+import { classifyGermanTarget } from "./target-classification/judgments.js";
 
 function routeOf(encounter: Encounter): string {
 	return `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
@@ -70,7 +55,7 @@ function supported(encounter: Encounter, stage: string): void {
 type EmojiInput = {
 	encounter: Encounter;
 	lemma: Dumling.Lemma;
-	candidates?: readonly string[];
+	candidates: readonly string[];
 };
 type KnowledgeInput = {
 	encounter: Encounter;
@@ -82,54 +67,13 @@ type KnowledgeInput = {
 export function createGermanOperations(
 	options: DumgenOptions,
 ): Omit<Dumgen, "segment" | "segmentSentence"> {
-	const call = modelCaller(options);
-	async function emoji(
-		raw: EmojiInput,
-		compare: boolean,
-		signal: AbortSignal,
-	): Promise<string> {
-		const stage = compare
-			? "resolveOrGenerateReadingEmojiDescription"
-			: "generateReadingEmojiDescription";
-		const input = parse<EmojiInput>(
-			compare ? "comparisonInput" : "generationInput",
-			raw,
-			stage,
-		);
-		const encounter = validateEncounter(input.encounter, stage);
-		agreement(encounter, input.lemma, stage);
-		supported(encounter, stage);
-		const member = authoredFor(input.lemma);
-		if (member) return member.reading.emojiDescription;
-		if (closedRoute(input.lemma))
-			throw new DumgenFailure(
-				"CatalogMiss",
-				stage,
-				"Lemma is absent from the Fixed Catalog",
-				routeOf(encounter),
-			);
-		const result = await call<{ emojiDescription: string }>(
-			stage,
-			routeOf(encounter),
-			compare ? "reading-resolution/de" : "reading-generation/de",
-			"emojiOutput",
-			{
-				markedContext: markedContext(encounter).markedContext,
-				lemma: input.lemma.canonicalForm,
-				...(compare
-					? { existingEmojiDescriptions: input.candidates }
-					: {}),
-			},
-			signal,
-		);
-		return result.emojiDescription;
-	}
+	const task = operationTask(options);
 	const operations = {
 		classifyTarget<L extends Dumling.Language>(raw: {
 			sentence: SegmentedSentence<L>;
 			clickedSegmentIndex: number;
 		}) {
-			return task("classifyTarget", async (signal) => {
+			return task("classifyTarget", raw, async (signal) => {
 				const input = parse<typeof raw>(
 					"classifyInputSchema",
 					raw,
@@ -150,47 +94,22 @@ export function createGermanOperations(
 						"classifyTarget",
 						"Target Classification is not enabled for this Language",
 					);
-				const projection =
-					createGermanHighLevelTargetClassificationProjection({
-						segments: input.sentence.segments,
-						clickedSegmentIndex: input.clickedSegmentIndex,
-					});
-				const result =
-					await call<GermanHighLevelTargetClassificationModelOutput>(
-						"classifyTarget",
-						"de",
-						"target-classification/de/high-level-whole-unit",
-						"target/de",
-						projection.modelInput,
-						signal,
-					);
-				const target = projection.canonicalize(result);
-				if ("decision" in target)
-					throw new DumgenFailure(
-						"Unresolved",
-						"classifyTarget",
-						"No defensible target",
-					);
-				return validateEncounter(
-					{ sentence: input.sentence, target },
-					"classifyTarget",
-				).target as AnalysisTarget<L>;
+				return (await classifyGermanTarget(
+					options,
+					input,
+					signal,
+				)) as AnalysisTarget<L>;
 			});
 		},
 		resolveGrammar<L extends Dumling.Language>(raw: Encounter<L>) {
-			return task("resolveGrammar", async (signal) => {
+			return task("resolveGrammar", raw, async (signal) => {
 				const encounter = validateEncounter(raw, "resolveGrammar");
 				supported(encounter, "resolveGrammar");
 				const route = routeOf(encounter),
 					input = markedContext(encounter);
-				const output = await call<
-					GrammarOutput | { decision: "Unresolved" }
-				>(
-					"resolveGrammar",
-					route,
-					grammarPromptRoutes[route] ?? "",
-					`grammar/${route}`,
-					input,
+				const output = await resolveGrammarJudgments(
+					options,
+					encounter,
 					signal,
 				);
 				if ("decision" in output)
@@ -257,27 +176,30 @@ export function createGermanOperations(
 				);
 			});
 		},
-		generateReadingEmojiDescription(raw: EmojiInput) {
-			return task("generateReadingEmojiDescription", (signal) =>
-				emoji(raw, false, signal),
-			);
-		},
 		resolveOrGenerateReadingEmojiDescription(raw: EmojiInput) {
 			return task(
 				"resolveOrGenerateReadingEmojiDescription",
+				raw,
 				async (signal) => {
-					const description = await emoji(raw, true, signal);
-					return {
-						decision: raw.candidates?.includes(description)
-							? ("Reuse" as const)
-							: ("New" as const),
-						emojiDescription: description,
-					};
+					const stage = "resolveOrGenerateReadingEmojiDescription";
+					const input = parse<EmojiInput>(
+						"comparisonInput",
+						raw,
+						stage,
+					);
+					const encounter = validateEncounter(input.encounter, stage);
+					agreement(encounter, input.lemma, stage);
+					supported(encounter, stage);
+					return resolveReading(
+						options,
+						{ ...input, encounter },
+						signal,
+					);
 				},
 			);
 		},
 		produceKnowledge<I extends PublicKnowledgeInput>(raw: I) {
-			return task("produceKnowledge", async (signal) => {
+			return task("produceKnowledge", raw, async (signal) => {
 				const input = parse<KnowledgeInput>(
 					"knowledgeInput",
 					raw,
@@ -289,69 +211,11 @@ export function createGermanOperations(
 				);
 				agreement(encounter, input.reading.lemma, "produceKnowledge");
 				supported(encounter, "produceKnowledge");
-				validateRequest(input.reading, input.request);
-				const member = authoredFor(input.reading.lemma),
-					closed = closedRoute(input.reading.lemma);
-				const exact =
-					member && sameValue(member.reading, input.reading)
-						? member
-						: undefined;
-				if (closed && !exact)
-					throw new DumgenFailure(
-						"CatalogMiss",
-						"produceKnowledge",
-						"Reading is absent from the Fixed Catalog",
-						routeOf(encounter),
-					);
-				const authored = exact
-					? authoredKnowledge(exact, input.request)
-					: {
-							production: {
-								changes: [],
-								pendingRelations: [],
-							} as KnowledgeProduction,
-							missing: input.request,
-						};
-				if (!Object.keys(authored.missing).length)
-					return authored.production as KnowledgeProduction<
-						I["reading"]["lemma"]["language"]
-					>;
-				if (closed)
-					throw new DumgenFailure(
-						"CatalogMiss",
-						"produceKnowledge",
-						"Requested Knowledge has not been authored",
-						routeOf(encounter),
-					);
-				const analysis = await call<KnowledgeAnalysis>(
-					"produceKnowledge",
-					routeOf(encounter),
-					`knowledge-analysis/de/${input.reading.lemma.family.toLowerCase()}`,
-					"knowledgeOutput",
-					{
-						markedContext: markedContext(encounter).markedContext,
-						reading: input.reading,
-						request: authored.missing,
-					},
+				return (await produceKnowledge(
+					options,
+					{ ...input, encounter },
 					signal,
-				);
-				const generated = projectKnowledge(
-					input.reading,
-					authored.missing,
-					analysis,
-				);
-				return {
-					changes: [
-						...authored.production.changes,
-						...generated.changes,
-					],
-					pendingRelations: [
-						...authored.production.pendingRelations,
-						...generated.pendingRelations,
-					],
-				} as unknown as KnowledgeProduction<
-					I["reading"]["lemma"]["language"]
-				>;
+				)) as KnowledgeProduction<I["reading"]["lemma"]["language"]>;
 			});
 		},
 	};

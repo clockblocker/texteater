@@ -4,7 +4,6 @@ import type {
 	ComparisonInput,
 	Dumgen,
 	Encounter,
-	GenerationInput,
 	Segment,
 	SegmentedSentence,
 } from "dumgen/types";
@@ -24,7 +23,7 @@ export type PersistedSentence = {
 	readonly sentenceId: string;
 	readonly textId: string;
 	readonly segmentedSentenceId: string;
-	readonly language: "de" | "he";
+	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly {
 		readonly index: number;
@@ -36,7 +35,7 @@ export type PersistedSentence = {
 export type SubmittedSentence = {
 	readonly segmentedSentenceId: string;
 	readonly position: number;
-	readonly language: "de" | "he";
+	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly Segment[];
 };
@@ -579,28 +578,10 @@ export function createTfDemoOrchestrator(options: {
 						encounter: resolved.encounter,
 						lemma: resolvedLemma,
 					};
-					const firstCandidate = candidates[0];
 					const operation =
-						firstCandidate === undefined
-							? options.dumgen
-									.generateReadingEmojiDescription(
-										base as GenerationInput<"de">,
-									)
-									.pipe(
-										Effect.map((emojiDescription) => ({
-											decision: "New" as const,
-											emojiDescription,
-										})),
-									)
-							: options.dumgen.resolveOrGenerateReadingEmojiDescription(
-									{
-										...base,
-										candidates: [
-											firstCandidate,
-											...candidates.slice(1),
-										],
-									} as ComparisonInput<"de">,
-								);
+						options.dumgen.resolveOrGenerateReadingEmojiDescription(
+							{ ...base, candidates } as ComparisonInput<"de">,
+						);
 					return yield* operation.pipe(
 						Effect.catchTag("CatalogMiss", (failure) =>
 							Effect.succeed({

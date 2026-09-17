@@ -1,7 +1,13 @@
 import { modelSchemas } from "../generated/model-schemas.js";
 import { prompts } from "../generated/prompts.js";
-import type { DumgenOptions, ModelConfiguration } from "../types.js";
+import type {
+	CallTrace,
+	DumgenOptions,
+	ModelConfiguration,
+	ModelRequest,
+} from "../types.js";
 import { DumgenFailure } from "./failure.js";
+import { contextFor, fingerprint } from "./trace.js";
 import { parse } from "./validation.js";
 
 export const defaultModelConfiguration: ModelConfiguration = {
@@ -52,25 +58,78 @@ export function modelCaller(options: DumgenOptions) {
 			configuration: effectiveConfiguration(options, route),
 			signal,
 		};
-		const start = performance.now();
-		let output: unknown;
-		try {
-			output = await options.execute(request);
-		} catch (error) {
-			const failure =
-				error instanceof Error ? error.message : String(error);
-			options.onModelExchange?.({
-				request,
-				failure,
-				durationMs: performance.now() - start,
-			});
-			throw new DumgenFailure("ProviderFailure", stage, failure, route);
-		}
-		options.onModelExchange?.({
-			request,
-			output,
-			durationMs: performance.now() - start,
-		});
-		return parse<T>(schema, output, stage, true);
+		return executeGeneration(options, request, (output) =>
+			parse<T>(schema, output, stage, true),
+		);
 	};
+}
+
+export async function executeGeneration<T>(
+	options: DumgenOptions,
+	request: ModelRequest,
+	validate: (output: unknown) => T,
+	dependsOn?: readonly string[],
+): Promise<T> {
+	const context = contextFor(request.signal);
+	const base = {
+		id: `${context.id}:${++context.sequence}`,
+		operationId: context.id,
+		executor: "Luna" as const,
+		request,
+		dependsOn: dependsOn ?? context.calls.map((call) => call.id),
+		fingerprint: await fingerprint({
+			prompt: request.systemPrompt,
+			schema: request.outputSchema,
+		}),
+	};
+	const start = performance.now();
+	let response: Awaited<ReturnType<DumgenOptions["execute"]>> | undefined;
+	let transport: CallTrace["transport"] = "Failure";
+	let validation: CallTrace["validation"] = "NotRun";
+	let failure: string | undefined;
+	try {
+		request.signal.throwIfAborted();
+		response = await options.execute(request);
+		transport = "Success";
+		request.signal.throwIfAborted();
+		validation = "Invalid";
+		if (
+			!response ||
+			typeof response !== "object" ||
+			!("output" in response)
+		)
+			throw Error("Generation executor omitted its output envelope");
+		const output = validate(response.output);
+		validation = "Valid";
+		return output;
+	} catch (error) {
+		failure = error instanceof Error ? error.message : String(error);
+		if (request.signal.aborted) {
+			transport = "Interrupted";
+			throw error;
+		}
+		throw error instanceof DumgenFailure
+			? error
+			: new DumgenFailure(
+					transport === "Success"
+						? "InvalidModelOutput"
+						: "ProviderFailure",
+					request.stage,
+					failure,
+					request.route,
+				);
+	} finally {
+		const exchange: CallTrace = {
+			...base,
+			transport,
+			validation,
+			...(response
+				? { output: response.output, metadata: response.metadata }
+				: {}),
+			...(failure ? { failure } : {}),
+			durationMs: performance.now() - start,
+		};
+		context.calls.push(exchange);
+		options.onModelExchange?.(exchange);
+	}
 }

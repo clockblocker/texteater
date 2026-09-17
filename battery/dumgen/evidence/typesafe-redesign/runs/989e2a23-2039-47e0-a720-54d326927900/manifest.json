@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "989e2a23-2039-47e0-a720-54d326927900",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:16.468Z",
+  "corpus": {
+    "fingerprint": "8472f8cbcb1e488fbce1211b90e3f489999eff96c64d3b6d6b6906a1d0a32982",
+    "caseIds": [
+      "grammar-de-proverb-dev-ende-gut"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

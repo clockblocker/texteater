@@ -1,4 +1,4 @@
-import type { Dumgen, ModelExchange } from "dumgen/types";
+import type { Dumgen, ModelExchange, OperationTrace } from "dumgen/types";
 import * as Effect from "effect/Effect";
 import { generation, operationStage } from "./model-trace";
 import type { SegmentationResponse } from "./shared/contract";
@@ -9,6 +9,7 @@ export function segmentForLaboratory(
 	dumgen: Pick<Dumgen, "segment">,
 	text: string,
 	exchanges: ModelExchange[],
+	operations: OperationTrace[] = [],
 ) {
 	return Effect.gen(function* () {
 		const decisions = yield* dumgen.segment({ sourceSentences: [text] });
@@ -16,7 +17,14 @@ export function segmentForLaboratory(
 		if (!decision)
 			throw new Error("Dumgen returned no segmentation decision.");
 		const intake = {
-			...operationStage("segment", { text }, decision, exchanges),
+			...operationStage(
+				"segment",
+				{ text },
+				decision,
+				exchanges,
+				"authored",
+				operations,
+			),
 			traceOrigin: "generated" as const,
 		};
 		if (decision.decision !== "Accepted")
@@ -28,6 +36,7 @@ export function segmentForLaboratory(
 			} satisfies SegmentationResponse;
 		if (
 			decision.sentence.language !== "de" &&
+			decision.sentence.language !== "en" &&
 			decision.sentence.language !== "he"
 		)
 			throw new Error("Unsupported segmentation language.");

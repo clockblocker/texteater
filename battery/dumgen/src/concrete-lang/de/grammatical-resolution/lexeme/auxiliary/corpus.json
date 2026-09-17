@@ -16,7 +16,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -27,7 +30,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Future AUX. Finite present third singular. Not passive. VerbType null."
+		"explanation": "Future AUX. Finite present third singular. Not passive. VerbType null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-demo-modal-kann": {
 		"input": {
@@ -46,7 +49,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -57,7 +63,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Meaning-bearing modal AUX. Bare infinitive outside target. VerbType Mod."
+		"explanation": "Meaning-bearing modal AUX. Bare infinitive outside target. VerbType Mod. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-demo-copula-ist": {
 		"input": {
@@ -76,7 +82,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -87,7 +96,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Copular sein is AUX on fixed route. Predicate stays context. VerbType null."
+		"explanation": "Copular sein is AUX on fixed route. Predicate stays context. VerbType null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-demo-citation-duerfen": {
 		"input": {
@@ -129,7 +138,10 @@
 					"person": "2",
 					"tense": null,
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -140,7 +152,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Copular imperative. Initial capital is Standard and normalizes lowercase."
+		"explanation": "Copular imperative. Initial capital is Standard and normalizes lowercase. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-perfect-hat-gegessen": {
 		"input": {
@@ -159,7 +171,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -169,7 +184,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-perfect-waren-gegangen": {
 		"input": {
@@ -188,7 +204,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -198,7 +217,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-passive-wird-repariert": {
 		"input": {
@@ -217,7 +237,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": "Pass"
+					"voice": "Pass",
+					"perfect": null,
+					"future": null,
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -228,7 +251,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Passive-forming werden. Mark AUX Surface voice Pass."
+		"explanation": "Passive-forming werden. Mark AUX Surface voice Pass. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-passive-wurde-gesperrt": {
 		"input": {
@@ -247,7 +270,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": "Pass"
+					"voice": "Pass",
+					"perfect": null,
+					"future": null,
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -257,7 +283,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-copula-bin-muede": {
 		"input": {
@@ -276,7 +303,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -286,7 +316,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-copula-bist-muede": {
 		"input": {
@@ -305,7 +336,10 @@
 					"person": "2",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -315,7 +349,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-copula-sind-muede": {
 		"input": {
@@ -334,7 +369,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -344,7 +382,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-copula-seid-muede": {
 		"input": {
@@ -363,7 +402,10 @@
 					"person": "2",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -373,7 +415,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-subjunctive-sei-gegangen": {
 		"input": {
@@ -392,7 +435,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -403,7 +449,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Konjunktiv I. Tense Pres in AUX codec."
+		"explanation": "Konjunktiv I. Tense Pres in AUX codec. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-subjunctive-waeren-geblieben": {
 		"input": {
@@ -422,7 +468,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -433,7 +482,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Konjunktiv II. Tense Past in AUX codec."
+		"explanation": "Konjunktiv II. Tense Past in AUX codec. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-modal-darf-bleiben": {
 		"input": {
@@ -452,7 +501,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -462,7 +514,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-modal-wolltest-gehen": {
 		"input": {
@@ -481,7 +534,10 @@
 					"person": "2",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -491,7 +547,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-modal-moechte-bleiben": {
 		"input": {
@@ -510,7 +567,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -521,7 +581,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Modal möchte. Lemma mögen. Konjunktiv II shape."
+		"explanation": "Modal möchte. Lemma mögen. Konjunktiv II shape. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-modal-sollen-syncretic": {
 		"input": {
@@ -540,7 +600,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -551,7 +614,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Form syncretic for indicative and subjunctive. Context damaged. Mood null."
+		"explanation": "Form syncretic for indicative and subjunctive. Context damaged. Mood null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-infinitive-sein": {
 		"input": {
@@ -570,7 +633,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -580,7 +646,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-infinitive-passive-werden": {
 		"input": {
@@ -599,7 +666,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": "Pass"
+					"voice": "Pass",
+					"perfect": null,
+					"future": null,
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -610,7 +680,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Passive auxiliary infinitive. Voice Pass."
+		"explanation": "Passive auxiliary infinitive. Voice Pass. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-participle-gewesen": {
 		"input": {
@@ -624,14 +694,16 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
 					"mood": null,
 					"number": null,
 					"person": null,
 					"tense": null,
 					"verbForm": "Part",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"participleForm": "Past"
 				}
 			},
 			"lemma": {
@@ -641,7 +713,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-participle-worden": {
 		"input": {
@@ -655,14 +728,16 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"aspect": null,
-					"gender": null,
 					"mood": null,
 					"number": null,
 					"person": null,
 					"tense": null,
 					"verbForm": "Part",
-					"voice": "Pass"
+					"voice": "Pass",
+					"perfect": null,
+					"future": null,
+					"passive": "Process",
+					"participleForm": "Past"
 				}
 			},
 			"lemma": {
@@ -673,7 +748,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Passive auxiliary participle. Voice Pass."
+		"explanation": "Passive auxiliary participle. Voice Pass. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-perfect-ist-gegangen": {
 		"input": {
@@ -692,7 +767,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -702,7 +780,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-future-werden-abreisen": {
 		"input": {
@@ -721,7 +800,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -731,7 +813,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-passive-wurden-gerufen": {
 		"input": {
@@ -750,7 +833,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": "Pass"
+					"voice": "Pass",
+					"perfect": null,
+					"future": null,
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -760,7 +846,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-copula-war-ruhig": {
 		"input": {
@@ -779,7 +866,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -789,7 +879,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-subjunctive-haette": {
 		"input": {
@@ -808,7 +899,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -818,7 +912,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-modal-muessen": {
 		"input": {
@@ -837,7 +932,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -847,7 +945,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-modal-mag": {
 		"input": {
@@ -866,7 +965,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -876,7 +978,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-modal-wollt": {
 		"input": {
@@ -895,7 +998,10 @@
 					"person": "2",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -905,7 +1011,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-citation-sein": {
 		"input": {
@@ -946,7 +1053,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -956,7 +1066,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-demo-typo-sol": {
 		"input": {
@@ -975,7 +1086,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -986,7 +1100,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Missing letter. Mark Typo. Repair member. Keep modal AUX grammar."
+		"explanation": "Missing letter. Mark Typo. Repair member. Keep modal AUX grammar. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-typo-mus": {
 		"input": {
@@ -1005,7 +1119,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1015,7 +1132,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-variant-muss": {
 		"input": {
@@ -1034,7 +1152,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1045,7 +1166,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed pre-reform spelling. Standard member. Preserve Surface. Variant spelling."
+		"explanation": "Licensed pre-reform spelling. Standard member. Preserve Surface. Variant spelling. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-typo-koenen": {
 		"input": {
@@ -1064,7 +1185,10 @@
 					"person": "1",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1074,7 +1198,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-accept-archaic-ward": {
 		"input": {
@@ -1095,7 +1220,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": "Pass"
+					"voice": "Pass",
+					"perfect": null,
+					"future": null,
+					"passive": "Process"
 				}
 			},
 			"lemma": {
@@ -1106,7 +1234,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Old passive auxiliary form. Standard attestation. Variant spelling. Surface Archaic."
+		"explanation": "Old passive auxiliary form. Standard attestation. Variant spelling. Surface Archaic. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-aux-dev-contrast-modal-mag": {
 		"input": {
@@ -1125,7 +1253,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": null
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null
 				}
 			},
 			"lemma": {
@@ -1136,6 +1267,6 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Marked use governs infinitive and is fixed AUX. Earlier nominal-object use stays unmarked lexical contrast."
+		"explanation": "Marked use governs infinitive and is fixed AUX. Earlier nominal-object use stays unmarked lexical contrast. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	}
 }

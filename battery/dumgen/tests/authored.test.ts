@@ -9,6 +9,7 @@ import { parseReadingKnowledge } from "dumrel";
 import { Effect } from "effect";
 import { stableJson } from "promptsmith";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
+import { executeOutput, rejectJudgment } from "./execution-fixture.js";
 
 test("reviewed member bundles have distinct identities and valid semantic endpoints", () => {
 	expect(
@@ -97,9 +98,10 @@ test("covered Knowledge and reviewed claims require no inventory preload or prov
 	const { knowledgeInputSchema } = await import("dumgen/schemas");
 	const result = await Effect.runPromise(
 		createDumgen({
-			execute: async () => {
+			judge: rejectJudgment,
+			execute: executeOutput(async () => {
 				throw Error("Unexpected provider call");
-			},
+			}),
 		}).produceKnowledge(knowledgeInputSchema.parse(input)),
 	);
 	if (member.knowledge.definition === undefined)

@@ -30,12 +30,30 @@ export { choice, noul, score } from "@typesafe-ai/sdk";
 export type TypeSafeExecutor = <const Q extends Questions>(
 	request: SystemOneRequest<Q>,
 	options?: RequestOptions,
-) => Promise<SystemOneResult<Q>>;
+) => Promise<SystemOneResult<Q> & { readonly requestId?: string }>;
 
 /** System One transport preserving the SDK's question-to-answer type inference. */
 export function createTypeSafeExecutor(
 	config: TypeSafeClientConfig = {},
 ): TypeSafeExecutor {
-	const client = new TypeSafeClient(config);
-	return (request, options) => client.systemOne(request, options);
+	const client = new TypeSafeClient({
+		...config,
+		apiKey:
+			config.apiKey ??
+			process.env.TYPESAFE_API_KEY ??
+			process.env.TYPESAFE_TOKEN,
+		retry: { ...config.retry, maxRetries: 0 },
+	});
+	return async (request, options) => {
+		const result = await client
+			.systemOne(request, {
+				...options,
+				retry: { ...options?.retry, maxRetries: 0 },
+			})
+			.withResponse();
+		return {
+			...result.data,
+			...(result.requestId ? { requestId: result.requestId } : {}),
+		};
+	};
 }

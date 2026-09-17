@@ -1,4 +1,4 @@
-import type { ModelExchange } from "dumgen/types";
+import type { ModelExchange, OperationTrace } from "dumgen/types";
 import type { ClassificationStageResult } from "./shared/contract";
 
 export function attemptedPromptPaths(
@@ -12,6 +12,7 @@ export function operationStage(
 	result: unknown,
 	exchanges: readonly ModelExchange[],
 	origin: "authored" | "supplied" = "authored",
+	operations: readonly OperationTrace[] = [],
 ): ClassificationStageResult {
 	const exchange = exchanges.findLast(
 		(value) => value.request.stage === stage,
@@ -22,6 +23,8 @@ export function operationStage(
 		input: exchange?.request.input ?? input,
 		output: exchange?.output ?? result,
 		result,
+		calls: exchanges.filter((value) => value.request.stage === stage),
+		operations: operations.filter((value) => value.operation === stage),
 	};
 }
 export function generation(

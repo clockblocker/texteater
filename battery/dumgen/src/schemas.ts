@@ -2,7 +2,6 @@ export {
 	analysisTargetSchema,
 	comparisonInputSchema,
 	encounterSchema,
-	generationInputSchema,
 	knowledgeInputSchema,
 } from "./generated/schemas.js";
 export {

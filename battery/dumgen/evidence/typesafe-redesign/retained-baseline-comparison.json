@@ -1,0 +1,1057 @@
+{
+  "source": {
+    "path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T06-46-37-689Z/direct-checkpoint.json",
+    "sha256": "651916c680db5949b96c1beca6f78cf320d1fd193c7f42ffec5e408ab9457d59",
+    "bytes": 2813295
+  },
+  "preflight": {
+    "runnerParameters": {
+      "batching": false
+    },
+    "runnerVersion": "target-classification-high-level-contracts-v9",
+    "question": "Does the additional-member compact-indices contract preserve the German high-level target policy across the development suite?",
+    "model": "gpt-5.6-luna",
+    "expectedResolvedModel": "gpt-5.6-luna",
+    "modelConfigSha256": "16b1a04440d4c20ee5dde440d5e3d47412c4a40751491b73a335857ce15d1cf5",
+    "corpusSha256": "da9786acb69fa8d69081c9265c78cdad15987a07f92fb12df17ccbe45d2f6bba",
+    "evaluatorBinding": {
+      "version": "german-high-level-target-evaluator-v1",
+      "sourceSha256": "17ac55c5c4d2d9beb6418abb8712860038d71f712fe2c516e61c450ea2dc3bb6",
+      "semanticFixtureMatrixVersion": "german-high-level-target-evaluator-semantics-v1",
+      "semanticFixtureMatrixSha256": "f70ddfa938c3e21401baffb0558c55656ecaf359fb48c6f07edd5b94deda99be"
+    },
+    "decisionPolicy": {
+      "expectedCallsPerArm": 188,
+      "expectedEvaluationCasesPerAttempt": 94,
+      "minimumAttemptContractScore": 90,
+      "minimumAttemptContractRatio": 0.9574468085106383,
+      "tieMargin": 0.01,
+      "tieRule": "inclusive-best-ratio-margin"
+    },
+    "decisionPolicySha256": "3681b52e93ef5cff75b3e62b6a5a40dee2e91cf88a60d72334004da7a0809ded",
+    "batchPolicy": {
+      "transport": "openai-batch",
+      "endpoint": "/v1/responses",
+      "completionWindow": "24h",
+      "promptCacheMode": "explicit",
+      "promptCacheTtl": "30m",
+      "promptCacheBreakpoint": "end-of-stable-system-prompt",
+      "maximumScheduledRequestsPerCacheKey": 12
+    },
+    "batchPolicySha256": "e7a6459878a9f3c29655345fd4f42cfc7736aba790f5af6b9cd64fb2459e2796",
+    "directResponsesPolicy": {
+      "transport": "openai-responses",
+      "endpoint": "/v1/responses",
+      "concurrency": 8,
+      "promptCacheMode": "explicit",
+      "promptCacheTtl": "30m",
+      "promptCacheBreakpoint": "end-of-stable-system-prompt",
+      "maximumScheduledRequestsPerCacheKey": 12
+    },
+    "directResponsesPolicySha256": "65a0a83651a21ea9e3f8d1d12ec6220b613aae9ec8a50dc531742ed33fe755d7",
+    "evaluationCaseIds": [
+      "target-de-route-lexeme-adj",
+      "target-de-route-lexeme-adp",
+      "target-de-route-lexeme-adv",
+      "target-de-route-lexeme-aux",
+      "target-de-route-lexeme-cconj",
+      "target-de-route-lexeme-det",
+      "target-de-route-lexeme-intj",
+      "target-de-route-lexeme-noun",
+      "target-de-route-lexeme-num",
+      "target-de-route-lexeme-part",
+      "target-de-route-lexeme-pron",
+      "target-de-route-lexeme-propn",
+      "target-de-route-lexeme-sconj",
+      "target-de-route-lexeme-sym",
+      "target-de-route-lexeme-verb",
+      "target-de-route-phraseme-aphorism-click-wissen",
+      "target-de-route-phraseme-aphorism-click-ist",
+      "target-de-route-phraseme-aphorism-click-macht",
+      "target-de-route-phraseme-discourse-click-herzlichen",
+      "target-de-route-phraseme-discourse-click-dank",
+      "target-de-route-phraseme-proverb-click-morgenstund",
+      "target-de-route-phraseme-proverb-click-hat",
+      "target-de-route-phraseme-proverb-click-gold",
+      "target-de-route-phraseme-proverb-click-im",
+      "target-de-route-phraseme-proverb-click-mund",
+      "target-de-core-entscheidung-click-entscheidung",
+      "target-de-core-entscheidung-click-trifft",
+      "target-de-core-entscheidung-click-eine",
+      "target-de-route-construction-fusion",
+      "target-de-route-construction-paired-click-je",
+      "target-de-route-construction-paired-click-desto",
+      "target-de-route-construction-paired-near-frueher",
+      "target-de-route-construction-paired-near-besser",
+      "target-de-boundary-idiom-click-brach",
+      "target-de-boundary-idiom-click-das",
+      "target-de-boundary-idiom-click-eis",
+      "target-de-boundary-idiom-near-endlich",
+      "target-de-boundary-literal-eis-click-brach",
+      "target-de-boundary-literal-eis-click-eis",
+      "target-de-boundary-governed-click-wartet",
+      "target-de-boundary-governed-click-auf",
+      "target-de-boundary-governed-near-bus",
+      "target-de-boundary-adjunct-click-laeuft",
+      "target-de-boundary-adjunct-click-auf",
+      "target-de-boundary-adjunct-click-wiese",
+      "target-de-boundary-inherent-reflexive-click-schaemt",
+      "target-de-boundary-inherent-reflexive-click-sich",
+      "target-de-boundary-optional-reflexive-click-waescht",
+      "target-de-boundary-optional-reflexive-click-sich",
+      "target-de-boundary-separable-click-steht",
+      "target-de-boundary-separable-click-auf",
+      "target-de-boundary-separable-near-heute",
+      "target-de-boundary-perfect-click-hat",
+      "target-de-boundary-perfect-click-gelacht",
+      "target-de-boundary-perfect-near-laut",
+      "target-de-boundary-future-click-wird",
+      "target-de-boundary-future-click-lachen",
+      "target-de-boundary-passive-click-wird",
+      "target-de-boundary-passive-click-gelobt",
+      "target-de-boundary-modal-click-muss",
+      "target-de-boundary-modal-click-schlafen",
+      "target-de-boundary-copula-click-ist",
+      "target-de-boundary-copula-click-muede",
+      "target-de-boundary-collocation-click-trifft",
+      "target-de-boundary-collocation-click-eine",
+      "target-de-boundary-collocation-click-entscheidung",
+      "target-de-boundary-collocation-near-heute",
+      "target-de-boundary-free-object-click-bringt",
+      "target-de-boundary-free-object-click-cola",
+      "target-de-boundary-fixed-function-click-heult",
+      "target-de-boundary-fixed-function-click-mit",
+      "target-de-boundary-fixed-function-click-den",
+      "target-de-boundary-fixed-function-click-woelfen",
+      "target-de-boundary-fixed-function-near-hungrigen",
+      "target-de-robust-repeated-click-steht",
+      "target-de-robust-repeated-click-final-auf",
+      "target-de-robust-repeated-near-first-auf",
+      "target-de-robust-overlap-collocation-click-stellt",
+      "target-de-robust-overlap-collocation-click-eine",
+      "target-de-robust-overlap-collocation-click-frage",
+      "target-de-robust-overlap-separable-click-stellt",
+      "target-de-robust-overlap-separable-click-ab",
+      "target-de-robust-overlap-near-vase",
+      "target-de-robust-partial-click-brach",
+      "target-de-robust-partial-click-das",
+      "target-de-robust-typo-click-stet",
+      "target-de-robust-typo-click-auf",
+      "target-de-robust-slang",
+      "target-de-robust-opaque-surroundings",
+      "target-de-robust-punctuation-click-steht",
+      "target-de-robust-punctuation-click-auf",
+      "target-de-robust-long-click-wird",
+      "target-de-robust-long-click-verstanden",
+      "target-de-robust-unresolved"
+    ],
+    "demonstrationCaseIds": [
+      "target-de-demo-perfect-arbeiten-click-habe",
+      "target-de-demo-governed-rechnen-click-rechnet",
+      "target-de-demo-governed-rechnen-click-mit",
+      "target-de-demo-idiom-faden-click-verlor",
+      "target-de-demo-idiom-faden-click-den",
+      "target-de-demo-idiom-faden-click-faden",
+      "target-de-demo-literal-faden-click-faden",
+      "target-de-demo-literal-handtuch-click-warf",
+      "target-de-demo-idiom-katze-click-die",
+      "target-de-demo-idiom-katze-click-verdammte",
+      "target-de-demo-paired-entweder-click-entweder",
+      "target-de-demo-paired-entweder-click-hier",
+      "target-de-demo-inherent-reflexive-click-beeile",
+      "target-de-demo-inherent-reflexive-click-mich",
+      "target-de-demo-optional-reflexive-click-dich",
+      "target-de-demo-modal-arbeiten-click-kann",
+      "target-de-demo-passive-briefe-click-werden",
+      "target-de-demo-passive-briefe-click-verschickt",
+      "target-de-demo-collocation-kenntnis-click-nahm",
+      "target-de-demo-collocation-kenntnis-click-zur",
+      "target-de-demo-symbol-percent",
+      "target-de-demo-default-interjection-oh",
+      "target-de-demo-repeated-anfangen-click-faengt",
+      "target-de-demo-repeated-anfangen-click-final-an",
+      "target-de-demo-repeated-anfangen-click-first-an"
+    ],
+    "attemptsPerArm": 2,
+    "exactCallCap": 188,
+    "inputTokenUpperBound": 5679738,
+    "outputTokenUpperBound": 192512,
+    "maximumEstimatedCostUsd": 1.6509488999999984,
+    "maximumSpendUsd": 2,
+    "priceSchedule": {
+      "id": "openai-responses-gpt-5.6-luna-2026-08-10",
+      "longContextThresholdTokens": 272000,
+      "shortContext": {
+        "inputUsdPerMillion": 0.2,
+        "cachedInputUsdPerMillion": 0.02,
+        "cacheWriteUsdPerMillion": 0.25,
+        "outputUsdPerMillion": 1.2
+      },
+      "longContext": {
+        "inputUsdPerMillion": 0.4,
+        "cachedInputUsdPerMillion": 0.04,
+        "cacheWriteUsdPerMillion": 0.5,
+        "outputUsdPerMillion": 1.8
+      }
+    },
+    "arms": [
+      {
+        "id": "additional-compact-indices",
+        "promptSha256": "f4a976850370b68863690d9ed847d3bb1af7200a63f7cefa20220e2400e3db6f",
+        "schemaSha256": "c3dd809f439800adcd8c692eeda71c9ca08981931c129295e50cb0f41559a520",
+        "adapterSha256": "593f4f465bc059fa5f57affe4b561ae40560c41d73d4f2551fdfde4a577b3ed4",
+        "postconditionFixturesSha256": "53e9af40b7cec1132b8a18e3523c3cca9a12bbdf06a5c005547613d1c4843867"
+      }
+    ]
+  },
+  "selectedAttempts": [
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-noun",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-noun",
+      "privateInput": {
+        "clickedCompactIndex": 1,
+        "segments": [
+          {
+            "compactIndex": 0,
+            "clicked": false,
+            "kind": "ResolvableText",
+            "text": "Das"
+          },
+          {
+            "compactIndex": 1,
+            "clicked": true,
+            "kind": "ResolvableText",
+            "text": "Haus"
+          },
+          {
+            "compactIndex": 2,
+            "clicked": false,
+            "kind": "ResolvableText",
+            "text": "steht"
+          },
+          {
+            "compactIndex": 3,
+            "clicked": false,
+            "kind": "ResolvableText",
+            "text": "leer"
+          },
+          {
+            "compactIndex": 4,
+            "clicked": false,
+            "kind": "Punctuation",
+            "text": "."
+          }
+        ]
+      },
+      "privateIdealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "membership": {
+            "additionalMemberCompactIndices": []
+          }
+        }
+      },
+      "canonicalInput": {
+        "clickedSegmentIndex": 2,
+        "segments": [
+          {
+            "kind": "ResolvableText",
+            "text": "Das"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "Haus"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "steht"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "leer"
+          },
+          {
+            "kind": "Punctuation",
+            "text": "."
+          }
+        ]
+      },
+      "canonicalIdealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            2
+          ]
+        }
+      },
+      "privateOutputJson": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "membership": {
+            "additionalMemberCompactIndices": []
+          }
+        }
+      },
+      "canonicalOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            2
+          ]
+        }
+      },
+      "evaluation": {
+        "contractPass": true,
+        "canonicalShapePass": true,
+        "decisionPass": true,
+        "routePass": true,
+        "exactMembershipPass": true,
+        "falseGroupingPass": true,
+        "falseSplittingPass": true,
+        "validMembershipPass": true,
+        "nonResolvableMembershipPass": true,
+        "orderPass": true,
+        "uniquenessPass": true,
+        "clickInclusionPass": true,
+        "correctUnresolvedPass": true
+      },
+      "latencyMs": 2729,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"membership\":{\"additionalMemberCompactIndices\":[]}}}",
+      "rawResponseJson": {
+        "id": "resp_0779137ff9f34a8f016a7973cf5bd881929884bc6a1b56d49b",
+        "object": "response",
+        "created_at": 1786344399,
+        "status": "completed",
+        "background": false,
+        "billing": {
+          "payer": "developer"
+        },
+        "completed_at": 1786344400,
+        "error": null,
+        "frequency_penalty": 0,
+        "incomplete_details": null,
+        "instructions": null,
+        "max_output_tokens": 1024,
+        "max_tool_calls": null,
+        "model": "gpt-5.6-luna",
+        "moderation": null,
+        "output": [
+          {
+            "id": "msg_0779137ff9f34a8f016a7973cfeb688192b3ac832f0be4bae2",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"membership\":{\"additionalMemberCompactIndices\":[]}}}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "presence_penalty": 0,
+        "previous_response_id": null,
+        "prompt_cache_key": "tc85:additional-compact-indices:s00",
+        "prompt_cache_options": {
+          "mode": "explicit",
+          "ttl": "30m"
+        },
+        "prompt_cache_retention": "24h",
+        "reasoning": {
+          "context": "all_turns",
+          "effort": "none",
+          "mode": "standard",
+          "summary": null
+        },
+        "safety_identifier": null,
+        "service_tier": "default",
+        "store": false,
+        "temperature": 1,
+        "text": {
+          "format": {
+            "type": "json_schema",
+            "description": null,
+            "name": "target_additional_compact_indices",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "Resolved",
+                    "Unresolved"
+                  ]
+                },
+                "target": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "family": {
+                              "type": "string",
+                              "const": "Lexeme"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "ADJ",
+                                "ADP",
+                                "ADV",
+                                "AUX",
+                                "CCONJ",
+                                "DET",
+                                "INTJ",
+                                "NOUN",
+                                "NUM",
+                                "PART",
+                                "PRON",
+                                "PROPN",
+                                "SCONJ",
+                                "SYM",
+                                "VERB"
+                              ]
+                            },
+                            "membership": {
+                              "type": "object",
+                              "properties": {
+                                "additionalMemberCompactIndices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                }
+                              },
+                              "required": [
+                                "additionalMemberCompactIndices"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "family",
+                            "kind",
+                            "membership"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "family": {
+                              "type": "string",
+                              "const": "Phraseme"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "Aphorism",
+                                "DiscourseFormula",
+                                "Idiom",
+                                "Proverb"
+                              ]
+                            },
+                            "membership": {
+                              "type": "object",
+                              "properties": {
+                                "additionalMemberCompactIndices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                }
+                              },
+                              "required": [
+                                "additionalMemberCompactIndices"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "family",
+                            "kind",
+                            "membership"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "family": {
+                              "type": "string",
+                              "const": "Construction"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "Fusion",
+                                "PairedFrame"
+                              ]
+                            },
+                            "membership": {
+                              "type": "object",
+                              "properties": {
+                                "additionalMemberCompactIndices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                }
+                              },
+                              "required": [
+                                "additionalMemberCompactIndices"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "family",
+                            "kind",
+                            "membership"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "decision",
+                "target"
+              ],
+              "additionalProperties": false
+            },
+            "strict": true
+          },
+          "verbosity": "low"
+        },
+        "tool_choice": "auto",
+        "tool_usage": {
+          "image_gen": {
+            "input_tokens": 0,
+            "input_tokens_details": {
+              "image_tokens": 0,
+              "text_tokens": 0
+            },
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "image_tokens": 0,
+              "text_tokens": 0
+            },
+            "total_tokens": 0
+          },
+          "web_search": {
+            "num_requests": 0
+          }
+        },
+        "tools": [],
+        "top_logprobs": 0,
+        "top_p": 0.98,
+        "truncation": "disabled",
+        "usage": {
+          "input_tokens": 6788,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 6680
+          },
+          "output_tokens": 38,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 6826
+        },
+        "user": null,
+        "metadata": {},
+        "output_text": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"membership\":{\"additionalMemberCompactIndices\":[]}}}"
+      },
+      "requestUtf8Bytes": 32074,
+      "responseUtf8Bytes": 3591,
+      "responseId": "resp_0779137ff9f34a8f016a7973cf5bd881929884bc6a1b56d49b",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawUsage": {
+        "input_tokens": 6788,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6680
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6826
+      },
+      "usage": {
+        "inputTokens": 6788,
+        "cachedInputTokens": 6680,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 38,
+        "totalTokens": 6826,
+        "longContext": false,
+        "billedCostUpperBoundUsd": 0.0002008
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-adj",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-adj",
+      "privateInput": {
+        "clickedCompactIndex": 1,
+        "segments": [
+          {
+            "compactIndex": 0,
+            "clicked": false,
+            "kind": "ResolvableText",
+            "text": "Der"
+          },
+          {
+            "compactIndex": 1,
+            "clicked": true,
+            "kind": "ResolvableText",
+            "text": "kluge"
+          },
+          {
+            "compactIndex": 2,
+            "clicked": false,
+            "kind": "ResolvableText",
+            "text": "Hund"
+          },
+          {
+            "compactIndex": 3,
+            "clicked": false,
+            "kind": "ResolvableText",
+            "text": "schläft"
+          },
+          {
+            "compactIndex": 4,
+            "clicked": false,
+            "kind": "Punctuation",
+            "text": "."
+          }
+        ]
+      },
+      "privateIdealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "membership": {
+            "additionalMemberCompactIndices": []
+          }
+        }
+      },
+      "canonicalInput": {
+        "clickedSegmentIndex": 2,
+        "segments": [
+          {
+            "kind": "ResolvableText",
+            "text": "Der"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "kluge"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "Hund"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "schläft"
+          },
+          {
+            "kind": "Punctuation",
+            "text": "."
+          }
+        ]
+      },
+      "canonicalIdealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            2
+          ]
+        }
+      },
+      "privateOutputJson": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "membership": {
+            "additionalMemberCompactIndices": []
+          }
+        }
+      },
+      "canonicalOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            2
+          ]
+        }
+      },
+      "evaluation": {
+        "contractPass": true,
+        "canonicalShapePass": true,
+        "decisionPass": true,
+        "routePass": true,
+        "exactMembershipPass": true,
+        "falseGroupingPass": true,
+        "falseSplittingPass": true,
+        "validMembershipPass": true,
+        "nonResolvableMembershipPass": true,
+        "orderPass": true,
+        "uniquenessPass": true,
+        "clickInclusionPass": true,
+        "correctUnresolvedPass": true
+      },
+      "latencyMs": 2799,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\",\"membership\":{\"additionalMemberCompactIndices\":[]}}}",
+      "rawResponseJson": {
+        "id": "resp_033b113db8dd5c1e016a7973cf0074819cbd1c0f0141e91ef9",
+        "object": "response",
+        "created_at": 1786344399,
+        "status": "completed",
+        "background": false,
+        "billing": {
+          "payer": "developer"
+        },
+        "completed_at": 1786344400,
+        "error": null,
+        "frequency_penalty": 0,
+        "incomplete_details": null,
+        "instructions": null,
+        "max_output_tokens": 1024,
+        "max_tool_calls": null,
+        "model": "gpt-5.6-luna",
+        "moderation": null,
+        "output": [
+          {
+            "id": "msg_033b113db8dd5c1e016a7973cf7ffc819c9a86129302cd0da6",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\",\"membership\":{\"additionalMemberCompactIndices\":[]}}}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "presence_penalty": 0,
+        "previous_response_id": null,
+        "prompt_cache_key": "tc85:additional-compact-indices:s00",
+        "prompt_cache_options": {
+          "mode": "explicit",
+          "ttl": "30m"
+        },
+        "prompt_cache_retention": "24h",
+        "reasoning": {
+          "context": "all_turns",
+          "effort": "none",
+          "mode": "standard",
+          "summary": null
+        },
+        "safety_identifier": null,
+        "service_tier": "default",
+        "store": false,
+        "temperature": 1,
+        "text": {
+          "format": {
+            "type": "json_schema",
+            "description": null,
+            "name": "target_additional_compact_indices",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "Resolved",
+                    "Unresolved"
+                  ]
+                },
+                "target": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "family": {
+                              "type": "string",
+                              "const": "Lexeme"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "ADJ",
+                                "ADP",
+                                "ADV",
+                                "AUX",
+                                "CCONJ",
+                                "DET",
+                                "INTJ",
+                                "NOUN",
+                                "NUM",
+                                "PART",
+                                "PRON",
+                                "PROPN",
+                                "SCONJ",
+                                "SYM",
+                                "VERB"
+                              ]
+                            },
+                            "membership": {
+                              "type": "object",
+                              "properties": {
+                                "additionalMemberCompactIndices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                }
+                              },
+                              "required": [
+                                "additionalMemberCompactIndices"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "family",
+                            "kind",
+                            "membership"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "family": {
+                              "type": "string",
+                              "const": "Phraseme"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "Aphorism",
+                                "DiscourseFormula",
+                                "Idiom",
+                                "Proverb"
+                              ]
+                            },
+                            "membership": {
+                              "type": "object",
+                              "properties": {
+                                "additionalMemberCompactIndices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                }
+                              },
+                              "required": [
+                                "additionalMemberCompactIndices"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "family",
+                            "kind",
+                            "membership"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "family": {
+                              "type": "string",
+                              "const": "Construction"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "Fusion",
+                                "PairedFrame"
+                              ]
+                            },
+                            "membership": {
+                              "type": "object",
+                              "properties": {
+                                "additionalMemberCompactIndices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                }
+                              },
+                              "required": [
+                                "additionalMemberCompactIndices"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "family",
+                            "kind",
+                            "membership"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "decision",
+                "target"
+              ],
+              "additionalProperties": false
+            },
+            "strict": true
+          },
+          "verbosity": "low"
+        },
+        "tool_choice": "auto",
+        "tool_usage": {
+          "image_gen": {
+            "input_tokens": 0,
+            "input_tokens_details": {
+              "image_tokens": 0,
+              "text_tokens": 0
+            },
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "image_tokens": 0,
+              "text_tokens": 0
+            },
+            "total_tokens": 0
+          },
+          "web_search": {
+            "num_requests": 0
+          }
+        },
+        "tools": [],
+        "top_logprobs": 0,
+        "top_p": 0.98,
+        "truncation": "disabled",
+        "usage": {
+          "input_tokens": 6791,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 6680
+          },
+          "output_tokens": 38,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 6829
+        },
+        "user": null,
+        "metadata": {},
+        "output_text": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\",\"membership\":{\"additionalMemberCompactIndices\":[]}}}"
+      },
+      "requestUtf8Bytes": 32078,
+      "responseUtf8Bytes": 3589,
+      "responseId": "resp_033b113db8dd5c1e016a7973cf0074819cbd1c0f0141e91ef9",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawUsage": {
+        "input_tokens": 6791,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6680
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6829
+      },
+      "usage": {
+        "inputTokens": 6791,
+        "cachedInputTokens": 6680,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 38,
+        "totalTokens": 6829,
+        "longContext": false,
+        "billedCostUpperBoundUsd": 0.0002014
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

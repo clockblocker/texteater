@@ -7,203 +7,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 		required: ["emojiDescription"],
 		additionalProperties: false,
 	},
-	intakeOutput: {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		type: "object",
-		properties: {
-			language: {
-				anyOf: [
-					{ type: "string", enum: ["de", "he"] },
-					{ type: "null" },
-				],
-			},
-			items: {
-				type: "array",
-				items: {
-					type: "object",
-					properties: {
-						id: { type: "string" },
-						decision: {
-							type: "string",
-							enum: [
-								"Accepted",
-								"UnsupportedLanguage",
-								"Unintelligible",
-							],
-						},
-						language: {
-							anyOf: [
-								{ type: "string", enum: ["de", "he"] },
-								{ type: "null" },
-							],
-						},
-						stitchedText: { type: "string", minLength: 1 },
-					},
-					required: ["id", "decision", "language", "stitchedText"],
-					additionalProperties: false,
-				},
-			},
-		},
-		required: ["language", "items"],
-		additionalProperties: false,
-	},
-	knowledgeOutput: {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		type: "object",
-		properties: {
-			transcription: {
-				anyOf: [{ type: "string", minLength: 1 }, { type: "null" }],
-			},
-			definition: {
-				anyOf: [{ type: "string", minLength: 1 }, { type: "null" }],
-			},
-			translations: {
-				type: "object",
-				properties: {
-					en: {
-						anyOf: [
-							{ type: "string", minLength: 1 },
-							{ type: "null" },
-						],
-					},
-					ru: {
-						anyOf: [
-							{ type: "string", minLength: 1 },
-							{ type: "null" },
-						],
-					},
-				},
-				additionalProperties: false,
-			},
-			semanticRelations: {
-				type: "object",
-				properties: {
-					synonym: {
-						anyOf: [
-							{
-								type: "array",
-								items: {
-									type: "object",
-									properties: {
-										canonicalForm: {
-											type: "string",
-											minLength: 1,
-										},
-										kind: { type: "string", minLength: 1 },
-									},
-									required: ["canonicalForm", "kind"],
-									additionalProperties: false,
-								},
-							},
-							{ type: "null" },
-						],
-					},
-					nearSynonym: {
-						anyOf: [
-							{
-								type: "array",
-								items: {
-									type: "object",
-									properties: {
-										canonicalForm: {
-											type: "string",
-											minLength: 1,
-										},
-										kind: { type: "string", minLength: 1 },
-									},
-									required: ["canonicalForm", "kind"],
-									additionalProperties: false,
-								},
-							},
-							{ type: "null" },
-						],
-					},
-					antonym: {
-						anyOf: [
-							{
-								type: "array",
-								items: {
-									type: "object",
-									properties: {
-										canonicalForm: {
-											type: "string",
-											minLength: 1,
-										},
-										kind: { type: "string", minLength: 1 },
-									},
-									required: ["canonicalForm", "kind"],
-									additionalProperties: false,
-								},
-							},
-							{ type: "null" },
-						],
-					},
-					nearAntonym: {
-						anyOf: [
-							{
-								type: "array",
-								items: {
-									type: "object",
-									properties: {
-										canonicalForm: {
-											type: "string",
-											minLength: 1,
-										},
-										kind: { type: "string", minLength: 1 },
-									},
-									required: ["canonicalForm", "kind"],
-									additionalProperties: false,
-								},
-							},
-							{ type: "null" },
-						],
-					},
-					hypernym: {
-						anyOf: [
-							{
-								type: "array",
-								items: {
-									type: "object",
-									properties: {
-										canonicalForm: {
-											type: "string",
-											minLength: 1,
-										},
-										kind: { type: "string", minLength: 1 },
-									},
-									required: ["canonicalForm", "kind"],
-									additionalProperties: false,
-								},
-							},
-							{ type: "null" },
-						],
-					},
-					holonym: {
-						anyOf: [
-							{
-								type: "array",
-								items: {
-									type: "object",
-									properties: {
-										canonicalForm: {
-											type: "string",
-											minLength: 1,
-										},
-										kind: { type: "string", minLength: 1 },
-									},
-									required: ["canonicalForm", "kind"],
-									additionalProperties: false,
-								},
-							},
-							{ type: "null" },
-						],
-					},
-				},
-				additionalProperties: false,
-			},
-		},
-		additionalProperties: false,
-	},
 	"grammar/de/Construction/Fusion": {
 		$schema: "https://json-schema.org/draft/2020-12/schema",
 		anyOf: [
@@ -859,55 +662,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -934,20 +699,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -955,7 +742,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -1015,13 +805,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -1031,14 +841,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -1051,21 +867,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -1073,84 +1037,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -3120,55 +3189,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -3195,20 +3226,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -3216,7 +3269,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -3276,13 +3332,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -3292,14 +3368,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -3312,21 +3394,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -3334,84 +3564,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -4459,55 +4794,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -4534,20 +4831,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -4555,7 +4874,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -4615,13 +4937,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -4631,14 +4973,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -4651,21 +4999,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -4673,84 +5169,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -4962,55 +5563,17 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{
 												type: "object",
 												properties: {
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													verbForm: { type: "null" },
-													voice: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Pass"],
-															},
-															{ type: "null" },
-														],
-													},
-												},
-												required: [
-													"number",
-													"tense",
-													"verbForm",
-													"voice",
-												],
-												additionalProperties: false,
-											},
-											{
-												type: "object",
-												properties: {
 													mood: {
-														type: "string",
-														enum: ["Imp"],
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Ind",
+																	"Sub",
+																],
+															},
+															{ type: "null" },
+														],
 													},
 													number: {
 														anyOf: [
@@ -5037,20 +5600,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
-													tense: { type: "null" },
-													verbForm: {
-														type: "string",
-														enum: ["Fin"],
-													},
-													voice: {
+													tense: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																enum: [
+																	"Past",
+																	"Pres",
+																],
 															},
 															{ type: "null" },
 														],
 													},
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -5058,7 +5643,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -5118,13 +5706,33 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: ["Fin"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
@@ -5134,14 +5742,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													mood: { type: "null" },
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
 													number: {
 														anyOf: [
 															{
@@ -5154,21 +5768,169 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															{ type: "null" },
 														],
 													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: {
+														type: "string",
+														enum: ["Imp"],
+													},
+													number: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Plur",
+																	"Sing",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													person: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"1",
+																	"2",
+																	"3",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Fin"],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
 														type: "string",
 														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
 														],
 													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
 												},
 												required: [
 													"mood",
@@ -5176,84 +5938,189 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
 											{
 												type: "object",
 												properties: {
-													aspect: {
-														anyOf: [
-															{
-																type: "string",
-																enum: ["Perf"],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
-													tense: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Past",
-																	"Pres",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													tense: { type: "null" },
 													verbForm: {
 														type: "string",
-														enum: ["Part"],
+														enum: ["Inf"],
 													},
-													voice: {
+													perfect: {
 														anyOf: [
 															{
 																type: "string",
-																enum: ["Pass"],
+																const: "Yes",
 															},
 															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
 														],
 													},
 												},
 												required: [
-													"aspect",
-													"gender",
 													"mood",
 													"number",
 													"person",
 													"tense",
 													"verbForm",
+													"perfect",
+													"future",
 													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: { type: "null" },
+													passive: { type: "null" },
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
+												],
+												additionalProperties: false,
+											},
+											{
+												type: "object",
+												properties: {
+													mood: { type: "null" },
+													number: { type: "null" },
+													person: { type: "null" },
+													tense: { type: "null" },
+													verbForm: {
+														type: "string",
+														enum: ["Part"],
+													},
+													participleForm: {
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Present",
+																	"Past",
+																],
+															},
+															{ type: "null" },
+														],
+													},
+													perfect: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													future: {
+														anyOf: [
+															{
+																type: "string",
+																const: "Yes",
+															},
+															{ type: "null" },
+														],
+													},
+													voice: {
+														type: "string",
+														enum: ["Pass"],
+													},
+													passive: {
+														type: "string",
+														enum: [
+															"Process",
+															"State",
+														],
+													},
+												},
+												required: [
+													"mood",
+													"number",
+													"person",
+													"tense",
+													"verbForm",
+													"participleForm",
+													"perfect",
+													"future",
+													"voice",
+													"passive",
 												],
 												additionalProperties: false,
 											},
@@ -12990,1857 +13857,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"realizationCoverage",
 				],
 				additionalProperties: false,
-			},
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Unresolved" },
-				},
-				required: ["decision"],
-				additionalProperties: false,
-			},
-		],
-	},
-	"target/de": {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		anyOf: [
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Resolved" },
-					target: {
-						anyOf: [
-							{
-								type: "object",
-								properties: {
-									family: {
-										type: "string",
-										const: "Construction",
-									},
-									kind: { type: "string", const: "Fusion" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "ADJ" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "ADP" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "ADV" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "AUX" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "CCONJ" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "DET" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "INTJ" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "NOUN" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "NUM" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "PART" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "PRON" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "PROPN" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "SCONJ" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "SYM" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: { type: "string", const: "Lexeme" },
-									kind: { type: "string", const: "VERB" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: {
-										type: "string",
-										const: "Phraseme",
-									},
-									kind: { type: "string", const: "Aphorism" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: {
-										type: "string",
-										const: "Phraseme",
-									},
-									kind: {
-										type: "string",
-										const: "DiscourseFormula",
-									},
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: {
-										type: "string",
-										const: "Phraseme",
-									},
-									kind: { type: "string", const: "Idiom" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-							{
-								type: "object",
-								properties: {
-									family: {
-										type: "string",
-										const: "Phraseme",
-									},
-									kind: { type: "string", const: "Proverb" },
-								},
-								required: ["family", "kind"],
-								additionalProperties: false,
-							},
-						],
-					},
-					additionalMemberIndices: {
-						type: "array",
-						items: {
-							type: "integer",
-							minimum: 0,
-							maximum: 9007199254740991,
-						},
-					},
-				},
-				required: ["decision", "target", "additionalMemberIndices"],
-				additionalProperties: false,
-			},
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Unresolved" },
-					target: { type: "null" },
-					additionalMemberIndices: { type: "null" },
-				},
-				required: ["decision", "target", "additionalMemberIndices"],
-				additionalProperties: false,
-			},
-		],
-	},
-	"target/en": {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		anyOf: [
-			{
-				anyOf: [
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Construction" },
-							kind: { type: "string", const: "Fusion" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "ADJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "ADP" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "ADV" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "AUX" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "CCONJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "DET" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "INTJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "NOUN" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "NUM" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "X" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PART" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PRON" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PROPN" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PUNCT" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "SCONJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "SYM" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "VERB" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Circumfix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Clitic" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Duplifix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Infix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Interfix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Prefix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Root" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Suffix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Suffixoid" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "ToneMarking" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Transfix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "Aphorism" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "DiscourseFormula" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "Idiom" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "Proverb" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-				],
-			},
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Unresolved" },
-				},
-				required: ["decision"],
-				additionalProperties: false,
-			},
-		],
-	},
-	"target/he": {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		anyOf: [
-			{
-				anyOf: [
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Construction" },
-							kind: { type: "string", const: "Fusion" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "ADJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "ADP" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "ADV" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "AUX" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "CCONJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "DET" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "INTJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "NOUN" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "NUM" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "X" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PART" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PRON" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PROPN" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "PUNCT" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "SCONJ" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "SYM" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Lexeme" },
-							kind: { type: "string", const: "VERB" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Circumfix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Clitic" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Duplifix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Infix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Interfix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Prefix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Root" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Suffix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Suffixoid" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "ToneMarking" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Morpheme" },
-							kind: { type: "string", const: "Transfix" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "Aphorism" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "DiscourseFormula" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "Idiom" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-					{
-						type: "object",
-						properties: {
-							family: { type: "string", const: "Phraseme" },
-							kind: { type: "string", const: "Proverb" },
-							memberSegmentIndices: {
-								type: "array",
-								prefixItems: [
-									{
-										type: "integer",
-										minimum: 0,
-										maximum: 9007199254740991,
-									},
-								],
-								items: {
-									type: "integer",
-									minimum: 0,
-									maximum: 9007199254740991,
-								},
-							},
-						},
-						required: ["family", "kind", "memberSegmentIndices"],
-						additionalProperties: false,
-					},
-				],
 			},
 			{
 				type: "object",

@@ -1,6 +1,7 @@
 import { parseUnit } from "dumling";
 import { parseReadingKnowledge } from "dumrel";
 import type { AuthoredMember } from "../src/concrete-lang/de/authored-closed-sets/member.js";
+import { validateAuthoredRealizations } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
 
 /** Fails the build before packaging an invalid authored Reading or its Knowledge. */
 export function validateAuthoredCatalog(
@@ -22,6 +23,7 @@ if (import.meta.main) {
 		"../src/concrete-lang/de/authored-closed-sets/inventory.js"
 	);
 	validateAuthoredCatalog(authoredMembers);
+	validateAuthoredRealizations();
 	console.log(
 		`Validated ${authoredMembers.length} authored catalog members.`,
 	);

@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "question": "Compare two unchanged non-verbal target-classification inputs and expectations against exact retained Luna baseline attempts. No verbal membership labels, new baselines, retries or tuning.",
+  "policy": {
+    "attemptsPerEntry": 1,
+    "automaticRetries": 0,
+    "tuning": false,
+    "heldOutUsedForTuning": false,
+    "deterministicOnlyEdges": [
+      "Unresolved injection",
+      "exact generated collision injection",
+      "partial failure injection",
+      "cancellation"
+    ]
+  },
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  },
+  "entries": [
+    {
+      "id": "target-de-route-lexeme-noun",
+      "role": "review",
+      "kind": "corpus",
+      "experiment": "target-classification/de/high-level-whole-unit",
+      "input": {
+        "clickedSegmentIndex": 2,
+        "segments": [
+          {
+            "kind": "ResolvableText",
+            "text": "Das"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "Haus"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "steht"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "leer"
+          },
+          {
+            "kind": "Punctuation",
+            "text": "."
+          }
+        ]
+      },
+      "expected": {
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "memberSegmentIndices": [
+          2
+        ]
+      }
+    },
+    {
+      "id": "target-de-route-lexeme-adj",
+      "role": "review",
+      "kind": "corpus",
+      "experiment": "target-classification/de/high-level-whole-unit",
+      "input": {
+        "clickedSegmentIndex": 2,
+        "segments": [
+          {
+            "kind": "ResolvableText",
+            "text": "Der"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "kluge"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "Hund"
+          },
+          {
+            "kind": "Whitespace",
+            "text": " "
+          },
+          {
+            "kind": "ResolvableText",
+            "text": "schläft"
+          },
+          {
+            "kind": "Punctuation",
+            "text": "."
+          }
+        ]
+      },
+      "expected": {
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "memberSegmentIndices": [
+          2
+        ]
+      }
+    }
+  ],
+  "fingerprint": "8ec5dedd96a73e6d33b8b990458c91cedd14eacfc7c9f154c4c58ef6ed0c31b8"
+}

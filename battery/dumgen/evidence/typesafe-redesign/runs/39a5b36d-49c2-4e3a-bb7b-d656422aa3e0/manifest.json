@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "39a5b36d-49c2-4e3a-bb7b-d656422aa3e0",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:08.696Z",
+  "corpus": {
+    "fingerprint": "e66da85c4504fab7024655e38a064ccb0250417757638c7b1e507a55332319b9",
+    "caseIds": [
+      "grammar-de-propn-dev-person-peters-gen"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

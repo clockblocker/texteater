@@ -1,0 +1,10 @@
+{
+  "relation-adv-25-muessen": {
+    "expectedFailure": "CatalogMiss",
+    "reason": "The retained prototype Reading uses ❗; the exact reviewed müssen Reading uses ⚠️. Production must not replace an unreviewed Closed Reading or generate its Knowledge."
+  },
+  "relation-adv-27-jeder": {
+    "expectedFailure": "CatalogMiss",
+    "reason": "The retained prototype Reading uses 🌐; the exact reviewed jeder Reading uses 💯. Production must preserve exact-Reading catalog ownership."
+  }
+}

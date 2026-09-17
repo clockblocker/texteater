@@ -52,3 +52,43 @@ export const evaluationRunSchema = z.strictObject({
 	cases: z.array(caseRecordSchema),
 	summary: runSummarySchema,
 });
+
+export const operationManifestSchema = runManifestSchema
+	.omit({ prompt: true, configuration: true })
+	.extend({
+		version: z.literal(2),
+		operationVersion: z.string().min(1),
+		configurations: z.strictObject({
+			generation: configurationSchema,
+			judgment: configurationSchema,
+		}),
+	});
+export const operationCaseRecordSchema = caseRecordSchema.extend({
+	status: z.enum([
+		"Success",
+		"Partial",
+		"InvalidOutput",
+		"ProviderFailure",
+		"EvaluationFailure",
+		"Interrupted",
+		"Unresolved",
+		"CatalogMiss",
+		"InvalidInput",
+		"NotImplemented",
+	]),
+	traces: z.array(z.json()),
+	calls: z.number().int().nonnegative(),
+	usage: z.strictObject({
+		inputTokens: z.number().nonnegative().nullable(),
+		outputTokens: z.number().nonnegative().nullable(),
+	}),
+});
+export const operationEvaluationRunSchema = z.strictObject({
+	manifest: operationManifestSchema,
+	cases: z.array(operationCaseRecordSchema),
+	summary: runSummarySchema,
+});
+export const storedRunSchema = z.union([
+	evaluationRunSchema,
+	operationEvaluationRunSchema,
+]);

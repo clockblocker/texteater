@@ -4,6 +4,8 @@ import type { Encounter } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
+import { grammarFixture } from "../../../../dumgen/tests/grammar-fixture.js";
+import { knowledgeFixture } from "../../../../dumgen/tests/knowledge-fixture.js";
 import {
 	ParsingError,
 	parseAsCommitChangesRequest,
@@ -61,10 +63,18 @@ test("an independently classified encounter reaches dictionary storage and pendi
 		},
 	];
 	const stages: string[] = [];
+	const grammarExecutor = grammarFixture(outputs[0]);
+	const knowledgeExecutor = knowledgeFixture(outputs[2]);
 	const dumgen = createDumgen({
+		judge: (request, options) =>
+			Object.hasOwn(request.questions, "kind_0")
+				? knowledgeExecutor.judge(request, options)
+				: grammarExecutor.judge(request, options),
 		execute: async (request) => {
 			stages.push(request.stage);
-			return outputs.shift();
+			return request.stage === "produceKnowledge"
+				? knowledgeExecutor.execute(request)
+				: { output: outputs[1] };
 		},
 	});
 	const { dict, storage } = getBootedUpDumdict("de");
@@ -78,8 +88,9 @@ test("an independently classified encounter reaches dictionary storage and pendi
 	});
 	if (!parsed.success) throw parsed.error;
 	const surface = parsed.chain.value.surface;
-	const emojiDescription = await Effect.runPromise(
-		dumgen.generateReadingEmojiDescription({
+	const { emojiDescription } = await Effect.runPromise(
+		dumgen.resolveOrGenerateReadingEmojiDescription({
+			candidates: [],
 			encounter,
 			lemma: surface.lemma,
 		}),
@@ -163,7 +174,7 @@ test("an independently classified encounter reaches dictionary storage and pendi
 	expect(candidates.candidates.map((value) => value.reading)).toEqual([
 		reading,
 	]);
-	expect(stages).toHaveLength(3);
+	expect(stages).toHaveLength(2);
 	expect(
 		stages.some((stage) => stage.toLowerCase().includes("classif")),
 	).toBe(false);

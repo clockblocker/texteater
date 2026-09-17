@@ -5,8 +5,8 @@ import type {
 	ComparisonInput,
 	Dumgen,
 	Encounter,
-	GenerationInput,
 	ModelExchange,
+	OperationTrace,
 } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
@@ -30,6 +30,7 @@ export type GermanClassificationTrace = Partial<
 >;
 export type DumgenFactory = (
 	onExchange?: (exchange: ModelExchange) => void,
+	onOperation?: (trace: OperationTrace) => void,
 ) => Dumgen;
 type Grammar = {
 	encounter: Encounter<"de">;
@@ -83,13 +84,21 @@ export class GermanClassificationResolver {
 		exchanges: ModelExchange[] = [],
 		attemptedPrompts: string[] = [],
 		suppliedTarget?: AnalysisTarget,
+		operations: OperationTrace[] = [],
 	): Effect.Effect<ClickResolutionResponse, unknown> {
 		const localExchanges: ModelExchange[] = [];
-		const dumgen = this.#createDumgen((exchange) => {
-			exchanges.push(exchange);
-			localExchanges.push(exchange);
-			attemptedPrompts.push(...attemptedPromptPaths([exchange]));
-		});
+		const localOperations: OperationTrace[] = [];
+		const dumgen = this.#createDumgen(
+			(exchange) => {
+				exchanges.push(exchange);
+				localExchanges.push(exchange);
+				attemptedPrompts.push(...attemptedPromptPaths([exchange]));
+			},
+			(trace) => {
+				localOperations.push(trace);
+				operations.push(trace);
+			},
+		);
 		let target = suppliedTarget;
 		let stages: GermanClassificationTrace = {};
 		let activeStage: ClassificationStageName = "target";
@@ -142,6 +151,7 @@ export class GermanClassificationResolver {
 					target,
 					localExchanges,
 					"supplied",
+					localOperations,
 				);
 				const encounter = validateEncounter({
 					sentence,
@@ -180,6 +190,8 @@ export class GermanClassificationResolver {
 					encounter,
 					attestation,
 					localExchanges,
+					"authored",
+					localOperations,
 				);
 				grammatical = { encounter, attestation, stages };
 				for (const index of target.memberSegmentIndices)
@@ -192,23 +204,11 @@ export class GermanClassificationResolver {
 				({ reading }) => reading.emojiDescription,
 			);
 			const base = { encounter: grammatical.encounter, lemma };
-			const firstCandidate = candidates[0];
 			const resolution =
-				firstCandidate !== undefined
-					? yield* dumgen.resolveOrGenerateReadingEmojiDescription({
-							...base,
-							candidates: [
-								firstCandidate,
-								...candidates.slice(1),
-							],
-						} as ComparisonInput<"de">)
-					: {
-							decision: "New" as const,
-							emojiDescription:
-								yield* dumgen.generateReadingEmojiDescription(
-									base as GenerationInput<"de">,
-								),
-						};
+				yield* dumgen.resolveOrGenerateReadingEmojiDescription({
+					...base,
+					candidates,
+				} as ComparisonInput<"de">);
 			const parsedReading = parseUnit({
 				unitKind: "Reading",
 				lemma,
@@ -223,12 +223,12 @@ export class GermanClassificationResolver {
 				throw new Error("Expected a German Reading.");
 			const reading = parsedReading.chain.value;
 			stages.reading = operationStage(
-				candidates.length
-					? "resolveOrGenerateReadingEmojiDescription"
-					: "generateReadingEmojiDescription",
+				"resolveOrGenerateReadingEmojiDescription",
 				{ ...base, candidates },
 				resolution,
 				localExchanges,
+				"authored",
+				localOperations,
 			);
 			// All dictionary writes occur after every production stage has succeeded.
 			if (resolution.decision === "New")
@@ -270,6 +270,14 @@ export class GermanClassificationResolver {
 					)
 				)
 					return Effect.fail(error);
+				stages[activeStage] = operationStage(
+					error.stage,
+					{ sentence, target },
+					{ decision: error._tag },
+					localExchanges,
+					"authored",
+					localOperations,
+				);
 				const common = {
 					stages,
 					diagnostics: [

@@ -1,8 +1,9 @@
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
+import type { KnowledgeFailure, KnowledgeRequest } from "dumgen/types";
 import { translationLanguageValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-
+import { knowledgeRequestComplete } from "../server/knowledgeCompletion";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
@@ -14,10 +15,12 @@ import {
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
+import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
 import {
 	dictionaryPlanValidator,
+	knowledgeProductionEvidenceValidator,
 	relationPublicationRunValidator,
 } from "./model/validators";
 import {
@@ -79,9 +82,6 @@ function coveredTranslationLanguages(
 	} | null,
 ): Set<Dumrel.TranslationLanguage> {
 	const covered = new Set<Dumrel.TranslationLanguage>();
-	for (const language of accumulated?.coveredTranslationLanguages ?? []) {
-		if (language === "en" || language === "ru") covered.add(language);
-	}
 	const knowledge = accumulated?.knowledge;
 	if (
 		!knowledge ||
@@ -93,7 +93,10 @@ function coveredTranslationLanguages(
 	const translations = Reflect.get(knowledge, "translations");
 	if (!translations || typeof translations !== "object") return covered;
 	for (const language of translationLanguageValues) {
-		if (Reflect.get(translations, language) !== undefined)
+		if (
+			Array.isArray(Reflect.get(translations, language)) &&
+			Reflect.get(translations, language).length > 0
+		)
 			covered.add(language);
 	}
 	return covered;
@@ -318,10 +321,18 @@ export const fail = internalMutation({
 		attemptKey: v.string(),
 		failureCode: v.string(),
 		failureMessage: v.string(),
+		productionEvidence: v.optional(knowledgeProductionEvidenceValidator),
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
 		const attempt = await findGenerationAttempt(ctx, args.attemptKey);
+		if (attempt && args.productionEvidence)
+			await recordKnowledgeProductionRun(
+				ctx,
+				attempt,
+				args.productionEvidence,
+				"Failure",
+			);
 		if (
 			attempt &&
 			attempt.state !== "Committed" &&
@@ -344,6 +355,7 @@ export const commitGenerated = internalMutation({
 		plan: dictionaryPlanValidator,
 		baseKnowledgePlan: dictionaryPlanValidator,
 		generatedChanges: v.array(v.any()),
+		productionEvidence: knowledgeProductionEvidenceValidator,
 		relationPublication: relationPublicationRunValidator,
 	},
 	returns: v.union(
@@ -399,12 +411,23 @@ export const commitGenerated = internalMutation({
 				? (entry.record as Record<string, unknown>)
 				: {};
 		const knowledge = record.knowledge ?? accumulated?.knowledge ?? {};
+		const complete = knowledgeRequestComplete(
+			knowledge,
+			args.productionEvidence.request as KnowledgeRequest,
+			args.productionEvidence.failures as KnowledgeFailure[],
+		);
+		await recordKnowledgeProductionRun(
+			ctx,
+			attempt,
+			args.productionEvidence,
+			args.productionEvidence.failures.length ? "Partial" : "Success",
+		);
 		await replaceAccumulatedKnowledge(
 			ctx,
 			attempt.ownerReadingKey,
 			knowledge,
 			{
-				status: "Full",
+				status: complete ? "Full" : "Partial",
 			},
 		);
 		const refreshed = await findAccumulatedKnowledge(
@@ -414,10 +437,7 @@ export const commitGenerated = internalMutation({
 		if (refreshed) {
 			await ctx.db.patch(refreshed._id, {
 				coveredTranslationLanguages: [
-					...new Set([
-						...coveredTranslationLanguages(refreshed),
-						...requestedTranslations,
-					]),
+					...new Set([...coveredTranslationLanguages(refreshed)]),
 				],
 			});
 		}
@@ -444,7 +464,15 @@ export const commitGenerated = internalMutation({
 			!publishRelations,
 		);
 		await ctx.db.patch(attempt._id, {
-			state: "Committed",
+			state: args.productionEvidence.failures.length
+				? "Failed"
+				: "Committed",
+			failureCode: args.productionEvidence.failures.length
+				? "partialKnowledge"
+				: undefined,
+			failureMessage: args.productionEvidence.failures.length
+				? `Saved available Knowledge. Could not complete: ${[...new Set(args.productionEvidence.failures.map((failure) => (failure.leaf ? `${failure.aspect}/${failure.leaf}` : failure.aspect)))].join(", ")}.`
+				: undefined,
 			updatedAt: Date.now(),
 		});
 		return { status: "Committed" as const };

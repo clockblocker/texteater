@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "92b13f9d-403f-4c20-8627-ddad744670ed",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:11.813Z",
+  "corpus": {
+    "fingerprint": "ddf1e252e2f0af3461a3b302477be0af17ea3571b8cb995f6e469b600c8f3de5",
+    "caseIds": [
+      "grammar-de-verb-past-ging"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

@@ -14,9 +14,13 @@ bun run --cwd battery/dumgen evaluate --experiment grammatical-resolution/de/lex
 bun run --cwd battery/dumgen evaluate --open RUN_ID --output .runs/dumgen
 ```
 
-`--model` and `--settings` override execution configuration. Model runs require
-`OPENAI_API_KEY`. Laboratory's **Evaluation runs** view uses the same definitions
-and records. Its interactive workbench uses these same production operations
+`--model` and `--settings` configure text generation; `--judgment-model` and
+`--judgment-timeout` configure bounded judgments. Live operations require
+`OPENAI_API_KEY` and `TYPESAFE_API_KEY` (or `TYPESAFE_TOKEN`). Both transports
+disable automatic retries. Laboratory's **Evaluation runs** view uses the same definitions
+and immutable version-2 records, with separate domain results, failures and
+TypeSafe/Luna calls. The four structured-Knowledge prototypes remain deferred
+and retain version-1 evaluation. Its interactive workbench uses these same production operations
 and session-scoped Dumdict storage.
 
 Routine output belongs in the untracked `.runs/` directory, or the directory

@@ -51,7 +51,10 @@ export const loadSync = internalQuery({
 				? { materializedDefinition: row.materializedDefinition }
 				: {}),
 			...(row.textId ? { textId: row.textId } : {}),
-			language: language === "de" || language === "he" ? language : null,
+			language:
+				language === "de" || language === "en" || language === "he"
+					? language
+					: null,
 		};
 	},
 });

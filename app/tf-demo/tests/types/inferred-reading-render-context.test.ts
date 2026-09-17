@@ -32,7 +32,7 @@ describe("Reading renderer inference", () => {
 				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbReadingNoteIdentity = { lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; }; unitKind: "Reading"; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
+			`"type GermanVerbReadingNoteIdentity = { lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; unitKind: "Reading"; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
 		);
 	}, 30_000);
 
@@ -43,7 +43,7 @@ describe("Reading renderer inference", () => {
 				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: str..."`,
+			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<...>; }; emojiDescription: string; ownerKind: "Readi..."`,
 		);
 	}, 30_000);
 
@@ -55,7 +55,7 @@ describe("Reading renderer inference", () => {
 				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
+			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasGovPrep: string | null; hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
 		);
 	}, 30_000);
 });

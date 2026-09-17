@@ -117,7 +117,7 @@ export async function writeDefinitionText(
 	input: {
 		readonly ownerReadingKey: string;
 		readonly definition: string;
-		readonly language: "de" | "he";
+		readonly language: "de" | "en" | "he";
 		readonly segmentedSentenceId: string;
 		readonly segments: readonly Infer<typeof segmentInputValidator>[];
 	},
@@ -174,7 +174,7 @@ export async function ensureInlineDefinitionText(
 	input: {
 		readonly ownerReadingKey: string;
 		readonly knowledge: unknown;
-		readonly language: "de" | "he";
+		readonly language: "de" | "en" | "he";
 		readonly segment: (
 			text: string,
 		) => readonly Infer<typeof segmentInputValidator>[];

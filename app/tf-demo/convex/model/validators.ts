@@ -4,7 +4,7 @@ import {
 	translationLanguageValues,
 } from "dumrel";
 
-const enabledSegmentationLanguageValues = ["de", "he"] as const;
+const enabledSegmentationLanguageValues = ["de", "en", "he"] as const;
 const grammaticalResolutionLanguageValues = ["de"] as const;
 const segmentKindValues = [
 	"ResolvableText",
@@ -324,6 +324,13 @@ export const resolutionPhaseValidator = v.union(
 
 export const resolutionGenerationEventValidator = v.union(
 	v.object({
+		kind: v.literal("TraceRecorded"),
+		requestId: v.string(),
+		runToken: v.string(),
+		phase: resolutionPhaseValidator,
+		traceJson: v.string(),
+	}),
+	v.object({
 		kind: v.literal("AttemptStarted"),
 		requestId: v.string(),
 		runToken: v.string(),
@@ -626,3 +633,17 @@ export const resolveSegmentResultValidator = v.union(
 		persisted: committedOccurrenceValidator,
 	}),
 );
+
+export const knowledgeProductionEvidenceValidator = v.object({
+	request: v.any(),
+	failures: v.array(
+		v.object({
+			aspect: v.string(),
+			leaf: v.optional(v.string()),
+			candidate: v.optional(v.string()),
+			code: v.string(),
+			message: v.string(),
+		}),
+	),
+	operationTraces: v.array(v.string()),
+});

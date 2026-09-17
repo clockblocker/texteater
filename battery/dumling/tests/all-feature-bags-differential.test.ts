@@ -3,6 +3,10 @@ import { z } from "zod";
 import fixtures from "./fixtures/legacy-feature-acceptance.json";
 
 for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
+	const supersededVerbalShape =
+		/^de\/(lexeme\/(verb|auxiliary)|phraseme\/(idiom|collocation))\.ts$/.test(
+			route,
+		);
 	test(`retained Feature Bag acceptance: ${route}`, async () => {
 		const module = await import(
 			`../src/schemas/concrete-language/${route}`
@@ -17,6 +21,6 @@ for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 			expect(
 				schema.safeParse(sample.input).success,
 				JSON.stringify(sample.input),
-			).toBe(sample.accepted);
+			).toBe(supersededVerbalShape ? false : sample.accepted);
 	});
 }

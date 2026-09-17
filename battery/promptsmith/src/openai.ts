@@ -60,6 +60,7 @@ export function createOpenAIExecutor(
 			output?: { content?: { type?: string; text?: string }[] }[];
 			usage?: unknown;
 			id?: string;
+			model?: string;
 		};
 		if (payload.status !== "completed")
 			throw Error(
@@ -74,6 +75,7 @@ export function createOpenAIExecutor(
 			output: JSON.parse(outputText).value,
 			metadata: {
 				responseId: payload.id ?? null,
+				model: payload.model ?? null,
 				usage: payload.usage ?? null,
 			},
 		};

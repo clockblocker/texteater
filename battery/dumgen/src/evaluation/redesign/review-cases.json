@@ -1,0 +1,514 @@
+{
+	"version": 1,
+	"role": "review; never claim unseen accuracy",
+	"constructions": [
+		{
+			"id": "ids-verbal-01",
+			"sourceSentence": "Er schreibt den Brief.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["schreibt"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-02",
+			"sourceSentence": "Er hat den Brief geschrieben.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["hat", "geschrieben"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": true,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-03",
+			"sourceSentence": "Er wird den Brief schreiben.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["wird", "schreiben"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": true,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-04",
+			"sourceSentence": "Er muss den Brief schreiben.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["schreiben"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": false,
+					"future": false,
+					"passive": null
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["muss"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-05",
+			"sourceSentence": "Er wird den Brief geschrieben haben.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["wird", "geschrieben", "haben"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": true,
+					"future": true,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-06",
+			"sourceSentence": "Er muss den Brief geschrieben haben.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["geschrieben", "haben"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": true,
+					"future": false,
+					"passive": null
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["muss"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-07",
+			"sourceSentence": "Er hat den Brief schreiben müssen.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["schreiben"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": false,
+					"future": false,
+					"passive": null
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["hat", "müssen"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": true,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-08",
+			"sourceSentence": "Er wird den Brief geschrieben haben müssen.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["geschrieben", "haben"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": true,
+					"future": false,
+					"passive": null
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["wird", "müssen"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": true,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-09",
+			"sourceSentence": "Der Brief wird geschrieben.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["wird", "geschrieben"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": false,
+					"passive": "Process"
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-10",
+			"sourceSentence": "Der Brief ist geschrieben worden.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["ist", "geschrieben", "worden"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": true,
+					"future": false,
+					"passive": "Process"
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-11",
+			"sourceSentence": "Der Brief wird geschrieben werden.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["wird", "geschrieben", "werden"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": true,
+					"passive": "Process"
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-12",
+			"sourceSentence": "Der Brief muss geschrieben werden.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["geschrieben", "werden"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": false,
+					"future": false,
+					"passive": "Process"
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["muss"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-13",
+			"sourceSentence": "Der Brief wird geschrieben worden sein.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["wird", "geschrieben", "worden", "sein"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": true,
+					"future": true,
+					"passive": "Process"
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-14",
+			"sourceSentence": "Der Brief muss geschrieben worden sein.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["geschrieben", "worden", "sein"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": true,
+					"future": false,
+					"passive": "Process"
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["muss"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-15",
+			"sourceSentence": "Der Brief hat geschrieben werden müssen.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["geschrieben", "werden"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": false,
+					"future": false,
+					"passive": "Process"
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["hat", "müssen"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": true,
+					"future": false,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		},
+		{
+			"id": "ids-verbal-16",
+			"sourceSentence": "Der Brief wird geschrieben worden sein müssen.",
+			"targets": [
+				{
+					"kind": "VERB",
+					"canonicalForm": "schreiben",
+					"members": ["geschrieben", "worden", "sein"],
+					"form": "Inf",
+					"finiteTense": null,
+					"perfect": true,
+					"future": false,
+					"passive": "Process"
+				},
+				{
+					"kind": "AUX",
+					"canonicalForm": "müssen",
+					"members": ["wird", "müssen"],
+					"form": "Fin",
+					"finiteTense": "Pres",
+					"perfect": false,
+					"future": true,
+					"passive": null
+				}
+			],
+			"clicks": "every member occurrence",
+			"realizationCoverage": "Full",
+			"provenance": "https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853",
+			"expectationStatus": "accepted-construction; adapted complete sentence"
+		}
+	],
+	"intake": [
+		{
+			"id": "rewrite-intake-mixed",
+			"sourceSentences": [
+				"Das Fenster ist offen.",
+				"The door is open.",
+				"החלון פתוח."
+			],
+			"expectedLanguages": ["de", "en", "he"],
+			"stitching": [false, false, false]
+		},
+		{
+			"id": "rewrite-intake-en-stitch",
+			"sourceSentences": ["The win dow is open."],
+			"expectedTexts": ["The window is open."],
+			"expectedLanguages": ["en"],
+			"stitching": [true]
+		},
+		{
+			"id": "rewrite-intake-he-stitch",
+			"sourceSentences": ["הח לון פתוח."],
+			"expectedTexts": ["החלון פתוח."],
+			"expectedLanguages": ["he"],
+			"stitching": [true]
+		},
+		{
+			"id": "rewrite-intake-de-stitch",
+			"sourceSentences": ["Das Fen ster ist offen."],
+			"expectedTexts": ["Das Fenster ist offen."],
+			"expectedLanguages": ["de"],
+			"stitching": [true]
+		},
+		{
+			"id": "rewrite-intake-rejection",
+			"sourceSentences": ["%$#@ !!!"],
+			"expectedDecision": "Unintelligible",
+			"generationCalls": 0
+		},
+		{
+			"id": "rewrite-intake-unsupported",
+			"sourceSentences": ["La fenêtre est ouverte."],
+			"expectedDecision": "UnsupportedLanguage",
+			"generationCalls": 0
+		}
+	],
+	"reading": [
+		{
+			"id": "rewrite-reading-empty",
+			"markedContext": "Das <TARGET>Schloss</TARGET> steht auf dem Hügel.",
+			"lemma": "Schloss",
+			"candidates": [],
+			"expectedDecision": "New",
+			"generationCalls": 1
+		},
+		{
+			"id": "rewrite-reading-reuse",
+			"markedContext": "Der Schlüssel steckt im <TARGET>Schloss</TARGET>.",
+			"lemma": "Schloss",
+			"candidates": ["🏰", "🔒"],
+			"expectedDecision": "Reuse",
+			"expectedEmojiDescription": "🔒",
+			"generationCalls": 0
+		},
+		{
+			"id": "rewrite-reading-no-match",
+			"markedContext": "Das <TARGET>Schloss</TARGET> steht auf dem Hügel.",
+			"lemma": "Schloss",
+			"candidates": ["🔒"],
+			"expectedDecision": "New",
+			"generationCalls": 1
+		},
+		{
+			"id": "rewrite-reading-uncertain",
+			"markedContext": "Das <TARGET>Schloss</TARGET> ist alt.",
+			"lemma": "Schloss",
+			"candidates": ["🏰", "🔒"],
+			"injectedChoice": "Unresolved",
+			"expectedDecision": "Unresolved",
+			"generationCalls": 0
+		},
+		{
+			"id": "rewrite-reading-collision",
+			"markedContext": "Das <TARGET>Schloss</TARGET> steht auf dem Hügel.",
+			"lemma": "Schloss",
+			"candidates": ["🏰"],
+			"injectedChoice": "NoMatch",
+			"injectedGeneration": "🏰",
+			"expectedDecision": "Reuse",
+			"generationCalls": 1
+		}
+	],
+	"knowledge": [
+		{
+			"id": "rewrite-knowledge-partial",
+			"scenario": "valid definition and invalid relation proposal",
+			"expected": "persist definition; report relation failure; never mark Full"
+		},
+		{
+			"id": "rewrite-knowledge-kind",
+			"scenario": "generated relation candidate with same-Family Kind judged by TypeSafe",
+			"expected": "generation never selects relation or Kind"
+		},
+		{
+			"id": "rewrite-knowledge-cancel",
+			"scenario": "cancellation between generation and judgment",
+			"expected": "interrupt without publishing contributions"
+		}
+	]
+}

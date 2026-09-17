@@ -28,7 +28,7 @@ type SegmentDisplayState =
 /** What one Sentence needs to read and click, wherever it is shown. */
 export type ReaderSentenceData = {
 	readonly sentenceId: string;
-	readonly language: "de" | "he";
+	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly SentenceSegmentView[];
 };

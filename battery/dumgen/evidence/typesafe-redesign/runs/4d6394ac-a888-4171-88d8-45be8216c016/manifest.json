@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "4d6394ac-a888-4171-88d8-45be8216c016",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:02.939Z",
+  "corpus": {
+    "fingerprint": "1c162be3a12356df13a669f6ddcbb42185a013089df022f918e4c70d49a56009",
+    "caseIds": [
+      "grammar-de-cconj-dev-adversative-aber-clauses"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

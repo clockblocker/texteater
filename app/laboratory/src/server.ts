@@ -1,14 +1,20 @@
 import { createDumgen, DumgenFailure } from "dumgen";
 import type {
+	DumgenOptions,
 	ModelConfiguration,
 	ModelExchange,
 	ModelExecutor,
+	OperationTrace,
 } from "dumgen/types";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Runtime from "effect/Runtime";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { configurationSchema } from "promptsmith/schemas";
+import {
+	createTypeSafeExecutor,
+	type TypeSafeExecutor,
+} from "promptsmith/typesafe";
 import { GermanClassificationResolver } from "./classification";
 import { createEvaluationService } from "./evaluations";
 import { attemptedPromptPaths, segmentForLaboratory } from "./segmentation";
@@ -56,6 +62,7 @@ async function logAttempt(input: {
 	trace: unknown;
 	promptNames: string[];
 	modelExchanges: readonly ModelExchange[];
+	operations: readonly OperationTrace[];
 	applicationResult: ApplicationResult | null;
 	startedAt: number;
 	errors: LoggedError[];
@@ -75,6 +82,7 @@ async function logAttempt(input: {
 				trace: {
 					stages: input.trace,
 					modelExchanges: input.modelExchanges,
+					operations: input.operations,
 				},
 				applicationResult: input.applicationResult,
 				latencyMs: Number(
@@ -94,6 +102,8 @@ export function startLaboratoryServer(
 		sessionDirectory?: string;
 		port?: number;
 		execute?: ModelExecutor;
+		judge?: TypeSafeExecutor;
+		judgmentConfiguration?: DumgenOptions["judgmentConfiguration"];
 		configuration?: Partial<ModelConfiguration>;
 	} = {},
 ) {
@@ -102,21 +112,30 @@ export function startLaboratoryServer(
 	const execute: ModelExecutor =
 		options.execute ??
 		(async (request) =>
-			(
-				await transport({
-					...request,
-					configuration: configurationSchema.parse(
-						request.configuration,
-					),
-				})
-			).output);
+			await transport({
+				...request,
+				configuration: configurationSchema.parse(request.configuration),
+			}));
 	const buildLaboratoryDumgen = (
 		onModelExchange?: (exchange: ModelExchange) => void,
+		onOperation?: (trace: OperationTrace) => void,
 	) =>
 		createDumgen({
 			execute,
+			judge:
+				options.judge ??
+				((request, requestOptions) =>
+					createTypeSafeExecutor({
+						apiKey:
+							process.env.TYPESAFE_API_KEY ??
+							process.env.TYPESAFE_TOKEN,
+					})(request, requestOptions)),
+			judgmentConfiguration: options.judgmentConfiguration ?? {
+				model: process.env.TYPESAFE_DEFAULT_MODEL ?? "jev-latest",
+			},
 			configuration: options.configuration,
 			onModelExchange,
+			onOperation,
 		});
 	let resolver = new GermanClassificationResolver(buildLaboratoryDumgen);
 	const sentences = new Map<
@@ -210,6 +229,17 @@ export function startLaboratoryServer(
 				dumgen: true,
 				model,
 				apiKeyConfigured: Boolean(process.env.OPENAI_API_KEY),
+				judgment: {
+					model:
+						options.judgmentConfiguration?.model ??
+						process.env.TYPESAFE_DEFAULT_MODEL ??
+						"jev-latest",
+					apiKeyConfigured: Boolean(
+						process.env.TYPESAFE_API_KEY ??
+							process.env.TYPESAFE_TOKEN,
+					),
+					maxRetries: 0,
+				},
 			}),
 			"/api/session": {
 				GET() {
@@ -233,6 +263,7 @@ export function startLaboratoryServer(
 					const trace: Partial<SegmentationResponse["stages"]> = {};
 					const promptNames: string[] = [];
 					const modelExchanges: ModelExchange[] = [];
+					const operations: OperationTrace[] = [];
 					let applicationResult: ApplicationResult | null = null;
 					let errors: LoggedError[] = [];
 					try {
@@ -257,11 +288,13 @@ export function startLaboratoryServer(
 
 						const body = await Effect.runPromise(
 							segmentForLaboratory(
-								buildLaboratoryDumgen((exchange) =>
-									modelExchanges.push(exchange),
+								buildLaboratoryDumgen(
+									(exchange) => modelExchanges.push(exchange),
+									(trace) => operations.push(trace),
 								),
 								input.text,
 								modelExchanges,
+								operations,
 							),
 							{ signal: request.signal },
 						);
@@ -297,6 +330,7 @@ export function startLaboratoryServer(
 							trace: { stages: trace },
 							promptNames: attemptedPromptPaths(modelExchanges),
 							modelExchanges,
+							operations,
 							applicationResult,
 							startedAt,
 							errors,
@@ -312,6 +346,7 @@ export function startLaboratoryServer(
 					let requestInput: unknown = null;
 					let result: ClickResolutionResponse | null = null;
 					const modelExchanges: ModelExchange[] = [];
+					const operations: OperationTrace[] = [];
 					const attemptedPrompts: string[] = [];
 					let applicationResult: ApplicationResult | null = null;
 					let errors: LoggedError[] = [];
@@ -385,6 +420,7 @@ export function startLaboratoryServer(
 								modelExchanges,
 								attemptedPrompts,
 								input.target,
+								operations,
 							),
 							{ signal: request.signal },
 						);
@@ -417,6 +453,7 @@ export function startLaboratoryServer(
 									? attemptedPrompts
 									: attemptedPromptPaths(modelExchanges)),
 							modelExchanges,
+							operations,
 							applicationResult,
 							startedAt,
 							errors,

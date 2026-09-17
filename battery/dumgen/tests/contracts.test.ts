@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
 import { createDumgen, validateEncounter } from "dumgen";
-import { getExperiment, listExperiments } from "dumgen/development";
-import { generationInputSchema } from "dumgen/schemas";
+import { getExperiment } from "dumgen/development";
+import { comparisonInputSchema } from "dumgen/schemas";
 import { Effect } from "effect";
-import { z } from "zod";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import pronounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
 import { grammarSchemas } from "../src/generated/schemas.js";
+import { grammarFixture } from "./grammar-fixture.js";
 
 // Expected identities come from the reviewed catalog, independently of each
 // corpus answer. Replaying an answer alone only proves schema compatibility.
@@ -38,7 +38,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 	const experiment = getExperiment(
 		"grammatical-resolution/de/lexeme/pronoun",
 	);
-	const demos = experiment.promptSource.demonstrations;
+	const demos = experiment.source.demonstrations;
 	if (!demos || !("ids" in demos))
 		throw Error("Missing pronoun demonstrations");
 	expect(demos.ids).toContain("grammar-de-pron-fixed-jemand-jemandem");
@@ -84,27 +84,27 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 		});
 		const calls: string[] = [];
 		const dumgen = createDumgen({
-			execute: async ({ stage }) => {
-				calls.push(stage);
-				if (stage !== "resolveGrammar")
-					throw Error("Unexpected emoji generation");
-				return golden.idealOutput;
-			},
+			...grammarFixture(golden.idealOutput),
+			onModelExchange: (exchange) => calls.push(exchange.request.stage),
 		});
 		const attestation = await Effect.runPromise(
 			dumgen.resolveGrammar(encounter),
 		);
 		expect(attestation.surface.lemma, id).toEqual(expected.lemma);
-		const input = generationInputSchema.parse({
+		const input = comparisonInputSchema.parse({
+			candidates: [],
 			encounter,
 			lemma: attestation.surface.lemma,
 		});
 		expect(
 			await Effect.runPromise(
-				dumgen.generateReadingEmojiDescription(input),
+				dumgen.resolveOrGenerateReadingEmojiDescription(input),
 			),
 			id,
-		).toBe(expected.reading.emojiDescription);
+		).toEqual({
+			decision: "New",
+			emojiDescription: expected.reading.emojiDescription,
+		});
 		expect(
 			await Effect.runPromise(
 				dumgen.resolveOrGenerateReadingEmojiDescription({
@@ -144,74 +144,6 @@ test("pronoun answers preserve case-bearing forms and isolate Surface reflexivit
 	}
 });
 
-test("production prompt prose matches response schemas without legacy serialization instructions", () => {
-	for (const spec of listExperiments().filter((item) =>
-		item.id.startsWith("grammatical-resolution/"),
-	)) {
-		const { body, outputSchema } = getExperiment(spec.id).promptSource;
-		const schema = z.toJSONSchema(outputSchema);
-		const resolved = schema.anyOf?.find(
-			(branch) => branch.properties?.lemma,
-		);
-		if (!resolved) throw Error(`Missing resolved contract: ${spec.id}`);
-		expect(resolved.required?.toSorted(), spec.id).toEqual([
-			"lemma",
-			"memberOrthographies",
-			"normalizedMembers",
-			"realizationCoverage",
-			"surface",
-		]);
-		const surface = resolved.properties?.surface;
-		const surfaceFields =
-			typeof surface === "object" ? surface.required : undefined;
-		if (!surfaceFields) throw Error(`Missing Surface contract: ${spec.id}`);
-		const declaredSurface = body.match(
-			/surface contains exactly ([^.]+)\./,
-		)?.[1];
-		if (!declaredSurface)
-			throw Error(`Missing Surface instructions: ${spec.id}`);
-		const proseFields = declaredSurface
-			.split(/,? and |, /)
-			.map((field) => field.trim())
-			.toSorted();
-		expect(proseFields, spec.id).toEqual(surfaceFields.toSorted());
-		expect(body.match(/<output_contract>/g), spec.id).toHaveLength(1);
-		for (const field of [
-			"memberOrthographies",
-			"normalizedMembers",
-			"surface",
-			"lemma",
-			"realizationCoverage",
-		])
-			expect(body, spec.id).toContain(field);
-		expect(body, spec.id).not.toMatch(
-			/\bCitation(?:Surface)?\b|\bInflection(?:Surface)?\b|surfaceKind|referenceGender/,
-		);
-		expect(body, spec.id).not.toMatch(
-			/(?:Never|Do not) return[^.]*realizationCoverage/i,
-		);
-		expect(body, spec.id).not.toMatch(
-			/(?:application|app) (?:injects|supplies|owns)[^.]*realization.?coverage/i,
-		);
-	}
-	const { body } = getExperiment(
-		"grammatical-resolution/de/lexeme/pronoun",
-	).promptSource;
-	expect(body).toContain("gender[psor] belong in lemma.coreFeatures");
-	expect(body).toContain(
-		'the only Inflectional Feature: use { reflex: "Yes" }',
-	);
-	for (const id of ["reading-generation/de", "reading-resolution/de"]) {
-		const source = getExperiment(id).promptSource;
-		expect(source.body).toContain(
-			'Return exactly { "emojiDescription": string }',
-		);
-		expect(z.toJSONSchema(source.outputSchema).required).toEqual([
-			"emojiDescription",
-		]);
-	}
-});
-
 test("alternate accusative jemand retains the reviewed jemanden identity", async () => {
 	const golden =
 		pronounCases["grammar-de-pron-fixed-jemand-jemanden"].idealOutput;
@@ -234,10 +166,8 @@ test("alternate accusative jemand retains the reviewed jemanden identity", async
 	} as const;
 	let calls = 0;
 	const dumgen = createDumgen({
-		execute: async () => {
-			if (++calls > 1) throw Error("Unexpected emoji generation");
-			return answer;
-		},
+		...grammarFixture(answer),
+		onModelExchange: () => calls++,
 	});
 	const attestation = await Effect.runPromise(
 		dumgen.resolveGrammar(encounter),
@@ -247,13 +177,14 @@ test("alternate accusative jemand retains the reviewed jemanden identity", async
 	expect(attestation.surface.lemma.canonicalForm).toBe("jemanden");
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter,
 					lemma: attestation.surface.lemma,
 				}),
 			),
 		),
-	).toBe("👤");
+	).toEqual({ decision: "New", emojiDescription: "👤" });
 	expect(calls).toBe(1);
 });

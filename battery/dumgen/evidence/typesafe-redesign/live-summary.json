@@ -1,0 +1,2800 @@
+{
+  "version": 1,
+  "records": 128,
+  "uniqueCases": 127,
+  "latestStatuses": {
+    "Success": 114,
+    "CatalogMiss": 2,
+    "Unresolved": 11
+  },
+  "allAttemptStatuses": {
+    "Success": 114,
+    "CatalogMiss": 2,
+    "Unresolved": 11,
+    "InvalidInput": 1
+  },
+  "comparisonCategories": {
+    "retained-reference-match": 34,
+    "retained-reference-difference": 19,
+    "domain-unavailable": 13,
+    "accepted-construction-match": 10,
+    "accepted-construction-difference": 36,
+    "intake-match": 5,
+    "intake-difference": 1,
+    "reading-human-review": 3,
+    "held-out-human-review": 6
+  },
+  "calls": {
+    "calls": 281,
+    "latencyMs": 152726.588249,
+    "transport": {
+      "Success": 281
+    },
+    "validation": {
+      "Valid": 281
+    },
+    "input_tokens": 645886,
+    "input_tokens_missingCalls": 0,
+    "output_tokens": 141411,
+    "output_tokens_missingCalls": 0,
+    "costUsd": null
+  },
+  "byStage": {
+    "resolveGrammar/TypeSafe": {
+      "calls": 102,
+      "latencyMs": 34096.26449100003,
+      "transport": {
+        "Success": 102
+      },
+      "validation": {
+        "Valid": 102
+      },
+      "input_tokens": 368727,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 99160,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "resolveGrammar/Luna": {
+      "calls": 23,
+      "latencyMs": 35646.86175200004,
+      "transport": {
+        "Success": 23
+      },
+      "validation": {
+        "Valid": 23
+      },
+      "input_tokens": 16475,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 383,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "produceKnowledge/Luna": {
+      "calls": 9,
+      "latencyMs": 22068.812376,
+      "transport": {
+        "Success": 9
+      },
+      "validation": {
+        "Valid": 9
+      },
+      "input_tokens": 2996,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 543,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "produceKnowledge/TypeSafe": {
+      "calls": 7,
+      "latencyMs": 2561.477250999993,
+      "transport": {
+        "Success": 7
+      },
+      "validation": {
+        "Valid": 7
+      },
+      "input_tokens": 43346,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 14267,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "resolveOrGenerateReadingEmojiDescription/Luna": {
+      "calls": 7,
+      "latencyMs": 14141.96291599999,
+      "transport": {
+        "Success": 7
+      },
+      "validation": {
+        "Valid": 7
+      },
+      "input_tokens": 2960,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 123,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "resolveOrGenerateReadingEmojiDescription/TypeSafe": {
+      "calls": 5,
+      "latencyMs": 1536.1958749999972,
+      "transport": {
+        "Success": 5
+      },
+      "validation": {
+        "Valid": 5
+      },
+      "input_tokens": 3968,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 244,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "resolveOrGenerateTranslation/TypeSafe": {
+      "calls": 3,
+      "latencyMs": 851.8376659999994,
+      "transport": {
+        "Success": 3
+      },
+      "validation": {
+        "Valid": 3
+      },
+      "input_tokens": 1618,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 150,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "classifyTarget/TypeSafe": {
+      "calls": 112,
+      "latencyMs": 34627.28379699996,
+      "transport": {
+        "Success": 112
+      },
+      "validation": {
+        "Valid": 112
+      },
+      "input_tokens": 198932,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 25001,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "segment/TypeSafe": {
+      "calls": 10,
+      "latencyMs": 2898.0739150000154,
+      "transport": {
+        "Success": 10
+      },
+      "validation": {
+        "Valid": 10
+      },
+      "input_tokens": 6486,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 1476,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    },
+    "segment/Luna": {
+      "calls": 3,
+      "latencyMs": 4297.8182099999685,
+      "transport": {
+        "Success": 3
+      },
+      "validation": {
+        "Valid": 3
+      },
+      "input_tokens": 378,
+      "input_tokens_missingCalls": 0,
+      "output_tokens": 64,
+      "output_tokens_missingCalls": 0,
+      "costUsd": null
+    }
+  },
+  "operationDurationMs": 155318.61925400005,
+  "unusedSpeculativeQuestions": 257,
+  "traceIntegrityIssues": [],
+  "pairedBaseline": [
+    {
+      "caseId": "target-de-route-lexeme-noun",
+      "baselineAttempt": "additional-compact-indices/1/target-de-route-lexeme-noun",
+      "baselineCheckpointSha256": "651916c680db5949b96c1beca6f78cf320d1fd193c7f42ffec5e408ab9457d59",
+      "baseline": {
+        "model": "gpt-5.6-luna",
+        "calls": 1,
+        "usage": {
+          "inputTokens": 6788,
+          "cachedInputTokens": 6680,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 38,
+          "totalTokens": 6826,
+          "longContext": false,
+          "billedCostUpperBoundUsd": 0.0002008
+        },
+        "latencyMs": 2729,
+        "output": {
+          "decision": "Resolved",
+          "target": {
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "memberSegmentIndices": [
+              2
+            ]
+          }
+        }
+      },
+      "current": {
+        "runId": "b3b3df28-f0b2-447f-80b5-7ae86eaf284d",
+        "calls": 2,
+        "usage": {
+          "inputTokens": 3182,
+          "outputTokens": 378
+        },
+        "latencyMs": 1062.058458,
+        "output": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            2
+          ]
+        }
+      },
+      "limitation": "Two unchanged non-verbal cases only; historical cache state and timing differ. Baseline cost is a retained upper bound; current cost is unavailable. No general accuracy or savings estimate."
+    },
+    {
+      "caseId": "target-de-route-lexeme-adj",
+      "baselineAttempt": "additional-compact-indices/1/target-de-route-lexeme-adj",
+      "baselineCheckpointSha256": "651916c680db5949b96c1beca6f78cf320d1fd193c7f42ffec5e408ab9457d59",
+      "baseline": {
+        "model": "gpt-5.6-luna",
+        "calls": 1,
+        "usage": {
+          "inputTokens": 6791,
+          "cachedInputTokens": 6680,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 38,
+          "totalTokens": 6829,
+          "longContext": false,
+          "billedCostUpperBoundUsd": 0.0002014
+        },
+        "latencyMs": 2799,
+        "output": {
+          "decision": "Resolved",
+          "target": {
+            "family": "Lexeme",
+            "kind": "ADJ",
+            "memberSegmentIndices": [
+              2
+            ]
+          }
+        }
+      },
+      "current": {
+        "runId": "5f985129-2af3-4906-b56f-9a465d1f7e5f",
+        "calls": 2,
+        "usage": {
+          "inputTokens": 3193,
+          "outputTokens": 379
+        },
+        "latencyMs": 607.2929999999999,
+        "output": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            2
+          ]
+        }
+      },
+      "limitation": "Two unchanged non-verbal cases only; historical cache state and timing differ. Baseline cost is a retained upper bound; current cost is unavailable. No general accuracy or savings estimate."
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "grammar-de-fusion-dev-am-bahnhof",
+      "runId": "21a3780a-0032-4d90-b3fa-b01dfdf1779f",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 1638.841625,
+      "usage": {
+        "inputTokens": 1615,
+        "outputTokens": 347
+      }
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-beim-umzug",
+      "runId": "19ed9302-312d-468e-98f8-94a862d4a208",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 257.88354200000003,
+      "usage": {
+        "inputTokens": 1638,
+        "outputTokens": 357
+      }
+    },
+    {
+      "caseId": "grammar-de-adj-accept-citation-mild",
+      "runId": "0edcec56-4b97-4d31-9e21-a6d01b723360",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 350.42604200000005,
+      "usage": {
+        "inputTokens": 2918,
+        "outputTokens": 799
+      }
+    },
+    {
+      "caseId": "grammar-de-adj-dev-attributive-acc-fem-rot",
+      "runId": "973ea86c-2637-4ad8-9b17-113d70cd3c34",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 4379.529,
+      "usage": {
+        "inputTokens": 3324,
+        "outputTokens": 807
+      }
+    },
+    {
+      "caseId": "grammar-de-adp-dev-prep-durch-acc",
+      "runId": "da3e3833-68e2-4eb4-9157-3ab861882973",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 269.38237499999923,
+      "usage": {
+        "inputTokens": 2942,
+        "outputTokens": 867
+      }
+    },
+    {
+      "caseId": "grammar-de-adp-dev-prep-zu-dat",
+      "runId": "c56d8d8a-556a-409a-a6f4-78346e296ce6",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 296.35870799999975,
+      "usage": {
+        "inputTokens": 2911,
+        "outputTokens": 849
+      }
+    },
+    {
+      "caseId": "grammar-de-adv-dev-temporal-morgen",
+      "runId": "8a3f66f9-4c1b-4334-94d2-3f3f3031e1f4",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 271.3424590000004,
+      "usage": {
+        "inputTokens": 2359,
+        "outputTokens": 623
+      }
+    },
+    {
+      "caseId": "grammar-de-adv-dev-initial-vielleicht",
+      "runId": "62999855-744c-4aaf-a55b-4641832d3dc0",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 315.2693340000005,
+      "usage": {
+        "inputTokens": 2322,
+        "outputTokens": 605
+      }
+    },
+    {
+      "caseId": "grammar-de-aux-dev-perfect-hat-gegessen",
+      "runId": "410c807a-413b-43b3-92b4-0b87432ed90e",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 302.3763749999998,
+      "usage": {
+        "inputTokens": 4798,
+        "outputTokens": 924
+      }
+    },
+    {
+      "caseId": "grammar-de-aux-dev-perfect-waren-gegangen",
+      "runId": "4e85b365-bb45-4ae9-bb53-16aa918d9a74",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 280.89716600000065,
+      "usage": {
+        "inputTokens": 4804,
+        "outputTokens": 927
+      }
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-ordinary-oder-nouns",
+      "runId": "560824bb-9dee-4302-a1b7-aa4572bf7d41",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 269.2128329999996,
+      "usage": {
+        "inputTokens": 1708,
+        "outputTokens": 377
+      }
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-adversative-aber-clauses",
+      "runId": "4d6394ac-a888-4171-88d8-45be8216c016",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 313.2464999999993,
+      "usage": {
+        "inputTokens": 1697,
+        "outputTokens": 377
+      }
+    },
+    {
+      "caseId": "grammar-de-det-dev-indefinite-article-einen",
+      "runId": "5bbc8ab3-3107-40c4-a23d-58216e3660c8",
+      "role": "review",
+      "status": "CatalogMiss",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Required DET identity is absent from the reviewed catalog",
+      "calls": 2,
+      "durationMs": 626.1964169999992,
+      "usage": {
+        "inputTokens": 4567,
+        "outputTokens": 1156
+      }
+    },
+    {
+      "caseId": "grammar-de-det-dev-demonstrative-diesem",
+      "runId": "d152dc4d-ae5f-4057-be33-c985680c67be",
+      "role": "review",
+      "status": "CatalogMiss",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Required DET identity is absent from the reviewed catalog",
+      "calls": 2,
+      "durationMs": 586.8349589999998,
+      "usage": {
+        "inputTokens": 4554,
+        "outputTokens": 1160
+      }
+    },
+    {
+      "caseId": "grammar-de-intj-dev-wupp-onomatopoeia",
+      "runId": "e23f5fb5-e81a-49a6-8b72-181dc8ce6f50",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 1,
+      "durationMs": 294.0227500000001,
+      "usage": {
+        "inputTokens": 1776,
+        "outputTokens": 425
+      }
+    },
+    {
+      "caseId": "grammar-de-intj-dev-hallo-greeting",
+      "runId": "b04858ef-1070-4f00-ad80-f4db7390f680",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 1,
+      "durationMs": 263.9119159999991,
+      "usage": {
+        "inputTokens": 1724,
+        "outputTokens": 388
+      }
+    },
+    {
+      "caseId": "grammar-de-noun-dev-nom-plur-banken",
+      "runId": "d030997f-caee-47b1-aef1-987a4ada47c6",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question lemma.coreFeatures.gender",
+      "calls": 1,
+      "durationMs": 286.7368750000005,
+      "usage": {
+        "inputTokens": 2325,
+        "outputTokens": 592
+      }
+    },
+    {
+      "caseId": "grammar-de-noun-dev-dat-sing-bibliothek",
+      "runId": "bc4881e0-7a73-49e0-a21a-4b02e9d884c1",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 266.1650000000009,
+      "usage": {
+        "inputTokens": 2306,
+        "outputTokens": 581
+      }
+    },
+    {
+      "caseId": "grammar-de-num-dev-initial-fuenf",
+      "runId": "4425586e-c434-40c9-9ff4-e9f9098c5fae",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 297.06524999999965,
+      "usage": {
+        "inputTokens": 2678,
+        "outputTokens": 716
+      }
+    },
+    {
+      "caseId": "grammar-de-num-dev-decimal-drei-komma-vierzehn",
+      "runId": "4de5edb4-2751-41c7-97ba-68f9fcc17df0",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 294.42004200000156,
+      "usage": {
+        "inputTokens": 3314,
+        "outputTokens": 974
+      }
+    },
+    {
+      "caseId": "grammar-de-x-dev-unknown-blarg-nom",
+      "runId": "524bb958-1443-465f-903a-2043e2bcf25f",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 1,
+      "durationMs": 353.81620799999837,
+      "usage": {
+        "inputTokens": 3145,
+        "outputTokens": 905
+      }
+    },
+    {
+      "caseId": "grammar-de-x-dev-unknown-glorps-acc",
+      "runId": "090d89c4-0975-4641-b23f-3ec43513f8be",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 1,
+      "durationMs": 293.6092919999992,
+      "usage": {
+        "inputTokens": 3154,
+        "outputTokens": 906
+      }
+    },
+    {
+      "caseId": "grammar-de-part-dev-negative-initial",
+      "runId": "8425cc85-d218-4e67-afa5-223818e6fdf8",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 341.33837499999936,
+      "usage": {
+        "inputTokens": 2087,
+        "outputTokens": 506
+      }
+    },
+    {
+      "caseId": "grammar-de-part-dev-answer-ja",
+      "runId": "84b9b151-dd9f-4dd2-82e0-5da2d90f56ab",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 283.2169590000012,
+      "usage": {
+        "inputTokens": 2138,
+        "outputTokens": 533
+      }
+    },
+    {
+      "caseId": "grammar-de-pron-fixed-mir",
+      "runId": "207a2304-0e9a-4959-85f6-42eaa236aec3",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 557.6905829999996,
+      "usage": {
+        "inputTokens": 4355,
+        "outputTokens": 1096
+      }
+    },
+    {
+      "caseId": "grammar-de-pron-fixed-du",
+      "runId": "ef41b786-4b37-4686-a7cd-f5ec86722285",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 279.0079999999998,
+      "usage": {
+        "inputTokens": 3837,
+        "outputTokens": 1055
+      }
+    },
+    {
+      "caseId": "grammar-de-propn-dev-person-anna-acc",
+      "runId": "dda41603-c07b-41ee-967a-c09cf973dd49",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question lemma.coreFeatures.gender",
+      "calls": 1,
+      "durationMs": 328.64345800000046,
+      "usage": {
+        "inputTokens": 2503,
+        "outputTokens": 641
+      }
+    },
+    {
+      "caseId": "grammar-de-propn-dev-person-peters-gen",
+      "runId": "39a5b36d-49c2-4e3a-bb7b-d656422aa3e0",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 290.1668340000015,
+      "usage": {
+        "inputTokens": 2505,
+        "outputTokens": 640
+      }
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-complement-dass",
+      "runId": "dc98e9f6-452b-4e0d-8f56-260ba6a6b6b4",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 312.96658300000126,
+      "usage": {
+        "inputTokens": 1679,
+        "outputTokens": 368
+      }
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-conditional-wenn",
+      "runId": "d3f63262-830d-429a-957d-ef70d021b039",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 312.3913330000014,
+      "usage": {
+        "inputTokens": 1699,
+        "outputTokens": 377
+      }
+    },
+    {
+      "caseId": "grammar-de-sym-dev-math-plus",
+      "runId": "cf21d294-9c08-44c9-b2f7-cc5fdc2cf773",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 298.2181670000009,
+      "usage": {
+        "inputTokens": 2466,
+        "outputTokens": 645
+      }
+    },
+    {
+      "caseId": "grammar-de-sym-dev-math-minus",
+      "runId": "9c2bd808-f8d1-48ee-a4ed-6de781d7b198",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 336.6399170000004,
+      "usage": {
+        "inputTokens": 2482,
+        "outputTokens": 654
+      }
+    },
+    {
+      "caseId": "grammar-de-verb-finite-liest",
+      "runId": "8140e25a-98b2-494f-a83d-e22598dc0c29",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 1537.866667000002,
+      "usage": {
+        "inputTokens": 4365,
+        "outputTokens": 1034
+      }
+    },
+    {
+      "caseId": "grammar-de-verb-past-ging",
+      "runId": "92b13f9d-403f-4c20-8627-ddad744670ed",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 1909.3518750000003,
+      "usage": {
+        "inputTokens": 4383,
+        "outputTokens": 1043
+      }
+    },
+    {
+      "caseId": "grammar-de-aphorism-nachahmer",
+      "runId": "724d6e43-c743-4ff8-a0c5-2c38c2788a17",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 286.6633750000001,
+      "usage": {
+        "inputTokens": 3271,
+        "outputTokens": 990
+      }
+    },
+    {
+      "caseId": "grammar-de-aphorism-nachsicht",
+      "runId": "8fafc145-492a-4793-8a45-0b6c2bf9055b",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 294.35720800000126,
+      "usage": {
+        "inputTokens": 3963,
+        "outputTokens": 1301
+      }
+    },
+    {
+      "caseId": "grammar-de-coll-antrag-present-full",
+      "runId": "e022334f-6002-454c-bff5-5871cb8f583c",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 309.0659169999999,
+      "usage": {
+        "inputTokens": 4029,
+        "outputTokens": 1089
+      }
+    },
+    {
+      "caseId": "grammar-de-coll-antrag-past-full",
+      "runId": "c21cf92f-e3d8-4a27-8498-646a9f45602d",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 313.9336250000015,
+      "usage": {
+        "inputTokens": 4061,
+        "outputTokens": 1098
+      }
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-dev-auf-wiedersehen",
+      "runId": "ee19c2af-03b3-4e88-b91e-8e7c13bae0a3",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 256.68208400000003,
+      "usage": {
+        "inputTokens": 2471,
+        "outputTokens": 665
+      }
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-dev-gern-geschehen",
+      "runId": "4ad6831e-dc7d-4779-8cbf-d621102c48a7",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 289.0080830000006,
+      "usage": {
+        "inputTokens": 2441,
+        "outputTokens": 658
+      }
+    },
+    {
+      "caseId": "grammar-de-idiom-was-zum-truncation-partial",
+      "runId": "e5c20522-6737-41ca-8b6a-e64f26f426cb",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 1,
+      "durationMs": 330.69012499999735,
+      "usage": {
+        "inputTokens": 3745,
+        "outputTokens": 1008
+      }
+    },
+    {
+      "caseId": "grammar-de-idiom-faeustchen-perfect-full",
+      "runId": "a199a5e4-bdab-442c-bb1c-78d563901fb6",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 306.5694160000021,
+      "usage": {
+        "inputTokens": 4816,
+        "outputTokens": 1428
+      }
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-andere-laender",
+      "runId": "7abf6ed2-36b4-474f-8a95-5914f18b5430",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 303.4396670000024,
+      "usage": {
+        "inputTokens": 2804,
+        "outputTokens": 806
+      }
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-ende-gut",
+      "runId": "989e2a23-2039-47e0-a720-54d326927900",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 275.6430419999997,
+      "usage": {
+        "inputTokens": 2785,
+        "outputTokens": 816
+      }
+    },
+    {
+      "caseId": "knowledge-demo-construction-fusion-ans",
+      "runId": "9cede5be-02e2-47e0-8df4-a27b03f85b30",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 0,
+      "durationMs": 6.109249999997701,
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    {
+      "caseId": "relation-basic-01-hubschrauber",
+      "runId": "0c5328db-2634-424f-96ac-cfb72a190d2d",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 2371.083834000001,
+      "usage": {
+        "inputTokens": 6333,
+        "outputTokens": 2107
+      }
+    },
+    {
+      "caseId": "relation-basic-02-sichtbar",
+      "runId": "1ad67c4e-61ed-4199-8dbc-299170111ed5",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 3523.472791,
+      "usage": {
+        "inputTokens": 6898,
+        "outputTokens": 2443
+      }
+    },
+    {
+      "caseId": "relation-basic-03-pudel",
+      "runId": "6edaa79e-a3a7-4191-853f-869e91645297",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 2658.853708999999,
+      "usage": {
+        "inputTokens": 8246,
+        "outputTokens": 2875
+      }
+    },
+    {
+      "caseId": "knowledge-demo-morpheme-suffix-heit",
+      "runId": "1bbfe640-f12c-4428-9704-a7b683b7b10c",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 0,
+      "durationMs": 5.424707999998645,
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    {
+      "caseId": "relation-adv-07-ins-gras-beissen",
+      "runId": "8d90e4a9-220b-497c-997e-9c40c5572d87",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 3534.8016670000034,
+      "usage": {
+        "inputTokens": 8134,
+        "outputTokens": 2544
+      }
+    },
+    {
+      "caseId": "relation-adv-34-aphorism-null",
+      "runId": "5d0cab0c-3420-4e21-8224-7e11dec4da46",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 3239.5204999999987,
+      "usage": {
+        "inputTokens": 8246,
+        "outputTokens": 2594
+      }
+    },
+    {
+      "caseId": "relation-adv-35-in-betracht-ziehen",
+      "runId": "4c30a1ac-d3db-4f69-8d29-ac2ea06db3ae",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 2781.758584000003,
+      "usage": {
+        "inputTokens": 4492,
+        "outputTokens": 1270
+      }
+    },
+    {
+      "caseId": "reading-generation-bank-seat",
+      "runId": "5334c6b0-982f-4f8c-b8be-748f42c63f60",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 1703.580041000001,
+      "usage": {
+        "inputTokens": 416,
+        "outputTokens": 18
+      }
+    },
+    {
+      "caseId": "reading-generation-maus-computer",
+      "runId": "3d50580b-a807-4ad7-bd13-05d14aa5400c",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 1637.1467919999996,
+      "usage": {
+        "inputTokens": 420,
+        "outputTokens": 19
+      }
+    },
+    {
+      "caseId": "reading-de-adj-sauer-acidic",
+      "runId": "dbd4f3f3-a81c-482a-9cd9-d385bb8e1275",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 1379.1226250000036,
+      "usage": {
+        "inputTokens": 429,
+        "outputTokens": 17
+      }
+    },
+    {
+      "caseId": "reading-de-adj-sauer-acidic-reuse",
+      "runId": "aaf6fbe4-f95a-4e0a-bcf0-a1ab470ff0bb",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 355.4903750000012,
+      "usage": {
+        "inputTokens": 692,
+        "outputTokens": 47
+      }
+    },
+    {
+      "caseId": "reading-de-adj-sauer-angry",
+      "runId": "39674c78-52cb-48d0-902d-727afe2acf93",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 1973.6771660000013,
+      "usage": {
+        "inputTokens": 1121,
+        "outputTokens": 64
+      }
+    },
+    {
+      "caseId": "translation-cover-near-equivalent",
+      "runId": "004d2b0e-78c0-47ca-a360-4a9ac7e91fb8",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 280.8274999999994,
+      "usage": {
+        "inputTokens": 551,
+        "outputTokens": 56
+      }
+    },
+    {
+      "caseId": "translation-cover-concise-paraphrase",
+      "runId": "9e0ef83c-5119-41db-9b3c-2569b625a24a",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 286.5097079999978,
+      "usage": {
+        "inputTokens": 534,
+        "outputTokens": 47
+      }
+    },
+    {
+      "caseId": "translation-add-register-distinction",
+      "runId": "13494a9f-caa0-4a1f-a396-ab35adb51d59",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-difference",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 288.77762500000244,
+      "usage": {
+        "inputTokens": 533,
+        "outputTokens": 47
+      }
+    },
+    {
+      "caseId": "ids-verbal-01-target-0-click-2",
+      "runId": "cf5ab9fb-d9f1-488d-a193-383db51be57b",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1988.0119170000035,
+      "usage": {
+        "inputTokens": 7576,
+        "outputTokens": 1423
+      }
+    },
+    {
+      "caseId": "ids-verbal-02-target-0-click-2",
+      "runId": "87e41066-a81b-4f64-b40d-9b788995e5c1",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2538.505459,
+      "usage": {
+        "inputTokens": 8141,
+        "outputTokens": 1604
+      }
+    },
+    {
+      "caseId": "ids-verbal-02-target-0-click-8",
+      "runId": "97eda8a4-7ded-4d0e-a49f-82e849095609",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2378.913042,
+      "usage": {
+        "inputTokens": 8138,
+        "outputTokens": 1604
+      }
+    },
+    {
+      "caseId": "ids-verbal-03-target-0-click-2",
+      "runId": "e8d0b5f3-5ffb-4885-a2a1-8fee49ecb50e",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird schreiben"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 924.3755830000009,
+      "usage": {
+        "inputTokens": 7425,
+        "outputTokens": 1589
+      }
+    },
+    {
+      "caseId": "ids-verbal-03-target-0-click-8",
+      "runId": "9f22b37c-028a-4c07-9b33-de8c3fd758a4",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird schreiben"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 986.5194999999949,
+      "usage": {
+        "inputTokens": 7424,
+        "outputTokens": 1589
+      }
+    },
+    {
+      "caseId": "ids-verbal-04-target-0-click-8",
+      "runId": "64361c0a-2c82-4003-b419-44798c5a8e25",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1004.1024169999946,
+      "usage": {
+        "inputTokens": 7102,
+        "outputTokens": 1465
+      }
+    },
+    {
+      "caseId": "ids-verbal-04-target-1-click-2",
+      "runId": "a0c2361b-cb9e-49b2-9edd-20d6608ef55d",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 949.458375000002,
+      "usage": {
+        "inputTokens": 8201,
+        "outputTokens": 1345
+      }
+    },
+    {
+      "caseId": "ids-verbal-05-target-0-click-2",
+      "runId": "3ed4658f-4806-4622-812e-29d43b10a23d",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird geschrieben haben"
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 866.3428749999948,
+      "usage": {
+        "inputTokens": 7952,
+        "outputTokens": 1752
+      }
+    },
+    {
+      "caseId": "ids-verbal-05-target-0-click-8",
+      "runId": "064ca5dd-08db-4250-b439-a3db6e4e4078",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird geschrieben haben"
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 890.1640000000043,
+      "usage": {
+        "inputTokens": 7950,
+        "outputTokens": 1752
+      }
+    },
+    {
+      "caseId": "ids-verbal-05-target-0-click-10",
+      "runId": "7e07f52a-6003-4490-8e90-229f7d2aa570",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird geschrieben haben"
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 922.8759589999972,
+      "usage": {
+        "inputTokens": 7954,
+        "outputTokens": 1751
+      }
+    },
+    {
+      "caseId": "ids-verbal-06-target-0-click-8",
+      "runId": "5182c8c3-140d-4a41-9d2b-c539604d826b",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "geschrieben haben"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 846.6439580000006,
+      "usage": {
+        "inputTokens": 7675,
+        "outputTokens": 1647
+      }
+    },
+    {
+      "caseId": "ids-verbal-06-target-0-click-10",
+      "runId": "da744b32-486a-4b2c-8e5f-7121a42aec06",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "geschrieben haben"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 862.0922910000008,
+      "usage": {
+        "inputTokens": 7679,
+        "outputTokens": 1646
+      }
+    },
+    {
+      "caseId": "ids-verbal-06-target-1-click-2",
+      "runId": "eb8c09a7-f922-4266-a34a-33f306232d0c",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 977.2677919999915,
+      "usage": {
+        "inputTokens": 8425,
+        "outputTokens": 1384
+      }
+    },
+    {
+      "caseId": "ids-verbal-07-target-0-click-8",
+      "runId": "70641d1b-3a5d-4062-bbf2-db72f82c5fc0",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 964.5527080000029,
+      "usage": {
+        "inputTokens": 7342,
+        "outputTokens": 1515
+      }
+    },
+    {
+      "caseId": "ids-verbal-07-target-1-click-2",
+      "runId": "64854638-bcea-4e4f-a0c7-10c6bf1adc07",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 845.6707920000044,
+      "usage": {
+        "inputTokens": 8700,
+        "outputTokens": 1491
+      }
+    },
+    {
+      "caseId": "ids-verbal-07-target-1-click-10",
+      "runId": "17d8ddb3-3e2d-489c-859d-b8b55d1ae7b6",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 906.2598750000034,
+      "usage": {
+        "inputTokens": 8699,
+        "outputTokens": 1490
+      }
+    },
+    {
+      "caseId": "ids-verbal-08-target-0-click-8",
+      "runId": "729618ff-06e5-493a-bb90-363dee940b3b",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            8,
+            10
+          ],
+          "actual": [
+            2,
+            8,
+            10
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird geschrieben haben"
+        },
+        {
+          "field": "form",
+          "expected": "Inf",
+          "actual": "Fin"
+        },
+        {
+          "field": "finiteTense",
+          "expected": null,
+          "actual": "Pres"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1031.877290999997,
+      "usage": {
+        "inputTokens": 8196,
+        "outputTokens": 1803
+      }
+    },
+    {
+      "caseId": "ids-verbal-08-target-0-click-10",
+      "runId": "eea77299-1724-4677-aa64-478a9490ad27",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            8,
+            10
+          ],
+          "actual": [
+            2,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "wird geschrieben haben müssen"
+        },
+        {
+          "field": "form",
+          "expected": "Inf",
+          "actual": "Fin"
+        },
+        {
+          "field": "finiteTense",
+          "expected": null,
+          "actual": "Pres"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1254.2246250000026,
+      "usage": {
+        "inputTokens": 8488,
+        "outputTokens": 1917
+      }
+    },
+    {
+      "caseId": "ids-verbal-08-target-1-click-2",
+      "runId": "7ee1aa5f-9462-4ff9-baee-c5089cca47d0",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            2,
+            12
+          ],
+          "actual": [
+            2,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "müssen",
+          "actual": "werden"
+        },
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1100.4462910000002,
+      "usage": {
+        "inputTokens": 9469,
+        "outputTokens": 1741
+      }
+    },
+    {
+      "caseId": "ids-verbal-08-target-1-click-12",
+      "runId": "9625e24e-711d-4ebc-8791-a5578c0d70a1",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            2,
+            12
+          ],
+          "actual": [
+            2,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "müssen",
+          "actual": "werden"
+        },
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1088.2222089999996,
+      "usage": {
+        "inputTokens": 9469,
+        "outputTokens": 1740
+      }
+    },
+    {
+      "caseId": "ids-verbal-09-target-0-click-4",
+      "runId": "a3a693dc-1d53-43d2-832a-3025beabfdc4",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "werden"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 3512.7475419999973,
+      "usage": {
+        "inputTokens": 7923,
+        "outputTokens": 1552
+      }
+    },
+    {
+      "caseId": "ids-verbal-09-target-0-click-6",
+      "runId": "8b79abea-85c9-4e78-903d-10ef40bf7a1d",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "werden"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 4653.927167000002,
+      "usage": {
+        "inputTokens": 7921,
+        "outputTokens": 1552
+      }
+    },
+    {
+      "caseId": "ids-verbal-10-target-0-click-4",
+      "runId": "3ab1306a-6007-433b-a527-85140cad32f2",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "werden"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 3122.961750000002,
+      "usage": {
+        "inputTokens": 8443,
+        "outputTokens": 1717
+      }
+    },
+    {
+      "caseId": "ids-verbal-10-target-0-click-6",
+      "runId": "0f7525cb-9b01-42d4-b3bc-975e60842a09",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2224.352958999996,
+      "usage": {
+        "inputTokens": 8440,
+        "outputTokens": 1718
+      }
+    },
+    {
+      "caseId": "ids-verbal-10-target-0-click-8",
+      "runId": "cd1610c8-dc64-46ee-bd84-3ce8be611540",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-match",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2254.1587500000023,
+      "usage": {
+        "inputTokens": 8442,
+        "outputTokens": 1718
+      }
+    },
+    {
+      "caseId": "ids-verbal-11-target-0-click-4",
+      "runId": "7ea86d1d-1f4e-47d8-8a47-5f5544b78512",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "werden"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1992.2305420000048,
+      "usage": {
+        "inputTokens": 8445,
+        "outputTokens": 1717
+      }
+    },
+    {
+      "caseId": "ids-verbal-11-target-0-click-6",
+      "runId": "5faadfaf-818c-4e75-9974-b2151f906bf8",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "werden"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 3270.8511249999865,
+      "usage": {
+        "inputTokens": 8443,
+        "outputTokens": 1717
+      }
+    },
+    {
+      "caseId": "ids-verbal-11-target-0-click-8",
+      "runId": "bfa01a81-ff9b-462e-8760-434793f3868c",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "werden"
+        },
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1818.1368329999968,
+      "usage": {
+        "inputTokens": 8446,
+        "outputTokens": 1715
+      }
+    },
+    {
+      "caseId": "ids-verbal-12-target-0-click-6",
+      "runId": "7f90b683-26ad-425f-af5f-e2921925bdb3",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "geschrieben werden"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 882.0008339999913,
+      "usage": {
+        "inputTokens": 7440,
+        "outputTokens": 1597
+      }
+    },
+    {
+      "caseId": "ids-verbal-12-target-0-click-8",
+      "runId": "c6012d05-070e-4e50-8f86-c922d6d4aab9",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            6,
+            8
+          ],
+          "actual": [
+            4,
+            6,
+            8
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "muss geschrieben werden"
+        },
+        {
+          "field": "form",
+          "expected": "Inf",
+          "actual": "Fin"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 886.4929160000029,
+      "usage": {
+        "inputTokens": 7718,
+        "outputTokens": 1709
+      }
+    },
+    {
+      "caseId": "ids-verbal-12-target-1-click-4",
+      "runId": "0e027bfb-d9d9-445d-9a8c-47b38ee3ba6c",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "kind",
+          "expected": "AUX",
+          "actual": "VERB"
+        },
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            4
+          ],
+          "actual": [
+            4,
+            6,
+            8
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "müssen",
+          "actual": "muss geschrieben werden"
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 883.2594169999938,
+      "usage": {
+        "inputTokens": 7717,
+        "outputTokens": 1707
+      }
+    },
+    {
+      "caseId": "ids-verbal-13-target-0-click-4",
+      "runId": "a2be3e4f-a97e-4358-b97a-0b34a69f9f12",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "sein"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2480.401874999996,
+      "usage": {
+        "inputTokens": 8984,
+        "outputTokens": 1883
+      }
+    },
+    {
+      "caseId": "ids-verbal-13-target-0-click-6",
+      "runId": "9c0afc3f-f7c6-481a-a4c0-58f2471a108c",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "sein"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1930.9557080000086,
+      "usage": {
+        "inputTokens": 8982,
+        "outputTokens": 1883
+      }
+    },
+    {
+      "caseId": "ids-verbal-13-target-0-click-8",
+      "runId": "84991dc3-cbe6-4d00-bb57-becd52f746be",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "sein"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2083.8845410000067,
+      "usage": {
+        "inputTokens": 8984,
+        "outputTokens": 1883
+      }
+    },
+    {
+      "caseId": "ids-verbal-13-target-0-click-10",
+      "runId": "adcbaa6e-a521-45ec-a354-6d4198c6b751",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "sein"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1880.3719160000037,
+      "usage": {
+        "inputTokens": 8986,
+        "outputTokens": 1882
+      }
+    },
+    {
+      "caseId": "ids-verbal-14-target-0-click-6",
+      "runId": "702345da-8f1e-4f24-83fc-5948621f9f5f",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "geschrieben worden sein"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1298.2391669999924,
+      "usage": {
+        "inputTokens": 7965,
+        "outputTokens": 1762
+      }
+    },
+    {
+      "caseId": "ids-verbal-14-target-0-click-8",
+      "runId": "3448068e-2cf9-42c9-b264-5e382e312b47",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            6,
+            8,
+            10
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "müssen"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2139.467208000002,
+      "usage": {
+        "inputTokens": 8987,
+        "outputTokens": 1893
+      }
+    },
+    {
+      "caseId": "ids-verbal-14-target-0-click-10",
+      "runId": "cd074d30-71f6-4d39-9a2d-19adccb3ee39",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "geschrieben worden sein"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 950.8293339999946,
+      "usage": {
+        "inputTokens": 7969,
+        "outputTokens": 1761
+      }
+    },
+    {
+      "caseId": "ids-verbal-14-target-1-click-4",
+      "runId": "52d55b1d-0ba3-4e9e-a751-bae87c983f7d",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "kind",
+          "expected": "AUX",
+          "actual": "VERB"
+        },
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            4
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "field": "form",
+          "expected": "Fin",
+          "actual": "Inf"
+        },
+        {
+          "field": "finiteTense",
+          "expected": "Pres",
+          "actual": null
+        },
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1745.1203749999986,
+      "usage": {
+        "inputTokens": 8987,
+        "outputTokens": 1893
+      }
+    },
+    {
+      "caseId": "ids-verbal-15-target-0-click-6",
+      "runId": "ff8c4745-2690-4a80-8508-8359e908505f",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 3,
+      "durationMs": 860.7172080000018,
+      "usage": {
+        "inputTokens": 7948,
+        "outputTokens": 1755
+      }
+    },
+    {
+      "caseId": "ids-verbal-15-target-0-click-8",
+      "runId": "4d0061fc-16c0-4a57-86b5-31e7a7fb7f83",
+      "role": "review",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 3,
+      "durationMs": 861.8328340000007,
+      "usage": {
+        "inputTokens": 8239,
+        "outputTokens": 1870
+      }
+    },
+    {
+      "caseId": "ids-verbal-15-target-1-click-4",
+      "runId": "38f7efac-e524-42fe-975c-daa3e511c54a",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            4,
+            10
+          ],
+          "actual": [
+            4,
+            6,
+            10
+          ]
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1163.5485829999961,
+      "usage": {
+        "inputTokens": 8976,
+        "outputTokens": 1596
+      }
+    },
+    {
+      "caseId": "ids-verbal-15-target-1-click-10",
+      "runId": "c50ce0f2-0a0e-4ff3-a83d-4d02228f8392",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 1198.8367500000022,
+      "usage": {
+        "inputTokens": 8703,
+        "outputTokens": 1488
+      }
+    },
+    {
+      "caseId": "ids-verbal-16-target-0-click-6",
+      "runId": "5cfb1916-c59d-4a19-b59f-0968c1775704",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            6,
+            8,
+            10
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "müssen"
+        },
+        {
+          "field": "form",
+          "expected": "Inf",
+          "actual": "Fin"
+        },
+        {
+          "field": "finiteTense",
+          "expected": null,
+          "actual": "Pres"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2234.5299159999995,
+      "usage": {
+        "inputTokens": 9229,
+        "outputTokens": 1936
+      }
+    },
+    {
+      "caseId": "ids-verbal-16-target-0-click-8",
+      "runId": "1b8cb35a-9be3-45eb-9a6a-c9025583c054",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            6,
+            8,
+            10
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "müssen"
+        },
+        {
+          "field": "form",
+          "expected": "Inf",
+          "actual": "Fin"
+        },
+        {
+          "field": "finiteTense",
+          "expected": null,
+          "actual": "Pres"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2310.7502499999973,
+      "usage": {
+        "inputTokens": 9534,
+        "outputTokens": 2051
+      }
+    },
+    {
+      "caseId": "ids-verbal-16-target-0-click-10",
+      "runId": "47bcda2e-4b11-430e-b900-42064ce79817",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "kind",
+          "expected": "VERB",
+          "actual": "AUX"
+        },
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            6,
+            8,
+            10
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "canonicalForm",
+          "expected": "schreiben",
+          "actual": "müssen"
+        },
+        {
+          "field": "form",
+          "expected": "Inf",
+          "actual": "Fin"
+        },
+        {
+          "field": "finiteTense",
+          "expected": null,
+          "actual": "Pres"
+        },
+        {
+          "field": "future",
+          "expected": false,
+          "actual": true
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 931.5656250000029,
+      "usage": {
+        "inputTokens": 9741,
+        "outputTokens": 1848
+      }
+    },
+    {
+      "caseId": "ids-verbal-16-target-1-click-4",
+      "runId": "91fd2315-204a-4d1e-9e2d-216042dd65af",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            4,
+            12
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 980.0964170000079,
+      "usage": {
+        "inputTokens": 9739,
+        "outputTokens": 1849
+      }
+    },
+    {
+      "caseId": "ids-verbal-16-target-1-click-12",
+      "runId": "cc7aec1b-e53a-4667-a8f2-5c68516fb5ed",
+      "role": "review",
+      "status": "Success",
+      "category": "accepted-construction-difference",
+      "differences": [
+        {
+          "field": "memberSegmentIndices",
+          "expected": [
+            4,
+            12
+          ],
+          "actual": [
+            4,
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        {
+          "field": "perfect",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "field": "passive",
+          "expected": null,
+          "actual": "Process"
+        }
+      ],
+      "error": null,
+      "calls": 3,
+      "durationMs": 867.3215839999903,
+      "usage": {
+        "inputTokens": 9739,
+        "outputTokens": 1848
+      }
+    },
+    {
+      "caseId": "rewrite-intake-mixed",
+      "runId": "7b3418d9-0fc0-4680-bd07-5cefc3ecda3c",
+      "role": "review",
+      "status": "Success",
+      "category": "intake-match",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 864.4784170000057,
+      "usage": {
+        "inputTokens": 1943,
+        "outputTokens": 441
+      }
+    },
+    {
+      "caseId": "rewrite-intake-en-stitch",
+      "runId": "94413ae6-2be6-4319-b0c3-ae1864e864b1",
+      "role": "review",
+      "status": "Success",
+      "category": "intake-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 1500.9190830000007,
+      "usage": {
+        "inputTokens": 773,
+        "outputTokens": 166
+      }
+    },
+    {
+      "caseId": "rewrite-intake-he-stitch",
+      "runId": "143288e2-4e79-48fe-816d-4b4a55952910",
+      "role": "review",
+      "status": "Success",
+      "category": "intake-difference",
+      "differences": [
+        {
+          "field": "texts",
+          "expected": [
+            "החלון פתוח."
+          ],
+          "actual": [
+            "הח לון פתוח."
+          ]
+        }
+      ],
+      "error": null,
+      "calls": 1,
+      "durationMs": 293.3538750000007,
+      "usage": {
+        "inputTokens": 651,
+        "outputTokens": 147
+      }
+    },
+    {
+      "caseId": "rewrite-intake-de-stitch",
+      "runId": "062effe6-e479-4164-a817-82005c16c3c1",
+      "role": "review",
+      "status": "Success",
+      "category": "intake-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 1550.9697080000042,
+      "usage": {
+        "inputTokens": 773,
+        "outputTokens": 166
+      }
+    },
+    {
+      "caseId": "rewrite-intake-rejection",
+      "runId": "8724be91-d2b1-4795-8803-bd72d5929a93",
+      "role": "review",
+      "status": "Success",
+      "category": "intake-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 318.140625,
+      "usage": {
+        "inputTokens": 646,
+        "outputTokens": 153
+      }
+    },
+    {
+      "caseId": "rewrite-intake-unsupported",
+      "runId": "fde79815-2542-46fa-9169-d6a433d82b20",
+      "role": "review",
+      "status": "Success",
+      "category": "intake-match",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 348.3998750000028,
+      "usage": {
+        "inputTokens": 646,
+        "outputTokens": 153
+      }
+    },
+    {
+      "caseId": "rewrite-reading-empty",
+      "runId": "e7f183e4-5842-4015-8e3e-21d60b628b53",
+      "role": "review",
+      "status": "Success",
+      "category": "reading-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 1384.9571660000074,
+      "usage": {
+        "inputTokens": 420,
+        "outputTokens": 17
+      }
+    },
+    {
+      "caseId": "rewrite-reading-reuse",
+      "runId": "dafe68ea-d9ce-495d-9b49-bdd13597f27b",
+      "role": "review",
+      "status": "Success",
+      "category": "reading-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 296.253624999983,
+      "usage": {
+        "inputTokens": 850,
+        "outputTokens": 56
+      }
+    },
+    {
+      "caseId": "rewrite-reading-no-match",
+      "runId": "32172579-4fa7-4e8e-96fb-6823c2570ca4",
+      "role": "review",
+      "status": "Success",
+      "category": "reading-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 5264.4009590000205,
+      "usage": {
+        "inputTokens": 1293,
+        "outputTokens": 64
+      }
+    },
+    {
+      "caseId": "held-recognition-passive",
+      "runId": "9f54c986-d428-41ce-986e-b121306eb453",
+      "role": "held-out",
+      "status": "Success",
+      "category": "held-out-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 2473.833209000004,
+      "usage": {
+        "inputTokens": 8947,
+        "outputTokens": 1820
+      }
+    },
+    {
+      "caseId": "held-recognition-modal",
+      "runId": "6ee1ff2c-d38e-437f-8aea-df2c3a7afe76",
+      "role": "held-out",
+      "status": "Success",
+      "category": "held-out-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 3,
+      "durationMs": 888.6187910000153,
+      "usage": {
+        "inputTokens": 8936,
+        "outputTokens": 1531
+      }
+    },
+    {
+      "caseId": "held-recognition-pronoun",
+      "runId": "65394d02-8f35-4118-a811-0c5d6b900223",
+      "role": "held-out",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Applicable grammatical answers do not compose into a legal analysis",
+      "calls": 4,
+      "durationMs": 1224.3049170000013,
+      "usage": {
+        "inputTokens": 7777,
+        "outputTokens": 1475
+      }
+    },
+    {
+      "caseId": "held-recognition-det",
+      "runId": "90d34748-8b65-4f86-a72e-008bab83d43d",
+      "role": "held-out",
+      "status": "Unresolved",
+      "category": "domain-unavailable",
+      "differences": [],
+      "error": "Unresolved applicable question support",
+      "calls": 3,
+      "durationMs": 803.6274580000027,
+      "usage": {
+        "inputTokens": 5897,
+        "outputTokens": 1052
+      }
+    },
+    {
+      "caseId": "held-intake-en",
+      "runId": "8cde3308-f351-4080-8210-89ae8ff4a994",
+      "role": "held-out",
+      "status": "Success",
+      "category": "held-out-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 2069.8141250000044,
+      "usage": {
+        "inputTokens": 773,
+        "outputTokens": 167
+      }
+    },
+    {
+      "caseId": "held-intake-he",
+      "runId": "a118cc7a-a39c-471f-858c-8713fa500c32",
+      "role": "held-out",
+      "status": "Success",
+      "category": "held-out-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 1,
+      "durationMs": 276.04441699999734,
+      "usage": {
+        "inputTokens": 659,
+        "outputTokens": 147
+      }
+    },
+    {
+      "caseId": "held-reading",
+      "runId": "a9ee92f7-928d-4efc-8862-388fbe2585cf",
+      "role": "held-out",
+      "status": "Success",
+      "category": "held-out-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 4,
+      "durationMs": 1813.3425420000003,
+      "usage": {
+        "inputTokens": 6810,
+        "outputTokens": 1096
+      }
+    },
+    {
+      "caseId": "held-knowledge",
+      "runId": "68e2fa4c-0384-439e-b4c6-072e1344beb1",
+      "role": "held-out",
+      "status": "Success",
+      "category": "held-out-human-review",
+      "differences": [],
+      "error": null,
+      "calls": 8,
+      "durationMs": 9243.769375000003,
+      "usage": {
+        "inputTokens": 10133,
+        "outputTokens": 1994
+      }
+    },
+    {
+      "caseId": "target-de-route-lexeme-noun",
+      "runId": "b3b3df28-f0b2-447f-80b5-7ae86eaf284d",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 1062.058458,
+      "usage": {
+        "inputTokens": 3182,
+        "outputTokens": 378
+      }
+    },
+    {
+      "caseId": "target-de-route-lexeme-adj",
+      "runId": "5f985129-2af3-4906-b56f-9a465d1f7e5f",
+      "role": "review",
+      "status": "Success",
+      "category": "retained-reference-match",
+      "differences": [],
+      "error": null,
+      "calls": 2,
+      "durationMs": 607.2929999999999,
+      "usage": {
+        "inputTokens": 3193,
+        "outputTokens": 379
+      }
+    }
+  ],
+  "limits": [
+    "Execution Success is not linguistic correctness. The 8 held-out cases remain human-reviewed; they were not used for tuning.",
+    "The original runner compared incompatible IDS/reference representations directly. Use the explicit comparison projections in this derived report; immutable raw runs retain the original exactMatch field.",
+    "One original held-reading InvalidInput attempt made zero model calls; its projection was repaired under a separately published one-entry manifest. Both records are retained.",
+    "Provider-reported cost is unavailable and is represented as null. Unused speculative calls and failed attempts are included in usage.",
+    "Four structured Knowledge prototypes remain deferred. tf-demo relation publication remains under its existing human qualification gate."
+  ]
+}

@@ -2,46 +2,55 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import {
+	choiceAnswers,
+	executeOutput,
+} from "../../../battery/dumgen/tests/execution-fixture.js";
+import { grammarFixture } from "../../../battery/dumgen/tests/grammar-fixture.js";
 import { startLaboratoryServer } from "../src/server";
 
 test("HTTP workbench retains session isolation, supplied targets, retry diagnostics and current logs", async () => {
 	const directory = await mkdtemp(join(tmpdir(), "laboratory-http-"));
 	const stages: string[] = [];
 	let failReading = true;
+	const grammar = {
+		memberOrthographies: ["Standard"],
+		normalizedMembers: ["Bank"],
+		surface: {
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: { case: "Nom", number: "Sing" },
+		},
+		lemma: {
+			canonicalForm: "Bank",
+			coreFeatures: { gender: "Fem", hyph: null },
+		},
+		realizationCoverage: "Full",
+	};
 	const server = startLaboratoryServer({
 		port: 0,
 		sessionDirectory: directory,
 		configuration: { model: "controlled" },
-		execute: async (request) => {
+		judge: (request, options) => {
+			if (Object.hasOwn(request.questions, "language")) {
+				stages.push("segment");
+				return Promise.resolve(
+					choiceAnswers(request.questions, (id) =>
+						id === "language"
+							? "de"
+							: id === "validity"
+								? "Accepted"
+								: "Unchanged",
+					),
+				);
+			}
+			stages.push("resolveGrammar");
+			return grammarFixture(grammar).judge(request, options);
+		},
+		execute: executeOutput(async (request) => {
 			stages.push(request.stage);
-			if (request.stage === "segment")
-				return {
-					language: "de",
-					items: [
-						{
-							id: "0",
-							decision: "Accepted",
-							language: "de",
-							stitchedText: "Bank",
-						},
-					],
-				};
-			if (request.stage === "resolveGrammar")
-				return {
-					memberOrthographies: ["Standard"],
-					normalizedMembers: ["Bank"],
-					surface: {
-						spelling: "Canonical",
-						surfaceFeatures: null,
-						inflectionalFeatures: { case: "Nom", number: "Sing" },
-					},
-					lemma: {
-						canonicalForm: "Bank",
-						coreFeatures: { gender: "Fem", hyph: null },
-					},
-					realizationCoverage: "Full",
-				};
-			if (request.stage === "generateReadingEmojiDescription") {
+
+			if (request.stage === "resolveOrGenerateReadingEmojiDescription") {
 				if (failReading) {
 					failReading = false;
 					throw new Error("controlled provider failure");
@@ -49,7 +58,7 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 				return { emojiDescription: "🏦" };
 			}
 			throw new Error(`Unexpected stage ${request.stage}`);
-		},
+		}),
 	});
 	const post = (path: string, body: unknown) =>
 		fetch(new URL(path, server.url), {
@@ -90,8 +99,8 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 		expect(stages).toEqual([
 			"segment",
 			"resolveGrammar",
-			"generateReadingEmojiDescription",
-			"generateReadingEmojiDescription",
+			"resolveOrGenerateReadingEmojiDescription",
+			"resolveOrGenerateReadingEmojiDescription",
 		]);
 		expect(
 			(await (await post("/api/resolve", input)).json()).generation

@@ -6,9 +6,10 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { createDumgen } from "dumgen";
-import type { Encounter, ModelRequest } from "dumgen/types";
+import type { Encounter, ModelExchange } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
+import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import {
 	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
@@ -131,11 +132,7 @@ const selection = {
 	sentenceId: "sentence-1",
 	clickedSegmentIndex: 0,
 };
-const classification = {
-	decision: "Resolved",
-	additionalMemberIndices: [],
-	target: { family: "Lexeme", kind: "NOUN" },
-};
+const classification = encounter.target;
 const grammarOutput = {
 	memberOrthographies: ["Standard"],
 	normalizedMembers: ["Banken"],
@@ -155,7 +152,7 @@ function setup(
 	overrides: Partial<OrchestrationPersistence> = {},
 	candidates: Dumling.Reading<"de">[] = [],
 ) {
-	const requests: ModelRequest[] = [];
+	const requests: ModelExchange["request"][] = [];
 	const { storage, commits } = createPlanningStorage(candidates);
 	storage.findStoredReadings = () =>
 		Effect.succeed({
@@ -242,12 +239,8 @@ function setup(
 		...overrides,
 	};
 	const dumgen = createDumgen({
-		execute: async (request) => {
-			requests.push(request);
-			const next = outputs.shift();
-			if (next instanceof Error) throw next;
-			return next;
-		},
+		...pipelineFixture(outputs),
+		onModelExchange: (exchange) => requests.push(exchange.request),
 	});
 	return {
 		orchestrator: createTfDemoOrchestrator({
@@ -305,7 +298,7 @@ test("real segmentation, classification, grammar and emoji production reach an a
 	).toHaveLength(1);
 	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
 	expect(run.writes).toHaveLength(1);
-	expect(run.requests).toHaveLength(4);
+	expect(run.requests).toHaveLength(5);
 });
 
 test("retry uses its exact Grammar checkpoint and skips classification and grammar", async () => {
@@ -314,7 +307,7 @@ test("retry uses its exact Grammar checkpoint and skips classification and gramm
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
 	expect(run.requests.map((request) => request.stage)).toEqual([
-		"generateReadingEmojiDescription",
+		"resolveOrGenerateReadingEmojiDescription",
 	]);
 	expect(run.writes[0]?.reading).toEqual(reading);
 });
@@ -355,9 +348,7 @@ test("a globally resolved occurrence is reused without generation", async () => 
 });
 
 test("Unresolved is durable and replayed; a late committed occurrence still wins", async () => {
-	const run = setup([
-		{ decision: "Unresolved", target: null, additionalMemberIndices: null },
-	]);
+	const run = setup([{ decision: "Unresolved" }]);
 	expect(
 		await Effect.runPromise(run.orchestrator.resolveSegment(selection)),
 	).toMatchObject({ grammatical: { decision: "Unresolved" } });
@@ -474,9 +465,9 @@ test("Knowledge changes validate against the exact tagged source Reading", () =>
 test("a Closed route miss records its typed outcome without dictionary writes or model fallback", async () => {
 	const run = setup([
 		{
-			decision: "Resolved",
-			additionalMemberIndices: [],
-			target: { family: "Lexeme", kind: "DET" },
+			family: "Lexeme",
+			kind: "DET",
+			memberSegmentIndices: [0],
 		},
 		{
 			memberOrthographies: ["Standard"],
@@ -507,7 +498,40 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 	).toMatchObject({
 		catalogMiss: { decision: "CatalogMiss", stage: "resolveGrammar" },
 	});
-	expect(run.requests).toHaveLength(2);
+	expect(run.requests).toHaveLength(3);
 	expect(run.writes).toHaveLength(0);
 	expect(run.commits).toHaveLength(0);
+});
+
+test("mixed German, English and Hebrew intake persists ordered sentences without recognition", async () => {
+	const source = ["Das Haus ist groß.", "The house is large.", "הבית גדול."];
+	const languages = ["de", "en", "he"];
+	const run = setup([
+		{
+			items: source.map((stitchedText, index) => ({
+				id: String(index),
+				decision: "Accepted",
+				language: languages[index],
+				stitchedText,
+			})),
+		},
+	]);
+	await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "mixed-intake",
+			sourceText: source.join("\n"),
+		}),
+	);
+	expect(
+		run.submitted[0]?.sentences.map((sentence) => sentence.language),
+	).toEqual(languages);
+	expect(
+		run.submitted[0]?.sentences.map((sentence) => sentence.stitchedText),
+	).toEqual(source);
+	expect(run.writes).toHaveLength(0);
+	expect(run.requests.map((request) => request.stage)).toEqual([
+		"segment",
+		"segment",
+		"segment",
+	]);
 });

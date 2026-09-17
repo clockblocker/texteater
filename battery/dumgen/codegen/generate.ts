@@ -45,7 +45,7 @@ export const emojiDescriptionSchema=R0.readingSchema.shape.emojiDescription;
 export const analysisTargetSchema=z.union([${routes.map((_, index) => target(index)).join(",")}]);
 export const encounterSchema=z.union([${routes.map((route, index) => `z.strictObject({sentence:segmentedSentenceSchema.extend({language:z.literal(${JSON.stringify(route.language)})}),target:${target(index)}})`).join(",")}]);
 export const generationInputSchema=z.union([${routes.map((_, index) => `z.strictObject({encounter:encounterSchema.options[${index}],lemma:R${index}.lemmaSchema})`).join(",")}]);
-export const comparisonInputSchema=z.union(generationInputSchema.options.map(schema=>schema.extend({candidates:z.tuple([emojiDescriptionSchema],emojiDescriptionSchema)})));
+export const comparisonInputSchema=z.union(generationInputSchema.options.map(schema=>schema.extend({candidates:z.array(emojiDescriptionSchema)})));
 export const knowledgeInputSchema=z.union([${routes.map((_, index) => `z.strictObject({encounter:encounterSchema.options[${index}],reading:R${index}.readingSchema,request:knowledgeRequestMaskSchema})`).join(",")}]);
 export const grammarSchemas={${routes.map((route, index) => `${JSON.stringify(route.key)}:z.strictObject({lemma:R${index}.lemmaSchema.omit({unitKind:true,language:true,family:true,kind:true}),surface:R${index}.surfaceSchema.omit({unitKind:true,language:true,lemma:true,normalizedSurface:true}),normalizedMembers:z.array(z.string().min(1)).min(1),memberOrthographies:z.array(z.enum(["Standard","Typo"])).min(1),realizationCoverage:z.enum(["Full","Partial"])})`).join(",")}};
 export const targetsByLanguage={${["de", "en", "he"]
@@ -114,10 +114,24 @@ console.log(
 );
 
 const { assembleSystemPrompt } = await import("promptsmith");
-const { promptRegistrations } = await import(
+const { corpusRegistrations } = await import(
 	"../src/concrete-lang/de/experiments.js"
 );
 await emit(
 	"prompts.ts",
-	`// Generated from explicitly selected demonstrations, never held-out cases.\nexport const prompts:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(promptRegistrations.filter(({ promptSource }) => !promptSource.route.startsWith("knowledge-analysis/") || promptSource.route.startsWith("knowledge-analysis/de/")).map(({ promptSource }) => [promptSource.route, assembleSystemPrompt(promptSource)])))};\nexport const grammarPromptRoutes:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(routes.filter((route) => route.language === "de").map((route) => [route.key, `grammatical-resolution/${route.modulePath.replace(/\.js$/, "")}`])))};`,
+	`// Generated from explicitly selected demonstrations, never held-out cases.\nexport const prompts:Readonly<Record<string,string>>=${JSON.stringify(
+		Object.fromEntries(
+			corpusRegistrations
+				.filter(
+					({ source }) =>
+						"body" in source &&
+						source.route === "reading-generation/de",
+				)
+				.map(({ source }) => {
+					if (!("body" in source))
+						throw Error("Missing active text prompt");
+					return [source.route, assembleSystemPrompt(source)];
+				}),
+		),
+	)};\nexport const grammarPromptRoutes:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(routes.filter((route) => route.language === "de").map((route) => [route.key, `grammatical-resolution/${route.modulePath.replace(/\.js$/, "")}`])))};`,
 );
