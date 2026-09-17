@@ -1,3 +1,8 @@
+.inspection-group-heading p {
+	margin-top: 0.35rem;
+	font-size: 0.75rem;
+	color: var(--muted-foreground);
+}
 /* Executor colors identify ownership across the timing bars and step list. */
 .resolution-inspector-toggle {
 	position: fixed;
@@ -324,4 +329,17 @@
 	.inspection-payload {
 		padding-left: 0;
 	}
+}
+
+.inspection-totals {
+	margin-top: 2rem;
+	padding-top: 1.25rem;
+	border-top: 4px solid var(--muted-foreground);
+}
+.inspection-group-heading h3 {
+	font-size: 0.85rem;
+	font-weight: 600;
+}
+.inspection-group-heading {
+	margin-bottom: 0.5rem;
 }

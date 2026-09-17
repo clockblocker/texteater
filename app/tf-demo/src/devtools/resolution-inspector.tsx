@@ -161,18 +161,24 @@ function InspectionDetail({
 	const orderedSteps = [...steps.results].sort(
 		(a, b) => a.startedAt - b.startedAt || b.durationMs - a.durationMs,
 	);
-	const byId = new Map(orderedSteps.map((step) => [step.id, step]));
-	function depth(step: Step): number {
-		let current = step;
-		let level = 0;
-		while (current.parentId && level < 8) {
-			const parent = byId.get(current.parentId);
-			if (!parent) break;
-			level++;
-			current = parent;
-		}
-		return level;
-	}
+	const parentIds = new Set(orderedSteps.map((step) => step.parentId));
+	const isTotal = (step: Step) =>
+		parentIds.has(step.id) ||
+		// This wrapper shares the session parent with its internal steps.
+		(step.name === "Resolve selected segment" &&
+			step.owner === "app/tf-demo · linguisticOrchestration");
+	const stepGroups = [
+		{
+			title: "Individual steps",
+			steps: orderedSteps.filter((step) => !isTotal(step)),
+			totals: false,
+		},
+		{
+			title: "Operation totals",
+			steps: orderedSteps.filter(isTotal),
+			totals: true,
+		},
+	];
 	const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 	const [now, setNow] = useState(Date.now);
 	const running =
@@ -263,7 +269,10 @@ function InspectionDetail({
 					<span>
 						Full chain <strong>{time(total)}</strong>
 					</span>
-					<span>{steps.results.length} steps</span>
+					<span>
+						{stepGroups[0].steps.length} steps ·{" "}
+						{stepGroups[1].steps.length} operation totals
+					</span>
 					{detail.knowledgeState && (
 						<span>Knowledge: {detail.knowledgeState}</span>
 					)}
@@ -312,73 +321,101 @@ function InspectionDetail({
 					className="inspection-steps"
 					aria-label="Resolution steps"
 				>
-					{orderedSteps.map((step) => (
-						<section
-							className="inspection-step"
-							id={`inspection-step-${step.id}`}
-							key={step.id}
-						>
-							<div className="inspection-step-row">
-								<button
-									type="button"
-									className="inspection-step-toggle"
-									style={{
-										paddingInlineStart: `${depth(step) * 0.7}rem`,
-									}}
-									aria-expanded={expanded.has(step.id)}
-									onClick={() => toggle(step.id)}
-								>
-									<ChevronRightIcon
-										size={16}
-										className={
-											expanded.has(step.id)
-												? "inspection-chevron-open"
-												: ""
-										}
-									/>
-									<span className="inspection-step-title">
-										{step.name}
-										<small>{step.owner}</small>
-									</span>
-									<span
-										className="inspection-kind"
-										data-kind={step.kind}
+					{stepGroups
+						.filter((group) => group.steps.length > 0)
+						.map((group) => (
+							<section
+								key={group.title}
+								aria-label={group.title}
+								className={
+									group.totals
+										? "inspection-totals"
+										: undefined
+								}
+							>
+								<header className="inspection-group-heading">
+									<h3>{group.title}</h3>
+									{group.totals && (
+										<p>
+											Durations include the steps within
+											each operation. They overlap; do not
+											add them together.
+										</p>
+									)}
+								</header>
+								{group.steps.map((step) => (
+									<section
+										className="inspection-step"
+										id={`inspection-step-${step.id}`}
+										key={step.id}
 									>
-										{step.kind === "TypeSafe"
-											? "TypeSafe AI"
-											: step.kind}
-									</span>
-									<span className="inspection-step-duration">
-										{step.timing === "Unmeasured"
-											? "not measured"
-											: time(step.durationMs)}
-									</span>
-									<span
-										role="img"
-										className="inspection-status"
-										data-status={step.status}
-										aria-label={step.status}
-									>
-										{step.status === "Success" ? (
-											<CheckIcon size={16} />
-										) : step.status === "Failure" ? (
-											<XIcon size={16} />
-										) : (
-											step.status
+										<div className="inspection-step-row">
+											<button
+												type="button"
+												className="inspection-step-toggle"
+												aria-expanded={expanded.has(
+													step.id,
+												)}
+												onClick={() => toggle(step.id)}
+											>
+												<ChevronRightIcon
+													size={16}
+													className={
+														expanded.has(step.id)
+															? "inspection-chevron-open"
+															: ""
+													}
+												/>
+												<span className="inspection-step-title">
+													{step.name}
+													<small>{step.owner}</small>
+												</span>
+												<span
+													className="inspection-kind"
+													data-kind={step.kind}
+												>
+													{step.kind === "TypeSafe"
+														? "TypeSafe AI"
+														: step.kind}
+												</span>
+												<span className="inspection-step-duration">
+													{step.timing ===
+													"Unmeasured"
+														? "not measured"
+														: time(step.durationMs)}
+												</span>
+												<span
+													role="img"
+													className="inspection-status"
+													data-status={step.status}
+													aria-label={step.status}
+												>
+													{step.status ===
+													"Success" ? (
+														<CheckIcon size={16} />
+													) : step.status ===
+														"Failure" ? (
+														<XIcon size={16} />
+													) : (
+														step.status
+													)}
+												</span>
+											</button>
+											<CopyInspectionReference
+												stepId={step._id}
+											/>
+										</div>
+										{expanded.has(step.id) && (
+											<StepPayload
+												step={step}
+												visitorId={visitorId}
+												start={start}
+											/>
 										)}
-									</span>
-								</button>
-								<CopyInspectionReference stepId={step._id} />
-							</div>
-							{expanded.has(step.id) && (
-								<StepPayload
-									step={step}
-									visitorId={visitorId}
-									start={start}
-								/>
-							)}
-						</section>
-					))}
+									</section>
+								))}
+							</section>
+						))}
 					{steps.results.length <= 1 && running && (
 						<p className="inspection-empty">
 							Resolution is running. Completed steps appear when
