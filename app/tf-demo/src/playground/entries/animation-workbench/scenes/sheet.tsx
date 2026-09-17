@@ -1,11 +1,26 @@
 import { deckFor } from "../../deck-models/dummy";
 import {
+	BAR_ENTER,
+	BAR_EXIT,
+	BAR_REM,
+	CARD_TITLE_REM,
+	CLIP_FADE,
+	HEADER_REM,
+	HOLD_SCALE,
+	HOLD_SHRINK,
+	KIND_LABEL,
+	KIND_LABEL_Y,
+	OPEN_SCALE,
+	SHEET_HEADER_REM,
+	SHEET_TITLE_REM,
+	spanOf,
+} from "../../deck-models/motion-spec";
+import {
 	CSS_EASE,
-	cubicBezier,
 	MORPH_CAVEAT,
 	MORPH_MS,
-	MOTION_EASE_IN_OUT,
 	morphProgress,
+	progressOf,
 } from "../motion";
 import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
 
@@ -16,9 +31,18 @@ import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
  * slot to the Pane's Sheet box and back, or into the hand, and its Heading
  * grows and shrinks with it. The Dialog is tw-animate keyframes in
  * `battery/lego/src/atoms/dialog.tsx`.
+ *
+ * The Compass scenes take every duration, curve and row height from
+ * `deck-models/motion-spec.ts`, which `drag-deck.tsx` reads too. What this
+ * file owns is the stage: a Pane, a deck slot and a hand, so the box has
+ * somewhere to travel between. The Dialog is not a playground animation
+ * and keeps its own numbers, copied from the lego atom.
  */
 
 const NOTE = deckFor("noch")[0];
+
+/** The preview's root font size: every rem in the spec is drawn at this. */
+const PX = 16;
 
 /* ------------------------------------------------------------- morph */
 
@@ -44,7 +68,7 @@ function mixBox(a: Box, b: Box, p: number): Box {
  * a small Card at the lower right; the hand is where an Open ↑ let go.
  */
 const STAGE = { width: 384, height: 208 };
-const BAR = 36;
+const BAR = BAR_REM * PX;
 const SHEET_BOX: Box = {
 	left: 24,
 	top: BAR + 16,
@@ -55,12 +79,13 @@ const SLOT: Box = { left: 232, top: 100, width: 128, height: 92 };
 const HAND: Box = { ...SLOT, top: SLOT.top - 64 };
 const LIFTED: Box = { left: 120, top: 70, width: 128, height: 92 };
 
-/** The Heading row: 2.75 rem and 1 rem type as a Card, 4.25 rem and 1.5 rem as a Sheet. */
-const HEADING = { card: 44, sheet: 68, cardType: 16, sheetType: 24 };
-const KIND_MS = 160;
-const FADE_MS = 200;
-const LONG_PRESS_MS = 500;
-const LINEAR = cubicBezier(0, 0, 1, 1);
+/** The Heading row and its title, as a Card and as a Sheet. */
+const HEADING = {
+	card: HEADER_REM * PX,
+	sheet: SHEET_HEADER_REM * PX,
+	cardType: CARD_TITLE_REM * PX,
+	sheetType: SHEET_TITLE_REM * PX,
+};
 
 export type MorphFrame = {
 	readonly box: Box;
@@ -92,14 +117,11 @@ function blocks(p: number, k: number, fade: number) {
 			height: mix(HEADING.card, HEADING.sheet, p),
 			fontSize: mix(HEADING.cardType, HEADING.sheetType, p),
 			kind: k,
-			kindY: mix(4, 0, k),
+			kindY: mix(KIND_LABEL_Y, 0, k),
 		},
 		fade,
 	};
 }
-
-const BAR_DELAY_MS = 180;
-const BAR_MS = 160;
 
 const grow: MorphScene = {
 	key: "note-grows",
@@ -107,23 +129,25 @@ const grow: MorphScene = {
 	title: "Card grows into a Sheet",
 	source: "drag-deck.tsx · growFromHand · NoteView box effect · MORPH",
 	knobs: [],
-	length: () => Math.max(MORPH_MS, BAR_DELAY_MS + BAR_MS),
+	length: () => Math.max(MORPH_MS, spanOf(BAR_ENTER)),
 	caveat: morphCaveat,
 	frame: (t) => {
 		const p = morphProgress(t);
-		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
 		return {
 			box: mixBox(HAND, SHEET_BOX, p),
-			scale: mix(1.05, 1, p),
+			/* it left the hand as the open Card, so at its resting size */
+			scale: mix(OPEN_SCALE, 1, p),
 			origin: "50% 50%",
 			border: "link",
-			...blocks(p, k, 1 - segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT)),
-			bar: segment(t, BAR_DELAY_MS, BAR_MS, MOTION_EASE_IN_OUT),
+			...blocks(
+				p,
+				progressOf(KIND_LABEL, t),
+				1 - progressOf(CLIP_FADE, t),
+			),
+			bar: progressOf(BAR_ENTER, t),
 		};
 	},
 };
-
-const BAR_EXIT_MS = 100;
 
 const collapse: MorphScene = {
 	key: "sheet-collapses",
@@ -135,14 +159,17 @@ const collapse: MorphScene = {
 	caveat: morphCaveat,
 	frame: (t) => {
 		const p = morphProgress(t);
-		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
 		return {
 			box: mixBox(SHEET_BOX, SLOT, p),
 			scale: 1,
 			origin: "50% 50%",
 			border: "line",
-			...blocks(1 - p, 1 - k, segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT)),
-			bar: 1 - segment(t, 0, BAR_EXIT_MS, MOTION_EASE_IN_OUT),
+			...blocks(
+				1 - p,
+				1 - progressOf(KIND_LABEL, t),
+				progressOf(CLIP_FADE, t),
+			),
+			bar: 1 - progressOf(BAR_EXIT, t),
 		};
 	},
 };
@@ -157,14 +184,17 @@ const lift: MorphScene = {
 	caveat: morphCaveat,
 	frame: (t) => {
 		const p = morphProgress(t);
-		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
 		return {
 			box: mixBox(SHEET_BOX, LIFTED, p),
 			scale: 1,
 			origin: "50% 100%",
 			border: "link",
-			...blocks(1 - p, 1 - k, segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT)),
-			bar: 1 - segment(t, 0, BAR_EXIT_MS, MOTION_EASE_IN_OUT),
+			...blocks(
+				1 - p,
+				1 - progressOf(KIND_LABEL, t),
+				progressOf(CLIP_FADE, t),
+			),
+			bar: 1 - progressOf(BAR_EXIT, t),
 		};
 	},
 };
@@ -175,12 +205,12 @@ const hold: MorphScene = {
 	title: "Sheet held",
 	source: "drag-deck.tsx · NoteView · holding · LONG_PRESS_MS",
 	knobs: [],
-	length: () => LONG_PRESS_MS,
+	length: () => HOLD_SHRINK.ms,
 	frame: (t) => {
-		const p = segment(t, 0, LONG_PRESS_MS, LINEAR);
+		const p = progressOf(HOLD_SHRINK, t);
 		return {
 			box: SHEET_BOX,
-			scale: mix(1, 0.95, p),
+			scale: mix(1, HOLD_SCALE, p),
 			origin: "84% 88%",
 			border: p > 0 ? "link" : "line",
 			...blocks(1, 1, 0),

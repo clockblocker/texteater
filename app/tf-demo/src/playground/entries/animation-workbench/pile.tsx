@@ -1,7 +1,12 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import { cleanWord, type DummyNote } from "../deck-models/dummy";
-import { type CardFrame, type Frame, HEADER_REM, PILE_HEIGHT_REM } from "./motion";
+import {
+	type CardFrame,
+	type Frame,
+	HEADER_REM,
+	PILE_HEIGHT_REM,
+} from "./motion";
 
 /**
  * Draws one Frame. No Motion, no CSS transitions: every style is the number
@@ -162,7 +167,10 @@ export function Pile({
 	tap: (index: number) => void;
 }) {
 	return (
-		<div className="relative w-full" style={{ height: rem(PILE_HEIGHT_REM) }}>
+		<div
+			className="relative w-full"
+			style={{ height: rem(PILE_HEIGHT_REM) }}
+		>
 			{cards.map((note, index) => {
 				const card = frame.cards[index];
 				if (!card) return null;

@@ -1,14 +1,26 @@
 import { deckFor } from "../../deck-models/dummy";
 import {
-	MOTION_EASE_IN,
-	MOTION_EASE_IN_OUT,
+	ARM_LABEL,
+	ARM_LABEL_ARMED,
+	ARM_LABEL_COMMITTED,
+	ARM_LABEL_FROM,
+	FLY_DISTANCE,
+	FLY_FADE,
+	FLY_ROTATE,
+	FLY_ROTATE_TO,
+	FLY_TRAVEL,
+	leanFor,
+	TILT_MAX,
+} from "../../deck-models/motion-spec";
+import {
 	type Params,
+	progressOf,
 	type SpringSpec,
 	springAt,
 	springLength,
 	springSettle,
 } from "../motion";
-import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
+import { mix, type Scene, type SceneGroup, scene } from "../scene";
 
 /**
  * DRAG — what the Compass Held Card does once the pointer lets go, or when
@@ -18,6 +30,11 @@ import { mix, type Scene, type SceneGroup, scene, segment } from "../scene";
  *
  * The Card is drawn at rest in the middle of a stage; `x` and `y` are its
  * offsets from that rest, as Motion holds them on the Note itself.
+ *
+ * Every duration, curve and distance comes from
+ * `deck-models/motion-spec.ts`. What a scene owns is where the pointer let
+ * go — the stage has to put the Card somewhere before it can move — and
+ * the beat before a commit, which exists so the preview shows both halves.
  */
 
 const NOTE = deckFor("noch")[0];
@@ -119,17 +136,16 @@ const tilt: GhostScene = {
 		...REST,
 		x: OVER_REMOVE.x,
 		y: OVER_REMOVE.y,
-		rotate: mix(0, -20, springProgress(t, params)),
+		rotate: mix(0, TILT_MAX, springProgress(t, params)),
 		border: "link",
 	}),
 };
 
 /**
  * An armed Remove past the commit line. While armed the lean follows the
- * pointer, dx / 16, so at this offset the ghost is already tilted a little.
+ * pointer, so at this offset the ghost is already tilted a little.
  */
-const ARMED_REMOVE = { x: -100, rotate: -100 / 16 };
-const FLY_MS = 220;
+const ARMED_REMOVE = { x: -100, rotate: leanFor(-100) };
 
 const flyAway: GhostScene = {
 	key: "fly-away",
@@ -137,23 +153,30 @@ const flyAway: GhostScene = {
 	source: "drag-deck.tsx · flyAway",
 	where: "playground",
 	knobs: [],
-	length: () => FLY_MS,
-	frame: (t) => {
-		const travel = segment(t, 0, FLY_MS, MOTION_EASE_IN);
-		const rest = segment(t, 0, FLY_MS, MOTION_EASE_IN_OUT);
-		return {
-			...REST,
-			x: mix(ARMED_REMOVE.x, ARMED_REMOVE.x - 720, travel),
-			rotate: mix(ARMED_REMOVE.rotate, -28, rest),
-			opacity: mix(1, 0, rest),
-			border: "destructive",
-			label: REMOVE,
-		};
-	},
+	length: () => FLY_TRAVEL.ms,
+	frame: (t) => ({
+		...REST,
+		x: mix(
+			ARMED_REMOVE.x,
+			ARMED_REMOVE.x - FLY_DISTANCE,
+			progressOf(FLY_TRAVEL, t),
+		),
+		rotate: mix(
+			ARMED_REMOVE.rotate,
+			FLY_ROTATE_TO,
+			progressOf(FLY_ROTATE, t),
+		),
+		opacity: mix(1, 0, progressOf(FLY_FADE, t)),
+		border: "destructive",
+		label: REMOVE,
+	}),
 };
 
-/** The arm label appears when the gesture arms, and firms up past commit. */
-const LABEL_MS = 150;
+/**
+ * The arm label appears when the gesture arms, and firms up past commit.
+ * A preview beat: how long it is merely armed before the pointer crosses
+ * the commit line.
+ */
 const COMMIT_AT = 350;
 
 const armLabel: GhostScene = {
@@ -162,19 +185,27 @@ const armLabel: GhostScene = {
 	source: "drag-deck.tsx · armLabel · pastCommit",
 	where: "playground",
 	knobs: [],
-	length: () => COMMIT_AT + LABEL_MS,
+	length: () => COMMIT_AT + ARM_LABEL.ms,
 	frame: (t) => {
-		const enter = segment(t, 0, LABEL_MS, MOTION_EASE_IN_OUT);
-		const commit = segment(t, COMMIT_AT, LABEL_MS, MOTION_EASE_IN_OUT);
+		const enter = progressOf(ARM_LABEL, t);
+		const commit = progressOf(ARM_LABEL, t, COMMIT_AT);
 		return {
 			...REST,
 			x: -40,
-			rotate: -40 / 16,
+			rotate: leanFor(-40),
 			border: "destructive",
 			label: {
 				...REMOVE,
-				opacity: mix(mix(0, 0.55, enter), 1, commit),
-				scale: mix(mix(0.9, 0.96, enter), 1, commit),
+				opacity: mix(
+					mix(ARM_LABEL_FROM.opacity, ARM_LABEL_ARMED.opacity, enter),
+					ARM_LABEL_COMMITTED.opacity,
+					commit,
+				),
+				scale: mix(
+					mix(ARM_LABEL_FROM.scale, ARM_LABEL_ARMED.scale, enter),
+					ARM_LABEL_COMMITTED.scale,
+					commit,
+				),
 			},
 		};
 	},

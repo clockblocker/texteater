@@ -1,4 +1,5 @@
 import {
+	DRAG_SPRING,
 	type Ease,
 	HEADER_REM,
 	MORPH,
@@ -41,8 +42,7 @@ export type Layout = {
 
 export function layoutFor(count: number, px: number): Layout {
 	const header = HEADER_REM * px;
-	const card =
-		(PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * px;
+	const card = (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * px;
 	return { count, px, header, card, body: card - header };
 }
 
@@ -57,10 +57,11 @@ export type Params = {
 	readonly damping: number;
 };
 
+/** The knobs start where the shipped drag spring is. */
 export const DEFAULT_PARAMS: Params = {
 	duration: 420,
-	stiffness: 520,
-	damping: 42,
+	stiffness: DRAG_SPRING.stiffness,
+	damping: DRAG_SPRING.damping,
 };
 
 /* --------------------------------------------------------------- easing */
@@ -91,9 +92,15 @@ export function cubicBezier(
 		let low = 0;
 		let high = 1;
 		let t = x;
-		for (let i = 0; i < 40; i += 1) {
+		/*
+		 * Bisection to a billionth. A millionth is not enough: where the
+		 * curve is steep the error in x is amplified in y, and the preview
+		 * then disagrees with Motion in the fifth decimal. Fifty halvings
+		 * of [0, 1] cost nothing here and put it below Motion's own solver.
+		 */
+		for (let i = 0; i < 50; i += 1) {
 			const guess = at(x1, x2, t);
-			if (Math.abs(guess - x) < 1e-6) break;
+			if (Math.abs(guess - x) < 1e-9) break;
 			if (guess < x) low = t;
 			else high = t;
 			t = (low + high) / 2;
@@ -104,14 +111,16 @@ export function cubicBezier(
 
 /** The browser's named timing functions. */
 export const CSS_EASE = cubicBezier(0.25, 0.1, 0.25, 1);
-/** Tailwind's `ease-in`, `ease-out`, `ease-in-out` and its transition default. */
-export const TW_EASE_IN = cubicBezier(0.4, 0, 1, 1);
+/** Tailwind's `ease-out` and `ease-in-out`, and its transition default. */
 export const TW_EASE_OUT = cubicBezier(0, 0, 0.2, 1);
 export const TW_EASE_IN_OUT = cubicBezier(0.4, 0, 0.2, 1);
-/** Motion's named tween easings ("easeIn", "easeOut", "easeInOut"). */
-export const MOTION_EASE_IN = cubicBezier(0.42, 0, 1, 1);
-export const MOTION_EASE_OUT = cubicBezier(0, 0, 0.58, 1);
-export const MOTION_EASE_IN_OUT = cubicBezier(0.42, 0, 0.58, 1);
+/**
+ * Motion's named tween easings. Only `CURVE` below reads them: a scene
+ * names an easing through its spec, never by reaching for the curve.
+ */
+const MOTION_EASE_IN = cubicBezier(0.42, 0, 1, 1);
+const MOTION_EASE_OUT = cubicBezier(0, 0, 0.58, 1);
+const MOTION_EASE_IN_OUT = cubicBezier(0.42, 0, 0.58, 1);
 
 export type SpringSpec = {
 	readonly stiffness: number;
@@ -220,11 +229,6 @@ const CURVE: Record<Ease, (p: number) => number> = {
 	easeInOut: MOTION_EASE_IN_OUT,
 };
 
-/** The cubic bézier behind one of Motion's easing names. */
-export function curveOf(ease: Ease): (p: number) => number {
-	return CURVE[ease];
-}
-
 /**
  * The spec's whole timeline, in ms: a tween's delay plus its duration, or
  * how long the spring takes to come to rest.
@@ -248,9 +252,7 @@ export function progressOf(spec: Spec, t: number, from = 0): number {
 	const settle = springSettle(spec);
 	const elapsed = t - from;
 	if (elapsed <= 0) return 0;
-	return settle.settled && elapsed >= settle.ms
-		? 1
-		: springAt(elapsed, spec);
+	return settle.settled && elapsed >= settle.ms ? 1 : springAt(elapsed, spec);
 }
 
 /**

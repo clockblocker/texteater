@@ -13,7 +13,7 @@ import type { CardFrame, Frame, Layout } from "./motion";
  * So there is no `t` here. The entry keeps its place in the workbench as
  * the one thing on the list with a timeline of zero — the size difference
  * is a state, not a move — and `OPEN_SCALE` is shared with the live deck
- * through `deck-models/open-card.ts`, so this stage and `drag-deck.tsx`
+ * through `deck-models/motion-spec.ts`, so this stage and `drag-deck.tsx`
  * cannot disagree about how far the front Card stands out.
  */
 
@@ -43,4 +43,4 @@ export function deckFrame(open: number, layout: Layout): Frame {
 }
 
 export const SWAP_SOURCE =
-	"motion-spec.ts · OPEN_SCALE · headingTravel → drag-deck.tsx · NoteView";
+	"motion-spec.ts · OPEN_SCALE → drag-deck.tsx · NoteView";

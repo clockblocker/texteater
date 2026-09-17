@@ -57,13 +57,6 @@ export function groupLength(group: SceneGroup, params: Params): number {
 	return Math.max(0, ...group.scenes.map((s) => s.length(params)));
 }
 
-const KNOB_ORDER: readonly Knob[] = ["duration", "stiffness", "damping"];
-
-export function groupKnobs(group: SceneGroup): readonly Knob[] {
-	const used = new Set(group.scenes.flatMap((s) => s.knobs));
-	return KNOB_ORDER.filter((knob) => used.has(knob));
-}
-
 /* -------------------------------------------------------------- helpers */
 
 /**

@@ -24,8 +24,42 @@ import {
 	type NoteLink,
 	noteById,
 } from "./dummy";
-import { MORPH } from "./morph";
-import { OPEN_SCALE } from "./open-card";
+import {
+	ARM_LABEL,
+	ARM_LABEL_ARMED,
+	ARM_LABEL_COMMITTED,
+	ARM_LABEL_FROM,
+	BAR_ENTER,
+	BAR_EXIT,
+	BAR_REM,
+	CARD_WIDTH_REM,
+	CLIP_FADE,
+	CONTEXT_ITEM,
+	DRAG_SPRING,
+	expandScaleFor,
+	FLY_DISTANCE,
+	FLY_FADE,
+	FLY_ROTATE,
+	FLY_ROTATE_TO,
+	FLY_TRAVEL,
+	HEADER_REM,
+	HOLD_RELEASE,
+	HOLD_SCALE,
+	HOLD_SHRINK,
+	KIND_LABEL,
+	KIND_LABEL_Y,
+	LONG_PRESS_MS,
+	leanFor,
+	MORPH as MORPH_SPEC,
+	motionOf,
+	NOTE_BORDER,
+	NOTE_ENTER,
+	NOTE_EXIT,
+	OPEN_SCALE,
+	PILE_HEIGHT_REM,
+	SHEET_HEADER_REM,
+	TILT_MAX,
+} from "./motion-spec";
 import { DummyReader, ModelShell, useEventLog } from "./shared";
 
 /**
@@ -122,16 +156,8 @@ type Lift = {
 };
 
 const ROOT_PANE = "text";
-const CARD_WIDTH_REM = 26;
-/** The whole column: the expanded Card plus one header row per folded Card. */
-const PILE_HEIGHT_REM = 30;
-const HEADER_REM = 2.75;
-/** The Heading row in Sheet form: the title grows and the kind label shows. */
-const SHEET_HEADER_REM = 4.25;
 const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
 const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
-/** The Pane bar above a Sheet: the trail and the collapse control. */
-const BAR_REM = 2.25;
 /** The Sheet's box: the Pane inset by these. */
 const SHEET_INSET_X_REM = 1.5;
 const SHEET_INSET_Y_REM = 1;
@@ -150,7 +176,6 @@ const THROW = 1;
 const VELOCITY_STALE_MS = 100;
 /** An armed Card that is held this long relaxes into a plain drag. */
 const HOLD_RELEASE_MS = 650;
-const LONG_PRESS_MS = 500;
 /** A settling animation that has not finished by then is treated as done. */
 const SETTLE_TIMEOUT_MS = 400;
 const CLICK_SLOP = 4;
@@ -158,7 +183,13 @@ const EDGE_BAND = 80;
 /** The remove zone's width, and the gap between it and the Deck. */
 const REMOVE_WIDTH = "5rem";
 const ZONE_GAP = "0.75rem";
-const SPRING = { type: "spring", stiffness: 520, damping: 42 } as const;
+/**
+ * The two springs, as Motion takes them. Their response lives in
+ * `motion-spec.ts`, which the Animation workbench reads too, so the
+ * preview and the live deck ride the same curve.
+ */
+const SPRING = motionOf(DRAG_SPRING);
+const MORPH = motionOf(MORPH_SPEC);
 
 const DISMISS_EXEMPT_SELECTOR = [
 	"button",
@@ -687,12 +718,12 @@ export function CompassModel() {
 		}
 
 		if (d.arm === "remove") {
-			h.rotate.set(Math.max(-20, Math.min(0, dx / 16)));
+			h.rotate.set(leanFor(dx));
 			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
 				release(d, "Held a beat");
 			else if (dx > 12) release(d, "Turned back");
 		} else if (d.arm === "expand") {
-			h.scale.set(1 + Math.max(0, Math.min(0.05, -dy / 800)));
+			h.scale.set(expandScaleFor(dy));
 			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
 				release(d, "Held a beat");
 			else if (dy > 12) release(d, "Turned back");
@@ -705,7 +736,7 @@ export function CompassModel() {
 		const overRemove = next?.kind === "remove";
 		if (overRemove !== d.overRemove) {
 			d.overRemove = overRemove;
-			animate(h.rotate, overRemove ? -20 : 0, SPRING);
+			animate(h.rotate, overRemove ? TILT_MAX : 0, SPRING);
 		}
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
@@ -741,12 +772,13 @@ export function CompassModel() {
 		settle(
 			() =>
 				Promise.all([
-					animate(h.x, h.x.get() - 720, {
-						duration: 0.22,
-						ease: "easeIn",
-					}),
-					animate(h.rotate, -28, { duration: 0.22 }),
-					animate(h.opacity, 0, { duration: 0.22 }),
+					animate(
+						h.x,
+						h.x.get() - FLY_DISTANCE,
+						motionOf(FLY_TRAVEL),
+					),
+					animate(h.rotate, FLY_ROTATE_TO, motionOf(FLY_ROTATE)),
+					animate(h.opacity, 0, motionOf(FLY_FADE)),
 				]),
 			() => removeCard(d.card, reason),
 		);
@@ -1011,11 +1043,11 @@ export function CompassModel() {
 							initial={{ opacity: 0 }}
 							animate={{
 								opacity: 1,
-								transition: { duration: 0.16, delay: 0.18 },
+								transition: motionOf(BAR_ENTER),
 							}}
 							exit={{
 								opacity: 0,
-								transition: { duration: 0.1 },
+								transition: motionOf(BAR_EXIT),
 							}}
 							className="absolute inset-x-0 top-0 z-20 flex items-center gap-2 bg-paper ps-2 pe-3"
 							style={{ height: `${BAR_REM.toString()}rem` }}
@@ -1301,7 +1333,7 @@ function NoteView({
 
 	useEffect(() => {
 		register(card.id, handle.current);
-		const fade = animate(opacity, 1, { duration: 0.16 });
+		const fade = animate(opacity, 1, motionOf(NOTE_ENTER));
 		return () => {
 			fade.stop();
 			register(card.id, null);
@@ -1327,10 +1359,8 @@ function NoteView({
 		if (held) return;
 		const controls = animate(
 			scale,
-			holding ? 0.95 : 1,
-			holding
-				? { duration: LONG_PRESS_MS / 1000, ease: "linear" }
-				: { duration: 0.16 },
+			holding ? HOLD_SCALE : 1,
+			motionOf(holding ? HOLD_SHRINK : HOLD_RELEASE),
 		);
 		return () => controls.stop();
 	}, [holding, held, scale]);
@@ -1409,9 +1439,9 @@ function NoteView({
 			data-past={pastCommit}
 			data-holding={holding}
 			data-pane={paneId ?? undefined}
-			exit={{ opacity: 0, transition: { duration: 0.12 } }}
+			exit={{ opacity: 0, transition: motionOf(NOTE_EXIT) }}
 			animate={{ borderColor }}
-			transition={{ duration: 0.16 }}
+			transition={motionOf(NOTE_BORDER)}
 			style={{
 				left,
 				top,
@@ -1454,7 +1484,7 @@ function NoteView({
 					<motion.div
 						aria-hidden="true"
 						animate={{ opacity: sheet || below ? 0 : 1 }}
-						transition={{ duration: 0.2 }}
+						transition={motionOf(CLIP_FADE)}
 						className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-gradient-to-t from-paper to-transparent"
 					/>
 				</div>
@@ -1479,13 +1509,12 @@ function NoteView({
 				{armLabel ? (
 					<motion.div
 						key={armLabel}
-						initial={{ opacity: 0, scale: 0.9 }}
-						animate={{
-							opacity: pastCommit ? 1 : 0.55,
-							scale: pastCommit ? 1 : 0.96,
-						}}
-						exit={{ opacity: 0, scale: 0.9 }}
-						transition={{ duration: 0.15 }}
+						initial={ARM_LABEL_FROM}
+						animate={
+							pastCommit ? ARM_LABEL_COMMITTED : ARM_LABEL_ARMED
+						}
+						exit={ARM_LABEL_FROM}
+						transition={motionOf(ARM_LABEL)}
 						className={`absolute top-3 z-10 rounded-md border px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${arm === "remove" ? "right-3 border-destructive bg-paper text-destructive" : "left-3 border-link bg-paper text-link"}`}
 					>
 						{armLabel}
@@ -1536,8 +1565,11 @@ function HeadingBlock({
 			className={`relative flex w-full shrink-0 items-end gap-4 px-4 ${sheet ? "cursor-grab touch-none active:cursor-grabbing" : ""} ${atBottom ? "" : "pb-2"}`}
 		>
 			<motion.span
-				animate={{ opacity: sheet ? 1 : 0, y: sheet ? 0 : 4 }}
-				transition={{ duration: 0.16 }}
+				animate={{
+					opacity: sheet ? 1 : 0,
+					y: sheet ? 0 : KIND_LABEL_Y,
+				}}
+				transition={motionOf(KIND_LABEL)}
 				className="pointer-events-none absolute top-3 left-4 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase"
 			>
 				{note.kind}
@@ -1585,7 +1617,7 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 							initial={{ opacity: 0, height: 0 }}
 							animate={{ opacity: 1, height: "auto" }}
 							exit={{ opacity: 0, height: 0 }}
-							transition={{ duration: 0.16 }}
+							transition={motionOf(CONTEXT_ITEM)}
 							className="overflow-hidden"
 						>
 							{highlight(line, word)}

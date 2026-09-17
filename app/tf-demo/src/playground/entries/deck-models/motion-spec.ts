@@ -213,27 +213,3 @@ const EXPAND_PER_PX = 1 / 800;
 export function expandScaleFor(dy: number): number {
 	return 1 + Math.max(0, Math.min(EXPAND_SCALE_MAX, -dy * EXPAND_PER_PX));
 }
-
-/**
- * Where a Note's Heading sits while it changes edges.
- *
- * A Heading that has moved from the top of the Card to the tail (or back)
- * is one row travelling the length of the Card's body. `remaining` is how
- * much of the MORPH spring is left to run — 1 at the start of the move, 0
- * once it has settled — so the offset is from where the row used to be
- * toward where it now belongs.
- *
- * The prototype and the workbench's deck Swap both lay the Heading out
- * with this, so neither has to know the other's flex order.
- */
-export function headingTravel(
-	cardHeight: number,
-	headerHeight: number,
-	edge: "top" | "bottom",
-	wasEdge: "top" | "bottom",
-	remaining: number,
-): number {
-	if (edge === wasEdge || remaining === 0) return 0;
-	const travel = cardHeight - headerHeight;
-	return (edge === "bottom" ? -travel : travel) * remaining;
-}

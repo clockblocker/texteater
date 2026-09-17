@@ -1,15 +1,37 @@
 import { deckFor } from "../../deck-models/dummy";
-import { MORPH_MS, MOTION_EASE_IN_OUT, morphProgress } from "../motion";
-import { mix, type SceneGroup, scene, segment } from "../scene";
+import {
+	BAR_ENTER,
+	BAR_EXIT,
+	CARD_TITLE_REM,
+	CLIP_FADE,
+	CONTEXT_ITEM,
+	HEADER_REM,
+	KIND_LABEL,
+	KIND_LABEL_Y,
+	NOTE_ENTER,
+	NOTE_EXIT,
+	SHEET_HEADER_REM,
+	SHEET_TITLE_REM,
+} from "../../deck-models/motion-spec";
+import { MORPH_MS, morphProgress, progressOf } from "../motion";
+import { mix, type SceneGroup, scene } from "../scene";
 
 /**
  * NOTE & BLOCKS — the smaller motions inside and around a Compass Note,
  * each on its own so it can be judged apart from the box morph it usually
  * runs under. All in `deck-models/drag-deck.tsx`: the Heading Block, the
  * Source Contexts Block, the Note's own fade in and out.
+ *
+ * Every duration, curve and distance below comes from
+ * `deck-models/motion-spec.ts`, which `drag-deck.tsx` reads too. The only
+ * numbers a scene owns are the stage's own geometry and the beats that
+ * exist so a preview has something to show — both marked where they are.
  */
 
 const NOTE = deckFor("noch")[0];
+
+/** The preview's root font size: every rem in the spec is drawn at this. */
+const PX = 16;
 
 function Stage({ children }: { readonly children: React.ReactNode }) {
 	return (
@@ -21,8 +43,12 @@ function Stage({ children }: { readonly children: React.ReactNode }) {
 
 /* ------------------------------------------------------- heading grows */
 
-const HEADING = { card: 44, sheet: 68, cardType: 16, sheetType: 24 };
-const KIND_MS = 160;
+const HEADING = {
+	card: HEADER_REM * PX,
+	sheet: SHEET_HEADER_REM * PX,
+	cardType: CARD_TITLE_REM * PX,
+	sheetType: SHEET_TITLE_REM * PX,
+};
 
 export type HeadingFrame = {
 	readonly height: number;
@@ -40,12 +66,12 @@ const headingGrows = scene<HeadingFrame>({
 	length: () => MORPH_MS,
 	frame: (t) => {
 		const p = morphProgress(t);
-		const k = segment(t, 0, KIND_MS, MOTION_EASE_IN_OUT);
+		const k = progressOf(KIND_LABEL, t);
 		return {
 			height: mix(HEADING.card, HEADING.sheet, p),
 			fontSize: mix(HEADING.cardType, HEADING.sheetType, p),
 			kind: k,
-			kindY: mix(4, 0, k),
+			kindY: mix(KIND_LABEL_Y, 0, k),
 		};
 	},
 	Render: ({ frame }) => (
@@ -78,60 +104,7 @@ const headingGrows = scene<HeadingFrame>({
 	),
 });
 
-/* ----------------------------------------------------- heading to tail */
-
-const TAIL_CARD = { height: 160, heading: 44 };
-
-export type TailFrame = {
-	/** The Heading's offset from the Card's top, px. */
-	readonly y: number;
-};
-
-const headingToTail = scene<TailFrame>({
-	key: "heading-to-tail",
-	title: "Heading moves to the tail",
-	source: 'drag-deck.tsx · HeadingBlock · layout="position" · order',
-	where: "playground",
-	knobs: [],
-	length: () => MORPH_MS,
-	frame: (t) => ({
-		y: mix(0, TAIL_CARD.height - TAIL_CARD.heading, morphProgress(t)),
-	}),
-	Render: ({ frame }) => (
-		<Stage>
-			<div
-				data-card
-				className="relative w-[20rem] overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper"
-				style={{ height: TAIL_CARD.height }}
-			>
-				<div className="space-y-1.5 px-4 pt-3 text-[0.85rem] leading-relaxed text-ink-soft">
-					{NOTE?.lines.slice(0, 3).map((line) => (
-						<p key={line}>{line}</p>
-					))}
-				</div>
-				<div
-					data-heading
-					className="absolute inset-x-0 top-0 flex items-center justify-between gap-4 bg-paper px-4"
-					style={{
-						height: TAIL_CARD.heading,
-						transform: `translateY(${frame.y.toFixed(2)}px)`,
-					}}
-				>
-					<span className="truncate font-serif text-[1rem] text-ink">
-						{NOTE?.tail.form}
-					</span>
-					<span className="shrink-0 text-[0.72rem] text-ink-muted">
-						{NOTE?.tail.gloss}
-					</span>
-				</div>
-			</div>
-		</Stage>
-	),
-});
-
 /* --------------------------------------------------------- clip lifts */
-
-const FADE_MS = 200;
 
 export type FadeFrame = { readonly fade: number };
 
@@ -141,8 +114,8 @@ const clipLifts = scene<FadeFrame>({
 	source: "drag-deck.tsx · NoteView · clip gradient · animate opacity",
 	where: "playground",
 	knobs: [],
-	length: () => FADE_MS,
-	frame: (t) => ({ fade: 1 - segment(t, 0, FADE_MS, MOTION_EASE_IN_OUT) }),
+	length: () => CLIP_FADE.ms,
+	frame: (t) => ({ fade: 1 - progressOf(CLIP_FADE, t) }),
 	Render: ({ frame }) => (
 		<Stage>
 			<div className="relative h-[8rem] w-[20rem] overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper">
@@ -163,7 +136,12 @@ const clipLifts = scene<FadeFrame>({
 
 /* --------------------------------------------------- contexts unfold */
 
-const ITEM_MS = 160;
+/**
+ * The one stand-in in the workbench. A Source Context wraps, so the
+ * prototype animates its height to `auto` and only the DOM knows the
+ * target; this is one line at the shipped type size, so the preview has a
+ * distance to travel. The duration and curve are the shipped ones.
+ */
 const ITEM_HEIGHT = 22;
 const PAGE = 3;
 
@@ -181,9 +159,9 @@ const contextsUnfold = scene<ContextsFrame>({
 	source: "drag-deck.tsx · ContextsBlock · AnimatePresence · height auto",
 	where: "playground",
 	knobs: [],
-	length: () => ITEM_MS,
+	length: () => CONTEXT_ITEM.ms,
 	frame: (t) => {
-		const p = segment(t, 0, ITEM_MS, MOTION_EASE_IN_OUT);
+		const p = progressOf(CONTEXT_ITEM, t);
 		return {
 			items: Array.from({ length: PAGE }, () => ({
 				height: mix(0, ITEM_HEIGHT, p),
@@ -224,10 +202,8 @@ const contextsUnfold = scene<ContextsFrame>({
 
 /* ---------------------------------------------------------- pane bar */
 
-const BAR_DELAY_MS = 180;
-const BAR_MS = 160;
+/** A preview beat: how long the bar sits before the Sheet closes. */
 const BAR_HOLD_UNTIL = 700;
-const BAR_EXIT_MS = 100;
 
 export type BarFrame = { readonly opacity: number };
 
@@ -237,12 +213,12 @@ const paneBar = scene<BarFrame>({
 	source: "drag-deck.tsx · renderPane · data-pane-bar · AnimatePresence",
 	where: "playground",
 	knobs: [],
-	length: () => BAR_HOLD_UNTIL + BAR_EXIT_MS,
+	length: () => BAR_HOLD_UNTIL + BAR_EXIT.ms,
 	frame: (t) => ({
 		opacity: mix(
-			segment(t, BAR_DELAY_MS, BAR_MS, MOTION_EASE_IN_OUT),
+			progressOf(BAR_ENTER, t),
 			0,
-			segment(t, BAR_HOLD_UNTIL, BAR_EXIT_MS, MOTION_EASE_IN_OUT),
+			progressOf(BAR_EXIT, t, BAR_HOLD_UNTIL),
 		),
 	}),
 	Render: ({ frame }) => (
@@ -270,9 +246,8 @@ const paneBar = scene<BarFrame>({
 
 /* --------------------------------------------------- note in and out */
 
-const ENTER_MS = 160;
+/** A preview beat: how long the Note sits before it is removed. */
 const LEAVE_AT = 500;
-const LEAVE_MS = 120;
 
 export type PresenceFrame = { readonly opacity: number };
 
@@ -282,12 +257,12 @@ const notePresence = scene<PresenceFrame>({
 	source: "drag-deck.tsx · NoteView · opacity on mount · exit",
 	where: "playground",
 	knobs: [],
-	length: () => LEAVE_AT + LEAVE_MS,
+	length: () => LEAVE_AT + NOTE_EXIT.ms,
 	frame: (t) => ({
 		opacity: mix(
-			segment(t, 0, ENTER_MS, MOTION_EASE_IN_OUT),
+			progressOf(NOTE_ENTER, t),
 			0,
-			segment(t, LEAVE_AT, LEAVE_MS, MOTION_EASE_IN_OUT),
+			progressOf(NOTE_EXIT, t, LEAVE_AT),
 		),
 	}),
 	Render: ({ frame }) => (
@@ -320,14 +295,7 @@ const notePresence = scene<PresenceFrame>({
 export const NOTE_GROUP: SceneGroup = {
 	key: "note",
 	title: "Note & blocks",
-	scenes: [
-		headingGrows,
-		headingToTail,
-		clipLifts,
-		contextsUnfold,
-		paneBar,
-		notePresence,
-	],
+	scenes: [headingGrows, clipLifts, contextsUnfold, paneBar, notePresence],
 };
 
 export { NOTE_GROUP as NOTE };
