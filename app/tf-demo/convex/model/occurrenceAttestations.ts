@@ -11,7 +11,7 @@ const MAX_SEGMENTS_PER_SENTENCE = 512;
 type ServerCtx = QueryCtx | MutationCtx;
 
 type LemmaRecord = {
-	language: "de" | "he";
+	language: "de" | "en" | "he";
 	family: string;
 	kind: string;
 	canonicalForm: string;
@@ -19,7 +19,7 @@ type LemmaRecord = {
 };
 
 type SurfaceRecord = {
-	language: "de" | "he";
+	language: "de" | "en" | "he";
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
 	surfaceFeatures: unknown;

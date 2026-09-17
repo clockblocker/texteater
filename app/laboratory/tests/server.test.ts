@@ -2,7 +2,10 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { executeOutput } from "../../../battery/dumgen/tests/execution-fixture.js";
+import {
+	choiceAnswers,
+	executeOutput,
+} from "../../../battery/dumgen/tests/execution-fixture.js";
 import { grammarFixture } from "../../../battery/dumgen/tests/grammar-fixture.js";
 import { startLaboratoryServer } from "../src/server";
 
@@ -29,23 +32,23 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 		sessionDirectory: directory,
 		configuration: { model: "controlled" },
 		judge: (request, options) => {
+			if (Object.hasOwn(request.questions, "language")) {
+				stages.push("segment");
+				return Promise.resolve(
+					choiceAnswers(request.questions, (id) =>
+						id === "language"
+							? "de"
+							: id === "validity"
+								? "Accepted"
+								: "Unchanged",
+					),
+				);
+			}
 			stages.push("resolveGrammar");
 			return grammarFixture(grammar).judge(request, options);
 		},
 		execute: executeOutput(async (request) => {
 			stages.push(request.stage);
-			if (request.stage === "segment")
-				return {
-					language: "de",
-					items: [
-						{
-							id: "0",
-							decision: "Accepted",
-							language: "de",
-							stitchedText: "Bank",
-						},
-					],
-				};
 
 			if (request.stage === "resolveOrGenerateReadingEmojiDescription") {
 				if (failReading) {

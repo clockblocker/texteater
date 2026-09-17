@@ -70,6 +70,7 @@ export function judgmentCaller(options: DumgenOptions) {
 		state: EntryType,
 		questions: Q,
 		signal: AbortSignal,
+		dependsOn?: readonly string[],
 	): Promise<SystemOneResult<Q>> => {
 		if (!Object.keys(questions).length)
 			throw new DumgenFailure(
@@ -116,7 +117,7 @@ export function judgmentCaller(options: DumgenOptions) {
 			operationId: context.id,
 			executor: "TypeSafe" as const,
 			request,
-			dependsOn: context.calls.map((call) => call.id),
+			dependsOn: dependsOn ?? context.calls.map((call) => call.id),
 			fingerprint: await fingerprint({ questions, state }),
 		};
 		const start = performance.now();

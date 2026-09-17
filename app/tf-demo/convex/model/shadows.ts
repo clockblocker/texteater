@@ -47,7 +47,7 @@ type ServerCtx = MutationCtx | QueryCtx;
 type UnknownRecord = Record<string, unknown>;
 
 export type ShadowDescriptor = {
-	readonly language: "de" | "he";
+	readonly language: "de" | "en" | "he";
 	readonly canonicalForm: string;
 	readonly family: string;
 	readonly kind: string;
@@ -104,7 +104,7 @@ export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
 		descriptor.language,
 		"Unit Shadow language",
 	);
-	if (language !== "de" && language !== "he") {
+	if (language !== "de" && language !== "en" && language !== "he") {
 		throw new Error(`Unsupported Unit Shadow language: ${language}`);
 	}
 	const normalized: ShadowDescriptor = {

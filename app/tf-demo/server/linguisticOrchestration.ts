@@ -23,7 +23,7 @@ export type PersistedSentence = {
 	readonly sentenceId: string;
 	readonly textId: string;
 	readonly segmentedSentenceId: string;
-	readonly language: "de" | "he";
+	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly {
 		readonly index: number;
@@ -35,7 +35,7 @@ export type PersistedSentence = {
 export type SubmittedSentence = {
 	readonly segmentedSentenceId: string;
 	readonly position: number;
-	readonly language: "de" | "he";
+	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly Segment[];
 };

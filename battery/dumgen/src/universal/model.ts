@@ -68,6 +68,7 @@ export async function executeGeneration<T>(
 	options: DumgenOptions,
 	request: ModelRequest,
 	validate: (output: unknown) => T,
+	dependsOn?: readonly string[],
 ): Promise<T> {
 	const context = contextFor(request.signal);
 	const base = {
@@ -75,7 +76,7 @@ export async function executeGeneration<T>(
 		operationId: context.id,
 		executor: "Luna" as const,
 		request,
-		dependsOn: context.calls.map((call) => call.id),
+		dependsOn: dependsOn ?? context.calls.map((call) => call.id),
 		fingerprint: await fingerprint({
 			prompt: request.systemPrompt,
 			schema: request.outputSchema,

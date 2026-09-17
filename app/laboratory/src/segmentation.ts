@@ -36,6 +36,7 @@ export function segmentForLaboratory(
 			} satisfies SegmentationResponse;
 		if (
 			decision.sentence.language !== "de" &&
+			decision.sentence.language !== "en" &&
 			decision.sentence.language !== "he"
 		)
 			throw new Error("Unsupported segmentation language.");

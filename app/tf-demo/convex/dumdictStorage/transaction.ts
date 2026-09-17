@@ -463,7 +463,7 @@ async function applyChange(
 			const lemmaKey = lemmaIdentityKey(lemma);
 			if (await findLemma(ctx, record.lemma)) return false;
 			const language = requireString(lemma.language, "Lemma language");
-			if (language !== "de" && language !== "he") {
+			if (language !== "de" && language !== "en" && language !== "he") {
 				throw new Error("Unsupported Lemma language.");
 			}
 			const canonical = await findCanonicalLemma(ctx, record.lemma);
@@ -566,7 +566,7 @@ async function applyChange(
 				surface.language,
 				"Surface language",
 			);
-			if (language !== "de" && language !== "he") {
+			if (language !== "de" && language !== "en" && language !== "he") {
 				throw new Error("Unsupported Surface language.");
 			}
 			const spelling = requireString(

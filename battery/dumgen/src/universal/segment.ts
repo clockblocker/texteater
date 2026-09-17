@@ -1,4 +1,5 @@
 import { segmentGerman } from "../concrete-lang/de/segmentation/segment.js";
+import { segmentEnglish } from "../concrete-lang/en/segmentation/segment.js";
 import { segmentHebrew } from "../concrete-lang/he/segmentation/segment.js";
 import type {
 	DumgenOptions,
@@ -6,11 +7,15 @@ import type {
 	SegmentedSentence,
 } from "../types.js";
 import { DumgenFailure } from "./failure.js";
-import { modelCaller } from "./model.js";
-import { operationTask } from "./trace.js";
+import { judgmentCaller } from "./judgment.js";
+import { effectiveConfiguration, executeGeneration } from "./model.js";
+import { choice } from "./questions.js";
+import { assertStitchedText } from "./segmentation.js";
+import { contextFor, operationTask, recordEvent } from "./trace.js";
 import { parse } from "./validation.js";
+
+const segmenters = { de: segmentGerman, en: segmentEnglish, he: segmentHebrew };
 export function createSegmentation(options: DumgenOptions) {
-	const call = modelCaller(options);
 	const task = operationTask(options);
 	return function segment(raw: {
 		readonly sourceSentences: readonly [string, ...string[]];
@@ -28,98 +33,153 @@ export function createSegmentation(options: DumgenOptions) {
 					"Source sentences must contain text",
 				);
 			const decisions: SegmentationDecision[] = [];
-			for (
-				let offset = 0;
-				offset < input.sourceSentences.length;
-				offset += 9
-			) {
-				const items = input.sourceSentences
-					.slice(offset, offset + 9)
-					.map((sourceText, index) => ({
-						id: String(offset + index),
-						sourceText,
-					}));
-				const result = await call<{
-					language: "de" | "he" | null;
-					items: {
-						id: string;
-						decision:
-							| "Accepted"
-							| "UnsupportedLanguage"
-							| "Unintelligible";
-						language: "de" | "he" | null;
-						stitchedText: string;
-					}[];
-				}>(
+			for (const [index, sourceText] of input.sourceSentences.entries()) {
+				const result = await judgmentCaller(options)(
 					"segment",
 					"intake",
-					"intake",
-					"intakeOutput",
-					{ items },
-					signal,
-				);
-				if (result.items.length !== items.length)
-					throw new DumgenFailure(
-						"InvalidModelOutput",
-						"segment",
-						"Intake must return one ordered decision per input",
-					);
-				for (const [index, item] of result.items.entries()) {
-					const source = items[index];
-					if (!source)
-						throw new DumgenFailure(
-							"InvalidModelOutput",
-							"segment",
-							"Intake returned an unexpected item position",
-						);
-					if (
-						item.id !== source.id ||
-						item.stitchedText.replaceAll(/\s/gu, "") !==
-							source.sourceText.replaceAll(/\s/gu, "")
-					)
-						throw new DumgenFailure(
-							"InvalidModelOutput",
-							"segment",
-							"Intake must preserve item order and every non-whitespace character",
-						);
-					if (item.decision !== "Accepted") {
-						if (item.language !== null)
-							throw new DumgenFailure(
-								"InvalidModelOutput",
-								"segment",
-								"Rejected intake must have no language",
-							);
-						decisions.push({ decision: item.decision });
-						continue;
-					}
-					if (!item.language || item.language !== result.language)
-						throw new DumgenFailure(
-							"InvalidModelOutput",
-							"segment",
-							"Accepted intake must retain its batch Language",
-						);
-					const segmented =
-						item.language === "de"
-							? segmentGerman(item.stitchedText)
-							: segmentHebrew(item.stitchedText);
-					const sentence = {
-						id: crypto.randomUUID(),
-						language: item.language,
-						segments: [...segmented.segments],
-					};
-					decisions.push(
-						parse<SegmentationDecision>(
-							"segmentationDecisionSchema",
+					{ id: String(index), sourceText },
+					{
+						language: choice(
+							"Determine this sentence's primary language independently of any neighboring sentence. Typos, slang, spacing damage and a local foreign span do not change its primary language.",
 							{
-								decision: "Accepted",
-								language: item.language,
-								sentence,
+								de: "German",
+								en: "English",
+								he: "Hebrew",
+								UnsupportedLanguage:
+									"An intelligible primary language other than German, English or Hebrew",
+								Unresolved:
+									"No defensible primary-language judgment",
 							},
-							"segment",
-							true,
 						),
-					);
+						validity: choice(
+							"Does this sentence contain useful, intelligible linguistic material? Allow typos, informal speech, spacing damage and local foreign spans. Reject only when no defensible reading exists.",
+							{
+								Accepted: "Intelligible linguistic material",
+								Unintelligible: "No defensible reading exists",
+								Unresolved: "Cannot decide validity",
+							},
+						),
+						stitching: choice(
+							"Does whitespace need repair? This includes split words, accidentally joined words, leading/trailing whitespace, non-ASCII whitespace or repeated spaces. Do not judge spelling, casing or punctuation repair.",
+							{
+								Needed: "Whitespace repair is needed",
+								Unchanged:
+									"Source is already trimmed with single ASCII spaces and needs no word-boundary repair",
+								Unresolved:
+									"Cannot decide whether whitespace repair is needed",
+							},
+						),
+					},
+					signal,
+					[],
+				);
+				const answer = (key: string) => {
+					const value =
+						result.answers[key as keyof typeof result.answers];
+					return value?.type === "choice"
+						? value.choice
+						: "Unresolved";
+				};
+				const language = answer("language"),
+					validity = answer("validity");
+				recordEvent(signal, "IntakeJudgments", {
+					index,
+					sourceText,
+					answers: result.answers,
+				});
+				if (validity === "Unintelligible") {
+					decisions.push({ decision: "Unintelligible" });
+					continue;
 				}
+				if (language === "UnsupportedLanguage") {
+					decisions.push({ decision: "UnsupportedLanguage" });
+					continue;
+				}
+				if (
+					validity !== "Accepted" ||
+					!["de", "en", "he"].includes(language) ||
+					answer("stitching") === "Unresolved"
+				)
+					throw new DumgenFailure(
+						"Unresolved",
+						"segment",
+						`Intake unresolved for sentence ${index}`,
+						"intake",
+					);
+				const supportedLanguage = language as "de" | "en" | "he";
+				let stitchedText = sourceText;
+				if (answer("stitching") === "Needed") {
+					const parent = contextFor(signal).calls.at(-1);
+					const output = await executeGeneration(
+						options,
+						{
+							stage: "segment",
+							route: "intake",
+							input: { sourceText, language: supportedLanguage },
+							signal,
+							configuration: effectiveConfiguration(
+								options,
+								"intake",
+							),
+							systemPrompt:
+								"Repair whitespace only in this one source sentence. Delete whitespace that splits one word; insert an ASCII space between accidentally joined words. Collapse remaining whitespace runs to a single ASCII space and trim edges. Preserve every non-whitespace Unicode code point in exactly its original order. Never correct spelling, casing, slang, wording or punctuation. Return only stitchedText.",
+							outputSchema: {
+								type: "object",
+								properties: {
+									stitchedText: { type: "string" },
+								},
+								required: ["stitchedText"],
+								additionalProperties: false,
+							},
+						},
+						(value) => {
+							if (
+								!value ||
+								typeof value !== "object" ||
+								Object.keys(value).length !== 1 ||
+								!("stitchedText" in value) ||
+								typeof value.stitchedText !== "string"
+							)
+								throw Error(
+									"Stitching must return only stitchedText",
+								);
+							if (
+								value.stitchedText.replaceAll(/\s/gu, "") !==
+								sourceText.replaceAll(/\s/gu, "")
+							)
+								throw Error(
+									"Stitching changed non-whitespace characters",
+								);
+							assertStitchedText(value.stitchedText);
+							return value.stitchedText;
+						},
+						parent ? [parent.id] : [],
+					);
+					stitchedText = output;
+				}
+				const segmented = segmenters[supportedLanguage](stitchedText);
+				const decision = parse<SegmentationDecision>(
+					"segmentationDecisionSchema",
+					{
+						decision: "Accepted",
+						language: supportedLanguage,
+						sentence: {
+							id: crypto.randomUUID(),
+							language: supportedLanguage,
+							segments: [...segmented.segments],
+						},
+					},
+					"segment",
+					true,
+				);
+				recordEvent(signal, "SourceSegmentation", {
+					index,
+					sourceText,
+					stitchedText,
+					decision,
+					rules: segmented.trace,
+				});
+				decisions.push(decision);
 			}
 			return decisions;
 		});
@@ -133,16 +193,16 @@ function stitchTrustedText(text: string): string {
 
 export function createTrustedSegmentation(options: DumgenOptions) {
 	const task = operationTask(options);
-	return function segmentSentence<L extends "de" | "he">(input: {
+	return function segmentSentence<L extends "de" | "en" | "he">(input: {
 		readonly language: L;
 		readonly stitchedText: string;
 	}) {
 		return task("segmentSentence", input, async () => {
-			if (input.language !== "de" && input.language !== "he")
+			if (!Object.hasOwn(segmenters, input.language))
 				throw new DumgenFailure(
 					"InvalidInput",
 					"segmentSentence",
-					"Trusted segmentation supports only de and he",
+					"Trusted segmentation supports de, en and he",
 				);
 			const stitchedText = stitchTrustedText(input.stitchedText);
 			if (stitchedText.length === 0)
@@ -151,10 +211,7 @@ export function createTrustedSegmentation(options: DumgenOptions) {
 					"segmentSentence",
 					"Stitched Text must contain text",
 				);
-			const segmented =
-				input.language === "de"
-					? segmentGerman(stitchedText)
-					: segmentHebrew(stitchedText);
+			const segmented = segmenters[input.language](stitchedText);
 			return {
 				id: crypto.randomUUID(),
 				language: input.language,

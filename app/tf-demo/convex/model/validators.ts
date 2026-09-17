@@ -4,7 +4,7 @@ import {
 	translationLanguageValues,
 } from "dumrel";
 
-const enabledSegmentationLanguageValues = ["de", "he"] as const;
+const enabledSegmentationLanguageValues = ["de", "en", "he"] as const;
 const grammaticalResolutionLanguageValues = ["de"] as const;
 const segmentKindValues = [
 	"ResolvableText",

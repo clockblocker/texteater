@@ -49,7 +49,10 @@ export type SegmentationResponse = {
 	};
 };
 
-export type SegmentedSentence = DumgenSentence<"de"> | DumgenSentence<"he">;
+export type SegmentedSentence =
+	| DumgenSentence<"de">
+	| DumgenSentence<"en">
+	| DumgenSentence<"he">;
 export type GermanSegmentedSentence = DumgenSentence<"de">;
 
 export type ClickResolutionRequest = {

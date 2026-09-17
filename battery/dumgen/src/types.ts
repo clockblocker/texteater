@@ -82,7 +82,7 @@ export interface Dumgen {
 	 * skipped; only the per-language Source Segmentation runs. Kept as a Task
 	 * so a language whose segmentation needs a model call fits unchanged.
 	 */
-	segmentSentence<L extends "de" | "he">(input: {
+	segmentSentence<L extends "de" | "en" | "he">(input: {
 		readonly language: L;
 		readonly stitchedText: string;
 	}): Task<SegmentedSentence<L>>;

@@ -32,6 +32,11 @@ export { knowledgeRequestMaskSchema };
 export const segmentationDecisionSchema = z.union([
 	z.strictObject({
 		decision: z.literal("Accepted"),
+		language: z.literal("en"),
+		sentence: segmentedSentenceSchema.extend({ language: z.literal("en") }),
+	}),
+	z.strictObject({
+		decision: z.literal("Accepted"),
 		language: z.literal("de"),
 		sentence: segmentedSentenceSchema.extend({ language: z.literal("de") }),
 	}),

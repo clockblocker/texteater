@@ -502,3 +502,36 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 	expect(run.writes).toHaveLength(0);
 	expect(run.commits).toHaveLength(0);
 });
+
+test("mixed German, English and Hebrew intake persists ordered sentences without recognition", async () => {
+	const source = ["Das Haus ist groß.", "The house is large.", "הבית גדול."];
+	const languages = ["de", "en", "he"];
+	const run = setup([
+		{
+			items: source.map((stitchedText, index) => ({
+				id: String(index),
+				decision: "Accepted",
+				language: languages[index],
+				stitchedText,
+			})),
+		},
+	]);
+	await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "mixed-intake",
+			sourceText: source.join("\n"),
+		}),
+	);
+	expect(
+		run.submitted[0]?.sentences.map((sentence) => sentence.language),
+	).toEqual(languages);
+	expect(
+		run.submitted[0]?.sentences.map((sentence) => sentence.stitchedText),
+	).toEqual(source);
+	expect(run.writes).toHaveLength(0);
+	expect(run.requests.map((request) => request.stage)).toEqual([
+		"segment",
+		"segment",
+		"segment",
+	]);
+});
