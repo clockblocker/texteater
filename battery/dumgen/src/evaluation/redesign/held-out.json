@@ -1,0 +1,53 @@
+{
+	"version": 1,
+	"role": "held-out; exclude from prompts, demonstrations and tuning; one final attempt per case",
+	"cases": [
+		{
+			"id": "held-recognition-passive",
+			"operation": "recognition",
+			"sourceSentence": "Das Paket ist gestern versehentlich umgeleitet worden.",
+			"clickText": "umgeleitet"
+		},
+		{
+			"id": "held-recognition-modal",
+			"operation": "recognition",
+			"sourceSentence": "Mira hat die Rechnung erneut prüfen müssen.",
+			"clickText": "müssen"
+		},
+		{
+			"id": "held-recognition-pronoun",
+			"operation": "recognition",
+			"sourceSentence": "Diesen beiden vertraue ich.",
+			"clickText": "Diesen"
+		},
+		{
+			"id": "held-recognition-det",
+			"operation": "recognition",
+			"sourceSentence": "Jenes kleine Segelboot gehört uns.",
+			"clickText": "Jenes"
+		},
+		{
+			"id": "held-intake-en",
+			"operation": "intake",
+			"sourceSentence": "The lantern flick ered twice."
+		},
+		{
+			"id": "held-intake-he",
+			"operation": "intake",
+			"sourceSentence": "הספרייה נס גרת מוקדם."
+		},
+		{
+			"id": "held-reading",
+			"operation": "reading",
+			"sourceSentence": "Die Birne in der Lampe flackert.",
+			"clickText": "Birne",
+			"candidates": ["🍐"]
+		},
+		{
+			"id": "held-knowledge",
+			"operation": "knowledge",
+			"sourceSentence": "Ein Dachs verschwindet im Gebüsch.",
+			"clickText": "Dachs"
+		}
+	]
+}

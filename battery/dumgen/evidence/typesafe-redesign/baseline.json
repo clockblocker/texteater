@@ -1,0 +1,1159 @@
+{
+	"version": 1,
+	"sourceRevision": "b68732504442f7a5a3bdae3c8df6d2c4a7db2e67",
+	"preservationRef": "codex/dumgen-baseline-449",
+	"lockfileSha256": "49389ff3d4fb0e493b54cb38f2376f0a76d8a6c958a4a18a53f0dd38958c2cb1",
+	"runtime": {
+		"bun": "1.4.2",
+		"node": "24.x"
+	},
+	"reproduction": {
+		"checkout": "git worktree add /tmp/dumgen-baseline codex/dumgen-baseline-449",
+		"install": "bun install --frozen-lockfile",
+		"checks": "bun run --cwd battery/dumgen test",
+		"experiments": "bun run --cwd battery/dumgen evaluate --list",
+		"live": "bun run --cwd battery/dumgen evaluate --experiment ID --revision b68732504442f7a5a3bdae3c8df6d2c4a7db2e67 --output /tmp/dumgen-baseline-runs"
+	},
+	"configuration": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				}
+			},
+			"transport": "promptsmith/openai",
+			"automaticRetries": 0
+		},
+		"judgment": {
+			"productionEnabled": false,
+			"dummy": "promptsmith/typesafe SDK 0.6.0",
+			"model": "SDK/service default; not pinned by the dummy",
+			"automaticRetries": 2
+		},
+		"secrets": "Caller environment; credentials deliberately excluded"
+	},
+	"baselineChecks": {
+		"tests": 24,
+		"passed": 24,
+		"failed": 0,
+		"assertions": 4586,
+		"liveInferencePerformed": false
+	},
+	"assets": [
+		{
+			"id": "grammatical-resolution/de/construction/fusion",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/construction/fusion/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/construction/fusion/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "12859fc7661b1165bbafa02d877b85ed0fffcdef9a0efc5cc60746ed33da0cc4",
+			"corpusSha256": "d30ec5cf34a9d14581d7ffde2fd7830d6e8dd42eec9cb97a56538ebcf99d509e",
+			"caseCount": 34,
+			"demonstrationIds": [
+				"grammar-de-fusion-demo-im-initial",
+				"grammar-de-fusion-demo-zur-noun-control",
+				"grammar-de-fusion-demo-zum-typo",
+				"grammar-de-fusion-demo-fuers-historical-variant",
+				"grammar-de-fusion-demo-am-near-route-controls",
+				"grammar-de-fusion-demo-ins-near-idiom-and-dialect"
+			],
+			"reviewCaseIds": [
+				"grammar-de-fusion-dev-am-bahnhof",
+				"grammar-de-fusion-dev-beim-umzug"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/adjective",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adjective/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adjective/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "e2049bdd2496e688d767c449f426e499b39a411d9f452be49b22b1baa2dca3f4",
+			"corpusSha256": "3db6161576f4900d3db452b9eacc2438c5c2a7540604b197da1d57408380a445",
+			"caseCount": 38,
+			"demonstrationIds": [
+				"grammar-de-adj-demo-citation-sanft",
+				"grammar-de-adj-demo-attributive-klein",
+				"grammar-de-adj-demo-adverbial-schnell",
+				"grammar-de-adj-demo-comparative-besser",
+				"grammar-de-adj-demo-ordinal-erste",
+				"grammar-de-adj-demo-typo-freundlcih"
+			],
+			"reviewCaseIds": [
+				"grammar-de-adj-accept-citation-mild",
+				"grammar-de-adj-dev-attributive-acc-fem-rot"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/adposition",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adposition/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adposition/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "f74c8d96852639d49abdd42210c1a7421df7bd94dfd5a22d6d00a5c5b6fe2c0c",
+			"corpusSha256": "ce4a739e3d85c4698494135d3a0aa6052adaeca4305e71df3a5cc14d350b3293",
+			"caseCount": 39,
+			"demonstrationIds": [
+				"grammar-de-adp-demo-prep-mit-dat",
+				"grammar-de-adp-demo-two-way-auf",
+				"grammar-de-adp-demo-post-entlang-acc",
+				"grammar-de-adp-demo-circ-von-an",
+				"grammar-de-adp-demo-typo-one",
+				"grammar-de-adp-demo-archaic-ob"
+			],
+			"reviewCaseIds": [
+				"grammar-de-adp-dev-prep-durch-acc",
+				"grammar-de-adp-dev-prep-zu-dat"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/adverb",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adverb/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/adverb/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "34853b7c3beeaae234427598f7cdc64f29ab0615279f1bd64f77146a7e3adbfb",
+			"corpusSha256": "7a94b4633a16774af6331afe8d02a23db6902aa6d52d24b8360efe59684fbff2",
+			"caseCount": 42,
+			"demonstrationIds": [
+				"grammar-de-adv-demo-temporal-heute",
+				"grammar-de-adv-demo-demonstrative-dazu",
+				"grammar-de-adv-demo-interrogative-warum",
+				"grammar-de-adv-demo-comparative-lieber",
+				"grammar-de-adv-demo-superlative-am-liebsten",
+				"grammar-de-adv-demo-typo-gester",
+				"grammar-de-adv-demo-einerseits-andererseits"
+			],
+			"reviewCaseIds": [
+				"grammar-de-adv-dev-temporal-morgen",
+				"grammar-de-adv-dev-initial-vielleicht"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/auxiliary",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [454],
+			"sourceSha256": "72beaf4550ff60753013a246ebd7c805533dfa1d4eefc09ce677b06b889ee9cc",
+			"corpusSha256": "112c9343ecd84936e9c3300ac77d3eb58c4969c0907e12cc4ad88cf579c6c6cf",
+			"caseCount": 39,
+			"demonstrationIds": [
+				"grammar-de-aux-demo-future-wird",
+				"grammar-de-aux-demo-modal-kann",
+				"grammar-de-aux-demo-copula-ist",
+				"grammar-de-aux-demo-citation-duerfen",
+				"grammar-de-aux-demo-imperative-sei",
+				"grammar-de-aux-demo-typo-sol"
+			],
+			"reviewCaseIds": [
+				"grammar-de-aux-dev-perfect-hat-gegessen",
+				"grammar-de-aux-dev-perfect-waren-gegangen"
+			],
+			"expectations": "review-membership-and-whole-Surface-composition",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/coordinating-conjunction",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/coordinating-conjunction/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/coordinating-conjunction/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "c26d147cb356eb44d7b8f0226b3c3c32d41f4c249257d09813db37c933317d44",
+			"corpusSha256": "07114a89ae67ab635041b1cf74aa2237529e696cdcdcee1111e148939f271374",
+			"caseCount": 58,
+			"demonstrationIds": [
+				"grammar-de-cconj-demo-ordinary-und",
+				"grammar-de-cconj-demo-comparative-als",
+				"grammar-de-cconj-demo-causal-denn",
+				"grammar-de-cconj-demo-typo-udn",
+				"grammar-de-cconj-demo-variant-bzw",
+				"grammar-de-cconj-demo-archaic-allein",
+				"grammar-de-cconj-demo-sowohl-als-auch",
+				"grammar-de-cconj-demo-je-desto",
+				"grammar-de-cconj-demo-entweder-typo"
+			],
+			"reviewCaseIds": [
+				"grammar-de-cconj-dev-ordinary-oder-nouns",
+				"grammar-de-cconj-dev-adversative-aber-clauses"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/determiner",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/determiner/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/determiner/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [455],
+			"sourceSha256": "32b879835b590654bb8cc209af334aa9caa7628ca55529636ed65bb7ff2e5a44",
+			"corpusSha256": "1e6ece8fd33b24deef3189c52457423a2f79883fdce2b4e33682b5aa0b6af345",
+			"caseCount": 43,
+			"demonstrationIds": [
+				"grammar-de-det-demo-definite-article-der",
+				"grammar-de-det-demo-possessive-meinem",
+				"grammar-de-det-demo-feminine-article-die",
+				"grammar-de-det-demo-neuter-article-das",
+				"grammar-de-det-demo-uninflected-derlei",
+				"grammar-de-det-demo-variant-ne",
+				"grammar-de-det-demo-standalone-jener",
+				"grammar-de-det-demo-paradigm-welche",
+				"grammar-de-det-demo-paradigm-manchem",
+				"grammar-de-det-demo-quoted-archaic-etwelche"
+			],
+			"reviewCaseIds": [
+				"grammar-de-det-dev-indefinite-article-einen",
+				"grammar-de-det-dev-demonstrative-diesem"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/interjection",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/interjection/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/interjection/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "f77881df4f2556fc43e64ddf612c4a134aae02590c54fd60d79919809fd586de",
+			"corpusSha256": "cc53315524f17cb2d43ea0f7b6bbf78906eb90ce24bd72519b0f2fbe185d2274",
+			"caseCount": 42,
+			"demonstrationIds": [
+				"grammar-de-intj-demo-pfui-expressive",
+				"grammar-de-intj-demo-ja-response",
+				"grammar-de-intj-demo-hmm-lengthened",
+				"grammar-de-intj-demo-ha-ha-reduplication",
+				"grammar-de-intj-demo-typo-huraa",
+				"grammar-de-intj-demo-archaic-juchhei",
+				"grammar-de-intj-demo-contextual-ach-after-noun"
+			],
+			"reviewCaseIds": [
+				"grammar-de-intj-dev-wupp-onomatopoeia",
+				"grammar-de-intj-dev-hallo-greeting"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/noun",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/noun/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "fe5c08210cdda61b1eaf05802f5bc2a226cd82b9a5475eb09e5ac62afc595382",
+			"corpusSha256": "d48db1edb092a303a30dfaa4ccd18beeafd3306fcc5b731fdbb27a4d92415b01",
+			"caseCount": 40,
+			"demonstrationIds": [
+				"grammar-de-noun-demo-citation-haus",
+				"grammar-de-noun-demo-acc-sing-hund",
+				"grammar-de-noun-demo-dat-plur-kindern",
+				"grammar-de-noun-demo-typo-kaffe",
+				"grammar-de-noun-demo-archaic-antlitz",
+				"grammar-de-noun-demo-suspended-kinderbuecher"
+			],
+			"reviewCaseIds": [
+				"grammar-de-noun-dev-nom-plur-banken",
+				"grammar-de-noun-dev-dat-sing-bibliothek"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/numeral",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/numeral/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/numeral/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "43f1add27ee9a355cd7171bd7f06267b1fbf959fad27b7246ddce41ea84605ba",
+			"corpusSha256": "97a6fdc28736a8df5f345ff0a34898af92b6acefa896105544ae5f560f4476bb",
+			"caseCount": 38,
+			"demonstrationIds": [
+				"grammar-de-num-demo-word-vier",
+				"grammar-de-num-demo-digit-7",
+				"grammar-de-num-demo-fraction-eineinhalb",
+				"grammar-de-num-demo-range-zehn-bis-zwoelf",
+				"grammar-de-num-demo-inflected-millionen",
+				"grammar-de-num-demo-initial-inflected-trillionen",
+				"grammar-de-num-demo-typo-dreii"
+			],
+			"reviewCaseIds": [
+				"grammar-de-num-dev-initial-fuenf",
+				"grammar-de-num-dev-decimal-drei-komma-vierzehn"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/other",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/other/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/other/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "fe590349ba25f1804ab3cdc3c76af3030bd110e671a51b8a17c3c4659b1361b2",
+			"corpusSha256": "085c64ba55d20f6f3f0f5c3dc4d517820756cce881164fd29454198290648d32",
+			"caseCount": 36,
+			"demonstrationIds": [
+				"grammar-de-x-demo-unknown-citation-zorp",
+				"grammar-de-x-demo-foreign-whatever",
+				"grammar-de-x-demo-inflection-glorp-dat",
+				"grammar-de-x-demo-typo-watevr",
+				"grammar-de-x-demo-abbr-idk",
+				"grammar-de-x-demo-fragment-unver",
+				"grammar-de-x-demo-inflection-nerpa-acc",
+				"grammar-de-x-demo-inflection-plerke-sub"
+			],
+			"reviewCaseIds": [
+				"grammar-de-x-dev-unknown-blarg-nom",
+				"grammar-de-x-dev-unknown-glorps-acc"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/particle",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/particle/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/particle/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "b161c3ce115b3749e00a432c2203371caced6b4bb1394693d9712f15ab3ba26d",
+			"corpusSha256": "10d1e5248d7c7f6c13d183925daa1af626ecc5cb7bd89326fe501d03fff8e053",
+			"caseCount": 42,
+			"demonstrationIds": [
+				"grammar-de-part-demo-negative-nicht",
+				"grammar-de-part-demo-infinitival-zu",
+				"grammar-de-part-demo-modal-halt",
+				"grammar-de-part-demo-focus-sogar",
+				"grammar-de-part-demo-typo-ebn",
+				"grammar-de-part-demo-archaic-nit",
+				"grammar-de-part-demo-distinct-archaic-ni",
+				"grammar-de-part-demo-foreign-yes",
+				"grammar-de-part-demo-abbreviation-aff"
+			],
+			"reviewCaseIds": [
+				"grammar-de-part-dev-negative-initial",
+				"grammar-de-part-dev-answer-ja"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/pronoun",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [455],
+			"sourceSha256": "f620b57ace084fe1805cccac519d842f6589202eaddda67d208250efbaf58050",
+			"corpusSha256": "7336dce5c1157ce0293cda13a93eabae09772130c999c69adc9ea4902be78b30",
+			"caseCount": 203,
+			"demonstrationIds": [
+				"grammar-de-pron-demo-personal-ihm",
+				"grammar-de-pron-demo-formal-ihnen",
+				"grammar-de-pron-demo-reflexive-sich",
+				"grammar-de-pron-fixed-der-paradigm-dem-der-nom-masc",
+				"grammar-de-pron-fixed-der-paradigm-rel-der-nom-masc",
+				"grammar-de-pron-fixed-jemand-jemandem",
+				"grammar-de-pron-fixed-niemand-niemandem",
+				"grammar-de-pron-fixed-keiner-nom-sing-masc",
+				"grammar-de-pron-fixed-keiner-nom-sing-neut",
+				"grammar-de-pron-fixed-keiner-nom-plur",
+				"grammar-de-pron-fixed-jedermann-acc",
+				"grammar-de-pron-fixed-jedermann-gen",
+				"grammar-de-pron-fixed-mancher-nom-sing-masc",
+				"grammar-de-pron-fixed-mancher-nom-plur",
+				"grammar-de-pron-fixed-mancher-dat-sing-neut",
+				"grammar-de-pron-demo-variant-nix",
+				"grammar-de-pron-dev-poss-meiner",
+				"grammar-de-pron-demo-archaic-meiner",
+				"grammar-de-pron-fixed-wem",
+				"grammar-de-pron-fixed-alles-acc",
+				"grammar-de-pron-fixed-alle-nom",
+				"grammar-de-pron-fixed-aller-gen",
+				"grammar-de-pron-fixed-jeder-nom-masc",
+				"grammar-de-pron-fixed-jeder-acc-fem",
+				"grammar-de-pron-fixed-jeder-dat-neut",
+				"grammar-de-pron-fixed-jeder-gen-fem",
+				"grammar-de-pron-fixed-jedweder-nom-masc",
+				"grammar-de-pron-fixed-jedweder-acc-fem",
+				"grammar-de-pron-fixed-jedweder-dat-neut",
+				"grammar-de-pron-fixed-jedweder-gen-fem",
+				"grammar-de-pron-fixed-jeglicher-nom-sing-masc",
+				"grammar-de-pron-fixed-jeglicher-acc-sing-fem",
+				"grammar-de-pron-fixed-jeglicher-dat-sing-neut",
+				"grammar-de-pron-fixed-jeglicher-gen-sing-fem",
+				"grammar-de-pron-fixed-jeglicher-nom-plur",
+				"grammar-de-pron-fixed-jeglicher-dat-plur",
+				"grammar-de-pron-fixed-mehrere-dat",
+				"grammar-de-pron-fixed-mehrere-gen"
+			],
+			"reviewCaseIds": [
+				"grammar-de-pron-fixed-mir",
+				"grammar-de-pron-fixed-du"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/proper-noun",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "252ad04d847fc274794f20d376552afe64b6d2862fc85ba991154363fce391dc",
+			"corpusSha256": "db526e90a6c01874ca550067f63e8ee05a20dfce48e6b2fe9b92bce84851ff58",
+			"caseCount": 46,
+			"demonstrationIds": [
+				"grammar-de-propn-demo-person-maria",
+				"grammar-de-propn-demo-place-berlin",
+				"grammar-de-propn-demo-multi-angela-merkel",
+				"grammar-de-propn-demo-genitive-hans",
+				"grammar-de-propn-demo-acronym-nato",
+				"grammar-de-propn-demo-typo-koelnn",
+				"grammar-de-propn-demo-citation-work-tonio-kroeger",
+				"grammar-de-propn-demo-org-unesco",
+				"grammar-de-propn-demo-vocative-clara",
+				"grammar-de-propn-demo-stylized-ebay",
+				"grammar-de-propn-demo-org-rotes-kreuz",
+				"grammar-de-propn-demo-work-physiker",
+				"grammar-de-propn-demo-integrated-lego"
+			],
+			"reviewCaseIds": [
+				"grammar-de-propn-dev-person-anna-acc",
+				"grammar-de-propn-dev-person-peters-gen"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/subordinating-conjunction",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/subordinating-conjunction/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/subordinating-conjunction/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "fe56c429140b3de07c7cde422fad095ada8bfc159ef2af4dde9cf37db348b456",
+			"corpusSha256": "b0d2263382a2314565257ac92b486ac2f7569befc8871abefe837700eb10079d",
+			"caseCount": 67,
+			"demonstrationIds": [
+				"grammar-de-sconj-demo-finite-weil",
+				"grammar-de-sconj-demo-reduced-wie",
+				"grammar-de-sconj-demo-infinitival-um",
+				"grammar-de-sconj-demo-causal-da",
+				"grammar-de-sconj-demo-typo-obwol",
+				"grammar-de-sconj-demo-historical-dass",
+				"grammar-de-sconj-demo-multiword-so-dass",
+				"grammar-de-sconj-demo-anstatt-zu",
+				"grammar-de-sconj-demo-discontinuous-so-dass"
+			],
+			"reviewCaseIds": [
+				"grammar-de-sconj-dev-complement-dass",
+				"grammar-de-sconj-dev-conditional-wenn"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/symbol",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/symbol/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/symbol/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "2adfe95a10c18a95d850985990b7c6f211d56be21a492e1304d914af0df5ecb0",
+			"corpusSha256": "fdb1ab44a669dfaa5f4534e940642df799eadae2cc577a78d4b9890da7303daf",
+			"caseCount": 45,
+			"demonstrationIds": [
+				"grammar-de-sym-demo-percent-unit",
+				"grammar-de-sym-demo-times-nominal",
+				"grammar-de-sym-demo-euro-currency",
+				"grammar-de-sym-demo-section-dative",
+				"grammar-de-sym-demo-equals-genitive",
+				"grammar-de-sym-demo-feminine-hash",
+				"grammar-de-sym-demo-foreign-arabic-percent",
+				"grammar-de-sym-demo-card-number-sign",
+				"grammar-de-sym-demo-range-dash",
+				"grammar-de-sym-demo-variant-fullwidth-plus",
+				"grammar-de-sym-demo-typo-ocr-euro",
+				"grammar-de-sym-demo-sections-plural"
+			],
+			"reviewCaseIds": [
+				"grammar-de-sym-dev-math-plus",
+				"grammar-de-sym-dev-math-minus"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/lexeme/verb",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/verb/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [454],
+			"sourceSha256": "2ac8d0a8718e41e0b74e14a81aba85463d946c928d72f222baf950fe9a335964",
+			"corpusSha256": "ab4acc849fe957be87d5162b0511787c4e013eb47a2ad3808d69b86d12d2e7c0",
+			"caseCount": 47,
+			"demonstrationIds": [
+				"grammar-de-verb-citation-arbeiten",
+				"grammar-de-verb-separable-imperative-aufpassen",
+				"grammar-de-verb-dw-future-beteiligen",
+				"grammar-de-verb-dw-separable-aufsetzen",
+				"grammar-de-verb-dw-modal-passive-hergestellt",
+				"grammar-de-verb-dw-perfect-passive-aufgefunden"
+			],
+			"reviewCaseIds": [
+				"grammar-de-verb-finite-liest",
+				"grammar-de-verb-past-ging"
+			],
+			"expectations": "review-membership-and-whole-Surface-composition",
+			"disputedCaseIds": [
+				"grammar-de-verb-provisional-zu-infinitive-warten"
+			]
+		},
+		{
+			"id": "grammatical-resolution/de/phraseme/aphorism",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/aphorism/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/aphorism/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "c2d8c60fb872550ee590f6371fa618b9e4ca2f742b248c8d022c94470b5c7626",
+			"corpusSha256": "3261063dd26919452efc11fbe5c0895891e112408f7b495b4893f0054c09eafc",
+			"caseCount": 32,
+			"demonstrationIds": [
+				"grammar-de-aphorism-alt-werden",
+				"grammar-de-aphorism-typo-hoert",
+				"grammar-de-aphorism-historical-muss",
+				"grammar-de-aphorism-vertrauen-discontinuous",
+				"grammar-de-aphorism-verstehen-partial",
+				"grammar-de-aphorism-liebe-rechte"
+			],
+			"reviewCaseIds": [
+				"grammar-de-aphorism-nachahmer",
+				"grammar-de-aphorism-nachsicht"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/phraseme/collocation",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/collocation/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/collocation/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "635fb694270b75d5dd3d4f2120583b17b2dffafad3220df07894fa3a07112c73",
+			"corpusSha256": "148ef302523b8813607f4692e49f9868159a26b0e3e10434dadc574c0de82aef",
+			"caseCount": 28,
+			"demonstrationIds": [
+				"grammar-de-coll-decision-present-full",
+				"grammar-de-coll-frage-citation",
+				"grammar-de-coll-verfuegung-present-full",
+				"grammar-de-coll-anerkennung-participle-typo-full",
+				"grammar-de-coll-unresolved-free-book-read"
+			],
+			"reviewCaseIds": [
+				"grammar-de-coll-antrag-present-full",
+				"grammar-de-coll-antrag-past-full"
+			],
+			"expectations": "review-membership-and-whole-Surface-composition",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/phraseme/discourse-formula",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/discourse-formula/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/discourse-formula/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "99e7482ffa96ab470d2a951274f93d142a5abffc8beb21e730c062fd81844a82",
+			"corpusSha256": "185e7197502517a5d62c6bcf35f885e9cb7ca11b9d838807915253b6b2ccba49",
+			"caseCount": 34,
+			"demonstrationIds": [
+				"grammar-de-discourse-formula-demo-guten-morgen",
+				"grammar-de-discourse-formula-demo-es-tut-mir-leid-discontinuous",
+				"grammar-de-discourse-formula-demo-vielen-dank-complement",
+				"grammar-de-discourse-formula-demo-ach-du-meine-guete-vocative",
+				"grammar-de-discourse-formula-demo-mfg-variant",
+				"grammar-de-discourse-formula-demo-es-tut-mir-partial"
+			],
+			"reviewCaseIds": [
+				"grammar-de-discourse-formula-dev-auf-wiedersehen",
+				"grammar-de-discourse-formula-dev-gern-geschehen"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/phraseme/idiom",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/idiom/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/idiom/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "1650d4d4ad87f43f69498346458070a4c5235accbe2863031eed856d7a6e2a5e",
+			"corpusSha256": "e969d1600bdb4d0df2535d6b008c7ce7f42bacf202bbeace5306866243632499",
+			"caseCount": 33,
+			"demonstrationIds": [
+				"grammar-de-idiom-flinte-past-full",
+				"grammar-de-idiom-grass-citation",
+				"grammar-de-idiom-woelfe-present-full",
+				"grammar-de-idiom-teufel-wand-full",
+				"grammar-de-idiom-nase-typo-full",
+				"grammar-de-idiom-handtuch-ellipsis-partial"
+			],
+			"reviewCaseIds": [
+				"grammar-de-idiom-was-zum-truncation-partial",
+				"grammar-de-idiom-faeustchen-perfect-full"
+			],
+			"expectations": "review-membership-and-whole-Surface-composition",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "grammatical-resolution/de/phraseme/proverb",
+			"path": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/proverb/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/grammatical-resolution/phraseme/proverb/corpus.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [456],
+			"sourceSha256": "57268e51b2a8a3bf6a02e4de544f685a3866ca3db3dc0229d080ca9c324e145c",
+			"corpusSha256": "ae349a010a2c2a1c62de46ac553d597aa300f7209a0184fc5a49e4a595604bc1",
+			"caseCount": 34,
+			"demonstrationIds": [
+				"grammar-de-proverb-demo-morgenstund-attribution",
+				"grammar-de-proverb-demo-aller-anfang-typo",
+				"grammar-de-proverb-demo-was-heute-punctuation",
+				"grammar-de-proverb-demo-grube-partial",
+				"grammar-de-proverb-demo-muss-historical-variant",
+				"grammar-de-proverb-demo-wo-gehobelt-discontinuous"
+			],
+			"reviewCaseIds": [
+				"grammar-de-proverb-dev-andere-laender",
+				"grammar-de-proverb-dev-ende-gut"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/de/construction",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/construction/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/construction/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [459],
+			"sourceSha256": "4c068a7d86d35dce119d3b8a9acd1e3afc9e3461df67f6a7e48fc94c8dff5f5a",
+			"corpusSha256": "37f1fabeb5824b9e5f446c233e500cd24bf9974fed7778224344fb9ac2e2cf79",
+			"caseCount": 1,
+			"demonstrationIds": [],
+			"reviewCaseIds": ["knowledge-demo-construction-fusion-ans"],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/de/lexeme",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [459],
+			"sourceSha256": "4c068a7d86d35dce119d3b8a9acd1e3afc9e3461df67f6a7e48fc94c8dff5f5a",
+			"corpusSha256": "588d1ef677402d7d01c8d77bee2cbe114bbd789a786a98168015d402d46bede8",
+			"caseCount": 62,
+			"demonstrationIds": [
+				"relation-demo-pfote-anchor",
+				"relation-demo-mieten-converse"
+			],
+			"reviewCaseIds": [
+				"relation-basic-01-hubschrauber",
+				"relation-basic-02-sichtbar",
+				"relation-basic-03-pudel"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": [
+				"relation-basic-01-hubschrauber",
+				"relation-adv-24-manchmal",
+				"relation-adv-29-zwei",
+				"relation-adv-39-eilen-multiword-target",
+				"relation-adv-42-beginnen-alternative"
+			]
+		},
+		{
+			"id": "knowledge-analysis/de/morpheme",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/morpheme/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/morpheme/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [459],
+			"sourceSha256": "4c068a7d86d35dce119d3b8a9acd1e3afc9e3461df67f6a7e48fc94c8dff5f5a",
+			"corpusSha256": "1c821b6432789eda24e3011b43756afa41174f5d8c466d91054ec999142cf3ae",
+			"caseCount": 1,
+			"demonstrationIds": [],
+			"reviewCaseIds": ["knowledge-demo-morpheme-suffix-heit"],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/de/phraseme",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [459],
+			"sourceSha256": "4c068a7d86d35dce119d3b8a9acd1e3afc9e3461df67f6a7e48fc94c8dff5f5a",
+			"corpusSha256": "fc208ec0a68679fdb9e694363c7e5655298e5fbdad8ff9953ef5662eb036ad53",
+			"caseCount": 6,
+			"demonstrationIds": ["relation-demo-zeit-ist-geld"],
+			"reviewCaseIds": [
+				"relation-adv-07-ins-gras-beissen",
+				"relation-adv-34-aphorism-null",
+				"relation-adv-35-in-betracht-ziehen"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": [
+				"relation-adv-34-aphorism-null",
+				"relation-adv-35-in-betracht-ziehen"
+			]
+		},
+		{
+			"id": "reading-generation/de",
+			"path": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [457],
+			"sourceSha256": "4dd751a864d656b8f02f2db9f869225ddfaa5ef89f09519338385260834e78d0",
+			"corpusSha256": "e10f2b2b7d4351bd23cc2415be9fc2b678dc592de5a19c10d2efb76d9b81a991",
+			"caseCount": 3,
+			"demonstrationIds": ["reading-generation-house"],
+			"reviewCaseIds": [
+				"reading-generation-bank-seat",
+				"reading-generation-maus-computer"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "reading-resolution/de",
+			"path": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [457],
+			"sourceSha256": "dda7ff5e5eb0b69326cde68b43b58eccd9225db6c7bb35bebcb8f54d850096b4",
+			"corpusSha256": "ede0cd0e0afdb74e25295b4a2426a9df42752a7e505ed378fa14210cc715dd81",
+			"caseCount": 73,
+			"demonstrationIds": [
+				"reading-de-key-metaphor",
+				"reading-de-maus-computer",
+				"reading-de-aufstehen-uprising",
+				"reading-de-adp-mit-connector",
+				"reading-de-idiom-mit-den-woelfen-heulen"
+			],
+			"reviewCaseIds": [
+				"reading-de-adj-sauer-acidic",
+				"reading-de-adj-sauer-acidic-reuse",
+				"reading-de-adj-sauer-angry"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "intake",
+			"path": "battery/dumgen/src/concrete-lang/de/segmentation/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [458],
+			"sourceSha256": "a05dbd797a80b5eba07319add00468eeb96a48cb5ef5fe5bfdd396147f956313",
+			"corpusSha256": "1c74dc0f2f3aff92bfb79c316261f8906a9d921504ce637c97e6cd72584320ac",
+			"caseCount": 4,
+			"demonstrationIds": ["intake-de-core"],
+			"reviewCaseIds": [
+				"intake-he-core",
+				"intake-unsupported",
+				"intake-de-boundary-isolation"
+			],
+			"expectations": "review-English-and-independent-sentence-decisions",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "target-classification/de/high-level-whole-unit",
+			"path": "battery/dumgen/src/concrete-lang/de/target-classification/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"enabled": true,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [453],
+			"sourceSha256": "a75625673f8ede9967835d5b4c2a8ffbbb7355d0c29f51ec085d0ef54dd4de68",
+			"corpusSha256": "44a9e95c50b17367c387775b6e6469f7556467efed16709f682fef7d624396f1",
+			"caseCount": 397,
+			"demonstrationIds": [
+				"target-de-demo-perfect-arbeiten-click-habe",
+				"target-de-demo-governed-rechnen-click-rechnet",
+				"target-de-demo-adjunct-rechnen-click-mit",
+				"target-de-demo-idiom-faden-click-den",
+				"target-de-demo-aphorism-zeit-click-ist",
+				"target-de-demo-literal-gras-click-biss",
+				"target-de-demo-idiom-katze-click-dem",
+				"target-de-demo-paired-einerseits-click-lokal",
+				"target-de-demo-inherent-reflexive-click-beeile",
+				"target-de-demo-optional-reflexive-click-dich",
+				"target-de-demo-modal-arbeiten-click-kann",
+				"target-de-demo-passive-briefe-click-werden",
+				"target-de-demo-state-passive-banken-click-sind",
+				"target-de-demo-state-passive-banken-click-geoeffnet",
+				"target-de-demo-state-passive-bauplan-click-freigegeben",
+				"target-de-demo-state-passive-absperrung-click-versetzt",
+				"target-de-demo-participial-adjective-brief-click-ist",
+				"target-de-demo-participial-adjective-brief-click-ungelesen",
+				"target-de-demo-repeated-anfangen-click-first-an",
+				"target-de-diagnostic-repeated-click-final-an",
+				"target-de-demo-typo-mitmachen-click-mit",
+				"target-de-demo-predicative-cringe-click-cringe",
+				"target-de-demo-discourse-herzliche-gruesse-click-herzliche",
+				"target-de-demo-paired-sowohl-click-robust",
+				"target-de-demo-idiom-kragen-click-der",
+				"target-de-demo-symbol-percent",
+				"target-de-core-unresolved-qzxv",
+				"target-de-diagnostic-idiom-oel-click-ins"
+			],
+			"reviewCaseIds": [
+				"target-de-route-lexeme-adj",
+				"target-de-route-lexeme-adp",
+				"target-de-route-lexeme-adv"
+			],
+			"expectations": "review-membership-and-whole-Surface-composition",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/lexical-breakdown/resolution",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/source-data.json",
+			"enabled": false,
+			"scope": "deferred",
+			"disposition": "retain-development-only",
+			"owners": [175, 158],
+			"sourceSha256": "2d60268cc20958ac1ec1fc747a87edbaf3bab37345cbc3c542e062e31a8c1ad3",
+			"corpusSha256": "5a25c8dfa67237a0a810dbaacd311eb8ba88422553f513167732e93211257279",
+			"caseCount": 3,
+			"demonstrationIds": ["lexical-resolve-repeated-shadows"],
+			"reviewCaseIds": [
+				"lexical-resolve-contextual-shadows",
+				"lexical-resolve-collocation-shadows"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/lexical-breakdown/segmentation",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/source-data.json",
+			"enabled": false,
+			"scope": "deferred",
+			"disposition": "retain-development-only",
+			"owners": [175, 158],
+			"sourceSha256": "e01b669d3316c749e2ae423c8bc71389ae84e3f0801fb645cf4d172b4d6a5079",
+			"corpusSha256": "763f98c0a7f17897dae3295d0d124ca9f6bb364f2545b7dee324794a098609aa",
+			"caseCount": 3,
+			"demonstrationIds": ["lexical-segment-phraseme-repetition"],
+			"reviewCaseIds": [
+				"lexical-segment-contextual-reflexive",
+				"lexical-segment-collocation"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/morphological-tree/resolution",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/source-data.json",
+			"enabled": false,
+			"scope": "deferred",
+			"disposition": "retain-development-only",
+			"owners": [175, 158],
+			"sourceSha256": "aa3097969dcd38fb37b2e63f9b7020ea9429d5eb6d3b12c951166c6255cefe27",
+			"corpusSha256": "e006de97aa11823402e5745e429aa2edebf9c6f9488b6532b1dfe2bbb0d75bf0",
+			"caseCount": 3,
+			"demonstrationIds": ["morphology-resolve-direct-pointers"],
+			"reviewCaseIds": [
+				"morphology-resolve-nested-pointers",
+				"morphology-resolve-phraseme-shadow"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/morphological-tree/segmentation",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/source-data.json",
+			"enabled": false,
+			"scope": "deferred",
+			"disposition": "retain-development-only",
+			"owners": [175, 158],
+			"sourceSha256": "88a8338c0ff72127a18e4dd9afea69c727e82ab025bd97fb9fc47fb55d5cf405",
+			"corpusSha256": "3f049f56e421afa6e6a87010665c75bd4dd0c72e18da180e0148e00408faa7c7",
+			"caseCount": 5,
+			"demonstrationIds": [
+				"morphology-segment-compound-high-value-chunks"
+			],
+			"reviewCaseIds": [
+				"morphology-segment-mixed-morpheme-and-lexeme",
+				"morphology-segment-nested-derivation",
+				"morphology-segment-phraseme-shadow"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		},
+		{
+			"id": "knowledge-analysis/translation",
+			"path": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/prompt.ts",
+			"corpusPath": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/source-data.json",
+			"enabled": false,
+			"scope": "in-scope",
+			"disposition": "replace-operation-and-retire-superseded-prompt",
+			"owners": [459],
+			"sourceSha256": "07f12f69fe05d17bb6e548f9736ac1101e2f1afe081a3a9ef4fe0ff549ba89a1",
+			"corpusSha256": "2c6dd5c0e75658d16094f0f71e64a2f4023f1d538a07c7aecd12fced6fbb94fc",
+			"caseCount": 8,
+			"demonstrationIds": ["translation-add-polysemy-sensitive-literal"],
+			"reviewCaseIds": [
+				"translation-cover-near-equivalent",
+				"translation-cover-concise-paraphrase",
+				"translation-add-register-distinction"
+			],
+			"expectations": "retain-unless-specific-conflict",
+			"disputedCaseIds": []
+		}
+	],
+	"retainedRuns": [
+		{
+			"path": ".runs/dumgen/46442be3-17f3-4639-b9d0-48eaa92079cb/manifest.json",
+			"manifest": {
+				"version": 1,
+				"runId": "46442be3-17f3-4639-b9d0-48eaa92079cb",
+				"experimentId": "intake",
+				"evaluatorVersion": "migration-1",
+				"sourceRevision": "controlled-ui-verification",
+				"startedAt": "2026-09-13T08:13:35.356Z",
+				"prompt": {
+					"route": "intake",
+					"fingerprint": "80b58b7cf6b9f33e9c02d9d42d948c21798901a31f47834d50a187c1ae738dd9",
+					"schemaFingerprint": "02aacc4503289ae2be23d817be31f57a7620b7b7c6590b7bc6870b13299c0043"
+				},
+				"corpus": {
+					"fingerprint": "f9e6cefb11d9bdd3195c3cf0e46aa726592dd1bd902547f5676473efb168f8ef",
+					"caseIds": [
+						"intake-he-core",
+						"intake-unsupported",
+						"intake-de-boundary-isolation"
+					]
+				},
+				"configuration": {
+					"model": "fixture-failure",
+					"settings": {}
+				}
+			},
+			"sha256": "ca636bc2b55ee80fe731e9b43948124e947a593fb04ac3493de65f583984e871",
+			"evidence": "injected UI verification; not live model accuracy"
+		},
+		{
+			"path": ".runs/dumgen/6e681ba3-4f4a-42ea-853f-37b71ffa30ed/manifest.json",
+			"manifest": {
+				"version": 1,
+				"runId": "6e681ba3-4f4a-42ea-853f-37b71ffa30ed",
+				"experimentId": "intake",
+				"evaluatorVersion": "migration-1",
+				"sourceRevision": "controlled-ui-verification",
+				"startedAt": "2026-09-13T08:13:35.345Z",
+				"prompt": {
+					"route": "intake",
+					"fingerprint": "80b58b7cf6b9f33e9c02d9d42d948c21798901a31f47834d50a187c1ae738dd9",
+					"schemaFingerprint": "02aacc4503289ae2be23d817be31f57a7620b7b7c6590b7bc6870b13299c0043"
+				},
+				"corpus": {
+					"fingerprint": "f9e6cefb11d9bdd3195c3cf0e46aa726592dd1bd902547f5676473efb168f8ef",
+					"caseIds": [
+						"intake-he-core",
+						"intake-unsupported",
+						"intake-de-boundary-isolation"
+					]
+				},
+				"configuration": {
+					"model": "fixture-reference",
+					"settings": {}
+				}
+			},
+			"sha256": "16fb685bcbe853654940765d0bf14c0998d2ac202a9b15d27b83cbbe5884c146",
+			"evidence": "injected UI verification; not live model accuracy"
+		}
+	],
+	"reviewCases": "battery/dumgen/src/evaluation/redesign/review-cases.json",
+	"heldOutCases": "battery/dumgen/src/evaluation/redesign/held-out.json",
+	"historicalCheckpoints": [
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T06-46-37-689Z/direct-checkpoint.json",
+			"sha256": "651916c680db5949b96c1beca6f78cf320d1fd193c7f42ffec5e408ab9457d59",
+			"bytes": 2813295
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T06-59-25-652Z/direct-checkpoint.json",
+			"sha256": "1b04a0b3d1b6ed6ad4ce3255b9a5bd4f128ad3f3d81d336e7c67f61e93fdf636",
+			"bytes": 2857648
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T07-05-38-236Z/direct-checkpoint.json",
+			"sha256": "9ca989a92129a2ca8e29d4b00c8e29955c28a8144b404d77fd88134b6de47db7",
+			"bytes": 2858012
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T07-10-11-582Z/direct-checkpoint.json",
+			"sha256": "a2569c72322d0699bd9148b1eb0e00890411e95924c280b97c9fab31f61fee9a",
+			"bytes": 2857856
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T07-17-10-398Z/direct-checkpoint.json",
+			"sha256": "83f3b07635b9aab46068f5e560da83e63e1679d27ee3141b1e41b422672ace6c",
+			"bytes": 2858466
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T14-11-56-988Z/direct-checkpoint.json",
+			"sha256": "8ed3695afd6296ca147919a1a5272acdb74a2e7b5ec638d2f1944f5af859e6b5",
+			"bytes": 69901
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T14-13-31-026Z/direct-checkpoint.json",
+			"sha256": "c0346479c4c39ca81b7f6e2a65ed8d3d553b9501c0ebe79d89e49c25e6038972",
+			"bytes": 1076201
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-10T14-40-01-281Z/direct-checkpoint.json",
+			"sha256": "83b3863fe25fa04f169d094f0c1d466ceb7c12f7b15206c4b763d7541e32914a",
+			"bytes": 1076116
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T07-19-38-742Z/direct-checkpoint.json",
+			"sha256": "93f82fd4eb794c845a04f13d3c3c320db3c190b85ddf6c5687070461a0c22532",
+			"bytes": 2864649
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T07-46-30-025Z/direct-checkpoint.json",
+			"sha256": "ab707d6c913f7d690c93690d3838b354cc2b426086981c264128ce776f4d49e4",
+			"bytes": 2859087
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T08-02-55-245Z/direct-checkpoint.json",
+			"sha256": "89cff709c580b7a3d6530f98307d5ef49184ee1d44c88256fc3ad1c899dd1093",
+			"bytes": 2268272
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T08-28-11-141Z/direct-checkpoint.json",
+			"sha256": "e8afd499ee869817febc0a397b5f5455f1ab46290a68707e6741e6bc9629e6e0",
+			"bytes": 2339469
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T08-29-21-312Z/direct-checkpoint.json",
+			"sha256": "7e7fc66599e941275b86b2e5ad833534bff1f84560a8821ce0c9cc5b09bd075f",
+			"bytes": 2339145
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T08-31-51-664Z/direct-checkpoint.json",
+			"sha256": "8e30b98078f62bf054d0d76a134a324b17ab0ffa42f843ae39d220cd5bd2f9c6",
+			"bytes": 2342516
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T08-33-45-941Z/direct-checkpoint.json",
+			"sha256": "1350aa9f6d1a334a87fe0caee88ee51a515fe94f4fe3b869dad459d8b8381c04",
+			"bytes": 2339054
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-12T08-35-37-661Z/direct-checkpoint.json",
+			"sha256": "4a1032864dea9f19ae73044e122104956d697cff5d85df711fef1e0cd4d82571",
+			"bytes": 2342078
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T04-43-20-629Z/direct-checkpoint.json",
+			"sha256": "5477c210423ef0c6c30ae94b05c9bb5e614bf0c8233f3e4a43381655cf2dc375",
+			"bytes": 2329238
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T05-10-07-184Z/direct-checkpoint.json",
+			"sha256": "8a46b0e400514d12a14abb167f5735454f9d597c9cb3c881e34b20c8067dd49e",
+			"bytes": 755928
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T05-12-53-472Z/direct-checkpoint.json",
+			"sha256": "8b3066fe79350c4151861145f8123edca0291139cf6bcd22461dd9aa2d8d8610",
+			"bytes": 755536
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T05-15-20-525Z/direct-checkpoint.json",
+			"sha256": "f5bb7f1b04c23975a25f8cd5ea7a63f5c59a01349dac7dc49d8f051e5cc26d72",
+			"bytes": 755160
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T05-21-28-062Z/direct-checkpoint.json",
+			"sha256": "c4150c425d2e2090e22ba63d896ef52e4da0bbb8539ff9e4624d2efce57791a0",
+			"bytes": 755155
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T05-26-35-621Z/direct-checkpoint.json",
+			"sha256": "91af01135797f26a1833476763d57677b9f42129892a1109474b646874327e7d",
+			"bytes": 754766
+		},
+		{
+			"path": ".runs/dumgen/historical-checkpoints/target-classification-high-level-contracts/runs/2026-08-13T05-29-01-478Z/direct-checkpoint.json",
+			"sha256": "24d1ad34beeeb38da3752d827e67304ff3ec12c39832426f43d9e8f23bf7f39d",
+			"bytes": 2328390
+		}
+	]
+}
