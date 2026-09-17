@@ -26,7 +26,6 @@ export function grammarFixture(
 				>;
 			const state = request.state as {
 				members: string[];
-				canonicalCandidates: string[];
 				reviewedIdentities: {
 					canonicalForm: string;
 					coreFeatures: unknown;
@@ -58,12 +57,11 @@ export function grammarFixture(
 					);
 					return index === -1 ? "NoMatch" : `identity_${index}`;
 				}
-				if (id === "canonical") {
-					const index = state.canonicalCandidates.indexOf(
-						String(output.lemma.canonicalForm),
-					);
-					return index === -1 ? "Generate" : `copy_${index}`;
-				}
+				if (id === "canonical")
+					return state.members.join(" ") ===
+						output.lemma.canonicalForm
+						? "Copy"
+						: "Generate";
 				if (id.startsWith("orthography_"))
 					return output.memberOrthographies[Number(id.slice(12))]!;
 				if (id.startsWith("normalization_")) {

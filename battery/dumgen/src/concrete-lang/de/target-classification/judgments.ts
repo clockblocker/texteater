@@ -8,7 +8,10 @@ import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
-import { validateEncounter } from "../../../universal/validation.js";
+import {
+	indexedContext,
+	validateEncounter,
+} from "../../../universal/validation.js";
 
 /** Shared semantic criteria for membership and the dependent whole-target decision. */
 export const targetCriteria = `Select the largest complete fixed learner-facing unit containing the clicked occurrence. Identity is occurrence position, never spelling. All fixed-member clicks must select exactly the same unit. Include fixed function words; exclude free arguments, modifiers, fillers, punctuation and opaque text. Mere proximity, frequency or ordinary compositional collocation does not establish fixedness.
@@ -59,12 +62,11 @@ export async function classifyGermanTarget(
 ): Promise<AnalysisTarget<"de">> {
 	const judge = judgmentCaller(options);
 	const state = {
-		sentence: input.sentence.segments.map((segment, index) => ({
-			...segment,
-			index,
-		})),
+		sentence: indexedContext(input.sentence),
 		clickedSegmentIndex: input.clickedSegmentIndex,
-		criteria: targetCriteria,
+		criteria:
+			"In `sentence`, <sN> tags identify selectable occurrences by original segment index N. Untagged text supplies context only. " +
+			targetCriteria,
 	};
 	const questions: Questions = {};
 	for (const [index, segment] of input.sentence.segments.entries()) {
@@ -74,7 +76,7 @@ export async function classifyGermanTarget(
 		)
 			continue;
 		questions[`member_${index}`] = choice(
-			`Does occurrence ${index} (${JSON.stringify(segment.text)}) belong to the same complete fixed unit as the clicked occurrence? Use full sentence context and the shared criteria.`,
+			`Does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`? Use full sentence context and the shared criteria.`,
 			{
 				Include: "It is a fixed member of that same unit",
 				Exclude:

@@ -5,7 +5,7 @@ import {
 	parseCompiledValidation,
 } from "dumval/runtime";
 import { validationRegistry } from "../generated/linked-validation.js";
-import type { Encounter } from "../types.js";
+import type { Encounter, SegmentedSentence } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 
 const registry: CompiledValidationRegistry = validationRegistry;
@@ -51,16 +51,28 @@ export function validateEncounter(
 	}
 	return encounter;
 }
+const escapeText = (text: string) =>
+	text
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;");
+
+/** Preserve source text and segment indices; only selectable occurrences get tags. */
+export function indexedContext(sentence: SegmentedSentence): string {
+	return sentence.segments
+		.map((segment, index) =>
+			segment.kind === "ResolvableText"
+				? `<s${index}>${escapeText(segment.text)}</s${index}>`
+				: escapeText(segment.text),
+		)
+		.join("");
+}
+
 export function markedContext(encounter: Encounter): {
 	markedContext: string;
 	members: string[];
 } {
 	const indices = new Set(encounter.target.memberSegmentIndices);
-	const escapeText = (text: string) =>
-		text
-			.replaceAll("&", "&amp;")
-			.replaceAll("<", "&lt;")
-			.replaceAll(">", "&gt;");
 	return {
 		markedContext: encounter.sentence.segments
 			.map((segment, index) =>

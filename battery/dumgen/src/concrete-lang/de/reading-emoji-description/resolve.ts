@@ -55,7 +55,7 @@ export async function resolveReading(
 			route,
 			JSON.parse(
 				JSON.stringify({
-					encounter: input.encounter,
+					...markedContext(input.encounter),
 					lemma: input.lemma,
 					candidates,
 				}),

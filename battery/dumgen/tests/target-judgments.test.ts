@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
-import { stableJson } from "promptsmith";
 import type {
 	Questions,
 	SystemOneResult,
@@ -9,6 +8,7 @@ import type {
 import review from "../src/evaluation/redesign/review-cases.json";
 import type { OperationTrace, SegmentedSentence } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
+import { indexedContext } from "../src/universal/validation.js";
 
 function answers(
 	request: { questions: Questions },
@@ -178,18 +178,18 @@ test("canonical classification evaluation calls the production operation and pre
 	).default;
 	const judge: TypeSafeExecutor = async (request) => {
 		const state = request.state as {
-			sentence: { index: number; text: string; kind: string }[];
+			sentence: string;
 			clickedSegmentIndex: number;
 		};
 		const golden = Object.values(data.cases).find(
 			(value) =>
 				value.input.clickedSegmentIndex === state.clickedSegmentIndex &&
-				stableJson(value.input.segments) ===
-					stableJson(
-						state.sentence.map(
-							({ index: _index, ...segment }) => segment,
-						),
-					),
+				indexedContext({
+					id: "fixture",
+					language: "de",
+					segments: value.input
+						.segments as SegmentedSentence["segments"],
+				}) === state.sentence,
 		);
 		if (!golden) throw Error("Missing canonical fixture");
 		const target = golden.idealOutput as {
@@ -251,4 +251,38 @@ test("canonical classification evaluation calls the production operation and pre
 				record.calls < 3,
 		),
 	).toBe(true);
+});
+
+test("compact classification state preserves positions, source spacing, punctuation and opaque text", async () => {
+	const sentence: SegmentedSentence<"de"> = {
+		id: "compact",
+		language: "de",
+		segments: [
+			{ kind: "ResolvableText", text: "vor" },
+			{ kind: "Whitespace", text: "\t " },
+			{ kind: "OpaqueText", text: "<s0> &" },
+			{ kind: "Punctuation", text: "," },
+			{ kind: "Whitespace", text: "\n" },
+			{ kind: "ResolvableText", text: "vor" },
+			{ kind: "Punctuation", text: "." },
+		],
+	};
+	const run = controlled([5], "Lexeme/ADP");
+	const output = await Effect.runPromise(
+		run.dumgen.classifyTarget({ sentence, clickedSegmentIndex: 5 }),
+	);
+	expect(output.memberSegmentIndices).toEqual([5]);
+	const [membership, classification] = run.traces[0]?.calls ?? [];
+	expect(membership?.request.input).toMatchObject({
+		sentence: "<s0>vor</s0>\t &lt;s0&gt; &amp;,\n<s5>vor</s5>.",
+		clickedSegmentIndex: 5,
+	});
+	expect(classification?.request.input).toMatchObject({
+		sentence: "<s0>vor</s0>\t &lt;s0&gt; &amp;,\n<s5>vor</s5>.",
+		memberSegmentIndices: [5],
+	});
+	if (!membership || !("questions" in membership.request))
+		throw Error("Expected membership batch");
+	expect(Object.keys(membership.request.questions)).toEqual(["member_0"]);
+	expect(classification?.dependsOn).toEqual([membership.id]);
 });

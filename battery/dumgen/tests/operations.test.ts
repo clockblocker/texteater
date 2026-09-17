@@ -6,7 +6,7 @@ import {
 	validateEncounter,
 } from "dumgen";
 import { comparisonInputSchema } from "dumgen/schemas";
-import type { ComparisonInput, Encounter, ModelRequest } from "dumgen/types";
+import type { ComparisonInput, Encounter } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
@@ -203,6 +203,13 @@ test("emoji operations use exact candidates and omit options for candidate-free 
 			}),
 		),
 	).toEqual({ decision: "New", emojiDescription: "💰" });
+	expect(calls[0]?.input).toMatchObject({
+		markedContext: "<TARGET>Bank</TARGET>",
+		members: ["Bank"],
+		lemma: noun,
+		candidates: ["💰"],
+	});
+	expect(calls[0]?.input).not.toHaveProperty("encounter");
 	expect(calls[3]?.input).toHaveProperty("existingEmojiDescriptions", []);
 	expect(
 		await tag(

@@ -167,13 +167,14 @@ test("confirmed absence is Closed DET CatalogMiss, Open PRON miss, or explicit u
 	}
 });
 
-test("Open PRON population misses copy available text and generate only missing text", async () => {
+test("Open PRON population misses copy exact headwords and generate changed text", async () => {
 	const { grammarFixture } = await import("./grammar-fixture.js");
 	const { createDumgen } = await import("../src/universal/dumgen.js");
 	const { validateEncounter } = await import(
 		"../src/universal/validation.js"
 	);
-	for (const typo of [false, true]) {
+	for (const attested of ["etwas", "Etwas", "etwsa"]) {
+		const typo = attested === "etwsa";
 		const core = {
 			case: null,
 			number: null,
@@ -211,7 +212,7 @@ test("Open PRON population misses copy available text and generate only missing 
 						segments: [
 							{
 								kind: "ResolvableText",
-								text: typo ? "etwsa" : "Etwas",
+								text: attested,
 							},
 						],
 					},
@@ -230,7 +231,9 @@ test("Open PRON population misses copy available text and generate only missing 
 			),
 		).toBe(true);
 		expect(traces[0]?.calls.map((call) => call.executor)).toEqual(
-			typo ? ["TypeSafe", "TypeSafe", "Luna"] : ["TypeSafe", "TypeSafe"],
+			attested === "etwas"
+				? ["TypeSafe", "TypeSafe"]
+				: ["TypeSafe", "TypeSafe", "Luna"],
 		);
 	}
 });

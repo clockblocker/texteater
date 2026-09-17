@@ -94,27 +94,9 @@ function transformed(text: string, mode: string): string {
 		return text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1);
 	return text;
 }
-function textCandidates(members: readonly string[], source: string): string[] {
-	const quoted = Array.from(
-		source.matchAll(/[„“"«]([^“”"»]+)[“”"»]/gu),
-		(match) => match[1]!,
-	).filter(Boolean);
-	const words = source.match(/[\p{L}\p{N}]+(?:[-’'][\p{L}\p{N}]+)*/gu) ?? [];
-	return [
-		...new Set([
-			...[members.join(" "), ...members].flatMap((text) => [
-				text,
-				transformed(text, "LowerInitial"),
-				transformed(text, "UpperInitial"),
-			]),
-			...words,
-			...quoted,
-		]),
-	];
-}
 
 const baseGuidance = `The classified route and ordered membership are fixed. Analyze only this whole target in full sentence context. Do not repair membership or reclassify. Return Unresolved when a valid analysis is not defensible.
-Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical. Canonical Form is the exact dictionary headword, not necessarily a copied Surface. Copy an available headword only when the exact candidate already is that headword; otherwise request text.
+Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical. Canonical Form is the exact dictionary headword, not necessarily a copied Surface. Copy the attested members joined with single spaces only when that exact text already is the headword; otherwise request text.
 Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.
 Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Contextual finite verbs and ordinary infinitives have marked bags. Structural null is not uncertainty.
 For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.
@@ -160,14 +142,6 @@ export async function resolveGrammarJudgments(
 	const identities = auxiliary
 		? authoredMembers.filter((member) => member.lemma.kind === "AUX")
 		: [];
-	const canonicalCandidates = textCandidates(
-		input.members,
-		input.markedContext.replaceAll(/<\/?TARGET>/gu, ""),
-	);
-	if (canonicalCandidates.length > 253)
-		return fail(
-			"Too many complete source-copy candidates for one bounded judgment",
-		);
 	const questions: Questions = {
 		support: choice(
 			"Can this fixed target support a coherent analysis on its supplied route?",
@@ -268,15 +242,10 @@ export async function resolveGrammarJudgments(
 		);
 	else if (encounter.target.kind !== "DET")
 		questions.canonical = choice(
-			"Is the exact dictionary Canonical Form already one of these copied source candidates? Inflection or Canonical spelling does not establish this. Select only exact available text; otherwise Generate.",
+			"Are the exact attested `members`, joined with single spaces in their supplied order, already the dictionary Canonical Form of this whole target? Inflection or Canonical spelling does not establish this. Copy requires exact text, including casing, with no normalization, omitted members or reordering. Otherwise Generate.",
 			{
-				...Object.fromEntries(
-					canonicalCandidates.map((text, index) => [
-						`copy_${index}`,
-						text,
-					]),
-				),
-				Generate: "Required headword is not available as exact text",
+				Copy: "The exact joined attested members already are the dictionary headword",
+				Generate: "The dictionary headword requires different text",
 				Unresolved: null,
 			},
 		);
@@ -288,7 +257,6 @@ export async function resolveGrammarJudgments(
 			baseGuidance +
 			(verbal ? verbalCompositionGuidance : "") +
 			(routeGuidance[encounter.target.kind] ?? ""),
-		canonicalCandidates,
 		reviewedIdentities: identities.map((member) => member.lemma),
 	};
 	const result = await judge(
@@ -452,9 +420,9 @@ export async function resolveGrammarJudgments(
 				const canonical = selected("canonical");
 				lemma = {
 					canonicalForm:
-						canonicalCandidates[
-							Number(canonical.slice("copy_".length))
-						],
+						canonical === "Copy"
+							? input.members.join(" ")
+							: undefined,
 					coreFeatures: core,
 				};
 				if (canonical === "Generate")
