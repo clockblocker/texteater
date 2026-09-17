@@ -18,6 +18,7 @@
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev --filter=@texteater/tf-demo",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",
+		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",
 		"test": "bun test ./tooling && bun tooling/run-workspaces.ts test",
 		"validate": "bun tooling/validate-repository.ts && bun tooling/dum-runtime-verification/verify.ts",
 		"verify:dum-runtime": "bun tooling/dum-runtime-verification/verify.ts"

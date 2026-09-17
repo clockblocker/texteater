@@ -318,55 +318,58 @@ function InspectionDetail({
 							id={`inspection-step-${step.id}`}
 							key={step.id}
 						>
-							<button
-								type="button"
-								className="inspection-step-toggle"
-								style={{
-									paddingInlineStart: `${depth(step) * 0.7}rem`,
-								}}
-								aria-expanded={expanded.has(step.id)}
-								onClick={() => toggle(step.id)}
-							>
-								<ChevronRightIcon
-									size={16}
-									className={
-										expanded.has(step.id)
-											? "inspection-chevron-open"
-											: ""
-									}
-								/>
-								<span className="inspection-step-title">
-									{step.name}
-									<small>{step.owner}</small>
-								</span>
-								<span
-									className="inspection-kind"
-									data-kind={step.kind}
+							<div className="inspection-step-row">
+								<button
+									type="button"
+									className="inspection-step-toggle"
+									style={{
+										paddingInlineStart: `${depth(step) * 0.7}rem`,
+									}}
+									aria-expanded={expanded.has(step.id)}
+									onClick={() => toggle(step.id)}
 								>
-									{step.kind === "TypeSafe"
-										? "TypeSafe AI"
-										: step.kind}
-								</span>
-								<span className="inspection-step-duration">
-									{step.timing === "Unmeasured"
-										? "not measured"
-										: time(step.durationMs)}
-								</span>
-								<span
-									role="img"
-									className="inspection-status"
-									data-status={step.status}
-									aria-label={step.status}
-								>
-									{step.status === "Success" ? (
-										<CheckIcon size={16} />
-									) : step.status === "Failure" ? (
-										<XIcon size={16} />
-									) : (
-										step.status
-									)}
-								</span>
-							</button>
+									<ChevronRightIcon
+										size={16}
+										className={
+											expanded.has(step.id)
+												? "inspection-chevron-open"
+												: ""
+										}
+									/>
+									<span className="inspection-step-title">
+										{step.name}
+										<small>{step.owner}</small>
+									</span>
+									<span
+										className="inspection-kind"
+										data-kind={step.kind}
+									>
+										{step.kind === "TypeSafe"
+											? "TypeSafe AI"
+											: step.kind}
+									</span>
+									<span className="inspection-step-duration">
+										{step.timing === "Unmeasured"
+											? "not measured"
+											: time(step.durationMs)}
+									</span>
+									<span
+										role="img"
+										className="inspection-status"
+										data-status={step.status}
+										aria-label={step.status}
+									>
+										{step.status === "Success" ? (
+											<CheckIcon size={16} />
+										) : step.status === "Failure" ? (
+											<XIcon size={16} />
+										) : (
+											step.status
+										)}
+									</span>
+								</button>
+								<CopyInspectionReference stepId={step._id} />
+							</div>
 							{expanded.has(step.id) && (
 								<StepPayload
 									step={step}
@@ -392,6 +395,37 @@ function InspectionDetail({
 				</footer>
 			</div>
 		</>
+	);
+}
+
+function CopyInspectionReference({ stepId }: { stepId: string }) {
+	const [copied, setCopied] = useState(false);
+	return (
+		<Button
+			type="button"
+			size="icon-sm"
+			variant="ghost"
+			className="inspection-copy-reference"
+			aria-label={
+				copied
+					? "Resolution step reference copied"
+					: "Copy resolution step reference"
+			}
+			title={copied ? "Copied" : "Copy reference"}
+			onClick={async () => {
+				try {
+					await navigator.clipboard.writeText(
+						`bun run resolution_inspector step ${stepId}`,
+					);
+					setCopied(true);
+					window.setTimeout(() => setCopied(false), 1600);
+				} catch {
+					setCopied(false);
+				}
+			}}
+		>
+			{copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
+		</Button>
 	);
 }
 

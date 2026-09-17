@@ -212,14 +212,33 @@
 .inspection-step {
 	border-bottom: 1px solid var(--border);
 }
+.inspection-step-row {
+	display: flex;
+	align-items: stretch;
+}
 .inspection-step-toggle {
-	width: 100%;
+	flex: 1;
+	min-width: 0;
 	display: flex;
 	align-items: center;
 	gap: 0.7rem;
 	padding: 0.9rem 0.1rem;
 	text-align: left;
 	cursor: pointer;
+}
+.inspection-copy-reference {
+	align-self: center;
+	flex: none;
+	margin-left: 0.25rem;
+	color: var(--muted-foreground);
+	opacity: 0.55;
+	transition-property: color, opacity;
+	transition-duration: 120ms;
+}
+.inspection-step-row:hover .inspection-copy-reference,
+.inspection-copy-reference:focus-visible {
+	color: var(--foreground);
+	opacity: 1;
 }
 .inspection-step-title {
 	flex: 1;
