@@ -81,6 +81,7 @@ export const emojiInputSchema = z.strictObject({
 export const emojiComparisonInputSchema = emojiInputSchema.extend({
 	existingEmojiDescriptions: z.array(emojiDescriptionSchema),
 });
+export const emojiGenerationOutputSchema = emojiDescriptionSchema;
 export const emojiOutputSchema = z.strictObject({
 	emojiDescription: emojiDescriptionSchema,
 });

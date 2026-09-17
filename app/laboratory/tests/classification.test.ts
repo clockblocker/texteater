@@ -67,11 +67,7 @@ function harness(outputs: unknown[]) {
 
 describe("Laboratory uses the published Encounter pipeline and dictionary", () => {
 	test("resolves all members once, captures real exchanges and commits tagged units", async () => {
-		const run = harness([
-			classification,
-			grammar,
-			{ emojiDescription: "🏦" },
-		]);
+		const run = harness([classification, grammar, "🏦"]);
 		const result = await run.resolve();
 		expect(result).toMatchObject({
 			decision: "Resolved",
@@ -104,13 +100,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		expect(run.requests).toHaveLength(5);
 	});
 	test("a supplied target bypasses classification and stays separate from whole-unit caches", async () => {
-		const run = harness([
-			grammar,
-			{ emojiDescription: "🏦" },
-			classification,
-			grammar,
-			{ emojiDescription: "🏦" },
-		]);
+		const run = harness([grammar, "🏦", classification, grammar, "🏦"]);
 		expect(await run.resolve("first", true)).toMatchObject({
 			decision: "Resolved",
 			stages: { target: { traceOrigin: "supplied" } },
@@ -131,7 +121,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 			classification,
 			grammar,
 			new Error("provider unavailable"),
-			{ emojiDescription: "🏦" },
+			"🏦",
 		]);
 		await expect(run.resolve()).rejects.toThrow("provider unavailable");
 		expect(run.resolver.snapshot()).toHaveLength(0);
@@ -153,10 +143,10 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		const run = harness([
 			classification,
 			grammar,
-			{ emojiDescription: "🏦" },
+			"🏦",
 			classification,
 			grammar,
-			{ emojiDescription: "🏦" },
+			"🏦",
 		]);
 		await run.resolve();
 		await run.resolve("second");

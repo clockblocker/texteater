@@ -16,9 +16,7 @@ export const canonicalDumgenValidationSchemas = {
 	generationInput: generated.generationInputSchema,
 	comparisonInput: generated.comparisonInputSchema,
 	knowledgeInput: generated.knowledgeInputSchema,
-	emojiOutput: z.strictObject({
-		emojiDescription: generated.emojiDescriptionSchema,
-	}),
+	emojiGenerationOutput: generated.emojiDescriptionSchema,
 
 	...Object.fromEntries(
 		Object.entries(generated.grammarSchemas).map(([key, value]) => [

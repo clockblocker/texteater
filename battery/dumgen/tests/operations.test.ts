@@ -58,7 +58,8 @@ function controlled(output: unknown) {
 					? (await knowledgeFixture(output).execute(request)).output
 					: request.stage === "resolveGrammar"
 						? (await grammarFixture(output).execute(request)).output
-						: output;
+						: (output as { emojiDescription?: unknown })
+								.emojiDescription;
 			}),
 		}),
 	};
@@ -210,7 +211,19 @@ test("emoji operations use exact candidates and omit options for candidate-free 
 		candidates: ["💰"],
 	});
 	expect(calls[0]?.input).not.toHaveProperty("encounter");
-	expect(calls[3]?.input).toHaveProperty("existingEmojiDescriptions", []);
+	expect(calls[3]?.input).toEqual({
+		markedContext: "<TARGET>Bank</TARGET>",
+		lemma: "Bank",
+	});
+	const generation = calls[3];
+	expect(generation && "outputSchema" in generation).toBe(true);
+	if (generation && "outputSchema" in generation) {
+		expect(generation.outputSchema).toMatchObject({ type: "string" });
+		expect(generation.systemPrompt).toContain(
+			"Return only one to four Unicode RGI emoji graphemes.",
+		);
+		expect(generation.systemPrompt).not.toContain('emojiDescription":');
+	}
 	expect(
 		await tag(
 			dumgen.resolveOrGenerateReadingEmojiDescription({

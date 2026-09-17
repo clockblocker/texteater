@@ -101,7 +101,7 @@ await emit(
 						key.startsWith("target/") ||
 						[
 							"intakeOutput",
-							"emojiOutput",
+							"emojiGenerationOutput",
 							"knowledgeOutput",
 						].includes(key),
 				)

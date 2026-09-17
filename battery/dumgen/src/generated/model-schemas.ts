@@ -1,11 +1,9 @@
 // Generated private model exchange schemas.
 export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
-	emojiOutput: {
+	emojiGenerationOutput: {
 		$schema: "https://json-schema.org/draft/2020-12/schema",
-		type: "object",
-		properties: { emojiDescription: { type: "string", minLength: 1 } },
-		required: ["emojiDescription"],
-		additionalProperties: false,
+		type: "string",
+		minLength: 1,
 	},
 	"grammar/de/Construction/Fusion": {
 		$schema: "https://json-schema.org/draft/2020-12/schema",

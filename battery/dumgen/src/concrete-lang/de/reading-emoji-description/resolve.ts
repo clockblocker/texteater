@@ -24,7 +24,7 @@ export async function resolveReading(
 	const stage = "resolveOrGenerateReadingEmojiDescription";
 	const route = `${input.lemma.language}/${input.lemma.family}/${input.lemma.kind}`;
 	const candidates = [...new Set(input.candidates)];
-	const resolve = (
+	const resolveAuthored = (
 		emojiDescription: string,
 	): ReadingEmojiDescriptionResolution => ({
 		decision: candidates.includes(emojiDescription) ? "Reuse" : "New",
@@ -33,7 +33,7 @@ export async function resolveReading(
 	const member = authoredFor(input.lemma);
 	if (member) {
 		recordEvent(signal, "AuthoredReading", { reading: member.reading });
-		return resolve(member.reading.emojiDescription);
+		return resolveAuthored(member.reading.emojiDescription);
 	}
 	if (closedRoute(input.lemma))
 		throw new DumgenFailure(
@@ -101,25 +101,26 @@ export async function resolveReading(
 			return { decision: "Reuse", emojiDescription: description };
 		}
 	} else recordEvent(signal, "EmptyReadingCandidates", { candidates });
-	const generated = await modelCaller(options)<{ emojiDescription: string }>(
+	const context = markedContext(input.encounter);
+	const emojiDescription = await modelCaller(options)<string>(
 		stage,
 		route,
 		"reading-generation/de",
-		"emojiOutput",
+		"emojiGenerationOutput",
 		{
-			...markedContext(input.encounter),
-			lemma: input.lemma,
-			existingEmojiDescriptions: candidates,
+			markedContext: context.markedContext,
+			lemma: input.lemma.canonicalForm,
 		},
 		signal,
 	);
-	const resolution = resolve(generated.emojiDescription);
-	recordEvent(
-		signal,
-		resolution.decision === "Reuse"
-			? "GeneratedReadingCollision"
-			: "GeneratedReading",
-		resolution,
-	);
+	if (candidates.includes(emojiDescription))
+		throw new DumgenFailure(
+			"InvalidModelOutput",
+			stage,
+			"Generated Reading collides with a candidate rejected by TypeSafe",
+			route,
+		);
+	const resolution = { decision: "New", emojiDescription } as const;
+	recordEvent(signal, "GeneratedReading", resolution);
 	return resolution;
 }

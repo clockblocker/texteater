@@ -1,7 +1,7 @@
 import { defineLinguisticPrompt } from "../../authoring.js";
 import {
 	emojiInputSchema as inputSchema,
-	emojiOutputSchema as outputSchema,
+	emojiGenerationOutputSchema as outputSchema,
 } from "../../model-schemas.js";
 import data from "./source-data.json";
 

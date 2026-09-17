@@ -69,8 +69,10 @@ export function queuedTargetJudgment(outputs: unknown[]): TypeSafeExecutor {
 export function readingJudgment(output: unknown): TypeSafeExecutor {
 	return async (request) => {
 		if (output instanceof Error) throw output;
-		const description = (output as { emojiDescription?: string })
-			?.emojiDescription;
+		const description =
+			typeof output === "string"
+				? output
+				: (output as { emojiDescription?: string })?.emojiDescription;
 		const candidates = (request.state as { candidates: string[] })
 			.candidates;
 		const index = candidates.indexOf(description ?? "");

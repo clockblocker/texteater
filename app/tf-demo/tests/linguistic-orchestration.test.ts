@@ -270,7 +270,7 @@ test("real segmentation, classification, grammar and emoji production reach an a
 		},
 		classification,
 		grammarOutput,
-		{ emojiDescription: "🏦" },
+		"🏦",
 	]);
 	await Effect.runPromise(
 		run.orchestrator.submitText({
@@ -302,7 +302,7 @@ test("real segmentation, classification, grammar and emoji production reach an a
 });
 
 test("retry uses its exact Grammar checkpoint and skips classification and grammar", async () => {
-	const run = setup([{ emojiDescription: "🏦" }]);
+	const run = setup(["🏦"]);
 	await Effect.runPromise(
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
@@ -313,7 +313,7 @@ test("retry uses its exact Grammar checkpoint and skips classification and gramm
 });
 
 test("stored Reading candidates are compared and reused without a new Reading plan", async () => {
-	const run = setup([{ emojiDescription: "🏦" }], {}, [reading]);
+	const run = setup(["🏦"], {}, [reading]);
 	const result = await Effect.runPromise(
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);

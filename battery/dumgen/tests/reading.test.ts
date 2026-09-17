@@ -36,7 +36,7 @@ for (const scenario of [
 		selection: "NoMatch",
 		candidates: ["💰", "💰"],
 		generated: "💰",
-		expected: { decision: "Reuse", emojiDescription: "💰" },
+		failure: "InvalidModelOutput",
 		calls: ["TypeSafe", "Luna"],
 	},
 	{
@@ -59,9 +59,7 @@ for (const scenario of [
 		const dumgen = createDumgen({
 			judge: async ({ questions }) =>
 				choiceAnswers(questions, () => scenario.selection),
-			execute: async () => ({
-				output: { emojiDescription: scenario.generated },
-			}),
+			execute: async () => ({ output: scenario.generated }),
 			onOperation: (trace) => traces.push(trace),
 		});
 		const result = await Effect.runPromise(
@@ -82,21 +80,38 @@ for (const scenario of [
 				expect(result.right).toEqual(scenario.expected);
 		}
 		const trace = traces[0];
-		expect(trace?.calls.map((call) => call.executor)).toEqual([
+		if (!trace) throw new Error("Missing Reading operation trace");
+		expect(trace.calls.map((call) => call.executor)).toEqual([
 			...scenario.calls,
 		]);
-		if (trace?.calls.length === 2)
-			expect<unknown>(trace.calls[1]?.dependsOn).toEqual([trace.calls[0]?.id]);
+		if (trace.calls.length === 2)
+			expect<unknown>(trace.calls[1]?.dependsOn).toEqual([
+				trace.calls[0]?.id,
+			]);
+		const generation = trace.calls.find((call) => call.executor === "Luna");
+		if (generation) {
+			expect(generation.request.input).toEqual({
+				markedContext:
+					"Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
+				lemma: base.lemma.canonicalForm,
+			});
+			expect("outputSchema" in generation.request).toBe(true);
+			if ("outputSchema" in generation.request)
+				expect(generation.request.outputSchema).toMatchObject({
+					type: "string",
+				});
+		}
 		if (
 			scenario.candidates.length === 2 &&
 			scenario.selection === "NoMatch"
 		) {
-			expect(trace?.events.map((event) => event.kind)).toEqual([
+			expect(trace.events.map((event) => event.kind)).toEqual([
 				"ReadingSelection",
-				"GeneratedReadingCollision",
 			]);
+			const selection = trace.calls[0];
+			if (!selection) throw new Error("Missing Reading selection call");
 			expect(
-				(trace?.calls[0]?.request.input as { candidates: string[] })
+				(selection.request.input as { candidates: string[] })
 					.candidates,
 			).toEqual(["💰"]);
 		}
@@ -108,9 +123,7 @@ test("all retained Reading cases execute the unified API and operation evaluator
 		const options = {
 			judge: readingJudgment(example.idealOutput),
 			execute: async () => ({
-				output: {
-					emojiDescription: example.idealOutput.emojiDescription,
-				},
+				output: example.idealOutput.emojiDescription,
 			}),
 			onOperation: (trace: OperationTrace) => traces.push(trace),
 		};

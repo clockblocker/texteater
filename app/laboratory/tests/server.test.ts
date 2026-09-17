@@ -55,7 +55,7 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 					failReading = false;
 					throw new Error("controlled provider failure");
 				}
-				return { emojiDescription: "🏦" };
+				return "🏦";
 			}
 			throw new Error(`Unexpected stage ${request.stage}`);
 		}),
