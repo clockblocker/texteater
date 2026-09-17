@@ -402,6 +402,40 @@ test("the snap-back model decides when the deck closes over a returning card", a
 	expect(candidate.closedFrom).toBeLessThan(8);
 });
 
+test("a returning card does not cross its slot, however it was let go", async ({
+	page,
+}) => {
+	await page.goto("/playground/animation-workbench/snap-back");
+	const frame = page.locator("[data-deck-frame]");
+	const card = frame.locator('[data-place="open"]');
+	const home = await card.boundingBox();
+	if (!home) throw new Error("Missing card geometry");
+	/* let go a long way out: the distance a spring with any bounce left
+	   in it rides past the slot before coming back */
+	await startDrag(page, card, 260, 130);
+	const samples = card.evaluate(async (element, at) => {
+		const taken: { dx: number; dy: number }[] = [];
+		const start = performance.now();
+		while (performance.now() - start < 700) {
+			await new Promise<void>((resolve) =>
+				requestAnimationFrame(() => resolve()),
+			);
+			const box = element.getBoundingClientRect();
+			taken.push({ dx: box.x - at.x, dy: box.y - at.y });
+		}
+		return taken;
+	}, home);
+	await page.mouse.up();
+	const taken = await samples;
+	/* it arrives and stops. A Card that crosses its slot and comes back
+	   reads as a thing that missed, and the Deck is a stack it has to
+	   line up with. */
+	expect(Math.min(...taken.map((sample) => sample.dx))).toBeGreaterThan(-1);
+	expect(Math.min(...taken.map((sample) => sample.dy))).toBeGreaterThan(-1);
+	expect(taken.at(-1)?.dx).toBeCloseTo(0, 0);
+	expect(taken.at(-1)?.dy).toBeCloseTo(0, 0);
+});
+
 test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
 	await page.goto("/playground/animation-workbench/sheet-lift");
 	const frame = page.locator("[data-deck-frame]");

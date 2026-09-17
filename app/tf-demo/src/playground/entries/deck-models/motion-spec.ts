@@ -50,6 +50,14 @@ export type Spring = {
 	readonly kind: "spring";
 	readonly stiffness: number;
 	readonly damping: number;
+	/**
+	 * Start from rest rather than from whatever velocity the value is
+	 * carrying. Motion hands a spring the value's current velocity by
+	 * default, which is what makes a flicked thing keep going — and what
+	 * makes it cross its target and come back. A return that may not
+	 * wobble has to start still, however fast the hand let go.
+	 */
+	readonly fromRest: boolean;
 };
 
 export type Spec = Tween | Spring;
@@ -65,8 +73,12 @@ export function tween(ms: number, ease: Ease = EASE_OUT, delayMs = 0): Tween {
 	return { kind: "tween", ms, ease, delayMs };
 }
 
-export function spring(stiffness: number, damping: number): Spring {
-	return { kind: "spring", stiffness, damping };
+export function spring(
+	stiffness: number,
+	damping: number,
+	fromRest = false,
+): Spring {
+	return { kind: "spring", stiffness, damping, fromRest };
 }
 
 /** The spec as Motion takes it, in seconds. */
@@ -76,6 +88,7 @@ export function motionOf(spec: Spec) {
 				type: "spring",
 				stiffness: spec.stiffness,
 				damping: spec.damping,
+				...(spec.fromRest ? { velocity: 0 } : {}),
 			} as const)
 		: ({
 				duration: spec.ms / 1000,
@@ -135,13 +148,19 @@ export const MORPH = spring(380, 38);
  * The drag spring: what a Held Card settles on when it snaps back, and
  * what the remove tilt rides.
  *
- * Damping 36 puts it at ζ ≈ 0.79 — a bounce of about 0.21, inside the
- * 0.1–0.3 a release wants. At 42 it was ζ ≈ 0.92, which absorbed a throw
- * so completely that the peak overshoot was 0.1 %: a Card let go at speed
- * arrived exactly as dead as one placed. A release is the one gesture
- * where bounce belongs, and this is the spring that plays it.
+ * It has no bounce and no momentum. 520/36 put it at ζ ≈ 0.79, on the
+ * reading that a release is the one gesture where bounce belongs — but
+ * the Card comes home into a Deck it has to line up with, and a Card that
+ * crosses its slot and comes back reads as a thing that missed. Damping
+ * 50 against stiffness 620 is ζ ≈ 1.004: it arrives and stops, in about
+ * 265 ms. `fromRest` drops the flick's velocity on top of that, so a
+ * Card thrown at the Deck cannot carry itself past the slot either.
+ *
+ * This is the one place in the file that gives up a spring's best
+ * property on purpose. Nothing else here is dragged, so nothing else
+ * had velocity to hand on.
  */
-export const DRAG_SPRING = spring(520, 36);
+export const DRAG_SPRING = spring(620, 50, true);
 
 /**
  * How long the prototype waits for a settling animation before it treats

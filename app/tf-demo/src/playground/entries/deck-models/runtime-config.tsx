@@ -78,7 +78,8 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 	return {
 		...spec,
 		transition,
-		SPRING: transition(spec.spring(p.stiffness, p.damping)),
+		/* the drag spring keeps its `fromRest`, whatever the knobs say */
+		SPRING: transition(spec.spring(p.stiffness, p.damping, true)),
 		MORPH: transition(spec.spring(p.morphStiffness, p.morphDamping)),
 		HEADING_EDGE: spec.tween(p.headingEdgeMs),
 		OPEN_SCALE: p.openScale,
