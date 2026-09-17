@@ -1,8 +1,13 @@
+import {
+	paginationOptsValidator,
+	paginationResultValidator,
+} from "convex/server";
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import {
+	type ActionCtx,
 	action,
 	internalAction,
 	internalMutation,
@@ -22,6 +27,13 @@ const MAX_CLEANUP_PHASE_STEPS = 64;
 const MAX_SENTENCES_PER_TEXT = 256;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const DESCRIPTOR_PAGE_SIZE = 20;
+const TEXT_PAGE_SIZE = 20;
+
+const resolutionInspectionTableNames = [
+	"inspectionPayloads",
+	"inspectionSteps",
+	"inspectionClicks",
+] as const satisfies readonly TableNames[];
 
 /** Every application-owned tf-demo table removed by the bounded full reset. */
 export const resetDemoTableNames = [
@@ -287,6 +299,56 @@ export const resetDemoDataBatch = internalMutation({
 	args: { tableIndex: v.optional(v.number()) },
 	returns: tableResetResultValidator,
 	handler: (ctx, { tableIndex }) => clearTableBatch(ctx, tableIndex),
+});
+
+export const listTextIds = internalQuery({
+	args: { paginationOpts: paginationOptsValidator },
+	returns: paginationResultValidator(v.id("texts")),
+	handler: async (ctx, { paginationOpts }) => {
+		const result = await ctx.db.query("texts").paginate(paginationOpts);
+		return { ...result, page: result.page.map((text) => text._id) };
+	},
+});
+
+const inspectionResetResultValidator = v.object({
+	deleted: v.number(),
+	hasMore: v.boolean(),
+	nextTableIndex: v.number(),
+});
+
+export const clearResolutionInspectionBatch = internalMutation({
+	args: { tableIndex: v.optional(v.number()) },
+	returns: inspectionResetResultValidator,
+	handler: async (ctx, { tableIndex: tableIndexValue }) => {
+		const tableIndex = tableIndexValue ?? 0;
+		if (
+			!Number.isSafeInteger(tableIndex) ||
+			tableIndex < 0 ||
+			tableIndex > resolutionInspectionTableNames.length
+		) {
+			throw new Error(
+				"Resolution inspection reset table index is invalid.",
+			);
+		}
+		if (tableIndex === resolutionInspectionTableNames.length) {
+			return { deleted: 0, hasMore: false, nextTableIndex: tableIndex };
+		}
+		const tableName = resolutionInspectionTableNames[tableIndex];
+		if (!tableName) {
+			throw new Error(
+				"Resolution inspection reset table index is invalid.",
+			);
+		}
+		const rows = await ctx.db.query(tableName).take(BATCH_SIZE);
+		await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
+		const nextTableIndex =
+			rows.length === BATCH_SIZE ? tableIndex : tableIndex + 1;
+		return {
+			deleted: rows.length,
+			hasMore: nextTableIndex < resolutionInspectionTableNames.length,
+			nextTableIndex,
+		};
+	},
 });
 
 const textAnalysisCandidatesValidator = v.object({
@@ -930,21 +992,74 @@ export const clearSharedData = action({
 	},
 });
 
-/**
- * Removes one Text's derived graph while preserving the Text and Sentences.
- * Shared Readings, Lemmas, and Surfaces survive when another occurrence still
- * uses them; source-owned Knowledge and relation data are pruned with orphans.
- */
-export const stripTextAnalysis = action({
-	args: { textId: v.id("texts") },
+export type StripAnalysesResult = StripTextAnalysisResult & {
+	strippedTexts: number;
+	removedInspectionRecords: number;
+};
+
+export async function stripAllAnalyses(
+	ctx: ActionCtx,
+): Promise<StripAnalysesResult> {
+	let cursor: string | null = null;
+	let strippedTexts = 0;
+	let removed = 0;
+	let deletedReadings = 0;
+	let deletedLemmas = 0;
+	for (let pageIndex = 0; pageIndex < MAX_BATCHES; pageIndex += 1) {
+		const page: {
+			page: Id<"texts">[];
+			isDone: boolean;
+			continueCursor: string;
+		} = await ctx.runQuery(internal.demoReset.listTextIds, {
+			paginationOpts: { cursor, numItems: TEXT_PAGE_SIZE },
+		});
+		for (const textId of page.page) {
+			const result = await stripTextAnalysisGraph(ctx, textId);
+			strippedTexts += 1;
+			removed += result.removed;
+			deletedReadings += result.deletedReadings;
+			deletedLemmas += result.deletedLemmas;
+		}
+		if (page.isDone) break;
+		cursor = page.continueCursor;
+		if (pageIndex === MAX_BATCHES - 1) {
+			throw new Error("Analysis stripping exceeded its Text page limit.");
+		}
+	}
+
+	let removedInspectionRecords = 0;
+	let tableIndex = 0;
+	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
+		const result = await ctx.runMutation(
+			internal.demoReset.clearResolutionInspectionBatch,
+			{ tableIndex },
+		);
+		removedInspectionRecords += result.deleted;
+		tableIndex = result.nextTableIndex;
+		if (!result.hasMore) {
+			return {
+				strippedTexts,
+				removed,
+				deletedReadings,
+				deletedLemmas,
+				removedInspectionRecords,
+			};
+		}
+	}
+	throw new Error("Resolution inspection reset exceeded its batch limit.");
+}
+
+/** Strips every Text and clears the Resolution Inspector's retained records. */
+export const stripAnalyses = action({
+	args: {},
 	returns: v.object({
+		strippedTexts: v.number(),
 		removed: v.number(),
 		deletedReadings: v.number(),
 		deletedLemmas: v.number(),
+		removedInspectionRecords: v.number(),
 	}),
-	handler: async (ctx, { textId }): Promise<StripTextAnalysisResult> => {
-		return stripTextAnalysisGraph(ctx, textId);
-	},
+	handler: (ctx): Promise<StripAnalysesResult> => stripAllAnalyses(ctx),
 });
 
 export const clearVisitorData = action({

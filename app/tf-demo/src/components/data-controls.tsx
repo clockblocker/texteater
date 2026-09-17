@@ -1,4 +1,3 @@
-import type { FunctionArgs } from "convex/server";
 import {
 	Button,
 	Card,
@@ -26,8 +25,9 @@ import { parseSubmittedTextId } from "@/lib/action-results";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 
-type TextId = FunctionArgs<typeof api.demoReset.stripTextAnalysis>["textId"];
+type TextId = Id<"texts">;
 
 export function DataControls({
 	text,
@@ -60,12 +60,12 @@ function useDemoDataControls(
 	);
 	const clearSharedData = usePendingAction(api.demoReset.clearSharedData);
 	const clearVisitorData = usePendingAction(api.demoReset.clearVisitorData);
-	const stripTextAnalysis = usePendingAction(api.demoReset.stripTextAnalysis);
+	const stripAnalyses = usePendingAction(api.demoReset.stripAnalyses);
 	const analyzeText = usePendingAction(api.orchestration.submitText);
 	const isBusy =
 		clearSharedData.isPending ||
 		clearVisitorData.isPending ||
-		stripTextAnalysis.isPending ||
+		stripAnalyses.isPending ||
 		analyzeText.isPending;
 	const error = interactionError;
 
@@ -83,15 +83,12 @@ function useDemoDataControls(
 	}
 
 	async function handleStripTextAnalysis() {
-		if (!text) return;
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			const result = await stripTextAnalysis.run({
-				textId: text.textId,
-			});
+			const result = await stripAnalyses.run({});
 			setNotice(
-				`Stripped ${result.removed} analysis records. The Text and its Sentences were kept.`,
+				`Stripped ${result.removed} analysis records from ${result.strippedTexts} Texts and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Texts and their Sentences were kept.`,
 			);
 		} catch (cause) {
 			setInteractionError(
@@ -143,7 +140,7 @@ function useDemoDataControls(
 		isBusy,
 		isClearingSharedData: clearSharedData.isPending,
 		isClearingVisitorData: clearVisitorData.isPending,
-		isStrippingTextAnalysis: stripTextAnalysis.isPending,
+		isStrippingTextAnalysis: stripAnalyses.isPending,
 		isAnalyzingText: analyzeText.isPending,
 		handleClearVisitorData,
 		handleStripTextAnalysis,
@@ -246,26 +243,25 @@ function DemoDataCard({
 						? "Clearing your data…"
 						: "Clear my data"}
 				</ConfirmDialog>
-				{text?.isAnalyzed ? (
-					<ConfirmDialog
-						trigger={
-							<Button
-								type="button"
-								variant="destructive"
-								disabled={isBusy}
-							/>
-						}
-						title="Strip the analysis from this text?"
-						description="The Text and its Sentences remain. Segments, resolutions, Clicks, and Readings with no other source are removed."
-						confirmLabel="Strip analysis"
-						onConfirm={() => void handleStripTextAnalysis()}
-					>
-						<EraserIcon data-icon="inline-start" />
-						{isStrippingTextAnalysis
-							? "Stripping analysis…"
-							: "Strip analysis"}
-					</ConfirmDialog>
-				) : text ? (
+				<ConfirmDialog
+					trigger={
+						<Button
+							type="button"
+							variant="destructive"
+							disabled={isBusy}
+						/>
+					}
+					title="Strip all analyses?"
+					description="All Texts and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
+					confirmLabel="Strip analyses"
+					onConfirm={() => void handleStripTextAnalysis()}
+				>
+					<EraserIcon data-icon="inline-start" />
+					{isStrippingTextAnalysis
+						? "Stripping analyses…"
+						: "Strip analyses"}
+				</ConfirmDialog>
+				{text && !text.isAnalyzed ? (
 					<Button
 						type="button"
 						disabled={isBusy}

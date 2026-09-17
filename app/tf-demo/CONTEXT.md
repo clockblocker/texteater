@@ -160,6 +160,6 @@ A rejected occurrence proposal that overlaps a committed Occurrence
 Attestation without matching all and only its members.
 
 **Analysis Stripping**:
-Removal of derived analysis for one Text while preserving the Text and its
-Sentences. Apart from full reset, it is the only operation that ends Occurrence
-Attestations and memberships.
+Removal of derived analysis for the Texts in scope while preserving those Texts
+and their Sentences. Apart from full reset, it is the only operation that ends
+Occurrence Attestations and memberships.

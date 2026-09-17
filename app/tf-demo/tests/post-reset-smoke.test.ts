@@ -1,10 +1,18 @@
 import { describe, expect, test } from "bun:test";
+import { getFunctionName } from "convex/server";
 import { createDumdictService, type DumdictStoragePort } from "dumdict";
 import * as Effect from "effect/Effect";
 import {
+	clearLemmaDataBatch,
+	clearReadingDataBatch,
+	clearResolutionInspectionBatch,
 	clearVisitorDataBatch,
+	getTextAnalysisCandidates,
+	listTextIds,
 	resetDemoDataBatch,
 	resetDemoTableNames,
+	stripAllAnalyses,
+	stripTextAnalysisGraphBatch,
 } from "../convex/demoReset";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import {
@@ -79,6 +87,91 @@ function storageFor(db: IndexedTestDb): DumdictStoragePort<"de"> {
 }
 
 describe("tf-demo post-reset contract", () => {
+	test("Strip analyses covers every Text and clears Resolution Inspector data", async () => {
+		const db = new IndexedTestDb({
+			texts: [
+				{ _id: "texts-one", sourceText: "Eins." },
+				{ _id: "texts-two", sourceText: "Zwei." },
+			],
+			sentences: [
+				{
+					_id: "sentences-one",
+					textId: "texts-one",
+					position: 0,
+				},
+				{
+					_id: "sentences-two",
+					textId: "texts-two",
+					position: 0,
+				},
+			],
+			segments: [
+				{
+					_id: "segments-one",
+					sentenceId: "sentences-one",
+					index: 0,
+				},
+				{
+					_id: "segments-two",
+					sentenceId: "sentences-two",
+					index: 0,
+				},
+			],
+			inspectionPayloads: [{ _id: "inspectionPayloads-one" }],
+			inspectionSteps: [{ _id: "inspectionSteps-one" }],
+			inspectionClicks: [{ _id: "inspectionClicks-one" }],
+		});
+		const queryFunctions = new Map<string, unknown>([
+			["demoReset:listTextIds", listTextIds],
+			["demoReset:getTextAnalysisCandidates", getTextAnalysisCandidates],
+		]);
+		const mutationFunctions = new Map<string, unknown>([
+			[
+				"demoReset:stripTextAnalysisGraphBatch",
+				stripTextAnalysisGraphBatch,
+			],
+			["demoReset:clearReadingDataBatch", clearReadingDataBatch],
+			["demoReset:clearLemmaDataBatch", clearLemmaDataBatch],
+			[
+				"demoReset:clearResolutionInspectionBatch",
+				clearResolutionInspectionBatch,
+			],
+		]);
+		const result = await stripAllAnalyses({
+			runQuery: (reference, args) => {
+				const fn = queryFunctions.get(getFunctionName(reference));
+				if (!fn)
+					throw new Error(
+						`Unexpected query ${getFunctionName(reference)}`,
+					);
+				return runTestQuery(db, fn, args);
+			},
+			runMutation: (reference, args) => {
+				const fn = mutationFunctions.get(getFunctionName(reference));
+				if (!fn) {
+					throw new Error(
+						`Unexpected mutation ${getFunctionName(reference)}`,
+					);
+				}
+				return runTestMutation(db, fn, args);
+			},
+		} as never);
+
+		expect(result).toEqual({
+			strippedTexts: 2,
+			removed: 2,
+			deletedReadings: 0,
+			deletedLemmas: 0,
+			removedInspectionRecords: 3,
+		});
+		expect(db.rows("texts")).toHaveLength(2);
+		expect(db.rows("sentences")).toHaveLength(2);
+		expect(db.rows("segments")).toEqual([]);
+		expect(db.rows("inspectionPayloads")).toEqual([]);
+		expect(db.rows("inspectionSteps")).toEqual([]);
+		expect(db.rows("inspectionClicks")).toEqual([]);
+	});
+
 	test("the bounded reset inventory stays complete as the schema changes", async () => {
 		const schemaTableNames = Object.keys(tfDemoSchema.tables).sort();
 		expect([...resetDemoTableNames].sort()).toEqual(schemaTableNames);
