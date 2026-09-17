@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "deterministicSuite": {
+    "command": "bun test battery/dumling/tests battery/dumrel/tests battery/dumdict/tests battery/dumgen/tests battery/promptsmith/tests app/laboratory/tests app/tf-demo/tests",
+    "passed": 656,
+    "failed": 0,
+    "snapshots": 9,
+    "assertions": 33832
+  },
+  "checks": {
+    "dumling": "check, check:types, generate:validation:check passed",
+    "dumrel": "check, check:types, generate:check passed",
+    "dumdict": "check, generate:validation:check passed",
+    "dumgen": "check, generate:check, build:js, build:types passed",
+    "promptsmith": "check passed",
+    "laboratory": "check and production build passed",
+    "tf-demo": "relation-policy check, tsc build, type tests and Vite production build passed",
+    "diff": "git diff --check passed"
+  },
+  "localIntegration": {
+    "tfDemo": "http://localhost:5174",
+    "laboratory": "http://127.0.0.1:5175/evaluations",
+    "backend": "Local Convex function spec includes productionEvidence in Knowledge commit/failure contracts",
+    "credentials": "Both OPENAI_API_KEY and TYPESAFE_API_KEY present in local backend; values not captured",
+    "browser": "Library and stored Text loaded in tf-demo; saved IDS recognition displayed target, Lemma, Surface, TypeSafe/Luna calls and usage in Laboratory",
+    "newPaidBrowserCalls": 0
+  },
+  "broaderChecks": {
+    "documentationIntegrity": {
+      "status": "Failed; pre-existing repository-wide scoped-count gate",
+      "beforeImplementation": 257,
+      "current": 258,
+      "requiredBelow": 210,
+      "otherDocumentationGateFailures": 0
+    },
+    "experimentalTestDiscovery": {
+      "status": "Initial overly broad bun test battery/dumling included a broken abandoned experimets import; final suite follows the package test script scope ./tests"
+    }
+  }
+}

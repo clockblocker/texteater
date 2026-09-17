@@ -17,28 +17,35 @@ export function createProductionDumgen(
 	return createDumgen({
 		...configuration,
 		judge: (request, options) => createTypeSafeExecutor()(request, options),
-		onOperation: (trace) =>
+		onOperation: (trace) => {
 			onEvent?.({
 				kind: "TraceRecorded",
 				traceJson: JSON.stringify(trace),
-			}),
-		onModelExchange: (exchange) =>
-			onEvent?.(
-				exchange.failure
-					? {
-							kind: "AttemptFailed",
-							failure: {
-								attempts: 1,
-								category: "ProviderUnavailable",
-								retryable: false,
+			});
+			for (const call of trace.calls) {
+				if (call.transport === "Interrupted") continue;
+				onEvent?.(
+					call.transport === "Failure" ||
+						call.validation === "Invalid"
+						? {
+								kind: "AttemptFailed",
+								failure: {
+									attempts: 1,
+									category:
+										call.validation === "Invalid"
+											? "InvalidOutput"
+											: "ProviderUnavailable",
+									retryable: false,
+								},
+							}
+						: {
+								kind: "Succeeded",
+								attempt: 1,
+								latencyMs: call.durationMs,
 							},
-						}
-					: {
-							kind: "Succeeded",
-							attempt: 1,
-							latencyMs: exchange.durationMs,
-						},
-			),
+				);
+			}
+		},
 		execute: async (request) =>
 			await execute({
 				...request,

@@ -30,6 +30,7 @@ export const resetDemoTableNames = [
 	"catalogGrowthSignals",
 	"generatedRelationProposals",
 	"generatedRelationRuns",
+	"knowledgeProductionRuns",
 	"knowledgeGenerationAttempts",
 	"relationPublicationControls",
 	"knowledgeSettings",

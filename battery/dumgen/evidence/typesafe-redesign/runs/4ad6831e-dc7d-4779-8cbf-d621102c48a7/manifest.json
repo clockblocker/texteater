@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "4ad6831e-dc7d-4779-8cbf-d621102c48a7",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:15.212Z",
+  "corpus": {
+    "fingerprint": "5bbfb6b788da08329c66d70519898f2c151e0fcb626a000553b16e829d4b1617",
+    "caseIds": [
+      "grammar-de-discourse-formula-dev-gern-geschehen"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

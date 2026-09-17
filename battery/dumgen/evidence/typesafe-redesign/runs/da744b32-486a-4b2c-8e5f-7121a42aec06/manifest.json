@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "da744b32-486a-4b2c-8e5f-7121a42aec06",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:57.216Z",
+  "corpus": {
+    "fingerprint": "4431a399d3010a9f050a83805edcd478fffa6bbff3f46727e0446f694377a275",
+    "caseIds": [
+      "ids-verbal-06-target-0-click-10"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

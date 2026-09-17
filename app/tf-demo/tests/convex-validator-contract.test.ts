@@ -6,7 +6,7 @@ const semanticRelationValues = [
 	"hyponym",
 	"meronym",
 ];
-const enabledSegmentationLanguageValues = ["de", "he"];
+const enabledSegmentationLanguageValues = ["de", "en", "he"];
 const grammaticalResolutionLanguageValues = ["de"];
 const segmentKindValues = [
 	"ResolvableText",

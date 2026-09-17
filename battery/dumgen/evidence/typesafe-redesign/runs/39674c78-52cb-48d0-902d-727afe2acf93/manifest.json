@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "39674c78-52cb-48d0-902d-727afe2acf93",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:40.009Z",
+  "corpus": {
+    "fingerprint": "4c9a3e97f964bad3371ce5b05914057c4817de068cab9fac4db79a2ccc62d610",
+    "caseIds": [
+      "reading-de-adj-sauer-angry"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

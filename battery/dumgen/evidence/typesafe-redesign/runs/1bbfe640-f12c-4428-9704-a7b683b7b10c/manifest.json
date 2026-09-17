@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "1bbfe640-f12c-4428-9704-a7b683b7b10c",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:25.335Z",
+  "corpus": {
+    "fingerprint": "eb39e0604c7880a6967243c449bfd27a8afe8ddbbda294a56140f086a92a5a62",
+    "caseIds": [
+      "knowledge-demo-morpheme-suffix-heit"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "e5c20522-6737-41ca-8b6a-e64f26f426cb",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:15.505Z",
+  "corpus": {
+    "fingerprint": "bf575128b3aace824c9b2bb3cfa78705c51f5057f17317aea0fda1ec2d5bde4a",
+    "caseIds": [
+      "grammar-de-idiom-was-zum-truncation-partial"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

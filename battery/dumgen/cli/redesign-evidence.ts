@@ -251,7 +251,8 @@ async function prepare() {
 }
 async function executeManifest() {
 	const manifestName = process.argv[4] ?? "live-manifest.json";
-	if (!/^[a-z0-9-]+manifest\.json$/u.test(manifestName)) throw Error("Invalid manifest name");
+	if (!/^[a-z0-9-]+manifest\.json$/u.test(manifestName))
+		throw Error("Invalid manifest name");
 	const manifest = JSON.parse(
 		await readFile(new URL(manifestName, directory), "utf8"),
 	);
@@ -288,7 +289,10 @@ async function executeManifest() {
 	const outputDirectory = new URL("runs/", directory).pathname;
 	// Claim before any call; rerunning this manifest is rejected, even after interruption.
 	await writeFile(
-		new URL(manifestName.replace("manifest.json", "attempt.json"), directory),
+		new URL(
+			manifestName.replace("manifest.json", "attempt.json"),
+			directory,
+		),
 		JSON.stringify({
 			sourceRevision,
 			fingerprint: manifest.fingerprint,
@@ -336,7 +340,10 @@ async function executeManifest() {
 						);
 					const input = recognizerInput.parse(entry.input);
 					const target = await unwrap(
-						dumgen.classifyTarget({ sentence: input.sentence, clickedSegmentIndex: input.clickedSegmentIndex }),
+						dumgen.classifyTarget({
+							sentence: input.sentence,
+							clickedSegmentIndex: input.clickedSegmentIndex,
+						}),
 						context.signal,
 					);
 					const encounter = { sentence: input.sentence, target };

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "19ed9302-312d-468e-98f8-94a862d4a208",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:22:55.841Z",
+  "corpus": {
+    "fingerprint": "869db35c0683f93f88e729867959aab982a988ab701a064610c4dab3bca31b80",
+    "caseIds": [
+      "grammar-de-fusion-dev-beim-umzug"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}

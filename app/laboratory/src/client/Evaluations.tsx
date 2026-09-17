@@ -3,9 +3,11 @@ import type { compareRuns } from "promptsmith/storage";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { OperationEvidence } from "./OperationEvidence";
 
 type Experiment = {
 	id: string;
+	mode?: "Operation" | "Deferred";
 	caseCount: number;
 	demonstrationCount: number;
 	evaluationCount: number;
@@ -88,7 +90,8 @@ export function Evaluations() {
 							Evaluation runs
 						</h1>
 						<p className="mt-1 text-sm text-muted-foreground">
-							Run held-out cases and compare saved results.
+							Review saved operation results and compare
+							experiments.
 						</p>
 					</div>
 					<a className="underline underline-offset-4" href="/">
@@ -149,12 +152,17 @@ export function Evaluations() {
 							}
 						>
 							{experiments.map((item) => (
-								<option key={item.id}>{item.id}</option>
+								<option key={item.id} value={item.id}>
+									{item.id}
+									{item.mode === "Deferred"
+										? " (deferred prototype)"
+										: ""}
+								</option>
 							))}
 						</select>
 						<span className="block text-sm tabular-nums text-muted-foreground">
 							{selected
-								? `${selected.demonstrationCount} demonstrations · ${selected.evaluationCount} test cases · ${selected.caseCount} total corpus cases`
+								? `${selected.demonstrationCount} reserved examples · ${selected.evaluationCount} test cases · ${selected.caseCount} total corpus cases`
 								: "Loading experiments…"}
 						</span>
 					</label>
@@ -284,7 +292,11 @@ export function Evaluations() {
 														)
 													}
 												>
-													{item.runId}
+													{item.manifest?.corpus
+														.caseIds.length === 1
+														? item.manifest.corpus
+																.caseIds[0]
+														: item.runId}
 												</button>
 											</td>
 											<td className="p-3">
@@ -384,9 +396,7 @@ export function Evaluations() {
 									{record.caseId} · {record.status} ·{" "}
 									{Math.round(record.durationMs)} ms
 								</summary>
-								<pre className="overflow-auto whitespace-pre-wrap break-words text-xs">
-									{JSON.stringify(record, null, 2)}
-								</pre>
+								<OperationEvidence record={record} />
 							</details>
 						))}
 					</section>

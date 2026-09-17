@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "runId": "ee19c2af-03b3-4e88-b91e-8e7c13bae0a3",
+  "experimentId": "typesafe-redesign/finite-review",
+  "evaluatorVersion": "finite-review-1",
+  "sourceRevision": "616a7225",
+  "startedAt": "2026-09-17T07:23:14.954Z",
+  "corpus": {
+    "fingerprint": "227fc0181ef349df1552b5d030582d35e06daea57b5b1594d0536a8cde293c8e",
+    "caseIds": [
+      "grammar-de-discourse-formula-dev-auf-wiedersehen"
+    ]
+  },
+  "operationVersion": "judgments-2",
+  "configurations": {
+    "generation": {
+      "model": "gpt-5.6-luna",
+      "settings": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "maxRetries": 0
+      }
+    },
+    "judgment": {
+      "model": "jev-latest",
+      "settings": {
+        "timeoutMs": 30000,
+        "maxRetries": 0
+      }
+    }
+  }
+}
