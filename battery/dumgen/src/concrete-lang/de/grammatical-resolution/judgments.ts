@@ -1,4 +1,4 @@
-import type { ChoiceQuestion, Questions } from "promptsmith/typesafe";
+import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";
 import type { DumgenOptions, Encounter } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
@@ -12,71 +12,13 @@ import { recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
+import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
+import { grammarFeatureFields } from "./feature-schema.js";
 import type { GrammarOutput } from "./project.js";
 import { routeGuidance } from "./route-guidance.js";
 import { verbalCompositionGuidance } from "./verbal-guidance.js";
 
-type Scalar = string | number | boolean | null;
-type Field = { values: Scalar[]; open: boolean };
-type Schema = {
-	type?: string;
-	const?: Scalar;
-	enum?: Scalar[];
-	properties?: Record<string, Schema>;
-	anyOf?: Schema[];
-	allOf?: Schema[];
-};
-/** The domain schema owns legal values. Questions add uncertainty without overloading domain null. */
-function fields(
-	schema: Schema,
-	path = "",
-	output = new Map<string, Field>(),
-): Map<string, Field> {
-	for (const branch of [...(schema.anyOf ?? []), ...(schema.allOf ?? [])])
-		fields(branch, path, output);
-	for (const [key, value] of Object.entries(schema.properties ?? {}))
-		fields(value, path ? `${path}.${key}` : key, output);
-	if (
-		Object.hasOwn(schema, "const") ||
-		schema.enum ||
-		schema.type === "null" ||
-		(schema.type === "string" && !schema.enum)
-	) {
-		const field = output.get(path) ?? { values: [], open: false };
-		for (const value of schema.enum ??
-			(Object.hasOwn(schema, "const")
-				? [schema.const!]
-				: schema.type === "null"
-					? [null]
-					: []))
-			if (!field.values.includes(value)) field.values.push(value);
-		field.open ||=
-			schema.type === "string" &&
-			!schema.enum &&
-			!Object.hasOwn(schema, "const");
-		output.set(path, field);
-	}
-	return output;
-}
-const fieldCatalogs = new Map<string, Map<string, Field>>();
 const unmarked = "Unmarked";
-function token(value: Scalar): string {
-	return value === null ? unmarked : String(value);
-}
-function featureQuestion(path: string, field: Field): ChoiceQuestion {
-	return choice(
-		`What is ${path} for this exact supplied whole target? Use the route policy and full sentence. Null/Unmarked is a linguistic value, not uncertainty. Answer a speculative branch only if applicable; code will discard other branches.`,
-		Object.fromEntries([
-			...field.values.map((value) => [
-				token(value),
-				value === null
-					? "Unmarked/inapplicable under the feature's domain policy"
-					: `Feature value ${value}`,
-			]),
-			["Unresolved", "Applicable but no defensible value can be chosen"],
-		]),
-	);
-}
 const normalizations = {
 	Keep: "Copy the attested member exactly, preserving licensed variants and required capitals",
 	LowerInitial:
@@ -131,8 +73,7 @@ export async function resolveGrammarJudgments(
 			"No grammatical route",
 			route,
 		);
-	const catalog = fieldCatalogs.get(route) ?? fields(schema as Schema);
-	fieldCatalogs.set(route, catalog);
+	const catalog = grammarFeatureFields(route);
 	const verbal = ["VERB", "AUX", "Idiom", "Collocation"].includes(
 		encounter.target.kind,
 	);
@@ -164,15 +105,7 @@ export async function resolveGrammarJudgments(
 		),
 	};
 	if (catalog.has("surface.inflectionalFeatures"))
-		questions.inflection = choice(
-			"Does this occurrence have a marked inflectional analysis or a null citation/unmarked bag?",
-			{
-				Marked: "Contextual marked inflection",
-				Citation:
-					"Dictionary mention or genuinely unmarked/invariant use under this route",
-				Unresolved: null,
-			},
-		);
+		questions.inflection = inflectionQuestion(encounter.target.kind);
 	for (const [path, field] of catalog) {
 		if (
 			!(
@@ -183,17 +116,7 @@ export async function resolveGrammarJudgments(
 			continue;
 		if (auxiliary && path.startsWith("lemma.")) continue;
 		if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
-		questions[path] = field.open
-			? choice(
-					`Does this lexical identity have ${path.split(".").at(-1)}?`,
-					{
-						Present:
-							"Present; select exact text from candidates later",
-						Absent: "No such lexical feature",
-						Unresolved: null,
-					},
-				)
-			: featureQuestion(path, field);
+		questions[path] = featureQuestion(encounter.target.kind, path, field);
 	}
 	for (const [index] of input.members.entries()) {
 		questions[`orthography_${index}`] = choice(

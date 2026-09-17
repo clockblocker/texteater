@@ -1,11 +1,13 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { NoteLinesSkeleton } from "lego";
+import { Button, NoteLinesSkeleton } from "lego";
+import { BookOpenIcon } from "lucide-react";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { usePendingAction } from "@/hooks/use-pending-action";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
-import type { SentenceView } from "@/lib/action-results";
+import { parseSubmittedTextId, type SentenceView } from "@/lib/action-results";
 import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
@@ -26,7 +28,11 @@ const MISSING_SOURCE_CONTEXT_NOTICE =
 export function TextView({ target }: { target: TextSubjectTarget }) {
 	const visitorId = useAnonymousVisitorId();
 	const [notice, setNotice] = useState<string | null>(null);
+	const [segmentationError, setSegmentationError] = useState<string | null>(
+		null,
+	);
 	const selection = useSegmentSelection(visitorId);
+	const segmentText = usePendingAction(api.orchestration.submitText);
 	const reveal = useOccurrenceReveal();
 	const revealSentenceId = useOccurrenceArrival(target.textId, reveal, {
 		onOccurrence: selection.markSelected,
@@ -44,7 +50,13 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 			...sentence,
 			sourceText: textDetail.sourceText,
 		})) ?? [];
-	const error = selection.error ?? mutationMessage(textQuery.error);
+	const error =
+		selection.error ??
+		segmentationError ??
+		mutationMessage(textQuery.error);
+	const needsSegmentation =
+		sentences.length > 0 &&
+		sentences.every((sentence) => sentence.segments.length === 0);
 
 	async function handleSegmentSelection(
 		sentence: SentenceView,
@@ -59,6 +71,26 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 			altKey,
 			anchorElement,
 		);
+	}
+
+	async function handleSegmentText() {
+		if (!textDetail) return;
+		setNotice(null);
+		setSegmentationError(null);
+		try {
+			const result = await segmentText.run({
+				submissionKey: textDetail.submissionKey,
+				sourceText: textDetail.sourceText,
+			});
+			if (parseSubmittedTextId(result) !== textDetail.textId) {
+				throw new Error("Segments were saved to a different Text.");
+			}
+			setNotice("Text split into segments.");
+		} catch (cause) {
+			setSegmentationError(
+				mutationMessage(cause) ?? "Text segmentation failed.",
+			);
+		}
 	}
 
 	if (textQuery.isPending) return <TextViewSkeleton />;
@@ -80,6 +112,9 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 			onRevealed={reveal?.acknowledge}
 			selectedSegmentKey={selection.selectedSegmentKey}
 			sentences={sentences}
+			showSegmentAction={needsSegmentation}
+			isSegmenting={segmentText.isPending}
+			onSegmentText={() => void handleSegmentText()}
 		/>
 	);
 }
@@ -150,6 +185,9 @@ export function TextPresentation({
 	onRevealed,
 	notice = null,
 	error = null,
+	showSegmentAction = false,
+	isSegmenting = false,
+	onSegmentText,
 }: {
 	readonly sentences: readonly SentenceView[];
 	readonly selectedSegmentKey: string | null;
@@ -163,6 +201,9 @@ export function TextPresentation({
 	readonly onRevealed?: () => void;
 	readonly notice?: string | null;
 	readonly error?: string | null;
+	readonly showSegmentAction?: boolean;
+	readonly isSegmenting?: boolean;
+	readonly onSegmentText?: () => void;
 }) {
 	return (
 		<div
@@ -177,6 +218,20 @@ export function TextPresentation({
 					revealSentenceId={revealSentenceId}
 					onRevealed={onRevealed}
 				/>
+				{showSegmentAction ? (
+					<div className="mt-8">
+						<Button
+							type="button"
+							disabled={isSegmenting}
+							onClick={onSegmentText}
+						>
+							<BookOpenIcon data-icon="inline-start" />
+							{isSegmenting
+								? "Splitting…"
+								: "Split into segments"}
+						</Button>
+					</div>
+				) : null}
 
 				{notice ? (
 					<ReaderStatus aria-live="polite">{notice}</ReaderStatus>

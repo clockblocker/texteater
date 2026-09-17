@@ -33,7 +33,12 @@ type TextId = Id<"texts">;
 export function DataControls({
 	text,
 }: {
-	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
+	text?: {
+		textId: TextId;
+		submissionKey: string;
+		sourceText: string;
+		isAnalyzed: boolean;
+	};
 }) {
 	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const { canCloseAllSheets, closeAllSheets } = useWorkspaceController();
@@ -85,7 +90,12 @@ function WorkspaceCard({
 
 function useDemoDataControls(
 	text:
-		| { textId: TextId; sourceText: string; isAnalyzed: boolean }
+		| {
+				textId: TextId;
+				submissionKey: string;
+				sourceText: string;
+				isAnalyzed: boolean;
+		  }
 		| undefined,
 ) {
 	const { revealLibrary } = useWorkspaceController();
@@ -97,12 +107,12 @@ function useDemoDataControls(
 	const clearSharedData = usePendingAction(api.demoReset.clearSharedData);
 	const clearVisitorData = usePendingAction(api.demoReset.clearVisitorData);
 	const stripAnalyses = usePendingAction(api.demoReset.stripAnalyses);
-	const analyzeText = usePendingAction(api.orchestration.submitText);
+	const segmentText = usePendingAction(api.orchestration.submitText);
 	const isBusy =
 		clearSharedData.isPending ||
 		clearVisitorData.isPending ||
 		stripAnalyses.isPending ||
-		analyzeText.isPending;
+		segmentText.isPending;
 	const error = interactionError;
 
 	async function handleClearVisitorData() {
@@ -133,23 +143,23 @@ function useDemoDataControls(
 		}
 	}
 
-	async function handleAnalyzeText() {
+	async function handleSegmentText() {
 		if (!text) return;
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			const result = await analyzeText.run({
-				submissionKey: submissionKeyFor(text.sourceText),
+			const result = await segmentText.run({
+				submissionKey: text.submissionKey,
 				sourceText: text.sourceText,
 			});
 			const analyzedTextId = parseSubmittedTextId(result);
 			if (analyzedTextId !== text.textId) {
 				throw new Error("Analysis was saved to a different Text.");
 			}
-			setNotice("Text analysis restored.");
+			setNotice("Text split into segments.");
 		} catch (cause) {
 			setInteractionError(
-				mutationMessage(cause) ?? "Text analysis failed.",
+				mutationMessage(cause) ?? "Text segmentation failed.",
 			);
 		}
 	}
@@ -177,10 +187,10 @@ function useDemoDataControls(
 		isClearingSharedData: clearSharedData.isPending,
 		isClearingVisitorData: clearVisitorData.isPending,
 		isStrippingTextAnalysis: stripAnalyses.isPending,
-		isAnalyzingText: analyzeText.isPending,
+		isSegmentingText: segmentText.isPending,
 		handleClearVisitorData,
 		handleStripTextAnalysis,
-		handleAnalyzeText,
+		handleSegmentText,
 		handleClearSharedData,
 	};
 }
@@ -228,23 +238,28 @@ function DemoDataCard({
 	isClearingSharedData,
 	isClearingVisitorData,
 	isStrippingTextAnalysis,
-	isAnalyzingText,
+	isSegmentingText,
 	handleClearVisitorData,
 	handleStripTextAnalysis,
-	handleAnalyzeText,
+	handleSegmentText,
 	handleClearSharedData,
 }: {
-	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
+	text?: {
+		textId: TextId;
+		submissionKey: string;
+		sourceText: string;
+		isAnalyzed: boolean;
+	};
 	notice: string | null;
 	error: string | null;
 	isBusy: boolean;
 	isClearingSharedData: boolean;
 	isClearingVisitorData: boolean;
 	isStrippingTextAnalysis: boolean;
-	isAnalyzingText: boolean;
+	isSegmentingText: boolean;
 	handleClearVisitorData(): Promise<void>;
 	handleStripTextAnalysis(): Promise<void>;
-	handleAnalyzeText(): Promise<void>;
+	handleSegmentText(): Promise<void>;
 	handleClearSharedData(): Promise<void>;
 }) {
 	return (
@@ -301,10 +316,12 @@ function DemoDataCard({
 					<Button
 						type="button"
 						disabled={isBusy}
-						onClick={() => void handleAnalyzeText()}
+						onClick={() => void handleSegmentText()}
 					>
 						<BookOpenIcon data-icon="inline-start" />
-						{isAnalyzingText ? "Analyzing…" : "Analyze text"}
+						{isSegmentingText
+							? "Splitting…"
+							: "Split into segments"}
 					</Button>
 				) : null}
 				<ConfirmDialog
@@ -346,8 +363,4 @@ function DemoDataCard({
 
 function mutationMessage(error: unknown): string | null {
 	return error instanceof Error ? error.message : null;
-}
-
-function submissionKeyFor(sourceText: string): string {
-	return `text:v1:${sourceText.trim().normalize("NFC")}`;
 }

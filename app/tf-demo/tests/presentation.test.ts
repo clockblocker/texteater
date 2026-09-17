@@ -15,6 +15,7 @@ import {
 	occurrenceFocus,
 } from "../convex/textViews";
 import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
+import { IndexedTestDb, runTestQuery } from "./support/indexed-db";
 
 const getReadingNoteHandler = queryHandler<{
 	readingId: string;
@@ -25,6 +26,29 @@ const getTextViewHandler = queryHandler<{
 	textId: string;
 	visitorId: string;
 }>(getTextView);
+
+test("a Text view preserves the stored submission identity for re-segmentation", async () => {
+	const view = await runTestQuery(
+		new IndexedTestDb({
+			texts: [
+				{
+					_id: "texts-legacy",
+					_creationTime: 1,
+					submissionKey: "text:legacy-import",
+					sourceText: "Die Banken.",
+				},
+			],
+		}),
+		getTextView,
+		{ textId: "texts-legacy", visitorId: "visitor-1" },
+	);
+
+	expect(view).toMatchObject({
+		textId: "texts-legacy",
+		submissionKey: "text:legacy-import",
+		sourceText: "Die Banken.",
+	});
+});
 
 test("projects Dumling feature values for learner inspection", () => {
 	expect(projectFeatures({ gender: "Fem", hyph: null })).toEqual([

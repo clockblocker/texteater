@@ -181,6 +181,7 @@ function TextDataControls({
 				text
 					? {
 							textId: text.textId,
+							submissionKey: text.submissionKey,
 							sourceText: text.sourceText,
 							isAnalyzed: text.sentences.some(
 								(sentence) => sentence.segments.length > 0,
