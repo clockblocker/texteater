@@ -29,12 +29,15 @@ import {
 	ARM_LABEL_ARMED,
 	ARM_LABEL_COMMITTED,
 	ARM_LABEL_FROM,
+	after,
 	BAR_ENTER,
 	BAR_EXIT,
 	BAR_REM,
 	CARD_WIDTH_REM,
 	CLIP_FADE,
 	CONTEXT_ITEM,
+	CONTEXT_PAGE,
+	contextDelayFor,
 	DRAG_SPRING,
 	expandScaleFor,
 	FLY_DISTANCE,
@@ -43,6 +46,7 @@ import {
 	FLY_ROTATE_TO,
 	FLY_TRAVEL,
 	HEADER_REM,
+	HEADING_EDGE,
 	HOLD_RELEASE,
 	HOLD_SCALE,
 	HOLD_SHRINK,
@@ -55,9 +59,11 @@ import {
 	NOTE_BORDER,
 	OPEN_SCALE,
 	PILE_HEIGHT_REM,
+	SETTLE_TIMEOUT_MS,
 	SHEET_HEADER_REM,
 	TILT_MAX,
 } from "./motion-spec";
+import { useDeckReducedMotion } from "./reduced-motion";
 import { DummyReader, ModelShell, useEventLog } from "./shared";
 
 /**
@@ -159,23 +165,27 @@ const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
 /** The Sheet's box: the Pane inset by these. */
 const SHEET_INSET_X_REM = 1.5;
 const SHEET_INSET_Y_REM = 1;
-/** How many Source Contexts a Card shows, and a Sheet page. */
+/** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
 const CARD_CONTEXTS = 2;
-const CONTEXT_PAGE = 5;
 /** How far the return zone reaches past the Deck's cards. */
 const PILE_PAD = "0.75rem";
 /** Travel before a gesture has a direction at all. */
 const ARM_SLOP = 8;
 /** Travel past which an armed gesture commits on release. */
 const COMMIT = 88;
-/** Velocity, in px/ms, that counts as a throw. */
-const THROW = 1;
+/**
+ * Velocity, in px/ms, that counts as a throw.
+ *
+ * It was 1, which is a hard deliberate flick — roughly a third of the
+ * fastest a hand moves. A Card swiped 60 px at 0.4 px/ms is unmistakably
+ * thrown and used to snap back; the distance threshold (`COMMIT`) was
+ * doing all the work, and a flick was never enough on its own.
+ */
+const THROW = 0.3;
 /** A pointer that rests this long before release has no velocity left. */
 const VELOCITY_STALE_MS = 100;
 /** An armed Card that is held this long relaxes into a plain drag. */
 const HOLD_RELEASE_MS = 650;
-/** A settling animation that has not finished by then is treated as done. */
-const SETTLE_TIMEOUT_MS = 400;
 const CLICK_SLOP = 4;
 const EDGE_BAND = 80;
 /** The remove zone's width, and the gap between it and the Deck. */
@@ -321,6 +331,9 @@ function sheetBoxIn(pane: Box, rem: number): Box {
 /* ---------------------------------------------------------------- model */
 
 export function CompassModel() {
+	/* Every animate() below is imperative, so none of it is reachable by
+	   CSS or by MotionConfig. See `reduced-motion.ts`. */
+	const reduce = useDeckReducedMotion();
 	const { entries, log, clear } = useEventLog();
 	const [selected, setSelected] = useState<string | null>(null);
 	const [deck, setDeck] = useState<readonly DeckCard[]>([]);
@@ -679,8 +692,7 @@ export function CompassModel() {
 		d.arm = null;
 		d.free = true;
 		setPastCommit(false);
-		animate(d.h.rotate, 0, SPRING);
-		animate(d.h.scale, 1, SPRING);
+		settleTransform(d.h);
 		log(`${reason}: plain drag`);
 		setDrag({ ...d });
 	}
@@ -716,12 +728,14 @@ export function CompassModel() {
 		}
 
 		if (d.arm === "remove") {
-			h.rotate.set(leanFor(dx));
+			/* the lean and the swell are decoration on top of a gesture
+			   that already reads in the border and the label */
+			h.rotate.set(reduce ? 0 : leanFor(dx));
 			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
 				release(d, "Held a beat");
 			else if (dx > 12) release(d, "Turned back");
 		} else if (d.arm === "expand") {
-			h.scale.set(expandScaleFor(dy));
+			h.scale.set(reduce ? 1 : expandScaleFor(dy));
 			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
 				release(d, "Held a beat");
 			else if (dy > 12) release(d, "Turned back");
@@ -734,7 +748,7 @@ export function CompassModel() {
 		const overRemove = next?.kind === "remove";
 		if (overRemove !== d.overRemove) {
 			d.overRemove = overRemove;
-			animate(h.rotate, overRemove ? TILT_MAX : 0, SPRING);
+			if (!reduce) animate(h.rotate, overRemove ? TILT_MAX : 0, SPRING);
 		}
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
@@ -753,7 +767,35 @@ export function CompassModel() {
 			setPastCommit(false);
 		});
 	}
+	/**
+	 * Put the Card's decoration back where it rests. Reduced motion takes
+	 * it there at once: the tilt and the swell say nothing the border and
+	 * the label are not already saying.
+	 */
+	function settleTransform(h: NoteHandle) {
+		if (reduce) {
+			h.rotate.jump(0);
+			h.scale.jump(1);
+			return;
+		}
+		animate(h.rotate, 0, SPRING);
+		animate(h.scale, 1, SPRING);
+	}
 	function snapBack(h: NoteHandle) {
+		if (reduce) {
+			for (const [value, rest] of [
+				[h.x, 0],
+				[h.y, 0],
+				[h.rotate, 0],
+				[h.scale, 1],
+			] as const)
+				value.jump(rest);
+			settle(
+				() => Promise.resolve(),
+				() => {},
+			);
+			return;
+		}
 		settle(
 			() =>
 				Promise.all([
@@ -765,19 +807,29 @@ export function CompassModel() {
 			() => {},
 		);
 	}
+	/**
+	 * Reduced motion keeps the fade and drops the 720 px of travel: the
+	 * Card still visibly leaves, it just does not fly across the page.
+	 */
 	function flyAway(d: Drag, reason: string) {
 		const { h } = d;
 		settle(
 			() =>
-				Promise.all([
-					animate(
-						h.x,
-						h.x.get() - FLY_DISTANCE,
-						motionOf(FLY_TRAVEL),
-					),
-					animate(h.rotate, FLY_ROTATE_TO, motionOf(FLY_ROTATE)),
-					animate(h.opacity, 0, motionOf(FLY_FADE)),
-				]),
+				reduce
+					? Promise.all([animate(h.opacity, 0, motionOf(FLY_FADE))])
+					: Promise.all([
+							animate(
+								h.x,
+								h.x.get() - FLY_DISTANCE,
+								motionOf(FLY_TRAVEL),
+							),
+							animate(
+								h.rotate,
+								FLY_ROTATE_TO,
+								motionOf(FLY_ROTATE),
+							),
+							animate(h.opacity, 0, motionOf(FLY_FADE)),
+						]),
 			() => removeCard(d.card, reason),
 		);
 	}
@@ -793,8 +845,13 @@ export function CompassModel() {
 		h.top.jump(h.top.get() + h.y.get());
 		h.x.jump(0);
 		h.y.jump(0);
-		animate(h.rotate, 0, MORPH);
-		animate(h.scale, 1, MORPH);
+		if (reduce) {
+			h.rotate.jump(0);
+			h.scale.jump(1);
+		} else {
+			animate(h.rotate, 0, MORPH);
+			animate(h.scale, 1, MORPH);
+		}
 		dragRef.current = null;
 		setDrag(null);
 		setDestination(null);
@@ -1299,6 +1356,7 @@ function NoteView({
 	onHoldLift: (lift: Lift) => void;
 	onFollow: (link: NoteLink) => void;
 }) {
+	const reduce = useDeckReducedMotion();
 	const left = useMotionValue(box.left);
 	const top = useMotionValue(box.top);
 	const width = useMotionValue(box.width);
@@ -1328,6 +1386,26 @@ function NoteView({
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
 	const shownScale = useTransform(() => scale.get() * restScale);
+	/**
+	 * The box's origin travels as a transform, not as `left`/`top`.
+	 *
+	 * `left` and `top` are still the spring's values and still mean "where
+	 * the model put this Note" — `growFromHand` folds the drag into them,
+	 * and nothing about that changes. What changes is how they reach the
+	 * DOM: as part of the transform, which composites, rather than as box
+	 * offsets, which lay out. Two of the four properties on MORPH leave the
+	 * layout path this way; `width` and `height` have to stay, because a
+	 * Note genuinely reflows its text between a Card and a Sheet.
+	 *
+	 * The drag offset rides along here rather than in its own `x`/`y`: one
+	 * translate, composed from both, so the two cannot fight over it. The
+	 * order the browser applies the transform in leaves `rotate` and
+	 * `scale` turning about the element's own `transform-origin` exactly as
+	 * they did when the box was positioned, so the hold's pressed-corner
+	 * origin is unaffected.
+	 */
+	const shownX = useTransform(() => left.get() + x.get());
+	const shownY = useTransform(() => top.get() + y.get());
 	const [holding, setHolding] = useState(false);
 	const [origin, setOrigin] = useState("50% 50%");
 	const section = useRef<HTMLElement>(null);
@@ -1343,6 +1421,13 @@ function NoteView({
 
 	/* the box: animate to wherever the model puts the Note now */
 	useEffect(() => {
+		if (reduce) {
+			left.jump(box.left);
+			top.jump(box.top);
+			width.jump(box.width);
+			height.jump(box.height);
+			return;
+		}
 		const controls = [
 			animate(left, box.left, MORPH),
 			animate(top, box.top, MORPH),
@@ -1352,18 +1437,34 @@ function NoteView({
 		return () => {
 			for (const control of controls) control.stop();
 		};
-	}, [box.left, box.top, box.width, box.height, left, top, width, height]);
+	}, [
+		box.left,
+		box.top,
+		box.width,
+		box.height,
+		left,
+		top,
+		width,
+		height,
+		reduce,
+	]);
 
-	/* the hold on a Sheet margin: shrink toward the finger, then lift */
+	/* the hold on a Sheet margin: shrink toward the finger, then lift.
+	   Reduced motion keeps the hold — the border still turns — without the
+	   shrink, which is the only part of it that moves. */
 	useEffect(() => {
 		if (held) return;
+		if (reduce) {
+			scale.jump(1);
+			return;
+		}
 		const controls = animate(
 			scale,
 			holding ? HOLD_SCALE : 1,
 			motionOf(holding ? HOLD_SHRINK : HOLD_RELEASE),
 		);
 		return () => controls.stop();
-	}, [holding, held, scale]);
+	}, [holding, held, scale, reduce]);
 
 	function marginDown(event: ReactPointerEvent<HTMLElement>) {
 		if (event.button !== 0 || hold.current) return;
@@ -1421,6 +1522,21 @@ function NoteView({
 
 	const sheet = form === "sheet";
 	const below = place === "below" && !sheet;
+	/**
+	 * Which transition the Heading and the Blocks ride when they swap ends.
+	 *
+	 * A change of form is a morph: the Heading's height springs on `MORPH`
+	 * at the same moment, so its position has to travel with it or the two
+	 * come apart. A deck tap changes only which edge the Heading sits at —
+	 * no height moves at all — so that is a quick slide, not a half-second
+	 * spring for a Card that has otherwise already arrived.
+	 */
+	const previousForm = useRef(form);
+	const morphing = previousForm.current !== form;
+	useEffect(() => {
+		previousForm.current = form;
+	}, [form]);
+	const positionSpec = morphing ? MORPH : motionOf(HEADING_EDGE);
 	const borderColor =
 		arm === "remove"
 			? "var(--destructive)"
@@ -1445,12 +1561,13 @@ function NoteView({
 			animate={{ borderColor }}
 			transition={motionOf(NOTE_BORDER)}
 			style={{
-				left,
-				top,
+				/* the origin is the transform's; see `shownX` above */
+				left: 0,
+				top: 0,
 				width,
 				height,
-				x,
-				y,
+				x: shownX,
+				y: shownY,
 				rotate,
 				scale: shownScale,
 				opacity,
@@ -1458,7 +1575,9 @@ function NoteView({
 				transformOrigin: held ? "50% 100%" : origin,
 			}}
 			onPointerDown={down}
-			className={`pointer-events-auto absolute flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper select-none ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
+			/* `contain` stops the width/height spring's recalc at this Note
+			   rather than letting it walk the deck */
+			className={`pointer-events-auto absolute flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper [contain:layout_paint] select-none ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
 		>
 			{/* the content column: one width in every form, centred in a wide box */}
 			<div
@@ -1470,9 +1589,16 @@ function NoteView({
 					form={form}
 					atBottom={below}
 					layout={!held}
+					positionSpec={positionSpec}
 				/>
-				<div
+				{/* the Blocks travel with the Heading: the row it vacates is
+				    the row they take, so bridging one without the other
+				    trades a jump for a slide against a jump */}
+				<motion.div
 					data-scroller=""
+					layout={held ? false : "position"}
+					layoutDependency={`${form}:${below.toString()}`}
+					transition={{ layout: positionSpec }}
 					className={`relative order-1 min-h-0 flex-1 ${sheet ? "overflow-y-auto" : "overflow-hidden"}`}
 				>
 					<div
@@ -1490,7 +1616,7 @@ function NoteView({
 						transition={motionOf(CLIP_FADE)}
 						className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-gradient-to-t from-paper to-transparent"
 					/>
-				</div>
+				</motion.div>
 			</div>
 			{/* a Sheet's own margins: hold one to lift the Sheet as a Card */}
 			{sheet && !covered
@@ -1549,11 +1675,14 @@ function HeadingBlock({
 	form,
 	atBottom,
 	layout,
+	positionSpec,
 }: {
 	note: DummyNote;
 	form: NoteForm;
 	atBottom: boolean;
 	layout: boolean;
+	/** What the row's position rides; see `positionSpec` in `NoteView`. */
+	positionSpec: ReturnType<typeof motionOf>;
 }) {
 	const sheet = form === "sheet";
 	const rem = remPx();
@@ -1570,8 +1699,11 @@ function HeadingBlock({
 			 */
 			initial={false}
 			layout={layout ? "position" : false}
-			layoutDependency={form}
-			transition={MORPH}
+			/* the edge belongs here too: without it a deck tap changes
+			   `atBottom` without Motion ever re-measuring, and the row is
+			   put at its new edge instead of going there */
+			layoutDependency={`${form}:${atBottom.toString()}`}
+			transition={{ ...MORPH, layout: positionSpec }}
 			animate={{ height: (sheet ? SHEET_HEADER_REM : HEADER_REM) * rem }}
 			style={{ order: atBottom ? 2 : 0 }}
 			className={`relative flex w-full shrink-0 items-end gap-4 px-4 ${sheet ? "cursor-grab touch-none active:cursor-grabbing" : ""} ${atBottom ? "" : "pb-2"}`}
@@ -1620,6 +1752,19 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 	const visible = note.contexts.slice(0, sheet ? shown : CARD_CONTEXTS);
 	const more = note.contexts.length - visible.length;
 	const word = cleanWord(note.word);
+	/**
+	 * Where the arriving group starts, so the stagger counts from the first
+	 * item that is actually new rather than from the top of the list.
+	 *
+	 * Counting from the absolute index would put the whole second page at
+	 * the cap — five items, all 200 ms late, all together, which is the
+	 * flat arrival this is here to break up.
+	 */
+	const settled = useRef(visible.length);
+	const arrivingFrom = settled.current;
+	useEffect(() => {
+		settled.current = visible.length;
+	}, [visible.length]);
 	return (
 		<div data-block="contexts" className="flex flex-col gap-1">
 			<div className="flex items-baseline justify-between font-mono text-[0.58rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
@@ -1628,13 +1773,27 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 			</div>
 			<ul className="flex flex-col gap-0.5 text-[0.8rem] leading-relaxed text-ink-soft">
 				<AnimatePresence initial={false}>
-					{visible.map((line) => (
+					{visible.map((line, index) => (
 						<motion.li
 							key={line}
 							initial={{ opacity: 0, height: 0 }}
-							animate={{ opacity: 1, height: "auto" }}
-							exit={{ opacity: 0, height: 0 }}
-							transition={motionOf(CONTEXT_ITEM)}
+							/* the stagger is on the way in only: a group
+							   arrives one after another, and leaves at once */
+							animate={{
+								opacity: 1,
+								height: "auto",
+								transition: motionOf(
+									after(
+										CONTEXT_ITEM,
+										contextDelayFor(index - arrivingFrom),
+									),
+								),
+							}}
+							exit={{
+								opacity: 0,
+								height: 0,
+								transition: motionOf(CONTEXT_ITEM),
+							}}
 							className="overflow-hidden"
 						>
 							{highlight(line, word)}

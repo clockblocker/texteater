@@ -34,10 +34,36 @@
 /* ---------------------------------------------------------------- kinds */
 
 /**
- * Motion's named tween easings. `motionOf` passes the name through
- * verbatim; the workbench maps it to the matching cubic bézier.
+ * A tween's curve: one of Motion's named easings, or a cubic bézier given
+ * outright. `motionOf` passes either through verbatim — Motion takes a
+ * four-number array as `ease` — and the workbench solves the same four
+ * numbers with `cubicBezier`.
+ *
+ * Prefer a bézier. Motion's named curves are the browser's built-ins, and
+ * those are too weak to read as deliberate: `easeOut` is
+ * `cubic-bezier(0, 0, 0.58, 1)`, which barely leans. The named ones are
+ * kept for `linear`, and for comparing against a built-in on purpose.
  */
-export type Ease = "linear" | "easeIn" | "easeOut" | "easeInOut";
+export type Bezier = readonly [number, number, number, number];
+export type Ease = "linear" | "easeIn" | "easeOut" | "easeInOut" | Bezier;
+
+/**
+ * The curves this playground animates on.
+ *
+ * `EASE_OUT` is the default and the one to reach for: almost everything
+ * here enters or leaves, and a curve that starts fast spends its slow half
+ * where nobody is looking. `EASE_IN_OUT` is for something that moves from
+ * one place on screen to another — nothing does yet; the springs carry
+ * that. `EASE_COLOUR` is the browser's own `ease`, which is what a colour
+ * change wants.
+ */
+export function isBezier(ease: Ease): ease is Bezier {
+	return typeof ease !== "string";
+}
+
+export const EASE_OUT: Bezier = [0.23, 1, 0.32, 1];
+export const EASE_IN_OUT: Bezier = [0.77, 0, 0.175, 1];
+export const EASE_COLOUR: Bezier = [0.25, 0.1, 0.25, 1];
 
 export type Tween = {
 	readonly kind: "tween";
@@ -57,15 +83,13 @@ export type Spring = {
 export type Spec = Tween | Spring;
 
 /**
- * A tween. The default easing is `easeInOut` because that is what Motion
- * itself uses for a `{ duration }` transition with no `ease` — declaring
- * it keeps the spec honest rather than leaning on that default.
+ * A tween. The default is `EASE_OUT`, because every tween in this file
+ * enters or leaves and none of them moves across the screen. It used to be
+ * Motion's own `easeInOut` default, which put a slow start on nine
+ * animations that wanted a fast one — the first half of
+ * `cubic-bezier(0.42, 0, 0.58, 1)` is an ease-in.
  */
-export function tween(
-	ms: number,
-	ease: Ease = "easeInOut",
-	delayMs = 0,
-): Tween {
+export function tween(ms: number, ease: Ease = EASE_OUT, delayMs = 0): Tween {
 	return { kind: "tween", ms, ease, delayMs };
 }
 
@@ -83,7 +107,11 @@ export function motionOf(spec: Spec) {
 			} as const)
 		: ({
 				duration: spec.ms / 1000,
-				ease: spec.ease,
+				/* Motion mutates nothing, but its type wants a plain
+				   four-tuple rather than our readonly one */
+				ease: isBezier(spec.ease)
+					? ([...spec.ease] as [number, number, number, number])
+					: spec.ease,
 				...(spec.delayMs > 0 ? { delay: spec.delayMs / 1000 } : {}),
 			} as const);
 }
@@ -135,8 +163,30 @@ export const MORPH = spring(380, 38);
 /**
  * The drag spring: what a Held Card settles on when it snaps back, and
  * what the remove tilt rides.
+ *
+ * Damping 36 puts it at ζ ≈ 0.79 — a bounce of about 0.21, inside the
+ * 0.1–0.3 a release wants. At 42 it was ζ ≈ 0.92, which absorbed a throw
+ * so completely that the peak overshoot was 0.1 %: a Card let go at speed
+ * arrived exactly as dead as one placed. A release is the one gesture
+ * where bounce belongs, and this is the spring that plays it.
  */
-export const DRAG_SPRING = spring(520, 42);
+export const DRAG_SPRING = spring(520, 36);
+
+/**
+ * How long the prototype waits for a settling animation before it treats
+ * the gesture as over and tears the drag state down.
+ *
+ * This is a ceiling on `DRAG_SPRING`, and the reason it lives here rather
+ * than in `drag-deck.tsx`: a spring softer than `DRAG_SPRING` can outlast
+ * it, and then the deck cuts the motion off mid-flight. The workbench
+ * reads it so tuning the spring past this point says so out loud instead
+ * of looking fine on the stage and failing in the deck.
+ *
+ * `DRAG_SPRING` settles at 368 ms from rest and 379 ms after a hard flick,
+ * so this leaves about 70 ms of margin. It was 400, which the softer
+ * damping would have left almost nothing of.
+ */
+export const SETTLE_TIMEOUT_MS = 450;
 
 /* --------------------------------------------------------- note tweens */
 
@@ -147,10 +197,25 @@ export const DRAG_SPRING = spring(520, 42);
  * because there is no animation in it.
  */
 
-/** The Note's border colour following its arm state. */
-export const NOTE_BORDER = tween(160);
+/** The Note's border colour following its arm state: a colour, so `ease`. */
+export const NOTE_BORDER = tween(160, EASE_COLOUR);
 /** The Card's clip gradient; a Sheet lifts it. */
 export const CLIP_FADE = tween(200);
+
+/**
+ * The Heading sliding to its other edge on a deck tap.
+ *
+ * A tap rearranges the deck at once — no pulse, and the open Card's size
+ * is handed over on the frame (`OPEN_SCALE`, a state rather than a move).
+ * The Heading is the exception: which edge it sits at is where it *is*,
+ * and put rather than slid it crosses a whole Card in one frame. That is
+ * the jarring change motion exists to prevent, and at a tap's frequency
+ * 140 ms is the whole of what it costs.
+ *
+ * A change of form is not this: that is a morph, and it rides `MORPH` with
+ * the rest of the box.
+ */
+export const HEADING_EDGE = tween(140);
 
 /** The Heading's kind label, shown in Sheet form only. */
 export const KIND_LABEL = tween(160);
@@ -161,17 +226,60 @@ export const KIND_LABEL_Y = 4;
  * One Source Context unfolding. See the note at the top of this file: the
  * prototype animates this height to `auto`, so only the duration and curve
  * are shared.
+ *
+ * Height is a layout property and there is no way around it here: an
+ * unfolding list has to push what is under it down, so `clip-path` would
+ * composite beautifully and leave the Body where it was. The rule against
+ * animating layout gives way to the thing the animation is for.
  */
 export const CONTEXT_ITEM = tween(160);
 
+/** How many Source Contexts arrive at once when a Sheet loads a page. */
+export const CONTEXT_PAGE = 5;
+
+/**
+ * The beat between one arriving Source Context and the next.
+ *
+ * They used to arrive on identical timing, which is a group landing as one
+ * flat event rather than as a group. 50 ms is the middle of the 30–80 ms a
+ * stagger wants: under 30 it is indistinguishable from simultaneous, over
+ * 80 the last item feels late.
+ *
+ * The cap is what keeps a long page from becoming a cascade. At 50 ms the
+ * fifth item starts at 200 ms and is done at 360 ms, and nothing may start
+ * later than that however many arrive — a stagger is decoration, and
+ * decoration does not get to run the clock.
+ */
+export const CONTEXT_STAGGER = 50;
+export const CONTEXT_STAGGER_MAX = 200;
+
+/** How long the `nth` arriving Source Context waits its turn, in ms. */
+export function contextDelayFor(nth: number): number {
+	return Math.min(CONTEXT_STAGGER_MAX, Math.max(0, nth) * CONTEXT_STAGGER);
+}
+
+/** `spec` with `delayMs` replaced: the same tween, waiting its turn. */
+export function after(spec: Tween, delayMs: number): Tween {
+	return { ...spec, delayMs };
+}
+
 /** The Pane bar: Sheet chrome, arriving after the box and leaving first. */
-export const BAR_ENTER = tween(160, "easeInOut", 180);
+export const BAR_ENTER = tween(160, EASE_OUT, 180);
 export const BAR_EXIT = tween(100);
 
 /* --------------------------------------------------------- drag tweens */
 
-/** A committed Remove: the Card leaves to the left and fades as it turns. */
-export const FLY_TRAVEL = tween(220, "easeIn");
+/**
+ * A committed Remove: the Card leaves to the left and fades as it turns.
+ *
+ * The travel used to be an `easeIn`, on the reading that a thing thrown
+ * away accelerates. What it actually did was stop the Card dead at the
+ * frame the finger let go — the gesture that commits a Remove is a flick,
+ * so the Card is already moving fast when this starts, and a slow start
+ * throws that away. See the note on `flyAway` in `drag-deck.tsx`: the
+ * flick's measured velocity still is not handed on.
+ */
+export const FLY_TRAVEL = tween(220);
 export const FLY_ROTATE = tween(220);
 export const FLY_FADE = tween(220);
 /** How far left it goes, px, and the angle it turns to on the way out. */

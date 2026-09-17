@@ -16,6 +16,7 @@ import {
 	type Params,
 	progressOf,
 	type SpringSpec,
+	settleCaveat,
 	springAt,
 	springLength,
 	springSettle,
@@ -39,9 +40,23 @@ import { mix, type Scene, type SceneGroup, scene } from "../scene";
 
 const NOTE = deckFor("noch")[0];
 
-/** The drag spring: `SPRING` in drag-deck.tsx, from the knobs. */
-function springOf(params: Params): SpringSpec {
-	return { stiffness: params.stiffness, damping: params.damping };
+/**
+ * The drag spring: `SPRING` in drag-deck.tsx, from the knobs.
+ *
+ * `travel` is how far the value has to go, in px. It is here because a
+ * spring's initial velocity is in units of that travel per second, and the
+ * knob is in px/ms — the units the deck itself measures a throw in
+ * (`THROW` in drag-deck.tsx). Pass 0 for a spring that starts from rest,
+ * which is what everything but a release does.
+ */
+function springOf(params: Params, travel = 0): SpringSpec {
+	const velocity =
+		travel === 0 ? 0 : -(params.velocity * 1000) / Math.abs(travel);
+	return {
+		stiffness: params.stiffness,
+		damping: params.damping,
+		...(velocity === 0 ? {} : { velocity }),
+	};
 }
 
 /**
@@ -49,16 +64,24 @@ function springOf(params: Params): SpringSpec {
  * Motion snaps a value to its target when it comes to rest. A spring the
  * preview cut short is never pinned: its last frame is wherever it was.
  */
-function springProgress(t: number, params: Params): number {
-	const spec = springOf(params);
+function springProgress(t: number, spec: SpringSpec): number {
 	const settle = springSettle(spec);
 	return settle.settled && t >= settle.ms ? 1 : springAt(t, spec);
 }
 
-function springCaveat(params: Params): string | null {
-	return springSettle(springOf(params)).settled
-		? null
-		: "Cut short at 5 s: this spring has not settled. The last frame is not its rest.";
+const CUT_SHORT =
+	"Cut short at 5 s: this spring has not settled. The last frame is not its rest.";
+
+/**
+ * `bounded` is for the one spring the deck puts a clock on: `snapBack`
+ * runs inside `settle()` in drag-deck.tsx, which gives up after
+ * `SETTLE_TIMEOUT_MS`. The remove tilt rides the same spring mid-drag with
+ * nothing waiting on it, so it has no such ceiling.
+ */
+function springCaveat(spec: SpringSpec, bounded = false): string | null {
+	const settle = springSettle(spec);
+	if (!settle.settled) return CUT_SHORT;
+	return bounded ? settleCaveat(settle.ms) : null;
 }
 
 type Label = {
@@ -101,17 +124,23 @@ const REMOVE: Label = {
 
 /** Where a free drag was let go: past the pile, up and to the right. */
 const DROP = { x: 140, y: -60 };
+/**
+ * How far the ghost has to travel home. The release velocity points back
+ * along this vector, so both axes carry the same velocity per unit of
+ * their own travel and one spring serves for both.
+ */
+const DROP_TRAVEL = Math.hypot(DROP.x, DROP.y);
 
 const snapBack: GhostScene = {
 	key: "snap-back",
 	title: "Snap back",
 	source: "drag-deck.tsx · snapBack · SPRING",
 	where: "playground",
-	knobs: ["stiffness", "damping"],
-	length: (params) => springLength(springOf(params)),
-	caveat: springCaveat,
+	knobs: ["stiffness", "damping", "velocity"],
+	length: (params) => springLength(springOf(params, DROP_TRAVEL)),
+	caveat: (params) => springCaveat(springOf(params, DROP_TRAVEL), true),
 	frame: (t, params) => {
-		const p = springProgress(t, params);
+		const p = springProgress(t, springOf(params, DROP_TRAVEL));
 		return {
 			...REST,
 			x: mix(DROP.x, 0, p),
@@ -129,14 +158,15 @@ const tilt: GhostScene = {
 	title: "Tilt over remove",
 	source: "drag-deck.tsx · frameMove · overRemove",
 	where: "playground",
+	/* the zone is crossed mid-drag, not released into: no velocity knob */
 	knobs: ["stiffness", "damping"],
 	length: (params) => springLength(springOf(params)),
-	caveat: springCaveat,
+	caveat: (params) => springCaveat(springOf(params)),
 	frame: (t, params) => ({
 		...REST,
 		x: OVER_REMOVE.x,
 		y: OVER_REMOVE.y,
-		rotate: mix(0, TILT_MAX, springProgress(t, params)),
+		rotate: mix(0, TILT_MAX, springProgress(t, springOf(params))),
 		border: "link",
 	}),
 };

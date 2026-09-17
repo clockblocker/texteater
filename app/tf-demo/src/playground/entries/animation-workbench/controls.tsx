@@ -198,7 +198,7 @@ export function Knob({
 				}}
 				className={`w-[3.4rem] shrink-0 rounded-[0.25rem] border border-line bg-canvas px-1 py-0.5 text-end ${VALUE}`}
 			/>
-			<span className="w-4 shrink-0 font-mono text-[0.62rem] text-ink-faint">
+			<span className="w-9 shrink-0 font-mono text-[0.62rem] text-ink-faint">
 				{unit ?? ""}
 			</span>
 			<Reset

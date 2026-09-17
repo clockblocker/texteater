@@ -103,9 +103,14 @@ describe("deriveKeyframes", () => {
 		expect(
 			last?.hits.filter((h) => h.event === "stop").map((h) => h.path),
 		).toContain("box.left");
-		/* the delayed Pane bar keeps its own start and settle */
+		/* The delayed Pane bar keeps its own start and settle. It moves on
+		   the frame its 180 ms delay is up, and is visually done at 311,
+		   well inside its 340 ms span: that is `EASE_OUT` spending its
+		   budget where the eye is, which the old `easeInOut` did not —
+		   under that curve the bar did not stir until 183 and was still
+		   arriving at 337. */
 		const bar = keys.filter((k) => k.hits.some((h) => h.path === "bar"));
-		expect(bar.map((k) => Math.round(k.at))).toEqual([183, 337]);
+		expect(bar.map((k) => Math.round(k.at))).toEqual([180, 311]);
 	});
 
 	test("a still frame has only its start and end", () => {
