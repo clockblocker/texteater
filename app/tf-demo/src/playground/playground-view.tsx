@@ -62,7 +62,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Animation workbench",
 		icon: ClapperboardIcon,
 		description:
-			"Every animation in use, main app and playground, on one scrubbable clock: the deck tap, the drag ghost, Sheet and Dialog, reading text, and the chrome. Pause, step a frame, replay, and turn the knobs on the frozen frame.",
+			"Every animation in use, on one millisecond axis. Open one to see it alone, scrub it, and turn its knobs.",
 		render: (route) => <AnimationWorkbench route={route} />,
 	},
 	{

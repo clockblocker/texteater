@@ -1,25 +1,32 @@
-import { MORPH } from "../deck-models/morph";
-import type { SwapEase, SwapSpec } from "../deck-models/swap-pulse";
+import {
+	type Ease,
+	HEADER_REM,
+	MORPH,
+	PILE_HEIGHT_REM,
+	type Spec,
+	spanOf,
+} from "../deck-models/motion-spec";
 
 /**
  * ANIMATION WORKBENCH — the deterministic core.
  *
- * Nothing here knows about React or the DOM. A move is a pair of open Card
- * indices; the Swap variant is a pure function from (move, time, spec,
- * layout) to the geometry of every Card. Playback, scrubbing and frame
- * stepping all call that one function with a different `t`, so they
- * cannot disagree.
+ * Nothing here knows about React or the DOM. A scene is a pure function
+ * of time, so playback, scrubbing and frame stepping all call that one
+ * function with a different `t` and cannot disagree.
  *
- * The clock only owns time. Durations, pulse shape and spring response are
- * parameters of the calculation, so a parameter change re-evaluates the
- * frozen frame in place.
+ * The clock only owns time. Durations and spring response are parameters
+ * of the calculation, so a parameter change re-evaluates the frozen frame
+ * in place. The deck's Swap is the one entry with no time in it at all:
+ * its `Frame` below is a function of which Card is open.
  */
 
 /* --------------------------------------------------------------- layout */
 
-/** The deck column and its Heading row, as Compass ships them. */
-export const PILE_REM = 30;
-export const HEADER_REM = 2.75;
+/**
+ * The deck column and its Heading row come from `deck-models/motion-spec`,
+ * so this stage is laid out with the numbers the live deck uses.
+ */
+export { HEADER_REM, PILE_HEIGHT_REM };
 
 export type Layout = {
 	readonly count: number;
@@ -34,13 +41,14 @@ export type Layout = {
 
 export function layoutFor(count: number, px: number): Layout {
 	const header = HEADER_REM * px;
-	const card = (PILE_REM - (Math.max(1, count) - 1) * HEADER_REM) * px;
+	const card =
+		(PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * px;
 	return { count, px, header, card, body: card - header };
 }
 
 /* --------------------------------------------------------------- params */
 
-/** The knobs the scene tabs read. Swap has its own: `SwapSpec`. */
+/** The knobs the scene tabs read. Swap has none: nothing in it moves. */
 export type Params = {
 	/** A scene's main tween, in ms. */
 	readonly duration: number;
@@ -59,11 +67,6 @@ export const DEFAULT_PARAMS: Params = {
 
 export function clamp01(value: number): number {
 	return value < 0 ? 0 : value > 1 ? 1 : value;
-}
-
-export function easeOut(p: number): number {
-	const x = clamp01(p);
-	return 1 - (1 - x) ** 3;
 }
 
 /* --------------------------------------------------- browser curves */
@@ -109,14 +112,6 @@ export const TW_EASE_IN_OUT = cubicBezier(0.4, 0, 0.2, 1);
 export const MOTION_EASE_IN = cubicBezier(0.42, 0, 1, 1);
 export const MOTION_EASE_OUT = cubicBezier(0, 0, 0.58, 1);
 export const MOTION_EASE_IN_OUT = cubicBezier(0.42, 0, 0.58, 1);
-
-/** Motion's named easings, as the workbench models them. */
-export const SWAP_EASE: Record<SwapEase, (p: number) => number> = {
-	linear: clamp01,
-	easeIn: MOTION_EASE_IN,
-	easeOut: MOTION_EASE_OUT,
-	easeInOut: MOTION_EASE_IN_OUT,
-};
 
 export type SpringSpec = {
 	readonly stiffness: number;
@@ -209,20 +204,79 @@ export function springLength(spec: SpringSpec): number {
 	return springSettle(spec).ms;
 }
 
+/* ----------------------------------------------------- shared specs */
+
+/**
+ * A spec from `deck-models/motion-spec` is data: a duration and a named
+ * curve, or a spring's response. These three turn one into the numbers a
+ * scene needs, so a scene never restates a duration, a delay or an easing
+ * the prototype already declares.
+ */
+
+const CURVE: Record<Ease, (p: number) => number> = {
+	linear: clamp01,
+	easeIn: MOTION_EASE_IN,
+	easeOut: MOTION_EASE_OUT,
+	easeInOut: MOTION_EASE_IN_OUT,
+};
+
+/** The cubic bézier behind one of Motion's easing names. */
+export function curveOf(ease: Ease): (p: number) => number {
+	return CURVE[ease];
+}
+
+/**
+ * The spec's whole timeline, in ms: a tween's delay plus its duration, or
+ * how long the spring takes to come to rest.
+ */
+export function lengthOf(spec: Spec): number {
+	return spec.kind === "tween" ? spanOf(spec) : springLength(spec);
+}
+
+/**
+ * How far along `spec` is at `t`, from 0 to 1. A tween waits out its
+ * delay, then runs its curve; a spring is pinned to 1 once it settles, the
+ * way Motion snaps a value to its target at rest. A spring the preview cut
+ * short is never pinned: its last frame is wherever it had got to.
+ *
+ * `from` shifts the whole spec later on the timeline, for a scene that
+ * plays one move after another.
+ */
+export function progressOf(spec: Spec, t: number, from = 0): number {
+	if (spec.kind === "tween")
+		return segmentAt(t, from + spec.delayMs, spec.ms, CURVE[spec.ease]);
+	const settle = springSettle(spec);
+	const elapsed = t - from;
+	if (elapsed <= 0) return 0;
+	return settle.settled && elapsed >= settle.ms
+		? 1
+		: springAt(elapsed, spec);
+}
+
+/**
+ * The eased progress of one segment that starts at `from` ms and runs
+ * `duration` ms: 0 before it, 1 after it. `scene.ts` re-exports this as
+ * `segment`, which is what scenes call it.
+ */
+export function segmentAt(
+	t: number,
+	from: number,
+	duration: number,
+	easing: (p: number) => number,
+): number {
+	if (duration <= 0) return t >= from ? 1 : 0;
+	return easing(clamp01((t - from) / duration));
+}
+
 /* ---------------------------------------------------------------- morph */
 
 /** The spring a Note's box and Heading ride between forms: `MORPH`. */
-export const MORPH_SPEC: SpringSpec = {
-	stiffness: MORPH.stiffness,
-	damping: MORPH.damping,
-};
+export const MORPH_SPEC: SpringSpec = MORPH;
 const MORPH_SETTLE = springSettle(MORPH_SPEC);
 
 /** The MORPH spring's progress at `t`, pinned to 1 once it has settled. */
 export function morphProgress(t: number): number {
-	return MORPH_SETTLE.settled && t >= MORPH_SETTLE.ms
-		? 1
-		: springAt(t, MORPH_SPEC);
+	return progressOf(MORPH, t);
 }
 
 /** How long MORPH takes to settle, in ms. */
@@ -232,113 +286,23 @@ export const MORPH_CAVEAT: string | null = MORPH_SETTLE.settled
 	? null
 	: "Cut short at 5 s: the MORPH spring has not settled.";
 
-/* ----------------------------------------------------------------- move */
-
-export type Move = {
-	/** The Card that was open before the tap. */
-	readonly from: number;
-	/** The Card that was tapped. */
-	readonly to: number;
-	/**
-	 * When the tap landed mid-flight: the frame on screen at that instant.
-	 * The variant plays its own choreography from `from`; the difference
-	 * between this seed and the variant's own first frame is faded out over
-	 * the move, so nothing jumps and the choreography is preserved.
-	 */
-	readonly seed?: Frame;
-};
-
-export function rest(open: number): Move {
-	return { from: open, to: open };
-}
-
-/** The whole timeline of a move, in ms. */
-export function moveLength(move: Move, spec: SwapSpec): number {
-	if (move.from === move.to && !move.seed) return 0;
-	/* the pulse, and the Heading that travels to the other edge on MORPH */
-	return Math.max(spec.duration, MORPH_MS);
-}
-
-/** The move's raw progress at `t`. */
-export function progress(t: number, spec: SwapSpec): number {
-	return clamp01(t / spec.duration);
-}
+/* ----------------------------------------------------------------- deck */
 
 /**
- * What a tap on `index` does to the move in flight (or at rest), given the
- * frame on screen. A tap on the Card already in front is redundant and
- * leaves the current pulse alone, whether it is playing or paused: it
- * must never collapse the timeline. A tap elsewhere mid-flight retargets
- * from the seed frame; at rest it starts clean.
+ * One Card's place in the deck. There is no time in here: a tap rearranges
+ * the deck at once, so a frame is a function of which Card is open and
+ * nothing else.
  */
-export function tapMove(
-	move: Move,
-	index: number,
-	inFlight: boolean,
-	onScreen: Frame,
-): Move | null {
-	if (index === move.to) return null;
-	return inFlight
-		? { from: move.to, to: index, seed: onScreen }
-		: { from: move.to, to: index };
-}
-
-/* ---------------------------------------------------------------- frame */
-
 export type CardFrame = {
 	readonly y: number;
 	readonly height: number;
 	readonly z: number;
+	/** The open Card rests larger than the rest: `OPEN_SCALE`. */
 	readonly scale: number;
-	/** Where the Heading row sits inside the Card. */
+	/** Which edge the Heading row sits at inside the Card. */
 	readonly headerAt: "top" | "bottom";
-	/**
-	 * The Heading's offset from that edge, px: a Heading that has just
-	 * changed edges is still travelling there on MORPH.
-	 */
-	readonly headerY: number;
 };
 
 export type Frame = {
 	readonly cards: readonly CardFrame[];
 };
-
-export type Variant = (
-	move: Move,
-	t: number,
-	spec: SwapSpec,
-	layout: Layout,
-) => Frame;
-
-/* ------------------------------------------------------------- retarget */
-
-const NUMERIC_KEYS = ["y", "height", "scale", "headerY"] as const;
-
-/**
- * Wrap a variant so a mid-flight tap starts from what is on screen. The
- * offset between the seed and the variant's own first frame is faded with
- * an ease-out over the whole timeline.
- */
-export function withSeed(variant: Variant): Variant {
-	return (move, t, spec, layout) => {
-		const frame = variant(move, t, spec, layout);
-		if (!move.seed) return frame;
-		const first = variant(move, 0, spec, layout);
-		const length = moveLength(move, spec);
-		const keep = 1 - easeOut(length > 0 ? t / length : 1);
-		if (keep <= 0) return frame;
-		const seed = move.seed;
-		const cards = frame.cards.map((card, index) => {
-			const was = seed.cards[index];
-			const base = first.cards[index];
-			if (!was || !base) return card;
-			const next = { ...card };
-			for (const key of NUMERIC_KEYS) {
-				(next as Record<typeof key, number>)[key] =
-					card[key] + (was[key] - base[key]) * keep;
-			}
-			return next;
-		});
-		return { cards };
-	};
-}

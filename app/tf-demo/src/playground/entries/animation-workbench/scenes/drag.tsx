@@ -88,7 +88,6 @@ const DROP = { x: 140, y: -60 };
 const snapBack: GhostScene = {
 	key: "snap-back",
 	title: "Snap back",
-	blurb: "A free drag let go nowhere: x, y, rotate and scale all spring home. Motion also feeds in the pointer's last velocity; here it is zero.",
 	source: "drag-deck.tsx · snapBack · SPRING",
 	where: "playground",
 	knobs: ["stiffness", "damping"],
@@ -111,7 +110,6 @@ const OVER_REMOVE = { x: -150, y: -30 };
 const tilt: GhostScene = {
 	key: "tilt",
 	title: "Tilt over remove",
-	blurb: "A free drag crossing into the remove zone: the ghost springs to a 20° lean, as if swiped. Leaving the zone springs it back.",
 	source: "drag-deck.tsx · frameMove · overRemove",
 	where: "playground",
 	knobs: ["stiffness", "damping"],
@@ -136,7 +134,6 @@ const FLY_MS = 220;
 const flyAway: GhostScene = {
 	key: "fly-away",
 	title: "Fly away",
-	blurb: "Remove committed: the ghost is thrown 720 px further left with an ease-in, leans to 28°, and fades, all in 220 ms.",
 	source: "drag-deck.tsx · flyAway",
 	where: "playground",
 	knobs: [],
@@ -162,7 +159,6 @@ const COMMIT_AT = 350;
 const armLabel: GhostScene = {
 	key: "arm-label",
 	title: "Arm label",
-	blurb: "The gesture arms: its label fades in at 55 % and a hair small. At the commit line it firms up to full opacity and size.",
 	source: "drag-deck.tsx · armLabel · pastCommit",
 	where: "playground",
 	knobs: [],
@@ -245,6 +241,5 @@ const withGhost = (spec: GhostScene) =>
 export const DRAG: SceneGroup = {
 	key: "drag",
 	title: "Drag",
-	blurb: "The Compass Held Card after the pointer lets go, or as it crosses a zone. Springs are Motion's own, in closed form, so they scrub.",
 	scenes: [snapBack, tilt, flyAway, armLabel].map(withGhost),
 };

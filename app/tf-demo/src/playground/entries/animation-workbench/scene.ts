@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
 import type { Params } from "./motion";
-import { clamp01 } from "./motion";
+import { clamp01, segmentAt } from "./motion";
 
 /**
  * A scene is one animation that ships somewhere in tf-demo, rewritten as a
@@ -9,11 +9,11 @@ import { clamp01 } from "./motion";
  * scene's `Render` draws that frame with inline styles and no CSS
  * transitions, so a scrubbed instant is exactly what playback shows.
  *
- * Scenes are grouped by what moves. The deck tap lives in `swap.ts`
- * and keeps its own tap-driven Move and its own spec; every other group is a list of scenes
- * on the shared clock, each replayed from `t = 0`. Only animations that are
- * in use belong here; `where` says whether that is the main app or the
- * playground prototypes.
+ * Scenes are grouped by what moves, and a group is a section of the
+ * workbench's index. The deck tap lives in `swap.ts` and keeps its own
+ * tap-driven Move and its own spec; every other scene is replayed from
+ * `t = 0`. Only animations that are in use belong here; `where` says
+ * whether that is the main app or the playground prototypes.
  */
 
 export type Knob = keyof Params;
@@ -24,7 +24,6 @@ export type Where = "main app" | "playground";
 export type Scene<F> = {
 	readonly key: string;
 	readonly title: string;
-	readonly blurb: string;
 	/** Where this motion ships, so a change here can be carried back. */
 	readonly source: string;
 	readonly where: Where;
@@ -51,7 +50,6 @@ export function scene<F>(spec: Scene<F>): AnyScene {
 export type SceneGroup = {
 	readonly key: string;
 	readonly title: string;
-	readonly blurb: string;
 	readonly scenes: readonly AnyScene[];
 };
 
@@ -70,17 +68,11 @@ export function groupKnobs(group: SceneGroup): readonly Knob[] {
 
 /**
  * The eased progress of one segment that starts at `from` ms and runs
- * `duration` ms: 0 before it, 1 after it.
+ * `duration` ms: 0 before it, 1 after it. Prefer `progressOf(spec, t)`
+ * when the segment is one of the shared specs; this is for the stand-in
+ * timings a preview needs that nothing ships.
  */
-export function segment(
-	t: number,
-	from: number,
-	duration: number,
-	easing: (p: number) => number,
-): number {
-	if (duration <= 0) return t >= from ? 1 : 0;
-	return easing(clamp01((t - from) / duration));
-}
+export { segmentAt as segment };
 
 /** `value` when `p` is 0, `target` when 1. */
 export function mix(value: number, target: number, p: number): number {

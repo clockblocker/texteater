@@ -1,7 +1,7 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import { cleanWord, type DummyNote } from "../deck-models/dummy";
-import { type CardFrame, type Frame, HEADER_REM, PILE_REM } from "./motion";
+import { type CardFrame, type Frame, HEADER_REM, PILE_HEIGHT_REM } from "./motion";
 
 /**
  * Draws one Frame. No Motion, no CSS transitions: every style is the number
@@ -11,7 +11,7 @@ import { type CardFrame, type Frame, HEADER_REM, PILE_REM } from "./motion";
  * A Card is the Compass Note in Card form (ADR 0006): the Heading Block,
  * then Source Contexts (two), the Body and the Links, clipped by the box
  * under a fade. A Card covered from below keeps the same Blocks and its
- * Heading sits at the bottom edge, offset by `headerY` while it travels.
+ * Heading sits at the bottom edge — put there, not slid there.
  */
 
 const CARD_CLASS =
@@ -23,24 +23,12 @@ function rem(value: number): string {
 	return `${value.toString()}rem`;
 }
 
-function Heading({
-	note,
-	atBottom,
-	y,
-}: {
-	note: DummyNote;
-	atBottom: boolean;
-	y: number;
-}) {
+function Heading({ note, atBottom }: { note: DummyNote; atBottom: boolean }) {
 	return (
 		<div
 			data-heading
 			className={`relative flex w-full shrink-0 items-end gap-4 bg-paper px-4 ${atBottom ? "" : "pb-2"}`}
-			style={{
-				height: rem(HEADER_REM),
-				order: atBottom ? 2 : 0,
-				transform: `translateY(${y.toFixed(2)}px)`,
-			}}
+			style={{ height: rem(HEADER_REM), order: atBottom ? 2 : 0 }}
 		>
 			<span
 				className={`min-w-0 flex-1 truncate font-serif text-[1rem] leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
@@ -158,7 +146,7 @@ function Card({
 				transform: `translateY(${frame.y.toFixed(2)}px) scale(${frame.scale.toFixed(4)})`,
 			}}
 		>
-			<Heading note={note} atBottom={below} y={frame.headerY} />
+			<Heading note={note} atBottom={below} />
 			<Blocks note={note} below={below} />
 		</article>
 	);
@@ -174,7 +162,7 @@ export function Pile({
 	tap: (index: number) => void;
 }) {
 	return (
-		<div className="relative w-full" style={{ height: rem(PILE_REM) }}>
+		<div className="relative w-full" style={{ height: rem(PILE_HEIGHT_REM) }}>
 			{cards.map((note, index) => {
 				const card = frame.cards[index];
 				if (!card) return null;

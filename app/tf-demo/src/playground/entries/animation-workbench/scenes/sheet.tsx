@@ -105,7 +105,6 @@ const grow: MorphScene = {
 	key: "note-grows",
 	where: "playground",
 	title: "Card grows into a Sheet",
-	blurb: "Open ↑ let go: the Note's drag offset is folded into its box, then left, top, width and height spring (MORPH, 380/38) from the hand to the Sheet box while scale springs back from 1.05. The Heading grows on the same spring, the kind label fades in over 160 ms, the clip fade lifts in 200 ms, and the Pane bar arrives 180 ms later.",
 	source: "drag-deck.tsx · growFromHand · NoteView box effect · MORPH",
 	knobs: [],
 	length: () => Math.max(MORPH_MS, BAR_DELAY_MS + BAR_MS),
@@ -130,7 +129,6 @@ const collapse: MorphScene = {
 	key: "sheet-collapses",
 	where: "playground",
 	title: "Sheet shrinks to a Card",
-	blurb: "← or Esc: the same element springs from the Sheet box back into its deck slot (MORPH). The Heading shrinks with it, the kind label fades in 160 ms, the clip fade returns in 200 ms, and the Pane bar is gone in 100 ms.",
 	source: "drag-deck.tsx · collapseSheet · NoteView box effect · MORPH",
 	knobs: [],
 	length: () => MORPH_MS,
@@ -153,7 +151,6 @@ const lift: MorphScene = {
 	key: "sheet-lifts",
 	where: "playground",
 	title: "Sheet lifts into the hand",
-	blurb: "Dragging the Heading, or a margin hold completing: the Sheet is at once a Held Card. Its box springs (MORPH) to Card size centred under the pointer; from there the drag offset moves it. Border link-blue: a free drag.",
 	source: "drag-deck.tsx · liftSheet · Drag.origin · MORPH",
 	knobs: [],
 	length: () => MORPH_MS,
@@ -176,7 +173,6 @@ const hold: MorphScene = {
 	key: "sheet-hold",
 	where: "playground",
 	title: "Sheet held",
-	blurb: "A long press on a Sheet margin: the Note shrinks toward the pressed corner to 0.95, linearly over the 500 ms it takes to lift, and its edge turns link-blue. Letting go early springs it back in 160 ms.",
 	source: "drag-deck.tsx · NoteView · holding · LONG_PRESS_MS",
 	knobs: [],
 	length: () => LONG_PRESS_MS,
@@ -291,7 +287,6 @@ const dialog: PanelScene = {
 	key: "dialog",
 	where: "main app",
 	title: "Dialog",
-	blurb: "A Dialog opens: scrim and panel fade in together, the panel zooming from 0.95, in 100 ms on the browser's `ease`.",
 	source: "lego/atoms/dialog.tsx · animate-in fade-in-0 zoom-in-95 duration-100",
 	knobs: [],
 	length: () => DIALOG_MS,
@@ -338,7 +333,6 @@ function DialogPanel({ frame }: { readonly frame: PanelFrame }) {
 export const SHEET: SceneGroup = {
 	key: "sheet",
 	title: "Sheet & dialog",
-	blurb: "A Note changing form: one element, its box on the MORPH spring, its Blocks adapting. And the app's Dialog on CSS.",
 	scenes: [
 		...[grow, collapse, lift, hold].map((spec) =>
 			scene<MorphFrame>({ ...spec, Render: NoteStage }),

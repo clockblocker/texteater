@@ -5,6 +5,7 @@ import {
 	type MotionValue,
 	motion,
 	useMotionValue,
+	useTransform,
 } from "motion/react";
 import {
 	type MouseEvent as ReactMouseEvent,
@@ -24,8 +25,8 @@ import {
 	noteById,
 } from "./dummy";
 import { MORPH } from "./morph";
+import { OPEN_SCALE } from "./open-card";
 import { DummyReader, ModelShell, useEventLog } from "./shared";
-import { SWAP, swapKeyframes } from "./swap-pulse";
 
 /**
  * COMPASS — the drag deck.
@@ -453,18 +454,6 @@ export function CompassModel() {
 		log(`Tap folded: ${card.note.kind} expands`);
 		setExpandedId(card.id);
 	}
-	useEffect(() => {
-		if (expandedId === null) return;
-		const front = root.current?.querySelector<HTMLElement>(
-			'[data-deck-notes] article[data-place="open"]',
-		);
-		if (!front) return;
-		// The pulse a Card gets when pulled to the front: Swap, as the
-		// Animation workbench tunes it.
-		const pulse = swapKeyframes(SWAP);
-		const controls = animate(front, pulse.keyframes, pulse.options);
-		return () => controls.stop();
-	}, [expandedId]);
 	function reset() {
 		setSelected(null);
 		setDeck([]);
@@ -1297,6 +1286,14 @@ function NoteView({
 		scale,
 		opacity,
 	});
+	/**
+	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
+	 * is a state, not a move: which Card is in front changes at once, with
+	 * no pulse. `scale` stays the raw value the drag and the hold animate,
+	 * and the two are multiplied on the way to the DOM.
+	 */
+	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
+	const shownScale = useTransform(() => scale.get() * restScale);
 	const [holding, setHolding] = useState(false);
 	const [origin, setOrigin] = useState("50% 50%");
 	const section = useRef<HTMLElement>(null);
@@ -1423,7 +1420,7 @@ function NoteView({
 				x,
 				y,
 				rotate,
-				scale,
+				scale: shownScale,
 				opacity,
 				zIndex: z,
 				transformOrigin: held ? "50% 100%" : origin,
@@ -1512,7 +1509,8 @@ const MARGIN_CLASS: Record<(typeof MARGINS)[number], string> = {
  * The Heading: pinned first, the lift handle in every form. In Card form
  * it is the one-line row (form, then gloss); in Sheet form the title grows
  * and the kind label shows above it. When the Card is a Card Tail the row
- * sits at the bottom edge, and moves there as one element.
+ * sits at the bottom edge — it is put there, not slid there: only the
+ * change of form morphs, which is what `layoutDependency` pins it to.
  */
 function HeadingBlock({
 	note,
@@ -1531,6 +1529,7 @@ function HeadingBlock({
 		<motion.div
 			data-heading=""
 			layout={layout ? "position" : false}
+			layoutDependency={form}
 			transition={MORPH}
 			animate={{ height: (sheet ? SHEET_HEADER_REM : HEADER_REM) * rem }}
 			style={{ order: atBottom ? 2 : 0 }}

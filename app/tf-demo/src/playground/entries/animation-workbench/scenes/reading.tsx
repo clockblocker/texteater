@@ -37,7 +37,6 @@ const sheenFrame = (t: number): SheenFrame => ({
 const boneSheen: SheenScene = {
 	key: "bone-sheen",
 	title: "Bone sheen",
-	blurb: "A Note on its way: one band of light, fixed to the viewport, sweeps every bone from −60 vw to 110 vw in 2.4 s and repeats. Turn Loop on to see it cycle.",
 	source: "lego/styles.css · --animate-bone · bone-sheen",
 	where: "main app",
 	knobs: [],
@@ -48,7 +47,6 @@ const boneSheen: SheenScene = {
 const wordSheen: SheenScene = {
 	key: "word-sheen",
 	title: "Word sheen",
-	blurb: "A word being resolved: the same band, clipped to the glyphs, sweeps the text from ink toward known blue under a dashed rule.",
 	source: "lego/styles.css · word-sheen · ReaderSegment tone=resolving",
 	where: "main app",
 	knobs: [],
@@ -132,7 +130,6 @@ export type ToneFrame = {
 const toneChange = scene<ToneFrame>({
 	key: "tone-change",
 	title: "Tone change",
-	blurb: "A word's knowledge state arrives: its colour crosses from unknown ink to known blue in 150 ms, Tailwind's transition ease.",
 	source: "lego/molecules/reader-segment.tsx · transition-colors duration-150",
 	where: "main app",
 	knobs: [],
@@ -170,7 +167,6 @@ export type FocusFrame = {
 const definitionFocus = scene<FocusFrame>({
 	key: "definition-focus",
 	title: "Definition dims",
-	blurb: "A Note focuses one sentence: the definition's own sentence settles to 70 % in 150 ms so the focused line stands out.",
 	source: "renderers/reading/definition/static.tsx · data-focused",
 	where: "main app",
 	knobs: [],
@@ -202,7 +198,6 @@ const definitionFocus = scene<FocusFrame>({
 export const READING: SceneGroup = {
 	key: "reading",
 	title: "Reading",
-	blurb: "Motion in running text and in a Note that is still loading: the sheen, a word's colour arriving, and a sentence stepping back.",
 	scenes: [
 		scene<SheenFrame>({ ...boneSheen, Render: Bones }),
 		scene<SheenFrame>({ ...wordSheen, Render: Resolving }),

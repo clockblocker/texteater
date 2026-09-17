@@ -34,7 +34,6 @@ export type HeadingFrame = {
 const headingGrows = scene<HeadingFrame>({
 	key: "heading-grows",
 	title: "Heading grows",
-	blurb: "Card to Sheet: the Heading row springs from 2.75 rem to 4.25 rem and the title from 1 rem to 1.5 rem, both on MORPH. The kind label above fades in and rises 4 px over 160 ms. The gloss stays put.",
 	source: "drag-deck.tsx · HeadingBlock · animate height / fontSize · MORPH",
 	where: "playground",
 	knobs: [],
@@ -91,7 +90,6 @@ export type TailFrame = {
 const headingToTail = scene<TailFrame>({
 	key: "heading-to-tail",
 	title: "Heading moves to the tail",
-	blurb: "Another Card is brought to the front and this one is now covered from below: its Heading is the same element, and Motion's position layout animation carries it from the top edge to the bottom on MORPH.",
 	source: 'drag-deck.tsx · HeadingBlock · layout="position" · order',
 	where: "playground",
 	knobs: [],
@@ -140,7 +138,6 @@ export type FadeFrame = { readonly fade: number };
 const clipLifts = scene<FadeFrame>({
 	key: "clip-lifts",
 	title: "Clip fade lifts",
-	blurb: "Card to Sheet: the gradient that fades a Card's clipped content out goes to 0 in 200 ms, and the content beneath scrolls instead.",
 	source: "drag-deck.tsx · NoteView · clip gradient · animate opacity",
 	where: "playground",
 	knobs: [],
@@ -181,7 +178,6 @@ export type ContextsFrame = {
 const contextsUnfold = scene<ContextsFrame>({
 	key: "contexts-unfold",
 	title: "Source Contexts unfold",
-	blurb: "Card to Sheet, or Load more: the items past the Card's two enter together, each from 0 height and 0 opacity to its full line in 160 ms.",
 	source: "drag-deck.tsx · ContextsBlock · AnimatePresence · height auto",
 	where: "playground",
 	knobs: [],
@@ -238,7 +234,6 @@ export type BarFrame = { readonly opacity: number };
 const paneBar = scene<BarFrame>({
 	key: "pane-bar",
 	title: "Pane bar",
-	blurb: "A Sheet arrives in a Pane: the bar with ← and the trail waits 180 ms for the box, then fades in over 160 ms. It holds, and when the Sheet leaves it is gone first, in 100 ms.",
 	source: "drag-deck.tsx · renderPane · data-pane-bar · AnimatePresence",
 	where: "playground",
 	knobs: [],
@@ -284,7 +279,6 @@ export type PresenceFrame = { readonly opacity: number };
 const notePresence = scene<PresenceFrame>({
 	key: "note-presence",
 	title: "Note appears, then leaves",
-	blurb: "A Note dealt or followed fades in over 160 ms in place. A Note removed or swept fades out in 120 ms. Nothing else moves: the box is already where it belongs.",
 	source: "drag-deck.tsx · NoteView · opacity on mount · exit",
 	where: "playground",
 	knobs: [],
@@ -326,7 +320,6 @@ const notePresence = scene<PresenceFrame>({
 export const NOTE_GROUP: SceneGroup = {
 	key: "note",
 	title: "Note & blocks",
-	blurb: "The motions inside and around a Compass Note, each apart from the box morph they usually run under.",
 	scenes: [
 		headingGrows,
 		headingToTail,

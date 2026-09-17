@@ -35,7 +35,6 @@ export type PressFrame = {
 const libraryPress = scene<PressFrame>({
 	key: "library-press",
 	title: "Library card pressed",
-	blurb: "Hover washes the card and nudges its arrow 2 px; the press shrinks it to 0.96 in 150 ms ease-out. It holds, then the release plays back.",
 	source: "views/library-view.tsx · active:scale-[0.96] · group-hover:translate-x-0.5",
 	where: "main app",
 	knobs: [],
@@ -109,7 +108,6 @@ const ITEMS = [
 const sidebarCollapse = scene<SidebarFrame>({
 	key: "sidebar-collapse",
 	title: "Sidebar collapses",
-	blurb: "The sidebar folds to its icon rail: width 16 rem to 3 rem over 200 ms, linear, while the group label fades and slides up out of the way.",
 	source: "lego/atoms/sidebar.tsx · collapsible=icon · transition-[width] ease-linear",
 	where: "main app",
 	knobs: [],
@@ -164,7 +162,6 @@ export type SpinFrame = {
 const spinner = scene<SpinFrame>({
 	key: "spinner",
 	title: "Spinner",
-	blurb: "A route or relation still on its way: Tailwind's spin, one turn a second, linear, repeating. Turn Loop on.",
 	source: "renderers/* · LoaderCircleIcon animate-spin",
 	where: "main app",
 	knobs: [],
@@ -200,7 +197,6 @@ export type CheckFrame = {
 const checkboxPress = scene<CheckFrame>({
 	key: "checkbox-press",
 	title: "Checkbox pressed",
-	blurb: "Press shrinks the box to 0.92 in 150 ms ease-out. On release it springs back over the same 150 ms as it fills with primary.",
 	source: "lego/atoms/checkbox.tsx · active:scale-[0.92] · data-checked",
 	where: "main app",
 	knobs: [],
@@ -267,7 +263,6 @@ export type SwitchFrame = {
 const switchToggle = scene<SwitchFrame>({
 	key: "switch-toggle",
 	title: "Switch toggled",
-	blurb: "The thumb slides its own width minus 2 px while the track turns primary, both in 150 ms on Tailwind's transition ease.",
 	source: "lego/atoms/switch.tsx · transition-transform · data-checked",
 	where: "main app",
 	knobs: [],
@@ -308,7 +303,6 @@ const switchToggle = scene<SwitchFrame>({
 export const CHROME: SceneGroup = {
 	key: "chrome",
 	title: "Chrome",
-	blurb: "The app frame's small motions: a Library card pressed, the sidebar folding, a spinner, a checkbox and a switch.",
 	scenes: [
 		libraryPress,
 		sidebarCollapse,

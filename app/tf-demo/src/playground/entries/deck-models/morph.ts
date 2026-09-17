@@ -1,10 +1,6 @@
 /**
- * MORPH — the spring a Note's box rides between forms, in one place.
- *
- * The Compass prototype animates a Note's left, top, width and height on
- * it whenever the model hands the Note a new box (deck slot, Sheet box, or
- * the hand), and the Heading's row height and title size with it. The
- * Animation workbench evaluates the same spring in closed form, so a change
- * here is the change in both.
+ * Kept as a re-export: `MORPH` now lives in `motion-spec.ts` with the rest
+ * of the playground's motion, so there is one file to change. Import it
+ * from there in new code.
  */
-export const MORPH = { type: "spring", stiffness: 380, damping: 38 } as const;
+export { MORPH } from "./motion-spec";
