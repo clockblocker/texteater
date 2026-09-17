@@ -762,6 +762,12 @@ export const persistResolvedClick = internalMutation({
 		}
 
 		const attestationId = await ctx.db.insert("attestations", {
+			...(args.occurrence.attestation.articleEvidence === undefined
+				? {}
+				: {
+						articleEvidence:
+							args.occurrence.attestation.articleEvidence,
+					}),
 			surfaceId: surface._id,
 			readingId: reading._id,
 			realizationCoverage:

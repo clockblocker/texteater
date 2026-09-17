@@ -119,6 +119,28 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 		expect(completed.route.clickedSegmentIndex).toBe(segment.index);
 		expect(completed.route.selectedSegment).toBe("Aufstieg");
 		const canonical = completed.terminal.canonical;
+		expect(canonical.normalizedSurface).toBe("der Aufstieg");
+		const nounSurfaceNote = await client.query(api.routeNotes.get, {
+			target: {
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "der Aufstieg",
+			},
+		});
+		if (nounSurfaceNote?.kind !== "Surface")
+			throw new Error("Missing noun Surface Note");
+		const article = nounSurfaceNote.analyses[0]?.article;
+		expect(article?.presented.normalizedSurface).toBe("der");
+		if (!article) throw new Error("Missing article route");
+		const articleNote = await client.query(api.readingNotes.get, {
+			readingId: article.target.readingId,
+			visitorId,
+		});
+		expect(articleNote?.reading.lemma).toMatchObject({
+			canonicalForm: "der",
+			kind: "DET",
+		});
+		expect(articleNote?.sourceContexts.page).toEqual([]);
 		const note = await client.query(api.readingNotes.get, {
 			readingId: canonical.readingId,
 			visitorId,
@@ -141,6 +163,11 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 			attestationId: canonical.attestationId,
 			encountered: true,
 		});
+		expect(
+			persisted?.sentences
+				.find((item) => item.sentenceId === sentence.sentenceId)
+				?.segments.find((item) => item.text === "der"),
+		).toMatchObject({ attestationId: canonical.attestationId });
 		await expect(
 			page
 				.locator('[data-note-kind="Reading"]')

@@ -37,7 +37,9 @@ _Avoid_: Inherent Features
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional
-features.
+features. A German common-noun Surface may include an article and its contextual
+DET Surface reference to an existing authored Reading. Its Lemma remains the
+bare noun.
 
 **Grundform**:
 A Surface's realization of its particular Lemma's canonical grammatical form.
@@ -49,7 +51,9 @@ _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 **Attestation**:
 A fleeting occurrence of one Surface, represented by ordered attested members
 and Full or Partial Realization Coverage. It has value equality but no durable
-identity.
+identity. German noun Attestations retain article source orthography separately
+from their members when an article is included. A shared article gives Partial
+coverage without becoming a second owned member.
 _Avoid_: Selection, click result, selected Surface
 
 ### Semantic identity

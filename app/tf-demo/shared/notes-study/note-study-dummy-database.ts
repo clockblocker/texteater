@@ -294,6 +294,7 @@ function occurrenceFor(
 			orthography: "Standard",
 		})),
 		realizationCoverage: "Full",
+		...(reading.lemma.kind === "NOUN" ? { articleEvidence: null } : {}),
 		surface: citationSurface,
 	});
 	return {
@@ -600,5 +601,9 @@ function fixtureSurface(
 		bare.chain.language === "de"
 	)
 		return bare.chain.value;
-	return parseGermanSurface({ ...input, inflectionalFeatures: null });
+	return parseGermanSurface({
+		...input,
+		inflectionalFeatures: null,
+		...(lemma.kind === "NOUN" ? { articleReference: null } : {}),
+	});
 }

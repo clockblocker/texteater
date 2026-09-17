@@ -15,3 +15,9 @@ grammatical relation projection in the replacement packages. Those abstractions
 connected distinct spellings without reliably preserving their claimed axis.
 Semantic Relation algebra stays in Dumrel. Dumgen owns the reviewed inventory
 and its feature-based selection; Dumling owns values and validation.
+
+German noun Surfaces own one nullable article reference containing a contextual
+DET Surface and its existing authored Reading. Inflection does not create a
+new DET Reading. The reference participates in Surface equality and contains
+no database IDs or source coordinates. It is grammatical composition, outside
+Reading-owned semantic relations. Fusions expose lexicalBreakdown instead.

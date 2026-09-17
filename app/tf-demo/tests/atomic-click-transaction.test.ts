@@ -144,7 +144,8 @@ const surface = {
 	spelling: "Canonical",
 
 	surfaceFeatures: null,
-	inflectionalFeatures: { case: "Nom", number: "Plur" },
+	inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+	articleReference: null,
 	lemma,
 } as const;
 const lemmaKey = lemmaIdentityKey(lemma);
@@ -210,6 +211,7 @@ function clickArgs(plan: DumdictPlan<"de">) {
 				unitKind: "Attestation",
 				members: [{ attested: "Banken", orthography: "Standard" }],
 				realizationCoverage: "Full",
+				articleEvidence: null,
 				surface,
 			},
 			surfaceKey,
@@ -276,6 +278,7 @@ test("a New plan adopts canonical-only Lemma, Reading, and Surface rows", async 
 			spelling: surface.spelling,
 			surfaceFeatures: surface.surfaceFeatures,
 			inflectionalFeatures: surface.inflectionalFeatures,
+			articleReference: surface.articleReference,
 		},
 	];
 	const db = new TransactionalDb(seed);
@@ -406,4 +409,136 @@ test("a readingKey for a different Reading is rejected without durable writes", 
 		"readingKey does not match the selected Reading identity.",
 	);
 	expect(db.snapshot()).toEqual(before);
+});
+
+test("a noun article materializes its Reading without a second occurrence", async () => {
+	const articleLemma = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "DET",
+		canonicalForm: "die",
+		coreFeatures: {
+			definite: "Def",
+			extPos: null,
+			foreign: null,
+			numType: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Art",
+		},
+	} as const;
+	const articleReading = {
+		unitKind: "Reading",
+		lemma: articleLemma,
+		emojiDescription: "👉",
+	} as const;
+	const articleReference = {
+		reading: articleReading,
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			lemma: articleLemma,
+			normalizedSurface: "die",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				case: "Nom",
+				number: "Plur",
+				gender: "Fem",
+				degree: null,
+				"gender[psor]": null,
+				"number[psor]": null,
+			},
+		},
+	} as const;
+	const nounSurface = {
+		...surface,
+		normalizedSurface: "die Banken",
+		inflectionalFeatures: {
+			...surface.inflectionalFeatures,
+			article: "Definite",
+		},
+		articleReference,
+	} as const;
+	const nounKey = makeSurfaceId("de", nounSurface);
+	const original = newReadingPlan();
+	const plan: DumdictPlan<"de"> = {
+		...original,
+		changes: original.changes.map((change) =>
+			change.type === "createOwnedSurface"
+				? {
+						...change,
+						entry: {
+							...change.entry,
+							id: nounKey,
+							surface: nounSurface,
+						},
+						preconditions: change.preconditions.map((condition) =>
+							condition.kind === "surfaceMissing"
+								? { ...condition, surfaceId: nounKey }
+								: condition,
+						),
+					}
+				: change,
+		),
+	};
+	const seed = sourceSeed();
+	seed.segments = [
+		{
+			_id: "article-segment",
+			sentenceId: "sentence-1",
+			index: 0,
+			kind: "ResolvableText",
+			text: "die",
+		},
+		{
+			_id: "noun-segment",
+			sentenceId: "sentence-1",
+			index: 2,
+			kind: "ResolvableText",
+			text: "Banken",
+		},
+	];
+	const db = new TransactionalDb(seed);
+	const args = clickArgs(plan);
+	await runTransaction(db, {
+		...args,
+		clickedSegmentIndex: 2,
+		occurrence: {
+			...args.occurrence,
+			surfaceKey: nounKey,
+			memberSegmentIndices: [0, 2],
+			attestation: {
+				...args.occurrence.attestation,
+				surface: nounSurface,
+				articleEvidence: { attested: "die", orthography: "Standard" },
+				members: [
+					{ attested: "die", orthography: "Standard" },
+					{ attested: "Banken", orthography: "Standard" },
+				],
+			},
+		},
+	});
+	expect(db.rows("lemmas")).toHaveLength(2);
+	expect(db.rows("readings")).toHaveLength(2);
+	expect(db.rows("surfaces")).toHaveLength(2);
+	expect(db.rows("attestations")).toHaveLength(1);
+	expect(db.rows("visitorClicks")).toHaveLength(1);
+	const attestation = db.rows("attestations")[0]!;
+	expect(
+		db
+			.rows("segments")
+			.every(
+				(row) =>
+					(row.attestationMembership as { attestationId: string })
+						.attestationId === attestation._id,
+			),
+	).toBe(true);
+	const component = db
+		.rows("readings")
+		.find((row) => row.readingKey === readingFingerprint(articleReading));
+	expect(component).toBeDefined();
+	expect(attestation.readingId).not.toBe(component?._id);
 });

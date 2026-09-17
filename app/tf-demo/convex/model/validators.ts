@@ -97,11 +97,13 @@ export const surfaceValueValidator = v.object({
 	spelling: surfaceSpellingValidator,
 
 	surfaceFeatures: v.any(),
+	articleReference: v.optional(v.any()),
 	inflectionalFeatures: v.optional(v.any()),
 	lemma: lemmaValueValidator,
 });
 
 export const attestationValueValidator = v.object({
+	articleEvidence: v.optional(v.any()),
 	unitKind: v.literal("Attestation"),
 	members: v.array(
 		v.object({

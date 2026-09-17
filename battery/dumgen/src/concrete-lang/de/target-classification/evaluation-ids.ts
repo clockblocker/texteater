@@ -1,4 +1,11 @@
 export const evaluationCaseIds = [
+	"target-de-noun-article-owner-noun",
+	"target-de-noun-article-adjective-article",
+	"target-de-noun-article-long-coordination",
+	"target-de-noun-article-repeated-article",
+	"target-de-noun-article-nested-head",
+	"target-de-noun-article-nested-complement",
+
 	"target-de-ids-verbal-01-group-0-click-2",
 	"target-de-ids-verbal-02-group-0-click-2",
 	"target-de-ids-verbal-02-group-0-click-8",

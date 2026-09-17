@@ -1,9 +1,13 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	germanNounAttestationError,
+	germanNounSurfaceError,
 	germanPronounCoreError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanNounAttestation,
+	isGermanNounSurface,
 	isGermanPronounCore,
 	nonEmptyFeatureBagError,
 	normalizeForm,
@@ -22,6 +26,14 @@ function check(
 				};
 }
 export const validationOperations: ValidationOperations = {
+	"dumling.de-noun.surface": check(
+		isGermanNounSurface,
+		germanNounSurfaceError,
+	),
+	"dumling.de-noun.attestation": check(
+		isGermanNounAttestation,
+		germanNounAttestationError,
+	),
 	"dumling.de-pronoun.core": check(
 		isGermanPronounCore,
 		germanPronounCoreError,

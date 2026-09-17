@@ -9,7 +9,15 @@ class RouteDb {
 	readonly paginations: { cursor: string | null; numItems: number }[] = [];
 	documentReads = 0;
 
-	constructor(private readonly tables: Record<string, readonly Row[]>) {}
+	constructor(private readonly tables: Record<string, readonly Row[]>) {
+		for (const surface of tables.surfaces ?? []) {
+			const lemma = tables.lemmas?.find(
+				(lemma) => lemma._id === surface.lemmaId,
+			);
+			if (lemma?.kind === "NOUN" && lemma.language === "de")
+				surface.articleReference ??= null;
+		}
+	}
 
 	normalizeId(table: string, id: string) {
 		const prefix: Record<string, string> = {
@@ -50,6 +58,12 @@ class RouteDb {
 				this.indexedQueries.push(`${table}.${index}`);
 				build(range);
 				return result;
+			},
+			async unique() {
+				return matches()[0] ?? null;
+			},
+			async first() {
+				return matches()[0] ?? null;
 			},
 			async take(limit: number) {
 				return matches().slice(0, limit);
@@ -257,10 +271,8 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 		new Set(projectedReadings.map((reading) => reading.readingId)).size,
 	).toBe(101);
 	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(51);
-	expect(peers).toHaveLength(51);
-	expect(peers.map((peer) => peer.lemmaId)).not.toContain(
-		"lemma-construction",
-	);
+	expect(peers).toHaveLength(52);
+	expect(peers.map((peer) => peer.lemmaId)).toContain("lemma-construction");
 	expect(db.indexedQueries).toContain(
 		"lemmas.by_language_and_canonical_form",
 	);
@@ -478,7 +490,7 @@ test("homographic demonstrative and relative Lemma navigation keeps exact Readin
 	}
 });
 
-test("Construction records and derived links are consistently unavailable", async () => {
+test("Fusion records expose Lemma, Surface and Attestation routes", async () => {
 	const db = new RouteDb({
 		texts: [{ _id: "text-1", sourceText: "dass" }],
 		sentences: [
@@ -535,7 +547,7 @@ test("Construction records and derived links are consistently unavailable", asyn
 			attestationId: "attestation-1",
 		} as const,
 	]) {
-		expect(await routeNote({ db }, { target })).toBeNull();
+		expect(await routeNote({ db }, { target })).not.toBeNull();
 	}
 });
 

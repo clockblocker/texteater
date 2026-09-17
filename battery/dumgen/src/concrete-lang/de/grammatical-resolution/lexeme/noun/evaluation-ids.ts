@@ -1,4 +1,10 @@
 export const evaluationCaseIds = [
+	"grammar-de-noun-dev-shared-long",
+	"grammar-de-noun-dev-repeated",
+	"grammar-de-noun-dev-nested",
+	"grammar-de-noun-dev-adjective",
+	"grammar-de-noun-dev-bad-agreement",
+
 	"grammar-de-noun-dev-nom-plur-banken",
 	"grammar-de-noun-dev-dat-sing-bibliothek",
 	"grammar-de-noun-dev-gen-sing-mannes",

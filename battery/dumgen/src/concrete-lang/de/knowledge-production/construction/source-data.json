@@ -17,10 +17,27 @@
 					"emojiDescription": "🌊",
 					"unitKind": "Reading"
 				},
-				"request": {}
+				"request": {
+					"lexicalBreakdown": null
+				}
 			},
-			"idealOutput": {},
-			"explanation": "The thin Construction route owns base leaves only: one definition and one English literal for the fused an + das form; it never requests Semantic Relations.",
+			"idealOutput": {
+				"lexicalBreakdown": [
+					{
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "an"
+					},
+					{
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "das"
+					}
+				]
+			},
+			"explanation": "Fusion exposes lexical ADP and authored DET component identities through lexicalBreakdown; neither expanded component claims an occurrence.",
 			"contaminationKeys": ["knowledge-de-construction-ans"]
 		}
 	},

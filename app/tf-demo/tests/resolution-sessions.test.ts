@@ -209,6 +209,7 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 				readingId: "reading-1",
 				surfaceId: "surface-1",
 				realizationCoverage: "Full",
+				articleEvidence: null,
 			},
 		],
 		readings: [
@@ -240,6 +241,7 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
+				articleReference: null,
 			},
 		],
 	};

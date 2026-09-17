@@ -51,9 +51,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [4]
+				"memberSegmentIndices": [0, 4]
 			},
-			"explanation": "The complete sentence disambiguates the clicked occurrence as Lexeme/NOUN in Dumling's UD-inspired product inventory. Source: https://universaldependencies.org/u/pos/NOUN.html",
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
 			"contaminationKeys": ["target-stimulus:kakao"]
 		},
 		"target-de-core-trotz": {
@@ -466,9 +466,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [2]
+				"memberSegmentIndices": [0, 2]
 			},
-			"explanation": "The complete sentence disambiguates the clicked occurrence as Lexeme/NOUN in Dumling's UD-inspired product inventory. Source: https://universaldependencies.org/u/pos/NOUN.html"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-route-lexeme-num": {
 			"input": {
@@ -3517,10 +3517,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [12]
+				"kind": "NOUN",
+				"memberSegmentIndices": [12, 14]
 			},
-			"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/DET. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-route-phraseme-collocation-antrag-click-antrag": {
 			"input": {
@@ -3595,9 +3595,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [14]
+				"memberSegmentIndices": [12, 14]
 			},
-			"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/NOUN. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-route-construction-fusion": {
 			"input": {
@@ -4514,9 +4514,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [8]
+				"memberSegmentIndices": [6, 8]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -4625,10 +4625,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [6]
+				"kind": "NOUN",
+				"memberSegmentIndices": [6, 8]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -5463,9 +5463,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [25]
+				"memberSegmentIndices": [23, 25]
 			},
-			"explanation": "This IDS idiom study uses das Eis brechen to contrast literal and figurative readings. Issue #82 product policy selects Phraseme/Idiom only in the figurative occurrence and fixes the realized member indices; the literal control remains independently classified Lexemes. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-boundary-governed-click-wartet": {
 			"input": {
@@ -5622,9 +5622,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [8]
+				"memberSegmentIndices": [6, 8]
 			},
-			"explanation": "IDS explicitly uses warten auf as a verb-governed, non-exchangeable preposition and distinguishes freely selected adverbial PPs. Issue #82 product policy maps wartet and auf together at original indices [2,4], keeps Bus at [8], and keeps each clicked member of läuft auf der Wiese separate at [2], [4], or [8]. Source: https://grammis.ids-mannheim.de/sgt/2262"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-boundary-adjunct-click-laeuft": {
 			"input": {
@@ -5781,9 +5781,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [8]
+				"memberSegmentIndices": [6, 8]
 			},
-			"explanation": "IDS explicitly uses warten auf as a verb-governed, non-exchangeable preposition and distinguishes freely selected adverbial PPs. Issue #82 product policy maps wartet and auf together at original indices [2,4], keeps Bus at [8], and keeps each clicked member of läuft auf der Wiese separate at [2], [4], or [8]. Source: https://grammis.ids-mannheim.de/sgt/2262"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-boundary-inherent-reflexive-click-schaemt": {
 			"input": {
@@ -8152,10 +8152,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [8]
+				"kind": "NOUN",
+				"memberSegmentIndices": [8, 10]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -8217,9 +8217,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [10]
+				"memberSegmentIndices": [8, 10]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -8390,9 +8390,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [8]
+				"memberSegmentIndices": [6, 8]
 			},
-			"explanation": "IDS uses eine Cola bringen as its ordinary full-verb-plus-object control. Issue #82 product policy therefore maps bringt as Lexeme/VERB [4] and Cola as the separate Lexeme/NOUN [8], with no guessed Collocation membership. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-boundary-fixed-function-click-heult": {
 			"input": {
@@ -9982,9 +9982,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [12]
+				"memberSegmentIndices": [8, 12]
 			},
-			"explanation": "The sewing context makes Faden a literal free noun rather than the figurative fixed expression; issue #82 therefore selects only the clicked Lexeme/NOUN. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-demo-literal-handtuch-click-warf": {
 			"input": {
@@ -13162,10 +13162,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [0]
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
 			},
-			"explanation": "Issue #251 preserves singleton DET routing when der, die, or das directly modifies an overt noun."
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-der-pron-det-die": {
 			"input": {
@@ -13199,10 +13199,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [0]
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
 			},
-			"explanation": "Issue #251 preserves singleton DET routing when der, die, or das directly modifies an overt noun."
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-der-pron-det-das": {
 			"input": {
@@ -13236,10 +13236,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [0]
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
 			},
-			"explanation": "Issue #251 preserves singleton DET routing when der, die, or das directly modifies an overt noun."
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-interrogative-free-wer": {
 			"input": {
@@ -13960,8 +13960,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [2]
-			}
+				"memberSegmentIndices": [0, 2]
+			},
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-negative-control-nicht-part": {
 			"input": {
@@ -23777,10 +23778,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "DET",
-				"memberSegmentIndices": [4]
+				"kind": "NOUN",
+				"memberSegmentIndices": [4, 6]
 			},
-			"explanation": "IDS explicitly lists eine Frage stellen as a meaning unit. Revised issue #82 high-level policy nevertheless keeps its non-idiomatic members separate: the clicked stellt, eine, or Frage is respectively Lexeme/VERB [2], Lexeme/DET [4], or Lexeme/NOUN [6], independently of the later abstellen occurrence. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-robust-overlap-collocation-click-frage": {
 			"input": {
@@ -23863,9 +23864,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [6]
+				"memberSegmentIndices": [4, 6]
 			},
-			"explanation": "IDS explicitly lists eine Frage stellen as a meaning unit. Revised issue #82 high-level policy nevertheless keeps its non-idiomatic members separate: the clicked stellt, eine, or Frage is respectively Lexeme/VERB [2], Lexeme/DET [4], or Lexeme/NOUN [6], independently of the later abstellen occurrence. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-robust-overlap-separable-click-stellt": {
 			"input": {
@@ -24118,9 +24119,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [14]
+				"memberSegmentIndices": [12, 14]
 			},
-			"explanation": "IDS identifies eine Frage stellen as the earlier conventional meaning unit, but revised issue #82 high-level policy keeps its non-idiomatic words separate. Vase likewise remains its own Lexeme/NOUN at exact original index [14], outside the later separable verb. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
+			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
 		"target-de-robust-partial-click-brach": {
 			"input": {
@@ -30048,6 +30049,358 @@
 				"memberSegmentIndices": [4, 12]
 			},
 			"explanation": "Accepted scoped construction from #442. Injected orchestration coverage is not live model accuracy."
+		},
+		"target-de-noun-article-owner-article": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstieg"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "und"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Abstieg"
+					}
+				],
+				"clickedSegmentIndex": 0
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-owner-article"]
+		},
+		"target-de-noun-article-owner-noun": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstieg"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "und"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Abstieg"
+					}
+				],
+				"clickedSegmentIndex": 2
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-owner-noun"]
+		},
+		"target-de-noun-article-shared-first": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstieg"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "und"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Abstieg"
+					}
+				],
+				"clickedSegmentIndex": 6
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-shared-first"]
+		},
+		"target-de-noun-article-adjective-article": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "steile"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstieg"
+					}
+				],
+				"clickedSegmentIndex": 0
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 4]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-adjective-article"]
+		},
+		"target-de-noun-article-long-coordination": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstieg"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "und"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Abstieg"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "und"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Umstieg"
+					}
+				],
+				"clickedSegmentIndex": 10
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [10]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-long-coordination"]
+		},
+		"target-de-noun-article-repeated-article": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstieg"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "und"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Abstieg"
+					}
+				],
+				"clickedSegmentIndex": 8
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [6, 8]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-repeated-article"]
+		},
+		"target-de-noun-article-nested-head": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Anfang"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "des"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstiegs"
+					}
+				],
+				"clickedSegmentIndex": 2
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-nested-head"]
+		},
+		"target-de-noun-article-nested-complement": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Anfang"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "des"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufstiegs"
+					}
+				],
+				"clickedSegmentIndex": 6
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [4, 6]
+			},
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"contaminationKeys": ["noun-article-nested-complement"]
 		}
 	},
 	"demonstrationIds": [
@@ -30078,7 +30431,9 @@
 		"target-de-demo-idiom-kragen-click-der",
 		"target-de-demo-symbol-percent",
 		"target-de-core-unresolved-qzxv",
-		"target-de-diagnostic-idiom-oel-click-ins"
+		"target-de-diagnostic-idiom-oel-click-ins",
+		"target-de-noun-article-owner-article",
+		"target-de-noun-article-shared-first"
 	],
 	"localDemonstrations": [
 		{

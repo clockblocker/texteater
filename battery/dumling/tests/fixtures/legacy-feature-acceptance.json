@@ -463,7 +463,8 @@
 				},
 				"inflectional": {
 					"case": "Acc",
-					"number": "Plur"
+					"number": "Plur",
+					"article": null
 				}
 			},
 			"accepted": true
@@ -482,7 +483,9 @@
 			"route": "de/lexeme/noun.ts",
 			"input": {
 				"core": {},
-				"inflectional": {}
+				"inflectional": {
+					"article": null
+				}
 			},
 			"accepted": false
 		},
@@ -492,7 +495,9 @@
 				"core": {
 					"unexpected": true
 				},
-				"inflectional": {}
+				"inflectional": {
+					"article": null
+				}
 			},
 			"accepted": false
 		},
@@ -505,7 +510,8 @@
 				},
 				"inflectional": {
 					"case": "Acc",
-					"number": "Plur"
+					"number": "Plur",
+					"article": null
 				},
 				"unexpected": true
 			},

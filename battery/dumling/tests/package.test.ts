@@ -201,7 +201,7 @@ import type * as Unsupported from "dumling/schema/en/phraseme/collocation";
 	}
 }, 30_000);
 
-test("a concrete schema import loads no other concrete route", async () => {
+test("a noun schema imports only its noun and article component routes", async () => {
 	const result = await build({
 		entryPoints: [
 			join(packageRoot, "src/generated/schemas/de/lexeme/noun.ts"),
@@ -220,6 +220,8 @@ test("a concrete schema import loads no other concrete route", async () => {
 			path,
 		),
 	);
-	expect(routes).toHaveLength(1);
-	expect(routes[0]).toEndWith("/de/lexeme/noun.ts");
+	expect(routes.map((path) => path.split("/de/")[1]).sort()).toEqual([
+		"lexeme/determiner.ts",
+		"lexeme/noun.ts",
+	]);
 });

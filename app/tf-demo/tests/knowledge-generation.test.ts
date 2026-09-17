@@ -185,6 +185,7 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 				language: "de",
 				normalizedSurface: "Bank",
 				inflectionalFeatures: null,
+				articleReference: null,
 				spelling: "Canonical",
 
 				surfaceFeatures: null,
@@ -204,6 +205,7 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 				surfaceId: "surface-1",
 				readingId: "reading-1",
 				realizationCoverage: "Full",
+				articleEvidence: null,
 			},
 		],
 		sentences: [

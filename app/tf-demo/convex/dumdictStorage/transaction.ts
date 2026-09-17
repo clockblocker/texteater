@@ -1,4 +1,6 @@
 import { v } from "convex/values";
+import { makeSurfaceId } from "dumdict/runtime";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	lemmaIdentityKey,
@@ -562,6 +564,45 @@ async function applyChange(
 				return false;
 			}
 			const surface = requireRecord(entry.surface, "Owned Surface value");
+			if (surface.articleReference) {
+				const parsed = parseUnit(surface);
+				if (
+					!parsed.success ||
+					parsed.chain.unitKind !== "Surface" ||
+					!("articleReference" in parsed.chain.value)
+				)
+					throw new Error("Invalid noun article Surface");
+				const reference = parsed.chain.value.articleReference;
+				if (reference) {
+					const { reading, surface: component } = reference;
+					const empty = {
+						notes: "",
+						attestedTranslations: [],
+						attestations: [],
+					};
+					if (!(await findLemma(ctx, reading.lemma)))
+						await applyChange(ctx, {
+							type: "createLemma",
+							record: { lemma: reading.lemma },
+						});
+					if (!(await findReading(ctx, reading)))
+						await applyChange(ctx, {
+							type: "createReading",
+							entry: { reading, ...empty },
+						});
+					const id = makeSurfaceId("de", component);
+					if (!(await findSurface(ctx, id)))
+						await applyChange(ctx, {
+							type: "createOwnedSurface",
+							entry: {
+								id,
+								ownerLemma: component.lemma,
+								surface: component,
+								...empty,
+							},
+						});
+				}
+			}
 			const language = requireString(
 				surface.language,
 				"Surface language",
@@ -594,6 +635,9 @@ async function applyChange(
 					),
 					spelling,
 					surfaceFeatures: surface.surfaceFeatures,
+					...(surface.articleReference === undefined
+						? {}
+						: { articleReference: surface.articleReference }),
 					...(surface.inflectionalFeatures === undefined
 						? {}
 						: {

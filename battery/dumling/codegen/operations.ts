@@ -1,15 +1,33 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
 	emojiDescriptionError,
+	germanNounAttestationError,
+	germanNounSurfaceError,
 	germanPronounCoreError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanNounAttestation,
+	isGermanNounSurface,
 	isGermanPronounCore,
 	nonEmptyFeatureBagError,
 	normalizeForm,
 } from "../src/validation/semantics.js";
 
 export const registrations = [
+	{
+		construct: "custom",
+		implementation: isGermanNounSurface,
+		error: germanNounSurfaceError,
+		name: "dumling.de-noun.surface",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanNounAttestation,
+		error: germanNounAttestationError,
+		name: "dumling.de-noun.attestation",
+		version: 1,
+	},
 	{
 		construct: "custom",
 		implementation: isGermanPronounCore,

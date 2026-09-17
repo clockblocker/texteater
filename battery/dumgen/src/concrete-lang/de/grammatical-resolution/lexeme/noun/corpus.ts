@@ -16,6 +16,8 @@ export const corpusSource = defineLinguisticCorpus({
 	outputSchema,
 	cases,
 	demonstrationIds: [
+		"grammar-de-noun-demo-shared-abstieg",
+		"grammar-de-noun-demo-owned-aufstieg",
 		"grammar-de-noun-demo-citation-haus",
 		"grammar-de-noun-demo-acc-sing-hund",
 		"grammar-de-noun-demo-dat-plur-kindern",

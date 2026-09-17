@@ -14,6 +14,7 @@ import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
+import { resolveNounArticle } from "./noun-article.js";
 import type { GrammarOutput } from "./project.js";
 import { routeGuidance } from "./route-guidance.js";
 import { verbalCompositionGuidance } from "./verbal-guidance.js";
@@ -43,7 +44,8 @@ Standard orthography includes licensed variants and ordinary sentence-initial ca
 Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Contextual finite verbs and ordinary infinitives have marked bags. Structural null is not uncertainty.
 For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.
 For noun suspension, completion is allowed only for one selected trailing-hyphen member in binary und/oder coordination with a full right compound sharing the literal suffix; retain Full coverage. Ordinary uninflected noun forms and dictionary citations remain distinct.
-Partial coverage is allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.`;
+German NOUN article features describe an owned or licensed shared article: Definite, Indefinite, or null for bare nouns/non-article determiners/nouns following a separate Fusion. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is null. Partial nouns are allowed only for licensed shared articles in compatible coordination; membership stays fixed.
+Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.`;
 
 export async function resolveGrammarJudgments(
 	options: DumgenOptions,
@@ -85,7 +87,9 @@ export async function resolveGrammarJudgments(
 		: [];
 	const questions: Questions = {
 		support: choice(
-			"Can this fixed target support a coherent analysis on its supplied route?",
+			encounter.target.kind === "NOUN"
+				? "Can this supplied noun target be analyzed under our noun convention? An ordinary article plus common noun is a supported NOUN target, not a phrase requiring idiomatic lexicalization. [der,Aufstieg] is supported both alone and in der Aufstieg und Abstieg; [Abstieg] is also supported there with a shared article. Excluded adjectives and coordinated nouns do not make this noun incomplete. Reject only an incoherent noun analysis; preserve the fixed members."
+				: "Can this fixed target support a coherent analysis on its supplied route?",
 			{
 				Supported: "Yes, keep route and membership unchanged",
 				Unresolved: "No defensible analysis on the supplied target",
@@ -115,6 +119,8 @@ export async function resolveGrammarJudgments(
 		)
 			continue;
 		if (auxiliary && path.startsWith("lemma.")) continue;
+		if (encounter.target.kind === "NOUN" && path.endsWith(".article"))
+			continue;
 		if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
 		questions[path] = featureQuestion(encounter.target.kind, path, field);
 	}
@@ -215,6 +221,9 @@ export async function resolveGrammarJudgments(
 				} else core[key] = answer === unmarked ? null : answer;
 			}
 		const surface: Record<string, unknown> = {
+			...(encounter.target.kind === "NOUN"
+				? { articleReference: null }
+				: {}),
 			spelling: selected("spelling"),
 			surfaceFeatures:
 				selected("historicalStatus") === "Archaic"
@@ -233,6 +242,13 @@ export async function resolveGrammarJudgments(
 						const key = path.slice(
 							"surface.inflectionalFeatures.".length,
 						);
+						if (
+							encounter.target.kind === "NOUN" &&
+							key === "article"
+						) {
+							bag.article = null;
+							continue;
+						}
 						if (verbal && key === "voice") continue;
 						if (
 							verbal &&
@@ -281,7 +297,7 @@ export async function resolveGrammarJudgments(
 			if (mode === "Generate")
 				needed[`member_${index}`] =
 					`Required normalized text for supplied member ${index}; preserve its inflection and position. Correct only the judged typo or licensed constrained noun suspension.`;
-		const coverage = partial
+		let coverage = partial
 			? (selected("coverage") as "Full" | "Partial")
 			: "Full";
 		const mechanicalCanonical =
@@ -366,6 +382,9 @@ export async function resolveGrammarJudgments(
 					memberOrthographies,
 					normalizedMembers,
 					realizationCoverage: coverage,
+					...(encounter.target.kind === "NOUN"
+						? { articleEvidence: null }
+						: {}),
 				},
 				"resolveGrammar",
 				true,
@@ -502,7 +521,28 @@ export async function resolveGrammarJudgments(
 					];
 			}
 		}
+		const article =
+			encounter.target.kind === "NOUN"
+				? await resolveNounArticle(
+						options,
+						encounter,
+						{
+							lemma,
+							surface,
+							normalizedMembers,
+							memberOrthographies,
+						},
+						signal,
+					)
+				: null;
+		if (article) {
+			surface.articleReference = article.reference;
+			coverage = article.coverage;
+		}
 		const output = {
+			...(encounter.target.kind === "NOUN"
+				? { articleEvidence: article?.evidence ?? null }
+				: {}),
 			lemma,
 			surface,
 			memberOrthographies,

@@ -52,7 +52,7 @@ type UnknownLanguageRegistry = RendererRegistry<"fr">;
 // @ts-expect-error Only stable Note kinds can own a registry slice.
 type UnknownNoteRegistry = RendererRegistry<"de", "Resolution">;
 // @ts-expect-error Only grammatical Families supported by the language are valid.
-type InvalidFamilyRegistry = RendererRegistry<"de", "Reading", "Construction">;
+type InvalidFamilyRegistry = RendererRegistry<"de", "Reading", "Unknown">;
 type InvalidFamilyKindRegistry = RendererRegistry<
 	"de",
 	"Reading",

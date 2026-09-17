@@ -142,6 +142,7 @@ export default defineSchema({
 		normalizedSurface: v.string(),
 		spelling: surfaceSpellingValidator,
 		surfaceFeatures: v.any(),
+		articleReference: v.optional(v.any()),
 		inflectionalFeatures: v.optional(v.any()),
 	})
 		.index("by_surface_key", ["surfaceKey"])
@@ -201,6 +202,7 @@ export default defineSchema({
 	}).index("by_surface_id", ["surfaceId"]),
 
 	attestations: defineTable({
+		articleEvidence: v.optional(v.any()),
 		surfaceId: v.id("surfaces"),
 		readingId: v.id("readings"),
 		realizationCoverage: realizationCoverageValidator,

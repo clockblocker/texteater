@@ -36,7 +36,12 @@ function surface(
 			coreFeatures: { ...core, ...options.core },
 		},
 		...("features" in options
-			? { inflectionalFeatures: options.features }
+			? {
+					inflectionalFeatures:
+						key === "de/Lexeme/NOUN" && options.features
+							? { article: null, ...options.features }
+							: options.features,
+				}
 			: {}),
 	});
 	if (!result.success) throw result.error;

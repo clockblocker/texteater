@@ -1,4 +1,6 @@
 import { v } from "convex/values";
+import { readingIdentityKey } from "../../../server/linguisticIdentity";
+import { parseGermanSurface } from "../../../server/operationalParsing";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -83,6 +85,15 @@ const surfaceRouteNoteValidator = v.object({
 	analyses: v.array(
 		v.object({
 			analysisKey: v.id("surfaces"),
+			article: v.optional(
+				v.union(
+					v.null(),
+					v.object({
+						presented: presentedSurfaceValidator,
+						target: readingTargetValidator,
+					}),
+				),
+			),
 			surfaceId: v.id("surfaces"),
 			lemmaId: v.id("lemmas"),
 			presented: presentedSurfaceValidator,
@@ -249,6 +260,30 @@ async function loadSurfaceRouteNote(
 	const lemmas = await Promise.all(
 		surfaces.map((surface) => ctx.db.get(surface.lemmaId)),
 	);
+	const articles = await Promise.all(
+		surfaces.map(async (surface, index) => {
+			const lemma = lemmas[index];
+			if (!lemma || surface.articleReference == null) return null;
+			const value = parseGermanSurface(surfaceValue(surface, lemma));
+			if (!("articleReference" in value) || !value.articleReference)
+				return null;
+			const reference = value.articleReference;
+			const reading = await ctx.db
+				.query("readings")
+				.withIndex("by_reading_key", (q) =>
+					q.eq("readingKey", readingIdentityKey(reference.reading)),
+				)
+				.unique();
+			if (!reading)
+				throw new Error(
+					"Article reference was not materialized with its noun Surface",
+				);
+			return {
+				presented: presentSurface(reference.surface),
+				target: { kind: "Reading" as const, readingId: reading._id },
+			};
+		}),
+	);
 	const analyses = surfaces.flatMap((surface, index) => {
 		const lemma = lemmas[index];
 		if (
@@ -262,6 +297,7 @@ async function loadSurfaceRouteNote(
 		return [
 			{
 				analysisKey: surface._id,
+				article: articles[index] ?? null,
 				surfaceId: surface._id,
 				lemmaId: lemma._id,
 				presented: presentSurface(surfaceValue(surface, lemma)),

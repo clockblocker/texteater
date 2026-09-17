@@ -136,7 +136,8 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		spelling: "Canonical",
 
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur" },
+		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+		articleReference: null,
 		lemma,
 	} as const;
 	const readingValue = {
@@ -188,7 +189,12 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			spelling: "Canonical",
 
 			surfaceFeatures: null,
-			inflectionalFeatures: { case: "Nom", number: "Plur" },
+			inflectionalFeatures: {
+				case: "Nom",
+				number: "Plur",
+				article: null,
+			},
+			articleReference: null,
 		},
 	};
 	const indexRange = {
@@ -269,6 +275,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 				unitKind: "Attestation",
 				members: [{ attested: "Banken", orthography: "Typo" }],
 				realizationCoverage: "Full",
+				articleEvidence: null,
 				surface,
 			},
 			surfaceKey,
@@ -280,6 +287,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		surfaceId,
 		readingId,
 		realizationCoverage: "Full",
+		articleEvidence: null,
 	});
 	expect(patchedMembership).toEqual({
 		attestationMembership: {
@@ -322,7 +330,8 @@ function existingOccurrenceHarness(
 		spelling: "Canonical",
 
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur" },
+		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+		articleReference: null,
 		lemma: lemmaValue,
 	} as const;
 	const surface = {
@@ -352,6 +361,7 @@ function existingOccurrenceHarness(
 		surfaceId: surface._id,
 		readingId: reading._id,
 		realizationCoverage: "Full",
+		articleEvidence: null,
 	};
 	const segments = [
 		{
@@ -529,6 +539,7 @@ test("clicked membership reuses the winner even when the losing proposal has few
 				unitKind: "Attestation",
 				members: [{ attested: "geöffnet", orthography: "Standard" }],
 				realizationCoverage: "Full",
+				articleEvidence: null,
 				surface: surfaceValue,
 			},
 			surfaceKey: makeSurfaceId("de", surfaceValue),
@@ -644,6 +655,7 @@ test("partial overlap reports the committed membership and writes nothing", asyn
 					{ attested: "geöffnet", orthography: "Standard" },
 				],
 				realizationCoverage: "Full",
+				articleEvidence: null,
 				surface: surfaceValue,
 			},
 			surfaceKey: makeSurfaceId("de", surfaceValue),

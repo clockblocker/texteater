@@ -120,9 +120,11 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 		normalizedSurface: "Banken",
 		spelling: "Canonical",
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur" },
+		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+		articleReference: null,
 	},
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	members: [{ attested: "Banken", orthography: "Standard" }],
 };
 const grammar = parseResolvedGrammar({ encounter, attestation });
@@ -139,13 +141,15 @@ const grammarOutput = {
 	surface: {
 		spelling: "Canonical",
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur" },
+		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+		articleReference: null,
 	},
 	lemma: {
 		canonicalForm: "Bank",
 		coreFeatures: { gender: "Fem", hyph: null },
 	},
 	realizationCoverage: "Full",
+	articleEvidence: null,
 };
 function setup(
 	outputs: unknown[],
@@ -476,6 +480,7 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 				spelling: "Canonical",
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
+				articleReference: null,
 			},
 			lemma: {
 				canonicalForm: "unreviewed",
@@ -491,6 +496,7 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 				},
 			},
 			realizationCoverage: "Full",
+			articleEvidence: null,
 		},
 	]);
 	expect(

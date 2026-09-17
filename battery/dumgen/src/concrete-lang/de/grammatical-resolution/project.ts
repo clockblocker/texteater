@@ -5,6 +5,10 @@ type GrammaticalResolutionInput = {
 };
 class DeGrammaticalResolutionProjectionError extends Error {}
 export type GrammarOutput = {
+	articleEvidence?: {
+		attested: string;
+		orthography: DeMemberOrthography;
+	} | null;
 	lemma: Record<string, unknown>;
 	surface: Record<string, unknown>;
 	memberOrthographies: DeMemberOrthography[];
@@ -16,20 +20,54 @@ export function normalizeGrammarSurface(
 	output: GrammarOutput,
 	route: { family: string; kind: string },
 ): string {
-	return route.family === "Lexeme" && route.kind === "NOUN"
-		? constructNounNormalizedSurface({
-				input,
-				memberOrthographies: output.memberOrthographies,
-				normalizedMembers: output.normalizedMembers,
-				surfaceKind: output.surface.inflectionalFeatures
-					? "Inflection"
-					: "Citation",
-			})
-		: constructNormalizedSurface({
-				attestedMembers: input.members,
-				memberOrthographies: output.memberOrthographies,
-				normalizedMembers: output.normalizedMembers,
-			});
+	const ownedArticle =
+		route.kind === "NOUN" &&
+		output.surface.articleReference &&
+		output.realizationCoverage === "Full";
+	if (ownedArticle)
+		constructNormalizedSurface({
+			attestedMembers: input.members.slice(0, 1),
+			normalizedMembers: output.normalizedMembers.slice(0, 1),
+			memberOrthographies: output.memberOrthographies.slice(0, 1),
+		});
+	const normalized =
+		route.family === "Lexeme" && route.kind === "NOUN"
+			? constructNounNormalizedSurface({
+					input: ownedArticle
+						? { ...input, members: input.members.slice(1) }
+						: input,
+					memberOrthographies: ownedArticle
+						? output.memberOrthographies.slice(1)
+						: output.memberOrthographies,
+					normalizedMembers: ownedArticle
+						? output.normalizedMembers.slice(1)
+						: output.normalizedMembers,
+					surfaceKind: output.surface.inflectionalFeatures
+						? "Inflection"
+						: "Citation",
+				})
+			: constructNormalizedSurface({
+					attestedMembers: input.members,
+					memberOrthographies: output.memberOrthographies,
+					normalizedMembers: output.normalizedMembers,
+				});
+	if (route.kind === "NOUN" && output.realizationCoverage === "Partial") {
+		const ref = output.surface.articleReference as {
+			surface: { normalizedSurface: string };
+		} | null;
+		if (!ref || !output.articleEvidence)
+			throw new DeGrammaticalResolutionProjectionError(
+				"Partial noun requires shared article evidence",
+			);
+		return `${ref.surface.normalizedSurface} ${normalized}`;
+	}
+	if (ownedArticle) {
+		const reference = output.surface.articleReference as {
+			surface: { normalizedSurface: string };
+		};
+		return `${reference.surface.normalizedSurface} ${normalized}`;
+	}
+	return normalized;
 }
 function constructNormalizedSurface(args: {
 	readonly attestedMembers: readonly string[];
@@ -104,7 +142,7 @@ function constructNounNormalizedSurface(args: {
 	if (match === null || rightConjunct === undefined) {
 		throw invalidNounSuspension();
 	}
-	const targetStart = input.markedContext.indexOf("<TARGET>");
+	const targetStart = input.markedContext.lastIndexOf("<TARGET>");
 	if (
 		targetStart < 0 ||
 		precedingSuspendedConjunctPattern.test(

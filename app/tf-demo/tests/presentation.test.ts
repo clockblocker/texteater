@@ -494,7 +494,7 @@ test("only learner-facing Unit families can open Unit Reading Notes", () => {
 	expect(["Lexeme", "Phraseme", "Morpheme"].every(isUnitReadingFamily)).toBe(
 		true,
 	);
-	expect(isUnitReadingFamily("Construction")).toBe(false);
+	expect(isUnitReadingFamily("Construction")).toBe(true);
 });
 
 test("malformed routed IDs return not-found without reading documents", async () => {

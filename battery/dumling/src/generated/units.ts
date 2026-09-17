@@ -1070,8 +1070,100 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
+				article: ("Definite" | "Indefinite") | null;
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				number: ("Plur" | "Sing") | null;
+			} | null;
+			articleReference: {
+				surface: {
+					unitKind: "Surface";
+					language: "de";
+					lemma: {
+						unitKind: "Lemma";
+						language: "de";
+						family: "Lexeme";
+						kind: "DET";
+						canonicalForm: string;
+						coreFeatures: {
+							definite: ("Def" | "Ind") | null;
+							extPos: ("ADV" | "DET") | null;
+							foreign: "Yes" | null;
+							numType: ("Card" | "Ord") | null;
+							person: ("1" | "2" | "3") | null;
+							polite: ("Form" | "Infm") | null;
+							poss: "Yes" | null;
+							pronType:
+								| (
+										| "Art"
+										| "Dem"
+										| "Emp"
+										| "Exc"
+										| "Ind"
+										| "Int"
+										| "Neg"
+										| "Prs"
+										| "Rel"
+										| "Tot"
+								  )
+								| null;
+						};
+					};
+					normalizedSurface: string;
+					spelling: "Canonical" | "Variant";
+					surfaceFeatures: {
+						historicalStatus: "Archaic" | null;
+					} | null;
+					inflectionalFeatures: {
+						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+						degree: ("Cmp" | "Pos" | "Sup") | null;
+						gender: ("Fem" | "Masc" | "Neut") | null;
+						"gender[psor]":
+							| (
+									| ("Fem" | "Masc" | "Neut")
+									| [
+											"Fem" | "Masc" | "Neut",
+											...Array<"Fem" | "Masc" | "Neut">,
+									  ]
+							  )
+							| null;
+						number: ("Plur" | "Sing") | null;
+						"number[psor]": ("Plur" | "Sing") | null;
+					} | null;
+				};
+				reading: {
+					unitKind: "Reading";
+					lemma: {
+						unitKind: "Lemma";
+						language: "de";
+						family: "Lexeme";
+						kind: "DET";
+						canonicalForm: string;
+						coreFeatures: {
+							definite: ("Def" | "Ind") | null;
+							extPos: ("ADV" | "DET") | null;
+							foreign: "Yes" | null;
+							numType: ("Card" | "Ord") | null;
+							person: ("1" | "2" | "3") | null;
+							polite: ("Form" | "Infm") | null;
+							poss: "Yes" | null;
+							pronType:
+								| (
+										| "Art"
+										| "Dem"
+										| "Emp"
+										| "Exc"
+										| "Ind"
+										| "Int"
+										| "Neg"
+										| "Prs"
+										| "Rel"
+										| "Tot"
+								  )
+								| null;
+						};
+					};
+					emojiDescription: string;
+				};
 			} | null;
 		};
 		Reading: {
@@ -1109,8 +1201,102 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
+					article: ("Definite" | "Indefinite") | null;
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
+				} | null;
+				articleReference: {
+					surface: {
+						unitKind: "Surface";
+						language: "de";
+						lemma: {
+							unitKind: "Lemma";
+							language: "de";
+							family: "Lexeme";
+							kind: "DET";
+							canonicalForm: string;
+							coreFeatures: {
+								definite: ("Def" | "Ind") | null;
+								extPos: ("ADV" | "DET") | null;
+								foreign: "Yes" | null;
+								numType: ("Card" | "Ord") | null;
+								person: ("1" | "2" | "3") | null;
+								polite: ("Form" | "Infm") | null;
+								poss: "Yes" | null;
+								pronType:
+									| (
+											| "Art"
+											| "Dem"
+											| "Emp"
+											| "Exc"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rel"
+											| "Tot"
+									  )
+									| null;
+							};
+						};
+						normalizedSurface: string;
+						spelling: "Canonical" | "Variant";
+						surfaceFeatures: {
+							historicalStatus: "Archaic" | null;
+						} | null;
+						inflectionalFeatures: {
+							case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+							degree: ("Cmp" | "Pos" | "Sup") | null;
+							gender: ("Fem" | "Masc" | "Neut") | null;
+							"gender[psor]":
+								| (
+										| ("Fem" | "Masc" | "Neut")
+										| [
+												"Fem" | "Masc" | "Neut",
+												...Array<
+													"Fem" | "Masc" | "Neut"
+												>,
+										  ]
+								  )
+								| null;
+							number: ("Plur" | "Sing") | null;
+							"number[psor]": ("Plur" | "Sing") | null;
+						} | null;
+					};
+					reading: {
+						unitKind: "Reading";
+						lemma: {
+							unitKind: "Lemma";
+							language: "de";
+							family: "Lexeme";
+							kind: "DET";
+							canonicalForm: string;
+							coreFeatures: {
+								definite: ("Def" | "Ind") | null;
+								extPos: ("ADV" | "DET") | null;
+								foreign: "Yes" | null;
+								numType: ("Card" | "Ord") | null;
+								person: ("1" | "2" | "3") | null;
+								polite: ("Form" | "Infm") | null;
+								poss: "Yes" | null;
+								pronType:
+									| (
+											| "Art"
+											| "Dem"
+											| "Emp"
+											| "Exc"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rel"
+											| "Tot"
+									  )
+									| null;
+							};
+						};
+						emojiDescription: string;
+					};
 				} | null;
 			};
 			members: [
@@ -1121,6 +1307,10 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Lexeme/NUM": {

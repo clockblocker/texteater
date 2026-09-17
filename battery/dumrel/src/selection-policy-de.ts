@@ -112,7 +112,7 @@ const makeDeRelMap = () =>
 			Transfix: request(select()),
 		},
 		Construction: {
-			Fusion: request(select()),
+			Fusion: { ...request(select()), lexicalBreakdown: null },
 		},
 	}) satisfies Record<string, Record<string, KnowledgeRequestMask>>;
 

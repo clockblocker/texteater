@@ -147,7 +147,7 @@ describe("compiled unit interface", () => {
 	test("preserves feature refinements and nonempty occurrence members", () => {
 		const result = parseUnit({
 			...noun.Surface,
-			inflectionalFeatures: { case: null, number: null },
+			inflectionalFeatures: { case: null, number: null, article: null },
 		});
 		expect(result.success).toBe(false);
 		if (!result.success)

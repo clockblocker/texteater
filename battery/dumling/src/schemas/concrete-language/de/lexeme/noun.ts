@@ -15,6 +15,7 @@ export const DeNounFeatureBagsSchema = z.strictObject({
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
+			article: z.enum(["Definite", "Indefinite"]),
 			case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
 			number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
 		}),

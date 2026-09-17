@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import { z } from "zod";
 import { DiscourseFormulaRoleSchema } from "./custom/discourse-formula-role.js";
 import { GovernedCaseSchema } from "./custom/governed-case.js";
 import { HasGovPrepSchema } from "./custom/governed-preposition.js";
@@ -52,6 +52,7 @@ import { VerbTypeSchema } from "./ud/verb-type.js";
 import { VoiceSchema } from "./ud/voice.js";
 
 export const UNIVERSAL_FEATURE_SCHEMA = {
+	article: z.enum(["Definite", "Indefinite"]),
 	abbr: AbbrSchema,
 	adpType: AdpTypeSchema,
 	animacy: AnimacySchema,

@@ -74,6 +74,16 @@ const partType = {
 
 // Meanings describe judgments; the schema supplies and restricts the actual choices.
 const meanings: Readonly<Record<string, Meaning>> = {
+	"surface.inflectionalFeatures.article": {
+		question:
+			"Does this whole common-noun Surface include a definite or indefinite article, overtly owned or licensed by compatible coordination? Separate Fusion, mein, dieser and kein do not supply an absorbed article. Ordinary bare nouns stay bare.",
+		values: {
+			Definite: "Included definite article",
+			Indefinite: "Included indefinite article",
+		},
+		unmarked:
+			"No included article; not uncertainty and not semantic indefiniteness",
+	},
 	"lemma.coreFeatures.gender": {
 		question:
 			"What is the dictionary noun's lexical grammatical gender? Recover the singular identity even from plural spelling, as with Kinder and das Kind. Diminutives in -chen/-lein are neuter regardless of the referent's sex. Preserve lexical gender in plural occurrences.",

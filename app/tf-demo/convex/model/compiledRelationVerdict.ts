@@ -4,11 +4,11 @@ export const COMPILED_RELATION_VERDICT = {
 	"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",
 	"verdictArtifactPath": "battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json",
 	"fingerprints": {
-		"prompt": "sha256:e143f28238f35c1c89274b55895b2087bc4f22460ecbae92d42b7bdd794b52fa",
-		"schema": "sha256:56ff86a19d066d7cf4586f084f28665093340cf5bca78f625b5c1f4be8f7c397",
+		"prompt": "sha256:024c0250857a70f9518fd015ba4a8e8c361f86d9e2eb9c41756329c6194d5059",
+		"schema": "sha256:c65ca66ffb58b5b029b7a5bb2dde13547ebb0237bdcdb37ba07f75582fbb0034",
 		"evaluator": "sha256:f0621ef08571243a53625918ab2e89248ee0e94e1dc8e26b2a03511efb7b01dd",
 		"model": "sha256:f230d5241fe38626fad36b78809b722d40eeced19b18aaaef0d9a1ffc87b4a64",
-		"policy": "sha256:cf5c2bc052e00ef5087a984aac4d6bde692f9570d354409fbaf8ece7d7043cc6"
+		"policy": "sha256:657f826c03db3492469382cb2af5b4d5cfffe34d0bc54a1a76e349f6eb3aded2"
 	},
 	"historicalCandidate": {
 		"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",

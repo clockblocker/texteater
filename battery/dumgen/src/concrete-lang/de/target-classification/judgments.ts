@@ -21,6 +21,7 @@ Productive perfect and passive complexes are complete verbal targets: ist ... au
 Fixed correlators include only anchors, never payload: entweder/oder, weder/noch, sowohl/als/auch, nicht nur/sondern auch, je/desto are CCONJ; um/zu, ohne/zu, statt/zu, so/dass are SCONJ; einerseits/andererseits and teils/teils are ADV. Classify the whole identity, not the clicked anchor's standalone POS.
 An established noncompositional expression is an Idiom; identical literal wording is separate. An anchor or fixed article/preposition click selects the same complete expression. A Fusion is one fused preposition/article source word unless inside a larger fixed expression. Ordinary conventional verb/noun combinations have no larger classification route.
 Free substantive interrogatives, demonstratives, relatives, quantifiers and negatives are PRON; adnominal forms directly modifying a noun are DET. Genitive jedermanns remains PRON. Comparative and adverbially used adjectives remain ADJ. Do not infer lemma or inflection here.
+German common nouns include their overt definite/indefinite article as fixed members, even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ. Article clicks resolve the same noun. In compatible nominal coordination, only the closest eligible noun owns the overt article: der Aufstieg und Abstieg gives [der,Aufstieg] and [Abstieg]. Closest means Segment distance within that nominal scope, excluding nested phrases; ties are Unresolved. Longer compatible coordination may share the article, but another explicit article or clause boundary stops sharing. Incompatible agreement and proximity alone never license sharing. Only forms of the true definite article der/die/das or indefinite article ein are absorbed. mein/dieser/kein are NOT absorbed articles in this domain: kein Haus gives [kein] DET and [Haus] NOUN, mein Hund gives [mein] DET and [Hund] NOUN. Clicking either does not include the other. mein/dieser/kein remain independent DETs; im/zum/ins remain Fusion and do not join nouns. Bare nouns stay bare. These noun rules preserve any larger established idiom boundary.
 A target is defensible only when the exact assembled members form the complete realized fixed unit, with no omitted present fixed member and no added free material. Uncertainty or contradictory membership must remain Unresolved; do not repair, trim, extend or replace the assembled group.`;
 
 const routes = {
@@ -76,7 +77,7 @@ export async function classifyGermanTarget(
 		)
 			continue;
 		questions[`member_${index}`] = choice(
-			`Does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`? Use full sentence context and the shared criteria.`,
+			`Does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`? Use full sentence context and the shared criteria. For ordinary noun groups, only der/die/das/ein articles join the noun; mein/dieser/kein and their noun are separate units. For example, clicking kein in kein Haus excludes Haus, while clicking den in den Hund includes Hund. A larger established idiom still keeps its fixed members.`,
 			{
 				Include: "It is a fixed member of that same unit",
 				Exclude:

@@ -26,6 +26,8 @@ export function grammarFixture(
 				>;
 			const state = request.state as {
 				members: string[];
+				sentence?: string;
+				target?: string;
 				reviewedIdentities: {
 					canonicalForm: string;
 					coreFeatures: unknown;
@@ -37,6 +39,35 @@ export function grammarFixture(
 				if (id === "support")
 					return "decision" in output ? "Unresolved" : "Supported";
 				if ("decision" in output) return "Unresolved";
+				if (id === "article")
+					return (
+						(
+							output.surface.inflectionalFeatures as {
+								article: string | null;
+							} | null
+						)?.article ?? "Bare"
+					);
+				if (id === "source") {
+					if (!output.articleEvidence) return "NoArticle";
+					const target = JSON.parse(state.target ?? "{}");
+					if (output.realizationCoverage === "Full")
+						return `s${target.memberSegmentIndices[0]}`;
+					const source = [
+						...(state.sentence ?? "").matchAll(
+							/<s(\d+)>(.*?)<\/s\d+>/gu,
+						),
+					].find(
+						(match) =>
+							match[2] === output.articleEvidence?.attested,
+					);
+					return source ? `s${source[1]}` : "Unresolved";
+				}
+				if (id === "realization")
+					return output.realizationCoverage === "Partial"
+						? "Shared"
+						: "Owned";
+				if (id === "orthography")
+					return output.articleEvidence?.orthography ?? "Standard";
 				if (id === "spelling") return String(output.surface.spelling);
 				if (id === "historicalStatus")
 					return output.surface.surfaceFeatures

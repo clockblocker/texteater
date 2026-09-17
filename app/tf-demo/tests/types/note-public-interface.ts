@@ -18,8 +18,8 @@ type ConstructionReadingNoteIdentity = Extract<
 	ReadingNote["reading"],
 	{ lemma: { language: "de"; family: "Construction" } }
 >;
-export type ReadingNotesContainOnlyUnitReadings = Expect<
-	Equal<ConstructionReadingNoteIdentity, never>
+export type ReadingNotesIncludeFusionReadings = Expect<
+	Equal<ConstructionReadingNoteIdentity["lemma"]["kind"], "Fusion">
 >;
 
 declare const reading: ReadingNote;

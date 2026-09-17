@@ -27,6 +27,7 @@ async function completions(marker: string) {
 
 test("concrete schema imports offer only their applicable fields", async () => {
 	expect(await completions("noun")).toEqual([
+		"articleReference",
 		"inflectionalFeatures",
 		"language",
 		"lemma",
@@ -58,7 +59,7 @@ test("schema output types retain route-specific features and composition", async
 			backend: "typescript7",
 		}),
 	).toMatchInlineSnapshot(
-		`"type NounFeatures = { case: "Acc" | "Dat" | "Gen" | "Nom" | null; number: "Plur" | "Sing" | null; } | null"`,
+		`"type NounFeatures = { article: "Definite" | "Indefinite" | null; case: "Acc" | "Dat" | "Gen" | "Nom" | null; number: "Plur" | "Sing" | null; } | null"`,
 	);
 	expect(
 		await inferredType(fixture, {

@@ -51,10 +51,23 @@ export function grammarOperationExperiment(
 				if (!chunk) continue;
 				const marked = chunk.startsWith("<TARGET>");
 				if (marked) members.push(segments.length);
-				segments.push({
-					kind: marked ? "ResolvableText" : "OpaqueText",
-					text: marked ? chunk.slice(8, -9) : chunk,
-				});
+				if (marked)
+					segments.push({
+						kind: "ResolvableText",
+						text: chunk.slice(8, -9),
+					});
+				else
+					for (const text of chunk.match(
+						/\s+|[\p{L}\p{N}]+(?:[-‐‑'][\p{L}\p{N}]+)*|[^\s\p{L}\p{N}]/gu,
+					) ?? [])
+						segments.push({
+							kind: /^\s+$/u.test(text)
+								? "Whitespace"
+								: /^[\p{L}\p{N}]/u.test(text)
+									? "ResolvableText"
+									: "Punctuation",
+							text,
+						});
 			}
 			if (
 				members.some(
@@ -96,11 +109,18 @@ export function grammarOperationExperiment(
 					coreFeatures: lemma.coreFeatures,
 				},
 				surface,
-				normalizedMembers: normalizedSurface.split(" "),
+				normalizedMembers:
+					"articleEvidence" in attestation &&
+					attestation.realizationCoverage === "Partial"
+						? normalizedSurface.split(" ").slice(1)
+						: normalizedSurface.split(" "),
 				memberOrthographies: attestation.members.map(
 					(member) => member.orthography,
 				),
 				realizationCoverage: attestation.realizationCoverage,
+				...("articleEvidence" in attestation
+					? { articleEvidence: attestation.articleEvidence }
+					: {}),
 			};
 		},
 	};

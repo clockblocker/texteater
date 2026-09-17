@@ -201,6 +201,9 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 			spelling: value.spelling,
 			surfaceFeatures: value.surfaceFeatures,
 			...inflectionalFeaturesOf(value),
+			...("articleReference" in value
+				? { articleReference: value.articleReference }
+				: {}),
 		});
 		surface = await ctx.db.get(surfaceId);
 		if (!surface) throw new Error("Failed to create Notes Study Surface.");
@@ -234,6 +237,9 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 				spelling: value.spelling,
 				surfaceFeatures: value.surfaceFeatures,
 				...inflectionalFeaturesOf(value),
+				...("articleReference" in value
+					? { articleReference: value.articleReference }
+					: {}),
 			});
 			presentationSurface = await ctx.db.get(id);
 		} else {
@@ -328,6 +334,12 @@ async function ensureOccurrence(
 				surfaceId: ids.surfaceId,
 				readingId: ids.readingId,
 				realizationCoverage: occurrence.attestation.realizationCoverage,
+				...("articleEvidence" in occurrence.attestation
+					? {
+							articleEvidence:
+								occurrence.attestation.articleEvidence,
+						}
+					: {}),
 			});
 			await Promise.all(
 				memberSegments.flatMap((segment) =>

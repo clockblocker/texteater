@@ -37,8 +37,15 @@ export function generationRequestFor(
 	const {
 		morphologicalTree: _morphologicalTree,
 		lexicalBreakdown: _lexicalBreakdown,
-		...request
+		...base
 	} = applicable;
+	const request = {
+		...base,
+		...(reading.lemma.kind === "Fusion" &&
+		applicable.lexicalBreakdown === null
+			? { lexicalBreakdown: null }
+			: {}),
+	};
 	const allowed = new Set(qualifiedKinds);
 	const semanticRelations = Object.fromEntries(
 		directSemanticRelationValues.flatMap((relation) =>

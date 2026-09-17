@@ -1815,6 +1815,18 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									{
 										type: "object",
 										properties: {
+											article: {
+												anyOf: [
+													{
+														type: "string",
+														enum: [
+															"Definite",
+															"Indefinite",
+														],
+													},
+													{ type: "null" },
+												],
+											},
 											case: {
 												anyOf: [
 													{
@@ -1839,7 +1851,572 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												],
 											},
 										},
-										required: ["case", "number"],
+										required: ["article", "case", "number"],
+										additionalProperties: false,
+									},
+									{ type: "null" },
+								],
+							},
+							articleReference: {
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											surface: {
+												type: "object",
+												properties: {
+													unitKind: {
+														type: "string",
+														const: "Surface",
+													},
+													language: {
+														type: "string",
+														const: "de",
+													},
+													lemma: {
+														type: "object",
+														properties: {
+															unitKind: {
+																type: "string",
+																const: "Lemma",
+															},
+															language: {
+																type: "string",
+																const: "de",
+															},
+															family: {
+																type: "string",
+																const: "Lexeme",
+															},
+															kind: {
+																type: "string",
+																const: "DET",
+															},
+															canonicalForm: {
+																type: "string",
+																minLength: 1,
+															},
+															coreFeatures: {
+																type: "object",
+																properties: {
+																	definite: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Def",
+																					"Ind",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	extPos: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"ADV",
+																					"DET",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	foreign: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Yes",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	numType: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Card",
+																					"Ord",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	person: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"1",
+																					"2",
+																					"3",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	polite: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Form",
+																					"Infm",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	poss: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Yes",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	pronType: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Art",
+																					"Dem",
+																					"Emp",
+																					"Exc",
+																					"Ind",
+																					"Int",
+																					"Neg",
+																					"Prs",
+																					"Rel",
+																					"Tot",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																},
+																required: [
+																	"definite",
+																	"extPos",
+																	"foreign",
+																	"numType",
+																	"person",
+																	"polite",
+																	"poss",
+																	"pronType",
+																],
+																additionalProperties: false,
+															},
+														},
+														required: [
+															"unitKind",
+															"language",
+															"family",
+															"kind",
+															"canonicalForm",
+															"coreFeatures",
+														],
+														additionalProperties: false,
+													},
+													normalizedSurface: {
+														type: "string",
+														minLength: 1,
+													},
+													spelling: {
+														type: "string",
+														enum: [
+															"Canonical",
+															"Variant",
+														],
+													},
+													surfaceFeatures: {
+														anyOf: [
+															{
+																type: "object",
+																properties: {
+																	historicalStatus:
+																		{
+																			anyOf: [
+																				{
+																					type: "string",
+																					const: "Archaic",
+																				},
+																				{
+																					type: "null",
+																				},
+																			],
+																		},
+																},
+																required: [
+																	"historicalStatus",
+																],
+																additionalProperties: false,
+															},
+															{ type: "null" },
+														],
+													},
+													inflectionalFeatures: {
+														anyOf: [
+															{
+																type: "object",
+																properties: {
+																	case: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Acc",
+																					"Dat",
+																					"Gen",
+																					"Nom",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	degree: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Cmp",
+																					"Pos",
+																					"Sup",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	gender: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Fem",
+																					"Masc",
+																					"Neut",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	"gender[psor]":
+																		{
+																			anyOf: [
+																				{
+																					anyOf: [
+																						{
+																							type: "string",
+																							enum: [
+																								"Fem",
+																								"Masc",
+																								"Neut",
+																							],
+																						},
+																						{
+																							type: "array",
+																							prefixItems:
+																								[
+																									{
+																										type: "string",
+																										enum: [
+																											"Fem",
+																											"Masc",
+																											"Neut",
+																										],
+																									},
+																								],
+																							items: {
+																								type: "string",
+																								enum: [
+																									"Fem",
+																									"Masc",
+																									"Neut",
+																								],
+																							},
+																						},
+																					],
+																				},
+																				{
+																					type: "null",
+																				},
+																			],
+																		},
+																	number: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Plur",
+																					"Sing",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	"number[psor]":
+																		{
+																			anyOf: [
+																				{
+																					type: "string",
+																					enum: [
+																						"Plur",
+																						"Sing",
+																					],
+																				},
+																				{
+																					type: "null",
+																				},
+																			],
+																		},
+																},
+																required: [
+																	"case",
+																	"degree",
+																	"gender",
+																	"gender[psor]",
+																	"number",
+																	"number[psor]",
+																],
+																additionalProperties: false,
+															},
+															{ type: "null" },
+														],
+													},
+												},
+												required: [
+													"unitKind",
+													"language",
+													"lemma",
+													"normalizedSurface",
+													"spelling",
+													"surfaceFeatures",
+													"inflectionalFeatures",
+												],
+												additionalProperties: false,
+											},
+											reading: {
+												type: "object",
+												properties: {
+													unitKind: {
+														type: "string",
+														const: "Reading",
+													},
+													lemma: {
+														type: "object",
+														properties: {
+															unitKind: {
+																type: "string",
+																const: "Lemma",
+															},
+															language: {
+																type: "string",
+																const: "de",
+															},
+															family: {
+																type: "string",
+																const: "Lexeme",
+															},
+															kind: {
+																type: "string",
+																const: "DET",
+															},
+															canonicalForm: {
+																type: "string",
+																minLength: 1,
+															},
+															coreFeatures: {
+																type: "object",
+																properties: {
+																	definite: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Def",
+																					"Ind",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	extPos: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"ADV",
+																					"DET",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	foreign: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Yes",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	numType: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Card",
+																					"Ord",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	person: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"1",
+																					"2",
+																					"3",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	polite: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Form",
+																					"Infm",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	poss: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Yes",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																	pronType: {
+																		anyOf: [
+																			{
+																				type: "string",
+																				enum: [
+																					"Art",
+																					"Dem",
+																					"Emp",
+																					"Exc",
+																					"Ind",
+																					"Int",
+																					"Neg",
+																					"Prs",
+																					"Rel",
+																					"Tot",
+																				],
+																			},
+																			{
+																				type: "null",
+																			},
+																		],
+																	},
+																},
+																required: [
+																	"definite",
+																	"extPos",
+																	"foreign",
+																	"numType",
+																	"person",
+																	"polite",
+																	"poss",
+																	"pronType",
+																],
+																additionalProperties: false,
+															},
+														},
+														required: [
+															"unitKind",
+															"language",
+															"family",
+															"kind",
+															"canonicalForm",
+															"coreFeatures",
+														],
+														additionalProperties: false,
+													},
+													emojiDescription: {
+														type: "string",
+														minLength: 1,
+													},
+												},
+												required: [
+													"unitKind",
+													"lemma",
+													"emojiDescription",
+												],
+												additionalProperties: false,
+											},
+										},
+										required: ["surface", "reading"],
 										additionalProperties: false,
 									},
 									{ type: "null" },
@@ -1850,6 +2427,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							"spelling",
 							"surfaceFeatures",
 							"inflectionalFeatures",
+							"articleReference",
 						],
 						additionalProperties: false,
 					},
@@ -1867,6 +2445,23 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 						type: "string",
 						enum: ["Full", "Partial"],
 					},
+					articleEvidence: {
+						anyOf: [
+							{
+								type: "object",
+								properties: {
+									attested: { type: "string", minLength: 1 },
+									orthography: {
+										type: "string",
+										enum: ["Standard", "Typo"],
+									},
+								},
+								required: ["attested", "orthography"],
+								additionalProperties: false,
+							},
+							{ type: "null" },
+						],
+					},
 				},
 				required: [
 					"lemma",
@@ -1874,6 +2469,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"normalizedMembers",
 					"memberOrthographies",
 					"realizationCoverage",
+					"articleEvidence",
 				],
 				additionalProperties: false,
 			},

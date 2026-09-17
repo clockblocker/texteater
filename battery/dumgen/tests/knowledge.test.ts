@@ -346,3 +346,113 @@ test("all four retained Family corpora run through production Knowledge with com
 	}
 	expect(count).toBe(70);
 }, 30000);
+
+for (const [form, adposition, article] of [
+	["im", "in", "der"],
+	["zum", "zu", "der"],
+	["ins", "in", "das"],
+] as const) {
+	test(`Fusion ${form} exposes component Shadows without new occurrences`, async () => {
+		const result = await Effect.runPromise(
+			createDumgen({
+				judge: async () => {
+					throw Error("Authored breakdown must not judge");
+				},
+				execute: async () => {
+					throw Error("Authored breakdown must not generate");
+				},
+			}).produceKnowledge({
+				encounter: {
+					sentence: {
+						id: "fusion",
+						language: "de",
+						segments: [{ kind: "ResolvableText", text: form }],
+					},
+					target: {
+						family: "Construction",
+						kind: "Fusion",
+						memberSegmentIndices: [0],
+					},
+				},
+				reading: {
+					unitKind: "Reading",
+					lemma: {
+						unitKind: "Lemma",
+						language: "de",
+						family: "Construction",
+						kind: "Fusion",
+						canonicalForm: form,
+						coreFeatures: {},
+					},
+					emojiDescription: "🔗",
+				},
+				request: { lexicalBreakdown: null },
+			}),
+		);
+		expect(result.failures).toEqual([]);
+		expect(result.changes).toEqual([
+			{
+				kind: "Contribute",
+				aspect: "lexicalBreakdown",
+				value: [
+					{
+						language: "de",
+						family: "Lexeme",
+						kind: "ADP",
+						canonicalForm: adposition,
+					},
+					{
+						language: "de",
+						family: "Lexeme",
+						kind: "DET",
+						canonicalForm: article,
+					},
+				],
+			},
+		]);
+	});
+}
+
+test("Fusion breakdown survives independently completed text contributions", async () => {
+	const result = await Effect.runPromise(
+		createDumgen({
+			execute: async () => ({
+				output: { text: "Verschmelzung von in und dem (Dativ)." },
+			}),
+			judge: async () => {
+				throw Error("No judgment needed");
+			},
+		}).produceKnowledge({
+			encounter: {
+				sentence: {
+					id: "fusion-mixed",
+					language: "de",
+					segments: [{ kind: "ResolvableText", text: "im" }],
+				},
+				target: {
+					family: "Construction",
+					kind: "Fusion",
+					memberSegmentIndices: [0],
+				},
+			},
+			reading: {
+				unitKind: "Reading",
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Construction",
+					kind: "Fusion",
+					canonicalForm: "im",
+					coreFeatures: {},
+				},
+				emojiDescription: "🔗",
+			},
+			request: { definition: null, lexicalBreakdown: null },
+		}),
+	);
+	expect(result.failures).toEqual([]);
+	expect(result.changes.map((change) => change.aspect)).toEqual([
+		"definition",
+		"lexicalBreakdown",
+	]);
+});

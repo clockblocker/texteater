@@ -214,7 +214,8 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 			surface: {
 				spelling: "Canonical",
 				surfaceFeatures: null,
-				inflectionalFeatures: inflection,
+				inflectionalFeatures: { ...inflection, article: null },
+				articleReference: null,
 			},
 			memberOrthographies: [
 				attested === normalized ? "Standard" : "Typo",
@@ -250,10 +251,10 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 		);
 		expect(output.surface.lemma.canonicalForm).toBe(canonicalForm);
 		expect(output.surface.normalizedSurface).toBe(normalized);
-		expect(output.surface).toHaveProperty(
-			"inflectionalFeatures",
-			inflection,
-		);
+		expect(output.surface).toHaveProperty("inflectionalFeatures", {
+			...inflection,
+			article: null,
+		});
 		expect(output.members[0]?.attested).toBe(attested);
 		const calls = traces[0]?.calls ?? [];
 		expect(calls).toHaveLength(expectedCalls);

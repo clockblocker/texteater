@@ -128,8 +128,71 @@ export async function produceKnowledge(
 	};
 	const textOutcomes: Array<TextOutcome | undefined> = [];
 	const textJobs: Array<Promise<void>> = [];
+	const publishOutcomes = () => {
+		result.changes = [
+			...authored.production.changes,
+			...textOutcomes.flatMap((item) => item?.changes ?? []),
+		];
+		result.failures = textOutcomes.flatMap((item) => item?.failures ?? []);
+		snapshot();
+	};
+
 	for (const [aspect, selection] of Object.entries(authored.missing)) {
 		if (aspect === "semanticRelations") continue;
+		if (aspect === "lexicalBreakdown" && reading.lemma.kind === "Fusion") {
+			const parts: Record<string, readonly [string, string]> = {
+				im: ["in", "der"],
+				zum: ["zu", "der"],
+				ins: ["in", "das"],
+				ans: ["an", "das"],
+				am: ["an", "der"],
+				beim: ["bei", "der"],
+				vom: ["von", "der"],
+				zur: ["zu", "die"],
+			};
+			const pair = parts[reading.lemma.canonicalForm];
+			if (pair)
+				textOutcomes.push({
+					failures: [],
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "lexicalBreakdown",
+							value: [
+								{
+									language: "de",
+									family: "Lexeme",
+									kind: "ADP",
+									canonicalForm: pair[0],
+								},
+								{
+									language: "de",
+									family: "Lexeme",
+									kind: "DET",
+									canonicalForm: pair[1],
+								},
+							],
+						},
+					],
+				});
+			else
+				textOutcomes.push({
+					changes: [],
+					failures: [
+						failureFor(
+							"lexicalBreakdown",
+							new DumgenFailure(
+								"Unresolved",
+								stage,
+								"No reviewed Fusion breakdown",
+								route,
+							),
+						),
+					],
+				});
+			publishOutcomes();
+			continue;
+		}
 		const leaves =
 			aspect === "translations"
 				? Object.keys(selection ?? {})
@@ -179,7 +242,7 @@ export async function produceKnowledge(
 									options,
 									route,
 								),
-								systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Write one concise contextual translation in ${leaf}, preserving meaningful case and punctuation.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+								systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Write one concise contextual translation in ${leaf}, preserving meaningful case and punctuation.`} ${reading.lemma.kind === "Fusion" && aspect === "definition" ? "Explain the expanded preposition plus contextual article and its Case (im = in dem, Dativ; zum = zu dem, Dativ; ins = in das, Akkusativ). These expanded components are an explanation, not separately attested words." : ""} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
 								outputSchema: {
 									type: "object",
 									properties: {
@@ -234,14 +297,7 @@ export async function produceKnowledge(
 						};
 					}
 					textOutcomes[outcomeIndex] = outcome;
-					result.changes = [
-						...authored.production.changes,
-						...textOutcomes.flatMap((item) => item?.changes ?? []),
-					];
-					result.failures = textOutcomes.flatMap(
-						(item) => item?.failures ?? [],
-					);
-					snapshot();
+					publishOutcomes();
 				})(),
 			);
 		}

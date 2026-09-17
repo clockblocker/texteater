@@ -1,6 +1,7 @@
 import {
 	directSemanticRelationSchema,
 	knowledgeRequestMaskSchema,
+	lexicalBreakdownSchema,
 } from "dumrel/schema";
 import { z } from "zod";
 import {
@@ -96,6 +97,7 @@ export const knowledgeInputSchema = z.strictObject({
 });
 const targets = z.array(targetProposalSchema).nullable().optional();
 export const knowledgeOutputSchema = z.strictObject({
+	lexicalBreakdown: lexicalBreakdownSchema.nullable().optional(),
 	transcription: z.string().min(1).nullable().optional(),
 	definition: z.string().min(1).nullable().optional(),
 	translations: z

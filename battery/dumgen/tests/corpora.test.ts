@@ -56,9 +56,9 @@ test("all development selections are disjoint and production assembly uses only 
 				item.id === "target-classification/de/high-level-whole-unit",
 		),
 	).toMatchObject({
-		caseCount: 445,
-		demonstrationCount: 28,
-		evaluationCount: 153,
+		caseCount: 453,
+		demonstrationCount: 30,
+		evaluationCount: 159,
 	});
 	expect(
 		Object.keys(prompts).some((route) =>
@@ -79,7 +79,7 @@ test("canonical target corpus survives compact representation round-trips", () =
 		);
 	}
 });
-test("all 1060 retained grammar answers project through public operations", async () => {
+test("all 1067 retained grammar answers project through public operations", async () => {
 	let count = 0;
 	const verifiedRoutes = new Set<string>();
 	for (const spec of listExperiments().filter((item) =>
@@ -114,7 +114,17 @@ test("all 1060 retained grammar answers project through public operations", asyn
 						kind: "ResolvableText",
 						text: chunk.slice(8, -9),
 					});
-				} else segments.push({ kind: "OpaqueText", text: chunk });
+				} else
+					for (const text of chunk.match(
+						/\p{L}[\p{L}\p{M}\p{N}’-]*|\s+|[^\p{L}\s]+/gu,
+					) ?? []) {
+						segments.push({
+							kind: /\p{L}/u.test(text)
+								? "ResolvableText"
+								: "OpaqueText",
+							text,
+						});
+					}
 			}
 			const encounter = validateEncounter({
 				sentence: { id, language, segments },
@@ -166,6 +176,6 @@ test("all 1060 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1060);
+	expect(count).toBe(1067);
 	expect(verifiedRoutes.size).toBe(22);
 }, 30_000);

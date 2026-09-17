@@ -146,12 +146,13 @@ export function createGermanOperations(
 					);
 				if (
 					output.realizationCoverage !== "Full" &&
-					lemma.family !== "Phraseme"
+					lemma.family !== "Phraseme" &&
+					lemma.kind !== "NOUN"
 				)
 					throw new DumgenFailure(
 						"InvalidModelOutput",
 						"resolveGrammar",
-						"Partial realization belongs to a Phraseme route",
+						"Partial realization requires a Phraseme or licensed shared noun article",
 						route,
 					);
 				return parse<Dumling.Attestation<L>>(
@@ -170,6 +171,12 @@ export function createGermanOperations(
 							orthography: output.memberOrthographies[index],
 						})),
 						realizationCoverage: output.realizationCoverage,
+						...(lemma.kind === "NOUN"
+							? {
+									articleEvidence:
+										output.articleEvidence ?? null,
+								}
+							: {}),
 					},
 					"resolveGrammar",
 					true,

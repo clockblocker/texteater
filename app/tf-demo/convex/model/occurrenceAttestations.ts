@@ -23,6 +23,7 @@ type SurfaceRecord = {
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
 	surfaceFeatures: unknown;
+	articleReference?: unknown;
 	inflectionalFeatures?: unknown;
 };
 
@@ -46,6 +47,9 @@ export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
 		normalizedSurface: surface.normalizedSurface,
 		spelling: surface.spelling,
 		surfaceFeatures: surface.surfaceFeatures,
+		...(surface.articleReference === undefined
+			? {}
+			: { articleReference: surface.articleReference }),
 		...(surface.inflectionalFeatures === undefined
 			? {}
 			: { inflectionalFeatures: surface.inflectionalFeatures }),
@@ -197,6 +201,9 @@ export async function loadOccurrenceAttestation(
 				| "Typo",
 		})),
 		realizationCoverage: attestation.realizationCoverage,
+		...(attestation.articleEvidence === undefined
+			? {}
+			: { articleEvidence: attestation.articleEvidence }),
 		surface: surfaceValue(surface, lemma),
 	};
 
