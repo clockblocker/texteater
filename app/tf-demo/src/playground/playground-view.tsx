@@ -62,7 +62,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Animation workbench",
 		icon: ClapperboardIcon,
 		description:
-			"Every animation in use, on one millisecond axis. Open one to see it alone, scrub it, and turn its knobs.",
+			"The deck’s live animations and gestures, isolated in scenarios. Compare the baseline with named parameter variants.",
 		render: (route) => <AnimationWorkbench route={route} />,
 	},
 	{

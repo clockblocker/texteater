@@ -1,34 +1,7 @@
 /**
- * MOTION SPEC — every animation the Compass prototype runs, as data.
- *
- * This file is the single source of truth for the playground's motion. The
- * Compass prototype (`drag-deck.tsx`) turns a spec into a Motion
- * transition with `motionOf`; the Animation workbench evaluates the same
- * spec in closed form to draw a frame at `t`. Neither owns a duration, an
- * easing or a distance of its own, so the two cannot disagree: a change
- * here is the change in both.
- *
- * Nothing here imports React, the DOM or Motion. A spec is numbers and a
- * named curve, so the workbench's pure `frame(t)` and the prototype's live
- * `animate()` are two readings of one description.
- *
- * ## What lives here, and what does not
- *
- * Here: how long something takes, what curve it runs on, how far it
- * travels, and the pure functions that map a gesture to a transform.
- *
- * Not here: which element moves and when the move starts. That is
- * choreography, and it belongs to whoever owns the state — the prototype
- * for the live deck, the scene for the workbench.
- *
- * ## The one thing that is not a number
- *
- * `CONTEXT_ITEM` animates a Source Context's height to `auto` in the
- * prototype, because a context sentence wraps and only the DOM knows how
- * tall it ends up. The spec fixes its duration and curve; the workbench
- * scene stands in a one-line height for the preview. That is the single
- * place where the preview's geometry is a stand-in rather than the shipped
- * value, and it is marked at its use.
+ * Default motion for the live deck runtime. Both playgrounds render that
+ * runtime; the workbench injects overrides through runtime-config.tsx.
+ * Durations are milliseconds here and seconds at the Motion boundary.
  */
 
 /* ---------------------------------------------------------------- kinds */
@@ -36,8 +9,7 @@
 /**
  * A tween's curve: one of Motion's named easings, or a cubic bézier given
  * outright. `motionOf` passes either through verbatim — Motion takes a
- * four-number array as `ease` — and the workbench solves the same four
- * numbers with `cubicBezier`.
+ * four-number array as `ease`. Both playgrounds use this same adapter.
  *
  * Prefer a bézier. Motion's named curves are the browser's built-ins, and
  * those are too weak to read as deliberate: `easeOut` is
@@ -124,9 +96,8 @@ export function spanOf(spec: Tween): number {
 /* ------------------------------------------------------------- geometry */
 
 /**
- * The deck column and the rows inside a Note, in rem. The prototype lays
- * out in rem strings and the workbench in px at a given root size, so both
- * read these and scale them themselves.
+ * The deck column and the rows inside a Note, in rem. The shared runtime lays
+ * out in rem strings and measures boxes in pixels at the current root size.
  */
 export const CARD_WIDTH_REM = 26;
 /** The whole column: the expanded Card plus one header row per folded Card. */
@@ -178,9 +149,7 @@ export const DRAG_SPRING = spring(520, 36);
  *
  * This is a ceiling on `DRAG_SPRING`, and the reason it lives here rather
  * than in `drag-deck.tsx`: a spring softer than `DRAG_SPRING` can outlast
- * it, and then the deck cuts the motion off mid-flight. The workbench
- * reads it so tuning the spring past this point says so out loud instead
- * of looking fine on the stage and failing in the deck.
+ * it. The same timeout applies to both playgrounds.
  *
  * `DRAG_SPRING` settles at 368 ms from rest and 379 ms after a hard flick,
  * so this leaves about 70 ms of margin. It was 400, which the softer
@@ -202,20 +171,8 @@ export const NOTE_BORDER = tween(160, EASE_COLOUR);
 /** The Card's clip gradient; a Sheet lifts it. */
 export const CLIP_FADE = tween(200);
 
-/**
- * The Heading sliding to its other edge on a deck tap.
- *
- * A tap rearranges the deck at once — no pulse, and the open Card's size
- * is handed over on the frame (`OPEN_SCALE`, a state rather than a move).
- * The Heading is the exception: which edge it sits at is where it *is*,
- * and put rather than slid it crosses a whole Card in one frame. That is
- * the jarring change motion exists to prevent, and at a tap's frequency
- * 140 ms is the whole of what it costs.
- *
- * A change of form is not this: that is a morph, and it rides `MORPH` with
- * the rest of the box.
- */
-export const HEADING_EDGE = tween(140);
+/** Card selection changes the Heading's edge immediately; variants may add a slide. */
+export const HEADING_EDGE = tween(0);
 
 /** The Heading's kind label, shown in Sheet form only. */
 export const KIND_LABEL = tween(160);
@@ -223,9 +180,8 @@ export const KIND_LABEL = tween(160);
 export const KIND_LABEL_Y = 4;
 
 /**
- * One Source Context unfolding. See the note at the top of this file: the
- * prototype animates this height to `auto`, so only the duration and curve
- * are shared.
+ * One Source Context unfolding. The
+ * runtime animates this height to `auto`, measured from the actual content.
  *
  * Height is a layout property and there is no way around it here: an
  * unfolding list has to push what is under it down, so `clip-path` would
@@ -311,8 +267,12 @@ export const HOLD_SCALE = 0.95;
 export const TILT_MAX = -20;
 const TILT_PER_PX = 1 / 16;
 
-export function leanFor(dx: number): number {
-	return Math.max(TILT_MAX, Math.min(0, dx * TILT_PER_PX));
+export function leanFor(
+	dx: number,
+	max = TILT_MAX,
+	perPx = TILT_PER_PX,
+): number {
+	return Math.max(max, Math.min(0, dx * perPx));
 }
 
 /**
@@ -322,6 +282,10 @@ export function leanFor(dx: number): number {
 export const EXPAND_SCALE_MAX = 0.05;
 const EXPAND_PER_PX = 1 / 800;
 
-export function expandScaleFor(dy: number): number {
-	return 1 + Math.max(0, Math.min(EXPAND_SCALE_MAX, -dy * EXPAND_PER_PX));
+export function expandScaleFor(
+	dy: number,
+	max = EXPAND_SCALE_MAX,
+	perPx = EXPAND_PER_PX,
+): number {
+	return 1 + Math.max(0, Math.min(max, -dy * perPx));
 }

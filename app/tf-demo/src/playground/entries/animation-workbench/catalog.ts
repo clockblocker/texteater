@@ -1,107 +1,162 @@
-import { deriveKeyframes, type Keyframe } from "./keyframes";
-import { DEFAULT_PARAMS, type Params } from "./motion";
-import type { AnyScene, Knob, Where } from "./scene";
-import { SCENE_GROUPS } from "./scenes";
-import { SWAP_SOURCE } from "./swap";
-
-/**
- * CATALOG — every animation in tf-demo as one flat list, addressed by key.
- *
- * The workbench shows exactly one animation at a time, so the catalog is
- * what the index lists and what a stage looks itself up in. The deck's Swap
- * is the one entry without a scene: it is tap-driven and does not animate
- * at all, so the stage draws it through `swap.ts` instead of `scene.frame`
- * and its timeline is zero.
- */
-
-export const SWAP_KEY = "swap";
+import type { DeckInteraction } from "../deck-models/interaction-policy";
+import type { DeckMotionOverrides } from "../deck-models/runtime-config";
 
 export type Entry = {
 	readonly key: string;
+	readonly interactions: readonly DeckInteraction[];
 	readonly title: string;
-	/** Where this motion ships, so a change here can be carried back. */
+	readonly instruction: string;
 	readonly source: string;
-	readonly where: Where;
-	/** The scene this entry plays, or null for the deck's Swap. */
-	readonly scene: AnyScene | null;
-	readonly knobs: readonly Knob[];
+	readonly initialScene: "empty" | "deck" | "sheet";
+	readonly knobs: readonly (keyof DeckMotionOverrides)[];
 };
 
-export type Section = {
+const source = "deck-models/drag-deck.tsx";
+const spring = ["stiffness", "damping"] as const;
+const morph = ["morphStiffness", "morphDamping"] as const;
+const release = ["commitDistance", "throwVelocity"] as const;
+
+export const SECTIONS: readonly {
 	readonly title: string;
 	readonly entries: readonly Entry[];
-};
-
-export const SECTIONS: readonly Section[] = [
+}[] = [
 	{
-		title: "Tap",
+		title: "Cards",
 		entries: [
 			{
-				key: SWAP_KEY,
-				title: "Swap",
-				source: SWAP_SOURCE,
-				where: "playground",
-				scene: null,
-				knobs: [],
+				key: "swap",
+				interactions: ["select", "drag"],
+				title: "Tap / selection",
+				instruction:
+					"Tap a folded card to select it. Switch repeatedly between the top and bottom cards to inspect heading placement and the selected scale.",
+				source,
+				initialScene: "deck",
+				knobs: ["headingEdgeMs", "openScale"],
+			},
+			{
+				key: "deal",
+				interactions: ["deal", "dismiss"],
+				title: "Deal / dismiss",
+				instruction:
+					"Select a word to deal its cards. Click the page outside the cards and words to sweep the deck away. Select another word to replace the deck. Escape removes the selected card.",
+				source,
+				initialScene: "empty",
+				knobs: ["durationScale"],
+			},
+			{
+				key: "remove",
+				interactions: ["drag", "remove"],
+				title: "Remove / throw",
+				instruction:
+					"Drag a card left past the commit distance, then release. Try a short fast throw and a slow release to compare the distance and velocity thresholds.",
+				source,
+				initialScene: "deck",
+				knobs: [
+					...spring,
+					...release,
+					"tiltMax",
+					"tiltPerPx",
+					"flyDistance",
+					"flyRotateTo",
+					"durationScale",
+				],
+			},
+			{
+				key: "snap-back",
+				interactions: ["drag"],
+				title: "Snap back / cancel",
+				instruction:
+					"Drag a card in any direction and release, or press Escape while dragging. Compare how the card settles back into the deck.",
+				source,
+				initialScene: "deck",
+				knobs: [...spring, ...release],
+			},
+			{
+				key: "drop-zones",
+				interactions: ["drag", "drop", "collapse"],
+				title: "Free drag / drop zones",
+				instruction:
+					"Drag a card and hold briefly to enter free drag. Move over the pane, its edges, the deck and the remove zone; release to open, split, return or remove. Watch the zone and card-border feedback.",
+				source,
+				initialScene: "deck",
+				knobs: [
+					...spring,
+					...morph,
+					"armReleaseMs",
+					"edgeBand",
+					"zoneFeedbackMs",
+					"durationScale",
+				],
 			},
 		],
 	},
-	...SCENE_GROUPS.map((group) => ({
-		title: group.title,
-		entries: group.scenes.map((scene) => ({
-			key: scene.key,
-			title: scene.title,
-			source: scene.source,
-			where: scene.where,
-			scene,
-			knobs: scene.knobs,
-		})),
-	})),
+	{
+		title: "Sheets",
+		entries: [
+			{
+				key: "sheet-morph",
+				interactions: ["drag", "expand", "collapse"],
+				title: "Expand / collapse",
+				instruction:
+					"Drag a card upward and release to open it as a sheet. Use the back arrow or Escape to collapse it. Watch the body, clipping and pane bar arrive with the sheet.",
+				source,
+				initialScene: "deck",
+				knobs: [...morph, ...release, "durationScale"],
+			},
+			{
+				key: "sheet-lift",
+				interactions: ["drag", "lift"],
+				title: "Heading lift / margin hold",
+				instruction:
+					"Drag the sheet heading to lift it into a held card. Reset, then press and hold a sheet margin: watch the shrink and blue border before it lifts. Release to return it to the deck, or cancel to restore the sheet.",
+				source,
+				initialScene: "sheet",
+				knobs: [
+					...spring,
+					...morph,
+					"holdMs",
+					"holdScale",
+					"durationScale",
+				],
+			},
+			{
+				key: "contexts",
+				interactions: ["contexts", "collapse"],
+				title: "Source contexts",
+				instruction:
+					"In the sheet, load more source contexts to inspect their staggered arrival. Collapse the sheet to see the context list contract back to the card view.",
+				source,
+				initialScene: "sheet",
+				knobs: [
+					"contextStaggerMs",
+					"contextStaggerMaxMs",
+					"durationScale",
+				],
+			},
+			{
+				key: "pane-bar",
+				interactions: ["follow", "collapse"],
+				title: "Pane bar / sheet stack",
+				instruction:
+					"Follow a link inside the sheet to open another sheet in the same pane. Use the back arrow to step back through the stack, then collapse the last sheet to inspect the bar exit.",
+				source,
+				initialScene: "sheet",
+				knobs: [...morph, "durationScale"],
+			},
+		],
+	},
 ];
 
-export const ENTRIES: readonly Entry[] = SECTIONS.flatMap(
-	(section) => section.entries,
-);
-
+export const ENTRIES = SECTIONS.flatMap((section) => section.entries);
 export function entryFor(key: string | undefined): Entry | null {
 	return ENTRIES.find((entry) => entry.key === key) ?? null;
 }
-
-/** The entry `step` places along the catalog from `key`, wrapping. */
 export function neighbour(key: string, step: number): Entry | null {
 	const at = ENTRIES.findIndex((entry) => entry.key === key);
-	if (at < 0 || ENTRIES.length === 0) return null;
-	const count = ENTRIES.length;
-	return ENTRIES[(((at + step) % count) + count) % count] ?? null;
-}
-
-/* ------------------------------------------------------------- timings */
-
-export type Timing = {
-	/** The timeline, in ms. */
-	readonly length: number;
-	/** The instants at which something happens, derived from the frame. */
-	readonly keys: readonly Keyframe[];
-};
-
-/**
- * One entry's timeline at the accepted settings. The index draws every
- * animation against the longest of these, so two bars are to scale.
- */
-export function timingFor(entry: Entry, params: Params): Timing {
-	const scene = entry.scene;
-	/* Swap: a state, not a move. Nothing happens over time, so nothing
-	   is drawn on the axis. */
-	if (!scene) return { length: 0, keys: [] };
-	const length = scene.length(params);
-	return {
-		length,
-		keys: deriveKeyframes((t) => scene.frame(t, params), length).keys,
-	};
-}
-
-export function catalogTimings(): ReadonlyMap<string, Timing> {
-	return new Map(
-		ENTRIES.map((entry) => [entry.key, timingFor(entry, DEFAULT_PARAMS)]),
+	if (at < 0) return null;
+	return (
+		ENTRIES[
+			(((at + step) % ENTRIES.length) + ENTRIES.length) % ENTRIES.length
+		] ?? null
 	);
 }
