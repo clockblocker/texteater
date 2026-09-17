@@ -40,7 +40,7 @@ import type {Encounter,AnalysisTarget,GenerationInput,ComparisonInput,KnowledgeI
 import type * as Dumling from ${JSON.stringify(resolve(root, "../dumling/dist/types.js"))};
 import {Effect} from ${JSON.stringify(resolve(root, "../../node_modules/effect/dist/dts/index.js"))};
 declare const encounter:Encounter<"de">;
-const operation=createDumgen({execute:async()=>null}).resolveGrammar(encounter);
+const operation=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}}).resolveGrammar(encounter);
 const recovered=operation.pipe(Effect.catchTag("InvalidInput",error=>Effect.succeed(error.message)));
 type Output=Effect.Effect.Success<typeof operation>;
 declare const output:Output;
@@ -72,7 +72,7 @@ const wrongUnitLanguage:GenerationInput={encounter:nounEncounter,lemma:englishNo
 const wrongComparison:ComparisonInput<"de">={encounter:nounEncounter,lemma:verb,candidates:["🏠"]};
 // @ts-expect-error Knowledge preserves Encounter/Reading correlation.
 const wrongKnowledge:KnowledgeInput<"de">={encounter:nounEncounter,reading:verbReading,request:{definition:null}};
-const dumgen=createDumgen({execute:async()=>null});
+const dumgen=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}});
 dumgen.generateReadingEmojiDescription(generation);
 dumgen.resolveOrGenerateReadingEmojiDescription(comparison);
 const production=dumgen.produceKnowledge(knowledge);
@@ -119,7 +119,9 @@ dumgen.produceKnowledge({encounter:nounEncounter,reading:verbReading,request:{de
 			child.exited,
 		]);
 		expect(exit, output + error).toBe(0);
-		expect(output).not.toMatch(/\/zod\/|\/schemas\/|\/promptsmith\//);
+		expect(output).not.toMatch(
+			/\/zod\/|\/schemas\/|\/promptsmith\/dist\/(?!typesafe\.d\.ts)/,
+		);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

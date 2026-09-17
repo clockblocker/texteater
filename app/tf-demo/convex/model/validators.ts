@@ -324,6 +324,13 @@ export const resolutionPhaseValidator = v.union(
 
 export const resolutionGenerationEventValidator = v.union(
 	v.object({
+		kind: v.literal("TraceRecorded"),
+		requestId: v.string(),
+		runToken: v.string(),
+		phase: resolutionPhaseValidator,
+		traceJson: v.string(),
+	}),
+	v.object({
 		kind: v.literal("AttemptStarted"),
 		requestId: v.string(),
 		runToken: v.string(),

@@ -2,6 +2,10 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import {
+	executeOutput,
+	rejectJudgment,
+} from "../../../battery/dumgen/tests/execution-fixture.js";
 import { startLaboratoryServer } from "../src/server";
 
 test("HTTP workbench retains session isolation, supplied targets, retry diagnostics and current logs", async () => {
@@ -12,7 +16,8 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 		port: 0,
 		sessionDirectory: directory,
 		configuration: { model: "controlled" },
-		execute: async (request) => {
+		judge: rejectJudgment,
+		execute: executeOutput(async (request) => {
 			stages.push(request.stage);
 			if (request.stage === "segment")
 				return {
@@ -49,7 +54,7 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 				return { emojiDescription: "🏦" };
 			}
 			throw new Error(`Unexpected stage ${request.stage}`);
-		},
+		}),
 	});
 	const post = (path: string, body: unknown) =>
 		fetch(new URL(path, server.url), {

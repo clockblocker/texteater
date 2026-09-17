@@ -131,7 +131,7 @@ export function executeResolutionSession({
 				...identity,
 				phase,
 			});
-			if (generationEvents.length < 64) generationEvents.push(projected);
+			generationEvents.push(projected);
 			diagnostics.info(
 				JSON.stringify({
 					event: "ResolutionGeneration",

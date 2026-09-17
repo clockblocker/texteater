@@ -1,7 +1,7 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { defaultRunOutputDirectory } from "dumgen/development";
-import type { ModelExchange } from "dumgen/types";
+import type { ModelExchange, OperationTrace } from "dumgen/types";
 
 export type LaboratoryOperation = "segmentation-chain" | "click-resolution";
 
@@ -20,6 +20,7 @@ export type LaboratorySessionEvent = {
 	trace: {
 		stages: unknown;
 		modelExchanges: readonly ModelExchange[];
+		operations?: readonly OperationTrace[];
 	};
 	applicationResult: unknown;
 	latencyMs: number;

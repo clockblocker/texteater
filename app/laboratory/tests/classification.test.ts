@@ -6,6 +6,10 @@ import type {
 	SegmentedSentence,
 } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import {
+	executeOutput,
+	rejectJudgment,
+} from "../../../battery/dumgen/tests/execution-fixture.js";
 import { GermanClassificationResolver } from "../src/classification";
 
 const sentence: SegmentedSentence<"de"> = {
@@ -46,13 +50,14 @@ function harness(outputs: unknown[]) {
 	const exchanges: ModelExchange[] = [];
 	const resolver = new GermanClassificationResolver((onModelExchange) =>
 		createDumgen({
+			judge: rejectJudgment,
 			onModelExchange,
-			execute: async (request) => {
+			execute: executeOutput(async (request) => {
 				requests.push(request);
 				const output = outputs.shift();
 				if (output instanceof Error) throw output;
 				return output;
-			},
+			}),
 		}),
 	);
 	return {

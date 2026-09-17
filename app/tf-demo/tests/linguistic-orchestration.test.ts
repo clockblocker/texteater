@@ -10,6 +10,10 @@ import type { Encounter, ModelRequest } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
+	executeOutput,
+	rejectJudgment,
+} from "../../../battery/dumgen/tests/execution-fixture.js";
+import {
 	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
@@ -242,12 +246,13 @@ function setup(
 		...overrides,
 	};
 	const dumgen = createDumgen({
-		execute: async (request) => {
+		judge: rejectJudgment,
+		execute: executeOutput(async (request) => {
 			requests.push(request);
 			const next = outputs.shift();
 			if (next instanceof Error) throw next;
 			return next;
-		},
+		}),
 	});
 	return {
 		orchestrator: createTfDemoOrchestrator({

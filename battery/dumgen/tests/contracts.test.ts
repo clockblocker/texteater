@@ -7,6 +7,7 @@ import { z } from "zod";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import pronounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
 import { grammarSchemas } from "../src/generated/schemas.js";
+import { executeOutput, rejectJudgment } from "./execution-fixture.js";
 
 // Expected identities come from the reviewed catalog, independently of each
 // corpus answer. Replaying an answer alone only proves schema compatibility.
@@ -84,12 +85,13 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 		});
 		const calls: string[] = [];
 		const dumgen = createDumgen({
-			execute: async ({ stage }) => {
+			judge: rejectJudgment,
+			execute: executeOutput(async ({ stage }) => {
 				calls.push(stage);
 				if (stage !== "resolveGrammar")
 					throw Error("Unexpected emoji generation");
 				return golden.idealOutput;
-			},
+			}),
 		});
 		const attestation = await Effect.runPromise(
 			dumgen.resolveGrammar(encounter),
@@ -234,10 +236,11 @@ test("alternate accusative jemand retains the reviewed jemanden identity", async
 	} as const;
 	let calls = 0;
 	const dumgen = createDumgen({
-		execute: async () => {
+		judge: rejectJudgment,
+		execute: executeOutput(async () => {
 			if (++calls > 1) throw Error("Unexpected emoji generation");
 			return answer;
-		},
+		}),
 	});
 	const attestation = await Effect.runPromise(
 		dumgen.resolveGrammar(encounter),

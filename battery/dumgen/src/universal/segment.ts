@@ -7,14 +7,15 @@ import type {
 } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 import { modelCaller } from "./model.js";
-import { task } from "./task.js";
+import { operationTask } from "./trace.js";
 import { parse } from "./validation.js";
 export function createSegmentation(options: DumgenOptions) {
 	const call = modelCaller(options);
+	const task = operationTask(options);
 	return function segment(raw: {
 		readonly sourceSentences: readonly [string, ...string[]];
 	}) {
-		return task("segment", async (signal) => {
+		return task("segment", raw, async (signal) => {
 			const input = parse<{ sourceSentences: string[] }>(
 				"segmentInputSchema",
 				raw,
@@ -130,12 +131,13 @@ function stitchTrustedText(text: string): string {
 	return text.replaceAll(/\s+/gu, " ").trim();
 }
 
-export function createTrustedSegmentation() {
+export function createTrustedSegmentation(options: DumgenOptions) {
+	const task = operationTask(options);
 	return function segmentSentence<L extends "de" | "he">(input: {
 		readonly language: L;
 		readonly stitchedText: string;
 	}) {
-		return task("segmentSentence", async () => {
+		return task("segmentSentence", input, async () => {
 			if (input.language !== "de" && input.language !== "he")
 				throw new DumgenFailure(
 					"InvalidInput",

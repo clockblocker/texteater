@@ -48,7 +48,7 @@ export function classifyResolutionFailure(
 					error._tag === "InvalidModelOutput"
 						? "InvalidOutput"
 						: "ProviderUnavailable",
-				retryable: error._tag === "ProviderFailure",
+				retryable: false,
 			}),
 		};
 	}

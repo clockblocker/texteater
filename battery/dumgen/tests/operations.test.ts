@@ -13,6 +13,7 @@ import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
+import { executeOutput, rejectJudgment } from "./execution-fixture.js";
 
 const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
@@ -36,10 +37,11 @@ function controlled(output: unknown) {
 	return {
 		calls,
 		dumgen: createDumgen({
-			execute: async (request) => {
+			judge: rejectJudgment,
+			execute: executeOutput(async (request) => {
 				calls.push(request);
 				return output;
-			},
+			}),
 		}),
 	};
 }
@@ -52,7 +54,8 @@ async function tag(task: Effect.Effect<unknown, unknown>) {
 test("direct targets and classified targets share one grammar path", async () => {
 	const calls: ModelRequest[] = [];
 	const dumgen = createDumgen({
-		execute: async (request) => {
+		judge: rejectJudgment,
+		execute: executeOutput(async (request) => {
 			calls.push(request);
 			return request.stage === "classifyTarget"
 				? {
@@ -61,7 +64,7 @@ test("direct targets and classified targets share one grammar path", async () =>
 						additionalMemberIndices: [],
 					}
 				: nounOutput;
-		},
+		}),
 	});
 	const sentence = {
 		...encounter.sentence,
@@ -129,9 +132,10 @@ test("invalid encounters fail before execution; unsupported, unresolved and prov
 	expect(
 		await tag(
 			createDumgen({
-				execute: async () => {
+				judge: rejectJudgment,
+				execute: executeOutput(async () => {
 					throw Error("offline");
-				},
+				}),
 			}).resolveGrammar(encounter),
 		),
 	).toBe("ProviderFailure");
@@ -352,7 +356,8 @@ test("migrated finite verb evidence remains present", () => {
 test("segmentation preserves ordered inputs, supports existing Hebrew, and rejects text changes", async () => {
 	const calls: ModelRequest[] = [];
 	const dumgen = createDumgen({
-		execute: async (request) => {
+		judge: rejectJudgment,
+		execute: executeOutput(async (request) => {
 			calls.push(request);
 			const { items } = request.input as {
 				items: { id: string; sourceText: string }[];
@@ -366,7 +371,7 @@ test("segmentation preserves ordered inputs, supports existing Hebrew, and rejec
 					language: "de",
 				})),
 			};
-		},
+		}),
 	});
 	const sentences = [
 		"Guten Morgen.",

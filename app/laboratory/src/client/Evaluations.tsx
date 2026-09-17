@@ -1,4 +1,4 @@
-import type { EvaluationRun } from "promptsmith/evaluation";
+import type { StoredRun } from "promptsmith/evaluation";
 import type { compareRuns } from "promptsmith/storage";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,8 @@ type Experiment = {
 };
 type SavedRun = {
 	runId: string;
-	manifest?: EvaluationRun["manifest"];
-	summary?: EvaluationRun["summary"];
+	manifest?: StoredRun["manifest"];
+	summary?: StoredRun["summary"];
 	error?: string;
 };
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
@@ -32,7 +32,7 @@ export function Evaluations() {
 		[model, setModel] = useState(""),
 		[settings, setSettings] = useState("{}"),
 		[revision, setRevision] = useState("");
-	const [run, setRun] = useState<EvaluationRun | null>(null),
+	const [run, setRun] = useState<StoredRun | null>(null),
 		[comparison, setComparison] = useState<ReturnType<
 			typeof compareRuns
 		> | null>(null),
@@ -114,7 +114,7 @@ export function Evaluations() {
 								throw Error(
 									"Enter a model to use custom settings",
 								);
-							const result = await request<EvaluationRun>(
+							const result = await request<StoredRun>(
 								"/api/evaluations/runs",
 								{
 									method: "POST",
@@ -258,7 +258,7 @@ export function Evaluations() {
 														void action(
 															async () => {
 																setRun(
-																	await request<EvaluationRun>(
+																	await request<StoredRun>(
 																		`/api/evaluations/runs/${encodeURIComponent(item.runId)}${query}`,
 																	),
 																);
@@ -275,10 +275,11 @@ export function Evaluations() {
 											<td className="p-3">
 												{item.manifest?.experimentId}
 												<br />
-												{
-													item.manifest?.configuration
-														.model
-												}
+												{item.manifest?.version === 2
+													? `${item.manifest.configurations.judgment.model} + ${item.manifest.configurations.generation.model}`
+													: item.manifest
+															?.configuration
+															.model}
 											</td>
 											<td className="p-3">
 												{item.error ??

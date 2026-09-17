@@ -1,6 +1,27 @@
 import { expect, test } from "bun:test";
 import { choice, createTypeSafeExecutor, noul } from "promptsmith/typesafe";
 
+test("TypeSafe transport attempts a failing request once, even with retry overrides", async () => {
+	let attempts = 0;
+	const execute = createTypeSafeExecutor({
+		apiKey: "fixture",
+		retry: { maxRetries: 2 },
+		fetch: async () => {
+			attempts++;
+			return new Response("rate limited", { status: 429 });
+		},
+	});
+	await expect(
+		execute(
+			{ state: "test", questions: { valid: noul("Valid?") } },
+			{
+				retry: { maxRetries: 2 },
+			},
+		),
+	).rejects.toThrow();
+	expect(attempts).toBe(1);
+});
+
 test("System One adapter preserves typed questions, request options and usage", async () => {
 	const controller = new AbortController();
 	let body: Record<string, unknown> = {};

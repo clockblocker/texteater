@@ -12,7 +12,7 @@ import type {
 } from "../../types.js";
 import { DumgenFailure } from "../../universal/failure.js";
 import { modelCaller } from "../../universal/model.js";
-import { task } from "../../universal/task.js";
+import { operationTask } from "../../universal/trace.js";
 import {
 	markedContext,
 	parse,
@@ -83,6 +83,7 @@ export function createGermanOperations(
 	options: DumgenOptions,
 ): Omit<Dumgen, "segment" | "segmentSentence"> {
 	const call = modelCaller(options);
+	const task = operationTask(options);
 	async function emoji(
 		raw: EmojiInput,
 		compare: boolean,
@@ -129,7 +130,7 @@ export function createGermanOperations(
 			sentence: SegmentedSentence<L>;
 			clickedSegmentIndex: number;
 		}) {
-			return task("classifyTarget", async (signal) => {
+			return task("classifyTarget", raw, async (signal) => {
 				const input = parse<typeof raw>(
 					"classifyInputSchema",
 					raw,
@@ -178,7 +179,7 @@ export function createGermanOperations(
 			});
 		},
 		resolveGrammar<L extends Dumling.Language>(raw: Encounter<L>) {
-			return task("resolveGrammar", async (signal) => {
+			return task("resolveGrammar", raw, async (signal) => {
 				const encounter = validateEncounter(raw, "resolveGrammar");
 				supported(encounter, "resolveGrammar");
 				const route = routeOf(encounter),
@@ -258,13 +259,14 @@ export function createGermanOperations(
 			});
 		},
 		generateReadingEmojiDescription(raw: EmojiInput) {
-			return task("generateReadingEmojiDescription", (signal) =>
+			return task("generateReadingEmojiDescription", raw, (signal) =>
 				emoji(raw, false, signal),
 			);
 		},
 		resolveOrGenerateReadingEmojiDescription(raw: EmojiInput) {
 			return task(
 				"resolveOrGenerateReadingEmojiDescription",
+				raw,
 				async (signal) => {
 					const description = await emoji(raw, true, signal);
 					return {
@@ -277,7 +279,7 @@ export function createGermanOperations(
 			);
 		},
 		produceKnowledge<I extends PublicKnowledgeInput>(raw: I) {
-			return task("produceKnowledge", async (signal) => {
+			return task("produceKnowledge", raw, async (signal) => {
 				const input = parse<KnowledgeInput>(
 					"knowledgeInput",
 					raw,

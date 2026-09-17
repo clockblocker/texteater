@@ -9,6 +9,10 @@ import {
 } from "dumdict";
 import { createDumgen } from "dumgen";
 import * as Effect from "effect/Effect";
+import {
+	executeOutput,
+	rejectJudgment,
+} from "../../../battery/dumgen/tests/execution-fixture.js";
 import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
 import {
 	commitDumdictChanges,
@@ -1555,9 +1559,10 @@ describe("tf-demo Dumdict relation storage", () => {
 		const orchestrator = createTfDemoOrchestrator({
 			dumgen: {
 				...createDumgen({
-					execute: async () => {
+					judge: rejectJudgment,
+					execute: executeOutput(async () => {
 						throw new Error("Unexpected model execution.");
-					},
+					}),
 				}),
 				classifyTarget: () =>
 					Effect.succeed(grammatical.encounter.target),

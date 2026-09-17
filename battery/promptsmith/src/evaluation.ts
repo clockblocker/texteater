@@ -14,6 +14,14 @@ import {
 } from "./schemas.js";
 import { stableJson } from "./stable-json.js";
 
+export type {
+	OperationEvaluationRun,
+	OperationEvidence,
+	OperationExperiment,
+	StoredRun,
+} from "./operation-evaluation.js";
+export { runOperationExperiment } from "./operation-evaluation.js";
+
 export type ModelConfiguration = z.infer<typeof configurationSchema>;
 export type EvaluationRun = z.infer<typeof evaluationRunSchema>;
 export type CaseRecord = z.infer<typeof caseRecordSchema>;

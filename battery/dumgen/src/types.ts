@@ -1,6 +1,7 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { Effect } from "effect";
+import type { Questions, TypeSafeExecutor } from "promptsmith/typesafe";
 import type * as Generated from "./generated/types.js";
 import type {
 	Segment,
@@ -122,18 +123,62 @@ export type ModelRequest = {
 	readonly configuration: ModelConfiguration;
 	readonly signal: AbortSignal;
 };
-export type ModelExecutor = (request: ModelRequest) => Promise<unknown>;
+export type ModelExecutor = (request: ModelRequest) => Promise<{
+	readonly output: unknown;
+	readonly metadata?: unknown;
+}>;
+export type JudgmentRequest = {
+	readonly stage: string;
+	readonly route: string;
+	readonly input: unknown;
+	readonly questions: Questions;
+	readonly configuration: ModelConfiguration;
+	readonly signal: AbortSignal;
+};
 export type ModelExchange = {
-	readonly request: ModelRequest;
+	readonly request: ModelRequest | JudgmentRequest;
 	readonly output?: unknown;
+	readonly metadata?: unknown;
 	readonly failure?: string;
+	readonly durationMs: number;
+};
+export type CallTrace = ModelExchange & {
+	readonly id: string;
+	readonly operationId: string;
+	readonly executor: "TypeSafe" | "Luna";
+	readonly dependsOn: readonly string[];
+	readonly fingerprint: string;
+	readonly transport: "Success" | "Failure" | "Interrupted";
+	readonly validation: "Valid" | "Invalid" | "NotRun";
+};
+export type OperationTrace = {
+	readonly version: 2;
+	readonly id: string;
+	readonly operation: string;
+	readonly input: unknown;
+	readonly generationConfiguration: ModelConfiguration;
+	readonly judgmentConfiguration: ModelConfiguration;
+	readonly calls: readonly CallTrace[];
+	readonly events: readonly {
+		readonly kind: string;
+		readonly data: unknown;
+	}[];
+	readonly output?: unknown;
+	readonly failure?: { readonly tag: string; readonly message: string };
+	readonly outcome: "Success" | "Failure" | "Interrupted";
 	readonly durationMs: number;
 };
 export type DumgenOptions = {
 	readonly execute: ModelExecutor;
+	readonly judge: TypeSafeExecutor;
 	readonly configuration?: Partial<ModelConfiguration>;
+	readonly judgmentConfiguration?: {
+		readonly model?: string;
+		readonly timeoutMs?: number;
+	};
 	readonly routeOverrides?: Readonly<
 		Record<string, Partial<ModelConfiguration>>
 	>;
 	readonly onModelExchange?: (exchange: ModelExchange) => void;
+	readonly onOperation?: (trace: OperationTrace) => void;
 };

@@ -3,6 +3,8 @@ import type {
 	SegmentedSentence as DumgenSentence,
 	AnalysisTarget as DumgenTarget,
 	Encounter,
+	ModelExchange,
+	OperationTrace,
 } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 export type Attestation = Dumling.Attestation<"de">;
@@ -64,6 +66,8 @@ export type ClassificationStageResult = {
 	input: unknown;
 	output: unknown;
 	result: unknown;
+	calls?: readonly ModelExchange[];
+	operations?: readonly OperationTrace[];
 };
 
 export type ResolutionDiagnostic = {

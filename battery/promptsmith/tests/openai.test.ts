@@ -36,6 +36,7 @@ test("Responses adapter transports arbitrary output shapes, settings, cancellati
 	expect(result.output).toEqual(["a", "b"]);
 	expect(result.metadata).toEqual({
 		responseId: "response",
+		model: null,
 		usage: { total_tokens: 12 },
 	});
 	expect(body).toMatchObject({

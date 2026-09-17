@@ -5,7 +5,7 @@ import { createSegmentation, createTrustedSegmentation } from "./segment.js";
 export function createDumgen(options: DumgenOptions): Dumgen {
 	return {
 		segment: createSegmentation(options),
-		segmentSentence: createTrustedSegmentation(),
+		segmentSentence: createTrustedSegmentation(options),
 		...createGermanOperations(options),
 	};
 }

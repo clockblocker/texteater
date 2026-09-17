@@ -10,6 +10,7 @@ import { createGermanHighLevelTargetClassificationProjection } from "../src/conc
 import targetData from "../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
+import { executeOutput, rejectJudgment } from "./execution-fixture.js";
 
 const kinds: Record<string, string> = {
 	"proper-noun": "PROPN",
@@ -121,7 +122,8 @@ test("all 1060 retained grammar answers project through public operations", asyn
 			const result = await Effect.runPromise(
 				Effect.either(
 					createDumgen({
-						execute: async () => golden.idealOutput,
+						judge: rejectJudgment,
+						execute: executeOutput(async () => golden.idealOutput),
 					}).resolveGrammar(encounter),
 				),
 			);
