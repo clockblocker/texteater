@@ -1,5 +1,18 @@
 import type { DeckInteraction } from "../deck-models/interaction-policy";
+import { SNAP_BACK_MODELS } from "../deck-models/motion-spec";
 import type { DeckMotionOverrides } from "../deck-models/runtime-config";
+
+/**
+ * An alternative the entry ships with, in the Version list beside the
+ * baseline and whatever the reader has saved. A preset is read-only: it is
+ * a position to compare against, not a draft. "Create variant" copies the
+ * selected one, so tuning a preset means starting from it.
+ */
+export type Preset = {
+	readonly key: string;
+	readonly name: string;
+	readonly motion: DeckMotionOverrides;
+};
 
 export type Entry = {
 	readonly key: string;
@@ -9,12 +22,42 @@ export type Entry = {
 	readonly source: string;
 	readonly initialScene: "empty" | "deck" | "sheet";
 	readonly knobs: readonly (keyof DeckMotionOverrides)[];
+	readonly presets?: readonly Preset[];
 };
 
 const source = "deck-models/drag-deck.tsx";
 const spring = ["stiffness", "damping"] as const;
 const morph = ["morphStiffness", "morphDamping"] as const;
 const release = ["commitDistance", "throwVelocity"] as const;
+
+/**
+ * One preset per snap-back model the Deck does not run. The baseline is
+ * `under`; `lifted` is what the prototype had before it, and is here to
+ * show what was wrong. The model is an index into `SNAP_BACK_MODELS`,
+ * which is what the "Snap-back model" knob writes too.
+ */
+const snapBackPresets: readonly Preset[] = [
+	{
+		key: "lifted",
+		name: "lifted — waits for the gesture to tear down (the old one)",
+		motion: { snapBackModel: SNAP_BACK_MODELS.indexOf("lifted") },
+	},
+	{
+		key: "land",
+		name: "land — rejoins it on arrival",
+		motion: { snapBackModel: SNAP_BACK_MODELS.indexOf("land") },
+	},
+	{
+		key: "quick",
+		name: "quick — arrival, on a 200 ms tween",
+		motion: { snapBackModel: SNAP_BACK_MODELS.indexOf("quick") },
+	},
+	{
+		key: "setdown",
+		name: "setdown — arrival, and the lift is visible",
+		motion: { snapBackModel: SNAP_BACK_MODELS.indexOf("setdown") },
+	},
+];
 
 export const SECTIONS: readonly {
 	readonly title: string;
@@ -66,10 +109,11 @@ export const SECTIONS: readonly {
 				interactions: ["drag"],
 				title: "Snap back / cancel",
 				instruction:
-					"Drag a card in any direction and release, or press Escape while dragging. Compare how the card settles back into the deck.",
+					"Drag a card in any direction and release, or press Escape while dragging. Watch the moment the deck closes over the card: the snap-back model decides whether that is an arrival or a change of z a fifth of a second later.",
 				source,
 				initialScene: "deck",
-				knobs: [...spring, ...release],
+				knobs: ["snapBackModel", "snapLandPx", ...spring, ...release],
+				presets: snapBackPresets,
 			},
 			{
 				key: "drop-zones",

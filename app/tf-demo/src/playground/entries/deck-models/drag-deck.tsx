@@ -37,6 +37,8 @@ import {
 	CARD_WIDTH_REM,
 	CONTEXT_PAGE,
 	HEADER_REM,
+	LIFT_SCALE,
+	liftShadow,
 	type motionOf,
 	PILE_HEIGHT_REM,
 	SHEET_HEADER_REM,
@@ -111,6 +113,8 @@ type NoteHandle = {
 	readonly rotate: MotionValue<number>;
 	readonly scale: MotionValue<number>;
 	readonly opacity: MotionValue<number>;
+	/** How far off the Deck the Card is held, 0 → 1; `setdown` only. */
+	readonly lift: MotionValue<number>;
 };
 type Drag = {
 	readonly card: DeckCard;
@@ -351,6 +355,10 @@ function CompassRuntime({
 		ZONE_FEEDBACK_MS,
 		OPEN_SCALE,
 		SETTLE_TIMEOUT_MS,
+		SNAP_BACK,
+		SNAP_LAND_PX,
+		SNAP_RETURN,
+		LIFT,
 		TILT_MAX,
 		leanFor,
 		expandScaleFor,
@@ -386,6 +394,12 @@ function CompassRuntime({
 	const [drag, setDrag] = useState<Drag | null>(null);
 	const [destination, setDestination] = useState<Destination | null>(null);
 	const [pastCommit, setPastCommit] = useState(false);
+	/**
+	 * A returning Card has reached its slot and the Deck has closed over
+	 * it: it is drawn in the stack again rather than above it. Which frame
+	 * this turns on is what the snap-back models disagree about.
+	 */
+	const [landed, setLanded] = useState(false);
 	/** Drop zones stay in the DOM for hit-testing; this only shows them. */
 	const [zonesVisible, setZonesVisible] = useState(initialZones);
 	/** Every Pane's box, relative to the frame; Notes are placed from these. */
@@ -395,6 +409,11 @@ function CompassRuntime({
 	const [rem, setRem] = useState(16);
 	const dragRef = useRef<Drag | null>(null);
 	const settlingRef = useRef(false);
+	const landedRef = useRef(false);
+	/** Live subscriptions watching a return for its arrival. */
+	const landWatch = useRef<(() => void)[]>([]);
+	/** The return's own animations, so a fresh grab can take the Card back. */
+	const returnRun = useRef<{ stop: () => void }[]>([]);
 	const root = useRef<HTMLDivElement>(null);
 	const handles = useRef(new Map<number, NoteHandle>());
 	const nextId = useRef(seed.length + 1);
@@ -616,6 +635,20 @@ function CompassRuntime({
 		h.rotate.jump(0);
 		h.scale.jump(1);
 		h.opacity.jump(1);
+		h.lift.jump(0);
+	}
+	/**
+	 * Forget a return in flight: its arrival watch and its animations.
+	 * A Card picked up again mid-return is under the pointer from that
+	 * frame on, and nothing that was taking it home may still be writing.
+	 */
+	function endReturn() {
+		for (const stop of landWatch.current) stop();
+		landWatch.current = [];
+		for (const run of returnRun.current) run.stop();
+		returnRun.current = [];
+		landedRef.current = false;
+		setLanded(false);
 	}
 	function currentBox(h: NoteHandle): Box {
 		return {
@@ -628,7 +661,11 @@ function CompassRuntime({
 	/** A Card on the Deck goes under the pointer; nothing moves until it does. */
 	function cardDown(event: ReactPointerEvent<HTMLElement>, card: DeckCard) {
 		if (!allows("drag") && !allows("select")) return;
-		if (event.button !== 0 || dragRef.current || settlingRef.current)
+		if (
+			event.button !== 0 ||
+			dragRef.current ||
+			(settlingRef.current && !landedRef.current)
+		)
 			return;
 		const frame = root.current;
 		const h = handles.current.get(card.id);
@@ -639,6 +676,7 @@ function CompassRuntime({
 		} catch {
 			/* a pointer the browser is not tracking; the frame still hears it */
 		}
+		endReturn();
 		resetTransforms(h);
 		setPastCommit(false);
 		const now = event.timeStamp;
@@ -669,6 +707,7 @@ function CompassRuntime({
 		reason: string,
 	) {
 		if (!allows("lift") || dragRef.current || settlingRef.current) return;
+		endReturn();
 		const frame = root.current;
 		const h = handles.current.get(card.id);
 		if (!frame || !h) return;
@@ -767,6 +806,8 @@ function CompassRuntime({
 
 		if (!d.arm && !d.free && Math.hypot(dx, dy) > ARM_SLOP) {
 			d.moved = true;
+			if (!reduce && SNAP_BACK === "setdown")
+				animate(h.lift, 1, transition(LIFT));
 			if (Math.abs(dx) > Math.abs(dy)) {
 				if (dx < 0 && allows("remove")) {
 					d.arm = "remove";
@@ -817,6 +858,13 @@ function CompassRuntime({
 		void Promise.race([run(), timeout]).then(() => {
 			settlingRef.current = false;
 			then();
+			/* a Card picked up again while it was settling is in hand now,
+			   and tearing the drag down under it would drop it */
+			if (dragRef.current) return;
+			landWatch.current = [];
+			returnRun.current = [];
+			landedRef.current = false;
+			setLanded(false);
 			setDrag(null);
 			setDestination(null);
 			setPastCommit(false);
@@ -836,6 +884,30 @@ function CompassRuntime({
 		animate(h.rotate, 0, SPRING);
 		animate(h.scale, 1, SPRING);
 	}
+	/**
+	 * The Deck closes over the returning Card. Everything the models
+	 * disagree about is when this runs.
+	 */
+	function rejoinStack() {
+		for (const stop of landWatch.current) stop();
+		landWatch.current = [];
+		landedRef.current = true;
+		setLanded(true);
+	}
+	/** Rejoin the stack once the Card is within `SNAP_LAND_PX` of its slot. */
+	function watchForLanding(h: NoteHandle) {
+		const check = () => {
+			if (Math.hypot(h.x.get(), h.y.get()) > SNAP_LAND_PX) return;
+			rejoinStack();
+		};
+		landWatch.current = [h.x.on("change", check), h.y.on("change", check)];
+		check();
+	}
+	/**
+	 * The Card goes back to the slot it was picked up from. The travel is
+	 * the same in every model bar `quick`; what differs is the frame the
+	 * Deck closes over it — see `SNAP_BACK_MODELS`.
+	 */
 	function snapBack(h: NoteHandle) {
 		if (reduce) {
 			for (const [value, rest] of [
@@ -843,22 +915,33 @@ function CompassRuntime({
 				[h.y, 0],
 				[h.rotate, 0],
 				[h.scale, 1],
+				[h.lift, 0],
 			] as const)
 				value.jump(rest);
+			rejoinStack();
 			settle(
 				() => Promise.resolve(),
 				() => {},
 			);
 			return;
 		}
+		if (SNAP_BACK === "under") rejoinStack();
+		else if (SNAP_BACK !== "lifted") watchForLanding(h);
+		const home = SNAP_BACK === "quick" ? transition(SNAP_RETURN) : SPRING;
 		settle(
-			() =>
-				Promise.all([
-					animate(h.x, 0, SPRING),
-					animate(h.y, 0, SPRING),
-					animate(h.rotate, 0, SPRING),
-					animate(h.scale, 1, SPRING),
-				]),
+			() => {
+				const run = [
+					animate(h.x, 0, home),
+					animate(h.y, 0, home),
+					animate(h.rotate, 0, home),
+					animate(h.scale, 1, home),
+					/* the lift only ever left the ground in `setdown`;
+					   in every other model this animates 0 to 0 */
+					animate(h.lift, 0, SPRING),
+				];
+				returnRun.current = run;
+				return Promise.all(run);
+			},
 			() => {},
 		);
 	}
@@ -903,9 +986,11 @@ function CompassRuntime({
 		if (reduce) {
 			h.rotate.jump(0);
 			h.scale.jump(1);
+			h.lift.jump(0);
 		} else {
 			animate(h.rotate, 0, MORPH);
 			animate(h.scale, 1, MORPH);
+			animate(h.lift, 0, MORPH);
 		}
 		dragRef.current = null;
 		setDrag(null);
@@ -1278,15 +1363,17 @@ function CompassRuntime({
 				width: cardWidth,
 				height: slotHeight,
 			};
-			/* z rises toward the expanded Card from both sides */
-			const z = held
-				? 40
-				: 10 +
-					(place === "open"
-						? 9
-						: place === "above"
-							? index
-							: count - 1 - index);
+			/* z rises toward the expanded Card from both sides; a Held
+			   Card is over all of them until it has landed */
+			const z =
+				held && !landed
+					? 40
+					: 10 +
+						(place === "open"
+							? 9
+							: place === "above"
+								? index
+								: count - 1 - index);
 			notes.push(
 				<NoteView
 					key={card.id}
@@ -1475,6 +1562,7 @@ function NoteView({
 	const scale = useMotionValue(1);
 	/* A dealt Note is simply there: opaque on its first frame, never faded. */
 	const opacity = useMotionValue(1);
+	const lift = useMotionValue(0);
 	const handle = useRef<NoteHandle>({
 		left,
 		top,
@@ -1485,6 +1573,7 @@ function NoteView({
 		rotate,
 		scale,
 		opacity,
+		lift,
 	});
 	/**
 	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
@@ -1493,7 +1582,17 @@ function NoteView({
 	 * and the two are multiplied on the way to the DOM.
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	const shownScale = useTransform(() => scale.get() * restScale);
+	/**
+	 * Three scales, multiplied on the way to the DOM: the Card's resting
+	 * one, whatever the drag and the hold are animating, and the `setdown`
+	 * model's lift off the Deck. The lift is a shadow as well; at 0 that
+	 * shadow is `none`, so a Card that never leaves the Deck hands the
+	 * compositor nothing to paint.
+	 */
+	const shownScale = useTransform(
+		() => scale.get() * restScale * (1 + lift.get() * LIFT_SCALE),
+	);
+	const shownShadow = useTransform(() => liftShadow(lift.get()));
 	/**
 	 * The box's origin travels as a transform, not as `left`/`top`.
 	 *
@@ -1750,8 +1849,21 @@ function NoteView({
 				rotate,
 				scale: shownScale,
 				opacity,
+				boxShadow: shownShadow,
 				zIndex: z,
-				transformOrigin: held ? "50% 100%" : origin,
+				/**
+				 * One origin for the Card's whole life. It used to move to
+				 * the bottom edge while the Card was held, so the remove
+				 * tilt would pivot there — but the open Card rests at
+				 * `OPEN_SCALE`, and scaling about the bottom rather than
+				 * the centre draws it `(OPEN_SCALE - 1) × height / 2`
+				 * higher: 9 px of hover that lasted from the grab until
+				 * the drag state tore down, and dropped away a fifth of a
+				 * second after the Card was home. The tilt pivots about
+				 * the centre now, which is where a Card under a finger
+				 * turns anyway.
+				 */
+				transformOrigin: origin,
 			}}
 			onPointerDown={down}
 			/* `contain` stops the width/height spring's recalc at this Note

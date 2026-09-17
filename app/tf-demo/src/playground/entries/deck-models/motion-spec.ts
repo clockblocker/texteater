@@ -157,6 +157,79 @@ export const DRAG_SPRING = spring(520, 36);
  */
 export const SETTLE_TIMEOUT_MS = 450;
 
+/* ----------------------------------------------------------- snap back */
+
+/**
+ * How a cancelled drag rejoins the Deck.
+ *
+ * A Held Card is drawn over the whole Deck (z 40), and the Deck is a
+ * stack: every Card but the front one is covered down to its Heading row
+ * by the Card in front of it. So the frame on which a returning Card gets
+ * its resting z back is a visible event — the Deck closes over it. These
+ * models differ in when that frame is, and in what the Card does to earn
+ * it.
+ *
+ * - `under` is the one the Deck runs. It gives the Card its resting z
+ *   back at the release, so the Card travels home beneath the Cards that
+ *   overlap it and nothing at all happens on arrival: there is no moment
+ *   left for the Deck to close in, because it never opened.
+ * - `lifted` is what the prototype shipped with, kept to compare against:
+ *   the stack is restored when the gesture tears down, which is
+ *   `SETTLE_TIMEOUT_MS` after the release rather than the moment of
+ *   arrival. The Card is home at ~220 ms, floats over the Deck for
+ *   another ~230, and the stack then closes in one frame. Nothing about
+ *   that frame is motion, so it reads as a teleport.
+ * - `land` keeps the Card over the Deck while it travels and restores the
+ *   stack at `SNAP_LAND_PX` from the slot — the same event as `lifted`,
+ *   moved onto the frame the motion ends, where the arrival hides it.
+ * - `quick` is `land` on `SNAP_RETURN` rather than the drag spring: a
+ *   cancelled gesture is a refusal, and a refusal is answered at once.
+ * - `setdown` is `land` with the lift made visible: the Card rises off
+ *   the Deck when the drag arms and descends onto it as it arrives, so
+ *   the Deck closing over it is the end of a movement rather than a
+ *   change of z.
+ */
+export const SNAP_BACK_MODELS = [
+	"lifted",
+	"under",
+	"land",
+	"quick",
+	"setdown",
+] as const;
+export type SnapBackModel = (typeof SNAP_BACK_MODELS)[number];
+
+/**
+ * The `quick` model's return.
+ *
+ * 200 ms is the middle of what a drawer gets and the top of what a
+ * dropdown gets, and this is smaller than either: the Card is already
+ * near its slot, and the gesture it answers has been refused.
+ */
+export const SNAP_RETURN = tween(200);
+
+/** How near its slot a returning Card has to be to rejoin the stack, px. */
+export const SNAP_LAND_PX = 6;
+
+/**
+ * The `setdown` model's lift: how far the Card rises off the Deck while
+ * it is in hand, as a fraction of its own size, and the tween it rises on.
+ * It descends on the drag spring instead, so the landing and the descent
+ * are one event.
+ */
+export const LIFT_SCALE = 0.04;
+export const LIFT = tween(140);
+
+/**
+ * The lift's shadow at height `lift`, 0 → 1. A Card on the Deck has no
+ * shadow at all rather than a shadow of no size: the models that never
+ * lift should not hand the compositor one to think about.
+ */
+export function liftShadow(lift: number): string {
+	return lift <= 0
+		? "none"
+		: `0 ${(lift * 18).toFixed(1)}px ${(lift * 32).toFixed(1)}px rgba(0, 0, 0, ${(lift * 0.34).toFixed(3)})`;
+}
+
 /* --------------------------------------------------------- note tweens */
 
 /*

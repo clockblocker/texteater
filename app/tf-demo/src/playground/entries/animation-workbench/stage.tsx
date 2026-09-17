@@ -68,7 +68,17 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 		setControlsOpen(false);
 		controlsToggle.current?.focus();
 	};
-	const candidate = variants.find((variant) => variant.id === selected);
+	/**
+	 * What the candidate pane renders: a saved variant, or one of the
+	 * entry's presets. Only a variant has parameters to edit — a preset is
+	 * a fixed position to compare against, and "Create variant" is how you
+	 * start from one.
+	 */
+	const variant = variants.find((saved) => saved.id === selected);
+	const preset = entry.presets?.find(
+		(shipped) => `preset:${shipped.key}` === selected,
+	);
+	const candidate = variant ?? preset;
 	useEffect(() => saveVariants(variants), [variants]);
 	const patch = (motion: DeckMotionOverrides) =>
 		setVariants((current) =>
@@ -157,9 +167,17 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 								className="max-w-[15rem] rounded-md border border-line bg-paper px-2 py-1.5 text-ink"
 							>
 								<option value="baseline">Baseline</option>
-								{variants.map((variant) => (
-									<option key={variant.id} value={variant.id}>
-										{variant.name}
+								{entry.presets?.map((shipped) => (
+									<option
+										key={shipped.key}
+										value={`preset:${shipped.key}`}
+									>
+										{shipped.name}
+									</option>
+								))}
+								{variants.map((saved) => (
+									<option key={saved.id} value={saved.id}>
+										{saved.name}
 									</option>
 								))}
 							</select>
@@ -192,7 +210,7 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 							Reset scene
 						</button>
 					</div>
-					{candidate ? (
+					{variant ? (
 						<section
 							aria-label="Variant parameters"
 							className="space-y-4 border-t border-line pt-4"
@@ -202,7 +220,7 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 									Name
 									<input
 										aria-label="Variant name"
-										value={candidate.name}
+										value={variant.name}
 										maxLength={80}
 										className="w-36 rounded-md border border-line bg-paper px-2 py-1 text-ink"
 										onChange={(event) =>
@@ -257,8 +275,42 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 									entry.knobs.includes(parameter.key),
 								).map((parameter) => {
 									const value =
-										candidate.motion[parameter.key] ??
+										variant.motion[parameter.key] ??
 										DEFAULT_DECK_MOTION[parameter.key];
+									if (parameter.choices)
+										return (
+											<label
+												key={parameter.key}
+												className="flex items-center justify-between gap-3 text-xs text-ink-muted"
+											>
+												{parameter.label}
+												<select
+													aria-label={parameter.label}
+													value={value}
+													className="rounded-md border border-line bg-paper px-2 py-1.5 text-ink"
+													onChange={(event) =>
+														patch({
+															[parameter.key]:
+																Number(
+																	event.target
+																		.value,
+																),
+														})
+													}
+												>
+													{parameter.choices.map(
+														(choice, index) => (
+															<option
+																key={choice}
+																value={index}
+															>
+																{choice}
+															</option>
+														),
+													)}
+												</select>
+											</label>
+										);
 									return (
 										<div
 											key={parameter.key}
@@ -349,7 +401,7 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 				) : null}
 				{candidate ? (
 					<Specimen
-						key={candidate.id}
+						key={selected}
 						entry={entry}
 						kind="candidate"
 						label={candidate.name || "Variant"}

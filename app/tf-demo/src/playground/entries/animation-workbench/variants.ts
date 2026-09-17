@@ -1,3 +1,4 @@
+import { SNAP_BACK_MODELS } from "../deck-models/motion-spec";
 import type { DeckMotionOverrides } from "../deck-models/runtime-config";
 
 export type Variant = {
@@ -13,9 +14,31 @@ export type Parameter = {
 	readonly max: number;
 	readonly step: number;
 	readonly unit?: string;
+	/**
+	 * A parameter that names a model rather than measuring one. It is
+	 * still a number — an index into these — so a saved variant stays the
+	 * plain record of numbers `readVariants` can check.
+	 */
+	readonly choices?: readonly string[];
 };
 
 export const PARAMETERS: readonly Parameter[] = [
+	{
+		key: "snapBackModel",
+		label: "Snap-back model",
+		min: 0,
+		max: SNAP_BACK_MODELS.length - 1,
+		step: 1,
+		choices: SNAP_BACK_MODELS,
+	},
+	{
+		key: "snapLandPx",
+		label: "Landing threshold",
+		min: 1,
+		max: 40,
+		step: 1,
+		unit: "px",
+	},
 	{
 		key: "zoneFeedbackMs",
 		label: "Zone feedback",

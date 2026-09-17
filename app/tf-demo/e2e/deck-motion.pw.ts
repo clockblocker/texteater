@@ -49,6 +49,41 @@ async function headingSamples(card: Locator) {
 	});
 }
 
+/**
+ * Every frame of a Card's return: how far it still is from the slot it
+ * left, and whether the Deck has closed over it yet. Start it before the
+ * release and await it after.
+ */
+async function returnSamples(card: Locator, home: { x: number; y: number }) {
+	return card.evaluate(async (element, at) => {
+		const samples: { t: number; d: number; z: number }[] = [];
+		const start = performance.now();
+		while (performance.now() - start < 700) {
+			await new Promise<void>((resolve) =>
+				requestAnimationFrame(() => resolve()),
+			);
+			const box = element.getBoundingClientRect();
+			samples.push({
+				t: performance.now() - start,
+				d: Math.hypot(box.x - at.x, box.y - at.y),
+				z: Number(getComputedStyle(element).zIndex),
+			});
+		}
+		return samples;
+	}, home);
+}
+
+/** When the Card arrived, and when — and where — the Deck closed over it. */
+function arrival(samples: { t: number; d: number; z: number }[]) {
+	const home = samples.find((sample) => sample.d <= 8);
+	const closed = samples.find((sample) => sample.z < 40);
+	return {
+		homeAt: home?.t ?? null,
+		closedAt: closed?.t ?? null,
+		closedFrom: closed?.d ?? null,
+	};
+}
+
 async function selectedScale(specimen: Locator) {
 	return specimen
 		.locator('[data-place="open"]')
@@ -319,6 +354,78 @@ test("system reduced motion suppresses drag tilt in both specimens", async ({
 		await page.mouse.up();
 		await expect(specimen.locator("[data-held]")).toHaveCount(0);
 	}
+});
+
+test("the snap-back model decides when the deck closes over a returning card", async ({
+	page,
+}) => {
+	await page.goto("/playground/animation-workbench/snap-back");
+	await page
+		.getByRole("button", { name: "Show controls", exact: true })
+		.click();
+	/* the models are the entry's own presets: they are in the Version list
+	   of a reader who has never saved a variant */
+	const version = page.getByRole("combobox", { name: "Version" });
+	await expect(version.locator("option")).toHaveText([
+		"Baseline",
+		/^lifted/,
+		/^land/,
+		/^quick/,
+		/^setdown/,
+	]);
+	await version.selectOption({ value: "preset:lifted" });
+	await page
+		.getByRole("button", { name: "Hide controls", exact: true })
+		.click();
+	const returnOf = async (kind: string) => {
+		const card = page.locator(
+			`[data-specimen="${kind}"] [data-place="open"]`,
+		);
+		const box = await card.boundingBox();
+		if (!box) throw new Error("Missing card geometry");
+		await startDrag(page, card, 180, 60);
+		const samples = returnSamples(card, box);
+		await page.mouse.up();
+		return arrival(await samples);
+	};
+
+	/* the baseline is `under`: the stack is restored at the release, so
+	   the Card travels the last of its way home beneath the Deck */
+	const baseline = await returnOf("baseline");
+	expect(baseline.closedFrom).toBeGreaterThan(50);
+	expect(baseline.closedAt).toBeLessThan(60);
+
+	/* the candidate is `lifted`, the model this replaced: it only ever
+	   closes over a Card that is already home */
+	const candidate = await returnOf("candidate");
+	expect(candidate.homeAt).not.toBeNull();
+	expect(candidate.closedFrom).toBeLessThan(8);
+});
+
+test("a held card is drawn where it rests, whatever its resting scale", async ({
+	page,
+}) => {
+	await page.goto("/playground/animation-workbench/snap-back");
+	const frame = page.locator("[data-deck-frame]");
+	/* the open Card rests at OPEN_SCALE, so it is the one a change of
+	   transform-origin between rest and hand would move */
+	const card = frame.locator('[data-place="open"]');
+	const atRest = await card.boundingBox();
+	if (!atRest) throw new Error("Missing card geometry");
+	await startDrag(page, card, 160, 40);
+	const inHand = await card.boundingBox();
+	if (!inHand) throw new Error("Missing held geometry");
+	/* the Card follows the pointer and does nothing else: a drag offset,
+	   not a drag offset plus whatever a change of origin is worth */
+	expect(inHand.x - atRest.x).toBeCloseTo(160, 0);
+	expect(inHand.y - atRest.y).toBeCloseTo(40, 0);
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	/* and home is home: nothing is left to fall into place once the
+	   gesture has torn down */
+	await expect
+		.poll(async () => (await card.boundingBox())?.y ?? null)
+		.toBeCloseTo(atRest.y, 0);
 });
 
 for (const scenario of ["swap", "snap-back"]) {

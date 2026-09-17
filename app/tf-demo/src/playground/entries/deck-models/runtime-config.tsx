@@ -19,6 +19,9 @@ export const DEFAULT_DECK_MOTION = {
 	velocityStaleMs: 100,
 	edgeBand: 80,
 	settleTimeoutMs: spec.SETTLE_TIMEOUT_MS,
+	/* an index into spec.SNAP_BACK_MODELS; see the note there */
+	snapBackModel: spec.SNAP_BACK_MODELS.indexOf("under"),
+	snapLandPx: spec.SNAP_LAND_PX,
 	holdScale: spec.HOLD_SCALE,
 	flyDistance: spec.FLY_DISTANCE,
 	flyRotateTo: spec.FLY_ROTATE_TO,
@@ -94,6 +97,9 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		VELOCITY_STALE_MS: p.velocityStaleMs,
 		EDGE_BAND: p.edgeBand,
 		SETTLE_TIMEOUT_MS: p.settleTimeoutMs * p.durationScale,
+		SNAP_BACK:
+			spec.SNAP_BACK_MODELS[Math.round(p.snapBackModel)] ?? "under",
+		SNAP_LAND_PX: p.snapLandPx,
 		FLY_DISTANCE: p.flyDistance,
 		FLY_ROTATE_TO: p.flyRotateTo,
 		TILT_MAX: p.tiltMax,
