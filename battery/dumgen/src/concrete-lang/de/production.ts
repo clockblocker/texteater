@@ -23,6 +23,7 @@ import {
 	closedRoute,
 	sameValue,
 } from "./authored-closed-sets/select.js";
+import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
 import {
 	type GrammarOutput,
 	normalizeGrammarSurface,
@@ -161,16 +162,16 @@ export function createGermanOperations(
 				supported(encounter, "resolveGrammar");
 				const route = routeOf(encounter),
 					input = markedContext(encounter);
-				const output = await call<
-					GrammarOutput | { decision: "Unresolved" }
-				>(
-					"resolveGrammar",
-					route,
-					grammarPromptRoutes[route] ?? "",
-					`grammar/${route}`,
-					input,
-					signal,
-				);
+				const output = ["VERB", "AUX"].includes(encounter.target.kind)
+					? await resolveGrammarJudgments(options, encounter, signal)
+					: await call<GrammarOutput | { decision: "Unresolved" }>(
+							"resolveGrammar",
+							route,
+							grammarPromptRoutes[route] ?? "",
+							`grammar/${route}`,
+							input,
+							signal,
+						);
 				if ("decision" in output)
 					throw new DumgenFailure(
 						"Unresolved",

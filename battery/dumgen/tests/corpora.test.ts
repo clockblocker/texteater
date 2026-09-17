@@ -11,6 +11,7 @@ import targetData from "../src/concrete-lang/de/target-classification/source-dat
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
 import { executeOutput, rejectJudgment } from "./execution-fixture.js";
+import { grammarFixture } from "./grammar-fixture.js";
 
 const kinds: Record<string, string> = {
 	"proper-noun": "PROPN",
@@ -121,10 +122,16 @@ test("all 1060 retained grammar answers project through public operations", asyn
 			});
 			const result = await Effect.runPromise(
 				Effect.either(
-					createDumgen({
-						judge: rejectJudgment,
-						execute: executeOutput(async () => golden.idealOutput),
-					}).resolveGrammar(encounter),
+					createDumgen(
+						["VERB", "AUX"].includes(kind)
+							? grammarFixture(golden.idealOutput)
+							: {
+									judge: rejectJudgment,
+									execute: executeOutput(
+										async () => golden.idealOutput,
+									),
+								},
+					).resolveGrammar(encounter),
 				),
 			);
 			if (

@@ -17,6 +17,7 @@ import {
 	meaningIsolationCaseIds,
 } from "./concrete-lang/de/reading-emoji-description/evaluator.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
+import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import type { DumgenOptions } from "./types.js";
 import { defaultModelConfiguration } from "./universal/model.js";
 import {
@@ -119,7 +120,9 @@ export async function evaluateExperiment(args: {
 	signal?: AbortSignal;
 }) {
 	if (
-		args.experimentId === "target-classification/de/high-level-whole-unit"
+		args.experimentId ===
+			"target-classification/de/high-level-whole-unit" ||
+		args.experimentId.startsWith("grammatical-resolution/")
 	) {
 		const options: DumgenOptions = {
 			execute: (request) =>
@@ -135,10 +138,15 @@ export async function evaluateExperiment(args: {
 			judgmentConfiguration: args.judgmentConfiguration,
 		};
 		const run = await runOperationExperiment({
-			experiment: targetOperationExperiment(options),
+			experiment: args.experimentId.startsWith("grammatical-resolution/")
+				? grammarOperationExperiment(
+						getExperiment(args.experimentId),
+						options,
+					)
+				: targetOperationExperiment(options),
 			experimentId: args.experimentId,
 			operationVersion: "judgments-2",
-			evaluatorVersion: "canonical-target-2",
+			evaluatorVersion: "canonical-operation-2",
 			sourceRevision: args.sourceRevision,
 			configurations: {
 				generation: generationConfiguration(

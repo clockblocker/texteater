@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { getExperiment } from "dumgen/development";
 import { stableJson } from "promptsmith";
-import type { EvaluationRun } from "promptsmith/evaluation";
+import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { runEvaluationCli } from "../../../battery/dumgen/cli/evaluate";
 import { createEvaluationService } from "../src/evaluations";
 
@@ -34,7 +34,7 @@ test("CLI and Laboratory share cases, evaluation records and configured storage"
 				"fixture",
 			],
 			{ execute, write: () => {} },
-		)) as EvaluationRun;
+		)) as OperationEvaluationRun;
 		const laboratory = createEvaluationService({
 			outputDirectory: directory,
 			execute,
@@ -44,10 +44,24 @@ test("CLI and Laboratory share cases, evaluation records and configured storage"
 			sourceRevision: "controlled",
 			configuration: { model: "fixture", settings: {} },
 		});
-		const comparable = (run: EvaluationRun) =>
-			run.cases.map(({ durationMs, ...record }) => record);
-		expect(comparable(cli)).toEqual(comparable(app));
-		expect(cli.manifest.configuration).toEqual(app.manifest.configuration);
+		if (app.manifest.version !== 2)
+			throw Error("Expected operation evidence");
+		const comparable = (run: OperationEvaluationRun) =>
+			run.cases.map(({ caseId, status, output, evaluation }) => ({
+				caseId,
+				status,
+				output,
+				evaluation,
+			}));
+		expect(comparable(cli)).toEqual(
+			comparable(app as OperationEvaluationRun),
+		);
+		expect(cli.manifest.configurations).toEqual(
+			(app as OperationEvaluationRun).manifest.configurations,
+		);
+		expect(cli.cases.every((record) => record.traces.length === 1)).toBe(
+			true,
+		);
 		expect(await laboratory.open(cli.manifest.runId)).toEqual(cli);
 		expect(
 			(await laboratory.compare(cli.manifest.runId, app.manifest.runId))
