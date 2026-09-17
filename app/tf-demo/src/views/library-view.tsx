@@ -38,6 +38,7 @@ const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
 
 export function LibraryView() {
 	const { follow } = useWorkspaceInteraction();
+	const [isAddTextOpen, setIsAddTextOpen] = useState(false);
 	const [sourceText, setSourceText] = useState(exampleText);
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
@@ -63,6 +64,7 @@ export function LibraryView() {
 				kind: "Text",
 				textId: parseSubmittedTextId(result),
 			});
+			setIsAddTextOpen(false);
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Text analysis failed.",
@@ -150,7 +152,7 @@ export function LibraryView() {
 				</div>
 			</div>
 
-			<Dialog>
+			<Dialog open={isAddTextOpen} onOpenChange={setIsAddTextOpen}>
 				<DialogTrigger
 					render={
 						<Button

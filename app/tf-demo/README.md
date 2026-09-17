@@ -16,11 +16,19 @@ bun run demo
 The first run creates a local deployment and writes `VITE_CONVEX_URL` to
 `.env.local`. Later runs reuse that deployment and its data.
 
-Set the model key on the Convex deployment:
+From `app/tf-demo`, set both provider credentials on the Convex deployment.
+Omit the values to enter them interactively without putting secrets in shell
+history:
 
 ```sh
-bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
+bun x convex env set OPENAI_API_KEY
+bun x convex env set TYPESAFE_API_KEY
 ```
+
+Convex actions read deployment environment variables. Keys in your shell or
+the repository's `.env.local` are not automatically available there. TypeSafe
+is required during text intake; OpenAI is also required for generated
+resolution. Configure both again when switching to a new deployment.
 
 The dictionary starts empty. Dumgen supplies reviewed Units and Knowledge on
 demand; grammatical navigation adds only the selected Reading.
