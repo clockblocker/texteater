@@ -6,12 +6,12 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { createDumgen } from "dumgen";
-import type { Encounter, ModelRequest } from "dumgen/types";
+import type { Encounter, ModelExchange } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
 	executeOutput,
-	rejectJudgment,
+	queuedTargetJudgment,
 } from "../../../battery/dumgen/tests/execution-fixture.js";
 import {
 	applyValidatedReadingKnowledgeChange,
@@ -135,11 +135,7 @@ const selection = {
 	sentenceId: "sentence-1",
 	clickedSegmentIndex: 0,
 };
-const classification = {
-	decision: "Resolved",
-	additionalMemberIndices: [],
-	target: { family: "Lexeme", kind: "NOUN" },
-};
+const classification = encounter.target;
 const grammarOutput = {
 	memberOrthographies: ["Standard"],
 	normalizedMembers: ["Banken"],
@@ -159,7 +155,7 @@ function setup(
 	overrides: Partial<OrchestrationPersistence> = {},
 	candidates: Dumling.Reading<"de">[] = [],
 ) {
-	const requests: ModelRequest[] = [];
+	const requests: ModelExchange["request"][] = [];
 	const { storage, commits } = createPlanningStorage(candidates);
 	storage.findStoredReadings = () =>
 		Effect.succeed({
@@ -246,9 +242,9 @@ function setup(
 		...overrides,
 	};
 	const dumgen = createDumgen({
-		judge: rejectJudgment,
+		judge: queuedTargetJudgment(outputs),
+		onModelExchange: (exchange) => requests.push(exchange.request),
 		execute: executeOutput(async (request) => {
-			requests.push(request);
 			const next = outputs.shift();
 			if (next instanceof Error) throw next;
 			return next;
@@ -360,9 +356,7 @@ test("a globally resolved occurrence is reused without generation", async () => 
 });
 
 test("Unresolved is durable and replayed; a late committed occurrence still wins", async () => {
-	const run = setup([
-		{ decision: "Unresolved", target: null, additionalMemberIndices: null },
-	]);
+	const run = setup([{ decision: "Unresolved" }]);
 	expect(
 		await Effect.runPromise(run.orchestrator.resolveSegment(selection)),
 	).toMatchObject({ grammatical: { decision: "Unresolved" } });
@@ -479,9 +473,9 @@ test("Knowledge changes validate against the exact tagged source Reading", () =>
 test("a Closed route miss records its typed outcome without dictionary writes or model fallback", async () => {
 	const run = setup([
 		{
-			decision: "Resolved",
-			additionalMemberIndices: [],
-			target: { family: "Lexeme", kind: "DET" },
+			family: "Lexeme",
+			kind: "DET",
+			memberSegmentIndices: [0],
 		},
 		{
 			memberOrthographies: ["Standard"],

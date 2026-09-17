@@ -3,14 +3,23 @@ import {
 	evaluateExperiment,
 	listExperiments,
 } from "dumgen/development";
+import type { DumgenOptions } from "dumgen/types";
 import type {
 	EvaluationExecutor,
 	ModelConfiguration,
 } from "promptsmith/evaluation";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { compareRuns, listRuns, loadRun } from "promptsmith/storage";
+import {
+	createTypeSafeExecutor,
+	type TypeSafeExecutor,
+} from "promptsmith/typesafe";
 export function createEvaluationService(
-	options: { outputDirectory?: string; execute?: EvaluationExecutor } = {},
+	options: {
+		outputDirectory?: string;
+		judge?: TypeSafeExecutor;
+		execute?: EvaluationExecutor;
+	} = {},
 ) {
 	const defaultDirectory =
 		options.outputDirectory ??
@@ -35,6 +44,7 @@ export function createEvaluationService(
 				experimentId: string;
 				sourceRevision: string;
 				configuration?: ModelConfiguration;
+				judgmentConfiguration?: DumgenOptions["judgmentConfiguration"];
 				outputDirectory?: string;
 			},
 			signal?: AbortSignal,
@@ -43,6 +53,10 @@ export function createEvaluationService(
 				...input,
 				outputDirectory: input.outputDirectory ?? defaultDirectory,
 				execute: options.execute ?? createOpenAIExecutor(),
+				judge:
+					options.judge ??
+					((request, options) =>
+						createTypeSafeExecutor()(request, options)),
 				signal,
 			}),
 	};

@@ -33,10 +33,7 @@ import {
 	projectKnowledge,
 	validateRequest,
 } from "./knowledge-production/project.js";
-import {
-	createGermanHighLevelTargetClassificationProjection,
-	type GermanHighLevelTargetClassificationModelOutput,
-} from "./target-classification/projection.js";
+import { classifyGermanTarget } from "./target-classification/judgments.js";
 
 function routeOf(encounter: Encounter): string {
 	return `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
@@ -151,31 +148,11 @@ export function createGermanOperations(
 						"classifyTarget",
 						"Target Classification is not enabled for this Language",
 					);
-				const projection =
-					createGermanHighLevelTargetClassificationProjection({
-						segments: input.sentence.segments,
-						clickedSegmentIndex: input.clickedSegmentIndex,
-					});
-				const result =
-					await call<GermanHighLevelTargetClassificationModelOutput>(
-						"classifyTarget",
-						"de",
-						"target-classification/de/high-level-whole-unit",
-						"target/de",
-						projection.modelInput,
-						signal,
-					);
-				const target = projection.canonicalize(result);
-				if ("decision" in target)
-					throw new DumgenFailure(
-						"Unresolved",
-						"classifyTarget",
-						"No defensible target",
-					);
-				return validateEncounter(
-					{ sentence: input.sentence, target },
-					"classifyTarget",
-				).target as AnalysisTarget<L>;
+				return (await classifyGermanTarget(
+					options,
+					input,
+					signal,
+				)) as AnalysisTarget<L>;
 			});
 		},
 		resolveGrammar<L extends Dumling.Language>(raw: Encounter<L>) {

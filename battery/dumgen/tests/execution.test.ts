@@ -99,7 +99,7 @@ test("complete operations retain both executors, dependencies, low confidence an
 		"TypeSafe",
 		"Luna",
 	]);
-	expect(trace?.calls[1]?.dependsOn).toEqual([trace?.calls[0]?.id]);
+	expect<unknown>(trace?.calls[1]?.dependsOn).toEqual([trace?.calls[0]?.id]);
 	expect(trace?.calls[0]?.output).toMatchObject({
 		model: "jev-reported",
 		usage: { input_tokens: 12 },

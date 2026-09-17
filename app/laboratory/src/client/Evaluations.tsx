@@ -30,6 +30,7 @@ export function Evaluations() {
 	const [experiment, setExperiment] = useState(""),
 		[directory, setDirectory] = useState(""),
 		[model, setModel] = useState(""),
+		[judgmentModel, setJudgmentModel] = useState(""),
 		[settings, setSettings] = useState("{}"),
 		[revision, setRevision] = useState("");
 	const [run, setRun] = useState<StoredRun | null>(null),
@@ -125,6 +126,9 @@ export function Evaluations() {
 										experimentId: experiment,
 										sourceRevision: revision,
 										configuration,
+										judgmentConfiguration: judgmentModel
+											? { model: judgmentModel }
+											: undefined,
 										outputDirectory: directory || undefined,
 									}),
 								},
@@ -178,12 +182,23 @@ export function Evaluations() {
 						/>
 					</label>
 					<label className="space-y-2">
-						<span>Model override</span>
+						<span>Generation model override</span>
 						<input
 							className={control}
 							placeholder="Dumgen default"
 							value={model}
 							onChange={(event) => setModel(event.target.value)}
+						/>
+					</label>
+					<label className="space-y-2">
+						<span>Judgment model override</span>
+						<input
+							className={control}
+							placeholder="jev-latest"
+							value={judgmentModel}
+							onChange={(event) =>
+								setJudgmentModel(event.target.value)
+							}
 						/>
 					</label>
 					<label htmlFor="model-settings" className="space-y-2">

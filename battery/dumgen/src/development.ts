@@ -4,8 +4,10 @@ import {
 	type EvaluationExecutor,
 	type ModelConfiguration,
 	runExperiment,
+	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
+import { createTypeSafeExecutor } from "promptsmith/typesafe";
 import { promptRegistrations } from "./concrete-lang/de/experiments.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
@@ -14,7 +16,13 @@ import {
 	evaluateReadingMeaningIsolation,
 	meaningIsolationCaseIds,
 } from "./concrete-lang/de/reading-emoji-description/evaluator.js";
+import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
+import type { DumgenOptions } from "./types.js";
 import { defaultModelConfiguration } from "./universal/model.js";
+import {
+	generationConfiguration,
+	judgmentConfiguration,
+} from "./universal/trace.js";
 
 type Registration = {
 	readonly promptSource: PromptSource;
@@ -103,11 +111,46 @@ export function getExperiment(id: string) {
 export async function evaluateExperiment(args: {
 	experimentId: string;
 	execute: EvaluationExecutor;
+	judge?: DumgenOptions["judge"];
+	judgmentConfiguration?: DumgenOptions["judgmentConfiguration"];
 	sourceRevision: string;
 	configuration?: ModelConfiguration;
 	outputDirectory?: string;
 	signal?: AbortSignal;
 }) {
+	if (
+		args.experimentId === "target-classification/de/high-level-whole-unit"
+	) {
+		const options: DumgenOptions = {
+			execute: (request) =>
+				args.execute({
+					...request,
+					configuration: request.configuration as ModelConfiguration,
+				}),
+			judge:
+				args.judge ??
+				((request, requestOptions) =>
+					createTypeSafeExecutor()(request, requestOptions)),
+			configuration: args.configuration,
+			judgmentConfiguration: args.judgmentConfiguration,
+		};
+		const run = await runOperationExperiment({
+			experiment: targetOperationExperiment(options),
+			experimentId: args.experimentId,
+			operationVersion: "judgments-2",
+			evaluatorVersion: "canonical-target-2",
+			sourceRevision: args.sourceRevision,
+			configurations: {
+				generation: generationConfiguration(
+					options,
+				) as ModelConfiguration,
+				judgment: judgmentConfiguration(options),
+			},
+			signal: args.signal,
+		});
+		if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+		return run;
+	}
 	const configuration =
 		args.configuration ?? (defaultModelConfiguration as ModelConfiguration);
 	const run = await runExperiment({

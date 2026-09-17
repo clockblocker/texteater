@@ -13,7 +13,11 @@ import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
-import { executeOutput, rejectJudgment } from "./execution-fixture.js";
+import {
+	executeOutput,
+	queuedTargetJudgment,
+	rejectJudgment,
+} from "./execution-fixture.js";
 
 const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
@@ -52,11 +56,11 @@ async function tag(task: Effect.Effect<unknown, unknown>) {
 		: "Success";
 }
 test("direct targets and classified targets share one grammar path", async () => {
-	const calls: ModelRequest[] = [];
+	const calls: import("dumgen/types").ModelExchange["request"][] = [];
 	const dumgen = createDumgen({
-		judge: rejectJudgment,
+		judge: queuedTargetJudgment([encounter.target]),
+		onModelExchange: (exchange) => calls.push(exchange.request),
 		execute: executeOutput(async (request) => {
-			calls.push(request);
 			return request.stage === "classifyTarget"
 				? {
 						decision: "Resolved",

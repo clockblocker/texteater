@@ -7,10 +7,15 @@ import {
 import type { EvaluationExecutor } from "promptsmith/evaluation";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { loadRun } from "promptsmith/storage";
+import {
+	createTypeSafeExecutor,
+	type TypeSafeExecutor,
+} from "promptsmith/typesafe";
 export async function runEvaluationCli(
 	argv: string[],
 	dependencies: {
 		execute?: EvaluationExecutor;
+		judge?: TypeSafeExecutor;
 		write?: (value: unknown) => void;
 	} = {},
 ) {
@@ -20,6 +25,8 @@ export async function runEvaluationCli(
 			list: { type: "boolean" },
 			experiment: { type: "string" },
 			model: { type: "string" },
+			"judgment-model": { type: "string" },
+			"judgment-timeout": { type: "string" },
 			settings: { type: "string" },
 			output: { type: "string" },
 			revision: { type: "string" },
@@ -63,6 +70,16 @@ export async function runEvaluationCli(
 	try {
 		const run = await evaluateExperiment({
 			experimentId: values.experiment,
+			judge:
+				dependencies.judge ??
+				((request, options) =>
+					createTypeSafeExecutor()(request, options)),
+			judgmentConfiguration: {
+				model: values["judgment-model"],
+				timeoutMs: values["judgment-timeout"]
+					? Number(values["judgment-timeout"])
+					: undefined,
+			},
 			configuration,
 			sourceRevision: values.revision,
 			outputDirectory,
