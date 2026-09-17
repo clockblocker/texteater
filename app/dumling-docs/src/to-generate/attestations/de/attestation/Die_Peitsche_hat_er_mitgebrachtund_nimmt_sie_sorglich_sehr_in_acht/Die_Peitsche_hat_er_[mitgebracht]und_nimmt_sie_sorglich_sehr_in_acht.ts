@@ -20,14 +20,15 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			aspect: null,
-			verbForm: "Part",
-			gender: null,
-			mood: null,
-			number: null,
-			person: null,
-			tense: null,
+			mood: "Ind",
+			number: "Sing",
+			person: "3",
+			tense: "Pres",
+			verbForm: "Fin",
+			perfect: "Yes",
+			future: null,
 			voice: null,
+			passive: null,
 		},
 		lemma: {
 			unitKind: "Lemma",

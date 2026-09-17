@@ -21,7 +21,10 @@ const occurrenceAttestation = {
 			person: "2",
 			verbForm: "Fin",
 			tense: null,
+			perfect: null,
+			future: null,
 			voice: null,
+			passive: null,
 		},
 		lemma: {
 			unitKind: "Lemma",
