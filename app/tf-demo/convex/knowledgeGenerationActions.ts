@@ -12,6 +12,7 @@ import {
 } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
+import { inspectionFor } from "./inspectionAction";
 import {
 	type effectiveRelationPublicationPolicy,
 	generatedKnowledgeAllowedForPublication,
@@ -92,147 +93,177 @@ export const runKnowledgeGeneration = internalAction({
 	args: { attemptKey: v.string() },
 	returns: v.null(),
 	handler: async (ctx, { attemptKey }) => {
-		let rejectedRun:
-			| {
-					runNumber: number;
-					requestedKinds: ReturnType<typeof requestedRelationKinds>;
-					artifactPath: string | null;
-					fingerprints: ReturnType<
-						typeof effectiveRelationPublicationPolicy
-					>["fingerprints"];
-			  }
-			| undefined;
-		let generationCompleted = false;
-		const operationTraces: string[] = [];
-		const knowledgeDumgen = createProductionDumgen((event) => {
-			if (event.kind === "TraceRecorded")
-				operationTraces.push(event.traceJson);
-		});
-		let requested: unknown = {};
-		await ctx.runMutation(internal.knowledgeGeneration.markRunning, {
-			attemptKey,
-		});
-		try {
-			const input = await ctx.runQuery(
-				internal.knowledgeGeneration.loadInput,
-				{ attemptKey },
-			);
-			if (!input || input.kind === "Full") return null;
-			if (input.reading.lemma.language !== "de") {
-				throw new Error("Unsupported Knowledge language.");
-			}
-			const reading = parseGermanReading(input.reading);
-			const authorization = await ctx.runQuery(
-				getRelationPublicationAuthorization,
+		const inspection = await inspectionFor(ctx, attemptKey, "Knowledge");
+		const run = async () => {
+			let rejectedRun:
+				| {
+						runNumber: number;
+						requestedKinds: ReturnType<
+							typeof requestedRelationKinds
+						>;
+						artifactPath: string | null;
+						fingerprints: ReturnType<
+							typeof effectiveRelationPublicationPolicy
+						>["fingerprints"];
+				  }
+				| undefined;
+			let generationCompleted = false;
+			const operationTraces: string[] = [];
+			const knowledgeDumgen = createProductionDumgen(
+				(event) => {
+					if (event.kind === "TraceRecorded")
+						operationTraces.push(event.traceJson);
+				},
 				{},
+				inspection,
 			);
-			const qualifiedKinds = authorization.rollbackStopped
-				? []
-				: authorization.qualifiedKinds;
-			const generationRequestFor = await getGenerationRequestBuilder();
-			const request = generationRequestFor(reading, qualifiedKinds, {
-				translationLanguages: input.translationLanguages,
-				translationsOnly: input.translationsOnly,
+			let requested: unknown = {};
+			await ctx.runMutation(internal.knowledgeGeneration.markRunning, {
+				attemptKey,
 			});
-			requested = request;
-			const requestedKinds = requestedRelationKinds(
-				"semanticRelations" in request ? request : {},
-			);
-			rejectedRun = {
-				runNumber: input.runNumber,
-				requestedKinds,
-				artifactPath: authorization.artifactPath,
-				fingerprints: authorization.fingerprints,
-			};
-			const generated = await Effect.runPromise(
-				knowledgeDumgen
-					.produceKnowledge({
-						encounter: parseResolvedGrammar({
-							encounter: input.encounter,
-							attestation: input.attestation,
-						}).encounter,
-						reading,
-						request,
-					} as KnowledgeInput<"de">)
-					.pipe(
-						Effect.catchTag("CatalogMiss", (failure) =>
-							Effect.succeed({
-								decision: "CatalogMiss" as const,
-								stage: failure.stage,
-								route: failure.route ?? "de",
-								message: failure.message,
-							}),
+			try {
+				const input = await ctx.runQuery(
+					internal.knowledgeGeneration.loadInput,
+					{ attemptKey },
+				);
+				if (!input || input.kind === "Full") return null;
+				if (input.reading.lemma.language !== "de") {
+					throw new Error("Unsupported Knowledge language.");
+				}
+				const reading = parseGermanReading(input.reading);
+				const authorization = await ctx.runQuery(
+					getRelationPublicationAuthorization,
+					{},
+				);
+				const qualifiedKinds = authorization.rollbackStopped
+					? []
+					: authorization.qualifiedKinds;
+				const generationRequestFor =
+					await getGenerationRequestBuilder();
+				const request = generationRequestFor(reading, qualifiedKinds, {
+					translationLanguages: input.translationLanguages,
+					translationsOnly: input.translationsOnly,
+				});
+				requested = request;
+				const requestedKinds = requestedRelationKinds(
+					"semanticRelations" in request ? request : {},
+				);
+				rejectedRun = {
+					runNumber: input.runNumber,
+					requestedKinds,
+					artifactPath: authorization.artifactPath,
+					fingerprints: authorization.fingerprints,
+				};
+				const generated = await Effect.runPromise(
+					knowledgeDumgen
+						.produceKnowledge({
+							encounter: parseResolvedGrammar({
+								encounter: input.encounter,
+								attestation: input.attestation,
+							}).encounter,
+							reading,
+							request,
+						} as KnowledgeInput<"de">)
+						.pipe(
+							Effect.catchTag("CatalogMiss", (failure) =>
+								Effect.succeed({
+									decision: "CatalogMiss" as const,
+									stage: failure.stage,
+									route: failure.route ?? "de",
+									message: failure.message,
+								}),
+							),
 						),
-					),
-			);
-			if ("decision" in generated) {
+				);
+				if ("decision" in generated) {
+					generationCompleted = true;
+					await ctx.runMutation(recordKnowledgeCatalogMiss, {
+						attemptKey,
+						miss: generated,
+						productionEvidence: {
+							request,
+							failures: [],
+							operationTraces,
+						},
+					});
+					return null;
+				}
 				generationCompleted = true;
-				await ctx.runMutation(recordKnowledgeCatalogMiss, {
+				const publishable = generatedKnowledgeAllowedForPublication(
+					generated,
+					qualifiedKinds,
+				);
+				await ctx.runAction(
+					internal.orchestration.applyGeneratedKnowledgePlan,
+					{
+						attemptKey,
+						reading,
+						changes: publishable.changes,
+						pendingRelations: publishable.pendingRelations,
+						productionEvidence: {
+							request,
+							failures: [...generated.failures],
+							operationTraces,
+						},
+						relationPublication: {
+							runNumber: input.runNumber,
+							requestedKinds,
+							artifactPath: authorization.artifactPath,
+							fingerprints: authorization.fingerprints,
+							proposals: publishable.pendingRelations.map(
+								(pending) => ({
+									relation: pending.relation,
+									targetShadow: pending.target,
+								}),
+							),
+						},
+					},
+				);
+				return null;
+			} catch (error) {
+				inspection?.failure(
+					"Knowledge generation failed",
+					"app/tf-demo · knowledgeGenerationActions",
+					requested,
+					error,
+				);
+				console.error("Knowledge generation attempt failed", error);
+				if (
+					!generationCompleted &&
+					rejectedRun &&
+					rejectedRun.requestedKinds.length > 0
+				) {
+					await ctx.runMutation(recordRejectedRelationOutput, {
+						attemptKey,
+						...rejectedRun,
+					});
+				}
+				await ctx.runMutation(internal.knowledgeGeneration.fail, {
 					attemptKey,
-					miss: generated,
+					failureCode: "generationFailed",
 					productionEvidence: {
-						request,
+						request: requested,
 						failures: [],
 						operationTraces,
 					},
+					failureMessage:
+						"Knowledge generation failed. Please retry.",
 				});
 				return null;
 			}
-			generationCompleted = true;
-			const publishable = generatedKnowledgeAllowedForPublication(
-				generated,
-				qualifiedKinds,
-			);
-			await ctx.runAction(
-				internal.orchestration.applyGeneratedKnowledgePlan,
-				{
-					attemptKey,
-					reading,
-					changes: publishable.changes,
-					pendingRelations: publishable.pendingRelations,
-					productionEvidence: {
-						request,
-						failures: [...generated.failures],
-						operationTraces,
-					},
-					relationPublication: {
-						runNumber: input.runNumber,
-						requestedKinds,
-						artifactPath: authorization.artifactPath,
-						fingerprints: authorization.fingerprints,
-						proposals: publishable.pendingRelations.map(
-							(pending) => ({
-								relation: pending.relation,
-								targetShadow: pending.target,
-							}),
-						),
-					},
-				},
-			);
-			return null;
-		} catch (error) {
-			console.error("Knowledge generation attempt failed", error);
-			if (
-				!generationCompleted &&
-				rejectedRun &&
-				rejectedRun.requestedKinds.length > 0
-			) {
-				await ctx.runMutation(recordRejectedRelationOutput, {
-					attemptKey,
-					...rejectedRun,
-				});
-			}
-			await ctx.runMutation(internal.knowledgeGeneration.fail, {
-				attemptKey,
-				failureCode: "generationFailed",
-				productionEvidence: {
-					request: requested,
-					failures: [],
-					operationTraces,
-				},
-				failureMessage: "Knowledge generation failed. Please retry.",
-			});
-			return null;
+		};
+		try {
+			return inspection
+				? await inspection.promise(
+						"Generate and publish Knowledge",
+						"app/tf-demo · knowledgeGenerationActions",
+						{ attemptKey },
+						run,
+						true,
+					)
+				: await run();
+		} finally {
+			await inspection?.flush();
 		}
 	},
 });

@@ -20,6 +20,7 @@ import type * as dumdictStorage_queries from "../dumdictStorage/queries.js";
 import type * as dumdictStorage_storage from "../dumdictStorage/storage.js";
 import type * as dumdictStorage_transaction from "../dumdictStorage/transaction.js";
 import type * as dumdictTransaction from "../dumdictTransaction.js";
+import type * as inspectionAction from "../inspectionAction.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
 import type * as knowledgeSettings from "../knowledgeSettings.js";
@@ -29,6 +30,7 @@ import type * as model_compiledRelationVerdict from "../model/compiledRelationVe
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
+import type * as model_inspection from "../model/inspection.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
@@ -56,6 +58,7 @@ import type * as personalAnnotations from "../personalAnnotations.js";
 import type * as readingBlockLayouts from "../readingBlockLayouts.js";
 import type * as readingNotes from "../readingNotes.js";
 import type * as relationPublication from "../relationPublication.js";
+import type * as resolutionInspection from "../resolutionInspection.js";
 import type * as resolutionSessions from "../resolutionSessions.js";
 import type * as reviewedNavigation from "../reviewedNavigation.js";
 import type * as routeNotes from "../routeNotes.js";
@@ -84,6 +87,7 @@ declare const fullApi: ApiFromModules<{
   "dumdictStorage/storage": typeof dumdictStorage_storage;
   "dumdictStorage/transaction": typeof dumdictStorage_transaction;
   dumdictTransaction: typeof dumdictTransaction;
+  inspectionAction: typeof inspectionAction;
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
   knowledgeSettings: typeof knowledgeSettings;
@@ -93,6 +97,7 @@ declare const fullApi: ApiFromModules<{
   "model/definitionTexts": typeof model_definitionTexts;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
+  "model/inspection": typeof model_inspection;
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;
@@ -120,6 +125,7 @@ declare const fullApi: ApiFromModules<{
   readingBlockLayouts: typeof readingBlockLayouts;
   readingNotes: typeof readingNotes;
   relationPublication: typeof relationPublication;
+  resolutionInspection: typeof resolutionInspection;
   resolutionSessions: typeof resolutionSessions;
   reviewedNavigation: typeof reviewedNavigation;
   routeNotes: typeof routeNotes;

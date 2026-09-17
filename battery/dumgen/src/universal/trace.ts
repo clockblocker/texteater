@@ -70,6 +70,7 @@ export function operationTask(options: DumgenOptions) {
 				sequence: 0,
 			};
 			contexts.set(signal, context);
+			const startedAt = Date.now();
 			const start = performance.now();
 			let output: T | undefined;
 			let failure: OperationTrace["failure"];
@@ -112,6 +113,7 @@ export function operationTask(options: DumgenOptions) {
 									output.failures.length
 								? "Partial"
 								: "Success",
+					startedAt,
 					durationMs: performance.now() - start,
 				});
 				contexts.delete(signal);

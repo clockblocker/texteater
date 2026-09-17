@@ -1,5 +1,5 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "lego";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
 	isPlaygroundPath,
@@ -24,6 +24,14 @@ import {
 	ApplicationWorkspaceProvider,
 } from "@/workspace/application-workspace";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
+
+const ResolutionInspector = import.meta.env.DEV
+	? lazy(() =>
+			import("@/devtools/resolution-inspector").then((module) => ({
+				default: module.ResolutionInspector,
+			})),
+		)
+	: null;
 
 export function App() {
 	return (
@@ -104,6 +112,11 @@ function ApplicationShell() {
 					</section>
 				)}
 			</SidebarInset>
+			{ResolutionInspector && (
+				<Suspense fallback={null}>
+					<ResolutionInspector />
+				</Suspense>
+			)}
 		</SidebarProvider>
 	);
 }

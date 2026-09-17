@@ -3,6 +3,7 @@ import type { DumgenOptions } from "dumgen/types";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { configurationSchema } from "promptsmith/schemas";
 import { createTypeSafeExecutor } from "promptsmith/typesafe";
+import type { InspectionCapture } from "./inspectionCapture";
 import type { GenerationEvent } from "./resolutionFailure";
 
 /** Model transport stays behind Dumgen's injected execution boundary. */
@@ -12,12 +13,14 @@ export function createProductionDumgen(
 		DumgenOptions,
 		"configuration" | "judgmentConfiguration"
 	> = {},
+	inspection?: InspectionCapture,
 ) {
 	const execute = createOpenAIExecutor();
 	return createDumgen({
 		...configuration,
 		judge: (request, options) => createTypeSafeExecutor()(request, options),
 		onOperation: (trace) => {
+			inspection?.operation(trace);
 			onEvent?.({
 				kind: "TraceRecorded",
 				traceJson: JSON.stringify(trace),

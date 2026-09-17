@@ -27,6 +27,9 @@ const DESCRIPTOR_PAGE_SIZE = 20;
 export const resetDemoTableNames = [
 	"resolutionSessions",
 	"resolutionRuns",
+	"inspectionPayloads",
+	"inspectionSteps",
+	"inspectionClicks",
 	"catalogGrowthSignals",
 	"generatedRelationProposals",
 	"generatedRelationRuns",

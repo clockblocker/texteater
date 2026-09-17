@@ -1,0 +1,308 @@
+/* Executor colors identify ownership across the timing bars and step list. */
+.resolution-inspector-toggle {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 5.5rem;
+	z-index: 45;
+	box-shadow: 0 4px 16px #0003;
+}
+.resolution-inspector-history {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 8.75rem;
+	z-index: 44;
+	width: min(22rem, calc(100vw - 2rem));
+	max-height: min(38rem, 78vh);
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+	background: var(--popover);
+	color: var(--popover-foreground);
+	box-shadow: 0 16px 48px #0004;
+}
+.resolution-inspector-history header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem;
+	border-bottom: 1px solid var(--border);
+}
+.resolution-inspector-history header p,
+.inspection-footer {
+	font-size: 0.75rem;
+	color: var(--muted-foreground);
+}
+.resolution-inspector-clicks {
+	overflow-y: auto;
+	padding: 0.65rem;
+}
+.inspection-click {
+	display: block;
+	width: 100%;
+	text-align: left;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	padding: 0.85rem;
+	margin-bottom: 0.5rem;
+	background: var(--card);
+	cursor: pointer;
+}
+.inspection-click:hover {
+	background: var(--accent);
+}
+.inspection-click-heading {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	align-items: baseline;
+}
+.inspection-click-heading time {
+	font-size: 0.7rem;
+	color: var(--muted-foreground);
+	font-variant-numeric: tabular-nums;
+}
+.inspection-sentence {
+	display: block;
+	font-size: 0.8rem;
+	color: var(--muted-foreground);
+	margin-top: 0.25rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.inspection-click-kind {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.7rem;
+	margin-top: 0.6rem;
+	color: var(--muted-foreground);
+}
+.resolution-inspector-dialog[data-slot="dialog-content"] {
+	width: min(72rem, calc(100vw - 2rem));
+	max-width: none;
+	height: min(54rem, 90svh);
+	padding: 0;
+	gap: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.inspection-heading {
+	padding: 1.25rem 2rem;
+	border-bottom: 1px solid var(--border);
+	text-align: left;
+}
+.inspection-back {
+	align-self: flex-start;
+	margin-left: -0.5rem;
+	color: var(--muted-foreground);
+}
+.inspection-title-row {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+.inspection-title-row h2 {
+	font-size: 1.5rem;
+}
+.inspection-state {
+	font-size: 0.7rem;
+	padding: 0.2rem 0.55rem;
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+}
+.inspection-metrics {
+	display: flex;
+	gap: 1.2rem;
+	flex-wrap: wrap;
+	font-size: 0.75rem;
+	color: var(--muted-foreground);
+	margin-top: 0.5rem;
+	font-variant-numeric: tabular-nums;
+}
+.inspection-metrics strong {
+	color: var(--foreground);
+	font-weight: 500;
+}
+.inspection-scroll {
+	overflow-y: auto;
+	min-height: 0;
+	padding: 1.5rem 2rem;
+}
+.inspection-waterfall {
+	padding-bottom: 1.5rem;
+}
+.inspection-legend {
+	display: flex;
+	gap: 1.25rem;
+	font-size: 0.7rem;
+	margin-bottom: 1rem;
+}
+.inspection-legend span::before {
+	content: "";
+	display: inline-block;
+	width: 0.45rem;
+	height: 0.45rem;
+	border-radius: 2px;
+	margin-right: 0.35rem;
+	background: var(--executor-color);
+}
+[data-kind="Code"] {
+	--executor-color: #599bd6;
+}
+[data-kind="TypeSafe"] {
+	--executor-color: #be83dc;
+}
+[data-kind="LLM"] {
+	--executor-color: #cc963a;
+}
+.inspection-axis {
+	display: flex;
+	justify-content: space-between;
+	color: var(--muted-foreground);
+	font-size: 0.65rem;
+	font-variant-numeric: tabular-nums;
+	margin-bottom: 0.4rem;
+}
+.inspection-total {
+	height: 0.5rem;
+	background: var(--muted);
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	margin-bottom: 0.4rem;
+}
+.inspection-timing-row {
+	position: relative;
+	height: 1.05rem;
+	border-left: 1px solid var(--border);
+	border-right: 1px solid var(--border);
+	background: linear-gradient(
+		to right,
+		transparent 49.9%,
+		var(--border) 50%,
+		transparent 50.1%
+	);
+}
+.inspection-bar {
+	position: absolute;
+	height: 0.8rem;
+	top: 0.1rem;
+	min-width: 3px;
+	border-radius: 2px;
+	background: var(--executor-color);
+	color: #131820;
+	cursor: pointer;
+	overflow: hidden;
+	text-align: left;
+}
+.inspection-bar span {
+	font-size: 0.6rem;
+	padding: 0 0.3rem;
+	white-space: nowrap;
+	display: block;
+	line-height: 0.8rem;
+}
+.inspection-bar[data-status="Failure"] {
+	outline: 1px solid #ef6666;
+}
+.inspection-bar:hover {
+	filter: brightness(1.2);
+}
+.inspection-step {
+	border-bottom: 1px solid var(--border);
+}
+.inspection-step-toggle {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	padding: 0.9rem 0.1rem;
+	text-align: left;
+	cursor: pointer;
+}
+.inspection-step-title {
+	flex: 1;
+	min-width: 0;
+	font-size: 0.85rem;
+	overflow-wrap: anywhere;
+}
+.inspection-step-title small {
+	display: block;
+	font-size: 0.7rem;
+	color: var(--muted-foreground);
+	margin-top: 0.15rem;
+}
+.inspection-chevron-open {
+	transform: rotate(90deg);
+}
+.inspection-kind {
+	font-size: 0.65rem;
+	color: var(--executor-color);
+}
+.inspection-step-duration {
+	font-size: 0.75rem;
+	width: 4.5rem;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+.inspection-status {
+	width: 1rem;
+	color: #419b70;
+}
+.inspection-status[data-status="Failure"] {
+	color: #e76969;
+}
+.inspection-payload {
+	padding: 0 0 1rem 1.8rem;
+}
+.inspection-payload-meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--muted-foreground);
+	font-size: 0.7rem;
+}
+.inspection-payload pre {
+	max-height: 30rem;
+	overflow: auto;
+	background: var(--muted);
+	border: 1px solid var(--border);
+	border-radius: 0.5rem;
+	padding: 1rem;
+	font-size: 0.7rem;
+	line-height: 1.6;
+	tab-size: 2;
+}
+.inspection-footer {
+	margin-top: 1.5rem;
+	line-height: 1.7;
+	overflow-wrap: anywhere;
+}
+.inspection-empty {
+	padding: 1rem;
+	font-size: 0.8rem;
+	color: var(--muted-foreground);
+	line-height: 1.6;
+}
+.inspection-step-toggle:focus-visible,
+.inspection-bar:focus-visible,
+.inspection-click:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 3px;
+}
+@media (max-width: 640px) {
+	.inspection-heading,
+	.inspection-scroll {
+		padding: 1rem;
+	}
+	.inspection-step-toggle {
+		gap: 0.4rem;
+	}
+	.inspection-kind {
+		display: none;
+	}
+	.inspection-payload {
+		padding-left: 0;
+	}
+}

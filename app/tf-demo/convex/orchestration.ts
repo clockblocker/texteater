@@ -6,6 +6,7 @@ import type { ApplyGeneratedKnowledgeRequest } from "dumdict";
 import { createDumdictService } from "dumdict/runtime";
 import { directSemanticRelationValues } from "dumrel";
 import * as Effect from "effect/Effect";
+import type { InspectionCapture } from "../server/inspectionCapture";
 import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
@@ -38,6 +39,7 @@ import {
 	type DictionaryPlanResult,
 	dictionaryPlanResult,
 } from "./dumdictActionStorage";
+import { inspectionFor } from "./inspectionAction";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	projectResolutionGrammar,
@@ -397,20 +399,88 @@ export const runResolutionSession = internalAction({
 	},
 	returns: v.null(),
 	handler: async (ctx, guard): Promise<null> => {
-		await Effect.runPromise(
-			executeResolutionSession({
-				identity: guard,
-				lifecycle: createConvexResolutionSessionLifecycle(ctx, guard),
-				resolve: (selection, checkpoints, observer) =>
-					orchestratorFor(ctx, guard, observer).resolveSegment(
-						selection,
-						checkpoints,
+		const inspection = await inspectionFor(ctx, guard.requestId);
+		const run = () =>
+			Effect.runPromise(
+				executeResolutionSession({
+					identity: guard,
+					lifecycle: tracedResolutionLifecycle(
+						createConvexResolutionSessionLifecycle(ctx, guard),
+						inspection,
 					),
-			}),
-		);
+					resolve: (selection, checkpoints, observer) => {
+						const resolution = orchestratorFor(
+							ctx,
+							guard,
+							observer,
+							inspection,
+						).resolveSegment(selection, checkpoints);
+						return inspection
+							? inspection.effect(
+									"Resolve selected segment",
+									"app/tf-demo · linguisticOrchestration",
+									{ selection, checkpoints },
+									resolution,
+								)
+							: resolution;
+					},
+				}),
+			);
+		try {
+			if (inspection)
+				await inspection.promise(
+					"Resolution session",
+					"app/tf-demo · orchestration.runResolutionSession",
+					guard,
+					run,
+					true,
+				);
+			else await run();
+		} finally {
+			await inspection?.flush();
+		}
 		return null;
 	},
 });
+
+function tracedResolutionLifecycle(
+	lifecycle: ResolutionSessionLifecyclePort,
+	inspection?: InspectionCapture,
+): ResolutionSessionLifecyclePort {
+	if (!inspection) return lifecycle;
+	return {
+		begin: () =>
+			inspection.promise(
+				"Load checkpoints and start run",
+				"app/tf-demo · resolutionSessions",
+				{},
+				() => lifecycle.begin(),
+			),
+		advance: (event) =>
+			inspection.promise(
+				`Save ${event.progress}`,
+				"app/tf-demo · resolutionSessions",
+				event,
+				() => lifecycle.advance(event),
+			),
+		settle: (result) =>
+			inspection.promise(
+				`Settle ${result.kind}`,
+				"app/tf-demo · resolutionSessions",
+				result,
+				() => lifecycle.settle(result),
+			),
+		record: (record) => {
+			if (record.kind !== "Succeeded") inspection.markFailed();
+			return inspection.promise(
+				`Record ${record.kind}`,
+				"app/tf-demo · resolutionSessions",
+				record,
+				() => lifecycle.record(record),
+			);
+		},
+	};
+}
 
 function createConvexResolutionSessionLifecycle(
 	ctx: ActionCtx,
@@ -553,14 +623,102 @@ function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard?: ResolutionSessionGuard,
 	observer?: ResolutionProgressObserver,
+	inspection?: InspectionCapture,
 ) {
+	const dictionary = createDumdictService({
+		language: "de",
+		storage: createConvexDumdictStorage(ctx),
+	});
+	const persistence = createConvexPersistence(ctx, sessionGuard);
+	const tracedPersistence: OrchestrationPersistence = inspection
+		? {
+				persistSubmittedText: (input) =>
+					inspection.promise(
+						"Persist submitted text",
+						"app/tf-demo",
+						input,
+						() => persistence.persistSubmittedText(input),
+					),
+				getSentenceForResolution: (input) =>
+					inspection.promise(
+						"Load sentence",
+						"app/tf-demo",
+						input,
+						() => persistence.getSentenceForResolution(input),
+					),
+				findRecordedClick: (input) =>
+					inspection.promise(
+						"Look up recorded encounter",
+						"app/tf-demo",
+						input,
+						() => persistence.findRecordedClick(input),
+					),
+				findAttestation: (input) =>
+					inspection.promise(
+						"Look up reusable Attestation",
+						"app/tf-demo",
+						input,
+						() => persistence.findAttestation(input),
+					),
+				persistResolvedClick: (input) =>
+					inspection.promise(
+						"Commit resolved occurrence",
+						"app/tf-demo · persistence",
+						input,
+						() => persistence.persistResolvedClick(input),
+					),
+				persistReusedResolvedClick: (input) =>
+					inspection.promise(
+						"Commit reused occurrence",
+						"app/tf-demo · persistence",
+						input,
+						() => persistence.persistReusedResolvedClick(input),
+					),
+				persistUnresolvedClick: (input) =>
+					inspection.promise(
+						"Commit unresolved encounter",
+						"app/tf-demo · persistence",
+						input,
+						() => persistence.persistUnresolvedClick(input),
+					),
+			}
+		: persistence;
 	return createTfDemoOrchestrator({
-		dumgen: createProductionDumgen(observer?.generationEvent),
-		dictionary: createDumdictService({
-			language: "de",
-			storage: createConvexDumdictStorage(ctx),
-		}),
-		persistence: createConvexPersistence(ctx, sessionGuard),
+		dumgen: createProductionDumgen(
+			observer?.generationEvent,
+			{},
+			inspection,
+		),
+		dictionary: inspection
+			? {
+					...dictionary,
+					findStoredReadings: (input) =>
+						inspection.effect(
+							"Find stored Readings",
+							"battery/dumdict",
+							input,
+							dictionary.findStoredReadings(input),
+						),
+					prepare: {
+						...dictionary.prepare,
+						addNewNote: (input) =>
+							inspection.effect(
+								"Prepare new Reading",
+								"battery/dumdict",
+								input,
+								dictionary.prepare.addNewNote(input),
+							),
+						ensureOwnedSurface: (input) =>
+							inspection.effect(
+								"Prepare owned Surface",
+								"battery/dumdict",
+								input,
+								dictionary.prepare.ensureOwnedSurface(input),
+							),
+					},
+				}
+			: dictionary,
+		persistence: tracedPersistence,
 		...(observer ? { observer } : {}),
 	});
 }
@@ -665,31 +823,43 @@ export const applyGeneratedKnowledgePlan = internalAction({
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
-		try {
-			const publishable = generatedKnowledgeAllowedForPublication(
-				args,
-				args.relationPublication.requestedKinds,
-			);
-			const request = structuredClone({
-				reading: args.reading,
-				changes: publishable.changes,
-				pendingRelations: publishable.pendingRelations,
-			}) as ApplyGeneratedKnowledgeRequest<"de">;
-			for (
-				let index = 0;
-				index < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
-				index += 1
-			) {
-				const prepared = await Effect.runPromise(
-					createDumdictService({
+		const inspection = await inspectionFor(
+			ctx,
+			args.attemptKey,
+			"Knowledge",
+		);
+		const run = async () => {
+			try {
+				const publishable = generatedKnowledgeAllowedForPublication(
+					args,
+					args.relationPublication.requestedKinds,
+				);
+				const request = structuredClone({
+					reading: args.reading,
+					changes: publishable.changes,
+					pendingRelations: publishable.pendingRelations,
+				}) as ApplyGeneratedKnowledgeRequest<"de">;
+				for (
+					let index = 0;
+					index < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
+					index += 1
+				) {
+					const planning = createDumdictService({
 						language: "de",
 						storage: createConvexDumdictStorage(ctx),
-					}).prepare.applyGeneratedKnowledge(request),
-				);
-				const fullPlan = dictionaryPlanResult(prepared.plan);
-				const committed = await ctx.runMutation(
-					internal.knowledgeGeneration.commitGenerated,
-					{
+					}).prepare.applyGeneratedKnowledge(request);
+					const prepared = await Effect.runPromise(
+						inspection
+							? inspection.effect(
+									"Prepare generated Knowledge",
+									"battery/dumdict",
+									request,
+									planning,
+								)
+							: planning,
+					);
+					const fullPlan = dictionaryPlanResult(prepared.plan);
+					const commitInput = {
 						attemptKey: args.attemptKey,
 						plan: fullPlan,
 						baseKnowledgePlan:
@@ -697,26 +867,59 @@ export const applyGeneratedKnowledgePlan = internalAction({
 						generatedChanges: publishable.changes,
 						productionEvidence: args.productionEvidence,
 						relationPublication: args.relationPublication,
-					},
+					};
+					const commit = () =>
+						ctx.runMutation(
+							internal.knowledgeGeneration.commitGenerated,
+							commitInput,
+						);
+					const committed = inspection
+						? await inspection.promise(
+								"Commit generated Knowledge",
+								"app/tf-demo · knowledgeGeneration.commitGenerated",
+								commitInput,
+								commit,
+							)
+						: await commit();
+					if (committed.status !== "DictionaryConflict") return null;
+				}
+				throw new Error("Knowledge save conflict.");
+			} catch (error) {
+				inspection?.failure(
+					"Knowledge publication failed",
+					"app/tf-demo · orchestration.applyGeneratedKnowledgePlan",
+					args,
+					error,
 				);
-				if (committed.status !== "DictionaryConflict") return null;
-			}
-			throw new Error("Knowledge save conflict.");
-		} catch (error) {
-			console.error("Generated Knowledge planning failed", error);
-			if (args.relationPublication.requestedKinds.length > 0) {
-				await ctx.runMutation(recordRelationPublicationFailure, {
+				console.error("Generated Knowledge planning failed", error);
+				if (args.relationPublication.requestedKinds.length > 0) {
+					await ctx.runMutation(recordRelationPublicationFailure, {
+						attemptKey: args.attemptKey,
+						run: args.relationPublication,
+					});
+				}
+				await ctx.runMutation(internal.knowledgeGeneration.fail, {
 					attemptKey: args.attemptKey,
-					run: args.relationPublication,
+					failureCode: "generationFailed",
+					productionEvidence: args.productionEvidence,
+					failureMessage:
+						"Knowledge generation failed. Please retry.",
 				});
+				return null;
 			}
-			await ctx.runMutation(internal.knowledgeGeneration.fail, {
-				attemptKey: args.attemptKey,
-				failureCode: "generationFailed",
-				productionEvidence: args.productionEvidence,
-				failureMessage: "Knowledge generation failed. Please retry.",
-			});
-			return null;
+		};
+		try {
+			return inspection
+				? await inspection.promise(
+						"Publish generated Knowledge",
+						"app/tf-demo · orchestration.applyGeneratedKnowledgePlan",
+						args,
+						run,
+						true,
+					)
+				: await run();
+		} finally {
+			await inspection?.flush();
 		}
 	},
 });

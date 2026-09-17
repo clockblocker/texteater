@@ -120,6 +120,7 @@ export function judgmentCaller(options: DumgenOptions) {
 			dependsOn: dependsOn ?? context.calls.map((call) => call.id),
 			fingerprint: await fingerprint({ questions, state }),
 		};
+		const startedAt = Date.now();
 		const start = performance.now();
 		let output: unknown;
 		let transport: CallTrace["transport"] = "Failure";
@@ -164,6 +165,7 @@ export function judgmentCaller(options: DumgenOptions) {
 				validation,
 				...(output === undefined ? {} : { output }),
 				...(failure ? { failure } : {}),
+				startedAt,
 				durationMs: performance.now() - start,
 			};
 			context.calls.push(exchange);

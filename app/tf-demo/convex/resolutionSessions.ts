@@ -7,6 +7,7 @@ import {
 	query,
 } from "./_generated/server";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
+import { inspectionJson } from "./model/inspection";
 import {
 	assertResolutionProgressTransition,
 	loadResolutionNote,
@@ -39,6 +40,7 @@ import {
 	ensureVisitorEncounter,
 	findVisitorEncounter,
 } from "./model/visitorClicks";
+import { saveInspectionStep } from "./resolutionInspection";
 
 const MAX_IDENTIFIER_LENGTH = 200;
 const CLEANUP_BATCH_SIZE = 200;
@@ -55,6 +57,7 @@ export const selectSegment = mutation({
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
 		routeNoteRequested: v.boolean(),
+		inspect: v.optional(v.boolean()),
 	},
 	returns: v.union(
 		v.object({
@@ -87,173 +90,232 @@ export const selectSegment = mutation({
 		}),
 	),
 	handler: async (ctx, args) => {
-		assertIdentifier(args.requestId, "requestId");
-		assertIdentifier(args.visitorId, "visitorId");
-		assertSegmentIndex(args.clickedSegmentIndex);
+		const startedAt = Date.now();
+		const select = async () => {
+			assertIdentifier(args.requestId, "requestId");
+			assertIdentifier(args.visitorId, "visitorId");
+			assertSegmentIndex(args.clickedSegmentIndex);
 
-		const sentence = await ctx.db.get(args.sentenceId);
-		if (!sentence) throw new Error("Sentence does not exist.");
-		const segment = await ctx.db
-			.query("segments")
-			.withIndex("by_sentence_id_and_index", (q) =>
-				q
-					.eq("sentenceId", args.sentenceId)
-					.eq("index", args.clickedSegmentIndex),
-			)
-			.unique();
-		if (segment?.kind !== "ResolvableText") {
-			throw new Error("Only a ResolvableText Segment can be clicked.");
-		}
-
-		const existing = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", args.requestId),
-			)
-			.unique();
-		if (existing) {
-			if (
-				existing.visitorId !== args.visitorId ||
-				existing.sentenceId !== args.sentenceId ||
-				existing.clickedSegmentIndex !== args.clickedSegmentIndex ||
-				existing.segmentId !== segment._id ||
-				Boolean(existing.routeNoteRequested) !== args.routeNoteRequested
-			) {
+			const sentence = await ctx.db.get(args.sentenceId);
+			if (!sentence) throw new Error("Sentence does not exist.");
+			const segment = await ctx.db
+				.query("segments")
+				.withIndex("by_sentence_id_and_index", (q) =>
+					q
+						.eq("sentenceId", args.sentenceId)
+						.eq("index", args.clickedSegmentIndex),
+				)
+				.unique();
+			if (segment?.kind !== "ResolvableText") {
 				throw new Error(
-					"requestId was already used for a different click.",
+					"Only a ResolvableText Segment can be clicked.",
 				);
 			}
-			const { lifecycle } = existing;
-			if (
-				lifecycle.state === "Terminal" &&
-				lifecycle.outcome === "Complete" &&
-				existing.readingId &&
-				existing.attestationId
-			) {
-				await scheduleKnowledgeGeneration(ctx, {
-					attemptKey: existing.requestId,
-					visitorId: existing.visitorId,
-					readingId: existing.readingId,
-					attestationId: existing.attestationId,
-				});
-			}
-			return {
-				kind: "Resolving" as const,
-				requestId: existing.requestId,
-				progress: lifecycle.progress,
-				activity:
-					lifecycle.state === "Active"
-						? lifecycle.activity
-						: ("Terminal" as const),
-				deduplicated: true,
-			};
-		}
 
-		const attestationId = segment.attestationMembership?.attestationId;
-		if (attestationId) {
-			const attestation = await ctx.db.get(attestationId);
-			if (!attestation) throw new Error("Attestation does not exist.");
-			const reading = await ctx.db.get(attestation.readingId);
-			if (!reading) throw new Error("Reading does not exist.");
-			const surface = await ctx.db.get(attestation.surfaceId);
-			if (surface?.language !== "de") {
-				throw new Error("Surface does not exist or is unsupported.");
+			const existing = await ctx.db
+				.query("resolutionSessions")
+				.withIndex("by_request_id", (q) =>
+					q.eq("requestId", args.requestId),
+				)
+				.unique();
+			if (existing) {
+				if (
+					existing.visitorId !== args.visitorId ||
+					existing.sentenceId !== args.sentenceId ||
+					existing.clickedSegmentIndex !== args.clickedSegmentIndex ||
+					existing.segmentId !== segment._id ||
+					Boolean(existing.routeNoteRequested) !==
+						args.routeNoteRequested
+				) {
+					throw new Error(
+						"requestId was already used for a different click.",
+					);
+				}
+				const { lifecycle } = existing;
+				if (
+					lifecycle.state === "Terminal" &&
+					lifecycle.outcome === "Complete" &&
+					existing.readingId &&
+					existing.attestationId
+				) {
+					await scheduleKnowledgeGeneration(ctx, {
+						attemptKey: existing.requestId,
+						visitorId: existing.visitorId,
+						readingId: existing.readingId,
+						attestationId: existing.attestationId,
+					});
+				}
+				return {
+					kind: "Resolving" as const,
+					requestId: existing.requestId,
+					progress: lifecycle.progress,
+					activity:
+						lifecycle.state === "Active"
+							? lifecycle.activity
+							: ("Terminal" as const),
+					deduplicated: true,
+				};
 			}
-			if (surface.lemmaId !== reading.lemmaId) {
-				throw new Error("Surface and Reading must share one Lemma.");
+
+			const attestationId = segment.attestationMembership?.attestationId;
+			if (attestationId) {
+				const attestation = await ctx.db.get(attestationId);
+				if (!attestation)
+					throw new Error("Attestation does not exist.");
+				const reading = await ctx.db.get(attestation.readingId);
+				if (!reading) throw new Error("Reading does not exist.");
+				const surface = await ctx.db.get(attestation.surfaceId);
+				if (surface?.language !== "de") {
+					throw new Error(
+						"Surface does not exist or is unsupported.",
+					);
+				}
+				if (surface.lemmaId !== reading.lemmaId) {
+					throw new Error(
+						"Surface and Reading must share one Lemma.",
+					);
+				}
+				await ensureVisitorEncounter(ctx, {
+					requestId: args.requestId,
+					visitorId: args.visitorId,
+					textId: sentence.textId,
+					sentenceId: sentence._id,
+					segmentId: segment._id,
+					attestationId,
+				});
+				await scheduleKnowledgeGeneration(ctx, {
+					attemptKey: args.requestId,
+					visitorId: args.visitorId,
+					readingId: reading._id,
+					attestationId,
+				});
+				return {
+					kind: "Available" as const,
+					canonical: {
+						readingId: reading._id,
+						lemmaId: reading.lemmaId,
+						surfaceId: surface._id,
+						surfaceLanguage: surface.language,
+						normalizedSurface: surface.normalizedSurface,
+						attestationId,
+					},
+					target: args.routeNoteRequested
+						? {
+								kind: "Attestation" as const,
+								attestationId,
+							}
+						: {
+								kind: "Reading" as const,
+								readingId: reading._id,
+							},
+				};
 			}
+
+			const now = Date.now();
+			const runToken = crypto.randomUUID();
 			await ensureVisitorEncounter(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
 				textId: sentence.textId,
 				sentenceId: sentence._id,
 				segmentId: segment._id,
-				attestationId,
 			});
-			await scheduleKnowledgeGeneration(ctx, {
-				attemptKey: args.requestId,
-				visitorId: args.visitorId,
-				readingId: reading._id,
-				attestationId,
-			});
-			return {
-				kind: "Available" as const,
-				canonical: {
-					readingId: reading._id,
-					lemmaId: reading.lemmaId,
-					surfaceId: surface._id,
-					surfaceLanguage: surface.language,
-					normalizedSurface: surface.normalizedSurface,
-					attestationId,
-				},
-				target: args.routeNoteRequested
-					? {
-							kind: "Attestation" as const,
-							attestationId,
-						}
-					: {
-							kind: "Reading" as const,
-							readingId: reading._id,
-						},
-			};
-		}
-
-		const now = Date.now();
-		const runToken = crypto.randomUUID();
-		await ensureVisitorEncounter(ctx, {
-			requestId: args.requestId,
-			visitorId: args.visitorId,
-			textId: sentence.textId,
-			sentenceId: sentence._id,
-			segmentId: segment._id,
-		});
-		await beginSegmentResolution(ctx, segment._id);
-		await ctx.db.insert("resolutionSessions", {
-			requestId: args.requestId,
-			visitorId: args.visitorId,
-			sentenceId: args.sentenceId,
-			segmentId: segment._id,
-			clickedSegmentIndex: args.clickedSegmentIndex,
-			routeNoteRequested: args.routeNoteRequested,
-			runToken,
-			lifecycle: {
-				state: "Active",
-				progress: "Starting",
-				activity: "Scheduled",
-			},
-			runNumber: 1,
-			retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
-			route: {
-				textId: sentence.textId,
-				sentenceId: sentence._id,
-				stitchedText: sentence.stitchedText,
-				clickedSegmentIndex: args.clickedSegmentIndex,
-				selectedSegment: segment.text,
-			},
-			createdAt: now,
-			updatedAt: now,
-		});
-		await ctx.scheduler.runAfter(
-			0,
-			internal.orchestration.runResolutionSession,
-			{
+			await beginSegmentResolution(ctx, segment._id);
+			await ctx.db.insert("resolutionSessions", {
 				requestId: args.requestId,
-				runToken,
+				visitorId: args.visitorId,
+				sentenceId: args.sentenceId,
 				segmentId: segment._id,
-			},
-		);
-		await ctx.scheduler.runAfter(
-			STALE_RUN_AFTER_MS,
-			internal.resolutionSessions.recoverStaleRun,
-			{ requestId: args.requestId, runToken },
-		);
-		return {
-			kind: "Resolving" as const,
-			requestId: args.requestId,
-			progress: "Starting" as const,
-			activity: "Scheduled" as const,
-			deduplicated: false,
+				clickedSegmentIndex: args.clickedSegmentIndex,
+				routeNoteRequested: args.routeNoteRequested,
+				runToken,
+				lifecycle: {
+					state: "Active",
+					progress: "Starting",
+					activity: "Scheduled",
+				},
+				runNumber: 1,
+				retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
+				route: {
+					textId: sentence.textId,
+					sentenceId: sentence._id,
+					stitchedText: sentence.stitchedText,
+					clickedSegmentIndex: args.clickedSegmentIndex,
+					selectedSegment: segment.text,
+				},
+				createdAt: now,
+				updatedAt: now,
+			});
+			await ctx.scheduler.runAfter(
+				0,
+				internal.orchestration.runResolutionSession,
+				{
+					requestId: args.requestId,
+					runToken,
+					segmentId: segment._id,
+				},
+			);
+			await ctx.scheduler.runAfter(
+				STALE_RUN_AFTER_MS,
+				internal.resolutionSessions.recoverStaleRun,
+				{ requestId: args.requestId, runToken },
+			);
+			return {
+				kind: "Resolving" as const,
+				requestId: args.requestId,
+				progress: "Starting" as const,
+				activity: "Scheduled" as const,
+				deduplicated: false,
+			};
 		};
+		const result = await select();
+		if (args.inspect) {
+			const existing = await ctx.db
+				.query("inspectionClicks")
+				.withIndex("by_request_id", (q) =>
+					q.eq("requestId", args.requestId),
+				)
+				.unique();
+			if (!existing) {
+				const sentence = await ctx.db.get(args.sentenceId);
+				const segment = await ctx.db
+					.query("segments")
+					.withIndex("by_sentence_id_and_index", (q) =>
+						q
+							.eq("sentenceId", args.sentenceId)
+							.eq("index", args.clickedSegmentIndex),
+					)
+					.unique();
+				await ctx.db.insert("inspectionClicks", {
+					requestId: args.requestId,
+					visitorId: args.visitorId,
+					sentenceId: args.sentenceId,
+					selectedSegment: segment?.text ?? "",
+					sentence: sentence?.stitchedText ?? "",
+					startedAt,
+					selectionKind: result.kind,
+				});
+				await saveInspectionStep(ctx, args.requestId, {
+					id: `${args.requestId}:selection`,
+					name:
+						result.kind === "Available"
+							? "Reuse stored Attestation"
+							: "Select segment and schedule resolution",
+					kind: "Code",
+					owner: "app/tf-demo · resolutionSessions.selectSegment",
+					startedAt,
+					durationMs: 0,
+					timing: "Unmeasured",
+					status: "Success",
+					payloadJson: inspectionJson({
+						input: args,
+						output: result,
+						timing: "Convex mutation clock is transaction-frozen; duration is not measured.",
+					}),
+				});
+			}
+		}
+		return result;
 	},
 });
 

@@ -82,6 +82,7 @@ export async function executeGeneration<T>(
 			schema: request.outputSchema,
 		}),
 	};
+	const startedAt = Date.now();
 	const start = performance.now();
 	let response: Awaited<ReturnType<DumgenOptions["execute"]>> | undefined;
 	let transport: CallTrace["transport"] = "Failure";
@@ -127,6 +128,7 @@ export async function executeGeneration<T>(
 				? { output: response.output, metadata: response.metadata }
 				: {}),
 			...(failure ? { failure } : {}),
+			startedAt,
 			durationMs: performance.now() - start,
 		};
 		context.calls.push(exchange);

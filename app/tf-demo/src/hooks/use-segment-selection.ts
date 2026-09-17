@@ -1,3 +1,4 @@
+import { useMutation } from "convex/react";
 import { useState } from "react";
 
 import { usePendingMutation } from "@/hooks/use-pending-mutation";
@@ -20,6 +21,9 @@ export function segmentKey(sentenceId: string, segmentIndex: number): string {
  * word and remembers which Segment is selected until the next click.
  */
 export function useSegmentSelection(visitorId: string) {
+	const recordSelectionTiming = useMutation(
+		api.resolutionInspection.recordSelectionTiming,
+	);
 	const { presentCards } = useWorkspaceInteraction();
 	const [routeNotesEnabled] = useRouteNotePreference();
 	const selectSegment = usePendingMutation(
@@ -40,16 +44,29 @@ export function useSegmentSelection(visitorId: string) {
 		setSelectedSegmentKey(segmentKey(sentenceId, clickedSegmentIndex));
 		try {
 			const requestId = crypto.randomUUID();
+			const startedAt = Date.now();
+			const clock = performance.now();
 			const result = await selectSegment.run({
 				requestId,
 				visitorId,
 				sentenceId,
 				clickedSegmentIndex,
+				inspect: import.meta.env.DEV,
 				routeNoteRequested: shouldRequestRouteNote(
 					routeNotesEnabled,
 					altKey,
 				),
 			});
+			if (import.meta.env.DEV) {
+				void recordSelectionTiming({
+					requestId,
+					visitorId,
+					startedAt,
+					durationMs: performance.now() - clock,
+				}).catch(() =>
+					console.warn("Selection timing could not be recorded."),
+				);
+			}
 			presentCards(segmentSelectionDeckCards(requestId, result), {
 				anchor: anchorElement,
 			});

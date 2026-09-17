@@ -63,7 +63,8 @@ export type ReadingEmojiDescriptionResolution = {
 	readonly emojiDescription: EmojiDescription;
 };
 export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
-export type KnowledgeFailure = Generated.KnowledgeProduction["failures"][number];
+export type KnowledgeFailure =
+	Generated.KnowledgeProduction["failures"][number];
 export type KnowledgeProduction<L extends DumgenLanguage = DumgenLanguage> = {
 	readonly failures: readonly KnowledgeFailure[];
 	readonly changes: readonly Dumrel.KnowledgeChange<Dumling.Reading<L>>[];
@@ -128,6 +129,8 @@ export type JudgmentRequest = {
 	readonly signal: AbortSignal;
 };
 export type ModelExchange = {
+	/** Epoch milliseconds; durationMs uses the monotonic clock. */
+	readonly startedAt?: number;
 	readonly request: ModelRequest | JudgmentRequest;
 	readonly output?: unknown;
 	readonly metadata?: unknown;
@@ -144,6 +147,7 @@ export type CallTrace = ModelExchange & {
 	readonly validation: "Valid" | "Invalid" | "NotRun";
 };
 export type OperationTrace = {
+	readonly startedAt?: number;
 	readonly version: 2;
 	readonly id: string;
 	readonly operation: string;

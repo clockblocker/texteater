@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { type FunctionReference, getFunctionName } from "convex/server";
 import {
 	commitGenerated,
 	fail,
@@ -585,6 +586,8 @@ test("the production application path keeps generated relations outside Dumdict"
 	};
 	const queryInputs: unknown[] = [];
 	const mutationInputs: unknown[] = [];
+	const inspectionInputs: { step: { name: string; payloadJson: string } }[] =
+		[];
 
 	const result = await handler<
 		{
@@ -599,6 +602,12 @@ test("the production application path keeps generated relations outside Dumdict"
 	>(applyGeneratedPlan)(
 		{
 			async runQuery(_reference: unknown, input: unknown) {
+				if (
+					getFunctionName(
+						_reference as FunctionReference<"query">,
+					) === "resolutionInspection:enabled"
+				)
+					return true;
 				queryInputs.push(input);
 				return {
 					intent: "applyGeneratedKnowledge",
@@ -615,6 +624,18 @@ test("the production application path keeps generated relations outside Dumdict"
 				};
 			},
 			async runMutation(_reference: unknown, input: unknown) {
+				if (
+					getFunctionName(
+						_reference as FunctionReference<"mutation">,
+					) === "resolutionInspection:recordStep"
+				) {
+					inspectionInputs.push(
+						input as {
+							step: { name: string; payloadJson: string };
+						},
+					);
+					return null;
+				}
 				mutationInputs.push(input);
 				return { status: "Committed" };
 			},
@@ -652,6 +673,14 @@ test("the production application path keeps generated relations outside Dumdict"
 	);
 
 	expect(result).toBeNull();
+	expect(inspectionInputs.map((input) => input.step.name)).toEqual([
+		"Prepare generated Knowledge",
+		"Commit generated Knowledge",
+		"Publish generated Knowledge",
+	]);
+	expect(
+		JSON.parse(inspectionInputs[1]?.step.payloadJson ?? "null").output,
+	).toEqual({ status: "Committed" });
 	expect(queryInputs).toEqual([
 		expect.objectContaining({
 			request: expect.objectContaining({

@@ -95,6 +95,11 @@ test("complete operations retain both executors, dependencies, low confidence an
 	expect(await Effect.runPromise(run)).toBe("generated");
 	const trace = traces[0];
 	expect(trace?.outcome).toBe("Success");
+	expect(trace?.startedAt).toBeGreaterThan(0);
+	for (const call of trace?.calls ?? []) {
+		expect(call.startedAt).toBeGreaterThanOrEqual(trace?.startedAt ?? 0);
+		expect(call.durationMs).toBeGreaterThanOrEqual(0);
+	}
 	expect(trace?.calls.map((call) => call.executor)).toEqual([
 		"TypeSafe",
 		"Luna",

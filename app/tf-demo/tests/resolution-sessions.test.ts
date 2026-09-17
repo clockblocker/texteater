@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { type FunctionReference, getFunctionName } from "convex/server";
 import {
 	clearVisitorDataBatch,
 	resetDemoDataBatch,
@@ -17,6 +18,10 @@ import {
 	persistSubmittedText,
 	persistUnresolvedClick,
 } from "../convex/persistence";
+import {
+	recordSelectionTiming,
+	recordStep,
+} from "../convex/resolutionInspection";
 import {
 	advance,
 	cleanup,
@@ -302,6 +307,121 @@ describe("Resolution Session", () => {
 		expect(db.rows("knowledgeGenerationAttempts")).toHaveLength(2);
 		expect(db.rows("resolutionSessions")).toEqual([]);
 		expect(scheduled).toHaveLength(2);
+	});
+
+	test("inspection records repeat selections separately while encounters stay deduplicated", async () => {
+		const db = new SessionDb(resolvedSourceSeed());
+		const ctx = { db };
+		const args = { ...beginArgs, inspect: true };
+		const run = handler<typeof args, unknown>(selectSegment);
+		await run(ctx, args);
+		await run(ctx, args);
+		await run(ctx, { ...args, requestId: "second-inspected-click" });
+		expect(db.rows("visitorClicks")).toHaveLength(1);
+		expect(db.rows("inspectionClicks")).toHaveLength(2);
+		expect(db.rows("inspectionSteps")).toHaveLength(2);
+		expect(db.rows("inspectionPayloads")).toHaveLength(2);
+		expect(db.rows("inspectionClicks")[0]).toMatchObject({
+			selectedSegment: "Banken",
+			sentence: "Die Banken.",
+			selectionKind: "Available",
+		});
+		expect(
+			JSON.parse(String(db.rows("inspectionPayloads")[0]?.text)).output
+				.kind,
+		).toBe("Available");
+	});
+
+	test("inspection retains terminal status and failure payloads independently of session cleanup", async () => {
+		const db = new SessionDb({
+			inspectionClicks: [
+				{
+					_id: "inspection-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					startedAt: 1,
+				},
+			],
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-1",
+					updatedAt: 50,
+					lifecycle: { state: "Terminal", outcome: "Complete" },
+				},
+			],
+			knowledgeGenerationAttempts: [
+				{
+					_id: "knowledge-1",
+					attemptKey: "request-1",
+					state: "Failed",
+				},
+			],
+		});
+		const args = {
+			requestId: "request-1",
+			scope: "Knowledge",
+			step: {
+				id: "knowledge-run",
+				name: "Knowledge",
+				kind: "Code",
+				owner: "app/tf-demo",
+				startedAt: 10,
+				durationMs: 40,
+				status: "Success",
+				payloadJson: JSON.stringify({ error: "Invalid plan" }),
+			},
+		};
+		await handler<typeof args, unknown>(recordStep)({ db }, args);
+		expect(db.rows("inspectionSteps")[0]).toMatchObject({
+			status: "Failure",
+		});
+		expect(db.rows("inspectionClicks")[0]).toMatchObject({
+			resolutionState: "Complete",
+			finishedAt: 50,
+			knowledgeState: "Failed",
+		});
+		expect(db.rows("inspectionPayloads")[0]?.text).toBe(
+			args.step.payloadJson,
+		);
+	});
+
+	test("selection timing records the browser round trip once and rejects another visitor", async () => {
+		const db = new SessionDb({
+			inspectionClicks: [
+				{
+					_id: "inspection-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					startedAt: 100,
+					selectionKind: "Available",
+				},
+			],
+			inspectionSteps: [
+				{
+					_id: "step-1",
+					requestId: "request-1",
+					id: "request-1:selection",
+					timing: "Unmeasured",
+					durationMs: 0,
+				},
+			],
+		});
+		const args = {
+			requestId: "request-1",
+			visitorId: "visitor-2",
+			startedAt: 90,
+			durationMs: 25,
+		};
+		const run = handler<typeof args, unknown>(recordSelectionTiming);
+		await run({ db }, args);
+		expect(db.rows("inspectionSteps")[0]?.durationMs).toBe(0);
+		await run({ db }, { ...args, visitorId: "visitor-1" });
+		await run({ db }, { ...args, visitorId: "visitor-1", durationMs: 90 });
+		expect(db.rows("inspectionSteps")[0]).toMatchObject({
+			durationMs: 25,
+			startedAt: 90,
+		});
 	});
 
 	test("begin captures one exact Segment and schedules orchestration once", async () => {
@@ -1375,6 +1495,12 @@ describe("Resolution Session", () => {
 			>(runResolutionSession)(
 				{
 					async runQuery(_reference: unknown, args: unknown) {
+						if (
+							getFunctionName(
+								_reference as FunctionReference<"query">,
+							) === "resolutionInspection:enabled"
+						)
+							return false;
 						queryCount += 1;
 						queryArgs.push(args);
 						return queryCount === 1
@@ -1458,7 +1584,12 @@ describe("Resolution Session", () => {
 				null
 			>(runResolutionSession)(
 				{
-					async runQuery() {
+					async runQuery(reference: FunctionReference<"query">) {
+						if (
+							getFunctionName(reference) ===
+							"resolutionInspection:enabled"
+						)
+							return false;
 						queryCount += 1;
 						if (queryCount === 1) {
 							return {
