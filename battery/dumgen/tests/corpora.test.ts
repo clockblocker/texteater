@@ -39,14 +39,16 @@ const kinds: Record<string, string> = {
 test("all development selections are disjoint and production assembly uses only demonstrations", () => {
 	for (const item of listExperiments()) {
 		const experiment = getExperiment(item.id);
-		const corpus = required(experiment.promptSource.goldenCorpus);
-		const demos = experiment.promptSource.demonstrations;
+		const corpus = required(experiment.source.goldenCorpus);
+		const demos = experiment.source.demonstrations;
 		const toUse = corpus.select(demos && "ids" in demos ? demos.ids : []);
 		expect(toUse.isDisjointFrom(experiment.evaluation)).toBe(true);
-		if (prompts[item.id])
-			expect(assembleSystemPrompt(experiment.promptSource)).toBe(
-				required(prompts[item.id]),
-			);
+		if (prompts[item.id] && "body" in experiment.source)
+			expect(
+				assembleSystemPrompt(
+					experiment.source as import("promptsmith").PromptSource,
+				),
+			).toBe(required(prompts[item.id]));
 	}
 	expect(
 		listExperiments().find(
@@ -91,9 +93,7 @@ test("all 1060 retained grammar answers project through public operations", asyn
 			kind = required(kinds[required(kindName)]);
 		const route =
 			`${language}/${family}/${kind}` as keyof typeof grammarSchemas;
-		const corpus = required(
-			getExperiment(spec.id).promptSource.goldenCorpus,
-		);
+		const corpus = required(getExperiment(spec.id).source.goldenCorpus);
 		for (const [id, golden] of Object.entries(corpus.cases)) {
 			const input = golden.input as {
 				markedContext: string;

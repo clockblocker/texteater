@@ -33,7 +33,7 @@ const examples = [
 for (const [route, kind, id] of examples)
 	test(`${id}: bounded judgments and only requested missing text`, async () => {
 		const golden = getExperiment(`grammatical-resolution/de/${route}`)
-			.promptSource.goldenCorpus?.cases[id];
+			.source.goldenCorpus?.cases[id];
 		if (!golden) throw Error(`Missing ${id}`);
 		const input = golden.input as {
 			markedContext: string;

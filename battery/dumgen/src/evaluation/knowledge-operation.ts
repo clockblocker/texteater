@@ -1,8 +1,8 @@
 import { Effect } from "effect";
-import type { PromptSource } from "promptsmith";
 import { defineGoldenCaseCollection, defineGoldenCorpus } from "promptsmith";
 import type { OperationExperiment } from "promptsmith/evaluation";
 import { z } from "zod";
+import type { LinguisticCorpus } from "../concrete-lang/de/authoring.js";
 import {
 	knowledgeInputSchema,
 	knowledgeOutputSchema,
@@ -17,7 +17,7 @@ import { knowledgeFailureSchema } from "../universal/schemas.js";
 import { validateEncounter } from "../universal/validation.js";
 
 type Definition = {
-	promptSource: PromptSource;
+	source: LinguisticCorpus;
 	evaluation: OperationExperiment<
 		z.ZodType,
 		z.ZodType,
@@ -73,13 +73,13 @@ export function knowledgeOperationExperiment(
 	definition: Definition,
 	options: DumgenOptions,
 ): OperationExperiment<z.ZodType, z.ZodType, unknown> {
-	const original = definition.promptSource.goldenCorpus;
+	const original = definition.source.goldenCorpus;
 	if (!original) throw Error("Missing Knowledge corpus");
 	const outputSchema = knowledgeOutputSchema.extend({
 		failures: z.array(knowledgeFailureSchema),
 	});
 	const corpus = defineGoldenCorpus({
-		route: definition.promptSource.route,
+		route: definition.source.route,
 		inputSchema: knowledgeInputSchema,
 		outputSchema,
 		collections: {
@@ -107,9 +107,9 @@ export function knowledgeOperationExperiment(
 				.toLocaleLowerCase("de"),
 	});
 	const demoIds =
-		definition.promptSource.demonstrations &&
-		"ids" in definition.promptSource.demonstrations
-			? definition.promptSource.demonstrations.ids
+		definition.source.demonstrations &&
+		"ids" in definition.source.demonstrations
+			? definition.source.demonstrations.ids
 			: [];
 	return {
 		corpus,

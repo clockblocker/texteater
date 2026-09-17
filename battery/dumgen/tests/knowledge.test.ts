@@ -275,7 +275,7 @@ test("all four retained Family corpora run through production Knowledge with com
 	for (const family of ["lexeme", "phraseme", "morpheme", "construction"]) {
 		const definition = getExperiment(`knowledge-analysis/de/${family}`);
 		for (const [id, example] of Object.entries(
-			definition.promptSource.goldenCorpus?.cases ?? {},
+			definition.source.goldenCorpus?.cases ?? {},
 		)) {
 			const fixture = knowledgeFixture(example.idealOutput),
 				traces: OperationTrace[] = [];

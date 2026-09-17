@@ -1,7 +1,6 @@
 import { z } from "zod";
 import * as universal from "../src/universal/schemas.js";
 
-const privateSchemas = await import("../src/concrete-lang/de/model-schemas.js");
 const generated = await import("../src/generated/schemas.js");
 export const canonicalDumgenValidationSchemas = {
 	...Object.fromEntries(
@@ -20,8 +19,6 @@ export const canonicalDumgenValidationSchemas = {
 	emojiOutput: z.strictObject({
 		emojiDescription: generated.emojiDescriptionSchema,
 	}),
-	intakeOutput: privateSchemas.intakeOutputSchema,
-	knowledgeOutput: privateSchemas.knowledgeOutputSchema,
 
 	...Object.fromEntries(
 		Object.entries(generated.grammarSchemas).map(([key, value]) => [
@@ -30,17 +27,6 @@ export const canonicalDumgenValidationSchemas = {
 				value,
 				z.strictObject({ decision: z.literal("Unresolved") }),
 			]),
-		]),
-	),
-	...Object.fromEntries(
-		Object.entries(generated.targetsByLanguage).map(([key, value]) => [
-			`target/${key}`,
-			key === "de"
-				? privateSchemas.targetOutputSchema
-				: z.union([
-						value,
-						z.strictObject({ decision: z.literal("Unresolved") }),
-					]),
 		]),
 	),
 };

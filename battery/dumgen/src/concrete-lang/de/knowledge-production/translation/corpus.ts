@@ -1,4 +1,4 @@
-import { defineLinguisticPrompt } from "../../authoring.js";
+import { defineLinguisticCorpus } from "../../authoring.js";
 import {
 	translationAnalysisInputSchema as inputSchema,
 	translationAnalysisOutputSchema as outputSchema,
@@ -6,7 +6,7 @@ import {
 import data from "./source-data.json";
 
 export { inputSchema, outputSchema };
-export const promptSource = defineLinguisticPrompt({
+export const corpusSource = defineLinguisticCorpus({
 	...data,
 	inputSchema,
 	outputSchema,

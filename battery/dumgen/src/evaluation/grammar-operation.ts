@@ -1,7 +1,7 @@
 import { Effect } from "effect";
-import type { PromptSource } from "promptsmith";
 import type { OperationExperiment } from "promptsmith/evaluation";
 import type { z } from "zod";
+import type { LinguisticCorpus } from "../concrete-lang/de/authoring.js";
 import { grammarPromptRoutes } from "../generated/prompts.js";
 import type { DumgenOptions, Segment } from "../types.js";
 import { createDumgen } from "../universal/dumgen.js";
@@ -10,7 +10,7 @@ import { validateEncounter } from "../universal/validation.js";
 /** Retained grammar corpora describe the operation projection, never a model response. */
 export function grammarOperationExperiment(
 	definition: {
-		promptSource: PromptSource;
+		source: LinguisticCorpus;
 		evaluation: OperationExperiment<
 			z.ZodType,
 			z.ZodType,
@@ -24,10 +24,10 @@ export function grammarOperationExperiment(
 	},
 	options: DumgenOptions,
 ): OperationExperiment<z.ZodType, z.ZodType, unknown> {
-	const corpus = definition.promptSource.goldenCorpus;
+	const corpus = definition.source.goldenCorpus;
 	if (!corpus) throw Error("Missing grammar corpus");
 	const key = Object.entries(grammarPromptRoutes).find(
-		([, route]) => route === definition.promptSource.route,
+		([, route]) => route === definition.source.route,
 	)?.[0];
 	if (!key) throw Error("Unknown grammar operation route");
 	const [language, family, kind] = key.split("/");
@@ -35,9 +35,9 @@ export function grammarOperationExperiment(
 		corpus,
 		evaluation: definition.evaluation,
 		demonstrations: corpus.select(
-			definition.promptSource.demonstrations &&
-				"ids" in definition.promptSource.demonstrations
-				? definition.promptSource.demonstrations.ids
+			definition.source.demonstrations &&
+				"ids" in definition.source.demonstrations
+				? definition.source.demonstrations.ids
 				: [],
 		),
 		evaluator: definition.evaluator,

@@ -1,3 +1,4 @@
+import type { LinguisticCorpus } from "./concrete-lang/de/authoring.js";
 import { knowledgeOperationExperiment } from "./evaluation/knowledge-operation.js";
 
 export { resolveOrGenerateTranslation } from "./concrete-lang/de/knowledge-production/translation/operation.js";
@@ -11,7 +12,7 @@ import {
 	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
-import { promptRegistrations } from "./concrete-lang/de/experiments.js";
+import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
 import phases from "./concrete-lang/de/knowledge-production/evaluation/phases.json";
@@ -32,10 +33,10 @@ import {
 } from "./universal/trace.js";
 
 type Registration = {
-	readonly promptSource: PromptSource;
+	readonly source: LinguisticCorpus | PromptSource;
 	readonly evaluationCaseIds: readonly string[];
 };
-const registrations: readonly Registration[] = promptRegistrations;
+const registrations: readonly Registration[] = corpusRegistrations;
 const phaseEntries = Object.entries(phases).flatMap(([route, selections]) =>
 	Object.entries(selections).map(([phase, ids]) => ({
 		id: `${route}:${phase}`,
@@ -44,52 +45,66 @@ const phaseEntries = Object.entries(phases).flatMap(([route, selections]) =>
 	})),
 );
 export function listExperiments() {
+	const metadataOnly: DumgenOptions = {
+		execute: async () => {
+			throw Error("Metadata must not execute generation");
+		},
+		judge: async () => {
+			throw Error("Metadata must not execute judgments");
+		},
+	};
 	return [
-		...registrations.map(({ promptSource, evaluationCaseIds }) => ({
-			id: promptSource.route,
-			demonstrationCount: promptSource.demonstrations?.cases.length ?? 0,
-			caseCount: Object.keys(promptSource.goldenCorpus?.cases ?? {})
-				.length,
-			evaluationCount: evaluationCaseIds.length,
-		})),
-		...phaseEntries.map((phase) => ({
-			id: phase.id,
-			demonstrationCount:
-				registrations.find(
-					(item) => item.promptSource.route === phase.route,
-				)?.promptSource.demonstrations?.cases.length ?? 0,
-			caseCount: Object.keys(
-				registrations.find(
-					(item) => item.promptSource.route === phase.route,
-				)?.promptSource.goldenCorpus?.cases ?? {},
-			).length,
-			evaluationCount: phase.ids.length,
-		})),
-	];
+		...registrations.map(({ source }) => source.route),
+		...phaseEntries.map(({ id }) => id),
+	].map((id) => {
+		const deferred =
+			id.includes("lexical-breakdown") ||
+			id.includes("morphological-tree");
+		const definition = deferred ? getExperiment(id) : null;
+		const operation = deferred
+			? null
+			: operationExperiment(id, metadataOnly);
+		const corpus = operation?.corpus ?? definition?.source.goldenCorpus;
+		const demonstrations =
+			operation?.demonstrations ?? definition?.source.demonstrations;
+		return {
+			id,
+			mode: deferred ? "Deferred" : "Operation",
+			demonstrationCount: demonstrations?.cases.length ?? 0,
+			caseCount: Object.keys(corpus?.cases ?? {}).length,
+			evaluationCount:
+				(operation?.evaluation ?? definition?.evaluation)?.cases
+					.length ?? 0,
+		};
+	});
 }
 export function getExperiment(id: string) {
 	const phase = phaseEntries.find((entry) => entry.id === id);
 	const route = phase?.route ?? id;
 	const registered = registrations.find(
-		(item) => item.promptSource.route === route,
+		(item) => item.source.route === route,
 	);
 	if (!registered) throw Error(`Unknown Dumgen experiment ${id}`);
-	const { promptSource, evaluationCaseIds } = registered;
-	const corpus = promptSource.goldenCorpus;
+	const { source, evaluationCaseIds } = registered;
+	const corpus = source.goldenCorpus;
 	if (!corpus) throw Error(`Experiment ${id} has no canonical corpus`);
-	return defineExperiment({
-		promptSource,
+	return {
+		source,
 		evaluation: corpus
 			.select(phase?.ids ?? evaluationCaseIds)
 			.difference(
 				corpus.select(
-					promptSource.demonstrations &&
-						"ids" in promptSource.demonstrations
-						? promptSource.demonstrations.ids
+					source.demonstrations && "ids" in source.demonstrations
+						? source.demonstrations.ids
 						: [],
 				),
 			),
-		evaluator: (args) => {
+		evaluator: (args: {
+			caseId: string;
+			input: unknown;
+			output: unknown;
+			idealOutput: unknown;
+		}) => {
 			if (
 				route.startsWith("knowledge-analysis/de/") &&
 				relationCorpusAdjudications.byCaseId[args.caseId]
@@ -113,15 +128,31 @@ export function getExperiment(id: string) {
 					stableJson(args.output) === stableJson(args.idealOutput),
 			};
 		},
+	};
+}
+function deferredExperiment(id: string) {
+	const definition = getExperiment(id);
+	const registered = corpusRegistrations.find(
+		({ source }) => source.route === id,
+	);
+	if (!registered || !("body" in registered.source))
+		throw Error(`Not a deferred prompt: ${id}`);
+	return defineExperiment({
+		promptSource: registered.source,
+		evaluation: definition.evaluation,
+		evaluator: definition.evaluator,
 	});
 }
+
 /** Every in-scope evaluation runs the same staged operation as production. */
 export function operationExperiment(id: string, options: DumgenOptions) {
 	if (id.startsWith("grammatical-resolution/"))
 		return grammarOperationExperiment(getExperiment(id), options);
-	if (id.startsWith("reading-")) return readingOperationExperiment(id, options);
+	if (id.startsWith("reading-"))
+		return readingOperationExperiment(id, options);
 	if (id === "intake") return intakeOperationExperiment(options);
-	if (id === "knowledge-analysis/translation") return translationOperationExperiment(options);
+	if (id === "knowledge-analysis/translation")
+		return translationOperationExperiment(options);
 	if (id.startsWith("knowledge-analysis/de/"))
 		return knowledgeOperationExperiment(getExperiment(id), options);
 	if (id === "target-classification/de/high-level-whole-unit")
@@ -182,7 +213,7 @@ export async function evaluateExperiment(args: {
 	const configuration =
 		args.configuration ?? (defaultModelConfiguration as ModelConfiguration);
 	const run = await runExperiment({
-		experiment: getExperiment(args.experimentId),
+		experiment: deferredExperiment(args.experimentId),
 		experimentId: args.experimentId,
 		evaluatorVersion: "migration-1",
 		configuration,

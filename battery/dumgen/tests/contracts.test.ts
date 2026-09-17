@@ -1,9 +1,8 @@
 import { expect, test } from "bun:test";
 import { createDumgen, validateEncounter } from "dumgen";
-import { getExperiment, listExperiments } from "dumgen/development";
+import { getExperiment } from "dumgen/development";
 import { comparisonInputSchema } from "dumgen/schemas";
 import { Effect } from "effect";
-import { z } from "zod";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import pronounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
 import { grammarSchemas } from "../src/generated/schemas.js";
@@ -39,7 +38,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 	const experiment = getExperiment(
 		"grammatical-resolution/de/lexeme/pronoun",
 	);
-	const demos = experiment.promptSource.demonstrations;
+	const demos = experiment.source.demonstrations;
 	if (!demos || !("ids" in demos))
 		throw Error("Missing pronoun demonstrations");
 	expect(demos.ids).toContain("grammar-de-pron-fixed-jemand-jemandem");
@@ -142,74 +141,6 @@ test("pronoun answers preserve case-bearing forms and isolate Surface reflexivit
 		).toEqual(
 			answer.surface.inflectionalFeatures === null ? [] : ["reflex"],
 		);
-	}
-});
-
-test("production prompt prose matches response schemas without legacy serialization instructions", () => {
-	for (const spec of listExperiments().filter((item) =>
-		item.id.startsWith("grammatical-resolution/"),
-	)) {
-		const { body, outputSchema } = getExperiment(spec.id).promptSource;
-		const schema = z.toJSONSchema(outputSchema);
-		const resolved = schema.anyOf?.find(
-			(branch) => branch.properties?.lemma,
-		);
-		if (!resolved) throw Error(`Missing resolved contract: ${spec.id}`);
-		expect(resolved.required?.toSorted(), spec.id).toEqual([
-			"lemma",
-			"memberOrthographies",
-			"normalizedMembers",
-			"realizationCoverage",
-			"surface",
-		]);
-		const surface = resolved.properties?.surface;
-		const surfaceFields =
-			typeof surface === "object" ? surface.required : undefined;
-		if (!surfaceFields) throw Error(`Missing Surface contract: ${spec.id}`);
-		const declaredSurface = body.match(
-			/surface contains exactly ([^.]+)\./,
-		)?.[1];
-		if (!declaredSurface)
-			throw Error(`Missing Surface instructions: ${spec.id}`);
-		const proseFields = declaredSurface
-			.split(/,? and |, /)
-			.map((field) => field.trim())
-			.toSorted();
-		expect(proseFields, spec.id).toEqual(surfaceFields.toSorted());
-		expect(body.match(/<output_contract>/g), spec.id).toHaveLength(1);
-		for (const field of [
-			"memberOrthographies",
-			"normalizedMembers",
-			"surface",
-			"lemma",
-			"realizationCoverage",
-		])
-			expect(body, spec.id).toContain(field);
-		expect(body, spec.id).not.toMatch(
-			/\bCitation(?:Surface)?\b|\bInflection(?:Surface)?\b|surfaceKind|referenceGender/,
-		);
-		expect(body, spec.id).not.toMatch(
-			/(?:Never|Do not) return[^.]*realizationCoverage/i,
-		);
-		expect(body, spec.id).not.toMatch(
-			/(?:application|app) (?:injects|supplies|owns)[^.]*realization.?coverage/i,
-		);
-	}
-	const { body } = getExperiment(
-		"grammatical-resolution/de/lexeme/pronoun",
-	).promptSource;
-	expect(body).toContain("gender[psor] belong in lemma.coreFeatures");
-	expect(body).toContain(
-		'the only Inflectional Feature: use { reflex: "Yes" }',
-	);
-	for (const id of ["reading-generation/de", "reading-resolution/de"]) {
-		const source = getExperiment(id).promptSource;
-		expect(source.body).toContain(
-			'Return exactly { "emojiDescription": string }',
-		);
-		expect(z.toJSONSchema(source.outputSchema).required).toEqual([
-			"emojiDescription",
-		]);
 	}
 });
 

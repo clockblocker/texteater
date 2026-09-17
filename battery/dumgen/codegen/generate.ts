@@ -114,10 +114,24 @@ console.log(
 );
 
 const { assembleSystemPrompt } = await import("promptsmith");
-const { promptRegistrations } = await import(
+const { corpusRegistrations } = await import(
 	"../src/concrete-lang/de/experiments.js"
 );
 await emit(
 	"prompts.ts",
-	`// Generated from explicitly selected demonstrations, never held-out cases.\nexport const prompts:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(promptRegistrations.filter(({ promptSource }) => !promptSource.route.startsWith("knowledge-analysis/") || promptSource.route.startsWith("knowledge-analysis/de/")).map(({ promptSource }) => [promptSource.route, assembleSystemPrompt(promptSource)])))};\nexport const grammarPromptRoutes:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(routes.filter((route) => route.language === "de").map((route) => [route.key, `grammatical-resolution/${route.modulePath.replace(/\.js$/, "")}`])))};`,
+	`// Generated from explicitly selected demonstrations, never held-out cases.\nexport const prompts:Readonly<Record<string,string>>=${JSON.stringify(
+		Object.fromEntries(
+			corpusRegistrations
+				.filter(
+					({ source }) =>
+						"body" in source &&
+						source.route === "reading-generation/de",
+				)
+				.map(({ source }) => {
+					if (!("body" in source))
+						throw Error("Missing active text prompt");
+					return [source.route, assembleSystemPrompt(source)];
+				}),
+		),
+	)};\nexport const grammarPromptRoutes:Readonly<Record<string,string>>=${JSON.stringify(Object.fromEntries(routes.filter((route) => route.language === "de").map((route) => [route.key, `grammatical-resolution/${route.modulePath.replace(/\.js$/, "")}`])))};`,
 );

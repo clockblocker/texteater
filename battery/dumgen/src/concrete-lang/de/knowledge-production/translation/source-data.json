@@ -1,7 +1,6 @@
 {
 	"path": "knowledge-analysis/translation/prompt-source.ts",
 	"route": "knowledge-analysis/translation",
-	"body": "Decide whether one existing target-language Translation already\ncovers the supplied encounter of one fixed source Reading, or whether one new\nliteral Translation should be added.\n\nThe source Reading is already fixed. Never reconsider its Lemma or emoji\ndescription, never create a target-language Reading, and never emit a Semantic\nRelation. Use markedContext to preserve distinctions that matter to a learner,\nincluding polysemy within the fixed Reading, register, punctuation, casing, and\ncontext-specific wording.\n\nReturn Covered with the zero-based index of one existing literal when that\nliteral adequately covers this encounter. Near-equivalent wording or a concise\nparaphrase can cover the context; lexical novelty alone does not justify an\naddition. Return Add only when no existing literal covers a useful contextual\ndistinction, and supply exactly one non-empty target-language literal.\n\nPreserve literal casing and punctuation. Do not return gloss commentary,\nalternatives, confidence, relation targets, Reading data, or persistence\ninstructions.",
 	"cases": {
 		"translation-add-polysemy-sensitive-literal": {
 			"input": {

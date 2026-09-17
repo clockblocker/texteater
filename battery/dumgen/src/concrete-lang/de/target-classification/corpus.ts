@@ -1,5 +1,5 @@
 import { segmentedSentenceSchema } from "../../../universal/schemas.js";
-import { defineLinguisticPrompt } from "../authoring.js";
+import { defineLinguisticCorpus } from "../authoring.js";
 import {
 	compactTargetInputSchema as inputSchema,
 	targetOutputSchema as outputSchema,
@@ -37,11 +37,10 @@ const cases = Object.fromEntries(
 		];
 	}),
 );
-export const promptSource = defineLinguisticPrompt({
+export const corpusSource = defineLinguisticCorpus({
 	route: data.route,
 	inputSchema,
 	outputSchema,
-	body: data.body,
 	cases,
 	demonstrationIds: data.demonstrationIds,
 	source: import.meta.url,
