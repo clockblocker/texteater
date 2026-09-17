@@ -45,7 +45,7 @@ export const emojiDescriptionSchema=R0.readingSchema.shape.emojiDescription;
 export const analysisTargetSchema=z.union([${routes.map((_, index) => target(index)).join(",")}]);
 export const encounterSchema=z.union([${routes.map((route, index) => `z.strictObject({sentence:segmentedSentenceSchema.extend({language:z.literal(${JSON.stringify(route.language)})}),target:${target(index)}})`).join(",")}]);
 export const generationInputSchema=z.union([${routes.map((_, index) => `z.strictObject({encounter:encounterSchema.options[${index}],lemma:R${index}.lemmaSchema})`).join(",")}]);
-export const comparisonInputSchema=z.union(generationInputSchema.options.map(schema=>schema.extend({candidates:z.tuple([emojiDescriptionSchema],emojiDescriptionSchema)})));
+export const comparisonInputSchema=z.union(generationInputSchema.options.map(schema=>schema.extend({candidates:z.array(emojiDescriptionSchema)})));
 export const knowledgeInputSchema=z.union([${routes.map((_, index) => `z.strictObject({encounter:encounterSchema.options[${index}],reading:R${index}.readingSchema,request:knowledgeRequestMaskSchema})`).join(",")}]);
 export const grammarSchemas={${routes.map((route, index) => `${JSON.stringify(route.key)}:z.strictObject({lemma:R${index}.lemmaSchema.omit({unitKind:true,language:true,family:true,kind:true}),surface:R${index}.surfaceSchema.omit({unitKind:true,language:true,lemma:true,normalizedSurface:true}),normalizedMembers:z.array(z.string().min(1)).min(1),memberOrthographies:z.array(z.enum(["Standard","Typo"])).min(1),realizationCoverage:z.enum(["Full","Partial"])})`).join(",")}};
 export const targetsByLanguage={${["de", "en", "he"]

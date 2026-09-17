@@ -5,8 +5,8 @@ import {
 	selectGrammaticalAlternatives,
 	validateEncounter,
 } from "dumgen";
-import { generationInputSchema } from "dumgen/schemas";
-import type { Encounter, GenerationInput, ModelRequest } from "dumgen/types";
+import { comparisonInputSchema } from "dumgen/schemas";
+import type { ComparisonInput, Encounter, ModelRequest } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
@@ -16,6 +16,7 @@ import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/ver
 import {
 	executeOutput,
 	queuedTargetJudgment,
+	readingJudgment,
 	rejectJudgment,
 } from "./execution-fixture.js";
 import { grammarFixture } from "./grammar-fixture.js";
@@ -42,7 +43,10 @@ function controlled(output: unknown) {
 	return {
 		calls,
 		dumgen: createDumgen({
-			judge: grammarFixture(output).judge,
+			judge: (request, options) =>
+				Object.hasOwn(request.questions, "reading")
+					? readingJudgment(output)(request, options)
+					: grammarFixture(output).judge(request, options),
 			onModelExchange: (exchange) => calls.push(exchange.request),
 			execute: executeOutput(async (request) => {
 				return request.stage === "resolveGrammar"
@@ -185,19 +189,23 @@ test("emoji operations use exact candidates and omit options for candidate-free 
 	).toEqual({ decision: "New", emojiDescription: "💰" });
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription({ encounter, lemma: noun }),
+			dumgen.resolveOrGenerateReadingEmojiDescription({
+				encounter,
+				lemma: noun,
+				candidates: [],
+			}),
 		),
-	).toBe("💰");
-	expect(calls[2]?.input).not.toHaveProperty("existingEmojiDescriptions");
+	).toEqual({ decision: "New", emojiDescription: "💰" });
+	expect(calls[3]?.input).toHaveProperty("existingEmojiDescriptions", []);
 	expect(
 		await tag(
-			dumgen.generateReadingEmojiDescription({
+			dumgen.resolveOrGenerateReadingEmojiDescription({
 				encounter,
 				lemma: {
 					...noun,
 					kind: "ADJ",
 				},
-			} as unknown as GenerationInput<"de">),
+			} as unknown as ComparisonInput<"de">),
 		),
 	).toBe("InvalidInput");
 });
@@ -273,19 +281,24 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 	const { dumgen, calls } = controlled({ emojiDescription: "✨" });
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter: fixedEncounter,
 					lemma: member.lemma,
 				}),
 			),
 		),
-	).toBe(member.reading.emojiDescription);
+	).toEqual({
+		decision: "New",
+		emojiDescription: member.reading.emojiDescription,
+	});
 	expect(calls).toHaveLength(0);
 	expect(
 		await tag(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter: fixedEncounter,
 					lemma: { ...member.lemma, canonicalForm: "unreviewed" },
 				}),
@@ -303,14 +316,15 @@ test("Closed Catalogs resolve internally and never fall through; Open population
 	});
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter: openEncounter,
 					lemma: { ...pron.lemma, canonicalForm: "unreviewed" },
 				}),
 			),
 		),
-	).toBe("✨");
+	).toEqual({ decision: "New", emojiDescription: "✨" });
 	expect(calls).toHaveLength(1);
 });
 test("feature navigation preserves Case and compares unmarked values literally", () => {

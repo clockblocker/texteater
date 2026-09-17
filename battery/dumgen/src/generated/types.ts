@@ -2859,595 +2859,595 @@ type _Output619 =
 	| _Output1353
 	| _Output1358;
 type _Output1366 = string;
-type _Output1365 = [_Output1366, ...Array<_Output1366>];
+type _Output1365 = Array<_Output1366>;
 type _Output1364 = {
 	encounter: _Output23;
 	lemma: _Output621;
 	candidates: _Output1365;
 };
-type _Output1368 = [_Output1366, ...Array<_Output1366>];
+type _Output1368 = Array<_Output1366>;
 type _Output1367 = {
 	encounter: _Output31;
 	lemma: _Output627;
 	candidates: _Output1368;
 };
-type _Output1370 = [_Output1366, ...Array<_Output1366>];
+type _Output1370 = Array<_Output1366>;
 type _Output1369 = {
 	encounter: _Output37;
 	lemma: _Output640;
 	candidates: _Output1370;
 };
-type _Output1372 = [_Output1366, ...Array<_Output1366>];
+type _Output1372 = Array<_Output1366>;
 type _Output1371 = {
 	encounter: _Output43;
 	lemma: _Output655;
 	candidates: _Output1372;
 };
-type _Output1374 = [_Output1366, ...Array<_Output1366>];
+type _Output1374 = Array<_Output1366>;
 type _Output1373 = {
 	encounter: _Output49;
 	lemma: _Output665;
 	candidates: _Output1374;
 };
-type _Output1376 = [_Output1366, ...Array<_Output1366>];
+type _Output1376 = Array<_Output1366>;
 type _Output1375 = {
 	encounter: _Output55;
 	lemma: _Output672;
 	candidates: _Output1376;
 };
-type _Output1378 = [_Output1366, ...Array<_Output1366>];
+type _Output1378 = Array<_Output1366>;
 type _Output1377 = {
 	encounter: _Output61;
 	lemma: _Output679;
 	candidates: _Output1378;
 };
-type _Output1380 = [_Output1366, ...Array<_Output1366>];
+type _Output1380 = Array<_Output1366>;
 type _Output1379 = {
 	encounter: _Output67;
 	lemma: _Output699;
 	candidates: _Output1380;
 };
-type _Output1382 = [_Output1366, ...Array<_Output1366>];
+type _Output1382 = Array<_Output1366>;
 type _Output1381 = {
 	encounter: _Output73;
 	lemma: _Output706;
 	candidates: _Output1382;
 };
-type _Output1384 = [_Output1366, ...Array<_Output1366>];
+type _Output1384 = Array<_Output1366>;
 type _Output1383 = {
 	encounter: _Output79;
 	lemma: _Output715;
 	candidates: _Output1384;
 };
-type _Output1386 = [_Output1366, ...Array<_Output1366>];
+type _Output1386 = Array<_Output1366>;
 type _Output1385 = {
 	encounter: _Output85;
 	lemma: _Output724;
 	candidates: _Output1386;
 };
-type _Output1388 = [_Output1366, ...Array<_Output1366>];
+type _Output1388 = Array<_Output1366>;
 type _Output1387 = {
 	encounter: _Output91;
 	lemma: _Output734;
 	candidates: _Output1388;
 };
-type _Output1390 = [_Output1366, ...Array<_Output1366>];
+type _Output1390 = Array<_Output1366>;
 type _Output1389 = {
 	encounter: _Output97;
 	lemma: _Output745;
 	candidates: _Output1390;
 };
-type _Output1392 = [_Output1366, ...Array<_Output1366>];
+type _Output1392 = Array<_Output1366>;
 type _Output1391 = {
 	encounter: _Output103;
 	lemma: _Output770;
 	candidates: _Output1392;
 };
-type _Output1394 = [_Output1366, ...Array<_Output1366>];
+type _Output1394 = Array<_Output1366>;
 type _Output1393 = {
 	encounter: _Output109;
 	lemma: _Output779;
 	candidates: _Output1394;
 };
-type _Output1396 = [_Output1366, ...Array<_Output1366>];
+type _Output1396 = Array<_Output1366>;
 type _Output1395 = {
 	encounter: _Output115;
 	lemma: _Output786;
 	candidates: _Output1396;
 };
-type _Output1398 = [_Output1366, ...Array<_Output1366>];
+type _Output1398 = Array<_Output1366>;
 type _Output1397 = {
 	encounter: _Output121;
 	lemma: _Output793;
 	candidates: _Output1398;
 };
-type _Output1400 = [_Output1366, ...Array<_Output1366>];
+type _Output1400 = Array<_Output1366>;
 type _Output1399 = {
 	encounter: _Output127;
 	lemma: _Output801;
 	candidates: _Output1400;
 };
-type _Output1402 = [_Output1366, ...Array<_Output1366>];
+type _Output1402 = Array<_Output1366>;
 type _Output1401 = {
 	encounter: _Output133;
 	lemma: _Output813;
 	candidates: _Output1402;
 };
-type _Output1404 = [_Output1366, ...Array<_Output1366>];
+type _Output1404 = Array<_Output1366>;
 type _Output1403 = {
 	encounter: _Output139;
 	lemma: _Output818;
 	candidates: _Output1404;
 };
-type _Output1406 = [_Output1366, ...Array<_Output1366>];
+type _Output1406 = Array<_Output1366>;
 type _Output1405 = {
 	encounter: _Output145;
 	lemma: _Output823;
 	candidates: _Output1406;
 };
-type _Output1408 = [_Output1366, ...Array<_Output1366>];
+type _Output1408 = Array<_Output1366>;
 type _Output1407 = {
 	encounter: _Output151;
 	lemma: _Output828;
 	candidates: _Output1408;
 };
-type _Output1410 = [_Output1366, ...Array<_Output1366>];
+type _Output1410 = Array<_Output1366>;
 type _Output1409 = {
 	encounter: _Output157;
 	lemma: _Output833;
 	candidates: _Output1410;
 };
-type _Output1412 = [_Output1366, ...Array<_Output1366>];
+type _Output1412 = Array<_Output1366>;
 type _Output1411 = {
 	encounter: _Output163;
 	lemma: _Output838;
 	candidates: _Output1412;
 };
-type _Output1414 = [_Output1366, ...Array<_Output1366>];
+type _Output1414 = Array<_Output1366>;
 type _Output1413 = {
 	encounter: _Output169;
 	lemma: _Output844;
 	candidates: _Output1414;
 };
-type _Output1416 = [_Output1366, ...Array<_Output1366>];
+type _Output1416 = Array<_Output1366>;
 type _Output1415 = {
 	encounter: _Output175;
 	lemma: _Output849;
 	candidates: _Output1416;
 };
-type _Output1418 = [_Output1366, ...Array<_Output1366>];
+type _Output1418 = Array<_Output1366>;
 type _Output1417 = {
 	encounter: _Output181;
 	lemma: _Output854;
 	candidates: _Output1418;
 };
-type _Output1420 = [_Output1366, ...Array<_Output1366>];
+type _Output1420 = Array<_Output1366>;
 type _Output1419 = {
 	encounter: _Output187;
 	lemma: _Output859;
 	candidates: _Output1420;
 };
-type _Output1422 = [_Output1366, ...Array<_Output1366>];
+type _Output1422 = Array<_Output1366>;
 type _Output1421 = {
 	encounter: _Output193;
 	lemma: _Output864;
 	candidates: _Output1422;
 };
-type _Output1424 = [_Output1366, ...Array<_Output1366>];
+type _Output1424 = Array<_Output1366>;
 type _Output1423 = {
 	encounter: _Output199;
 	lemma: _Output869;
 	candidates: _Output1424;
 };
-type _Output1426 = [_Output1366, ...Array<_Output1366>];
+type _Output1426 = Array<_Output1366>;
 type _Output1425 = {
 	encounter: _Output205;
 	lemma: _Output874;
 	candidates: _Output1426;
 };
-type _Output1428 = [_Output1366, ...Array<_Output1366>];
+type _Output1428 = Array<_Output1366>;
 type _Output1427 = {
 	encounter: _Output211;
 	lemma: _Output881;
 	candidates: _Output1428;
 };
-type _Output1430 = [_Output1366, ...Array<_Output1366>];
+type _Output1430 = Array<_Output1366>;
 type _Output1429 = {
 	encounter: _Output217;
 	lemma: _Output886;
 	candidates: _Output1430;
 };
-type _Output1432 = [_Output1366, ...Array<_Output1366>];
+type _Output1432 = Array<_Output1366>;
 type _Output1431 = {
 	encounter: _Output223;
 	lemma: _Output891;
 	candidates: _Output1432;
 };
-type _Output1434 = [_Output1366, ...Array<_Output1366>];
+type _Output1434 = Array<_Output1366>;
 type _Output1433 = {
 	encounter: _Output229;
 	lemma: _Output896;
 	candidates: _Output1434;
 };
-type _Output1436 = [_Output1366, ...Array<_Output1366>];
+type _Output1436 = Array<_Output1366>;
 type _Output1435 = {
 	encounter: _Output235;
 	lemma: _Output910;
 	candidates: _Output1436;
 };
-type _Output1438 = [_Output1366, ...Array<_Output1366>];
+type _Output1438 = Array<_Output1366>;
 type _Output1437 = {
 	encounter: _Output241;
 	lemma: _Output918;
 	candidates: _Output1438;
 };
-type _Output1440 = [_Output1366, ...Array<_Output1366>];
+type _Output1440 = Array<_Output1366>;
 type _Output1439 = {
 	encounter: _Output247;
 	lemma: _Output936;
 	candidates: _Output1440;
 };
-type _Output1442 = [_Output1366, ...Array<_Output1366>];
+type _Output1442 = Array<_Output1366>;
 type _Output1441 = {
 	encounter: _Output253;
 	lemma: _Output944;
 	candidates: _Output1442;
 };
-type _Output1444 = [_Output1366, ...Array<_Output1366>];
+type _Output1444 = Array<_Output1366>;
 type _Output1443 = {
 	encounter: _Output259;
 	lemma: _Output952;
 	candidates: _Output1444;
 };
-type _Output1446 = [_Output1366, ...Array<_Output1366>];
+type _Output1446 = Array<_Output1366>;
 type _Output1445 = {
 	encounter: _Output265;
 	lemma: _Output972;
 	candidates: _Output1446;
 };
-type _Output1448 = [_Output1366, ...Array<_Output1366>];
+type _Output1448 = Array<_Output1366>;
 type _Output1447 = {
 	encounter: _Output271;
 	lemma: _Output983;
 	candidates: _Output1448;
 };
-type _Output1450 = [_Output1366, ...Array<_Output1366>];
+type _Output1450 = Array<_Output1366>;
 type _Output1449 = {
 	encounter: _Output277;
 	lemma: _Output998;
 	candidates: _Output1450;
 };
-type _Output1452 = [_Output1366, ...Array<_Output1366>];
+type _Output1452 = Array<_Output1366>;
 type _Output1451 = {
 	encounter: _Output283;
 	lemma: _Output1010;
 	candidates: _Output1452;
 };
-type _Output1454 = [_Output1366, ...Array<_Output1366>];
+type _Output1454 = Array<_Output1366>;
 type _Output1453 = {
 	encounter: _Output289;
 	lemma: _Output1018;
 	candidates: _Output1454;
 };
-type _Output1456 = [_Output1366, ...Array<_Output1366>];
+type _Output1456 = Array<_Output1366>;
 type _Output1455 = {
 	encounter: _Output295;
 	lemma: _Output1028;
 	candidates: _Output1456;
 };
-type _Output1458 = [_Output1366, ...Array<_Output1366>];
+type _Output1458 = Array<_Output1366>;
 type _Output1457 = {
 	encounter: _Output301;
 	lemma: _Output1045;
 	candidates: _Output1458;
 };
-type _Output1460 = [_Output1366, ...Array<_Output1366>];
+type _Output1460 = Array<_Output1366>;
 type _Output1459 = {
 	encounter: _Output307;
 	lemma: _Output1055;
 	candidates: _Output1460;
 };
-type _Output1462 = [_Output1366, ...Array<_Output1366>];
+type _Output1462 = Array<_Output1366>;
 type _Output1461 = {
 	encounter: _Output313;
 	lemma: _Output1060;
 	candidates: _Output1462;
 };
-type _Output1464 = [_Output1366, ...Array<_Output1366>];
+type _Output1464 = Array<_Output1366>;
 type _Output1463 = {
 	encounter: _Output319;
 	lemma: _Output1070;
 	candidates: _Output1464;
 };
-type _Output1466 = [_Output1366, ...Array<_Output1366>];
+type _Output1466 = Array<_Output1366>;
 type _Output1465 = {
 	encounter: _Output325;
 	lemma: _Output1078;
 	candidates: _Output1466;
 };
-type _Output1468 = [_Output1366, ...Array<_Output1366>];
+type _Output1468 = Array<_Output1366>;
 type _Output1467 = {
 	encounter: _Output331;
 	lemma: _Output1091;
 	candidates: _Output1468;
 };
-type _Output1470 = [_Output1366, ...Array<_Output1366>];
+type _Output1470 = Array<_Output1366>;
 type _Output1469 = {
 	encounter: _Output337;
 	lemma: _Output1096;
 	candidates: _Output1470;
 };
-type _Output1472 = [_Output1366, ...Array<_Output1366>];
+type _Output1472 = Array<_Output1366>;
 type _Output1471 = {
 	encounter: _Output343;
 	lemma: _Output1101;
 	candidates: _Output1472;
 };
-type _Output1474 = [_Output1366, ...Array<_Output1366>];
+type _Output1474 = Array<_Output1366>;
 type _Output1473 = {
 	encounter: _Output349;
 	lemma: _Output1106;
 	candidates: _Output1474;
 };
-type _Output1476 = [_Output1366, ...Array<_Output1366>];
+type _Output1476 = Array<_Output1366>;
 type _Output1475 = {
 	encounter: _Output355;
 	lemma: _Output1111;
 	candidates: _Output1476;
 };
-type _Output1478 = [_Output1366, ...Array<_Output1366>];
+type _Output1478 = Array<_Output1366>;
 type _Output1477 = {
 	encounter: _Output361;
 	lemma: _Output1116;
 	candidates: _Output1478;
 };
-type _Output1480 = [_Output1366, ...Array<_Output1366>];
+type _Output1480 = Array<_Output1366>;
 type _Output1479 = {
 	encounter: _Output367;
 	lemma: _Output1121;
 	candidates: _Output1480;
 };
-type _Output1482 = [_Output1366, ...Array<_Output1366>];
+type _Output1482 = Array<_Output1366>;
 type _Output1481 = {
 	encounter: _Output373;
 	lemma: _Output1126;
 	candidates: _Output1482;
 };
-type _Output1484 = [_Output1366, ...Array<_Output1366>];
+type _Output1484 = Array<_Output1366>;
 type _Output1483 = {
 	encounter: _Output379;
 	lemma: _Output1131;
 	candidates: _Output1484;
 };
-type _Output1486 = [_Output1366, ...Array<_Output1366>];
+type _Output1486 = Array<_Output1366>;
 type _Output1485 = {
 	encounter: _Output385;
 	lemma: _Output1136;
 	candidates: _Output1486;
 };
-type _Output1488 = [_Output1366, ...Array<_Output1366>];
+type _Output1488 = Array<_Output1366>;
 type _Output1487 = {
 	encounter: _Output391;
 	lemma: _Output1141;
 	candidates: _Output1488;
 };
-type _Output1490 = [_Output1366, ...Array<_Output1366>];
+type _Output1490 = Array<_Output1366>;
 type _Output1489 = {
 	encounter: _Output397;
 	lemma: _Output1146;
 	candidates: _Output1490;
 };
-type _Output1492 = [_Output1366, ...Array<_Output1366>];
+type _Output1492 = Array<_Output1366>;
 type _Output1491 = {
 	encounter: _Output403;
 	lemma: _Output1151;
 	candidates: _Output1492;
 };
-type _Output1494 = [_Output1366, ...Array<_Output1366>];
+type _Output1494 = Array<_Output1366>;
 type _Output1493 = {
 	encounter: _Output409;
 	lemma: _Output1157;
 	candidates: _Output1494;
 };
-type _Output1496 = [_Output1366, ...Array<_Output1366>];
+type _Output1496 = Array<_Output1366>;
 type _Output1495 = {
 	encounter: _Output415;
 	lemma: _Output1162;
 	candidates: _Output1496;
 };
-type _Output1498 = [_Output1366, ...Array<_Output1366>];
+type _Output1498 = Array<_Output1366>;
 type _Output1497 = {
 	encounter: _Output421;
 	lemma: _Output1167;
 	candidates: _Output1498;
 };
-type _Output1500 = [_Output1366, ...Array<_Output1366>];
+type _Output1500 = Array<_Output1366>;
 type _Output1499 = {
 	encounter: _Output427;
 	lemma: _Output1172;
 	candidates: _Output1500;
 };
-type _Output1502 = [_Output1366, ...Array<_Output1366>];
+type _Output1502 = Array<_Output1366>;
 type _Output1501 = {
 	encounter: _Output433;
 	lemma: _Output1178;
 	candidates: _Output1502;
 };
-type _Output1504 = [_Output1366, ...Array<_Output1366>];
+type _Output1504 = Array<_Output1366>;
 type _Output1503 = {
 	encounter: _Output439;
 	lemma: _Output1186;
 	candidates: _Output1504;
 };
-type _Output1506 = [_Output1366, ...Array<_Output1366>];
+type _Output1506 = Array<_Output1366>;
 type _Output1505 = {
 	encounter: _Output445;
 	lemma: _Output1193;
 	candidates: _Output1506;
 };
-type _Output1508 = [_Output1366, ...Array<_Output1366>];
+type _Output1508 = Array<_Output1366>;
 type _Output1507 = {
 	encounter: _Output451;
 	lemma: _Output1200;
 	candidates: _Output1508;
 };
-type _Output1510 = [_Output1366, ...Array<_Output1366>];
+type _Output1510 = Array<_Output1366>;
 type _Output1509 = {
 	encounter: _Output457;
 	lemma: _Output1205;
 	candidates: _Output1510;
 };
-type _Output1512 = [_Output1366, ...Array<_Output1366>];
+type _Output1512 = Array<_Output1366>;
 type _Output1511 = {
 	encounter: _Output463;
 	lemma: _Output1212;
 	candidates: _Output1512;
 };
-type _Output1514 = [_Output1366, ...Array<_Output1366>];
+type _Output1514 = Array<_Output1366>;
 type _Output1513 = {
 	encounter: _Output469;
 	lemma: _Output1217;
 	candidates: _Output1514;
 };
-type _Output1516 = [_Output1366, ...Array<_Output1366>];
+type _Output1516 = Array<_Output1366>;
 type _Output1515 = {
 	encounter: _Output475;
 	lemma: _Output1227;
 	candidates: _Output1516;
 };
-type _Output1518 = [_Output1366, ...Array<_Output1366>];
+type _Output1518 = Array<_Output1366>;
 type _Output1517 = {
 	encounter: _Output481;
 	lemma: _Output1232;
 	candidates: _Output1518;
 };
-type _Output1520 = [_Output1366, ...Array<_Output1366>];
+type _Output1520 = Array<_Output1366>;
 type _Output1519 = {
 	encounter: _Output487;
 	lemma: _Output1237;
 	candidates: _Output1520;
 };
-type _Output1522 = [_Output1366, ...Array<_Output1366>];
+type _Output1522 = Array<_Output1366>;
 type _Output1521 = {
 	encounter: _Output493;
 	lemma: _Output1242;
 	candidates: _Output1522;
 };
-type _Output1524 = [_Output1366, ...Array<_Output1366>];
+type _Output1524 = Array<_Output1366>;
 type _Output1523 = {
 	encounter: _Output499;
 	lemma: _Output1253;
 	candidates: _Output1524;
 };
-type _Output1526 = [_Output1366, ...Array<_Output1366>];
+type _Output1526 = Array<_Output1366>;
 type _Output1525 = {
 	encounter: _Output505;
 	lemma: _Output1263;
 	candidates: _Output1526;
 };
-type _Output1528 = [_Output1366, ...Array<_Output1366>];
+type _Output1528 = Array<_Output1366>;
 type _Output1527 = {
 	encounter: _Output511;
 	lemma: _Output1268;
 	candidates: _Output1528;
 };
-type _Output1530 = [_Output1366, ...Array<_Output1366>];
+type _Output1530 = Array<_Output1366>;
 type _Output1529 = {
 	encounter: _Output517;
 	lemma: _Output1275;
 	candidates: _Output1530;
 };
-type _Output1532 = [_Output1366, ...Array<_Output1366>];
+type _Output1532 = Array<_Output1366>;
 type _Output1531 = {
 	encounter: _Output523;
 	lemma: _Output1280;
 	candidates: _Output1532;
 };
-type _Output1534 = [_Output1366, ...Array<_Output1366>];
+type _Output1534 = Array<_Output1366>;
 type _Output1533 = {
 	encounter: _Output529;
 	lemma: _Output1289;
 	candidates: _Output1534;
 };
-type _Output1536 = [_Output1366, ...Array<_Output1366>];
+type _Output1536 = Array<_Output1366>;
 type _Output1535 = {
 	encounter: _Output535;
 	lemma: _Output1294;
 	candidates: _Output1536;
 };
-type _Output1538 = [_Output1366, ...Array<_Output1366>];
+type _Output1538 = Array<_Output1366>;
 type _Output1537 = {
 	encounter: _Output541;
 	lemma: _Output1299;
 	candidates: _Output1538;
 };
-type _Output1540 = [_Output1366, ...Array<_Output1366>];
+type _Output1540 = Array<_Output1366>;
 type _Output1539 = {
 	encounter: _Output547;
 	lemma: _Output1304;
 	candidates: _Output1540;
 };
-type _Output1542 = [_Output1366, ...Array<_Output1366>];
+type _Output1542 = Array<_Output1366>;
 type _Output1541 = {
 	encounter: _Output553;
 	lemma: _Output1309;
 	candidates: _Output1542;
 };
-type _Output1544 = [_Output1366, ...Array<_Output1366>];
+type _Output1544 = Array<_Output1366>;
 type _Output1543 = {
 	encounter: _Output559;
 	lemma: _Output1314;
 	candidates: _Output1544;
 };
-type _Output1546 = [_Output1366, ...Array<_Output1366>];
+type _Output1546 = Array<_Output1366>;
 type _Output1545 = {
 	encounter: _Output565;
 	lemma: _Output1319;
 	candidates: _Output1546;
 };
-type _Output1548 = [_Output1366, ...Array<_Output1366>];
+type _Output1548 = Array<_Output1366>;
 type _Output1547 = {
 	encounter: _Output571;
 	lemma: _Output1324;
 	candidates: _Output1548;
 };
-type _Output1550 = [_Output1366, ...Array<_Output1366>];
+type _Output1550 = Array<_Output1366>;
 type _Output1549 = {
 	encounter: _Output577;
 	lemma: _Output1329;
 	candidates: _Output1550;
 };
-type _Output1552 = [_Output1366, ...Array<_Output1366>];
+type _Output1552 = Array<_Output1366>;
 type _Output1551 = {
 	encounter: _Output583;
 	lemma: _Output1334;
 	candidates: _Output1552;
 };
-type _Output1554 = [_Output1366, ...Array<_Output1366>];
+type _Output1554 = Array<_Output1366>;
 type _Output1553 = {
 	encounter: _Output589;
 	lemma: _Output1339;
 	candidates: _Output1554;
 };
-type _Output1556 = [_Output1366, ...Array<_Output1366>];
+type _Output1556 = Array<_Output1366>;
 type _Output1555 = {
 	encounter: _Output595;
 	lemma: _Output1344;
 	candidates: _Output1556;
 };
-type _Output1558 = [_Output1366, ...Array<_Output1366>];
+type _Output1558 = Array<_Output1366>;
 type _Output1557 = {
 	encounter: _Output601;
 	lemma: _Output1349;
 	candidates: _Output1558;
 };
-type _Output1560 = [_Output1366, ...Array<_Output1366>];
+type _Output1560 = Array<_Output1366>;
 type _Output1559 = {
 	encounter: _Output607;
 	lemma: _Output1354;
 	candidates: _Output1560;
 };
-type _Output1562 = [_Output1366, ...Array<_Output1366>];
+type _Output1562 = Array<_Output1366>;
 type _Output1561 = {
 	encounter: _Output613;
 	lemma: _Output1359;

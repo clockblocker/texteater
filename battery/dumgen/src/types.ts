@@ -43,13 +43,6 @@ type OperationInput<T> = T extends { encounter: unknown }
 					: T[K];
 		}
 	: never;
-export type GenerationInput<L extends DumgenLanguage = DumgenLanguage> =
-	OperationInput<
-		Extract<
-			Generated.GenerationInput,
-			{ encounter: { sentence: { language: L } } }
-		>
-	>;
 export type ComparisonInput<L extends DumgenLanguage = DumgenLanguage> =
 	OperationInput<
 		Extract<
@@ -103,9 +96,6 @@ export interface Dumgen {
 	resolveOrGenerateReadingEmojiDescription<L extends DumgenLanguage>(
 		input: ComparisonInput<L>,
 	): Task<ReadingEmojiDescriptionResolution>;
-	generateReadingEmojiDescription<L extends DumgenLanguage>(
-		input: GenerationInput<L>,
-	): Task<EmojiDescription>;
 	produceKnowledge<I extends KnowledgeInput>(
 		input: I,
 	): Task<KnowledgeProduction<I["reading"]["lemma"]["language"]>>;

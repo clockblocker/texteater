@@ -5,7 +5,6 @@ import type {
 	ComparisonInput,
 	Dumgen,
 	Encounter,
-	GenerationInput,
 	ModelExchange,
 	OperationTrace,
 } from "dumgen/types";
@@ -205,23 +204,11 @@ export class GermanClassificationResolver {
 				({ reading }) => reading.emojiDescription,
 			);
 			const base = { encounter: grammatical.encounter, lemma };
-			const firstCandidate = candidates[0];
 			const resolution =
-				firstCandidate !== undefined
-					? yield* dumgen.resolveOrGenerateReadingEmojiDescription({
-							...base,
-							candidates: [
-								firstCandidate,
-								...candidates.slice(1),
-							],
-						} as ComparisonInput<"de">)
-					: {
-							decision: "New" as const,
-							emojiDescription:
-								yield* dumgen.generateReadingEmojiDescription(
-									base as GenerationInput<"de">,
-								),
-						};
+				yield* dumgen.resolveOrGenerateReadingEmojiDescription({
+					...base,
+					candidates,
+				} as ComparisonInput<"de">);
 			const parsedReading = parseUnit({
 				unitKind: "Reading",
 				lemma,
@@ -236,9 +223,7 @@ export class GermanClassificationResolver {
 				throw new Error("Expected a German Reading.");
 			const reading = parsedReading.chain.value;
 			stages.reading = operationStage(
-				candidates.length
-					? "resolveOrGenerateReadingEmojiDescription"
-					: "generateReadingEmojiDescription",
+				"resolveOrGenerateReadingEmojiDescription",
 				{ ...base, candidates },
 				resolution,
 				localExchanges,

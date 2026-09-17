@@ -30,6 +30,7 @@ import {
 	projectKnowledge,
 	validateRequest,
 } from "./knowledge-production/project.js";
+import { resolveReading } from "./reading-emoji-description/resolve.js";
 import { classifyGermanTarget } from "./target-classification/judgments.js";
 
 function routeOf(encounter: Encounter): string {
@@ -64,7 +65,7 @@ function supported(encounter: Encounter, stage: string): void {
 type EmojiInput = {
 	encounter: Encounter;
 	lemma: Dumling.Lemma;
-	candidates?: readonly string[];
+	candidates: readonly string[];
 };
 type KnowledgeInput = {
 	encounter: Encounter;
@@ -78,47 +79,6 @@ export function createGermanOperations(
 ): Omit<Dumgen, "segment" | "segmentSentence"> {
 	const call = modelCaller(options);
 	const task = operationTask(options);
-	async function emoji(
-		raw: EmojiInput,
-		compare: boolean,
-		signal: AbortSignal,
-	): Promise<string> {
-		const stage = compare
-			? "resolveOrGenerateReadingEmojiDescription"
-			: "generateReadingEmojiDescription";
-		const input = parse<EmojiInput>(
-			compare ? "comparisonInput" : "generationInput",
-			raw,
-			stage,
-		);
-		const encounter = validateEncounter(input.encounter, stage);
-		agreement(encounter, input.lemma, stage);
-		supported(encounter, stage);
-		const member = authoredFor(input.lemma);
-		if (member) return member.reading.emojiDescription;
-		if (closedRoute(input.lemma))
-			throw new DumgenFailure(
-				"CatalogMiss",
-				stage,
-				"Lemma is absent from the Fixed Catalog",
-				routeOf(encounter),
-			);
-		const result = await call<{ emojiDescription: string }>(
-			stage,
-			routeOf(encounter),
-			compare ? "reading-resolution/de" : "reading-generation/de",
-			"emojiOutput",
-			{
-				markedContext: markedContext(encounter).markedContext,
-				lemma: input.lemma.canonicalForm,
-				...(compare
-					? { existingEmojiDescriptions: input.candidates }
-					: {}),
-			},
-			signal,
-		);
-		return result.emojiDescription;
-	}
 	const operations = {
 		classifyTarget<L extends Dumling.Language>(raw: {
 			sentence: SegmentedSentence<L>;
@@ -227,23 +187,25 @@ export function createGermanOperations(
 				);
 			});
 		},
-		generateReadingEmojiDescription(raw: EmojiInput) {
-			return task("generateReadingEmojiDescription", raw, (signal) =>
-				emoji(raw, false, signal),
-			);
-		},
 		resolveOrGenerateReadingEmojiDescription(raw: EmojiInput) {
 			return task(
 				"resolveOrGenerateReadingEmojiDescription",
 				raw,
 				async (signal) => {
-					const description = await emoji(raw, true, signal);
-					return {
-						decision: raw.candidates?.includes(description)
-							? ("Reuse" as const)
-							: ("New" as const),
-						emojiDescription: description,
-					};
+					const stage = "resolveOrGenerateReadingEmojiDescription";
+					const input = parse<EmojiInput>(
+						"comparisonInput",
+						raw,
+						stage,
+					);
+					const encounter = validateEncounter(input.encounter, stage);
+					agreement(encounter, input.lemma, stage);
+					supported(encounter, stage);
+					return resolveReading(
+						options,
+						{ ...input, encounter },
+						signal,
+					);
 				},
 			);
 		},

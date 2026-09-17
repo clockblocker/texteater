@@ -2101,12 +2101,7 @@ export const generationInputSchema = z.union([
 ]);
 export const comparisonInputSchema = z.union(
 	generationInputSchema.options.map((schema) =>
-		schema.extend({
-			candidates: z.tuple(
-				[emojiDescriptionSchema],
-				emojiDescriptionSchema,
-			),
-		}),
+		schema.extend({ candidates: z.array(emojiDescriptionSchema) }),
 	),
 );
 export const knowledgeInputSchema = z.union([

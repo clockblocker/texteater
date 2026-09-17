@@ -1,0 +1,4057 @@
+{
+  "reading-generation-house": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-generation-house",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir wohnen in einem "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Haus"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Haus",
+        "coreFeatures": {
+          "gender": "Neut",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🏠"
+    }
+  },
+  "reading-generation-bank-seat": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-generation-bank-seat",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir sitzen auf einer "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Bank"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " im Park."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Bank",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🪑"
+    }
+  },
+  "reading-generation-maus-computer": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-generation-maus-computer",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Klicke mit der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Maus"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " auf das Symbol."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Maus",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🖱️"
+    }
+  },
+  "reading-de-adj-sauer-acidic": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-sauer-acidic",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Zitronenlimonade schmeckt "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "sauer"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "sauer",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🍋"
+    },
+    "explanation": "Sour taste. First reading. New."
+  },
+  "reading-de-adj-sauer-acidic-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-sauer-acidic-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir pflücken die "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "sauren"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Äpfel später."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "sauer",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🍋"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🍋"
+    },
+    "explanation": "Same sour taste across bearer and inflection. Reuse."
+  },
+  "reading-de-adj-sauer-angry": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-sauer-angry",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Nach der Absage war Lea "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "sauer"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " auf ihren Chef."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "sauer",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🍋"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "😠"
+    },
+    "explanation": "Angry, not sour-tasting. New."
+  },
+  "reading-de-adj-sauer-angry-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-sauer-angry-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wegen der Verspätung ist er noch immer "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "sauer"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "sauer",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🍋",
+        "😠"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "😠"
+    },
+    "explanation": "Angry again. Reuse."
+  },
+  "reading-de-adj-leicht-weight": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-leicht-weight",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der leere Koffer ist überraschend "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "leicht"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "leicht",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🪶"
+    },
+    "explanation": "Low weight. First reading. New."
+  },
+  "reading-de-adj-leicht-easy": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-leicht-easy",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Aufgabe ist "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "leicht"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "leicht",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🪶"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "✅"
+    },
+    "explanation": "Easy, not low in weight. New."
+  },
+  "reading-de-adj-leicht-easy-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-leicht-easy-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Diese Anleitung ist "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "leicht"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " zu verstehen."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "leicht",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🪶",
+        "✅"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "✅"
+    },
+    "explanation": "Easy to understand. Same broad difficulty reading. Reuse."
+  },
+  "reading-de-scharf-spicy": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-scharf-spicy",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Suppe ist sehr "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "scharf"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "scharf",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🔪"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🌶️"
+    },
+    "explanation": "Spicy, not sharp-edged. New."
+  },
+  "reading-de-scharf-sharp": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-scharf-sharp",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das Messer ist "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "scharf"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " genug, um das Brot zu schneiden."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "scharf",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🌶️",
+        "🔪"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🔪"
+    },
+    "explanation": "Sharp-edged. Reuse."
+  },
+  "reading-de-adj-blau-colour": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-blau-colour",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der Himmel ist heute tief "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "blau"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "blau",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🟦"
+    },
+    "explanation": "Blue colour. First reading. New."
+  },
+  "reading-de-adj-blau-drunk": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-blau-drunk",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Nach fünf Bier war er völlig "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "blau"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "blau",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🟦"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🍺"
+    },
+    "explanation": "Drunk, not blue-coloured. New."
+  },
+  "reading-de-adj-menschlich-human": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-menschlich-human",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "menschliche"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Körper braucht Wasser."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "menschlich",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🧑"
+    },
+    "explanation": "Relating to humans. First reading. New."
+  },
+  "reading-de-adj-menschlich-humane": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adj-menschlich-humane",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Ihr Umgang mit den Patienten war stets "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "menschlich"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADJ",
+        "canonicalForm": "menschlich",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": null,
+          "variant": null
+        }
+      },
+      "candidates": [
+        "🧑"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "❤️"
+    },
+    "explanation": "Humane and compassionate, not merely human. New."
+  },
+  "reading-de-adp-ueber-connector": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-ueber-connector",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das Hotel verfügt "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "über"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " einen Pool."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "über",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🔗"
+    },
+    "explanation": "verfügen über fixed. über only links. New."
+  },
+  "reading-de-adp-ueber-above": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-ueber-above",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Lampe hängt "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "über"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " dem Tisch."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "über",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "⬆️"
+    },
+    "explanation": "Above, not a generic connector. New."
+  },
+  "reading-de-adp-ueber-topic-unfall": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-ueber-topic-unfall",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie sprechen "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "über"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " den Unfall."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "über",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "⬆️",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "💬"
+    },
+    "explanation": "Topic, not above. New."
+  },
+  "reading-de-adp-ueber-topic-wetter": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-ueber-topic-wetter",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir reden "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "über"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " das Wetter."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "über",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "⬆️",
+        "💬",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "💬"
+    },
+    "explanation": "Topic. Reuse."
+  },
+  "reading-de-adp-mit-means": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-mit-means",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Mara schneidet das Brot "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "mit"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " einem Messer."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "mit",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Dat",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "🤝",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🛠️"
+    },
+    "explanation": "Means, not companion. New."
+  },
+  "reading-de-adp-mit-connector": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-mit-connector",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir rechnen "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "mit"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Regen."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "mit",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Dat",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "🤝",
+        "🛠️",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🔗"
+    },
+    "explanation": "rechnen mit fixed. mit only links."
+  },
+  "reading-de-adp-um-topic": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-um-topic",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der Streit geht "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "um"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Geld."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "um",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "🔄",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "💬"
+    },
+    "explanation": "Topic, not around. New."
+  },
+  "reading-de-adp-um-clock-time": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-um-clock-time",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der Zug fährt "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "um"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " acht Uhr."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "um",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "🔄",
+        "💬",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "⏰"
+    },
+    "explanation": "Clock point. New."
+  },
+  "reading-de-adp-nach-sensory-characteristic": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-nach-sensory-characteristic",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Jacke riecht "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "nach"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Rauch."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "nach",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Dat",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "🧭",
+        "⏭️",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🟰"
+    },
+    "explanation": "A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New."
+  },
+  "reading-de-adp-vor-broad-precedence": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-vor-broad-precedence",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie ruft mich "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "vor"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " dem Essen an."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "vor",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Dat",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "⏮️",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "⏮️"
+    },
+    "explanation": "Still before. Reuse."
+  },
+  "reading-de-adp-vor-cause": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-vor-cause",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das Kind zittert "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "vor"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Angst."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "vor",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Dat",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "⏮️",
+        "🔗"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "⚡"
+    },
+    "explanation": "Cause, not before. New."
+  },
+  "reading-de-adp-gegen-counteraction": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-gegen-counteraction",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie nimmt eine Tablette "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "gegen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Kopfschmerzen."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "gegen",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "⚔️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "⚔️"
+    },
+    "explanation": "Medicine fights pain. Same against."
+  },
+  "reading-de-adp-gegen-approximation": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-adp-gegen-approximation",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir kommen "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "gegen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " acht Uhr."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADP",
+        "canonicalForm": "gegen",
+        "coreFeatures": {
+          "abbr": null,
+          "adpType": "Prep",
+          "extPos": null,
+          "foreign": null,
+          "governedCase": "Acc",
+          "partType": null
+        }
+      },
+      "candidates": [
+        "⚔️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🤏"
+    },
+    "explanation": "Rough time, not against. New."
+  },
+  "reading-de-noun-bank-bench-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-bank-bench-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Besucher saßen auf einer langen "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Bank"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Bank",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🪑"
+    },
+    "explanation": "Seating object. New."
+  },
+  "reading-de-bank-park-bench": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-bank-park-bench",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir sitzen auf einer "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Bank"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " im Park."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Bank",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🪑"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🪑"
+    },
+    "explanation": "Same seating object. The park is only scenery. Reuse."
+  },
+  "reading-de-bank-financial": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-bank-financial",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie hebt Geld bei der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Bank"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " ab."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Bank",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🪑"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🏦"
+    },
+    "explanation": "Financial institution, not seating. New."
+  },
+  "reading-de-noun-bank-financial-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-bank-financial-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Bank"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " genehmigte den Kredit."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Bank",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🪑",
+        "🏦"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🏦"
+    },
+    "explanation": "Same financial institution in another context. Reuse."
+  },
+  "reading-de-noun-schluessel-literal-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-schluessel-literal-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Schlüssel"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " steckt im Schloss."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Schlüssel",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🔑"
+    },
+    "explanation": "Physical key. New."
+  },
+  "reading-de-key-metaphor": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-key-metaphor",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Geduld ist der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Schlüssel"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " zum Erfolg."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Schlüssel",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🔑"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🔑"
+    },
+    "explanation": "Same access concept. Reuse."
+  },
+  "reading-de-noun-maus-animal-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-maus-animal-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Katze jagt eine "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Maus"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Maus",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🐭"
+    },
+    "explanation": "Animal. New."
+  },
+  "reading-de-maus-computer": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-maus-computer",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Bewege den Zeiger mit der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Maus"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Maus",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🐭"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🖱️"
+    },
+    "explanation": "Computer device, not animal. New."
+  },
+  "reading-de-noun-maus-computer-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-maus-computer-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die kabellose "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Maus"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " braucht neue Batterien."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Maus",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🐭",
+        "🖱️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🖱️"
+    },
+    "explanation": "Same computer device with a contextual detail. Reuse."
+  },
+  "reading-de-noun-absatz-heel-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-absatz-heel-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Absatz"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " meines Stiefels ist abgebrochen."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Absatz",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "👠"
+    },
+    "explanation": "Shoe heel. New."
+  },
+  "reading-de-noun-absatz-sales-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-absatz-sales-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Absatz"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " der neuen Fahrräder steigt."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Absatz",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "👠"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🛒"
+    },
+    "explanation": "Product sales, not a shoe heel. New."
+  },
+  "reading-de-noun-absatz-paragraph-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-noun-absatz-paragraph-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der erste "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Absatz"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " führt das Thema ein."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Absatz",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "👠",
+        "🛒"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "📄"
+    },
+    "explanation": "Text paragraph, neither a shoe heel nor sales. New."
+  },
+  "reading-de-absatz-paragraph": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-absatz-paragraph",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Im zweiten "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Absatz"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " steht die Begründung."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Absatz",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "👠",
+        "🛒",
+        "📄"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "📄"
+    },
+    "explanation": "Another text paragraph. Reuse."
+  },
+  "reading-de-tea": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-tea",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Tee"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " duftet."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Tee",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "☕"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "☕"
+    },
+    "explanation": "The supplied cup already represents the stable tea concept. Reuse."
+  },
+  "reading-de-kitchen-room": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-kitchen-room",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir trinken Kaffee in der "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Küche"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Küche",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🍳"
+    },
+    "explanation": "The kitchen room, independent of the coffee-drinking scene. New."
+  },
+  "reading-de-zug-chess-move": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-zug-chess-move",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Mit diesem "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Zug"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " setzt sie den König schachmatt."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Zug",
+        "coreFeatures": {
+          "gender": "Masc",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🚆",
+        "💨",
+        "🧲",
+        "➡️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "➡️"
+    },
+    "explanation": "Chess move. ➡️ already fits."
+  },
+  "reading-de-leitung-management": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-leitung-management",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Leitung"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " berief eine Sitzung ein."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NOUN",
+        "canonicalForm": "Leitung",
+        "coreFeatures": {
+          "gender": "Fem",
+          "hyph": null
+        }
+      },
+      "candidates": [
+        "🔌"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🧑‍💼"
+    },
+    "explanation": "Management, not a conducting line. New."
+  },
+  "reading-de-construction-fusion-am-temporal": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-construction-fusion-am-temporal",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der Kurs beginnt "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "am"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Montag."
+            }
+          ]
+        },
+        "target": {
+          "family": "Construction",
+          "kind": "Fusion",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Construction",
+        "kind": "Fusion",
+        "canonicalForm": "am",
+        "coreFeatures": {}
+      },
+      "candidates": [
+        "📍"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "📅"
+    },
+    "explanation": "The fused form marks a calendar-time relation, not a place. New."
+  },
+  "reading-de-lexeme-cconj-entweder-oder": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-cconj-entweder-oder",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir reisen "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "entweder"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " am Freitag "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "oder"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " am Samstag."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "CCONJ",
+          "memberSegmentIndices": [
+            1,
+            3
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "CCONJ",
+        "canonicalForm": "entweder … oder",
+        "coreFeatures": {
+          "conjType": null
+        }
+      },
+      "candidates": [
+        "🔀"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🔀"
+    },
+    "explanation": "The multi-member Lexeme/CCONJ presents alternatives. Reuse."
+  },
+  "reading-de-lexeme-det-der-neighbor-house-isolation": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-det-der-neighbor-house-isolation",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "ResolvableText",
+              "text": "Die"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Häuser sind groß."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET",
+          "memberSegmentIndices": [
+            0
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "DET",
+        "canonicalForm": "der",
+        "coreFeatures": {
+          "definite": "Def",
+          "extPos": null,
+          "foreign": null,
+          "numType": null,
+          "person": null,
+          "polite": null,
+          "poss": null,
+          "pronType": "Art"
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "👉"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. Definite article. The houses are the referent, not the determiner's meaning."
+  },
+  "reading-de-lexeme-pron-das-relative-neighbor-house-isolation": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-pron-das-relative-neighbor-house-isolation",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das Haus, "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "das"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " dort steht, ist alt."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "PRON",
+        "canonicalForm": "das",
+        "coreFeatures": {
+          "case": "Nom",
+          "number": "Sing",
+          "gender[psor]": null,
+          "extPos": null,
+          "foreign": null,
+          "person": null,
+          "polite": null,
+          "poss": null,
+          "pronType": "Rel",
+          "gender": "Neut",
+          "referenceNumber": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "👤"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. Relative pronoun. The house is its antecedent, not the pronoun's meaning."
+  },
+  "reading-de-lexeme-det-der-neighbor-car-isolation": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-det-der-neighbor-car-isolation",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "ResolvableText",
+              "text": "Das"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Auto ist neu."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET",
+          "memberSegmentIndices": [
+            0
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "DET",
+        "canonicalForm": "der",
+        "coreFeatures": {
+          "definite": "Def",
+          "extPos": null,
+          "foreign": null,
+          "numType": null,
+          "person": null,
+          "polite": null,
+          "poss": null,
+          "pronType": "Art"
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "👉"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. Definite article. The car is the referent, not the determiner's meaning."
+  },
+  "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Katze, "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "die"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " schläft, ist alt."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "PRON",
+        "canonicalForm": "die",
+        "coreFeatures": {
+          "case": "Nom",
+          "number": "Sing",
+          "gender[psor]": null,
+          "extPos": null,
+          "foreign": null,
+          "person": null,
+          "polite": null,
+          "poss": null,
+          "pronType": "Rel",
+          "gender": "Fem",
+          "referenceNumber": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "👤"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. Relative pronoun. The cat and feminine agreement belong to its antecedent, not the pronoun's meaning."
+  },
+  "reading-de-lexeme-adv-sonst-usual": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-adv-sonst-usual",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Er arbeitet "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "sonst"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " im Homeoffice, heute aber im Büro."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "ADV",
+        "canonicalForm": "sonst",
+        "coreFeatures": {
+          "foreign": null,
+          "numType": null,
+          "pronType": null
+        }
+      },
+      "candidates": [
+        "⚠️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🔁"
+    },
+    "explanation": "Usual circumstances, not an otherwise-warning reading. New."
+  },
+  "reading-de-lexeme-aux-werden-passive": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-aux-werden-passive",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der Antrag "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "wird"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " morgen geprüft."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "AUX",
+        "canonicalForm": "werden",
+        "coreFeatures": {
+          "verbType": null
+        }
+      },
+      "candidates": [
+        "🔮"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🔄"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. Passive auxiliary use, not future prediction. New."
+  },
+  "reading-de-lexeme-cconj-aber-contrast-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-cconj-aber-contrast-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie ist müde, "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "aber"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " zufrieden."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "CCONJ",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "CCONJ",
+        "canonicalForm": "aber",
+        "coreFeatures": {
+          "conjType": null
+        }
+      },
+      "candidates": [
+        "↔️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "↔️"
+    },
+    "explanation": "Contrast between coordinated statements. Reuse."
+  },
+  "reading-de-lexeme-det-dieser-demonstrative-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-det-dieser-demonstrative-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Ich nehme "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "diesen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Stuhl."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "DET",
+        "canonicalForm": "dieser",
+        "coreFeatures": {
+          "definite": null,
+          "extPos": null,
+          "foreign": null,
+          "numType": null,
+          "person": null,
+          "polite": null,
+          "poss": null,
+          "pronType": "Dem"
+        }
+      },
+      "candidates": [
+        "👉"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "👉"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. Demonstrative selection of a particular referent. Reuse."
+  },
+  "reading-de-lexeme-intj-hurra-celebration-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-intj-hurra-celebration-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "ResolvableText",
+              "text": "Hurra"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": ", wir haben gewonnen!"
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "INTJ",
+          "memberSegmentIndices": [
+            0
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "INTJ",
+        "canonicalForm": "Hurra",
+        "coreFeatures": {
+          "partType": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🎉"
+    },
+    "explanation": "A stable exclamation of celebration. New."
+  },
+  "reading-de-lexeme-num-drei-cardinal-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-num-drei-cardinal-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie kauft "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "drei"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Äpfel."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "NUM",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "NUM",
+        "canonicalForm": "drei",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "numType": "Card"
+        }
+      },
+      "candidates": [
+        "3️⃣"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "3️⃣"
+    },
+    "explanation": "Cardinal quantity three. Reuse."
+  },
+  "reading-de-lexeme-part-nicht-negation-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-part-nicht-negation-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das stimmt "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "nicht"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "PART",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "PART",
+        "canonicalForm": "nicht",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "partType": null,
+          "polarity": "Neg"
+        }
+      },
+      "candidates": [
+        "🚫"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🚫"
+    },
+    "explanation": "Ordinary negation. Reuse."
+  },
+  "reading-de-lexeme-pron-jemand-person-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-pron-jemand-person-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "ResolvableText",
+              "text": "Jemand"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " wartet vor der Tür."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON",
+          "memberSegmentIndices": [
+            0
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "PRON",
+        "canonicalForm": "jemand",
+        "coreFeatures": {
+          "case": "Nom",
+          "number": "Sing",
+          "gender[psor]": null,
+          "extPos": null,
+          "foreign": null,
+          "person": null,
+          "polite": null,
+          "poss": null,
+          "pronType": "Ind",
+          "gender": null,
+          "referenceNumber": null
+        }
+      },
+      "candidates": [
+        "👤"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "👤"
+    },
+    "explanation": "Exact reviewed identity supplies its authored Reading. An unspecified person. Reuse."
+  },
+  "reading-de-lexeme-sconj-waehrend-adversative": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-sconj-waehrend-adversative",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "ResolvableText",
+              "text": "Während"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " Lea gern früh beginnt, arbeitet Amir lieber abends."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ",
+          "memberSegmentIndices": [
+            0
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "SCONJ",
+        "canonicalForm": "während",
+        "coreFeatures": {
+          "conjType": null
+        }
+      },
+      "candidates": [
+        "⏳"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "↔️"
+    },
+    "explanation": "Adversative contrast, not temporal duration. New."
+  },
+  "reading-de-lexeme-propn-berlin-city-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-propn-berlin-city-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Sie lebt seit Jahren in "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Berlin"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "PROPN",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "PROPN",
+        "canonicalForm": "Berlin",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "gender": "Neut"
+        }
+      },
+      "candidates": [
+        "🏙️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🏙️"
+    },
+    "explanation": "The city Berlin, independent of this residence scene. Reuse."
+  },
+  "reading-de-lexeme-sym-euro-currency-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-sym-euro-currency-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das kostet zehn "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "€"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "SYM",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "SYM",
+        "canonicalForm": "€",
+        "coreFeatures": {
+          "foreign": null,
+          "numType": null
+        }
+      },
+      "candidates": [
+        "💶"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "💶"
+    },
+    "explanation": "The euro currency symbol. Reuse."
+  },
+  "reading-de-lexeme-x-lol-laughter-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-x-lol-laughter-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Er antwortete im Chat nur mit "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "lol"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "X",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "X",
+        "canonicalForm": "lol",
+        "coreFeatures": {
+          "abbr": null,
+          "foreign": null,
+          "hyph": null,
+          "numType": null
+        }
+      },
+      "candidates": [
+        "😂"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "😂"
+    },
+    "explanation": "The chat expression marks laughter. Reuse."
+  },
+  "reading-de-morpheme-suffix-chen-neighbor-house-isolation": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-morpheme-suffix-chen-neighbor-house-isolation",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das Häus"
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "chen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " ist alt."
+            }
+          ]
+        },
+        "target": {
+          "family": "Morpheme",
+          "kind": "Suffix",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Morpheme",
+        "kind": "Suffix",
+        "canonicalForm": "-chen",
+        "coreFeatures": {}
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🤏"
+    },
+    "explanation": "Diminutive suffix. House belongs to the base; smallness is the suffix's stable contribution."
+  },
+  "reading-de-phraseme-collocation-entscheidung-treffen-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-phraseme-collocation-entscheidung-treffen-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Das Team "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "trifft"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " heute "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "eine"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Entscheidung"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "Collocation",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "Collocation",
+        "canonicalForm": "eine Entscheidung treffen",
+        "coreFeatures": {}
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🤔✅"
+    },
+    "explanation": "The collocation denotes reaching a decision; all three lexical members form one stable concept. New."
+  },
+  "reading-de-phraseme-collocation-entscheidung-treffen-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-phraseme-collocation-entscheidung-treffen-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Wir müssen bald "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "eine"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Entscheidung"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "treffen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "Collocation",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "Collocation",
+        "canonicalForm": "eine Entscheidung treffen",
+        "coreFeatures": {}
+      },
+      "candidates": [
+        "🤔✅"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🤔✅"
+    },
+    "explanation": "The same decision-making collocation in another attestation. Reuse."
+  },
+  "reading-de-idiom-mit-den-woelfen-heulen": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-idiom-mit-den-woelfen-heulen",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Obwohl er anderer Meinung war, "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "heulte"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " er "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "mit"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "den"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Wölfen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "Idiom",
+        "canonicalForm": "mit den Wölfen heulen",
+        "coreFeatures": {}
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🐺🗣️🤝"
+    },
+    "explanation": "Follow the group despite disagreement. Whole idiom. New."
+  },
+  "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Als sie von seiner Krankheit hörte, sagte sie: „"
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Das"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "tut"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "mir"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "leid"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": ".“"
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "DiscourseFormula",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "DiscourseFormula",
+        "canonicalForm": "das tut mir leid",
+        "coreFeatures": {
+          "discourseFormulaRole": null
+        }
+      },
+      "candidates": [
+        "😔"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "😔"
+    },
+    "explanation": "A conventional expression of sympathy, not literal regret about an action. Reuse."
+  },
+  "reading-de-phraseme-aphorism-zeit-ist-geld": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-phraseme-aphorism-zeit-ist-geld",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Für den knappen Zeitplan gilt: "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Zeit"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "ist"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Geld"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "Aphorism",
+        "canonicalForm": "Zeit ist Geld",
+        "coreFeatures": {}
+      },
+      "candidates": [
+        "⏳💰"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "⏳💰"
+    },
+    "explanation": "The aphorism equates time with money. Reuse."
+  },
+  "reading-de-phraseme-proverb-viele-koeche": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-phraseme-proverb-viele-koeche",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Im Projekt durfte nun jeder mitentscheiden – "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "viele"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Köche"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "verderben"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "den"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Brei"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5,
+            7,
+            9
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "Proverb",
+        "canonicalForm": "Viele Köche verderben den Brei",
+        "coreFeatures": {}
+      },
+      "candidates": [
+        "👥💥"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "👥💥"
+    },
+    "explanation": "The proverb warns that too many participants spoil the result. Reuse."
+  },
+  "reading-de-phraseme-idiom-den-faden-verlieren": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-phraseme-idiom-den-faden-verlieren",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Bei der dritten Zwischenfrage "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "verlor"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " die Rednerin "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "den"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "Faden"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom",
+          "memberSegmentIndices": [
+            1,
+            3,
+            5
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Phraseme",
+        "kind": "Idiom",
+        "canonicalForm": "den Faden verlieren",
+        "coreFeatures": {}
+      },
+      "candidates": [
+        "🧵❌"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "🧵❌"
+    },
+    "explanation": "Losing one's train of thought, not losing literal thread. Reuse."
+  },
+  "reading-de-lexeme-verb-laufen-operate-new": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-verb-laufen-operate-new",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Maschine "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "läuft"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " wieder."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "VERB",
+        "canonicalForm": "laufen",
+        "coreFeatures": {
+          "hasGovPrep": null,
+          "hasSepPrefix": null,
+          "lexicallyReflexive": null,
+          "verbType": null
+        }
+      },
+      "candidates": [
+        "🏃"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "⚙️"
+    },
+    "explanation": "A machine operating is not physical running. Create a stable operation reading."
+  },
+  "reading-de-lexeme-verb-laufen-operate-reuse": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-lexeme-verb-laufen-operate-reuse",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Der Motor "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "läuft"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " ruhig."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB",
+          "memberSegmentIndices": [
+            1
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "VERB",
+        "canonicalForm": "laufen",
+        "coreFeatures": {
+          "hasGovPrep": null,
+          "hasSepPrefix": null,
+          "lexicallyReflexive": null,
+          "verbType": null
+        }
+      },
+      "candidates": [
+        "🏃",
+        "⚙️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "Reuse",
+      "emojiDescription": "⚙️"
+    },
+    "explanation": "A motor operating is the same broad machine-operation reading. Reuse."
+  },
+  "reading-de-aufstehen-uprising": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-aufstehen-uprising",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Die Bürger "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "stehen"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " gegen die Unterdrückung "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "auf"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB",
+          "memberSegmentIndices": [
+            1,
+            3
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "VERB",
+        "canonicalForm": "aufstehen",
+        "coreFeatures": {
+          "hasGovPrep": null,
+          "hasSepPrefix": "auf",
+          "lexicallyReflexive": null,
+          "verbType": null
+        }
+      },
+      "candidates": [
+        "🛏️⬆️"
+      ]
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "✊⬆️"
+    },
+    "explanation": "Revolt. Auf adds upward structure. New."
+  },
+  "reading-de-aufstehen-morning-six": {
+    "input": {
+      "encounter": {
+        "sentence": {
+          "id": "reading-de-aufstehen-morning-six",
+          "language": "de",
+          "segments": [
+            {
+              "kind": "OpaqueText",
+              "text": "Morgen "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "steht"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": " sie um sechs Uhr "
+            },
+            {
+              "kind": "ResolvableText",
+              "text": "auf"
+            },
+            {
+              "kind": "OpaqueText",
+              "text": "."
+            }
+          ]
+        },
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB",
+          "memberSegmentIndices": [
+            1,
+            3
+          ]
+        }
+      },
+      "lemma": {
+        "unitKind": "Lemma",
+        "language": "de",
+        "family": "Lexeme",
+        "kind": "VERB",
+        "canonicalForm": "aufstehen",
+        "coreFeatures": {
+          "hasGovPrep": null,
+          "hasSepPrefix": "auf",
+          "lexicallyReflexive": null,
+          "verbType": null
+        }
+      },
+      "candidates": []
+    },
+    "idealOutput": {
+      "decision": "New",
+      "emojiDescription": "🛏️⬆️"
+    },
+    "explanation": "Get out of bed. Auf adds upward structure. New."
+  }
+}

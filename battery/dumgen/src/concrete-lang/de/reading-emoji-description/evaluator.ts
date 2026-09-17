@@ -32,8 +32,6 @@ export const meaningIsolationCaseIds = Object.keys(
 
 export type ReadingMeaningIsolationEvaluation = Readonly<{
 	contractPass: boolean;
-	decisionPass: boolean;
-	noveltyPass: boolean;
 	neighborMeaningPass: boolean;
 }>;
 
@@ -41,7 +39,7 @@ export const evaluateReadingMeaningIsolation: ExperimentEvaluation<
 	typeof inputSchema,
 	typeof outputSchema,
 	ReadingMeaningIsolationEvaluation
-> = ({ caseId, input, output }) => {
+> = ({ caseId, output }) => {
 	const forbidden =
 		neighborEmojiByCaseId[caseId as keyof typeof neighborEmojiByCaseId];
 	if (forbidden === undefined) {
@@ -49,19 +47,11 @@ export const evaluateReadingMeaningIsolation: ExperimentEvaluation<
 			`No neighbor-meaning oracle exists for case "${caseId}".`,
 		);
 	}
-	const decisionPass = !input.existingEmojiDescriptions.includes(
-		output.emojiDescription,
-	);
-	const noveltyPass = !input.existingEmojiDescriptions.includes(
-		output.emojiDescription,
-	);
 	const neighborMeaningPass = forbidden.every(
 		(emoji) => !output.emojiDescription.includes(emoji),
 	);
 	return {
-		contractPass: decisionPass && noveltyPass && neighborMeaningPass,
-		decisionPass,
-		noveltyPass,
+		contractPass: neighborMeaningPass,
 		neighborMeaningPass,
 	};
 };

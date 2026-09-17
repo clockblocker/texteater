@@ -1,5 +1,5 @@
 import type { DumgenOptions } from "../src/types.js";
-import { queuedTargetJudgment } from "./execution-fixture.js";
+import { queuedTargetJudgment, readingJudgment } from "./execution-fixture.js";
 import { grammarFixture } from "./grammar-fixture.js";
 
 /** Queue canonical stage expectations; each stage may now make several traced calls. */
@@ -10,6 +10,14 @@ export function pipelineFixture(
 	let grammar: DumgenOptions | undefined;
 	return {
 		judge: async (request, options) => {
+			if (Object.hasOwn(request.questions, "reading")) {
+				const output = outputs[0];
+				const result = await readingJudgment(output)(request, options);
+				const answer = result.answers.reading;
+				if (answer?.type === "choice" && answer.choice !== "NoMatch")
+					outputs.shift();
+				return result;
+			}
 			if (Object.hasOwn(request.questions, "support"))
 				grammar = grammarFixture(outputs.shift());
 			if (

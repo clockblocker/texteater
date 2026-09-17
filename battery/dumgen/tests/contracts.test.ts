@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { createDumgen, validateEncounter } from "dumgen";
 import { getExperiment, listExperiments } from "dumgen/development";
-import { generationInputSchema } from "dumgen/schemas";
+import { comparisonInputSchema } from "dumgen/schemas";
 import { Effect } from "effect";
 import { z } from "zod";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
@@ -92,16 +92,20 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 			dumgen.resolveGrammar(encounter),
 		);
 		expect(attestation.surface.lemma, id).toEqual(expected.lemma);
-		const input = generationInputSchema.parse({
+		const input = comparisonInputSchema.parse({
+			candidates: [],
 			encounter,
 			lemma: attestation.surface.lemma,
 		});
 		expect(
 			await Effect.runPromise(
-				dumgen.generateReadingEmojiDescription(input),
+				dumgen.resolveOrGenerateReadingEmojiDescription(input),
 			),
 			id,
-		).toBe(expected.reading.emojiDescription);
+		).toEqual({
+			decision: "New",
+			emojiDescription: expected.reading.emojiDescription,
+		});
 		expect(
 			await Effect.runPromise(
 				dumgen.resolveOrGenerateReadingEmojiDescription({
@@ -242,13 +246,14 @@ test("alternate accusative jemand retains the reviewed jemanden identity", async
 	expect(attestation.surface.lemma.canonicalForm).toBe("jemanden");
 	expect(
 		await Effect.runPromise(
-			dumgen.generateReadingEmojiDescription(
-				generationInputSchema.parse({
+			dumgen.resolveOrGenerateReadingEmojiDescription(
+				comparisonInputSchema.parse({
+					candidates: [],
 					encounter,
 					lemma: attestation.surface.lemma,
 				}),
 			),
 		),
-	).toBe("👤");
+	).toEqual({ decision: "New", emojiDescription: "👤" });
 	expect(calls).toBe(1);
 });

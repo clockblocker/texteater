@@ -307,7 +307,7 @@ test("retry uses its exact Grammar checkpoint and skips classification and gramm
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
 	expect(run.requests.map((request) => request.stage)).toEqual([
-		"generateReadingEmojiDescription",
+		"resolveOrGenerateReadingEmojiDescription",
 	]);
 	expect(run.writes[0]?.reading).toEqual(reading);
 });

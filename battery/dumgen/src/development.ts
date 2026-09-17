@@ -15,6 +15,7 @@ import {
 	evaluateReadingMeaningIsolation,
 	meaningIsolationCaseIds,
 } from "./concrete-lang/de/reading-emoji-description/evaluator.js";
+import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-description/experiment.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import type { DumgenOptions } from "./types.js";
@@ -121,7 +122,8 @@ export async function evaluateExperiment(args: {
 	if (
 		args.experimentId ===
 			"target-classification/de/high-level-whole-unit" ||
-		args.experimentId.startsWith("grammatical-resolution/")
+		args.experimentId.startsWith("grammatical-resolution/") ||
+		args.experimentId.startsWith("reading-")
 	) {
 		if (!args.judge)
 			throw Error(
@@ -143,7 +145,9 @@ export async function evaluateExperiment(args: {
 						getExperiment(args.experimentId),
 						options,
 					)
-				: targetOperationExperiment(options),
+				: args.experimentId.startsWith("reading-")
+					? readingOperationExperiment(args.experimentId, options)
+					: targetOperationExperiment(options),
 			experimentId: args.experimentId,
 			operationVersion: "judgments-2",
 			evaluatorVersion: "canonical-operation-2",

@@ -87,7 +87,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 			"classifyTarget",
 			"resolveGrammar",
 			"resolveGrammar",
-			"generateReadingEmojiDescription",
+			"resolveOrGenerateReadingEmojiDescription",
 		]);
 		expect(run.resolver.snapshot()).toHaveLength(1);
 		expect(run.resolver.snapshot()[0]?.readingEntries).toHaveLength(1);
@@ -118,7 +118,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		expect(run.requests.map((value) => value.stage)).toEqual([
 			"resolveGrammar",
 			"resolveGrammar",
-			"generateReadingEmojiDescription",
+			"resolveOrGenerateReadingEmojiDescription",
 		]);
 		expect(await run.resolve()).toMatchObject({ decision: "Resolved" });
 		expect(run.requests.at(-1)?.stage).toBe(

@@ -47,7 +47,7 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 					],
 				};
 
-			if (request.stage === "generateReadingEmojiDescription") {
+			if (request.stage === "resolveOrGenerateReadingEmojiDescription") {
 				if (failReading) {
 					failReading = false;
 					throw new Error("controlled provider failure");
@@ -96,8 +96,8 @@ test("HTTP workbench retains session isolation, supplied targets, retry diagnost
 		expect(stages).toEqual([
 			"segment",
 			"resolveGrammar",
-			"generateReadingEmojiDescription",
-			"generateReadingEmojiDescription",
+			"resolveOrGenerateReadingEmojiDescription",
+			"resolveOrGenerateReadingEmojiDescription",
 		]);
 		expect(
 			(await (await post("/api/resolve", input)).json()).generation

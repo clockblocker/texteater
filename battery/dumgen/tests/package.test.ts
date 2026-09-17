@@ -36,7 +36,7 @@ test("published consumer declarations preserve Language and Kind without a Zod g
 		await writeFile(
 			join(directory, "consumer.ts"),
 			`import {createDumgen} from ${JSON.stringify(join(root, "dist/index.js"))};
-import type {Encounter,AnalysisTarget,GenerationInput,ComparisonInput,KnowledgeInput} from ${JSON.stringify(join(root, "dist/types.js"))};
+import type {Encounter,AnalysisTarget,ComparisonInput,KnowledgeInput} from ${JSON.stringify(join(root, "dist/types.js"))};
 import type * as Dumling from ${JSON.stringify(resolve(root, "../dumling/dist/types.js"))};
 import {Effect} from ${JSON.stringify(resolve(root, "../../node_modules/effect/dist/dts/index.js"))};
 declare const encounter:Encounter<"de">;
@@ -59,28 +59,28 @@ declare const englishNoun:Dumling.Lemma<"en","Lexeme","NOUN">;
 declare const nounReading:Dumling.Reading<"de","Lexeme","NOUN">;
 declare const verbReading:Dumling.Reading<"de","Lexeme","VERB">;
 const nounEncounter={sentence:{id:"noun",language:"de",segments:[{kind:"ResolvableText",text:"Haus"}]},target:{family:"Lexeme",kind:"NOUN",memberSegmentIndices:[0]}} as const;
-const generation:GenerationInput<"de">={encounter:nounEncounter,lemma:noun};
+const generation:ComparisonInput<"de">={candidates:[],encounter:nounEncounter,lemma:noun};
 const comparison:ComparisonInput<"de">={...generation,candidates:["🏠"] as const};
 const knowledge:KnowledgeInput<"de">={encounter:nounEncounter,reading:nounReading,request:{definition:null}};
 // @ts-expect-error Encounter and Lemma must have the same Kind.
-const wrongGeneration:GenerationInput<"de">={encounter:nounEncounter,lemma:verb};
+const wrongGeneration:ComparisonInput<"de">={candidates:[],encounter:nounEncounter,lemma:verb};
 // @ts-expect-error Encounter and Lemma must have the same Family.
-const wrongFamily:GenerationInput={encounter:nounEncounter,lemma:idiom};
+const wrongFamily:ComparisonInput={candidates:[],encounter:nounEncounter,lemma:idiom};
 // @ts-expect-error Encounter and Lemma must have the same Language.
-const wrongUnitLanguage:GenerationInput={encounter:nounEncounter,lemma:englishNoun};
+const wrongUnitLanguage:ComparisonInput={candidates:[],encounter:nounEncounter,lemma:englishNoun};
 // @ts-expect-error Candidate comparison preserves Encounter/Lemma correlation.
 const wrongComparison:ComparisonInput<"de">={encounter:nounEncounter,lemma:verb,candidates:["🏠"]};
 // @ts-expect-error Knowledge preserves Encounter/Reading correlation.
 const wrongKnowledge:KnowledgeInput<"de">={encounter:nounEncounter,reading:verbReading,request:{definition:null}};
 const dumgen=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}});
-dumgen.generateReadingEmojiDescription(generation);
+dumgen.resolveOrGenerateReadingEmojiDescription(generation);
 dumgen.resolveOrGenerateReadingEmojiDescription(comparison);
 const production=dumgen.produceKnowledge(knowledge);
 type Production=Effect.Effect.Success<typeof production>;
 declare const proposal:Production;
 const pendingLanguage:"de"=proposal.pendingRelations[0]!.target.language;
 // @ts-expect-error Public operations reject mismatched units too.
-dumgen.generateReadingEmojiDescription({encounter:nounEncounter,lemma:verb});
+dumgen.resolveOrGenerateReadingEmojiDescription({candidates:[],encounter:nounEncounter,lemma:verb});
 // @ts-expect-error Public comparison rejects mismatched units too.
 dumgen.resolveOrGenerateReadingEmojiDescription({encounter:nounEncounter,lemma:verb,candidates:["🏠"]});
 // @ts-expect-error Public Knowledge rejects mismatched units too.
