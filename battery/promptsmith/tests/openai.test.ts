@@ -49,10 +49,12 @@ test("text output stays raw and the optional cache breakpoint precedes dynamic i
 test("Responses adapter transports arbitrary output shapes, settings, cancellation and usage", async () => {
 	const controller = new AbortController();
 	let body: Record<string, unknown> = {};
+	let headers = new Headers();
 	const execute = createOpenAIExecutor({
 		apiKey: "fixture",
 		fetch: async (_url, init) => {
 			body = JSON.parse(String(init?.body));
+			headers = new Headers(init?.headers);
 			expect(init?.signal).toBe(controller.signal);
 			return Response.json(
 				{
@@ -87,13 +89,29 @@ test("Responses adapter transports arbitrary output shapes, settings, cancellati
 		signal: controller.signal,
 	});
 	expect(result.output).toEqual(["a", "b"]);
+	expect(headers.get("X-Client-Request-Id")).toMatch(
+		/^[0-9a-f]{8}-[0-9a-f-]{27}$/,
+	);
 	expect(result.metadata).toMatchObject({
 		requestId: "request",
+		clientRequestId: headers.get("X-Client-Request-Id"),
 		timing: {
 			headersMs: expect.any(Number),
 			bodyMs: expect.any(Number),
 			totalMs: expect.any(Number),
 			providerProcessingMs: 12.5,
+			detailed: {
+				instrumentation: "fetch",
+				request: {
+					serializationMs: expect.any(Number),
+					bodyBytes: expect.any(Number),
+				},
+				local: {
+					bodyReadMs: expect.any(Number),
+					responseParseMs: expect.any(Number),
+					outputParseMs: expect.any(Number),
+				},
+			},
 		},
 		responseId: "response",
 		model: null,

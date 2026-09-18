@@ -10,6 +10,7 @@ import {
 import {
 	ActivityIcon,
 	ArrowLeftIcon,
+	BracesIcon,
 	CheckIcon,
 	ChevronRightIcon,
 	CopyIcon,
@@ -180,6 +181,7 @@ function InspectionDetail({
 		},
 	];
 	const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+	const [showDetailedTraces, setShowDetailedTraces] = useState(false);
 	const [now, setNow] = useState(Date.now);
 	const running =
 		detail &&
@@ -257,6 +259,19 @@ function InspectionDetail({
 				<div className="inspection-title-row">
 					<DialogTitle>{detail.click.selectedSegment}</DialogTitle>
 					<span className="inspection-state">{detail.state}</span>
+					<Button
+						type="button"
+						size="sm"
+						variant="outline"
+						className="inspection-detailed-toggle"
+						aria-pressed={showDetailedTraces}
+						onClick={() =>
+							setShowDetailedTraces((visible) => !visible)
+						}
+					>
+						<BracesIcon size={14} />
+						{showDetailedTraces ? "Hide traces" : "Detailed traces"}
+					</Button>
 				</div>
 				<DialogDescription>{detail.click.sentence}</DialogDescription>
 				<div className="inspection-metrics">
@@ -279,150 +294,183 @@ function InspectionDetail({
 				</div>
 			</DialogHeader>
 			<div className="inspection-scroll">
-				<section
-					aria-label="Resolution timing waterfall"
-					className="inspection-waterfall"
-				>
-					<div className="inspection-legend">
-						<span data-kind="Code">Code</span>
-						<span data-kind="TypeSafe">TypeSafe AI</span>
-						<span data-kind="LLM">LLM</span>
-					</div>
-					<div className="inspection-axis">
-						<span>0</span>
-						<span>{time(total / 2)}</span>
-						<span>{time(total)}</span>
-					</div>
-					<div
-						className="inspection-total"
-						title={`Full chain: ${time(total)}`}
+				{showDetailedTraces ? (
+					<DetailedTraces
+						steps={orderedSteps}
+						visitorId={visitorId}
+						start={start}
 					/>
-					{orderedSteps.map((step) => (
-						<div className="inspection-timing-row" key={step.id}>
-							<button
-								type="button"
-								data-kind={step.kind}
-								data-status={step.status}
-								className="inspection-bar"
-								aria-label={`Inspect ${step.name}, ${step.timing === "Unmeasured" ? "not measured" : time(step.durationMs)}`}
-								title={`${step.name} · ${step.owner} · ${step.timing === "Unmeasured" ? "not measured" : time(step.durationMs)}`}
-								style={{
-									left: `${Math.max(0, ((step.startedAt - start) / total) * 100)}%`,
-									width: `${Math.max(0.35, Math.min(100, (step.durationMs / total) * 100))}%`,
-								}}
-								onClick={() => reveal(step)}
-							>
-								<span>{step.name}</span>
-							</button>
-						</div>
-					))}
-				</section>
-				<section
-					className="inspection-steps"
-					aria-label="Resolution steps"
-				>
-					{stepGroups
-						.filter((group) => group.steps.length > 0)
-						.map((group) => (
-							<section
-								key={group.title}
-								aria-label={group.title}
-								className={
-									group.totals
-										? "inspection-totals"
-										: undefined
-								}
-							>
-								<header className="inspection-group-heading">
-									<h3>{group.title}</h3>
-									{group.totals && (
-										<p>
-											Durations include the steps within
-											each operation. They overlap; do not
-											add them together.
-										</p>
-									)}
-								</header>
-								{group.steps.map((step) => (
-									<section
-										className="inspection-step"
-										id={`inspection-step-${step.id}`}
-										key={step.id}
+				) : (
+					<>
+						<section
+							aria-label="Resolution timing waterfall"
+							className="inspection-waterfall"
+						>
+							<div className="inspection-legend">
+								<span data-kind="Code">Code</span>
+								<span data-kind="TypeSafe">TypeSafe AI</span>
+								<span data-kind="LLM">LLM</span>
+							</div>
+							<div className="inspection-axis">
+								<span>0</span>
+								<span>{time(total / 2)}</span>
+								<span>{time(total)}</span>
+							</div>
+							<div
+								className="inspection-total"
+								title={`Full chain: ${time(total)}`}
+							/>
+							{orderedSteps.map((step) => (
+								<div
+									className="inspection-timing-row"
+									key={step.id}
+								>
+									<button
+										type="button"
+										data-kind={step.kind}
+										data-status={step.status}
+										className="inspection-bar"
+										aria-label={`Inspect ${step.name}, ${step.timing === "Unmeasured" ? "not measured" : time(step.durationMs)}`}
+										title={`${step.name} · ${step.owner} · ${step.timing === "Unmeasured" ? "not measured" : time(step.durationMs)}`}
+										style={{
+											left: `${Math.max(0, ((step.startedAt - start) / total) * 100)}%`,
+											width: `${Math.max(0.35, Math.min(100, (step.durationMs / total) * 100))}%`,
+										}}
+										onClick={() => reveal(step)}
 									>
-										<div className="inspection-step-row">
-											<button
-												type="button"
-												className="inspection-step-toggle"
-												aria-expanded={expanded.has(
-													step.id,
-												)}
-												onClick={() => toggle(step.id)}
+										<span>{step.name}</span>
+									</button>
+								</div>
+							))}
+						</section>
+						<section
+							className="inspection-steps"
+							aria-label="Resolution steps"
+						>
+							{stepGroups
+								.filter((group) => group.steps.length > 0)
+								.map((group) => (
+									<section
+										key={group.title}
+										aria-label={group.title}
+										className={
+											group.totals
+												? "inspection-totals"
+												: undefined
+										}
+									>
+										<header className="inspection-group-heading">
+											<h3>{group.title}</h3>
+											{group.totals && (
+												<p>
+													Durations include the steps
+													within each operation. They
+													overlap; do not add them
+													together.
+												</p>
+											)}
+										</header>
+										{group.steps.map((step) => (
+											<section
+												className="inspection-step"
+												id={`inspection-step-${step.id}`}
+												key={step.id}
 											>
-												<ChevronRightIcon
-													size={16}
-													className={
-														expanded.has(step.id)
-															? "inspection-chevron-open"
-															: ""
-													}
-												/>
-												<span className="inspection-step-title">
-													{step.name}
-													<small>{step.owner}</small>
-												</span>
-												<span
-													className="inspection-kind"
-													data-kind={step.kind}
-												>
-													{step.kind === "TypeSafe"
-														? "TypeSafe AI"
-														: step.kind}
-												</span>
-												<span className="inspection-step-duration">
-													{step.timing ===
-													"Unmeasured"
-														? "not measured"
-														: time(step.durationMs)}
-												</span>
-												<span
-													role="img"
-													className="inspection-status"
-													data-status={step.status}
-													aria-label={step.status}
-												>
-													{step.status ===
-													"Success" ? (
-														<CheckIcon size={16} />
-													) : step.status ===
-														"Failure" ? (
-														<XIcon size={16} />
-													) : (
-														step.status
-													)}
-												</span>
-											</button>
-											<CopyInspectionReference
-												stepId={step._id}
-											/>
-										</div>
-										{expanded.has(step.id) && (
-											<StepPayload
-												step={step}
-												visitorId={visitorId}
-												start={start}
-											/>
-										)}
+												<div className="inspection-step-row">
+													<button
+														type="button"
+														className="inspection-step-toggle"
+														aria-expanded={expanded.has(
+															step.id,
+														)}
+														onClick={() =>
+															toggle(step.id)
+														}
+													>
+														<ChevronRightIcon
+															size={16}
+															className={
+																expanded.has(
+																	step.id,
+																)
+																	? "inspection-chevron-open"
+																	: ""
+															}
+														/>
+														<span className="inspection-step-title">
+															{step.name}
+															<small>
+																{step.owner}
+															</small>
+														</span>
+														<span
+															className="inspection-kind"
+															data-kind={
+																step.kind
+															}
+														>
+															{step.kind ===
+															"TypeSafe"
+																? "TypeSafe AI"
+																: step.kind}
+														</span>
+														<span className="inspection-step-duration">
+															{step.timing ===
+															"Unmeasured"
+																? "not measured"
+																: time(
+																		step.durationMs,
+																	)}
+														</span>
+														<span
+															role="img"
+															className="inspection-status"
+															data-status={
+																step.status
+															}
+															aria-label={
+																step.status
+															}
+														>
+															{step.status ===
+															"Success" ? (
+																<CheckIcon
+																	size={16}
+																/>
+															) : step.status ===
+																"Failure" ? (
+																<XIcon
+																	size={16}
+																/>
+															) : (
+																step.status
+															)}
+														</span>
+													</button>
+													<CopyInspectionReference
+														stepId={step._id}
+													/>
+												</div>
+												{expanded.has(step.id) && (
+													<StepPayload
+														step={step}
+														visitorId={visitorId}
+														start={start}
+													/>
+												)}
+											</section>
+										))}
 									</section>
 								))}
-							</section>
-						))}
-					{steps.results.length <= 1 && running && (
-						<p className="inspection-empty">
-							Resolution is running. Completed steps appear when
-							the action records its trace.
-						</p>
-					)}
-				</section>
+							{steps.results.length <= 1 && running && (
+								<p className="inspection-empty">
+									Resolution is running. Completed steps
+									appear when the action records its trace.
+								</p>
+							)}
+						</section>
+					</>
+				)}
 				<footer className="inspection-footer">
 					{clock(start)} · {requestId}
 					<br />
@@ -445,14 +493,14 @@ function CopyInspectionReference({ stepId }: { stepId: string }) {
 			className="inspection-copy-reference"
 			aria-label={
 				copied
-					? "Resolution step reference copied"
-					: "Copy resolution step reference"
+					? "Detailed trace command copied"
+					: "Copy detailed trace command"
 			}
-			title={copied ? "Copied" : "Copy reference"}
+			title={copied ? "Copied" : "Copy detailed trace command"}
 			onClick={async () => {
 				try {
 					await navigator.clipboard.writeText(
-						`bun run resolution_inspector step ${stepId}`,
+						`bun run resolution_inspector trace ${stepId}`,
 					);
 					setCopied(true);
 					window.setTimeout(() => setCopied(false), 1600);
@@ -463,6 +511,53 @@ function CopyInspectionReference({ stepId }: { stepId: string }) {
 		>
 			{copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
 		</Button>
+	);
+}
+
+function DetailedTraces({
+	steps,
+	visitorId,
+	start,
+}: {
+	steps: Step[];
+	visitorId: string;
+	start: number;
+}) {
+	return (
+		<section className="inspection-detailed" aria-label="Detailed traces">
+			<header className="inspection-detailed-heading">
+				<div>
+					<h3>Detailed traces</h3>
+					<p className="inspection-detailed-description">
+						Captured inputs, outputs, model metadata, and local
+						transport timings for every stage.
+					</p>
+				</div>
+				<code>resolution_inspector trace &lt;stepId&gt;</code>
+			</header>
+			{steps.map((step) => (
+				<section className="inspection-detailed-step" key={step.id}>
+					<header>
+						<div>
+							<h4>{step.name}</h4>
+							<p className="inspection-detailed-description">
+								{step.owner} ·{" "}
+								{step.kind === "TypeSafe"
+									? "TypeSafe AI"
+									: step.kind}
+							</p>
+						</div>
+						<span>{time(step.durationMs)}</span>
+						<CopyInspectionReference stepId={step._id} />
+					</header>
+					<StepPayload
+						step={step}
+						visitorId={visitorId}
+						start={start}
+					/>
+				</section>
+			))}
+		</section>
 	);
 }
 

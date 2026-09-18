@@ -136,6 +136,19 @@ export function inspectResolutionStep(
 	return runReadonlyInspection(source, options);
 }
 
+export function inspectResolutionTrace(
+	stepId: string,
+	options?: DeploymentOptions,
+): Promise<void> {
+	const source = `
+		const step = await ctx.db.get(${literal(stepId)});
+		if (!step) throw new Error("Inspection step not found: " + ${literal(stepId)});
+		${payloadExpression("step")}
+		return { step, trace: payload };
+	`;
+	return runReadonlyInspection(source, options);
+}
+
 export function inspectResolutionRequest(
 	requestId: string,
 	options?: DeploymentOptions,
@@ -233,6 +246,7 @@ export function listRecentResolutionInspections(
 
 function usage(): never {
 	console.error(`Usage:
+  bun run resolution_inspector trace <inspectionStepId>
   bun run resolution_inspector step <inspectionStepId>
   bun run resolution_inspector request <requestId>
   bun run resolution_inspector run <resolutionRunId>
@@ -269,7 +283,9 @@ if (import.meta.main) {
 		process.argv.slice(2),
 	);
 	const [command, identifier] = positional;
-	if (command === "step" && identifier)
+	if (command === "trace" && identifier)
+		await inspectResolutionTrace(identifier, options);
+	else if (command === "step" && identifier)
 		await inspectResolutionStep(identifier, options);
 	else if (command === "request" && identifier)
 		await inspectResolutionRequest(identifier, options);
