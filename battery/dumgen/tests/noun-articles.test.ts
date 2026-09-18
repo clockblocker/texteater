@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { checkIfGrundform, parseUnit } from "dumling";
 import { Effect } from "effect";
 import { deriveNounArticle, nounArticleReference } from "../src/index.js";
+import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
 import { grammarFixture } from "./grammar-fixture.js";
@@ -354,9 +355,11 @@ test("article attachment offers only complete lexical candidates", async () => {
 			judge: async (request, settings) => {
 				if (request.questions.attachment) {
 					inspected = true;
-					expect(Object.keys(request.questions)).toEqual([
-						"attachment",
-					]);
+					// Attachment travels with the feature questions in one round trip.
+					expect(Object.keys(request.questions)).toContain("support");
+					expect(Object.keys(request.questions)).toContain(
+						"surface.inflectionalFeatures.case",
+					);
 					const question = request.questions.attachment;
 					if (question.type !== "choice")
 						throw Error("Expected attachment choice");
@@ -461,18 +464,28 @@ for (const [text, caseValue] of [
 		const options = grammarFixture(fixture.golden);
 		const judge = options.judge;
 		if (!judge) throw Error("Missing fixture judge");
+		const traces: OperationTrace[] = [];
 		let checked = false;
 		const result = await Effect.runPromise(
 			createDumgen({
 				...options,
+				onOperation: (trace) => traces.push(trace),
 				judge: async (request, settings) => {
 					const question =
 						request.questions["surface.inflectionalFeatures.case"];
 					if (question?.type === "choice") {
 						checked = true;
+						// The speculative Case question travels with the features
+						// and offers the whole schema; code filters by the article.
+						expect(Object.keys(request.questions)).toContain(
+							"support",
+						);
 						expect(Object.keys(question.criteria).sort()).toEqual([
+							"Acc",
 							"Dat",
 							"Gen",
+							"Nom",
+							"Unmarked",
 							"Unresolved",
 						]);
 					}
@@ -481,6 +494,66 @@ for (const [text, caseValue] of [
 			}).resolveGrammar(fixture.encounter),
 		);
 		expect(checked).toBe(true);
+		expect(traces[0]?.calls).toHaveLength(1);
+		expect(result.surface).toHaveProperty(
+			"inflectionalFeatures.case",
+			caseValue,
+		);
+	});
+
+	test(`incompatible speculative Case falls back to a compatible-only question: ${text}`, async () => {
+		const fixture = example(
+			text,
+			["der", "Frau"],
+			"Frau",
+			"der",
+			"Definite",
+			caseValue,
+			"Sing",
+			"Fem",
+		);
+		const options = grammarFixture(fixture.golden);
+		const judge = options.judge;
+		if (!judge) throw Error("Missing fixture judge");
+		const traces: OperationTrace[] = [];
+		const offered: string[][] = [];
+		const result = await Effect.runPromise(
+			createDumgen({
+				...options,
+				onOperation: (trace) => traces.push(trace),
+				judge: async (request, settings) => {
+					const question =
+						request.questions["surface.inflectionalFeatures.case"];
+					if (question?.type === "choice")
+						offered.push(Object.keys(question.criteria).sort());
+					const answered = await judge(request, settings);
+					if (Object.hasOwn(request.questions, "support")) {
+						// Speculative Nom contradicts the Dat/Gen article form.
+						const speculative =
+							answered.answers[
+								"surface.inflectionalFeatures.case"
+							];
+						if (speculative?.type === "choice")
+							return {
+								...answered,
+								answers: {
+									...answered.answers,
+									"surface.inflectionalFeatures.case": {
+										...speculative,
+										choice: "Nom",
+									},
+								},
+							};
+					}
+					return answered;
+				},
+			}).resolveGrammar(fixture.encounter),
+		);
+		expect(traces[0]?.calls.map((call) => call.request.route)).toEqual([
+			"de/Lexeme/NOUN/features",
+			"de/Lexeme/NOUN/case",
+		]);
+		expect(offered[1]).toEqual(["Dat", "Gen", "Unresolved"]);
 		expect(result.surface).toHaveProperty(
 			"inflectionalFeatures.case",
 			caseValue,

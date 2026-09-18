@@ -8,7 +8,6 @@ import {
 	RELATION_PUBLICATION_FINGERPRINTS,
 	type ReviewedRelationVerdictArtifact,
 } from "../convex/model/generatedKnowledgeContainment";
-import { withoutGeneratedRelationPlan } from "../convex/orchestration";
 import {
 	getAuthorization,
 	listAttemptProvenance,
@@ -515,7 +514,7 @@ test("rollback persistence and proposal monitoring are queryable through interna
 	).toMatchObject({ rejectedOutputs: 1, nulls: 0 });
 });
 
-test("commit-time rollback fallback removes relation operations but retains base Knowledge", () => {
+test("commit-time rollback keeps base Knowledge changes and drops relation changes", () => {
 	const baseChange = {
 		kind: "applyKnowledgeChange",
 		envelope: {
@@ -539,28 +538,6 @@ test("commit-time rollback fallback removes relation operations but retains base
 			},
 		},
 	};
-	const filtered = withoutGeneratedRelationPlan({
-		baseRevision: "convex-0",
-		changes: [
-			{
-				type: "patchReading",
-				reading: sourceReading,
-				ops: [baseChange, relationChange],
-				preconditions: [],
-			},
-			{
-				type: "createPendingSemanticRelation",
-				record: {},
-				preconditions: [],
-			},
-		],
-	});
-	expect(filtered.changes).toEqual([
-		expect.objectContaining({
-			type: "patchReading",
-			ops: [baseChange],
-		}),
-	]);
 	expect(
 		generatedKnowledgeAllowedForPublication(
 			{

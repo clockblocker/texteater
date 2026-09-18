@@ -92,64 +92,44 @@ export async function classifyGermanTarget(
 		);
 	}
 	const members = [input.clickedSegmentIndex];
-	let selected: string | undefined;
 	const membershipQuestions = Object.keys(questions);
-	if (membershipQuestions.length) {
-		const result = await judge<Questions>(
-			"classifyTarget",
-			"de/membership",
-			state,
-			{
-				...questions,
-				singletonRoute: choice(
-					`Is the exact group [${input.clickedSegmentIndex}] (only occurrence <s${input.clickedSegmentIndex}> in \`sentence\`) a defensible complete target under \`criteria\`? Choose the Family/Kind of the whole unit or Unresolved.`,
-					routes,
-				),
-			},
-			signal,
-		);
-		for (const id of membershipQuestions) {
-			const answer = result.answers[id];
-			if (answer?.type !== "choice" || answer.choice === "Unresolved")
-				throw new DumgenFailure(
-					"Unresolved",
-					"classifyTarget",
-					"Target membership is unresolved",
-				);
-			if (answer.choice === "Include")
-				members.push(Number(id.slice("member_".length)));
-		}
-		// The speculative decision is about this exact singleton, never a larger group.
-		if (members.length === 1) {
-			const singletonRoute = result.answers.singletonRoute;
-			if (singletonRoute?.type === "choice")
-				selected = singletonRoute.choice;
-		}
-		recordEvent(signal, "JudgmentApplicability", {
-			consumed: [
-				...membershipQuestions,
-				...(members.length === 1 ? ["singletonRoute"] : []),
-			],
-			ignored: members.length === 1 ? [] : ["singletonRoute"],
-		});
+	// Membership and route are independent judgments over the same state, so
+	// they travel in one round trip. The route is asked about the complete
+	// unit containing the clicked occurrence rather than about the assembled
+	// group; the grammar stage's own support question guards the assembly.
+	const result = await judge<Questions>(
+		"classifyTarget",
+		"de/target",
+		state,
+		{
+			...questions,
+			route: choice(
+				`Under \`criteria\`, what is the Family/Kind of the complete fixed unit in \`sentence\` that contains the occurrence identified by \`clickedSegmentIndex\`? Classify the whole unit, not the clicked word's standalone part of speech. Choose Unresolved when no defensible complete target contains it.`,
+				routes,
+			),
+		},
+		signal,
+	);
+	for (const id of membershipQuestions) {
+		const answer = result.answers[id];
+		if (answer?.type !== "choice" || answer.choice === "Unresolved")
+			throw new DumgenFailure(
+				"Unresolved",
+				"classifyTarget",
+				"Target membership is unresolved",
+			);
+		if (answer.choice === "Include")
+			members.push(Number(id.slice("member_".length)));
 	}
+	recordEvent(signal, "JudgmentApplicability", {
+		consumed: [...membershipQuestions, "route"],
+		ignored: [],
+	});
 	members.sort((a, b) => a - b);
 	recordEvent(signal, "TargetAssembled", { memberSegmentIndices: members });
-	if (selected === undefined) {
-		const result = await judge(
-			"classifyTarget",
-			"de/whole-target",
-			{ ...state, memberSegmentIndices: members },
-			{
-				route: choice(
-					"Is the exact group identified by `memberSegmentIndices` in `sentence` a defensible complete target under `criteria`? Choose the Family/Kind of the whole unit or Unresolved.",
-					routes,
-				),
-			},
-			signal,
-		);
-		selected = result.answers.route.choice;
-	}
+	const routeAnswer = result.answers.route;
+	const selected =
+		routeAnswer?.type === "choice" ? routeAnswer.choice : "Unresolved";
 	if (selected === "Unresolved")
 		throw new DumgenFailure(
 			"Unresolved",

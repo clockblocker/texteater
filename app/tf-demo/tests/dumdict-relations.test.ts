@@ -1480,7 +1480,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			},
 		];
 		const db = new IndexedDb(seed);
-		const plans: DumdictPlan<"de">[] = [];
+		const decisions: ("New" | "Reuse")[] = [];
 		const citation = surface("gehen");
 		const grammatical = {
 			decision: "Resolved",
@@ -1534,15 +1534,15 @@ describe("tf-demo Dumdict relation storage", () => {
 				};
 			},
 			async persistResolvedClick(input) {
-				plans.push(input.dictionaryPlan);
+				decisions.push(input.readingDecision);
 				return {
 					status: "Committed",
-					clickId: `click-${plans.length}`,
-					attestationId: `attestation-${plans.length}`,
+					clickId: `click-${decisions.length}`,
+					attestationId: `attestation-${decisions.length}`,
 					readingId: "reading-gehen",
 					deduplicated: false,
 					occurrence: {
-						attestationId: `attestation-${plans.length}`,
+						attestationId: `attestation-${decisions.length}`,
 						grammatical,
 						reading: gehenReading,
 					},
@@ -1590,7 +1590,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			);
 		}
 
-		expect(plans.map(({ changes }) => changes)).toEqual([[], []]);
+		expect(decisions).toEqual(["Reuse", "Reuse"]);
 		expect(db.rows("readingEntries")[0]?.record).toMatchObject({
 			knowledge: directKnowledge,
 		});

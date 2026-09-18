@@ -12,6 +12,8 @@
 		"src/index.ts",
 		"src/types.ts",
 		"src/schemas.ts",
-		"src/development.ts"
+		"src/development.ts",
+		"src/authored.ts",
+		"src/validation.ts"
 	]
 }

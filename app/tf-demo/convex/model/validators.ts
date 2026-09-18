@@ -584,8 +584,13 @@ export const resolvedClickCommitValidator = v.union(
 	resolvedClickConflictValidator,
 );
 
+export const readingDecisionValidator = v.union(
+	v.literal("Reuse"),
+	v.literal("New"),
+);
+
 const readingResolutionValidator = v.object({
-	decision: v.union(v.literal("Reuse"), v.literal("New")),
+	decision: readingDecisionValidator,
 	emojiDescription: v.string(),
 });
 
@@ -634,14 +639,12 @@ export const resolveSegmentResultValidator = v.union(
 		grammatical: resolvedGrammaticalValidator,
 		readingResolution: readingResolutionValidator,
 		reading: readingValueValidator,
-		dictionaryPlan: dictionaryPlanValidator,
 		persisted: resolvedClickConflictValidator,
 	}),
 	v.object({
 		grammatical: resolvedGrammaticalValidator,
 		readingResolution: readingResolutionValidator,
 		reading: readingValueValidator,
-		dictionaryPlan: dictionaryPlanValidator,
 		reused: v.boolean(),
 		persisted: committedOccurrenceValidator,
 	}),

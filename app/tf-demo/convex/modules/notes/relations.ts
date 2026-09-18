@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { selectGrammaticalAlternatives } from "dumgen";
+import { selectGrammaticalAlternatives } from "dumgen/authored";
 import type * as Dumling from "dumling/types";
 import {
 	directSemanticRelationValues,

@@ -44,21 +44,18 @@ function answers(
 function controlled(
 	members: readonly number[],
 	route: string,
-	options: { singletonRoute?: string; unresolvedMember?: number } = {},
+	options: { unresolvedMember?: number } = {},
 ) {
 	const traces: OperationTrace[] = [];
 	const judge: TypeSafeExecutor = async (request) =>
 		answers(request, (id) =>
 			id === "route"
 				? route
-				: id === "singletonRoute"
-					? (options.singletonRoute ??
-						(members.length === 1 ? route : "Unresolved"))
-					: Number(id.slice(7)) === options.unresolvedMember
-						? "Unresolved"
-						: members.includes(Number(id.slice(7)))
-							? "Include"
-							: "Exclude",
+				: Number(id.slice(7)) === options.unresolvedMember
+					? "Unresolved"
+					: members.includes(Number(id.slice(7)))
+						? "Include"
+						: "Exclude",
 		) as SystemOneResult<typeof request.questions>;
 	return {
 		traces,
@@ -111,14 +108,10 @@ test("every member click of all 16 accepted constructions assembles the exact sc
 					memberSegmentIndices: members,
 				});
 				const trace = run.traces[0]!;
-				const skipsWholeTarget = members.length === 1;
-				expect(trace.calls.map((call) => call.executor)).toEqual(
-					skipsWholeTarget ? ["TypeSafe"] : ["TypeSafe", "TypeSafe"],
-				);
-				if (!skipsWholeTarget)
-					expect(trace.calls[1]!.dependsOn).toEqual([
-						trace.calls[0]!.id,
-					]);
+				// Membership and route are one round trip regardless of group size.
+				expect(trace.calls.map((call) => call.executor)).toEqual([
+					"TypeSafe",
+				]);
 				const request = trace.calls[0]!.request;
 				if (!("questions" in request)) throw Error("Expected judgment");
 				expect(Object.keys(request.questions)).toEqual([
@@ -128,7 +121,7 @@ test("every member click of all 16 accepted constructions assembles the exact sc
 							? [`member_${index}`]
 							: [],
 					),
-					"singletonRoute",
+					"route",
 				]);
 			}
 		}
@@ -161,7 +154,7 @@ test("repeated spelling stays positional; invalid whole groups stop without repa
 		),
 	);
 	expect(result._tag).toBe("Left");
-	expect(invalid.traces[0]!.calls).toHaveLength(2);
+	expect(invalid.traces[0]!.calls).toHaveLength(1);
 	expect(invalid.traces[0]!.failure?.tag).toBe("Unresolved");
 });
 test("a lone resolvable occurrence skips the empty membership batch but still judges its route", async () => {
@@ -305,10 +298,10 @@ test("compact classification state preserves positions, source spacing, punctuat
 		throw Error("Expected membership batch");
 	expect(Object.keys(membership.request.questions)).toEqual([
 		"member_0",
-		"singletonRoute",
+		"route",
 	]);
-	expect(membership.request.questions.singletonRoute?.instructions).toContain(
-		"only occurrence <s5>",
+	expect(membership.request.questions.route?.instructions).toContain(
+		"`clickedSegmentIndex`",
 	);
 	expect(membership.dependsOn).toEqual([]);
 });
@@ -318,65 +311,27 @@ for (const scenario of [
 		name: "accepts a complete singleton in one call",
 		members: [3],
 		route: "Lexeme/ADJ",
-		singletonRoute: "Lexeme/ADJ",
-		calls: 1,
-	},
-	{
-		name: "does not retry an unresolved singleton decision",
-		members: [3],
-		route: "Lexeme/ADJ",
-		singletonRoute: "Unresolved",
-		calls: 1,
-	},
-	{
-		name: "keeps the original determiner decision without review",
-		members: [3],
-		route: "Lexeme/PRON",
-		singletonRoute: "Lexeme/DET",
-		calls: 1,
-	},
-	{
-		name: "keeps the original pronoun decision without review",
-		members: [3],
-		route: "Lexeme/DET",
-		singletonRoute: "Lexeme/PRON",
-		calls: 1,
 	},
 	{
 		name: "preserves singleton uncertainty without another call",
 		members: [3],
 		route: "Unresolved",
-		singletonRoute: "Unresolved",
-		calls: 1,
 	},
 	{
-		name: "ignores an accepted singleton route for a multi-member target",
+		name: "accepts a multi-member target in one call",
 		members: [0, 1],
 		route: "Lexeme/NOUN",
-		singletonRoute: "Lexeme/DET",
-		calls: 2,
 	},
 	{
-		name: "ignores singleton uncertainty for a multi-member target",
-		members: [0, 1],
-		route: "Lexeme/NOUN",
-		singletonRoute: "Unresolved",
-		calls: 2,
-	},
-	{
-		name: "does not bypass invalid whole-group membership with a singleton route",
+		name: "stops on an undefensible multi-member unit without repair",
 		members: [0, 1],
 		route: "Unresolved",
-		singletonRoute: "Lexeme/DET",
-		calls: 2,
 	},
 	{
-		name: "does not let singleton acceptance override unresolved membership",
+		name: "does not let route acceptance override unresolved membership",
 		members: [3],
 		route: "Lexeme/ADJ",
-		singletonRoute: "Lexeme/ADJ",
 		unresolvedMember: 0,
-		calls: 1,
 	},
 ]) {
 	test(scenario.name, async () => {
@@ -397,39 +352,34 @@ for (const scenario of [
 				}),
 			),
 		);
-		const selectedRoute =
-			scenario.members.length === 1
-				? scenario.singletonRoute
-				: scenario.route;
 		const unresolved =
-			selectedRoute === "Unresolved" ||
+			scenario.route === "Unresolved" ||
 			scenario.unresolvedMember !== undefined;
 		if (unresolved) {
 			expect(result._tag).toBe("Left");
 			expect(run.traces[0]?.failure?.tag).toBe("Unresolved");
 		} else {
-			const [family, kind] = selectedRoute.split("/");
+			const [family, kind] = scenario.route.split("/");
 			expect(result).toMatchObject({
 				_tag: "Right",
 				right: { family, kind, memberSegmentIndices: scenario.members },
 			});
 		}
 		const trace = required(run.traces[0]);
-		expect(trace.calls).toHaveLength(scenario.calls);
-		if (scenario.calls === 2) {
-			expect(trace.calls[1]?.request.input).toMatchObject({
-				memberSegmentIndices: scenario.members,
-			});
-			expect(trace.calls[1]?.dependsOn).toEqual([
-				required(trace.calls[0]).id,
-			]);
-		}
-		if (scenario.members.length > 1)
+		// One round trip: membership and the unit route are independent judgments.
+		expect(trace.calls).toHaveLength(1);
+		expect(required(trace.calls[0]).dependsOn).toEqual([]);
+		if (scenario.unresolvedMember === undefined)
 			expect(trace.events).toContainEqual({
 				kind: "JudgmentApplicability",
 				data: {
-					consumed: ["member_1", "member_2", "member_3"],
-					ignored: ["singletonRoute"],
+					consumed: [
+						...[0, 1, 2, 3]
+							.filter((index) => index !== scenario.members[0])
+							.map((index) => `member_${index}`),
+						"route",
+					],
+					ignored: [],
 				},
 			});
 	});

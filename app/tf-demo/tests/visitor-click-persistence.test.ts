@@ -162,8 +162,42 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			readingKey,
 			emojiDescription: readingValue.emojiDescription,
 		},
-		surfaces: { _id: surfaceId, lemmaId, surfaceKey },
-		lemmas: { _id: lemmaId, lemmaKey: lemmaIdentityKey(lemma) },
+		surfaces: {
+			_id: surfaceId,
+			lemmaId,
+			surfaceKey,
+			language: "de",
+			normalizedSurface: "Banken",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				case: "Nom",
+				number: "Plur",
+				article: null,
+			},
+		},
+		lemmas: {
+			_id: lemmaId,
+			lemmaKey: lemmaIdentityKey(lemma),
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Bank",
+			coreFeatures: { gender: "Fem", hyph: null },
+		},
+		// The reused Reading and its Surface are already dictionary entries, so
+		// the mutation-side planner produces an empty plan.
+		dictionaryLemmas: { _id: "dictionary-lemma-1", lemmaId },
+		readingEntries: {
+			_id: "reading-entry-1",
+			readingId,
+			record: { attestedTranslations: [], attestations: [], notes: "" },
+		},
+		ownedSurfaces: {
+			_id: "owned-surface-1",
+			surfaceId,
+			record: { attestedTranslations: [], attestations: [], notes: "" },
+		},
 	};
 	const documents: Record<string, unknown> = {
 		[sentenceId]: {
@@ -267,7 +301,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		clickedSegmentIndex: 0,
 		reading: readingValue,
 		readingKey,
-		dictionaryPlan: { baseRevision: "convex-0", changes: [] },
+		readingDecision: "Reuse",
 		occurrence: {
 			memberSegmentIndices: [0],
 			attestation: {
@@ -520,18 +554,7 @@ test("clicked membership reuses the winner even when the losing proposal has few
 		clickedSegmentIndex: 2,
 		reading: readingValue,
 		readingKey: readingFingerprint(readingValue),
-		dictionaryPlan: {
-			baseRevision: "stale",
-			changes: [
-				{
-					type: "createLemma",
-					record: { lemma: lemmaValue },
-					preconditions: [
-						{ kind: "revisionMatches", revision: "stale" },
-					],
-				},
-			],
-		},
+		readingDecision: "New",
 		occurrence: {
 			memberSegmentIndices: [2],
 			attestation: {
@@ -633,18 +656,7 @@ test("partial overlap reports the committed membership and writes nothing", asyn
 		clickedSegmentIndex: 2,
 		reading: readingValue,
 		readingKey: readingFingerprint(readingValue),
-		dictionaryPlan: {
-			baseRevision: "stale",
-			changes: [
-				{
-					type: "createLemma",
-					record: { lemma: lemmaValue },
-					preconditions: [
-						{ kind: "revisionMatches", revision: "stale" },
-					],
-				},
-			],
-		},
+		readingDecision: "New",
 		occurrence: {
 			memberSegmentIndices: [0, 2],
 			attestation: {

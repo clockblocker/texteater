@@ -1,5 +1,5 @@
-import { validateEncounter } from "dumgen";
 import type { Encounter } from "dumgen/types";
+import { validateEncounter } from "dumgen/validation";
 import type * as Dumling from "dumling/types";
 import { parseGermanAttestation } from "./operationalParsing";
 

@@ -26,6 +26,14 @@
 			"types": "./dist/development.d.ts",
 			"import": "./dist/development.js"
 		},
+		"./authored": {
+			"types": "./dist/authored.d.ts",
+			"import": "./dist/authored.js"
+		},
+		"./validation": {
+			"types": "./dist/validation.d.ts",
+			"import": "./dist/validation.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -38,7 +46,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run validate:catalog && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/development.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/development.ts src/authored.ts src/validation.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"generate": "bun codegen/generate.ts",

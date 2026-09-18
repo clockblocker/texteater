@@ -1,8 +1,6 @@
 "use node";
 
-import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { type Infer, v } from "convex/values";
-import type { ApplyGeneratedKnowledgeRequest } from "dumdict";
 import { createDumdictService } from "dumdict/runtime";
 import { directSemanticRelationValues } from "dumrel";
 import * as Effect from "effect/Effect";
@@ -28,38 +26,21 @@ import {
 	parseGermanLemma,
 	parseGermanReading,
 } from "../server/operationalParsing";
-import {
-	parseResolvedGrammar,
-	type ResolvedGrammar,
-} from "../server/resolutionGrammar";
-import {
-	executeResolutionSession,
-	type ResolutionSessionLifecyclePort,
-} from "../server/resolutionSessionExecution";
+import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import { api, internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
-import {
-	createConvexDumdictStorage,
-	type DictionaryPlanResult,
-	dictionaryPlanResult,
-} from "./dumdictActionStorage";
+import { createConvexDumdictStorage } from "./dumdictActionStorage";
 import { inspectionFor } from "./inspectionAction";
-import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
+import { resolvedGrammaticalActionResult } from "./model/grammarCheckpoint";
+import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 import {
-	projectResolutionGrammar,
-	projectResolutionReading,
-	type ResolutionSessionGuard,
-} from "./model/resolutionSessions";
-import {
-	knowledgeProductionEvidenceValidator,
 	type nonResolvedGrammaticalValidator,
-	relationPublicationRunValidator,
-	type resolvedGrammaticalValidator,
+	resolutionSessionGuardValidator,
 	resolveSegmentResultValidator,
 	type reusableAttestationValidator,
 } from "./model/validators";
-import type { RelationPublicationRun } from "./relationPublication";
+import { createResolutionSessionLifecycle } from "./resolutionSessionLifecycle";
 
 const MAX_KNOWLEDGE_PLAN_ATTEMPTS = 3;
 
@@ -76,41 +57,7 @@ const submitTextResultValidator = v.union(
 
 type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
 
-type ResolutionCatalogMiss = Extract<
-	ResolveSegmentResult,
-	{ catalogMiss: unknown }
->["catalogMiss"];
-
-const recordAndSettleCatalogMiss = makeFunctionReference<
-	"mutation",
-	{ guard: ResolutionSessionGuard; miss: ResolutionCatalogMiss },
-	null
->(
-	"catalogGrowthSignals:recordAndSettleCatalogMiss",
-) as unknown as FunctionReference<
-	"mutation",
-	"internal",
-	{ guard: ResolutionSessionGuard; miss: ResolutionCatalogMiss },
-	null
->;
-
-const recordRelationPublicationFailure = makeFunctionReference<
-	"mutation",
-	{ attemptKey: string; run: RelationPublicationRun },
-	null
->(
-	"relationPublication:recordPublicationFailure",
-) as unknown as FunctionReference<
-	"mutation",
-	"internal",
-	{ attemptKey: string; run: RelationPublicationRun },
-	null
->;
-
 type ResolveSegmentActionResult = Infer<typeof resolveSegmentResultValidator>;
-type ResolvedGrammaticalActionResult = Infer<
-	typeof resolvedGrammaticalValidator
->;
 type NonResolvedGrammaticalActionResult = Infer<
 	typeof nonResolvedGrammaticalValidator
 >;
@@ -133,34 +80,6 @@ function nonResolvedGrammaticalActionResult(
 	return input;
 }
 
-function resolvedGrammaticalActionResult(
-	input: ResolvedGrammar,
-): ResolvedGrammaticalActionResult {
-	const parsed = parseResolvedGrammar(input);
-	return {
-		...parsed,
-		encounter: {
-			sentence: {
-				...parsed.encounter.sentence,
-				segments: parsed.encounter.sentence.segments.map((segment) => ({
-					...segment,
-				})),
-			},
-			target: {
-				...parsed.encounter.target,
-				memberSegmentIndices: [
-					...parsed.encounter.target.memberSegmentIndices,
-				],
-			},
-		},
-	};
-}
-function resolvedGrammaticalCheckpoint(
-	input: ResolvedGrammaticalActionResult,
-): ResolvedGrammar {
-	return parseResolvedGrammar(input);
-}
-
 function reusableAttestationResult(
 	input: ReusableAttestation,
 ): ReusableAttestationResult {
@@ -171,51 +90,6 @@ function reusableAttestationResult(
 			...input.reading,
 			lemma: { ...input.reading.lemma },
 		},
-	};
-}
-
-/**
- * The commit-time rollback fallback. It removes only generated relation plan
- * operations so base Knowledge from the same model response can still commit.
- */
-export function withoutGeneratedRelationPlan(
-	plan: DictionaryPlanResult,
-): DictionaryPlanResult {
-	const changes: DictionaryPlanResult["changes"] = [];
-	for (const change of plan.changes) {
-		if (
-			change.type === "createPendingSemanticRelation" ||
-			change.type === "deletePendingSemanticRelation"
-		) {
-			continue;
-		}
-		if (change.type !== "patchReading") {
-			changes.push(change);
-			continue;
-		}
-		const ops = change.ops.filter((operation) => {
-			if (
-				typeof operation !== "object" ||
-				operation === null ||
-				!("kind" in operation) ||
-				operation.kind !== "applyKnowledgeChange" ||
-				!("envelope" in operation) ||
-				typeof operation.envelope !== "object" ||
-				operation.envelope === null ||
-				!("change" in operation.envelope) ||
-				typeof operation.envelope.change !== "object" ||
-				operation.envelope.change === null ||
-				!("aspect" in operation.envelope.change)
-			) {
-				return true;
-			}
-			return operation.envelope.change.aspect !== "semanticRelations";
-		});
-		if (ops.length > 0) changes.push({ ...change, ops });
-	}
-	return {
-		...plan,
-		changes,
 	};
 }
 
@@ -265,13 +139,11 @@ function resolveSegmentActionResult(
 			...result.reading,
 			lemma: { ...result.reading.lemma },
 		};
-		const dictionaryPlan = dictionaryPlanResult(result.dictionaryPlan);
 		if (!("reused" in result)) {
 			return {
 				grammatical,
 				readingResolution: { ...result.readingResolution },
 				reading,
-				dictionaryPlan,
 				persisted:
 					result.persisted.status === "MembershipConflict"
 						? {
@@ -288,7 +160,6 @@ function resolveSegmentActionResult(
 			grammatical,
 			readingResolution: { ...result.readingResolution },
 			reading,
-			dictionaryPlan,
 			reused: result.reused,
 			persisted: committedOccurrenceResult(result.persisted),
 		};
@@ -376,9 +247,11 @@ export const submitText = action({
 				sourceText: args.sourceText,
 			});
 		}
-		const inspection = args.inspectionVisitorId
-			? await inspectionFor(ctx, requestId)
-			: undefined;
+		const inspection = inspectionFor(
+			ctx,
+			requestId,
+			Boolean(args.inspectionVisitorId),
+		);
 		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
 		try {
 			const run = () =>
@@ -437,19 +310,23 @@ export const resolveSegment = action({
 
 export const runResolutionSession = internalAction({
 	args: {
-		requestId: v.string(),
-		runToken: v.string(),
-		segmentId: v.id("segments"),
+		...resolutionSessionGuardValidator.fields,
+		inspect: v.optional(v.boolean()),
 	},
 	returns: v.null(),
-	handler: async (ctx, guard): Promise<null> => {
-		const inspection = await inspectionFor(ctx, guard.requestId);
+	handler: async (ctx, { inspect, ...guard }): Promise<null> => {
+		const inspection = inspectionFor(
+			ctx,
+			guard.requestId,
+			inspect === true,
+		);
 		const run = () =>
 			Effect.runPromise(
 				executeResolutionSession({
 					identity: guard,
-					lifecycle: tracedResolutionLifecycle(
-						createConvexResolutionSessionLifecycle(ctx, guard),
+					lifecycle: createResolutionSessionLifecycle(
+						ctx,
+						guard,
 						inspection,
 					),
 					resolve: (selection, checkpoints, observer, context) => {
@@ -486,183 +363,6 @@ export const runResolutionSession = internalAction({
 		return null;
 	},
 });
-
-function tracedResolutionLifecycle(
-	lifecycle: ResolutionSessionLifecyclePort,
-	inspection?: InspectionCapture,
-): ResolutionSessionLifecyclePort {
-	if (!inspection) return lifecycle;
-	return {
-		begin: () =>
-			inspection.promise(
-				"Load checkpoints and start run",
-				"app/tf-demo · resolutionSessions",
-				{},
-				() => lifecycle.begin(),
-			),
-		advance: (event) =>
-			event.progress === "RouteAvailable" ||
-			event.progress === "Committing"
-				? lifecycle.advance(event)
-				: inspection.promise(
-						`Save ${event.progress}`,
-						"app/tf-demo · resolutionSessions",
-						event,
-						() => lifecycle.advance(event),
-					),
-		settle: (result) =>
-			inspection.promise(
-				`Settle ${result.kind}`,
-				"app/tf-demo · resolutionSessions",
-				result,
-				() => lifecycle.settle(result),
-			),
-		record: (record) => {
-			if (record.kind !== "Succeeded") inspection.markFailed();
-			return inspection.promise(
-				`Record ${record.kind}`,
-				"app/tf-demo · resolutionSessions",
-				record,
-				() => lifecycle.record(record),
-			);
-		},
-	};
-}
-
-function createConvexResolutionSessionLifecycle(
-	ctx: ActionCtx,
-	guard: ResolutionSessionGuard,
-): ResolutionSessionLifecyclePort {
-	return {
-		async begin() {
-			const input = await ctx.runMutation(
-				internal.resolutionSessions.beginRun,
-				{ guard },
-			);
-			if (!input) return null;
-
-			return {
-				selection: input.selection,
-				context: {
-					...input.context,
-					lemmaCandidates:
-						input.context.lemmaCandidates.map(parseGermanLemma),
-				} as ResolutionContext,
-				checkpoints: {
-					...(input.checkpoints.grammatical
-						? {
-								grammatical: resolvedGrammaticalCheckpoint(
-									input.checkpoints.grammatical,
-								),
-							}
-						: {}),
-					...(input.checkpoints.reading
-						? {
-								reading: {
-									resolution:
-										input.checkpoints.reading.resolution,
-									reading: parseGermanReading(
-										input.checkpoints.reading.reading,
-									),
-								},
-							}
-						: {}),
-				},
-			};
-		},
-		async advance(event) {
-			switch (event.progress) {
-				case "RouteAvailable":
-				case "Committing":
-					// Route is published when claiming the run; commit publishes terminal progress.
-					return;
-				case "GrammarAvailable":
-					await ctx.runMutation(internal.resolutionSessions.advance, {
-						guard,
-						progress: event.progress,
-						grammar: projectResolutionGrammar(event.grammatical),
-						grammaticalCheckpoint: resolvedGrammaticalActionResult(
-							event.grammatical,
-						),
-					});
-					return;
-				case "ReadingAvailable":
-					await ctx.runMutation(internal.resolutionSessions.advance, {
-						guard,
-						progress: event.progress,
-						reading: projectResolutionReading(event.reading),
-						readingCheckpoint: {
-							resolution: event.readingResolution,
-							reading: event.reading,
-						},
-					});
-			}
-		},
-		async settle(result) {
-			if (result.kind === "CatalogMiss") {
-				await ctx.runMutation(recordAndSettleCatalogMiss, {
-					guard,
-					miss: result.miss,
-				});
-				return;
-			}
-			await ctx.runMutation(
-				internal.resolutionSessions.settleAfterRun,
-				result.kind === "Complete"
-					? {
-							guard,
-							result: {
-								...result,
-								readingId: convexId<"readings">(
-									result.readingId,
-								),
-								attestationId: convexId<"attestations">(
-									result.attestationId,
-								),
-							},
-						}
-					: { guard, result },
-			);
-		},
-		async record(record) {
-			switch (record.kind) {
-				case "Succeeded":
-					await ctx.runMutation(
-						internal.resolutionSessions.recordRunSuccess,
-						{
-							guard,
-							phase: record.phase,
-							generationEvents: [...record.generationEvents],
-						},
-					);
-					return;
-				case "GenerationFailed":
-					await ctx.runMutation(
-						internal.resolutionSessions.recordRunFailure,
-						{
-							guard,
-							phase: record.phase,
-							failure: record.failure,
-							generationEvents: [...record.generationEvents],
-						},
-					);
-					return;
-				case "InternalFailed":
-					await ctx.runMutation(
-						internal.resolutionSessions.recordInternalRunFailure,
-						{
-							guard,
-							phase: record.phase,
-							diagnosticId: record.diagnosticId,
-							errorName: record.errorName,
-							errorFingerprint: record.errorFingerprint,
-							generationEvents: [...record.generationEvents],
-						},
-					);
-			}
-		},
-	};
-}
 
 function orchestratorFor(
 	ctx: ActionCtx,
@@ -758,7 +458,6 @@ function orchestratorFor(
 		),
 		dictionary: inspection
 			? {
-					...dictionary,
 					findStoredReadings: (input) =>
 						inspection.effect(
 							"Find stored Readings",
@@ -766,23 +465,6 @@ function orchestratorFor(
 							input,
 							dictionary.findStoredReadings(input),
 						),
-					prepare: {
-						...dictionary.prepare,
-						addNewNote: (input) =>
-							inspection.effect(
-								"Prepare new Reading",
-								"battery/dumdict",
-								input,
-								dictionary.prepare.addNewNote(input),
-							),
-						ensureOwnedSurface: (input) =>
-							inspection.effect(
-								"Prepare owned Surface",
-								"battery/dumdict",
-								input,
-								dictionary.prepare.ensureOwnedSurface(input),
-							),
-					},
 				}
 			: dictionary,
 		persistence: tracedPersistence,
@@ -821,10 +503,9 @@ function createConvexPersistence(
 			} as ResolutionContext;
 		},
 		async persistResolvedClick(input) {
-			const dictionaryPlan = dictionaryPlanResult(input.dictionaryPlan);
 			return ctx.runMutation(internal.persistence.persistResolvedClick, {
 				...convexSegmentSelectionArgs(input),
-				dictionaryPlan,
+				readingDecision: input.readingDecision,
 				...(input.knowledgeDraftJson
 					? { knowledgeDraftJson: input.knowledgeDraftJson }
 					: {}),
@@ -875,126 +556,6 @@ function convexSegmentSelectionArgs(input: ResolveSegmentInput) {
 		clickedSegmentIndex: input.clickedSegmentIndex,
 	};
 }
-
-export const applyGeneratedKnowledgePlan = internalAction({
-	args: {
-		attemptKey: v.string(),
-		publication: v.optional(
-			v.object({ sequence: v.number(), final: v.boolean() }),
-		),
-		reading: v.any(),
-		changes: v.array(v.any()),
-		pendingRelations: v.array(v.any()),
-		productionEvidence: knowledgeProductionEvidenceValidator,
-		relationPublication: relationPublicationRunValidator,
-	},
-	returns: v.null(),
-	handler: async (ctx, args) => {
-		const inspection = await inspectionFor(
-			ctx,
-			args.attemptKey,
-			"Knowledge",
-		);
-		const run = async () => {
-			try {
-				const publishable = generatedKnowledgeAllowedForPublication(
-					args,
-					args.relationPublication.requestedKinds,
-				);
-				const request = structuredClone({
-					reading: args.reading,
-					changes: publishable.changes,
-					pendingRelations: publishable.pendingRelations,
-				}) as ApplyGeneratedKnowledgeRequest<"de">;
-				for (
-					let index = 0;
-					index < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
-					index += 1
-				) {
-					const planning = createDumdictService({
-						language: "de",
-						storage: createConvexDumdictStorage(ctx),
-					}).prepare.applyGeneratedKnowledge(request);
-					const prepared = await Effect.runPromise(
-						inspection
-							? inspection.effect(
-									"Prepare generated Knowledge",
-									"battery/dumdict",
-									request,
-									planning,
-								)
-							: planning,
-					);
-					const fullPlan = dictionaryPlanResult(prepared.plan);
-					const commitInput = {
-						attemptKey: args.attemptKey,
-						...(args.publication
-							? { publication: args.publication }
-							: {}),
-						plan: fullPlan,
-						baseKnowledgePlan:
-							withoutGeneratedRelationPlan(fullPlan),
-						generatedChanges: publishable.changes,
-						productionEvidence: args.productionEvidence,
-						relationPublication: args.relationPublication,
-					};
-					const commit = () =>
-						ctx.runMutation(
-							internal.knowledgeGeneration.commitGenerated,
-							commitInput,
-						);
-					const committed = inspection
-						? await inspection.promise(
-								"Commit generated Knowledge",
-								"app/tf-demo · knowledgeGeneration.commitGenerated",
-								commitInput,
-								commit,
-							)
-						: await commit();
-					if (committed.status !== "DictionaryConflict") return null;
-				}
-				throw new Error("Knowledge save conflict.");
-			} catch (error) {
-				inspection?.failure(
-					"Knowledge publication failed",
-					"app/tf-demo · orchestration.applyGeneratedKnowledgePlan",
-					args,
-					error,
-				);
-				console.error("Generated Knowledge planning failed", error);
-				// The final publication retries any contribution that failed here.
-				if (args.publication && !args.publication.final) throw error;
-				if (args.relationPublication.requestedKinds.length > 0) {
-					await ctx.runMutation(recordRelationPublicationFailure, {
-						attemptKey: args.attemptKey,
-						run: args.relationPublication,
-					});
-				}
-				await ctx.runMutation(internal.knowledgeGeneration.fail, {
-					attemptKey: args.attemptKey,
-					failureCode: "generationFailed",
-					productionEvidence: args.productionEvidence,
-					failureMessage:
-						"Knowledge generation failed. Please retry.",
-				});
-				return null;
-			}
-		};
-		try {
-			return inspection
-				? await inspection.promise(
-						"Publish generated Knowledge",
-						"app/tf-demo · orchestration.applyGeneratedKnowledgePlan",
-						args,
-						run,
-						true,
-					)
-				: await run();
-		} finally {
-			await inspection?.flush();
-		}
-	},
-});
 
 function pendingLocatorFromRecord(value: unknown): {
 	sourceReadingKey: string;
@@ -1250,7 +811,7 @@ export const followNounArticle = action({
 	handler: async (ctx, { lemmaId }): Promise<Id<"readings">> => {
 		const [{ selectNounHeadingArticle }, { readingIdentityKey }] =
 			await Promise.all([
-				import("dumgen"),
+				import("dumgen/authored"),
 				import("../server/linguisticIdentity"),
 			]);
 		const lemma = await ctx.runQuery(

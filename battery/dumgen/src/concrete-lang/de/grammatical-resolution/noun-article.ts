@@ -1,5 +1,5 @@
-import { germanArticleForm, parseUnit } from "dumling";
-import type * as Dumling from "dumling/types";
+import { germanArticleForm } from "dumling";
+import type { Questions } from "promptsmith/typesafe";
 import type { DumgenOptions, Encounter } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
@@ -9,117 +9,11 @@ import {
 	indexedContext,
 	markedContext,
 } from "../../../universal/validation.js";
-import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { germanFusion } from "../fusions.js";
 import { featureQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
+import { nounArticleReference } from "./noun-article-reference.js";
 import type { GrammarOutput } from "./project.js";
-
-/** Exact reviewed identity plus contextual morphology, without any occurrence or database identity. */
-export function nounArticleReference(input: {
-	article: string;
-	case: string;
-	number: string;
-	gender: string | null;
-	spelled?: string;
-}) {
-	const expected = germanArticleForm(input);
-	if (
-		!expected ||
-		(input.spelled !== undefined && input.spelled !== expected)
-	)
-		throw new DumgenFailure(
-			"Unresolved",
-			"resolveGrammar",
-			"Article form and noun agreement are incompatible",
-		);
-	const canonical =
-		input.article === "Indefinite"
-			? "ein"
-			: input.number === "Plur" || input.gender === "Fem"
-				? "die"
-				: input.gender === "Neut"
-					? "das"
-					: "der";
-	const member = authoredMembers.find(
-		({ lemma }) =>
-			lemma.kind === "DET" &&
-			lemma.canonicalForm === canonical &&
-			"pronType" in lemma.coreFeatures &&
-			lemma.coreFeatures.pronType === "Art",
-	);
-	if (!member || member.lemma.kind !== "DET")
-		throw new DumgenFailure(
-			"CatalogMiss",
-			"resolveGrammar",
-			`Missing reviewed article ${canonical}`,
-			"de/Lexeme/DET",
-		);
-	const surface = {
-		unitKind: "Surface",
-		language: "de",
-		lemma: member.lemma,
-		normalizedSurface: expected,
-		spelling: "Canonical",
-		surfaceFeatures: null,
-		inflectionalFeatures: {
-			case: input.case,
-			number: input.number,
-			gender: input.gender,
-			degree: null,
-			"gender[psor]": null,
-			"number[psor]": null,
-		},
-	};
-	const parsed = parseUnit(surface);
-	if (!parsed.success) throw parsed.error;
-	if (
-		parsed.chain.unitKind !== "Surface" ||
-		parsed.chain.language !== "de" ||
-		parsed.chain.family !== "Lexeme" ||
-		parsed.chain.kind !== "DET"
-	)
-		throw new Error("Expected an article Surface");
-	const reading: Dumling.Reading<"de", "Lexeme", "DET"> = {
-		...member.reading,
-		lemma: member.lemma,
-	};
-	return { surface: parsed.chain.value, reading };
-}
-
-/** The reviewed citation article for a German noun heading, independent of its encounters. */
-export function selectNounHeadingArticle(lemma: {
-	language: string;
-	family: string;
-	kind: string;
-	coreFeatures: Readonly<Record<string, unknown>>;
-}) {
-	if (
-		lemma.language !== "de" ||
-		lemma.family !== "Lexeme" ||
-		lemma.kind !== "NOUN"
-	)
-		return null;
-	const gender = lemma.coreFeatures.gender;
-	const canonical =
-		gender === "Masc"
-			? "der"
-			: gender === "Fem"
-				? "die"
-				: gender === "Neut"
-					? "das"
-					: null;
-	if (!canonical) return null;
-	return (
-		authoredMembers.find(
-			({ lemma: candidate }) =>
-				candidate.kind === "DET" &&
-				candidate.canonicalForm === canonical &&
-				"pronType" in candidate.coreFeatures &&
-				candidate.coreFeatures.pronType === "Art",
-		) ?? null
-	);
-}
 
 type ArticleCandidate = {
 	segmentIndex: number;
@@ -141,10 +35,19 @@ const indefiniteSpellings = new Set([
 	"eines",
 ]);
 
-/** Candidate spelling establishes possible analyses; the judgment still decides contextual attachment. */
-function articleCandidates(
+const casePath = "surface.inflectionalFeatures.case";
+
+export const nounArticlePolicy =
+	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means an overt true article in this noun's supplied members. Shared means a standalone article licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg. A Fusion candidate supplies its internal DET form to its nominal complement, including compatible coordinated complements: im Wald gives dem Wald, ins Haus gives das Haus, and im Wald und Feld permits dem Feld. The fused word stays a separate Construction/Fusion target and never becomes a noun member. Distinguish actual governing Fusions from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling or Fusion, choose Unresolved.";
+
+/**
+ * Candidate spelling establishes possible analyses from raw source text, so the
+ * attachment question can travel in the same round trip as the feature
+ * questions; the judgment still decides contextual attachment. Owned
+ * orthography is patched from the judged member orthography afterwards.
+ */
+export function nounArticleCandidates(
 	encounter: Encounter,
-	output: Pick<GrammarOutput, "normalizedMembers" | "memberOrthographies">,
 ): Map<string, ArticleCandidate> {
 	const candidates = new Map<string, ArticleCandidate>();
 	const members = encounter.target.memberSegmentIndices;
@@ -156,19 +59,7 @@ function articleCandidates(
 		const owned = position !== -1;
 		if (owned ? position !== 0 || members.length < 2 : index >= firstMember)
 			continue;
-		const normalized = owned
-			? output.normalizedMembers[position]
-			: segment.text;
-		const orthography = owned
-			? output.memberOrthographies[position]
-			: "Standard";
-		if (normalized === undefined || orthography === undefined)
-			throw new DumgenFailure(
-				"Unresolved",
-				"resolveGrammar",
-				"Article member evidence is not aligned",
-			);
-		const form = normalized.normalize("NFC").toLocaleLowerCase("de");
+		const form = segment.text.normalize("NFC").toLocaleLowerCase("de");
 		const fusion = germanFusion(form);
 		// A Fusion's source Segment always remains outside the noun target.
 		if (fusion && owned) continue;
@@ -183,7 +74,7 @@ function articleCandidates(
 		candidates.set(`${realization}_s${index}`, {
 			segmentIndex: index,
 			attested: segment.text,
-			orthography,
+			orthography: "Standard",
 			realization,
 			article,
 			form: fusion?.articleForm ?? form,
@@ -193,6 +84,50 @@ function articleCandidates(
 	return candidates;
 }
 
+/** Speculative article questions asked together with the noun feature questions. */
+export function nounArticleQuestions(
+	encounter: Encounter,
+	candidates: Map<string, ArticleCandidate>,
+): Questions {
+	const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
+	if (!field) throw Error("Missing noun Case schema");
+	const questions: Questions = {};
+	if (
+		encounter.sentence.segments.filter(
+			(segment) => segment.kind === "ResolvableText",
+		).length > 1
+	)
+		questions.attachment = choice(
+			"Under `articlePolicy`, which complete article attachment in `sentence` is licensed for the noun target marked in `markedContext` (its occurrences are `target.memberSegmentIndices`)? Judge agreement from the sentence itself.",
+			{
+				...Object.fromEntries(
+					[...candidates].map(([key, candidate]) => [
+						key,
+						`${candidate.realization}: source <s${candidate.segmentIndex}> ${candidate.attested} supplies ${candidate.article} DET form ${candidate.form}. Select only if this source grammatically supplies this noun's article.`,
+					]),
+				),
+				None: "No owned, shared, or Fusion-supplied article belongs to this noun",
+				Unresolved:
+					"Attachment is ambiguous, incompatible, or required evidence has no supported candidate",
+			},
+		);
+	// Case is asked speculatively; code prefers the deterministic derivation
+	// from the attached article and consumes this answer only when needed.
+	questions[casePath] = featureQuestion("NOUN", casePath, field);
+	return questions;
+}
+
+export function nounArticleState(encounter: Encounter) {
+	return {
+		sentence: indexedContext(encounter.sentence),
+		target: {
+			...encounter.target,
+			memberSegmentIndices: [...encounter.target.memberSegmentIndices],
+		},
+		articlePolicy: nounArticlePolicy,
+	};
+}
+
 export async function resolveNounArticle(
 	options: DumgenOptions,
 	encounter: Encounter,
@@ -200,6 +135,13 @@ export async function resolveNounArticle(
 		GrammarOutput,
 		"lemma" | "surface" | "normalizedMembers" | "memberOrthographies"
 	>,
+	judged: {
+		candidates: Map<string, ArticleCandidate>;
+		/** Undefined when the attachment question was not applicable. */
+		attachment: string | undefined;
+		/** The speculative Case answer, if any. */
+		case: string | undefined;
+	},
 	signal: AbortSignal,
 ) {
 	const bag = output.surface.inflectionalFeatures as Record<
@@ -217,63 +159,23 @@ export async function resolveNounArticle(
 		);
 	};
 	let candidate: ArticleCandidate | undefined;
-	if (
-		encounter.sentence.segments.filter(
-			(segment) => segment.kind === "ResolvableText",
-		).length > 1
-	) {
-		const candidates = articleCandidates(encounter, output);
-		const result = await judgmentCaller(options)(
-			"resolveGrammar",
-			"de/Lexeme/NOUN/article",
-			{
-				sentence: indexedContext(encounter.sentence),
-				target: {
-					...encounter.target,
-					memberSegmentIndices: [
-						...encounter.target.memberSegmentIndices,
-					],
-				},
-				noun: {
-					canonicalForm: String(output.lemma.canonicalForm),
-					coreFeatures: core,
-				},
-				features: {
-					number: bag.number ?? null,
-					gender: core.gender ?? null,
-				},
-				policy: "Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means an overt true article in this noun's supplied members. Shared means a standalone article licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg. A Fusion candidate supplies its internal DET form to its nominal complement, including compatible coordinated complements: im Wald gives dem Wald, ins Haus gives das Haus, and im Wald und Feld permits dem Feld. The fused word stays a separate Construction/Fusion target and never becomes a noun member. Distinguish actual governing Fusions from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling or Fusion, choose Unresolved.",
-			},
-			{
-				attachment: choice(
-					"Under `policy`, which complete article attachment in `sentence` is licensed for `target`, given `noun` and `features`?",
-					{
-						...Object.fromEntries(
-							[...candidates].map(([key, candidate]) => [
-								key,
-								`${candidate.realization}: source <s${candidate.segmentIndex}> ${candidate.attested} supplies ${candidate.article} DET form ${candidate.form}. Select only if this source grammatically supplies this noun's article.`,
-							]),
-						),
-						None: "No owned, shared, or Fusion-supplied article belongs to this noun",
-						Unresolved:
-							"Attachment is ambiguous, incompatible, or required evidence has no supported candidate",
-					},
-				),
-			},
-			signal,
-		);
-		const attachment = result.answers.attachment.choice;
-		if (attachment === "Unresolved")
+	if (judged.attachment !== undefined) {
+		if (judged.attachment === "Unresolved")
 			return fail("Unresolved noun article attachment");
-		if (attachment !== "None") {
-			candidate = candidates.get(attachment);
+		if (judged.attachment !== "None") {
+			candidate = judged.candidates.get(judged.attachment);
 			if (!candidate)
 				return fail("Article attachment is not an eligible candidate");
+			if (candidate.realization === "Owned") {
+				const orthography = output.memberOrthographies[0];
+				if (orthography === undefined)
+					return fail("Article member evidence is not aligned");
+				candidate = { ...candidate, orthography };
+			}
 		}
 	}
 	// Attachment precedes Case. A selected article constrains its possible analyses;
 	// a unique Case is determined by the morphology, not a separate model guess.
-	const casePath = "surface.inflectionalFeatures.case";
 	const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
 	if (!field) throw Error("Missing noun Case schema");
 	let cases = field.values;
@@ -289,13 +191,24 @@ export async function resolveNounArticle(
 					number: bag.number ?? null,
 					gender: core.gender ?? null,
 				}) === selectedArticle.form &&
-				(selectedArticle.case === null || caseValue === selectedArticle.case),
+				(selectedArticle.case === null ||
+					caseValue === selectedArticle.case),
 		);
 		if (!cases.length)
 			return fail("Article form and noun agreement are incompatible");
 	}
+	const speculative =
+		judged.case === undefined || judged.case === "Unresolved"
+			? undefined
+			: judged.case === "Unmarked"
+				? null
+				: judged.case;
 	if (cases.length === 1) bag.case = String(cases[0]);
+	else if (speculative !== undefined && cases.includes(speculative))
+		bag.case = speculative;
 	else {
+		// The speculative answer is incompatible with the attached article:
+		// ask again over the compatible values only.
 		const result = await judgmentCaller(options)(
 			"resolveGrammar",
 			"de/Lexeme/NOUN/case",
@@ -350,29 +263,4 @@ export async function resolveNounArticle(
 				? ("Full" as const)
 				: ("Partial" as const),
 	};
-}
-
-/** Derives a contextual article from resolved noun grammar without model execution. */
-export function deriveNounArticle(surface: Dumling.Surface) {
-	if (
-		surface.language !== "de" ||
-		surface.lemma.family !== "Lexeme" ||
-		surface.lemma.kind !== "NOUN"
-	)
-		return null;
-	const noun = surface as Dumling.Surface<"de", "Lexeme", "NOUN">;
-	const bag = noun.inflectionalFeatures;
-	if (!bag?.article) return null;
-	if (!bag.case || !bag.number)
-		throw new DumgenFailure(
-			"Unresolved",
-			"resolveGrammar",
-			"Article requires known noun agreement",
-		);
-	return nounArticleReference({
-		article: bag.article,
-		case: bag.case,
-		number: bag.number,
-		gender: noun.lemma.coreFeatures.gender,
-	});
 }

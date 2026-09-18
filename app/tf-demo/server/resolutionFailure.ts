@@ -1,5 +1,5 @@
 import type { Infer } from "convex/values";
-import { DumgenFailure } from "dumgen";
+import { DumgenFailure } from "dumgen/validation";
 import type {
 	resolutionGenerationEventValidator,
 	safeGenerationFailureValidator,

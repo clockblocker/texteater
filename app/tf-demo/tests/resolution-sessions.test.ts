@@ -23,7 +23,7 @@ import {
 	detail,
 	finishAnalysis,
 	recordSelectionTiming,
-	recordStep,
+	recordSteps,
 } from "../convex/resolutionInspection";
 import {
 	advance,
@@ -372,21 +372,22 @@ describe("Resolution Session", () => {
 				},
 			],
 		});
+		const step = {
+			id: "knowledge-run",
+			name: "Knowledge",
+			kind: "Code",
+			owner: "app/tf-demo",
+			startedAt: 10,
+			durationMs: 40,
+			status: "Success",
+			payloadJson: JSON.stringify({ error: "Invalid plan" }),
+		};
 		const args = {
 			requestId: "request-1",
 			scope: "Knowledge",
-			step: {
-				id: "knowledge-run",
-				name: "Knowledge",
-				kind: "Code",
-				owner: "app/tf-demo",
-				startedAt: 10,
-				durationMs: 40,
-				status: "Success",
-				payloadJson: JSON.stringify({ error: "Invalid plan" }),
-			},
+			steps: [step],
 		};
-		await handler<typeof args, unknown>(recordStep)({ db }, args);
+		await handler<typeof args, unknown>(recordSteps)({ db }, args);
 		expect(db.rows("inspectionSteps")[0]).toMatchObject({
 			status: "Failure",
 		});
@@ -395,9 +396,7 @@ describe("Resolution Session", () => {
 			finishedAt: 50,
 			knowledgeState: "Failed",
 		});
-		expect(db.rows("inspectionPayloads")[0]?.text).toBe(
-			args.step.payloadJson,
-		);
+		expect(db.rows("inspectionPayloads")[0]?.text).toBe(step.payloadJson);
 	});
 
 	test("selection timing records the browser round trip once and rejects another visitor", async () => {

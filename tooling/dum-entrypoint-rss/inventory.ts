@@ -139,6 +139,16 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
+		specifier: "dumdict/planning",
+		classification: "operational",
+		rationale:
+			"Transaction-side planning runtime; must exclude Effect and schema authoring.",
+		operation: {
+			id: "dumdict.plan-reading-entry",
+			description: "plan reading entry",
+		},
+	},
+	{
 		specifier: "dumdict/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",
@@ -167,6 +177,26 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		specifier: "dumgen/types",
 		classification: "type-only",
 		rationale: "Structural declarations, with empty JavaScript.",
+	},
+	{
+		specifier: "dumgen/authored",
+		classification: "operational",
+		rationale:
+			"Model-free authored selection; must exclude Effect, promptsmith, and schema authoring.",
+		operation: {
+			id: "dumgen.select-authored",
+			description: "select authored article",
+		},
+	},
+	{
+		specifier: "dumgen/validation",
+		classification: "operational",
+		rationale:
+			"Encounter validation; must exclude Effect, promptsmith, and schema authoring.",
+		operation: {
+			id: "dumgen.validate-encounter",
+			description: "validate encounter",
+		},
 	},
 	{
 		specifier: "dumgen/schemas",

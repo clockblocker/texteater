@@ -15,7 +15,12 @@ import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
-import { resolveNounArticle } from "./noun-article.js";
+import {
+	nounArticleCandidates,
+	nounArticleQuestions,
+	nounArticleState,
+	resolveNounArticle,
+} from "./noun-article.js";
 import type { GrammarOutput } from "./project.js";
 import { routeGuidance } from "./route-guidance.js";
 import { verbalCompositionGuidance } from "./verbal-guidance.js";
@@ -37,6 +42,58 @@ function transformed(text: string, mode: string): string {
 	if (mode === "UpperInitial")
 		return text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1);
 	return text;
+}
+
+const lexicalStringLimit = 254;
+/**
+ * Candidate strings for open lexical features (separable prefix, governed
+ * preposition) derived from raw members only, so they can be asked in the same
+ * round trip as the feature questions. Casing follows ordinary normalization;
+ * the judged canonical form may still add candidates in the follow-up.
+ */
+function speculativeLexicalStringCandidates(
+	catalog: ReturnType<typeof grammarFeatureFields>,
+	members: readonly string[],
+): Record<string, string[]> {
+	const candidates: Record<string, string[]> = {};
+	const words = [
+		...new Set(
+			members.flatMap((text) => [
+				text,
+				text.slice(0, 1).toLocaleLowerCase("de") + text.slice(1),
+			]),
+		),
+	];
+	for (const [path, field] of catalog) {
+		if (!field.open || !path.startsWith("lemma.coreFeatures.")) continue;
+		const key = path.slice("lemma.coreFeatures.".length);
+		const values = [
+			...new Set(
+				key === "hasSepPrefix"
+					? words.flatMap((word) =>
+							Array.from({ length: word.length }, (_, index) =>
+								word.slice(0, index + 1),
+							),
+						)
+					: words,
+			),
+		];
+		if (values.length && values.length <= lexicalStringLimit)
+			candidates[key] = values;
+	}
+	return candidates;
+}
+function lexicalStringQuestion(key: string, candidates: readonly string[]) {
+	return choice(
+		`If the lexical feature judgment establishes ${key} as Present, which exact text in \`lexicalStringCandidates.${key}\` is it? Prefixes are separable prefixes; governed prepositions must be lexically selected and cannot be a detached prefix or adjunct.`,
+		{
+			...Object.fromEntries(
+				candidates.map((text, index) => [`text_${index}`, text]),
+			),
+			Unresolved:
+				"None is defensible, or the feature is Absent; do not revise the feature judgment",
+		},
+	);
 }
 
 const sharedPolicy = {
@@ -221,6 +278,22 @@ export async function resolveGrammarJudgments(
 					"Cannot defensibly establish whether the concrete candidate is the dictionary headword",
 			},
 		);
+	// Speculative questions whose candidates come from raw source text ride in
+	// the same round trip; code consumes them only when they apply.
+	const articleCandidates =
+		encounter.target.kind === "NOUN"
+			? nounArticleCandidates(encounter)
+			: null;
+	if (articleCandidates)
+		Object.assign(
+			questions,
+			nounArticleQuestions(encounter, articleCandidates),
+		);
+	const lexicalStringCandidates = auxiliary
+		? {}
+		: speculativeLexicalStringCandidates(catalog, input.members);
+	for (const [key, candidates] of Object.entries(lexicalStringCandidates))
+		questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
 	const judge = judgmentCaller(options);
 	const state = {
 		...input,
@@ -228,6 +301,10 @@ export async function resolveGrammarJudgments(
 		canonicalFormCandidate,
 		canonicalFormAlternatives,
 		storedLemmas,
+		...(articleCandidates ? nounArticleState(encounter) : {}),
+		...(Object.keys(lexicalStringCandidates).length
+			? { lexicalStringCandidates }
+			: {}),
 		policy: {
 			...sharedPolicy,
 			...(verbal
@@ -262,6 +339,13 @@ export async function resolveGrammarJudgments(
 		)
 			return fail(`Unresolved applicable question ${id}`);
 		return answer.choice;
+	}
+	/** A speculative answer: consumed when applicable, never a failure by itself. */
+	function speculative(id: string): string | undefined {
+		if (!(id in questions)) return undefined;
+		consumed.add(id);
+		const answer = result.answers[id];
+		return answer?.type === "choice" ? answer.choice : undefined;
 	}
 	try {
 		selected("support");
@@ -525,14 +609,27 @@ export async function resolveGrammarJudgments(
 					normalizedMembers[index] = generated[`member_${index}`]!;
 		}
 		if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
-		if (openFeatures.length) {
+		// Speculative lexical strings answered in the first round trip settle
+		// the open feature; only unresolved ones need the follow-up.
+		const pendingFeatures = openFeatures.filter((key) => {
+			const answer = speculative(`text.${key}`);
+			const text =
+				answer?.startsWith("text_") &&
+				lexicalStringCandidates[key]?.[
+					Number(answer.slice("text_".length))
+				];
+			if (!text) return true;
+			core[key] = text;
+			return false;
+		});
+		if (pendingFeatures.length) {
 			const words = [
 				...normalizedMembers,
 				...String(lemma.canonicalForm).split(/\s+|\.\.\./u),
 			].filter(Boolean);
 			const followup: Questions = {};
 			const candidates: Record<string, string[]> = {};
-			for (const key of openFeatures) {
+			for (const key of pendingFeatures) {
 				candidates[key] = [
 					...new Set(
 						key === "hasSepPrefix"
@@ -573,7 +670,7 @@ export async function resolveGrammarJudgments(
 				followup,
 				signal,
 			);
-			for (const key of openFeatures) {
+			for (const key of pendingFeatures) {
 				const answer = resolved.answers[key];
 				if (
 					!answer ||
@@ -587,20 +684,24 @@ export async function resolveGrammarJudgments(
 					];
 			}
 		}
-		const article =
-			encounter.target.kind === "NOUN"
-				? await resolveNounArticle(
-						options,
-						encounter,
-						{
-							lemma,
-							surface,
-							normalizedMembers,
-							memberOrthographies,
-						},
-						signal,
-					)
-				: null;
+		const article = articleCandidates
+			? await resolveNounArticle(
+					options,
+					encounter,
+					{
+						lemma,
+						surface,
+						normalizedMembers,
+						memberOrthographies,
+					},
+					{
+						candidates: articleCandidates,
+						attachment: speculative("attachment"),
+						case: speculative("surface.inflectionalFeatures.case"),
+					},
+					signal,
+				)
+			: null;
 		if (article) {
 			coverage = article.coverage;
 		}

@@ -1,10 +1,11 @@
 import { v } from "convex/values";
 
-import { internalQuery, type QueryCtx } from "../_generated/server";
+import { internalQuery } from "../_generated/server";
 import { lemmaValue } from "../model/occurrenceAttestations";
 import { requireRecord } from "../model/readingKnowledge";
 import { pendingShadowDescriptor } from "../model/shadows";
 import { lemmaValueValidator } from "../model/validators";
+import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
 	currentRevision,
@@ -17,6 +18,7 @@ import {
 	MAX_PENDING_RELATIONS_PER_SLICE,
 	MAX_READING_CANDIDATES,
 	pendingLocatorKey,
+	type ServerCtx,
 	uniqueBoundedKeys,
 } from "./storage";
 
@@ -103,7 +105,7 @@ const readingEntryContextArgsValidator = v.union(
 );
 
 async function loadExactPendingRecords(
-	ctx: QueryCtx,
+	ctx: ServerCtx,
 	rawLocatorKeys: readonly string[],
 ) {
 	const locatorKeys = uniqueBoundedKeys(
@@ -137,176 +139,183 @@ async function loadExactPendingRecords(
 	});
 }
 
+/**
+ * Loads the operation-shaped Reading Entry context for one dictionary intent.
+ *
+ * The internal query below hands this slice to the action-side adapter; the
+ * mutation-side adapter reads it directly inside its own transaction.
+ */
+export async function loadReadingEntryContextSlice(
+	ctx: ServerCtx,
+	args: ReadingEntryContextArgs,
+) {
+	switch (args.intent) {
+		case "ensureReadingEntry": {
+			const [revision, lemma, reading] = await Promise.all([
+				currentRevision(ctx),
+				findLemmaByKey(ctx, args.lemmaKey),
+				findReadingByKey(ctx, args.readingKey),
+			]);
+			return {
+				intent: args.intent,
+				revision,
+				...(lemma
+					? {
+							existingLemma: {
+								lemma: lemmaValue(lemma.canonical),
+							},
+						}
+					: {}),
+				...(reading ? { existingReading: reading.entry } : {}),
+			};
+		}
+		case "ensureOwnedSurface": {
+			const [revision, lemma, reading, surface] = await Promise.all([
+				currentRevision(ctx),
+				findLemmaByKey(ctx, args.lemmaKey),
+				findReadingByKey(ctx, args.readingKey),
+				findSurface(ctx, args.surfaceKey),
+			]);
+			return {
+				intent: args.intent,
+				revision,
+				...(lemma
+					? {
+							existingLemma: {
+								lemma: lemmaValue(lemma.canonical),
+							},
+						}
+					: {}),
+				...(reading ? { existingReading: reading.entry } : {}),
+				existingOwnedSurfaces: surface ? [surface.entry] : [],
+			};
+		}
+		case "applyGeneratedKnowledge": {
+			assertPlanBudget(
+				1 + args.pendingLocatorKeys.length,
+				"Generated-Knowledge context",
+			);
+			const [revision, reading, pending, inventory] = await Promise.all([
+				currentRevision(ctx),
+				findReadingByKey(ctx, args.readingKey),
+				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
+				loadRelationInventory(ctx),
+			]);
+			return {
+				intent: args.intent,
+				revision,
+				...(reading ? { existingReading: reading.entry } : {}),
+				exactPendingRelations: pending,
+				relationLemmas: inventory.lemmas,
+				relationReadings: inventory.readings,
+			};
+		}
+		case "addNewNote": {
+			assertPlanBudget(
+				2 +
+					args.surfaceKeys.length +
+					args.explicitLemmaTargetKeys.length +
+					args.pendingLocatorKeys.length,
+				"New-note context",
+			);
+			const surfaceKeys = uniqueBoundedKeys(
+				args.surfaceKeys,
+				"New-note owned Surface loading",
+			);
+			const explicitLemmaTargetKeys = uniqueBoundedKeys(
+				args.explicitLemmaTargetKeys,
+				"New-note explicit Lemma target loading",
+			);
+			const [
+				revision,
+				lemma,
+				reading,
+				surfaces,
+				explicitTargets,
+				pending,
+				matchingPending,
+				inventory,
+			] = await Promise.all([
+				currentRevision(ctx),
+				findLemmaByKey(ctx, args.lemmaKey),
+				findReadingByKey(ctx, args.readingKey),
+				Promise.all(surfaceKeys.map((key) => findSurface(ctx, key))),
+				Promise.all(
+					explicitLemmaTargetKeys.map((key) =>
+						findLemmaByKey(ctx, key),
+					),
+				),
+				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
+				ctx.db
+					.query("pendingSemanticRelations")
+					.withIndex("by_target_canonical_form", (q) =>
+						q.eq(
+							"targetCanonicalForm",
+							args.proposedLemma.canonicalForm,
+						),
+					)
+					.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+				loadRelationInventory(ctx),
+			]);
+			if (matchingPending.length > MAX_PENDING_RELATIONS_PER_SLICE)
+				throw new Error(
+					`A pending-relation slice supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} matching records.`,
+				);
+			return {
+				intent: args.intent,
+				revision,
+				...(lemma
+					? {
+							existingLemma: {
+								lemma: lemmaValue(lemma.canonical),
+							},
+						}
+					: {}),
+				...(reading ? { existingReading: reading.entry } : {}),
+				existingOwnedSurfaces: surfaces.flatMap((surface) =>
+					surface ? [surface.entry] : [],
+				),
+				explicitExistingLemmaTargets: explicitTargets.flatMap(
+					(target) =>
+						target ? [{ lemma: lemmaValue(target.canonical) }] : [],
+				),
+				exactPendingRelations: pending,
+				pendingRelationsMatchingProposedLemma: matchingPending.flatMap(
+					(record) => {
+						try {
+							const descriptor = pendingShadowDescriptor(
+								record.record,
+							);
+							return descriptor.language ===
+								args.proposedLemma.language &&
+								descriptor.canonicalForm ===
+									args.proposedLemma.canonicalForm &&
+								descriptor.family ===
+									args.proposedLemma.family &&
+								descriptor.kind === args.proposedLemma.kind
+								? [
+										requireRecord(
+											record.record,
+											"Pending Semantic Relation record",
+										),
+									]
+								: [];
+						} catch {
+							return [];
+						}
+					},
+				),
+				relationLemmas: inventory.lemmas,
+				relationReadings: inventory.readings,
+			};
+		}
+	}
+}
+
 export const loadDumdictReadingEntryContext = internalQuery({
 	args: { request: readingEntryContextArgsValidator },
 	returns: v.any(),
-	handler: async (ctx, { request: args }) => {
-		switch (args.intent) {
-			case "ensureReadingEntry": {
-				const [revision, lemma, reading] = await Promise.all([
-					currentRevision(ctx),
-					findLemmaByKey(ctx, args.lemmaKey),
-					findReadingByKey(ctx, args.readingKey),
-				]);
-				return {
-					intent: args.intent,
-					revision,
-					...(lemma
-						? {
-								existingLemma: {
-									lemma: lemmaValue(lemma.canonical),
-								},
-							}
-						: {}),
-					...(reading ? { existingReading: reading.entry } : {}),
-				};
-			}
-			case "ensureOwnedSurface": {
-				const [revision, lemma, reading, surface] = await Promise.all([
-					currentRevision(ctx),
-					findLemmaByKey(ctx, args.lemmaKey),
-					findReadingByKey(ctx, args.readingKey),
-					findSurface(ctx, args.surfaceKey),
-				]);
-				return {
-					intent: args.intent,
-					revision,
-					...(lemma
-						? {
-								existingLemma: {
-									lemma: lemmaValue(lemma.canonical),
-								},
-							}
-						: {}),
-					...(reading ? { existingReading: reading.entry } : {}),
-					existingOwnedSurfaces: surface ? [surface.entry] : [],
-				};
-			}
-			case "applyGeneratedKnowledge": {
-				assertPlanBudget(
-					1 + args.pendingLocatorKeys.length,
-					"Generated-Knowledge context",
-				);
-				const [revision, reading, pending, inventory] =
-					await Promise.all([
-						currentRevision(ctx),
-						findReadingByKey(ctx, args.readingKey),
-						loadExactPendingRecords(ctx, args.pendingLocatorKeys),
-						loadRelationInventory(ctx),
-					]);
-				return {
-					intent: args.intent,
-					revision,
-					...(reading ? { existingReading: reading.entry } : {}),
-					exactPendingRelations: pending,
-					relationLemmas: inventory.lemmas,
-					relationReadings: inventory.readings,
-				};
-			}
-			case "addNewNote": {
-				assertPlanBudget(
-					2 +
-						args.surfaceKeys.length +
-						args.explicitLemmaTargetKeys.length +
-						args.pendingLocatorKeys.length,
-					"New-note context",
-				);
-				const surfaceKeys = uniqueBoundedKeys(
-					args.surfaceKeys,
-					"New-note owned Surface loading",
-				);
-				const explicitLemmaTargetKeys = uniqueBoundedKeys(
-					args.explicitLemmaTargetKeys,
-					"New-note explicit Lemma target loading",
-				);
-				const [
-					revision,
-					lemma,
-					reading,
-					surfaces,
-					explicitTargets,
-					pending,
-					matchingPending,
-					inventory,
-				] = await Promise.all([
-					currentRevision(ctx),
-					findLemmaByKey(ctx, args.lemmaKey),
-					findReadingByKey(ctx, args.readingKey),
-					Promise.all(
-						surfaceKeys.map((key) => findSurface(ctx, key)),
-					),
-					Promise.all(
-						explicitLemmaTargetKeys.map((key) =>
-							findLemmaByKey(ctx, key),
-						),
-					),
-					loadExactPendingRecords(ctx, args.pendingLocatorKeys),
-					ctx.db
-						.query("pendingSemanticRelations")
-						.withIndex("by_target_canonical_form", (q) =>
-							q.eq(
-								"targetCanonicalForm",
-								args.proposedLemma.canonicalForm,
-							),
-						)
-						.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
-					loadRelationInventory(ctx),
-				]);
-				if (matchingPending.length > MAX_PENDING_RELATIONS_PER_SLICE)
-					throw new Error(
-						`A pending-relation slice supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} matching records.`,
-					);
-				return {
-					intent: args.intent,
-					revision,
-					...(lemma
-						? {
-								existingLemma: {
-									lemma: lemmaValue(lemma.canonical),
-								},
-							}
-						: {}),
-					...(reading ? { existingReading: reading.entry } : {}),
-					existingOwnedSurfaces: surfaces.flatMap((surface) =>
-						surface ? [surface.entry] : [],
-					),
-					explicitExistingLemmaTargets: explicitTargets.flatMap(
-						(target) =>
-							target
-								? [{ lemma: lemmaValue(target.canonical) }]
-								: [],
-					),
-					exactPendingRelations: pending,
-					pendingRelationsMatchingProposedLemma:
-						matchingPending.flatMap((record) => {
-							try {
-								const descriptor = pendingShadowDescriptor(
-									record.record,
-								);
-								return descriptor.language ===
-									args.proposedLemma.language &&
-									descriptor.canonicalForm ===
-										args.proposedLemma.canonicalForm &&
-									descriptor.family ===
-										args.proposedLemma.family &&
-									descriptor.kind === args.proposedLemma.kind
-									? [
-											requireRecord(
-												record.record,
-												"Pending Semantic Relation record",
-											),
-										]
-									: [];
-							} catch {
-								return [];
-							}
-						}),
-					relationLemmas: inventory.lemmas,
-					relationReadings: inventory.readings,
-				};
-			}
-		}
-	},
+	handler: (ctx, { request }) => loadReadingEntryContextSlice(ctx, request),
 });
 
 export const getDumdictRelationsCleanupInfo = internalQuery({

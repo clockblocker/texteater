@@ -1,6 +1,10 @@
 import { v } from "convex/values";
-import { makeSurfaceId } from "dumdict/runtime";
-import { deriveGrammaticalComponent, selectAuthoredReading, selectAuthoredArticle } from "dumgen";
+import { makeSurfaceId } from "dumdict/planning";
+import {
+	deriveGrammaticalComponent,
+	selectAuthoredArticle,
+	selectAuthoredReading,
+} from "dumgen/authored";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
@@ -577,7 +581,8 @@ async function applyChange(
 					"Surface Entry key does not match its current value",
 				);
 			const reference = deriveGrammaticalComponent(parsed.chain.value);
-			if (reference) await materializeGrammaticalComponent(ctx, reference);
+			if (reference)
+				await materializeGrammaticalComponent(ctx, reference);
 			const language = requireString(
 				surface.language,
 				"Surface language",

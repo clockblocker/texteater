@@ -3,7 +3,7 @@ import { DumgenFailure } from "../../../universal/failure.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { member as subjectEs } from "../authored-closed-sets/members/lexeme/pronoun/personal/es-subject-expletive.js";
 import { sameValue } from "../authored-closed-sets/select.js";
-import { deriveNounArticle } from "./noun-article.js";
+import { deriveNounArticle } from "./noun-article-reference.js";
 
 /** Resolves reviewed composition without executing a model or adding content to its parent. */
 export function deriveGrammaticalComponent(surface: Dumling.Surface) {

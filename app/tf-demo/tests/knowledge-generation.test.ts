@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
 import { type FunctionReference, getFunctionName } from "convex/server";
 import {
-	commitGenerated,
+	begin,
 	fail,
-	loadInput,
+	publish,
 	retry,
 	scheduleKnowledgeGeneration,
 } from "../convex/knowledgeGeneration";
@@ -20,9 +20,12 @@ import {
 	RELATION_PUBLICATION_FINGERPRINTS,
 } from "../convex/model/generatedKnowledgeContainment";
 import { replaceAccumulatedKnowledge } from "../convex/model/shadows";
-import { applyGeneratedKnowledgePlan as applyGeneratedPlan } from "../convex/orchestration";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+} from "../server/linguisticIdentity";
 
 const PRODUCTION_EVIDENCE = {
 	request: { definition: null },
@@ -95,6 +98,12 @@ class GenerationDb {
 				predicates.every((predicate) => predicate(row)),
 			);
 		return {
+			async take(limit: number) {
+				return matches().slice(0, limit);
+			},
+			async collect() {
+				return matches();
+			},
 			withIndex(_name: string, build: (range: typeof range) => unknown) {
 				build(range);
 				const indexed = {
@@ -187,6 +196,79 @@ const EMPTY_RELATION_RUN = {
 	proposals: [],
 } as const;
 
+const BANK_LEMMA = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+	canonicalForm: "Bank",
+	coreFeatures: { gender: "Fem", hyph: null },
+} as const;
+const BANK_READING = {
+	unitKind: "Reading",
+	lemma: BANK_LEMMA,
+	emojiDescription: "🏦",
+} as const;
+const BANK_READING_KEY = readingIdentityKey(BANK_READING);
+
+/** Dictionary rows the mutation-side planner needs to find the Reading it patches. */
+function dictionaryRows(
+	record: Record<string, unknown> = {},
+): Record<string, readonly Row[]> {
+	return {
+		lemmas: [
+			{
+				_id: "lemma-1",
+				lemmaKey: lemmaIdentityKey(BANK_LEMMA),
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Bank",
+				coreFeatures: { gender: "Fem", hyph: null },
+			},
+		],
+		dictionaryLemmas: [{ _id: "dictionary-lemma-1", lemmaId: "lemma-1" }],
+		readings: [
+			{
+				_id: "reading-1",
+				readingKey: BANK_READING_KEY,
+				lemmaId: "lemma-1",
+				emojiDescription: "🏦",
+			},
+		],
+		readingEntries: [
+			{
+				_id: "entry-1",
+				readingId: "reading-1",
+				record: {
+					attestedTranslations: [],
+					attestations: [],
+					notes: "",
+					...record,
+				},
+			},
+		],
+	};
+}
+
+function dictionaryAttempt(id: string, attemptKey: string): Row {
+	return { ...attempt(id, attemptKey), ownerReadingKey: BANK_READING_KEY };
+}
+
+function publishArgs(
+	overrides: Record<string, unknown> & { attemptKey: string },
+) {
+	return {
+		final: true,
+		reading: BANK_READING,
+		changes: [],
+		pendingRelations: [],
+		relationPublication: EMPTY_RELATION_RUN,
+		productionEvidence: PRODUCTION_EVIDENCE,
+		...overrides,
+	};
+}
+
 function occurrenceRows(): Record<string, readonly Row[]> {
 	return {
 		lemmas: [
@@ -263,67 +345,29 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 
 test("existing requested content completes an empty generated batch and the first complete writer wins", async () => {
 	const db = new GenerationDb({
-		readings: [
-			{
-				_id: "reading-1",
-				readingKey: "reading-key",
-				lemmaId: "lemma-1",
-				emojiDescription: "🏦",
+		...dictionaryRows({
+			knowledge: {
+				definition: "canonical",
+				translations: { en: ["bank"] },
 			},
-		],
-		readingEntries: [
-			{
-				_id: "entry-1",
-				readingId: "reading-1",
-				record: {
-					knowledge: {
-						definition: "canonical",
-						translations: { en: ["bank"] },
-					},
-				},
-			},
-		],
+		}),
 		knowledgeGenerationAttempts: [
-			attempt("attempt-1", "attempt-1"),
-			attempt("attempt-2", "attempt-2"),
+			dictionaryAttempt("attempt-1", "attempt-1"),
+			dictionaryAttempt("attempt-2", "attempt-2"),
 		],
 	});
-	const run = handler<
-		{
-			attemptKey: string;
-			plan: unknown;
-			baseKnowledgePlan: unknown;
-			generatedChanges: unknown[];
-			relationPublication: typeof EMPTY_RELATION_RUN;
-			productionEvidence: typeof PRODUCTION_EVIDENCE;
-		},
-		{ status: string }
-	>(commitGenerated);
+	const run = handler<unknown, { status: string }>(publish);
 	const ctx = { db };
 
-	expect(
-		await run(ctx, {
-			attemptKey: "attempt-1",
-			plan: { baseRevision: "convex-0", changes: [] },
-			baseKnowledgePlan: { baseRevision: "convex-0", changes: [] },
-			generatedChanges: [],
-			relationPublication: EMPTY_RELATION_RUN,
-			productionEvidence: PRODUCTION_EVIDENCE,
-		}),
-	).toEqual({ status: "Committed" });
-	expect(
-		await run(ctx, {
-			attemptKey: "attempt-2",
-			plan: { baseRevision: "convex-0", changes: [] },
-			baseKnowledgePlan: { baseRevision: "convex-0", changes: [] },
-			generatedChanges: [],
-			relationPublication: EMPTY_RELATION_RUN,
-			productionEvidence: PRODUCTION_EVIDENCE,
-		}),
-	).toEqual({ status: "AlreadyFull" });
+	expect(await run(ctx, publishArgs({ attemptKey: "attempt-1" }))).toEqual({
+		status: "Committed",
+	});
+	expect(await run(ctx, publishArgs({ attemptKey: "attempt-2" }))).toEqual({
+		status: "AlreadyFull",
+	});
 	expect(db.rows("accumulatedKnowledge")).toEqual([
 		expect.objectContaining({
-			ownerReadingKey: "reading-key",
+			ownerReadingKey: BANK_READING_KEY,
 			knowledge: {
 				definition: "canonical",
 				translations: { en: ["bank"] },
@@ -342,22 +386,10 @@ test("existing requested content completes an empty generated batch and the firs
 
 test("commit-time relation blocking keeps base evidence and records publication failure", async () => {
 	const db = new GenerationDb({
-		readings: [
-			{
-				_id: "reading-1",
-				readingKey: "reading-key",
-				lemmaId: "lemma-1",
-				emojiDescription: "🏦",
-			},
+		...dictionaryRows(),
+		knowledgeGenerationAttempts: [
+			dictionaryAttempt("attempt-1", "attempt-1"),
 		],
-		readingEntries: [
-			{
-				_id: "entry-1",
-				readingId: "reading-1",
-				record: { knowledge: { definition: "Ein Geldinstitut." } },
-			},
-		],
-		knowledgeGenerationAttempts: [attempt("attempt-1", "attempt-1")],
 	});
 	const relationPublication = {
 		runNumber: 1,
@@ -376,24 +408,11 @@ test("commit-time relation blocking keeps base evidence and records publication 
 			},
 		],
 	};
-	const result = await handler<
-		{
-			attemptKey: string;
-			plan: unknown;
-			baseKnowledgePlan: unknown;
-			generatedChanges: unknown[];
-			relationPublication: typeof relationPublication;
-			productionEvidence: typeof PRODUCTION_EVIDENCE;
-		},
-		{ status: string }
-	>(commitGenerated)(
+	const result = await handler<unknown, { status: string }>(publish)(
 		{ db },
-		{
+		publishArgs({
 			attemptKey: "attempt-1",
-			// This relation-bearing plan must never be inspected when blocked.
-			plan: { baseRevision: "convex-0", changes: [{ type: "invalid" }] },
-			baseKnowledgePlan: { baseRevision: "convex-0", changes: [] },
-			generatedChanges: [
+			changes: [
 				{
 					kind: "Contribute",
 					aspect: "definition",
@@ -406,16 +425,31 @@ test("commit-time relation blocking keeps base evidence and records publication 
 					value: [],
 				},
 			],
+			pendingRelations: [
+				{
+					relation: "synonym",
+					target: {
+						language: "de",
+						family: "Lexeme",
+						kind: "NOUN",
+						canonicalForm: "Geldinstitut",
+					},
+				},
+			],
 			relationPublication,
-			productionEvidence: PRODUCTION_EVIDENCE,
-		},
+		}),
 	);
 	expect(result).toEqual({ status: "Committed" });
+	// The blocked relation never reaches the dictionary: no pending Shadow, no edge.
+	expect(db.rows("pendingSemanticRelations")).toEqual([]);
 	expect(db.rows("knowledgeChanges")).toEqual([
 		expect.objectContaining({
 			change: expect.objectContaining({ aspect: "definition" }),
 		}),
 	]);
+	expect(db.rows("readingEntries")[0]?.record).toMatchObject({
+		knowledge: { definition: "Ein Geldinstitut." },
+	});
 	expect(db.rows("generatedRelationRuns")).toEqual([
 		expect.objectContaining({
 			relation: "synonym",
@@ -468,24 +502,21 @@ test("manual writes never downgrade Full and failures persist only a safe catego
 });
 
 test("Full is a zero-call cache hit and generation keeps the complete German base mask", async () => {
-	let actionCalls = 0;
+	const mutations: string[] = [];
 	const result = await handler<{ attemptKey: string }, null>(runGeneration)(
 		{
-			async runMutation() {
-				return null;
-			},
-			async runQuery() {
+			async runMutation(reference: FunctionReference<"mutation">) {
+				mutations.push(getFunctionName(reference));
 				return { kind: "Full" };
 			},
-			async runAction() {
-				actionCalls += 1;
-				return null;
+			async runQuery() {
+				throw new Error("Full attempts need no query hop.");
 			},
 		},
 		{ attemptKey: "already-full" },
 	);
 	expect(result).toBeNull();
-	expect(actionCalls).toBe(0);
+	expect(mutations).toEqual(["knowledgeGeneration:begin"]);
 
 	const request = generationRequestFor(
 		{
@@ -597,77 +628,16 @@ test("production publication remains empty without a reviewed verdict", () => {
 });
 
 test("the production application path keeps generated relations outside Dumdict", async () => {
-	const reading = {
-		unitKind: "Reading",
-		lemma: {
-			unitKind: "Lemma",
-			language: "de",
-			family: "Lexeme",
-			kind: "NOUN",
-			canonicalForm: "Bank",
-			coreFeatures: { gender: "Fem", hyph: null },
-		},
-		emojiDescription: "🏦",
-	};
-	const queryInputs: unknown[] = [];
-	const mutationInputs: unknown[] = [];
-	const inspectionInputs: { step: { name: string; payloadJson: string } }[] =
-		[];
-
-	const result = await handler<
-		{
-			attemptKey: string;
-			reading: unknown;
-			changes: unknown[];
-			pendingRelations: unknown[];
-			relationPublication: typeof EMPTY_RELATION_RUN;
-			productionEvidence: typeof PRODUCTION_EVIDENCE;
-		},
-		null
-	>(applyGeneratedPlan)(
-		{
-			async runQuery(_reference: unknown, input: unknown) {
-				if (
-					getFunctionName(
-						_reference as FunctionReference<"query">,
-					) === "resolutionInspection:enabled"
-				)
-					return true;
-				queryInputs.push(input);
-				return {
-					intent: "applyGeneratedKnowledge",
-					revision: "convex-0",
-					existingReading: {
-						reading,
-						attestedTranslations: [],
-						attestations: [],
-						notes: "",
-					},
-					exactPendingRelations: [],
-					relationLemmas: [],
-					relationReadings: [],
-				};
-			},
-			async runMutation(_reference: unknown, input: unknown) {
-				if (
-					getFunctionName(
-						_reference as FunctionReference<"mutation">,
-					) === "resolutionInspection:recordStep"
-				) {
-					inspectionInputs.push(
-						input as {
-							step: { name: string; payloadJson: string };
-						},
-					);
-					return null;
-				}
-				mutationInputs.push(input);
-				return { status: "Committed" };
-			},
-		},
-		{
+	const db = new GenerationDb({
+		...dictionaryRows(),
+		knowledgeGenerationAttempts: [
+			dictionaryAttempt("attempt-1", "attempt-1"),
+		],
+	});
+	const result = await handler<unknown, { status: string }>(publish)(
+		{ db },
+		publishArgs({
 			attemptKey: "attempt-1",
-			reading,
 			changes: [
 				{
 					kind: "Contribute",
@@ -692,40 +662,26 @@ test("the production application path keeps generated relations outside Dumdict"
 					},
 				},
 			],
-			relationPublication: EMPTY_RELATION_RUN,
-			productionEvidence: PRODUCTION_EVIDENCE,
-		},
+		}),
 	);
 
-	expect(result).toBeNull();
-	expect(inspectionInputs.map((input) => input.step.name)).toEqual([
-		"Prepare generated Knowledge",
-		"Commit generated Knowledge",
-		"Publish generated Knowledge",
-	]);
-	expect(
-		JSON.parse(inspectionInputs[1]?.step.payloadJson ?? "null").output,
-	).toEqual({ status: "Committed" });
-	expect(queryInputs).toEqual([
+	expect(result).toEqual({ status: "Committed" });
+	expect(db.rows("knowledgeChanges")).toEqual([
 		expect.objectContaining({
-			request: expect.objectContaining({
-				intent: "applyGeneratedKnowledge",
-				pendingLocatorKeys: [],
-			}),
+			knowledgeChangeKey: "attempt-1:1:1:0",
+			change: {
+				kind: "Contribute",
+				aspect: "definition",
+				value: "Ein Geldinstitut.",
+			},
 		}),
 	]);
-	expect(mutationInputs).toEqual([
-		expect.objectContaining({
-			attemptKey: "attempt-1",
-			generatedChanges: [
-				{
-					kind: "Contribute",
-					aspect: "definition",
-					value: "Ein Geldinstitut.",
-				},
-			],
-		}),
-	]);
+	expect(db.rows("pendingSemanticRelations")).toEqual([]);
+	expect(db.rows("semanticRelationEdges")).toEqual([]);
+	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+		state: "Committed",
+		publicationSequence: 1,
+	});
 });
 
 test("scheduling is exact, idempotent, skips Full, and retries Failed", async () => {
@@ -766,7 +722,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			knowledgeDraftJson,
 		}),
 	]);
-	const loaded = await handler<{ attemptKey: string }, unknown>(loadInput)(
+	const loaded = await handler<{ attemptKey: string }, unknown>(begin)(
 		{ db },
 		{ attemptKey: "request-1" },
 	);
@@ -844,7 +800,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		{ ...input, attemptKey: "russian-supplement" } as never,
 	);
 	expect(
-		await handler<{ attemptKey: string }, unknown>(loadInput)(
+		await handler<{ attemptKey: string }, unknown>(begin)(
 			{ db: supplementDb },
 			{ attemptKey: "russian-supplement" },
 		),
@@ -1016,7 +972,7 @@ test("settling an active Knowledge attempt schedules the next waiting demand", a
 	]);
 });
 
-test("dictionary conflict rolls back the generated commit", async () => {
+test("a rejected dictionary plan fails the final publication without recording changes", async () => {
 	const db = new GenerationDb({
 		...occurrenceRows(),
 		accumulatedKnowledge: [
@@ -1028,41 +984,38 @@ test("dictionary conflict rolls back the generated commit", async () => {
 				updatedAt: 1,
 			},
 		],
+		// The attempt's Reading is not in the dictionary, so planning is rejected.
 		knowledgeGenerationAttempts: [attempt("attempt-1", "attempt-1")],
-		dictionaryState: [
-			{ _id: "dictionary-state", key: "global", revision: 1 },
-		],
 	});
-	const result = await handler<
-		{
-			attemptKey: string;
-			plan: unknown;
-			baseKnowledgePlan: unknown;
-			generatedChanges: unknown[];
-			relationPublication: typeof EMPTY_RELATION_RUN;
-			productionEvidence: typeof PRODUCTION_EVIDENCE;
-		},
-		{ status: string }
-	>(commitGenerated)(
+	const result = await handler<unknown, { status: string }>(publish)(
 		{ db },
-		{
+		publishArgs({
 			attemptKey: "attempt-1",
-			plan: { baseRevision: "convex-0", changes: [{}] },
-			baseKnowledgePlan: { baseRevision: "convex-0", changes: [{}] },
-			generatedChanges: [{ kind: "SetDefinition" }],
-			relationPublication: EMPTY_RELATION_RUN,
-			productionEvidence: PRODUCTION_EVIDENCE,
-		},
+			changes: [
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: "Ein Geldinstitut.",
+				},
+			],
+		}),
 	);
-	expect(result).toEqual({ status: "DictionaryConflict" });
+	expect(result).toMatchObject({ status: "Rejected" });
 	expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
 		knowledge: { definition: "partial" },
 		status: "Partial",
 	});
 	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
-		state: "Running",
+		state: "Failed",
+		failureCode: "generationFailed",
 	});
 	expect(db.rows("knowledgeChanges")).toEqual([]);
+	expect(
+		await handler<unknown, { status: string }>(publish)(
+			{ db },
+			publishArgs({ attemptKey: "attempt-1" }),
+		),
+	).toEqual({ status: "Ignored" });
 });
 
 test("Knowledge settings default enabled and persist independently per visitor", async () => {
@@ -1124,14 +1077,10 @@ test.each([false, true])(
 			knowledgeGenerationAttempts: [attempt("progress", "progress")],
 		});
 		await db.patch("segment-2", { kind: "OpaqueText" });
-		const input = await handler<{ attemptKey: string }, unknown>(loadInput)(
-			{ db },
-			{ attemptKey: "progress" },
-		);
 		const slow = Promise.withResolvers<void>();
 		const published = Promise.withResolvers<void>();
 		const publications: Array<{
-			publication: { final: boolean };
+			final: boolean;
 			changes: unknown[];
 		}> = [];
 		const previousFetch = globalThis.fetch;
@@ -1171,32 +1120,26 @@ test.each([false, true])(
 			)(
 				{
 					async runQuery(reference: FunctionReference<"query">) {
-						const name = getFunctionName(reference);
-						if (name === "resolutionInspection:enabled")
-							return false;
-						if (name === "knowledgeGeneration:loadInput")
-							return input;
-						if (name === "relationPublication:getAuthorization")
-							return {
-								rollbackStopped: false,
-								qualifiedKinds: [],
-								artifactPath: null,
-								fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
-							};
-						throw Error(`Unexpected query ${name}`);
+						throw Error(
+							`Unexpected query ${getFunctionName(reference)}`,
+						);
 					},
-					async runMutation() {
-						return null;
-					},
-					async runAction(
-						_reference: unknown,
+					async runMutation(
+						reference: FunctionReference<"mutation">,
 						args: (typeof publications)[number],
 					) {
+						const name = getFunctionName(reference);
+						if (name === "knowledgeGeneration:begin")
+							return handler<{ attemptKey: string }, unknown>(
+								begin,
+							)({ db }, { attemptKey: "progress" });
+						if (name !== "knowledgeGeneration:publish")
+							throw Error(`Unexpected mutation ${name}`);
 						publications.push(args);
-						if (!args.publication.final) published.resolve();
+						if (!args.final) published.resolve();
 						if (failFirstPublication && publications.length === 1)
 							throw Error("Simulated transient commit failure");
-						return null;
+						return { status: "Committed" };
 					},
 				},
 				{ attemptKey: "progress" },
@@ -1205,20 +1148,15 @@ test.each([false, true])(
 			});
 			await published.promise;
 			expect(finished).toBe(false);
-			expect(publications[0]?.publication.final).toBe(false);
+			expect(publications[0]?.final).toBe(false);
+			expect(publications[0]?.changes.length).toBeLessThan(3);
 			slow.resolve();
 			await running;
-			expect(publications.at(-1)?.publication.final).toBe(true);
-			if (failFirstPublication)
-				expect(publications.at(-1)?.changes).toEqual(
-					publications[0]?.changes,
-				);
-			else expect(publications.at(-1)?.changes).toEqual([]);
-			expect(
-				publications
-					.slice(failFirstPublication ? 1 : 0)
-					.flatMap((item) => item.changes),
-			).toHaveLength(3);
+			// The final publication always carries every change; the mutation
+			// drops what this run already published.
+			expect(publications.at(-1)?.final).toBe(true);
+			expect(publications.at(-1)?.changes).toHaveLength(3);
+			expect(publications.length).toBeGreaterThan(1);
 		} finally {
 			slow.resolve();
 			globalThis.fetch = previousFetch;
@@ -1231,52 +1169,16 @@ test.each([false, true])(
 test.each([false, true])(
 	"partial generation commits valid changes and retains its final trace (incremental=%s)",
 	async (incremental) => {
-		const rows = occurrenceRows();
 		const db = new GenerationDb({
-			...rows,
-			knowledgeGenerationAttempts: [attempt("partial", "partial")],
+			...dictionaryRows(),
+			knowledgeGenerationAttempts: [
+				dictionaryAttempt("partial", "partial"),
+			],
 		});
-		const lemma = {
-			unitKind: "Lemma",
-			language: "de",
-			family: "Lexeme",
-			kind: "NOUN",
-			canonicalForm: "Bank",
-			coreFeatures: { gender: "Fem", hyph: null },
-		};
-		const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
-		const { lemmaIdentityKey, readingIdentityKey } = await import(
-			"../server/linguisticIdentity"
-		);
-		await db.patch("lemma-1", { lemmaKey: lemmaIdentityKey(lemma) });
-		const readingKey = readingIdentityKey(reading);
-		await db.patch("reading-1", { readingKey });
-		await db.patch("partial", { ownerReadingKey: readingKey });
-		await db.insert("readingEntries", {
-			readingId: "reading-1",
-			record: { attestedTranslations: [], attestations: [], notes: "" },
-		});
-
 		const change = {
 			kind: "Contribute",
 			aspect: "definition",
 			value: "Ein Geldinstitut.",
-		};
-		const plan = {
-			baseRevision: "convex-0",
-			changes: [
-				{
-					type: "patchReading",
-					reading,
-					ops: [
-						{
-							kind: "applyKnowledgeChange",
-							envelope: { reading, change },
-						},
-					],
-					preconditions: [],
-				},
-			],
 		};
 		const evidence = {
 			request: { definition: null, translations: { ru: null } },
@@ -1296,23 +1198,18 @@ test.each([false, true])(
 				}),
 			],
 		};
+		const commit = handler<unknown, { status: string }>(publish);
 		if (incremental) {
-			const commit = handler<unknown, { status: string }>(
-				commitGenerated,
-			);
-			const intermediate = {
+			const intermediate = publishArgs({
 				attemptKey: "partial",
-				publication: { sequence: 1, final: false },
-				plan,
-				baseKnowledgePlan: plan,
-				generatedChanges: [change],
-				relationPublication: EMPTY_RELATION_RUN,
+				final: false,
+				changes: [change],
 				productionEvidence: {
 					...evidence,
 					failures: [],
 					operationTraces: [],
 				},
-			};
+			});
 			expect(await commit({ db }, intermediate)).toEqual({
 				status: "Committed",
 			});
@@ -1325,15 +1222,16 @@ test.each([false, true])(
 				publicationSequence: 1,
 			});
 			expect(db.rows("knowledgeProductionRuns")).toEqual([]);
+			// A repeated contribution is deduplicated by content, not by sequence.
 			expect(await commit({ db }, intermediate)).toEqual({
-				status: "Ignored",
+				status: "Committed",
 			});
+			expect(db.rows("knowledgeChanges")).toHaveLength(1);
 			expect(
 				await commit(
 					{ db },
 					{
 						...intermediate,
-						publication: { sequence: 2, final: false },
 						relationPublication: {
 							...EMPTY_RELATION_RUN,
 							runNumber: 999,
@@ -1343,29 +1241,16 @@ test.each([false, true])(
 			).toEqual({ status: "Ignored" });
 			expect(db.rows("knowledgeChanges")).toHaveLength(1);
 		}
-		const finalPlan = incremental
-			? {
-					baseRevision: `convex-${db.rows("dictionaryState")[0]?.revision ?? 0}`,
-					changes: [],
-				}
-			: plan;
-		const result = await handler<unknown, { status: string }>(
-			commitGenerated,
-		)(
+		const result = await commit(
 			{ db },
-			{
+			publishArgs({
 				attemptKey: "partial",
-				...(incremental
-					? { publication: { sequence: 2, final: true } }
-					: {}),
-				plan: finalPlan,
-				baseKnowledgePlan: finalPlan,
-				generatedChanges: incremental ? [] : [change],
-				relationPublication: EMPTY_RELATION_RUN,
+				changes: [change],
 				productionEvidence: evidence,
-			},
+			}),
 		);
 		expect(result.status).toBe("Committed");
+		expect(db.rows("knowledgeChanges")).toHaveLength(1);
 		expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
 			status: "Partial",
 			knowledge: { definition: "Ein Geldinstitut." },

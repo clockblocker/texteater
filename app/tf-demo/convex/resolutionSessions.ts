@@ -3,7 +3,7 @@ import { restoreStoredGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { internalMutation, mutation, query } from "./_generated/server";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
-import { inspectionJson } from "./model/inspection";
+import { inspectionJson, inspectionRequested } from "./model/inspection";
 import {
 	assertResolutionProgressTransition,
 	loadResolutionNote,
@@ -253,6 +253,7 @@ export const selectSegment = mutation({
 					requestId: args.requestId,
 					runToken,
 					segmentId: segment._id,
+					...(args.inspect ? { inspect: true } : {}),
 				},
 			);
 			await ctx.scheduler.runAfter(
@@ -371,6 +372,7 @@ export const retryResolution = mutation({
 			failureMessage: undefined,
 			updatedAt: now,
 		});
+		const inspect = await inspectionRequested(ctx, session.requestId);
 		await ctx.scheduler.runAfter(
 			0,
 			internal.orchestration.runResolutionSession,
@@ -378,6 +380,7 @@ export const retryResolution = mutation({
 				requestId: session.requestId,
 				runToken,
 				segmentId: session.segmentId,
+				...(inspect ? { inspect } : {}),
 			},
 		);
 		await ctx.scheduler.runAfter(
@@ -631,6 +634,7 @@ export const recoverStaleRun = internalMutation({
 			nextRetryAt: undefined,
 			updatedAt: Date.now(),
 		});
+		const inspect = await inspectionRequested(ctx, session.requestId);
 		await ctx.scheduler.runAfter(
 			0,
 			internal.orchestration.runResolutionSession,
@@ -638,6 +642,7 @@ export const recoverStaleRun = internalMutation({
 				requestId: session.requestId,
 				runToken,
 				segmentId: session.segmentId,
+				...(inspect ? { inspect } : {}),
 			},
 		);
 		await ctx.scheduler.runAfter(

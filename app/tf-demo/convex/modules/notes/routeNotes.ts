@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { makeSurfaceId } from "dumdict/runtime";
-import { deriveNounArticle } from "dumgen";
+import { makeSurfaceId } from "dumdict/planning";
+import { deriveNounArticle } from "dumgen/authored";
 import { parseGermanSurface } from "../../../server/operationalParsing";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";

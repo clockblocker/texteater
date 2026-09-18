@@ -1,88 +1,22 @@
 "use node";
 
-import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
 import type { KnowledgeInput, KnowledgeProduction } from "dumgen/types";
 import * as Effect from "effect/Effect";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 import { createProductionDumgen } from "../server/modelExecution";
 import { parseGermanReading } from "../server/operationalParsing";
-import {
-	type CatalogMissSignal,
-	parseResolvedGrammar,
-} from "../server/resolutionGrammar";
+import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
 import { inspectionFor } from "./inspectionAction";
 import {
-	type effectiveRelationPublicationPolicy,
 	generatedKnowledgeAllowedForPublication,
+	type RelationPublicationFingerprints,
 	requestedRelationKinds,
 } from "./model/generatedKnowledgeContainment";
-import type { RelationPublicationAuthorization } from "./relationPublication";
 
-const getRelationPublicationAuthorization = makeFunctionReference<
-	"query",
-	Record<string, never>,
-	RelationPublicationAuthorization
->("relationPublication:getAuthorization") as unknown as FunctionReference<
-	"query",
-	"internal",
-	Record<string, never>,
-	RelationPublicationAuthorization
->;
-
-const recordRejectedRelationOutput = makeFunctionReference<
-	"mutation",
-	{
-		attemptKey: string;
-		runNumber: number;
-		requestedKinds: ReturnType<typeof requestedRelationKinds>;
-		artifactPath: string | null;
-		fingerprints: RelationPublicationAuthorization["fingerprints"];
-	},
-	null
->("relationPublication:recordRejectedOutput") as unknown as FunctionReference<
-	"mutation",
-	"internal",
-	{
-		attemptKey: string;
-		runNumber: number;
-		requestedKinds: ReturnType<typeof requestedRelationKinds>;
-		artifactPath: string | null;
-		fingerprints: RelationPublicationAuthorization["fingerprints"];
-	},
-	null
->;
-
-const recordKnowledgeCatalogMiss = makeFunctionReference<
-	"mutation",
-	{
-		attemptKey: string;
-		miss: CatalogMissSignal;
-		productionEvidence?: {
-			request: unknown;
-			failures: [];
-			operationTraces: string[];
-		};
-	},
-	null
->(
-	"catalogGrowthSignals:recordKnowledgeCatalogMiss",
-) as unknown as FunctionReference<
-	"mutation",
-	"internal",
-	{
-		attemptKey: string;
-		miss: CatalogMissSignal;
-		productionEvidence?: {
-			request: unknown;
-			failures: [];
-			operationTraces: string[];
-		};
-	},
-	null
->;
+const OWNER = "app/tf-demo · knowledgeGenerationActions";
 
 function getGenerationRequestBuilder() {
 	return import("../server/generatedKnowledgeRequest").then(
@@ -90,11 +24,26 @@ function getGenerationRequestBuilder() {
 	);
 }
 
+/**
+ * Runs the Knowledge model pipeline for one attempt.
+ *
+ * The action owns model execution only. It claims the run with one mutation,
+ * publishes each contribution with one mutation, and finishes with one
+ * mutation; sequencing, dedupe, the relation gate, and dictionary planning
+ * live in `knowledgeGeneration.publish` beside the data they change.
+ */
 export const runKnowledgeGeneration = internalAction({
-	args: { attemptKey: v.string() },
+	args: { attemptKey: v.string(), inspect: v.optional(v.boolean()) },
 	returns: v.null(),
-	handler: async (ctx, { attemptKey }) => {
-		const inspection = await inspectionFor(ctx, attemptKey, "Knowledge");
+	handler: async (ctx, { attemptKey, inspect }) => {
+		const inspection = inspectionFor(
+			ctx,
+			attemptKey,
+			inspect === true,
+			"Knowledge",
+		);
+		const hop = <T>(name: string, input: unknown, run: () => Promise<T>) =>
+			inspection ? inspection.promise(name, OWNER, input, run) : run();
 		const run = async () => {
 			let rejectedRun:
 				| {
@@ -103,9 +52,7 @@ export const runKnowledgeGeneration = internalAction({
 							typeof requestedRelationKinds
 						>;
 						artifactPath: string | null;
-						fingerprints: ReturnType<
-							typeof effectiveRelationPublicationPolicy
-						>["fingerprints"];
+						fingerprints: RelationPublicationFingerprints;
 				  }
 				| undefined;
 			let generationCompleted = false;
@@ -113,20 +60,19 @@ export const runKnowledgeGeneration = internalAction({
 			let publicationQueue = Promise.resolve();
 			const pendingContributions: KnowledgeProduction["changes"][number][] =
 				[];
-			let publicationSequence = 0;
-			const publishedChanges = new Set<string>();
 			let publishContribution: (
 				changes: KnowledgeProduction["changes"],
 			) => Promise<void> = async () => {};
 
 			let requested: unknown = {};
-			await ctx.runMutation(internal.knowledgeGeneration.markRunning, {
-				attemptKey,
-			});
 			try {
-				const input = await ctx.runQuery(
-					internal.knowledgeGeneration.loadInput,
+				const input = await hop(
+					"Claim attempt and load input",
 					{ attemptKey },
+					() =>
+						ctx.runMutation(internal.knowledgeGeneration.begin, {
+							attemptKey,
+						}),
 				);
 				if (!input || input.kind === "Full") return null;
 				if (input.reading.lemma.language !== "de") {
@@ -154,7 +100,7 @@ export const runKnowledgeGeneration = internalAction({
 										await publishContribution(contribution);
 								})
 								.catch((error) => {
-									// Keep generation running; the final commit retries unsaved text.
+									// Keep generation running; the final publication retries unsaved text.
 									console.error(
 										"Incremental Knowledge publication failed",
 										error,
@@ -165,10 +111,7 @@ export const runKnowledgeGeneration = internalAction({
 					inspection,
 				);
 				const reading = parseGermanReading(input.reading);
-				const authorization = await ctx.runQuery(
-					getRelationPublicationAuthorization,
-					{},
-				);
+				const { authorization } = input;
 				const qualifiedKinds = authorization.rollbackStopped
 					? []
 					: authorization.qualifiedKinds;
@@ -188,35 +131,54 @@ export const runKnowledgeGeneration = internalAction({
 					artifactPath: authorization.artifactPath,
 					fingerprints: authorization.fingerprints,
 				};
-				publishContribution = async (changes) => {
-					await ctx.runAction(
-						internal.orchestration.applyGeneratedKnowledgePlan,
-						{
-							attemptKey,
-							publication: {
-								sequence: ++publicationSequence,
-								final: false,
-							},
-							reading,
-							changes: [...changes],
-							pendingRelations: [],
-							productionEvidence: {
-								request,
-								failures: [],
-								operationTraces: [],
-							},
-							relationPublication: {
-								runNumber: input.runNumber,
-								requestedKinds: [],
-								artifactPath: authorization.artifactPath,
-								fingerprints: authorization.fingerprints,
-								proposals: [],
-							},
+				const publish = async (
+					final: boolean,
+					publishable: {
+						changes: KnowledgeProduction["changes"];
+						pendingRelations: KnowledgeProduction<"de">["pendingRelations"];
+					},
+					failures: KnowledgeProduction<"de">["failures"],
+				) => {
+					const args = {
+						attemptKey,
+						final,
+						reading,
+						changes: [...publishable.changes],
+						pendingRelations: [...publishable.pendingRelations],
+						productionEvidence: {
+							request,
+							failures: [...failures],
+							operationTraces: final ? operationTraces : [],
 						},
+						relationPublication: {
+							runNumber: input.runNumber,
+							requestedKinds: final ? requestedKinds : [],
+							artifactPath: authorization.artifactPath,
+							fingerprints: authorization.fingerprints,
+							proposals: publishable.pendingRelations.map(
+								(pending) => ({
+									relation: pending.relation,
+									targetShadow: pending.target,
+								}),
+							),
+						},
+					};
+					const result = await hop(
+						final
+							? "Publish generated Knowledge"
+							: "Publish Knowledge contribution",
+						args,
+						() =>
+							ctx.runMutation(
+								internal.knowledgeGeneration.publish,
+								args,
+							),
 					);
-					for (const change of changes)
-						publishedChanges.add(JSON.stringify(change));
+					if (result.status === "Rejected")
+						throw new Error(result.message);
 				};
+				publishContribution = (changes) =>
+					publish(false, { changes, pendingRelations: [] }, []);
 				const generated = await Effect.runPromise(
 					knowledgeDumgen
 						.produceKnowledge({
@@ -244,75 +206,42 @@ export const runKnowledgeGeneration = internalAction({
 				await publicationQueue;
 				if ("decision" in generated) {
 					generationCompleted = true;
-					await ctx.runMutation(recordKnowledgeCatalogMiss, {
-						attemptKey,
-						miss: generated,
-						productionEvidence: {
-							request,
-							failures: [],
-							operationTraces,
-						},
-					});
+					await hop("Record catalog miss", generated, () =>
+						ctx.runMutation(
+							internal.catalogGrowthSignals
+								.recordKnowledgeCatalogMiss,
+							{
+								attemptKey,
+								miss: generated,
+								productionEvidence: {
+									request,
+									failures: [],
+									operationTraces,
+								},
+							},
+						),
+					);
 					return null;
 				}
 				generationCompleted = true;
-				const publishable = generatedKnowledgeAllowedForPublication(
-					generated,
-					qualifiedKinds,
-				);
-				await ctx.runAction(
-					internal.orchestration.applyGeneratedKnowledgePlan,
-					{
-						attemptKey,
-						publication: {
-							sequence: ++publicationSequence,
-							final: true,
-						},
-						reading,
-						changes: publishable.changes.filter(
-							(change) =>
-								!publishedChanges.has(JSON.stringify(change)),
-						),
-						pendingRelations: publishable.pendingRelations,
-						productionEvidence: {
-							request,
-							failures: [...generated.failures],
-							operationTraces,
-						},
-						relationPublication: {
-							runNumber: input.runNumber,
-							requestedKinds,
-							artifactPath: authorization.artifactPath,
-							fingerprints: authorization.fingerprints,
-							proposals: publishable.pendingRelations.map(
-								(pending) => ({
-									relation: pending.relation,
-									targetShadow: pending.target,
-								}),
-							),
-						},
-					},
+				await publish(
+					true,
+					generatedKnowledgeAllowedForPublication(
+						generated,
+						qualifiedKinds,
+					),
+					generated.failures,
 				);
 				return null;
 			} catch (error) {
 				await publicationQueue;
 				inspection?.failure(
 					"Knowledge generation failed",
-					"app/tf-demo · knowledgeGenerationActions",
+					OWNER,
 					requested,
 					error,
 				);
 				console.error("Knowledge generation attempt failed", error);
-				if (
-					!generationCompleted &&
-					rejectedRun &&
-					rejectedRun.requestedKinds.length > 0
-				) {
-					await ctx.runMutation(recordRejectedRelationOutput, {
-						attemptKey,
-						...rejectedRun,
-					});
-				}
 				await ctx.runMutation(internal.knowledgeGeneration.fail, {
 					attemptKey,
 					failureCode: "generationFailed",
@@ -323,6 +252,11 @@ export const runKnowledgeGeneration = internalAction({
 					},
 					failureMessage:
 						"Knowledge generation failed. Please retry.",
+					...(!generationCompleted &&
+					rejectedRun &&
+					rejectedRun.requestedKinds.length > 0
+						? { rejectedRelationRun: rejectedRun }
+						: {}),
 				});
 				return null;
 			}
@@ -331,7 +265,7 @@ export const runKnowledgeGeneration = internalAction({
 			return inspection
 				? await inspection.promise(
 						"Generate and publish Knowledge",
-						"app/tf-demo · knowledgeGenerationActions",
+						OWNER,
 						{ attemptKey },
 						run,
 						true,

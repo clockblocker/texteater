@@ -1,4 +1,5 @@
 import { type Infer, v } from "convex/values";
+import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 export const inspectionStepValidator = v.object({
 	id: v.string(),
@@ -60,4 +61,21 @@ export function inspectionPayloadChunks(text: string): string[] {
 		offset = end;
 	}
 	return chunks;
+}
+
+/**
+ * Whether a request asked for Resolution Inspector capture. Schedulers read
+ * this once and pass the answer into the scheduled action's arguments, so the
+ * action never spends a query hop asking.
+ */
+export async function inspectionRequested(
+	ctx: QueryCtx | MutationCtx,
+	requestId: string,
+): Promise<boolean> {
+	return (
+		(await ctx.db
+			.query("inspectionClicks")
+			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
+			.unique()) !== null
+	);
 }

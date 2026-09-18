@@ -1,3 +1,4 @@
+"use node";
 /**
  * Action-level Shared Demo Dictionary persistence seam.
  *

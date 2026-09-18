@@ -8,7 +8,7 @@ export {
 	deriveNounArticle,
 	nounArticleReference,
 	selectNounHeadingArticle,
-} from "./concrete-lang/de/grammatical-resolution/noun-article.js";
+} from "./concrete-lang/de/grammatical-resolution/noun-article-reference.js";
 export { draftKnowledge } from "./concrete-lang/de/knowledge-production/draft.js";
 export type {
 	Dumgen,

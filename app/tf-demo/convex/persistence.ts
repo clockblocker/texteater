@@ -1,16 +1,23 @@
-import { v } from "convex/values";
+import { type Infer, v } from "convex/values";
 import type * as Dumling from "dumling/types";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
+import {
+	parseGermanAttestation,
+	parseGermanReading,
+} from "../server/operationalParsing";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	type MutationCtx,
 	type QueryCtx,
 } from "./_generated/server";
-import { createDumdictTransaction } from "./dumdictTransaction";
+import {
+	createDumdictTransaction,
+	type DumdictTransactionOutcome,
+} from "./dumdictTransaction";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import {
 	assertIndex,
@@ -30,8 +37,8 @@ import {
 	settleUnresolved,
 } from "./model/resolutionSessions";
 import {
-	dictionaryPlanValidator,
 	occurrenceAttestationInputValidator,
+	readingDecisionValidator,
 	readingValueValidator,
 	resolutionSessionGuardValidator,
 	resolvedClickCommitValidator,
@@ -134,6 +141,44 @@ async function recordClickAgainstCommittedAttestation(
 		deduplicated: false,
 		occurrence,
 	};
+}
+
+function emptyNote() {
+	return {
+		attestedTranslations: [] as string[],
+		attestations: [] as string[],
+		notes: "",
+	};
+}
+
+/**
+ * Plans the dictionary side of a resolved occurrence inside this transaction.
+ * A New Reading becomes a Reading Note owning the attested Surface; a reused
+ * Reading only gains the Surface if the dictionary does not own it yet.
+ */
+async function planAndCommitDictionary(
+	ctx: MutationCtx,
+	args: {
+		readonly reading: Infer<typeof readingValueValidator>;
+		readonly readingDecision: Infer<typeof readingDecisionValidator>;
+		readonly occurrence: Infer<typeof occurrenceAttestationInputValidator>;
+	},
+): Promise<DumdictTransactionOutcome> {
+	const dictionary = createDumdictTransaction(ctx);
+	const reading = parseGermanReading(args.reading);
+	const ownedSurface = {
+		surface: parseGermanAttestation(args.occurrence.attestation).surface,
+		note: emptyNote(),
+	};
+	return args.readingDecision === "Reuse"
+		? dictionary.ensureOwnedSurface({ reading, ownedSurface })
+		: dictionary.addNewNote({
+				draft: {
+					reading,
+					note: emptyNote(),
+					ownedSurfaces: [ownedSurface],
+				},
+			});
 }
 
 export const persistSubmittedText = internalMutation({
@@ -323,7 +368,7 @@ export const persistResolvedClick = internalMutation({
 		occurrence: occurrenceAttestationInputValidator,
 		reading: readingValueValidator,
 		readingKey: v.string(),
-		dictionaryPlan: dictionaryPlanValidator,
+		readingDecision: readingDecisionValidator,
 		sessionGuard: v.optional(resolutionSessionGuardValidator),
 	},
 	returns: resolvedClickCommitValidator,
@@ -491,23 +536,30 @@ export const persistResolvedClick = internalMutation({
 			};
 		}
 
-		const dictionaryCommit = await createDumdictTransaction(ctx).commit(
-			args.dictionaryPlan,
-		);
-		if (dictionaryCommit.status === "conflict") {
+		// The dictionary plan is built and applied here, against the state this
+		// transaction reads, so the occurrence never carries a stale plan.
+		const dictionaryCommit = await planAndCommitDictionary(ctx, args);
+		if (dictionaryCommit.status !== "committed") {
 			if (session) {
 				await settleFailed(
 					ctx,
 					session,
-					"The shared dictionary changed before this resolution could be saved.",
+					"The shared dictionary rejected this resolution before it could be saved.",
 				);
 			}
 			return {
 				status: "DictionaryConflict" as const,
-				code: dictionaryCommit.code,
+				code:
+					dictionaryCommit.status === "conflict"
+						? dictionaryCommit.code
+						: ("semanticPreconditionFailed" as const),
 				message:
-					"The Shared Demo Dictionary changed before this click committed.",
-				latestRevision: dictionaryCommit.latestRevision,
+					dictionaryCommit.message ??
+					"The Shared Demo Dictionary rejected this click.",
+				...(dictionaryCommit.status === "conflict" &&
+				dictionaryCommit.latestRevision
+					? { latestRevision: dictionaryCommit.latestRevision }
+					: {}),
 			};
 		}
 

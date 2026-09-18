@@ -5,7 +5,6 @@ import {
 import { v } from "convex/values";
 import {
 	internalMutation,
-	internalQuery,
 	type MutationCtx,
 	mutation,
 	query,
@@ -84,62 +83,58 @@ export const finishAnalysis = internalMutation({
 	},
 });
 
-export const enabled = internalQuery({
-	args: { requestId: v.string() },
-	returns: v.boolean(),
-	handler: async (ctx, { requestId }) =>
-		!!(await ctx.db
-			.query("inspectionClicks")
-			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
-			.unique()),
-});
-export const recordStep = internalMutation({
+export const recordSteps = internalMutation({
 	args: {
 		requestId: v.string(),
 		scope: v.optional(
 			v.union(v.literal("Resolution"), v.literal("Knowledge")),
 		),
-		step: inspectionStepValidator.extend({ payloadJson: v.string() }),
+		steps: v.array(
+			inspectionStepValidator.extend({ payloadJson: v.string() }),
+		),
 	},
 	returns: v.null(),
-	handler: async (ctx, { requestId, step, scope = "Resolution" }) => {
+	handler: async (ctx, { requestId, steps, scope = "Resolution" }) => {
 		const click = await ctx.db
 			.query("inspectionClicks")
 			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 			.unique();
-		if (click) {
-			let captured = step;
-			if (!step.parentId) {
-				const session = await ctx.db
-					.query("resolutionSessions")
-					.withIndex("by_request_id", (q) =>
-						q.eq("requestId", requestId),
-					)
-					.unique();
-				const knowledge = await ctx.db
-					.query("knowledgeGenerationAttempts")
-					.withIndex("by_attempt_key", (q) =>
-						q.eq("attemptKey", requestId),
-					)
-					.unique();
-				if (
-					(scope === "Knowledge" && knowledge?.state === "Failed") ||
-					(scope === "Resolution" &&
-						session?.lifecycle.state === "Terminal" &&
-						session.lifecycle.outcome === "PermanentFailure")
+		if (!click) return null;
+		let rootFailed = false;
+		if (steps.some((step) => !step.parentId)) {
+			const session = await ctx.db
+				.query("resolutionSessions")
+				.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
+				.unique();
+			const knowledge = await ctx.db
+				.query("knowledgeGenerationAttempts")
+				.withIndex("by_attempt_key", (q) =>
+					q.eq("attemptKey", requestId),
 				)
-					captured = { ...step, status: "Failure" };
-				await ctx.db.patch(click._id, {
-					...(session?.lifecycle.state === "Terminal"
-						? {
-								resolutionState: session.lifecycle.outcome,
-								finishedAt: session.updatedAt,
-							}
-						: {}),
-					...(knowledge ? { knowledgeState: knowledge.state } : {}),
-				});
-			}
-			await saveInspectionStep(ctx, requestId, captured);
+				.unique();
+			rootFailed =
+				(scope === "Knowledge" && knowledge?.state === "Failed") ||
+				(scope === "Resolution" &&
+					session?.lifecycle.state === "Terminal" &&
+					session.lifecycle.outcome === "PermanentFailure");
+			await ctx.db.patch(click._id, {
+				...(session?.lifecycle.state === "Terminal"
+					? {
+							resolutionState: session.lifecycle.outcome,
+							finishedAt: session.updatedAt,
+						}
+					: {}),
+				...(knowledge ? { knowledgeState: knowledge.state } : {}),
+			});
+		}
+		for (const step of steps) {
+			await saveInspectionStep(
+				ctx,
+				requestId,
+				!step.parentId && rootFailed
+					? { ...step, status: "Failure" }
+					: step,
+			);
 		}
 		return null;
 	},

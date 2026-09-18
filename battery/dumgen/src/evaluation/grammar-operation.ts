@@ -121,6 +121,9 @@ export function grammarOperationExperiment(
 				...("articleEvidence" in attestation
 					? { articleEvidence: attestation.articleEvidence }
 					: {}),
+				...("expletiveEvidence" in attestation
+					? { expletiveEvidence: attestation.expletiveEvidence }
+					: {}),
 			};
 		},
 	};

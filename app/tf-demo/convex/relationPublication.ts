@@ -28,7 +28,7 @@ const MAX_MONITORING_ROWS = 500;
 const MAX_REVIEW_ROWS = 100;
 const REVIEW_SAMPLE_DENOMINATOR = 10;
 
-const publicationAuthorizationValidator = v.object({
+export const publicationAuthorizationValidator = v.object({
 	artifactPath: v.union(v.string(), v.null()),
 	fingerprints: relationPublicationFingerprintsValidator,
 	qualifiedKinds: v.array(directSemanticRelationValidator),
@@ -342,6 +342,45 @@ export async function recordCommittedRelationRun(
 	}
 }
 
+/** Records a run whose model output was rejected before any publication. */
+export async function recordRejectedRelationOutput(
+	ctx: MutationCtx,
+	attempt: Pick<
+		Doc<"knowledgeGenerationAttempts">,
+		"attemptKey" | "readingId" | "ownerReadingKey" | "attestationId"
+	>,
+	run: {
+		readonly runNumber: number;
+		readonly requestedKinds: readonly Dumrel.DirectSemanticRelation[];
+		readonly artifactPath: string | null;
+		readonly fingerprints: RelationPublicationFingerprints;
+	},
+): Promise<void> {
+	assertRunNumber(run.runNumber);
+	const now = Date.now();
+	for (const relation of run.requestedKinds) {
+		await upsertRun(ctx, {
+			runKey: runKey(attempt.attemptKey, run.runNumber, relation),
+			attemptKey: attempt.attemptKey,
+			runNumber: run.runNumber,
+			relation,
+			sourceReadingId: attempt.readingId,
+			sourceReadingKey: attempt.ownerReadingKey,
+			contextAttestationId: attempt.attestationId,
+			verdictArtifactPath: run.artifactPath,
+			fingerprints: run.fingerprints,
+			generatedTargets: 0,
+			nulls: 0,
+			pendingShadows: 0,
+			directMatches: 0,
+			rejectedOutputs: 1,
+			publicationFailures: 0,
+			createdAt: now,
+			updatedAt: now,
+		});
+	}
+}
+
 export const recordRejectedOutput = internalMutation({
 	args: {
 		attemptKey: v.string(),
@@ -352,7 +391,6 @@ export const recordRejectedOutput = internalMutation({
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
-		assertRunNumber(args.runNumber);
 		const attempt = await ctx.db
 			.query("knowledgeGenerationAttempts")
 			.withIndex("by_attempt_key", (q) =>
@@ -360,28 +398,7 @@ export const recordRejectedOutput = internalMutation({
 			)
 			.unique();
 		if (!attempt) return null;
-		const now = Date.now();
-		for (const relation of args.requestedKinds) {
-			await upsertRun(ctx, {
-				runKey: runKey(args.attemptKey, args.runNumber, relation),
-				attemptKey: args.attemptKey,
-				runNumber: args.runNumber,
-				relation,
-				sourceReadingId: attempt.readingId,
-				sourceReadingKey: attempt.ownerReadingKey,
-				contextAttestationId: attempt.attestationId,
-				verdictArtifactPath: args.artifactPath,
-				fingerprints: args.fingerprints,
-				generatedTargets: 0,
-				nulls: 0,
-				pendingShadows: 0,
-				directMatches: 0,
-				rejectedOutputs: 1,
-				publicationFailures: 0,
-				createdAt: now,
-				updatedAt: now,
-			});
-		}
+		await recordRejectedRelationOutput(ctx, attempt, args);
 		return null;
 	},
 });

@@ -1,18 +1,6 @@
-import { type FunctionReference, makeFunctionReference } from "convex/server";
+import { internal } from "../_generated/api";
 import type { MutationCtx } from "../_generated/server";
-
-const runKnowledgeGeneration = makeFunctionReference<
-	"action",
-	{ attemptKey: string },
-	null
->(
-	"knowledgeGenerationActions:runKnowledgeGeneration",
-) as unknown as FunctionReference<
-	"action",
-	"internal",
-	{ attemptKey: string },
-	null
->;
+import { inspectionRequested } from "./inspection";
 
 export async function scheduleNextWaitingKnowledgeAttempt(
 	ctx: MutationCtx,
@@ -29,7 +17,10 @@ export async function scheduleNextWaitingKnowledgeAttempt(
 		state: "Scheduled",
 		updatedAt: Date.now(),
 	});
-	await ctx.scheduler.runAfter(0, runKnowledgeGeneration, {
-		attemptKey: waiting.attemptKey,
-	});
+	const inspect = await inspectionRequested(ctx, waiting.attemptKey);
+	await ctx.scheduler.runAfter(
+		0,
+		internal.knowledgeGenerationActions.runKnowledgeGeneration,
+		{ attemptKey: waiting.attemptKey, ...(inspect ? { inspect } : {}) },
+	);
 }

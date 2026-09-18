@@ -1,5 +1,5 @@
-import { makeSurfaceId } from "dumdict/runtime";
-import { deriveNounArticle } from "dumgen";
+import { makeSurfaceId } from "dumdict/planning";
+import { deriveNounArticle } from "dumgen/authored";
 import { parseGermanSurface } from "../../server/operationalParsing";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";

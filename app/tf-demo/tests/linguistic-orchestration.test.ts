@@ -296,10 +296,8 @@ test("real segmentation, classification, grammar and emoji production reach an a
 	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.reading).toEqual(reading);
 	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
-	expect(
-		run.writes[0]?.dictionaryPlan.changes.map((change) => change.type),
-	).toEqual(["createLemma", "createReading", "createOwnedSurface"]);
-	expect(run.commits).toHaveLength(0); // The host transaction receives the whole plan.
+	expect(run.writes[0]?.readingDecision).toBe("New");
+	expect(run.commits).toHaveLength(0); // The host transaction plans and commits the dictionary itself.
 	expect(result).toMatchObject({
 		grammatical: { encounter },
 		persisted: { status: "Committed" },
@@ -330,11 +328,7 @@ test("stored Reading candidates are compared and reused without a new Reading pl
 	);
 	expect(result).toMatchObject({ readingResolution: { decision: "Reuse" } });
 	expect(run.requests).toHaveLength(1);
-	expect(
-		run.writes[0]?.dictionaryPlan.changes.some(
-			(change) => change.type === "createReading",
-		),
-	).toBe(false);
+	expect(run.writes[0]?.readingDecision).toBe("Reuse");
 });
 
 test("a globally resolved occurrence is reused without generation", async () => {
@@ -796,11 +790,10 @@ test("a failed Reading checkpoint prevents occurrence commit", async () => {
 	expect(run.writes).toHaveLength(0);
 });
 
-test("a failed dictionary read waits for the in-flight checkpoint before failure handling", async () => {
+test("the occurrence commit waits for the in-flight Reading checkpoint", async () => {
 	const checkpoint = Promise.withResolvers<void>();
-	const readStarted = Promise.withResolvers<void>();
 	let saved = false;
-	let settled = false;
+	let savedBeforeCommit: boolean | undefined;
 	const run = setup(["🏦"], {}, [reading], {
 		observer: {
 			async grammarAvailable() {},
@@ -809,35 +802,17 @@ test("a failed dictionary read waits for the in-flight checkpoint before failure
 				saved = true;
 			},
 			async committing() {
-				throw Error("Must not commit failed preparation");
+				savedBeforeCommit = saved;
 			},
 		},
 	});
-	run.storage.loadReadingEntryContext = () =>
-		Effect.sync(() => {
-			readStarted.resolve();
-			throw Error("Read failed while checkpoint was in flight");
-		});
 	const outcome = Effect.runPromise(
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	).then(
-		() => {
-			settled = true;
-			return "Success";
-		},
-		() => {
-			settled = true;
-			return "Failure";
-		},
 	);
-	try {
-		await readStarted.promise;
-		await Bun.sleep(0);
-		expect(settled).toBe(false);
-	} finally {
-		checkpoint.resolve();
-	}
-	expect(await outcome).toBe("Failure");
-	expect(saved).toBe(true);
+	await Bun.sleep(0);
 	expect(run.writes).toHaveLength(0);
+	checkpoint.resolve();
+	await outcome;
+	expect(savedBeforeCommit).toBe(true);
+	expect(run.writes).toHaveLength(1);
 });

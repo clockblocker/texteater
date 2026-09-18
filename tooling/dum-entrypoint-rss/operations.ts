@@ -121,7 +121,11 @@ export async function runRepresentativeOperation(
 					normalizedSurface: "Bank",
 					spelling: "Canonical",
 					surfaceFeatures: null,
-					inflectionalFeatures: { case: "Nom", number: "Sing" },
+					inflectionalFeatures: {
+						case: "Nom",
+						number: "Sing",
+						article: null,
+					},
 				}),
 				"string",
 			);
@@ -152,8 +156,95 @@ export async function runRepresentativeOperation(
 				[],
 			);
 			break;
+		case "dumdict.plan-reading-entry": {
+			const planner = call(module, "createDumdictPlanner", "de");
+			const planned = planner.ensureReadingEntry(
+				{ intent: "ensureReadingEntry", revision: "rss-0" },
+				{
+					entry: {
+						reading,
+						attestedTranslations: [],
+						attestations: [],
+						notes: "",
+					},
+				},
+			);
+			assert.equal(planned.status, "planned");
+			assert.deepEqual(
+				planned.plan.changes.map(
+					(change: { type: string }) => change.type,
+				),
+				["createLemma", "createReading"],
+			);
+			break;
+		}
+		case "dumgen.select-authored": {
+			const article = call(module, "selectNounHeadingArticle", lemma);
+			assert.equal(article?.lemma?.canonicalForm, "die");
+			assert.equal(
+				call(module, "selectAuthoredArticle", article.reading),
+				article,
+			);
+			break;
+		}
+		case "dumgen.validate-encounter": {
+			const encounter = call(module, "validateEncounter", {
+				sentence: {
+					id: "rss",
+					language: "de",
+					segments: [{ kind: "ResolvableText", text: "Bank" }],
+				},
+				target: {
+					family: "Lexeme",
+					kind: "NOUN",
+					memberSegmentIndices: [0],
+				},
+			});
+			assert.equal(encounter.target.kind, "NOUN");
+			break;
+		}
 		case "dumgen.resolve-supplied-target": {
 			const dumgen = call(module, "createDumgen", {
+				// Grammar resolution asks bounded feature questions; answer each
+				// with its first concrete option so the probe never needs a model.
+				judge: async (request: {
+					questions: Record<
+						string,
+						{ criteria?: Record<string, unknown> }
+					>;
+				}) => ({
+					model: "injected",
+					usage: { input_tokens: 1, output_tokens: 1 },
+					answers: Object.fromEntries(
+						Object.entries(request.questions).map(
+							([id, question]) => {
+								const keys = Object.keys(
+									question.criteria ?? {},
+								);
+								const choice =
+									keys.find(
+										(key) =>
+											key !== "Unresolved" &&
+											key !== "Unmarked",
+									) ?? keys[0];
+								return [
+									id,
+									{
+										type: "choice",
+										choice,
+										confidence: 1,
+										probabilities: Object.fromEntries(
+											keys.map((key) => [
+												key,
+												key === choice ? 1 : 0,
+											]),
+										),
+									},
+								];
+							},
+						),
+					),
+				}),
 				execute: async () => ({
 					memberOrthographies: ["Standard"],
 					normalizedMembers: ["Bank"],

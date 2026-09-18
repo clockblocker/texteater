@@ -1,71 +1,19 @@
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
-import type {
-	AddNewNoteRequest,
-	ApplyGeneratedKnowledgeRequest,
-	EnsureOwnedSurfaceRequest,
-	EnsureReadingEntryRequest,
-} from "../public";
-import type {
-	LoadReadingEntryContextRequest,
-	ReadingEntryContext,
-} from "../storage";
+import type { ReadingEntryContext } from "../storage";
+import {
+	type ReadingEntryContextLoad,
+	storageRequestFor,
+} from "./context-request";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export type ReadingEntryContextLoad<L extends Dumling.Language> =
-	| { intent: "addNewNote"; request: AddNewNoteRequest<L> }
-	| {
-			intent: "applyGeneratedKnowledge";
-			request: ApplyGeneratedKnowledgeRequest<L>;
-	  }
-	| {
-			intent: "ensureOwnedSurface";
-			request: EnsureOwnedSurfaceRequest<L>;
-	  }
-	| {
-			intent: "ensureReadingEntry";
-			request: EnsureReadingEntryRequest<L>;
-	  };
+export type { ReadingEntryContextLoad } from "./context-request";
 
 type ContextFor<
 	L extends Dumling.Language,
 	Load extends ReadingEntryContextLoad<L>,
 > = Extract<ReadingEntryContext<L>, { intent: Load["intent"] }>;
-
-function storageRequestFor<L extends Dumling.Language>(
-	load: ReadingEntryContextLoad<L>,
-): LoadReadingEntryContextRequest<L> {
-	switch (load.intent) {
-		case "addNewNote":
-			return {
-				intent: load.intent,
-				reading: load.request.draft.reading,
-				ownedSurfaces:
-					load.request.draft.ownedSurfaces?.map(
-						({ surface }) => surface,
-					) ?? [],
-				relations: [...(load.request.draft.relations ?? [])],
-			};
-		case "applyGeneratedKnowledge":
-			return {
-				intent: load.intent,
-				reading: load.request.reading,
-				pendingRelations: [...load.request.pendingRelations],
-			};
-		case "ensureOwnedSurface":
-			return {
-				intent: load.intent,
-				reading: load.request.reading,
-				surface: load.request.ownedSurface.surface,
-			};
-		case "ensureReadingEntry":
-			return {
-				intent: load.intent,
-				reading: load.request.entry.reading,
-			};
-	}
-}
 
 export function loadReadingEntryContext<
 	L extends Dumling.Language,

@@ -1,4 +1,4 @@
-import type { DumdictPlan, DumdictService, StoreRevision } from "dumdict";
+import type { DumdictService, StoreRevision } from "dumdict";
 import { makeSurfaceId } from "dumdict/runtime";
 import type {
 	ComparisonInput,
@@ -57,7 +57,8 @@ export type ResolvedClickPersistence = {
 	};
 	readonly reading: Dumling.Reading<"de">;
 	readonly readingKey: string;
-	readonly dictionaryPlan: DumdictPlan<"de">;
+	/** The dictionary plan is built where it commits: inside the host transaction. */
+	readonly readingDecision: ReadingResolution["decision"];
 };
 
 export type ReusableAttestation = {
@@ -177,7 +178,6 @@ export type ResolveSegmentResult =
 			readonly grammatical: ResolvedGrammatical;
 			readonly readingResolution: ReadingResolution;
 			readonly reading: Dumling.Reading<"de">;
-			readonly dictionaryPlan: DumdictPlan<"de">;
 			readonly persisted: Extract<
 				ResolvedClickCommit,
 				{ status: "MembershipConflict" | "DictionaryConflict" }
@@ -187,7 +187,6 @@ export type ResolveSegmentResult =
 			readonly grammatical: ResolvedGrammatical;
 			readonly readingResolution: ReadingResolution;
 			readonly reading: Dumling.Reading<"de">;
-			readonly dictionaryPlan: DumdictPlan<"de">;
 			readonly reused: boolean;
 			readonly persisted: Extract<
 				ResolvedClickCommit,
@@ -270,14 +269,16 @@ export type ResolutionCheckpoints = {
 export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
 
 /**
- * Composes Dumgen resolution and Dumdict planning behind one persistence port.
- * Convex supplies the production port; tests can use an in-memory port without
- * changing workflow or conflict semantics.
+ * Composes Dumgen resolution behind one persistence port. The dictionary is
+ * consulted only to compare stored Readings; dictionary planning happens where
+ * it commits, inside the persistence port's transaction. Convex supplies the
+ * production port; tests can use an in-memory port without changing workflow
+ * or conflict semantics.
  */
 export function createTfDemoOrchestrator(options: {
 	readonly dumgen: Dumgen;
 	readonly inspection?: InspectionCapture;
-	readonly dictionary: DumdictService<"de">;
+	readonly dictionary: Pick<DumdictService<"de">, "findStoredReadings">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
 	/** Drafts describe the resolved Reading; its Emoji Description is the sense anchor. */
@@ -476,54 +477,19 @@ export function createTfDemoOrchestrator(options: {
 				);
 			}
 
-			const prepare =
-				readingResolution.decision === "Reuse"
-					? options.dictionary.prepare.ensureOwnedSurface({
+			if (!checkpoints.reading)
+				yield* Effect.tryPromise(
+					() =>
+						options.observer?.readingAvailable({
 							reading,
-							ownedSurface: {
-								surface: grammatical.attestation.surface,
-								note: emptyNote(),
-							},
-						})
-					: options.dictionary.prepare.addNewNote({
-							draft: {
-								reading,
-								note: emptyNote(),
-								ownedSurfaces: [
-									{
-										surface:
-											grammatical.attestation.surface,
-										note: emptyNote(),
-									},
-								],
-							},
-						});
-			const [readingSaved, preparation] = yield* Effect.all(
-				[
-					Effect.exit(
-						checkpoints.reading
-							? Effect.void
-							: Effect.tryPromise(
-									() =>
-										options.observer?.readingAvailable({
-											reading,
-											readingResolution,
-										}) ?? Promise.resolve(),
-								),
-					),
-					Effect.exit(prepare),
-				],
-				{ concurrency: "unbounded" },
-			);
-
-			yield* readingSaved;
-			const prepared = yield* preparation;
+							readingResolution,
+						}) ?? Promise.resolve(),
+				);
 
 			const draft =
 				knowledgeDraft && readingResolution.decision === "New"
 					? yield* Fiber.join(knowledgeDraft)
 					: null;
-			const dictionaryPlan = prepared.plan;
 
 			const surfaceKey = surfaceIdentityKey(
 				grammatical.attestation.surface,
@@ -547,7 +513,7 @@ export function createTfDemoOrchestrator(options: {
 					},
 					reading,
 					readingKey,
-					dictionaryPlan,
+					readingDecision: readingResolution.decision,
 				}),
 			);
 			if (
@@ -558,7 +524,6 @@ export function createTfDemoOrchestrator(options: {
 					grammatical,
 					readingResolution,
 					reading,
-					dictionaryPlan,
 					persisted,
 				};
 			}
@@ -567,7 +532,6 @@ export function createTfDemoOrchestrator(options: {
 				grammatical: persisted.occurrence.grammatical,
 				readingResolution,
 				reading: persisted.occurrence.reading,
-				dictionaryPlan,
 				reused: persisted.status === "Reused",
 				persisted,
 			};
@@ -770,14 +734,6 @@ function isSegmentKind(value: string): value is Segment["kind"] {
 		value === "Whitespace" ||
 		value === "Punctuation"
 	);
-}
-
-function emptyNote() {
-	return {
-		attestedTranslations: [] as string[],
-		attestations: [] as string[],
-		notes: "",
-	};
 }
 
 function assertNonEmpty(value: string, field: string): void {

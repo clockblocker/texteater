@@ -35,6 +35,7 @@ export function grammarFixture(
 					coreFeatures: unknown;
 				}[];
 				candidates?: Record<string, string[]>;
+				lexicalStringCandidates?: Record<string, string[]>;
 			};
 			return choiceAnswers(request.questions, (id) => {
 				if (overrides[id]) return overrides[id];
@@ -120,6 +121,20 @@ export function grammarFixture(
 				}
 				if (state.candidates?.[id])
 					return `text_${state.candidates[id]!.indexOf(String((output.lemma.coreFeatures as Record<string, unknown>)[id]))}`;
+				if (id.startsWith("text.")) {
+					// Speculative lexical string in the features round trip.
+					const key = id.slice("text.".length);
+					const expected = (
+						output.lemma.coreFeatures as Record<string, unknown>
+					)[key];
+					const index =
+						expected === null || expected === undefined
+							? -1
+							: (state.lexicalStringCandidates?.[key]?.indexOf(
+									String(expected),
+								) ?? -1);
+					return index === -1 ? "Unresolved" : `text_${index}`;
+				}
 				let value: unknown = output;
 				for (const key of id.split("."))
 					value =
