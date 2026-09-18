@@ -1,4 +1,5 @@
 export { selectGrammaticalAlternatives } from "./concrete-lang/de/authored-closed-sets/select.js";
+export { draftKnowledge } from "./concrete-lang/de/knowledge-production/draft.js";
 export type {
 	Dumgen,
 	DumgenOptions,

@@ -10,6 +10,7 @@ import type {
 } from "./generated/types.js";
 import type { DumgenFailure } from "./universal/failure.js";
 
+export type { KnowledgeDraft } from "./concrete-lang/de/knowledge-production/draft.js";
 export type { Segment, SegmentationDecision } from "./generated/types.js";
 export type DumgenLanguage = Dumling.Language;
 export type SegmentKind = Segment["kind"];
@@ -171,6 +172,8 @@ export type OperationTrace = {
 	readonly durationMs: number;
 };
 export type DumgenOptions = {
+	/** Generated text awaiting a Reading owner; source and shape checks are local only. */
+	readonly knowledgeDraft?: unknown;
 	readonly execute: ModelExecutor;
 	readonly judge: TypeSafeExecutor;
 	readonly configuration?: Partial<ModelConfiguration>;

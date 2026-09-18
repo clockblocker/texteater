@@ -1,4 +1,4 @@
-import { createDumgen } from "dumgen";
+import { createDumgen, draftKnowledge } from "dumgen";
 import type { DumgenOptions } from "dumgen/types";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { configurationSchema } from "promptsmith/schemas";
@@ -11,12 +11,30 @@ export function createProductionDumgen(
 	onEvent?: (event: GenerationEvent) => void,
 	configuration: Pick<
 		DumgenOptions,
-		"configuration" | "judgmentConfiguration" | "onKnowledgeContribution"
+		| "configuration"
+		| "judgmentConfiguration"
+		| "onKnowledgeContribution"
+		| "knowledgeDraft"
 	> = {},
 	inspection?: InspectionCapture,
 ) {
+	return createDumgen(productionOptions(onEvent, configuration, inspection));
+}
+
+export function createProductionKnowledgeDraft(
+	input: Parameters<typeof draftKnowledge>[1],
+	inspection?: InspectionCapture,
+) {
+	return draftKnowledge(productionOptions(undefined, {}, inspection), input);
+}
+
+function productionOptions(
+	onEvent: ((event: GenerationEvent) => void) | undefined,
+	configuration: Partial<DumgenOptions>,
+	inspection?: InspectionCapture,
+): DumgenOptions {
 	const execute = createOpenAIExecutor();
-	return createDumgen({
+	return {
 		...configuration,
 		judge: (request, options) => createTypeSafeExecutor()(request, options),
 		onOperation: (trace) => {
@@ -54,5 +72,5 @@ export function createProductionDumgen(
 				...request,
 				configuration: configurationSchema.parse(request.configuration),
 			}),
-	});
+	};
 }

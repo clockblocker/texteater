@@ -743,7 +743,12 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			},
 		},
 	};
+	const knowledgeDraftJson = JSON.stringify({
+		sourceFingerprint: "draft-source",
+		texts: [],
+	});
 	const input = {
+		knowledgeDraftJson,
 		attemptKey: "request-1",
 		visitorId: "visitor-1",
 		readingId: "reading-1",
@@ -758,6 +763,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			attemptKey: "request-1",
 			ownerReadingKey: "reading-key",
 			state: "Scheduled",
+			knowledgeDraftJson,
 		}),
 	]);
 	const loaded = await handler<{ attemptKey: string }, unknown>(loadInput)(
@@ -767,6 +773,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	expect(loaded).toEqual(
 		expect.objectContaining({
 			kind: "Generate",
+			knowledgeDraftJson,
 			reading: expect.objectContaining({ emojiDescription: "🏦" }),
 			encounter: expect.objectContaining({
 				target: {

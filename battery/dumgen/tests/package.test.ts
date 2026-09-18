@@ -26,6 +26,7 @@ test("published production runtime is independent of authoring and evaluation", 
 	expect(Object.keys(api).sort()).toEqual([
 		"DumgenFailure",
 		"createDumgen",
+		"draftKnowledge",
 		"selectGrammaticalAlternatives",
 		"validateEncounter",
 	]);

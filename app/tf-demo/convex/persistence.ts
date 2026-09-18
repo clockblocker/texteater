@@ -522,6 +522,7 @@ export const persistReusedResolvedClick = internalMutation({
 
 export const persistResolvedClick = internalMutation({
 	args: {
+		knowledgeDraftJson: v.optional(v.string()),
 		requestId: v.string(),
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
@@ -811,6 +812,9 @@ export const persistResolvedClick = internalMutation({
 		await settleResolvedSession(ctx, session, result);
 		await scheduleKnowledgeGeneration(ctx, {
 			attemptKey: args.requestId,
+			...(args.knowledgeDraftJson
+				? { knowledgeDraftJson: args.knowledgeDraftJson }
+				: {}),
 			visitorId: args.visitorId,
 			readingId: result.readingId,
 			attestationId: result.attestationId,

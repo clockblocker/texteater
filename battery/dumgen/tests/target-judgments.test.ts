@@ -110,10 +110,7 @@ test("every member click of all 16 accepted constructions assembles the exact sc
 					memberSegmentIndices: members,
 				});
 				const trace = run.traces[0]!;
-				const skipsWholeTarget =
-					members.length === 1 &&
-					target.kind !== "PRON" &&
-					target.kind !== "DET";
+				const skipsWholeTarget = members.length === 1;
 				expect(trace.calls.map((call) => call.executor)).toEqual(
 					skipsWholeTarget ? ["TypeSafe"] : ["TypeSafe", "TypeSafe"],
 				);
@@ -324,32 +321,32 @@ for (const scenario of [
 		calls: 1,
 	},
 	{
-		name: "retries a rejected singleton through whole-target validation",
+		name: "does not retry an unresolved singleton decision",
 		members: [3],
 		route: "Lexeme/ADJ",
 		singletonRoute: "Unresolved",
-		calls: 2,
+		calls: 1,
 	},
 	{
-		name: "validates a speculative determiner through the whole-target decision",
+		name: "keeps the original determiner decision without review",
 		members: [3],
 		route: "Lexeme/PRON",
 		singletonRoute: "Lexeme/DET",
-		calls: 2,
+		calls: 1,
 	},
 	{
-		name: "validates a speculative pronoun through the whole-target decision",
+		name: "keeps the original pronoun decision without review",
 		members: [3],
 		route: "Lexeme/DET",
 		singletonRoute: "Lexeme/PRON",
-		calls: 2,
+		calls: 1,
 	},
 	{
-		name: "preserves an unresolved whole-target fallback",
+		name: "preserves singleton uncertainty without another call",
 		members: [3],
 		route: "Unresolved",
 		singletonRoute: "Unresolved",
-		calls: 2,
+		calls: 1,
 	},
 	{
 		name: "ignores an accepted singleton route for a multi-member target",
@@ -399,14 +396,18 @@ for (const scenario of [
 				}),
 			),
 		);
+		const selectedRoute =
+			scenario.members.length === 1
+				? scenario.singletonRoute
+				: scenario.route;
 		const unresolved =
-			scenario.route === "Unresolved" ||
+			selectedRoute === "Unresolved" ||
 			scenario.unresolvedMember !== undefined;
 		if (unresolved) {
 			expect(result._tag).toBe("Left");
 			expect(run.traces[0]?.failure?.tag).toBe("Unresolved");
 		} else {
-			const [family, kind] = scenario.route.split("/");
+			const [family, kind] = selectedRoute.split("/");
 			expect(result).toMatchObject({
 				_tag: "Right",
 				right: { family, kind, memberSegmentIndices: scenario.members },

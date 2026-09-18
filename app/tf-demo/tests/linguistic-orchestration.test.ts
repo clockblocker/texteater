@@ -6,7 +6,7 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { createDumgen } from "dumgen";
-import type { Encounter, ModelExchange } from "dumgen/types";
+import type { DumgenOptions, Encounter, ModelExchange } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
@@ -155,6 +155,10 @@ function setup(
 	outputs: unknown[],
 	overrides: Partial<OrchestrationPersistence> = {},
 	candidates: Dumling.Reading<"de">[] = [],
+	hooks: Pick<
+		Parameters<typeof createTfDemoOrchestrator>[0],
+		"draftKnowledge" | "observer"
+	> & { execute?: DumgenOptions["execute"] } = {},
 ) {
 	const requests: ModelExchange["request"][] = [];
 	const { storage, commits } = createPlanningStorage(candidates);
@@ -244,10 +248,13 @@ function setup(
 	};
 	const dumgen = createDumgen({
 		...pipelineFixture(outputs),
+		...(hooks.execute ? { execute: hooks.execute } : {}),
 		onModelExchange: (exchange) => requests.push(exchange.request),
 	});
 	return {
 		orchestrator: createTfDemoOrchestrator({
+			draftKnowledge: hooks.draftKnowledge,
+			observer: hooks.observer,
 			dumgen,
 			dictionary: createDumdictService({ language: "de", storage }),
 			persistence,
@@ -302,7 +309,7 @@ test("real segmentation, classification, grammar and emoji production reach an a
 	).toHaveLength(1);
 	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
 	expect(run.writes).toHaveLength(1);
-	expect(run.requests).toHaveLength(5);
+	expect(run.requests).toHaveLength(6);
 });
 
 test("retry uses its exact Grammar checkpoint and skips classification and grammar", async () => {
@@ -311,7 +318,7 @@ test("retry uses its exact Grammar checkpoint and skips classification and gramm
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
 	expect(run.requests.map((request) => request.stage)).toEqual([
-		"resolveOrGenerateReadingEmojiDescription",
+		"generateReadingEmojiDescription",
 	]);
 	expect(run.writes[0]?.reading).toEqual(reading);
 });
@@ -540,4 +547,122 @@ test("mixed German, English and Hebrew intake persists ordered sentences without
 		"segment",
 		"segment",
 	]);
+});
+
+test("Knowledge drafts overlap emoji generation and are handed off only with the finalized Reading", async () => {
+	const draftStarted = Promise.withResolvers<void>();
+	const emojiStarted = Promise.withResolvers<void>();
+	const releaseDraft = Promise.withResolvers<void>();
+	const releaseEmoji = Promise.withResolvers<void>();
+	const readingAvailable = Promise.withResolvers<void>();
+	const draft = {
+		sourceFingerprint: "fixture",
+		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
+	};
+	const run = setup([], {}, [], {
+		draftKnowledge: (input) =>
+			Effect.tryPromise(async () => {
+				expect(input.lemma).toEqual(lemma);
+				draftStarted.resolve();
+				await releaseDraft.promise;
+				return draft;
+			}),
+		execute: async () => {
+			emojiStarted.resolve();
+			await releaseEmoji.promise;
+			return { output: "🏦" };
+		},
+		observer: {
+			async grammarAvailable() {},
+			async readingAvailable() {
+				readingAvailable.resolve();
+			},
+			async committing() {},
+		},
+	});
+	const pending = Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	await Promise.all([draftStarted.promise, emojiStarted.promise]);
+	expect(run.writes).toHaveLength(0);
+	releaseEmoji.resolve();
+	await readingAvailable.promise;
+	expect(run.writes).toHaveLength(0);
+	releaseDraft.resolve();
+	await pending;
+	expect(run.writes).toHaveLength(1);
+	expect(run.writes[0]?.reading.emojiDescription).toBe("🏦");
+	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
+		draft,
+	);
+});
+
+test("emoji failure cancels speculative Knowledge and never hands it to persistence", async () => {
+	const draftStarted = Promise.withResolvers<void>();
+	let aborted = false;
+	const run = setup([], {}, [], {
+		draftKnowledge: () =>
+			Effect.tryPromise(
+				(signal) =>
+					new Promise((_, reject) => {
+						signal.addEventListener(
+							"abort",
+							() => {
+								aborted = true;
+								reject(Error("aborted"));
+							},
+							{ once: true },
+						);
+						draftStarted.resolve();
+					}),
+			),
+		execute: async () => {
+			await draftStarted.promise;
+			throw Error("emoji failed");
+		},
+	});
+	const result = await Effect.runPromise(
+		Effect.either(
+			run.orchestrator.resolveSegment(selection, {
+				grammatical: grammar,
+			}),
+		),
+	);
+	expect(result._tag).toBe("Left");
+	expect(aborted).toBe(true);
+	expect(run.writes).toHaveLength(0);
+});
+
+test("failed Knowledge speculation does not fail Reading resolution", async () => {
+	const run = setup(["🏦"], {}, [], {
+		draftKnowledge: () => Effect.fail(Error("offline")),
+	});
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	expect(run.writes).toHaveLength(1);
+	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
+});
+
+test("existing Reading candidates bypass Knowledge speculation", async () => {
+	let drafts = 0;
+	const run = setup(
+		[{ decision: "Reuse", emojiDescription: "🏦" }],
+		{},
+		[{ unitKind: "Reading", lemma, emojiDescription: "🏦" }],
+		{
+			draftKnowledge: () => {
+				drafts++;
+				return Effect.succeed({
+					sourceFingerprint: "unused",
+					texts: [],
+				});
+			},
+		},
+	);
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	expect(drafts).toBe(0);
+	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });

@@ -117,14 +117,7 @@ export async function classifyGermanTarget(
 		// The speculative decision is about this exact singleton, never a larger group.
 		if (members.length === 1) {
 			const singletonRoute = result.answers.singletonRoute;
-			if (
-				singletonRoute?.type === "choice" &&
-				singletonRoute.choice !== "Unresolved" &&
-				// Speculative PRON/DET distinctions regressed in live evaluation.
-				// Keep the whole-target judgment for either side of that boundary.
-				singletonRoute.choice !== "Lexeme/PRON" &&
-				singletonRoute.choice !== "Lexeme/DET"
-			)
+			if (singletonRoute?.type === "choice")
 				selected = singletonRoute.choice;
 		}
 		recordEvent(signal, "JudgmentApplicability", {

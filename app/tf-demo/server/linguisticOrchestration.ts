@@ -4,6 +4,7 @@ import type {
 	ComparisonInput,
 	Dumgen,
 	Encounter,
+	KnowledgeDraft,
 	Segment,
 	SegmentedSentence,
 } from "dumgen/types";
@@ -12,6 +13,7 @@ import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import type { UnknownException } from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Fiber from "effect/Fiber";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
@@ -41,6 +43,7 @@ export type SubmittedSentence = {
 };
 
 export type ResolvedClickPersistence = {
+	readonly knowledgeDraftJson?: string;
 	readonly requestId: string;
 	readonly visitorId: string;
 	readonly sentenceId: string;
@@ -275,6 +278,11 @@ export function createTfDemoOrchestrator(options: {
 	readonly dictionary: DumdictService<"de">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
+	readonly draftKnowledge?: (input: {
+		encounter: Encounter<"de">;
+		lemma: Dumling.Lemma<"de">;
+		visitorId: string;
+	}) => Effect.Effect<KnowledgeDraft, unknown>;
 }) {
 	function submitText(input: SubmitTextInput) {
 		return Effect.gen(function* () {
@@ -328,6 +336,9 @@ export function createTfDemoOrchestrator(options: {
 		checkpoints: ResolutionCheckpoints = {},
 	) {
 		return Effect.gen(function* () {
+			let knowledgeDraft:
+				| Fiber.RuntimeFiber<KnowledgeDraft | null, never>
+				| undefined;
 			assertNonEmpty(input.requestId, "requestId");
 			assertNonEmpty(input.visitorId, "visitorId");
 			assertNonEmpty(input.sentenceId, "sentenceId");
@@ -402,8 +413,9 @@ export function createTfDemoOrchestrator(options: {
 			if (!checkpoints.grammatical) {
 				yield* Effect.tryPromise(
 					() =>
-						options.observer?.grammarAvailable({ grammatical }) ??
-						Promise.resolve(),
+						options.observer?.grammarAvailable({
+							grammatical,
+						}) ?? Promise.resolve(),
 				);
 			}
 
@@ -441,6 +453,10 @@ export function createTfDemoOrchestrator(options: {
 						}) ?? Promise.resolve(),
 				);
 			}
+			const draft =
+				knowledgeDraft && readingResolution.decision === "New"
+					? yield* Fiber.join(knowledgeDraft)
+					: null;
 			const prepared = yield* readingResolution.decision === "Reuse"
 				? options.dictionary.prepare.ensureOwnedSurface({
 						reading,
@@ -473,6 +489,9 @@ export function createTfDemoOrchestrator(options: {
 			const persisted = yield* Effect.tryPromise(() =>
 				options.persistence.persistResolvedClick({
 					...input,
+					...(draft && (draft.texts.length || draft.relations)
+						? { knowledgeDraftJson: JSON.stringify(draft) }
+						: {}),
 					occurrence: {
 						memberSegmentIndices:
 							grammatical.encounter.target.memberSegmentIndices,
@@ -525,7 +544,10 @@ export function createTfDemoOrchestrator(options: {
 							sentence,
 							clickedSegmentIndex: request.clickedSegmentIndex,
 						});
-						const encounter: Encounter<"de"> = { sentence, target };
+						const encounter: Encounter<"de"> = {
+							sentence,
+							target,
+						};
 						const attestation =
 							yield* options.dumgen.resolveGrammar(encounter);
 						return {
@@ -578,9 +600,23 @@ export function createTfDemoOrchestrator(options: {
 						encounter: resolved.encounter,
 						lemma: resolvedLemma,
 					};
+					if (!candidates.length && options.draftKnowledge) {
+						knowledgeDraft = yield* options
+							.draftKnowledge({
+								...base,
+								visitorId: input.visitorId,
+							})
+							.pipe(
+								Effect.catchAll(() => Effect.succeed(null)),
+								Effect.forkScoped,
+							);
+					}
 					const operation =
 						options.dumgen.resolveOrGenerateReadingEmojiDescription(
-							{ ...base, candidates } as ComparisonInput<"de">,
+							{
+								...base,
+								candidates,
+							} as ComparisonInput<"de">,
 						);
 					return yield* operation.pipe(
 						Effect.catchTag("CatalogMiss", (failure) =>
@@ -594,7 +630,7 @@ export function createTfDemoOrchestrator(options: {
 					);
 				});
 			}
-		});
+		}).pipe(Effect.scoped);
 	}
 
 	return Object.freeze({ submitText, resolveSegment });

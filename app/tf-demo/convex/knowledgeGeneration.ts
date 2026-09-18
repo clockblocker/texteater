@@ -132,6 +132,7 @@ export async function scheduleKnowledgeGeneration(
 	ctx: MutationCtx,
 	input: {
 		attemptKey: string;
+		knowledgeDraftJson?: string;
 		visitorId: string;
 		readingId: Id<"readings">;
 		attestationId: Id<"attestations">;
@@ -300,6 +301,9 @@ export const loadInput = internalQuery({
 			encounter: occurrence.encounter,
 			attestation: occurrence.publicAttestation,
 			existingKnowledge: accumulated?.knowledge ?? {},
+			...(attempt.knowledgeDraftJson
+				? { knowledgeDraftJson: attempt.knowledgeDraftJson }
+				: {}),
 			runNumber: attempt.runNumber ?? 1,
 			translationLanguages: missingTranslations,
 			translationsOnly: accumulated?.status === "Full",

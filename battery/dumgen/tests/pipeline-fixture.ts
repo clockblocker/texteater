@@ -32,7 +32,12 @@ export function pipelineFixture(
 				Object.hasOwn(request.questions, "support") ||
 				Object.hasOwn(request.questions, "identity") ||
 				Object.hasOwn(request.questions, "hasGovPrep") ||
-				Object.hasOwn(request.questions, "hasSepPrefix")
+				Object.hasOwn(request.questions, "hasSepPrefix") ||
+				Object.hasOwn(
+					request.questions,
+					"surface.inflectionalFeatures.case",
+				) ||
+				Object.hasOwn(request.questions, "attachment")
 			) {
 				if (!grammar) throw Error("Missing grammar fixture");
 				return grammar.judge(request, options);

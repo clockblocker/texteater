@@ -24,6 +24,7 @@ import {
 	sameValue,
 } from "../authored-closed-sets/select.js";
 import { germanFusion } from "../fusions.js";
+import { draftedRelationCandidates, draftedTexts } from "./draft.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
 	authoredKnowledge,
@@ -118,6 +119,11 @@ export async function produceKnowledge(
 		snapshot();
 	};
 	snapshot();
+	const draftTexts = await draftedTexts(
+		options,
+		{ ...input, request: authored.missing },
+		signal,
+	);
 	const state = {
 		reading,
 		markedContext: markedContext(input.encounter).markedContext,
@@ -217,53 +223,68 @@ export async function produceKnowledge(
 						const requestMask = leaf
 							? { translations: { [leaf]: null } }
 							: { [aspect]: null };
-						const contribution = await executeGeneration(
-							options,
-							{
-								stage,
-								route,
-								input: {
-									...state,
-									aspect,
-									...(leaf ? { language: leaf } : {}),
-								},
-								signal,
-								configuration: effectiveConfiguration(
-									options,
-									route,
-								),
-								systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} ${reading.lemma.kind === "Fusion" && aspect === "definition" ? "Explain the expanded preposition plus contextual article and its Case (im = in dem, Dativ; zum = zu dem, Dativ; ins = in das, Akkusativ). These expanded components are an explanation, not separately attested words." : ""} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
-								outputSchema: {
-									type: "object",
-									properties: {
-										text: { type: ["string", "null"] },
-									},
-									required: ["text"],
-									additionalProperties: false,
-								},
-							},
-							(output) => {
-								if (
-									!output ||
-									typeof output !== "object" ||
-									Object.keys(output).length !== 1 ||
-									!("text" in output) ||
-									(output.text !== null &&
-										typeof output.text !== "string")
-								)
-									throw Error("Expected only text or null");
-								if (output.text === null) return null;
-								const analysis = leaf
-									? { translations: { [leaf]: output.text } }
-									: { [aspect]: output.text };
-								return projectKnowledge(
-									reading,
-									requestMask,
-									analysis,
-								);
-							},
-							[],
+						const validateText = (output: unknown) => {
+							if (
+								!output ||
+								typeof output !== "object" ||
+								Object.keys(output).length !== 1 ||
+								!("text" in output) ||
+								(output.text !== null &&
+									typeof output.text !== "string")
+							)
+								throw Error("Expected only text or null");
+							if (output.text === null) return null;
+							const analysis = leaf
+								? { translations: { [leaf]: output.text } }
+								: { [aspect]: output.text };
+							return projectKnowledge(
+								reading,
+								requestMask,
+								analysis,
+							);
+						};
+						const draftText = draftTexts.get(
+							`${aspect}/${leaf ?? ""}`,
 						);
+						const contribution =
+							draftText !== undefined
+								? validateText({ text: draftText })
+								: await executeGeneration(
+										options,
+										{
+											stage,
+											route,
+											input: {
+												...state,
+												aspect,
+												...(leaf
+													? { language: leaf }
+													: {}),
+											},
+											signal,
+											configuration:
+												effectiveConfiguration(
+													options,
+													route,
+												),
+											systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German Reading in its marked context. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} ${reading.lemma.kind === "Fusion" && aspect === "definition" ? "Explain the expanded preposition plus contextual article and its Case (im = in dem, Dativ; zum = zu dem, Dativ; ins = in das, Akkusativ). These expanded components are an explanation, not separately attested words." : ""} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+											outputSchema: {
+												type: "object",
+												properties: {
+													text: {
+														type: [
+															"string",
+															"null",
+														],
+													},
+												},
+												required: ["text"],
+												additionalProperties: false,
+											},
+										},
+										validateText,
+										[],
+									);
 						if (contribution)
 							outcome = {
 								changes: contribution.changes,
@@ -317,53 +338,58 @@ export async function produceKnowledge(
 	}
 	let candidates: string[];
 	try {
-		candidates = await executeGeneration(
-			options,
-			{
-				stage,
-				route,
-				input: { ...state, requestedRelations },
-				signal,
-				configuration: effectiveConfiguration(options, route),
-				systemPrompt:
-					"Propose up to 16 distinct German Canonical Forms relevant to the requested Semantic Relations of this fixed exact Reading. Preserve its meaning and source Family. Propose text only in a flat candidates array. No relation labels, Kinds, Language, Family, Core Features, Emoji Descriptions, IDs or persistence instructions. Do not propose the source itself, incidental neighbors, inflected Surface forms or duplicate targets. An empty array means no candidates were found, not reviewed exhaustive absence.",
-				outputSchema: {
-					type: "object",
-					properties: {
-						candidates: {
-							type: "array",
-							items: { type: "string" },
-							maxItems: 16,
+		candidates =
+			(await draftedRelationCandidates(options, input)) ??
+			(await executeGeneration(
+				options,
+				{
+					stage,
+					route,
+					input: { ...state, requestedRelations },
+					signal,
+					configuration: effectiveConfiguration(options, route),
+					systemPrompt:
+						"Propose up to 16 distinct German Canonical Forms relevant to the requested Semantic Relations of this fixed exact Reading. Preserve its meaning and source Family. Propose text only in a flat candidates array. No relation labels, Kinds, Language, Family, Core Features, Emoji Descriptions, IDs or persistence instructions. Do not propose the source itself, incidental neighbors, inflected Surface forms or duplicate targets. An empty array means no candidates were found, not reviewed exhaustive absence.",
+					outputSchema: {
+						type: "object",
+						properties: {
+							candidates: {
+								type: "array",
+								items: { type: "string" },
+								maxItems: 16,
+							},
 						},
+						required: ["candidates"],
+						additionalProperties: false,
 					},
-					required: ["candidates"],
-					additionalProperties: false,
 				},
-			},
-			(output) => {
-				if (
-					!output ||
-					typeof output !== "object" ||
-					Object.keys(output).length !== 1 ||
-					!("candidates" in output) ||
-					!Array.isArray(output.candidates) ||
-					output.candidates.length > 16 ||
-					output.candidates.some(
-						(value) =>
-							typeof value !== "string" || !normalizeText(value),
+				(output) => {
+					if (
+						!output ||
+						typeof output !== "object" ||
+						Object.keys(output).length !== 1 ||
+						!("candidates" in output) ||
+						!Array.isArray(output.candidates) ||
+						output.candidates.length > 16 ||
+						output.candidates.some(
+							(value) =>
+								typeof value !== "string" ||
+								!normalizeText(value),
+						)
 					)
-				)
-					throw Error(
-						"Expected a bounded flat array of candidate text",
-					);
-				return [
-					...new Set(
-						output.candidates.map((value) => normalizeText(value)),
-					),
-				];
-			},
-			[],
-		);
+						throw Error(
+							"Expected a bounded flat array of candidate text",
+						);
+					return [
+						...new Set(
+							output.candidates.map((value) =>
+								normalizeText(value),
+							),
+						),
+					];
+				},
+				[],
+			));
 	} catch (error) {
 		for (const leaf of requestedRelations)
 			failed("semanticRelations", error, { leaf });
@@ -407,7 +433,12 @@ export async function produceKnowledge(
 		);
 	}
 	try {
-		const parent = contextFor(signal).calls.at(-1);
+		const parent = contextFor(signal).calls.findLast(
+			(call) =>
+				call.request.stage === stage &&
+				"requestedRelations" in
+					(call.request.input as Record<string, unknown>),
+		);
 		const judgments = await judgmentCaller(options)(
 			stage,
 			route,

@@ -3,7 +3,7 @@ import { directSemanticRelationValues, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
 export function generationRequestFor(
-	reading: Dumling.Reading<"de">,
+	reading: { readonly lemma: Dumling.Lemma<"de"> },
 	qualifiedKinds: readonly Dumrel.DirectSemanticRelation[],
 	options: {
 		readonly translationLanguages?: readonly Dumrel.TranslationLanguage[];

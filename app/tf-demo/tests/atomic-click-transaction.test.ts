@@ -121,9 +121,13 @@ const handler = (
 	}
 )._handler;
 
-async function runTransaction(db: TransactionalDb, args: unknown) {
+async function runTransaction(
+	db: TransactionalDb,
+	args: unknown,
+	scheduler?: { runAfter: (...args: unknown[]) => Promise<void> },
+) {
 	const draft = db.fork();
-	const result = await handler({ db: draft }, args);
+	const result = await handler({ db: draft, scheduler }, args);
 	db.adopt(draft);
 	return result;
 }
@@ -255,6 +259,51 @@ test("a non-empty New plan commits dictionary, occurrence membership, and Click 
 	expect(db.rows("segments")[0]?.attestationMembership).toMatchObject({
 		orthography: "Standard",
 	});
+});
+
+test("Knowledge drafts follow the committed occurrence and a late writer cannot replace them", async () => {
+	const db = new TransactionalDb(sourceSeed());
+	const scheduled: unknown[][] = [];
+	const scheduler = {
+		async runAfter(...args: unknown[]) {
+			scheduled.push(args);
+		},
+	};
+	const knowledgeDraftJson = JSON.stringify({
+		sourceFingerprint: "original",
+		texts: [],
+	});
+	const args = { ...clickArgs(newReadingPlan()), knowledgeDraftJson };
+	await runTransaction(db, args, scheduler);
+	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+		expect.objectContaining({
+			knowledgeDraftJson,
+			readingId: db.rows("readings")[0]?._id,
+		}),
+	]);
+	const late = await runTransaction(
+		db,
+		{
+			...args,
+			requestId: "late-writer",
+			knowledgeDraftJson: JSON.stringify({
+				sourceFingerprint: "late",
+				texts: [],
+			}),
+		},
+		scheduler,
+	);
+	expect(late).toMatchObject({ status: "Reused" });
+	expect(
+		db
+			.rows("knowledgeGenerationAttempts")
+			.find((row) => row.attemptKey === "late-writer")
+			?.knowledgeDraftJson,
+	).toBeUndefined();
+	expect(db.rows("knowledgeGenerationAttempts")[0]?.knowledgeDraftJson).toBe(
+		knowledgeDraftJson,
+	);
+	expect(scheduled).toHaveLength(1);
 });
 
 test("a New plan adopts canonical-only Lemma, Reading, and Surface rows", async () => {

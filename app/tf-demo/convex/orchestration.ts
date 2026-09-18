@@ -21,7 +21,10 @@ import {
 	type ReusedResolvedClickCommit,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
-import { createProductionDumgen } from "../server/modelExecution";
+import {
+	createProductionDumgen,
+	createProductionKnowledgeDraft,
+} from "../server/modelExecution";
 import { parseGermanReading } from "../server/operationalParsing";
 import {
 	parseResolvedGrammar,
@@ -31,7 +34,7 @@ import {
 	executeResolutionSession,
 	type ResolutionSessionLifecyclePort,
 } from "../server/resolutionSessionExecution";
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
 import {
@@ -684,6 +687,42 @@ function orchestratorFor(
 			}
 		: persistence;
 	return createTfDemoOrchestrator({
+		draftKnowledge: ({ encounter, lemma, visitorId }) =>
+			Effect.gen(function* () {
+				const [settings, authorization] = yield* Effect.tryPromise(() =>
+					Promise.all([
+						ctx.runQuery(api.knowledgeSettings.get, { visitorId }),
+						ctx.runQuery(
+							internal.relationPublication.getAuthorization,
+							{},
+						),
+					]),
+				);
+				const { generationRequestFor } = yield* Effect.promise(
+					() => import("../server/generatedKnowledgeRequest"),
+				);
+				return yield* createProductionKnowledgeDraft(
+					{
+						encounter,
+						lemma,
+						request: generationRequestFor(
+							{ lemma },
+							authorization.rollbackStopped
+								? []
+								: authorization.qualifiedKinds,
+							{
+								translationLanguages: (
+									["en", "ru"] as const
+								).filter(
+									(language) =>
+										settings.translations[language],
+								),
+							},
+						),
+					},
+					inspection,
+				);
+			}),
 		dumgen: createProductionDumgen(
 			observer?.generationEvent,
 			{},
@@ -764,6 +803,9 @@ function createConvexPersistence(
 			return ctx.runMutation(internal.persistence.persistResolvedClick, {
 				...convexSegmentSelectionArgs(input),
 				dictionaryPlan,
+				...(input.knowledgeDraftJson
+					? { knowledgeDraftJson: input.knowledgeDraftJson }
+					: {}),
 				reading: input.reading,
 				readingKey: input.readingKey,
 				occurrence: {

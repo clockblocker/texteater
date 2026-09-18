@@ -118,33 +118,7 @@ export const runKnowledgeGeneration = internalAction({
 			let publishContribution: (
 				changes: KnowledgeProduction["changes"],
 			) => Promise<void> = async () => {};
-			const knowledgeDumgen = createProductionDumgen(
-				(event) => {
-					if (event.kind === "TraceRecorded")
-						operationTraces.push(event.traceJson);
-				},
-				{
-					onKnowledgeContribution: (changes) => {
-						pendingContributions.push(...structuredClone(changes));
-						publicationQueue = publicationQueue
-							.then(async () => {
-								// Coalesce siblings that finish while a commit is in flight.
-								const contribution =
-									pendingContributions.splice(0);
-								if (contribution.length)
-									await publishContribution(contribution);
-							})
-							.catch((error) => {
-								// Keep generation running; the final commit retries unsaved text.
-								console.error(
-									"Incremental Knowledge publication failed",
-									error,
-								);
-							});
-					},
-				},
-				inspection,
-			);
+
 			let requested: unknown = {};
 			await ctx.runMutation(internal.knowledgeGeneration.markRunning, {
 				attemptKey,
@@ -158,6 +132,38 @@ export const runKnowledgeGeneration = internalAction({
 				if (input.reading.lemma.language !== "de") {
 					throw new Error("Unsupported Knowledge language.");
 				}
+				const knowledgeDumgen = createProductionDumgen(
+					(event) => {
+						if (event.kind === "TraceRecorded")
+							operationTraces.push(event.traceJson);
+					},
+					{
+						knowledgeDraft: input.knowledgeDraftJson
+							? JSON.parse(input.knowledgeDraftJson)
+							: undefined,
+						onKnowledgeContribution: (changes) => {
+							pendingContributions.push(
+								...structuredClone(changes),
+							);
+							publicationQueue = publicationQueue
+								.then(async () => {
+									// Coalesce siblings that finish while a commit is in flight.
+									const contribution =
+										pendingContributions.splice(0);
+									if (contribution.length)
+										await publishContribution(contribution);
+								})
+								.catch((error) => {
+									// Keep generation running; the final commit retries unsaved text.
+									console.error(
+										"Incremental Knowledge publication failed",
+										error,
+									);
+								});
+						},
+					},
+					inspection,
+				);
 				const reading = parseGermanReading(input.reading);
 				const authorization = await ctx.runQuery(
 					getRelationPublicationAuthorization,
