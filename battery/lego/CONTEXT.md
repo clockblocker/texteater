@@ -24,7 +24,9 @@ rests on, and raised is one step above paper for hover and popups.
 A hairline rule. The strong line marks a separator or a Card edge.
 
 **Gender tone**:
-The colour of a headword by grammatical gender: feminine, masculine, neuter.
+The feminine, masculine, or neuter variant of link colour for a noun or pronoun
+whose gender is a marked Core Feature. A noun's article shares its Gender tone,
+including on plural forms.
 
 **Segment tone**:
 The colour of a reader segment by its state: unknown, known, selected,

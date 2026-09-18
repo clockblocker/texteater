@@ -40,6 +40,50 @@ export async function saveInspectionStep(
 	}
 }
 
+export const beginAnalysis = internalMutation({
+	args: {
+		requestId: v.string(),
+		visitorId: v.string(),
+		sourceText: v.string(),
+	},
+	returns: v.null(),
+	handler: async (ctx, args) => {
+		await ctx.db.insert("inspectionClicks", {
+			requestId: args.requestId,
+			visitorId: args.visitorId,
+			selectedSegment: "Sentence analysis",
+			sentence: args.sourceText,
+			selectionKind: "Analysis",
+			startedAt: Date.now(),
+			resolutionState: "Running",
+		});
+		return null;
+	},
+});
+
+export const finishAnalysis = internalMutation({
+	args: {
+		requestId: v.string(),
+		state: v.union(v.literal("Complete"), v.literal("PermanentFailure")),
+	},
+	returns: v.null(),
+	handler: async (ctx, args) => {
+		const record = await ctx.db
+			.query("inspectionClicks")
+			.withIndex("by_request_id", (q) =>
+				q.eq("requestId", args.requestId),
+			)
+			.unique();
+		if (record?.selectionKind === "Analysis") {
+			await ctx.db.patch(record._id, {
+				resolutionState: args.state,
+				finishedAt: Date.now(),
+			});
+		}
+		return null;
+	},
+});
+
 export const enabled = internalQuery({
 	args: { requestId: v.string() },
 	returns: v.boolean(),

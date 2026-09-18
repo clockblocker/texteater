@@ -132,15 +132,12 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 		const article = nounSurfaceNote.analyses[0]?.article;
 		expect(article?.presented.normalizedSurface).toBe("der");
 		if (!article) throw new Error("Missing article route");
-		const articleNote = await client.query(api.readingNotes.get, {
-			readingId: article.target.readingId,
+		const articleNote = await client.query(api.routeNotes.get, {
+			target: { ...article.target, ...article.presentationContext },
 			visitorId,
 		});
-		expect(articleNote?.reading.lemma).toMatchObject({
-			canonicalForm: "der",
-			kind: "DET",
-		});
-		expect(articleNote?.sourceContexts.page).toEqual([]);
+		if (articleNote?.kind !== "Surface") throw new Error("Missing DET Surface Note");
+		expect(articleNote.analyses.find(({ analysisKey }) => analysisKey === article.presentationContext.activeAnalysisKey)?.presented.lemma).toMatchObject({ canonicalForm: "der", kind: "DET" });
 		const note = await client.query(api.readingNotes.get, {
 			readingId: canonical.readingId,
 			visitorId,

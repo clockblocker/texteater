@@ -43,7 +43,7 @@ export const renderDefaultSurfaceRoutes = (({
 					const { lemma } = analysis.presented;
 					const { article } = analysis;
 					const isActive = analysis.analysisKey === activeAnalysisKey;
-					const tone = genderTone(lemma.coreFeatures) ?? "default";
+					const tone = genderTone(lemma) ?? "default";
 					const inflection = featureSummary(
 						analysis.presented.inflectionalFeatures,
 					);
@@ -55,9 +55,11 @@ export const renderDefaultSurfaceRoutes = (({
 							{article ? (
 								<div className="mb-2">
 									<LinkButton
+										className={TONE_CLASS[tone]}
 										onClick={() =>
 											PresentationCapabilities.follow(
 												article.target,
+												article.presentationContext,
 											)
 										}
 									>

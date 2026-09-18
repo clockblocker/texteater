@@ -1,4 +1,4 @@
-import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { SurfaceNotePresentationContext, WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import type { KnowledgePreferences } from "../../../../shared/knowledge-preferences";
 import type { NoteDataFor } from "./data";
@@ -8,6 +8,7 @@ export type ShadowNoteReferrer =
 	NoteDataFor<"Shadow">["references"]["page"][number];
 
 export type ReadingPresentationCapabilities = {
+	readonly nounArticle?: NounArticleNavigation;
 	readonly grammaticalAlternatives?: {
 		readonly follow: (readingKey: string) => Promise<void>;
 		readonly pending: boolean;
@@ -33,7 +34,7 @@ export type ReadingPresentationCapabilities = {
 	 * inside it. Only a Sheet offers this; a Card leaves it undefined.
 	 */
 	readonly definition?: DefinitionCapabilities;
-	readonly follow: (target: WorkspaceTarget) => void;
+	readonly follow: (target: WorkspaceTarget, presentationContext?: SurfaceNotePresentationContext) => void;
 };
 
 export type DefinitionCapabilities = {
@@ -49,6 +50,7 @@ export type DefinitionCapabilities = {
 };
 
 export type RoutePresentationCapabilities = {
+	readonly nounArticle?: NounArticleNavigation;
 	readonly presentation?: "Card" | "Sheet";
 	readonly activeAnalysisKey?: Id<"surfaces">;
 	readonly pagination: {
@@ -57,14 +59,20 @@ export type RoutePresentationCapabilities = {
 		readonly error: string | null;
 		readonly loadMore: (() => Promise<void>) | null;
 	};
-	readonly follow: (target: WorkspaceTarget) => void;
+	readonly follow: (target: WorkspaceTarget, presentationContext?: SurfaceNotePresentationContext) => void;
+};
+
+export type NounArticleNavigation = {
+	readonly follow: (lemmaId: Id<"lemmas">) => void;
+	readonly pending: boolean;
+	readonly error: string | null;
 };
 
 export type SurfacePresentationCapabilities = {
 	readonly presentation?: "Card" | "Sheet";
 	readonly activeAnalysisKey?: Id<"surfaces">;
 	readonly pagination?: RoutePresentationCapabilities["pagination"];
-	readonly follow: (target: WorkspaceTarget) => void;
+	readonly follow: (target: WorkspaceTarget, presentationContext?: SurfaceNotePresentationContext) => void;
 };
 
 export type ShadowPresentationCapabilities = {
@@ -82,5 +90,5 @@ export type ShadowPresentationCapabilities = {
 		readonly outcome: string | null;
 		readonly resolve: ((locatorKey: string) => Promise<void>) | null;
 	};
-	readonly follow: (target: WorkspaceTarget) => void;
+	readonly follow: (target: WorkspaceTarget, presentationContext?: SurfaceNotePresentationContext) => void;
 };

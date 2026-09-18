@@ -1,3 +1,5 @@
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 import type { DumgenOptions, Encounter } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
@@ -48,9 +50,7 @@ export function nounArticleReference(input: {
 	const canonical =
 		input.article === "Indefinite"
 			? "ein"
-			: ["der", "die", "das"].includes(expected)
-				? expected
-				: input.number === "Plur" || input.gender === "Fem"
+			: input.number === "Plur" || input.gender === "Fem"
 					? "die"
 					: input.gender === "Neut"
 						? "das"
@@ -85,7 +85,25 @@ export function nounArticleReference(input: {
 			"number[psor]": null,
 		},
 	};
-	return { surface, reading: member.reading };
+	const parsed = parseUnit(surface);
+	if (!parsed.success) throw parsed.error;
+	if (parsed.chain.unitKind !== "Surface" || parsed.chain.language !== "de" || parsed.chain.family !== "Lexeme" || parsed.chain.kind !== "DET") throw new Error("Expected an article Surface");
+	const reading: Dumling.Reading<"de", "Lexeme", "DET"> = { ...member.reading, lemma: member.lemma };
+	return { surface: parsed.chain.value, reading };
+}
+
+/** The reviewed citation article for a German noun heading, independent of its encounters. */
+export function selectNounHeadingArticle(lemma: {
+	language: string;
+	family: string;
+	kind: string;
+	coreFeatures: Readonly<Record<string, unknown>>;
+}) {
+	if (lemma.language !== "de" || lemma.family !== "Lexeme" || lemma.kind !== "NOUN") return null;
+	const gender = lemma.coreFeatures.gender;
+	const canonical = gender === "Masc" ? "der" : gender === "Fem" ? "die" : gender === "Neut" ? "das" : null;
+	if (!canonical) return null;
+	return authoredMembers.find(({ lemma: candidate }) => candidate.kind === "DET" && candidate.canonicalForm === canonical && "pronType" in candidate.coreFeatures && candidate.coreFeatures.pronType === "Art") ?? null;
 }
 
 type ArticleCandidate = {

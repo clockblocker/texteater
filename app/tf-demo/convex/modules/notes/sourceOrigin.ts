@@ -2,6 +2,7 @@ import { v } from "convex/values";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
+import { grammaticalGenderValidator } from "../text/sentenceView";
 import { segmentKindValidator } from "../../model/validators";
 
 /** Where a source Sentence lives: a Visitor-submitted Text or one Reading's Definition. */
@@ -34,6 +35,7 @@ export const sourceTargetValidator = v.union(
 export const sourceSegmentValidator = v.object({
 	kind: segmentKindValidator,
 	text: v.string(),
+	gender: v.optional(grammaticalGenderValidator),
 });
 
 export type SourceOrigin =

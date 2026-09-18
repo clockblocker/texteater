@@ -19,6 +19,9 @@ import {
 	persistUnresolvedClick,
 } from "../convex/persistence";
 import {
+	beginAnalysis,
+	detail,
+	finishAnalysis,
 	recordSelectionTiming,
 	recordStep,
 } from "../convex/resolutionInspection";
@@ -1778,3 +1781,37 @@ function readingProjection(emojiDescription = "🏦", canonicalForm = "Bank") {
 		kind: "NOUN",
 	};
 }
+
+test("analysis history survives without a resolution session and is scoped to its visitor", async () => {
+	const db = new SessionDb();
+	await handler<
+		{ requestId: string; visitorId: string; sourceText: string },
+		null
+	>(beginAnalysis)(
+		{ db },
+		{
+			requestId: "analysis-1",
+			visitorId: "visitor-1",
+			sourceText: "Hallo. Welt!",
+		},
+	);
+	const read = handler<{ requestId: string; visitorId: string }, unknown>(
+		detail,
+	);
+	expect(
+		await read({ db }, { requestId: "analysis-1", visitorId: "visitor-2" }),
+	).toBeNull();
+	expect(
+		await read({ db }, { requestId: "analysis-1", visitorId: "visitor-1" }),
+	).toMatchObject({ state: "Running", finishedAt: null });
+	await handler<{ requestId: string; state: string }, null>(finishAnalysis)(
+		{ db },
+		{ requestId: "analysis-1", state: "PermanentFailure" },
+	);
+	expect(
+		await read({ db }, { requestId: "analysis-1", visitorId: "visitor-1" }),
+	).toMatchObject({
+		state: "PermanentFailure",
+		finishedAt: expect.any(Number),
+	});
+});

@@ -149,6 +149,9 @@ function useDemoDataControls(
 		setInteractionError(null);
 		try {
 			const result = await segmentText.run({
+				inspectionVisitorId: import.meta.env.DEV
+					? visitorId
+					: undefined,
 				submissionKey: text.submissionKey,
 				sourceText: text.sourceText,
 			});

@@ -17,7 +17,7 @@ export type PresentCardsOptions = {
 };
 
 export type WorkspaceInteraction = {
-	readonly follow: (target: WorkspaceTarget) => void;
+	readonly follow: (target: WorkspaceTarget, presentationContext?: SurfaceNotePresentationContext) => void;
 	readonly presentCards: (
 		cards: readonly WorkspaceCardTarget[],
 		options?: PresentCardsOptions,

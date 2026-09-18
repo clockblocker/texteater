@@ -26,6 +26,7 @@ import {
 	PlusIcon,
 } from "lucide-react";
 import { type FormEvent, useState } from "react";
+import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
@@ -37,6 +38,7 @@ const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
 });
 
 export function LibraryView() {
+	const visitorId = useAnonymousVisitorId();
 	const { follow } = useWorkspaceInteraction();
 	const [isAddTextOpen, setIsAddTextOpen] = useState(false);
 	const [sourceText, setSourceText] = useState(exampleText);
@@ -57,6 +59,9 @@ export function LibraryView() {
 
 		try {
 			const result = await submitText.run({
+				inspectionVisitorId: import.meta.env.DEV
+					? visitorId
+					: undefined,
 				submissionKey: submissionKeyFor(normalized),
 				sourceText: normalized,
 			});

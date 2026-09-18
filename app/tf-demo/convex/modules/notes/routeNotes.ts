@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { readingIdentityKey } from "../../../server/linguisticIdentity";
+import { makeSurfaceId } from "dumdict/runtime";
+import { projectSentenceView } from "../text/sentenceView";
 import { parseGermanSurface } from "../../../server/operationalParsing";
 
 import type { Doc, Id } from "../../_generated/dataModel";
@@ -90,7 +91,8 @@ const surfaceRouteNoteValidator = v.object({
 					v.null(),
 					v.object({
 						presented: presentedSurfaceValidator,
-						target: readingTargetValidator,
+						target: surfaceTargetValidator,
+						presentationContext: v.object({ activeAnalysisKey: v.id("surfaces") }),
 					}),
 				),
 			),
@@ -154,9 +156,10 @@ export async function loadRouteNote(
 	ctx: QueryCtx,
 	target: RouteNoteTarget,
 	contextCursor?: string,
+	visitorId?: string,
 ) {
 	if (target.kind === "Attestation") {
-		return loadAttestationRouteNote(ctx, target.attestationId);
+		return loadAttestationRouteNote(ctx, target.attestationId, visitorId);
 	}
 	if (target.kind === "Surface") {
 		return loadSurfaceRouteNote(
@@ -173,6 +176,7 @@ export async function loadRouteNote(
 async function loadAttestationRouteNote(
 	ctx: QueryCtx,
 	attestationId: Id<"attestations">,
+	visitorId?: string,
 ) {
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
 	if (!occurrence) return null;
@@ -187,6 +191,7 @@ async function loadAttestationRouteNote(
 	if (!text) return null;
 	const origin = await projectSourceOrigin(ctx, text);
 	if (!origin) return null;
+	const view = visitorId ? await projectSentenceView(ctx, occurrence.sentence, visitorId) : null;
 	return {
 		kind: "Attestation" as const,
 		target: {
@@ -198,7 +203,8 @@ async function loadAttestationRouteNote(
 			sentencePosition: occurrence.sentence.position,
 			sentenceSnippet: occurrence.sentence.stitchedText,
 			segments: occurrence.segments.map(
-				({ kind, text: segmentText }) => ({
+				({ kind, text: segmentText, index }) => ({
+					...(view?.segments.find((segment) => segment.index === index)?.gender ? { gender: view?.segments.find((segment) => segment.index === index)?.gender } : {}),
 					kind,
 					text: segmentText,
 				}),
@@ -268,19 +274,14 @@ async function loadSurfaceRouteNote(
 			if (!("articleReference" in value) || !value.articleReference)
 				return null;
 			const reference = value.articleReference;
-			const reading = await ctx.db
-				.query("readings")
-				.withIndex("by_reading_key", (q) =>
-					q.eq("readingKey", readingIdentityKey(reference.reading)),
-				)
+			const component = await ctx.db.query("surfaces")
+				.withIndex("by_surface_key", (q) => q.eq("surfaceKey", makeSurfaceId("de", reference.surface)))
 				.unique();
-			if (!reading)
-				throw new Error(
-					"Article reference was not materialized with its noun Surface",
-				);
+			if (!component) throw new Error("Article Surface was not materialized with its noun Surface");
 			return {
 				presented: presentSurface(reference.surface),
-				target: { kind: "Reading" as const, readingId: reading._id },
+				target: { kind: "Surface" as const, language: "de" as const, normalizedSurface: reference.surface.normalizedSurface },
+				presentationContext: { activeAnalysisKey: component._id },
 			};
 		}),
 	);

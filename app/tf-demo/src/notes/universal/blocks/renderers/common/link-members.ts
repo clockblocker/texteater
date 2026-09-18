@@ -4,6 +4,7 @@ import { createElement, type MouseEvent, type ReactNode } from "react";
 export type SourceSegment = {
 	readonly kind: string;
 	readonly text: string;
+	readonly gender?: "Fem" | "Masc" | "Neut";
 };
 
 /**
@@ -43,6 +44,7 @@ export function linkMembers(
 				{
 					key: `${index}:${segment.text}`,
 					tone: "known",
+					gender: segment.gender,
 					interaction: "hover",
 					"aria-label": `${segment.text}, open in ${destination}`,
 					onClick: (event: MouseEvent<HTMLButtonElement>) => {

@@ -14,7 +14,6 @@ import {
 import { findVisitorEncounter } from "../../model/visitorClicks";
 import { loadPersonalAnnotation } from "../../personalAnnotations";
 import {
-	loadSentenceSegments,
 	projectSentenceView,
 	sentenceViewValidator,
 } from "../text/sentenceView";
@@ -565,9 +564,9 @@ async function projectSourceContext(
 	const text = await ctx.db.get(sentence.textId);
 	if (!text) return null;
 	if (text.origin?.readingKey === ownerReadingKey) return null;
-	const [origin, segments] = await Promise.all([
+	const [origin, view] = await Promise.all([
 		projectSourceOrigin(ctx, text),
-		loadSentenceSegments(ctx, sentence._id),
+		projectSentenceView(ctx, sentence, visitorId),
 	]);
 	if (!origin) return null;
 	return {
@@ -575,9 +574,8 @@ async function projectSourceContext(
 		textId: text._id,
 		sentencePosition: sentence.position,
 		sentenceSnippet: sentence.stitchedText,
-		segments: segments.map(({ kind, text: segmentText }) => ({
-			kind,
-			text: segmentText,
+		segments: view.segments.map(({ kind, text, gender }) => ({
+			kind, text, ...(gender ? { gender } : {}),
 		})),
 		memberSegmentIndices: members.memberSegmentIndices,
 		memberTexts: members.memberTexts,

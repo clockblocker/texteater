@@ -79,6 +79,9 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 		setSegmentationError(null);
 		try {
 			const result = await segmentText.run({
+				inspectionVisitorId: import.meta.env.DEV
+					? visitorId
+					: undefined,
 				submissionKey: textDetail.submissionKey,
 				sourceText: textDetail.sourceText,
 			});

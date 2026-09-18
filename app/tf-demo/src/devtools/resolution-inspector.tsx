@@ -62,17 +62,17 @@ export function ResolutionInspector() {
 			{open && (
 				<aside
 					className="resolution-inspector-history"
-					aria-label="Resolution click history"
+					aria-label="Resolution and analysis history"
 				>
 					<header>
 						<div>
 							<strong>Resolution inspector</strong>
-							<p>Clicks from this browser</p>
+							<p>Analyses and clicks from this browser</p>
 						</div>
 						<Button
 							size="icon-sm"
 							variant="ghost"
-							aria-label="Close click history"
+							aria-label="Close inspection history"
 							onClick={() => setOpen(false)}
 						>
 							<XIcon />
@@ -80,12 +80,13 @@ export function ResolutionInspector() {
 					</header>
 					<div className="resolution-inspector-clicks">
 						{history.status === "LoadingFirstPage" ? (
-							<p className="inspection-empty">Loading clicks…</p>
+							<p className="inspection-empty">Loading history…</p>
 						) : history.results.length === 0 ? (
 							<p className="inspection-empty">
-								Click a word in a text or definition. Its
-								resolution will be recorded here, even while
-								this panel is closed.
+								Submit or re-analyze a text to inspect sentence
+								splitting and segmentation, or click a word to
+								inspect its resolution. New runs are recorded
+								even while this panel is closed.
 							</p>
 						) : (
 							history.results.map((click) => (
@@ -103,9 +104,12 @@ export function ResolutionInspector() {
 										{click.sentence}
 									</span>
 									<span className="inspection-click-kind">
-										{click.selectionKind === "Available"
-											? "Stored result"
-											: "Resolution"}
+										{click.selectionKind === "Analysis"
+											? "Sentence splitting & analysis"
+											: click.selectionKind ===
+													"Available"
+												? "Stored result"
+												: "Resolution"}
 										<ChevronRightIcon size={14} />
 									</span>
 								</button>
@@ -116,7 +120,7 @@ export function ResolutionInspector() {
 								variant="ghost"
 								onClick={() => history.loadMore(25)}
 							>
-								Older clicks
+								Older entries
 							</Button>
 						)}
 					</div>
@@ -231,7 +235,7 @@ function InspectionDetail({
 			<>
 				<DialogTitle>Inspection unavailable</DialogTitle>
 				<DialogDescription>
-					This click may have been removed by a demo reset.
+					This inspection may have been removed by a demo reset.
 				</DialogDescription>
 			</>
 		);
@@ -256,7 +260,7 @@ function InspectionDetail({
 					onClick={onBack}
 					className="inspection-back"
 				>
-					<ArrowLeftIcon size={14} /> Click history
+					<ArrowLeftIcon size={14} /> Inspection history
 				</Button>
 				<div className="inspection-title-row">
 					<DialogTitle>{detail.click.selectedSegment}</DialogTitle>
@@ -280,7 +284,9 @@ function InspectionDetail({
 					<span>
 						{resolvedMs === null
 							? "Captured duration"
-							: "Reading resolved"}{" "}
+							: detail.click.selectionKind === "Analysis"
+								? "Analysis duration"
+								: "Reading resolved"}{" "}
 						<strong>{time(resolvedMs ?? total)}</strong>
 					</span>
 					<span>
@@ -296,6 +302,15 @@ function InspectionDetail({
 				</div>
 			</DialogHeader>
 			<div className="inspection-scroll">
+				{detail.click.selectionKind === "Analysis" && (
+					<p className="inspection-empty">
+						Expand “Split text into sentences” for sentence
+						boundaries. The “segment” operation contains language
+						and validity judgments, whitespace repairs, segmentation
+						rules, and the resulting segments. Detailed traces show
+						each model call’s inputs and outputs.
+					</p>
+				)}
 				{showDetailedTraces ? (
 					<DetailedTraces
 						steps={orderedSteps}
@@ -467,8 +482,9 @@ function InspectionDetail({
 								))}
 							{steps.results.length <= 1 && running && (
 								<p className="inspection-empty">
-									Resolution is running. Completed steps
-									appear when the action records its trace.
+									Analysis or resolution is running. Completed
+									steps appear when the action records its
+									trace.
 								</p>
 							)}
 						</section>
@@ -478,8 +494,14 @@ function InspectionDetail({
 					{clock(start)} · {requestId}
 					<br />
 					Timeline includes scheduling gaps. Provider bars include
-					response validation. Selection timing is unavailable inside
-					Convex’s transaction clock.
+					response validation.
+					{detail.click.selectionKind !== "Analysis" && (
+						<>
+							{" "}
+							Selection timing is unavailable inside Convex’s
+							transaction clock.
+						</>
+					)}
 				</footer>
 			</div>
 		</>

@@ -5,6 +5,7 @@ import { loadRouteNote, routeNoteValidator } from "./modules/notes/routeNotes";
 
 export const get = query({
 	args: {
+		visitorId: v.optional(v.string()),
 		target: v.union(
 			v.object({
 				kind: v.literal("Attestation"),
@@ -27,5 +28,5 @@ export const get = query({
 	},
 	returns: v.union(v.null(), routeNoteValidator),
 	handler: async (ctx, args) =>
-		loadRouteNote(ctx, args.target, args.target.contextCursor),
+		loadRouteNote(ctx, args.target, args.target.contextCursor, args.visitorId),
 });

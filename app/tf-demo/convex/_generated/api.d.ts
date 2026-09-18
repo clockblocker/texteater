@@ -33,6 +33,7 @@ import type * as model_generatedKnowledgeContainment from "../model/generatedKno
 import type * as model_inspection from "../model/inspection.js";
 import type * as model_knowledgeGenerationAttempts from "../model/knowledgeGenerationAttempts.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
+import type * as model_nounArticleMigration from "../model/nounArticleMigration.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
@@ -101,6 +102,7 @@ declare const fullApi: ApiFromModules<{
   "model/inspection": typeof model_inspection;
   "model/knowledgeGenerationAttempts": typeof model_knowledgeGenerationAttempts;
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
+  "model/nounArticleMigration": typeof model_nounArticleMigration;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;

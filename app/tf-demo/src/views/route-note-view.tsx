@@ -1,5 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
+import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
@@ -23,16 +25,20 @@ export function RouteNoteView({
 	target,
 	presentation = "Sheet",
 	activeAnalysisKey,
+	visitorId: visitorIdOverride,
 }: {
+	visitorId?: string;
 	target: RouteNoteTarget;
 	presentation?: "Card" | "Sheet";
 	activeAnalysisKey?: Id<"surfaces">;
 }) {
 	const { follow } = useWorkspaceInteraction();
+	const anonymousVisitorId = useAnonymousVisitorId();
+	const visitorId = visitorIdOverride ?? anonymousVisitorId;
 	const noteQuery = useQuery({
 		...convexQuery(
 			api.routeNotes.get,
-			routeNoteQueryArgs(target, activeAnalysisKey),
+			{ ...routeNoteQueryArgs(target, activeAnalysisKey), visitorId },
 		),
 		gcTime: 10_000,
 	});
@@ -123,6 +129,7 @@ function PaginatedRouteNote({
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
+	const nounArticle = useNounArticleNavigation();
 	const loadRoutePage = useCallback(
 		async (cursor: string): Promise<PaginatedRouteNote | null> => {
 			const next = await convex.query(api.routeNotes.get, {
@@ -140,12 +147,12 @@ function PaginatedRouteNote({
 
 	return renderNote({
 		noteData: pagination.note,
-		capabilities: routeNoteCapabilities(follow, presentation, {
+		capabilities: { nounArticle, ...routeNoteCapabilities(follow, presentation, {
 			hasMore: pagination.hasMore,
 			isLoading: pagination.isLoading,
 			error: pagination.error,
 			loadMore: pagination.hasMore ? pagination.loadMore : null,
-		}),
+		}) },
 	});
 }
 

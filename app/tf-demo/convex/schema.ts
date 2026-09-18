@@ -40,11 +40,15 @@ export default defineSchema({
 	inspectionClicks: defineTable({
 		requestId: v.string(),
 		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
+		sentenceId: v.optional(v.id("sentences")),
 		selectedSegment: v.string(),
 		sentence: v.string(),
 		startedAt: v.number(),
-		selectionKind: v.union(v.literal("Available"), v.literal("Resolving")),
+		selectionKind: v.union(
+			v.literal("Available"),
+			v.literal("Resolving"),
+			v.literal("Analysis"),
+		),
 		resolutionState: v.optional(v.string()),
 		finishedAt: v.optional(v.number()),
 		knowledgeState: v.optional(v.string()),

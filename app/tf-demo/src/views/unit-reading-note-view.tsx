@@ -3,6 +3,7 @@ import {
 	useQuery,
 	useMutation as useReactQueryMutation,
 } from "@tanstack/react-query";
+import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import { useAction, useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useEffect } from "react";
@@ -91,6 +92,7 @@ function ReadingNoteContainer({
 	const ensureKnowledge = useMutation(
 		api.knowledgeGeneration.ensureForReading,
 	);
+	const nounArticle = useNounArticleNavigation();
 	const followAlternative = useAction(
 		api.orchestration.followGrammaticalAlternative,
 	);
@@ -143,6 +145,7 @@ function ReadingNoteContainer({
 		});
 	}
 	const capabilities = {
+		nounArticle,
 		grammaticalAlternatives: {
 			follow: (readingKey: string) =>
 				alternativeMutation.mutateAsync(readingKey),

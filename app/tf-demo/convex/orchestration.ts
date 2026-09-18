@@ -362,16 +362,55 @@ export const submitText = action({
 	args: {
 		submissionKey: v.string(),
 		sourceText: v.string(),
+		inspectionVisitorId: v.optional(v.string()),
 	},
 	returns: submitTextResultValidator,
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
-		const result = await Effect.runPromise(
-			orchestratorFor(ctx).submitText(args),
-		);
-		return {
-			status: "Accepted",
-			textId: convexId<"texts">(result.persisted.textId),
-		};
+		const requestId = crypto.randomUUID();
+		if (args.inspectionVisitorId) {
+			await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
+				requestId,
+				visitorId: args.inspectionVisitorId,
+				sourceText: args.sourceText,
+			});
+		}
+		const inspection = args.inspectionVisitorId
+			? await inspectionFor(ctx, requestId)
+			: undefined;
+		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
+		try {
+			const run = () =>
+				Effect.runPromise(
+					orchestratorFor(
+						ctx,
+						undefined,
+						undefined,
+						inspection,
+					).submitText(args),
+				);
+			const result = inspection
+				? await inspection.promise(
+						"Analyze submitted text",
+						"app/tf-demo · linguisticOrchestration",
+						{ sourceText: args.sourceText },
+						run,
+						true,
+					)
+				: await run();
+			state = "Complete";
+			return {
+				status: "Accepted",
+				textId: convexId<"texts">(result.persisted.textId),
+			};
+		} finally {
+			await inspection?.flush();
+			if (args.inspectionVisitorId) {
+				await ctx.runMutation(
+					internal.resolutionInspection.finishAnalysis,
+					{ requestId, state },
+				);
+			}
+		}
 	},
 });
 
@@ -758,6 +797,7 @@ function orchestratorFor(
 				}
 			: dictionary,
 		persistence: tracedPersistence,
+		inspection,
 		...(observer ? { observer } : {}),
 	});
 }
@@ -1217,6 +1257,62 @@ export const followGrammaticalAlternative = action({
 		}
 		throw new Error(
 			"Grammatical alternative conflicted with another change; try again.",
+		);
+	},
+});
+
+/** Opens a noun heading's reviewed article without creating a semantic relation or encounter. */
+export const followNounArticle = action({
+	args: { lemmaId: v.id("lemmas") },
+	returns: v.id("readings"),
+	handler: async (ctx, { lemmaId }): Promise<Id<"readings">> => {
+		const [{ selectNounHeadingArticle }, { readingIdentityKey }] =
+			await Promise.all([
+				import("dumgen"),
+				import("../server/linguisticIdentity"),
+			]);
+		const lemma = await ctx.runQuery(
+			internal.reviewedNavigation.nounSource,
+			{ lemmaId },
+		);
+		const selected = selectNounHeadingArticle({ ...lemma, coreFeatures: lemma.coreFeatures && typeof lemma.coreFeatures === "object" ? lemma.coreFeatures as Record<string, unknown> : {} });
+		if (!selected)
+			throw new Error("This Lemma has no noun heading article.");
+		const readingKey = readingIdentityKey(selected.reading);
+		const dictionary = createDumdictService({
+			language: "de",
+			storage: createConvexDumdictStorage(ctx),
+		});
+		for (
+			let attempt = 0;
+			attempt < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
+			attempt++
+		) {
+			const result = await Effect.runPromise(
+				Effect.either(
+					dictionary.ensureReadingEntry({
+						entry: {
+							reading: selected.reading,
+							knowledge: { definition: selected.knowledge.definition, translations: selected.knowledge.translations },
+							attestedTranslations: [],
+							attestations: [],
+							notes: "",
+						},
+					}),
+				),
+			);
+			if (result._tag === "Left") {
+				if (result.left._tag === "DumdictRevisionConflict") continue;
+				throw new Error("The article Reading could not be stored.");
+			}
+			const destination = await ctx.runQuery(
+				internal.reviewedNavigation.destination,
+				{ readingKey },
+			);
+			if (destination) return destination;
+		}
+		throw new Error(
+			"Opening the article conflicted with another change; try again.",
 		);
 	},
 });

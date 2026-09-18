@@ -1,4 +1,5 @@
 import type { NoteTitleTone } from "lego";
+import { coreGender } from "../../../../../../shared/grammatical-gender";
 
 type PresentedFeatures = Readonly<
 	Record<string, string | readonly string[] | null | undefined | unknown>
@@ -12,9 +13,9 @@ const GENDER_TONES: Readonly<Record<string, NoteTitleTone>> = {
 
 /** The headword tone for a Lemma's grammatical gender, when it has one. */
 export function genderTone(
-	coreFeatures: PresentedFeatures,
+	lemma: { family: string; kind: string; coreFeatures: unknown },
 ): NoteTitleTone | undefined {
-	const gender = coreFeatures.gender;
+	const gender = coreGender(lemma);
 	return typeof gender === "string" ? GENDER_TONES[gender] : undefined;
 }
 

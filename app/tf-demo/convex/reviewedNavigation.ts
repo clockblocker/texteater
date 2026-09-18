@@ -1,7 +1,17 @@
 import { v } from "convex/values";
 import { internalQuery } from "./_generated/server";
-import { readingValue } from "./model/occurrenceAttestations";
-import { readingValueValidator } from "./model/validators";
+import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
+import { lemmaValueValidator, readingValueValidator } from "./model/validators";
+
+export const nounSource = internalQuery({
+	args: { lemmaId: v.id("lemmas") },
+	returns: lemmaValueValidator,
+	handler: async (ctx, { lemmaId }) => {
+		const lemma = await ctx.db.get(lemmaId);
+		if (!lemma) throw new Error("Lemma not found.");
+		return lemmaValue(lemma);
+	},
+});
 
 export const source = internalQuery({
 	args: { readingId: v.id("readings") },

@@ -573,35 +573,7 @@ async function applyChange(
 				)
 					throw new Error("Invalid noun article Surface");
 				const reference = parsed.chain.value.articleReference;
-				if (reference) {
-					const { reading, surface: component } = reference;
-					const empty = {
-						notes: "",
-						attestedTranslations: [],
-						attestations: [],
-					};
-					if (!(await findLemma(ctx, reading.lemma)))
-						await applyChange(ctx, {
-							type: "createLemma",
-							record: { lemma: reading.lemma },
-						});
-					if (!(await findReading(ctx, reading)))
-						await applyChange(ctx, {
-							type: "createReading",
-							entry: { reading, ...empty },
-						});
-					const id = makeSurfaceId("de", component);
-					if (!(await findSurface(ctx, id)))
-						await applyChange(ctx, {
-							type: "createOwnedSurface",
-							entry: {
-								id,
-								ownerLemma: component.lemma,
-								surface: component,
-								...empty,
-							},
-						});
-				}
+				if (reference) await materializeNounArticle(ctx, reference);
 			}
 			const language = requireString(
 				surface.language,
@@ -895,3 +867,19 @@ export const commitDumdictChanges = internalMutation({
 	returns: commitResultValidator,
 	handler: applyDumdictPlanInTransaction,
 });
+
+/** Materializes the grammatical component without creating another occurrence. */
+export async function materializeNounArticle(
+	ctx: MutationCtx,
+	reference: NonNullable<Dumling.Surface<"de", "Lexeme", "NOUN">["articleReference"]>,
+) {
+	const { reading, surface } = reference;
+	const empty = { notes: "", attestedTranslations: [], attestations: [] };
+	if (!(await findLemma(ctx, reading.lemma)))
+		await applyChange(ctx, { type: "createLemma", record: { lemma: reading.lemma } });
+	if (!(await findReading(ctx, reading)))
+		await applyChange(ctx, { type: "createReading", entry: { reading, ...empty } });
+	const id = makeSurfaceId("de", surface);
+	if (!(await findSurface(ctx, id)))
+		await applyChange(ctx, { type: "createOwnedSurface", entry: { id, ownerLemma: surface.lemma, surface, ...empty } });
+}

@@ -12,6 +12,7 @@ export type SentenceSegmentView = {
 	readonly text: string;
 	readonly attestationId?: Id<"attestations">;
 	readonly encountered: boolean;
+	readonly gender?: "Fem" | "Masc" | "Neut";
 	readonly resolutionState?: "Active" | "Unresolved" | "PermanentFailure";
 };
 

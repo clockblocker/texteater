@@ -10,6 +10,7 @@ import type { DumgenOptions, Encounter, ModelExchange } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
+import { createInspectionCapture } from "../server/inspectionCapture";
 import {
 	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
@@ -157,7 +158,7 @@ function setup(
 	candidates: Dumling.Reading<"de">[] = [],
 	hooks: Pick<
 		Parameters<typeof createTfDemoOrchestrator>[0],
-		"draftKnowledge" | "observer"
+		"draftKnowledge" | "observer" | "inspection"
 	> & { execute?: DumgenOptions["execute"] } = {},
 ) {
 	const requests: ModelExchange["request"][] = [];
@@ -250,11 +251,13 @@ function setup(
 		...pipelineFixture(outputs),
 		...(hooks.execute ? { execute: hooks.execute } : {}),
 		onModelExchange: (exchange) => requests.push(exchange.request),
+		onOperation: (trace) => hooks.inspection?.operation(trace),
 	});
 	return {
 		orchestrator: createTfDemoOrchestrator({
 			draftKnowledge: hooks.draftKnowledge,
 			observer: hooks.observer,
+			inspection: hooks.inspection,
 			dumgen,
 			dictionary: createDumdictService({ language: "de", storage }),
 			persistence,
@@ -665,4 +668,57 @@ test("existing Reading candidates bypass Knowledge speculation", async () => {
 	);
 	expect(drafts).toBe(0);
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
+});
+
+test("submission inspection captures sentence boundaries and segmentation inputs and outputs", async () => {
+	const inspection = createInspectionCapture();
+	const run = setup(
+		[
+			{
+				language: "de",
+				items: [
+					{
+						id: "0",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Hallo.",
+					},
+					{
+						id: "1",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Welt!",
+					},
+				],
+			},
+		],
+		{},
+		[],
+		{ inspection },
+	);
+	await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "inspected",
+			sourceText: "Hallo. Welt!",
+		}),
+	);
+	const split = inspection.steps.find(
+		(step) => step.name === "Split text into sentences",
+	);
+	expect(split?.status).toBe("Success");
+	expect(JSON.parse(split?.payloadJson ?? "null")).toEqual({
+		input: { sourceText: "Hallo. Welt!" },
+		output: ["Hallo.", "Welt!"],
+	});
+	expect(inspection.steps.some((step) => step.kind === "TypeSafe")).toBe(
+		true,
+	);
+	expect(
+		inspection.steps.some(
+			(step) =>
+				step.owner === "battery/dumgen" &&
+				step.payloadJson.includes("Hallo."),
+		),
+	).toBe(true);
+	expect(run.submitted).toHaveLength(1);
 });

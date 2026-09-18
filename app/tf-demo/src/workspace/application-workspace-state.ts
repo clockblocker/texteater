@@ -49,6 +49,7 @@ export type ApplicationWorkspaceAction =
 	  }
 	| {
 			readonly type: "Follow";
+			readonly presentationContext?: SurfaceNotePresentationContext;
 			readonly target: WorkspaceTarget;
 			readonly originPresentationId?: string;
 	  }
@@ -92,7 +93,7 @@ export function reduceApplicationWorkspaceSession(
 				workspaceReducer(session.workspace, action.command),
 			);
 		case "Follow":
-			return follow(session, action.target, action.originPresentationId);
+			return follow(session, action.target, action.originPresentationId, action.presentationContext);
 		case "RevealLibrary":
 			return revealLibrary(session, action.originPresentationId);
 		case "CloseAllSheets":
@@ -113,6 +114,7 @@ function follow(
 	session: ApplicationWorkspaceSession,
 	target: WorkspaceTarget,
 	originPresentationId: string | undefined,
+	presentationContext?: SurfaceNotePresentationContext,
 ): ApplicationWorkspaceSession {
 	const paneId = originPresentationId
 		? activePaneForPresentation(session.workspace, originPresentationId)
@@ -124,7 +126,7 @@ function follow(
 			workspaceReducer(session.workspace, {
 				type: "OpenSheet",
 				paneId,
-				subject: workspaceSubjectFor(target),
+				subject: workspaceSubjectFor(target, presentationContext),
 				locked: false,
 			}),
 		);

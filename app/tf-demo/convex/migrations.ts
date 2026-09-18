@@ -6,6 +6,7 @@ import {
 	syncDefinitionText,
 } from "./model/definitionTexts";
 import schema from "./schema";
+import { migrateNounArticle } from "./model/nounArticleMigration";
 
 export const migrations = new Migrations(components.migrations, { schema });
 
@@ -43,3 +44,8 @@ export const materializeDefinitionTexts = migrations.define({
 });
 
 export const run = migrations.runner();
+
+export const correctNounArticleOwners = migrations.define({
+	table: "surfaces",
+	migrateOne: migrateNounArticle,
+});

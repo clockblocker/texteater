@@ -37,6 +37,9 @@ const readerSegmentVariants = cva(
 				shadow: "text-word-shadow decoration-current/40 decoration-[0.06em]",
 				failed: "text-word-unknown cursor-default disabled:cursor-default",
 			},
+			gender: {
+				Fem: "", Masc: "", Neut: "",
+			},
 			interaction: {
 				idle: "",
 				previewed: "underline",
@@ -45,6 +48,9 @@ const readerSegmentVariants = cva(
 			},
 		},
 		compoundVariants: [
+			{ tone: "known", gender: "Fem", className: "text-gender-feminine" },
+			{ tone: "known", gender: "Masc", className: "text-gender-masculine" },
+			{ tone: "known", gender: "Neut", className: "text-gender-neuter" },
 			{
 				tone: "failed",
 				className:
@@ -71,6 +77,7 @@ export function ReaderSegment({
 	className,
 	tone,
 	interaction,
+	gender,
 	type = "button",
 	...props
 }: React.ComponentProps<"button"> &
@@ -78,9 +85,10 @@ export function ReaderSegment({
 	return (
 		<button
 			data-slot="reader-segment"
+			data-gender={tone === "known" ? gender : undefined}
 			type={type}
 			className={cn(
-				readerSegmentVariants({ tone, interaction }),
+				readerSegmentVariants({ tone, interaction, gender }),
 				className,
 			)}
 			{...props}

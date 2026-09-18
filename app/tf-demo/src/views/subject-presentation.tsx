@@ -35,6 +35,7 @@ export function renderApplicationSubject(
 		case "Attestation":
 			return (
 				<RouteNoteView
+					visitorId={options.visitorId}
 					key={noteTargetKey(target)}
 					target={target}
 					presentation={presentation}

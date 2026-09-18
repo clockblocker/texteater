@@ -4,8 +4,10 @@ import {
 	NoteTitle,
 	NoteTitleLink,
 	NoteTitleRow,
-	type NoteTitleTone,
 } from "lego";
+import { genderTone } from "../../common/feature-values";
+import { NounArticle } from "../../common/noun-article";
+import { coreGender } from "../../../../../../../shared/grammatical-gender";
 import { type ReactNode, useId } from "react";
 import type { Id } from "../../../../../../../convex/_generated/dataModel";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
@@ -17,12 +19,6 @@ export const DefaultReadingHeaderRenderer = (({
 }) => (
 	<ReadingHeader note={noteData} capabilities={PresentationCapabilities} />
 )) satisfies ReadingDefaultRenderer;
-
-const GENDER_TONES: Readonly<Record<string, NoteTitleTone>> = {
-	Fem: "feminine",
-	Masc: "masculine",
-	Neut: "neuter",
-};
 
 export function ReadingHeader({
 	note,
@@ -48,7 +44,7 @@ export function ReadingHeader({
 }) {
 	const id = useId();
 	const { lemma } = note.reading;
-	const gender = lemma.coreFeatures.gender;
+	const gender = coreGender(lemma);
 	return (
 		<header>
 			<NoteTitleRow>
@@ -58,15 +54,12 @@ export function ReadingHeader({
 					data-gender={
 						typeof gender === "string" ? gender : undefined
 					}
-					tone={
-						typeof gender === "string"
-							? GENDER_TONES[gender]
-							: undefined
-					}
+					tone={genderTone(lemma)}
 				>
 					<span className="text-ink">
 						{note.reading.emojiDescription}{" "}
 					</span>
+					<NounArticle lemma={lemma} lemmaId={lemma.lemmaId} navigation={capabilities.nounArticle} />
 					<NoteTitleLink
 						aria-label={`${lemma.canonicalForm}, open its Lemma`}
 						onClick={() =>
@@ -84,6 +77,7 @@ export function ReadingHeader({
 					<Ipa transcription={note.knowledge.transcription} />
 				) : null}
 			</NoteTitleRow>
+			{capabilities.nounArticle?.error ? <p role="alert" className="text-sm text-destructive">{capabilities.nounArticle.error}</p> : null}
 		</header>
 	);
 }

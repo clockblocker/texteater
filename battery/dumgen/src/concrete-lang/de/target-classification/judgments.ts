@@ -77,7 +77,7 @@ export async function classifyGermanTarget(
 		)
 			continue;
 		questions[`member_${index}`] = choice(
-			`Does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`? Use full sentence context and \`criteria\`. For ordinary noun groups, only der/die/das/ein articles join the noun; mein/dieser/kein and their noun are separate units. A larger established idiom still keeps its fixed members.`,
+				`Under \`criteria\`, does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`?`,
 			{
 				Include: "It is a fixed member of that same unit",
 				Exclude:
@@ -97,7 +97,7 @@ export async function classifyGermanTarget(
 			{
 				...questions,
 				singletonRoute: choice(
-					`Is the exact group [${input.clickedSegmentIndex}] (only occurrence <s${input.clickedSegmentIndex}> in \`sentence\`) a defensible complete target under \`criteria\`? Choose the Family/Kind of the whole unit or Unresolved. Do not repair membership or classify a fragment of a larger unit.`,
+						`Is the exact group [${input.clickedSegmentIndex}] (only occurrence <s${input.clickedSegmentIndex}> in \`sentence\`) a defensible complete target under \`criteria\`? Choose the Family/Kind of the whole unit or Unresolved.`,
 					routes,
 				),
 			},
@@ -137,7 +137,7 @@ export async function classifyGermanTarget(
 			{ ...state, memberSegmentIndices: members },
 			{
 				route: choice(
-					"Is this exact assembled group a defensible complete target? Choose the Family/Kind of the whole unit or Unresolved. Do not repair membership or classify only the click.",
+					"Is the exact group identified by `memberSegmentIndices` in `sentence` a defensible complete target under `criteria`? Choose the Family/Kind of the whole unit or Unresolved.",
 					routes,
 				),
 			},

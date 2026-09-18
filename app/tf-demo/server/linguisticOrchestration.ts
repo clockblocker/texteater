@@ -14,6 +14,7 @@ import type * as Dumrel from "dumrel/types";
 import type { UnknownException } from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
+import type { InspectionCapture } from "./inspectionCapture";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
@@ -275,6 +276,7 @@ export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
  */
 export function createTfDemoOrchestrator(options: {
 	readonly dumgen: Dumgen;
+	readonly inspection?: InspectionCapture;
 	readonly dictionary: DumdictService<"de">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
@@ -289,7 +291,15 @@ export function createTfDemoOrchestrator(options: {
 			assertNonEmpty(input.submissionKey, "submissionKey");
 			assertNonEmpty(input.sourceText, "sourceText");
 
-			const sourceSentences = splitInSentences(input.sourceText);
+			const split = Effect.sync(() => splitInSentences(input.sourceText));
+			const sourceSentences = yield* options.inspection
+				? options.inspection.effect(
+						"Split text into sentences",
+						"app/tf-demo · Intl.Segmenter (de, sentence)",
+						{ sourceText: input.sourceText },
+						split,
+					)
+				: split;
 			assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
 			const firstSourceSentence = sourceSentences[0];
 			if (firstSourceSentence === undefined)

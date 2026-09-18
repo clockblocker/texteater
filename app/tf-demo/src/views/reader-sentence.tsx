@@ -115,6 +115,7 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 						key={segment.index}
 						data-state={displayState}
 						tone={segmentTone(displayState)}
+						gender={segment.encountered ? segment.gender : undefined}
 						interaction={segmentInteraction(displayState)}
 						disabled={
 							sentence.language !== "de" ||

@@ -244,9 +244,10 @@ function ApplicationPresentation({
 	);
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
-			follow: (target) =>
+			follow: (target, presentationContext) =>
 				dispatch({
 					type: "Follow",
+					presentationContext,
 					originPresentationId: presentationId,
 					target,
 				}),
