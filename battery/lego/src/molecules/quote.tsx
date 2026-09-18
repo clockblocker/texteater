@@ -1,6 +1,7 @@
 import type * as React from "react";
 
 import { cn } from "../utils";
+import { type LinkTone, linkToneClasses } from "./link-tone";
 
 const passage =
 	"py-1 ps-[clamp(1rem,2.5cqi,2.5rem)] text-start leading-[1.55] font-[430] tracking-[-0.012em] compact:ps-3";
@@ -23,10 +24,12 @@ const bar =
 export function Quote({
 	className,
 	children,
+	tone = "default",
 	onFollow,
 	followLabel = "Open in the source Text",
 	...props
 }: React.ComponentProps<"div"> & {
+	readonly tone?: LinkTone;
 	readonly onFollow?: () => void;
 	readonly followLabel?: string;
 }) {
@@ -35,6 +38,7 @@ export function Quote({
 			<div
 				data-slot="quote"
 				className={cn(
+					linkToneClasses[tone],
 					bar,
 					passage,
 					"has-[[data-slot=reader-segment]:hover]:border-link has-[[data-slot=reader-segment]:focus-visible]:border-link",
@@ -50,6 +54,7 @@ export function Quote({
 		<div
 			data-slot="quote"
 			className={cn(
+				linkToneClasses[tone],
 				"relative",
 				"has-[[data-slot=quote-surface]:hover]:[&_[data-slot=reader-segment]]:underline",
 				className,

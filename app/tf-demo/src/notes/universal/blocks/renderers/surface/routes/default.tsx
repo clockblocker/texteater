@@ -6,13 +6,6 @@ import { featureSummary, genderTone } from "../../common/feature-values";
 import { RouteAside } from "../../common/features";
 import { RouteMark } from "../../common/route-mark";
 
-const TONE_CLASS = {
-	feminine: "text-gender-feminine",
-	masculine: "text-gender-masculine",
-	neuter: "text-gender-neuter",
-	default: "",
-} as const;
-
 /**
  * Every Lemma this written form can be. In Card form only the analysis the
  * opening context selected is shown; the Sheet reveals the whole aggregate.
@@ -55,7 +48,9 @@ export const renderDefaultSurfaceRoutes = (({
 							{article ? (
 								<div className="mb-2">
 									<LinkButton
-										className={TONE_CLASS[tone]}
+										tone={
+											tone === "default" ? "link" : tone
+										}
 										onClick={() =>
 											PresentationCapabilities.follow(
 												article.target,
@@ -81,7 +76,7 @@ export const renderDefaultSurfaceRoutes = (({
 										analysis.lemmaTarget,
 									)
 								}
-								className={TONE_CLASS[tone]}
+								tone={tone === "default" ? "link" : tone}
 							>
 								<RouteMark
 									hop="leadsTo"

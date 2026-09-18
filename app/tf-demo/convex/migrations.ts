@@ -1,12 +1,14 @@
 import { Migrations } from "@convex-dev/migrations";
 
 import { components } from "./_generated/api";
+import { completeAuthoredArticleKnowledge } from "./dumdictStorage/transaction";
 import {
 	findDefinitionText,
 	syncDefinitionText,
 } from "./model/definitionTexts";
-import schema from "./schema";
 import { migrateNounArticle } from "./model/nounArticleMigration";
+import { readingValue } from "./model/occurrenceAttestations";
+import schema from "./schema";
 
 export const migrations = new Migrations(components.migrations, { schema });
 
@@ -48,4 +50,30 @@ export const run = migrations.runner();
 export const correctNounArticleOwners = migrations.define({
 	table: "surfaces",
 	migrateOne: migrateNounArticle,
+});
+
+export const backfillAuthoredArticleKnowledge = migrations.define({
+	table: "readings",
+	migrateOne: async (ctx, reading) => {
+		const lemma = await ctx.db.get(reading.lemmaId);
+		if (
+			!lemma ||
+			!(await completeAuthoredArticleKnowledge(
+				ctx,
+				readingValue(reading, lemma),
+			))
+		)
+			return;
+		const state = await ctx.db
+			.query("dictionaryState")
+			.withIndex("by_key", (q) => q.eq("key", "global"))
+			.unique();
+		if (state)
+			await ctx.db.patch(state._id, { revision: state.revision + 1 });
+		else
+			await ctx.db.insert("dictionaryState", {
+				key: "global",
+				revision: 1,
+			});
+	},
 });

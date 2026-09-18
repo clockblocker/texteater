@@ -817,3 +817,29 @@ describe("application workspace state", () => {
 		}
 	});
 });
+
+test("following an article carries its contextual Surface analysis into the new Sheet", () => {
+	const session = reduceApplicationWorkspaceSession(
+		createApplicationWorkspaceSession(),
+		{
+			type: "Follow",
+			target: {
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "der",
+			},
+			presentationContext: {
+				activeAnalysisKey: "surface-feminine-dative",
+			},
+		},
+	);
+	expect(
+		Object.values(session.workspace.presentations).some(
+			({ subject }) =>
+				subject.kind === "Note" &&
+				subject.target.kind === "Surface" &&
+				subject.presentationContext?.activeAnalysisKey ===
+					"surface-feminine-dative",
+		),
+	).toBe(true);
+});

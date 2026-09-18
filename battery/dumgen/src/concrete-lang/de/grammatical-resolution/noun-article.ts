@@ -51,10 +51,10 @@ export function nounArticleReference(input: {
 		input.article === "Indefinite"
 			? "ein"
 			: input.number === "Plur" || input.gender === "Fem"
-					? "die"
-					: input.gender === "Neut"
-						? "das"
-						: "der";
+				? "die"
+				: input.gender === "Neut"
+					? "das"
+					: "der";
 	const member = authoredMembers.find(
 		({ lemma }) =>
 			lemma.kind === "DET" &&
@@ -87,8 +87,17 @@ export function nounArticleReference(input: {
 	};
 	const parsed = parseUnit(surface);
 	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Surface" || parsed.chain.language !== "de" || parsed.chain.family !== "Lexeme" || parsed.chain.kind !== "DET") throw new Error("Expected an article Surface");
-	const reading: Dumling.Reading<"de", "Lexeme", "DET"> = { ...member.reading, lemma: member.lemma };
+	if (
+		parsed.chain.unitKind !== "Surface" ||
+		parsed.chain.language !== "de" ||
+		parsed.chain.family !== "Lexeme" ||
+		parsed.chain.kind !== "DET"
+	)
+		throw new Error("Expected an article Surface");
+	const reading: Dumling.Reading<"de", "Lexeme", "DET"> = {
+		...member.reading,
+		lemma: member.lemma,
+	};
 	return { surface: parsed.chain.value, reading };
 }
 
@@ -99,11 +108,31 @@ export function selectNounHeadingArticle(lemma: {
 	kind: string;
 	coreFeatures: Readonly<Record<string, unknown>>;
 }) {
-	if (lemma.language !== "de" || lemma.family !== "Lexeme" || lemma.kind !== "NOUN") return null;
+	if (
+		lemma.language !== "de" ||
+		lemma.family !== "Lexeme" ||
+		lemma.kind !== "NOUN"
+	)
+		return null;
 	const gender = lemma.coreFeatures.gender;
-	const canonical = gender === "Masc" ? "der" : gender === "Fem" ? "die" : gender === "Neut" ? "das" : null;
+	const canonical =
+		gender === "Masc"
+			? "der"
+			: gender === "Fem"
+				? "die"
+				: gender === "Neut"
+					? "das"
+					: null;
 	if (!canonical) return null;
-	return authoredMembers.find(({ lemma: candidate }) => candidate.kind === "DET" && candidate.canonicalForm === canonical && "pronType" in candidate.coreFeatures && candidate.coreFeatures.pronType === "Art") ?? null;
+	return (
+		authoredMembers.find(
+			({ lemma: candidate }) =>
+				candidate.kind === "DET" &&
+				candidate.canonicalForm === canonical &&
+				"pronType" in candidate.coreFeatures &&
+				candidate.coreFeatures.pronType === "Art",
+		) ?? null
+	);
 }
 
 type ArticleCandidate = {

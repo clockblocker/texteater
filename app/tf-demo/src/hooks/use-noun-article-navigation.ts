@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useAction } from "convex/react";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
-import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 
 export function useNounArticleNavigation() {
 	const openArticle = useAction(api.orchestration.followNounArticle);
@@ -16,6 +16,8 @@ export function useNounArticleNavigation() {
 	return {
 		follow: mutation.mutate,
 		pending: mutation.isPending,
-		error: mutation.error ? "Could not open the article. Please retry." : null,
+		error: mutation.error
+			? "Could not open the article. Please retry."
+			: null,
 	};
 }

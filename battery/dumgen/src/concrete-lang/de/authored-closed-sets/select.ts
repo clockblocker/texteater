@@ -25,6 +25,18 @@ export function sameValue(left: unknown, right: unknown): boolean {
 export function authoredFor(lemma: Dumling.Lemma) {
 	return authoredMembers.find((member) => sameValue(member.lemma, lemma));
 }
+/** Selects an exact authored article Reading, including its reviewed Knowledge. */
+export function selectAuthoredArticle(reading: unknown) {
+	return (
+		authoredMembers.find(
+			(member) =>
+				member.lemma.kind === "DET" &&
+				"pronType" in member.lemma.coreFeatures &&
+				member.lemma.coreFeatures.pronType === "Art" &&
+				sameValue(member.reading, reading),
+		) ?? null
+	);
+}
 export function closedRoute(lemma: {
 	language: string;
 	family: string;

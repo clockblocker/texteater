@@ -1,7 +1,7 @@
-import { projectSentenceView } from "../convex/modules/text/sentenceView";
-import { nounArticleReference } from "dumgen";
-import { makeSurfaceId } from "dumdict";
 import { expect, test } from "bun:test";
+import { makeSurfaceId } from "dumdict";
+import { nounArticleReference } from "dumgen";
+import { projectSentenceView } from "../convex/modules/text/sentenceView";
 
 import { get } from "../convex/routeNotes";
 
@@ -681,44 +681,153 @@ function nestedValue(row: Row, path: string): unknown {
 	}, row);
 }
 
-
 test("noun Surface article opens the exact DET analysis, including feminine der", async () => {
-	const reference = nounArticleReference({ article: "Definite", case: "Dat", number: "Sing", gender: "Fem", spelled: "der" });
-	const noun = { _id: "lemma-frau", language: "de", family: "Lexeme", kind: "NOUN", canonicalForm: "Frau", coreFeatures: { gender: "Fem", hyph: null } };
+	const reference = nounArticleReference({
+		article: "Definite",
+		case: "Dat",
+		number: "Sing",
+		gender: "Fem",
+		spelled: "der",
+	});
+	const noun = {
+		_id: "lemma-frau",
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Frau",
+		coreFeatures: { gender: "Fem", hyph: null },
+	};
 	const db = new RouteDb({
 		lemmas: [noun, { ...reference.reading.lemma, _id: "lemma-die" }],
 		surfaces: [
-			{ _id: "surface-noun", language: "de", lemmaId: noun._id, normalizedSurface: "der Frau", spelling: "Canonical", surfaceFeatures: null, inflectionalFeatures: { article: "Definite", case: "Dat", number: "Sing" }, articleReference: reference },
-			{ ...reference.surface, _id: "surface-det", lemmaId: "lemma-die", surfaceKey: makeSurfaceId("de", reference.surface) },
+			{
+				_id: "surface-noun",
+				language: "de",
+				lemmaId: noun._id,
+				normalizedSurface: "der Frau",
+				spelling: "Canonical",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					article: "Definite",
+					case: "Dat",
+					number: "Sing",
+				},
+				articleReference: reference,
+			},
+			{
+				...reference.surface,
+				_id: "surface-det",
+				lemmaId: "lemma-die",
+				surfaceKey: makeSurfaceId("de", reference.surface),
+			},
 		],
 	});
-	const note = await routeNote({ db }, { target: { kind: "Surface", language: "de", normalizedSurface: "der Frau" } });
-	expect(note).toMatchObject({ analyses: [{ article: {
-		target: { kind: "Surface", language: "de", normalizedSurface: "der" },
-		presentationContext: { activeAnalysisKey: "surface-det" },
-		presented: { lemma: { canonicalForm: "die" }, inflectionalFeatures: { gender: "Fem", case: "Dat" } },
-	} }] });
+	const note = await routeNote(
+		{ db },
+		{
+			target: {
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "der Frau",
+			},
+		},
+	);
+	expect(note).toMatchObject({
+		analyses: [
+			{
+				article: {
+					target: {
+						kind: "Surface",
+						language: "de",
+						normalizedSurface: "der",
+					},
+					presentationContext: { activeAnalysisKey: "surface-det" },
+					presented: {
+						lemma: { canonicalForm: "die" },
+						inflectionalFeatures: { gender: "Fem", case: "Dat" },
+					},
+				},
+			},
+		],
+	});
 });
 
 test("sentence gender belongs to the visitor's encountered occurrence, including its article", async () => {
-	const sentence = { _id: "sentence-1", position: 0, language: "de", stitchedText: "der Frau", textId: "text-1" };
+	const sentence = {
+		_id: "sentence-1",
+		position: 0,
+		language: "de",
+		stitchedText: "der Frau",
+		textId: "text-1",
+	};
 	const db = new RouteDb({
 		segments: [
-			{ _id: "segment-article", sentenceId: sentence._id, index: 0, kind: "ResolvableText", text: "der", attestationMembership: { attestationId: "attestation-1" } },
-			{ _id: "segment-space", sentenceId: sentence._id, index: 1, kind: "Whitespace", text: " " },
-			{ _id: "segment-noun", sentenceId: sentence._id, index: 2, kind: "ResolvableText", text: "Frau", attestationMembership: { attestationId: "attestation-1" } },
+			{
+				_id: "segment-article",
+				sentenceId: sentence._id,
+				index: 0,
+				kind: "ResolvableText",
+				text: "der",
+				attestationMembership: { attestationId: "attestation-1" },
+			},
+			{
+				_id: "segment-space",
+				sentenceId: sentence._id,
+				index: 1,
+				kind: "Whitespace",
+				text: " ",
+			},
+			{
+				_id: "segment-noun",
+				sentenceId: sentence._id,
+				index: 2,
+				kind: "ResolvableText",
+				text: "Frau",
+				attestationMembership: { attestationId: "attestation-1" },
+			},
 		],
-		visitorClicks: [{ _id: "click-1", visitorId: "alice", segmentId: "segment-article" }],
+		visitorClicks: [
+			{
+				_id: "click-1",
+				visitorId: "alice",
+				segmentId: "segment-article",
+			},
+		],
 		attestations: [{ _id: "attestation-1", readingId: "reading-1" }],
 		readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
-		lemmas: [{ _id: "lemma-1", family: "Lexeme", kind: "NOUN", coreFeatures: { gender: "Fem" } }],
+		lemmas: [
+			{
+				_id: "lemma-1",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: { gender: "Fem" },
+			},
+		],
 	});
-	const project = projectSentenceView as unknown as (ctx: unknown, sentence: unknown, visitor: string) => Promise<{ segments: { text: string; gender?: string; encountered: boolean }[] }>;
+	const project = projectSentenceView as unknown as (
+		ctx: unknown,
+		sentence: unknown,
+		visitor: string,
+	) => Promise<{
+		segments: { text: string; gender?: string; encountered: boolean }[];
+	}>;
 	const alice = await project({ db }, sentence, "alice");
 	const bob = await project({ db }, sentence, "bob");
 	expect(alice.segments.filter(({ gender }) => gender)).toEqual([
-		expect.objectContaining({ text: "der", gender: "Fem", encountered: true }),
-		expect.objectContaining({ text: "Frau", gender: "Fem", encountered: true }),
+		expect.objectContaining({
+			text: "der",
+			gender: "Fem",
+			encountered: true,
+		}),
+		expect.objectContaining({
+			text: "Frau",
+			gender: "Fem",
+			encountered: true,
+		}),
 	]);
-	expect(bob.segments.every(({ gender, encountered }) => !gender && !encountered)).toBe(true);
+	expect(
+		bob.segments.every(
+			({ gender, encountered }) => !gender && !encountered,
+		),
+	).toBe(true);
 });

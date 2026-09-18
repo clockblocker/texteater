@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
 import { cn } from "../utils";
+import { linkToneClasses } from "./link-tone";
 
 /**
  * Two independent axes describe a word in running text.
@@ -33,12 +34,14 @@ const readerSegmentVariants = cva(
 					"text-word-unknown decoration-current/40 decoration-[0.06em]",
 				resolving:
 					"word-sheen bg-ink bg-clip-text text-transparent decoration-dashed decoration-[0.09em] motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-word-resolving",
-				known: "text-word-known decoration-current/40 decoration-[0.06em]",
+				known: "text-link decoration-current/40 decoration-[0.06em]",
 				shadow: "text-word-shadow decoration-current/40 decoration-[0.06em]",
 				failed: "text-word-unknown cursor-default disabled:cursor-default",
 			},
 			gender: {
-				Fem: "", Masc: "", Neut: "",
+				Fem: "",
+				Masc: "",
+				Neut: "",
 			},
 			interaction: {
 				idle: "",
@@ -48,9 +51,21 @@ const readerSegmentVariants = cva(
 			},
 		},
 		compoundVariants: [
-			{ tone: "known", gender: "Fem", className: "text-gender-feminine" },
-			{ tone: "known", gender: "Masc", className: "text-gender-masculine" },
-			{ tone: "known", gender: "Neut", className: "text-gender-neuter" },
+			{
+				tone: "known",
+				gender: "Fem",
+				className: linkToneClasses.feminine,
+			},
+			{
+				tone: "known",
+				gender: "Masc",
+				className: linkToneClasses.masculine,
+			},
+			{
+				tone: "known",
+				gender: "Neut",
+				className: linkToneClasses.neuter,
+			},
 			{
 				tone: "failed",
 				className:

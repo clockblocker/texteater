@@ -575,7 +575,9 @@ async function projectSourceContext(
 		sentencePosition: sentence.position,
 		sentenceSnippet: sentence.stitchedText,
 		segments: view.segments.map(({ kind, text, gender }) => ({
-			kind, text, ...(gender ? { gender } : {}),
+			kind,
+			text,
+			...(gender ? { gender } : {}),
 		})),
 		memberSegmentIndices: members.memberSegmentIndices,
 		memberTexts: members.memberTexts,

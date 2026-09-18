@@ -136,8 +136,15 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 			target: { ...article.target, ...article.presentationContext },
 			visitorId,
 		});
-		if (articleNote?.kind !== "Surface") throw new Error("Missing DET Surface Note");
-		expect(articleNote.analyses.find(({ analysisKey }) => analysisKey === article.presentationContext.activeAnalysisKey)?.presented.lemma).toMatchObject({ canonicalForm: "der", kind: "DET" });
+		if (articleNote?.kind !== "Surface")
+			throw new Error("Missing DET Surface Note");
+		expect(
+			articleNote.analyses.find(
+				({ analysisKey }) =>
+					analysisKey ===
+					article.presentationContext.activeAnalysisKey,
+			)?.presented.lemma,
+		).toMatchObject({ canonicalForm: "der", kind: "DET" });
 		const note = await client.query(api.readingNotes.get, {
 			readingId: canonical.readingId,
 			visitorId,

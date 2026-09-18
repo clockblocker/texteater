@@ -1,17 +1,11 @@
-import {
-	Ipa,
-	NoteTags,
-	NoteTitle,
-	NoteTitleLink,
-	NoteTitleRow,
-} from "lego";
-import { genderTone } from "../../common/feature-values";
-import { NounArticle } from "../../common/noun-article";
-import { coreGender } from "../../../../../../../shared/grammatical-gender";
+import { Ipa, NoteTags, NoteTitle, NoteTitleLink, NoteTitleRow } from "lego";
 import { type ReactNode, useId } from "react";
 import type { Id } from "../../../../../../../convex/_generated/dataModel";
+import { coreGender } from "../../../../../../../shared/grammatical-gender";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
+import { genderTone } from "../../common/feature-values";
+import { NounArticle } from "../../common/noun-article";
 
 export const DefaultReadingHeaderRenderer = (({
 	noteData,
@@ -59,7 +53,11 @@ export function ReadingHeader({
 					<span className="text-ink">
 						{note.reading.emojiDescription}{" "}
 					</span>
-					<NounArticle lemma={lemma} lemmaId={lemma.lemmaId} navigation={capabilities.nounArticle} />
+					<NounArticle
+						lemma={lemma}
+						lemmaId={lemma.lemmaId}
+						navigation={capabilities.nounArticle}
+					/>
 					<NoteTitleLink
 						aria-label={`${lemma.canonicalForm}, open its Lemma`}
 						onClick={() =>
@@ -77,7 +75,11 @@ export function ReadingHeader({
 					<Ipa transcription={note.knowledge.transcription} />
 				) : null}
 			</NoteTitleRow>
-			{capabilities.nounArticle?.error ? <p role="alert" className="text-sm text-destructive">{capabilities.nounArticle.error}</p> : null}
+			{capabilities.nounArticle?.error ? (
+				<p role="alert" className="text-sm text-destructive">
+					{capabilities.nounArticle.error}
+				</p>
+			) : null}
 		</header>
 	);
 }

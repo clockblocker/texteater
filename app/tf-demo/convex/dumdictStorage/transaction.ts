@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { makeSurfaceId } from "dumdict/runtime";
+import { selectAuthoredArticle } from "dumgen";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
@@ -14,6 +15,7 @@ import {
 	requireChangeKind,
 	requireRecord,
 	requireString,
+	stableFingerprint,
 	withoutKeys,
 } from "../model/readingKnowledge";
 import {
@@ -181,7 +183,7 @@ async function advancePreflightState(
 			return;
 		}
 		case "createReading": {
-			const entry = requireRecord(change.entry, "Reading Entry");
+			const entry = withAuthoredArticleKnowledge(change.entry);
 			const key = readingIdentityKey(entry.reading);
 			shadow.readings.set(key, true);
 			shadow.readingEntries.set(
@@ -486,7 +488,7 @@ async function applyChange(
 			return true;
 		}
 		case "createReading": {
-			const entry = requireRecord(change.entry, "Reading Entry");
+			const entry = withAuthoredArticleKnowledge(change.entry);
 			const reading = requireRecord(entry.reading, "Reading");
 			const emojiDescription = requireString(
 				reading.emojiDescription,
@@ -871,15 +873,77 @@ export const commitDumdictChanges = internalMutation({
 /** Materializes the grammatical component without creating another occurrence. */
 export async function materializeNounArticle(
 	ctx: MutationCtx,
-	reference: NonNullable<Dumling.Surface<"de", "Lexeme", "NOUN">["articleReference"]>,
+	reference: NonNullable<
+		Dumling.Surface<"de", "Lexeme", "NOUN">["articleReference"]
+	>,
 ) {
 	const { reading, surface } = reference;
 	const empty = { notes: "", attestedTranslations: [], attestations: [] };
 	if (!(await findLemma(ctx, reading.lemma)))
-		await applyChange(ctx, { type: "createLemma", record: { lemma: reading.lemma } });
+		await applyChange(ctx, {
+			type: "createLemma",
+			record: { lemma: reading.lemma },
+		});
 	if (!(await findReading(ctx, reading)))
-		await applyChange(ctx, { type: "createReading", entry: { reading, ...empty } });
+		await applyChange(ctx, {
+			type: "createReading",
+			entry: { reading, ...empty },
+		});
+	await completeAuthoredArticleKnowledge(ctx, reading);
 	const id = makeSurfaceId("de", surface);
 	if (!(await findSurface(ctx, id)))
-		await applyChange(ctx, { type: "createOwnedSurface", entry: { id, ownerLemma: surface.lemma, surface, ...empty } });
+		await applyChange(ctx, {
+			type: "createOwnedSurface",
+			entry: { id, ownerLemma: surface.lemma, surface, ...empty },
+		});
+}
+
+/** Repairs legacy article entries without replacing existing Knowledge or creating encounters. */
+export async function completeAuthoredArticleKnowledge(
+	ctx: MutationCtx,
+	reading: unknown,
+) {
+	const authored = selectAuthoredArticle(reading);
+	if (!authored) return false;
+	const stored = await findReading(ctx, authored.reading);
+	if (!stored) return false;
+	const accumulated = await ctx.db
+		.query("accumulatedKnowledge")
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", stored.readingKey),
+		)
+		.unique();
+	const entry = await ctx.db.get(stored.entryId);
+	if (!entry) return false;
+	const record = requireRecord(entry.record, "Reading Entry record");
+	const knowledge = {
+		...optionalRecord(withoutSemanticRelationTargets(authored.knowledge)),
+		...optionalRecord(record.knowledge),
+		...accumulated?.knowledge,
+	};
+	if (
+		stableFingerprint(record.knowledge) === stableFingerprint(knowledge) &&
+		stableFingerprint(accumulated?.knowledge) ===
+			stableFingerprint(knowledge)
+	)
+		return false;
+	await ctx.db.patch(entry._id, { record: { ...record, knowledge } });
+	await replaceAccumulatedKnowledge(ctx, stored.readingKey, knowledge);
+	return true;
+}
+
+function withAuthoredArticleKnowledge(value: unknown): AnyRecord {
+	const proposed = requireRecord(value, "Reading Entry");
+	const authored = selectAuthoredArticle(proposed.reading);
+	return authored
+		? {
+				...proposed,
+				knowledge: {
+					...optionalRecord(
+						withoutSemanticRelationTargets(authored.knowledge),
+					),
+					...optionalRecord(proposed.knowledge),
+				},
+			}
+		: proposed;
 }

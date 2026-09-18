@@ -93,7 +93,12 @@ export function reduceApplicationWorkspaceSession(
 				workspaceReducer(session.workspace, action.command),
 			);
 		case "Follow":
-			return follow(session, action.target, action.originPresentationId, action.presentationContext);
+			return follow(
+				session,
+				action.target,
+				action.originPresentationId,
+				action.presentationContext,
+			);
 		case "RevealLibrary":
 			return revealLibrary(session, action.originPresentationId);
 		case "CloseAllSheets":

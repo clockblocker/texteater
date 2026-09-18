@@ -25,7 +25,10 @@ import {
 	createProductionDumgen,
 	createProductionKnowledgeDraft,
 } from "../server/modelExecution";
-import { parseGermanReading } from "../server/operationalParsing";
+import {
+	parseGermanLemma,
+	parseGermanReading,
+} from "../server/operationalParsing";
 import {
 	parseResolvedGrammar,
 	type ResolvedGrammar,
@@ -1275,10 +1278,19 @@ export const followNounArticle = action({
 			internal.reviewedNavigation.nounSource,
 			{ lemmaId },
 		);
-		const selected = selectNounHeadingArticle({ ...lemma, coreFeatures: lemma.coreFeatures && typeof lemma.coreFeatures === "object" ? lemma.coreFeatures as Record<string, unknown> : {} });
+		const selected = selectNounHeadingArticle(parseGermanLemma(lemma));
 		if (!selected)
 			throw new Error("This Lemma has no noun heading article.");
 		const readingKey = readingIdentityKey(selected.reading);
+		const existing = await ctx.runQuery(
+			internal.reviewedNavigation.destination,
+			{ readingKey },
+		);
+		if (existing)
+			return ctx.runMutation(
+				internal.reviewedNavigation.completeNounArticleKnowledge,
+				{ lemmaId },
+			);
 		const dictionary = createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
@@ -1293,7 +1305,10 @@ export const followNounArticle = action({
 					dictionary.ensureReadingEntry({
 						entry: {
 							reading: selected.reading,
-							knowledge: { definition: selected.knowledge.definition, translations: selected.knowledge.translations },
+							knowledge: {
+								definition: selected.knowledge.definition,
+								translations: selected.knowledge.translations,
+							},
 							attestedTranslations: [],
 							attestations: [],
 							notes: "",
@@ -1302,6 +1317,16 @@ export const followNounArticle = action({
 				),
 			);
 			if (result._tag === "Left") {
+				const concurrent = await ctx.runQuery(
+					internal.reviewedNavigation.destination,
+					{ readingKey },
+				);
+				if (concurrent)
+					return ctx.runMutation(
+						internal.reviewedNavigation
+							.completeNounArticleKnowledge,
+						{ lemmaId },
+					);
 				if (result.left._tag === "DumdictRevisionConflict") continue;
 				throw new Error("The article Reading could not be stored.");
 			}
@@ -1309,7 +1334,11 @@ export const followNounArticle = action({
 				internal.reviewedNavigation.destination,
 				{ readingKey },
 			);
-			if (destination) return destination;
+			if (destination)
+				return ctx.runMutation(
+					internal.reviewedNavigation.completeNounArticleKnowledge,
+					{ lemmaId },
+				);
 		}
 		throw new Error(
 			"Opening the article conflicted with another change; try again.",

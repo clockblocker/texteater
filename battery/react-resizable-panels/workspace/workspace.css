@@ -322,7 +322,7 @@ body:has(.workspace) {
 	transform: translate(-50%, calc(-100% + 1.15rem));
 }
 .workspace button:focus-visible {
-	outline: 2px solid var(--primary, #a3c6f8);
+	outline: 2px solid var(--link, var(--primary, #a3c6f8));
 	outline-offset: -2px;
 }
 
@@ -350,7 +350,7 @@ body:has(.workspace) {
 
 [data-workspace-selected="true"] {
 	text-decoration: underline;
-	text-decoration-color: var(--primary, #a3c6f8);
+	text-decoration-color: currentColor;
 	text-underline-offset: 0.2em;
 }
 .workspace__drop-label {

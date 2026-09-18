@@ -1,4 +1,4 @@
-import { LinkButton, Quote } from "lego";
+import { LinkButton, type NoteTitleTone, Quote } from "lego";
 import type { ReactNode } from "react";
 
 import { linkMembers, type SourceSegment } from "./link-members";
@@ -38,7 +38,26 @@ export function SourceQuote({
 		follow,
 		destination,
 	);
-	const quote = { onFollow: follow, followLabel: `Open in ${destination}` };
+	const memberGenders = new Set(
+		memberSegmentIndices.map((index) => segments[index]?.gender),
+	);
+	const gender =
+		memberGenders.size === 1
+			? memberGenders.values().next().value
+			: undefined;
+	const tone: NoteTitleTone =
+		gender === "Fem"
+			? "feminine"
+			: gender === "Masc"
+				? "masculine"
+				: gender === "Neut"
+					? "neuter"
+					: "default";
+	const quote = {
+		tone,
+		onFollow: follow,
+		followLabel: `Open in ${destination}`,
+	};
 	if (origin.kind !== "Definition")
 		return <Quote {...quote}>{members}</Quote>;
 	return (

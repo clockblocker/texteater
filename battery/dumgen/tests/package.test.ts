@@ -27,7 +27,10 @@ test("published production runtime is independent of authoring and evaluation", 
 		"DumgenFailure",
 		"createDumgen",
 		"draftKnowledge",
+		"nounArticleReference",
+		"selectAuthoredArticle",
 		"selectGrammaticalAlternatives",
+		"selectNounHeadingArticle",
 		"validateEncounter",
 	]);
 });

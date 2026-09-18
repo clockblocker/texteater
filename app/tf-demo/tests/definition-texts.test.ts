@@ -10,11 +10,11 @@ import {
 	definitionOf,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
-import { proseSegments } from "../tooling/playground-example-collection";
-import { load } from "../tooling/playground-fixtures";
 import { get as getReadingNote } from "../convex/readingNotes";
 import { list as listTexts } from "../convex/texts";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
+import { proseSegments } from "../tooling/playground-example-collection";
+import { load } from "../tooling/playground-fixtures";
 import {
 	IndexedTestDb,
 	runTestMutation,

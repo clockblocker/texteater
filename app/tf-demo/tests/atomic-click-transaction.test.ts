@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
 import type { DumdictPlan } from "dumdict";
 import { makeSurfaceId } from "dumdict";
+import { nounArticleReference } from "dumgen";
+import { migrateNounArticle } from "../convex/model/nounArticleMigration";
 import { persistResolvedClick } from "../convex/persistence";
 import {
 	lemmaIdentityKey,
@@ -575,7 +577,8 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 	expect(db.rows("surfaces")).toHaveLength(2);
 	expect(db.rows("attestations")).toHaveLength(1);
 	expect(db.rows("visitorClicks")).toHaveLength(1);
-	const attestation = db.rows("attestations")[0]!;
+	const attestation = db.rows("attestations")[0];
+	if (!attestation) throw new Error("Missing noun Attestation");
 	expect(
 		db
 			.rows("segments")
@@ -590,4 +593,81 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 		.find((row) => row.readingKey === readingFingerprint(articleReading));
 	expect(component).toBeDefined();
 	expect(attestation.readingId).not.toBe(component?._id);
+});
+
+test("article owner migration preserves Surface and occurrence IDs and is repeatable", async () => {
+	const correct = nounArticleReference({
+		article: "Definite",
+		case: "Dat",
+		number: "Sing",
+		gender: "Fem",
+		spelled: "der",
+	});
+	const oldLemma = { ...correct.reading.lemma, canonicalForm: "der" };
+	const oldReference = {
+		reading: { ...correct.reading, lemma: oldLemma },
+		surface: { ...correct.surface, lemma: oldLemma },
+	};
+	const oldSurface = {
+		...surface,
+		normalizedSurface: "der Bank",
+		inflectionalFeatures: {
+			article: "Definite",
+			case: "Dat",
+			number: "Sing",
+		},
+		articleReference: oldReference,
+	} as const;
+	const row = {
+		...oldSurface,
+		_id: "surface-old",
+		lemmaId: "lemma-bank",
+		surfaceKey: makeSurfaceId("de", oldSurface),
+	};
+	const db = new TransactionalDb({
+		lemmas: [
+			{
+				...surface.lemma,
+				_id: "lemma-bank",
+				lemmaKey: lemmaIdentityKey(surface.lemma),
+			},
+		],
+		surfaces: [row],
+		ownedSurfaces: [
+			{
+				_id: "owned-old",
+				surfaceId: row._id,
+				record: { notes: "keep this", attestedTranslations: [] },
+			},
+		],
+		attestations: [
+			{
+				_id: "attestation-old",
+				surfaceId: row._id,
+				readingId: "reading-bank",
+			},
+		],
+	});
+	const migrate = migrateNounArticle as unknown as (
+		ctx: unknown,
+		row: unknown,
+	) => Promise<void>;
+	await migrate({ db }, row);
+	const updated = await db.get(row._id);
+	expect(updated).toMatchObject({
+		_id: row._id,
+		articleReference: correct,
+		surfaceKey: makeSurfaceId("de", {
+			...oldSurface,
+			articleReference: correct,
+		}),
+	});
+	expect(db.rows("attestations")[0]?.surfaceId).toBe(row._id);
+	expect(
+		db.rows("ownedSurfaces").find((value) => value._id === "owned-old")
+			?.record,
+	).toEqual({ notes: "keep this", attestedTranslations: [] });
+	const snapshot = db.snapshot();
+	await migrate({ db }, updated);
+	expect(db.snapshot()).toEqual(snapshot);
 });

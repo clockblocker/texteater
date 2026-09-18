@@ -1,5 +1,5 @@
-import { coreGender } from "../../../shared/grammatical-gender";
 import { v } from "convex/values";
+import { coreGender } from "../../../shared/grammatical-gender";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -9,7 +9,11 @@ import {
 } from "../../model/validators";
 import { findVisitorEncounter } from "../../model/visitorClicks";
 
-export const grammaticalGenderValidator = v.union(v.literal("Fem"), v.literal("Masc"), v.literal("Neut"));
+export const grammaticalGenderValidator = v.union(
+	v.literal("Fem"),
+	v.literal("Masc"),
+	v.literal("Neut"),
+);
 
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 
@@ -74,12 +78,20 @@ export async function projectSentenceView(
 			encounteredAttestationIds.add(attestationId);
 		}
 	}
-	const genders = new Map(await Promise.all([...encounteredAttestationIds].map(async (id) => {
-		const attestation = await ctx.db.get(id);
-		const reading = attestation ? await ctx.db.get(attestation.readingId) : null;
-		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
-		return [id, lemma ? coreGender(lemma) : undefined] as const;
-	})));
+	const genders = new Map(
+		await Promise.all(
+			[...encounteredAttestationIds].map(async (id) => {
+				const attestation = await ctx.db.get(id);
+				const reading = attestation
+					? await ctx.db.get(attestation.readingId)
+					: null;
+				const lemma = reading
+					? await ctx.db.get(reading.lemmaId)
+					: null;
+				return [id, lemma ? coreGender(lemma) : undefined] as const;
+			}),
+		),
+	);
 	return {
 		sentenceId: sentence._id,
 		position: sentence.position,
@@ -99,7 +111,9 @@ export async function projectSentenceView(
 				text: segment.text,
 				...(attestationId ? { attestationId } : {}),
 				encountered,
-				...(attestationId && genders.get(attestationId) ? { gender: genders.get(attestationId) } : {}),
+				...(attestationId && genders.get(attestationId)
+					? { gender: genders.get(attestationId) }
+					: {}),
 				...(encountered && segment.resolutionState
 					? { resolutionState: segment.resolutionState.kind }
 					: {}),

@@ -12,9 +12,11 @@ const GENDER_TONES: Readonly<Record<string, NoteTitleTone>> = {
 };
 
 /** The headword tone for a Lemma's grammatical gender, when it has one. */
-export function genderTone(
-	lemma: { family: string; kind: string; coreFeatures: unknown },
-): NoteTitleTone | undefined {
+export function genderTone(lemma: {
+	family: string;
+	kind: string;
+	coreFeatures: unknown;
+}): NoteTitleTone | undefined {
 	const gender = coreGender(lemma);
 	return typeof gender === "string" ? GENDER_TONES[gender] : undefined;
 }

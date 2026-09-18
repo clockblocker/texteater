@@ -28,5 +28,10 @@ export const get = query({
 	},
 	returns: v.union(v.null(), routeNoteValidator),
 	handler: async (ctx, args) =>
-		loadRouteNote(ctx, args.target, args.target.contextCursor, args.visitorId),
+		loadRouteNote(
+			ctx,
+			args.target,
+			args.target.contextCursor,
+			args.visitorId,
+		),
 });

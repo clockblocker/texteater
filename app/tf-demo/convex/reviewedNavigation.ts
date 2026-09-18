@@ -1,5 +1,9 @@
 import { v } from "convex/values";
-import { internalQuery } from "./_generated/server";
+import { selectNounHeadingArticle } from "dumgen";
+import { readingIdentityKey } from "../server/linguisticIdentity";
+import { parseGermanLemma } from "../server/operationalParsing";
+import { internalMutation, internalQuery } from "./_generated/server";
+import { completeAuthoredArticleKnowledge } from "./dumdictStorage/transaction";
 import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
 import { lemmaValueValidator, readingValueValidator } from "./model/validators";
 
@@ -36,4 +40,39 @@ export const destination = internalQuery({
 				)
 				.unique()
 		)?._id ?? null,
+});
+
+/** Also supports opening legacy article entries before the backfill has run. */
+export const completeNounArticleKnowledge = internalMutation({
+	args: { lemmaId: v.id("lemmas") },
+	returns: v.id("readings"),
+	handler: async (ctx, { lemmaId }) => {
+		const noun = await ctx.db.get(lemmaId);
+		const selected = noun
+			? selectNounHeadingArticle(parseGermanLemma(lemmaValue(noun)))
+			: null;
+		if (!selected)
+			throw new Error("This Lemma has no noun heading article.");
+		const readingKey = readingIdentityKey(selected.reading);
+		const reading = await ctx.db
+			.query("readings")
+			.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
+			.unique();
+		if (!reading)
+			throw new Error("Article Reading has not been materialized.");
+		if (!(await completeAuthoredArticleKnowledge(ctx, selected.reading)))
+			return reading._id;
+		const state = await ctx.db
+			.query("dictionaryState")
+			.withIndex("by_key", (q) => q.eq("key", "global"))
+			.unique();
+		if (state)
+			await ctx.db.patch(state._id, { revision: state.revision + 1 });
+		else
+			await ctx.db.insert("dictionaryState", {
+				key: "global",
+				revision: 1,
+			});
+		return reading._id;
+	},
 });

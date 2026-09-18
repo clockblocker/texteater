@@ -508,9 +508,19 @@ for (const [form, caseValue, number, gender, owner] of [
 	["der", "Gen", "Plur", "Masc", "die"],
 ] as const) {
 	test(`${form} (${gender} ${number} ${caseValue}) belongs to authored ${owner}`, () => {
-		const reference = nounArticleReference({ article: "Definite", case: caseValue, number, gender, spelled: form });
+		const reference = nounArticleReference({
+			article: "Definite",
+			case: caseValue,
+			number,
+			gender,
+			spelled: form,
+		});
 		expect(reference.surface.lemma.canonicalForm).toBe(owner);
 		expect(reference.reading.lemma).toEqual(reference.surface.lemma);
-		expect(reference.surface.inflectionalFeatures).toMatchObject({ case: caseValue, number, gender });
+		expect(reference.surface.inflectionalFeatures).toMatchObject({
+			case: caseValue,
+			number,
+			gender,
+		});
 	});
 }

@@ -1,10 +1,10 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
+import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
+import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -36,10 +36,10 @@ export function RouteNoteView({
 	const anonymousVisitorId = useAnonymousVisitorId();
 	const visitorId = visitorIdOverride ?? anonymousVisitorId;
 	const noteQuery = useQuery({
-		...convexQuery(
-			api.routeNotes.get,
-			{ ...routeNoteQueryArgs(target, activeAnalysisKey), visitorId },
-		),
+		...convexQuery(api.routeNotes.get, {
+			...routeNoteQueryArgs(target, activeAnalysisKey),
+			visitorId,
+		}),
 		gcTime: 10_000,
 	});
 	if (noteQuery.isPending)
@@ -147,12 +147,15 @@ function PaginatedRouteNote({
 
 	return renderNote({
 		noteData: pagination.note,
-		capabilities: { nounArticle, ...routeNoteCapabilities(follow, presentation, {
-			hasMore: pagination.hasMore,
-			isLoading: pagination.isLoading,
-			error: pagination.error,
-			loadMore: pagination.hasMore ? pagination.loadMore : null,
-		}) },
+		capabilities: {
+			nounArticle,
+			...routeNoteCapabilities(follow, presentation, {
+				hasMore: pagination.hasMore,
+				isLoading: pagination.isLoading,
+				error: pagination.error,
+				loadMore: pagination.hasMore ? pagination.loadMore : null,
+			}),
+		},
 	});
 }
 
