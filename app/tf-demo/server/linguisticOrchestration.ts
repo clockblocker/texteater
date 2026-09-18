@@ -13,7 +13,9 @@ import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import type { UnknownException } from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
+import * as Option from "effect/Option";
 import type { InspectionCapture } from "./inspectionCapture";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
@@ -281,10 +283,10 @@ export function createTfDemoOrchestrator(options: {
 	readonly dictionary: Pick<DumdictService<"de">, "findStoredReadings">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
-	/** Drafts describe the resolved Reading; its Emoji Description is the sense anchor. */
+	/** Drafts are anchored on the marked sentence and Lemma; they run concurrently with Reading resolution. */
 	readonly draftKnowledge?: (input: {
 		encounter: Encounter<"de">;
-		reading: Dumling.Reading<"de">;
+		lemma: Dumling.Lemma<"de">;
 		visitorId: string;
 	}) => Effect.Effect<KnowledgeDraft, unknown>;
 }) {
@@ -425,6 +427,20 @@ export function createTfDemoOrchestrator(options: {
 			const lemma = parseGermanLemma(
 				grammatical.attestation.surface.lemma,
 			);
+			// Text Knowledge speculates from the sentence and Lemma alone, so
+			// it overlaps Reading resolution instead of waiting for the emoji.
+			// The scope interrupts it whenever resolution fails.
+			if (options.draftKnowledge && !checkpoints.reading)
+				knowledgeDraft = yield* options
+					.draftKnowledge({
+						encounter: grammatical.encounter,
+						lemma,
+						visitorId: input.visitorId,
+					})
+					.pipe(
+						Effect.catchAll(() => Effect.succeed(null)),
+						Effect.forkScoped,
+					);
 			const [grammarSaved, readingsLoaded] = yield* Effect.all(
 				[
 					Effect.exit(
@@ -486,10 +502,23 @@ export function createTfDemoOrchestrator(options: {
 						}) ?? Promise.resolve(),
 				);
 
-			const draft =
-				knowledgeDraft && readingResolution.decision === "New"
+			// A new Reading waits for its drafts. A reused Reading usually has
+			// its Knowledge already, so only a draft that already finished is
+			// handed on; an unfinished one is dropped rather than delaying the commit.
+			const draft = !knowledgeDraft
+				? null
+				: readingResolution.decision === "New"
 					? yield* Fiber.join(knowledgeDraft)
-					: null;
+					: yield* Fiber.poll(knowledgeDraft).pipe(
+							Effect.flatMap((exit) =>
+								Option.isSome(exit) &&
+								Exit.isSuccess(exit.value)
+									? Effect.succeed(exit.value.value)
+									: Fiber.interrupt(knowledgeDraft).pipe(
+											Effect.as(null),
+										),
+							),
+						);
 
 			const surfaceKey = surfaceIdentityKey(
 				grammatical.attestation.surface,
@@ -620,28 +649,6 @@ export function createTfDemoOrchestrator(options: {
 							}),
 						),
 					);
-					// Text Knowledge waits for the Emoji Description so every
-					// draft describes the same sense; it overlaps persistence.
-					if (
-						resolution.decision === "New" &&
-						options.draftKnowledge
-					) {
-						knowledgeDraft = yield* options
-							.draftKnowledge({
-								encounter: resolved.encounter,
-								reading: parseGermanReading({
-									unitKind: "Reading",
-									lemma: resolvedLemma,
-									emojiDescription:
-										resolution.emojiDescription,
-								}),
-								visitorId: input.visitorId,
-							})
-							.pipe(
-								Effect.catchAll(() => Effect.succeed(null)),
-								Effect.forkScoped,
-							);
-					}
 					return resolution;
 				});
 			}

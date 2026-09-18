@@ -43,7 +43,7 @@ async function fixtureDraft() {
 	return {
 		sourceFingerprint: await knowledgeDraftFingerprint(
 			input.encounter,
-			input.reading,
+			input.reading.lemma,
 		),
 		texts: [
 			{ aspect: "definition", text: "Ein Geldinstitut." },
@@ -52,7 +52,7 @@ async function fixtureDraft() {
 	};
 }
 
-test("text and relation drafts start concurrently, anchored on the Reading, without publication", async () => {
+test("text and relation drafts start concurrently, anchored on the Lemma and sentence, without publication", async () => {
 	const started = Promise.withResolvers<void>();
 	const release = Promise.withResolvers<void>();
 	const calls: string[] = [];
@@ -64,9 +64,14 @@ test("text and relation drafts start concurrently, anchored on the Reading, with
 				execute: async (request) => {
 					const state = request.input as {
 						aspect?: string;
-						reading?: { emojiDescription?: string };
+						lemma?: { canonicalForm?: string };
+						markedContext?: string;
+						reading?: unknown;
 					};
-					expect(state.reading?.emojiDescription).toBe("🏦");
+					expect(state.lemma?.canonicalForm).toBe("Bank");
+					expect(state.reading).toBeUndefined();
+					if (state.aspect !== "transcription")
+						expect(state.markedContext).toContain("<TARGET>");
 					calls.push(state.aspect ?? "relations");
 					if (calls.length === 3) started.resolve();
 					await release.promise;
@@ -87,7 +92,7 @@ test("text and relation drafts start concurrently, anchored on the Reading, with
 			},
 			{
 				encounter: input.encounter,
-				reading: input.reading,
+				lemma: input.reading.lemma,
 				request: {
 					...input.request,
 					semanticRelations: { synonym: null },
@@ -188,7 +193,7 @@ test("draft failure preserves successful siblings and leaves fallback generation
 			},
 			{
 				encounter: input.encounter,
-				reading: input.reading,
+				lemma: input.reading.lemma,
 				request: input.request,
 			},
 		),
@@ -224,7 +229,7 @@ test("unclassified relation candidates receive their first Kind and relation dec
 	expect(result.pendingRelations).toHaveLength(1);
 });
 
-test("transcription drafts see only the Lemma while sense texts see the Reading and context", async () => {
+test("transcription drafts see only the Lemma while sense texts see the Lemma and marked context", async () => {
 	const inputs: Record<string, unknown>[] = [];
 	await Effect.runPromise(
 		draftKnowledge(
@@ -237,7 +242,7 @@ test("transcription drafts see only the Lemma while sense texts see the Reading 
 			},
 			{
 				encounter: input.encounter,
-				reading: input.reading,
+				lemma: input.reading.lemma,
 				request: { transcription: null, definition: null },
 			},
 		),
@@ -251,12 +256,13 @@ test("transcription drafts see only the Lemma while sense texts see the Reading 
 		aspect: "transcription",
 	});
 	expect(definition).toMatchObject({
-		reading: input.reading,
+		lemma: input.reading.lemma,
 		markedContext: "<TARGET>Bank</TARGET>",
 	});
+	expect(definition).not.toHaveProperty("reading");
 });
 
-test("drafts written for another Emoji Description of the same Lemma are not reused", async () => {
+test("drafts written for another Lemma are not reused", async () => {
 	let generated = 0;
 	const result = await Effect.runPromise(
 		createDumgen({
@@ -264,7 +270,7 @@ test("drafts written for another Emoji Description of the same Lemma are not reu
 				...(await fixtureDraft()),
 				sourceFingerprint: await knowledgeDraftFingerprint(
 					input.encounter,
-					{ ...input.reading, emojiDescription: "🪑" },
+					{ ...input.reading.lemma, canonicalForm: "Banke" },
 				),
 			},
 			execute: async () => {

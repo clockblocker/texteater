@@ -547,7 +547,7 @@ test("mixed German, English and Hebrew intake persists ordered sentences without
 	]);
 });
 
-test("Knowledge drafts start only after the Emoji Description and receive it as the sense anchor", async () => {
+test("Knowledge drafts start from the Lemma before the Emoji Description and are handed to persistence with the new Reading", async () => {
 	const draftStarted = Promise.withResolvers<void>();
 	const emojiStarted = Promise.withResolvers<void>();
 	const releaseDraft = Promise.withResolvers<void>();
@@ -561,12 +561,9 @@ test("Knowledge drafts start only after the Emoji Description and receive it as 
 	const run = setup([], {}, [], {
 		draftKnowledge: (input) =>
 			Effect.tryPromise(async () => {
-				expect(emojiSettled).toBe(true);
-				expect(input.reading).toEqual({
-					unitKind: "Reading",
-					lemma,
-					emojiDescription: "🏦",
-				});
+				expect(emojiSettled).toBe(false);
+				expect(input.lemma).toEqual(lemma);
+				expect("reading" in input).toBe(false);
 				draftStarted.resolve();
 				await releaseDraft.promise;
 				return draft;
@@ -588,10 +585,10 @@ test("Knowledge drafts start only after the Emoji Description and receive it as 
 	const pending = Effect.runPromise(
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
-	await emojiStarted.promise;
+	await Promise.all([draftStarted.promise, emojiStarted.promise]);
 	expect(run.writes).toHaveLength(0);
 	releaseEmoji.resolve();
-	await Promise.all([draftStarted.promise, readingAvailable.promise]);
+	await readingAvailable.promise;
 	expect(run.writes).toHaveLength(0);
 	releaseDraft.resolve();
 	await pending;
@@ -602,12 +599,19 @@ test("Knowledge drafts start only after the Emoji Description and receive it as 
 	);
 });
 
-test("emoji failure never starts Knowledge drafting or hands anything to persistence", async () => {
+test("emoji failure interrupts an in-flight Knowledge draft and hands nothing to persistence", async () => {
 	let drafts = 0;
+	let interrupted = false;
 	const run = setup([], {}, [], {
 		draftKnowledge: () => {
 			drafts++;
-			return Effect.succeed({ sourceFingerprint: "unused", texts: [] });
+			return Effect.never.pipe(
+				Effect.onInterrupt(() =>
+					Effect.sync(() => {
+						interrupted = true;
+					}),
+				),
+			);
 		},
 		execute: async () => {
 			throw Error("emoji failed");
@@ -621,7 +625,8 @@ test("emoji failure never starts Knowledge drafting or hands anything to persist
 		),
 	);
 	expect(result._tag).toBe("Left");
-	expect(drafts).toBe(0);
+	expect(drafts).toBe(1);
+	expect(interrupted).toBe(true);
 	expect(run.writes).toHaveLength(0);
 });
 
@@ -636,27 +641,49 @@ test("failed Knowledge speculation does not fail Reading resolution", async () =
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });
 
-test("existing Reading candidates bypass Knowledge speculation", async () => {
-	let drafts = 0;
+test("a reused Reading drops an unfinished Knowledge draft instead of waiting for it", async () => {
+	let interrupted = false;
 	const run = setup(
 		[{ decision: "Reuse", emojiDescription: "🏦" }],
 		{},
 		[{ unitKind: "Reading", lemma, emojiDescription: "🏦" }],
 		{
-			draftKnowledge: () => {
-				drafts++;
-				return Effect.succeed({
-					sourceFingerprint: "unused",
-					texts: [],
-				});
-			},
+			draftKnowledge: () =>
+				Effect.never.pipe(
+					Effect.onInterrupt(() =>
+						Effect.sync(() => {
+							interrupted = true;
+						}),
+					),
+				),
 		},
 	);
 	await Effect.runPromise(
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
-	expect(drafts).toBe(0);
+	expect(interrupted).toBe(true);
+	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
+});
+
+test("a reused Reading keeps a Knowledge draft that already finished", async () => {
+	const draft = {
+		sourceFingerprint: "fixture",
+		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
+	};
+	const run = setup(
+		[{ decision: "Reuse", emojiDescription: "🏦" }],
+		{},
+		[{ unitKind: "Reading", lemma, emojiDescription: "🏦" }],
+		{ draftKnowledge: () => Effect.succeed(draft) },
+	);
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	expect(run.writes).toHaveLength(1);
+	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
+		draft,
+	);
 });
 
 test("submission inspection captures sentence boundaries and segmentation inputs and outputs", async () => {
