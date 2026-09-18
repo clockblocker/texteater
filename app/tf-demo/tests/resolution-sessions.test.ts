@@ -306,9 +306,18 @@ describe("Resolution Session", () => {
 			},
 		});
 		expect(db.rows("visitorClicks")).toHaveLength(1);
-		expect(db.rows("knowledgeGenerationAttempts")).toHaveLength(2);
+		expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+			expect.objectContaining({
+				attemptKey: "request-1",
+				state: "Scheduled",
+			}),
+			expect.objectContaining({
+				attemptKey: "request-2",
+				state: "Waiting",
+			}),
+		]);
 		expect(db.rows("resolutionSessions")).toEqual([]);
-		expect(scheduled).toHaveLength(2);
+		expect(scheduled).toHaveLength(1);
 	});
 
 	test("inspection records repeat selections separately while encounters stay deduplicated", async () => {

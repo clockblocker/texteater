@@ -15,6 +15,7 @@ import {
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
+import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
@@ -73,6 +74,23 @@ function findAccumulatedKnowledge(
 			q.eq("ownerReadingKey", ownerReadingKey),
 		)
 		.unique();
+}
+
+async function hasActiveGenerationAttempt(
+	ctx: KnowledgeStateCtx,
+	ownerReadingKey: string,
+): Promise<boolean> {
+	const [scheduled, running] = await Promise.all(
+		(["Scheduled", "Running"] as const).map((state) =>
+			ctx.db
+				.query("knowledgeGenerationAttempts")
+				.withIndex("by_owner_reading_key_and_state", (q) =>
+					q.eq("ownerReadingKey", ownerReadingKey).eq("state", state),
+				)
+				.take(1),
+		),
+	);
+	return scheduled.length > 0 || running.length > 0;
 }
 
 function coveredTranslationLanguages(
@@ -158,27 +176,34 @@ export async function scheduleKnowledgeGeneration(
 			throw new Error("attemptKey collides with a different occurrence.");
 		}
 		if (existing.state === "Failed") {
+			const waiting = await hasActiveGenerationAttempt(
+				ctx,
+				ownerReadingKey,
+			);
 			await ctx.db.patch(existing._id, {
-				state: "Scheduled",
+				state: waiting ? "Waiting" : "Scheduled",
 				failureCode: undefined,
 				failureMessage: undefined,
 				updatedAt: Date.now(),
 			});
-			await ctx.scheduler.runAfter(0, runKnowledgeGeneration, {
-				attemptKey: input.attemptKey,
-			});
+			if (!waiting)
+				await ctx.scheduler.runAfter(0, runKnowledgeGeneration, {
+					attemptKey: input.attemptKey,
+				});
 		}
 		return;
 	}
 	const now = Date.now();
+	const waiting = await hasActiveGenerationAttempt(ctx, ownerReadingKey);
 	await ctx.db.insert("knowledgeGenerationAttempts", {
 		...input,
 		ownerReadingKey,
 		translationLanguages,
-		state: "Scheduled",
+		state: waiting ? "Waiting" : "Scheduled",
 		createdAt: now,
 		updatedAt: now,
 	});
+	if (waiting) return;
 	await ctx.scheduler.runAfter(0, runKnowledgeGeneration, {
 		attemptKey: input.attemptKey,
 	});
@@ -302,6 +327,10 @@ export const markRunning = internalMutation({
 				state: "LostRace",
 				updatedAt: Date.now(),
 			});
+			await scheduleNextWaitingKnowledgeAttempt(
+				ctx,
+				attempt.ownerReadingKey,
+			);
 			return null;
 		}
 		if (attempt.state === "Scheduled" || attempt.state === "Failed") {
@@ -346,6 +375,10 @@ export const fail = internalMutation({
 				failureMessage: "Knowledge generation failed. Please retry.",
 				updatedAt: Date.now(),
 			});
+			await scheduleNextWaitingKnowledgeAttempt(
+				ctx,
+				attempt.ownerReadingKey,
+			);
 		}
 		return null;
 	},
@@ -420,6 +453,10 @@ export const commitGenerated = internalMutation({
 				state: "LostRace",
 				updatedAt: Date.now(),
 			});
+			await scheduleNextWaitingKnowledgeAttempt(
+				ctx,
+				attempt.ownerReadingKey,
+			);
 			return { status: "AlreadyFull" as const };
 		}
 
@@ -532,6 +569,7 @@ export const commitGenerated = internalMutation({
 				: undefined,
 			updatedAt: Date.now(),
 		});
+		await scheduleNextWaitingKnowledgeAttempt(ctx, attempt.ownerReadingKey);
 		return { status: "Committed" as const };
 	},
 });

@@ -180,6 +180,7 @@ export const knowledgeStatusValidator = v.union(
 );
 
 export const knowledgeGenerationAttemptStateValidator = v.union(
+	v.literal("Waiting"),
 	v.literal("Scheduled"),
 	v.literal("Running"),
 	v.literal("Failed"),

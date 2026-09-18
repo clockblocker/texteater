@@ -98,6 +98,9 @@ class GenerationDb {
 			withIndex(_name: string, build: (range: typeof range) => unknown) {
 				build(range);
 				const indexed = {
+					async collect() {
+						return matches();
+					},
 					async unique() {
 						const rows = matches();
 						if (rows.length > 1)
@@ -900,6 +903,110 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	expect(retryDb.rows("knowledgeGenerationAttempts")[0]).not.toHaveProperty(
 		"failureMessage",
 	);
+});
+
+test("a second Knowledge demand for the same Reading waits for the active attempt", async () => {
+	const scheduled: Array<{ attemptKey: string }> = [];
+	const db = new GenerationDb(occurrenceRows());
+	const ctx = {
+		db,
+		scheduler: {
+			async runAfter(
+				_delay: number,
+				_reference: unknown,
+				args: { attemptKey: string },
+			) {
+				scheduled.push(args);
+			},
+		},
+	};
+	const input = {
+		visitorId: "visitor-1",
+		readingId: "reading-1",
+		attestationId: "attestation-1",
+	} as const;
+
+	await scheduleKnowledgeGeneration(
+		ctx as never,
+		{
+			...input,
+			attemptKey: "resolution-request",
+		} as never,
+	);
+	await scheduleKnowledgeGeneration(
+		ctx as never,
+		{
+			...input,
+			attemptKey: "coverage-request",
+		} as never,
+	);
+
+	expect(scheduled).toEqual([{ attemptKey: "resolution-request" }]);
+	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+		expect.objectContaining({
+			attemptKey: "resolution-request",
+			state: "Scheduled",
+		}),
+		expect.objectContaining({
+			attemptKey: "coverage-request",
+			state: "Waiting",
+		}),
+	]);
+});
+
+test("settling an active Knowledge attempt schedules the next waiting demand", async () => {
+	const db = new GenerationDb({
+		...occurrenceRows(),
+		knowledgeGenerationAttempts: [
+			attempt("active-attempt", "resolution-request"),
+			{
+				...attempt("waiting-attempt", "coverage-request"),
+				state: "Waiting",
+				createdAt: 2,
+				updatedAt: 2,
+			},
+		],
+	});
+	const scheduled: Array<{ attemptKey: string }> = [];
+
+	await handler<
+		{
+			attemptKey: string;
+			failureCode: string;
+			failureMessage: string;
+		},
+		null
+	>(fail)(
+		{
+			db,
+			scheduler: {
+				async runAfter(
+					_delay: number,
+					_reference: unknown,
+					args: { attemptKey: string },
+				) {
+					scheduled.push(args);
+				},
+			},
+		},
+		{
+			attemptKey: "resolution-request",
+			failureCode: "generationFailed",
+			failureMessage: "failed",
+		},
+	);
+
+	expect(scheduled).toEqual([{ attemptKey: "coverage-request" }]);
+	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+		expect.objectContaining({
+			attemptKey: "resolution-request",
+			state: "Failed",
+		}),
+		expect.objectContaining({
+			attemptKey: "coverage-request",
+			state: "Scheduled",
+		}),
+	]);
 });
 
 test("dictionary conflict rolls back the generated commit", async () => {

@@ -31,6 +31,7 @@ import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_inspection from "../model/inspection.js";
+import type * as model_knowledgeGenerationAttempts from "../model/knowledgeGenerationAttempts.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
@@ -98,6 +99,7 @@ declare const fullApi: ApiFromModules<{
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/inspection": typeof model_inspection;
+  "model/knowledgeGenerationAttempts": typeof model_knowledgeGenerationAttempts;
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;

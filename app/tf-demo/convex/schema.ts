@@ -305,7 +305,8 @@ export default defineSchema({
 		.index("by_owner_reading_key_and_updated_at", [
 			"ownerReadingKey",
 			"updatedAt",
-		]),
+		])
+		.index("by_owner_reading_key_and_state", ["ownerReadingKey", "state"]),
 
 	relationPublicationControls: defineTable({
 		key: v.literal("global"),

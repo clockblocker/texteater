@@ -284,7 +284,8 @@ export async function loadUnitReadingNote(
 		readingKnowledge?.knowledge,
 	);
 	const activeAttempt = attempts.find(
-		({ state }) => state === "Scheduled" || state === "Running",
+		({ state }) =>
+			state === "Waiting" || state === "Scheduled" || state === "Running",
 	);
 	const failedAttempt = attempts.find(({ state }) => state === "Failed");
 	const status: "Absent" | "Partial" | "Full" =

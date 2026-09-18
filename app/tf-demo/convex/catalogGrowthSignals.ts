@@ -2,6 +2,7 @@ import { type Infer, v } from "convex/values";
 import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 import { canonicalJson } from "./model/canonicalJson";
+import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import {
 	requireActiveResolutionSession,
@@ -143,6 +144,7 @@ export const recordKnowledgeCatalogMiss = internalMutation({
 				"No reviewed catalog member matches this encounter.",
 			updatedAt: Date.now(),
 		});
+		await scheduleNextWaitingKnowledgeAttempt(ctx, attempt.ownerReadingKey);
 		return null;
 	},
 });
