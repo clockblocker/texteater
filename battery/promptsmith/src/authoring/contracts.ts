@@ -215,6 +215,7 @@ export interface PromptSource<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
 > {
+	readonly outputFormat?: "text" | "json";
 	readonly route: string;
 	readonly inputSchema: InputSchema;
 	readonly outputSchema: OutputSchema;

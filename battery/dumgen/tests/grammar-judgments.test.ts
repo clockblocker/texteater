@@ -257,7 +257,8 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 		});
 		expect(output.members[0]?.attested).toBe(attested);
 		const calls = traces[0]?.calls ?? [];
-		expect(calls).toHaveLength(expectedCalls);
+		expect(calls).toHaveLength(expectedCalls + 1);
+		expect(calls.at(-1)?.request.route).toBe("de/Lexeme/NOUN/case");
 		const request = calls[0]?.request;
 		if (!request || !("questions" in request))
 			throw Error("Expected feature batch");
@@ -274,7 +275,13 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 			Object.keys(request.questions.canonical?.criteria ?? {}),
 		).toEqual(["Copy", "Generate", "Unresolved"]);
 		expect(request.questions).toHaveProperty(["lemma.coreFeatures.gender"]);
-		expect(request.questions).toHaveProperty([
+		expect(request.questions).not.toHaveProperty([
+			"surface.inflectionalFeatures.case",
+		]);
+		const caseRequest = calls.at(-1)?.request;
+		if (!caseRequest || !("questions" in caseRequest))
+			throw Error("Expected dependent Case judgment");
+		expect(caseRequest.questions).toHaveProperty([
 			"surface.inflectionalFeatures.case",
 		]);
 		if (expectedCalls === 2) {

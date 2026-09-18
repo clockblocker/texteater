@@ -57,7 +57,7 @@ export function normalizeGrammarSurface(
 		} | null;
 		if (!ref || !output.articleEvidence)
 			throw new DeGrammaticalResolutionProjectionError(
-				"Partial noun requires shared article evidence",
+				"Partial noun requires shared or Fusion article evidence",
 			);
 		return `${ref.surface.normalizedSurface} ${normalized}`;
 	}

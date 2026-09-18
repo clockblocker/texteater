@@ -21,7 +21,7 @@ Productive perfect and passive complexes are complete verbal targets: ist ... au
 Fixed correlators include only anchors, never payload: entweder/oder, weder/noch, sowohl/als/auch, nicht nur/sondern auch, je/desto are CCONJ; um/zu, ohne/zu, statt/zu, so/dass are SCONJ; einerseits/andererseits and teils/teils are ADV. Classify the whole identity, not the clicked anchor's standalone POS.
 An established noncompositional expression is an Idiom; identical literal wording is separate. An anchor or fixed article/preposition click selects the same complete expression. A Fusion is one fused preposition/article source word unless inside a larger fixed expression. Ordinary conventional verb/noun combinations have no larger classification route.
 Free substantive interrogatives, demonstratives, relatives, quantifiers and negatives are PRON; adnominal forms directly modifying a noun are DET. Genitive jedermanns remains PRON. Comparative and adverbially used adjectives remain ADJ. Do not infer lemma or inflection here.
-German common nouns include their overt definite/indefinite article as fixed members, even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ. Article clicks resolve the same noun. In compatible nominal coordination, only the closest eligible noun owns the overt article: der Aufstieg und Abstieg gives [der,Aufstieg] and [Abstieg]. Closest means Segment distance within that nominal scope, excluding nested phrases; ties are Unresolved. Longer compatible coordination may share the article, but another explicit article or clause boundary stops sharing. Incompatible agreement and proximity alone never license sharing. Only forms of the true definite article der/die/das or indefinite article ein are absorbed. mein/dieser/kein are NOT absorbed articles in this domain: kein Haus gives [kein] DET and [Haus] NOUN, mein Hund gives [mein] DET and [Hund] NOUN. Clicking either does not include the other. mein/dieser/kein remain independent DETs; im/zum/ins remain Fusion and do not join nouns. Bare nouns stay bare. These noun rules preserve any larger established idiom boundary.
+German common nouns include their overt definite/indefinite article as fixed members, even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ. Article clicks resolve the same noun. In compatible nominal coordination, only the closest eligible noun owns the overt article: der Aufstieg und Abstieg gives [der,Aufstieg] and [Abstieg]. Closest means Segment distance within that nominal scope, excluding nested phrases; ties are Unresolved. Longer compatible coordination may share the article, but another explicit article or clause boundary stops sharing. Incompatible agreement and proximity alone never license sharing. Only forms of the true definite article der/die/das or indefinite article ein are absorbed. mein/dieser/kein are NOT absorbed articles in this domain: kein Haus gives [kein] DET and [Haus] NOUN, mein Hund gives [mein] DET and [Hund] NOUN. Clicking either does not include the other. mein/dieser/kein remain independent DETs; im/zum/ins remain Fusion and do not join nouns. Their internal article may supply noun grammar later without adding the Fusion to noun membership. Bare nouns stay bare. These noun rules preserve any larger established idiom boundary.
 A target is defensible only when the exact assembled members form the complete realized fixed unit, with no omitted present fixed member and no added free material. Uncertainty or contradictory membership must remain Unresolved; do not repair, trim, extend or replace the assembled group.`;
 
 const routes = {
@@ -87,16 +87,25 @@ export async function classifyGermanTarget(
 		);
 	}
 	const members = [input.clickedSegmentIndex];
-	if (Object.keys(questions).length) {
-		const result = await judge(
+	let selected: string | undefined;
+	const membershipQuestions = Object.keys(questions);
+	if (membershipQuestions.length) {
+		const result = await judge<Questions>(
 			"classifyTarget",
 			"de/membership",
 			state,
-			questions,
+			{
+				...questions,
+				singletonRoute: choice(
+					`Is the exact group [${input.clickedSegmentIndex}] (only occurrence <s${input.clickedSegmentIndex}> in \`sentence\`) a defensible complete target under \`criteria\`? Choose the Family/Kind of the whole unit or Unresolved. Do not repair membership or classify a fragment of a larger unit.`,
+					routes,
+				),
+			},
 			signal,
 		);
-		for (const [id, answer] of Object.entries(result.answers)) {
-			if (answer.type !== "choice" || answer.choice === "Unresolved")
+		for (const id of membershipQuestions) {
+			const answer = result.answers[id];
+			if (answer?.type !== "choice" || answer.choice === "Unresolved")
 				throw new DumgenFailure(
 					"Unresolved",
 					"classifyTarget",
@@ -105,22 +114,44 @@ export async function classifyGermanTarget(
 			if (answer.choice === "Include")
 				members.push(Number(id.slice("member_".length)));
 		}
+		// The speculative decision is about this exact singleton, never a larger group.
+		if (members.length === 1) {
+			const singletonRoute = result.answers.singletonRoute;
+			if (
+				singletonRoute?.type === "choice" &&
+				singletonRoute.choice !== "Unresolved" &&
+				// Speculative PRON/DET distinctions regressed in live evaluation.
+				// Keep the whole-target judgment for either side of that boundary.
+				singletonRoute.choice !== "Lexeme/PRON" &&
+				singletonRoute.choice !== "Lexeme/DET"
+			)
+				selected = singletonRoute.choice;
+		}
+		recordEvent(signal, "JudgmentApplicability", {
+			consumed: [
+				...membershipQuestions,
+				...(members.length === 1 ? ["singletonRoute"] : []),
+			],
+			ignored: members.length === 1 ? [] : ["singletonRoute"],
+		});
 	}
 	members.sort((a, b) => a - b);
 	recordEvent(signal, "TargetAssembled", { memberSegmentIndices: members });
-	const result = await judge(
-		"classifyTarget",
-		"de/whole-target",
-		{ ...state, memberSegmentIndices: members },
-		{
-			route: choice(
-				"Is this exact assembled group a defensible complete target? Choose the Family/Kind of the whole unit or Unresolved. Do not repair membership or classify only the click.",
-				routes,
-			),
-		},
-		signal,
-	);
-	const selected = result.answers.route.choice;
+	if (selected === undefined) {
+		const result = await judge(
+			"classifyTarget",
+			"de/whole-target",
+			{ ...state, memberSegmentIndices: members },
+			{
+				route: choice(
+					"Is this exact assembled group a defensible complete target? Choose the Family/Kind of the whole unit or Unresolved. Do not repair membership or classify only the click.",
+					routes,
+				),
+			},
+			signal,
+		);
+		selected = result.answers.route.choice;
+	}
 	if (selected === "Unresolved")
 		throw new DumgenFailure(
 			"Unresolved",

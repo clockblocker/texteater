@@ -76,7 +76,7 @@ const partType = {
 const meanings: Readonly<Record<string, Meaning>> = {
 	"surface.inflectionalFeatures.article": {
 		question:
-			"Does this whole common-noun Surface include a definite or indefinite article, overtly owned or licensed by compatible coordination? Separate Fusion, mein, dieser and kein do not supply an absorbed article. Ordinary bare nouns stay bare.",
+			"Does this whole common-noun Surface include a definite or indefinite article, overtly owned, licensed by compatible coordination, or supplied by a governing Fusion? A Fusion contributes its internal DET without joining noun membership; mein, dieser and kein do not supply an article. Ordinary bare nouns stay bare.",
 		values: {
 			Definite: "Included definite article",
 			Indefinite: "Included indefinite article",

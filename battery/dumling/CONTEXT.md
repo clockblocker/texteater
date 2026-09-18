@@ -52,8 +52,9 @@ _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 A fleeting occurrence of one Surface, represented by ordered attested members
 and Full or Partial Realization Coverage. It has value equality but no durable
 identity. German noun Attestations retain article source orthography separately
-from their members when an article is included. A shared article gives Partial
-coverage without becoming a second owned member.
+from their members when an article is included. A shared article or an article supplied by a Fusion gives Partial
+coverage without becoming a second owned member. Fusion evidence retains the
+fused source spelling; the Surface reference names its DET component.
 _Avoid_: Selection, click result, selected Surface
 
 ### Semantic identity
@@ -65,7 +66,8 @@ _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:
 The stable dictionary-scoped semantic label that distinguishes Readings of the
-same Lemma.
+same Lemma and helps a learner recognize the intended meaning beside it.
+It is an emoji mnemonic whose associations or combinations preserve that meaning.
 
 ### German classifications
 

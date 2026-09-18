@@ -3340,5 +3340,435 @@
 		"idealOutput": {
 			"decision": "Unresolved"
 		}
+	},
+	"grammar-de-noun-regression-fusion-im-wald": {
+		"input": {
+			"markedContext": "Wir bleiben im <TARGET>Wald</TARGET>.",
+			"members": ["Wald"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Wald",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"article": "Definite"
+				},
+				"articleReference": {
+					"surface": {
+						"unitKind": "Surface",
+						"language": "de",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "der",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						},
+						"normalizedSurface": "dem",
+						"spelling": "Canonical",
+						"surfaceFeatures": null,
+						"inflectionalFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"gender": "Masc",
+							"degree": null,
+							"gender[psor]": null,
+							"number[psor]": null
+						}
+					},
+					"reading": {
+						"unitKind": "Reading",
+						"emojiDescription": "👉",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "der",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						}
+					}
+				}
+			},
+			"normalizedMembers": ["Wald"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Partial",
+			"articleEvidence": {
+				"attested": "im",
+				"orthography": "Standard"
+			}
+		}
+	},
+	"grammar-de-noun-regression-fusion-zum-wald": {
+		"input": {
+			"markedContext": "Wir gehen zum <TARGET>Wald</TARGET>.",
+			"members": ["Wald"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Wald",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"article": "Definite"
+				},
+				"articleReference": {
+					"surface": {
+						"unitKind": "Surface",
+						"language": "de",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "der",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						},
+						"normalizedSurface": "dem",
+						"spelling": "Canonical",
+						"surfaceFeatures": null,
+						"inflectionalFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"gender": "Masc",
+							"degree": null,
+							"gender[psor]": null,
+							"number[psor]": null
+						}
+					},
+					"reading": {
+						"unitKind": "Reading",
+						"emojiDescription": "👉",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "der",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						}
+					}
+				}
+			},
+			"normalizedMembers": ["Wald"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Partial",
+			"articleEvidence": {
+				"attested": "zum",
+				"orthography": "Standard"
+			}
+		}
+	},
+	"grammar-de-noun-regression-fusion-ins-haus": {
+		"input": {
+			"markedContext": "Wir gehen ins <TARGET>Haus</TARGET>.",
+			"members": ["Haus"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Haus",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"article": "Definite"
+				},
+				"articleReference": {
+					"surface": {
+						"unitKind": "Surface",
+						"language": "de",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "das",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						},
+						"normalizedSurface": "das",
+						"spelling": "Canonical",
+						"surfaceFeatures": null,
+						"inflectionalFeatures": {
+							"case": "Acc",
+							"number": "Sing",
+							"gender": "Neut",
+							"degree": null,
+							"gender[psor]": null,
+							"number[psor]": null
+						}
+					},
+					"reading": {
+						"unitKind": "Reading",
+						"emojiDescription": "👉",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "das",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						}
+					}
+				}
+			},
+			"normalizedMembers": ["Haus"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Partial",
+			"articleEvidence": {
+				"attested": "ins",
+				"orthography": "Standard"
+			}
+		}
+	},
+	"grammar-de-noun-regression-fusion-shared-feld": {
+		"input": {
+			"markedContext": "Wir bleiben im Wald und <TARGET>Feld</TARGET>.",
+			"members": ["Feld"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Feld",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"article": "Definite"
+				},
+				"articleReference": {
+					"surface": {
+						"unitKind": "Surface",
+						"language": "de",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "das",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						},
+						"normalizedSurface": "dem",
+						"spelling": "Canonical",
+						"surfaceFeatures": null,
+						"inflectionalFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"gender": "Neut",
+							"degree": null,
+							"gender[psor]": null,
+							"number[psor]": null
+						}
+					},
+					"reading": {
+						"unitKind": "Reading",
+						"emojiDescription": "👉",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "das",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						}
+					}
+				}
+			},
+			"normalizedMembers": ["Feld"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Partial",
+			"articleEvidence": {
+				"attested": "im",
+				"orthography": "Standard"
+			}
+		}
+	},
+	"grammar-de-noun-regression-fusion-zur-schule": {
+		"input": {
+			"markedContext": "Wir gehen zur <TARGET>Schule</TARGET>.",
+			"members": ["Schule"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Schule",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"article": "Definite"
+				},
+				"articleReference": {
+					"surface": {
+						"unitKind": "Surface",
+						"language": "de",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "der",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						},
+						"normalizedSurface": "der",
+						"spelling": "Canonical",
+						"surfaceFeatures": null,
+						"inflectionalFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"gender": "Fem",
+							"degree": null,
+							"gender[psor]": null,
+							"number[psor]": null
+						}
+					},
+					"reading": {
+						"unitKind": "Reading",
+						"emojiDescription": "👉",
+						"lemma": {
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "DET",
+							"canonicalForm": "der",
+							"coreFeatures": {
+								"definite": "Def",
+								"extPos": null,
+								"foreign": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Art"
+							},
+							"unitKind": "Lemma"
+						}
+					}
+				}
+			},
+			"normalizedMembers": ["Schule"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Partial",
+			"articleEvidence": {
+				"attested": "zur",
+				"orthography": "Standard"
+			}
+		}
 	}
 }

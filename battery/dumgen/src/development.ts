@@ -196,8 +196,14 @@ export async function evaluateExperiment(args: {
 		const run = await runOperationExperiment({
 			experiment: operationExperiment(args.experimentId, options),
 			experimentId: args.experimentId,
-			operationVersion: "judgments-2",
-			evaluatorVersion: "canonical-operation-2",
+			operationVersion:
+				args.experimentId === "reading-generation/de"
+					? "reading-text-1"
+					: "judgments-2",
+			evaluatorVersion:
+				args.experimentId === "reading-generation/de"
+					? "reading-mnemonic-1"
+					: "canonical-operation-2",
 			sourceRevision: args.sourceRevision,
 			configurations: {
 				generation: generationConfiguration(

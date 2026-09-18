@@ -10,6 +10,7 @@ import {
 } from "./authoring/golden-corpus.js";
 import { assertCaseSelectionsUncontaminated } from "./authoring/selection-contamination.js";
 import { fingerprint, type ModelConfiguration } from "./evaluation.js";
+import { summarizeQuality } from "./quality.js";
 import {
 	operationCaseRecordSchema,
 	operationEvaluationRunSchema,
@@ -211,6 +212,7 @@ export async function runOperationExperiment<
 		manifest,
 		cases: records,
 		summary: {
+			quality: summarizeQuality(records),
 			status: interrupted
 				? "Interrupted"
 				: failed

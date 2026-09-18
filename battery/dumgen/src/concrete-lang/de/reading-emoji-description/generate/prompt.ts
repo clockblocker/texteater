@@ -3,6 +3,7 @@ import {
 	emojiInputSchema as inputSchema,
 	emojiGenerationOutputSchema as outputSchema,
 } from "../../model-schemas.js";
+import { additionalDemonstrationIds, additionalPromptCases } from "./cases.js";
 import data from "./source-data.json";
 
 export { inputSchema, outputSchema };
@@ -11,7 +12,10 @@ export const promptSource = defineLinguisticPrompt({
 	inputSchema,
 	outputSchema,
 	body: data.body,
-	cases: data.cases,
-	demonstrationIds: data.demonstrationIds,
+	outputFormat: "text",
+	cases: { ...data.cases, ...additionalPromptCases },
+	demonstrationIds: [
+		...new Set([...data.demonstrationIds, ...additionalDemonstrationIds]),
+	],
 	source: import.meta.url,
 });

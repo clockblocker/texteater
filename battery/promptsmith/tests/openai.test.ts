@@ -1,6 +1,51 @@
 import { expect, test } from "bun:test";
 import { createOpenAIExecutor } from "promptsmith/openai";
 
+test("text output stays raw and the optional cache breakpoint precedes dynamic input", async () => {
+	for (const cachePrompt of [false, true]) {
+		let body: Record<string, unknown> = {};
+		const execute = createOpenAIExecutor({
+			apiKey: "fixture",
+			fetch: async (_url, init) => {
+				body = JSON.parse(String(init?.body));
+				return Response.json({
+					status: "completed",
+					output: [
+						{ content: [{ type: "output_text", text: "💪😓" }] },
+					],
+				});
+			},
+		});
+		const result = await execute({
+			systemPrompt: "Stable examples",
+			input: { lemma: "anstrengend" },
+			outputFormat: "text",
+			cachePrompt,
+			configuration: { model: "fixture", settings: {} },
+		});
+		expect(result.output).toBe("💪😓");
+		expect(body.text).toEqual({ format: { type: "text" } });
+		expect(body.input).toEqual([
+			cachePrompt
+				? {
+						role: "developer",
+						content: [
+							{
+								type: "input_text",
+								text: "Stable examples",
+								prompt_cache_breakpoint: { mode: "explicit" },
+							},
+						],
+					}
+				: { role: "system", content: "Stable examples" },
+			{ role: "user", content: '{"lemma":"anstrengend"}' },
+		]);
+		if (cachePrompt)
+			expect(body.prompt_cache_options).toEqual({ mode: "explicit" });
+		else expect(body).not.toHaveProperty("prompt_cache_options");
+	}
+});
+
 test("Responses adapter transports arbitrary output shapes, settings, cancellation and usage", async () => {
 	const controller = new AbortController();
 	let body: Record<string, unknown> = {};

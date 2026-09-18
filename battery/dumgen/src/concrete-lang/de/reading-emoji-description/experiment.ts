@@ -16,6 +16,12 @@ import {
 	evaluateReadingMeaningIsolation,
 	meaningIsolationCaseIds,
 } from "./evaluator.js";
+import {
+	additionalDemonstrationIds,
+	additionalOperationCases,
+	additionalPromptCases,
+	evaluateGeneratedEmoji,
+} from "./generate/cases.js";
 import { evaluationCaseIds as generateIds } from "./generate/evaluation-ids.js";
 import generate from "./generate/source-data.json";
 import cases from "./operation-cases.json";
@@ -32,9 +38,21 @@ export function readingOperationExperiment(
 ): OperationExperiment<
 	typeof comparisonInputSchema,
 	typeof outputSchema,
-	{ contractPass: boolean }
+	{ contractPass: boolean | null; needsReview?: boolean }
 > {
-	const data = route === generate.route ? generate : resolve;
+	const generating = route === generate.route;
+	const data = generating
+		? {
+				...generate,
+				cases: { ...generate.cases, ...additionalPromptCases },
+				demonstrationIds: [
+					...new Set([
+						...generate.demonstrationIds,
+						...additionalDemonstrationIds,
+					]),
+				],
+			}
+		: resolve;
 	const corpus = defineGoldenCorpus({
 		route,
 		inputSchema: comparisonInputSchema,
@@ -42,7 +60,7 @@ export function readingOperationExperiment(
 		collections: {
 			canonical: defineGoldenCaseCollection(import.meta.url, {
 				cases: Object.fromEntries(
-					Object.entries(cases)
+					Object.entries({ ...cases, ...additionalOperationCases })
 						.filter(([id]) => Object.hasOwn(data.cases, id))
 						.map(([id, example]) => [
 							id,
@@ -93,19 +111,26 @@ export function readingOperationExperiment(
 			return outputSchema.parse(result.right);
 		},
 		evaluator: (args) =>
-			meaningIsolationCaseIds.some((id) => id === args.caseId)
-				? evaluateReadingMeaningIsolation({
-						...args,
-						input: {
-							markedContext: "",
-							lemma: args.input.lemma.canonicalForm,
-							existingEmojiDescriptions: args.input.candidates,
+			generating
+				? evaluateGeneratedEmoji(
+						args.caseId,
+						args.output,
+						args.idealOutput,
+					)
+				: meaningIsolationCaseIds.some((id) => id === args.caseId)
+					? evaluateReadingMeaningIsolation({
+							...args,
+							input: {
+								markedContext: "",
+								lemma: args.input.lemma.canonicalForm,
+								existingEmojiDescriptions:
+									args.input.candidates,
+							},
+						})
+					: {
+							contractPass:
+								stableJson(args.output) ===
+								stableJson(args.idealOutput),
 						},
-					})
-				: {
-						contractPass:
-							stableJson(args.output) ===
-							stableJson(args.idealOutput),
-					},
 	};
 }

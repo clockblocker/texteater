@@ -59,10 +59,14 @@ export function defineLinguisticPrompt<
 	I extends z.ZodType,
 	O extends z.ZodType,
 >(
-	args: Parameters<typeof defineLinguisticCorpus<I, O>>[0] & { body: string },
+	args: Parameters<typeof defineLinguisticCorpus<I, O>>[0] & {
+		body: string;
+		outputFormat?: "text" | "json";
+	},
 ): PromptSource<I, O> {
 	return definePromptSource({
 		...defineLinguisticCorpus(args),
 		body: args.body,
+		outputFormat: args.outputFormat,
 	});
 }

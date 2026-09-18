@@ -23,6 +23,7 @@ import {
 	closedRoute,
 	sameValue,
 } from "../authored-closed-sets/select.js";
+import { germanFusion } from "../fusions.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
 	authoredKnowledge,
@@ -139,18 +140,8 @@ export async function produceKnowledge(
 	for (const [aspect, selection] of Object.entries(authored.missing)) {
 		if (aspect === "semanticRelations") continue;
 		if (aspect === "lexicalBreakdown" && reading.lemma.kind === "Fusion") {
-			const parts: Record<string, readonly [string, string]> = {
-				im: ["in", "der"],
-				zum: ["zu", "der"],
-				ins: ["in", "das"],
-				ans: ["an", "das"],
-				am: ["an", "der"],
-				beim: ["bei", "der"],
-				vom: ["von", "der"],
-				zur: ["zu", "die"],
-			};
-			const pair = parts[reading.lemma.canonicalForm];
-			if (pair)
+			const fusion = germanFusion(reading.lemma.canonicalForm);
+			if (fusion)
 				textOutcomes.push({
 					failures: [],
 					changes: [
@@ -162,13 +153,13 @@ export async function produceKnowledge(
 									language: "de",
 									family: "Lexeme",
 									kind: "ADP",
-									canonicalForm: pair[0],
+									canonicalForm: fusion.adposition,
 								},
 								{
 									language: "de",
 									family: "Lexeme",
 									kind: "DET",
-									canonicalForm: pair[1],
+									canonicalForm: fusion.articleLemma,
 								},
 							],
 						},

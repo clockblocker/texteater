@@ -25,7 +25,7 @@ async function runReadonlyInspection(
 			convexExecutable,
 			"run",
 			"--inline-query",
-			source,
+			`return JSON.stringify(await (async () => { ${source} })());`,
 			...deploymentArguments,
 			"--typecheck",
 			"disable",
@@ -35,12 +35,18 @@ async function runReadonlyInspection(
 		{
 			cwd: appDirectory,
 			stdin: "inherit",
-			stdout: "inherit",
+			stdout: "pipe",
 			stderr: "inherit",
 		},
 	);
-	const exitCode = await child.exited;
+	const [exitCode, stdout] = await Promise.all([
+		child.exited,
+		new Response(child.stdout).text(),
+	]);
 	if (exitCode !== 0) process.exit(exitCode);
+	// Arbitrary payload keys (including JSON Schema's $schema) stay opaque
+	// across Convex's value boundary and are decoded only by the local CLI.
+	console.log(JSON.stringify(JSON.parse(JSON.parse(stdout)), null, 2));
 }
 
 const literal = (value: string | number) => JSON.stringify(value);

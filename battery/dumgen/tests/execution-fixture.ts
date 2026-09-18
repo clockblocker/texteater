@@ -55,13 +55,15 @@ export function queuedTargetJudgment(outputs: unknown[]): TypeSafeExecutor {
 			throw Error("Expected an injected canonical target");
 		if (Object.hasOwn(request.questions, "route")) outputs.shift();
 		return choiceAnswers(request.questions, (id) =>
-			id === "route"
-				? output.decision === "Unresolved"
-					? "Unresolved"
-					: `${output.family}/${output.kind}`
-				: output.memberSegmentIndices?.includes(Number(id.slice(7)))
-					? "Include"
-					: "Exclude",
+			id === "singletonRoute"
+				? "Unresolved"
+				: id === "route"
+					? output.decision === "Unresolved"
+						? "Unresolved"
+						: `${output.family}/${output.kind}`
+					: output.memberSegmentIndices?.includes(Number(id.slice(7)))
+						? "Include"
+						: "Exclude",
 		);
 	};
 }

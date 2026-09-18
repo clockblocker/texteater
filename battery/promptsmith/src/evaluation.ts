@@ -6,6 +6,7 @@ import type {
 	PromptOutputSchema,
 } from "./authoring/contracts.js";
 import { defineExperiment } from "./authoring/define-experiment.js";
+import { summarizeQuality } from "./quality.js";
 import {
 	caseRecordSchema,
 	configurationSchema,
@@ -21,17 +22,27 @@ export type {
 	StoredRun,
 } from "./operation-evaluation.js";
 export { runOperationExperiment } from "./operation-evaluation.js";
+export { summarizeQuality } from "./quality.js";
 
 export type ModelConfiguration = z.infer<typeof configurationSchema>;
 export type EvaluationRun = z.infer<typeof evaluationRunSchema>;
 export type CaseRecord = z.infer<typeof caseRecordSchema>;
-export type EvaluationExecutor = (request: {
-	readonly systemPrompt: string;
-	readonly input: unknown;
-	readonly outputSchema: Record<string, unknown>;
-	readonly configuration: ModelConfiguration;
-	readonly signal?: AbortSignal;
-}) => Promise<{ readonly output: unknown; readonly metadata?: unknown }>;
+/** Text generation keeps validation local; structured callers supply a provider schema. */
+export type OutputContract =
+	| { readonly outputFormat: "text"; readonly outputSchema?: never }
+	| {
+			readonly outputFormat?: "json";
+			readonly outputSchema: Readonly<Record<string, unknown>>;
+	  };
+export type EvaluationExecutor = (
+	request: OutputContract & {
+		readonly systemPrompt: string;
+		readonly input: unknown;
+		readonly cachePrompt?: boolean;
+		readonly configuration: ModelConfiguration;
+		readonly signal?: AbortSignal;
+	},
+) => Promise<{ readonly output: unknown; readonly metadata?: unknown }>;
 
 export async function fingerprint(value: unknown): Promise<string> {
 	const bytes = new TextEncoder().encode(stableJson(value));
@@ -74,6 +85,7 @@ export async function runExperiment<
 			route: experiment.promptSource.route,
 			fingerprint: await fingerprint(systemPrompt),
 			schemaFingerprint: await fingerprint({
+				format: experiment.promptSource.outputFormat ?? "json",
 				input: z.toJSONSchema(experiment.promptSource.inputSchema),
 				output: outputSchema,
 			}),
@@ -110,7 +122,9 @@ export async function runExperiment<
 			result = await args.execute({
 				systemPrompt,
 				input: golden.input,
-				outputSchema,
+				...(experiment.promptSource.outputFormat === "text"
+					? { outputFormat: "text" as const }
+					: { outputSchema }),
 				configuration,
 				signal: args.signal,
 			});
@@ -204,6 +218,7 @@ export async function runExperiment<
 		manifest,
 		cases: records,
 		summary: {
+			quality: summarizeQuality(records),
 			status: interrupted
 				? "Interrupted"
 				: failed

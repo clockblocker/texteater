@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { StoredRun } from "./evaluation.js";
+import { summarizeQuality } from "./quality.js";
 import { runManifestSchema, storedRunSchema } from "./schemas.js";
 
 /** Creates a new run directory; existing evidence is never overwritten. */
@@ -67,6 +68,9 @@ export async function loadRun(
 		parsed.summary.succeeded !== succeeded ||
 		parsed.summary.interrupted !== interrupted ||
 		parsed.summary.failed !== failed ||
+		(parsed.summary.quality !== undefined &&
+			JSON.stringify(parsed.summary.quality) !==
+				JSON.stringify(summarizeQuality(parsed.cases))) ||
 		parsed.summary.status !==
 			(interrupted ? "Interrupted" : failed ? "Failed" : "Completed")
 	)

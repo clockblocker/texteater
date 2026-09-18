@@ -107,12 +107,18 @@ export type ModelConfiguration = {
 	readonly model: string;
 	readonly settings: Readonly<Record<string, unknown>>;
 };
-export type ModelRequest = {
+export type ModelRequest = (
+	| { readonly outputFormat: "text"; readonly outputSchema?: never }
+	| {
+			readonly outputFormat?: "json";
+			readonly outputSchema: Readonly<Record<string, unknown>>;
+	  }
+) & {
 	readonly stage: string;
 	readonly route: string;
 	readonly systemPrompt: string;
 	readonly input: unknown;
-	readonly outputSchema: Readonly<Record<string, unknown>>;
+	readonly cachePrompt?: boolean;
 	readonly configuration: ModelConfiguration;
 	readonly signal: AbortSignal;
 };

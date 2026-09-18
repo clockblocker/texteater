@@ -14,4 +14,7 @@ or omitted entity-owned material does not change Surface identity.
 German noun Attestations may also retain source article orthography as
 `articleEvidence`. Shared evidence is not an attested member. A licensed shared
 article gives Partial coverage; the same reusable noun Surface can have Full
-coverage elsewhere. Sentence coordinates remain application-owned.
+coverage elsewhere. A governing Fusion can also supply the article with Partial
+coverage: `im Wald` attests `[Wald]`, retains `im` as article evidence, and
+references DET Surface `dem` in noun Surface `dem Wald`. The expanded article
+is not a separately attested word. Sentence coordinates remain application-owned.

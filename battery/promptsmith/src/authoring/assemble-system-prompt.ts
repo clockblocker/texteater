@@ -14,7 +14,18 @@ export function assembleSystemPrompt(source: PromptSource): string {
 			example.explanation === undefined
 				? ""
 				: `\nExplanation (guidance only; not part of the output):\n${example.explanation}`;
-		return `Example ${index + 1}\nInput:\n${stableJson(example.input)}\nIdeal output:\n${stableJson(example.idealOutput)}${explanation}`;
+		if (
+			source.outputFormat === "text" &&
+			typeof example.idealOutput !== "string"
+		)
+			throw Error(
+				`Text prompt ${source.route} requires string demonstrations`,
+			);
+		const output =
+			source.outputFormat === "text"
+				? example.idealOutput
+				: stableJson(example.idealOutput);
+		return `Example ${index + 1}\nInput:\n${stableJson(example.input)}\nIdeal output:\n${output}${explanation}`;
 	});
 	return `${body}\n\nExamples to follow:\n\n${renderedExamples.join("\n\n")}`;
 }

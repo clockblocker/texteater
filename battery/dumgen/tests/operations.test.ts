@@ -216,11 +216,11 @@ test("emoji operations use exact candidates and omit options for candidate-free 
 		lemma: "Bank",
 	});
 	const generation = calls[3];
-	expect(generation && "outputSchema" in generation).toBe(true);
-	if (generation && "outputSchema" in generation) {
-		expect(generation.outputSchema).toMatchObject({ type: "string" });
+	expect(generation).toHaveProperty("outputFormat", "text");
+	expect(generation).not.toHaveProperty("outputSchema");
+	if (generation && "systemPrompt" in generation) {
 		expect(generation.systemPrompt).toContain(
-			"Return only one to four Unicode RGI emoji graphemes.",
+			"Return only one to four emoji graphemes, directly as text.",
 		);
 		expect(generation.systemPrompt).not.toContain('emojiDescription":');
 	}

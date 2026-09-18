@@ -40,6 +40,14 @@ export const caseRecordSchema = z.strictObject({
 	metadata: z.json().optional(),
 });
 export const runSummarySchema = z.strictObject({
+	quality: z
+		.strictObject({
+			passed: z.number().int().nonnegative(),
+			failed: z.number().int().nonnegative(),
+			needsReview: z.number().int().nonnegative(),
+			unscored: z.number().int().nonnegative(),
+		})
+		.optional(),
 	status: z.enum(["Completed", "Failed", "Interrupted"]),
 	finishedAt: z.string().datetime(),
 	total: z.number().int().nonnegative(),

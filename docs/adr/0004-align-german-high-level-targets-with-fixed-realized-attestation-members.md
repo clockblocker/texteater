@@ -18,3 +18,10 @@ An explicit article or clause boundary ends sharing; proximity alone does not
 license it. For these Partial nouns, normalized Surface prepends the recovered
 article to the member projection. Positional source evidence remains unchanged.
 The existing Full-coverage suspended-compound completion remains valid.
+
+A separate governing Fusion may supply its DET component to a noun Surface.
+`im` remains Construction/Fusion while `Wald` resolves to Surface `dem Wald`,
+Partial coverage, and member `[Wald]`. The same rule applies through licensed
+coordination, as in `im Wald und Feld`. The Fusion keeps its own click target
+and exposes its components through lexical breakdown. Its source spelling is
+article evidence, while its expanded DET form enters the noun Surface.

@@ -16,6 +16,7 @@ function example(
 	number = "Sing",
 	gender = "Masc",
 	shared = false,
+	articleSource = form,
 ) {
 	const segments = text
 		.split(/(\s+)/u)
@@ -60,7 +61,7 @@ function example(
 		memberOrthographies: members.map(() => "Standard"),
 		realizationCoverage: shared ? "Partial" : "Full",
 		articleEvidence: article
-			? { attested: form, orthography: "Standard" }
+			? { attested: articleSource, orthography: "Standard" }
 			: null,
 	};
 	return {
@@ -204,7 +205,7 @@ test("shared noun resolves first without resolving or claiming the article owner
 	);
 });
 
-for (const determiner of ["mein", "dieser", "kein", "im", "zum", "ins"])
+for (const determiner of ["mein", "dieser", "kein"])
 	test(`${determiner} does not become a noun article`, async () => {
 		const result = await example(
 			`${determiner} Haus`,
@@ -272,3 +273,229 @@ test("sentence-initial article casing stays source evidence while the noun Surfa
 		orthography: "Standard",
 	});
 });
+
+for (const [text, noun, form, caseValue, gender, source] of [
+	["Wir bleiben im Wald", "Wald", "dem", "Dat", "Masc", "im"],
+	["Wir gehen zum Wald", "Wald", "dem", "Dat", "Masc", "zum"],
+	["Wir gehen ins Haus", "Haus", "das", "Acc", "Neut", "ins"],
+	["Im Wald bleiben wir", "Wald", "dem", "Dat", "Masc", "Im"],
+	["Wir bleiben im dichten Wald", "Wald", "dem", "Dat", "Masc", "im"],
+	["Wir bleiben im Wald und Feld", "Feld", "dem", "Dat", "Neut", "im"],
+	["Wir gehen zur Schule", "Schule", "der", "Dat", "Fem", "zur"],
+] as const) {
+	test(`Fusion supplies DET without owning the source: ${text}`, async () => {
+		const fixture = example(
+			text,
+			[noun],
+			noun,
+			form,
+			"Definite",
+			caseValue,
+			"Sing",
+			gender,
+			true,
+			source,
+		);
+		const result = await fixture.resolve();
+		expect(result.surface.normalizedSurface).toBe(`${form} ${noun}`);
+		expect(result.surface).toHaveProperty(
+			"inflectionalFeatures.article",
+			"Definite",
+		);
+		expect(result.surface).toHaveProperty(
+			"articleReference.surface.normalizedSurface",
+			form,
+		);
+		expect(result.members).toEqual([
+			{ attested: noun, orthography: "Standard" },
+		]);
+		expect(result.realizationCoverage).toBe("Partial");
+		expect(result).toHaveProperty("articleEvidence", {
+			attested: source,
+			orthography: "Standard",
+		});
+		expect(parseUnit(result).success).toBe(true);
+	});
+}
+
+test("Fusion and standalone article produce the same reusable noun Surface", async () => {
+	const fused = await example(
+		"im Wald",
+		["Wald"],
+		"Wald",
+		"dem",
+		"Definite",
+		"Dat",
+		"Sing",
+		"Masc",
+		true,
+		"im",
+	).resolve();
+	const standalone = await example(
+		"in dem Wald",
+		["dem", "Wald"],
+		"Wald",
+		"dem",
+		"Definite",
+		"Dat",
+	).resolve();
+	expect(fused.surface).toEqual(standalone.surface);
+	expect(fused.realizationCoverage).toBe("Partial");
+	expect(standalone.realizationCoverage).toBe("Full");
+});
+
+test("article attachment offers only complete lexical candidates", async () => {
+	const fixture = example(
+		"Wir bleiben im Wald",
+		["Wald"],
+		"Wald",
+		"dem",
+		"Definite",
+		"Dat",
+		"Sing",
+		"Masc",
+		true,
+		"im",
+	);
+	const options = grammarFixture(fixture.golden);
+	const judge = options.judge;
+	if (!judge) throw Error("Missing fixture judge");
+	let inspected = false;
+	const result = await Effect.runPromise(
+		createDumgen({
+			...options,
+			judge: async (request, settings) => {
+				if (request.questions.attachment) {
+					inspected = true;
+					expect(Object.keys(request.questions)).toEqual([
+						"attachment",
+					]);
+					const question = request.questions.attachment;
+					if (question.type !== "choice")
+						throw Error("Expected attachment choice");
+					expect(Object.keys(question.criteria)).toEqual([
+						"Fusion_s4",
+						"None",
+						"Unresolved",
+					]);
+					expect(question.criteria.Fusion_s4).toContain("dem");
+				}
+				return judge(request, settings);
+			},
+		}).resolveGrammar(fixture.encounter),
+	);
+	expect(inspected).toBe(true);
+	expect(result.surface.normalizedSurface).toBe("dem Wald");
+});
+
+test("Fusion agreement contradictions remain Unresolved", async () => {
+	const fixture = example(
+		"ins Wald",
+		["Wald"],
+		"Wald",
+		"dem",
+		"Definite",
+		"Dat",
+		"Sing",
+		"Masc",
+		true,
+		"ins",
+	);
+	await expect(fixture.resolve()).rejects.toThrow(
+		"Article form and noun agreement are incompatible",
+	);
+});
+
+test("unrelated Fusion evidence is optional and uncertainty is not a bare noun", async () => {
+	const fixture = example(
+		"Im Haus liegt Holz",
+		["Holz"],
+		"Holz",
+		"",
+		null,
+		"Nom",
+		"Sing",
+		"Neut",
+	);
+	const result = await fixture.resolve();
+	expect(result.surface.normalizedSurface).toBe("Holz");
+	expect(result.surface).toHaveProperty("articleReference", null);
+	await expect(
+		Effect.runPromise(
+			createDumgen(
+				grammarFixture(fixture.golden, { attachment: "Unresolved" }),
+			).resolveGrammar(fixture.encounter),
+		),
+	).rejects.toThrow("Unresolved noun article attachment");
+});
+
+test("Fusion morphology determines Case before any independent Case judgment", async () => {
+	const fixture = example(
+		"Wir gehen zur Schule",
+		["Schule"],
+		"Schule",
+		"der",
+		"Definite",
+		"Dat",
+		"Sing",
+		"Fem",
+		true,
+		"zur",
+	);
+	const options = grammarFixture(fixture.golden, {
+		"surface.inflectionalFeatures.case": "Gen",
+	});
+	const result = await Effect.runPromise(
+		createDumgen(options).resolveGrammar(fixture.encounter),
+	);
+	expect(result.surface).toHaveProperty("inflectionalFeatures.case", "Dat");
+	expect(result.surface).toHaveProperty(
+		"articleReference.surface.inflectionalFeatures.case",
+		"Dat",
+	);
+});
+
+for (const [text, caseValue] of [
+	["mit der Frau", "Dat"],
+	["wegen der Frau", "Gen"],
+] as const) {
+	test(`syncretic standalone article retains contextual Case: ${text}`, async () => {
+		const fixture = example(
+			text,
+			["der", "Frau"],
+			"Frau",
+			"der",
+			"Definite",
+			caseValue,
+			"Sing",
+			"Fem",
+		);
+		const options = grammarFixture(fixture.golden);
+		const judge = options.judge;
+		if (!judge) throw Error("Missing fixture judge");
+		let checked = false;
+		const result = await Effect.runPromise(
+			createDumgen({
+				...options,
+				judge: async (request, settings) => {
+					const question =
+						request.questions["surface.inflectionalFeatures.case"];
+					if (question?.type === "choice") {
+						checked = true;
+						expect(Object.keys(question.criteria).sort()).toEqual([
+							"Dat",
+							"Gen",
+							"Unresolved",
+						]);
+					}
+					return judge(request, settings);
+				},
+			}).resolveGrammar(fixture.encounter),
+		);
+		expect(checked).toBe(true);
+		expect(result.surface).toHaveProperty(
+			"inflectionalFeatures.case",
+			caseValue,
+		);
+	});
+}

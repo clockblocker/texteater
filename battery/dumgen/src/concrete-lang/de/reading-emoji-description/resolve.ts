@@ -6,7 +6,7 @@ import type {
 } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
-import { modelCaller } from "../../../universal/model.js";
+import { textModelCaller } from "../../../universal/model.js";
 import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
 import { markedContext } from "../../../universal/validation.js";
@@ -102,7 +102,7 @@ export async function resolveReading(
 		}
 	} else recordEvent(signal, "EmptyReadingCandidates", { candidates });
 	const context = markedContext(input.encounter);
-	const emojiDescription = await modelCaller(options)<string>(
+	const emojiDescription = await textModelCaller(options)<string>(
 		stage,
 		route,
 		"reading-generation/de",

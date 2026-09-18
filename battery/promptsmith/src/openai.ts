@@ -11,7 +11,8 @@ export function createOpenAIExecutor(
 	} = {},
 ): EvaluationExecutor {
 	return async (request) => {
-		const { $defs, $schema, ...outputSchema } = request.outputSchema;
+		const textOutput = request.outputFormat === "text";
+		const { $defs, $schema, ...outputSchema } = request.outputSchema ?? {};
 		const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
 		if (!apiKey) throw Error("OPENAI_API_KEY is not configured");
 		const started = performance.now();
@@ -28,26 +29,44 @@ export function createOpenAIExecutor(
 					...request.configuration.settings,
 					model: request.configuration.model,
 					store: false,
+					...(request.cachePrompt
+						? { prompt_cache_options: { mode: "explicit" } }
+						: {}),
 					input: [
-						{ role: "system", content: request.systemPrompt },
+						request.cachePrompt
+							? {
+									role: "developer",
+									content: [
+										{
+											type: "input_text",
+											text: request.systemPrompt,
+											prompt_cache_breakpoint: {
+												mode: "explicit",
+											},
+										},
+									],
+								}
+							: { role: "system", content: request.systemPrompt },
 						{
 							role: "user",
 							content: JSON.stringify(request.input),
 						},
 					],
 					text: {
-						format: {
-							type: "json_schema",
-							name: "experiment_output",
-							strict: false,
-							schema: {
-								type: "object",
-								properties: { value: outputSchema },
-								required: ["value"],
-								additionalProperties: false,
-								...($defs ? { $defs } : {}),
-							},
-						},
+						format: textOutput
+							? { type: "text" }
+							: {
+									type: "json_schema",
+									name: "experiment_output",
+									strict: false,
+									schema: {
+										type: "object",
+										properties: { value: outputSchema },
+										required: ["value"],
+										additionalProperties: false,
+										...($defs ? { $defs } : {}),
+									},
+								},
 					},
 				}),
 			},
@@ -78,7 +97,7 @@ export function createOpenAIExecutor(
 			.map((content) => content.text ?? "")
 			.join("");
 		return {
-			output: JSON.parse(outputText).value,
+			output: textOutput ? outputText : JSON.parse(outputText).value,
 			metadata: {
 				requestId: response.headers.get("x-request-id"),
 				timing: {

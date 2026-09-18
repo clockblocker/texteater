@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
+import { createOpenAIExecutor } from "promptsmith/openai";
 import { readingOperationExperiment } from "../src/concrete-lang/de/reading-emoji-description/experiment.js";
+import { evaluateGeneratedEmoji } from "../src/concrete-lang/de/reading-emoji-description/generate/cases.js";
 import cases from "../src/concrete-lang/de/reading-emoji-description/operation-cases.json";
 import { comparisonInputSchema } from "../src/generated/schemas.js";
 import type { OperationTrace } from "../src/types.js";
@@ -10,6 +12,101 @@ import { choiceAnswers, readingJudgment } from "./execution-fixture.js";
 const base = comparisonInputSchema.parse(
 	cases["reading-de-noun-bank-financial-reuse"].input,
 );
+
+test("new Reading uses one raw-text request with local emoji validation and no judgment", async () => {
+	for (const text of [
+		"💪😓",
+		'"💪😓"',
+		'{"value":"💪😓"}',
+		"effort 💪",
+		"😓😓😓😓😓",
+	]) {
+		let calls = 0;
+		const dumgen = createDumgen({
+			judge: async () => {
+				throw Error("New Reading must not request a semantic judgment");
+			},
+			execute: (request) =>
+				createOpenAIExecutor({
+					apiKey: "fixture",
+					fetch: async (_url, init) => {
+						calls++;
+						const body = JSON.parse(String(init?.body));
+						expect(body.text).toEqual({ format: { type: "text" } });
+						return Response.json({
+							status: "completed",
+							output: [
+								{ content: [{ type: "output_text", text }] },
+							],
+						});
+					},
+				})({
+					...request,
+					configuration: { model: "fixture", settings: {} },
+				}),
+		});
+		const result = await Effect.runPromise(
+			Effect.either(
+				dumgen.resolveOrGenerateReadingEmojiDescription({
+					...base,
+					candidates: [],
+				}),
+			),
+		);
+		expect(calls).toBe(1);
+		if (text === "💪😓")
+			expect(result).toMatchObject({
+				_tag: "Right",
+				right: { decision: "New", emojiDescription: text },
+			});
+		else
+			expect(result).toMatchObject({
+				_tag: "Left",
+				left: { _tag: "InvalidModelOutput" },
+			});
+	}
+});
+
+test("generation quality accepts reviewed alternatives and flags novel ones for review", () => {
+	const ideal = { decision: "New", emojiDescription: "😓" };
+	const evaluate = (emojiDescription: string) =>
+		evaluateGeneratedEmoji(
+			"reading-generation-strenuous-hike",
+			{ decision: "New", emojiDescription },
+			ideal,
+		);
+	expect(evaluate("💪😓")).toMatchObject({
+		contractPass: true,
+		exactMatch: false,
+		needsReview: false,
+	});
+	expect(evaluate("💪")).toMatchObject({
+		contractPass: false,
+		needsReview: false,
+	});
+	expect(evaluate("🧗😩")).toMatchObject({
+		contractPass: null,
+		needsReview: true,
+	});
+});
+
+test("bulk-discovered semantic failures cannot be counted as successful mnemonics", () => {
+	for (const [id, emojiDescription, expected] of [
+		["lock-door", "🏰", "🔒"],
+		["wait-bus", "⏳🚌", "⏳"],
+		["exciting-story", "😮‍💨❓", "🤩"],
+	]) {
+		if (!id || !emojiDescription || !expected)
+			throw Error("Incomplete semantic fixture");
+		expect(
+			evaluateGeneratedEmoji(
+				`reading-generation-${id}`,
+				{ decision: "New", emojiDescription },
+				{ decision: "New", emojiDescription: expected },
+			),
+		).toMatchObject({ contractPass: false, needsReview: false });
+	}
+});
 for (const scenario of [
 	{
 		selection: "candidate_0",
@@ -95,11 +192,9 @@ for (const scenario of [
 					"Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
 				lemma: base.lemma.canonicalForm,
 			});
-			expect("outputSchema" in generation.request).toBe(true);
-			if ("outputSchema" in generation.request)
-				expect(generation.request.outputSchema).toMatchObject({
-					type: "string",
-				});
+			expect(generation.request).toHaveProperty("outputFormat", "text");
+			expect(generation.request).toHaveProperty("cachePrompt", true);
+			expect(generation.request).not.toHaveProperty("outputSchema");
 		}
 		if (
 			scenario.candidates.length === 2 &&

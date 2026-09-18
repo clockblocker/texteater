@@ -1,4 +1,3 @@
-import { modelSchemas } from "../generated/model-schemas.js";
 import { prompts } from "../generated/prompts.js";
 import type {
 	CallTrace,
@@ -31,7 +30,7 @@ export function effectiveConfiguration(
 		},
 	};
 }
-export function modelCaller(options: DumgenOptions) {
+export function textModelCaller(options: DumgenOptions) {
 	return async <T>(
 		stage: string,
 		route: string,
@@ -40,9 +39,8 @@ export function modelCaller(options: DumgenOptions) {
 		input: unknown,
 		signal: AbortSignal,
 	): Promise<T> => {
-		const systemPrompt = prompts[promptRoute],
-			outputSchema = modelSchemas[schema];
-		if (!systemPrompt || !outputSchema)
+		const systemPrompt = prompts[promptRoute];
+		if (!systemPrompt)
 			throw new DumgenFailure(
 				"NotImplemented",
 				stage,
@@ -53,7 +51,8 @@ export function modelCaller(options: DumgenOptions) {
 			stage,
 			route,
 			systemPrompt,
-			outputSchema,
+			outputFormat: "text" as const,
+			cachePrompt: true,
 			input,
 			configuration: effectiveConfiguration(options, route),
 			signal,
@@ -79,7 +78,8 @@ export async function executeGeneration<T>(
 		dependsOn: dependsOn ?? context.calls.map((call) => call.id),
 		fingerprint: await fingerprint({
 			prompt: request.systemPrompt,
-			schema: request.outputSchema,
+			format: request.outputFormat ?? "json",
+			...(request.outputSchema ? { schema: request.outputSchema } : {}),
 		}),
 	};
 	const startedAt = Date.now();

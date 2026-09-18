@@ -3,8 +3,14 @@ import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
-import { indexedContext } from "../../../universal/validation.js";
+import {
+	indexedContext,
+	markedContext,
+} from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
+import { germanFusion } from "../fusions.js";
+import { featureQuestion } from "./feature-questions.js";
+import { grammarFeatureFields } from "./feature-schema.js";
 import type { GrammarOutput } from "./project.js";
 
 const definiteForms: Record<string, Record<string, string>> = {
@@ -82,6 +88,75 @@ export function nounArticleReference(input: {
 	return { surface, reading: member.reading };
 }
 
+type ArticleCandidate = {
+	segmentIndex: number;
+	attested: string;
+	orthography: "Standard" | "Typo";
+	realization: "Owned" | "Shared" | "Fusion";
+	article: "Definite" | "Indefinite";
+	form: string;
+	case: "Dat" | "Acc" | null;
+};
+
+const definiteSpellings = new Set(
+	Object.values(definiteForms).flatMap(Object.values),
+);
+const indefiniteSpellings = new Set(
+	Object.values(indefiniteForms).flatMap(Object.values),
+);
+
+/** Candidate spelling establishes possible analyses; the judgment still decides contextual attachment. */
+function articleCandidates(
+	encounter: Encounter,
+	output: Pick<GrammarOutput, "normalizedMembers" | "memberOrthographies">,
+): Map<string, ArticleCandidate> {
+	const candidates = new Map<string, ArticleCandidate>();
+	const members = encounter.target.memberSegmentIndices;
+	const firstMember = members[0];
+	if (firstMember === undefined) return candidates;
+	for (const [index, segment] of encounter.sentence.segments.entries()) {
+		if (segment.kind !== "ResolvableText") continue;
+		const position = members.indexOf(index);
+		const owned = position !== -1;
+		if (owned ? position !== 0 || members.length < 2 : index >= firstMember)
+			continue;
+		const normalized = owned
+			? output.normalizedMembers[position]
+			: segment.text;
+		const orthography = owned
+			? output.memberOrthographies[position]
+			: "Standard";
+		if (normalized === undefined || orthography === undefined)
+			throw new DumgenFailure(
+				"Unresolved",
+				"resolveGrammar",
+				"Article member evidence is not aligned",
+			);
+		const form = normalized.normalize("NFC").toLocaleLowerCase("de");
+		const fusion = germanFusion(form);
+		// A Fusion's source Segment always remains outside the noun target.
+		if (fusion && owned) continue;
+		const article =
+			fusion || definiteSpellings.has(form)
+				? "Definite"
+				: indefiniteSpellings.has(form)
+					? "Indefinite"
+					: undefined;
+		if (!article) continue;
+		const realization = fusion ? "Fusion" : owned ? "Owned" : "Shared";
+		candidates.set(`${realization}_s${index}`, {
+			segmentIndex: index,
+			attested: segment.text,
+			orthography,
+			realization,
+			article,
+			form: fusion?.articleForm ?? form,
+			case: fusion?.articleCase ?? null,
+		});
+	}
+	return candidates;
+}
+
 export async function resolveNounArticle(
 	options: DumgenOptions,
 	encounter: Encounter,
@@ -95,13 +170,7 @@ export async function resolveNounArticle(
 		string,
 		string | null
 	> | null;
-	if (
-		!bag ||
-		encounter.sentence.segments.filter(
-			(segment) => segment.kind === "ResolvableText",
-		).length < 2
-	)
-		return null;
+	if (!bag) return null;
 	const core = output.lemma.coreFeatures as Record<string, string | null>;
 	const fail = (message: string): never => {
 		throw new DumgenFailure(
@@ -111,111 +180,130 @@ export async function resolveNounArticle(
 			"de/Lexeme/NOUN",
 		);
 	};
-	const result = await judgmentCaller(options)(
-		"resolveGrammar",
-		"de/Lexeme/NOUN/article",
-		{
-			sentence: indexedContext(encounter.sentence),
-			target: JSON.stringify(encounter.target),
-			noun: JSON.stringify(output.lemma),
-			features: {
-				case: bag.case ?? null,
-				number: bag.number ?? null,
-				gender: core.gender ?? null,
+	let candidate: ArticleCandidate | undefined;
+	if (
+		encounter.sentence.segments.filter(
+			(segment) => segment.kind === "ResolvableText",
+		).length > 1
+	) {
+		const candidates = articleCandidates(encounter, output);
+		const result = await judgmentCaller(options)(
+			"resolveGrammar",
+			"de/Lexeme/NOUN/article",
+			{
+				sentence: indexedContext(encounter.sentence),
+				target: JSON.stringify(encounter.target),
+				noun: JSON.stringify(output.lemma),
+				features: {
+					number: bag.number ?? null,
+					gender: core.gender ?? null,
+				},
+				policy: "Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means an overt true article in this noun's supplied members. Shared means a standalone article licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg. A Fusion candidate supplies its internal DET form to its nominal complement, including compatible coordinated complements: im Wald gives dem Wald, ins Haus gives das Haus, and im Wald und Feld permits dem Feld. The fused word stays a separate Construction/Fusion target and never becomes a noun member. Distinguish actual governing Fusions from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling or Fusion, choose Unresolved.",
 			},
-			policy: "Decide the article of the complete noun Surface, including licensed sharing, independently of whether the source article is a supplied member. In `der Aufstieg und Abstieg`, both nouns have Definite article: Aufstieg owns der and Abstieg shares that same der. `der Aufstieg und Abstieg und Umstieg` licenses it for all three. A singleton target Abstieg is not bare merely because der is owned by Aufstieg. In `der Aufstieg und der Abstieg`, each noun owns its own article. Select the overt article occurrence licensed by this noun. Owned means it belongs to supplied members and this is the closest eligible noun head by Segment distance within the nominal scope. Shared means it belongs to another closest noun in the same compatible coordination. Do not cross an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Longer coordination is allowed. Ties or ambiguous attachment are Unresolved. No article may be invented for bare nouns, separate mein/dieser/kein or a noun following Fusion. Use the full Sentence, never previous clicks. A selected article must be a true definite/indefinite article, not a homographic pronoun.",
-		},
-		{
-			article: choice(
-				"Which article belongs to this noun Surface under the sharing policy?",
-				{
-					Definite: "Definite article owned or shared",
-					Indefinite: "Indefinite article owned or shared",
-					Bare: "No licensed article (including mein/dieser/kein or Fusion)",
-					Unresolved: null,
-				},
-			),
-			source: choice(
-				"Which source occurrence supplies this noun's article?",
-				{
-					...Object.fromEntries(
-						encounter.sentence.segments.flatMap((segment, index) =>
-							segment.kind === "ResolvableText"
-								? [[`s${index}`, segment.text]]
-								: [],
+			{
+				attachment: choice(
+					"Which complete article attachment is licensed for this noun?",
+					{
+						...Object.fromEntries(
+							[...candidates].map(([key, candidate]) => [
+								key,
+								`${candidate.realization}: source <s${candidate.segmentIndex}> ${candidate.attested} supplies ${candidate.article} DET form ${candidate.form}. Select only if this source grammatically supplies this noun's article.`,
+							]),
 						),
-					),
-					NoArticle: "This noun has no owned or shared article",
-					Unresolved: "No defensible article source",
-				},
-			),
-			orthography: choice(
-				"Is the article's source spelling standard or a spelling/casing typo? Grammar disagreement is Unresolved, not a typo.",
-				{ Standard: null, Typo: null, Unresolved: null },
-			),
-		},
-		signal,
-	);
-	const selected = (key: keyof typeof result.answers) => {
-		const answer = result.answers[key];
-		if (!answer || answer.choice === "Unresolved")
-			return fail(`Unresolved article ${key}`);
-		return String(answer.choice);
-	};
-	const article = selected("article");
-	const source = selected("source");
-	if (article === "Bare") {
-		if (source !== "NoArticle")
-			return fail("Bare noun contradicts selected article evidence");
+						None: "No owned, shared, or Fusion-supplied article belongs to this noun",
+						Unresolved:
+							"Attachment is ambiguous, incompatible, or required evidence has no supported candidate",
+					},
+				),
+			},
+			signal,
+		);
+		const attachment = result.answers.attachment.choice;
+		if (attachment === "Unresolved")
+			return fail("Unresolved noun article attachment");
+		if (attachment !== "None") {
+			candidate = candidates.get(attachment);
+			if (!candidate)
+				return fail("Article attachment is not an eligible candidate");
+		}
+	}
+	// Attachment precedes Case. A selected article constrains its possible analyses;
+	// a unique Case is determined by the morphology, not a separate model guess.
+	const casePath = "surface.inflectionalFeatures.case";
+	const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
+	if (!field) throw Error("Missing noun Case schema");
+	let cases = field.values;
+	if (candidate) {
+		if (!bag.number || (bag.number !== "Plur" && !core.gender))
+			return fail("Article requires known noun agreement");
+		const forms =
+			candidate.article === "Definite" ? definiteForms : indefiniteForms;
+		cases = Object.entries(
+			forms[bag.number === "Plur" ? "Plur" : (core.gender ?? "")] ?? {},
+		)
+			.filter(
+				([caseValue, form]) =>
+					form === candidate.form &&
+					(candidate.case === null || caseValue === candidate.case),
+			)
+			.map(([caseValue]) => caseValue);
+		if (!cases.length)
+			return fail("Article form and noun agreement are incompatible");
+	}
+	if (cases.length === 1) bag.case = String(cases[0]);
+	else {
+		const result = await judgmentCaller(options)(
+			"resolveGrammar",
+			"de/Lexeme/NOUN/case",
+			{
+				...markedContext(encounter),
+				article: candidate
+					? `${candidate.realization}: ${candidate.attested} supplies ${candidate.form}`
+					: "No attached article",
+			},
+			{
+				[casePath]: featureQuestion("NOUN", casePath, {
+					values: cases,
+					open: false,
+				}),
+			},
+			signal,
+		);
+		const selected = result.answers[casePath].choice;
+		if (selected === "Unresolved") return fail("Unresolved noun Case");
+		bag.case = selected === "Unmarked" ? null : selected;
+	}
+	if (!candidate) {
 		bag.article = null;
 		return null;
 	}
-	if (source === "NoArticle")
-		return fail("Marked noun article requires source evidence");
-	if (!bag.case || !bag.number || (bag.number !== "Plur" && !core.gender))
+	if (!bag.case || !bag.number)
 		return fail("Article requires known noun agreement");
-	bag.article = article;
-	const index = Number(source.slice(1));
-	const segment = encounter.sentence.segments[index];
-	if (!segment || segment.kind !== "ResolvableText")
-		return fail("Article source is not selectable");
-	const position = encounter.target.memberSegmentIndices.indexOf(index);
-	const owned = position !== -1;
-	if (
-		owned &&
-		(position !== 0 || encounter.target.memberSegmentIndices.length < 2)
-	)
-		return fail("Owned article must precede its noun members");
-	if (!owned && index >= encounter.target.memberSegmentIndices[0]!)
-		return fail("Shared article must precede the coordinated noun");
-	const orthography = selected("orthography") as "Standard" | "Typo";
-	if (owned && output.memberOrthographies[position] !== orthography)
-		return fail("Article orthography contradicts member evidence");
-	const expected = (
-		bag.article === "Definite" ? definiteForms : indefiniteForms
-	)[bag.number === "Plur" ? "Plur" : (core.gender ?? "")]?.[bag.case];
-	const spelled = owned
-		? output.normalizedMembers[position]!.toLocaleLowerCase("de")
-		: orthography === "Typo"
-			? expected
-			: segment.text.toLocaleLowerCase("de");
-	if (!spelled) return fail("Article agreement has no form");
 	const reference = nounArticleReference({
-		article: bag.article,
+		article: candidate.article,
 		case: bag.case,
 		number: bag.number,
 		gender: core.gender ?? null,
-		spelled,
+		spelled: candidate.form,
 	});
+	bag.article = candidate.article;
 	recordEvent(signal, "NounArticleEvidence", {
-		segmentIndex: index,
-		realization: owned ? "Owned" : "Shared",
-		attested: segment.text,
-		orthography,
+		segmentIndex: candidate.segmentIndex,
+		realization: candidate.realization,
+		attested: candidate.attested,
+		orthography: candidate.orthography,
+		articleForm: candidate.form,
+		case: bag.case,
 	});
 	return {
 		reference,
-		evidence: { attested: segment.text, orthography },
-		coverage: owned ? ("Full" as const) : ("Partial" as const),
+		evidence: {
+			attested: candidate.attested,
+			orthography: candidate.orthography,
+		},
+		coverage:
+			candidate.realization === "Owned"
+				? ("Full" as const)
+				: ("Partial" as const),
 	};
 }

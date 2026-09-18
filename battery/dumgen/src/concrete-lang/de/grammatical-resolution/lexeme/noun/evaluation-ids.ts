@@ -39,4 +39,9 @@ export const evaluationCaseIds = [
 	"grammar-de-noun-accept-suspended-oder-singular",
 	"grammar-de-noun-accept-suspended-dativ-plural",
 	"grammar-de-noun-accept-suspended-nominativ-plural",
+	"grammar-de-noun-regression-fusion-im-wald",
+	"grammar-de-noun-regression-fusion-zum-wald",
+	"grammar-de-noun-regression-fusion-ins-haus",
+	"grammar-de-noun-regression-fusion-shared-feld",
+	"grammar-de-noun-regression-fusion-zur-schule",
 ] as const;

@@ -44,7 +44,7 @@ Standard orthography includes licensed variants and ordinary sentence-initial ca
 Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Contextual finite verbs and ordinary infinitives have marked bags. Structural null is not uncertainty.
 For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.
 For noun suspension, completion is allowed only for one selected trailing-hyphen member in binary und/oder coordination with a full right compound sharing the literal suffix; retain Full coverage. Ordinary uninflected noun forms and dictionary citations remain distinct.
-German NOUN article features describe an owned or licensed shared article: Definite, Indefinite, or null for bare nouns/non-article determiners/nouns following a separate Fusion. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is null. Partial nouns are allowed only for licensed shared articles in compatible coordination; membership stays fixed.
+German NOUN article features describe an owned, licensed shared, or Fusion-supplied article: Definite, Indefinite, or null for bare nouns/non-article determiners. A separate governing Fusion supplies its DET component: im Wald has Surface dem Wald with only Wald attested as a member and im retained as article evidence. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is null. Partial nouns are allowed for licensed shared articles in compatible coordination or articles supplied by a governing Fusion; membership stays fixed.
 Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.`;
 
 export async function resolveGrammarJudgments(
@@ -119,7 +119,10 @@ export async function resolveGrammarJudgments(
 		)
 			continue;
 		if (auxiliary && path.startsWith("lemma.")) continue;
-		if (encounter.target.kind === "NOUN" && path.endsWith(".article"))
+		if (
+			encounter.target.kind === "NOUN" &&
+			(path.endsWith(".article") || path.endsWith(".case"))
+		)
 			continue;
 		if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
 		questions[path] = featureQuestion(encounter.target.kind, path, field);
@@ -244,9 +247,9 @@ export async function resolveGrammarJudgments(
 						);
 						if (
 							encounter.target.kind === "NOUN" &&
-							key === "article"
+							(key === "article" || key === "case")
 						) {
-							bag.article = null;
+							bag[key] = null;
 							continue;
 						}
 						if (verbal && key === "voice") continue;

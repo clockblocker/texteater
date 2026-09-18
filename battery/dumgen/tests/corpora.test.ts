@@ -79,7 +79,7 @@ test("canonical target corpus survives compact representation round-trips", () =
 		);
 	}
 });
-test("all 1067 retained grammar answers project through public operations", async () => {
+test("all 1072 retained grammar answers project through public operations", async () => {
 	let count = 0;
 	const verifiedRoutes = new Set<string>();
 	for (const spec of listExperiments().filter((item) =>
@@ -176,6 +176,6 @@ test("all 1067 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1067);
+	expect(count).toBe(1072);
 	expect(verifiedRoutes.size).toBe(22);
 }, 30_000);

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { required } from "common-utils";
 import { Effect } from "effect";
 import type {
 	Questions,
@@ -39,15 +40,24 @@ function answers(
 		),
 	};
 }
-function controlled(members: readonly number[], route: string) {
+function controlled(
+	members: readonly number[],
+	route: string,
+	options: { singletonRoute?: string; unresolvedMember?: number } = {},
+) {
 	const traces: OperationTrace[] = [];
 	const judge: TypeSafeExecutor = async (request) =>
 		answers(request, (id) =>
 			id === "route"
 				? route
-				: members.includes(Number(id.slice(7)))
-					? "Include"
-					: "Exclude",
+				: id === "singletonRoute"
+					? (options.singletonRoute ??
+						(members.length === 1 ? route : "Unresolved"))
+					: Number(id.slice(7)) === options.unresolvedMember
+						? "Unresolved"
+						: members.includes(Number(id.slice(7)))
+							? "Include"
+							: "Exclude",
 		) as SystemOneResult<typeof request.questions>;
 	return {
 		traces,
@@ -100,21 +110,28 @@ test("every member click of all 16 accepted constructions assembles the exact sc
 					memberSegmentIndices: members,
 				});
 				const trace = run.traces[0]!;
-				expect(trace.calls.map((call) => call.executor)).toEqual([
-					"TypeSafe",
-					"TypeSafe",
-				]);
-				expect(trace.calls[1]!.dependsOn).toEqual([trace.calls[0]!.id]);
+				const skipsWholeTarget =
+					members.length === 1 &&
+					target.kind !== "PRON" &&
+					target.kind !== "DET";
+				expect(trace.calls.map((call) => call.executor)).toEqual(
+					skipsWholeTarget ? ["TypeSafe"] : ["TypeSafe", "TypeSafe"],
+				);
+				if (!skipsWholeTarget)
+					expect(trace.calls[1]!.dependsOn).toEqual([
+						trace.calls[0]!.id,
+					]);
 				const request = trace.calls[0]!.request;
 				if (!("questions" in request)) throw Error("Expected judgment");
-				expect(Object.keys(request.questions)).toEqual(
-					sentence.segments.flatMap((segment, index) =>
+				expect(Object.keys(request.questions)).toEqual([
+					...sentence.segments.flatMap((segment, index) =>
 						segment.kind === "ResolvableText" &&
 						index !== clickedSegmentIndex
 							? [`member_${index}`]
 							: [],
 					),
-				);
+					"singletonRoute",
+				]);
 			}
 		}
 	}
@@ -199,13 +216,15 @@ test("canonical classification evaluation calls the production operation and pre
 			memberSegmentIndices?: number[];
 		};
 		return answers(request, (id) =>
-			id === "route"
-				? target.decision === "Unresolved"
-					? "Unresolved"
-					: `${target.family}/${target.kind}`
-				: target.memberSegmentIndices?.includes(Number(id.slice(7)))
-					? "Include"
-					: "Exclude",
+			id === "singletonRoute" && target.memberSegmentIndices?.length !== 1
+				? "Unresolved"
+				: id === "route" || id === "singletonRoute"
+					? target.decision === "Unresolved"
+						? "Unresolved"
+						: `${target.family}/${target.kind}`
+					: target.memberSegmentIndices?.includes(Number(id.slice(7)))
+						? "Include"
+						: "Exclude",
 		) as SystemOneResult<typeof request.questions>;
 	};
 	const run = await runOperationExperiment({
@@ -272,17 +291,144 @@ test("compact classification state preserves positions, source spacing, punctuat
 		run.dumgen.classifyTarget({ sentence, clickedSegmentIndex: 5 }),
 	);
 	expect(output.memberSegmentIndices).toEqual([5]);
-	const [membership, classification] = run.traces[0]?.calls ?? [];
+	const [membership] = run.traces[0]?.calls ?? [];
+	expect(run.traces[0]?.calls).toHaveLength(1);
 	expect(membership?.request.input).toMatchObject({
 		sentence: "<s0>vor</s0>\t &lt;s0&gt; &amp;,\n<s5>vor</s5>.",
 		clickedSegmentIndex: 5,
 	});
-	expect(classification?.request.input).toMatchObject({
-		sentence: "<s0>vor</s0>\t &lt;s0&gt; &amp;,\n<s5>vor</s5>.",
-		memberSegmentIndices: [5],
-	});
+	// Speculation belongs to its question; every membership judgment keeps the original state.
+	expect(Object.keys(membership?.request.input as object)).toEqual([
+		"sentence",
+		"clickedSegmentIndex",
+		"criteria",
+	]);
 	if (!membership || !("questions" in membership.request))
 		throw Error("Expected membership batch");
-	expect(Object.keys(membership.request.questions)).toEqual(["member_0"]);
-	expect(classification?.dependsOn).toEqual([membership.id]);
+	expect(Object.keys(membership.request.questions)).toEqual([
+		"member_0",
+		"singletonRoute",
+	]);
+	expect(membership.request.questions.singletonRoute?.instructions).toContain(
+		"only occurrence <s5>",
+	);
+	expect(membership.dependsOn).toEqual([]);
 });
+
+for (const scenario of [
+	{
+		name: "accepts a complete singleton in one call",
+		members: [3],
+		route: "Lexeme/ADJ",
+		singletonRoute: "Lexeme/ADJ",
+		calls: 1,
+	},
+	{
+		name: "retries a rejected singleton through whole-target validation",
+		members: [3],
+		route: "Lexeme/ADJ",
+		singletonRoute: "Unresolved",
+		calls: 2,
+	},
+	{
+		name: "validates a speculative determiner through the whole-target decision",
+		members: [3],
+		route: "Lexeme/PRON",
+		singletonRoute: "Lexeme/DET",
+		calls: 2,
+	},
+	{
+		name: "validates a speculative pronoun through the whole-target decision",
+		members: [3],
+		route: "Lexeme/DET",
+		singletonRoute: "Lexeme/PRON",
+		calls: 2,
+	},
+	{
+		name: "preserves an unresolved whole-target fallback",
+		members: [3],
+		route: "Unresolved",
+		singletonRoute: "Unresolved",
+		calls: 2,
+	},
+	{
+		name: "ignores an accepted singleton route for a multi-member target",
+		members: [0, 1],
+		route: "Lexeme/NOUN",
+		singletonRoute: "Lexeme/DET",
+		calls: 2,
+	},
+	{
+		name: "ignores singleton uncertainty for a multi-member target",
+		members: [0, 1],
+		route: "Lexeme/NOUN",
+		singletonRoute: "Unresolved",
+		calls: 2,
+	},
+	{
+		name: "does not bypass invalid whole-group membership with a singleton route",
+		members: [0, 1],
+		route: "Unresolved",
+		singletonRoute: "Lexeme/DET",
+		calls: 2,
+	},
+	{
+		name: "does not let singleton acceptance override unresolved membership",
+		members: [3],
+		route: "Lexeme/ADJ",
+		singletonRoute: "Lexeme/ADJ",
+		unresolvedMember: 0,
+		calls: 1,
+	},
+]) {
+	test(scenario.name, async () => {
+		const sentence: SegmentedSentence<"de"> = {
+			id: "speculative",
+			language: "de",
+			segments: ["Der", "Aufstieg", "war", "anstrengend"].map((text) => ({
+				kind: "ResolvableText",
+				text,
+			})),
+		};
+		const run = controlled(scenario.members, scenario.route, scenario);
+		const result = await Effect.runPromise(
+			Effect.either(
+				run.dumgen.classifyTarget({
+					sentence,
+					clickedSegmentIndex: required(scenario.members[0]),
+				}),
+			),
+		);
+		const unresolved =
+			scenario.route === "Unresolved" ||
+			scenario.unresolvedMember !== undefined;
+		if (unresolved) {
+			expect(result._tag).toBe("Left");
+			expect(run.traces[0]?.failure?.tag).toBe("Unresolved");
+		} else {
+			const [family, kind] = scenario.route.split("/");
+			expect(result).toMatchObject({
+				_tag: "Right",
+				right: { family, kind, memberSegmentIndices: scenario.members },
+			});
+		}
+		const trace = required(run.traces[0]);
+		expect(trace.calls).toHaveLength(scenario.calls);
+		if (scenario.calls === 2) {
+			expect(trace.calls[1]?.request.input).toMatchObject({
+				memberSegmentIndices: scenario.members,
+			});
+			expect(trace.calls[1]?.dependsOn).toEqual([
+				required(trace.calls[0]).id,
+			]);
+		}
+		if (scenario.members.length > 1)
+			expect(trace.events).toContainEqual({
+				kind: "JudgmentApplicability",
+				data: {
+					consumed: ["member_1", "member_2", "member_3"],
+					ignored: ["singletonRoute"],
+				},
+			});
+	});
+}
