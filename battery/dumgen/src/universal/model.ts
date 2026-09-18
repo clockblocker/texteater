@@ -74,7 +74,7 @@ export async function executeGeneration<T>(
 		id: `${context.id}:${++context.sequence}`,
 		operationId: context.id,
 		executor: "Luna" as const,
-		request,
+		request: { ...request, input: structuredClone(request.input) },
 		dependsOn: dependsOn ?? context.calls.map((call) => call.id),
 		fingerprint: await fingerprint({
 			prompt: request.systemPrompt,

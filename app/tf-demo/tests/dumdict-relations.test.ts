@@ -1513,26 +1513,25 @@ describe("tf-demo Dumdict relation storage", () => {
 			async persistSubmittedText() {
 				throw new Error("Unexpected submission.");
 			},
-			async getSentenceForResolution() {
+			async loadResolutionContext() {
 				return {
-					sentenceId: "sentence-1",
-					textId: "text-1",
-					segmentedSentenceId: "segmented-1",
-					language: "de",
-					stitchedText: "Wir gehen.",
-					segments: [
-						{ index: 0, kind: "ResolvableText", text: "Wir" },
-						{ index: 1, kind: "Whitespace", text: " " },
-						{ index: 2, kind: "ResolvableText", text: "gehen" },
-						{ index: 3, kind: "Punctuation", text: "." },
-					],
+					recorded: null,
+					reusable: null,
+					lemmaCandidates: [],
+					sentence: {
+						sentenceId: "sentence-1",
+						textId: "text-1",
+						segmentedSentenceId: "segmented-1",
+						language: "de",
+						stitchedText: "Wir gehen.",
+						segments: [
+							{ index: 0, kind: "ResolvableText", text: "Wir" },
+							{ index: 1, kind: "Whitespace", text: " " },
+							{ index: 2, kind: "ResolvableText", text: "gehen" },
+							{ index: 3, kind: "Punctuation", text: "." },
+						],
+					},
 				};
-			},
-			async findRecordedClick() {
-				return null;
-			},
-			async findAttestation() {
-				return null;
 			},
 			async persistResolvedClick(input) {
 				plans.push(input.dictionaryPlan);

@@ -27,6 +27,7 @@ export function grammarFixture(
 			const state = request.state as {
 				members: string[];
 				canonicalFormCandidate?: string;
+				canonicalFormAlternatives?: string[];
 				sentence?: string;
 				target?: { memberSegmentIndices: number[] };
 				reviewedIdentities: {
@@ -84,6 +85,13 @@ export function grammarFixture(
 					);
 					return index === -1 ? "NoMatch" : `identity_${index}`;
 				}
+				if (
+					id === "canonical" &&
+					state.canonicalFormAlternatives?.includes(
+						String(output.lemma.canonicalForm),
+					)
+				)
+					return `candidate_${state.canonicalFormAlternatives.indexOf(String(output.lemma.canonicalForm))}`;
 				if (id === "canonical")
 					return state.canonicalFormCandidate ===
 						output.lemma.canonicalForm

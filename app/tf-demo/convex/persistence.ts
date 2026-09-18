@@ -7,13 +7,19 @@ import {
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
-	internalQuery,
 	type MutationCtx,
 	type QueryCtx,
 } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
-import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
+import {
+	assertIndex,
+	assertMatchingRetry,
+	assertNonEmpty,
+	assertVisitorInput,
+	reconstructReusableAttestation,
+	requireClickableSegment,
+} from "./model/resolutionLookup";
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,
@@ -25,63 +31,16 @@ import {
 } from "./model/resolutionSessions";
 import {
 	dictionaryPlanValidator,
-	languageValidator,
 	occurrenceAttestationInputValidator,
 	readingValueValidator,
-	recordedClickValidator,
 	resolutionSessionGuardValidator,
 	resolvedClickCommitValidator,
-	reusableAttestationValidator,
 	reusedResolvedClickCommitValidator,
-	segmentKindValidator,
 	sentenceInputValidator,
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
 import { persistSubmittedText as persistSubmittedTextImplementation } from "./modules/text/submission";
-
-const MAX_SEGMENTS_PER_SENTENCE = 512;
-
-function assertNonEmpty(value: string, name: string): void {
-	if (value.trim().length === 0)
-		throw new Error(`${name} must not be empty.`);
-}
-
-function assertIndex(value: number, name: string): void {
-	if (!Number.isSafeInteger(value) || value < 0) {
-		throw new Error(`${name} must be a non-negative safe integer.`);
-	}
-}
-
-function assertVisitorInput(visitorId: string, requestId: string): void {
-	assertNonEmpty(visitorId, "visitorId");
-	assertNonEmpty(requestId, "requestId");
-	if (visitorId.length > 200 || requestId.length > 200) {
-		throw new Error(
-			"Visitor and request identifiers are limited to 200 characters.",
-		);
-	}
-}
-
-async function requireClickableSegment(
-	ctx: MutationCtx | QueryCtx,
-	sentenceId: Id<"sentences">,
-	clickedSegmentIndex: number,
-) {
-	assertIndex(clickedSegmentIndex, "clickedSegmentIndex");
-	const sentence = await ctx.db.get(sentenceId);
-	if (!sentence) throw new Error("Sentence does not exist.");
-	const segment = await ctx.db
-		.query("segments")
-		.withIndex("by_sentence_id_and_index", (q) =>
-			q.eq("sentenceId", sentenceId).eq("index", clickedSegmentIndex),
-		)
-		.unique();
-	if (segment?.kind !== "ResolvableText") {
-		throw new Error("Only a ResolvableText Segment can be clicked.");
-	}
-	return { sentence, segment };
-}
 
 async function findClickByRequestId(
 	ctx: MutationCtx | QueryCtx,
@@ -137,31 +96,6 @@ async function settleResolvedSession(
 	});
 }
 
-async function reconstructReusableAttestation(
-	ctx: MutationCtx | QueryCtx,
-	attestationId: Id<"attestations">,
-	_clickedSegmentIndex: number,
-) {
-	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
-	if (!occurrence) {
-		throw new Error("Click refers to an invalid Attestation.");
-	}
-	return {
-		sentenceId: occurrence.sentence._id,
-		readingId: occurrence.reading._id,
-		value: {
-			attestationId,
-			grammatical: {
-				decision: "Resolved" as const,
-				language: "de" as const,
-				encounter: occurrence.encounter,
-				attestation: occurrence.publicAttestation,
-			},
-			reading: occurrence.publicReading,
-		},
-	};
-}
-
 async function recordClickAgainstCommittedAttestation(
 	ctx: MutationCtx,
 	input: {
@@ -202,24 +136,6 @@ async function recordClickAgainstCommittedAttestation(
 	};
 }
 
-function assertMatchingRetry(
-	click: {
-		visitorId: string;
-		segmentId: Id<"segments">;
-	},
-	args: {
-		visitorId: string;
-		segmentId: Id<"segments">;
-	},
-): void {
-	if (
-		click.visitorId !== args.visitorId ||
-		click.segmentId !== args.segmentId
-	) {
-		throw new Error("requestId was already used for a different click.");
-	}
-}
-
 export const persistSubmittedText = internalMutation({
 	args: {
 		submissionKey: v.string(),
@@ -232,129 +148,6 @@ export const persistSubmittedText = internalMutation({
 		deduplicated: v.boolean(),
 	}),
 	handler: persistSubmittedTextImplementation,
-});
-export const getSentenceForResolution = internalQuery({
-	args: { sentenceId: v.id("sentences") },
-	returns: v.union(
-		v.null(),
-		v.object({
-			sentenceId: v.id("sentences"),
-			textId: v.id("texts"),
-			segmentedSentenceId: v.string(),
-			language: languageValidator,
-			stitchedText: v.string(),
-			segments: v.array(
-				v.object({
-					index: v.number(),
-					kind: segmentKindValidator,
-					text: v.string(),
-				}),
-			),
-		}),
-	),
-	handler: async (ctx, { sentenceId }) => {
-		const sentence = await ctx.db.get(sentenceId);
-		if (!sentence) return null;
-		const segments = await ctx.db
-			.query("segments")
-			.withIndex("by_sentence_id_and_index", (q) =>
-				q.eq("sentenceId", sentenceId),
-			)
-			.take(MAX_SEGMENTS_PER_SENTENCE);
-		return {
-			sentenceId,
-			textId: sentence.textId,
-			segmentedSentenceId: sentence.segmentedSentenceId,
-			language: sentence.language,
-			stitchedText: sentence.stitchedText,
-			segments: segments.map(({ index, kind, text }) => ({
-				index,
-				kind,
-				text,
-			})),
-		};
-	},
-});
-
-export const findAttestationForSegment = internalQuery({
-	args: {
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-	},
-	returns: v.union(v.null(), reusableAttestationValidator),
-	handler: async (ctx, { sentenceId, clickedSegmentIndex }) => {
-		assertIndex(clickedSegmentIndex, "clickedSegmentIndex");
-		const { segment } = await requireClickableSegment(
-			ctx,
-			sentenceId,
-			clickedSegmentIndex,
-		);
-		const attestationId = segment.attestationMembership?.attestationId;
-		if (!attestationId) return null;
-		const reusable = await reconstructReusableAttestation(
-			ctx,
-			attestationId,
-			clickedSegmentIndex,
-		);
-		return reusable.sentenceId === sentenceId ? reusable.value : null;
-	},
-});
-
-export const findClickResultByRequestId = internalQuery({
-	args: {
-		requestId: v.string(),
-		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-	},
-	returns: v.union(v.null(), recordedClickValidator),
-	handler: async (ctx, args) => {
-		assertVisitorInput(args.visitorId, args.requestId);
-		const { segment } = await requireClickableSegment(
-			ctx,
-			args.sentenceId,
-			args.clickedSegmentIndex,
-		);
-		const click = await ctx.db
-			.query("visitorClicks")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", args.requestId),
-			)
-			.unique();
-		if (!click) return null;
-		assertMatchingRetry(click, {
-			visitorId: args.visitorId,
-			segmentId: segment._id,
-		});
-		if (click.attestationId) {
-			const reusable = await reconstructReusableAttestation(
-				ctx,
-				click.attestationId,
-				args.clickedSegmentIndex,
-			);
-			return {
-				clickId: click._id,
-				status: "Resolved" as const,
-				readingId: reusable.readingId,
-				occurrence: reusable.value,
-			};
-		}
-
-		const session = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", args.requestId),
-			)
-			.unique();
-		// Selecting a Segment records the Visitor Encounter before resolution starts.
-		if (
-			session &&
-			(session.lifecycle.state !== "Terminal" ||
-				session.lifecycle.outcome !== "Unresolved")
-		)
-			return null;
-		return { clickId: click._id, status: "Unresolved" as const };
-	},
 });
 
 export const persistUnresolvedClick = internalMutation({

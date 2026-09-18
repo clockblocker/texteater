@@ -101,90 +101,114 @@ export function createGermanOperations(
 				)) as AnalysisTarget<L>;
 			});
 		},
-		resolveGrammar<L extends Dumling.Language>(raw: Encounter<L>) {
-			return task("resolveGrammar", raw, async (signal) => {
-				const encounter = validateEncounter(raw, "resolveGrammar");
-				supported(encounter, "resolveGrammar");
-				const route = routeOf(encounter),
-					input = markedContext(encounter);
-				const output = await resolveGrammarJudgments(
-					options,
-					encounter,
-					signal,
-				);
-				if ("decision" in output)
-					throw new DumgenFailure(
-						"Unresolved",
-						"resolveGrammar",
-						"Target could not be resolved",
-						route,
+		resolveGrammar<L extends Dumling.Language>(
+			raw: Encounter<L>,
+			lemmaCandidates: readonly Dumling.Lemma<L>[] = [],
+		) {
+			return task(
+				"resolveGrammar",
+				{ ...raw, lemmaCandidates },
+				async (signal) => {
+					if (lemmaCandidates.length > 64)
+						throw new DumgenFailure(
+							"InvalidInput",
+							"resolveGrammar",
+							"At most 64 stored Lemma candidates are supported",
+						);
+					const candidates = lemmaCandidates.map((value) =>
+						parse<Dumling.Lemma>(
+							"lemmaSchema",
+							value,
+							"resolveGrammar",
+						),
 					);
-				const normalizedSurface = normalizeGrammarSurface(
-					input,
-					output,
-					encounter.target,
-				);
-				const lemma = parse<Dumling.Lemma>(
-					"lemmaSchema",
-					{
-						...output.lemma,
-						unitKind: "Lemma",
-						language: encounter.sentence.language,
-						family: encounter.target.family,
-						kind: encounter.target.kind,
-					},
-					"resolveGrammar",
-					true,
-				);
-				const authored = authoredFor(lemma);
-				if (closedRoute(lemma) && !authored)
-					throw new DumgenFailure(
-						"CatalogMiss",
-						"resolveGrammar",
-						"Resolved Lemma is outside the Fixed Catalog",
-						route,
+					const encounter = validateEncounter(raw, "resolveGrammar");
+					supported(encounter, "resolveGrammar");
+					const route = routeOf(encounter),
+						input = markedContext(encounter);
+					const output = await resolveGrammarJudgments(
+						options,
+						encounter,
+						signal,
+						candidates,
 					);
-				if (
-					output.realizationCoverage !== "Full" &&
-					lemma.family !== "Phraseme" &&
-					lemma.kind !== "NOUN"
-				)
-					throw new DumgenFailure(
-						"InvalidModelOutput",
-						"resolveGrammar",
-						"Partial realization requires a Phraseme or licensed shared noun article",
-						route,
+					if ("decision" in output)
+						throw new DumgenFailure(
+							"Unresolved",
+							"resolveGrammar",
+							"Target could not be resolved",
+							route,
+						);
+					const normalizedSurface = normalizeGrammarSurface(
+						input,
+						output,
+						encounter.target,
 					);
-				return parse<Dumling.Attestation<L>>(
-					"attestationSchema",
-					{
-						unitKind: "Attestation",
-						surface: {
-							...output.surface,
-							unitKind: "Surface",
+					const lemma = parse<Dumling.Lemma>(
+						"lemmaSchema",
+						{
+							...output.lemma,
+							unitKind: "Lemma",
 							language: encounter.sentence.language,
-							lemma: authored?.lemma ?? lemma,
-							normalizedSurface,
+							family: encounter.target.family,
+							kind: encounter.target.kind,
 						},
-						members: input.members.map((attested, index) => ({
-							attested,
-							orthography: output.memberOrthographies[index],
-						})),
-						realizationCoverage: output.realizationCoverage,
-						...("expletiveEvidence" in output
-							? { expletiveEvidence: output.expletiveEvidence }
-							: {}),
-						...(lemma.kind === "NOUN"
-							? {
-									articleEvidence:
-										output.articleEvidence ?? null,
-								}
-							: {}),
-					},
-					"resolveGrammar",
-					true,
-				);
-			});
+						"resolveGrammar",
+						true,
+					);
+					const authored = authoredFor(lemma);
+					if (closedRoute(lemma) && !authored)
+						throw new DumgenFailure(
+							"CatalogMiss",
+							"resolveGrammar",
+							"Resolved Lemma is outside the Fixed Catalog",
+							route,
+						);
+					if (
+						output.realizationCoverage !== "Full" &&
+						lemma.family !== "Phraseme" &&
+						lemma.kind !== "NOUN"
+					)
+						throw new DumgenFailure(
+							"InvalidModelOutput",
+							"resolveGrammar",
+							"Partial realization requires a Phraseme or licensed shared noun article",
+							route,
+						);
+					return parse<Dumling.Attestation<L>>(
+						"attestationSchema",
+						{
+							unitKind: "Attestation",
+							surface: {
+								...output.surface,
+								unitKind: "Surface",
+								language: encounter.sentence.language,
+								lemma: authored?.lemma ?? lemma,
+								normalizedSurface,
+							},
+							members: input.members.map((attested, index) => ({
+								attested,
+								orthography: output.memberOrthographies[index],
+							})),
+							realizationCoverage: output.realizationCoverage,
+							...("expletiveEvidence" in output
+								? {
+										expletiveEvidence:
+											output.expletiveEvidence,
+									}
+								: {}),
+							...(lemma.kind === "NOUN"
+								? {
+										articleEvidence:
+											output.articleEvidence ?? null,
+									}
+								: {}),
+						},
+						"resolveGrammar",
+						true,
+					);
+				},
+			);
 		},
 		resolveOrGenerateReadingEmojiDescription(raw: EmojiInput) {
 			return task(

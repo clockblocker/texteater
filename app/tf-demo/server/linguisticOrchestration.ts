@@ -209,16 +209,9 @@ export type OrchestrationPersistence = {
 		readonly sourceText: string;
 		readonly sentences: readonly SubmittedSentence[];
 	}): Promise<{ readonly textId: string }>;
-	getSentenceForResolution(input: {
-		readonly sentenceId: string;
-	}): Promise<PersistedSentence | null>;
-	findRecordedClick(
+	loadResolutionContext(
 		input: ResolveSegmentInput,
-	): Promise<RecordedClick | null>;
-	findAttestation(input: {
-		readonly sentenceId: string;
-		readonly clickedSegmentIndex: number;
-	}): Promise<ReusableAttestation | null>;
+	): Promise<ResolutionContext>;
 	persistResolvedClick(
 		input: ResolvedClickPersistence,
 	): Promise<ResolvedClickCommit>;
@@ -257,6 +250,13 @@ export type ResolutionProgressObserver = {
 		readonly readingResolution: ReadingResolution;
 	}): Promise<void>;
 	committing(): Promise<void>;
+};
+
+export type ResolutionContext = {
+	readonly recorded: RecordedClick | null;
+	readonly reusable: ReusableAttestation | null;
+	readonly sentence: PersistedSentence | null;
+	readonly lemmaCandidates: readonly Dumling.Lemma<"de">[];
 };
 
 export type ResolutionCheckpoints = {
@@ -344,6 +344,7 @@ export function createTfDemoOrchestrator(options: {
 	function resolveSegment(
 		input: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
+		initialContext?: ResolutionContext,
 	) {
 		return Effect.gen(function* () {
 			let knowledgeDraft:
@@ -357,9 +358,12 @@ export function createTfDemoOrchestrator(options: {
 					"clickedSegmentIndex must be a safe integer.",
 				);
 			}
-			const recorded = yield* Effect.tryPromise(() =>
-				options.persistence.findRecordedClick(input),
-			);
+			const context =
+				initialContext ??
+				(yield* Effect.tryPromise(() =>
+					options.persistence.loadResolutionContext(input),
+				));
+			const recorded = context.recorded;
 			if (recorded) {
 				return recorded.status === "Resolved"
 					? {
@@ -378,12 +382,7 @@ export function createTfDemoOrchestrator(options: {
 							persisted: recorded,
 						};
 			}
-			const reusable = yield* Effect.tryPromise(() =>
-				options.persistence.findAttestation({
-					sentenceId: input.sentenceId,
-					clickedSegmentIndex: input.clickedSegmentIndex,
-				}),
-			);
+			const reusable = context.reusable;
 			if (reusable) {
 				const persisted = yield* Effect.tryPromise(() =>
 					options.persistence.persistReusedResolvedClick({
@@ -420,18 +419,39 @@ export function createTfDemoOrchestrator(options: {
 				}
 				return { grammatical, persisted };
 			}
-			if (!checkpoints.grammatical) {
-				yield* Effect.tryPromise(
-					() =>
-						options.observer?.grammarAvailable({
-							grammatical,
-						}) ?? Promise.resolve(),
-				);
-			}
 
 			const lemma = parseGermanLemma(
 				grammatical.attestation.surface.lemma,
 			);
+			const [grammarSaved, readingsLoaded] = yield* Effect.all(
+				[
+					Effect.exit(
+						checkpoints.grammatical
+							? Effect.void
+							: Effect.tryPromise(
+									() =>
+										options.observer?.grammarAvailable({
+											grammatical,
+										}) ?? Promise.resolve(),
+								),
+					),
+					Effect.exit(
+						checkpoints.reading
+							? Effect.succeed(null)
+							: effectFrom(
+									options.dictionary.findStoredReadings({
+										lemma,
+									}),
+								),
+					),
+				],
+				{ concurrency: "unbounded" },
+			);
+
+			// Convex writes cannot be cancelled: settle both operations before failure handling.
+			yield* grammarSaved;
+			const storedReadings = yield* readingsLoaded;
+
 			const lemmaKey = lemmaIdentityKey(lemma);
 			const readingResolution = checkpoints.reading
 				? checkpoints.reading.resolution
@@ -454,39 +474,54 @@ export function createTfDemoOrchestrator(options: {
 					"The Reading checkpoint does not match Grammar.",
 				);
 			}
-			if (!checkpoints.reading) {
-				yield* Effect.tryPromise(
-					() =>
-						options.observer?.readingAvailable({
+
+			const prepare =
+				readingResolution.decision === "Reuse"
+					? options.dictionary.prepare.ensureOwnedSurface({
 							reading,
-							readingResolution,
-						}) ?? Promise.resolve(),
-				);
-			}
+							ownedSurface: {
+								surface: grammatical.attestation.surface,
+								note: emptyNote(),
+							},
+						})
+					: options.dictionary.prepare.addNewNote({
+							draft: {
+								reading,
+								note: emptyNote(),
+								ownedSurfaces: [
+									{
+										surface:
+											grammatical.attestation.surface,
+										note: emptyNote(),
+									},
+								],
+							},
+						});
+			const [readingSaved, preparation] = yield* Effect.all(
+				[
+					Effect.exit(
+						checkpoints.reading
+							? Effect.void
+							: Effect.tryPromise(
+									() =>
+										options.observer?.readingAvailable({
+											reading,
+											readingResolution,
+										}) ?? Promise.resolve(),
+								),
+					),
+					Effect.exit(prepare),
+				],
+				{ concurrency: "unbounded" },
+			);
+
+			yield* readingSaved;
+			const prepared = yield* preparation;
+
 			const draft =
 				knowledgeDraft && readingResolution.decision === "New"
 					? yield* Fiber.join(knowledgeDraft)
 					: null;
-			const prepared = yield* readingResolution.decision === "Reuse"
-				? options.dictionary.prepare.ensureOwnedSurface({
-						reading,
-						ownedSurface: {
-							surface: grammatical.attestation.surface,
-							note: emptyNote(),
-						},
-					})
-				: options.dictionary.prepare.addNewNote({
-						draft: {
-							reading,
-							note: emptyNote(),
-							ownedSurfaces: [
-								{
-									surface: grammatical.attestation.surface,
-									note: emptyNote(),
-								},
-							],
-						},
-					});
 			const dictionaryPlan = prepared.plan;
 
 			const surfaceKey = surfaceIdentityKey(
@@ -538,11 +573,7 @@ export function createTfDemoOrchestrator(options: {
 
 			function resolveGrammatical(request: ResolveSegmentInput) {
 				return Effect.gen(function* () {
-					const stored = yield* Effect.tryPromise(() =>
-						options.persistence.getSentenceForResolution({
-							sentenceId: request.sentenceId,
-						}),
-					);
+					const stored = context.sentence;
 					if (!stored) {
 						throw new Error(
 							"The requested sentence does not exist.",
@@ -559,7 +590,10 @@ export function createTfDemoOrchestrator(options: {
 							target,
 						};
 						const attestation =
-							yield* options.dumgen.resolveGrammar(encounter);
+							yield* options.dumgen.resolveGrammar(
+								encounter,
+								context.lemmaCandidates,
+							);
 						return {
 							decision: "Resolved" as const,
 							language: "de" as const,
@@ -590,11 +624,8 @@ export function createTfDemoOrchestrator(options: {
 				resolvedLemma: Dumling.Lemma<"de">,
 			) {
 				return Effect.gen(function* () {
-					const storedReadings = yield* effectFrom(
-						options.dictionary.findStoredReadings({
-							lemma: resolvedLemma,
-						}),
-					);
+					if (!storedReadings)
+						throw new Error("Reading candidates were not loaded.");
 					if (
 						resolved.encounter.target.family !==
 							resolvedLemma.family ||

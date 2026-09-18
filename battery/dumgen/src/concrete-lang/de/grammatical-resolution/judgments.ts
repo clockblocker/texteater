@@ -1,3 +1,4 @@
+import type * as Dumling from "dumling/types";
 import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";
 import type { DumgenOptions, Encounter } from "../../../types.js";
@@ -43,7 +44,7 @@ const sharedPolicy = {
 	identity:
 		"Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical.",
 	canonicalForm:
-		"Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete `canonicalFormCandidate` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise establish that different text is required. Inflection does not prevent identical spelling. Acceptance requires exact text and casing with no normalization, omitted members or reordering.",
+		"Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete `canonicalFormCandidate` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise select an exact headword from `canonicalFormAlternatives` when available. These include stored dictionary headwords and, for nouns, individual source members without the article. Candidates are suggestions, not proof: preserve contextual identity and Core Features; select missing text only when no candidate is the exact headword. Inflection does not prevent identical spelling. Selection requires exact headword text and casing; the headword may omit compositional articles even though Attestation membership stays fixed.",
 	orthography:
 		"Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.",
 	inflection:
@@ -67,6 +68,7 @@ export async function resolveGrammarJudgments(
 	options: DumgenOptions,
 	encounter: Encounter,
 	signal: AbortSignal,
+	lemmaCandidates: readonly Dumling.Lemma[] = [],
 ): Promise<GrammarOutput> {
 	const route = `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
 	if (
@@ -84,6 +86,20 @@ export async function resolveGrammarJudgments(
 	};
 	const input = markedContext(encounter);
 	const canonicalFormCandidate = input.members.join(" ");
+	const storedLemmas = lemmaCandidates.filter(
+		(lemma) =>
+			lemma.language === encounter.sentence.language &&
+			lemma.family === encounter.target.family &&
+			lemma.kind === encounter.target.kind,
+	);
+	const canonicalFormAlternatives = [
+		...new Set([
+			...storedLemmas.map((lemma) => lemma.canonicalForm),
+			...(encounter.target.kind === "NOUN" ? input.members : []),
+		]),
+	]
+		.filter((text) => text !== canonicalFormCandidate)
+		.slice(0, 64);
 	const schema = modelSchemas[`grammar/${route}`];
 	if (!schema)
 		throw new DumgenFailure(
@@ -189,12 +205,18 @@ export async function resolveGrammarJudgments(
 		);
 	else if (encounter.target.kind !== "DET")
 		questions.canonical = choice(
-			"Under `policy.canonicalForm`, does `canonicalFormCandidate` exactly equal the dictionary Canonical Form of the fixed whole target in `markedContext`?",
+			"Under `policy.canonicalForm`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in `markedContext`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.",
 			{
+				...Object.fromEntries(
+					canonicalFormAlternatives.map((text, index) => [
+						`candidate_${index}`,
+						text,
+					]),
+				),
 				CandidateIsCanonical:
 					"`canonicalFormCandidate` is already the exact dictionary headword",
 				CandidateIsNotCanonical:
-					"The dictionary headword requires text different from `canonicalFormCandidate`",
+					"The dictionary headword is absent from both `canonicalFormCandidate` and every `canonicalFormAlternatives` value",
 				Unresolved:
 					"Cannot defensibly establish whether the concrete candidate is the dictionary headword",
 			},
@@ -204,6 +226,8 @@ export async function resolveGrammarJudgments(
 		...input,
 		route,
 		canonicalFormCandidate,
+		canonicalFormAlternatives,
+		storedLemmas,
 		policy: {
 			...sharedPolicy,
 			...(verbal
@@ -390,7 +414,15 @@ export async function resolveGrammarJudgments(
 					canonicalForm:
 						canonical === "CandidateIsCanonical"
 							? canonicalFormCandidate
-							: undefined,
+							: canonical.startsWith("candidate_")
+								? canonicalFormAlternatives[
+										Number(
+											canonical.slice(
+												"candidate_".length,
+											),
+										)
+									]
+								: undefined,
 					coreFeatures: core,
 				};
 				if (canonical === "CandidateIsNotCanonical")
@@ -588,7 +620,8 @@ export async function resolveGrammarJudgments(
 				);
 			const attested = input.members[position];
 			const orthography = memberOrthographies[position];
-			if (attested === undefined || orthography === undefined) return fail("Unaligned subject es evidence");
+			if (attested === undefined || orthography === undefined)
+				return fail("Unaligned subject es evidence");
 			normalizedMembers[position] = "es";
 			expletiveEvidence = {
 				attested,

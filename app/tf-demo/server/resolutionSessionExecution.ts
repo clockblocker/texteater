@@ -2,6 +2,7 @@ import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import type {
 	ResolutionCheckpoints,
+	ResolutionContext,
 	ResolutionProgressObserver,
 	ResolveSegmentInput,
 	ResolveSegmentResult,
@@ -31,6 +32,7 @@ export type ResolutionSessionRunIdentity = {
 export type ResolutionSessionRunInput = {
 	readonly selection: ResolveSegmentInput;
 	readonly checkpoints: ResolutionCheckpoints;
+	readonly context?: ResolutionContext;
 };
 
 export type ResolutionSessionAdvance =
@@ -96,6 +98,7 @@ export type ResolutionSessionLinguisticPort = (
 	selection: ResolveSegmentInput,
 	checkpoints: ResolutionCheckpoints,
 	observer: ResolutionProgressObserver,
+	context?: ResolutionContext,
 ) => Effect.Effect<ResolveSegmentResult, unknown, never>;
 
 type ResolutionExecutionDiagnostics = {
@@ -176,6 +179,7 @@ export function executeResolutionSession({
 			input.selection,
 			input.checkpoints,
 			observer,
+			input.context,
 		);
 		if ("catalogMiss" in result) {
 			yield* Effect.tryPromise(() =>

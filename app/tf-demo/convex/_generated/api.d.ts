@@ -37,6 +37,7 @@ import type * as model_nounArticleMigration from "../model/nounArticleMigration.
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
+import type * as model_resolutionLookup from "../model/resolutionLookup.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_segmentResolutionState from "../model/segmentResolutionState.js";
 import type * as model_shadows from "../model/shadows.js";
@@ -60,6 +61,7 @@ import type * as personalAnnotations from "../personalAnnotations.js";
 import type * as readingBlockLayouts from "../readingBlockLayouts.js";
 import type * as readingNotes from "../readingNotes.js";
 import type * as relationPublication from "../relationPublication.js";
+import type * as resolutionContext from "../resolutionContext.js";
 import type * as resolutionInspection from "../resolutionInspection.js";
 import type * as resolutionSessions from "../resolutionSessions.js";
 import type * as reviewedNavigation from "../reviewedNavigation.js";
@@ -106,6 +108,7 @@ declare const fullApi: ApiFromModules<{
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;
+  "model/resolutionLookup": typeof model_resolutionLookup;
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/segmentResolutionState": typeof model_segmentResolutionState;
   "model/shadows": typeof model_shadows;
@@ -129,6 +132,7 @@ declare const fullApi: ApiFromModules<{
   readingBlockLayouts: typeof readingBlockLayouts;
   readingNotes: typeof readingNotes;
   relationPublication: typeof relationPublication;
+  resolutionContext: typeof resolutionContext;
   resolutionInspection: typeof resolutionInspection;
   resolutionSessions: typeof resolutionSessions;
   reviewedNavigation: typeof reviewedNavigation;

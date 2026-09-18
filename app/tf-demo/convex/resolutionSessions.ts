@@ -1,12 +1,7 @@
 import { type Infer, v } from "convex/values";
 import { restoreStoredGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
-import {
-	internalMutation,
-	internalQuery,
-	mutation,
-	query,
-} from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import { inspectionJson } from "./model/inspection";
 import {
@@ -41,6 +36,10 @@ import {
 	ensureVisitorEncounter,
 	findVisitorEncounter,
 } from "./model/visitorClicks";
+import {
+	loadResolutionContext,
+	resolutionContextValidator,
+} from "./resolutionContext";
 import { saveInspectionStep } from "./resolutionInspection";
 
 const MAX_IDENTIFIER_LENGTH = 200;
@@ -390,11 +389,12 @@ export const retryResolution = mutation({
 	},
 });
 
-export const getRunInput = internalQuery({
+export const beginRun = internalMutation({
 	args: { guard: resolutionSessionGuardValidator },
 	returns: v.union(
 		v.null(),
 		v.object({
+			context: resolutionContextValidator,
 			selection: v.object({
 				requestId: v.string(),
 				visitorId: v.string(),
@@ -429,7 +429,8 @@ export const getRunInput = internalQuery({
 			!session ||
 			session.runToken !== guard.runToken ||
 			session.segmentId !== guard.segmentId ||
-			session.lifecycle.state === "Terminal"
+			session.lifecycle.state === "Terminal" ||
+			session.lifecycle.activity === "Running"
 		) {
 			return null;
 		}
@@ -442,9 +443,26 @@ export const getRunInput = internalQuery({
 		) {
 			return null;
 		}
+		await upsertResolutionRun(ctx, session, {
+			phase: phaseForProgress(session.lifecycle.progress),
+			state: "Running",
+		});
+		await ctx.db.patch(session._id, {
+			lifecycle: {
+				state: "Active",
+				progress:
+					session.lifecycle.progress === "Starting"
+						? "RouteAvailable"
+						: session.lifecycle.progress,
+				activity: "Running",
+			},
+			updatedAt: Date.now(),
+		});
+
 		const restored = session.grammaticalCheckpoint
 			? restoreStoredGrammar(session.grammaticalCheckpoint)
 			: undefined;
+		const context = await loadResolutionContext(ctx, session, !restored);
 		const grammaticalCheckpoint = restored
 			? {
 					...restored,
@@ -466,6 +484,7 @@ export const getRunInput = internalQuery({
 				}
 			: undefined;
 		return {
+			context,
 			selection: {
 				requestId: session.requestId,
 				visitorId: session.visitorId,
@@ -626,31 +645,6 @@ export const recoverStaleRun = internalMutation({
 			internal.resolutionSessions.recoverStaleRun,
 			{ requestId: session.requestId, runToken },
 		);
-		return true;
-	},
-});
-
-export const markRunStarted = internalMutation({
-	args: { guard: resolutionSessionGuardValidator },
-	returns: v.boolean(),
-	handler: async (ctx, { guard }) => {
-		const session = await requireActiveResolutionSession(ctx, guard);
-		const { lifecycle } = session;
-		if (lifecycle.state === "Active" && lifecycle.activity === "Running") {
-			return false;
-		}
-		await upsertResolutionRun(ctx, session, {
-			phase: phaseForProgress(lifecycle.progress),
-			state: "Running",
-		});
-		await ctx.db.patch(session._id, {
-			lifecycle: {
-				state: "Active",
-				progress: lifecycle.progress,
-				activity: "Running",
-			},
-			updatedAt: Date.now(),
-		});
 		return true;
 	},
 });

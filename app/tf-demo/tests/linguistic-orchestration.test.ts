@@ -15,7 +15,6 @@ import {
 	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
-	type PersistedSentence,
 	type RecordedClick,
 	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
@@ -187,23 +186,22 @@ function setup(
 			submitted.push(input);
 			return { textId: "text-1" };
 		},
-		async getSentenceForResolution(): Promise<PersistedSentence> {
+		async loadResolutionContext() {
 			return {
-				sentenceId: "sentence-1",
-				textId: "text-1",
-				segmentedSentenceId: "sentence-1",
-				language: "de",
-				stitchedText: "Banken",
-				segments: [
-					{ index: 0, kind: "ResolvableText", text: "Banken" },
-				],
+				recorded,
+				reusable: occurrence,
+				lemmaCandidates: [],
+				sentence: {
+					sentenceId: "sentence-1",
+					textId: "text-1",
+					segmentedSentenceId: "sentence-1",
+					language: "de",
+					stitchedText: "Banken",
+					segments: [
+						{ index: 0, kind: "ResolvableText", text: "Banken" },
+					],
+				},
 			};
-		},
-		async findRecordedClick() {
-			return recorded;
-		},
-		async findAttestation() {
-			return occurrence;
 		},
 		async persistResolvedClick(input) {
 			writes.push(input);
@@ -260,6 +258,7 @@ function setup(
 			dictionary: createDumdictService({ language: "de", storage }),
 			persistence,
 		}),
+		storage,
 		requests,
 		writes,
 		submitted,
@@ -340,11 +339,16 @@ test("stored Reading candidates are compared and reused without a new Reading pl
 
 test("a globally resolved occurrence is reused without generation", async () => {
 	const run = setup([], {
-		async findAttestation() {
+		async loadResolutionContext() {
 			return {
-				attestationId: "attestation-1",
-				grammatical: grammar,
-				reading,
+				recorded: null,
+				sentence: null,
+				lemmaCandidates: [],
+				reusable: {
+					attestationId: "attestation-1",
+					grammatical: grammar,
+					reading,
+				},
 			};
 		},
 	});
@@ -718,4 +722,128 @@ test("submission inspection captures sentence boundaries and segmentation inputs
 		),
 	).toBe(true);
 	expect(run.submitted).toHaveLength(1);
+});
+
+test("stored Lemma candidates reach grammar before headword generation, while Reading selection remains contextual", async () => {
+	const run = setup(
+		[classification, grammarOutput, "🏦"],
+		{
+			async loadResolutionContext() {
+				return {
+					recorded: null,
+					reusable: null,
+					lemmaCandidates: [lemma],
+					sentence: {
+						sentenceId: "sentence-1",
+						textId: "text-1",
+						segmentedSentenceId: "sentence-1",
+						language: "de",
+						stitchedText: "Banken",
+						segments: [
+							{
+								index: 0,
+								kind: "ResolvableText",
+								text: "Banken",
+							},
+						],
+					},
+				};
+			},
+		},
+		[reading],
+		{
+			execute: async () => {
+				throw Error(
+					"Existing headword and Reading need no text generation",
+				);
+			},
+		},
+	);
+	const result = await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection),
+	);
+	expect(result).toMatchObject({
+		readingResolution: { decision: "Reuse" },
+		reading,
+	});
+	expect(
+		run.requests.some(
+			(request) => request.stage === "generateCanonicalForm",
+		),
+	).toBe(false);
+	expect(
+		run.requests.some(
+			(request) =>
+				request.stage === "resolveOrGenerateReadingEmojiDescription",
+		),
+	).toBe(true);
+	expect(run.writes).toHaveLength(1);
+});
+
+test("a failed Reading checkpoint prevents occurrence commit", async () => {
+	const run = setup(["🏦"], {}, [reading], {
+		observer: {
+			async grammarAvailable() {},
+			async readingAvailable() {
+				throw Error("Checkpoint unavailable");
+			},
+			async committing() {
+				throw Error("Must not commit after checkpoint failure");
+			},
+		},
+	});
+	await expect(
+		Effect.runPromise(
+			run.orchestrator.resolveSegment(selection, {
+				grammatical: grammar,
+			}),
+		),
+	).rejects.toThrow();
+	expect(run.writes).toHaveLength(0);
+});
+
+test("a failed dictionary read waits for the in-flight checkpoint before failure handling", async () => {
+	const checkpoint = Promise.withResolvers<void>();
+	const readStarted = Promise.withResolvers<void>();
+	let saved = false;
+	let settled = false;
+	const run = setup(["🏦"], {}, [reading], {
+		observer: {
+			async grammarAvailable() {},
+			async readingAvailable() {
+				await checkpoint.promise;
+				saved = true;
+			},
+			async committing() {
+				throw Error("Must not commit failed preparation");
+			},
+		},
+	});
+	run.storage.loadReadingEntryContext = () =>
+		Effect.sync(() => {
+			readStarted.resolve();
+			throw Error("Read failed while checkpoint was in flight");
+		});
+	const outcome = Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	).then(
+		() => {
+			settled = true;
+			return "Success";
+		},
+		() => {
+			settled = true;
+			return "Failure";
+		},
+	);
+	try {
+		await readStarted.promise;
+		await Bun.sleep(0);
+		expect(settled).toBe(false);
+	} finally {
+		checkpoint.resolve();
+	}
+	expect(await outcome).toBe("Failure");
+	expect(saved).toBe(true);
+	expect(run.writes).toHaveLength(0);
 });

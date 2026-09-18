@@ -11,8 +11,7 @@ import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
 	type OrchestrationPersistence,
-	type PersistedSentence,
-	type RecordedClick,
+	type ResolutionContext,
 	type ResolutionProgressObserver,
 	type ResolvedClickCommit,
 	type ResolveSegmentInput,
@@ -453,13 +452,13 @@ export const runResolutionSession = internalAction({
 						createConvexResolutionSessionLifecycle(ctx, guard),
 						inspection,
 					),
-					resolve: (selection, checkpoints, observer) => {
+					resolve: (selection, checkpoints, observer, context) => {
 						const resolution = orchestratorFor(
 							ctx,
 							guard,
 							observer,
 							inspection,
-						).resolveSegment(selection, checkpoints);
+						).resolveSegment(selection, checkpoints, context);
 						return inspection
 							? inspection.effect(
 									"Resolve selected segment",
@@ -502,12 +501,15 @@ function tracedResolutionLifecycle(
 				() => lifecycle.begin(),
 			),
 		advance: (event) =>
-			inspection.promise(
-				`Save ${event.progress}`,
-				"app/tf-demo · resolutionSessions",
-				event,
-				() => lifecycle.advance(event),
-			),
+			event.progress === "RouteAvailable" ||
+			event.progress === "Committing"
+				? lifecycle.advance(event)
+				: inspection.promise(
+						`Save ${event.progress}`,
+						"app/tf-demo · resolutionSessions",
+						event,
+						() => lifecycle.advance(event),
+					),
 		settle: (result) =>
 			inspection.promise(
 				`Settle ${result.kind}`,
@@ -533,18 +535,19 @@ function createConvexResolutionSessionLifecycle(
 ): ResolutionSessionLifecyclePort {
 	return {
 		async begin() {
-			const input = await ctx.runQuery(
-				internal.resolutionSessions.getRunInput,
+			const input = await ctx.runMutation(
+				internal.resolutionSessions.beginRun,
 				{ guard },
 			);
 			if (!input) return null;
-			const started = await ctx.runMutation(
-				internal.resolutionSessions.markRunStarted,
-				{ guard },
-			);
-			if (!started) return null;
+
 			return {
 				selection: input.selection,
+				context: {
+					...input.context,
+					lemmaCandidates:
+						input.context.lemmaCandidates.map(parseGermanLemma),
+				} as ResolutionContext,
 				checkpoints: {
 					...(input.checkpoints.grammatical
 						? {
@@ -571,10 +574,7 @@ function createConvexResolutionSessionLifecycle(
 			switch (event.progress) {
 				case "RouteAvailable":
 				case "Committing":
-					await ctx.runMutation(internal.resolutionSessions.advance, {
-						guard,
-						progress: event.progress,
-					});
+					// Route is published when claiming the run; commit publishes terminal progress.
 					return;
 				case "GrammarAvailable":
 					await ctx.runMutation(internal.resolutionSessions.advance, {
@@ -684,26 +684,12 @@ function orchestratorFor(
 						input,
 						() => persistence.persistSubmittedText(input),
 					),
-				getSentenceForResolution: (input) =>
+				loadResolutionContext: (input) =>
 					inspection.promise(
-						"Load sentence",
+						"Load resolution context",
 						"app/tf-demo",
 						input,
-						() => persistence.getSentenceForResolution(input),
-					),
-				findRecordedClick: (input) =>
-					inspection.promise(
-						"Look up recorded encounter",
-						"app/tf-demo",
-						input,
-						() => persistence.findRecordedClick(input),
-					),
-				findAttestation: (input) =>
-					inspection.promise(
-						"Look up reusable Attestation",
-						"app/tf-demo",
-						input,
-						() => persistence.findAttestation(input),
+						() => persistence.loadResolutionContext(input),
 					),
 				persistResolvedClick: (input) =>
 					inspection.promise(
@@ -821,25 +807,18 @@ function createConvexPersistence(
 				})),
 			});
 		},
-		async getSentenceForResolution({ sentenceId }) {
-			return ctx.runQuery(internal.persistence.getSentenceForResolution, {
-				sentenceId: sentenceId as Id<"sentences">,
-			}) as Promise<PersistedSentence | null>;
-		},
-		async findRecordedClick(input) {
-			return ctx.runQuery(
-				internal.persistence.findClickResultByRequestId,
-				convexSegmentSelectionArgs(input),
-			) as Promise<RecordedClick | null>;
-		},
-		async findAttestation({ sentenceId, clickedSegmentIndex }) {
-			return ctx.runQuery(
-				internal.persistence.findAttestationForSegment,
+		async loadResolutionContext(input) {
+			const context = await ctx.runQuery(
+				internal.resolutionContext.load,
 				{
-					sentenceId: sentenceId as Id<"sentences">,
-					clickedSegmentIndex,
+					...input,
+					sentenceId: convexId<"sentences">(input.sentenceId),
 				},
-			) as Promise<ReusableAttestation | null>;
+			);
+			return {
+				...context,
+				lemmaCandidates: context.lemmaCandidates.map(parseGermanLemma),
+			} as ResolutionContext;
 		},
 		async persistResolvedClick(input) {
 			const dictionaryPlan = dictionaryPlanResult(input.dictionaryPlan);

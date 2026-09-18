@@ -27,6 +27,7 @@ import {
 } from "../convex/resolutionInspection";
 import {
 	advance,
+	beginRun,
 	cleanup,
 	MAX_RESOLUTION_RUNS,
 	recordRunFailure,
@@ -1499,38 +1500,41 @@ describe("Resolution Session", () => {
 			},
 			{ status: "Unresolved", clickId: "click-2" },
 		] as const) {
-			let queryCount = 0;
-			const queryArgs: unknown[] = [];
 			const mutationArgs: unknown[] = [];
+			const calls: string[] = [];
 			await handler<
 				{ requestId: string; runToken: string; segmentId: string },
 				null
 			>(runResolutionSession)(
 				{
-					async runQuery(_reference: unknown, args: unknown) {
-						if (
-							getFunctionName(
-								_reference as FunctionReference<"query">,
-							) === "resolutionInspection:enabled"
-						)
-							return false;
-						queryCount += 1;
-						queryArgs.push(args);
-						return queryCount === 1
-							? {
-									selection: {
-										requestId: "request-1",
-										visitorId: "visitor-1",
-										sentenceId: "sentence-1",
-										clickedSegmentIndex: 2,
-									},
-									checkpoints: {},
-									runNumber: 2,
-								}
-							: recorded;
+					async runQuery(reference: FunctionReference<"query">) {
+						const name = getFunctionName(reference);
+						expect(name).toBe("resolutionInspection:enabled");
+						return false;
 					},
-					async runMutation(_reference: unknown, args: unknown) {
+					async runMutation(
+						reference: FunctionReference<"mutation">,
+						args: unknown,
+					) {
+						const name = getFunctionName(reference);
+						calls.push(name);
 						mutationArgs.push(args);
+						if (name === "resolutionSessions:beginRun")
+							return {
+								selection: {
+									requestId: "request-1",
+									visitorId: "visitor-1",
+									sentenceId: "sentence-1",
+									clickedSegmentIndex: 2,
+								},
+								checkpoints: {},
+								context: {
+									recorded,
+									reusable: null,
+									sentence: null,
+									lemmaCandidates: [],
+								},
+							};
 						return true;
 					},
 				},
@@ -1540,17 +1544,12 @@ describe("Resolution Session", () => {
 					segmentId: "segment-1",
 				},
 			);
+			expect(calls).toEqual([
+				"resolutionSessions:beginRun",
+				"resolutionSessions:settleAfterRun",
+				"resolutionSessions:recordRunSuccess",
+			]);
 
-			expect(queryCount).toBe(2);
-			expect(queryArgs[1]).toEqual({
-				requestId: "request-1",
-				visitorId: "visitor-1",
-				sentenceId: "sentence-1",
-				clickedSegmentIndex: 2,
-			});
-			expect(mutationArgs[1]).toMatchObject({
-				progress: "RouteAvailable",
-			});
 			if (recorded.status === "Resolved") {
 				expect(
 					mutationArgs.flatMap((args) =>
@@ -1558,7 +1557,7 @@ describe("Resolution Session", () => {
 							? [(args as { progress: string }).progress]
 							: [],
 					),
-				).toEqual(["RouteAvailable"]);
+				).toEqual([]);
 				expect(
 					mutationArgs.find(
 						(args) => "result" in (args as Record<string, unknown>),
@@ -1571,7 +1570,7 @@ describe("Resolution Session", () => {
 					},
 				});
 			} else {
-				expect(mutationArgs).toHaveLength(4);
+				expect(mutationArgs).toHaveLength(3);
 				expect(
 					mutationArgs.find(
 						(args) => "result" in (args as Record<string, unknown>),
@@ -1584,7 +1583,6 @@ describe("Resolution Session", () => {
 	});
 
 	test("the scheduled action records unexpected failures without leaking their message", async () => {
-		let queryCount = 0;
 		const mutationArgs: unknown[] = [];
 		const errorLogs: string[] = [];
 		const originalConsoleError = console.error;
@@ -1603,21 +1601,17 @@ describe("Resolution Session", () => {
 							"resolutionInspection:enabled"
 						)
 							return false;
-						queryCount += 1;
-						if (queryCount === 1) {
-							return {
-								selection: {
-									requestId: "request-1",
-									visitorId: "visitor-1",
-									sentenceId: "sentence-1",
-									clickedSegmentIndex: 2,
-								},
-								checkpoints: {},
-							};
-						}
-						throw new TypeError("secret checkpoint payload");
+						throw new Error("Unexpected query");
 					},
-					async runMutation(_reference: unknown, args: unknown) {
+					async runMutation(
+						reference: FunctionReference<"mutation">,
+						args: unknown,
+					) {
+						if (
+							getFunctionName(reference) ===
+							"resolutionSessions:beginRun"
+						)
+							throw new TypeError("secret checkpoint payload");
 						mutationArgs.push(args);
 						return true;
 					},
@@ -1641,7 +1635,7 @@ describe("Resolution Session", () => {
 				requestId: "request-1",
 				runToken: "run-1",
 			},
-			phase: "Grammar",
+			phase: "Route",
 		});
 		expect(errorLogs.join("\n")).toContain("ResolutionRunInternalFailure");
 		expect(errorLogs.join("\n")).not.toContain("secret checkpoint payload");
@@ -1813,4 +1807,52 @@ test("analysis history survives without a resolution session and is scoped to it
 		state: "PermanentFailure",
 		finishedAt: expect.any(Number),
 	});
+});
+
+test("beginRun atomically claims work, loads sentence and stored Surface candidates, and rejects duplicate runners", async () => {
+	const source = sourceSeed();
+	const stored = resolvedSourceSeed();
+	const db = new SessionDb({
+		...source,
+		lemmas: stored.lemmas ?? [],
+		surfaces: stored.surfaces ?? [],
+	});
+	const ctx = { db, scheduler: { async runAfter() {} } };
+	await handler<typeof beginArgs, unknown>(selectSegment)(ctx, beginArgs);
+	const session = db.rows("resolutionSessions")[0];
+	if (!session) throw Error("Missing session");
+	const guard = {
+		requestId: beginArgs.requestId,
+		runToken: String(session.runToken),
+		segmentId: String(session.segmentId),
+	};
+	const run = handler<{ guard: typeof guard }, unknown>(beginRun);
+	expect(
+		await run(ctx, { guard: { ...guard, runToken: "stale" } }),
+	).toBeNull();
+	expect(db.rows("resolutionRuns")).toHaveLength(0);
+	const result = await run(ctx, { guard });
+	expect(result).toMatchObject({
+		selection: { requestId: beginArgs.requestId },
+		checkpoints: {},
+		context: {
+			recorded: null,
+			reusable: null,
+			sentence: { stitchedText: "Die Banken." },
+			lemmaCandidates: [
+				expect.objectContaining({ canonicalForm: "Bank" }),
+			],
+		},
+	});
+	expect(db.rows("resolutionSessions")[0]).toMatchObject({
+		lifecycle: {
+			state: "Active",
+			progress: "RouteAvailable",
+			activity: "Running",
+		},
+	});
+	expect(db.rows("resolutionRuns")).toHaveLength(1);
+	expect(await run(ctx, { guard })).toBeNull();
+	expect(db.rows("resolutionRuns")).toHaveLength(1);
+	expect(db.queriedIndexes).toContain("by_language_and_normalized_surface");
 });

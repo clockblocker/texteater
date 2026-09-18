@@ -15,10 +15,8 @@ import {
 	stripTextAnalysisGraphBatch,
 } from "../convex/demoReset";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
-import {
-	findClickResultByRequestId,
-	persistSubmittedText,
-} from "../convex/persistence";
+import { persistSubmittedText } from "../convex/persistence";
+import { load as loadResolutionContext } from "../convex/resolutionContext";
 import tfDemoSchema from "../convex/schema";
 import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
 import { createTestConvexDumdictStorage } from "./support/dumdict-storage";
@@ -540,7 +538,7 @@ test("an active Visitor Encounter is not replayed as an Unresolved result", asyn
 		clickedSegmentIndex: 0,
 	};
 	expect(
-		await runTestQuery(db, findClickResultByRequestId, input),
+		(await runTestQuery(db, loadResolutionContext, input)).recorded,
 	).toBeNull();
 	await db.patch("session-1", {
 		lifecycle: {
@@ -549,7 +547,9 @@ test("an active Visitor Encounter is not replayed as an Unresolved result", asyn
 			outcome: "Unresolved",
 		},
 	});
-	expect(await runTestQuery(db, findClickResultByRequestId, input)).toEqual({
+	expect(
+		(await runTestQuery(db, loadResolutionContext, input)).recorded,
+	).toEqual({
 		clickId: "click-1",
 		status: "Unresolved",
 	});
