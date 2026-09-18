@@ -11,7 +11,7 @@ import { parse } from "./validation.js";
 
 export const defaultModelConfiguration: ModelConfiguration = {
 	model: "gpt-5.6-luna",
-	settings: { reasoning: { effort: "none" } },
+	settings: { reasoning: { effort: "none" }, service_tier: "fast" },
 };
 export function effectiveConfiguration(
 	options: DumgenOptions,

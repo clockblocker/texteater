@@ -103,7 +103,7 @@ export async function resolveReading(
 	} else recordEvent(signal, "EmptyReadingCandidates", { candidates });
 	const context = markedContext(input.encounter);
 	const emojiDescription = await textModelCaller(options)<string>(
-		stage,
+		"generateReadingEmojiDescription",
 		route,
 		"reading-generation/de",
 		"emojiGenerationOutput",
