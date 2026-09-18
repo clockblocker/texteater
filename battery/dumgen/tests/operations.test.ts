@@ -56,7 +56,7 @@ function controlled(output: unknown) {
 			execute: executeOutput(async (request) => {
 				return request.stage === "produceKnowledge"
 					? (await knowledgeFixture(output).execute(request)).output
-					: request.stage === "resolveGrammar"
+					: request.route.endsWith("/text")
 						? (await grammarFixture(output).execute(request)).output
 						: (output as { emojiDescription?: unknown })
 								.emojiDescription;

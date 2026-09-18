@@ -372,6 +372,7 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 			const generation = calls[1];
 			if (!generation) throw Error("Expected headword generation");
 			expect(generation.executor).toBe("Luna");
+			expect(generation.request.stage).toBe("generateCanonicalForm");
 			expect(generation.request.input).toMatchObject({
 				needed: { canonicalForm: expect.any(String) },
 			});

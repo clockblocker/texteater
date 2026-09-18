@@ -434,7 +434,11 @@ export async function resolveGrammarJudgments(
 			const generated = await executeGeneration(
 				options,
 				{
-					stage: "resolveGrammar",
+					stage: needed.canonicalForm
+						? Object.keys(needed).length === 1
+							? "generateCanonicalForm"
+							: "generateCanonicalFormAndNormalizedMembers"
+						: "generateNormalizedMembers",
 					route: `${route}/text`,
 					input: {
 						...input,
