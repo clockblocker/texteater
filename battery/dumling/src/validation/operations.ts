@@ -4,11 +4,15 @@ import {
 	germanNounAttestationError,
 	germanNounSurfaceError,
 	germanPronounCoreError,
+	germanVerbalAttestationError,
+	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
 	isGermanNounAttestation,
 	isGermanNounSurface,
 	isGermanPronounCore,
+	isGermanVerbalAttestation,
+	isGermanVerbalSurface,
 	nonEmptyFeatureBagError,
 	normalizeForm,
 } from "./semantics.js";
@@ -26,6 +30,14 @@ function check(
 				};
 }
 export const validationOperations: ValidationOperations = {
+	"dumling.de-verbal.surface": check(
+		isGermanVerbalSurface,
+		germanVerbalSurfaceError,
+	),
+	"dumling.de-verbal.attestation": check(
+		isGermanVerbalAttestation,
+		germanVerbalAttestationError,
+	),
 	"dumling.de-noun.surface": check(
 		isGermanNounSurface,
 		germanNounSurfaceError,

@@ -12,15 +12,7 @@ class RouteDb {
 	readonly paginations: { cursor: string | null; numItems: number }[] = [];
 	documentReads = 0;
 
-	constructor(private readonly tables: Record<string, readonly Row[]>) {
-		for (const surface of tables.surfaces ?? []) {
-			const lemma = tables.lemmas?.find(
-				(lemma) => lemma._id === surface.lemmaId,
-			);
-			if (lemma?.kind === "NOUN" && lemma.language === "de")
-				surface.articleReference ??= null;
-		}
-	}
+	constructor(private readonly tables: Record<string, readonly Row[]>) {}
 
 	normalizeId(table: string, id: string) {
 		const prefix: Record<string, string> = {
@@ -712,7 +704,6 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 					case: "Dat",
 					number: "Sing",
 				},
-				articleReference: reference,
 			},
 			{
 				...reference.surface,

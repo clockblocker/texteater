@@ -61,48 +61,22 @@ type NounComposition = {
 		case: string | null;
 		number: string | null;
 	} | null;
-	articleReference: {
-		surface: {
-			lemma: {
-				coreFeatures: {
-					pronType: string | null;
-					definite: string | null;
-				};
-			};
-			inflectionalFeatures: {
-				case: string | null;
-				number: string | null;
-				gender: string | null;
-			} | null;
-			normalizedSurface: string;
-		};
-		reading: { lemma: unknown };
-	} | null;
+
 	lemma: { coreFeatures: { gender: string | null } };
 	normalizedSurface: string;
 };
 export function isGermanNounSurface(input: unknown): boolean {
 	const value = input as NounComposition;
 	const bag = value.inflectionalFeatures;
-	const reference = value.articleReference;
-	if (!bag?.article) return reference === null;
-	if (!reference || !bag.case || !bag.number) return false;
-	const component = reference.surface;
-	const features = component.inflectionalFeatures;
-	return (
-		component.lemma.coreFeatures.pronType === "Art" &&
-		component.lemma.coreFeatures.definite ===
-			(bag.article === "Definite" ? "Def" : "Ind") &&
-		JSON.stringify(component.lemma) ===
-			JSON.stringify(reference.reading.lemma) &&
-		features?.case === bag.case &&
-		features.number === bag.number &&
-		features.gender === value.lemma.coreFeatures.gender &&
-		value.normalizedSurface.startsWith(`${component.normalizedSurface} `)
-	);
+	if (!bag?.article) return true;
+	const form = germanArticleForm({
+		...bag,
+		gender: value.lemma.coreFeatures.gender,
+	});
+	return form !== null && value.normalizedSurface.startsWith(`${form} `);
 }
 export function germanNounSurfaceError(): string {
-	return "Noun article reference must match its article feature, agreement, authored Reading Lemma and normalized form";
+	return "Noun article must match its article feature, agreement and normalized form";
 }
 export function isGermanNounAttestation(input: unknown): boolean {
 	const value = input as {
@@ -111,8 +85,8 @@ export function isGermanNounAttestation(input: unknown): boolean {
 		realizationCoverage: string;
 		members: { attested: string }[];
 	};
-	const reference = value.surface.articleReference;
-	if (!reference)
+	const article = value.surface.inflectionalFeatures?.article;
+	if (!article)
 		return (
 			value.articleEvidence === null &&
 			value.realizationCoverage === "Full"
@@ -128,4 +102,101 @@ export function isGermanNounAttestation(input: unknown): boolean {
 }
 export function germanNounAttestationError(): string {
 	return "Noun realization requires article evidence; Full coverage owns the article and bare nouns have Full coverage";
+}
+
+const definiteForms: Record<string, Record<string, string>> = {
+	Masc: { Nom: "der", Acc: "den", Dat: "dem", Gen: "des" },
+	Fem: { Nom: "die", Acc: "die", Dat: "der", Gen: "der" },
+	Neut: { Nom: "das", Acc: "das", Dat: "dem", Gen: "des" },
+	Plur: { Nom: "die", Acc: "die", Dat: "den", Gen: "der" },
+};
+const indefiniteForms: Record<string, Record<string, string>> = {
+	Masc: { Nom: "ein", Acc: "einen", Dat: "einem", Gen: "eines" },
+	Fem: { Nom: "eine", Acc: "eine", Dat: "einer", Gen: "einer" },
+	Neut: { Nom: "ein", Acc: "ein", Dat: "einem", Gen: "eines" },
+};
+
+/** Normalized German article morphology; null means absent or unsupported coordinates. */
+export function germanArticleForm(input: {
+	article: string | null;
+	case: string | null;
+	number: string | null;
+	gender: string | null;
+}): string | null {
+	if (
+		!input.case ||
+		!input.number ||
+		!["Sing", "Plur"].includes(input.number)
+	)
+		return null;
+	const forms =
+		input.article === "Definite"
+			? definiteForms
+			: input.article === "Indefinite"
+				? indefiniteForms
+				: null;
+	return (
+		forms?.[input.number === "Plur" ? "Plur" : (input.gender ?? "")]?.[
+			input.case
+		] ?? null
+	);
+}
+
+export function isGermanVerbalAttestation(input: unknown): boolean {
+	const value = input as {
+		surface: {
+			normalizedSurface: string;
+			inflectionalFeatures: {
+				expletive: string | null;
+				verbForm: string;
+				person: string | null;
+				number: string | null;
+			} | null;
+		};
+		expletiveEvidence: { attested: string; orthography: string } | null;
+		members: { attested: string; orthography: string }[];
+		realizationCoverage: string;
+	};
+	const bag = value.surface.inflectionalFeatures;
+	if (!bag?.expletive) return value.expletiveEvidence === null;
+	const evidence = value.expletiveEvidence;
+	if (!evidence || value.realizationCoverage !== "Full") return false;
+	if (bag.verbForm === "Fin" && (bag.person !== "3" || bag.number !== "Sing"))
+		return false;
+	return (
+		value.surface.normalizedSurface.split(" ").includes("es") &&
+		(evidence.orthography === "Typo" ||
+			evidence.attested.toLocaleLowerCase("de") === "es") &&
+		value.members.some(
+			(member) =>
+				member.attested === evidence.attested &&
+				member.orthography === evidence.orthography,
+		)
+	);
+}
+export function germanVerbalAttestationError(): string {
+	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization";
+}
+
+export function isGermanVerbalSurface(input: unknown): boolean {
+	const value = input as {
+		normalizedSurface: string;
+		inflectionalFeatures: {
+			expletive: string | null;
+			verbForm: string;
+			person: string | null;
+			number: string | null;
+			mood: string | null;
+		} | null;
+	};
+	const bag = value.inflectionalFeatures;
+	if (!bag?.expletive) return true;
+	return (
+		value.normalizedSurface.split(" ").includes("es") &&
+		(bag.verbForm !== "Fin" ||
+			(bag.person === "3" && bag.number === "Sing" && bag.mood !== "Imp"))
+	);
+}
+export function germanVerbalSurfaceError(): string {
+	return "Subject-expletive Surface requires normalized es and compatible verbal agreement";
 }

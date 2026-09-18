@@ -253,9 +253,6 @@ export async function resolveGrammarJudgments(
 				} else core[key] = answer === unmarked ? null : answer;
 			}
 		const surface: Record<string, unknown> = {
-			...(encounter.target.kind === "NOUN"
-				? { articleReference: null }
-				: {}),
 			spelling: selected("spelling"),
 			surfaceFeatures:
 				selected("historicalStatus") === "Archaic"
@@ -414,6 +411,7 @@ export async function resolveGrammarJudgments(
 					memberOrthographies,
 					normalizedMembers,
 					realizationCoverage: coverage,
+					...(verbal ? { expletiveEvidence: null } : {}),
 					...(encounter.target.kind === "NOUN"
 						? { articleEvidence: null }
 						: {}),
@@ -452,7 +450,7 @@ export async function resolveGrammarJudgments(
 						memberOrthographies,
 					},
 					systemPrompt:
-						"Supply exactly the requested missing German text fields. All grammatical judgments and target membership are fixed. Never emit bounded labels, add attested members, modernize a licensed variant, or use a different identity. Canonical Form is the dictionary headword; normalized member text retains occurrence morphology. For verbal headwords use the lexical infinitive with required reflexive/preposition/prefix material, not the whole auxiliary chain. For proverbial/aphoristic canonical wording omit punctuation. Noun suspension completion must preserve the literal shared suffix from the binary right conjunct.",
+						"Supply exactly the requested missing German text fields. All grammatical judgments and target membership are fixed. Never emit bounded labels, add attested members, modernize a licensed variant, or use a different identity. Canonical Form is the dictionary headword; normalized member text retains occurrence morphology. For subject-expletive composition retain the ordinary verb Lemma: geben for es gibt/es gab/gibt es, regnen for es regnet; never prefix canonical forms with es. For verbal headwords use the lexical infinitive with required reflexive/prefix material, not the whole auxiliary chain. Governed prepositions stay in hasGovPrep and normalized members, not in the headword: es geht um -> gehen; es handelt sich um -> sich handeln. For proverbial/aphoristic canonical wording omit punctuation. Noun suspension completion must preserve the literal shared suffix from the binary right conjunct.",
 					outputSchema: {
 						type: "object",
 						properties: Object.fromEntries(
@@ -572,10 +570,33 @@ export async function resolveGrammarJudgments(
 					)
 				: null;
 		if (article) {
-			surface.articleReference = article.reference;
 			coverage = article.coverage;
 		}
+		let expletiveEvidence = null;
+		if (
+			verbal &&
+			(surface.inflectionalFeatures as Record<string, unknown> | null)
+				?.expletive === "Subject"
+		) {
+			const positions = normalizedMembers.flatMap((text, index) =>
+				text.toLocaleLowerCase("de") === "es" ? [index] : [],
+			);
+			const [position] = positions;
+			if (positions.length !== 1 || position === undefined)
+				return fail(
+					"Subject es needs one unambiguous owned occurrence",
+				);
+			const attested = input.members[position];
+			const orthography = memberOrthographies[position];
+			if (attested === undefined || orthography === undefined) return fail("Unaligned subject es evidence");
+			normalizedMembers[position] = "es";
+			expletiveEvidence = {
+				attested,
+				orthography,
+			};
+		}
 		const output = {
+			...(verbal ? { expletiveEvidence } : {}),
 			...(encounter.target.kind === "NOUN"
 				? { articleEvidence: article?.evidence ?? null }
 				: {}),

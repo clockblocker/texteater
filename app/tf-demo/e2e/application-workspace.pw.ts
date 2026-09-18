@@ -150,12 +150,23 @@ for (const { text, words } of [
 		page,
 	}) => {
 		await page.goto("/");
+		if (text.startsWith("Der Aufstieg")) {
+			await page
+				.getByRole("button", { name: /Wir gehen ins Haus\./ })
+				.click();
+			await expect(
+				page.getByRole("article", { name: "Text", exact: true }),
+			).toBeVisible();
+			await page
+				.getByRole("button", { name: "Library", exact: true })
+				.click();
+		}
 		await page
-			.locator('section[aria-labelledby="library-title"]')
+			.locator('section[aria-labelledby="library-title"]:visible')
 			.getByText(text, { exact: true })
 			.click();
-		const segments = page.locator(
-			'[data-slot="text-reader"] [data-slot="reader-segment"]',
+		const segments = workspace(page).locator(
+			'.workspace__sheet:not([data-covered="true"]) [data-slot="text-reader"] [data-slot="reader-segment"]',
 		);
 
 		for (const phase of [

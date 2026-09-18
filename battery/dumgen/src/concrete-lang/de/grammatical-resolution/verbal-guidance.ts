@@ -1,5 +1,16 @@
 export const verbalCompositionGuidance = `
-Analyze the complete supplied verbal target. Its grammatical auxiliaries
+Analyze the complete supplied verbal target. A fixed nonreferential subject es
+plus its verb is a supported VERB target in this domain, even though es is a
+pronoun when analyzed alone. es gibt, gibt es and es gab have Lemma geben;
+es regnet has regnen. es geht um has gehen with hasGovPrep um; es handelt sich
+um has sich handeln with hasGovPrep um and lexicallyReflexive Yes. These are
+not unsupported mixed-POS groups and do not require a new es-prefixed Lemma.
+Use expletive Subject for these complete targets, person 3 and number Sing
+when finite. Retain tense from the verb and lowercase normalized es while
+preserving source Es in evidence. Normalize ordinary sentence-initial verb
+capitalization to lowercase too (Gibt es -> gibt es). Positional, anticipatory, referential and
+object es remain independent and set no expletive on the verb.
+ Its grammatical auxiliaries
 contribute to the whole Surface; a separate modal or other unmarked target
 contributes no finite features. Membership and the VERB/AUX/ADJ route are fixed.
 

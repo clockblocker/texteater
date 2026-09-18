@@ -137,7 +137,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
-		articleReference: null,
+
 		lemma,
 	} as const;
 	const readingValue = {
@@ -194,7 +194,6 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 				number: "Plur",
 				article: null,
 			},
-			articleReference: null,
 		},
 	};
 	const indexRange = {
@@ -331,7 +330,7 @@ function existingOccurrenceHarness(
 
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
-		articleReference: null,
+
 		lemma: lemmaValue,
 	} as const;
 	const surface = {

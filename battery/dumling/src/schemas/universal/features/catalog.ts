@@ -69,6 +69,7 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	extPos: ExtPosSchema,
 	foreign: ForeignSchema,
 	future: FutureConstructionSchema,
+	expletive: z.literal("Subject"),
 	gender: GenderSchema,
 	"gender[psor]": GenderSchema,
 	governedCase: GovernedCaseSchema,

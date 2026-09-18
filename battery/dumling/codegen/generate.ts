@@ -53,7 +53,7 @@ const outputs = {
 	...Object.fromEntries(
 		routes.map((route) => [
 			`schemas/${route.modulePath.replace(/\.js$/, ".ts")}`,
-			`// Generated concrete schemas. Run bun run generate.\nimport {${route.exportName} as featureBags} from "../../../../schemas/concrete-language/${route.modulePath}";\nimport {buildUnitSchemas} from "../../../../schemas/units.js";\n${route.language === "de" && route.kind === "NOUN" ? 'import { DeDeterminerFeatureBagsSchema as articleBags } from "../../../../schemas/concrete-language/de/lexeme/determiner.js";\n' : ""}const schemas=buildUnitSchemas(${JSON.stringify({ language: route.language, family: route.family, kind: route.kind })},featureBags.shape.core,${Object.hasOwn(route.bag.shape, "inflectional") ? "featureBags.shape.inflectional" : "undefined"}${route.language === "de" && route.kind === "NOUN" ? ",articleBags" : ""});\nexport const lemmaSchema=schemas.Lemma;\nexport const surfaceSchema=schemas.Surface;\nexport const readingSchema=schemas.Reading;\nexport const attestationSchema=schemas.Attestation;\n`,
+			`// Generated concrete schemas. Run bun run generate.\nimport {${route.exportName} as featureBags} from "../../../../schemas/concrete-language/${route.modulePath}";\nimport {buildUnitSchemas} from "../../../../schemas/units.js";\nconst schemas=buildUnitSchemas(${JSON.stringify({ language: route.language, family: route.family, kind: route.kind })},featureBags.shape.core,${Object.hasOwn(route.bag.shape, "inflectional") ? "featureBags.shape.inflectional" : "undefined"});\nexport const lemmaSchema=schemas.Lemma;\nexport const surfaceSchema=schemas.Surface;\nexport const readingSchema=schemas.Reading;\nexport const attestationSchema=schemas.Attestation;\n`,
 		]),
 	),
 };

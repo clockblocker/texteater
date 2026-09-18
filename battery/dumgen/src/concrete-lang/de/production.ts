@@ -171,6 +171,9 @@ export function createGermanOperations(
 							orthography: output.memberOrthographies[index],
 						})),
 						realizationCoverage: output.realizationCoverage,
+						...("expletiveEvidence" in output
+							? { expletiveEvidence: output.expletiveEvidence }
+							: {}),
 						...(lemma.kind === "NOUN"
 							? {
 									articleEvidence:

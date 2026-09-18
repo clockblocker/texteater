@@ -23,7 +23,6 @@ type SurfaceRecord = {
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
 	surfaceFeatures: unknown;
-	articleReference?: unknown;
 	inflectionalFeatures?: unknown;
 };
 
@@ -41,18 +40,23 @@ export function lemmaValue(lemma: LemmaRecord) {
 }
 
 export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
+	const bag = surface.inflectionalFeatures;
+	const inflectionalFeatures =
+		lemma.language === "de" &&
+		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind) &&
+		bag &&
+		typeof bag === "object"
+			? { expletive: null, ...bag }
+			: bag;
 	return {
 		unitKind: "Surface" as const,
 		language: surface.language,
 		normalizedSurface: surface.normalizedSurface,
 		spelling: surface.spelling,
 		surfaceFeatures: surface.surfaceFeatures,
-		...(surface.articleReference === undefined
-			? {}
-			: { articleReference: surface.articleReference }),
 		...(surface.inflectionalFeatures === undefined
 			? {}
-			: { inflectionalFeatures: surface.inflectionalFeatures }),
+			: { inflectionalFeatures }),
 		lemma: lemmaValue(lemma),
 	};
 }
@@ -201,6 +205,10 @@ export async function loadOccurrenceAttestation(
 				| "Typo",
 		})),
 		realizationCoverage: attestation.realizationCoverage,
+		...(lemma.language === "de" &&
+		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind)
+			? { expletiveEvidence: attestation.expletiveEvidence ?? null }
+			: {}),
 		...(attestation.articleEvidence === undefined
 			? {}
 			: { articleEvidence: attestation.articleEvidence }),

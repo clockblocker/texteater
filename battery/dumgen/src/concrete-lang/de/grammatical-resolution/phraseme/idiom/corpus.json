@@ -26,13 +26,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "die Flinte ins Korn werfen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:flinte-ins-korn-werfen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -54,7 +56,8 @@
 			"lemma": {
 				"canonicalForm": "ins Gras beißen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:ins-gras-beissen"]
 	},
@@ -84,13 +87,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "mit den Wölfen heulen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "Heult starts sentence. Standard spelling. Normalize verb to heult. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:mit-den-woelfen-heulen"]
@@ -130,13 +135,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "den Teufel an die Wand malen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:teufel-an-die-wand-malen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -168,13 +175,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "auf der Nase herumtanzen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "dem Chef is free argument. Do not add jemandem to canonicalForm. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:auf-der-nase-herumtanzen"]
@@ -200,13 +209,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "das Handtuch werfen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "Second occurrence. Fixed object omitted by coordination. Meaning stays clear. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:das-handtuch-werfen"]
@@ -228,7 +239,8 @@
 			"lemma": {
 				"canonicalForm": "was zum Teufel",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "Conventional truncation. Was + zum identify the exact Idiom; Teufel is unrealized fixed material.",
 		"contaminationKeys": ["de-idiom-lemma:was-zum-teufel"]
@@ -260,13 +272,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "sich ins Fäustchen lachen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:sich-ins-faeustchen-lachen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -292,13 +306,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Trübsal blasen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:truebsal-blasen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -329,13 +345,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Hand und Fuß haben",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:hand-und-fuss-haben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -366,13 +384,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "frieren wie ein Schneider",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:frieren-wie-ein-schneider"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -412,13 +432,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "zwei Fliegen mit einer Klappe schlagen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:zwei-fliegen-eine-klappe"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -444,13 +466,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "den Löffel abgeben",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:den-loeffel-abgeben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -482,13 +506,15 @@
 					"perfect": null,
 					"future": "Yes",
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "die kalte Schulter zeigen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:kalte-schulter-zeigen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -514,13 +540,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "ins Fettnäpfchen treten",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:ins-fettnaepfchen-treten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -552,13 +580,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Tomaten auf den Augen haben",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:tomaten-auf-den-augen-haben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -608,13 +638,15 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "den Nagel auf den Kopf treffen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:nagel-auf-den-kopf-treffen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -646,13 +678,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "die Zunge im Zaum halten",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:zunge-im-zaum-halten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -684,13 +718,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "durch dick und dünn gehen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:durch-dick-und-duenn-gehen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -721,13 +757,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "den Faden verlieren",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:den-faden-verlieren"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -753,13 +791,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "übers Ohr hauen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:uebers-ohr-hauen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -785,13 +825,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "den Kürzeren ziehen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:den-kuerzeren-ziehen"]
@@ -817,13 +859,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "das Bett hüten",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "First phrase literal. Marked second phrase means staying in bed ill. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:das-bett-hueten"]
@@ -854,13 +898,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "auf Wolke sieben schweben",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:auf-wolke-sieben-schweben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -891,13 +937,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "aus allen Wolken fallen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:aus-allen-wolken-fallen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -937,13 +985,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "die Katze im Sack kaufen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:katze-im-sack-kaufen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -975,13 +1025,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "die Kirche im Dorf lassen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:kirche-im-dorf-lassen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1023,13 +1075,15 @@
 					"perfect": null,
 					"future": "Yes",
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "kein Blatt vor den Mund nehmen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:kein-blatt-vor-den-mund-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1071,13 +1125,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "den Kopf in den Sand stecken",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:kopf-in-den-sand-stecken"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1115,13 +1171,15 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Licht ins Dunkel bringen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:licht-ins-dunkel-bringen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1153,13 +1211,15 @@
 					"perfect": null,
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "alle Hände voll zu tun haben",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:alle-haende-voll-zu-tun-haben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1190,13 +1250,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "auf dem Schlauch stehen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-idiom-lemma:auf-dem-schlauch-stehen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1222,13 +1284,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "die Segel streichen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:die-segel-streichen"]

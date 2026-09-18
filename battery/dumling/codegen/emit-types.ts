@@ -21,6 +21,8 @@ export function outputType(
 							"dumling.de-pronoun.core",
 							"dumling.de-noun.surface",
 							"dumling.de-noun.attestation",
+							"dumling.de-verbal.attestation",
+							"dumling.de-verbal.surface",
 							"dumling.emoji-description",
 							"dumling.normalize-form",
 						]).has(effect[1])

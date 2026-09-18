@@ -1,3 +1,5 @@
+import { germanArticleForm } from "dumling";
+
 type DeMemberOrthography = "Standard" | "Typo";
 type GrammaticalResolutionInput = {
 	readonly markedContext: string;
@@ -5,6 +7,10 @@ type GrammaticalResolutionInput = {
 };
 class DeGrammaticalResolutionProjectionError extends Error {}
 export type GrammarOutput = {
+	expletiveEvidence?: {
+		attested: string;
+		orthography: DeMemberOrthography;
+	} | null;
 	articleEvidence?: {
 		attested: string;
 		orthography: DeMemberOrthography;
@@ -20,9 +26,19 @@ export function normalizeGrammarSurface(
 	output: GrammarOutput,
 	route: { family: string; kind: string },
 ): string {
+	const bag = output.surface.inflectionalFeatures as {
+		article: string | null;
+		case: string | null;
+		number: string | null;
+	} | null;
+	const core = output.lemma.coreFeatures as { gender: string | null };
+	const articleForm =
+		route.kind === "NOUN" && bag?.article
+			? germanArticleForm({ ...bag, gender: core.gender })
+			: null;
 	const ownedArticle =
 		route.kind === "NOUN" &&
-		output.surface.articleReference &&
+		articleForm &&
 		output.realizationCoverage === "Full";
 	if (ownedArticle)
 		constructNormalizedSurface({
@@ -52,20 +68,14 @@ export function normalizeGrammarSurface(
 					normalizedMembers: output.normalizedMembers,
 				});
 	if (route.kind === "NOUN" && output.realizationCoverage === "Partial") {
-		const ref = output.surface.articleReference as {
-			surface: { normalizedSurface: string };
-		} | null;
-		if (!ref || !output.articleEvidence)
+		if (!articleForm || !output.articleEvidence)
 			throw new DeGrammaticalResolutionProjectionError(
 				"Partial noun requires shared or Fusion article evidence",
 			);
-		return `${ref.surface.normalizedSurface} ${normalized}`;
+		return `${articleForm} ${normalized}`;
 	}
 	if (ownedArticle) {
-		const reference = output.surface.articleReference as {
-			surface: { normalizedSurface: string };
-		};
-		return `${reference.surface.normalizedSurface} ${normalized}`;
+		return `${articleForm} ${normalized}`;
 	}
 	return normalized;
 }

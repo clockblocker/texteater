@@ -27,7 +27,6 @@ async function completions(marker: string) {
 
 test("concrete schema imports offer only their applicable fields", async () => {
 	expect(await completions("noun")).toEqual([
-		"articleReference",
 		"inflectionalFeatures",
 		"language",
 		"lemma",

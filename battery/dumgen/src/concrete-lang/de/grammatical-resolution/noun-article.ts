@@ -1,4 +1,4 @@
-import { parseUnit } from "dumling";
+import { germanArticleForm, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { DumgenOptions, Encounter } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
@@ -15,33 +15,19 @@ import { featureQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
 import type { GrammarOutput } from "./project.js";
 
-const definiteForms: Record<string, Record<string, string>> = {
-	Masc: { Nom: "der", Acc: "den", Dat: "dem", Gen: "des" },
-	Fem: { Nom: "die", Acc: "die", Dat: "der", Gen: "der" },
-	Neut: { Nom: "das", Acc: "das", Dat: "dem", Gen: "des" },
-	Plur: { Nom: "die", Acc: "die", Dat: "den", Gen: "der" },
-};
-const indefiniteForms: Record<string, Record<string, string>> = {
-	Masc: { Nom: "ein", Acc: "einen", Dat: "einem", Gen: "eines" },
-	Fem: { Nom: "eine", Acc: "eine", Dat: "einer", Gen: "einer" },
-	Neut: { Nom: "ein", Acc: "ein", Dat: "einem", Gen: "eines" },
-};
-
 /** Exact reviewed identity plus contextual morphology, without any occurrence or database identity. */
 export function nounArticleReference(input: {
 	article: string;
 	case: string;
 	number: string;
 	gender: string | null;
-	spelled: string;
+	spelled?: string;
 }) {
-	const forms =
-		input.article === "Definite" ? definiteForms : indefiniteForms;
-	const expected =
-		forms[input.number === "Plur" ? "Plur" : (input.gender ?? "")]?.[
-			input.case
-		];
-	if (!expected || input.spelled !== expected)
+	const expected = germanArticleForm(input);
+	if (
+		!expected ||
+		(input.spelled !== undefined && input.spelled !== expected)
+	)
 		throw new DumgenFailure(
 			"Unresolved",
 			"resolveGrammar",
@@ -145,12 +131,15 @@ type ArticleCandidate = {
 	case: "Dat" | "Acc" | null;
 };
 
-const definiteSpellings = new Set(
-	Object.values(definiteForms).flatMap(Object.values),
-);
-const indefiniteSpellings = new Set(
-	Object.values(indefiniteForms).flatMap(Object.values),
-);
+const definiteSpellings = new Set(["der", "die", "das", "den", "dem", "des"]);
+const indefiniteSpellings = new Set([
+	"ein",
+	"eine",
+	"einen",
+	"einem",
+	"einer",
+	"eines",
+]);
 
 /** Candidate spelling establishes possible analyses; the judgment still decides contextual attachment. */
 function articleCandidates(
@@ -291,17 +280,17 @@ export async function resolveNounArticle(
 	if (candidate) {
 		if (!bag.number || (bag.number !== "Plur" && !core.gender))
 			return fail("Article requires known noun agreement");
-		const forms =
-			candidate.article === "Definite" ? definiteForms : indefiniteForms;
-		cases = Object.entries(
-			forms[bag.number === "Plur" ? "Plur" : (core.gender ?? "")] ?? {},
-		)
-			.filter(
-				([caseValue, form]) =>
-					form === candidate.form &&
-					(candidate.case === null || caseValue === candidate.case),
-			)
-			.map(([caseValue]) => caseValue);
+		const selectedArticle = candidate;
+		cases = ["Nom", "Acc", "Dat", "Gen"].filter(
+			(caseValue) =>
+				germanArticleForm({
+					article: selectedArticle.article,
+					case: caseValue,
+					number: bag.number ?? null,
+					gender: core.gender ?? null,
+				}) === selectedArticle.form &&
+				(selectedArticle.case === null || caseValue === selectedArticle.case),
+		);
 		if (!cases.length)
 			return fail("Article form and noun agreement are incompatible");
 	}
@@ -361,4 +350,29 @@ export async function resolveNounArticle(
 				? ("Full" as const)
 				: ("Partial" as const),
 	};
+}
+
+/** Derives a contextual article from resolved noun grammar without model execution. */
+export function deriveNounArticle(surface: Dumling.Surface) {
+	if (
+		surface.language !== "de" ||
+		surface.lemma.family !== "Lexeme" ||
+		surface.lemma.kind !== "NOUN"
+	)
+		return null;
+	const noun = surface as Dumling.Surface<"de", "Lexeme", "NOUN">;
+	const bag = noun.inflectionalFeatures;
+	if (!bag?.article) return null;
+	if (!bag.case || !bag.number)
+		throw new DumgenFailure(
+			"Unresolved",
+			"resolveGrammar",
+			"Article requires known noun agreement",
+		);
+	return nounArticleReference({
+		article: bag.article,
+		case: bag.case,
+		number: bag.number,
+		gender: noun.lemma.coreFeatures.gender,
+	});
 }

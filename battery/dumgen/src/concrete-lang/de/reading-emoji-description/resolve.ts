@@ -10,7 +10,12 @@ import { textModelCaller } from "../../../universal/model.js";
 import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
 import { markedContext } from "../../../universal/validation.js";
-import { authoredFor, closedRoute } from "../authored-closed-sets/select.js";
+import { authoredMembers } from "../authored-closed-sets/inventory.js";
+import {
+	authoredFor,
+	closedRoute,
+	sameValue,
+} from "../authored-closed-sets/select.js";
 
 export async function resolveReading(
 	options: DumgenOptions,
@@ -31,6 +36,49 @@ export async function resolveReading(
 		emojiDescription,
 	});
 	const member = authoredFor(input.lemma);
+	const reviewed = authoredMembers.filter((candidate) =>
+		sameValue(candidate.lemma, input.lemma),
+	);
+	if (reviewed.length > 1) {
+		const result = await judgmentCaller(options)(
+			stage,
+			route,
+			{
+				...markedContext(input.encounter),
+				readings: reviewed.map((candidate) => ({
+					emojiDescription: candidate.reading.emojiDescription,
+					definition: candidate.knowledge.definition ?? "",
+				})),
+			},
+			{
+				reading: choice(
+					"Choose the reviewed Reading for this exact occurrence; distinguish referential it from nonreferential subject es. Uncertainty is Unresolved.",
+					{
+						...Object.fromEntries(
+							reviewed.map((candidate, index) => [
+								`authored_${index}`,
+								String(candidate.knowledge.definition),
+							]),
+						),
+						Unresolved: "No defensible reviewed Reading",
+					},
+				),
+			},
+			signal,
+		);
+		const selected =
+			reviewed[
+				Number(result.answers.reading.choice.replace("authored_", ""))
+			];
+		if (!selected)
+			throw new DumgenFailure(
+				"Unresolved",
+				stage,
+				"Reviewed Reading remains uncertain",
+				route,
+			);
+		return resolveAuthored(selected.reading.emojiDescription);
+	}
 	if (member) {
 		recordEvent(signal, "AuthoredReading", { reading: member.reading });
 		return resolveAuthored(member.reading.emojiDescription);
@@ -62,7 +110,7 @@ export async function resolveReading(
 			),
 			{
 				reading: choice(
-					"Select the existing Emoji Description that represents the marked target's learner-facing concept for this exact fixed Lemma. Distinguish homonyms. Related uses share one broad recognizable concept unless reuse would materially mislead a beginner. Ignore incidental participants, scenery, inflection and tense. Do not borrow a neighboring word's meaning. A singleton is not automatically a match. NoMatch means a defensible new concept, not uncertainty between meanings.",
+					"Select the existing Emoji Description that represents the marked target's learner-facing concept for this exact fixed Lemma. Distinguish homonyms. Existential geben in es gibt/es gab means existence or availability and must not reuse its transfer/giving Reading. Related uses share one broad recognizable concept unless reuse would materially mislead a beginner. Ignore incidental participants, scenery, inflection and tense. Do not borrow a neighboring word's meaning. A singleton is not automatically a match. NoMatch means a defensible new concept, not uncertainty between meanings.",
 					{
 						...Object.fromEntries(
 							candidates.map((value, index) => [

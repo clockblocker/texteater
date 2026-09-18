@@ -1,4 +1,5 @@
 import { type Infer, v } from "convex/values";
+import { restoreStoredGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import {
 	internalMutation,
@@ -441,6 +442,29 @@ export const getRunInput = internalQuery({
 		) {
 			return null;
 		}
+		const restored = session.grammaticalCheckpoint
+			? restoreStoredGrammar(session.grammaticalCheckpoint)
+			: undefined;
+		const grammaticalCheckpoint = restored
+			? {
+					...restored,
+					encounter: {
+						sentence: {
+							...restored.encounter.sentence,
+							segments: restored.encounter.sentence.segments.map(
+								(segment) => ({ ...segment }),
+							),
+						},
+						target: {
+							...restored.encounter.target,
+							memberSegmentIndices: [
+								...restored.encounter.target
+									.memberSegmentIndices,
+							],
+						},
+					},
+				}
+			: undefined;
 		return {
 			selection: {
 				requestId: session.requestId,
@@ -449,10 +473,10 @@ export const getRunInput = internalQuery({
 				clickedSegmentIndex: session.clickedSegmentIndex,
 			},
 			checkpoints: {
-				...(session.grammaticalCheckpoint
-					? { grammatical: session.grammaticalCheckpoint }
+				...(grammaticalCheckpoint
+					? { grammatical: grammaticalCheckpoint }
 					: {}),
-				...(session.readingCheckpoint
+				...(grammaticalCheckpoint && session.readingCheckpoint
 					? { reading: session.readingCheckpoint }
 					: {}),
 			},

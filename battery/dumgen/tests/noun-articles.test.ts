@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { checkIfGrundform, parseUnit } from "dumling";
 import { Effect } from "effect";
-import { nounArticleReference } from "../src/concrete-lang/de/grammatical-resolution/noun-article.js";
+import { deriveNounArticle, nounArticleReference } from "../src/index.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
 import { grammarFixture } from "./grammar-fixture.js";
@@ -40,22 +40,12 @@ function example(
 			memberSegmentIndices: indices,
 		},
 	});
-	const reference = article
-		? nounArticleReference({
-				article,
-				case: caseValue,
-				number,
-				gender,
-				spelled: form,
-			})
-		: null;
 	const golden = {
 		lemma: { canonicalForm: noun, coreFeatures: { gender, hyph: null } },
 		surface: {
 			spelling: "Canonical",
 			surfaceFeatures: null,
 			inflectionalFeatures: { case: caseValue, number, article },
-			articleReference: reference,
 		},
 		normalizedMembers: members,
 		memberOrthographies: members.map(() => "Standard"),
@@ -197,11 +187,8 @@ test("shared noun resolves first without resolving or claiming the article owner
 	).resolve();
 	expect(first.members).toHaveLength(2);
 	expect(second.members).toHaveLength(1);
-	expect(second.surface).toHaveProperty(
-		"articleReference",
-		"articleReference" in first.surface
-			? first.surface.articleReference
-			: undefined,
+	expect(deriveNounArticle(second.surface)).toEqual(
+		deriveNounArticle(first.surface),
 	);
 });
 
@@ -217,7 +204,8 @@ for (const determiner of ["mein", "dieser", "kein"])
 			"Sing",
 			"Neut",
 		).resolve();
-		expect(result.surface).toHaveProperty("articleReference", null);
+		expect(result.surface).not.toHaveProperty("articleReference");
+		expect(deriveNounArticle(result.surface)).toBeNull();
 		expect(result.surface).toHaveProperty(
 			"inflectionalFeatures.article",
 			null,
@@ -243,14 +231,13 @@ test("article agreement and reference identity are validated", async () => {
 		"Definite",
 		"Acc",
 	).resolve();
-	const surface = structuredClone(result.surface);
-	if (!("articleReference" in surface) || !surface.articleReference)
-		throw Error("Missing noun reference");
-	surface.articleReference.reading.lemma.canonicalForm = "die";
-	expect(parseUnit(surface).success).toBe(false);
-	const missing = { ...result.surface } as Record<string, unknown>;
-	delete missing.articleReference;
-	expect(parseUnit(missing).success).toBe(false);
+	expect(
+		parseUnit({ ...result.surface, articleReference: null }).success,
+	).toBe(false);
+	expect(
+		parseUnit({ ...result.surface, normalizedSurface: "das Hund" }).success,
+	).toBe(false);
+	expect(parseUnit(result.surface).success).toBe(true);
 	expect(parseUnit({ ...result, articleEvidence: null }).success).toBe(false);
 });
 
@@ -302,8 +289,8 @@ for (const [text, noun, form, caseValue, gender, source] of [
 			"inflectionalFeatures.article",
 			"Definite",
 		);
-		expect(result.surface).toHaveProperty(
-			"articleReference.surface.normalizedSurface",
+		expect(deriveNounArticle(result.surface)).toHaveProperty(
+			"surface.normalizedSurface",
 			form,
 		);
 		expect(result.members).toEqual([
@@ -419,7 +406,8 @@ test("unrelated Fusion evidence is optional and uncertainty is not a bare noun",
 	);
 	const result = await fixture.resolve();
 	expect(result.surface.normalizedSurface).toBe("Holz");
-	expect(result.surface).toHaveProperty("articleReference", null);
+	expect(result.surface).not.toHaveProperty("articleReference");
+	expect(deriveNounArticle(result.surface)).toBeNull();
 	await expect(
 		Effect.runPromise(
 			createDumgen(
@@ -449,8 +437,8 @@ test("Fusion morphology determines Case before any independent Case judgment", a
 		createDumgen(options).resolveGrammar(fixture.encounter),
 	);
 	expect(result.surface).toHaveProperty("inflectionalFeatures.case", "Dat");
-	expect(result.surface).toHaveProperty(
-		"articleReference.surface.inflectionalFeatures.case",
+	expect(deriveNounArticle(result.surface)).toHaveProperty(
+		"surface.inflectionalFeatures.case",
 		"Dat",
 	);
 });

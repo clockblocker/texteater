@@ -511,6 +511,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -522,6 +523,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -533,6 +535,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -544,6 +547,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -555,6 +559,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -566,6 +571,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -578,6 +584,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -590,6 +597,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -634,6 +642,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -645,6 +654,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -656,6 +666,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -667,6 +678,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -678,6 +690,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -689,6 +702,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -701,6 +715,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -713,6 +728,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -729,6 +745,10 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			expletiveEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Lexeme/CCONJ": {
@@ -1074,97 +1094,6 @@ export interface UnitMap {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				number: ("Plur" | "Sing") | null;
 			} | null;
-			articleReference: {
-				surface: {
-					unitKind: "Surface";
-					language: "de";
-					lemma: {
-						unitKind: "Lemma";
-						language: "de";
-						family: "Lexeme";
-						kind: "DET";
-						canonicalForm: string;
-						coreFeatures: {
-							definite: ("Def" | "Ind") | null;
-							extPos: ("ADV" | "DET") | null;
-							foreign: "Yes" | null;
-							numType: ("Card" | "Ord") | null;
-							person: ("1" | "2" | "3") | null;
-							polite: ("Form" | "Infm") | null;
-							poss: "Yes" | null;
-							pronType:
-								| (
-										| "Art"
-										| "Dem"
-										| "Emp"
-										| "Exc"
-										| "Ind"
-										| "Int"
-										| "Neg"
-										| "Prs"
-										| "Rel"
-										| "Tot"
-								  )
-								| null;
-						};
-					};
-					normalizedSurface: string;
-					spelling: "Canonical" | "Variant";
-					surfaceFeatures: {
-						historicalStatus: "Archaic" | null;
-					} | null;
-					inflectionalFeatures: {
-						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-						degree: ("Cmp" | "Pos" | "Sup") | null;
-						gender: ("Fem" | "Masc" | "Neut") | null;
-						"gender[psor]":
-							| (
-									| ("Fem" | "Masc" | "Neut")
-									| [
-											"Fem" | "Masc" | "Neut",
-											...Array<"Fem" | "Masc" | "Neut">,
-									  ]
-							  )
-							| null;
-						number: ("Plur" | "Sing") | null;
-						"number[psor]": ("Plur" | "Sing") | null;
-					} | null;
-				};
-				reading: {
-					unitKind: "Reading";
-					lemma: {
-						unitKind: "Lemma";
-						language: "de";
-						family: "Lexeme";
-						kind: "DET";
-						canonicalForm: string;
-						coreFeatures: {
-							definite: ("Def" | "Ind") | null;
-							extPos: ("ADV" | "DET") | null;
-							foreign: "Yes" | null;
-							numType: ("Card" | "Ord") | null;
-							person: ("1" | "2" | "3") | null;
-							polite: ("Form" | "Infm") | null;
-							poss: "Yes" | null;
-							pronType:
-								| (
-										| "Art"
-										| "Dem"
-										| "Emp"
-										| "Exc"
-										| "Ind"
-										| "Int"
-										| "Neg"
-										| "Prs"
-										| "Rel"
-										| "Tot"
-								  )
-								| null;
-						};
-					};
-					emojiDescription: string;
-				};
-			} | null;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -1204,99 +1133,6 @@ export interface UnitMap {
 					article: ("Definite" | "Indefinite") | null;
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
-				} | null;
-				articleReference: {
-					surface: {
-						unitKind: "Surface";
-						language: "de";
-						lemma: {
-							unitKind: "Lemma";
-							language: "de";
-							family: "Lexeme";
-							kind: "DET";
-							canonicalForm: string;
-							coreFeatures: {
-								definite: ("Def" | "Ind") | null;
-								extPos: ("ADV" | "DET") | null;
-								foreign: "Yes" | null;
-								numType: ("Card" | "Ord") | null;
-								person: ("1" | "2" | "3") | null;
-								polite: ("Form" | "Infm") | null;
-								poss: "Yes" | null;
-								pronType:
-									| (
-											| "Art"
-											| "Dem"
-											| "Emp"
-											| "Exc"
-											| "Ind"
-											| "Int"
-											| "Neg"
-											| "Prs"
-											| "Rel"
-											| "Tot"
-									  )
-									| null;
-							};
-						};
-						normalizedSurface: string;
-						spelling: "Canonical" | "Variant";
-						surfaceFeatures: {
-							historicalStatus: "Archaic" | null;
-						} | null;
-						inflectionalFeatures: {
-							case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-							degree: ("Cmp" | "Pos" | "Sup") | null;
-							gender: ("Fem" | "Masc" | "Neut") | null;
-							"gender[psor]":
-								| (
-										| ("Fem" | "Masc" | "Neut")
-										| [
-												"Fem" | "Masc" | "Neut",
-												...Array<
-													"Fem" | "Masc" | "Neut"
-												>,
-										  ]
-								  )
-								| null;
-							number: ("Plur" | "Sing") | null;
-							"number[psor]": ("Plur" | "Sing") | null;
-						} | null;
-					};
-					reading: {
-						unitKind: "Reading";
-						lemma: {
-							unitKind: "Lemma";
-							language: "de";
-							family: "Lexeme";
-							kind: "DET";
-							canonicalForm: string;
-							coreFeatures: {
-								definite: ("Def" | "Ind") | null;
-								extPos: ("ADV" | "DET") | null;
-								foreign: "Yes" | null;
-								numType: ("Card" | "Ord") | null;
-								person: ("1" | "2" | "3") | null;
-								polite: ("Form" | "Infm") | null;
-								poss: "Yes" | null;
-								pronType:
-									| (
-											| "Art"
-											| "Dem"
-											| "Emp"
-											| "Exc"
-											| "Ind"
-											| "Int"
-											| "Neg"
-											| "Prs"
-											| "Rel"
-											| "Tot"
-									  )
-									| null;
-							};
-						};
-						emojiDescription: string;
-					};
 				} | null;
 			};
 			members: [
@@ -2134,6 +1970,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -2145,6 +1982,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -2156,6 +1994,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -2167,6 +2006,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -2178,6 +2018,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -2189,6 +2030,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -2201,6 +2043,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -2213,6 +2056,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -2267,6 +2111,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -2278,6 +2123,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -2289,6 +2135,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -2300,6 +2147,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -2311,6 +2159,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -2322,6 +2171,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -2334,6 +2184,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -2346,6 +2197,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -2362,6 +2214,10 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			expletiveEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Morpheme/Circumfix": {
@@ -3088,6 +2944,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3099,6 +2956,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3110,6 +2968,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3121,6 +2980,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3132,6 +2992,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3143,6 +3004,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3155,6 +3017,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3167,6 +3030,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3211,6 +3075,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3222,6 +3087,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3233,6 +3099,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3244,6 +3111,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3255,6 +3123,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3266,6 +3135,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3278,6 +3148,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3290,6 +3161,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3306,6 +3178,10 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			expletiveEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Phraseme/DiscourseFormula": {
@@ -3462,6 +3338,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3473,6 +3350,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: ("Past" | "Pres") | null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3484,6 +3362,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3495,6 +3374,7 @@ export interface UnitMap {
 								person: ("1" | "2" | "3") | null;
 								tense: null;
 								verbForm: "Fin";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3506,6 +3386,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3517,6 +3398,7 @@ export interface UnitMap {
 								person: null;
 								tense: null;
 								verbForm: "Inf";
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3529,6 +3411,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: null;
@@ -3541,6 +3424,7 @@ export interface UnitMap {
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
@@ -3585,6 +3469,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3596,6 +3481,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: ("Past" | "Pres") | null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3607,6 +3493,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3618,6 +3505,7 @@ export interface UnitMap {
 									person: ("1" | "2" | "3") | null;
 									tense: null;
 									verbForm: "Fin";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3629,6 +3517,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3640,6 +3529,7 @@ export interface UnitMap {
 									person: null;
 									tense: null;
 									verbForm: "Inf";
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3652,6 +3542,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: null;
@@ -3664,6 +3555,7 @@ export interface UnitMap {
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
@@ -3680,6 +3572,10 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			expletiveEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Phraseme/Proverb": {

@@ -1,12 +1,16 @@
 import { Migrations } from "@convex-dev/migrations";
 
-import { components } from "./_generated/api";
-import { completeAuthoredArticleKnowledge } from "./dumdictStorage/transaction";
+import { components, internal } from "./_generated/api";
+import { completeAuthoredComponentKnowledge } from "./dumdictStorage/transaction";
 import {
 	findDefinitionText,
 	syncDefinitionText,
 } from "./model/definitionTexts";
-import { migrateNounArticle } from "./model/nounArticleMigration";
+import {
+	migrateCompositionAttestation,
+	migrateCompositionOwnership,
+	migrateNounArticle,
+} from "./model/nounArticleMigration";
 import { readingValue } from "./model/occurrenceAttestations";
 import schema from "./schema";
 
@@ -58,7 +62,7 @@ export const backfillAuthoredArticleKnowledge = migrations.define({
 		const lemma = await ctx.db.get(reading.lemmaId);
 		if (
 			!lemma ||
-			!(await completeAuthoredArticleKnowledge(
+			!(await completeAuthoredComponentKnowledge(
 				ctx,
 				readingValue(reading, lemma),
 			))
@@ -77,3 +81,23 @@ export const backfillAuthoredArticleKnowledge = migrations.define({
 			});
 	},
 });
+
+export const deriveSurfaceComponents = migrations.define({
+	table: "surfaces",
+	migrateOne: migrateNounArticle,
+});
+export const reconcileCompositionOwnership = migrations.define({
+	table: "ownedSurfaces",
+	migrateOne: migrateCompositionOwnership,
+});
+export const reconcileCompositionAttestations = migrations.define({
+	table: "attestations",
+	migrateOne: migrateCompositionAttestation,
+});
+
+/** Run in order: re-key values, merge dictionary ownership, then redirect occurrences. */
+export const runCompositionCutover = migrations.runner([
+	internal.migrations.deriveSurfaceComponents,
+	internal.migrations.reconcileCompositionOwnership,
+	internal.migrations.reconcileCompositionAttestations,
+]);

@@ -295,6 +295,9 @@ function occurrenceFor(
 		})),
 		realizationCoverage: "Full",
 		...(reading.lemma.kind === "NOUN" ? { articleEvidence: null } : {}),
+		...(["VERB", "AUX", "Idiom", "Collocation"].includes(reading.lemma.kind)
+			? { expletiveEvidence: null }
+			: {}),
 		surface: citationSurface,
 	});
 	return {
@@ -604,6 +607,5 @@ function fixtureSurface(
 	return parseGermanSurface({
 		...input,
 		inflectionalFeatures: null,
-		...(lemma.kind === "NOUN" ? { articleReference: null } : {}),
 	});
 }

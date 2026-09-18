@@ -16,5 +16,5 @@ German noun Attestations may also retain source article orthography as
 article gives Partial coverage; the same reusable noun Surface can have Full
 coverage elsewhere. A governing Fusion can also supply the article with Partial
 coverage: `im Wald` attests `[Wald]`, retains `im` as article evidence, and
-references DET Surface `dem` in noun Surface `dem Wald`. The expanded article
+derives DET Surface `dem` from the grammar of noun Surface `dem Wald`. The expanded article
 is not a separately attested word. Sentence coordinates remain application-owned.

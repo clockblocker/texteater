@@ -122,7 +122,6 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 		spelling: "Canonical",
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
-		articleReference: null,
 	},
 	realizationCoverage: "Full",
 	articleEvidence: null,
@@ -143,7 +142,6 @@ const grammarOutput = {
 		spelling: "Canonical",
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
-		articleReference: null,
 	},
 	lemma: {
 		canonicalForm: "Bank",
@@ -490,7 +488,6 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 				spelling: "Canonical",
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
-				articleReference: null,
 			},
 			lemma: {
 				canonicalForm: "unreviewed",

@@ -48,6 +48,7 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"ParsingError",
 		"UnitKind",
 		"checkIfGrundform",
+		"germanArticleForm",
 		"parseUnit",
 	]);
 	expect(module.parseUnit(null).success).toBe(false);
@@ -201,7 +202,7 @@ import type * as Unsupported from "dumling/schema/en/phraseme/collocation";
 	}
 }, 30_000);
 
-test("a noun schema imports only its noun and article component routes", async () => {
+test("a noun schema imports only its noun route", async () => {
 	const result = await build({
 		entryPoints: [
 			join(packageRoot, "src/generated/schemas/de/lexeme/noun.ts"),
@@ -221,7 +222,6 @@ test("a noun schema imports only its noun and article component routes", async (
 		),
 	);
 	expect(routes.map((path) => path.split("/de/")[1]).sort()).toEqual([
-		"lexeme/determiner.ts",
 		"lexeme/noun.ts",
 	]);
 });

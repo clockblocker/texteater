@@ -26,7 +26,7 @@ import {
 	resolutionReadingProjectionValidator,
 	resolutionRouteProjectionValidator,
 	resolutionRunStateValidator,
-	resolvedGrammaticalValidator,
+	storedGrammaticalCheckpointValidator,
 	safeGenerationFailureValidator,
 	segmentKindValidator,
 	segmentResolutionStateValidator,
@@ -146,7 +146,9 @@ export default defineSchema({
 		normalizedSurface: v.string(),
 		spelling: surfaceSpellingValidator,
 		surfaceFeatures: v.any(),
+		/** Legacy input retained only until the composition cutover completes. */
 		articleReference: v.optional(v.any()),
+		redirectedTo: v.optional(v.id("surfaces")),
 		inflectionalFeatures: v.optional(v.any()),
 	})
 		.index("by_surface_key", ["surfaceKey"])
@@ -207,6 +209,7 @@ export default defineSchema({
 
 	attestations: defineTable({
 		articleEvidence: v.optional(v.any()),
+		expletiveEvidence: v.optional(v.any()),
 		surfaceId: v.id("surfaces"),
 		readingId: v.id("readings"),
 		realizationCoverage: realizationCoverageValidator,
@@ -459,7 +462,7 @@ export default defineSchema({
 		route: resolutionRouteProjectionValidator,
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
-		grammaticalCheckpoint: v.optional(resolvedGrammaticalValidator),
+		grammaticalCheckpoint: v.optional(storedGrammaticalCheckpointValidator),
 		readingCheckpoint: v.optional(
 			v.object({
 				resolution: v.object({

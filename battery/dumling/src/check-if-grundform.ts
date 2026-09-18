@@ -17,7 +17,12 @@ import type { Surface } from "./types.js";
  * the assessment, and neither the Surface nor its feature bags are modified.
  */
 export function checkIfGrundform(surface: Surface): GrundformResult {
-	if ("articleReference" in surface && surface.articleReference)
+	if (
+		"inflectionalFeatures" in surface &&
+		surface.inflectionalFeatures &&
+		"article" in surface.inflectionalFeatures &&
+		surface.inflectionalFeatures.article
+	)
 		return { success: true, value: false };
 	if (
 		surface.spelling !== "Variant" &&

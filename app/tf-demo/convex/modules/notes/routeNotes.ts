@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { makeSurfaceId } from "dumdict/runtime";
+import { deriveNounArticle } from "dumgen";
 import { parseGermanSurface } from "../../../server/operationalParsing";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -259,9 +260,14 @@ async function loadSurfaceRouteNote(
 			cursor: contextCursor ?? null,
 			numItems: SURFACE_ANALYSIS_PAGE_SIZE,
 		});
-	let surfaces = page.page;
+	let activeRedirect: Id<"surfaces"> | undefined;
+	let surfaces = page.page.filter((surface) => !surface.redirectedTo);
 	if (contextCursor === undefined && activeAnalysisKey !== undefined) {
-		const activeSurface = await ctx.db.get(activeAnalysisKey);
+		const savedSurface = await ctx.db.get(activeAnalysisKey);
+		activeRedirect = savedSurface?.redirectedTo;
+		const activeSurface = savedSurface?.redirectedTo
+			? await ctx.db.get(savedSurface.redirectedTo)
+			: savedSurface;
 		if (
 			activeSurface?.language === language &&
 			activeSurface.normalizedSurface === normalizedSurface &&
@@ -277,11 +283,10 @@ async function loadSurfaceRouteNote(
 	const articles = await Promise.all(
 		surfaces.map(async (surface, index) => {
 			const lemma = lemmas[index];
-			if (!lemma || surface.articleReference == null) return null;
+			if (!lemma) return null;
 			const value = parseGermanSurface(surfaceValue(surface, lemma));
-			if (!("articleReference" in value) || !value.articleReference)
-				return null;
-			const reference = value.articleReference;
+			const reference = deriveNounArticle(value);
+			if (!reference) return null;
 			const component = await ctx.db
 				.query("surfaces")
 				.withIndex("by_surface_key", (q) =>
@@ -315,7 +320,10 @@ async function loadSurfaceRouteNote(
 		}
 		return [
 			{
-				analysisKey: surface._id,
+				analysisKey:
+					surface._id === activeRedirect && activeAnalysisKey
+						? activeAnalysisKey
+						: surface._id,
 				article: articles[index] ?? null,
 				surfaceId: surface._id,
 				lemmaId: lemma._id,
@@ -384,7 +392,7 @@ async function loadLemmaRouteNote(
 				cursor: cursor.cursor,
 				numItems: ROUTE_CONNECTION_PAGE_SIZE,
 			});
-		surfaces = page.page;
+		surfaces = page.page.filter((surface) => !surface.redirectedTo);
 		continueCursor = page.isDone
 			? routeConnectionCursor("Lemma", "sameWrittenForm", null)
 			: routeConnectionCursor("Lemma", "surfaces", page.continueCursor);

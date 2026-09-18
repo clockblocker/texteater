@@ -45,7 +45,6 @@ test("an independently classified encounter reaches dictionary storage and pendi
 				spelling: "Canonical",
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
-				articleReference: null,
 			},
 			lemma: {
 				canonicalForm: "Bank",

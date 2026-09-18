@@ -3,14 +3,17 @@ import {
 	emojiDescriptionError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
+	germanVerbalAttestationError,
+	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
 	isGermanNounAttestation,
 	isGermanNounSurface,
+	isGermanVerbalAttestation,
+	isGermanVerbalSurface,
 	nonEmptyFeatureBagError,
 	normalizeForm,
 } from "../validation/semantics.js";
-import type { DeDeterminerFeatureBagsSchema } from "./concrete-language/de/lexeme/determiner.js";
 
 export const UnitKindSchema = z.enum([
 	"Lemma",
@@ -84,67 +87,37 @@ function buildBaseUnitSchemas<
 	return { Lemma, Surface, Reading, Attestation };
 }
 
-function buildArticleReferenceSchema(
-	bags: typeof DeDeterminerFeatureBagsSchema,
-) {
-	const units = buildBaseUnitSchemas(
-		{ language: "de", family: "Lexeme", kind: "DET" },
-		bags.shape.core,
-		bags.shape.inflectional,
-	);
-	return z.strictObject({ surface: units.Surface, reading: units.Reading });
-}
-
-/** A noun owns one reusable article analysis; occurrence evidence stays on its Attestation. */
+/** Composition stores grammatical features; source evidence belongs to the Attestation. */
 export function buildUnitSchemas<
 	L extends string,
 	F extends string,
 	K extends string,
 	C extends z.core.$ZodType,
 	I extends z.core.$ZodType | undefined,
->(
-	route: { language: L; family: F; kind: K },
-	core: C,
-	inflectional: I,
-	articleBags?: typeof DeDeterminerFeatureBagsSchema,
-) {
+>(route: { language: L; family: F; kind: K }, core: C, inflectional: I) {
 	const base = buildBaseUnitSchemas(route, core, inflectional);
 	const noun =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
 		route.kind === "NOUN";
-	if (noun && !articleBags)
-		throw new Error(
-			"German noun schemas require their DET component schema",
-		);
-	const articleReference = articleBags
-		? buildArticleReferenceSchema(articleBags).nullable()
-		: undefined;
-	let Surface = base.Surface.extend(
-		noun && articleReference ? { articleReference } : {},
-	) as z.ZodObject<
-		typeof base.Surface.shape &
-			(L extends "de"
-				? F extends "Lexeme"
-					? K extends "NOUN"
-						? {
-								articleReference: z.ZodNullable<
-									ReturnType<
-										typeof buildArticleReferenceSchema
-									>
-								>;
-							}
-						: Record<never, never>
-					: Record<never, never>
-				: Record<never, never>)
-	>;
+	const verbal =
+		route.language === "de" &&
+		((route.family === "Lexeme" && ["VERB", "AUX"].includes(route.kind)) ||
+			(route.family === "Phraseme" &&
+				["Idiom", "Collocation"].includes(route.kind)));
+	let Surface = base.Surface;
 	if (noun)
 		Surface = Surface.refine(isGermanNounSurface, {
 			error: germanNounSurfaceError,
 		});
+	if (verbal)
+		Surface = Surface.refine(isGermanVerbalSurface, {
+			error: germanVerbalSurfaceError,
+		});
 	let Attestation = base.Attestation.extend({
 		surface: Surface,
 		...(noun ? { articleEvidence: memberSchema.nullable() } : {}),
+		...(verbal ? { expletiveEvidence: memberSchema.nullable() } : {}),
 	}) as unknown as z.ZodObject<
 		Omit<typeof base.Attestation.shape, "surface"> & {
 			surface: typeof Surface;
@@ -158,11 +131,20 @@ export function buildUnitSchemas<
 							}
 						: Record<never, never>
 					: Record<never, never>
+				: Record<never, never>) &
+			(L extends "de"
+				? K extends "VERB" | "AUX" | "Idiom" | "Collocation"
+					? { expletiveEvidence: z.ZodNullable<typeof memberSchema> }
+					: Record<never, never>
 				: Record<never, never>)
 	>;
 	if (noun)
 		Attestation = Attestation.refine(isGermanNounAttestation, {
 			error: germanNounAttestationError,
+		});
+	if (verbal)
+		Attestation = Attestation.refine(isGermanVerbalAttestation, {
+			error: germanVerbalAttestationError,
 		});
 	return { Lemma: base.Lemma, Surface, Reading: base.Reading, Attestation };
 }

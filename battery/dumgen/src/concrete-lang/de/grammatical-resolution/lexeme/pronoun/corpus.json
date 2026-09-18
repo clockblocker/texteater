@@ -1923,7 +1923,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Masc",
 					"referenceNumber": null
 				}
@@ -1956,7 +1956,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Fem",
 					"referenceNumber": null
 				}
@@ -1989,7 +1989,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Neut",
 					"referenceNumber": null
 				}
@@ -2022,7 +2022,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Masc",
 					"referenceNumber": null
 				}
@@ -2055,7 +2055,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Fem",
 					"referenceNumber": null
 				}
@@ -2088,7 +2088,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Neut",
 					"referenceNumber": null
 				}
@@ -2121,7 +2121,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Masc",
 					"referenceNumber": null
 				}
@@ -2154,7 +2154,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Fem",
 					"referenceNumber": null
 				}
@@ -2187,7 +2187,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Neut",
 					"referenceNumber": null
 				}
@@ -2220,7 +2220,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Masc",
 					"referenceNumber": null
 				}
@@ -2253,7 +2253,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Fem",
 					"referenceNumber": null
 				}
@@ -2286,7 +2286,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": "Neut",
 					"referenceNumber": null
 				}
@@ -2319,7 +2319,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2352,7 +2352,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2385,7 +2385,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2418,7 +2418,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2814,7 +2814,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2847,7 +2847,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2880,7 +2880,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -2913,7 +2913,7 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Tot",
+					"pronType": "Ind",
 					"gender": null,
 					"referenceNumber": null
 				}
@@ -3225,30 +3225,7 @@
 			"members": ["jedes"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jedes"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "jedes",
-				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": "Masc",
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
 		"explanation": "The occurrence realizes the jedes Lemma with Gen Case in Core."
 	},
@@ -3291,30 +3268,7 @@
 			"members": ["jedes"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jedes"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "jedes",
-				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": "Neut",
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
 		"explanation": "The occurrence realizes the jedes Lemma with Gen Case in Core."
 	},
@@ -3621,30 +3575,7 @@
 			"members": ["jedwedes"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jedwedes"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "jedwedes",
-				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": "Masc",
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
 		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
 	},
@@ -3687,30 +3618,7 @@
 			"members": ["jedwedes"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jedwedes"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "jedwedes",
-				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": "Neut",
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
 		"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
 	},
@@ -4017,30 +3925,7 @@
 			"members": ["jegliches"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jegliches"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "jegliches",
-				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": "Masc",
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
 		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
 	},
@@ -4083,30 +3968,7 @@
 			"members": ["jegliches"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jegliches"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "jegliches",
-				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": "Neut",
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
 		"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder."
 	},

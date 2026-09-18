@@ -46,3 +46,37 @@ export function parseResolvedGrammar(input: {
 		attestation,
 	};
 }
+
+/** Resumes stored pre-cutover work without reclassifying or changing occurrence membership. */
+export function restoreStoredGrammar(input: {
+	encounter: unknown;
+	attestation: unknown;
+}): ResolvedGrammar | undefined {
+	try {
+		const attestation = input.attestation as Record<string, unknown>;
+		const surface = attestation.surface as Record<string, unknown>;
+		const lemma = surface.lemma as { language: string; kind: string };
+		const { articleReference: _legacy, ...currentSurface } = surface;
+		const verbal =
+			lemma.language === "de" &&
+			["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind);
+		const bag = currentSurface.inflectionalFeatures;
+		if (verbal && bag && typeof bag === "object")
+			currentSurface.inflectionalFeatures = { expletive: null, ...bag };
+		return parseResolvedGrammar({
+			encounter: input.encounter,
+			attestation: {
+				...attestation,
+				surface: currentSurface,
+				...(verbal
+					? {
+							expletiveEvidence:
+								attestation.expletiveEvidence ?? null,
+						}
+					: {}),
+			},
+		});
+	} catch {
+		return undefined;
+	}
+}

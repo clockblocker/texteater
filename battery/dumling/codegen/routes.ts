@@ -1,6 +1,5 @@
 import { readdir } from "node:fs/promises";
 import { z } from "zod";
-import { DeDeterminerFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/determiner.js";
 import { buildUnitSchemas } from "../src/schemas/units.js";
 import {
 	ConstructionKindSchema,
@@ -92,14 +91,7 @@ export async function loadRoutes() {
 				...coordinate,
 				key: `${language}/${family}/${kind}`,
 				bag,
-				schemas: buildUnitSchemas(
-					coordinate,
-					core,
-					inflectional,
-					language === "de" && kind === "NOUN"
-						? DeDeterminerFeatureBagsSchema
-						: undefined,
-				),
+				schemas: buildUnitSchemas(coordinate, core, inflectional),
 			};
 		}),
 	);

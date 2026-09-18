@@ -17,8 +17,8 @@ proposal whose members are all unclaimed may commit; partial overlap is a
 Membership Conflict and commits nothing. Analysis Stripping and full reset are
 the only operations that remove occurrence records.
 
-Noun article references materialize dictionary Lemmas, Surfaces and reviewed
-Readings in the noun commit. Components receive no Occurrence Attestation or
+Feature-derived noun articles and subject expletive es materialize dictionary
+Lemmas, Surfaces and exact reviewed Readings in the parent commit. Components receive no Occurrence Attestation or
 Visitor Encounter. Shared article evidence is persisted separately from
 membership; highlighting continues to mark owned members only. A source click
 on an owned article follows the noun route and contributes no DET Source Context.

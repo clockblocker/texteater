@@ -1,4 +1,15 @@
 export const evaluationCaseIds = [
+	"grammar-de-verb-subject-question",
+	"grammar-de-verb-subject-past",
+	"grammar-de-verb-subject-subordinate",
+	"grammar-de-verb-subject-weather",
+	"grammar-de-verb-subject-governed",
+	"grammar-de-verb-subject-reflexive",
+	"grammar-de-verb-referential-es",
+	"grammar-de-verb-positional-es",
+	"grammar-de-verb-anticipatory-es",
+	"grammar-de-verb-object-es",
+
 	"grammar-de-verb-finite-liest",
 	"grammar-de-verb-past-ging",
 	"grammar-de-verb-imperative-lauf",

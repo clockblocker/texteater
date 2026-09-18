@@ -6,7 +6,7 @@ import { germanHausLemma } from "./lemmas";
 export const germanHausCitationSurface = {
 	unitKind: "Surface" as const,
 	inflectionalFeatures: null,
-	articleReference: null,
+
 	language: "de",
 	normalizedSurface: "Haus",
 

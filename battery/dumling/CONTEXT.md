@@ -37,9 +37,9 @@ _Avoid_: Inherent Features
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional
-features. A German common-noun Surface may include an article and its contextual
-DET Surface reference to an existing authored Reading. Its Lemma remains the
-bare noun.
+features. German common-noun articles and verbal subject expletives are
+composition expressed by grammatical features. Their component values are
+derived separately. The Lemma remains the bare noun or ordinary verb.
 
 **Grundform**:
 A Surface's realization of its particular Lemma's canonical grammatical form.
@@ -54,7 +54,9 @@ and Full or Partial Realization Coverage. It has value equality but no durable
 identity. German noun Attestations retain article source orthography separately
 from their members when an article is included. A shared article or an article supplied by a Fusion gives Partial
 coverage without becoming a second owned member. Fusion evidence retains the
-fused source spelling; the Surface reference names its DET component.
+fused source spelling; noun grammar determines its DET component. German verbal
+Attestations retain subject-expletive source orthography as evidence for an owned
+member.
 _Avoid_: Selection, click result, selected Surface
 
 ### Semantic identity

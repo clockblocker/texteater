@@ -20,13 +20,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "eine Entscheidung treffen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:entscheidung-treffen"]
@@ -48,7 +50,8 @@
 			"lemma": {
 				"canonicalForm": "eine Frage stellen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "An explicit dictionary entry is Citation rather than a contextual Inflection.",
 		"contaminationKeys": ["de-coll-lemma:frage-stellen"]
@@ -74,13 +77,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "zur Verfügung stellen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:verfuegung-stellen"]
@@ -106,13 +111,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Anerkennung finden",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"explanation": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:anerkennung-finden"]
@@ -138,13 +145,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "einen Antrag stellen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:antrag-stellen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -170,13 +179,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "einen Antrag stellen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:antrag-stellen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -202,13 +213,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "eine Vereinbarung treffen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:vereinbarung-treffen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -234,13 +247,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Abbitte leisten",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -266,13 +281,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Abschied nehmen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -298,13 +315,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Zustimmung erteilen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:zustimmung-erteilen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -330,13 +349,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "zum Ende kommen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:ende-kommen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -367,13 +388,15 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "in Anspruch nehmen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:anspruch-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -399,13 +422,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "zum Ausdruck bringen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:ausdruck-bringen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -431,13 +456,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Einfluss nehmen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:einfluss-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -463,13 +490,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "in Erscheinung treten",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:erscheinung-treten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -491,7 +520,8 @@
 			"lemma": {
 				"canonicalForm": "Abschied nehmen",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"]
 	},
@@ -516,13 +546,15 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "Abbitte leisten",
 				"coreFeatures": {}
-			}
+			},
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."

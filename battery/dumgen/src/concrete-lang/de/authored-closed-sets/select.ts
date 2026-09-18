@@ -96,3 +96,7 @@ export function selectGrammaticalAlternatives(input: {
 		)
 		.map((member) => member.reading);
 }
+
+export function authoredReading(reading: unknown) {
+	return authoredMembers.find((member) => sameValue(member.reading, reading));
+}

@@ -16,6 +16,8 @@ export const corpusSource = defineLinguisticCorpus({
 	outputSchema,
 	cases,
 	demonstrationIds: [
+		"grammar-de-verb-demo-exists",
+		"grammar-de-verb-demo-weather",
 		"grammar-de-verb-citation-arbeiten",
 		"grammar-de-verb-separable-imperative-aufpassen",
 		"grammar-de-verb-dw-future-beteiligen",

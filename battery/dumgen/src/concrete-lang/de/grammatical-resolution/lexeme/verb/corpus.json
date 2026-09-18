@@ -19,7 +19,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -31,7 +32,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -57,7 +59,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		}
 	},
 	"grammar-de-verb-past-ging": {
@@ -80,7 +83,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -92,7 +96,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -116,7 +121,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -128,7 +134,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -152,7 +159,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -164,7 +172,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -188,7 +197,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -200,7 +210,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -224,7 +235,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -236,7 +248,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -260,7 +273,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -272,7 +286,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Two auf. First governed preposition. Second separable prefix. dich free. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -296,7 +311,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -308,7 +324,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -332,7 +349,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -344,7 +362,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -368,7 +387,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -380,7 +400,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -404,7 +425,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -416,7 +438,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -440,7 +463,8 @@
 					"perfect": null,
 					"future": "Yes",
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -452,7 +476,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "wird member. reisen head. Head stays Inf. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -476,7 +501,8 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -488,7 +514,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -512,7 +539,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -524,7 +552,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -548,7 +577,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -560,7 +590,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -584,7 +615,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -596,7 +628,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -620,7 +653,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -632,7 +666,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -656,7 +691,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -668,7 +704,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -692,7 +729,8 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -704,7 +742,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -728,7 +767,8 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "State"
+					"passive": "State",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -740,7 +780,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "TIGER productive state passive. ist member. geschlossen head stays Part under schließen. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -764,7 +805,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -776,7 +818,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -805,7 +848,8 @@
 					"perfect": null,
 					"future": "Yes",
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -817,7 +861,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
@@ -844,7 +889,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -856,7 +902,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "sich ordinary object. Not member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -883,7 +930,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -895,7 +943,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
@@ -922,7 +971,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -934,7 +984,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
@@ -961,7 +1012,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -973,7 +1025,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
@@ -1000,7 +1053,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1012,7 +1066,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
@@ -1039,7 +1094,8 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1051,7 +1107,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
@@ -1078,7 +1135,8 @@
 					"perfect": null,
 					"future": "Yes",
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1090,7 +1148,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "First wird member. Last wird other verb. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -1117,7 +1176,8 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1129,7 +1189,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "soll modal. Not member. werden passive member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -1156,7 +1217,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1168,7 +1230,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
@@ -1195,7 +1258,8 @@
 					"perfect": null,
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1207,7 +1271,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
@@ -1239,7 +1304,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1251,7 +1317,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
@@ -1278,7 +1345,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1290,7 +1358,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
@@ -1317,7 +1386,8 @@
 					"perfect": "Yes",
 					"future": null,
 					"voice": "Pass",
-					"passive": "Process"
+					"passive": "Process",
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1329,7 +1399,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
@@ -1361,7 +1432,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1373,7 +1445,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
@@ -1400,7 +1473,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1412,7 +1486,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1436,7 +1511,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1448,7 +1524,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1472,7 +1549,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1484,7 +1562,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1508,7 +1587,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1520,7 +1600,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1544,7 +1625,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1556,7 +1638,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1580,7 +1663,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1592,7 +1676,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1616,7 +1701,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1628,7 +1714,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1652,7 +1739,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1664,7 +1752,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1688,7 +1777,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1700,7 +1790,8 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1724,7 +1815,8 @@
 					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": null
+					"passive": null,
+					"expletive": null
 				}
 			},
 			"lemma": {
@@ -1736,8 +1828,506 @@
 					"verbType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+	},
+	"grammar-de-verb-demo-exists": {
+		"input": {
+			"markedContext": "<TARGET>Es</TARGET> <TARGET>gibt</TARGET> Brot.",
+			"members": ["Es", "gibt"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "geben",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["es", "gibt"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "Es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:demo-exists"]
+	},
+	"grammar-de-verb-demo-weather": {
+		"input": {
+			"markedContext": "<TARGET>Es</TARGET> <TARGET>regnet</TARGET> heute.",
+			"members": ["Es", "regnet"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "regnen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["es", "regnet"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "Es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:demo-weather"]
+	},
+	"grammar-de-verb-subject-question": {
+		"input": {
+			"markedContext": "<TARGET>Gibt</TARGET> <TARGET>es</TARGET> einen Ausweg?",
+			"members": ["Gibt", "es"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "geben",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["gibt", "es"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:subject-question"]
+	},
+	"grammar-de-verb-subject-past": {
+		"input": {
+			"markedContext": "<TARGET>Es</TARGET> <TARGET>gab</TARGET> damals Hoffnung.",
+			"members": ["Es", "gab"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "geben",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["es", "gab"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "Es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:subject-past"]
+	},
+	"grammar-de-verb-subject-subordinate": {
+		"input": {
+			"markedContext": "weil <TARGET>es</TARGET> dort noch Möglichkeiten <TARGET>gibt</TARGET>",
+			"members": ["es", "gibt"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "geben",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["es", "gibt"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:subject-subordinate"]
+	},
+	"grammar-de-verb-subject-weather": {
+		"input": {
+			"markedContext": "Heute <TARGET>regnet</TARGET> <TARGET>es</TARGET> wieder.",
+			"members": ["regnet", "es"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "regnen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["regnet", "es"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:subject-weather"]
+	},
+	"grammar-de-verb-subject-governed": {
+		"input": {
+			"markedContext": "<TARGET>Es</TARGET> <TARGET>geht</TARGET> heute <TARGET>um</TARGET> Geld.",
+			"members": ["Es", "geht", "um"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "gehen",
+				"coreFeatures": {
+					"hasGovPrep": "um",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["es", "geht", "um"],
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "Es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:subject-governed"]
+	},
+	"grammar-de-verb-subject-reflexive": {
+		"input": {
+			"markedContext": "<TARGET>Es</TARGET> <TARGET>handelt</TARGET> <TARGET>sich</TARGET> <TARGET>um</TARGET> einen Fehler.",
+			"members": ["Es", "handelt", "sich", "um"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "sich handeln",
+				"coreFeatures": {
+					"hasGovPrep": "um",
+					"hasSepPrefix": null,
+					"lexicallyReflexive": "Yes",
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": "Subject"
+				}
+			},
+			"normalizedMembers": ["es", "handelt", "sich", "um"],
+			"memberOrthographies": [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard"
+			],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": {
+				"attested": "Es",
+				"orthography": "Standard"
+			}
+		},
+		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+		"contaminationKeys": ["subject-es:subject-reflexive"]
+	},
+	"grammar-de-verb-referential-es": {
+		"input": {
+			"markedContext": "Es <TARGET>liegt</TARGET> auf dem Tisch.",
+			"members": ["liegt"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "liegen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"normalizedMembers": ["liegt"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "This es is outside lexically selected subject-expletive composition.",
+		"contaminationKeys": ["subject-es:referential-es"]
+	},
+	"grammar-de-verb-positional-es": {
+		"input": {
+			"markedContext": "Es <TARGET>kamen</TARGET> Gäste.",
+			"members": ["kamen"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "kommen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Plur",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"normalizedMembers": ["kamen"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "This es is outside lexically selected subject-expletive composition.",
+		"contaminationKeys": ["subject-es:positional-es"]
+	},
+	"grammar-de-verb-anticipatory-es": {
+		"input": {
+			"markedContext": "Es <TARGET>freut</TARGET> mich, dass du kommst.",
+			"members": ["freut"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "freuen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"normalizedMembers": ["freut"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "This es is outside lexically selected subject-expletive composition.",
+		"contaminationKeys": ["subject-es:anticipatory-es"]
+	},
+	"grammar-de-verb-object-es": {
+		"input": {
+			"markedContext": "Sie <TARGET>meint</TARGET> es gut mit dir.",
+			"members": ["meint"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "meinen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"normalizedMembers": ["meint"],
+			"memberOrthographies": ["Standard"],
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "This es is outside lexically selected subject-expletive composition.",
+		"contaminationKeys": ["subject-es:object-es"]
 	}
 }

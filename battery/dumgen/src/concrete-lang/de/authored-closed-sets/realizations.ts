@@ -1,6 +1,7 @@
 import type * as Dumling from "dumling/types";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
+import { reviewedPronouns } from "./pronoun-paradigms.js";
 import { sameValue } from "./select.js";
 
 export type AuthoredRealization = {
@@ -14,6 +15,9 @@ const declined = (stem: string) =>
 const strong = (stem: string) =>
 	["e", "er", "es", "em", "en"].map((ending) => stem + ending);
 /** Reviewed realization paradigms for existing identities, independent of evaluation corpora. */
+// LEO: licensed reductions and plural was für, not spelling errors.
+// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
+// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de
 const determinerForms: Readonly<Record<string, readonly string[]>> = {
 	ein: [...declined("ein"), "ne", "nen", "nem"],
 	mein: declined("mein"),
@@ -21,8 +25,8 @@ const determinerForms: Readonly<Record<string, readonly string[]>> = {
 	sein: declined("sein"),
 	ihr: declined("ihr"),
 	Ihr: declined("Ihr"),
-	unser: declined("unser"),
-	euer: ["euer", ...strong("eur")],
+	unser: [...declined("unser"), ...strong("unsr"), "unsern", "unserm"],
+	euer: [...declined("euer"), ...strong("eur"), "euern", "euerm"],
 	derjenige: [
 		"derjenige",
 		"diejenige",
@@ -52,7 +56,7 @@ const determinerForms: Readonly<Record<string, readonly string[]>> = {
 	irgendwelcher: strong("irgendwelch"),
 	wieviel: declined("wieviel"),
 	wievielte: declined("wievielt"),
-	"was für ein": declined("was für ein"),
+	"was für ein": [...declined("was für ein"), "was für"],
 	einige: declined("einig"),
 	etliche: declined("etlich"),
 	irgendein: declined("irgendein"),
@@ -83,12 +87,27 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 		const forms =
 			lemma.kind === "DET"
 				? (determinerForms[lemma.canonicalForm] ?? [])
-				: (pronounAliases[lemma.canonicalForm] ?? []);
+				: [
+						...(pronounAliases[lemma.canonicalForm] ?? []),
+						...(reviewedPronouns.find(
+							(entry) => entry.member === member,
+						)?.variants ?? []),
+					];
 		return [...new Set([lemma.canonicalForm, ...forms])].map((spelled) => ({
 			member,
 			spelled,
 		}));
 	});
+
+// Multiple Readings may share one Lemma. Deduplicate once so expanded paradigms
+// do not cause a quadratic scan for every encountered pronoun.
+const grammaticalMembers = authoredMembers.filter(
+	(member, index) =>
+		(member.lemma.kind === "DET" || member.lemma.kind === "PRON") &&
+		!authoredMembers
+			.slice(0, index)
+			.some((prior) => sameValue(prior.lemma, member.lemma)),
+);
 
 /** Core nulls compare literally; no missing spelling map is interpreted as catalog absence. */
 export function locateAuthoredIdentity(
@@ -100,7 +119,7 @@ export function locateAuthoredIdentity(
 	},
 	mappings: readonly AuthoredRealization[] = authoredRealizations,
 ) {
-	const compatible = authoredMembers.filter(
+	const compatible = grammaticalMembers.filter(
 		(member) =>
 			member.lemma.kind === input.kind &&
 			sameValue(member.lemma.coreFeatures, input.core),

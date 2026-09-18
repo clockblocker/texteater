@@ -3,7 +3,7 @@ import { selectNounHeadingArticle } from "dumgen";
 import { readingIdentityKey } from "../server/linguisticIdentity";
 import { parseGermanLemma } from "../server/operationalParsing";
 import { internalMutation, internalQuery } from "./_generated/server";
-import { completeAuthoredArticleKnowledge } from "./dumdictStorage/transaction";
+import { completeAuthoredComponentKnowledge } from "./dumdictStorage/transaction";
 import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
 import { lemmaValueValidator, readingValueValidator } from "./model/validators";
 
@@ -60,7 +60,7 @@ export const completeNounArticleKnowledge = internalMutation({
 			.unique();
 		if (!reading)
 			throw new Error("Article Reading has not been materialized.");
-		if (!(await completeAuthoredArticleKnowledge(ctx, selected.reading)))
+		if (!(await completeAuthoredComponentKnowledge(ctx, selected.reading)))
 			return reading._id;
 		const state = await ctx.db
 			.query("dictionaryState")

@@ -56,6 +56,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 			({ lemma }) =>
 				lemma.kind === "PRON" &&
 				lemma.canonicalForm === form &&
+				lemma.coreFeatures.extPos === null &&
 				lemma.coreFeatures.case === grammaticalCase &&
 				lemma.coreFeatures.pronType === pronType &&
 				lemma.coreFeatures.gender === gender &&
@@ -123,6 +124,10 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 
 test("pronoun answers preserve case-bearing forms and isolate Surface reflexivity", () => {
 	for (const [id, golden] of Object.entries(pronounCases)) {
+		if ("decision" in golden.idealOutput) {
+			expect(golden.idealOutput.decision, id).toBe("Unresolved");
+			continue;
+		}
 		const answer = grammarSchemas["de/Lexeme/PRON"].parse(
 			golden.idealOutput,
 		);

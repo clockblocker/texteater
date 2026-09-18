@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { makeSurfaceId } from "dumdict/runtime";
-import { selectAuthoredArticle } from "dumgen";
+import { deriveGrammaticalComponent, selectAuthoredReading, selectAuthoredArticle } from "dumgen";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
@@ -566,17 +566,18 @@ async function applyChange(
 				return false;
 			}
 			const surface = requireRecord(entry.surface, "Owned Surface value");
-			if (surface.articleReference) {
-				const parsed = parseUnit(surface);
-				if (
-					!parsed.success ||
-					parsed.chain.unitKind !== "Surface" ||
-					!("articleReference" in parsed.chain.value)
-				)
-					throw new Error("Invalid noun article Surface");
-				const reference = parsed.chain.value.articleReference;
-				if (reference) await materializeNounArticle(ctx, reference);
-			}
+			const parsed = parseUnit(surface);
+			if (!parsed.success || parsed.chain.unitKind !== "Surface")
+				throw new Error("Invalid Surface");
+			if (
+				surfaceKey !==
+				makeSurfaceId(parsed.chain.language, parsed.chain.value)
+			)
+				throw new Error(
+					"Surface Entry key does not match its current value",
+				);
+			const reference = deriveGrammaticalComponent(parsed.chain.value);
+			if (reference) await materializeGrammaticalComponent(ctx, reference);
 			const language = requireString(
 				surface.language,
 				"Surface language",
@@ -609,9 +610,6 @@ async function applyChange(
 					),
 					spelling,
 					surfaceFeatures: surface.surfaceFeatures,
-					...(surface.articleReference === undefined
-						? {}
-						: { articleReference: surface.articleReference }),
 					...(surface.inflectionalFeatures === undefined
 						? {}
 						: {
@@ -871,11 +869,9 @@ export const commitDumdictChanges = internalMutation({
 });
 
 /** Materializes the grammatical component without creating another occurrence. */
-export async function materializeNounArticle(
+export async function materializeGrammaticalComponent(
 	ctx: MutationCtx,
-	reference: NonNullable<
-		Dumling.Surface<"de", "Lexeme", "NOUN">["articleReference"]
-	>,
+	reference: NonNullable<ReturnType<typeof deriveGrammaticalComponent>>,
 ) {
 	const { reading, surface } = reference;
 	const empty = { notes: "", attestedTranslations: [], attestations: [] };
@@ -889,7 +885,7 @@ export async function materializeNounArticle(
 			type: "createReading",
 			entry: { reading, ...empty },
 		});
-	await completeAuthoredArticleKnowledge(ctx, reading);
+	await completeAuthoredComponentKnowledge(ctx, reading);
 	const id = makeSurfaceId("de", surface);
 	if (!(await findSurface(ctx, id)))
 		await applyChange(ctx, {
@@ -898,12 +894,12 @@ export async function materializeNounArticle(
 		});
 }
 
-/** Repairs legacy article entries without replacing existing Knowledge or creating encounters. */
-export async function completeAuthoredArticleKnowledge(
+/** Completes reviewed component entries without replacing existing Knowledge or creating encounters. */
+export async function completeAuthoredComponentKnowledge(
 	ctx: MutationCtx,
 	reading: unknown,
 ) {
-	const authored = selectAuthoredArticle(reading);
+	const authored = selectAuthoredReading(reading);
 	if (!authored) return false;
 	const stored = await findReading(ctx, authored.reading);
 	if (!stored) return false;

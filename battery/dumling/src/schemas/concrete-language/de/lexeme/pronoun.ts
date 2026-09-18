@@ -12,6 +12,11 @@ import {
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
+// LEO separates antecedent/possessor coordinates from the pronoun's own case.
+// Attributive genitives fit extPos DET without borrowing the following noun's agreement.
+// ADR 0018 chooses Core identity coordinates; LEO does not prescribe Lemma granularity.
+// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
+// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
 export const DePronounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),

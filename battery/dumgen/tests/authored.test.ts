@@ -84,9 +84,10 @@ test("every authored member supplies all advertised Knowledge without a provider
 	expect(calls).toBe(0);
 });
 
-test("reviewed member bundles have distinct identities and valid semantic endpoints", () => {
+test("reviewed member bundles have distinct Readings and valid semantic endpoints", () => {
 	expect(
-		new Set(authoredMembers.map((member) => stableJson(member.lemma))).size,
+		new Set(authoredMembers.map((member) => stableJson(member.reading)))
+			.size,
 	).toBe(authoredMembers.length);
 	for (const member of authoredMembers) {
 		expect(member.reading.lemma).toEqual(member.lemma);

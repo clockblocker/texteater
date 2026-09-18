@@ -4,6 +4,7 @@ import { checkIfGrundform, parseUnit } from "../src/index.js";
 import { DeVerbalInflectionalFeatureBagSchema } from "../src/schemas/concrete-language/de/de-feature-catalog.js";
 
 const finite = {
+	expletive: null,
 	verbForm: "Fin",
 	tense: "Pres",
 	mood: "Ind",
@@ -47,6 +48,7 @@ for (const construction of review.constructions) {
 	test(`${construction.id}: all complete scoped targets validate as Full`, () => {
 		for (const target of construction.targets) {
 			const features = {
+				expletive: null,
 				verbForm: target.form,
 				tense: target.finiteTense,
 				mood: target.form === "Fin" ? "Ind" : null,
@@ -59,6 +61,7 @@ for (const construction of review.constructions) {
 			};
 			const result = parseUnit({
 				unitKind: "Attestation",
+				expletiveEvidence: null,
 				members: target.members.map((attested) => ({
 					attested,
 					orthography: "Standard",

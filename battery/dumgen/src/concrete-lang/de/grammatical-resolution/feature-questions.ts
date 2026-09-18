@@ -74,6 +74,14 @@ const partType = {
 
 // Meanings describe judgments; the schema supplies and restricts the actual choices.
 const meanings: Readonly<Record<string, Meaning>> = {
+	"surface.inflectionalFeatures.expletive": {
+		question:
+			"Does this complete verbal realization own lexically selected nonreferential subject es? Include es gibt/es gab/gibt es, es regnet, es geht um and es handelt sich um. Exclude referential es, positional es in Es kamen Gäste, anticipatory es in Es freut mich, dass du kommst, and object es in Sie meint es gut mit dir. Uncertain classification is Unresolved.",
+		values: {
+			Subject: "Realized fixed nonreferential nominative subject es",
+		},
+		unmarked: "No subject-expletive composition in this Surface",
+	},
 	"surface.inflectionalFeatures.article": {
 		question:
 			"Does this whole common-noun Surface include a definite or indefinite article, overtly owned, licensed by compatible coordination, or supplied by a governing Fusion? A Fusion contributes its internal DET without joining noun membership; mein, dieser and kein do not supply an article. Ordinary bare nouns stay bare.",
@@ -181,7 +189,12 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		unmarked:
 			"No single stable lexical case government, including a two-way adposition",
 	},
+	// LEO: attributive genitive pronouns retain their own antecedent coordinates.
+	// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 	"lemma.coreFeatures.extPos": {
+		byKind: {
+			PRON: "Is this an attributive genitive dessen/deren/wessen before a noun? If so mark DET. Its Core Case remains Gen and its Number/Gender concerns the antecedent, not that noun. Ordinary standalone pronouns are Unmarked.",
+		},
 		question:
 			"Does this fixed lexical identity have a licensed external syntactic function distinct from its ordinary route? Keep the supplied route unchanged; do not mark a neighboring word's function.",
 		values: {

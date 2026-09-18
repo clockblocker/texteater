@@ -208,7 +208,7 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 				language: "de",
 				normalizedSurface: "Bank",
 				inflectionalFeatures: null,
-				articleReference: null,
+
 				spelling: "Canonical",
 
 				surfaceFeatures: null,

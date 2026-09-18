@@ -2696,6 +2696,7 @@ export const grammarSchemas = {
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		expletiveEvidence: R4.attestationSchema.shape.expletiveEvidence,
 	}),
 	"de/Lexeme/CCONJ": z.strictObject({
 		lemma: R5.lemmaSchema.omit({
@@ -2944,6 +2945,7 @@ export const grammarSchemas = {
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		expletiveEvidence: R17.attestationSchema.shape.expletiveEvidence,
 	}),
 	"de/Morpheme/Circumfix": z.strictObject({
 		lemma: R18.lemmaSchema.omit({
@@ -3172,6 +3174,7 @@ export const grammarSchemas = {
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		expletiveEvidence: R29.attestationSchema.shape.expletiveEvidence,
 	}),
 	"de/Phraseme/DiscourseFormula": z.strictObject({
 		lemma: R30.lemmaSchema.omit({
@@ -3210,6 +3213,7 @@ export const grammarSchemas = {
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		expletiveEvidence: R31.attestationSchema.shape.expletiveEvidence,
 	}),
 	"de/Phraseme/Proverb": z.strictObject({
 		lemma: R32.lemmaSchema.omit({

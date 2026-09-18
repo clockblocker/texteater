@@ -10,8 +10,7 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null,
-				"articleReference": null
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "Haus",
@@ -39,61 +38,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "den",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -125,61 +69,6 @@
 					"case": "Dat",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "den",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Plur",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -211,61 +100,6 @@
 					"case": "Nom",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Plur",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -297,61 +131,6 @@
 					"case": "Dat",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -383,61 +162,6 @@
 					"case": "Gen",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "des",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Gen",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -469,61 +193,6 @@
 					"case": "Gen",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Gen",
-							"number": "Plur",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -555,8 +224,7 @@
 					"case": null,
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Leute",
@@ -584,61 +252,6 @@
 					"case": "Acc",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Plur",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -670,61 +283,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "das",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -756,61 +314,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -842,61 +345,6 @@
 					"case": "Dat",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "dem",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -928,61 +376,6 @@
 					"case": "Nom",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Plur",
-							"gender": null,
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1014,8 +407,7 @@
 					"case": "Acc",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Knie",
@@ -1044,61 +436,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1131,61 +468,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1217,61 +499,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1303,61 +530,6 @@
 					"case": "Dat",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "den",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Plur",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1389,61 +561,6 @@
 					"case": "Gen",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Gen",
-							"number": "Plur",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1475,8 +592,7 @@
 					"case": "Nom",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Mädchen",
@@ -1504,61 +620,6 @@
 					"case": "Nom",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Plur",
-							"gender": null,
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1590,61 +651,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1678,8 +684,7 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Antlitz",
@@ -1707,61 +712,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1793,61 +743,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1880,61 +775,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -1968,61 +808,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2054,61 +839,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2140,61 +870,6 @@
 					"case": "Nom",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Plur",
-							"gender": null,
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2226,61 +901,6 @@
 					"case": "Gen",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Gen",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2312,61 +932,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "die",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2398,61 +963,6 @@
 					"case": "Dat",
 					"number": "Plur",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "den",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Plur",
-							"gender": null,
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "die",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2484,8 +994,7 @@
 					"case": "Acc",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Kinderbuch",
@@ -2514,8 +1023,7 @@
 					"case": "Acc",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Jugendbuch",
@@ -2543,61 +1051,6 @@
 					"case": "Gen",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "des",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Gen",
-							"number": "Sing",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2629,8 +1082,7 @@
 					"case": "Acc",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Kinderbuch",
@@ -2658,8 +1110,7 @@
 					"case": "Acc",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Kinderbuch",
@@ -2687,61 +1138,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Indefinite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "ein",
-							"coreFeatures": {
-								"definite": "Ind",
-								"extPos": null,
-								"foreign": null,
-								"numType": "Card",
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "ein",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "ein",
-							"coreFeatures": {
-								"definite": "Ind",
-								"extPos": null,
-								"foreign": null,
-								"numType": "Card",
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "1️⃣"
-					}
 				}
 			},
 			"lemma": {
@@ -2773,8 +1169,7 @@
 					"case": "Dat",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Kinderbuch",
@@ -2802,8 +1197,7 @@
 					"case": "Nom",
 					"number": "Plur",
 					"article": null
-				},
-				"articleReference": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Kinderbuch",
@@ -2831,61 +1225,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -2917,61 +1256,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -3003,61 +1287,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -3089,61 +1318,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -3175,61 +1349,6 @@
 					"case": "Gen",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "des",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Gen",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -3261,61 +1380,6 @@
 					"case": "Nom",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							}
-						},
-						"emojiDescription": "👉"
-					}
 				}
 			},
 			"lemma": {
@@ -3361,61 +1425,6 @@
 					"case": "Dat",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						},
-						"normalizedSurface": "dem",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"emojiDescription": "👉",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						}
-					}
 				}
 			},
 			"normalizedMembers": ["Wald"],
@@ -3447,61 +1456,6 @@
 					"case": "Dat",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						},
-						"normalizedSurface": "dem",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Sing",
-							"gender": "Masc",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"emojiDescription": "👉",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						}
-					}
 				}
 			},
 			"normalizedMembers": ["Wald"],
@@ -3533,61 +1487,6 @@
 					"case": "Acc",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						},
-						"normalizedSurface": "das",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"emojiDescription": "👉",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						}
-					}
 				}
 			},
 			"normalizedMembers": ["Haus"],
@@ -3619,61 +1518,6 @@
 					"case": "Dat",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						},
-						"normalizedSurface": "dem",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Sing",
-							"gender": "Neut",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"emojiDescription": "👉",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "das",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						}
-					}
 				}
 			},
 			"normalizedMembers": ["Feld"],
@@ -3705,61 +1549,6 @@
 					"case": "Dat",
 					"number": "Sing",
 					"article": "Definite"
-				},
-				"articleReference": {
-					"surface": {
-						"unitKind": "Surface",
-						"language": "de",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						},
-						"normalizedSurface": "der",
-						"spelling": "Canonical",
-						"surfaceFeatures": null,
-						"inflectionalFeatures": {
-							"case": "Dat",
-							"number": "Sing",
-							"gender": "Fem",
-							"degree": null,
-							"gender[psor]": null,
-							"number[psor]": null
-						}
-					},
-					"reading": {
-						"unitKind": "Reading",
-						"emojiDescription": "👉",
-						"lemma": {
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "DET",
-							"canonicalForm": "der",
-							"coreFeatures": {
-								"definite": "Def",
-								"extPos": null,
-								"foreign": null,
-								"numType": null,
-								"person": null,
-								"polite": null,
-								"poss": null,
-								"pronType": "Art"
-							},
-							"unitKind": "Lemma"
-						}
-					}
 				}
 			},
 			"normalizedMembers": ["Schule"],

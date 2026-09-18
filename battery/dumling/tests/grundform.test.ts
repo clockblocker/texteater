@@ -68,6 +68,7 @@ describe("Grundform assessment", () => {
 	test("uses infinitive features and rejects finite grammar even with identical spelling", () => {
 		const germanInfinitive = {
 			...infinitive,
+			expletive: null,
 			perfect: null,
 			future: null,
 			passive: null,

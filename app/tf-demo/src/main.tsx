@@ -6,6 +6,12 @@ import { isPlaygroundPath } from "@/playground/playground-router";
 
 import "./index.css";
 
+if (import.meta.env.DEV && import.meta.env.VITE_TF_MOUSE_TRACE === "1") {
+	const { startMouseTrace } = await import("./devtools/mouse-trace");
+	const stopMouseTrace = startMouseTrace();
+	import.meta.hot?.dispose(stopMouseTrace);
+}
+
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {

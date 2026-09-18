@@ -19,9 +19,8 @@ import { choice } from "../../../universal/questions.js";
 import { contextFor, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import {
-	authoredFor,
+	authoredReading,
 	closedRoute,
-	sameValue,
 } from "../authored-closed-sets/select.js";
 import { germanFusion } from "../fusions.js";
 import { draftedRelationCandidates, draftedTexts } from "./draft.js";
@@ -64,10 +63,8 @@ export async function produceKnowledge(
 		stage = "produceKnowledge",
 		route = `de/${reading.lemma.family}/${reading.lemma.kind}`;
 	validateRequest(reading, request);
-	const member = authoredFor(reading.lemma),
-		closed = closedRoute(reading.lemma);
-	const exact =
-		member && sameValue(member.reading, reading) ? member : undefined;
+	const closed = closedRoute(reading.lemma);
+	const exact = authoredReading(reading);
 	if (closed && !exact)
 		throw new DumgenFailure(
 			"CatalogMiss",

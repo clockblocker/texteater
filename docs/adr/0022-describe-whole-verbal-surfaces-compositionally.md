@@ -34,3 +34,12 @@ analysis evidence; they do not require a public grammatical tree.
 The accepted amendment is recorded in
 [the grammar decision](https://github.com/clockblocker/texteater/issues/442#issuecomment-5709380853).
 The remaining lexical-participle questions in issue 360 remain separate.
+
+A realized, lexically selected nonreferential subject `es` joins the verbal
+Analysis Target and sets `expletive: Subject`. Its occurrence spelling is retained
+as `expletiveEvidence`, aligned with an owned member. `es gibt` and `es gab` retain
+Lemma `geben`; `es regnet` retains `regnen`. Referential, positional, anticipatory
+and object `es` remain outside this composition rule. Word order does not change
+these boundaries. Person and number remain verbal features; existential meaning
+belongs to a Reading. The derived pronoun uses an exact authored nonreferential
+Reading of the existing nominative `es` Lemma.

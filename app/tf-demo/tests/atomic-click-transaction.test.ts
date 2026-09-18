@@ -2,7 +2,11 @@ import { expect, test } from "bun:test";
 import type { DumdictPlan } from "dumdict";
 import { makeSurfaceId } from "dumdict";
 import { nounArticleReference } from "dumgen";
-import { migrateNounArticle } from "../convex/model/nounArticleMigration";
+import {
+	migrateCompositionAttestation,
+	migrateCompositionOwnership,
+	migrateNounArticle,
+} from "../convex/model/nounArticleMigration";
 import { persistResolvedClick } from "../convex/persistence";
 import {
 	lemmaIdentityKey,
@@ -61,6 +65,10 @@ class TransactionalDb {
 			if (row) return row;
 		}
 		return null;
+	}
+
+	async delete(id: string) {
+		for (const rows of this.tables.values()) rows.delete(id);
 	}
 
 	query(table: string) {
@@ -151,7 +159,7 @@ const surface = {
 
 	surfaceFeatures: null,
 	inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
-	articleReference: null,
+
 	lemma,
 } as const;
 const lemmaKey = lemmaIdentityKey(lemma);
@@ -329,7 +337,6 @@ test("a New plan adopts canonical-only Lemma, Reading, and Surface rows", async 
 			spelling: surface.spelling,
 			surfaceFeatures: surface.surfaceFeatures,
 			inflectionalFeatures: surface.inflectionalFeatures,
-			articleReference: surface.articleReference,
 		},
 	];
 	const db = new TransactionalDb(seed);
@@ -485,25 +492,6 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 		lemma: articleLemma,
 		emojiDescription: "👉",
 	} as const;
-	const articleReference = {
-		reading: articleReading,
-		surface: {
-			unitKind: "Surface",
-			language: "de",
-			lemma: articleLemma,
-			normalizedSurface: "die",
-			spelling: "Canonical",
-			surfaceFeatures: null,
-			inflectionalFeatures: {
-				case: "Nom",
-				number: "Plur",
-				gender: "Fem",
-				degree: null,
-				"gender[psor]": null,
-				"number[psor]": null,
-			},
-		},
-	} as const;
 	const nounSurface = {
 		...surface,
 		normalizedSurface: "die Banken",
@@ -511,7 +499,6 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 			...surface.inflectionalFeatures,
 			article: "Definite",
 		},
-		articleReference,
 	} as const;
 	const nounKey = makeSurfaceId("de", nounSurface);
 	const original = newReadingPlan();
@@ -622,7 +609,7 @@ test("article owner migration preserves Surface and occurrence IDs and is repeat
 		...oldSurface,
 		_id: "surface-old",
 		lemmaId: "lemma-bank",
-		surfaceKey: makeSurfaceId("de", oldSurface),
+		surfaceKey: "legacy-noun-surface-key",
 	};
 	const db = new TransactionalDb({
 		lemmas: [
@@ -656,11 +643,10 @@ test("article owner migration preserves Surface and occurrence IDs and is repeat
 	const updated = await db.get(row._id);
 	expect(updated).toMatchObject({
 		_id: row._id,
-		articleReference: correct,
-		surfaceKey: makeSurfaceId("de", {
-			...oldSurface,
-			articleReference: correct,
-		}),
+		surfaceKey: makeSurfaceId(
+			"de",
+			(({ articleReference: _legacy, ...value }) => value)(oldSurface),
+		),
 	});
 	expect(db.rows("attestations")[0]?.surfaceId).toBe(row._id);
 	expect(
@@ -670,4 +656,163 @@ test("article owner migration preserves Surface and occurrence IDs and is repeat
 	const snapshot = db.snapshot();
 	await migrate({ db }, updated);
 	expect(db.snapshot()).toEqual(snapshot);
+});
+
+test("composition cutover reconciles collisions while preserving encounters, annotations and saved Surface IDs", async () => {
+	const value = {
+		...surface,
+		normalizedSurface: "der Bank",
+		inflectionalFeatures: {
+			article: "Definite",
+			case: "Dat",
+			number: "Sing",
+		},
+	} as const;
+	const common = {
+		language: "de",
+		lemmaId: "lemma-bank",
+		normalizedSurface: value.normalizedSurface,
+		spelling: value.spelling,
+		surfaceFeatures: value.surfaceFeatures,
+		inflectionalFeatures: value.inflectionalFeatures,
+	};
+	const old = {
+		...common,
+		_id: "surface-old",
+		surfaceKey: "legacy-collision-key",
+		articleReference: { obsolete: true },
+	};
+	const current = {
+		...common,
+		_id: "surface-current",
+		surfaceKey: makeSurfaceId("de", value),
+	};
+	const protectedRows = {
+		visitorClicks: [
+			{
+				_id: "click-old",
+				attestationId: "attestation-old",
+				segmentId: "segment-old",
+				visitorId: "visitor",
+			},
+		],
+		personalAnnotations: [
+			{
+				_id: "annotation-old",
+				readingId: "reading-bank",
+				text: "remember this",
+			},
+		],
+		accumulatedKnowledge: [
+			{
+				_id: "knowledge-old",
+				ownerReadingKey: "reading-bank",
+				knowledge: { definition: "keep" },
+			},
+		],
+		segments: [
+			{
+				_id: "segment-old",
+				attestationMembership: {
+					attestationId: "attestation-old",
+					orthography: "Standard",
+				},
+			},
+		],
+	};
+	const db = new TransactionalDb({
+		...protectedRows,
+		lemmas: [
+			{
+				...surface.lemma,
+				_id: "lemma-bank",
+				lemmaKey: lemmaIdentityKey(surface.lemma),
+			},
+		],
+		surfaces: [old, current],
+		ownedSurfaces: [
+			{
+				_id: "owned-old",
+				surfaceId: old._id,
+				record: { notes: "old note", attestedTranslations: ["old"] },
+			},
+			{
+				_id: "owned-current",
+				surfaceId: current._id,
+				record: {
+					notes: "current note",
+					attestedTranslations: ["new"],
+				},
+			},
+		],
+		attestations: [
+			{
+				_id: "attestation-old",
+				surfaceId: old._id,
+				readingId: "reading-bank",
+				realizationCoverage: "Full",
+			},
+		],
+	});
+	const migrate = migrateNounArticle as unknown as (
+		ctx: unknown,
+		row: unknown,
+	) => Promise<void>;
+	const ownership = migrateCompositionOwnership as unknown as typeof migrate;
+	const occurrence =
+		migrateCompositionAttestation as unknown as typeof migrate;
+	await migrate({ db }, old);
+	expect(await db.get(old._id)).toMatchObject({ redirectedTo: current._id });
+	expect((await db.get(old._id))?.articleReference).toBeUndefined();
+	await ownership({ db }, await db.get("owned-old"));
+	await occurrence({ db }, await db.get("attestation-old"));
+	expect((await db.get("attestation-old"))?.surfaceId).toBe(current._id);
+	expect((await db.get("owned-current"))?.record).toEqual({
+		notes: "current note\n\nold note",
+		attestedTranslations: ["new", "old"],
+	});
+	for (const [table, rows] of Object.entries(protectedRows))
+		expect(db.rows(table)).toEqual(expect.arrayContaining(rows));
+	const snapshot = db.snapshot();
+	await migrate({ db }, await db.get(old._id));
+	await occurrence({ db }, await db.get("attestation-old"));
+	expect(db.snapshot()).toEqual(snapshot);
+});
+
+test("an in-flight legacy Surface proposal cannot reintroduce articleReference", async () => {
+	const db = new TransactionalDb(sourceSeed());
+	const plan = newReadingPlan();
+	for (const change of plan.changes) {
+		if (change.type === "createOwnedSurface")
+			Object.assign(change.entry, {
+				surface: { ...change.entry.surface, articleReference: null },
+			});
+	}
+	const before = db.snapshot();
+	await expect(runTransaction(db, clickArgs(plan))).rejects.toThrow();
+	expect(db.snapshot()).toEqual(before);
+});
+
+test("subject es materializes its exact Reading and Knowledge while retaining one verbal occurrence", async () => {
+ const verbLemma = { unitKind: "Lemma", language: "de", family: "Lexeme", kind: "VERB", canonicalForm: "geben", coreFeatures: { hasGovPrep: null, hasSepPrefix: null, lexicallyReflexive: null, verbType: null } } as const;
+ const verbReading = { unitKind: "Reading", lemma: verbLemma, emojiDescription: "🌍" } as const;
+ const verbSurface = { unitKind: "Surface", language: "de", lemma: verbLemma, normalizedSurface: "es gibt", spelling: "Canonical", surfaceFeatures: null, inflectionalFeatures: { verbForm: "Fin", tense: "Pres", mood: "Ind", person: "3", number: "Sing", expletive: "Subject", perfect: null, future: null, passive: null, voice: null } } as const;
+ const verbKey = makeSurfaceId("de", verbSurface);
+ const plan: DumdictPlan<"de"> = { baseRevision: "convex-0" as DumdictPlan<"de">["baseRevision"], changes: [
+  { type: "createLemma", record: { lemma: verbLemma }, preconditions: [] },
+  { type: "createReading", entry: { reading: verbReading, ...note }, preconditions: [] },
+  { type: "createOwnedSurface", entry: { id: verbKey, surface: verbSurface, ownerLemma: verbLemma, ...note }, preconditions: [] },
+ ] };
+ const seed = sourceSeed();
+ seed.segments = ["Es", "gibt"].map((text, index) => ({ _id: `verb-member-${index}`, sentenceId: "sentence-1", index, kind: "ResolvableText", text }));
+ const db = new TransactionalDb(seed);
+ const args = clickArgs(plan);
+ await runTransaction(db, { ...args, reading: verbReading, readingKey: readingFingerprint(verbReading), occurrence: { surfaceKey: verbKey, lemmaKey: lemmaIdentityKey(verbLemma), memberSegmentIndices: [0, 1], attestation: { unitKind: "Attestation", surface: verbSurface, members: [{ attested: "Es", orthography: "Standard" }, { attested: "gibt", orthography: "Standard" }], realizationCoverage: "Full", expletiveEvidence: { attested: "Es", orthography: "Standard" } } } });
+ expect(db.rows("attestations")).toHaveLength(1);
+ expect(db.rows("attestations")[0]).toMatchObject({ expletiveEvidence: { attested: "Es", orthography: "Standard" } });
+ const componentLemma = db.rows("lemmas").find(row => row.kind === "PRON");
+ const componentReading = db.rows("readings").find(row => row.lemmaId === componentLemma?._id);
+ expect(componentReading?.emojiDescription).toBe("⚪");
+ expect(db.rows("accumulatedKnowledge").some(row => row.ownerReadingKey === componentReading?.readingKey)).toBe(true);
+ expect(db.rows("segments").every(row => (row.attestationMembership as { attestationId: string }).attestationId === db.rows("attestations")[0]?._id)).toBe(true);
 });

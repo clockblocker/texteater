@@ -173,8 +173,8 @@ test("Open PRON population misses copy exact headwords and generate changed text
 	const { validateEncounter } = await import(
 		"../src/universal/validation.js"
 	);
-	for (const attested of ["etwas", "Etwas", "etwsa"]) {
-		const typo = attested === "etwsa";
+	for (const attested of ["meinesgleichen", "Meinesgleichen", "meinesgleihcen"]) {
+		const typo = attested === "meinesgleihcen";
 		const core = {
 			case: null,
 			number: null,
@@ -189,13 +189,13 @@ test("Open PRON population misses copy exact headwords and generate changed text
 			referenceNumber: null,
 		};
 		const expected = {
-			lemma: { canonicalForm: "etwas", coreFeatures: core },
+			lemma: { canonicalForm: "meinesgleichen", coreFeatures: core },
 			surface: {
 				spelling: "Canonical",
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
 			},
-			normalizedMembers: ["etwas"],
+			normalizedMembers: ["meinesgleichen"],
 			memberOrthographies: [typo ? "Typo" : "Standard"],
 			realizationCoverage: "Full",
 		};
@@ -224,14 +224,14 @@ test("Open PRON population misses copy exact headwords and generate changed text
 				}),
 			),
 		);
-		expect(output.surface.lemma.canonicalForm).toBe("etwas");
+		expect(output.surface.lemma.canonicalForm).toBe("meinesgleichen");
 		expect(
 			traces[0]?.events.some(
 				(event) => event.kind === "AuthoredPopulationMiss",
 			),
 		).toBe(true);
 		expect(traces[0]?.calls.map((call) => call.executor)).toEqual(
-			attested === "etwas"
+			attested === "meinesgleichen"
 				? ["TypeSafe", "TypeSafe"]
 				: ["TypeSafe", "TypeSafe", "Luna"],
 		);

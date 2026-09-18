@@ -62,9 +62,7 @@ import { member as m146 } from "./members/lexeme/pronoun/demonstrative/dem-neute
 import { member as m144 } from "./members/lexeme/pronoun/demonstrative/den-masculine-singular-accusative.js";
 import { member as m151 } from "./members/lexeme/pronoun/demonstrative/denen-plural-dative.js";
 import { member as m135 } from "./members/lexeme/pronoun/demonstrative/der-feminine-singular-dative.js";
-import { member as m136 } from "./members/lexeme/pronoun/demonstrative/der-feminine-singular-genitive.js";
 import { member as m134 } from "./members/lexeme/pronoun/demonstrative/der-masculine-singular-nominative.js";
-import { member as m137 } from "./members/lexeme/pronoun/demonstrative/der-plural-genitive.js";
 import { member as m149 } from "./members/lexeme/pronoun/demonstrative/deren-feminine-singular-genitive.js";
 import { member as m150 } from "./members/lexeme/pronoun/demonstrative/deren-plural-genitive.js";
 import { member as m147 } from "./members/lexeme/pronoun/demonstrative/dessen-masculine-singular-genitive.js";
@@ -80,7 +78,6 @@ import { member as m118 } from "./members/lexeme/pronoun/interrogative/wem-dativ
 import { member as m117 } from "./members/lexeme/pronoun/interrogative/wen-accusative.js";
 import { member as m116 } from "./members/lexeme/pronoun/interrogative/wer-nominative.js";
 import { member as m119 } from "./members/lexeme/pronoun/interrogative/wessen-genitive.js";
-import { member as m130 } from "./members/lexeme/pronoun/negative/keiner.js";
 import { member as m126 } from "./members/lexeme/pronoun/negative/nichts.js";
 import { member as m123 } from "./members/lexeme/pronoun/negative/niemand-singular-nominative.js";
 import { member as m125 } from "./members/lexeme/pronoun/negative/niemandem-singular-dative.js";
@@ -90,6 +87,7 @@ import { member as m62 } from "./members/lexeme/pronoun/personal/dich-second-per
 import { member as m63 } from "./members/lexeme/pronoun/personal/dir-second-person-informal-singular-reference-singular-dative.js";
 import { member as m61 } from "./members/lexeme/pronoun/personal/du-second-person-informal-singular-reference-singular-nominative.js";
 import { member as m65 } from "./members/lexeme/pronoun/personal/er-third-person-singular-reference-masculine-singular-nominative.js";
+import { member as subjectEs } from "./members/lexeme/pronoun/personal/es-subject-expletive.js";
 import { member as m75 } from "./members/lexeme/pronoun/personal/es-third-person-singular-reference-neuter-singular-accusative.js";
 import { member as m74 } from "./members/lexeme/pronoun/personal/es-third-person-singular-reference-neuter-singular-nominative.js";
 import { member as m84 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-reference-plural-accusative.js";
@@ -125,19 +123,6 @@ import { member as m79 } from "./members/lexeme/pronoun/personal/uns-first-perso
 import { member as m80 } from "./members/lexeme/pronoun/personal/uns-first-person-plural-reference-plural-dative.js";
 import { member as m81 } from "./members/lexeme/pronoun/personal/unser-first-person-plural-reference-plural-genitive.js";
 import { member as m78 } from "./members/lexeme/pronoun/personal/wir-first-person-plural-reference-plural-nominative.js";
-import { member as m102 } from "./members/lexeme/pronoun/possessive/dein-second-person-informal-singular-reference.js";
-import { member as m112 } from "./members/lexeme/pronoun/possessive/euer-second-person-informal-plural-reference.js";
-import { member as m113 } from "./members/lexeme/pronoun/possessive/ihr-second-person-formal.js";
-import { member as m110 } from "./members/lexeme/pronoun/possessive/ihr-third-person-plural-reference.js";
-import { member as m109 } from "./members/lexeme/pronoun/possessive/ihr-third-person-singular-reference-feminine-possessor.js";
-import { member as m101 } from "./members/lexeme/pronoun/possessive/mein-first-person-singular-reference.js";
-import { member as m103 } from "./members/lexeme/pronoun/possessive/sein-third-person-singular-reference-masculine-possessor.js";
-import { member as m106 } from "./members/lexeme/pronoun/possessive/sein-third-person-singular-reference-neuter-possessor.js";
-import { member as m104 } from "./members/lexeme/pronoun/possessive/seiner-third-person-singular-reference-masculine-singular-nominative-masculine-possessor.js";
-import { member as m107 } from "./members/lexeme/pronoun/possessive/seiner-third-person-singular-reference-masculine-singular-nominative-neuter-possessor.js";
-import { member as m105 } from "./members/lexeme/pronoun/possessive/seines-third-person-singular-reference-neuter-singular-nominative-masculine-possessor.js";
-import { member as m108 } from "./members/lexeme/pronoun/possessive/seines-third-person-singular-reference-neuter-singular-nominative-neuter-possessor.js";
-import { member as m111 } from "./members/lexeme/pronoun/possessive/unser-first-person-plural-reference.js";
 import { member as m99 } from "./members/lexeme/pronoun/reflexive/sich-third-person-accusative.js";
 import { member as m100 } from "./members/lexeme/pronoun/reflexive/sich-third-person-dative.js";
 import { member as m161 } from "./members/lexeme/pronoun/relative/das-neuter-singular-accusative.js";
@@ -147,9 +132,7 @@ import { member as m164 } from "./members/lexeme/pronoun/relative/dem-neuter-sin
 import { member as m162 } from "./members/lexeme/pronoun/relative/den-masculine-singular-accusative.js";
 import { member as m169 } from "./members/lexeme/pronoun/relative/denen-plural-dative.js";
 import { member as m153 } from "./members/lexeme/pronoun/relative/der-feminine-singular-dative.js";
-import { member as m154 } from "./members/lexeme/pronoun/relative/der-feminine-singular-genitive.js";
 import { member as m152 } from "./members/lexeme/pronoun/relative/der-masculine-singular-nominative.js";
-import { member as m155 } from "./members/lexeme/pronoun/relative/der-plural-genitive.js";
 import { member as m167 } from "./members/lexeme/pronoun/relative/deren-feminine-singular-genitive.js";
 import { member as m168 } from "./members/lexeme/pronoun/relative/deren-plural-genitive.js";
 import { member as m165 } from "./members/lexeme/pronoun/relative/dessen-masculine-singular-genitive.js";
@@ -158,14 +141,7 @@ import { member as m157 } from "./members/lexeme/pronoun/relative/die-feminine-s
 import { member as m156 } from "./members/lexeme/pronoun/relative/die-feminine-singular-nominative.js";
 import { member as m159 } from "./members/lexeme/pronoun/relative/die-plural-accusative.js";
 import { member as m158 } from "./members/lexeme/pronoun/relative/die-plural-nominative.js";
-import { member as m115 } from "./members/lexeme/pronoun/total/alle.js";
-import { member as m114 } from "./members/lexeme/pronoun/total/alles.js";
-import { member as m127 } from "./members/lexeme/pronoun/total/jeder.js";
-import { member as m131 } from "./members/lexeme/pronoun/total/jedermann.js";
-import { member as m128 } from "./members/lexeme/pronoun/total/jedweder.js";
-import { member as m129 } from "./members/lexeme/pronoun/total/jeglicher.js";
-import { member as m132 } from "./members/lexeme/pronoun/total/mancher.js";
-import { member as m133 } from "./members/lexeme/pronoun/total/mehrere.js";
+import { reviewedPronouns } from "./pronoun-paradigms.js";
 export const authoredMembers = [
 	m0,
 	m1,
@@ -266,21 +242,6 @@ export const authoredMembers = [
 	m98,
 	m99,
 	m100,
-	m101,
-	m102,
-	m103,
-	m104,
-	m105,
-	m106,
-	m107,
-	m108,
-	m109,
-	m110,
-	m111,
-	m112,
-	m113,
-	m114,
-	m115,
 	m116,
 	m117,
 	m118,
@@ -292,17 +253,8 @@ export const authoredMembers = [
 	m124,
 	m125,
 	m126,
-	m127,
-	m128,
-	m129,
-	m130,
-	m131,
-	m132,
-	m133,
 	m134,
 	m135,
-	m136,
-	m137,
 	m138,
 	m139,
 	m140,
@@ -319,8 +271,6 @@ export const authoredMembers = [
 	m151,
 	m152,
 	m153,
-	m154,
-	m155,
 	m156,
 	m157,
 	m158,
@@ -335,4 +285,6 @@ export const authoredMembers = [
 	m167,
 	m168,
 	m169,
+	subjectEs,
+	...reviewedPronouns.map(({ member }) => member),
 ];

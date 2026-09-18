@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const playgroundUrl = "http://127.0.0.1:4175";
+const port = Number(process.env.TF_DEMO_E2E_PORT ?? 4175);
+const playgroundUrl = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
 	testDir: "./e2e",
@@ -21,7 +22,7 @@ export default defineConfig({
 		},
 	],
 	webServer: {
-		command: "bun run vite --host 127.0.0.1 --port 4175",
+		command: `bun run vite --host 127.0.0.1 --port ${port} --strictPort`,
 		url: playgroundUrl,
 		reuseExistingServer: !process.env.CI,
 		timeout: 30_000,

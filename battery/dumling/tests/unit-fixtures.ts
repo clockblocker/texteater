@@ -42,6 +42,11 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	const bag = route.bag.parse(sample);
 	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
 		Object.assign(bag.inflectional, { article: null });
+	const verbal =
+		route.language === "de" &&
+		["VERB", "AUX", "Idiom", "Collocation"].includes(route.kind);
+	if (verbal && bag.inflectional)
+		Object.assign(bag.inflectional, { expletive: null });
 	const Lemma = {
 		unitKind: "Lemma",
 		language: route.language,
@@ -57,7 +62,7 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		normalizedSurface: "example",
 		spelling: "Canonical",
 		surfaceFeatures: null,
-		...(route.key === "de/Lexeme/NOUN" ? { articleReference: null } : {}),
+
 		...(Object.hasOwn(bag, "inflectional")
 			? { inflectionalFeatures: bag.inflectional }
 			: {}),
@@ -69,6 +74,7 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	};
 	const Attestation = {
 		unitKind: "Attestation",
+		...(verbal ? { expletiveEvidence: null } : {}),
 		surface: Surface,
 		members: [{ attested: "example", orthography: "Standard" }],
 		realizationCoverage: "Full",

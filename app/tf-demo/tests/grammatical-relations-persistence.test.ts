@@ -4,8 +4,8 @@ import { nounArticleReference } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as storageFunctions from "../convex/dumdictStorage";
 import {
-	completeAuthoredArticleKnowledge,
-	materializeNounArticle,
+	completeAuthoredComponentKnowledge,
+	materializeGrammaticalComponent,
 } from "../convex/dumdictStorage/transaction";
 import {
 	loadGrammaticalAlternatives,
@@ -227,7 +227,7 @@ test("noun composition creates its article Reading with authored Knowledge befor
 		gender: "Fem",
 		spelled: "der",
 	});
-	await materializeNounArticle({ db } as never, reference);
+	await materializeGrammaticalComponent({ db } as never, reference);
 	expect(db.rows("accumulatedKnowledge")).toHaveLength(1);
 	const id = await runNavigation(db, followNounArticle, {
 		lemmaId: "noun-lemma",
@@ -261,7 +261,7 @@ for (const [article, gender, spelled, canonical] of [
 			case: "Nom",
 			number: "Sing",
 		});
-		await materializeNounArticle({ db } as never, reference);
+		await materializeGrammaticalComponent({ db } as never, reference);
 		const knowledge = db.rows("accumulatedKnowledge")[0]?.knowledge as {
 			definition: string;
 			translations: { en: string[] };
@@ -277,7 +277,7 @@ for (const [article, gender, spelled, canonical] of [
 		expect(db.rows("attestations")).toHaveLength(0);
 		expect(db.rows("visitorClicks")).toHaveLength(0);
 		const before = db.snapshot();
-		await materializeNounArticle({ db } as never, reference);
+		await materializeGrammaticalComponent({ db } as never, reference);
 		expect(db.snapshot()).toEqual(before);
 	});
 }
@@ -291,7 +291,7 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 		case: "Dat",
 		number: "Sing",
 	});
-	await materializeNounArticle({ db } as never, reference);
+	await materializeGrammaticalComponent({ db } as never, reference);
 	const entry = db.rows("readingEntries")[0];
 	const accumulated = db.rows("accumulatedKnowledge")[0];
 	if (!entry || !accumulated) throw new Error("Missing article records");
@@ -300,7 +300,7 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 	});
 	await db.delete(accumulated._id);
 	expect(
-		await completeAuthoredArticleKnowledge(
+		await completeAuthoredComponentKnowledge(
 			{ db } as never,
 			reference.reading,
 		),
@@ -317,7 +317,7 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 	await db.patch(restored._id, {
 		knowledge: { definition: "My edited definition" },
 	});
-	await completeAuthoredArticleKnowledge({ db } as never, reference.reading);
+	await completeAuthoredComponentKnowledge({ db } as never, reference.reading);
 	expect(
 		(
 			db.rows("accumulatedKnowledge")[0]?.knowledge as
@@ -329,7 +329,7 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 	).toBe("My edited definition");
 	const before = db.snapshot();
 	expect(
-		await completeAuthoredArticleKnowledge(
+		await completeAuthoredComponentKnowledge(
 			{ db } as never,
 			reference.reading,
 		),

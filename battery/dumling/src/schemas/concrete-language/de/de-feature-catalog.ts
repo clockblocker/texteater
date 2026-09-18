@@ -132,6 +132,7 @@ export const DE_FEATURE_SCHEMA = {
 
 // Whole-Surface form and finite coordinates are independent of construction.
 const composition = {
+	expletive: z.literal("Subject").nullable(),
 	perfect: UNIVERSAL_FEATURE_SCHEMA.perfect.nullable(),
 	future: UNIVERSAL_FEATURE_SCHEMA.future.nullable(),
 };

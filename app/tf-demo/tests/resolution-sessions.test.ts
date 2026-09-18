@@ -244,7 +244,6 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
-				articleReference: null,
 			},
 		],
 	};

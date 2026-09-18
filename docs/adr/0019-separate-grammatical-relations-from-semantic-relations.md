@@ -16,8 +16,16 @@ connected distinct spellings without reliably preserving their claimed axis.
 Semantic Relation algebra stays in Dumrel. Dumgen owns the reviewed inventory
 and its feature-based selection; Dumling owns values and validation.
 
-German noun Surfaces own one nullable article reference containing a contextual
-DET Surface and its existing authored Reading. Inflection does not create a
-new DET Reading. The reference participates in Surface equality and contains
-no database IDs or source coordinates. It is grammatical composition, outside
-Reading-owned semantic relations. Fusions expose lexicalBreakdown instead.
+German composition stores grammatical coordinates on the Surface. Dumgen derives
+a contextual component Surface and exact reviewed Reading when requested; neither
+value is embedded in the parent or included in its identity. Nouns retain article
+category, case and number, with gender on the Lemma. German verbal Surfaces use
+nullable `expletive: Subject` for realized nonreferential subject `es`, retaining
+the ordinary verb Lemma. Null means absent composition, not unresolved evidence.
+
+This replaces embedded noun article references under
+[issue 472](https://github.com/clockblocker/texteater/issues/472). It avoids making
+a noun's grammatical identity depend on authored Reading content while preserving
+agreement-based article selection. Missing grammar is unresolved; missing reviewed
+content is a Catalog Miss. Source spelling remains on Attestations. Fusions
+continue to expose lexical breakdown.

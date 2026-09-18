@@ -1,54 +1,119 @@
 import { makeSurfaceId } from "dumdict/runtime";
-import { nounArticleReference } from "dumgen";
+import { deriveNounArticle } from "dumgen";
 import { parseGermanSurface } from "../../server/operationalParsing";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
-import { materializeNounArticle } from "../dumdictStorage/transaction";
+import { materializeGrammaticalComponent } from "../dumdictStorage/transaction";
 import { surfaceValue } from "./occurrenceAttestations";
 
-/** Corrects the article owner while preserving the noun Surface ID and all occurrence links. */
+/** Re-keys grammar without dropping old destinations. Collisions retain an ID redirect. */
 export async function migrateNounArticle(
 	ctx: MutationCtx,
 	stored: Doc<"surfaces">,
 ) {
-	if (stored.language !== "de" || !stored.articleReference) return;
+	if (stored.language !== "de" || stored.redirectedTo) return;
 	const lemma = await ctx.db.get(stored.lemmaId);
-	if (lemma?.family !== "Lexeme" || lemma.kind !== "NOUN") return;
+	if (!lemma) return;
 	const value = parseGermanSurface(surfaceValue(stored, lemma));
+	const surfaceKey = makeSurfaceId("de", value);
 	if (
-		!("articleReference" in value) ||
-		!value.articleReference ||
-		!value.inflectionalFeatures
+		surfaceKey === stored.surfaceKey &&
+		stored.articleReference === undefined
 	)
 		return;
-	const { article, case: caseValue, number } = value.inflectionalFeatures;
-	if (!article || !caseValue || !number) return;
-	const reference = nounArticleReference({
-		article,
-		case: caseValue,
-		number,
-		gender: value.lemma.coreFeatures.gender,
-		spelled: value.articleReference.surface.normalizedSurface,
-	});
-	const surfaceKey = makeSurfaceId("de", {
-		...value,
-		articleReference: reference,
-	});
-	if (surfaceKey === stored.surfaceKey) return;
 	const existing = await ctx.db
 		.query("surfaces")
 		.withIndex("by_surface_key", (q) => q.eq("surfaceKey", surfaceKey))
 		.unique();
-	if (existing && existing._id !== stored._id)
-		throw new Error(
-			"Noun article migration requires merging duplicate Surface records before proceeding.",
-		);
-	await materializeNounArticle(ctx, reference);
-	await ctx.db.patch(stored._id, { surfaceKey, articleReference: reference });
+	const reference = deriveNounArticle(value);
+	if (reference) await materializeGrammaticalComponent(ctx, reference);
+	await ctx.db.patch(stored._id, {
+		surfaceKey:
+			existing && existing._id !== stored._id
+				? `redirect:${stored._id}`
+				: surfaceKey,
+		redirectedTo:
+			existing && existing._id !== stored._id ? existing._id : undefined,
+		articleReference: undefined,
+		...("inflectionalFeatures" in value
+			? { inflectionalFeatures: value.inflectionalFeatures }
+			: {}),
+	});
 	const state = await ctx.db
 		.query("dictionaryState")
 		.withIndex("by_key", (q) => q.eq("key", "global"))
 		.unique();
 	if (state) await ctx.db.patch(state._id, { revision: state.revision + 1 });
 	else await ctx.db.insert("dictionaryState", { key: "global", revision: 1 });
+}
+
+/** A separate per-row pass bounds work even when one Surface has many occurrences. */
+export async function migrateCompositionAttestation(
+	ctx: MutationCtx,
+	row: Doc<"attestations">,
+) {
+	const surface = await ctx.db.get(row.surfaceId);
+	if (!surface)
+		throw new Error(
+			"Missing Attestation Surface during composition migration",
+		);
+	const lemma = await ctx.db.get(surface.lemmaId);
+	const verbal =
+		lemma?.language === "de" &&
+		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind);
+	if (surface.redirectedTo || (verbal && row.expletiveEvidence === undefined))
+		await ctx.db.patch(row._id, {
+			surfaceId: surface.redirectedTo ?? row.surfaceId,
+			...(verbal
+				? { expletiveEvidence: row.expletiveEvidence ?? null }
+				: {}),
+		});
+}
+
+/** Merge dictionary prose and translations before removing only the duplicate ownership row. */
+export async function migrateCompositionOwnership(
+	ctx: MutationCtx,
+	row: Doc<"ownedSurfaces">,
+) {
+	const surface = await ctx.db.get(row.surfaceId);
+	if (!surface?.redirectedTo) return;
+	const destination = surface.redirectedTo;
+	const existing = await ctx.db
+		.query("ownedSurfaces")
+		.withIndex("by_surface_id", (q) => q.eq("surfaceId", destination))
+		.unique();
+	if (!existing) {
+		await ctx.db.patch(row._id, { surfaceId: surface.redirectedTo });
+		return;
+	}
+	const left = existing.record as Record<string, unknown>;
+	const right = row.record as Record<string, unknown>;
+	const notes = [
+		...new Set(
+			[left.notes, right.notes].filter(
+				(value) => typeof value === "string" && value.length,
+			),
+		),
+	].join("\n\n");
+	const translations = [
+		...(Array.isArray(left.attestedTranslations)
+			? left.attestedTranslations
+			: []),
+		...(Array.isArray(right.attestedTranslations)
+			? right.attestedTranslations
+			: []),
+	];
+	await ctx.db.patch(existing._id, {
+		record: {
+			...right,
+			...left,
+			notes,
+			attestedTranslations: [
+				...new Map(
+					translations.map((value) => [JSON.stringify(value), value]),
+				).values(),
+			],
+		},
+	});
+	await ctx.db.delete(row._id);
 }

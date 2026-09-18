@@ -97,13 +97,13 @@ export const surfaceValueValidator = v.object({
 	spelling: surfaceSpellingValidator,
 
 	surfaceFeatures: v.any(),
-	articleReference: v.optional(v.any()),
 	inflectionalFeatures: v.optional(v.any()),
 	lemma: lemmaValueValidator,
 });
 
 export const attestationValueValidator = v.object({
 	articleEvidence: v.optional(v.any()),
+	expletiveEvidence: v.optional(v.any()),
 	unitKind: v.literal("Attestation"),
 	members: v.array(
 		v.object({
@@ -465,6 +465,16 @@ export const resolvedGrammaticalValidator = v.object({
 	encounter: encounterValidator,
 	attestation: attestationValueValidator,
 });
+
+/** Storage compatibility only; incoming proposals use the strict current contract. */
+export const storedGrammaticalCheckpointValidator =
+	resolvedGrammaticalValidator.extend({
+		attestation: attestationValueValidator.extend({
+			surface: surfaceValueValidator.extend({
+				articleReference: v.optional(v.any()),
+			}),
+		}),
+	});
 
 export const nonResolvedGrammaticalValidator = v.union(
 	v.object({
