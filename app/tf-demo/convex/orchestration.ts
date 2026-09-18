@@ -715,7 +715,7 @@ function orchestratorFor(
 			}
 		: persistence;
 	return createTfDemoOrchestrator({
-		draftKnowledge: ({ encounter, lemma, visitorId }) =>
+		draftKnowledge: ({ encounter, reading, visitorId }) =>
 			Effect.gen(function* () {
 				const [settings, authorization] = yield* Effect.tryPromise(() =>
 					Promise.all([
@@ -732,9 +732,9 @@ function orchestratorFor(
 				return yield* createProductionKnowledgeDraft(
 					{
 						encounter,
-						lemma,
+						reading,
 						request: generationRequestFor(
-							{ lemma },
+							reading,
 							authorization.rollbackStopped
 								? []
 								: authorization.qualifiedKinds,

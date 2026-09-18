@@ -20,6 +20,18 @@ import {
 } from "../../../universal/validation.js";
 import { authoredFor, closedRoute } from "../authored-closed-sets/select.js";
 
+/** Transcription belongs to the Lemma headword; no sentence or Reading is needed. */
+const transcriptionPrompt =
+	"Write the broad standard-German IPA transcription of the supplied German Lemma headword, without slash or bracket delimiters. Preserve the Lemma exactly. Return {text:string}, or {text:null} if the pronunciation is uncertain.";
+
+/** Definitions and translations describe the sense the Reading's Emoji Description names. */
+function senseTextPrompt(
+	aspect: "definition" | "translations",
+	language: string | undefined,
+) {
+	return `Draft only the requested ${aspect} for the fixed exact German Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names, not another sense of the same Lemma and not the surrounding scene. Never change the Lemma, Kind, Core Features or Emoji Description, and do not borrow a neighboring word's meaning. ${aspect === "definition" ? "Write a concise German definition." : `Translate only the marked target into ${language}; return one concise word or phrase, never the whole sentence.`} Return {text:string}, or {text:null} if no defensible contribution exists. The caller attaches this text to the Reading after local validation.`;
+}
+
 export type KnowledgeDraft = {
 	readonly sourceFingerprint: string;
 	readonly relations?: {
@@ -33,19 +45,20 @@ export type KnowledgeDraft = {
 	}[];
 };
 
+/** The Reading's Emoji Description is the sense anchor; drafts are bound to it. */
 export function knowledgeDraftFingerprint(
 	encounter: Encounter,
-	lemma: Dumling.Lemma,
+	reading: Dumling.Reading,
 ) {
-	return fingerprint({ context: markedContext(encounter), lemma });
+	return fingerprint({ context: markedContext(encounter), reading });
 }
 
-/** Drafts acquire their Reading owner at publication; reuse checks are local only. */
+/** Drafts describe an already resolved Reading; reuse checks are local only. */
 export function draftKnowledge(
 	options: DumgenOptions,
 	input: {
 		encounter: Encounter;
-		lemma: Dumling.Lemma;
+		reading: Dumling.Reading;
 		request: KnowledgeRequest;
 	},
 ) {
@@ -57,20 +70,21 @@ export function draftKnowledge(
 				input.encounter,
 				"draftKnowledge",
 			);
-			const lemma = parse<Dumling.Lemma>(
-				"lemmaSchema",
-				input.lemma,
+			const reading = parse<Dumling.Reading>(
+				"readingSchema",
+				input.reading,
 				"draftKnowledge",
 			);
+			const lemma = reading.lemma;
 			if (
 				lemma.language !== encounter.sentence.language ||
 				lemma.family !== encounter.target.family ||
 				lemma.kind !== encounter.target.kind
 			)
-				throw Error("Draft Lemma and Encounter routes disagree");
+				throw Error("Draft Reading and Encounter routes disagree");
 			const sourceFingerprint = await knowledgeDraftFingerprint(
 				encounter,
-				lemma,
+				reading,
 			);
 			if (
 				lemma.language !== "de" ||
@@ -104,15 +118,27 @@ export function draftKnowledge(
 											options,
 											route,
 										),
-										input: {
-											lemma,
-											markedContext:
-												markedContext(encounter)
-													.markedContext,
-											aspect,
-											...(language ? { language } : {}),
-										},
-										systemPrompt: `Draft only the requested ${aspect} for the exact fixed German Lemma as used by the marked target in this sentence. Preserve the supplied Lemma and its grammatical identity. Resolve the intended meaning from the target and context; do not borrow a neighboring word's meaning. The Reading emoji is being resolved separately. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the marked target into ${language}; return one concise word or phrase, never the whole sentence.`} Return {text:string}, or {text:null} if the meaning is uncertain. The caller attaches this text to the completed Reading after local validation.`,
+										input:
+											aspect === "transcription"
+												? { lemma, aspect }
+												: {
+														reading,
+														markedContext:
+															markedContext(
+																encounter,
+															).markedContext,
+														aspect,
+														...(language
+															? { language }
+															: {}),
+													},
+										systemPrompt:
+											aspect === "transcription"
+												? transcriptionPrompt
+												: senseTextPrompt(
+														aspect,
+														language,
+													),
 										outputSchema: {
 											type: "object",
 											properties: {
@@ -181,14 +207,14 @@ export function draftKnowledge(
 										route,
 									),
 									input: {
-										lemma,
+										reading,
 										markedContext:
 											markedContext(encounter)
 												.markedContext,
 										requestedRelations: requested,
 									},
 									systemPrompt:
-										"Propose up to 16 distinct German Canonical Forms for the requested semantic relations of the fixed Lemma in this marked context. Preserve the source meaning and Family. Return only {candidates:string[]}. Do not include the source itself, incidental neighbors or inflected forms. The relation Kind and label are selected separately for the completed Reading.",
+										"Propose up to 16 distinct German Canonical Forms for the requested semantic relations of the fixed exact Reading in this marked context. The Reading's emojiDescription is the sense anchor; relate to that sense only. Preserve the source Family. Return only {candidates:string[]}. Do not include the source itself, incidental neighbors or inflected forms. The relation Kind and label are selected separately.",
 									outputSchema: {
 										type: "object",
 										properties: {
@@ -271,10 +297,7 @@ export async function draftedTexts(
 		!Array.isArray(draft.texts) ||
 		draft.texts.length > 20 ||
 		draft.sourceFingerprint !==
-			(await knowledgeDraftFingerprint(
-				input.encounter,
-				input.reading.lemma,
-			))
+			(await knowledgeDraftFingerprint(input.encounter, input.reading))
 	)
 		return accepted;
 	const texts = draft.texts.filter(
@@ -320,10 +343,7 @@ export async function draftedRelationCandidates(
 		typeof draft !== "object" ||
 		!("sourceFingerprint" in draft) ||
 		draft.sourceFingerprint !==
-			(await knowledgeDraftFingerprint(
-				input.encounter,
-				input.reading.lemma,
-			)) ||
+			(await knowledgeDraftFingerprint(input.encounter, input.reading)) ||
 		!("relations" in draft)
 	)
 		return undefined;

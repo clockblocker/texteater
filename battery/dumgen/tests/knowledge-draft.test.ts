@@ -43,7 +43,7 @@ async function fixtureDraft() {
 	return {
 		sourceFingerprint: await knowledgeDraftFingerprint(
 			input.encounter,
-			input.reading.lemma,
+			input.reading,
 		),
 		texts: [
 			{ aspect: "definition", text: "Ein Geldinstitut." },
@@ -52,7 +52,7 @@ async function fixtureDraft() {
 	};
 }
 
-test("text and relation drafts start concurrently with no provisional Reading or publication", async () => {
+test("text and relation drafts start concurrently, anchored on the Reading, without publication", async () => {
 	const started = Promise.withResolvers<void>();
 	const release = Promise.withResolvers<void>();
 	const calls: string[] = [];
@@ -64,9 +64,9 @@ test("text and relation drafts start concurrently with no provisional Reading or
 				execute: async (request) => {
 					const state = request.input as {
 						aspect?: string;
-						reading?: unknown;
+						reading?: { emojiDescription?: string };
 					};
-					expect(state.reading).toBeUndefined();
+					expect(state.reading?.emojiDescription).toBe("🏦");
 					calls.push(state.aspect ?? "relations");
 					if (calls.length === 3) started.resolve();
 					await release.promise;
@@ -87,7 +87,7 @@ test("text and relation drafts start concurrently with no provisional Reading or
 			},
 			{
 				encounter: input.encounter,
-				lemma: input.reading.lemma,
+				reading: input.reading,
 				request: {
 					...input.request,
 					semanticRelations: { synonym: null },
@@ -188,7 +188,7 @@ test("draft failure preserves successful siblings and leaves fallback generation
 			},
 			{
 				encounter: input.encounter,
-				lemma: input.reading.lemma,
+				reading: input.reading,
 				request: input.request,
 			},
 		),
@@ -222,4 +222,58 @@ test("unclassified relation candidates receive their first Kind and relation dec
 	);
 	expect(result.failures).toEqual([]);
 	expect(result.pendingRelations).toHaveLength(1);
+});
+
+test("transcription drafts see only the Lemma while sense texts see the Reading and context", async () => {
+	const inputs: Record<string, unknown>[] = [];
+	await Effect.runPromise(
+		draftKnowledge(
+			{
+				execute: async (request) => {
+					inputs.push(request.input as Record<string, unknown>);
+					return { output: { text: "x" } };
+				},
+				judge: unexpectedJudge,
+			},
+			{
+				encounter: input.encounter,
+				reading: input.reading,
+				request: { transcription: null, definition: null },
+			},
+		),
+	);
+	const transcription = inputs.find(
+		(item) => item.aspect === "transcription",
+	);
+	const definition = inputs.find((item) => item.aspect === "definition");
+	expect(transcription).toEqual({
+		lemma: input.reading.lemma,
+		aspect: "transcription",
+	});
+	expect(definition).toMatchObject({
+		reading: input.reading,
+		markedContext: "<TARGET>Bank</TARGET>",
+	});
+});
+
+test("drafts written for another Emoji Description of the same Lemma are not reused", async () => {
+	let generated = 0;
+	const result = await Effect.runPromise(
+		createDumgen({
+			knowledgeDraft: {
+				...(await fixtureDraft()),
+				sourceFingerprint: await knowledgeDraftFingerprint(
+					input.encounter,
+					{ ...input.reading, emojiDescription: "🪑" },
+				),
+			},
+			execute: async () => {
+				generated++;
+				return { output: { text: "bank" } };
+			},
+			judge: unexpectedJudge,
+		}).produceKnowledge(input),
+	);
+	expect(generated).toBe(2);
+	expect(result.failures).toEqual([]);
 });

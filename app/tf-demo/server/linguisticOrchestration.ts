@@ -280,9 +280,10 @@ export function createTfDemoOrchestrator(options: {
 	readonly dictionary: DumdictService<"de">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
+	/** Drafts describe the resolved Reading; its Emoji Description is the sense anchor. */
 	readonly draftKnowledge?: (input: {
 		encounter: Encounter<"de">;
-		lemma: Dumling.Lemma<"de">;
+		reading: Dumling.Reading<"de">;
 		visitorId: string;
 	}) => Effect.Effect<KnowledgeDraft, unknown>;
 }) {
@@ -637,29 +638,15 @@ export function createTfDemoOrchestrator(options: {
 					const candidates = storedReadings.candidates.map(
 						({ reading }) => reading.emojiDescription,
 					);
-					const base = {
-						encounter: resolved.encounter,
-						lemma: resolvedLemma,
-					};
-					if (!candidates.length && options.draftKnowledge) {
-						knowledgeDraft = yield* options
-							.draftKnowledge({
-								...base,
-								visitorId: input.visitorId,
-							})
-							.pipe(
-								Effect.catchAll(() => Effect.succeed(null)),
-								Effect.forkScoped,
-							);
-					}
 					const operation =
 						options.dumgen.resolveOrGenerateReadingEmojiDescription(
 							{
-								...base,
+								encounter: resolved.encounter,
+								lemma: resolvedLemma,
 								candidates,
 							} as ComparisonInput<"de">,
 						);
-					return yield* operation.pipe(
+					const resolution = yield* operation.pipe(
 						Effect.catchTag("CatalogMiss", (failure) =>
 							Effect.succeed({
 								decision: "CatalogMiss" as const,
@@ -669,6 +656,29 @@ export function createTfDemoOrchestrator(options: {
 							}),
 						),
 					);
+					// Text Knowledge waits for the Emoji Description so every
+					// draft describes the same sense; it overlaps persistence.
+					if (
+						resolution.decision === "New" &&
+						options.draftKnowledge
+					) {
+						knowledgeDraft = yield* options
+							.draftKnowledge({
+								encounter: resolved.encounter,
+								reading: parseGermanReading({
+									unitKind: "Reading",
+									lemma: resolvedLemma,
+									emojiDescription:
+										resolution.emojiDescription,
+								}),
+								visitorId: input.visitorId,
+							})
+							.pipe(
+								Effect.catchAll(() => Effect.succeed(null)),
+								Effect.forkScoped,
+							);
+					}
+					return resolution;
 				});
 			}
 		}).pipe(Effect.scoped);

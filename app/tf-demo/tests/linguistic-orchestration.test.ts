@@ -553,7 +553,7 @@ test("mixed German, English and Hebrew intake persists ordered sentences without
 	]);
 });
 
-test("Knowledge drafts overlap emoji generation and are handed off only with the finalized Reading", async () => {
+test("Knowledge drafts start only after the Emoji Description and receive it as the sense anchor", async () => {
 	const draftStarted = Promise.withResolvers<void>();
 	const emojiStarted = Promise.withResolvers<void>();
 	const releaseDraft = Promise.withResolvers<void>();
@@ -563,10 +563,16 @@ test("Knowledge drafts overlap emoji generation and are handed off only with the
 		sourceFingerprint: "fixture",
 		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
 	};
+	let emojiSettled = false;
 	const run = setup([], {}, [], {
 		draftKnowledge: (input) =>
 			Effect.tryPromise(async () => {
-				expect(input.lemma).toEqual(lemma);
+				expect(emojiSettled).toBe(true);
+				expect(input.reading).toEqual({
+					unitKind: "Reading",
+					lemma,
+					emojiDescription: "🏦",
+				});
 				draftStarted.resolve();
 				await releaseDraft.promise;
 				return draft;
@@ -574,6 +580,7 @@ test("Knowledge drafts overlap emoji generation and are handed off only with the
 		execute: async () => {
 			emojiStarted.resolve();
 			await releaseEmoji.promise;
+			emojiSettled = true;
 			return { output: "🏦" };
 		},
 		observer: {
@@ -587,10 +594,10 @@ test("Knowledge drafts overlap emoji generation and are handed off only with the
 	const pending = Effect.runPromise(
 		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
 	);
-	await Promise.all([draftStarted.promise, emojiStarted.promise]);
+	await emojiStarted.promise;
 	expect(run.writes).toHaveLength(0);
 	releaseEmoji.resolve();
-	await readingAvailable.promise;
+	await Promise.all([draftStarted.promise, readingAvailable.promise]);
 	expect(run.writes).toHaveLength(0);
 	releaseDraft.resolve();
 	await pending;
@@ -601,27 +608,14 @@ test("Knowledge drafts overlap emoji generation and are handed off only with the
 	);
 });
 
-test("emoji failure cancels speculative Knowledge and never hands it to persistence", async () => {
-	const draftStarted = Promise.withResolvers<void>();
-	let aborted = false;
+test("emoji failure never starts Knowledge drafting or hands anything to persistence", async () => {
+	let drafts = 0;
 	const run = setup([], {}, [], {
-		draftKnowledge: () =>
-			Effect.tryPromise(
-				(signal) =>
-					new Promise((_, reject) => {
-						signal.addEventListener(
-							"abort",
-							() => {
-								aborted = true;
-								reject(Error("aborted"));
-							},
-							{ once: true },
-						);
-						draftStarted.resolve();
-					}),
-			),
+		draftKnowledge: () => {
+			drafts++;
+			return Effect.succeed({ sourceFingerprint: "unused", texts: [] });
+		},
 		execute: async () => {
-			await draftStarted.promise;
 			throw Error("emoji failed");
 		},
 	});
@@ -633,7 +627,7 @@ test("emoji failure cancels speculative Knowledge and never hands it to persiste
 		),
 	);
 	expect(result._tag).toBe("Left");
-	expect(aborted).toBe(true);
+	expect(drafts).toBe(0);
 	expect(run.writes).toHaveLength(0);
 });
 
