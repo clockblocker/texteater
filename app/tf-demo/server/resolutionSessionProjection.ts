@@ -12,6 +12,7 @@ export type ResolutionGrammarProjection = {
 	readonly canonicalForm: string;
 	readonly family: string;
 	readonly kind: string;
+	readonly coreFeatures?: Readonly<Record<string, unknown>>;
 };
 
 export type ResolutionReadingProjection = {
@@ -51,6 +52,7 @@ export function projectResolutionGrammar(
 		canonicalForm: surface.lemma.canonicalForm,
 		family: surface.lemma.family,
 		kind: surface.lemma.kind,
+		coreFeatures: surface.lemma.coreFeatures,
 	};
 }
 

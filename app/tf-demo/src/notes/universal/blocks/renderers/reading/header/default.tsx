@@ -1,8 +1,16 @@
-import { Ipa, NoteTags, NoteTitle, NoteTitleLink, NoteTitleRow } from "lego";
+import {
+	Ipa,
+	NoteBone,
+	NoteTags,
+	NoteTitle,
+	NoteTitleLink,
+	NoteTitleRow,
+} from "lego";
 import { type ReactNode, useId } from "react";
 import type { Id } from "../../../../../../../convex/_generated/dataModel";
 import { coreGender } from "../../../../../../../shared/grammatical-gender";
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
+import type { ReadingNotePending } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { genderTone } from "../../common/feature-values";
 import { NounArticle } from "../../common/noun-article";
@@ -32,6 +40,7 @@ export function ReadingHeader({
 			};
 		};
 		knowledge: { transcription?: string | null };
+		pending?: ReadingNotePending;
 	};
 	capabilities: ReadingPresentationCapabilities;
 	title?: ReactNode;
@@ -39,6 +48,8 @@ export function ReadingHeader({
 	const id = useId();
 	const { lemma } = note.reading;
 	const gender = coreGender(lemma);
+	const pending = note.pending;
+	const headword = title ?? lemma.canonicalForm;
 	return (
 		<header>
 			<NoteTitleRow>
@@ -50,25 +61,44 @@ export function ReadingHeader({
 					}
 					tone={genderTone(lemma)}
 				>
-					<span className="text-ink">
-						{note.reading.emojiDescription}{" "}
-					</span>
+					{pending?.emojiDescription ? (
+						<NoteBone
+							aria-label="Emoji on the way"
+							className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]"
+						/>
+					) : (
+						<span
+							className={
+								pending?.emojiArrived
+									? "note-arrival text-ink"
+									: "text-ink"
+							}
+						>
+							{note.reading.emojiDescription}{" "}
+						</span>
+					)}
 					<NounArticle
 						lemma={lemma}
 						lemmaId={lemma.lemmaId}
-						navigation={capabilities.nounArticle}
-					/>
-					<NoteTitleLink
-						aria-label={`${lemma.canonicalForm}, open its Lemma`}
-						onClick={() =>
-							capabilities.follow({
-								kind: "Lemma",
-								lemmaId: lemma.lemmaId,
-							})
+						navigation={
+							pending ? undefined : capabilities.nounArticle
 						}
-					>
-						{title ?? lemma.canonicalForm}
-					</NoteTitleLink>
+					/>
+					{pending ? (
+						<span data-reading-headword="">{headword}</span>
+					) : (
+						<NoteTitleLink
+							aria-label={`${lemma.canonicalForm}, open its Lemma`}
+							onClick={() =>
+								capabilities.follow({
+									kind: "Lemma",
+									lemmaId: lemma.lemmaId,
+								})
+							}
+						>
+							{headword}
+						</NoteTitleLink>
+					)}
 				</NoteTitle>
 				{capabilities.knowledgeSettings.transcription &&
 				note.knowledge.transcription ? (

@@ -14,6 +14,7 @@ import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReadingNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
+import { ResolvingReadingNote } from "@/views/resolving-reading-note";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
@@ -27,10 +28,13 @@ export function UnitReadingNoteView({
 	target,
 	presentation = "Sheet",
 	visitorId: visitorIdOverride,
+	resolutionRequestId,
 }: {
 	presentation?: "Card" | "Sheet";
 	target: ReadingNoteTarget;
 	visitorId?: string;
+	/** The Resolution this Reading was just committed from; it stands in while the stored Note loads. */
+	resolutionRequestId?: string;
 }) {
 	const anonymousVisitorId = useAnonymousVisitorId();
 	const visitorId = visitorIdOverride ?? anonymousVisitorId;
@@ -47,7 +51,14 @@ export function UnitReadingNoteView({
 	});
 
 	if (noteQuery.isPending || settingsQuery.isPending) {
-		return <ReadingNoteSkeleton presentation={presentation} />;
+		return resolutionRequestId ? (
+			<ResolvingReadingNoteStandIn
+				requestId={resolutionRequestId}
+				presentation={presentation}
+			/>
+		) : (
+			<ReadingNoteSkeleton presentation={presentation} />
+		);
 	}
 	if (noteQuery.data?.kind !== "Reading" || !settingsQuery.data) {
 		return (
@@ -66,6 +77,35 @@ export function UnitReadingNoteView({
 			note={noteQuery.data}
 			knowledgeSettings={settingsQuery.data}
 			focus={target.focus ?? null}
+		/>
+	);
+}
+
+/**
+ * Keeps the resolving Reading Note on screen until the stored one arrives, so
+ * the hand-off at commit swaps words into place instead of flashing bones.
+ */
+function ResolvingReadingNoteStandIn({
+	requestId,
+	presentation,
+}: {
+	requestId: string;
+	presentation: "Card" | "Sheet";
+}) {
+	const noteQuery = useQuery({
+		...convexQuery(api.resolutionSessions.getResolutionNote, {
+			requestId,
+		}),
+		gcTime: 10_000,
+	});
+	const note = noteQuery.data;
+	if (!note?.grammar)
+		return <ReadingNoteSkeleton presentation={presentation} />;
+	return (
+		<ResolvingReadingNote
+			note={note}
+			presentation={presentation}
+			animateArrivals={false}
 		/>
 	);
 }

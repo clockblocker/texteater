@@ -37,15 +37,37 @@ export type SurfaceNotePresentationContext = {
 	readonly activeAnalysisKey: Id<"surfaces">;
 };
 
+export type ReadingNotePresentationContext = {
+	/**
+	 * The Resolution this Reading was just committed from. While the stored
+	 * Note loads, its Presentation keeps showing the resolving Note instead of
+	 * a skeleton.
+	 */
+	readonly resolutionRequestId: string;
+};
+
+export type NotePresentationContext =
+	| SurfaceNotePresentationContext
+	| ReadingNotePresentationContext;
+
 type ContextualSurfaceNoteSubject = {
 	readonly kind: "Note";
 	readonly target: SurfaceNoteTarget;
 	readonly presentationContext?: SurfaceNotePresentationContext;
 };
 
+type ContextualReadingNoteSubject = {
+	readonly kind: "Note";
+	readonly target: ReadingNoteTarget;
+	readonly presentationContext?: ReadingNotePresentationContext;
+};
+
 type ContextFreeNoteSubject = {
 	readonly kind: "Note";
-	readonly target: Exclude<WorkspaceNoteTarget, SurfaceNoteTarget>;
+	readonly target: Exclude<
+		WorkspaceNoteTarget,
+		SurfaceNoteTarget | ReadingNoteTarget
+	>;
 	readonly presentationContext?: never;
 };
 
@@ -55,6 +77,7 @@ export type TextSubjectTarget = Omit<TextTarget, "focusAttestationId">;
 export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
 	| ContextualSurfaceNoteSubject
+	| ContextualReadingNoteSubject
 	| ContextFreeNoteSubject;
 
 export type WorkspacePresentation = "Card" | "Sheet";
@@ -64,25 +87,41 @@ export function workspaceSubjectFor(
 	presentationContext?: SurfaceNotePresentationContext,
 ): ContextualSurfaceNoteSubject;
 export function workspaceSubjectFor(
-	target: Exclude<WorkspaceTarget, SurfaceNoteTarget>,
-): Exclude<WorkspaceSubject, ContextualSurfaceNoteSubject>;
+	target: ReadingNoteTarget,
+	presentationContext?: ReadingNotePresentationContext,
+): ContextualReadingNoteSubject;
+export function workspaceSubjectFor(
+	target: Exclude<WorkspaceTarget, SurfaceNoteTarget | ReadingNoteTarget>,
+): Exclude<
+	WorkspaceSubject,
+	ContextualSurfaceNoteSubject | ContextualReadingNoteSubject
+>;
 export function workspaceSubjectFor(
 	target: WorkspaceTarget,
-	presentationContext?: SurfaceNotePresentationContext,
+	presentationContext?: NotePresentationContext,
 ): WorkspaceSubject;
 export function workspaceSubjectFor(
 	target: WorkspaceTarget,
-	presentationContext?: SurfaceNotePresentationContext,
+	presentationContext?: NotePresentationContext,
 ): WorkspaceSubject {
-	return target.kind === "Text"
-		? { kind: "Text", target: { kind: "Text", textId: target.textId } }
-		: target.kind === "Surface"
-			? {
-					kind: "Note",
-					target,
-					...(presentationContext ? { presentationContext } : {}),
-				}
-			: { kind: "Note", target };
+	if (target.kind === "Text")
+		return {
+			kind: "Text",
+			target: { kind: "Text", textId: target.textId },
+		};
+	if (
+		target.kind === "Surface" &&
+		presentationContext &&
+		"activeAnalysisKey" in presentationContext
+	)
+		return { kind: "Note", target, presentationContext };
+	if (
+		target.kind === "Reading" &&
+		presentationContext &&
+		"resolutionRequestId" in presentationContext
+	)
+		return { kind: "Note", target, presentationContext };
+	return { kind: "Note", target } as WorkspaceSubject;
 }
 
 export function workspaceSubjectKey(subject: WorkspaceSubject): string {
@@ -123,7 +162,7 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 			return (
 				typeof target.readingId === "string" &&
 				isDefinitionFocus(target.focus) &&
-				value.presentationContext === undefined
+				isReadingNotePresentationContext(value.presentationContext)
 			);
 		case "Lemma":
 			return (
@@ -171,6 +210,15 @@ function isDefinitionFocus(value: unknown): boolean {
 	);
 }
 
+function isReadingNotePresentationContext(
+	value: unknown,
+): value is ReadingNotePresentationContext | undefined {
+	return (
+		value === undefined ||
+		(isRecord(value) && typeof value.resolutionRequestId === "string")
+	);
+}
+
 function isSurfaceNotePresentationContext(
 	value: unknown,
 ): value is SurfaceNotePresentationContext | undefined {
@@ -207,11 +255,19 @@ export function workspaceSubjectsEqual(
 		right.target.kind === "Surface"
 	) {
 		return (
-			left.presentationContext?.activeAnalysisKey ===
-			right.presentationContext?.activeAnalysisKey
+			activeAnalysisKeyOf(left.presentationContext) ===
+			activeAnalysisKeyOf(right.presentationContext)
 		);
 	}
 	return true;
+}
+
+export function activeAnalysisKeyOf(
+	context: NotePresentationContext | undefined,
+): Id<"surfaces"> | undefined {
+	return context && "activeAnalysisKey" in context
+		? context.activeAnalysisKey
+		: undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

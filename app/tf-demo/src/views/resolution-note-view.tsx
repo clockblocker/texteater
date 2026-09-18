@@ -8,6 +8,7 @@ import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
 import { NoteSkeletonFor } from "@/views/note-skeletons";
 import { resolutionDeckCards } from "@/views/resolution-deck";
+import { ResolvingReadingNote } from "@/views/resolving-reading-note";
 import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -96,6 +97,7 @@ export function ResolutionStepNoteView({
 		<ResolutionStepNoteFrame
 			stepKind={target.stepKind}
 			presentation={presentation}
+			note={note}
 		/>
 	);
 }
@@ -162,12 +164,21 @@ export function ResolutionNoteFrame({
 	);
 }
 
+/**
+ * A step of a running Resolution. The Reading step is the eventual Reading
+ * Note itself, fed what the Session knows so far; the other steps keep the
+ * skeleton of the Note they become.
+ */
 export function ResolutionStepNoteFrame({
 	stepKind,
 	presentation,
+	note,
 }: {
 	stepKind: ResolutionStepTarget["stepKind"];
 	presentation: Presentation;
+	note?: ResolutionNote;
 }) {
+	if (stepKind === "Reading" && note?.grammar)
+		return <ResolvingReadingNote note={note} presentation={presentation} />;
 	return <NoteSkeletonFor kind={stepKind} presentation={presentation} />;
 }

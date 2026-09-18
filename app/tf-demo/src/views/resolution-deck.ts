@@ -1,6 +1,7 @@
 import type { Id } from "../../convex/_generated/dataModel";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 import type {
+	ReadingNotePresentationContext,
 	ResolutionStepKind,
 	WorkspaceTarget,
 } from "../workspace/sheet-workspace";
@@ -48,8 +49,13 @@ function availableStepCards(
 	note: ResolutionNote,
 ): readonly WorkspaceCardTarget[] {
 	const requestId = note.target.requestId;
+	// A resolved Lemma always yields a Reading, so its Card opens with Grammar
+	// and fills in as the emoji and Knowledge arrive. A failed Session keeps
+	// its Grammar steps but not a Reading that will never finish loading.
+	const failed =
+		note.activity === "Terminal" && note.terminal?.kind !== "Complete";
 	return [
-		...(note.reading ? [stepCard(requestId, "Reading")] : []),
+		...(note.grammar && !failed ? [stepCard(requestId, "Reading")] : []),
 		...(note.grammar
 			? [stepCard(requestId, "Lemma"), stepCard(requestId, "Surface")]
 			: []),
@@ -86,6 +92,7 @@ function completedCards(
 		note.target.requestId,
 		terminal.target,
 		canonical,
+		{ resolutionRequestId: note.target.requestId },
 	);
 }
 
@@ -93,11 +100,18 @@ export function canonicalResolutionDeckCards(
 	requestId: string,
 	foregroundTarget: WorkspaceTarget,
 	canonical: CanonicalResolution,
+	/** Set when the deck converges from a live Resolution, so the stored Reading Note can load behind the resolving one. */
+	readingContext?: ReadingNotePresentationContext,
 ): readonly WorkspaceCardTarget[] {
-	const reading = canonicalCard(requestId, "Reading", {
-		kind: "Reading",
-		readingId: canonical.readingId,
-	});
+	const reading = canonicalCard(
+		requestId,
+		"Reading",
+		{
+			kind: "Reading",
+			readingId: canonical.readingId,
+		},
+		readingContext,
+	);
 	const lemma = canonicalCard(requestId, "Lemma", {
 		kind: "Lemma",
 		lemmaId: canonical.lemmaId,

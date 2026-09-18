@@ -1,5 +1,5 @@
 import type {
-	SurfaceNotePresentationContext,
+	NotePresentationContext,
 	WorkspaceTarget,
 } from "@/workspace/sheet-workspace";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -39,7 +39,7 @@ export type ReadingPresentationCapabilities = {
 	readonly definition?: DefinitionCapabilities;
 	readonly follow: (
 		target: WorkspaceTarget,
-		presentationContext?: SurfaceNotePresentationContext,
+		presentationContext?: NotePresentationContext,
 	) => void;
 };
 
@@ -67,7 +67,7 @@ export type RoutePresentationCapabilities = {
 	};
 	readonly follow: (
 		target: WorkspaceTarget,
-		presentationContext?: SurfaceNotePresentationContext,
+		presentationContext?: NotePresentationContext,
 	) => void;
 };
 
@@ -83,7 +83,7 @@ export type SurfacePresentationCapabilities = {
 	readonly pagination?: RoutePresentationCapabilities["pagination"];
 	readonly follow: (
 		target: WorkspaceTarget,
-		presentationContext?: SurfaceNotePresentationContext,
+		presentationContext?: NotePresentationContext,
 	) => void;
 };
 
@@ -104,6 +104,6 @@ export type ShadowPresentationCapabilities = {
 	};
 	readonly follow: (
 		target: WorkspaceTarget,
-		presentationContext?: SurfaceNotePresentationContext,
+		presentationContext?: NotePresentationContext,
 	) => void;
 };

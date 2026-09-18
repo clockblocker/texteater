@@ -28,3 +28,19 @@
 			text-decoration-color, fill, stroke;
 	}
 }
+
+/* A word that arrives into a Note that was already showing its bone for it. */
+@keyframes note-arrive {
+	from {
+		opacity: 0;
+		transform: translateY(0.12em);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+.note-arrival {
+	display: inline-block;
+	animation: note-arrive 180ms ease-out both;
+}

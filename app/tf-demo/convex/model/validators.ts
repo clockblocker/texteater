@@ -396,6 +396,8 @@ export const resolutionGrammarProjectionValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
+	/** Lets the resolving Reading Note take its headword tone before commit. Absent on older Sessions. */
+	coreFeatures: v.optional(v.any()),
 });
 
 export const resolutionReadingProjectionValidator = v.object({

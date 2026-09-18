@@ -3,11 +3,31 @@ import type { FunctionReturnType } from "convex/server";
 import type { api } from "../../../../convex/_generated/api";
 import type { NoteKind } from "./kind";
 
-export type NoteData = NonNullable<
+type LoadedNoteData = NonNullable<
 	| FunctionReturnType<typeof api.readingNotes.get>
 	| FunctionReturnType<typeof api.routeNotes.get>
 	| FunctionReturnType<typeof api.shadowNotes.get>
 >;
+
+/**
+ * Which parts of a Reading Note are still on the way. A resolving Reading is
+ * rendered by the same renderer as a stored one, fed a model whose missing
+ * parts are marked here so each block can show a bone in their place.
+ */
+export type ReadingNotePending = {
+	/** No Reading or Lemma exists yet: identities are placeholders and must not be followed. */
+	readonly identity: true;
+	/** The Emoji Description has not been generated yet. */
+	readonly emojiDescription: boolean;
+	/** The emoji arrived while this Presentation was showing its bone, so it animates in. */
+	readonly emojiArrived?: boolean;
+};
+
+export type NoteData =
+	| Exclude<LoadedNoteData, { readonly kind: "Reading" }>
+	| (Extract<LoadedNoteData, { readonly kind: "Reading" }> & {
+			readonly pending?: ReadingNotePending;
+	  });
 
 export type NoteDataFor<K extends NoteKind> = Extract<NoteData, { kind: K }>;
 

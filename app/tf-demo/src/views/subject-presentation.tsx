@@ -6,9 +6,10 @@ import { RouteNoteView } from "@/views/route-note-view";
 import { ShadowNoteView } from "@/views/shadow-note-view";
 import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
-import type {
-	WorkspacePresentation,
-	WorkspaceSubject,
+import {
+	activeAnalysisKeyOf,
+	type WorkspacePresentation,
+	type WorkspaceSubject,
 } from "@/workspace/sheet-workspace";
 
 /** Maps one workspace Subject to the view that presents it. */
@@ -28,6 +29,13 @@ export function renderApplicationSubject(
 					target={target}
 					presentation={presentation}
 					visitorId={options.visitorId}
+					resolutionRequestId={
+						"presentationContext" in subject &&
+						subject.presentationContext &&
+						"resolutionRequestId" in subject.presentationContext
+							? subject.presentationContext.resolutionRequestId
+							: undefined
+					}
 				/>
 			);
 		case "Lemma":
@@ -40,10 +48,9 @@ export function renderApplicationSubject(
 					target={target}
 					presentation={presentation}
 					activeAnalysisKey={
-						target.kind === "Surface"
-							? "presentationContext" in subject
-								? subject.presentationContext?.activeAnalysisKey
-								: undefined
+						target.kind === "Surface" &&
+						"presentationContext" in subject
+							? activeAnalysisKeyOf(subject.presentationContext)
 							: undefined
 					}
 				/>

@@ -7,7 +7,7 @@ import {
 } from "react-resizable-panels/workspace";
 
 import {
-	type SurfaceNotePresentationContext,
+	type NotePresentationContext,
 	type WorkspaceSubject,
 	type WorkspaceTarget,
 	workspaceSubjectFor,
@@ -22,7 +22,7 @@ export type ApplicationWorkspaceSubject =
 export type ApplicationCardCandidate = {
 	readonly key: string;
 	readonly target: WorkspaceTarget;
-	readonly presentationContext?: SurfaceNotePresentationContext;
+	readonly presentationContext?: NotePresentationContext;
 };
 
 /**
@@ -49,7 +49,7 @@ export type ApplicationWorkspaceAction =
 	  }
 	| {
 			readonly type: "Follow";
-			readonly presentationContext?: SurfaceNotePresentationContext;
+			readonly presentationContext?: NotePresentationContext;
 			readonly target: WorkspaceTarget;
 			readonly originPresentationId?: string;
 	  }
@@ -119,7 +119,7 @@ function follow(
 	session: ApplicationWorkspaceSession,
 	target: WorkspaceTarget,
 	originPresentationId: string | undefined,
-	presentationContext?: SurfaceNotePresentationContext,
+	presentationContext?: NotePresentationContext,
 ): ApplicationWorkspaceSession {
 	const paneId = originPresentationId
 		? activePaneForPresentation(session.workspace, originPresentationId)

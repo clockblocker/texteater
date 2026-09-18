@@ -1,14 +1,14 @@
 import { createContext, type ReactNode, useContext } from "react";
 
 import type {
-	SurfaceNotePresentationContext,
+	NotePresentationContext,
 	WorkspaceTarget,
 } from "./sheet-workspace";
 
 export type WorkspaceCardTarget = {
 	readonly key: string;
 	readonly target: WorkspaceTarget;
-	readonly presentationContext?: SurfaceNotePresentationContext;
+	readonly presentationContext?: NotePresentationContext;
 };
 
 export type PresentCardsOptions = {
@@ -19,7 +19,7 @@ export type PresentCardsOptions = {
 export type WorkspaceInteraction = {
 	readonly follow: (
 		target: WorkspaceTarget,
-		presentationContext?: SurfaceNotePresentationContext,
+		presentationContext?: NotePresentationContext,
 	) => void;
 	readonly presentCards: (
 		cards: readonly WorkspaceCardTarget[],
