@@ -39,7 +39,7 @@ function transformed(text: string, mode: string): string {
 }
 
 const baseGuidance = `The classified route and ordered membership are fixed. Analyze only this whole target in full sentence context. Do not repair membership or reclassify. Return Unresolved when a valid analysis is not defensible.
-Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical. Canonical Form is the exact dictionary headword, not necessarily a copied Surface. Copy the attested members joined with single spaces only when that exact text already is the headword; otherwise request text.
+Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical. Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete \`canonicalFormCandidate\` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise establish that different text is required.
 Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.
 Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Contextual finite verbs and ordinary infinitives have marked bags. Structural null is not uncertainty.
 For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.
@@ -67,6 +67,7 @@ export async function resolveGrammarJudgments(
 		throw new DumgenFailure("Unresolved", "resolveGrammar", message, route);
 	};
 	const input = markedContext(encounter);
+	const canonicalFormCandidate = input.members.join(" ");
 	const schema = modelSchemas[`grammar/${route}`];
 	if (!schema)
 		throw new DumgenFailure(
@@ -174,17 +175,21 @@ export async function resolveGrammarJudgments(
 		);
 	else if (encounter.target.kind !== "DET")
 		questions.canonical = choice(
-			"Are the exact attested `members`, joined with single spaces in their supplied order, already the dictionary Canonical Form of this whole target? Inflection or Canonical spelling does not establish this. Copy requires exact text, including casing, with no normalization, omitted members or reordering. Otherwise Generate.",
+			"Does the concrete `canonicalFormCandidate` exactly equal the dictionary Canonical Form of this fixed whole target? Judge that supplied string itself, not whether the occurrence is finite or otherwise inflected. Inflection does not prevent identical spelling: in `Wir gehen ins Haus`, finite `gehen` has Canonical Form `gehen`. Acceptance requires exact text and casing with no normalization, omitted members or reordering.",
 			{
-				Copy: "The exact joined attested members already are the dictionary headword",
-				Generate: "The dictionary headword requires different text",
-				Unresolved: null,
+				CandidateIsCanonical:
+					"`canonicalFormCandidate` is already the exact dictionary headword",
+				CandidateIsNotCanonical:
+					"The dictionary headword requires text different from `canonicalFormCandidate`",
+				Unresolved:
+					"Cannot defensibly establish whether the concrete candidate is the dictionary headword",
 			},
 		);
 	const judge = judgmentCaller(options);
 	const state = {
 		...input,
 		route,
+		canonicalFormCandidate,
 		criteria:
 			baseGuidance +
 			(verbal ? verbalCompositionGuidance : "") +
@@ -362,12 +367,12 @@ export async function resolveGrammarJudgments(
 				const canonical = selected("canonical");
 				lemma = {
 					canonicalForm:
-						canonical === "Copy"
-							? input.members.join(" ")
+						canonical === "CandidateIsCanonical"
+							? canonicalFormCandidate
 							: undefined,
 					coreFeatures: core,
 				};
-				if (canonical === "Generate")
+				if (canonical === "CandidateIsNotCanonical")
 					needed.canonicalForm =
 						"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
 			}

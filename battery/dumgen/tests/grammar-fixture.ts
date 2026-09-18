@@ -26,6 +26,7 @@ export function grammarFixture(
 				>;
 			const state = request.state as {
 				members: string[];
+				canonicalFormCandidate?: string;
 				sentence?: string;
 				target?: string;
 				reviewedIdentities: {
@@ -84,10 +85,10 @@ export function grammarFixture(
 					return index === -1 ? "NoMatch" : `identity_${index}`;
 				}
 				if (id === "canonical")
-					return state.members.join(" ") ===
+					return state.canonicalFormCandidate ===
 						output.lemma.canonicalForm
-						? "Copy"
-						: "Generate";
+						? "CandidateIsCanonical"
+						: "CandidateIsNotCanonical";
 				if (id.startsWith("orthography_"))
 					return output.memberOrthographies[Number(id.slice(12))]!;
 				if (id.startsWith("normalization_")) {

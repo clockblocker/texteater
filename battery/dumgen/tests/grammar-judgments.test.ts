@@ -142,6 +142,79 @@ test("incompatible applicable features stop before missing-text generation", asy
 	expect(traces[0]?.calls).toHaveLength(1);
 });
 
+test("finite homograph canonical candidate resolves without generation", async () => {
+	const expected = {
+		lemma: {
+			canonicalForm: "gehen",
+			coreFeatures: {
+				hasGovPrep: null,
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
+			},
+		},
+		surface: {
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				mood: "Ind",
+				number: "Plur",
+				person: "1",
+				tense: "Pres",
+				verbForm: "Fin",
+				perfect: null,
+				future: null,
+				passive: null,
+				voice: null,
+			},
+		},
+		memberOrthographies: ["Standard"],
+		normalizedMembers: ["gehen"],
+		realizationCoverage: "Full",
+	};
+	const traces: OperationTrace[] = [];
+	const output = await Effect.runPromise(
+		createDumgen({
+			...grammarFixture(expected),
+			execute: async () => {
+				throw Error("Canonical candidate must not invoke generation");
+			},
+			onOperation: (trace) => traces.push(trace),
+		}).resolveGrammar(
+			validateEncounter({
+				sentence: {
+					id: "finite-homograph",
+					language: "de",
+					segments: [
+						{ kind: "ResolvableText", text: "Wir" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "gehen" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "ins" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "Haus" },
+						{ kind: "Punctuation", text: "." },
+					],
+				},
+				target: {
+					family: "Lexeme",
+					kind: "VERB",
+					memberSegmentIndices: [2],
+				},
+			}),
+		),
+	);
+	expect(output.surface.lemma.canonicalForm).toBe("gehen");
+	expect(traces[0]?.calls).toHaveLength(1);
+	const request = traces[0]?.calls[0]?.request;
+	if (!request || !("questions" in request))
+		throw Error("Expected feature judgment");
+	expect(request.input).toHaveProperty("canonicalFormCandidate", "gehen");
+	expect(request.questions.canonical?.instructions).toContain(
+		"finite `gehen` has Canonical Form `gehen`",
+	);
+});
+
 test("AUX catalog absence and uncertainty remain distinct and never invoke Luna", async () => {
 	const encounter = validateEncounter({
 		sentence: {
@@ -262,18 +335,25 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 		const request = calls[0]?.request;
 		if (!request || !("questions" in request))
 			throw Error("Expected feature batch");
-		expect(request.input).not.toHaveProperty("canonicalCandidates");
+		expect(request.input).toHaveProperty(
+			"canonicalFormCandidate",
+			attested,
+		);
 		expect(request.questions.canonical).toMatchObject({
 			type: "choice",
 			criteria: {
-				Copy: expect.any(String),
-				Generate: expect.any(String),
-				Unresolved: null,
+				CandidateIsCanonical: expect.any(String),
+				CandidateIsNotCanonical: expect.any(String),
+				Unresolved: expect.any(String),
 			},
 		});
 		expect(
 			Object.keys(request.questions.canonical?.criteria ?? {}),
-		).toEqual(["Copy", "Generate", "Unresolved"]);
+		).toEqual([
+			"CandidateIsCanonical",
+			"CandidateIsNotCanonical",
+			"Unresolved",
+		]);
 		expect(request.questions).toHaveProperty(["lemma.coreFeatures.gender"]);
 		expect(request.questions).not.toHaveProperty([
 			"surface.inflectionalFeatures.case",
