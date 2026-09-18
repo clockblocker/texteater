@@ -38,14 +38,30 @@ function transformed(text: string, mode: string): string {
 	return text;
 }
 
-const baseGuidance = `The classified route and ordered membership are fixed. Analyze only this whole target in full sentence context. Do not repair membership or reclassify. Return Unresolved when a valid analysis is not defensible.
-Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical. Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete \`canonicalFormCandidate\` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise establish that different text is required.
-Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.
-Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Contextual finite verbs and ordinary infinitives have marked bags. Structural null is not uncertainty.
-For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.
-For noun suspension, completion is allowed only for one selected trailing-hyphen member in binary und/oder coordination with a full right compound sharing the literal suffix; retain Full coverage. Ordinary uninflected noun forms and dictionary citations remain distinct.
-German NOUN article features describe an owned, licensed shared, or Fusion-supplied article: Definite, Indefinite, or null for bare nouns/non-article determiners. A separate governing Fusion supplies its DET component: im Wald has Surface dem Wald with only Wald attested as a member and im retained as article evidence. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is null. Partial nouns are allowed for licensed shared articles in compatible coordination or articles supplied by a governing Fusion; membership stays fixed.
-Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.`;
+const sharedPolicy = {
+	target: "The classified route and ordered membership are fixed. Analyze only this whole target in full sentence context. Do not repair membership or reclassify. Return Unresolved when a valid analysis is not defensible.",
+	identity:
+		"Core Features belong to the dictionary identity, not the current inflection. Occurrence features belong to Surface. Spelling Canonical does not mean Grundform: finite and declined forms may be Canonical.",
+	canonicalForm:
+		"Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete `canonicalFormCandidate` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise establish that different text is required. Inflection does not prevent identical spelling. Acceptance requires exact text and casing with no normalization, omitted members or reordering.",
+	orthography:
+		"Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.",
+	inflection:
+		"Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Structural null is not uncertainty.",
+};
+
+const nounPolicy = {
+	suspension:
+		"For noun suspension, completion is allowed only for one selected trailing-hyphen member in binary und/oder coordination with a full right compound sharing the literal suffix; retain Full coverage. Ordinary uninflected noun forms and dictionary citations remain distinct.",
+	articles:
+		"German NOUN article features describe an owned, licensed shared, or Fusion-supplied article: Definite, Indefinite, or null for bare nouns/non-article determiners. A separate governing Fusion supplies its DET component: im Wald has Surface dem Wald with only Wald attested as a member and im retained as article evidence. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is null. Partial nouns are allowed for licensed shared articles in compatible coordination or articles supplied by a governing Fusion; membership stays fixed.",
+};
+
+const verbalIdentityPolicy =
+	"For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.";
+
+const partialCoveragePolicy =
+	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
 
 export async function resolveGrammarJudgments(
 	options: DumgenOptions,
@@ -88,16 +104,14 @@ export async function resolveGrammarJudgments(
 		: [];
 	const questions: Questions = {
 		support: choice(
-			encounter.target.kind === "NOUN"
-				? "Can this supplied noun target be analyzed under our noun convention? An ordinary article plus common noun is a supported NOUN target, not a phrase requiring idiomatic lexicalization. [der,Aufstieg] is supported both alone and in der Aufstieg und Abstieg; [Abstieg] is also supported there with a shared article. Excluded adjectives and coordinated nouns do not make this noun incomplete. Reject only an incoherent noun analysis; preserve the fixed members."
-				: "Can this fixed target support a coherent analysis on its supplied route?",
+			"Under `policy`, can the fixed target in `markedContext` support a coherent analysis on `route`?",
 			{
 				Supported: "Yes, keep route and membership unchanged",
 				Unresolved: "No defensible analysis on the supplied target",
 			},
 		),
 		spelling: choice(
-			"Is the normalized Surface a canonical spelling of its Lemma or a licensed variant? Inflection alone never means Variant.",
+			"Under `policy.orthography` and `policy.route`, is the Surface realized by `members` in `markedContext` a canonical spelling of its Lemma or a licensed variant? Inflection alone never means Variant.",
 			{ Canonical: null, Variant: null, Unresolved: null },
 		),
 		historicalStatus: choice(
@@ -130,7 +144,7 @@ export async function resolveGrammarJudgments(
 	}
 	for (const [index] of input.members.entries()) {
 		questions[`orthography_${index}`] = choice(
-			`Orthography of member ${index}?`,
+			`Under \`policy.orthography\`, what is the orthography of \`members[${index}]\` in \`markedContext\`?`,
 			{
 				Standard:
 					"Licensed spelling/capitalization, including variants",
@@ -139,7 +153,7 @@ export async function resolveGrammarJudgments(
 			},
 		);
 		questions[`normalization_${index}`] = choice(
-			`How should member ${index} be positionally normalized? Preserve contextual morphology, licensed variants and source order.`,
+			`Under \`policy\`, how should \`members[${index}]\` be positionally normalized in \`markedContext\`?`,
 			normalizations,
 		);
 	}
@@ -175,7 +189,7 @@ export async function resolveGrammarJudgments(
 		);
 	else if (encounter.target.kind !== "DET")
 		questions.canonical = choice(
-			"Does the concrete `canonicalFormCandidate` exactly equal the dictionary Canonical Form of this fixed whole target? Judge that supplied string itself, not whether the occurrence is finite or otherwise inflected. Inflection does not prevent identical spelling: in `Wir gehen ins Haus`, finite `gehen` has Canonical Form `gehen`. Acceptance requires exact text and casing with no normalization, omitted members or reordering.",
+			"Under `policy.canonicalForm`, does `canonicalFormCandidate` exactly equal the dictionary Canonical Form of the fixed whole target in `markedContext`?",
 			{
 				CandidateIsCanonical:
 					"`canonicalFormCandidate` is already the exact dictionary headword",
@@ -190,10 +204,20 @@ export async function resolveGrammarJudgments(
 		...input,
 		route,
 		canonicalFormCandidate,
-		criteria:
-			baseGuidance +
-			(verbal ? verbalCompositionGuidance : "") +
-			(routeGuidance[encounter.target.kind] ?? ""),
+		policy: {
+			...sharedPolicy,
+			...(verbal
+				? {
+						verbalIdentity: verbalIdentityPolicy,
+						canonicalExample:
+							"In Wir gehen ins Haus, finite gehen has Canonical Form gehen.",
+						verbalComposition: verbalCompositionGuidance,
+					}
+				: {}),
+			...(encounter.target.kind === "NOUN" ? { noun: nounPolicy } : {}),
+			...(partial ? { coverage: partialCoveragePolicy } : {}),
+			route: routeGuidance[encounter.target.kind] ?? "",
+		},
 		reviewedIdentities: identities.map((member) => member.lemma),
 	};
 	const result = await judge(

@@ -576,7 +576,7 @@ export function inflectionQuestion(kind: string): ChoiceQuestion {
 		: inflectionPolicies[kind];
 	if (!policy) throw Error(`Missing German inflection policy: ${kind}`);
 	return choice(
-		`Does the complete ${kind} target in \`markedContext\` have contextual Surface inflection under this route, or a null inflection bag? Decide independently from the feature questions.`,
+		`Under \`policy.inflection\` and \`policy.route\`, does the complete ${kind} target in \`markedContext\` have contextual Surface inflection, or a null inflection bag? Decide independently from the feature questions.`,
 		{
 			Marked: policy.marked,
 			Citation: policy.citation,

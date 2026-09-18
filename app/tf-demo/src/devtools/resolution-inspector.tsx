@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
+import { layoutFlamegraph } from "./resolution-flamegraph";
 import "./resolution-inspector.css";
 
 type Step = Doc<"inspectionSteps">;
@@ -297,6 +298,7 @@ function InspectionDetail({
 				{showDetailedTraces ? (
 					<DetailedTraces
 						steps={orderedSteps}
+						total={total}
 						visitorId={visitorId}
 						start={start}
 					/>
@@ -518,45 +520,105 @@ function DetailedTraces({
 	steps,
 	visitorId,
 	start,
+	total,
 }: {
 	steps: Step[];
 	visitorId: string;
 	start: number;
+	total: number;
 }) {
+	const [selectedId, setSelectedId] = useState<string | null>(null);
+	const selected = steps.find((step) => step.id === selectedId) ?? steps[0];
+	const spans = layoutFlamegraph(steps);
+	const rows = Math.max(1, ...spans.map((span) => span.row + 1));
 	return (
 		<section className="inspection-detailed" aria-label="Detailed traces">
 			<header className="inspection-detailed-heading">
 				<div>
-					<h3>Detailed traces</h3>
+					<h3>Detailed trace flamegraph</h3>
 					<p className="inspection-detailed-description">
-						Captured inputs, outputs, model metadata, and local
-						transport timings for every stage.
+						Select a span to inspect its inputs, outputs, and model
+						metadata. Child spans appear below their parent;
+						parallel work overlaps in time.
 					</p>
 				</div>
-				<code>resolution_inspector trace &lt;stepId&gt;</code>
 			</header>
-			{steps.map((step) => (
-				<section className="inspection-detailed-step" key={step.id}>
+			<div className="inspection-legend">
+				<span data-kind="Code">Code</span>
+				<span data-kind="TypeSafe">TypeSafe AI</span>
+				<span data-kind="LLM">LLM</span>
+			</div>
+			<div className="inspection-flamegraph-scroll">
+				<div className="inspection-flamegraph-inner">
+					<div className="inspection-axis">
+						<span>0</span>
+						<span>{time(total / 2)}</span>
+						<span>{time(total)}</span>
+					</div>
+					<section
+						className="inspection-flamegraph"
+						style={{ height: rows * 30 }}
+						aria-label="Detailed trace timing spans"
+					>
+						{spans.map(({ step, row }) => (
+							<button
+								type="button"
+								key={step.id}
+								className="inspection-bar inspection-flamegraph-bar"
+								data-kind={step.kind}
+								data-status={step.status}
+								aria-pressed={selected?.id === step.id}
+								aria-label={`${step.name}, ${step.timing === "Unmeasured" ? "not measured" : time(step.durationMs)}, ${step.status}`}
+								title={`${step.name} · ${step.owner} · ${step.timing === "Unmeasured" ? "not measured" : time(step.durationMs)}`}
+								style={{
+									left: `${Math.max(0, ((step.startedAt - start) / total) * 100)}%`,
+									width: `${Math.max(0, (step.durationMs / total) * 100)}%`,
+									top: row * 30,
+								}}
+								onClick={() => setSelectedId(step.id)}
+							>
+								<span>
+									{step.name} ·{" "}
+									{step.timing === "Unmeasured"
+										? "not measured"
+										: time(step.durationMs)}
+								</span>
+							</button>
+						))}
+					</section>
+				</div>
+			</div>
+			{selected ? (
+				<section
+					className="inspection-detailed-step"
+					aria-label="Selected trace"
+				>
 					<header>
 						<div>
-							<h4>{step.name}</h4>
+							<h4>{selected.name}</h4>
 							<p className="inspection-detailed-description">
-								{step.owner} ·{" "}
-								{step.kind === "TypeSafe"
-									? "TypeSafe AI"
-									: step.kind}
+								{selected.owner}
 							</p>
 						</div>
-						<span>{time(step.durationMs)}</span>
-						<CopyInspectionReference stepId={step._id} />
+						<span>
+							{selected.timing === "Unmeasured"
+								? "not measured"
+								: time(selected.durationMs)}
+						</span>
+						<CopyInspectionReference stepId={selected._id} />
 					</header>
 					<StepPayload
-						step={step}
+						key={selected.id}
+						step={selected}
 						visitorId={visitorId}
 						start={start}
 					/>
 				</section>
-			))}
+			) : (
+				<p className="inspection-empty">
+					Completed traces will appear here as they are recorded.
+				</p>
+			)}
 		</section>
 	);
 }

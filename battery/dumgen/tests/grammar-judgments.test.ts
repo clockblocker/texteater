@@ -211,7 +211,11 @@ test("finite homograph canonical candidate resolves without generation", async (
 		throw Error("Expected feature judgment");
 	expect(request.input).toHaveProperty("canonicalFormCandidate", "gehen");
 	expect(request.questions.canonical?.instructions).toContain(
-		"finite `gehen` has Canonical Form `gehen`",
+		"`policy.canonicalForm`",
+	);
+	expect(request.input).toHaveProperty(
+		"policy.canonicalExample",
+		"In Wir gehen ins Haus, finite gehen has Canonical Form gehen.",
 	);
 });
 

@@ -215,6 +215,10 @@
 	display: block;
 	line-height: 0.8rem;
 }
+.inspection-flamegraph-bar span {
+	font-size: 0.7rem;
+	line-height: 24px;
+}
 .inspection-bar[data-status="Failure"] {
 	outline: 1px solid #ef6666;
 }
@@ -409,4 +413,25 @@
 }
 .inspection-group-heading {
 	margin-bottom: 0.5rem;
+}
+
+.inspection-flamegraph-scroll {
+	overflow-x: auto;
+	padding: 4px 4px 1rem;
+	margin-bottom: 1rem;
+}
+.inspection-flamegraph-inner {
+	min-width: 640px;
+}
+.inspection-flamegraph {
+	position: relative;
+}
+.inspection-flamegraph-bar {
+	height: 26px;
+	border: 1px solid var(--background);
+}
+.inspection-flamegraph-bar[aria-pressed="true"] {
+	outline: 2px solid var(--foreground);
+	outline-offset: 1px;
+	z-index: 1;
 }

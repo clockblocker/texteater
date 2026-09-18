@@ -28,7 +28,7 @@ export function grammarFixture(
 				members: string[];
 				canonicalFormCandidate?: string;
 				sentence?: string;
-				target?: string;
+				target?: { memberSegmentIndices: number[] };
 				reviewedIdentities: {
 					canonicalForm: string;
 					coreFeatures: unknown;
@@ -42,10 +42,10 @@ export function grammarFixture(
 				if ("decision" in output) return "Unresolved";
 				if (id === "attachment") {
 					if (!output.articleEvidence) return "None";
-					const target = JSON.parse(state.target ?? "{}");
+					const target = state.target;
 					const sourceIndex =
 						output.realizationCoverage === "Full"
-							? target.memberSegmentIndices[0]
+							? target?.memberSegmentIndices[0]
 							: [
 									...(state.sentence ?? "").matchAll(
 										/<s(\d+)>(.*?)<\/s\d+>/gu,

@@ -192,8 +192,16 @@ export async function resolveNounArticle(
 			"de/Lexeme/NOUN/article",
 			{
 				sentence: indexedContext(encounter.sentence),
-				target: JSON.stringify(encounter.target),
-				noun: JSON.stringify(output.lemma),
+				target: {
+					...encounter.target,
+					memberSegmentIndices: [
+						...encounter.target.memberSegmentIndices,
+					],
+				},
+				noun: {
+					canonicalForm: String(output.lemma.canonicalForm),
+					coreFeatures: core,
+				},
 				features: {
 					number: bag.number ?? null,
 					gender: core.gender ?? null,
@@ -202,7 +210,7 @@ export async function resolveNounArticle(
 			},
 			{
 				attachment: choice(
-					"Which complete article attachment is licensed for this noun?",
+					"Under `policy`, which complete article attachment in `sentence` is licensed for `target`, given `noun` and `features`?",
 					{
 						...Object.fromEntries(
 							[...candidates].map(([key, candidate]) => [

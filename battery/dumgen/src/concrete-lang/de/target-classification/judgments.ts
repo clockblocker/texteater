@@ -77,7 +77,7 @@ export async function classifyGermanTarget(
 		)
 			continue;
 		questions[`member_${index}`] = choice(
-			`Does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`? Use full sentence context and the shared criteria. For ordinary noun groups, only der/die/das/ein articles join the noun; mein/dieser/kein and their noun are separate units. For example, clicking kein in kein Haus excludes Haus, while clicking den in den Hund includes Hund. A larger established idiom still keeps its fixed members.`,
+			`Does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`? Use full sentence context and \`criteria\`. For ordinary noun groups, only der/die/das/ein articles join the noun; mein/dieser/kein and their noun are separate units. A larger established idiom still keeps its fixed members.`,
 			{
 				Include: "It is a fixed member of that same unit",
 				Exclude:
