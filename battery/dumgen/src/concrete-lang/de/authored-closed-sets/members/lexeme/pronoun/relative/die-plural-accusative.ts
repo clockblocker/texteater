@@ -27,7 +27,11 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Relativpronomen „die“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
-		translations: { en: ["who", "which", "that"] },
+		transcription: "diː",
+		translations: {
+			en: ["who", "which", "that"],
+			ru: ["которые", "которых"],
+		},
 		semanticRelations: {
 			targetKind: "reading",
 			synonym: [
@@ -371,9 +375,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "reading",
 		semanticRelations: {
 			synonym: "Authored",

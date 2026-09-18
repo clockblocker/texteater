@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das substantivische Possessivpronomen „euer“ bezeichnet etwas, das die angesprochene Mehrzahl zugeordnet ist.",
-		translations: { en: ["yours (plural)"] },
+		transcription: "ˈɔʏ̯ɐ",
+		translations: { en: ["yours (plural)"], ru: ["ваш"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

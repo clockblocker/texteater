@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „ihr“ verweist auf die angesprochene Mehrzahl.",
-		translations: { en: ["you"] },
+		transcription: "iːɐ̯",
+		translations: { en: ["you"], ru: ["вы"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

@@ -24,3 +24,19 @@ inventory nor select a catalog.
 
 The Closed Route and Catalog Miss behavior in ADR 0015 and the Fixed Population
 behavior in ADR 0017 remain in force.
+
+Every authored member of a Fixed Catalog or Fixed Population must store all
+Knowledge required or advertised for its exact Reading. Completeness follows
+the applicable Knowledge policy with every supported aspect and translation
+language enabled, independent of a Visitor's settings. Semantic relation
+coverage stores reviewed claims or an explicit ReviewedEmpty decision for each
+applicable relation.
+
+The catalog build rejects incomplete members and coverage claims that disagree
+with their content. Adding an advertised aspect or translation language requires
+completing affected members before release. Resolving an exact authored Reading
+publishes its stored Knowledge without model generation. Missing content is a
+Catalog Miss, including for a Fixed Population inside an Open Route; unlisted
+members of that Open Route still follow normal production. This trades catalog
+maintenance for deterministic content and removes encounter-time generation as
+a way to conceal an incomplete authored member.

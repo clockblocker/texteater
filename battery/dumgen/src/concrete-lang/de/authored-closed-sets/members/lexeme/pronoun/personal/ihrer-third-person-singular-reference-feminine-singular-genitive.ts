@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „ihrer“ verweist auf die weibliche dritte Person Einzahl.",
-		translations: { en: ["her"] },
+		transcription: "ˈiːʁɐ",
+		translations: { en: ["her"], ru: ["её"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

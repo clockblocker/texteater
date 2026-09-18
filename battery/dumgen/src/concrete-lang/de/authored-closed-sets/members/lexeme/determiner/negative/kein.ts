@@ -22,14 +22,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🚫" }, lemma },
 	knowledge: {
+		transcription: "kaɪn",
 		definition:
 			"Der negative Determinierer „kein“ verneint das Vorhandensein des bezeichneten Bezugs.",
-		translations: { en: ["no", "not a"] },
+		translations: { en: ["no", "not a"], ru: ["никакой"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

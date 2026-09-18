@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „deiner“ verweist auf die angesprochene Einzahl.",
-		translations: { en: ["you"] },
+		transcription: "ˈdaɪ̯nɐ",
+		translations: { en: ["you"], ru: ["тебя"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

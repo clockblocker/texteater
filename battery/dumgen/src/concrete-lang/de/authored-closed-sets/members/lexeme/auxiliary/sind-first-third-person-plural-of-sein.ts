@@ -15,9 +15,10 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🟰" }, lemma },
 	knowledge: {
+		transcription: "zɪnt",
 		definition:
 			"Das Auxiliar „sind“ bezeichnet dieselbe Identität wie „sein“ in einer eigenständigen grammatischen Form.",
-		translations: { en: ["are"] },
+		translations: { en: ["are"], ru: ["форма «быть»: мы/они"] },
 		semanticRelations: {
 			targetKind: "reading",
 			synonym: [
@@ -85,9 +86,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "reading",
 		semanticRelations: {
 			synonym: "Authored",

@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „uns“ verweist auf die sprechende Mehrzahl.",
-		translations: { en: ["us"] },
+		transcription: "ʊns",
+		translations: { en: ["us"], ru: ["нас"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

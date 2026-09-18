@@ -5,11 +5,84 @@ import {
 	validateEncounter,
 } from "dumgen";
 import type * as Dumling from "dumling/types";
-import { parseReadingKnowledge } from "dumrel";
+import { parseReadingKnowledge, selectKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { Effect } from "effect";
 import { stableJson } from "promptsmith";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
+import { knowledgeInputSchema } from "../src/schemas.js";
+import { createDumgen as createSourceDumgen } from "../src/universal/dumgen.js";
 import { executeOutput, rejectJudgment } from "./execution-fixture.js";
+
+test("every authored member supplies all advertised Knowledge without a provider", async () => {
+	let calls = 0;
+	const unexpected = async (): Promise<never> => {
+		calls++;
+		throw Error("Authored Knowledge must not call a provider");
+	};
+	const dumgen = createSourceDumgen({
+		execute: unexpected,
+		judge: unexpected,
+	});
+	for (const member of authoredMembers) {
+		const { language, family, kind, canonicalForm } = member.lemma;
+		const selected = selectKnowledge({
+			route: {
+				language,
+				family,
+				kind,
+			} as Dumrel.KnowledgeSelectionInput["route"],
+		});
+		if (!selected.success) throw selected.error;
+		const result = await Effect.runPromise(
+			dumgen.produceKnowledge(
+				knowledgeInputSchema.parse({
+					encounter: {
+						sentence: {
+							id: "authored",
+							language,
+							segments: [
+								{ kind: "ResolvableText", text: canonicalForm },
+							],
+						},
+						target: { family, kind, memberSegmentIndices: [0] },
+					},
+					reading: member.reading,
+					request: selected.value,
+				}),
+			),
+		);
+		expect(result.failures, canonicalForm).toEqual([]);
+		expect(result.pendingRelations, canonicalForm).toEqual([]);
+		expect(result.changes, canonicalForm).toEqual(
+			expect.arrayContaining([
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: member.knowledge.definition,
+				},
+				{
+					kind: "Contribute",
+					aspect: "transcription",
+					value: member.knowledge.transcription,
+				},
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: member.knowledge.translations?.en,
+				},
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "ru",
+					value: member.knowledge.translations?.ru,
+				},
+			]),
+		);
+	}
+	expect(calls).toBe(0);
+});
 
 test("reviewed member bundles have distinct identities and valid semantic endpoints", () => {
 	expect(

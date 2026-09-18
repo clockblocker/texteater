@@ -27,12 +27,16 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „Sie“ verweist auf eine höflich angesprochene Person.",
-		translations: { en: ["you (formal singular)"] },
+		transcription: "ziː",
+		translations: {
+			en: ["you (formal singular)"],
+			ru: ["Вы (вежл., ед. ч.)"],
+		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

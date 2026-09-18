@@ -22,14 +22,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "➕" }, lemma },
 	knowledge: {
+		transcription: "meːɐ̯",
 		definition:
 			"Der quantifizierende Determinierer „mehr“ grenzt die Menge der bezeichneten Bezüge ein.",
-		translations: { en: ["more"] },
+		translations: { en: ["more"], ru: ["больше"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

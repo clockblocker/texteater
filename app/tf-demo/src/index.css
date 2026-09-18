@@ -1,5 +1,4 @@
 @import "lego/styles.css";
-@import "react-resizable-panels/workspace.css";
 
 @media (prefers-reduced-motion: reduce) {
 	:root:not([data-motion-preference="ignore"]) *,

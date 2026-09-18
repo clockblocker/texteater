@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Interrogativpronomen „wem“ fragt nach einer Person in der durch seine Form ausgedrückten Kasusrolle.",
-		translations: { en: ["whom"] },
+		transcription: "veːm",
+		translations: { en: ["whom"], ru: ["кому"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

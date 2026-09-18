@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das substantivische Possessivpronomen „ihr“ bezeichnet etwas, das die dritte Person Mehrzahl zugeordnet ist.",
-		translations: { en: ["theirs"] },
+		transcription: "iːɐ̯",
+		translations: { en: ["theirs"], ru: ["их"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

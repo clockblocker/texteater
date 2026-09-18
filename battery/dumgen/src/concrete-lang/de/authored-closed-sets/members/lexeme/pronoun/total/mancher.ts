@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Totalpronomen „mancher“ bezeichnet einen nicht vollständigen Teil einer im Kontext bestimmten Menge.",
-		translations: { en: ["some", "many a one"] },
+		transcription: "ˈmançɐ",
+		translations: { en: ["some", "many a one"], ru: ["некоторые", "иной"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

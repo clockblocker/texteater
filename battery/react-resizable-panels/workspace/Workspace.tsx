@@ -48,7 +48,7 @@ type CardPlacement<S> = {
 	total: number;
 };
 
-/** How long a closed Card stays mounted for its exit; matches `workspace.css`. */
+/** Also exposed on each Card as `--workspace-card-exit-duration` for skins. */
 const CARD_EXIT_MS = 150;
 
 function collectCardPlacements<S>(
@@ -98,12 +98,42 @@ export type WorkspaceRenderContext<S> = {
 	selectAnchor(anchor: HTMLElement): void;
 };
 
+export type WorkspaceClassNames = Partial<
+	Record<
+		| "canvas"
+		| "group"
+		| "pane"
+		| "content"
+		| "sheet"
+		| "separator"
+		| "lift"
+		| "pane-actions"
+		| "pane-close"
+		| "cards"
+		| "return-zone"
+		| "card"
+		| "card-content"
+		| "card-tail"
+		| "drop"
+		| "drop-label"
+		| "edge-hint"
+		| "drag",
+		string
+	>
+>;
+
 export type WorkspaceProps<S> = {
 	state: WorkspaceState<S>;
 	dispatch(command: WorkspaceCommand<S>): void;
 	renderSubject(subject: S, context: WorkspaceRenderContext<S>): ReactNode;
 	labelSubject(subject: S): string;
 	className?: string;
+	/**
+	 * Add visual classes without replacing the structural workspace classes.
+	 * `drag` styles the preview portaled to document.body, outside the root.
+	 * Cards expose --workspace-card-exit-duration; use it for data-leaving exits.
+	 */
+	classNames?: WorkspaceClassNames;
 };
 
 function minimumWidth(node: WorkspaceLayout): number {
@@ -184,7 +214,13 @@ export function Workspace<S>({
 	renderSubject,
 	labelSubject,
 	className,
+	classNames,
 }: WorkspaceProps<S>) {
+	function partClassName(part: keyof WorkspaceClassNames) {
+		return [`workspace__${part}`, classNames?.[part]]
+			.filter(Boolean)
+			.join(" ");
+	}
 	const root = useRef<HTMLDivElement>(null);
 	const [pointer, setPointer] = useState<PointerPosition | null>(null);
 	const liftStartRef = useRef<PointerPosition | null>(null);
@@ -626,7 +662,7 @@ export function Workspace<S>({
 		return (
 			<button
 				type="button"
-				className="workspace__lift"
+				className={partClassName("lift")}
 				data-edge={edge}
 				aria-label={`Lift ${labelSubject(presentation.subject)} ${presentation.form} from ${edge} edge`}
 				onPointerDown={(event) => beginLift(event, presentation, edge)}
@@ -669,7 +705,7 @@ export function Workspace<S>({
 		return (
 			<article
 				key={card.id}
-				className="workspace__card"
+				className={partClassName("card")}
 				onDoubleClick={(event) => toggleBody(event, card, paneId)}
 				data-presentation-id={card.id}
 				data-presentation-form="Card"
@@ -678,13 +714,17 @@ export function Workspace<S>({
 				style={
 					{
 						"--workspace-card-depth": index,
+						"--workspace-card-exit-duration": `${CARD_EXIT_MS}ms`,
 						top: `calc(${index} * var(--workspace-card-step))`,
 						zIndex: total - index,
 						height: `calc(100% - ${total - 1} * var(--workspace-card-step))`,
 					} as CSSProperties
 				}
 			>
-				<div className="workspace__card-content" inert={index !== 0}>
+				<div
+					className={partClassName("card-content")}
+					inert={index !== 0}
+				>
 					{renderSubject(card.subject, {
 						presentationId: card.id,
 						presentation: "Card",
@@ -695,7 +735,7 @@ export function Workspace<S>({
 				{index === 0 && !leaving ? renderLiftHandle(card, "top") : null}
 				<button
 					type="button"
-					className="workspace__card-tail"
+					className={partClassName("card-tail")}
 					aria-label={`Lift ${labelSubject(card.subject)} Card`}
 					{...liftHandlers(card)}
 				>
@@ -719,7 +759,7 @@ export function Workspace<S>({
 		return (
 			<section
 				key={paneId}
-				className="workspace__pane"
+				className={partClassName("pane")}
 				data-workspace-pane={paneId}
 				data-has-card-layer={cardLayers.length ? "true" : undefined}
 				onPointerDownCapture={(event) =>
@@ -732,14 +772,14 @@ export function Workspace<S>({
 					dismissLayerFromPane(event, cardLayers)
 				}
 			>
-				<div className="workspace__content">
+				<div className={partClassName("content")}>
 					{sheets.map((sheet, index) => {
 						const covered = index !== sheets.length - 1;
 						return (
 							// biome-ignore lint/a11y/noStaticElementInteractions: Optional surface shortcut; embedded controls retain their own semantics.
 							<div
 								key={sheet.id}
-								className="workspace__sheet"
+								className={partClassName("sheet")}
 								onDoubleClick={(event) =>
 									toggleBody(event, sheet, paneId)
 								}
@@ -783,19 +823,20 @@ export function Workspace<S>({
 					? (["left", "right", "bottom"] as const).map((edge) => (
 							<div
 								key={edge}
-								className="workspace__edge-hint"
+								className={partClassName("edge-hint")}
 								data-edge={edge}
 								aria-hidden="true"
 							/>
 						))
 					: null}
-				<div className="workspace__pane-actions">
+				<div className={partClassName("pane-actions")}>
 					<span>
 						{sheets.length} Sheet{sheets.length === 1 ? "" : "s"}
 					</span>
 					{top && !top.locked ? (
 						<button
 							type="button"
+							className={partClassName("pane-close")}
 							aria-label={`Close ${labelSubject(top.subject)}`}
 							onClick={() =>
 								dispatch({
@@ -819,7 +860,13 @@ export function Workspace<S>({
 						)
 						.map((id) => ({ id, memberIds: [] as string[] })),
 				].map((layer) => {
-					const cards = selectVisibleCards(state, layer.id);
+					// A retained exit layer must not resurrect interactive Cards
+					// from a layer now covered by a Sheet.
+					const cards = cardLayers.some(
+						(visible) => visible.id === layer.id,
+					)
+						? selectVisibleCards(state, layer.id)
+						: [];
 					const holdsMember =
 						lifted?.presentation.layerId === layer.id;
 					const leaving = leavingHere.filter(
@@ -835,7 +882,7 @@ export function Workspace<S>({
 					return (
 						<div
 							key={layer.id}
-							className="workspace__cards"
+							className={partClassName("cards")}
 							data-card-layer={layer.id}
 							data-return-layer={
 								holdsMember ? layer.id : undefined
@@ -848,7 +895,7 @@ export function Workspace<S>({
 						>
 							{holdsMember ? (
 								<div
-									className="workspace__return-zone"
+									className={partClassName("return-zone")}
 									data-return-zone=""
 									aria-hidden="true"
 								/>
@@ -871,12 +918,12 @@ export function Workspace<S>({
 				})}
 				{isTarget && isTarget.edge !== "return" ? (
 					<div
-						className="workspace__drop"
+						className={partClassName("drop")}
 						data-edge={isTarget.edge}
 						aria-label={`Drop as ${isTarget.edge === "inside" ? "a sheet in this pane" : `a sheet at the ${isTarget.edge} edge`}`}
 						role="status"
 					>
-						<span className="workspace__drop-label">
+						<span className={partClassName("drop-label")}>
 							{isTarget.edge === "inside"
 								? "Drop in pane"
 								: `Drop at ${isTarget.edge} edge`}
@@ -894,7 +941,7 @@ export function Workspace<S>({
 				key={node.id}
 				id={node.id}
 				orientation={node.axis}
-				className="workspace__group"
+				className={partClassName("group")}
 			>
 				<Panel
 					id={node.children[0].id}
@@ -907,7 +954,7 @@ export function Workspace<S>({
 					{renderLayout(node.children[0])}
 				</Panel>
 				<Separator
-					className="workspace__separator"
+					className={partClassName("separator")}
 					aria-label={`Resize ${node.axis} split`}
 				/>
 				<Panel
@@ -936,7 +983,7 @@ export function Workspace<S>({
 		>
 			<div
 				ref={root}
-				className="workspace__canvas"
+				className={partClassName("canvas")}
 				style={{
 					minWidth:
 						layout.kind === "Pane"
@@ -949,7 +996,7 @@ export function Workspace<S>({
 			{lifted && pointer
 				? createPortal(
 						<div
-							className="workspace__drag"
+							className={partClassName("drag")}
 							data-lifted-presentation={lifted.presentation.id}
 							data-source-form={lifted.sourceForm}
 							data-anchor={liftAnchor}

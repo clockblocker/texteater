@@ -31,7 +31,8 @@ continues through generation.
 a production route that resolves only within its Fixed Catalog.
 
 **Catalog Miss**:
-absence of the required authored value on a Closed Route.
+absence of a required authored value on a Closed Route or for an exact authored
+Reading in a Fixed Population.
 
 **Grammatical Navigation**:
 selection of reviewed members by preserving fixed

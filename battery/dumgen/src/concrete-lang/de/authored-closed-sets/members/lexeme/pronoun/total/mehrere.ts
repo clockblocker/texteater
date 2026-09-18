@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Totalpronomen „mehrere“ bezeichnet eine unbestimmte Mehrzahl von Personen oder Sachen.",
-		translations: { en: ["several", "multiple"] },
+		transcription: "ˈmeːʁəʁə",
+		translations: { en: ["several", "multiple"], ru: ["несколько"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

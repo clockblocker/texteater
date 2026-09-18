@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das substantivische Possessivpronomen „sein“ bezeichnet etwas, das die sächliche dritte Person Einzahl zugeordnet ist.",
-		translations: { en: ["its"] },
+		transcription: "ˈzaɪ̯nɐ",
+		translations: { en: ["its"], ru: ["его (обладатель — ср. род)"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

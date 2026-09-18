@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { Effect, Fiber } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import expectedOutcomes from "../src/concrete-lang/de/knowledge-production/evaluation/operation-outcomes.json";
+import { knowledgeInputSchema } from "../src/schemas.js";
 import type {
 	KnowledgeInput,
 	KnowledgeProduction,
@@ -282,48 +283,72 @@ test("validated text is emitted while a sibling is still pending, with only proj
 		{ aspect: "translations", code: "InvalidModelOutput" },
 	]);
 });
-test("Closed missing leaves retain reviewed independent contributions without generation", async () => {
-	const member = authoredMembers.find(
-		(member) =>
-			member.lemma.kind === "DET" &&
-			member.knowledge.definition &&
-			!member.knowledge.translations?.ru,
-	);
-	if (!member)
-		throw Error(
-			"Expected authored determiner with a missing Russian translation",
+test.each(["DET", "PRON"] as const)(
+	"incomplete authored %s retains stored contributions without generation",
+	async (kind) => {
+		const index = authoredMembers.findIndex(
+			(member) => member.lemma.kind === kind,
 		);
-	let calls = 0;
-	const dumgen = createDumgen({
-		execute: async () => {
+		const member = authoredMembers[index];
+		if (!member) throw Error(`Missing authored ${kind}`);
+		const translations = { ...member.knowledge.translations };
+		delete translations.ru;
+		const semanticRelations = { ...member.coverage.semanticRelations };
+		delete semanticRelations.synonym;
+		// Simulate a damaged catalog without depending on a real content gap.
+		authoredMembers[index] = {
+			...member,
+			knowledge: { ...member.knowledge, translations },
+			coverage: { ...member.coverage, semanticRelations },
+		};
+		let calls = 0;
+		const unexpected = async (): Promise<never> => {
 			calls++;
-			throw Error("Unexpected generation");
-		},
-		judge: async () => {
-			calls++;
-			throw Error("Unexpected judgment");
-		},
-	});
-	const result = await Effect.runPromise(
-		dumgen.produceKnowledge({
-			encounter: {
-				...input.encounter,
-				target: {
-					family: "Lexeme",
-					kind: "DET",
-					memberSegmentIndices: [0],
+			throw Error("Unexpected provider call");
+		};
+		try {
+			const result = await Effect.runPromise(
+				createDumgen({
+					execute: unexpected,
+					judge: unexpected,
+				}).produceKnowledge(
+					knowledgeInputSchema.parse({
+						encounter: {
+							...input.encounter,
+							target: {
+								family: "Lexeme",
+								kind,
+								memberSegmentIndices: [0],
+							},
+						},
+						reading: member.reading,
+						request: {
+							definition: null,
+							translations: { ru: null },
+							semanticRelations: { synonym: null },
+						},
+					}),
+				),
+			);
+			expect(result.changes).toHaveLength(1);
+			expect(result.changes[0]).toMatchObject({
+				aspect: "definition",
+				value: member.knowledge.definition,
+			});
+			expect(result.failures).toMatchObject([
+				{ aspect: "translations", leaf: "ru", code: "CatalogMiss" },
+				{
+					aspect: "semanticRelations",
+					leaf: "synonym",
+					code: "CatalogMiss",
 				},
-			},
-			reading: member.reading,
-			request: { definition: null, translations: { ru: null } },
-		} as KnowledgeInput<"de">),
-	);
-	expect(result.changes).toHaveLength(1);
-	expect(result.failures).toMatchObject([
-		{ aspect: "translations", leaf: "ru", code: "CatalogMiss" },
-	]);
-	expect(calls).toBe(0);
-});
+			]);
+			expect(calls).toBe(0);
+		} finally {
+			authoredMembers[index] = member;
+		}
+	},
+);
 test("interruption retains evidence of completed independent work and starts no dependent judgments", async () => {
 	const traces: OperationTrace[] = [];
 	let judgeCalls = 0;

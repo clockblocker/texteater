@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Reflexivpronomen „sich“ verweist in der dritten Person auf den Bezug des Subjekts zurück.",
-		translations: { en: ["oneself"] },
+		transcription: "zɪç",
+		translations: { en: ["oneself"], ru: ["себя"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

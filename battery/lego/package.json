@@ -24,6 +24,7 @@
 	"files": [
 		"dist",
 		"src/styles.css",
+		"src/workspace.css",
 		"README.md"
 	],
 	"scripts": {
@@ -35,7 +36,8 @@
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"test:e2e": "playwright test"
 	},
 	"peerDependencies": {
 		"react": "^19.2.6",
@@ -55,15 +57,19 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",
+		"@playwright/test": "^1.62.1",
+		"@tailwindcss/vite": "^4",
 		"@types/node": "^24.13.3",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react": "^6",
 		"bun-types": "1.4.2",
 		"dependency-cruiser": "^18.1.0",
 		"esbuild": "^0.28.1",
 		"knip": "^6.29.0",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
-		"typescript": "^7.0.2"
+		"typescript": "^7.0.2",
+		"vite": "^8"
 	}
 }

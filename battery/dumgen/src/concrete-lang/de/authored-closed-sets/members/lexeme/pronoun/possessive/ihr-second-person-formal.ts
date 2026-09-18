@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das substantivische Possessivpronomen „Ihr“ bezeichnet etwas, das eine höflich angesprochene Person oder Gruppe zugeordnet ist.",
-		translations: { en: ["yours (formal)"] },
+		transcription: "iːɐ̯",
+		translations: { en: ["yours (formal)"], ru: ["Ваш (вежл.)"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

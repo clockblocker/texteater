@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Totalpronomen „jeder“ bezeichnet jedes einzelne Mitglied einer Gruppe.",
-		translations: { en: ["everyone", "each"] },
+		transcription: "ˈjeːdɐ",
+		translations: { en: ["everyone", "each"], ru: ["каждый"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das substantivische Possessivpronomen „unser“ bezeichnet etwas, das die sprechende Mehrzahl zugeordnet ist.",
-		translations: { en: ["ours"] },
+		transcription: "ˈʊnzɐ",
+		translations: { en: ["ours"], ru: ["наш"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

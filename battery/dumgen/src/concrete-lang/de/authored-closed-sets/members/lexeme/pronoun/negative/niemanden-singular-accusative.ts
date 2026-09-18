@@ -26,12 +26,13 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🚫" }, lemma },
 	knowledge: {
 		definition: "Das Negativpronomen „niemand“ bezeichnet keine Person.",
-		translations: { en: ["nobody", "no one"] },
+		transcription: "ˈniːmandn̩",
+		translations: { en: ["nobody", "no one"], ru: ["никого"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

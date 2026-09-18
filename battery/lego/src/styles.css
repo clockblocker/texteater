@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "react-resizable-panels/workspace.css";
+@import "./workspace.css";
 
 /* Utility classes used inside lego live next to this file, outside any
    consumer's automatic source detection. */
@@ -101,6 +103,12 @@
 	--radius-2xl: calc(var(--radius) * 1.8);
 	--radius-3xl: calc(var(--radius) * 2.2);
 	--radius-4xl: calc(var(--radius) * 2.6);
+	--radius-workspace: 0.7rem;
+	--radius-workspace-label: 0.35rem;
+	--text-workspace: 0.85rem;
+	--text-workspace--line-height: normal;
+	--text-workspace-action: 0.65rem;
+	--text-workspace-tail: 0.7rem;
 
 	/* One reading column shared by Texts and Notes. */
 	--container-note: 48rem;

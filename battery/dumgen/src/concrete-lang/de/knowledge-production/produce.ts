@@ -202,7 +202,7 @@ export async function produceKnowledge(
 					const targetAspect = aspect as KnowledgeFailure["aspect"];
 					let outcome: TextOutcome;
 					try {
-						if (closed)
+						if (closed || exact)
 							throw new DumgenFailure(
 								"CatalogMiss",
 								stage,
@@ -322,7 +322,7 @@ export async function produceKnowledge(
 		authored.missing.semanticRelations ?? {},
 	) as Dumrel.DirectSemanticRelation[];
 	if (!requestedRelations.length) return result as KnowledgeProduction;
-	if (closed) {
+	if (closed || exact) {
 		for (const leaf of requestedRelations)
 			failed(
 				"semanticRelations",

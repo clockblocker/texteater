@@ -22,14 +22,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🙋🔐" }, lemma },
 	knowledge: {
+		transcription: "maɪn",
 		definition:
 			"Der Possessivartikel „mein“ ordnet den bezeichneten Gegenstand einer Person oder Gruppe zu.",
-		translations: { en: ["my"] },
+		translations: { en: ["my"], ru: ["мой"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

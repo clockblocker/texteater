@@ -27,7 +27,8 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Relativpronomen „dessen“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
-		translations: { en: ["who", "which", "that"] },
+		transcription: "ˈdɛsn̩",
+		translations: { en: ["who", "which", "that"], ru: ["которого", "чей"] },
 		semanticRelations: {
 			targetKind: "reading",
 			synonym: [
@@ -419,9 +420,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "reading",
 		semanticRelations: {
 			synonym: "Authored",

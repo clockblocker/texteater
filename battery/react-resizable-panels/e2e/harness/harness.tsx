@@ -76,7 +76,11 @@ export function labelSubject(subject: HarnessSubject): string {
 	return subject.kind === "Text" ? "Source text" : subject.note;
 }
 
-export function Harness() {
+export function Harness({
+	WorkspaceComponent = Workspace,
+}: {
+	WorkspaceComponent?: typeof Workspace;
+} = {}) {
 	const [{ workspace, history }, dispatch] = useReducer(
 		reduce,
 		undefined,
@@ -87,7 +91,7 @@ export function Harness() {
 	);
 	return (
 		<div className="harness">
-			<Workspace
+			<WorkspaceComponent
 				state={workspace}
 				dispatch={dispatch}
 				labelSubject={labelSubject}

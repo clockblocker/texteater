@@ -27,12 +27,16 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „Ihnen“ verweist auf eine höflich angesprochene Person.",
-		translations: { en: ["you (formal singular)"] },
+		transcription: "ˈiːnən",
+		translations: {
+			en: ["you (formal singular)"],
+			ru: ["Вам (вежл., ед. ч.)"],
+		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

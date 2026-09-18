@@ -15,14 +15,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🤲" }, lemma },
 	knowledge: {
+		transcription: "ˈhaːbn̩",
 		definition:
 			"Das Auxiliar „haben“ bildet eine grammatische Verbkonstruktion.",
-		translations: { en: ["have"] },
+		translations: { en: ["have"], ru: ["вспомогательный глагол перфекта"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

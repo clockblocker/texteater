@@ -10,3 +10,4 @@ export * from "./note-tags";
 export * from "./note-title";
 export * from "./quote";
 export * from "./reader-segment";
+export * from "./workspace";

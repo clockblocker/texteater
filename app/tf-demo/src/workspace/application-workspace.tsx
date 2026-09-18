@@ -1,3 +1,4 @@
+import { Workspace } from "lego";
 import {
 	createContext,
 	type Dispatch,
@@ -12,7 +13,6 @@ import {
 } from "react";
 import {
 	selectVisibleSheets,
-	Workspace,
 	type WorkspaceCommand,
 	type WorkspaceRenderContext,
 } from "react-resizable-panels/workspace";

@@ -5,27 +5,19 @@ html:has(.workspace),
 body:has(.workspace) {
 	overscroll-behavior-x: none;
 }
-/* Generic layering and geometry. Product content supplies its own typography. */
+/* Layout and interaction only. Consumers supply visual classes through
+   Workspace's classNames prop, including the portaled drag preview. */
 .workspace {
-	--workspace-card-radius: 0.7rem;
 	--workspace-resize-clearance: 12px;
 	--workspace-card-step: 28px;
 	--workspace-card-tail-height: calc(
 		var(--workspace-card-step) +
-		var(--workspace-card-radius)
+		var(--workspace-card-radius, 0px)
 	);
 	position: relative;
 	height: 100%;
 	min-height: 0;
 	overflow: auto;
-	background: var(--canvas, #141920);
-	color: var(--ink, #e2e5e9);
-	font:
-		0.85rem "Geist Variable",
-		sans-serif;
-}
-.workspace button {
-	cursor: pointer;
 }
 .workspace__canvas,
 .workspace__group {
@@ -38,7 +30,6 @@ body:has(.workspace) {
 	height: 100%;
 	min-width: 0;
 	min-height: 0;
-	background: var(--paper, #1c2128);
 }
 .workspace__content {
 	position: absolute;
@@ -53,24 +44,18 @@ body:has(.workspace) {
 	inset: 0;
 	height: 100%;
 	min-height: 100%;
-	background: var(--paper, #1c2128);
 }
 .workspace__sheet > * {
 	min-height: 100%;
 }
+/* A covered Sheet stays mounted, but only the top Sheet is exposed. */
 .workspace__sheet[data-covered="true"] {
 	visibility: hidden;
 }
-/* A covered Sheet is announced by the Pane's sheet count alone; the top
-   Sheet draws no edge for it. */
-/* A hairline between Panes, as quiet as the rule between Note blocks. The
-   line itself is one pixel; a wider invisible band around it takes the
-   pointer so the resize is easy to grab. */
+/* A one-pixel separator with a wider invisible pointer target. */
 .workspace__separator {
 	position: relative;
 	z-index: 4;
-	background: var(--line, #383e47);
-	transition: background-color 150ms ease-out;
 }
 .workspace__separator[aria-orientation="vertical"] {
 	width: 1px;
@@ -89,20 +74,12 @@ body:has(.workspace) {
 .workspace__separator[aria-orientation="horizontal"]::before {
 	inset-block: -5px;
 }
-.workspace__separator:hover,
-.workspace__separator:focus-visible,
-.workspace__separator[data-separator="active"] {
-	background: var(--primary, #a3c6f8);
-	outline: none;
-}
 .workspace__lift {
 	position: absolute;
 	z-index: 5;
 	left: 0;
 	width: 100%;
 	height: 2.8rem;
-	border: 0;
-	background: transparent;
 	touch-action: none;
 	cursor: grab;
 }
@@ -112,36 +89,6 @@ body:has(.workspace) {
 .workspace__lift[data-edge="bottom"] {
 	bottom: var(--workspace-resize-clearance);
 }
-.workspace__lift span {
-	position: absolute;
-	top: 0;
-	inset-inline: 1.25rem;
-	height: 1px;
-	background: linear-gradient(
-		90deg,
-		transparent,
-		var(--line-strong, #657994),
-		transparent
-	);
-}
-.workspace__lift[data-edge="bottom"] span {
-	top: auto;
-	bottom: 0;
-}
-.workspace__lift span::after {
-	content: "";
-	position: absolute;
-	left: 50%;
-	top: -3px;
-	width: 6px;
-	height: 6px;
-	transform: rotate(45deg);
-	background: var(--paper, #1c2128);
-	border: 1px solid var(--primary, #a3c6f8);
-}
-.workspace__lift:hover span {
-	background: var(--primary, #a3c6f8);
-}
 .workspace__pane-actions {
 	position: absolute;
 	top: 0.4rem;
@@ -150,26 +97,10 @@ body:has(.workspace) {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	color: var(--ink-muted, #8e9bae);
-	font-size: 0.65rem;
 }
-.workspace__pane-actions button {
+.workspace__pane-close {
 	width: 1.8rem;
 	height: 1.8rem;
-	border: 1px solid var(--line-strong, #435064);
-	border-radius: 50%;
-	background: var(--canvas, #141920);
-	color: var(--ink, #e2e5e9);
-	font-size: 1rem;
-	transition:
-		background-color 100ms ease-out,
-		scale 150ms ease-out;
-}
-.workspace__pane-actions button:hover {
-	background: var(--raised, #283342);
-}
-.workspace__pane-actions button:active {
-	scale: 0.96;
 }
 /* Applications may place the Card Layer through these custom properties. */
 .workspace__cards {
@@ -185,83 +116,24 @@ body:has(.workspace) {
 .workspace__return-zone {
 	position: absolute;
 	inset: -12px;
-	border: 2px solid transparent;
-	border-radius: calc(var(--workspace-card-radius) + 12px);
 	pointer-events: none;
-	transition: border-color 150ms ease-out;
 }
-.workspace__cards[data-return-target="true"] > .workspace__return-zone {
-	border-color: var(--primary, #a3c6f8);
-}
-/* A Card floats: a hairline of light on its edge, a one-pixel highlight
-   along its top, and a shadow beneath, no border. The shadow is three layers, all tinted with the palette's scrim
-   rather than black: a tight contact layer at the edge, a mid layer, and a
-   wide soft layer with negative spread so nothing leaks above the top edge.
-   Cards deeper in the stack (`--workspace-card-depth`, 0 = front) sit lower,
-   so their layers tighten and fade. It arrives from slightly below and
-   leaves slightly upward. The enter transition starts from `@starting-style`,
-   so closing mid-arrival simply reverses the same transition. */
 .workspace__card {
-	--_lift: max(0.3, calc(1 - var(--workspace-card-depth, 0) * 0.35));
-	--_shadow: var(--scrim, #0a0d12);
+	/* Stack dimensions include the lift area and tail, even without a reset. */
+	box-sizing: border-box;
 	position: absolute;
 	right: 0;
 	left: 0;
 	overflow: hidden;
-	border-radius: var(--workspace-card-radius);
 	padding-block: 1.5rem var(--workspace-card-tail-height);
-	background: var(--paper, #1c2128);
-	box-shadow:
-		inset 0 1px 0 oklch(1 0 0 / 0.06),
-		0 0 0 1px oklch(1 0 0 / 0.08),
-		0 1px 2px color-mix(in oklch, var(--_shadow) 55%, transparent),
-		0 calc(4px * var(--_lift)) calc(8px * var(--_lift)) -2px
-		color-mix(in oklch, var(--_shadow) 45%, transparent),
-		0 calc(24px * var(--_lift)) calc(48px * var(--_lift))
-		calc(-12px * var(--_lift))
-		color-mix(in oklch, var(--_shadow) 75%, transparent);
 	pointer-events: auto;
-	opacity: 1;
-	translate: 0 0;
-	filter: blur(0);
-	transition:
-		opacity 300ms cubic-bezier(0.2, 0, 0, 1),
-		translate 300ms cubic-bezier(0.2, 0, 0, 1),
-		filter 300ms cubic-bezier(0.2, 0, 0, 1),
-		box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
-}
-@starting-style {
-	.workspace__card {
-		opacity: 0;
-		translate: 0 12px;
-		filter: blur(4px);
-	}
 }
 .workspace__card[data-leaving="true"] {
-	opacity: 0;
-	translate: 0 -12px;
 	pointer-events: none;
-	transition:
-		opacity 150ms ease-out,
-		translate 150ms ease-out;
 }
 .workspace__card-content {
 	height: 100%;
 	overflow: auto;
-}
-.workspace__card > .workspace__lift span {
-	background: none;
-}
-.workspace__card > .workspace__lift span::after {
-	top: 3px;
-	transform: translateX(-50%) rotate(45deg);
-	background: transparent;
-	border: 0;
-	border-right: 1px solid var(--line-strong, #56657a);
-	border-bottom: 1px solid var(--line-strong, #56657a);
-}
-.workspace__card > .workspace__lift:hover span::after {
-	border-color: var(--primary, #a3c6f8);
 }
 .workspace__card-tail {
 	position: absolute;
@@ -269,24 +141,14 @@ body:has(.workspace) {
 	left: 0;
 	width: 100%;
 	height: var(--workspace-card-tail-height);
-	padding-top: var(--workspace-card-radius);
-	border: 0;
-	border-top: 1px solid var(--line, #383e47);
-	background: var(--paper, #1c2128);
-	color: var(--ink-soft, #a3aab4);
-	font-size: 0.7rem;
+	padding-top: var(--workspace-card-radius, 0px);
 	touch-action: none;
 	cursor: grab;
-	transition:
-		background-color 150ms ease-out,
-		color 150ms ease-out;
 }
 .workspace__drop {
 	position: absolute;
 	z-index: 15;
 	inset: 0;
-	border: 2px solid var(--primary, #a3c6f8);
-	background: color-mix(in srgb, var(--primary, #a3c6f8) 28%, transparent);
 	pointer-events: none;
 }
 .workspace__drop[data-edge="left"] {
@@ -299,47 +161,18 @@ body:has(.workspace) {
 	top: 50%;
 }
 .workspace__drag {
+	box-sizing: border-box;
 	position: fixed;
 	z-index: 100;
 	width: min(25.775rem, calc(100vw - 3rem));
 	height: min(34rem, 70vh);
 	overflow: hidden;
-	border-radius: var(--workspace-card-radius, 0.7rem);
 	padding-block: 1.5rem;
-	background: var(--paper, #1c2128);
-	box-shadow:
-		inset 0 1px 0 oklch(1 0 0 / 0.06),
-		0 0 0 1px oklch(1 0 0 / 0.1),
-		0 1px 2px color-mix(in oklch, var(--scrim, #0a0d12) 55%, transparent),
-		0 8px 16px -4px
-		color-mix(in oklch, var(--scrim, #0a0d12) 45%, transparent),
-		0 28px 56px -12px
-		color-mix(in oklch, var(--scrim, #0a0d12) 75%, transparent);
 	pointer-events: none;
 	transform: translate(-50%, -1.15rem);
 }
 .workspace__drag[data-anchor="bottom"] {
 	transform: translate(-50%, calc(-100% + 1.15rem));
-}
-.workspace button:focus-visible {
-	outline: 2px solid var(--link, var(--primary, #a3c6f8));
-	outline-offset: -2px;
-}
-
-.workspace__lift span {
-	opacity: 0.35;
-	transition:
-		opacity 150ms ease-out,
-		background-color 150ms ease-out;
-}
-.workspace__lift:hover span,
-.workspace__lift:focus-visible span {
-	opacity: 1;
-}
-.workspace__card-tail:hover,
-.workspace__card-tail:focus-visible {
-	background: var(--raised, #283342);
-	color: var(--accent-foreground, #d7e8ff);
 }
 @media (pointer: coarse) {
 	.workspace {
@@ -347,31 +180,17 @@ body:has(.workspace) {
 		--workspace-card-step: 44px;
 	}
 }
-
-[data-workspace-selected="true"] {
-	text-decoration: underline;
-	text-decoration-color: currentColor;
-	text-underline-offset: 0.2em;
-}
 .workspace__drop-label {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	padding: 0.4rem 0.7rem;
-	border-radius: 0.35rem;
-	background: var(--raised, #172335);
-	color: var(--accent-foreground, #d7e8ff);
 	white-space: nowrap;
 }
 .workspace__edge-hint {
 	position: absolute;
 	z-index: 14;
 	pointer-events: none;
-	background: color-mix(in srgb, var(--primary, #a3c6f8) 6%, transparent);
-	border: 1px solid
-		color-mix(in srgb, var(--primary, #a3c6f8) 31%, transparent);
-	color: var(--ink-soft, #a5bddf);
 	display: grid;
 	place-items: center;
 }

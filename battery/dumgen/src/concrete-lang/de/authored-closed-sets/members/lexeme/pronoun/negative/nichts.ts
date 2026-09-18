@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Negativpronomen „nichts“ verneint das Vorhandensein einer Sache.",
-		translations: { en: ["nothing"] },
+		transcription: "nɪçts",
+		translations: { en: ["nothing"], ru: ["ничто", "ничего"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

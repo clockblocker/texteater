@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Indefinitpronomen „jemand“ verweist auf eine nicht näher bestimmte Person.",
-		translations: { en: ["someone", "somebody"] },
+		transcription: "ˈjeːmandn̩",
+		translations: { en: ["someone", "somebody"], ru: ["кого-то"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

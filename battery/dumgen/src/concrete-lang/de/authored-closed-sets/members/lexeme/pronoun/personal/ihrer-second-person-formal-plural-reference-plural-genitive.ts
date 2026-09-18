@@ -27,12 +27,16 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „Ihrer“ verweist auf mehrere höflich angesprochene Personen.",
-		translations: { en: ["you (formal plural)"] },
+		transcription: "ˈiːʁɐ",
+		translations: {
+			en: ["you (formal plural)"],
+			ru: ["Вас (вежл., мн. ч.)"],
+		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

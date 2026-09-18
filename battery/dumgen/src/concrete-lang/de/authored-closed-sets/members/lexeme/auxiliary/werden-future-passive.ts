@@ -15,14 +15,18 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🔄" }, lemma },
 	knowledge: {
+		transcription: "ˈveːɐ̯dn̩",
 		definition:
 			"Das Auxiliar „werden“ bildet eine grammatische Verbkonstruktion.",
-		translations: { en: ["become", "will"] },
+		translations: {
+			en: ["become", "will"],
+			ru: ["вспомогательный глагол будущего времени и пассива"],
+		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

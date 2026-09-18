@@ -22,14 +22,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
 	knowledge: {
+		transcription: "ˈdeːɐ̯laɪ̯",
 		definition:
 			"Der Demonstrativartikel „derlei“ hebt einen bestimmten Bezug hervor.",
-		translations: { en: ["this kind of"] },
+		translations: { en: ["this kind of"], ru: ["такого рода"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

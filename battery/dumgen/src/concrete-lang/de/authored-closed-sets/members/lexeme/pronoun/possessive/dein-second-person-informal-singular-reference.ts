@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das substantivische Possessivpronomen „dein“ bezeichnet etwas, das die angesprochene Einzahl zugeordnet ist.",
-		translations: { en: ["yours"] },
+		transcription: "daɪ̯n",
+		translations: { en: ["yours"], ru: ["твой"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

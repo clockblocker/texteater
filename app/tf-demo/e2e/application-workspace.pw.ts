@@ -130,3 +130,97 @@ test("a stored Text opens a segment deck, splits, reloads, and collapses", async
 	).toBeVisible();
 	await expect(workspace(page).locator("[data-card-layer]")).toHaveCount(0);
 });
+
+for (const { text, words } of [
+	{ text: "Wir gehen ins Haus.", words: ["Wir", "gehen", "ins", "Haus"] },
+	{
+		text: "Der Aufstieg und Abstieg waren gestern anstrengend.",
+		words: [
+			"Der",
+			"Aufstieg",
+			"und",
+			"Abstieg",
+			"waren",
+			"gestern",
+			"anstrengend",
+		],
+	},
+]) {
+	test(`Text segments remain hoverable after clicking empty Sheet space: ${text}`, async ({
+		page,
+	}) => {
+		await page.goto("/");
+		await page
+			.locator('section[aria-labelledby="library-title"]')
+			.getByText(text, { exact: true })
+			.click();
+		const segments = page.locator(
+			'[data-slot="text-reader"] [data-slot="reader-segment"]',
+		);
+
+		for (const phase of [
+			"before background click",
+			"after background click",
+			"after dismissing a deck",
+			"after another background click",
+		]) {
+			if (phase === "after dismissing a deck") {
+				await segments
+					.filter({ hasText: new RegExp(`^${words[0]}$`) })
+					.click();
+				await expect(
+					workspace(page).locator("[data-card-layer]"),
+				).toBeVisible();
+			}
+			if (phase !== "before background click") {
+				const pane = await workspace(page)
+					.locator("[data-workspace-pane]")
+					.boundingBox();
+				if (!pane) throw new Error("Missing Text Pane geometry.");
+				await page.mouse.click(
+					pane.x + 24,
+					pane.y + pane.height * 0.75,
+					{
+						delay: 100,
+					},
+				);
+				await expect(
+					workspace(page).locator("[data-card-layer]"),
+				).toHaveCount(0);
+			}
+			for (const word of words) {
+				await test.step(`${phase}: hover ${word}`, async () => {
+					const segment = segments.filter({
+						hasText: new RegExp(`^${word}$`),
+					});
+					await expect(segment).toBeVisible();
+					await expect(segment).toBeEnabled();
+					await segment.scrollIntoViewIfNeeded();
+					const box = await segment.boundingBox();
+					if (!box) throw new Error("Missing Text segment geometry.");
+					const point = {
+						x: box.x + box.width / 2,
+						y: box.y + box.height / 2,
+					};
+					await page.mouse.move(point.x, point.y, { steps: 10 });
+
+					// Check the cursor at the actual pointer target, including any overlay.
+					await expect
+						.poll(() =>
+							page.evaluate(({ x, y }) => {
+								const target = document.elementFromPoint(x, y);
+								return target
+									? getComputedStyle(target).cursor
+									: null;
+							}, point),
+						)
+						.toBe("pointer");
+					await expect(segment).toHaveCSS(
+						"text-decoration-line",
+						"underline",
+					);
+				});
+			}
+		}
+	});
+}

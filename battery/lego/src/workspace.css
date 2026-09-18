@@ -1,0 +1,117 @@
+/* Workspace decoration and coordinated motion. Layout and gesture geometry
+   remain in react-resizable-panels/workspace.css. */
+@layer components {
+	.lego-workspace button {
+		cursor: pointer;
+	}
+	.lego-workspace button:focus-visible {
+		outline: 2px solid var(--link);
+		outline-offset: -2px;
+	}
+	.lego-workspace [data-workspace-selected="true"] {
+		text-decoration: underline;
+		text-decoration-color: currentColor;
+		text-underline-offset: 0.2em;
+	}
+	.lego-workspace-lift span {
+		position: absolute;
+		top: 0;
+		inset-inline: 1.25rem;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			var(--line-strong),
+			transparent
+		);
+		opacity: 0.35;
+		transition:
+			opacity 150ms ease-out,
+			background-color 150ms ease-out;
+	}
+	.lego-workspace-lift[data-edge="bottom"] span {
+		top: auto;
+		bottom: 0;
+	}
+	.lego-workspace-lift span::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		top: -3px;
+		width: 6px;
+		height: 6px;
+		transform: rotate(45deg);
+		background: var(--paper);
+		border: 1px solid var(--primary);
+	}
+	.lego-workspace-lift:hover span {
+		background: var(--primary);
+	}
+	.lego-workspace-lift:hover span,
+	.lego-workspace-lift:focus-visible span {
+		opacity: 1;
+	}
+	.lego-workspace-close {
+		transition:
+			background-color 100ms ease-out,
+			scale 150ms ease-out;
+	}
+	/* Deeper Cards cast tighter, fainter shadows. Keep the layered shadow as
+	   one rule so depth and the palette's scrim remain easy to tune together. */
+	.lego-workspace-card {
+		--_lift: max(0.3, calc(1 - var(--workspace-card-depth, 0) * 0.35));
+		box-shadow:
+			inset 0 1px 0 oklch(1 0 0 / 0.06),
+			0 0 0 1px oklch(1 0 0 / 0.08),
+			0 1px 2px color-mix(in oklch, var(--scrim) 55%, transparent),
+			0 calc(4px * var(--_lift)) calc(8px * var(--_lift)) -2px
+			color-mix(in oklch, var(--scrim) 45%, transparent),
+			0 calc(24px * var(--_lift)) calc(48px * var(--_lift))
+			calc(-12px * var(--_lift))
+			color-mix(in oklch, var(--scrim) 75%, transparent);
+		opacity: 1;
+		translate: 0 0;
+		filter: blur(0);
+		transition:
+			opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+			translate 300ms cubic-bezier(0.2, 0, 0, 1),
+			filter 300ms cubic-bezier(0.2, 0, 0, 1),
+			box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
+	}
+	@starting-style {
+		.lego-workspace-card {
+			opacity: 0;
+			translate: 0 12px;
+			filter: blur(4px);
+		}
+	}
+	.lego-workspace-card[data-leaving="true"] {
+		opacity: 0;
+		translate: 0 -12px;
+		transition:
+			opacity var(--workspace-card-exit-duration) ease-out,
+			translate var(--workspace-card-exit-duration) ease-out;
+	}
+	.lego-workspace-card > .lego-workspace-lift span {
+		background: none;
+	}
+	.lego-workspace-card > .lego-workspace-lift span::after {
+		top: 3px;
+		transform: translateX(-50%) rotate(45deg);
+		background: transparent;
+		border: 0;
+		border-right: 1px solid var(--line-strong);
+		border-bottom: 1px solid var(--line-strong);
+	}
+	.lego-workspace-card > .lego-workspace-lift:hover span::after {
+		border-color: var(--primary);
+	}
+	.lego-workspace-drag {
+		box-shadow:
+			inset 0 1px 0 oklch(1 0 0 / 0.06),
+			0 0 0 1px oklch(1 0 0 / 0.1),
+			0 1px 2px color-mix(in oklch, var(--scrim) 55%, transparent),
+			0 8px 16px -4px color-mix(in oklch, var(--scrim) 45%, transparent),
+			0 28px 56px -12px color-mix(in oklch, var(--scrim) 75%, transparent);
+	}
+}

@@ -27,7 +27,8 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Demonstrativpronomen „dessen“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
-		translations: { en: ["that one", "this one"] },
+		transcription: "ˈdɛsn̩",
+		translations: { en: ["that one", "this one"], ru: ["его"] },
 		semanticRelations: {
 			targetKind: "reading",
 			synonym: [
@@ -419,9 +420,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "reading",
 		semanticRelations: {
 			synonym: "Authored",

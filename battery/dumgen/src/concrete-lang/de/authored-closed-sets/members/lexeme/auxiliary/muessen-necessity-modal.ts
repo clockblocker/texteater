@@ -15,14 +15,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "⚠️" }, lemma },
 	knowledge: {
+		transcription: "ˈmʏsn̩",
 		definition:
 			"Das Modalauxiliar „müssen“ modifiziert die Geltung oder Möglichkeit einer Handlung.",
-		translations: { en: ["must"] },
+		translations: { en: ["must"], ru: ["быть обязанным"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

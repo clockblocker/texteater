@@ -27,7 +27,11 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das gehoben oder veraltet wirkende Totalpronomen „jedweder“ bezeichnet nachdrücklich jedes einzelne Mitglied einer Gruppe.",
-		translations: { en: ["each and every", "everyone"] },
+		transcription: "ˈjeːtveːdɐ",
+		translations: {
+			en: ["each and every", "everyone"],
+			ru: ["всякий", "каждый"],
+		},
 		semanticRelations: {
 			targetKind: "lemma",
 			synonym: [
@@ -55,9 +59,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "Authored",

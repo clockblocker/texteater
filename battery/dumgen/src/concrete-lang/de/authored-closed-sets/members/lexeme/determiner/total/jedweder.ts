@@ -22,14 +22,15 @@ export const member = defineAuthoredMember({
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "💯" }, lemma },
 	knowledge: {
+		transcription: "ˈjeːtveːdɐ",
 		definition:
 			"Der totalisierende Determinierer „jedweder“ erfasst die bezeichnete Menge vollständig.",
-		translations: { en: ["each and every"] },
+		translations: { en: ["each and every"], ru: ["каждый"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

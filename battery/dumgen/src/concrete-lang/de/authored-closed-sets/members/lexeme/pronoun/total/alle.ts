@@ -27,12 +27,13 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Totalpronomen „alle“ bezeichnet die Gesamtheit in der Mehrzahl.",
-		translations: { en: ["all", "everyone"] },
+		transcription: "ˈalə",
+		translations: { en: ["all", "everyone"], ru: ["все"] },
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

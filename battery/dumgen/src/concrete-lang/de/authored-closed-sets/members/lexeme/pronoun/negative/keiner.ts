@@ -27,7 +27,8 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das Negativpronomen „keiner“ verneint die Zugehörigkeit zu einer im Kontext bestimmten Menge und kann sich auf Personen oder Sachen beziehen.",
-		translations: { en: ["none", "no one"] },
+		transcription: "ˈkaɪ̯nɐ",
+		translations: { en: ["none", "no one"], ru: ["никто", "ни один"] },
 		semanticRelations: {
 			targetKind: "lemma",
 			nearSynonym: [
@@ -75,9 +76,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "ReviewedEmpty",

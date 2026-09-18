@@ -27,7 +27,11 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		definition:
 			"Das gehoben wirkende Totalpronomen „jeglicher“ bezeichnet jedes einzelne Mitglied einer Gruppe und kann auch pluralisch gebraucht werden.",
-		translations: { en: ["each", "any", "every one"] },
+		transcription: "ˈjeːklɪçɐ",
+		translations: {
+			en: ["each", "any", "every one"],
+			ru: ["всякий", "любой"],
+		},
 		semanticRelations: {
 			targetKind: "lemma",
 			synonym: [
@@ -55,9 +59,9 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: {
-		transcription: "Unauthored",
+		transcription: "Authored",
 		definition: "Authored",
-		translations: { en: "Authored" },
+		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
 			synonym: "Authored",

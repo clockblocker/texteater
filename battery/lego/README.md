@@ -8,6 +8,9 @@ Import `lego/styles.css` once from the application stylesheet. It brings in
 Tailwind, the shadcn base, the Geist font, the token palette, and the `compact:`
 density variant. Applications keep no `@theme` block of their own.
 
+`Workspace` adds the shared visual treatment to the headless workspace renderer.
+The state model and commands remain in `react-resizable-panels/workspace`.
+
 Import components from `lego`. Atoms are the shadcn primitives (`Button`,
 `Dialog`, `Sidebar`, and so on). Molecules are the opinionated pieces that give
 Notes and reading text their look: `NoteSection`, `NoteTitle`, `QuoteButton`,

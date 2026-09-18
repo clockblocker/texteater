@@ -1,4 +1,4 @@
-/* Harness chrome only. Workspace presentation comes from workspace.css. */
+/* Harness chrome only. The primitive uses native, unthemed controls. */
 html,
 body,
 #root {

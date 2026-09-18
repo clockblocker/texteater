@@ -496,3 +496,55 @@ test("workspace reserves horizontal overscroll at the browser root", async ({
 		"auto",
 	);
 });
+
+for (const edge of ["right", "bottom"] as const) {
+	test(`a ${edge} split can be resized through its separator`, async ({
+		page,
+	}) => {
+		await page.goto("/");
+		await openCards(page);
+		const tail = page
+			.getByRole("button", { name: /Lift .* Card$/ })
+			.first();
+		await tail.hover();
+		const tailBox = await tail.boundingBox();
+		const paneBox = await page
+			.locator("[data-workspace-pane]")
+			.boundingBox();
+		if (!tailBox || !paneBox) throw new Error("Missing split geometry.");
+		await page.mouse.move(
+			tailBox.x + tailBox.width / 2,
+			tailBox.y + tailBox.height / 2,
+		);
+		await page.mouse.down();
+		await page.mouse.move(
+			paneBox.x +
+				(edge === "right" ? paneBox.width - 4 : paneBox.width / 2),
+			paneBox.y +
+				(edge === "bottom" ? paneBox.height - 4 : paneBox.height / 2),
+			{ steps: 8 },
+		);
+		await page.mouse.up();
+		const panes = page.locator("[data-workspace-pane]");
+		await expect(panes).toHaveCount(2);
+		const separator = page.getByRole("separator");
+		const separatorBox = await separator.boundingBox();
+		const before = await panes.first().boundingBox();
+		if (!separatorBox || !before)
+			throw new Error("Missing separator geometry.");
+		const x = separatorBox.x + separatorBox.width / 2;
+		const y = separatorBox.y + separatorBox.height / 2;
+		await page.mouse.move(x, y);
+		await page.mouse.down();
+		await page.mouse.move(
+			x + (edge === "right" ? 24 : 0),
+			y + (edge === "bottom" ? 24 : 0),
+			{ steps: 5 },
+		);
+		await page.mouse.up();
+		const dimension = edge === "right" ? "width" : "height";
+		await expect
+			.poll(async () => (await panes.first().boundingBox())?.[dimension])
+			.toBeGreaterThan(before[dimension] + 10);
+	});
+}
