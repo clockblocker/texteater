@@ -6,12 +6,14 @@ import type {
 } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
-import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
+import { validateEncounter } from "../../../universal/validation.js";
 import {
-	indexedContext,
-	validateEncounter,
-} from "../../../universal/validation.js";
+	assembleTarget,
+	classificationState,
+	membershipQuestions,
+	routeQuestion,
+} from "./assembly.js";
 
 // LEO distinguishes standalone/attributive pronouns and article-bound possessives.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
@@ -25,41 +27,8 @@ Productive perfect and passive complexes are complete verbal targets: ist ... au
 Fixed correlators include only anchors, never payload: entweder/oder, weder/noch, sowohl/als/auch, nicht nur/sondern auch, je/desto are CCONJ; um/zu, ohne/zu, statt/zu, so/dass are SCONJ; einerseits/andererseits and teils/teils are ADV. Classify the whole identity, not the clicked anchor's standalone POS.
 An established noncompositional expression is an Idiom; identical literal wording is separate. An anchor or fixed article/preposition click selects the same complete expression. A Fusion is one fused preposition/article source word unless inside a larger fixed expression. Ordinary conventional verb/noun combinations have no larger classification route.
 Free substantive interrogatives, demonstratives, relatives, quantifiers and negatives are PRON; adnominal forms directly modifying a noun are DET. Genitive jedermanns remains PRON. Attributive genitives dessen/deren/wessen are also PRON (with external DET function), not ordinary agreeing determiners: keep the following noun separate. Article-bound possessives der meine/der meinige have a separate DET article and PRON meine/meinige; do not absorb that article using the common-noun rule. Fixed was für einer/was für welche is one PRON target; was für ein before a noun, or plural/mass was für, is one DET target. These expressions can be discontinuous; preserve all fixed anchors and exclude the noun or other free material. Comparative and adverbially used adjectives remain ADJ. Do not infer lemma or inflection here.
-German common nouns include their overt definite/indefinite article as fixed members, even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ. Article clicks resolve the same noun. In compatible nominal coordination, only the closest eligible noun owns the overt article: der Aufstieg und Abstieg gives [der,Aufstieg] and [Abstieg]. Closest means Segment distance within that nominal scope, excluding nested phrases; ties are Unresolved. Longer compatible coordination may share the article, but another explicit article or clause boundary stops sharing. Incompatible agreement and proximity alone never license sharing. Only forms of the true definite article der/die/das or indefinite article ein are absorbed. mein/dieser/kein are NOT absorbed articles in this domain: kein Haus gives [kein] DET and [Haus] NOUN, mein Hund gives [mein] DET and [Hund] NOUN. Clicking either does not include the other. mein/dieser/kein remain independent DETs; im/zum/ins remain Fusion and do not join nouns. Their internal article may supply noun grammar later without adding the Fusion to noun membership. Bare nouns stay bare. These noun rules preserve any larger established idiom boundary.
+German common nouns include their overt definite/indefinite article as fixed members, even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ. A noun absorbs at most one article, the one opening its own nominal phrase; an article separated from the clicked noun by a verb, a clause boundary or another noun belongs to that other noun and never joins: clicking Weg in Der Weg ist das Ziel gives [Der,Weg], never das. Article clicks resolve the same noun. In compatible nominal coordination, only the closest eligible noun owns the overt article: der Aufstieg und Abstieg gives [der,Aufstieg] and [Abstieg]. Closest means Segment distance within that nominal scope, excluding nested phrases; ties are Unresolved. Longer compatible coordination may share the article, but another explicit article or clause boundary stops sharing. Incompatible agreement and proximity alone never license sharing. Only forms of the true definite article der/die/das or indefinite article ein are absorbed. mein/dieser/kein are NOT absorbed articles in this domain: kein Haus gives [kein] DET and [Haus] NOUN, mein Hund gives [mein] DET and [Hund] NOUN. Clicking either does not include the other. mein/dieser/kein remain independent DETs; im/zum/ins remain Fusion and do not join nouns. Their internal article may supply noun grammar later without adding the Fusion to noun membership. Bare nouns stay bare. These noun rules preserve any larger established idiom boundary.
 A target is defensible only when the exact assembled members form the complete realized fixed unit, with no omitted present fixed member and no added free material. Uncertainty or contradictory membership must remain Unresolved; do not repair, trim, extend or replace the assembled group.`;
-
-const routes = {
-	"Lexeme/ADJ":
-		"Adjective, including adjectival participles and adverbial adjective uses",
-	"Lexeme/ADP":
-		"Adposition (preposition, postposition or fixed circumposition)",
-	"Lexeme/ADV": "Adverb, including a whole adverbial correlator",
-	"Lexeme/AUX":
-		"Meaning-bearing modal with an overt infinitive, or copula; includes its own scoped grammatical auxiliaries",
-	"Lexeme/CCONJ":
-		"Coordinating conjunction, including a complete fixed correlator",
-	"Lexeme/DET": "Determiner modifying a noun",
-	"Lexeme/INTJ": "Interjection",
-	"Lexeme/NOUN": "Common noun, including substantivized participles",
-	"Lexeme/NUM": "Numeral",
-	"Lexeme/PART": "Particle",
-	"Lexeme/PRON":
-		"Pronoun used substantively, or attributive genitive dessen/deren/wessen",
-	"Lexeme/PROPN": "Proper noun",
-	"Lexeme/SCONJ":
-		"Subordinating conjunction, including fixed multi-member conjunctions",
-	"Lexeme/SYM": "Symbol",
-	"Lexeme/VERB":
-		"Whole lexical verb with its own scoped auxiliaries and fixed members",
-	"Phraseme/Aphorism": "Established concise attributed maxim",
-	"Phraseme/DiscourseFormula": "Established fixed discourse formula",
-	"Phraseme/Idiom":
-		"Established noncompositional expression in this contextual meaning",
-	"Phraseme/Proverb": "Established traditional saying",
-	"Construction/Fusion": "One fused preposition/article source word",
-	Unresolved:
-		"The exact assembled group is invalid, incomplete, includes free material, or has no defensible allowed route",
-};
 
 export async function classifyGermanTarget(
 	options: DumgenOptions,
@@ -67,32 +36,7 @@ export async function classifyGermanTarget(
 	signal: AbortSignal,
 ): Promise<AnalysisTarget<"de">> {
 	const judge = judgmentCaller(options);
-	const state = {
-		sentence: indexedContext(input.sentence),
-		clickedSegmentIndex: input.clickedSegmentIndex,
-		criteria:
-			"In `sentence`, <sN> tags identify selectable occurrences by original segment index N. Untagged text supplies context only. " +
-			targetCriteria,
-	};
-	const questions: Questions = {};
-	for (const [index, segment] of input.sentence.segments.entries()) {
-		if (
-			segment.kind !== "ResolvableText" ||
-			index === input.clickedSegmentIndex
-		)
-			continue;
-		questions[`member_${index}`] = choice(
-			`Under \`criteria\`, does occurrence <s${index}> in \`sentence\` belong to the same complete fixed unit as the occurrence identified by \`clickedSegmentIndex\`?`,
-			{
-				Include: "It is a fixed member of that same unit",
-				Exclude:
-					"It belongs to another unit or is free contextual material",
-				Unresolved: "Its membership cannot be defensibly decided",
-			},
-		);
-	}
-	const members = [input.clickedSegmentIndex];
-	const membershipQuestions = Object.keys(questions);
+	const membership = membershipQuestions(input);
 	// Membership and route are independent judgments over the same state, so
 	// they travel in one round trip. The route is asked about the complete
 	// unit containing the clicked occurrence rather than about the assembled
@@ -100,47 +44,32 @@ export async function classifyGermanTarget(
 	const result = await judge<Questions>(
 		"classifyTarget",
 		"de/target",
-		state,
-		{
-			...questions,
-			route: choice(
-				`Under \`criteria\`, what is the Family/Kind of the complete fixed unit in \`sentence\` that contains the occurrence identified by \`clickedSegmentIndex\`? Classify the whole unit, not the clicked word's standalone part of speech. Choose Unresolved when no defensible complete target contains it.`,
-				routes,
-			),
-		},
+		classificationState(input, targetCriteria),
+		{ ...membership, route: routeQuestion },
 		signal,
 	);
-	for (const id of membershipQuestions) {
-		const answer = result.answers[id];
-		if (answer?.type !== "choice" || answer.choice === "Unresolved")
-			throw new DumgenFailure(
-				"Unresolved",
-				"classifyTarget",
-				"Target membership is unresolved",
-			);
-		if (answer.choice === "Include")
-			members.push(Number(id.slice("member_".length)));
-	}
+	const assembly = assembleTarget(input, result.answers);
 	recordEvent(signal, "JudgmentApplicability", {
-		consumed: [...membershipQuestions, "route"],
+		consumed: [...Object.keys(membership), "route"],
 		ignored: [],
 	});
-	members.sort((a, b) => a - b);
-	recordEvent(signal, "TargetAssembled", { memberSegmentIndices: members });
-	const routeAnswer = result.answers.route;
-	const selected =
-		routeAnswer?.type === "choice" ? routeAnswer.choice : "Unresolved";
-	if (selected === "Unresolved")
+	if (assembly.decision === "Unresolved")
 		throw new DumgenFailure(
 			"Unresolved",
 			"classifyTarget",
-			"Assembled target is not defensible",
+			assembly.reason,
 		);
-	const [family, kind] = selected.split("/");
+	recordEvent(signal, "TargetAssembled", {
+		memberSegmentIndices: assembly.memberSegmentIndices,
+	});
 	return validateEncounter(
 		{
 			sentence: input.sentence,
-			target: { family, kind, memberSegmentIndices: members },
+			target: {
+				family: assembly.family,
+				kind: assembly.kind,
+				memberSegmentIndices: assembly.memberSegmentIndices,
+			},
 		},
 		"classifyTarget",
 	).target as AnalysisTarget<"de">;

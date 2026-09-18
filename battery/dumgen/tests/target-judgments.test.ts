@@ -157,6 +157,47 @@ test("repeated spelling stays positional; invalid whole groups stop without repa
 	expect(invalid.traces[0]!.calls).toHaveLength(1);
 	expect(invalid.traces[0]!.failure?.tag).toBe("Unresolved");
 });
+test("a noun target absorbing stray articles stops in classification", async () => {
+	const sentence: SegmentedSentence<"de"> = {
+		id: "stray-articles",
+		language: "de",
+		segments: ["Der", "Weg", "ist", "das", "Ziel"].map((text) => ({
+			text,
+			kind: "ResolvableText",
+		})),
+	};
+	const stray = controlled([0, 1, 3], "Lexeme/NOUN");
+	const result = await Effect.runPromise(
+		Effect.either(
+			stray.dumgen.classifyTarget({ sentence, clickedSegmentIndex: 1 }),
+		),
+	);
+	expect(result._tag).toBe("Left");
+	expect(stray.traces[0]!.failure?.tag).toBe("Unresolved");
+	expect(stray.traces[0]!.failure?.message).toContain("article");
+	const own = controlled([0, 1], "Lexeme/NOUN");
+	expect(
+		(
+			await Effect.runPromise(
+				own.dumgen.classifyTarget({ sentence, clickedSegmentIndex: 1 }),
+			)
+		).memberSegmentIndices,
+	).toEqual([0, 1]);
+	// An article after the noun is never its own.
+	const trailing = controlled([1, 3], "Lexeme/NOUN");
+	expect(
+		(
+			await Effect.runPromise(
+				Effect.either(
+					trailing.dumgen.classifyTarget({
+						sentence,
+						clickedSegmentIndex: 1,
+					}),
+				),
+			)
+		)._tag,
+	).toBe("Left");
+});
 test("a lone resolvable occurrence skips the empty membership batch but still judges its route", async () => {
 	const run = controlled([0], "Lexeme/INTJ");
 	expect(

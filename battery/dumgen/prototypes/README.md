@@ -67,3 +67,41 @@ The verb baseline needed the evaluation projection fix in `src/evaluation/gramma
 (expletiveEvidence was dropped, so every verb case failed the output schema).
 
 Note: `cli/evaluate.ts` evaluates the built `dist`, so run `bun run build:js` before evaluating source changes.
+
+## P4: stray articles on noun clicks (2026-09-18)
+
+Live traces (`resolution_inspector trace p97562n0ccz21jxdhedxhvace18em5yt`, `…p9779dzqs7a0nth68zdfk9y2es8em33n`)
+showed the membership judge attaching every definite article in the sentence to a
+clicked noun: a click on `Weg` in `… sagte die Wanderführerin: „Der Weg ist das Ziel.“`
+assembled `[die, Der, Weg, das]` NOUN with Include probabilities 0.75–0.86, and the
+grammar stage's `support` question then failed the request as
+`Unresolved applicable question support`.
+
+Changes measured here:
+
+- `targetCriteria` gained one sentence: a noun absorbs at most one article, the one
+  opening its own phrase; articles across a verb, clause boundary or another noun never join.
+- `assembleTarget` (new `target-classification/assembly.ts`, shared by production and
+  this prototype) rejects a NOUN assembly with more than one article member, or one
+  that is not the leftmost member, before the grammar stage runs.
+- 24 golden cases `target-de-noun-article-cross-*` (four sentences with several
+  articles across clauses, every noun and article click), listed in `evaluation-ids.ts`.
+
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/p4-noun-article-membership.ts eval'
+
+| variant | legacy 182 pass | new 24 pass | stray article assemblies (206) |
+| --- | --- | --- | --- |
+| head (wording before the change) | 117 | 17 | 7 |
+| tightened (current wording) | 124 | 21 | 4 |
+| owned (tightened + one `ownedArticle` choice feeding NOUN article membership) | 119 | 21 | 3 |
+
+On the 32-case article subset, two runs each: head 23/23, tightened 25/26, owned 27/25.
+The tightened wording keeps the production baseline on the legacy set (124, same as
+the pre-Design-A production number) and removes the stray-article assemblies on noun
+routes; the remaining "stray" rows are idiom/verb membership errors, not article ones.
+The extra `ownedArticle` question buys nothing over the wording and costs legacy
+cases, so it is not adopted.
+
+Consistent remaining failures in the new cases are article clicks, not noun clicks:
+clicking `dem`/`der`/`des` returns the article alone as NOUN or DET, or `des` as
+Fusion. That is a separate weakness of the article-click rule and is left open.
