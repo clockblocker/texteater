@@ -43,18 +43,30 @@
 	padding: 0.65rem;
 }
 .inspection-click {
-	display: block;
+	position: relative;
 	width: 100%;
-	text-align: left;
 	border: 1px solid var(--border);
 	border-radius: 0.75rem;
 	padding: 0.85rem;
 	margin-bottom: 0.5rem;
 	background: var(--card);
-	cursor: pointer;
 }
 .inspection-click:hover {
-	background: var(--accent);
+	border-color: color-mix(in srgb, var(--foreground) 55%, var(--border));
+}
+.inspection-click:has(.inspection-copy-reference:hover) {
+	border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
+}
+.inspection-click-open {
+	display: block;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+}
+.inspection-click-actions {
+	position: absolute;
+	right: 0.65rem;
+	bottom: 0.45rem;
 }
 .inspection-click-heading {
 	display: flex;
@@ -79,6 +91,7 @@
 .inspection-click-kind {
 	display: flex;
 	justify-content: space-between;
+	padding-right: 2rem;
 	font-size: 0.7rem;
 	margin-top: 0.6rem;
 	color: var(--muted-foreground);
@@ -136,6 +149,11 @@
 .inspection-metrics strong {
 	color: var(--foreground);
 	font-weight: 500;
+}
+.inspection-chain-reference {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
 }
 .inspection-scroll {
 	overflow-y: auto;
@@ -247,9 +265,23 @@
 	flex: none;
 	margin-left: 0.25rem;
 	color: var(--muted-foreground);
+	cursor: pointer;
 	opacity: 0.55;
 	transition-property: color, opacity;
 	transition-duration: 120ms;
+}
+.inspection-chain-reference .inspection-copy-reference {
+	opacity: 1;
+	margin-left: 0.15rem;
+	height: 1.5rem;
+	padding: 0 0.35rem;
+}
+.inspection-click-actions .inspection-copy-reference {
+	opacity: 1;
+	border: 1px solid var(--border);
+}
+.inspection-click-actions .inspection-copy-reference:hover {
+	border-color: color-mix(in srgb, var(--foreground) 55%, var(--border));
 }
 .inspection-step-row:hover .inspection-copy-reference,
 .inspection-copy-reference:focus-visible {
@@ -371,7 +403,7 @@
 }
 .inspection-step-toggle:focus-visible,
 .inspection-bar:focus-visible,
-.inspection-click:focus-visible {
+.inspection-click-open:focus-visible {
 	outline: 2px solid var(--ring);
 	outline-offset: 3px;
 }

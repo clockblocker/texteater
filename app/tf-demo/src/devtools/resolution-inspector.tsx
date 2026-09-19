@@ -90,29 +90,45 @@ export function ResolutionInspector() {
 							</p>
 						) : (
 							history.results.map((click) => (
-								<button
-									type="button"
+								<div
 									className="inspection-click"
 									key={click._id}
-									onClick={() => setSelected(click.requestId)}
 								>
-									<span className="inspection-click-heading">
-										<strong>{click.selectedSegment}</strong>
-										<time>{clock(click.startedAt)}</time>
-									</span>
-									<span className="inspection-sentence">
-										{click.sentence}
-									</span>
-									<span className="inspection-click-kind">
-										{click.selectionKind === "Analysis"
-											? "Sentence splitting & analysis"
-											: click.selectionKind ===
-													"Available"
-												? "Stored result"
-												: "Resolution"}
-										<ChevronRightIcon size={14} />
-									</span>
-								</button>
+									<button
+										type="button"
+										className="inspection-click-open"
+										onClick={() =>
+											setSelected(click.requestId)
+										}
+									>
+										<span className="inspection-click-heading">
+											<strong>
+												{click.selectedSegment}
+											</strong>
+											<time>
+												{clock(click.startedAt)}
+											</time>
+										</span>
+										<span className="inspection-sentence">
+											{click.sentence}
+										</span>
+										<span className="inspection-click-kind">
+											{click.selectionKind === "Analysis"
+												? "Sentence splitting & analysis"
+												: click.selectionKind ===
+														"Available"
+													? "Stored result"
+													: "Resolution"}
+											<ChevronRightIcon size={14} />
+										</span>
+									</button>
+									<div className="inspection-click-actions">
+										<CopyInspectionValue
+											value={`bun run resolution_inspector request ${click.requestId}`}
+											label="Copy full chain command"
+										/>
+									</div>
+								</div>
 							))
 						)}
 						{history.status === "CanLoadMore" && (
@@ -289,8 +305,12 @@ function InspectionDetail({
 								: "Reading resolved"}{" "}
 						<strong>{time(resolvedMs ?? total)}</strong>
 					</span>
-					<span>
+					<span className="inspection-chain-reference">
 						Full chain <strong>{time(total)}</strong>
+						<CopyInspectionValue
+							value={`bun run resolution_inspector request ${requestId}`}
+							label="Copy full chain command"
+						/>
 					</span>
 					<span>
 						{stepGroups[0].steps.length} steps ·{" "}
@@ -509,6 +529,21 @@ function InspectionDetail({
 }
 
 function CopyInspectionReference({ stepId }: { stepId: string }) {
+	return (
+		<CopyInspectionValue
+			value={`bun run resolution_inspector trace ${stepId}`}
+			label="Copy detailed trace command"
+		/>
+	);
+}
+
+function CopyInspectionValue({
+	value,
+	label,
+}: {
+	value: string;
+	label: string;
+}) {
 	const [copied, setCopied] = useState(false);
 	return (
 		<Button
@@ -516,17 +551,11 @@ function CopyInspectionReference({ stepId }: { stepId: string }) {
 			size="icon-sm"
 			variant="ghost"
 			className="inspection-copy-reference"
-			aria-label={
-				copied
-					? "Detailed trace command copied"
-					: "Copy detailed trace command"
-			}
-			title={copied ? "Copied" : "Copy detailed trace command"}
+			aria-label={copied ? "Copied" : label}
+			title={copied ? "Copied" : label}
 			onClick={async () => {
 				try {
-					await navigator.clipboard.writeText(
-						`bun run resolution_inspector trace ${stepId}`,
-					);
+					await navigator.clipboard.writeText(`\`${value}\``);
 					setCopied(true);
 					window.setTimeout(() => setCopied(false), 1600);
 				} catch {
@@ -738,7 +767,7 @@ function StepPayload({
 					disabled={!complete}
 					onClick={async () => {
 						try {
-							await navigator.clipboard.writeText(text);
+							await navigator.clipboard.writeText(`\`${text}\``);
 							setCopied(true);
 						} catch {
 							setCopied(false);
