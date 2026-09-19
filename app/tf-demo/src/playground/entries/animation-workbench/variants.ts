@@ -55,14 +55,6 @@ export const PARAMETERS: readonly Parameter[] = [
 		step: 25,
 		unit: "ms",
 	},
-	{
-		key: "edgeBand",
-		label: "Edge drop band",
-		min: 20,
-		max: 160,
-		step: 1,
-		unit: "px",
-	},
 	{ key: "holdScale", label: "Hold scale", min: 0.8, max: 1, step: 0.01 },
 	{
 		key: "tiltMax",

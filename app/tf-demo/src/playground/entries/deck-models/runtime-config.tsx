@@ -18,7 +18,6 @@ export const DEFAULT_DECK_MOTION = {
 	clickSlop: 4,
 	armReleaseMs: 650,
 	velocityStaleMs: 100,
-	edgeBand: 80,
 	settleTimeoutMs: spec.SETTLE_TIMEOUT_MS,
 	/* an index into spec.SNAP_BACK_MODELS; see the note there */
 	snapBackModel: spec.SNAP_BACK_MODELS.indexOf("under"),
@@ -102,7 +101,6 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		THROW: p.throwVelocity,
 		HOLD_RELEASE_MS: p.armReleaseMs,
 		VELOCITY_STALE_MS: p.velocityStaleMs,
-		EDGE_BAND: p.edgeBand,
 		SETTLE_TIMEOUT_MS: p.settleTimeoutMs * p.durationScale,
 		SNAP_BACK:
 			spec.SNAP_BACK_MODELS[Math.round(p.snapBackModel)] ?? "under",
