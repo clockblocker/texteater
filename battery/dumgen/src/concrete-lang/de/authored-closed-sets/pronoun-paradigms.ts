@@ -374,7 +374,8 @@ add(
 	),
 );
 // jeder is singular. Genitive jedes cannot stand alone, unlike eines jeden.
-// Rare plural jedweder/jeglicher is left to the Open Route pending separate review.
+// Plural jedwede/jegliche is rare but closed: a Closed Route member covers every
+// cell of its supported feature product (map 487, ticket 499).
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-jeder3.html?lang=de
 for (const [stem, ipa] of [
 	["jed", "ˈjeːd"],
@@ -387,7 +388,7 @@ for (const [stem, ipa] of [
 			...t,
 			Masc: [t.Masc[0], t.Masc[1], t.Masc[2], null],
 			Neut: [t.Neut[0], t.Neut[1], t.Neut[2], null],
-			Plur: absent,
+			Plur: stem === "jed" ? absent : t.Plur,
 		},
 		description(
 			"Tot",

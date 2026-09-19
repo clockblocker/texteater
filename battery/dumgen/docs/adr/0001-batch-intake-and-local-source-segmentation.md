@@ -17,3 +17,7 @@ This supersedes the original single-model Intake call that combined batch
 Language, judgments and repair. Deterministic, package-free Source Segmentation
 remains the boundary; analyzer-backed Hebrew segmentation was rejected because
 its footprint and server-only deployment violate that boundary.
+
+ADR 0004 amends the boundary: deterministic Source Segmentation is the first
+internal step of intake-time Segment production, and word-internal splitting
+happens there rather than at click resolution.
