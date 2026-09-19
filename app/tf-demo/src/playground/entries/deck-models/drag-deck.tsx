@@ -155,10 +155,15 @@ const SHEET_INSET_Y_REM = 1;
 /** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
 const CARD_CONTEXTS = 2;
 /** How far the return zone reaches past the Deck's cards. */
-const PILE_PAD = "0.75rem";
+const PILE_PAD_REM = 0.75;
+const PILE_PAD = `${PILE_PAD_REM.toString()}rem`;
 /** The remove zone's width, and the gap between it and the Deck. */
 const REMOVE_WIDTH = "5rem";
 const ZONE_GAP = "0.75rem";
+/** The Heading's inline padding: what a Card's title sits in from its edge. */
+const TITLE_INSET_REM = 1;
+/** The gap between a selected word's baseline box and the dealt Deck. */
+const DEAL_GAP_PX = 8;
 
 const DISMISS_EXEMPT_SELECTOR = [
 	"button",
@@ -239,6 +244,24 @@ function cardWidthIn(
 /** The expanded Card's height, in px, for a Deck of `count` Cards. */
 function cardHeightPx(count: number): number {
 	return (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * remPx();
+}
+
+/**
+ * The Deck's left edge inside its Pane: the Card's title starts where the
+ * selected word does, kept inside the Pane by a `PILE_PAD` margin. With no
+ * word yet (a seeded scene), the Deck is centred as before.
+ */
+function deckLeftIn(
+	paneWidth: number,
+	cardWidth: number,
+	rem: number,
+	anchorLeft: number | null,
+): number {
+	if (anchorLeft === null) return (paneWidth - cardWidth) / 2;
+	const pad = PILE_PAD_REM * rem;
+	const wanted = anchorLeft - TITLE_INSET_REM * rem;
+	const max = paneWidth - cardWidth - pad;
+	return Math.max(Math.min(pad, max), Math.min(wanted, max));
 }
 
 function panesOf(node: LayoutNode): readonly PaneNode[] {
@@ -391,6 +414,12 @@ function CompassRuntime({
 		sheets: initialScene === "sheet" ? seed.slice(0, 1) : [],
 	});
 	const [anchorTop, setAnchorTop] = useState((embedded ? 3 : 8) * 16);
+	/**
+	 * Where the Deck's titles start, from the root Pane's left edge; null
+	 * until a word is selected, and then that word's left. The Deck sits
+	 * so its titles line up under the word, not centred in the Pane.
+	 */
+	const [anchorLeft, setAnchorLeft] = useState<number | null>(null);
 	const [drag, setDrag] = useState<Drag | null>(null);
 	const [destination, setDestination] = useState<Destination | null>(null);
 	const [pastCommit, setPastCommit] = useState(false);
@@ -503,7 +532,10 @@ function CompassRuntime({
 			.closest("[data-deck-pane]")
 			?.getBoundingClientRect();
 		const box = element.getBoundingClientRect();
-		if (stageBox) setAnchorTop(box.bottom - stageBox.top + 14);
+		if (stageBox) {
+			setAnchorTop(box.bottom - stageBox.top + DEAL_GAP_PX);
+			setAnchorLeft(box.left - stageBox.left);
+		}
 		log(
 			`Select "${word}": ${deck.length ? `sweep ${deck.length.toString()}, ` : ""}deal 4`,
 		);
@@ -576,6 +608,7 @@ function CompassRuntime({
 	}
 	function reset() {
 		setSelected(null);
+		setAnchorLeft(null);
 		setDeck([]);
 		setExpandedId(null);
 		setLayout({ kind: "Pane", id: ROOT_PANE, sheets: [] });
@@ -1181,17 +1214,24 @@ function CompassRuntime({
 
 	/** The zones around the Deck's footprint: hit areas, and outlines on demand. */
 	function renderZones() {
+		const columnWidth = cardWidthIn(
+			paneBoxes[ROOT_PANE]?.width ?? 0,
+			rem,
+			OPEN_SCALE,
+		);
 		return (
 			<div
 				data-deck-column=""
-				className="pointer-events-none absolute left-1/2 -translate-x-1/2"
+				className="pointer-events-none absolute"
 				style={{
 					top: anchorTop,
-					width: cardWidthIn(
+					left: deckLeftIn(
 						paneBoxes[ROOT_PANE]?.width ?? 0,
+						columnWidth,
 						rem,
-						OPEN_SCALE,
+						anchorLeft,
 					),
+					width: columnWidth,
 					height: PILE_HEIGHT,
 				}}
 			>
@@ -1378,7 +1418,9 @@ function CompassRuntime({
 				index < open ? "above" : index > open ? "below" : "open";
 			const held = drag?.moved === true && drag.card.id === card.id;
 			const slot: Box = {
-				left: rootBox.left + (rootBox.width - cardWidth) / 2,
+				left:
+					rootBox.left +
+					deckLeftIn(rootBox.width, cardWidth, rem, anchorLeft),
 				top: rootBox.top + anchorTop + index * headerPx,
 				width: cardWidth,
 				height: slotHeight,

@@ -1,10 +1,17 @@
 import { writeFile } from "node:fs/promises";
-import { createTypeSafeExecutor } from "promptsmith/typesafe";
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
+import { createTypeSafeExecutor } from "promptsmith/typesafe";
 
-export const judge = createTypeSafeExecutor({
-	apiKey: process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_TOKEN,
-});
+/** Constructed on first use so importing helpers needs no API key. */
+let executor: ReturnType<typeof createTypeSafeExecutor> | null = null;
+export function judge(
+	...args: Parameters<ReturnType<typeof createTypeSafeExecutor>>
+) {
+	executor ??= createTypeSafeExecutor({
+		apiKey: process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_TOKEN,
+	});
+	return executor(...args);
+}
 
 export type Call = {
 	route: string;
@@ -39,7 +46,9 @@ export async function ask<const Q extends Questions>(
 export function stable(value: unknown): string {
 	return JSON.stringify(value, (_, v) =>
 		v && typeof v === "object" && !Array.isArray(v)
-			? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1)))
+			? Object.fromEntries(
+					Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1)),
+				)
 			: v,
 	);
 }
@@ -72,7 +81,8 @@ export async function runCases<C>(
 					expected: null,
 					actual: null,
 					calls: [],
-					error: error instanceof Error ? error.message : String(error),
+					error:
+						error instanceof Error ? error.message : String(error),
 				});
 			}
 			if (results.length % 20 === 0)
@@ -91,7 +101,8 @@ export function summarize(name: string, results: CaseResult[]) {
 		r.calls.reduce((sum, c) => sum + c.durationMs, 0),
 	);
 	const sorted = [...perCase].sort((a, b) => a - b);
-	const q = (p: number) => sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] ?? 0;
+	const q = (p: number) =>
+		sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] ?? 0;
 	const summary = {
 		name,
 		cases: results.length,
@@ -99,14 +110,35 @@ export function summarize(name: string, results: CaseResult[]) {
 		passRate: +(passed / results.length).toFixed(3),
 		errored,
 		callsPerCase: +(calls.length / results.length).toFixed(2),
-		questionsPerCase: +(calls.reduce((s, c) => s + c.questions, 0) / results.length).toFixed(1),
-		inputTokensPerCase: Math.round(calls.reduce((s, c) => s + c.input_tokens, 0) / results.length),
-		outputTokensPerCase: Math.round(calls.reduce((s, c) => s + c.output_tokens, 0) / results.length),
-		sequentialLatencyMs: { p50: Math.round(q(0.5)), p90: Math.round(q(0.9)), mean: Math.round(perCase.reduce((a, b) => a + b, 0) / perCase.length) },
+		questionsPerCase: +(
+			calls.reduce((s, c) => s + c.questions, 0) / results.length
+		).toFixed(1),
+		inputTokensPerCase: Math.round(
+			calls.reduce((s, c) => s + c.input_tokens, 0) / results.length,
+		),
+		outputTokensPerCase: Math.round(
+			calls.reduce((s, c) => s + c.output_tokens, 0) / results.length,
+		),
+		sequentialLatencyMs: {
+			p50: Math.round(q(0.5)),
+			p90: Math.round(q(0.9)),
+			mean: Math.round(
+				perCase.reduce((a, b) => a + b, 0) / perCase.length,
+			),
+		},
 		byRoute: Object.fromEntries(
 			[...new Set(calls.map((c) => c.route))].map((route) => {
 				const own = calls.filter((c) => c.route === route);
-				return [route, { calls: own.length, meanMs: Math.round(own.reduce((s, c) => s + c.durationMs, 0) / own.length) }];
+				return [
+					route,
+					{
+						calls: own.length,
+						meanMs: Math.round(
+							own.reduce((s, c) => s + c.durationMs, 0) /
+								own.length,
+						),
+					},
+				];
 			}),
 		),
 	};
