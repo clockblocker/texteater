@@ -22,7 +22,6 @@ export const corpusSource = defineLinguisticCorpus({
 		"grammar-de-det-demo-neuter-article-das",
 		"grammar-de-det-demo-uninflected-derlei",
 		"grammar-de-det-demo-variant-ne",
-		"grammar-de-det-demo-standalone-jener",
 		"grammar-de-det-demo-paradigm-welche",
 		"grammar-de-det-demo-paradigm-manchem",
 		"grammar-de-det-demo-quoted-archaic-etwelche",

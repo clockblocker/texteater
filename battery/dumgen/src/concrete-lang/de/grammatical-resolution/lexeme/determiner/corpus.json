@@ -209,43 +209,6 @@
 			"realizationCoverage": "Full"
 		}
 	},
-	"grammar-de-det-demo-standalone-jener": {
-		"input": {
-			"markedContext": "<TARGET>Jener</TARGET> war deutlich günstiger als dieser hier.",
-			"members": ["Jener"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["jener"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "jener",
-				"coreFeatures": {
-					"definite": null,
-					"extPos": null,
-					"foreign": null,
-					"numType": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Dem"
-				}
-			},
-			"realizationCoverage": "Full"
-		},
-		"explanation": "The route is fixed DET, not PRON; German UD keeps the lexical determiner identity when it stands alone."
-	},
 	"grammar-de-det-demo-paradigm-welche": {
 		"input": {
 			"markedContext": "<TARGET>Welche</TARGET> Nachricht hat die Redaktion zuerst bestätigt?",

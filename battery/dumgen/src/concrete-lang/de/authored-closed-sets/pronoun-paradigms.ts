@@ -277,6 +277,88 @@ add(
 	),
 );
 
+// Standalone quantifiers (ticket 503): a determiner form without a noun is PRON,
+// resolved in the pronoun catalog; DET keeps the attributive identity. viel and
+// wenig stand alone as neuter mass singular (vieles, bare viel) or plural; the
+// genitive is adjectival -en. Masc/Fem singular has no standalone use.
+for (const [stem, ipa, emoji, definition, en, ru] of [
+	[
+		"viel",
+		"ˈfiːl",
+		"🔢",
+		"Bezeichnet eine große unbestimmte Menge oder Anzahl.",
+		"much; many; a lot",
+		"многое; многие",
+	],
+	[
+		"wenig",
+		"ˈveːnɪɡ",
+		"➖",
+		"Bezeichnet eine geringe unbestimmte Menge oder Anzahl.",
+		"little; few",
+		"немногое; немногие",
+	],
+] as const) {
+	const t = strongPronoun(stem, ipa),
+		bare = (cell: (typeof t.Neut)[number]) =>
+			form(cell.text, cell.ipa, stem);
+	add(
+		{
+			Masc: absent,
+			Fem: absent,
+			Neut: [bare(t.Neut[0]), bare(t.Neut[1]), bare(t.Neut[2]), t.Masc[1]],
+			Plur: t.Plur,
+		},
+		description("Ind", emoji, definition, [en], [ru]),
+	);
+}
+// meist stands alone only after the definite article (das meiste, die meisten),
+// so its standalone cells carry weak endings.
+add(
+	{
+		Masc: absent,
+		Fem: absent,
+		Neut: [
+			form("meiste", "ˈmaɪ̯stə"),
+			form("meiste", "ˈmaɪ̯stə"),
+			form("meisten", "ˈmaɪ̯stən"),
+			form("meisten", "ˈmaɪ̯stən"),
+		],
+		Plur: [
+			form("meisten", "ˈmaɪ̯stən"),
+			form("meisten", "ˈmaɪ̯stən"),
+			form("meisten", "ˈmaɪ̯stən"),
+			form("meisten", "ˈmaɪ̯stən"),
+		],
+	},
+	description(
+		"Ind",
+		"🔢",
+		"Bezeichnet den größten Teil einer Menge oder Gruppe.",
+		["most; the majority"],
+		["большинство; большая часть"],
+	),
+);
+// sämtlich is total; standalone as neuter mass singular or plural.
+{
+	const t = strongPronoun("sämtlich", "ˈzɛmtlɪç");
+	add(
+		{
+			Masc: absent,
+			Fem: absent,
+			Neut: [t.Neut[0], t.Neut[1], t.Neut[2], t.Masc[1]],
+			Plur: t.Plur,
+		},
+		description(
+			"Tot",
+			"💯",
+			"Bezeichnet die Gesamtheit einer Menge ohne Ausnahme.",
+			["all; the whole of"],
+			["всё; все"],
+		),
+	);
+}
+
 // Strong adjectival genitive -en, not pronominal -es.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-einige3.html?lang=de
 for (const [stem, ipa, en, ru] of [
@@ -716,25 +798,26 @@ for (const [
 }
 
 // was für: plural standalone welche, but attributive bare was für.
-// No routine standalone genitive is authored; the source describes it as absent or extremely rare.
+// The standalone genitive is rare (echo questions after a genitive verb: "Er bedarf
+// eines Anwalts. Was für eines?") but exists, so the Closed Route invariant keeps it.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de
 {
 	const t = strongPronoun("was für ein", "vas fyːɐ̯ ˈaɪ̯n");
 	add(
 		{
-			Masc: [t.Masc[0], t.Masc[1], t.Masc[2], null],
+			Masc: t.Masc,
 			Neut: [
 				form("was für eines", "vas fyːɐ̯ ˈaɪ̯nəs", "was für eins"),
 				form("was für eines", "vas fyːɐ̯ ˈaɪ̯nəs", "was für eins"),
 				t.Neut[2],
-				null,
+				t.Neut[3],
 			],
-			Fem: [t.Fem[0], t.Fem[1], t.Fem[2], null],
+			Fem: t.Fem,
 			Plur: [
 				form("was für welche", "vas fyːɐ̯ ˈvɛlçə"),
 				form("was für welche", "vas fyːɐ̯ ˈvɛlçə"),
 				form("was für welchen", "vas fyːɐ̯ ˈvɛlçən"),
-				null,
+				form("was für welcher", "vas fyːɐ̯ ˈvɛlçɐ"),
 			],
 		},
 		description(

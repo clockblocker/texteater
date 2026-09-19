@@ -147,6 +147,7 @@ export const evaluationCaseIds = [
 	"grammar-de-pron-demo-relative-der",
 	"grammar-de-pron-demo-indefinite-etwas",
 	"grammar-de-pron-dev-demonstrative-das-nom",
+	"grammar-de-pron-dev-standalone-jener",
 	"grammar-de-pron-dev-relative-die-nom",
 	"grammar-de-pron-dev-interrogative-wer-nom",
 	"grammar-de-pron-dev-indefinite-jemandem",

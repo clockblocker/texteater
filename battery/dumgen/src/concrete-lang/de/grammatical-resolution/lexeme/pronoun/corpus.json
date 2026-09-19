@@ -6013,6 +6013,39 @@
 			"realizationCoverage": "Full"
 		}
 	},
+	"grammar-de-pron-dev-standalone-jener": {
+		"input": {
+			"markedContext": "<TARGET>Jener</TARGET> war deutlich günstiger als dieser hier.",
+			"members": ["Jener"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["jener"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "jener",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Masc",
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "A determiner form without a noun is a substantive use and routes to PRON; the standalone demonstrative jener is an authored pronoun identity, and DET keeps only the attributive use (ticket 503)."
+	},
 	"grammar-de-pron-dev-total-foreign-all": {
 		"input": {
 			"markedContext": "Im englischen Bericht stand: „<TARGET>All</TARGET> had arrived safely.“",
