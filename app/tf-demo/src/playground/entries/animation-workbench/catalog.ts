@@ -81,17 +81,17 @@ export const SECTIONS: readonly {
 				interactions: ["deal", "dismiss"],
 				title: "Deal / dismiss",
 				instruction:
-					"Select a word to deal its cards. Click the page outside the cards and words to sweep the deck away. Select another word to replace the deck. Escape removes the selected card.",
+					"Select a word to deal its cards. Click the page outside the cards and words to sweep the deck away. Select another word to replace the deck. Escape sweeps the deck.",
 				source,
 				initialScene: "empty",
 				knobs: ["durationScale"],
 			},
 			{
-				key: "remove",
-				interactions: ["drag", "remove"],
-				title: "Remove / throw",
+				key: "sweep",
+				interactions: ["drag", "sweep"],
+				title: "Sweep / swipe left",
 				instruction:
-					"Drag a card left past the commit distance, then release. Try a short fast throw and a slow release to compare the distance and velocity thresholds.",
+					"Drag a card left past the commit distance, then release: the whole deck goes, there is no per-card removal. Try a short fast throw and a slow release to compare the distance and velocity thresholds.",
 				source,
 				initialScene: "deck",
 				knobs: [
@@ -120,7 +120,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "drop", "collapse"],
 				title: "Free drag / drop zones",
 				instruction:
-					"Drag a card and hold briefly to enter free drag. Move over the pane, its edges, the deck and the remove zone; release to open, split, return or remove. Watch the zone and card-border feedback.",
+					"Drag a card and hold briefly to enter free drag. Move over the pane, its edges and the deck; release to open it as a Cover, spawn a Floating Pane, or return it. Watch the zone and card-border feedback.",
 				source,
 				initialScene: "deck",
 				knobs: [
@@ -142,7 +142,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "expand", "collapse"],
 				title: "Expand / collapse",
 				instruction:
-					"Drag a card upward and release to open it as a sheet. Use the back arrow or Escape to collapse it. Watch the body, clipping and pane bar arrive with the sheet.",
+					"Drag a card upward and release to open it as a Cover; the deck beneath is hidden, not ended. Use the back arrow to collapse it and reveal the deck again. Watch the body and clipping arrive with the sheet.",
 				source,
 				initialScene: "deck",
 				knobs: [...morph, ...release, "durationScale"],
@@ -182,7 +182,7 @@ export const SECTIONS: readonly {
 				interactions: ["follow", "collapse"],
 				title: "Pane bar / sheet stack",
 				instruction:
-					"Follow a link inside the sheet to open another sheet in the same pane. Use the back arrow to step back through the stack, then collapse the last sheet to inspect the bar exit.",
+					"Follow a link inside the sheet to push another Cover in the same pane. Use the back arrow to step back through the stack: a Cover that came from a link closes, the one lifted from the deck collapses back to its card. Watch the trail change in the pane bar.",
 				source,
 				initialScene: "sheet",
 				knobs: [...morph, "durationScale"],

@@ -121,8 +121,13 @@ export const CARD_TITLE_REM = 1;
 /** The Heading row in Sheet form: the title grows and the kind label shows. */
 export const SHEET_HEADER_REM = 4.25;
 export const SHEET_TITLE_REM = 1.5;
-/** The Pane bar above a Sheet: the trail and the collapse control. */
+/** The Pane bar above a Sheet: the trail and the ← or X control. */
 export const BAR_REM = 2.25;
+/**
+ * A Card lifted from a Link or a Segment, or a Text lifted off its Ground,
+ * rests in no Deck; this is the box it is held in.
+ */
+export const LOOSE_CARD_REM = 18;
 
 /**
  * The open Card's resting scale: 5 % larger than the Cards behind it.
@@ -345,6 +350,12 @@ export const ARM_LABEL_COMMITTED = { opacity: 1, scale: 1 } as const;
 
 /** A press this long on a Sheet margin lifts it as a Held Card. */
 export const LONG_PRESS_MS = 500;
+/**
+ * The long press that lifts a Rooted Pane's Ground content off its Heading
+ * (issue 480: about one second). Longer than a margin hold on purpose: the
+ * Ground is the main thing, and moving it should not happen by accident.
+ */
+export const GROUND_PRESS_MS = 1000;
 /** The Sheet shrinks toward the finger over the whole press, then releases. */
 export const HOLD_SHRINK = tween(LONG_PRESS_MS, "linear");
 export const HOLD_RELEASE = tween(160);

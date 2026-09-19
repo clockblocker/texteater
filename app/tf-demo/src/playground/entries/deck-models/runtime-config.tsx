@@ -11,6 +11,7 @@ export const DEFAULT_DECK_MOTION = {
 	durationScale: 1,
 	zoneFeedbackMs: 150,
 	holdMs: spec.LONG_PRESS_MS,
+	groundPressMs: spec.GROUND_PRESS_MS,
 	commitDistance: 88,
 	throwVelocity: 0.3,
 	armSlop: 8,
@@ -87,6 +88,11 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		LONG_PRESS_MS: p.holdMs,
 		HOLD_SHRINK: spec.tween(
 			p.holdMs / Math.max(0.01, p.durationScale),
+			"linear",
+		),
+		GROUND_PRESS_MS: p.groundPressMs,
+		GROUND_SHRINK: spec.tween(
+			p.groundPressMs / Math.max(0.01, p.durationScale),
 			"linear",
 		),
 		HOLD_SCALE: p.holdScale,

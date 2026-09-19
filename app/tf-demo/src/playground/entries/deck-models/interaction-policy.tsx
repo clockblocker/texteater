@@ -1,10 +1,14 @@
 import { createContext, useContext } from "react";
 
-/** Scenarios restrict available inputs/outcomes; the live handlers and motion stay shared. */
+/**
+ * Scenarios restrict available inputs/outcomes; the live handlers and motion
+ * stay shared. `sweep` is the swipe-left Sweep of a whole Deck (issue 479);
+ * `dismiss` is the Sweep by a dismissive click or Escape.
+ */
 export type DeckInteraction =
 	| "select"
 	| "drag"
-	| "remove"
+	| "sweep"
 	| "expand"
 	| "drop"
 	| "collapse"
@@ -16,7 +20,7 @@ export type DeckInteraction =
 export const ALL_INTERACTIONS: readonly DeckInteraction[] = [
 	"select",
 	"drag",
-	"remove",
+	"sweep",
 	"expand",
 	"drop",
 	"collapse",

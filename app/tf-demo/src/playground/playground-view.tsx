@@ -54,7 +54,7 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		title: "Deck models",
 		icon: LayersIcon,
 		description:
-			"Compass: what a drag means for a deck of Cards. The first direction names the intent; a held gesture relaxes into a plain drag.",
+			"Compass: the Pane algebra. Every Pane has a Ground line (Menu › Library › Text) with ← stepping down it; Links push Covers, Segments deal Decks, a drag lifts either; a Note dropped on an edge is a Floating Pane closed by X.",
 		render: () => <DeckModelsGallery />,
 	},
 	{

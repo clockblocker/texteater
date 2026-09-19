@@ -13,6 +13,26 @@ async function startDrag(page: Page, card: Locator, dx: number, dy: number) {
 	await page.mouse.move(x + dx, y + dy, { steps: 5 });
 }
 
+/** A Sheet is handled by its bar: drag from the bar's free middle, clear of its ← button. */
+async function startBarDrag(
+	page: Page,
+	frame: Locator,
+	sheet: Locator,
+	dx: number,
+	dy: number,
+) {
+	const id = await sheet.getAttribute("data-sheet-id");
+	const bar = await frame
+		.locator(`[data-cover-bar="${id ?? ""}"]`)
+		.boundingBox();
+	if (!bar) throw new Error("Missing cover bar geometry");
+	const x = bar.x + bar.width * 0.6;
+	const y = bar.y + bar.height / 2;
+	await page.mouse.move(x, y);
+	await page.mouse.down();
+	await page.mouse.move(x + dx, y + dy, { steps: 5 });
+}
+
 async function openSheet(page: Page, frame: Locator) {
 	await startDrag(page, frame.locator('[data-place="open"]'), 0, -120);
 	await page.mouse.up();
@@ -121,7 +141,7 @@ for (const surface of ["deck-models", "animation-workbench/swap"]) {
 
 		await startDrag(page, first, -110, 0);
 		if (surface === "deck-models")
-			await expect(first).toHaveAttribute("data-arm", "remove");
+			await expect(first).toHaveAttribute("data-arm", "sweep");
 		else await expect(first).not.toHaveAttribute("data-arm");
 		await frame.dispatchEvent("pointercancel", {
 			pointerId: 1,
@@ -131,10 +151,11 @@ for (const surface of ["deck-models", "animation-workbench/swap"]) {
 		await expect(frame.locator("[data-held]")).toHaveCount(0);
 		await expect(cards).toHaveCount(4);
 
+		/* a swipe left sweeps the whole Deck: there is no per-Card removal */
 		await startDrag(page, first, -110, 0);
 		await page.mouse.up();
 		await expect(frame.locator("[data-held]")).toHaveCount(0);
-		await expect(cards).toHaveCount(surface === "deck-models" ? 3 : 4);
+		await expect(cards).toHaveCount(surface === "deck-models" ? 0 : 4);
 	});
 }
 
@@ -189,7 +210,7 @@ test("injected parameters change the candidate renderer while baseline and Escap
 	await expect(baseline.locator('[data-form="card"]')).toHaveCount(4);
 });
 
-test("sheet morph permits collapse but isolates heading lift", async ({
+test("sheet morph permits collapse but isolates the bar lift", async ({
 	page,
 }) => {
 	await page.goto("/playground/animation-workbench/sheet-morph");
@@ -197,12 +218,18 @@ test("sheet morph permits collapse but isolates heading lift", async ({
 	await openSheet(page, frame);
 	const sheet = frame.locator('[data-form="sheet"]');
 	const pane = await sheet.getAttribute("data-pane");
+	/* the Note's own Heading is never a Sheet's handle */
 	await startDrag(page, sheet, -110, 0);
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await page.mouse.up();
+	/* and the bar is, but only when the scenario allows a lift */
+	await startBarDrag(page, frame, sheet, -110, 0);
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
 	await page.mouse.up();
 	await expect(sheet).toHaveCount(1);
 	await expect(sheet).toHaveAttribute("data-pane", pane ?? "");
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(3);
+	/* the Cover hides the Deck it was lifted from; ← reveals it again */
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
 	await frame.getByRole("button", { name: "Collapse back to card" }).click();
 	await expect(sheet).toHaveCount(0);
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
@@ -224,7 +251,7 @@ test("a real margin hold lifts the sheet and pointer cancellation restores it", 
 	await frame.dispatchEvent("pointercancel", { pointerId: 1, bubbles: true });
 	await page.mouse.up();
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(3);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
 });
 
 test("a free drag shows the real edge target and splits a pane on release", async ({
@@ -242,9 +269,12 @@ test("a free drag shows the real edge target and splits a pane on release", asyn
 		frame.locator('[data-edge="right"][data-active="true"]'),
 	).toBeVisible();
 	await page.mouse.up();
+	/* the dropped Card is the new Pane's Ground: a Floating Pane, closed by X */
 	await expect(frame.locator("[data-deck-pane]")).toHaveCount(2);
-	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
-	await frame.getByRole("button", { name: "Collapse back to card" }).click();
+	await expect(frame.locator('[data-pane-kind="floating"]')).toHaveCount(1);
+	await expect(frame.locator('[data-form="ground"]')).toHaveCount(2);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(3);
+	await frame.getByRole("button", { name: "Close pane" }).click();
 	await expect(frame.locator("[data-deck-pane]")).toHaveCount(1);
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
 });
@@ -328,7 +358,7 @@ test("system reduced motion suppresses drag tilt in both specimens", async ({
 	page,
 }) => {
 	await page.emulateMedia({ reducedMotion: "reduce" });
-	await page.goto("/playground/animation-workbench/remove");
+	await page.goto("/playground/animation-workbench/sweep");
 	await page
 		.getByRole("button", { name: "Show controls", exact: true })
 		.click();
@@ -342,7 +372,7 @@ test("system reduced motion suppresses drag tilt in both specimens", async ({
 		const specimen = page.locator(`[data-specimen="${kind}"]`);
 		const card = specimen.locator('[data-place="open"]');
 		await startDrag(page, card, -60, 0);
-		await expect(card).toHaveAttribute("data-arm", "remove");
+		await expect(card).toHaveAttribute("data-arm", "sweep");
 		const rotation = await card.evaluate((element) => {
 			const matrix = new DOMMatrixReadOnly(
 				getComputedStyle(element).transform,
@@ -442,9 +472,9 @@ test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
 	const sheet = frame.locator('[data-form="sheet"]');
 	const id = await sheet.getAttribute("data-card-id");
 	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
-	/* lift it by the Heading and let go without going anywhere: the Note
-	   is in the hand, and its slot is a whole Sheet's height away */
-	await startDrag(page, sheet, 3, 3);
+	/* lift it by its bar and let go without going anywhere: the Note is
+	   in the hand, and its slot is a whole Sheet's height away */
+	await startBarDrag(page, frame, sheet, 3, 3);
 	const samples = note.evaluate(async (element) => {
 		const taken: { y: number; held: boolean }[] = [];
 		const start = performance.now();
@@ -529,17 +559,62 @@ for (const scenario of ["swap", "snap-back"]) {
 			await expect(link).toBeDisabled();
 	});
 }
-test("remove scenario uses the real removal but cannot expand", async ({
+test("sweep scenario sweeps the whole deck but cannot expand", async ({
 	page,
 }) => {
-	await page.goto("/playground/animation-workbench/remove");
+	await page.goto("/playground/animation-workbench/sweep");
 	const frame = page.locator("[data-deck-frame]");
 	await startDrag(page, frame.locator('[data-place="open"]'), 0, -140);
 	await page.mouse.up();
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
 	await startDrag(page, frame.locator('[data-place="open"]'), -140, 0);
-	await expect(frame.locator('[data-arm="remove"]')).toHaveCount(1);
+	await expect(frame.locator('[data-arm="sweep"]')).toHaveCount(1);
 	await page.mouse.up();
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(3);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
+});
+
+test("the ground line steps down and back up, and a link pushes a cover that closes", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	const pane = frame.locator('[data-deck-pane="root"]');
+	await expect(pane).toHaveAttribute("data-pane-kind", "rooted");
+	await expect(frame.locator('[data-form="ground"]')).toHaveCount(1);
+	/* ← on the Ground: Text › Library › Menu, and back up by tapping */
+	await pane.getByRole("button", { name: "Back to Library" }).click();
+	await expect(frame.locator('[data-form="ground"]')).toHaveCount(0);
+	await pane.getByRole("button", { name: "Back to Menu" }).click();
+	await expect(
+		pane.getByRole("button", { name: "At the Menu" }),
+	).toBeDisabled();
+	await pane.locator('[data-ground-item="library"]').click();
+	await pane.locator('[data-ground-item="brief"]').click();
+	await expect(frame.locator('[data-form="ground"]')).toHaveCount(1);
+	await expect(pane.locator("nav")).toContainText("Der Brief");
+	/* a word deals a Deck that belongs to the Text; a Cover from a link
+	   hides it and closes on ← because it never had a Card */
+	await frame.locator('[data-word="Ende"]').click();
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	await startDrag(page, frame.locator('[data-place="open"]'), 0, -120);
+	await page.mouse.up();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+	await frame
+		.locator('[data-form="sheet"] [data-block="links"] button')
+		.first()
+		.click();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(2);
+	/* each Cover carries its own bar; only the top one's ← is live */
+	await expect(frame.locator("[data-cover-bar]")).toHaveCount(2);
+	await frame.getByRole("button", { name: "Close cover" }).click();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+	await frame.getByRole("button", { name: "Collapse back to card" }).click();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+	/* a dismissive click on the Text sweeps its Deck */
+	await frame
+		.locator('[data-form="ground"]')
+		.click({ position: { x: 20, y: 300 } });
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
 });

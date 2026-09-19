@@ -1,7 +1,8 @@
 /**
  * Dummy subjects for the deck-model prototypes. Nothing here touches the fake
- * db: a word yields four Notes, each Note links onward, and one link always
- * leads back to the Text. The interaction algebra is the thing under study.
+ * db: a Library lists a few Texts, a word yields four Notes, each Note links
+ * onward, and one link always leads back to a Sentence in a Text. The
+ * interaction algebra is the thing under study.
  */
 
 export type NoteKind = "Attestation" | "Reading" | "Lemma" | "Surface";
@@ -14,9 +15,34 @@ export const NOTE_KINDS: readonly NoteKind[] = [
 	"Attestation",
 ];
 
+export type DummyText = {
+	readonly id: string;
+	readonly title: string;
+	readonly sentences: readonly (readonly string[])[];
+};
+
+/** A place in a Text: the Sentence, and the word lit inside it. */
+export type TextFocus = {
+	readonly sentence: number;
+	readonly word: string;
+};
+
 export type NoteLink =
 	| { readonly kind: "Note"; readonly noteId: string; readonly label: string }
-	| { readonly kind: "Text"; readonly word: string; readonly label: string };
+	| {
+			readonly kind: "Text";
+			readonly textId: string;
+			readonly focus: TextFocus;
+			readonly label: string;
+	  };
+
+/** One Source Context: a Sentence the word was met in, tokenized so its Segments can be clicked. */
+export type SourceContext = {
+	/** The Text the Sentence belongs to; null for filler that has no source. */
+	readonly textId: string | null;
+	readonly sentence: number;
+	readonly words: readonly string[];
+};
 
 export type DummyNote = {
 	readonly id: string;
@@ -28,21 +54,47 @@ export type DummyNote = {
 	/** The one-line footer a covered Card shows: its form, then a gloss. */
 	readonly tail: { readonly form: string; readonly gloss: string };
 	/** Source Contexts: sentences the word was met in, most recent first. */
-	readonly contexts: readonly string[];
+	readonly contexts: readonly SourceContext[];
 };
 
-export type DummySubject =
-	| { readonly kind: "Text" }
-	| { readonly kind: "Note"; readonly noteId: string };
-
-export const TEXT_SENTENCES: readonly (readonly string[])[] = [
-	["Das", "Haus", "steht", "am", "Ende", "der", "Straße."],
-	["Niemand", "hatte", "es", "seit", "Jahren", "betreten."],
-	["Nur", "der", "Wind", "kannte", "noch", "den", "Weg", "hinein."],
+export const TEXTS: readonly DummyText[] = [
+	{
+		id: "haus",
+		title: "Das Haus am Ende",
+		sentences: [
+			["Das", "Haus", "steht", "am", "Ende", "der", "Straße."],
+			["Niemand", "hatte", "es", "seit", "Jahren", "betreten."],
+			["Nur", "der", "Wind", "kannte", "noch", "den", "Weg", "hinein."],
+		],
+	},
+	{
+		id: "brief",
+		title: "Der Brief",
+		sentences: [
+			["Der", "Brief", "lag", "seit", "Tagen", "auf", "dem", "Tisch."],
+			["Niemand", "wollte", "ihn", "öffnen."],
+			["Am", "Ende", "tat", "es", "der", "Wind."],
+		],
+	},
+	{
+		id: "hof",
+		title: "Im Hof",
+		sentences: [
+			["Die", "Kinder", "riefen", "über", "den", "Hof."],
+			["Ein", "Schild", "am", "Zaun", "sagte", "nur:", "Ruhe."],
+			["Der", "Weg", "zum", "Haus", "war", "noch", "nass."],
+		],
+	},
 ];
 
+export const FIRST_TEXT = TEXTS[0] as DummyText;
+
+export function textById(id: string): DummyText {
+	return TEXTS.find((text) => text.id === id) ?? FIRST_TEXT;
+}
+
 const LEMMA_OF: Readonly<Record<string, string>> = {
-	"Straße.": "Straße",
+	Straße: "Straße",
 	hatte: "haben",
 	steht: "stehen",
 	betreten: "betreten",
@@ -51,12 +103,20 @@ const LEMMA_OF: Readonly<Record<string, string>> = {
 	Das: "der",
 	der: "der",
 	es: "es",
-	"hinein.": "hinein",
+	hinein: "hinein",
+	lag: "liegen",
+	wollte: "wollen",
+	tat: "tun",
+	riefen: "rufen",
+	sagte: "sagen",
+	war: "sein",
+	Tagen: "Tag",
+	Kinder: "Kind",
 };
 
 const GLOSS: Readonly<Record<string, string>> = {
 	Haus: "house",
-	"Straße.": "street",
+	Straße: "street",
 	Weg: "way",
 	Wind: "wind",
 	Ende: "end",
@@ -64,7 +124,7 @@ const GLOSS: Readonly<Record<string, string>> = {
 	Niemand: "nobody",
 	hatte: "had",
 	steht: "stands",
-	"betreten.": "entered",
+	betreten: "entered",
 	kannte: "knew",
 	Das: "the",
 	der: "the",
@@ -74,41 +134,59 @@ const GLOSS: Readonly<Record<string, string>> = {
 	seit: "since",
 	Nur: "only",
 	noch: "still",
-	"hinein.": "inside",
+	hinein: "inside",
+	Brief: "letter",
+	lag: "lay",
+	Tagen: "days",
+	Tisch: "table",
+	wollte: "wanted",
+	öffnen: "open",
+	tat: "did",
+	Kinder: "children",
+	riefen: "called",
+	Hof: "yard",
+	Schild: "sign",
+	Zaun: "fence",
+	Ruhe: "quiet",
+	nass: "wet",
 };
 
 const FORM_OF: Readonly<Record<string, string>> = {
-	"Straße.": "Nom. Sg.",
+	Straße: "Nom. Sg.",
 	Haus: "Nom. Sg.",
 	Jahren: "Dat. Pl.",
+	Tagen: "Dat. Pl.",
 	hatte: "Prät. 3. Sg.",
 	steht: "Präs. 3. Sg.",
-	"betreten.": "Partizip II",
+	betreten: "Partizip II",
 	kannte: "Prät. 3. Sg.",
+	lag: "Prät. 3. Sg.",
 	den: "Akk. Sg. m.",
 	Das: "Nom. Sg. n.",
 	der: "Nom. Sg. m.",
+	Kinder: "Nom. Pl.",
 };
 
 const RELATED: Readonly<Record<string, string>> = {
-	Haus: "Straße.",
-	"Straße.": "Weg",
+	Haus: "Straße",
+	Straße: "Weg",
 	Weg: "Haus",
 	Wind: "Ende",
 	Ende: "Wind",
 	Jahren: "Niemand",
+	Brief: "Tisch",
 };
 
 export function noteId(kind: NoteKind, word: string): string {
-	return `${kind}:${word}`;
+	return `${kind}:${cleanWord(word)}`;
 }
 
 export function cleanWord(word: string): string {
-	return word.replace(/[.,;!?]$/u, "");
+	return word.replace(/[.,;:!?]$/u, "");
 }
 
 function lemmaOf(word: string): string {
-	return LEMMA_OF[word] ?? cleanWord(word);
+	return LEMMA_OF[cleanWord(word)] ?? cleanWord(word);
 }
 
 const LINE_POOL = [
@@ -125,18 +203,23 @@ const CONTEXT_POOL = [
 	"Später stand {w} noch einmal in der Zeitung.",
 	"Niemand fragte, was {w} hier bedeuten sollte.",
 	"Im Brief war {w} gleich zweimal unterstrichen.",
-	"Die Kinder riefen {w} über den Hof.",
-	"Ein Schild am Zaun sagte nur: {w}.",
 	"Zuletzt hörte sie {w} im Radio.",
 ];
 
-/** The Text's own sentences with the word first, then filler, most recent first. */
-function contextsFor(word: string): readonly string[] {
+/** Every Sentence in every Text that holds the word, then filler; most recent first. */
+function contextsFor(word: string): readonly SourceContext[] {
 	const clean = cleanWord(word);
-	const own = TEXT_SENTENCES.filter((sentence) =>
-		sentence.some((token) => cleanWord(token) === clean),
-	).map((sentence) => sentence.join(" "));
-	const filler = CONTEXT_POOL.map((line) => line.replace("{w}", clean));
+	const own: SourceContext[] = [];
+	for (const text of TEXTS)
+		text.sentences.forEach((sentence, index) => {
+			if (sentence.some((token) => cleanWord(token) === clean))
+				own.push({ textId: text.id, sentence: index, words: sentence });
+		});
+	const filler = CONTEXT_POOL.map((line, index) => ({
+		textId: null,
+		sentence: index,
+		words: line.replace("{w}", clean).split(" "),
+	}));
 	return [...own, ...filler];
 }
 
@@ -149,22 +232,34 @@ function linesFor(kind: NoteKind, word: string): readonly string[] {
 	);
 }
 
+/** The first Sentence the word appears in, for "Go to source". */
+function sourceOf(word: string): NoteLink | null {
+	const first = contextsFor(word).find((context) => context.textId !== null);
+	if (!first?.textId) return null;
+	return {
+		kind: "Text",
+		textId: first.textId,
+		focus: { sentence: first.sentence, word: cleanWord(word) },
+		label: "Go to source",
+	};
+}
+
 export function noteFor(kind: NoteKind, word: string): DummyNote {
 	const clean = cleanWord(word);
 	const lemma = lemmaOf(word);
-	const related = RELATED[word];
+	const related = RELATED[clean];
 	const links: NoteLink[] = [];
 	switch (kind) {
-		case "Attestation":
-			links.push(
-				{ kind: "Text", word, label: "Go to source" },
-				{
-					kind: "Note",
-					noteId: noteId("Reading", word),
-					label: `Reading of ${clean}`,
-				},
-			);
+		case "Attestation": {
+			const source = sourceOf(word);
+			if (source) links.push(source);
+			links.push({
+				kind: "Note",
+				noteId: noteId("Reading", word),
+				label: `Reading of ${clean}`,
+			});
 			break;
+		}
 		case "Reading":
 			links.push({
 				kind: "Note",
@@ -175,7 +270,7 @@ export function noteFor(kind: NoteKind, word: string): DummyNote {
 				links.push({
 					kind: "Note",
 					noteId: noteId("Reading", related),
-					label: `See also ${cleanWord(related)}`,
+					label: `See also ${related}`,
 				});
 			break;
 		case "Lemma":
@@ -202,25 +297,25 @@ export function noteFor(kind: NoteKind, word: string): DummyNote {
 				links.push({
 					kind: "Note",
 					noteId: noteId("Surface", related),
-					label: `Surface ${cleanWord(related)}`,
+					label: `Surface ${related}`,
 				});
 			break;
 	}
 	const tail =
 		kind === "Reading"
-			? { form: GLOSS[word] ?? clean.toLowerCase(), gloss: "meaning" }
+			? { form: GLOSS[clean] ?? clean.toLowerCase(), gloss: "meaning" }
 			: kind === "Lemma"
 				? {
 						form: lemma,
 						gloss: /^[A-ZÄÖÜ]/u.test(lemma) ? "noun" : "verb",
 					}
 				: kind === "Surface"
-					? { form: clean, gloss: FORM_OF[word] ?? "uninflected" }
-					: { form: word, gloss: "as written" };
+					? { form: clean, gloss: FORM_OF[clean] ?? "uninflected" }
+					: { form: clean, gloss: "as written" };
 	return {
 		id: noteId(kind, word),
 		kind,
-		word,
+		word: clean,
 		title:
 			kind === "Lemma" ? lemma : kind === "Reading" ? tail.form : clean,
 		lines: linesFor(kind, word),
@@ -238,10 +333,4 @@ export function noteById(id: string): DummyNote {
 /** The four Notes a selected word deals, in reading order. */
 export function deckFor(word: string): readonly DummyNote[] {
 	return NOTE_KINDS.map((kind) => noteFor(kind, word));
-}
-
-export function subjectLabel(subject: DummySubject): string {
-	if (subject.kind === "Text") return "Text";
-	const note = noteById(subject.noteId);
-	return `${note.kind} · ${note.title}`;
 }

@@ -6,13 +6,6 @@ import {
 	useState,
 } from "react";
 
-import {
-	cleanWord,
-	type DummyNote,
-	type NoteLink,
-	TEXT_SENTENCES,
-} from "./dummy";
-
 /* ------------------------------------------------------------------ log */
 
 export type LogEntry = { readonly id: number; readonly text: string };
@@ -117,7 +110,7 @@ export function ModelShell({
 					<ol className="min-h-0 flex-1 space-y-1 overflow-auto font-mono text-[0.7rem] leading-snug text-ink-soft">
 						{entries.length === 0 ? (
 							<li className="text-ink-muted">
-								Select a word in the Text to deal a deck.
+								Select a word in the Text to deal a Deck.
 							</li>
 						) : null}
 						{entries.map((entry) => (
@@ -127,127 +120,6 @@ export function ModelShell({
 					</ol>
 				</section>
 			</aside>
-		</div>
-	);
-}
-
-/* --------------------------------------------------------------- reader */
-
-export type WordRef = { readonly word: string; readonly element: HTMLElement };
-
-/**
- * A dummy Text. The selected word wears the selection wash; every other word
- * is an unknown Unit and only its underline reacts.
- */
-export function DummyReader({
-	selected,
-	onSelect,
-	onBackground,
-	dense = false,
-}: {
-	selected: string | null;
-	onSelect: (ref: WordRef) => void;
-	onBackground?: () => void;
-	dense?: boolean;
-}) {
-	return (
-		<div
-			className={`mx-auto w-full max-w-[42rem] px-8 ${dense ? "pt-6" : "pt-10"} pb-12 font-serif text-[1.15rem] leading-[1.71rem] text-ink`}
-			onPointerDown={(event) => {
-				if (
-					onBackground &&
-					!(event.target as HTMLElement).closest("[data-word]")
-				)
-					onBackground();
-			}}
-		>
-			<h2 className="mb-5 font-sans text-[0.68rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
-				Das Haus am Ende
-			</h2>
-			{TEXT_SENTENCES.map((sentence) => (
-				<p key={sentence.join(" ")} className="mb-[1.75rem]">
-					{sentence.map((word, index) => (
-						<span key={`${word}-${index.toString()}`}>
-							<button
-								type="button"
-								data-word={word}
-								aria-pressed={selected === word}
-								onClick={(event) =>
-									onSelect({
-										word,
-										element: event.currentTarget,
-									})
-								}
-								className="rounded-[0.2rem] px-[0.08em] text-word-unknown decoration-word-resolving decoration-[1.5px] underline-offset-[0.2em] hover:underline aria-pressed:bg-selection aria-pressed:text-selection-foreground"
-							>
-								{word}
-							</button>
-							{index < sentence.length - 1 ? " " : ""}
-						</span>
-					))}
-				</p>
-			))}
-		</div>
-	);
-}
-
-/* ----------------------------------------------------------------- note */
-
-const KIND_TINT: Readonly<Record<DummyNote["kind"], string>> = {
-	Attestation: "text-ink-muted",
-	Reading: "text-link",
-	Lemma: "text-ink",
-	Surface: "text-ink-soft",
-};
-
-export function NoteBody({
-	note,
-	onFollow,
-	compact = false,
-}: {
-	note: DummyNote;
-	onFollow: (link: NoteLink) => void;
-	compact?: boolean;
-}) {
-	return (
-		<div
-			className={`flex flex-col gap-3 ${compact ? "px-4 py-3" : "px-6 py-5"}`}
-		>
-			<div>
-				<div
-					className={`font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${KIND_TINT[note.kind]}`}
-				>
-					{note.kind}
-				</div>
-				<h3
-					className={`font-serif ${compact ? "text-[1.15rem]" : "text-[1.5rem]"} leading-tight text-ink`}
-				>
-					{note.title}
-				</h3>
-			</div>
-			<div className="space-y-1.5 text-[0.85rem] leading-relaxed text-ink-soft">
-				{note.lines.map((line, index) => (
-					<p key={`${index.toString()}-${line}`}>{line}</p>
-				))}
-			</div>
-			<ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[0.85rem]">
-				{note.links.map((link) => (
-					<li key={link.label}>
-						<button
-							type="button"
-							onClick={(event) => {
-								event.stopPropagation();
-								onFollow(link);
-							}}
-							className="text-link decoration-link-shadow decoration-[1.5px] underline-offset-[0.2em] hover:underline"
-						>
-							{link.kind === "Text"
-								? `↩ ${link.label} (${cleanWord(link.word)})`
-								: link.label}
-						</button>
-					</li>
-				))}
-			</ul>
 		</div>
 	);
 }

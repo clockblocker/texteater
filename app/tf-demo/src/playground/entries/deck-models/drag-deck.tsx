@@ -22,9 +22,16 @@ import { useMotionPreference } from "@/lib/motion-preference";
 import {
 	cleanWord,
 	type DummyNote,
+	type DummyText,
 	deckFor,
+	FIRST_TEXT,
 	type NoteLink,
 	noteById,
+	noteFor,
+	type SourceContext,
+	TEXTS,
+	type TextFocus,
+	textById,
 } from "./dummy";
 import {
 	ALL_INTERACTIONS,
@@ -39,6 +46,7 @@ import {
 	CONTEXT_PAGE,
 	HEADER_REM,
 	LIFT_SCALE,
+	LOOSE_CARD_REM,
 	liftShadow,
 	type motionOf,
 	PILE_HEIGHT_REM,
@@ -50,39 +58,81 @@ import {
 	DeckMotionProvider,
 	useDeckMotion,
 } from "./runtime-config";
-import { DummyReader, ModelShell, useEventLog } from "./shared";
+import { ModelShell, useEventLog } from "./shared";
 
 /**
- * COMPASS — the drag deck.
+ * COMPASS — the Pane algebra (Wayfinder map texteater#473, rebuilt for #482).
  *
- * A Note is one element in every form (ADR 0006). The same `NoteView` is a
- * Card in the Deck, the Held Card under the pointer, and the Sheet in a
- * Pane: only its box moves, and its Blocks read the form and adapt. There
- * is no drag ghost and no separate Sheet component, so nothing crossfades.
+ * Every Pane has a permanent Ground whose content walks a line: Menu ›
+ * Library › Text. ← on the Ground steps one rung down that line. Everything
+ * above the Ground is a Cover; following a Link pushes one, and ← on a Cover
+ * collapses it back to its Card when that Card is still in a live Deck, or
+ * closes it otherwise. A Pane whose line reaches the Menu is Rooted; a Pane
+ * spawned by dropping a Note or a Text on an edge is Floating, its Ground is
+ * the dropped thing, and its bar shows X, which closes the Pane.
  *
- * The Deck is one column: every Card shows its Heading row, and the
- * expanded Card takes the rest of the height. The written form sits on top,
- * the meaning at the bottom, and the meaning opens by default. A tap on a
- * folded Card expands it; a tap on the expanded Card does nothing: only the
- * "up" gestures open a Sheet. The first direction of a drag names its
- * intent: left arms "Remove" (the Card tilts), up arms "Open as sheet".
- * Hold an armed Card longer than a beat and the arm relaxes into a plain
- * drag.
+ * Clicks are target-based. A Segment (a word in the Text, or in a Source
+ * Context inside a Note) deals a Deck that belongs to the Sheet it was
+ * clicked in; a new selection in the same Sheet replaces it. A Link pushes a
+ * Cover. Dragging either lifts a Held Card from the pointer, and that is the
+ * one spawning mechanism: drop it in a Pane for a Cover there, on a Pane edge
+ * for a new Pane, or back where it came from to cancel.
  *
- * A plain drag drops inside a pane to open the Card as a Sheet there, on a
- * pane edge to split a new pane (after the production Workspace), on the
- * strip left of the Deck to remove, or back on the Deck. A fast throw left
- * or up still removes or opens without a zone. A Sheet lifts back into a
- * Held Card straight from its Heading, or after holding one of its margins:
- * the Sheet shrinks a touch and its border turns blue while the hold runs.
+ * A Deck is hidden, never ended, by covering: only the top Sheet's Deck is
+ * drawn, and ← reveals the one beneath. A Deck ends when its Sheet leaves,
+ * or by a Sweep: a dismissive click on its Sheet, Escape, or (behind the
+ * policy switch of #479) a fast swipe left on any of its Cards. There is no
+ * per-Card removal.
+ *
+ * A Note is one element in every form (ADR 0006). The same `PresentationView`
+ * is a Card in the Deck, the Held Card under the pointer, and the Sheet in a
+ * Pane; only its box moves, and its Blocks read the form and adapt. A Text
+ * takes the same element: its Blocks are its Sentences.
+ *
+ * Provisional defaults the build may overturn: Segments and Links inside a
+ * resting Card are inert until the Card is a Sheet (#485); the Library opens
+ * a Text only by tap, never by drag (#486).
  */
 
-type DeckCard = { readonly id: number; readonly note: DummyNote };
-type Edge = "left" | "right" | "bottom";
+/* ---------------------------------------------------------------- types */
+
+type Subject =
+	| { readonly kind: "Note"; readonly note: DummyNote }
+	| {
+			readonly kind: "Text";
+			readonly text: DummyText;
+			readonly focus: TextFocus | null;
+	  };
+/** One workspace instance of a Subject; a fresh one for every open (issue 483). */
+type Presentation = { readonly id: number; readonly subject: Subject };
+type Deck = {
+	readonly word: string;
+	/** Where the Deck sits in its Pane; null centres it (a seeded scene). */
+	readonly anchor: { readonly top: number; readonly left: number } | null;
+	/**
+	 * Every Note dealt, in Deck rank. A Note keeps its rank in whatever form
+	 * it takes: opening as a Cover does not move it, and collapsing brings it
+	 * back to the same slot. Only a Sweep, or a new deal, changes this list.
+	 */
+	readonly cards: readonly Presentation[];
+	readonly expandedId: number | null;
+};
+type Rung = { readonly id: number; readonly deck: Deck | null } & (
+	| { readonly kind: "Menu" }
+	| { readonly kind: "Library" }
+	| { readonly kind: "Sheet"; readonly card: Presentation }
+);
+type Cover = {
+	readonly id: number;
+	readonly card: Presentation;
+	readonly deck: Deck | null;
+};
 type PaneNode = {
 	readonly kind: "Pane";
 	readonly id: string;
-	readonly sheets: readonly DeckCard[];
+	/** The Ground line, bottom rung first. Rooted when it starts at the Menu. */
+	readonly line: readonly Rung[];
+	readonly covers: readonly Cover[];
 };
 type SplitNode = {
 	readonly kind: "Split";
@@ -91,12 +141,12 @@ type SplitNode = {
 	readonly children: readonly [LayoutNode, LayoutNode];
 };
 type LayoutNode = PaneNode | SplitNode;
+type Edge = "left" | "right" | "bottom";
 type Destination =
 	| { readonly kind: "return" }
-	| { readonly kind: "remove" }
 	| { readonly kind: "sheet"; readonly paneId: string }
 	| { readonly kind: "pane"; readonly paneId: string; readonly edge: Edge };
-type Arm = "remove" | "expand";
+type Arm = "sweep" | "expand";
 type Box = {
 	readonly left: number;
 	readonly top: number;
@@ -117,13 +167,31 @@ type NoteHandle = {
 	/** How far off the Deck the Card is held, 0 → 1; `setdown` only. */
 	readonly lift: MotionValue<number>;
 };
+/** A Sheet a Deck can belong to: a Ground rung or a Cover, found by id. */
+type SheetRef = {
+	readonly paneId: string;
+	readonly sheetId: number;
+	readonly card: Presentation | null;
+	readonly deck: Deck | null;
+	readonly ground: boolean;
+};
 type Drag = {
-	readonly card: DeckCard;
+	readonly card: Presentation;
 	readonly h: NoteHandle;
 	readonly pointerId: number;
 	readonly start: { x: number; y: number; t: number };
 	/** The box the Note holds while in hand; its drag offset is on top. */
 	readonly origin: Box;
+	/** The Pane the gesture started in: where ↑ and a throw up open a Cover. */
+	readonly paneId: string;
+	/** The Deck the Note rests in, if it rests in one: its slot, and what a swipe sweeps. */
+	readonly deckSheet: number | null;
+	/**
+	 * Where a release with nothing under it sends the Note: back to its
+	 * slot on the Deck, back to the Sheet it was lifted out of, or away —
+	 * a Card lifted from a Link or a Segment came from nowhere.
+	 */
+	readonly home: "slot" | "restore" | "vanish";
 	arm: Arm | null;
 	armedAt: number;
 	free: boolean;
@@ -134,8 +202,6 @@ type Drag = {
 	 * the Deck untouched, so a tap is only a tap.
 	 */
 	moved: boolean;
-	/** The pointer is over the remove zone; the Card is tilted. */
-	overRemove: boolean;
 	v: { vx: number; vy: number };
 	last: { x: number; y: number; t: number };
 };
@@ -146,11 +212,22 @@ type Lift = {
 	readonly x: number;
 	readonly y: number;
 };
+/** A Segment or a Link under a pointer that has not moved yet. */
+type PendingLift = {
+	readonly pointerId: number;
+	readonly x: number;
+	readonly y: number;
+	readonly paneId: string;
+	readonly make: () => Subject;
+};
+type Checkpoint = {
+	readonly layout: LayoutNode;
+};
 
-const ROOT_PANE = "text";
+const ROOT_PANE = "root";
 const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
 const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
-/** The Sheet's box: the Pane inset by these. */
+/** A Cover's box: the Pane inset by these. A Ground fills its Pane. */
 const SHEET_INSET_X_REM = 1.5;
 const SHEET_INSET_Y_REM = 1;
 /** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
@@ -158,14 +235,12 @@ const CARD_CONTEXTS = 2;
 /** How far the return zone reaches past the Deck's cards. */
 const PILE_PAD_REM = 0.75;
 const PILE_PAD = `${PILE_PAD_REM.toString()}rem`;
-/** The remove zone's width, and the gap between it and the Deck. */
-const REMOVE_WIDTH = "5rem";
-const ZONE_GAP = "0.75rem";
 /** The Heading's inline padding: what a Card's title sits in from its edge. */
 const TITLE_INSET_REM = 1;
 /** The gap between a selected word's baseline box and the dealt Deck. */
 const DEAL_GAP_PX = 8;
 
+/** A click on one of these is never a dismissive click. */
 const DISMISS_EXEMPT_SELECTOR = [
 	"button",
 	"a",
@@ -177,46 +252,59 @@ const DISMISS_EXEMPT_SELECTOR = [
 	"[contenteditable]",
 	"[role=button]",
 	"[role=link]",
-	"[role=tab]",
-	"[role=checkbox]",
-	"[role=radio]",
-	/* a Note in any form */
-	"article",
+	"[data-word]",
+	/* a Card, resting or held */
+	'[data-form="card"]',
 	"[data-return-zone]",
+	"[data-pane-bar]",
+	"[data-cover-bar]",
 ].join(", ");
 
 const RULES = [
 	{
-		move: "Drag ←",
-		means: "Arms Remove: the Card tilts and commits past the line. Hold a beat and it relaxes into a plain drag.",
+		move: "Click a word",
+		means: "Deals a Deck that belongs to the Sheet it was clicked in: the Text, or a Source Context inside a Note.",
 	},
 	{
-		move: "Drag ↑",
-		means: "Arms Open as sheet. Same beat rule.",
+		move: "Click a link",
+		means: "Pushes a Cover over this Pane. Go to source pushes the Text, scrolled to the Sentence.",
 	},
 	{
-		move: "Plain drag",
-		means: "Drop in a pane to open as a Sheet, on an edge for a new pane, left of the Deck to remove, or back on the Deck.",
+		move: "Drag a word or link",
+		means: "Lifts a Held Card. Drop in a Pane for a Cover, on an edge for a new Pane, anywhere else to let it go.",
 	},
 	{
-		move: "Throw",
-		means: "A fast release removes, or opens as a Sheet, without a zone.",
-	},
-	{ move: "Tap folded", means: "Brings that Card to the front." },
-	{
-		move: "Drag Sheet heading",
-		means: "Lifts the Sheet straight into a Held Card.",
+		move: "Drag ↑ a Card",
+		means: "Arms Open as a Cover. Hold a beat and it relaxes into a plain drag.",
 	},
 	{
-		move: "Hold Sheet margin",
-		means: "The Sheet shrinks and blues, then lifts as a Held Card. ← collapses it to the Deck.",
+		move: "Drag ← a Card",
+		means: "Arms Sweep: the whole Deck goes, when the switch is on.",
 	},
 	{
-		move: "Esc",
-		means: "Cancels a drag; else collapses the top Sheet; else removes the expanded Card.",
+		move: "← on a Cover",
+		means: "Collapses it to its Card if that Card is still in a live Deck, else closes it.",
 	},
-	{ move: "Follow link", means: "Opens a Sheet on top, in the same pane." },
-	{ move: "Click page", means: "Sweeps the Deck." },
+	{
+		move: "← on the Ground",
+		means: "Steps one rung down the line: Text › Library › Menu. The Text's Deck goes with it.",
+	},
+	{
+		move: "X",
+		means: "Closes a Floating Pane. Its Note collapses back to its Card if the Deck is still live.",
+	},
+	{
+		move: "Drag a Cover's bar",
+		means: "Lifts the Cover into a Held Card. A Floating Ground lifts by its Pane bar the same way, and its Pane closes behind it.",
+	},
+	{
+		move: "Hold the Pane bar",
+		means: "About a second on a Rooted Ground's bar lifts the Text; the Pane steps down to the Library.",
+	},
+	{
+		move: "Click the page, Esc",
+		means: "Sweeps the top Sheet's Deck.",
+	},
 ];
 
 /* -------------------------------------------------------------- layout */
@@ -250,7 +338,7 @@ function cardHeightPx(count: number): number {
 /**
  * The Deck's left edge inside its Pane: the Card's title starts where the
  * selected word does, kept inside the Pane by a `PILE_PAD` margin. With no
- * word yet (a seeded scene), the Deck is centred as before.
+ * word yet (a seeded scene), the Deck is centred.
  */
 function deckLeftIn(
 	paneWidth: number,
@@ -301,8 +389,99 @@ function updatePane(
 	return replacePane(node, id, update(pane)) ?? node;
 }
 
-function sheetLabel(card: DeckCard): string {
-	return `${card.note.kind} · ${card.note.title}`;
+function isRooted(pane: PaneNode): boolean {
+	return pane.line[0]?.kind === "Menu";
+}
+
+function groundOf(pane: PaneNode): Rung {
+	const rung = pane.line.at(-1);
+	if (!rung) throw new Error(`Pane ${pane.id} has no Ground`);
+	return rung;
+}
+
+/** Every Sheet in a Pane, bottom first: the Ground, then its Covers. */
+function sheetsOf(pane: PaneNode): readonly SheetRef[] {
+	const ground = groundOf(pane);
+	return [
+		{
+			paneId: pane.id,
+			sheetId: ground.id,
+			card: ground.kind === "Sheet" ? ground.card : null,
+			deck: ground.deck,
+			ground: true,
+		},
+		...pane.covers.map((cover) => ({
+			paneId: pane.id,
+			sheetId: cover.id,
+			card: cover.card,
+			deck: cover.deck,
+			ground: false,
+		})),
+	];
+}
+
+function topSheetOf(pane: PaneNode): SheetRef {
+	const sheets = sheetsOf(pane);
+	return sheets[sheets.length - 1] as SheetRef;
+}
+
+function findSheet(node: LayoutNode, sheetId: number): SheetRef | null {
+	for (const pane of panesOf(node))
+		for (const sheet of sheetsOf(pane))
+			if (sheet.sheetId === sheetId) return sheet;
+	return null;
+}
+
+/** Rewrites one Sheet's Deck, wherever that Sheet is. */
+function updateDeck(
+	node: LayoutNode,
+	sheetId: number,
+	update: (deck: Deck | null) => Deck | null,
+): LayoutNode {
+	const sheet = findSheet(node, sheetId);
+	if (!sheet) return node;
+	return updatePane(node, sheet.paneId, (pane) => ({
+		...pane,
+		line: pane.line.map((rung) =>
+			rung.id === sheetId ? { ...rung, deck: update(rung.deck) } : rung,
+		),
+		covers: pane.covers.map((cover) =>
+			cover.id === sheetId
+				? { ...cover, deck: update(cover.deck) }
+				: cover,
+		),
+	}));
+}
+
+/** Every Presentation that is open as a Sheet somewhere, so its Card is not on a Deck. */
+function openIds(node: LayoutNode): ReadonlySet<number> {
+	const ids = new Set<number>();
+	for (const pane of panesOf(node))
+		for (const sheet of sheetsOf(pane))
+			if (sheet.card) ids.add(sheet.card.id);
+	return ids;
+}
+
+/**
+ * The live Deck a Card still has a slot in, if any: the Sheet that dealt it
+ * is still in its stack and the Deck has not been swept or replaced since.
+ */
+function deckHolding(node: LayoutNode, cardId: number): SheetRef | null {
+	for (const pane of panesOf(node))
+		for (const sheet of sheetsOf(pane))
+			if (sheet.deck?.cards.some((card) => card.id === cardId))
+				return sheet;
+	return null;
+}
+
+function subjectLabel(subject: Subject): string {
+	return subject.kind === "Text"
+		? subject.text.title
+		: `${subject.note.kind} · ${subject.note.title}`;
+}
+
+function rungLabel(rung: Rung): string {
+	return rung.kind === "Sheet" ? subjectLabel(rung.card.subject) : rung.kind;
 }
 
 function sameBox(a: Box | undefined, b: Box): boolean {
@@ -315,8 +494,8 @@ function sameBox(a: Box | undefined, b: Box): boolean {
 	);
 }
 
-/** Where a Sheet sits in a Pane: under the bar, inset from the edges. */
-function sheetBoxIn(pane: Box, rem: number): Box {
+/** Where a Cover sits in a Pane: under the bar, inset from the edges. */
+function coverBoxIn(pane: Box, rem: number): Box {
 	const insetX = SHEET_INSET_X_REM * rem;
 	const insetY = SHEET_INSET_Y_REM * rem;
 	const bar = BAR_REM * rem;
@@ -325,6 +504,17 @@ function sheetBoxIn(pane: Box, rem: number): Box {
 		top: pane.top + bar + insetY,
 		width: Math.max(0, pane.width - 2 * insetX),
 		height: Math.max(0, pane.height - bar - 2 * insetY),
+	};
+}
+
+/** Where a Ground sits: the whole Pane under its bar. */
+function groundBoxIn(pane: Box, rem: number): Box {
+	const bar = BAR_REM * rem;
+	return {
+		left: pane.left,
+		top: pane.top + bar,
+		width: pane.width,
+		height: Math.max(0, pane.height - bar),
 	};
 }
 
@@ -364,7 +554,15 @@ function CompassRuntime({
 	showZones: initialZones = false,
 	showReader = !embedded,
 }: Omit<CompassModelProps, "motion">) {
-	const allows = useDeckInteractions();
+	const policy = useDeckInteractions();
+	/**
+	 * Issue 479, prototyped both ways behind one switch: with it on, a fast
+	 * swipe left on any Card sweeps the whole Deck; off, the left gesture
+	 * is gone and only the click, Escape and a new selection sweep.
+	 */
+	const [swipeSweeps, setSwipeSweeps] = useState(true);
+	const allows = (interaction: DeckInteraction) =>
+		policy(interaction) && (interaction !== "sweep" || swipeSweeps);
 	const {
 		transition,
 		SPRING,
@@ -375,6 +573,9 @@ function CompassRuntime({
 		VELOCITY_STALE_MS,
 		HOLD_RELEASE_MS,
 		CLICK_SLOP,
+		GROUND_PRESS_MS,
+		GROUND_SHRINK,
+		HOLD_RELEASE,
 		EDGE_BAND,
 		ZONE_FEEDBACK_MS,
 		OPEN_SCALE,
@@ -383,7 +584,6 @@ function CompassRuntime({
 		SNAP_LAND_PX,
 		SNAP_RETURN,
 		LIFT,
-		TILT_MAX,
 		leanFor,
 		expandScaleFor,
 		FLY_DISTANCE,
@@ -394,39 +594,23 @@ function CompassRuntime({
 		BAR_ENTER,
 		BAR_EXIT,
 	} = useDeckMotion();
-	const [seed] = useState(() =>
-		initialScene === "empty"
-			? []
-			: deckFor("noch").map((note, index) => ({ id: index + 1, note })),
-	);
 
 	/* Every animate() below is imperative, so none of it is reachable by
 	   CSS or by MotionConfig. See `reduced-motion.ts`. */
 	const reduce = useDeckReducedMotion();
 	const { entries, log, clear } = useEventLog();
-	const [selected, setSelected] = useState<string | null>(null);
-	/**
-	 * Every Note dealt for the selected word, in Deck rank: the order the
-	 * deal established, and the one true one. A Note keeps its rank in
-	 * whatever form it takes — opening as a Sheet does not move it, and
-	 * collapsing brings it back to the same slot. Only a remove, or a new
-	 * deal, changes this list. The Deck on screen is derived from it below.
-	 */
-	const [dealt, setDealt] = useState<readonly DeckCard[]>(seed);
-	const [expandedId, setExpandedId] = useState<number | null>(null);
-	const [layout, setLayout] = useState<LayoutNode>({
-		kind: "Pane",
-		id: ROOT_PANE,
-		sheets: initialScene === "sheet" ? seed.slice(0, 1) : [],
-	});
-	const [anchorTop, setAnchorTop] = useState((embedded ? 3 : 8) * 16);
-	/**
-	 * Where the Deck's titles start, from the root Pane's left edge; null
-	 * until a word is selected, and then that word's left. The Deck sits
-	 * so its titles line up under the word, not centred in the Pane.
-	 */
-	const [anchorLeft, setAnchorLeft] = useState<number | null>(null);
+	const nextId = useRef(1);
+	const nextSheet = useRef(1);
+	const nextPane = useRef(1);
+	const [layout, setLayout] = useState<LayoutNode>(() =>
+		initialLayout(initialScene, nextId, nextSheet),
+	);
 	const [drag, setDrag] = useState<Drag | null>(null);
+	/** A Card lifted from a Link or a Segment: in no Deck, in no Sheet, in hand. */
+	const [loose, setLoose] = useState<{
+		readonly card: Presentation;
+		readonly box: Box;
+	} | null>(null);
 	const [destination, setDestination] = useState<Destination | null>(null);
 	const [pastCommit, setPastCommit] = useState(false);
 	/**
@@ -438,13 +622,8 @@ function CompassRuntime({
 	/**
 	 * The gesture is over and the Note is on its way home. It stops being
 	 * boxed at the hand from this frame: the release is where it learns
-	 * its slot, not the teardown. For a Card the two are the same box and
-	 * nothing changes — but a Sheet lifted by its Heading is held in a
-	 * hand box nowhere near its slot, and used to settle there, wait out
-	 * the settle timeout and only then travel down to the Deck. One
-	 * release, two motions and a stop in between. Now the box morphs to
-	 * the slot while the drag offset unwinds on its own spring: both end
-	 * at the same place, so they read as one move.
+	 * its slot, not the teardown, so the box morphs to the slot while the
+	 * drag offset unwinds on its own spring and the two read as one move.
 	 */
 	const [returning, setReturning] = useState(false);
 	/** Drop zones stay in the DOM for hit-testing; this only shows them. */
@@ -455,6 +634,8 @@ function CompassRuntime({
 	);
 	const [rem, setRem] = useState(16);
 	const dragRef = useRef<Drag | null>(null);
+	const layoutRef = useRef(layout);
+	layoutRef.current = layout;
 	const settlingRef = useRef(false);
 	const landedRef = useRef(false);
 	/** Live subscriptions watching a return for its arrival. */
@@ -463,13 +644,12 @@ function CompassRuntime({
 	const returnRun = useRef<{ stop: () => void }[]>([]);
 	const root = useRef<HTMLDivElement>(null);
 	const handles = useRef(new Map<number, NoteHandle>());
-	const nextId = useRef(seed.length + 1);
-	const nextPane = useRef(1);
-	const gestureCheckpoint = useRef<{
-		dealt: readonly DeckCard[];
-		layout: LayoutNode;
-		expandedId: number | null;
-	} | null>(null);
+	const gestureCheckpoint = useRef<Checkpoint | null>(null);
+	const pendingLift = useRef<PendingLift | null>(null);
+	/** A lift started under this click: the click is not a click. */
+	const swallowClick = useRef(false);
+	/** The Pane the reader last touched: what Escape sweeps. */
+	const activePane = useRef(ROOT_PANE);
 	const pagePointer = useRef<{
 		id: number;
 		x: number;
@@ -479,21 +659,18 @@ function CompassRuntime({
 	} | null>(null);
 	const dismissOnClick = useRef(false);
 
-	const rootPane = findPane(layout, ROOT_PANE);
-	/** The Deck's Cards: the dealt Notes that are not open as a Sheet. */
-	const deck = useMemo(() => {
-		const open = new Set(
-			panesOf(layout).flatMap((pane) => pane.sheets.map((c) => c.id)),
-		);
-		return dealt.filter((c) => !open.has(c.id));
-	}, [dealt, layout]);
-	const expanded = deck.find((c) => c.id === expandedId) ?? deck[0] ?? null;
+	const open = useMemo(() => openIds(layout), [layout]);
+	/** The Cards a Deck shows: the dealt Notes that are not open as a Sheet. */
+	const visibleCards = (deck: Deck) =>
+		deck.cards.filter((card) => !open.has(card.id));
+	const expandedOf = (deck: Deck, cards: readonly Presentation[]) =>
+		cards.find((card) => card.id === deck.expandedId) ?? cards[0] ?? null;
 
 	/* the held Note's offset drives the commit line */
 	useEffect(() => {
 		const d = drag;
 		if (!d?.arm) return;
-		const value = d.arm === "remove" ? d.h.x : d.h.y;
+		const value = d.arm === "sweep" ? d.h.x : d.h.y;
 		const update = (v: number) => setPastCommit(v < -COMMIT);
 		update(value.get());
 		return value.on("change", update);
@@ -535,46 +712,187 @@ function CompassRuntime({
 		return () => observer.disconnect();
 	}, [layout]);
 
-	/* --- deck operations --- */
+	/* --- the Ground line --- */
 
-	function deal(word: string, element: HTMLElement) {
-		if (!allows("deal")) return;
-		setSelected(word);
-		setExpandedId(null);
-		const stageBox = element
-			.closest("[data-deck-pane]")
-			?.getBoundingClientRect();
-		const box = element.getBoundingClientRect();
-		if (stageBox) {
-			setAnchorTop(box.bottom - stageBox.top + DEAL_GAP_PX);
-			setAnchorLeft(box.left - stageBox.left);
-		}
-		log(
-			`Select "${word}": ${deck.length ? `sweep ${deck.length.toString()}, ` : ""}deal 4`,
-		);
-		setDealt(deckFor(word).map((note) => ({ id: nextId.current++, note })));
+	function present(subject: Subject): Presentation {
+		return { id: nextId.current++, subject };
 	}
-	function removeCard(card: DeckCard, reason: string) {
-		log(`${reason}: ${card.note.kind} removed`);
-		setDealt((d) => d.filter((c) => c.id !== card.id));
-	}
-	/** A Sheet is a form, not a move: the Card keeps its rank in `dealt`. */
-	function openSheet(card: DeckCard, paneId: string, reason: string) {
-		log(`${reason}: ${card.note.kind} opens as a Sheet in ${paneId}`);
+	function stepUp(
+		paneId: string,
+		rung:
+			| { readonly kind: "Menu" }
+			| { readonly kind: "Library" }
+			| { readonly kind: "Sheet"; readonly card: Presentation },
+	) {
+		const next: Rung = { ...rung, id: nextSheet.current++, deck: null };
 		setLayout((node) =>
 			updatePane(node, paneId, (pane) => ({
 				...pane,
-				sheets: [...pane.sheets, card],
+				line: [...pane.line, next],
 			})),
 		);
 	}
-	function splitPane(card: DeckCard, paneId: string, edge: Edge) {
+	function openLibrary(paneId: string) {
+		log(`Menu › Library in ${paneId}`);
+		stepUp(paneId, { kind: "Library" });
+	}
+	function openText(paneId: string, text: DummyText) {
+		log(`Library › ${text.title} in ${paneId}: the Ground's selection`);
+		stepUp(paneId, {
+			kind: "Sheet",
+			card: present({ kind: "Text", text, focus: null }),
+		});
+	}
+	/** ← on a Ground: one rung down the line. The rung's Deck leaves with it. */
+	function stepDown(paneId: string, reason: string) {
+		const pane = findPane(layoutRef.current, paneId);
+		if (!pane || pane.covers.length || pane.line.length < 2) return;
+		const leaving = groundOf(pane);
+		const below = pane.line[pane.line.length - 2] as Rung;
+		log(
+			`${reason}: ${rungLabel(leaving)} › ${rungLabel(below)}${leaving.deck ? ", its Deck ends" : ""}`,
+		);
+		setLayout((node) =>
+			updatePane(node, paneId, (p) => ({
+				...p,
+				line: p.line.slice(0, -1),
+			})),
+		);
+	}
+	/** A Rooted Pane spawned empty, at its Menu, on purpose (issue 480). */
+	function spawnEmptyPane() {
 		const id = `pane-${(nextPane.current++).toString()}`;
-		log(`Drop at ${edge} edge: new pane ${id} with ${card.note.kind}`);
+		log(`New Rooted Pane ${id} at its Menu`);
+		setLayout((node) => {
+			const pane = findPane(node, ROOT_PANE);
+			if (!pane) return node;
+			const fresh: PaneNode = {
+				kind: "Pane",
+				id,
+				line: [{ id: nextSheet.current++, kind: "Menu", deck: null }],
+				covers: [],
+			};
+			return (
+				replacePane(node, ROOT_PANE, {
+					kind: "Split",
+					id: `split-${id}`,
+					axis: "horizontal",
+					children: [pane, fresh],
+				}) ?? node
+			);
+		});
+	}
+
+	/* --- decks --- */
+
+	/** A Segment clicked in a Sheet deals a Deck that belongs to that Sheet. */
+	function deal(
+		paneId: string,
+		sheetId: number,
+		word: string,
+		element: HTMLElement,
+	) {
+		if (!allows("deal")) return;
+		const pane = findPane(layoutRef.current, paneId);
+		if (!pane || topSheetOf(pane).sheetId !== sheetId) return;
+		const frameBox = root.current?.getBoundingClientRect();
+		const paneBox = paneBoxes[paneId];
+		const box = element.getBoundingClientRect();
+		const anchor =
+			frameBox && paneBox
+				? {
+						top:
+							box.bottom -
+							frameBox.top -
+							paneBox.top +
+							DEAL_GAP_PX,
+						left: box.left - frameBox.left - paneBox.left,
+					}
+				: null;
+		const before = findSheet(layoutRef.current, sheetId)?.deck;
+		log(
+			`Select "${cleanWord(word)}": ${before ? "replace the Deck, " : ""}deal 4`,
+		);
+		setLayout((node) =>
+			updateDeck(node, sheetId, () => ({
+				word: cleanWord(word),
+				anchor,
+				cards: deckFor(word).map((note) =>
+					present({ kind: "Note", note }),
+				),
+				expandedId: null,
+			})),
+		);
+	}
+	function expand(sheetId: number, card: Presentation) {
+		if (!allows("select")) return;
+		log(`Tap folded: ${subjectLabel(card.subject)} expands`);
+		setLayout((node) =>
+			updateDeck(node, sheetId, (deck) =>
+				deck ? { ...deck, expandedId: card.id } : deck,
+			),
+		);
+	}
+	/** The Deck ends: every Card still on it flies off, then it is gone. */
+	function sweep(
+		sheetId: number,
+		reason: string,
+		run?: () => Promise<unknown>,
+	) {
+		const sheet = findSheet(layoutRef.current, sheetId);
+		if (!sheet?.deck) return;
+		const cards = visibleCards(sheet.deck);
+		log(`${reason}: sweep ${cards.length.toString()}`);
+		const end = () =>
+			setLayout((node) => updateDeck(node, sheetId, () => null));
+		if (run) {
+			settle(run, end);
+			return;
+		}
+		const fly = cards.flatMap((card) => {
+			const h = handles.current.get(card.id);
+			return h ? [flight(h)] : [];
+		});
+		settle(() => Promise.all(fly), end);
+	}
+
+	/* --- covers and panes --- */
+
+	/** A Cover is a form, not a move: a dealt Card keeps its rank in its Deck. */
+	function openCover(paneId: string, card: Presentation, reason: string) {
+		log(`${reason}: ${subjectLabel(card.subject)} covers ${paneId}`);
+		setLayout((node) =>
+			updatePane(node, paneId, (pane) => ({
+				...pane,
+				covers: [
+					...pane.covers,
+					{ id: nextSheet.current++, card, deck: null },
+				],
+			})),
+		);
+	}
+	/** A Note or a Text dropped on an edge is the new Pane's Ground: a Floating Pane. */
+	function splitPane(card: Presentation, paneId: string, edge: Edge) {
+		const id = `pane-${(nextPane.current++).toString()}`;
+		log(
+			`Drop at ${edge} edge: Floating Pane ${id} with ${subjectLabel(card.subject)} as Ground`,
+		);
 		setLayout((node) => {
 			const pane = findPane(node, paneId);
 			if (!pane) return node;
-			const fresh: PaneNode = { kind: "Pane", id, sheets: [card] };
+			const fresh: PaneNode = {
+				kind: "Pane",
+				id,
+				line: [
+					{
+						id: nextSheet.current++,
+						kind: "Sheet",
+						card,
+						deck: null,
+					},
+				],
+				covers: [],
+			};
 			const split: SplitNode = {
 				kind: "Split",
 				id: `split-${id}`,
@@ -584,50 +902,75 @@ function CompassRuntime({
 			return replacePane(node, paneId, split) ?? node;
 		});
 	}
-	function collapseSheet(paneId: string, card: DeckCard, reason: string) {
-		log(`${reason}: ${card.note.kind} collapses back onto the Deck`);
+	/** Puts a Card back in front on the Deck that still holds it, if one does. */
+	function collapseTo(node: LayoutNode, card: Presentation): LayoutNode {
+		const holder = deckHolding(node, card.id);
+		return holder
+			? updateDeck(node, holder.sheetId, (deck) =>
+					deck ? { ...deck, expandedId: card.id } : deck,
+				)
+			: node;
+	}
+	/** ← on a Cover: Collapse when its Card is still on a live Deck, Close otherwise. */
+	function leaveCover(paneId: string, cover: Cover, reason: string) {
+		const holder = deckHolding(layoutRef.current, cover.card.id);
+		log(
+			`${reason}: ${subjectLabel(cover.card.subject)} ${holder ? "collapses back to its Card" : "closes"}${cover.deck ? ", its Deck ends" : ""}`,
+		);
+		setLayout((node) =>
+			collapseTo(
+				updatePane(node, paneId, (pane) => ({
+					...pane,
+					covers: pane.covers.filter((c) => c.id !== cover.id),
+				})),
+				cover.card,
+			),
+		);
+	}
+	/** X: a Floating Pane closes with its Covers and its Deck. */
+	function closePane(paneId: string, reason: string) {
+		const pane = findPane(layoutRef.current, paneId);
+		if (!pane || isRooted(pane)) return;
+		const ground = groundOf(pane);
+		const card = ground.kind === "Sheet" ? ground.card : null;
+		const holder = card ? deckHolding(layoutRef.current, card.id) : null;
+		log(
+			`${reason}: Pane ${paneId} closes${card ? `; ${subjectLabel(card.subject)} ${holder ? "collapses back to its Card" : "closes"}` : ""}`,
+		);
 		setLayout((node) => {
-			const pane = findPane(node, paneId);
-			if (!pane) return node;
-			const sheets = pane.sheets.filter((c) => c.id !== card.id);
-			if (!sheets.length && paneId !== ROOT_PANE)
-				return replacePane(node, paneId, null) ?? node;
-			return replacePane(node, paneId, { ...pane, sheets }) ?? node;
+			const without = replacePane(node, paneId, null) ?? node;
+			return card ? collapseTo(without, card) : without;
 		});
-		/* back in its own slot: the Card never left `dealt` */
-		setExpandedId(card.id);
+	}
+	/** The Pane bar's control: the Ground's ←, or a Floating Pane's X. */
+	function back(paneId: string, reason: string) {
+		const pane = findPane(layoutRef.current, paneId);
+		if (!pane || !allows("collapse")) return;
+		if (isRooted(pane)) {
+			if (!pane.covers.length) stepDown(paneId, reason);
+		} else closePane(paneId, reason);
+	}
+	/** A Cover bar's ←: only the top Cover's is reachable. */
+	function coverBack(paneId: string, sheetId: number) {
+		const pane = findPane(layoutRef.current, paneId);
+		const top = pane?.covers.at(-1);
+		if (!top || top.id !== sheetId || !allows("collapse")) return;
+		leaveCover(paneId, top, "←");
 	}
 	function follow(paneId: string, link: NoteLink) {
 		if (!allows("follow")) return;
-		if (link.kind === "Text") {
-			log(`Go to source "${link.word}": word reselected`);
-			setSelected(link.word);
-			return;
-		}
-		const card = { id: nextId.current++, note: noteById(link.noteId) };
-		log(`Follow ${link.label}: Sheet on top in ${paneId}`);
-		/* a followed Note was never dealt: it ranks after the deal, so a
-		   collapse lands it at the bottom of the Deck */
-		setDealt((d) => [...d, card]);
-		setLayout((node) =>
-			updatePane(node, paneId, (pane) => ({
-				...pane,
-				sheets: [...pane.sheets, card],
-			})),
-		);
-	}
-	function expand(card: DeckCard) {
-		if (!allows("select")) return;
-		log(`Tap folded: ${card.note.kind} expands`);
-		setExpandedId(card.id);
+		const subject = subjectOfLink(link);
+		openCover(paneId, present(subject), `Follow ${link.label}`);
 	}
 	function reset() {
-		setSelected(null);
-		setAnchorLeft(null);
-		setDealt([]);
-		setExpandedId(null);
-		setLayout({ kind: "Pane", id: ROOT_PANE, sheets: [] });
+		nextId.current = 1;
+		nextSheet.current = 1;
+		nextPane.current = 1;
+		setLayout(initialLayout("empty", nextId, nextSheet));
 		dragRef.current = null;
+		gestureCheckpoint.current = null;
+		pendingLift.current = null;
+		setLoose(null);
 		setDrag(null);
 		setDestination(null);
 		clear();
@@ -647,9 +990,6 @@ function CompassRuntime({
 		const slot = frame.querySelector<HTMLElement>("[data-return-zone]");
 		if (slot && inside(slot.getBoundingClientRect()))
 			return { kind: "return" };
-		const gutter = frame.querySelector<HTMLElement>("[data-remove-zone]");
-		if (gutter && inside(gutter.getBoundingClientRect()))
-			return { kind: "remove" };
 		for (const element of frame.querySelectorAll<HTMLElement>(
 			"[data-deck-pane]",
 		)) {
@@ -719,8 +1059,19 @@ function CompassRuntime({
 			height: h.height.get(),
 		};
 	}
+	function capture(pointerId: number) {
+		try {
+			root.current?.setPointerCapture(pointerId);
+		} catch {
+			/* a pointer the browser is not tracking; the frame still hears it */
+		}
+	}
 	/** A Card on the Deck goes under the pointer; nothing moves until it does. */
-	function cardDown(event: ReactPointerEvent<HTMLElement>, card: DeckCard) {
+	function cardDown(
+		event: ReactPointerEvent<HTMLElement>,
+		card: Presentation,
+		sheet: SheetRef,
+	) {
 		if (!allows("drag") && !allows("select")) return;
 		if (
 			event.button !== 0 ||
@@ -728,15 +1079,10 @@ function CompassRuntime({
 			(settlingRef.current && !landedRef.current)
 		)
 			return;
-		const frame = root.current;
 		const h = handles.current.get(card.id);
-		if (!frame || !h) return;
+		if (!h) return;
 		event.preventDefault();
-		try {
-			frame.setPointerCapture(event.pointerId);
-		} catch {
-			/* a pointer the browser is not tracking; the frame still hears it */
-		}
+		capture(event.pointerId);
 		endReturn();
 		resetTransforms(h);
 		setPastCommit(false);
@@ -747,12 +1093,14 @@ function CompassRuntime({
 			pointerId: event.pointerId,
 			start: { x: event.clientX, y: event.clientY, t: now },
 			origin: currentBox(h),
+			paneId: sheet.paneId,
+			deckSheet: sheet.sheetId,
+			home: "slot",
 			arm: null,
 			armedAt: 0,
 			free: false,
 			lifted: false,
 			moved: false,
-			overRemove: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: event.clientX, y: event.clientY, t: now },
 		};
@@ -760,35 +1108,41 @@ function CompassRuntime({
 		setDrag(d);
 		setDestination(null);
 	}
-	/** A Sheet collapses onto the Deck and shrinks into the hand, mid-drag. */
-	function liftSheet(
-		paneId: string,
-		card: DeckCard,
-		lift: Lift,
-		reason: string,
-	) {
-		if (!allows("lift") || dragRef.current || settlingRef.current) return;
-		endReturn();
+	/** The box a Note is held in when it was lifted out of a Sheet or from nowhere. */
+	function handBox(lift: Lift, paneId: string, height: number): Box {
 		const frame = root.current;
-		const h = handles.current.get(card.id);
-		if (!frame || !h) return;
-		try {
-			frame.setPointerCapture(lift.pointerId);
-		} catch {
-			/* a pointer the browser is not tracking; the frame still hears it */
-		}
-		pagePointer.current = null;
-		gestureCheckpoint.current = { dealt, layout, expandedId };
-		collapseSheet(paneId, card, reason);
-		const frameBox = frame.getBoundingClientRect();
+		const frameBox = frame?.getBoundingClientRect();
+		if (!frameBox) return { left: 0, top: 0, width: 0, height };
 		const width = cardWidthIn(
-			paneBoxes[ROOT_PANE]?.width ?? frameBox.width,
+			paneBoxes[paneId]?.width ?? frameBox.width,
 			remPx(),
 			OPEN_SCALE,
 		);
-		/* a Sheet is never in `deck`, so the Deck it lands on is one taller */
-		const count = deck.length + 1;
-		const height = cardHeightPx(count);
+		return {
+			left: Math.max(
+				0,
+				Math.min(
+					frameBox.width - width,
+					lift.x - frameBox.left - width / 2,
+				),
+			),
+			top: lift.y - frameBox.top - 24,
+			width,
+			height,
+		};
+	}
+	function startLift(
+		card: Presentation,
+		lift: Lift,
+		origin: Box,
+		paneId: string,
+		deckSheet: number | null,
+		home: Drag["home"],
+	) {
+		const h = handles.current.get(card.id);
+		if (!h) return;
+		capture(lift.pointerId);
+		pagePointer.current = null;
 		resetTransforms(h);
 		setPastCommit(false);
 		const now = performance.now();
@@ -797,24 +1151,15 @@ function CompassRuntime({
 			h,
 			pointerId: lift.pointerId,
 			start: { x: lift.x, y: lift.y, t: now },
-			origin: {
-				left: Math.max(
-					0,
-					Math.min(
-						frameBox.width - width,
-						lift.x - frameBox.left - width / 2,
-					),
-				),
-				top: lift.y - frameBox.top - 24,
-				width,
-				height,
-			},
+			origin,
+			paneId,
+			deckSheet,
+			home,
 			arm: null,
 			armedAt: 0,
 			free: true,
 			lifted: true,
 			moved: true,
-			overRemove: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: lift.x, y: lift.y, t: now },
 		};
@@ -822,24 +1167,225 @@ function CompassRuntime({
 		setDrag(d);
 		setDestination(destinationAt(lift.x, lift.y));
 	}
-	function noteDown(
-		event: ReactPointerEvent<HTMLElement>,
-		card: DeckCard,
-		form: NoteForm,
-		paneId: string | null,
+	/**
+	 * A Sheet lifted by its Heading or a held margin: a Cover leaves its
+	 * stack, a Floating Ground takes its whole Pane with it. If the Card is
+	 * still on a live Deck it shrinks toward its slot there; otherwise it
+	 * is in hand with nowhere to go back to but the Sheet it was.
+	 */
+	function liftSheet(
+		sheet: SheetRef,
+		lift: Lift,
+		reason: string,
+		bar: HTMLElement | null = null,
 	) {
-		if (form === "card") {
-			cardDown(event, card);
+		if (!allows("lift") || dragRef.current || settlingRef.current) return;
+		const card = sheet.card;
+		if (!card) return;
+		endReturn();
+		gestureCheckpoint.current = { layout: layoutRef.current };
+		const holder = deckHolding(layoutRef.current, card.id);
+		if (sheet.ground) {
+			log(
+				`${reason}: ${subjectLabel(card.subject)} lifts; Pane ${sheet.paneId} closes behind it`,
+			);
+			setLayout((node) => replacePane(node, sheet.paneId, null) ?? node);
+		} else {
+			log(
+				`${reason}: ${subjectLabel(card.subject)} lifts off ${sheet.paneId}`,
+			);
+			setLayout((node) =>
+				updatePane(node, sheet.paneId, (p) => ({
+					...p,
+					covers: p.covers.filter((c) => c.id !== sheet.sheetId),
+				})),
+			);
+		}
+		/* the Deck it lands on is one taller than what it shows now */
+		const count = holder?.deck ? visibleCards(holder.deck).length + 1 : 1;
+		const height = holder ? cardHeightPx(count) : LOOSE_CARD_REM * remPx();
+		if (holder) {
+			setLayout((node) => collapseTo(node, card));
+		}
+		emergeFrom(card, bar);
+		startLift(
+			card,
+			lift,
+			handBox(lift, sheet.paneId, height),
+			sheet.paneId,
+			holder?.sheetId ?? null,
+			holder ? "slot" : "restore",
+		);
+	}
+	/**
+	 * A Sheet is handled by its bar, not by its content: the Card emerges
+	 * from the bar rather than the whole Sheet shrinking into the hand. The
+	 * one element stays one element (ADR 0006); only its box starts the
+	 * morph at the bar instead of at the Sheet.
+	 */
+	function emergeFrom(card: Presentation, bar: HTMLElement | null) {
+		const frame = root.current;
+		const h = handles.current.get(card.id);
+		if (!frame || !h || !bar) return;
+		const frameBox = frame.getBoundingClientRect();
+		const rect = bar.getBoundingClientRect();
+		h.left.jump(rect.left - frameBox.left);
+		h.top.jump(rect.top - frameBox.top);
+		h.width.jump(rect.width);
+		h.height.jump(rect.height);
+	}
+	/** A Rooted Ground's content, its bar held about a second: it lifts and the Pane steps down. */
+	function liftGround(sheet: SheetRef, lift: Lift, bar: HTMLElement | null) {
+		if (!allows("lift") || dragRef.current || settlingRef.current) return;
+		const pane = findPane(layoutRef.current, sheet.paneId);
+		const card = sheet.card;
+		if (!pane || !card || pane.covers.length || pane.line.length < 2)
+			return;
+		endReturn();
+		gestureCheckpoint.current = { layout: layoutRef.current };
+		stepDown(sheet.paneId, "Hold bar: lift the Ground");
+		emergeFrom(card, bar);
+		startLift(
+			card,
+			lift,
+			handBox(lift, sheet.paneId, LOOSE_CARD_REM * remPx()),
+			sheet.paneId,
+			null,
+			"restore",
+		);
+	}
+	/* --- the bars are the handles --- */
+
+	const barHold = useRef<{
+		timer: number;
+		pointerId: number;
+		x: number;
+		y: number;
+	} | null>(null);
+	/** The Pane whose bar is being held, for the bar's own feedback. */
+	const [barHolding, setBarHolding] = useState<string | null>(null);
+	function stopBarHold() {
+		if (barHold.current) window.clearTimeout(barHold.current.timer);
+		barHold.current = null;
+		setBarHolding(null);
+	}
+	useEffect(() => stopBarHold, []);
+	/**
+	 * The Pane bar is the Ground's handle. Rooted: hold it about a second
+	 * and the Ground lifts. Floating: a plain drag lifts it, like any
+	 * Card. Covered, it is nobody's handle.
+	 */
+	function paneBarDown(
+		event: ReactPointerEvent<HTMLElement>,
+		pane: PaneNode,
+	) {
+		if (event.button !== 0 || barHold.current || dragRef.current) return;
+		if ((event.target as HTMLElement).closest("button")) return;
+		const ground = sheetsOf(pane)[0];
+		if (!ground?.card || pane.covers.length || !allows("lift")) return;
+		const bar = event.currentTarget;
+		const lift = {
+			pointerId: event.pointerId,
+			x: event.clientX,
+			y: event.clientY,
+		};
+		event.preventDefault();
+		if (!isRooted(pane)) {
+			liftSheet(ground, lift, "Drag bar", bar);
 			return;
 		}
-		if (event.button !== 0 || paneId === null) return;
+		if (pane.line.length < 2) return;
+		setBarHolding(pane.id);
+		barHold.current = {
+			pointerId: event.pointerId,
+			x: event.clientX,
+			y: event.clientY,
+			timer: window.setTimeout(() => {
+				barHold.current = null;
+				setBarHolding(null);
+				liftGround(ground, lift, bar);
+			}, GROUND_PRESS_MS),
+		};
+	}
+	function paneBarMove(event: ReactPointerEvent<HTMLElement>) {
+		const hold = barHold.current;
+		if (!hold || hold.pointerId !== event.pointerId) return;
+		if (
+			Math.hypot(event.clientX - hold.x, event.clientY - hold.y) >
+			CLICK_SLOP
+		)
+			stopBarHold();
+	}
+	/** A Cover's bar lifts the Cover, straight into the hand. */
+	function coverBarDown(
+		event: ReactPointerEvent<HTMLElement>,
+		sheet: SheetRef,
+	) {
+		if (event.button !== 0 || dragRef.current) return;
+		if ((event.target as HTMLElement).closest("button")) return;
 		event.preventDefault();
 		liftSheet(
-			paneId,
-			card,
+			sheet,
 			{ pointerId: event.pointerId, x: event.clientX, y: event.clientY },
-			"Drag heading",
+			"Drag bar",
+			event.currentTarget,
 		);
+	}
+
+	/** A Segment or a Link dragged past the slop: a fresh Card, from nowhere. */
+	function liftLoose(
+		pending: PendingLift,
+		event: ReactPointerEvent<HTMLElement>,
+	) {
+		if (!allows("drag") || dragRef.current || settlingRef.current) return;
+		const card = present(pending.make());
+		log(`Drag: ${subjectLabel(card.subject)} lifts as a fresh Card`);
+		swallowClick.current = true;
+		const lift = {
+			pointerId: pending.pointerId,
+			x: pending.x,
+			y: pending.y,
+		};
+		const box = handBox(lift, pending.paneId, LOOSE_CARD_REM * remPx());
+		setLoose({ card, box });
+		/* the handle exists once the Card has rendered; finish the lift then */
+		queueLift.current = { card, lift, box, paneId: pending.paneId, event };
+	}
+	const queueLift = useRef<{
+		card: Presentation;
+		lift: Lift;
+		box: Box;
+		paneId: string;
+		event: ReactPointerEvent<HTMLElement>;
+	} | null>(null);
+	/* an effect, not a layout effect: the Card registers its handle in one */
+	useEffect(() => {
+		const queued = queueLift.current;
+		if (!queued || !loose || loose.card.id !== queued.card.id) return;
+		queueLift.current = null;
+		startLift(
+			queued.card,
+			queued.lift,
+			queued.box,
+			queued.paneId,
+			null,
+			"vanish",
+		);
+		frameMove(queued.event);
+	});
+	function segmentDown(
+		event: ReactPointerEvent<HTMLElement>,
+		paneId: string,
+		make: () => Subject,
+	) {
+		if (event.button !== 0 || dragRef.current) return;
+		pendingLift.current = {
+			pointerId: event.pointerId,
+			x: event.clientX,
+			y: event.clientY,
+			paneId,
+			make,
+		};
 	}
 	function release(d: Drag, reason: string) {
 		d.arm = null;
@@ -851,6 +1397,19 @@ function CompassRuntime({
 	}
 	function frameMove(event: ReactPointerEvent<HTMLElement>) {
 		if (!allows("drag")) return;
+		const pending = pendingLift.current;
+		if (pending && pending.pointerId === event.pointerId) {
+			if (
+				Math.hypot(
+					event.clientX - pending.x,
+					event.clientY - pending.y,
+				) > ARM_SLOP
+			) {
+				pendingLift.current = null;
+				liftLoose(pending, event);
+			}
+			return;
+		}
 		const d = dragRef.current;
 		if (!d || d.pointerId !== event.pointerId) return;
 		const { h } = d;
@@ -869,21 +1428,21 @@ function CompassRuntime({
 			if (!reduce && SNAP_BACK === "setdown")
 				animate(h.lift, 1, transition(LIFT));
 			if (Math.abs(dx) > Math.abs(dy)) {
-				if (dx < 0 && allows("remove")) {
-					d.arm = "remove";
+				if (dx < 0 && allows("sweep") && d.deckSheet !== null) {
+					d.arm = "sweep";
 					d.armedAt = event.timeStamp;
-					log("Drag ←: armed Remove");
+					log("Drag ←: armed Sweep");
 					setDrag({ ...d });
-				} else release(d, "Drag →");
+				} else release(d, dx < 0 ? "Drag ←" : "Drag →");
 			} else if (dy < 0 && allows("expand")) {
 				d.arm = "expand";
 				d.armedAt = event.timeStamp;
-				log("Drag ↑: armed Open as sheet");
+				log("Drag ↑: armed Open as Cover");
 				setDrag({ ...d });
 			} else release(d, "Drag ↓");
 		}
 
-		if (d.arm === "remove") {
+		if (d.arm === "sweep") {
 			/* the lean and the swell are decoration on top of a gesture
 			   that already reads in the border and the label */
 			h.rotate.set(reduce ? 0 : leanFor(dx));
@@ -900,12 +1459,6 @@ function CompassRuntime({
 		const next = d.free
 			? destinationAt(event.clientX, event.clientY)
 			: null;
-		/* over the remove zone the Card tilts as if swiped left */
-		const overRemove = next?.kind === "remove";
-		if (overRemove !== d.overRemove) {
-			d.overRemove = overRemove;
-			if (!reduce) animate(h.rotate, overRemove ? TILT_MAX : 0, SPRING);
-		}
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
 		);
@@ -926,6 +1479,7 @@ function CompassRuntime({
 			landedRef.current = false;
 			setLanded(false);
 			setReturning(false);
+			setLoose(null);
 			setDrag(null);
 			setDestination(null);
 			setPastCommit(false);
@@ -958,8 +1512,7 @@ function CompassRuntime({
 	/**
 	 * Rejoin the stack once the drag offset is within `SNAP_LAND_PX` of
 	 * nothing. That is the gesture unwinding, which for a Card is the
-	 * whole of its journey home; a Sheet's box is still morphing to the
-	 * slot beside it, and these models do not speak for that.
+	 * whole of its journey home.
 	 */
 	function watchForLanding(h: NoteHandle) {
 		const check = () => {
@@ -1013,30 +1566,54 @@ function CompassRuntime({
 		);
 	}
 	/**
-	 * Reduced motion keeps the fade and drops the 720 px of travel: the
-	 * Card still visibly leaves, it just does not fly across the page.
+	 * A Card leaving for good. Reduced motion keeps the fade and drops the
+	 * 720 px of travel: the Card still visibly leaves, it just does not
+	 * fly across the page.
 	 */
-	function flyAway(d: Drag, reason: string) {
-		const { h } = d;
+	function flight(h: NoteHandle): Promise<unknown> {
+		return reduce
+			? Promise.all([animate(h.opacity, 0, transition(FLY_FADE))])
+			: Promise.all([
+					animate(
+						h.x,
+						h.x.get() - FLY_DISTANCE,
+						transition(FLY_TRAVEL),
+					),
+					animate(h.rotate, FLY_ROTATE_TO, transition(FLY_ROTATE)),
+					animate(h.opacity, 0, transition(FLY_FADE)),
+				]);
+	}
+	/** A loose Card let go with nothing under it: it fades where it is. */
+	function vanish(d: Drag) {
+		log("Let go: the Card goes");
 		settle(
-			() =>
-				reduce
-					? Promise.all([animate(h.opacity, 0, transition(FLY_FADE))])
-					: Promise.all([
-							animate(
-								h.x,
-								h.x.get() - FLY_DISTANCE,
-								transition(FLY_TRAVEL),
-							),
-							animate(
-								h.rotate,
-								FLY_ROTATE_TO,
-								transition(FLY_ROTATE),
-							),
-							animate(h.opacity, 0, transition(FLY_FADE)),
-						]),
-			() => removeCard(d.card, reason),
+			() => Promise.all([animate(d.h.opacity, 0, transition(FLY_FADE))]),
+			() => {},
 		);
+	}
+	/** A lifted Sheet let go with nowhere to be: it is the Sheet again. */
+	function restore(d: Drag, reason: string) {
+		const checkpoint = gestureCheckpoint.current;
+		gestureCheckpoint.current = null;
+		log(`${reason}: ${subjectLabel(d.card.subject)} is a Sheet again`);
+		resetTransforms(d.h);
+		if (checkpoint) setLayout(checkpoint.layout);
+		setLoose(null);
+		setDrag(null);
+		setDestination(null);
+		setPastCommit(false);
+	}
+	/** Whole-Deck swipe: the held Card and its Deck fly together. */
+	function sweepByDrag(d: Drag, reason: string) {
+		if (d.deckSheet === null) return;
+		const sheet = findSheet(layoutRef.current, d.deckSheet);
+		if (!sheet?.deck) return;
+		const cards = visibleCards(sheet.deck);
+		const fly = cards.flatMap((card) => {
+			const h = handles.current.get(card.id);
+			return h ? [flight(h)] : [];
+		});
+		sweep(d.deckSheet, reason, () => Promise.all(fly));
 	}
 	/**
 	 * The Note stays exactly where the hand left it and grows from there:
@@ -1059,13 +1636,24 @@ function CompassRuntime({
 			animate(h.scale, 1, MORPH);
 			animate(h.lift, 0, MORPH);
 		}
+		gestureCheckpoint.current = null;
 		dragRef.current = null;
 		setDrag(null);
 		setDestination(null);
 		setPastCommit(false);
 		commit();
+		/* a loose Card is a Sheet now; its Presentation lives in the layout */
+		setLoose(null);
+	}
+	/** A release with nothing under it. */
+	function goHome(d: Drag) {
+		if (d.home === "slot") snapBack(d.h);
+		else if (d.home === "restore") restore(d, "Released in place");
+		else vanish(d);
 	}
 	function frameUp(event: ReactPointerEvent<HTMLElement>) {
+		pendingLift.current = null;
+		stopBarHold();
 		const d = dragRef.current;
 		if (!d || d.pointerId !== event.pointerId) return;
 		dragRef.current = null;
@@ -1081,64 +1669,80 @@ function CompassRuntime({
 
 		if (travelled < CLICK_SLOP + 2) {
 			if (d.lifted) {
-				log("Released in place: stays on the Deck");
-				snapBack(h);
+				if (d.home === "slot")
+					log("Released in place: stays on the Deck");
+				goHome(d);
 				return;
 			}
 			setDrag(null);
-			if (expanded && card.id === expanded.id)
+			const sheet =
+				d.deckSheet === null
+					? null
+					: findSheet(layoutRef.current, d.deckSheet);
+			if (!sheet?.deck) return;
+			const deck = sheet.deck;
+			if (expandedOf(deck, visibleCards(deck))?.id === card.id)
 				log("Tap expanded: nothing; drag ↑ to open");
-			else expand(card);
+			else expand(sheet.sheetId, card);
 			return;
 		}
-		if (d.arm === "remove") {
-			if (dx < -COMMIT || vx < -THROW) flyAway(d, "Remove ←");
+		if (d.arm === "sweep") {
+			if (dx < -COMMIT || vx < -THROW) sweepByDrag(d, "Swipe ←");
 			else snapBack(h);
 			return;
 		}
 		if (d.arm === "expand") {
 			if (dy < -COMMIT || vy < -THROW)
-				growFromHand(d, () => openSheet(card, ROOT_PANE, "Open ↑"));
+				growFromHand(d, () => openCover(d.paneId, card, "Open ↑"));
 			else snapBack(h);
 			return;
 		}
-		if (allows("remove") && vx < -THROW && Math.abs(vx) > Math.abs(vy)) {
-			flyAway(d, "Throw ←");
+		if (
+			allows("sweep") &&
+			d.deckSheet !== null &&
+			vx < -THROW &&
+			Math.abs(vx) > Math.abs(vy)
+		) {
+			sweepByDrag(d, "Throw ←");
 			return;
 		}
 		if (allows("expand") && vy < -THROW) {
 			const target = destinationAt(event.clientX, event.clientY);
 			const paneId =
-				target && "paneId" in target ? target.paneId : ROOT_PANE;
-			growFromHand(d, () => openSheet(card, paneId, "Throw ↑"));
+				target && "paneId" in target ? target.paneId : d.paneId;
+			growFromHand(d, () => openCover(paneId, card, "Throw ↑"));
 			return;
 		}
 		const target = destinationAt(event.clientX, event.clientY);
 		if (!target || target.kind === "return") {
-			snapBack(h);
+			goHome(d);
 			return;
 		}
-		if (target.kind === "remove") flyAway(d, "Drop on Remove");
-		else if (target.kind === "sheet")
+		if (target.kind === "sheet")
 			growFromHand(d, () =>
-				openSheet(card, target.paneId, "Drop in pane"),
+				openCover(target.paneId, card, "Drop in Pane"),
 			);
 		else growFromHand(d, () => splitPane(card, target.paneId, target.edge));
 	}
 	function cancelDrag(event?: ReactPointerEvent<HTMLElement>) {
+		pendingLift.current = null;
+		stopBarHold();
 		const d = dragRef.current;
 		if (!d || (event && event.pointerId !== d.pointerId)) return;
 		dragRef.current = null;
 		if (root.current?.hasPointerCapture(d.pointerId))
 			root.current.releasePointerCapture(d.pointerId);
 		log("Drag cancelled");
+		if (d.lifted && d.home !== "slot") {
+			restore(d, "Cancel");
+			return;
+		}
 		const checkpoint = gestureCheckpoint.current;
 		gestureCheckpoint.current = null;
 		if (d.lifted && checkpoint) {
 			resetTransforms(d.h);
-			setDealt(checkpoint.dealt);
 			setLayout(checkpoint.layout);
-			setExpandedId(checkpoint.expandedId);
+			setLoose(null);
 			setDrag(null);
 			setDestination(null);
 			setPastCommit(false);
@@ -1157,21 +1761,25 @@ function CompassRuntime({
 				cancelDrag();
 				return;
 			}
-			const top = rootPane?.sheets.at(-1);
-			if (top && allows("collapse")) {
-				collapseSheet(ROOT_PANE, top, "Esc");
-				return;
-			}
-			if (expanded && allows("dismiss")) removeCard(expanded, "Esc");
+			if (!allows("dismiss")) return;
+			const pane = findPane(layoutRef.current, activePane.current);
+			const top = pane ? topSheetOf(pane) : null;
+			if (top?.deck && visibleCards(top.deck).length)
+				sweep(top.sheetId, "Esc");
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
 	});
 
-	/* --- page click sweeps the Deck (ported from the main app) --- */
+	/* --- a dismissive click sweeps the top Sheet's Deck --- */
 
 	function pageDown(event: ReactPointerEvent<HTMLElement>) {
 		dismissOnClick.current = false;
+		const at = (event.target as HTMLElement).closest<HTMLElement>(
+			"[data-deck-pane], [data-pane]",
+		);
+		const paneId = at?.dataset.deckPane ?? at?.dataset.pane;
+		if (paneId) activePane.current = paneId;
 		if (event.button !== 0) return;
 		pagePointer.current = {
 			id: event.pointerId,
@@ -1205,14 +1813,31 @@ function CompassRuntime({
 		if (pagePointer.current) pagePointer.current.scrolled = true;
 	}
 	function pageClick(event: ReactMouseEvent<HTMLElement>) {
-		if (!allows("dismiss")) return;
-		if (!dismissOnClick.current || !deck.length || rootPane?.sheets.length)
+		if (swallowClick.current) {
+			swallowClick.current = false;
+			event.preventDefault();
+			event.stopPropagation();
 			return;
-		if ((event.target as HTMLElement).closest(DISMISS_EXEMPT_SELECTOR))
-			return;
-		log(`Click page: sweep ${deck.length.toString()}`);
-		setDealt([]);
-		setExpandedId(null);
+		}
+		if (!allows("dismiss") || !dismissOnClick.current) return;
+		const target = event.target as HTMLElement;
+		if (target.closest(DISMISS_EXEMPT_SELECTOR)) return;
+		const sheetId = Number(
+			target.closest<HTMLElement>("[data-sheet-id]")?.dataset.sheetId,
+		);
+		const paneId =
+			target.closest<HTMLElement>("[data-deck-pane]")?.dataset.deckPane;
+		const pane = paneId ? findPane(layoutRef.current, paneId) : null;
+		const top = pane ? topSheetOf(pane) : null;
+		/* only a click on the top Sheet is a click on that Sheet */
+		const sheet =
+			Number.isFinite(sheetId) && sheetId
+				? findSheet(layoutRef.current, sheetId)
+				: top;
+		if (!sheet?.deck || !visibleCards(sheet.deck).length) return;
+		const its = findPane(layoutRef.current, sheet.paneId);
+		if (!its || topSheetOf(its).sheetId !== sheet.sheetId) return;
+		sweep(sheet.sheetId, "Click page");
 	}
 
 	/* --- render --- */
@@ -1220,170 +1845,200 @@ function CompassRuntime({
 	const dragging = drag !== null;
 	const showZones = allows("drop") && dragging && drag.free;
 	const armLabel =
-		drag?.arm === "remove"
-			? "Remove"
+		drag?.arm === "sweep"
+			? "Sweep"
 			: drag?.arm === "expand"
-				? "Open as sheet"
+				? "Open as Cover"
 				: null;
+	const register = (id: number, handle: NoteHandle | null) => {
+		if (handle) handles.current.set(id, handle);
+		else handles.current.delete(id);
+	};
 
-	/** The zones around the Deck's footprint: hit areas, and outlines on demand. */
-	function renderZones() {
-		const columnWidth = cardWidthIn(
-			paneBoxes[ROOT_PANE]?.width ?? 0,
-			rem,
-			OPEN_SCALE,
-		);
+	/** The return zone over a Deck's footprint: a hit area, and an outline on demand. */
+	function renderReturnZone(sheet: SheetRef, paneBox: Box) {
+		const deck = sheet.deck;
+		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId)
+			return null;
+		const columnWidth = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
 		return (
 			<div
+				key={`return-${sheet.sheetId.toString()}`}
 				data-deck-column=""
 				className="pointer-events-none absolute"
 				style={{
-					top: anchorTop,
-					left: deckLeftIn(
-						paneBoxes[ROOT_PANE]?.width ?? 0,
-						columnWidth,
-						rem,
-						anchorLeft,
-					),
+					top:
+						paneBox.top +
+						(deck.anchor?.top ?? defaultAnchorTop(embedded)),
+					left:
+						paneBox.left +
+						deckLeftIn(
+							paneBox.width,
+							columnWidth,
+							rem,
+							deck.anchor?.left ?? null,
+						),
 					width: columnWidth,
 					height: PILE_HEIGHT,
 				}}
 			>
-				{/* the remove zone: a strip just left of the Deck, same height */}
-				{showZones ? (
-					<div
-						aria-hidden="true"
-						data-remove-zone=""
-						data-active={destination?.kind === "remove"}
-						data-shown={zonesVisible}
-						className="pointer-events-none absolute z-[35] grid data-[shown=false]:invisible place-items-center rounded-[1.1rem] border border-dashed border-destructive/50 bg-destructive/5 transition-colors data-[active=true]:border-destructive data-[active=true]:bg-destructive/15"
-						style={{
-							transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-							insetInlineStart: `calc(-1 * ${PILE_PAD} - ${ZONE_GAP} - ${REMOVE_WIDTH})`,
-							top: `calc(-1 * ${PILE_PAD})`,
-							width: REMOVE_WIDTH,
-							height: `calc(${PILE_HEIGHT} + 2 * ${PILE_PAD})`,
-						}}
-					>
-						<span className="rotate-180 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-destructive uppercase [writing-mode:vertical-rl]">
-							Remove
-						</span>
-					</div>
-				) : null}
-				{/* the return zone: the whole Deck's footprint, above the pane wash */}
-				{showZones ? (
-					<div
-						aria-hidden="true"
-						data-return-zone=""
-						data-active={destination?.kind === "return"}
-						data-shown={zonesVisible}
-						className="pointer-events-none absolute z-[35] flex data-[shown=false]:invisible items-end justify-center pb-3 rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15"
-						style={{
-							transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-							insetInlineStart: `calc(-1 * ${PILE_PAD})`,
-							top: `calc(-1 * ${PILE_PAD})`,
-							width: `calc(100% + 2 * ${PILE_PAD})`,
-							height: `calc(${PILE_HEIGHT} + 2 * ${PILE_PAD})`,
-						}}
-					>
-						<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
-							Back on the Deck
-						</span>
-					</div>
-				) : null}
+				<div
+					aria-hidden="true"
+					data-return-zone=""
+					data-active={destination?.kind === "return"}
+					data-shown={zonesVisible}
+					className="pointer-events-none absolute z-[35] flex data-[shown=false]:invisible items-end justify-center pb-3 rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15"
+					style={{
+						transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
+						insetInlineStart: `calc(-1 * ${PILE_PAD})`,
+						top: `calc(-1 * ${PILE_PAD})`,
+						width: `calc(100% + 2 * ${PILE_PAD})`,
+						height: `calc(${PILE_HEIGHT} + 2 * ${PILE_PAD})`,
+					}}
+				>
+					<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
+						Back on the Deck
+					</span>
+				</div>
 			</div>
 		);
 	}
 
 	function renderPane(pane: PaneNode): ReactNode {
-		const isRoot = pane.id === ROOT_PANE;
-		const top = pane.sheets.at(-1);
-		const trail = [
-			"Text",
-			...pane.sheets.map((sheet) => sheetLabel(sheet)),
-		];
+		const rooted = isRooted(pane);
+		const ground = groundOf(pane);
+		const covered = pane.covers.length > 0;
+		const trail = pane.line.map((rung) => rungLabel(rung));
+		/* the bar is a handle only while its Ground is a Sheet and uncovered */
+		const handle =
+			ground.kind === "Sheet" && !covered && allows("lift")
+				? rooted
+					? "press"
+					: "drag"
+				: "none";
+		const holdingHere = barHolding === pane.id;
+		/* the Pane bar is the Ground's: ← steps its line (not while it is
+		   covered), X closes a Floating Pane with everything on it. Each
+		   Cover carries its own bar. */
+		const control = rooted
+			? {
+					glyph: "←",
+					label:
+						pane.line.length > 1
+							? `Back to ${rungLabel(pane.line[pane.line.length - 2] as Rung)}`
+							: "At the Menu",
+					enabled:
+						pane.line.length > 1 && !covered && allows("collapse"),
+				}
+			: {
+					glyph: "×",
+					label: "Close pane",
+					enabled: allows("collapse"),
+				};
 		return (
 			<section
 				key={pane.id}
 				data-deck-pane={pane.id}
-				aria-label={isRoot ? "Text pane" : `Pane ${pane.id}`}
+				data-pane-kind={rooted ? "rooted" : "floating"}
+				aria-label={
+					rooted
+						? `Rooted pane ${pane.id}`
+						: `Floating pane ${pane.id}`
+				}
 				className="relative h-full min-h-0 overflow-hidden bg-paper"
-				onPointerDownCapture={isRoot ? pageDown : undefined}
-				onPointerMoveCapture={isRoot ? pageMove : undefined}
-				onPointerUpCapture={isRoot ? pageUp : undefined}
-				onScrollCapture={isRoot ? pageScroll : undefined}
-				onClickCapture={isRoot ? pageClick : undefined}
 			>
-				{isRoot ? (
-					<>
-						<div className="h-full overflow-auto">
-							{showReader ? (
-								<DummyReader
-									selected={selected}
-									onSelect={({ word, element }) =>
-										deal(word, element)
-									}
-								/>
-							) : null}
-						</div>
-						{renderZones()}
-					</>
-				) : null}
-				{/* the Pane bar: Sheet chrome, owned by the Pane, arriving after the box */}
-				<AnimatePresence>
-					{top ? (
-						<motion.div
-							key="bar"
-							data-pane-bar=""
-							initial={{ opacity: 0 }}
-							animate={{
-								opacity: 1,
-								transition: transition(BAR_ENTER),
-							}}
-							exit={{
-								opacity: 0,
-								transition: transition(BAR_EXIT),
-							}}
-							className="absolute inset-x-0 top-0 z-20 flex items-center gap-2 bg-paper ps-2 pe-3"
-							style={{ height: `${BAR_REM.toString()}rem` }}
-						>
-							<button
-								type="button"
-								disabled={!allows("collapse")}
-								aria-label="Collapse back to card"
-								title="Collapse back to card"
-								onClick={() => collapseSheet(pane.id, top, "←")}
-								className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised"
-							>
-								←
-							</button>
-							<nav
-								aria-label="Trail"
-								className="flex min-w-0 items-center gap-1 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase"
-							>
-								{trail.map((crumb, index) => (
+				{/* the Pane bar: Sheet chrome, owned by the Pane, and the
+				    Ground's handle. A hold shrinks the bar a touch. */}
+				<motion.div
+					data-pane-bar=""
+					data-handle={handle}
+					data-holding={holdingHere}
+					initial={false}
+					animate={{ scale: holdingHere ? 0.985 : 1 }}
+					transition={transition(
+						holdingHere ? GROUND_SHRINK : HOLD_RELEASE,
+					)}
+					onPointerDown={(event) => paneBarDown(event, pane)}
+					onPointerMove={paneBarMove}
+					onPointerUp={stopBarHold}
+					onPointerCancel={stopBarHold}
+					onPointerLeave={stopBarHold}
+					className={`absolute inset-x-0 top-0 z-20 flex items-center gap-2 border-b border-line bg-paper ps-2 pe-3 select-none ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
+					style={{
+						height: `${BAR_REM.toString()}rem`,
+						transformOrigin: "0% 50%",
+					}}
+				>
+					<button
+						type="button"
+						disabled={!control.enabled}
+						aria-label={control.label}
+						title={control.label}
+						onClick={() => back(pane.id, control.glyph)}
+						className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised disabled:text-ink-muted disabled:hover:bg-transparent"
+					>
+						{control.glyph}
+					</button>
+					<nav
+						aria-label="Trail"
+						className="flex min-w-0 items-center gap-1 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase"
+					>
+						<AnimatePresence initial={false}>
+							{trail.map((crumb, index) => (
+								<motion.span
+									key={`${index.toString()}-${crumb}`}
+									initial={{ opacity: 0 }}
+									animate={{
+										opacity: 1,
+										transition: transition(BAR_ENTER),
+									}}
+									exit={{
+										opacity: 0,
+										transition: transition(BAR_EXIT),
+									}}
+									className="contents"
+								>
+									{index > 0 ? (
+										<span aria-hidden="true">›</span>
+									) : null}
 									<span
-										key={`${index.toString()}-${crumb}`}
-										className="contents"
+										className={
+											index === trail.length - 1
+												? holdingHere
+													? "text-link"
+													: "text-ink"
+												: undefined
+										}
 									>
-										{index > 0 ? (
-											<span aria-hidden="true">›</span>
-										) : null}
-										<span
-											className={
-												index === trail.length - 1
-													? "text-ink"
-													: undefined
-											}
-										>
-											{crumb}
-										</span>
+										{crumb}
 									</span>
-								))}
-							</nav>
-						</motion.div>
-					) : null}
-				</AnimatePresence>
+								</motion.span>
+							))}
+						</AnimatePresence>
+						{handle === "press" ? (
+							<span className="ms-2 shrink-0 normal-case tracking-normal text-ink-muted">
+								hold to lift
+							</span>
+						) : null}
+					</nav>
+				</motion.div>
+				{/* the Menu and the Library are the Ground's first rungs: lists, in the Pane */}
+				{ground.kind === "Menu" ? (
+					<GroundList
+						title="Menu"
+						items={[{ key: "library", label: "Library" }]}
+						onPick={() => openLibrary(pane.id)}
+					/>
+				) : ground.kind === "Library" ? (
+					<GroundList
+						title="Library"
+						items={TEXTS.map((text) => ({
+							key: text.id,
+							label: text.title,
+						}))}
+						onPick={(key) => openText(pane.id, textById(key))}
+					/>
+				) : null}
 				{showZones ? (
 					<DropZones
 						paneId={pane.id}
@@ -1411,31 +2066,34 @@ function CompassRuntime({
 		);
 	}
 
-	/**
-	 * Every Note, in whatever form it is in right now, with the box it
-	 * should occupy. The Deck's Cards sit in slots one Heading row apart;
-	 * Sheets fill their Pane's Sheet box; the held one keeps its hand box.
-	 */
-	function renderNotes(): ReactNode {
-		const rootBox = paneBoxes[ROOT_PANE];
-		if (!rootBox) return null;
-		const count = deck.length;
-		const cardWidth = cardWidthIn(rootBox.width, rem, OPEN_SCALE);
+	/** The top Sheet's Deck: Cards in slots one Heading row apart. */
+	function renderDeck(sheet: SheetRef, paneBox: Box): ReactNode[] {
+		const deck = sheet.deck;
+		if (!deck) return [];
+		const cards = visibleCards(deck);
+		const count = cards.length;
+		const cardWidth = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
 		const headerPx = HEADER_REM * rem;
 		const slotHeight = cardHeightPx(count);
-		const order = [...deck].reverse();
-		const open = expanded ? order.indexOf(expanded) : count - 1;
-		const notes: ReactNode[] = [];
-
-		order.forEach((card, index) => {
+		const order = [...cards].reverse();
+		const expanded = expandedOf(deck, cards);
+		const openAt = expanded ? order.indexOf(expanded) : count - 1;
+		const anchorTop = deck.anchor?.top ?? defaultAnchorTop(embedded);
+		const left =
+			paneBox.left +
+			deckLeftIn(
+				paneBox.width,
+				cardWidth,
+				rem,
+				deck.anchor?.left ?? null,
+			);
+		return order.map((card, index) => {
 			const place: Place =
-				index < open ? "above" : index > open ? "below" : "open";
+				index < openAt ? "above" : index > openAt ? "below" : "open";
 			const held = drag?.moved === true && drag.card.id === card.id;
 			const slot: Box = {
-				left:
-					rootBox.left +
-					deckLeftIn(rootBox.width, cardWidth, rem, anchorLeft),
-				top: rootBox.top + anchorTop + index * headerPx,
+				left,
+				top: paneBox.top + anchorTop + index * headerPx,
 				width: cardWidth,
 				height: slotHeight,
 			};
@@ -1450,8 +2108,8 @@ function CompassRuntime({
 							: place === "above"
 								? index
 								: count - 1 - index);
-			notes.push(
-				<NoteView
+			return (
+				<PresentationView
 					key={card.id}
 					card={card}
 					form="card"
@@ -1463,53 +2121,186 @@ function CompassRuntime({
 					free={held ? (drag?.free ?? false) : false}
 					pastCommit={held && pastCommit}
 					armLabel={held ? armLabel : null}
-					paneId={null}
-					register={(id, handle) => {
-						if (handle) handles.current.set(id, handle);
-						else handles.current.delete(id);
-					}}
-					onDown={(event) => noteDown(event, card, "card", null)}
+					paneId={sheet.paneId}
+					sheetId={null}
+					ground={false}
+					showText={showReader}
+					litWord={null}
+					register={register}
+					onDown={(event) => cardDown(event, card, sheet)}
 					onHoldLift={() => {}}
-					onFollow={(link) => follow(ROOT_PANE, link)}
-				/>,
+					onFollow={() => {}}
+					onSegment={() => {}}
+					onSegmentDown={() => {}}
+				/>
 			);
 		});
+	}
 
+	/**
+	 * A Cover's own bar: its ← and its label, sitting on the Cover's box
+	 * above the Note. Pane chrome, not Note content (ADR 0006), so it is
+	 * drawn beside the Note rather than inside it, and arrives a beat after
+	 * the box the way the Pane bar used to.
+	 */
+	function renderCoverBar(
+		sheet: SheetRef,
+		box: Box,
+		z: number,
+		isTop: boolean,
+	): ReactNode {
+		const card = sheet.card;
+		if (!card) return null;
+		const label = deckHolding(layout, card.id)
+			? "Collapse back to card"
+			: "Close cover";
+		return (
+			<motion.div
+				key={`bar-${sheet.sheetId.toString()}`}
+				data-cover-bar={sheet.sheetId}
+				data-pane={sheet.paneId}
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: transition(BAR_ENTER) }}
+				onPointerDown={
+					isTop && allows("lift")
+						? (event) => coverBarDown(event, sheet)
+						: undefined
+				}
+				className={`pointer-events-auto absolute flex items-center gap-2 rounded-t-[0.9rem] border border-b-0 border-line-strong bg-paper ps-2 pe-3 select-none ${isTop && allows("lift") ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
+				style={{
+					left: box.left,
+					top: box.top,
+					width: box.width,
+					height: `${BAR_REM.toString()}rem`,
+					zIndex: z,
+				}}
+			>
+				<button
+					type="button"
+					disabled={!isTop || !allows("collapse")}
+					aria-label={label}
+					title={label}
+					onClick={() => coverBack(sheet.paneId, sheet.sheetId)}
+					className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised disabled:text-ink-muted disabled:hover:bg-transparent"
+				>
+					←
+				</button>
+				<span className="min-w-0 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink uppercase">
+					{subjectLabel(card.subject)}
+				</span>
+			</motion.div>
+		);
+	}
+
+	/**
+	 * Every Note, in whatever form it is in right now, with the box it
+	 * should occupy: each Pane's Ground and Covers, the top Sheet's Deck,
+	 * and a loose Card in hand.
+	 */
+	function renderNotes(): ReactNode {
+		const notes: ReactNode[] = [];
+		const rendered = new Set<number>();
 		for (const pane of panesOf(layout)) {
 			const paneBox = paneBoxes[pane.id];
 			if (!paneBox) continue;
-			const box = sheetBoxIn(paneBox, rem);
-			pane.sheets.forEach((card, index) => {
-				const isTop = index === pane.sheets.length - 1;
+			const sheets = sheetsOf(pane);
+			const top = sheets[sheets.length - 1] as SheetRef;
+			sheets.forEach((sheet, index) => {
+				if (!sheet.card) return;
+				const isTop = index === sheets.length - 1;
+				rendered.add(sheet.card.id);
+				const coverBox = sheet.ground ? null : coverBoxIn(paneBox, rem);
+				if (coverBox)
+					notes.push(
+						renderCoverBar(sheet, coverBox, 1 + index, isTop),
+					);
 				notes.push(
-					<NoteView
-						key={card.id}
-						card={card}
+					<PresentationView
+						key={sheet.card.id}
+						card={sheet.card}
 						form="sheet"
 						place="open"
-						box={box}
-						z={30 + index}
+						box={
+							coverBox
+								? {
+										...coverBox,
+										top: coverBox.top + BAR_REM * rem,
+										height: Math.max(
+											0,
+											coverBox.height - BAR_REM * rem,
+										),
+									}
+								: groundBoxIn(paneBox, rem)
+						}
+						z={1 + index}
 						held={false}
 						arm={null}
 						free={false}
 						pastCommit={false}
 						armLabel={null}
 						paneId={pane.id}
+						sheetId={sheet.sheetId}
+						ground={sheet.ground}
 						covered={!isTop}
-						register={(id, handle) => {
-							if (handle) handles.current.set(id, handle);
-							else handles.current.delete(id);
-						}}
-						onDown={(event) =>
-							noteDown(event, card, "sheet", pane.id)
-						}
+						showText={showReader}
+						litWord={isTop ? (sheet.deck?.word ?? null) : null}
+						register={register}
+						onDown={() => {}}
 						onHoldLift={(lift) =>
-							liftSheet(pane.id, card, lift, "Hold margin")
+							liftSheet(sheet, lift, "Hold margin")
 						}
 						onFollow={(link) => follow(pane.id, link)}
+						onSegment={(word, element) =>
+							deal(pane.id, sheet.sheetId, word, element)
+						}
+						onSegmentDown={(event, make) =>
+							segmentDown(event, pane.id, make)
+						}
 					/>,
 				);
 			});
+			if (top.deck)
+				for (const card of visibleCards(top.deck))
+					rendered.add(card.id);
+			notes.push(...renderDeck(top, paneBox));
+			notes.push(renderReturnZone(top, paneBox));
+		}
+		/* a Card from nowhere, or a Sheet in hand whose Deck is hidden or
+		   gone: nothing above drew it, and the hand still holds it */
+		const inHand =
+			loose && !rendered.has(loose.card.id)
+				? { card: loose.card, box: loose.box }
+				: drag?.lifted && !rendered.has(drag.card.id)
+					? { card: drag.card, box: drag.origin }
+					: null;
+		if (inHand) {
+			const held = drag?.card.id === inHand.card.id;
+			notes.push(
+				<PresentationView
+					key={inHand.card.id}
+					card={inHand.card}
+					form="card"
+					place="open"
+					box={held && drag ? drag.origin : inHand.box}
+					z={40}
+					held={held}
+					arm={held ? (drag?.arm ?? null) : null}
+					free={held ? (drag?.free ?? false) : false}
+					pastCommit={held && pastCommit}
+					armLabel={held ? armLabel : null}
+					paneId={drag?.paneId ?? ROOT_PANE}
+					sheetId={null}
+					ground={false}
+					showText={showReader}
+					litWord={null}
+					register={register}
+					onDown={() => {}}
+					onHoldLift={() => {}}
+					onFollow={() => {}}
+					onSegment={() => {}}
+					onSegmentDown={() => {}}
+				/>,
+			);
 		}
 		return notes;
 	}
@@ -1519,9 +2310,14 @@ function CompassRuntime({
 			ref={root}
 			data-deck-frame=""
 			tabIndex={-1}
-			onPointerDownCapture={() =>
-				root.current?.focus({ preventScroll: true })
-			}
+			onPointerDownCapture={(event) => {
+				root.current?.focus({ preventScroll: true });
+				pageDown(event);
+			}}
+			onPointerMoveCapture={pageMove}
+			onPointerUpCapture={pageUp}
+			onScrollCapture={pageScroll}
+			onClickCapture={pageClick}
 			className="relative h-full min-h-0 overflow-hidden"
 			onPointerMove={frameMove}
 			onPointerUp={frameUp}
@@ -1529,9 +2325,9 @@ function CompassRuntime({
 		>
 			{renderLayout(layout)}
 			{/* every Note, in every form, placed over the Panes.
-				    No AnimatePresence: nothing here has an exit to play, and
-				    holding a swept Note for the frame it takes to find that
-				    out leaves the old deck standing over the new one. */}
+			    No AnimatePresence: nothing here has an exit to play, and
+			    holding a swept Note for the frame it takes to find that
+			    out leaves the old deck standing over the new one. */}
 			<div
 				data-deck-notes=""
 				className="pointer-events-none absolute inset-0"
@@ -1547,17 +2343,37 @@ function CompassRuntime({
 			entries={entries}
 			onReset={reset}
 			toolbar={
-				<label className="flex cursor-pointer items-center justify-between gap-3 text-[0.8rem] text-ink select-none">
-					<span>Show drop zones</span>
-					<input
-						type="checkbox"
-						checked={zonesVisible}
-						onChange={(event) =>
-							setZonesVisible(event.target.checked)
-						}
-						className="accent-link"
-					/>
-				</label>
+				<div className="flex flex-col gap-2 text-[0.8rem] text-ink">
+					<label className="flex cursor-pointer items-center justify-between gap-3 select-none">
+						<span>Swipe left sweeps the Deck</span>
+						<input
+							type="checkbox"
+							checked={swipeSweeps}
+							onChange={(event) =>
+								setSwipeSweeps(event.target.checked)
+							}
+							className="accent-link"
+						/>
+					</label>
+					<label className="flex cursor-pointer items-center justify-between gap-3 select-none">
+						<span>Show drop zones</span>
+						<input
+							type="checkbox"
+							checked={zonesVisible}
+							onChange={(event) =>
+								setZonesVisible(event.target.checked)
+							}
+							className="accent-link"
+						/>
+					</label>
+					<button
+						type="button"
+						onClick={spawnEmptyPane}
+						className="self-start text-[0.78rem] text-link underline-offset-2 hover:underline"
+					>
+						Spawn an empty Rooted Pane
+					</button>
+				</div>
 			}
 		>
 			{frame}
@@ -1565,15 +2381,111 @@ function CompassRuntime({
 	);
 }
 
+/** Where a seeded Deck sits when no word was selected to anchor it. */
+function defaultAnchorTop(embedded: boolean): number {
+	return (embedded ? 3 : 8) * 16;
+}
+
+function subjectOfLink(link: NoteLink): Subject {
+	return link.kind === "Text"
+		? { kind: "Text", text: textById(link.textId), focus: link.focus }
+		: { kind: "Note", note: noteById(link.noteId) };
+}
+
+/**
+ * The opening scene. Every scene starts a Rooted Pane at the end of its
+ * line, Menu › Library › Text, so ← has rungs to step down; a seeded scene
+ * deals a Deck for "noch", and the Sheet scene opens its first Card.
+ */
+function initialLayout(
+	scene: "empty" | "deck" | "sheet",
+	nextId: { current: number },
+	nextSheet: { current: number },
+): LayoutNode {
+	const text: Presentation = {
+		id: nextId.current++,
+		subject: { kind: "Text", text: FIRST_TEXT, focus: null },
+	};
+	const cards =
+		scene === "empty"
+			? []
+			: deckFor("noch").map((note) => ({
+					id: nextId.current++,
+					subject: { kind: "Note" as const, note },
+				}));
+	const deck: Deck | null = cards.length
+		? {
+				word: "noch",
+				anchor: null,
+				cards,
+				expandedId: null,
+			}
+		: null;
+	const first = cards[0];
+	return {
+		kind: "Pane",
+		id: ROOT_PANE,
+		line: [
+			{ id: nextSheet.current++, kind: "Menu", deck: null },
+			{ id: nextSheet.current++, kind: "Library", deck: null },
+			{ id: nextSheet.current++, kind: "Sheet", card: text, deck },
+		],
+		covers:
+			scene === "sheet" && first
+				? [{ id: nextSheet.current++, card: first, deck: null }]
+				: [],
+	};
+}
+
+/* ----------------------------------------------------------- ground list */
+
+/** A Menu or a Library rung: a list the Ground walks by tapping. */
+function GroundList({
+	title,
+	items,
+	onPick,
+}: {
+	title: string;
+	items: readonly { readonly key: string; readonly label: string }[];
+	onPick: (key: string) => void;
+}) {
+	return (
+		<div
+			className="h-full overflow-auto"
+			style={{ paddingTop: `${BAR_REM.toString()}rem` }}
+		>
+			<div className="mx-auto w-full max-w-[42rem] px-8 pt-10 pb-12">
+				<h2 className="mb-5 font-sans text-[0.68rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
+					{title}
+				</h2>
+				<ul className="flex flex-col gap-1">
+					{items.map((item) => (
+						<li key={item.key}>
+							<button
+								type="button"
+								data-ground-item={item.key}
+								onClick={() => onPick(item.key)}
+								className="w-full rounded-md px-3 py-2 text-left font-serif text-[1.15rem] text-ink hover:bg-raised"
+							>
+								{item.label}
+							</button>
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+	);
+}
+
 /* ----------------------------------------------------------------- note */
 
 /**
- * One Note, in one of its forms. Its box is four motion values that
- * animate to whatever target the model hands it; the drag transforms sit
- * on top of the box, so a release can fold them in and grow from there.
+ * One Presentation, in one of its forms. Its box is four motion values
+ * that animate to whatever target the model hands it; the drag transforms
+ * sit on top of the box, so a release can fold them in and grow from there.
  * The Blocks inside read `form` and `place` and adapt.
  */
-function NoteView({
+function PresentationView({
 	card,
 	form,
 	place,
@@ -1585,13 +2497,19 @@ function NoteView({
 	pastCommit,
 	armLabel,
 	paneId,
+	sheetId,
+	ground,
 	covered = false,
+	showText,
+	litWord,
 	register,
 	onDown,
 	onHoldLift,
 	onFollow,
+	onSegment,
+	onSegmentDown,
 }: {
-	card: DeckCard;
+	card: Presentation;
 	form: NoteForm;
 	place: Place;
 	box: Box;
@@ -1601,13 +2519,26 @@ function NoteView({
 	free: boolean;
 	pastCommit: boolean;
 	armLabel: string | null;
-	paneId: string | null;
+	paneId: string;
+	/** The Sheet this is, when it is one; a Deck can belong to it. */
+	sheetId: number | null;
+	/** A Ground fills its Pane and wears no Card chrome. */
+	ground: boolean;
 	/** A Sheet under another Sheet in the same Pane. */
 	covered?: boolean;
+	/** A Text Ground with the reader hidden: the workbench's quiet scenes. */
+	showText: boolean;
+	/** The word this Sheet's Deck was dealt for, lit in its Segments. */
+	litWord: string | null;
 	register: (id: number, handle: NoteHandle | null) => void;
 	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	onHoldLift: (lift: Lift) => void;
 	onFollow: (link: NoteLink) => void;
+	onSegment: (word: string, element: HTMLElement) => void;
+	onSegmentDown: (
+		event: ReactPointerEvent<HTMLElement>,
+		make: () => Subject,
+	) => void;
 }) {
 	const {
 		transition,
@@ -1658,34 +2589,16 @@ function NoteView({
 	 * and the two are multiplied on the way to the DOM.
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	/**
-	 * Three scales, multiplied on the way to the DOM: the Card's resting
-	 * one, whatever the drag and the hold are animating, and the `setdown`
-	 * model's lift off the Deck. The lift is a shadow as well; at 0 that
-	 * shadow is `none`, so a Card that never leaves the Deck hands the
-	 * compositor nothing to paint.
-	 */
 	const shownScale = useTransform(
 		() => scale.get() * restScale * (1 + lift.get() * LIFT_SCALE),
 	);
 	const shownShadow = useTransform(() => liftShadow(lift.get()));
 	/**
-	 * The box's origin travels as a transform, not as `left`/`top`.
-	 *
-	 * `left` and `top` are still the spring's values and still mean "where
-	 * the model put this Note" — `growFromHand` folds the drag into them,
-	 * and nothing about that changes. What changes is how they reach the
-	 * DOM: as part of the transform, which composites, rather than as box
-	 * offsets, which lay out. Two of the four properties on MORPH leave the
-	 * layout path this way; `width` and `height` have to stay, because a
-	 * Note genuinely reflows its text between a Card and a Sheet.
-	 *
-	 * The drag offset rides along here rather than in its own `x`/`y`: one
-	 * translate, composed from both, so the two cannot fight over it. The
-	 * order the browser applies the transform in leaves `rotate` and
-	 * `scale` turning about the element's own `transform-origin` exactly as
-	 * they did when the box was positioned, so the hold's pressed-corner
-	 * origin is unaffected.
+	 * The box's origin travels as a transform, not as `left`/`top`, so two
+	 * of the four properties on MORPH leave the layout path; `width` and
+	 * `height` have to stay, because a Note genuinely reflows its text
+	 * between a Card and a Sheet. The drag offset rides along in the same
+	 * translate, so the two cannot fight over it.
 	 */
 	const shownX = useTransform(() => left.get() + x.get());
 	const shownY = useTransform(() => top.get() + y.get());
@@ -1739,9 +2652,9 @@ function NoteView({
 		MORPH,
 	]);
 
-	/* the hold on a Sheet margin: shrink toward the finger, then lift.
-	   Reduced motion keeps the hold — the border still turns — without the
-	   shrink, which is the only part of it that moves. */
+	/* the hold on a Sheet margin or a Rooted Ground's Heading: shrink toward
+	   the finger, then lift. Reduced motion keeps the hold — the border still
+	   turns — without the shrink, which is the only part of it that moves. */
 	useEffect(() => {
 		if (held) return;
 		if (reduce) {
@@ -1765,7 +2678,7 @@ function NoteView({
 		transition,
 	]);
 
-	function marginDown(event: ReactPointerEvent<HTMLElement>) {
+	function startHold(event: ReactPointerEvent<HTMLElement>) {
 		if (event.button !== 0 || hold.current) return;
 		event.preventDefault();
 		event.stopPropagation();
@@ -1791,7 +2704,7 @@ function NoteView({
 			}, LONG_PRESS_MS),
 		};
 	}
-	function marginMove(event: ReactPointerEvent<HTMLElement>) {
+	function holdMove(event: ReactPointerEvent<HTMLElement>) {
 		const current = hold.current;
 		if (!current || current.pointer.pointerId !== event.pointerId) return;
 		if (
@@ -1813,22 +2726,18 @@ function NoteView({
 	function down(event: ReactPointerEvent<HTMLElement>) {
 		const target = event.target as HTMLElement;
 		if (target.closest("button")) return;
-		/* a Sheet is lifted by its Heading only; its body scrolls */
-		if (form === "sheet" && !target.closest("[data-heading]")) return;
 		if (covered) return;
-		onDown(event);
+		/* a Sheet is handled by its bar, never by its content: a Card is
+		   picked up from anywhere, a Sheet's body only scrolls */
+		if (form === "card") onDown(event);
 	}
 
 	const sheet = form === "sheet";
 	const below = place === "below" && !sheet;
 	/**
 	 * Which transition the Heading and the Blocks ride when they swap ends.
-	 *
-	 * A change of form is a morph: the Heading's height springs on `MORPH`
-	 * at the same moment, so its position has to travel with it or the two
-	 * come apart. A deck tap changes only which edge the Heading sits at —
-	 * no height moves at all. The baseline changes edges immediately; a
-	 * headingEdgeMs override enables a sliding alternative.
+	 * A change of form is a morph on `MORPH`; a deck tap changes only which
+	 * edge the Heading sits at, on `HEADING_EDGE`.
 	 */
 	const previousForm = useRef(form);
 	const morphing = previousForm.current !== form;
@@ -1836,8 +2745,6 @@ function NoteView({
 		previousForm.current = form;
 	}, [form]);
 	const positionSpec = morphing ? MORPH : transition(HEADING_EDGE);
-	/* Measure local flex positions explicitly: ancestor motion transforms can
-	   prevent layout projection from detecting an edge swap. */
 	const headingOffset = useMotionValue(0);
 	const bodyOffset = useMotionValue(0);
 	const previousPositions = useRef<{
@@ -1891,31 +2798,35 @@ function NoteView({
 		bodyOffset,
 	]);
 	const borderColor =
-		arm === "remove"
+		arm === "sweep"
 			? "var(--destructive)"
 			: arm === "expand" || free || holding
 				? "var(--link)"
-				: "var(--line-strong)";
+				: ground
+					? "transparent"
+					: "var(--line-strong)";
+	const subject = card.subject;
+	const dataForm = ground ? "ground" : form;
 
 	return (
 		<motion.article
 			ref={section}
-			aria-label={`${card.note.kind} ${sheet ? "sheet" : "card"}`}
+			aria-label={`${subjectLabel(subject)} ${ground ? "ground" : sheet ? "sheet" : "card"}`}
 			data-card-id={card.id}
-			data-form={form}
+			data-form={dataForm}
 			data-place={sheet ? undefined : place}
 			data-held={held || undefined}
 			data-arm={arm ?? undefined}
 			data-past={pastCommit}
 			data-holding={holding}
-			data-pane={paneId ?? undefined}
+			data-pane={paneId}
+			data-sheet-id={sheetId ?? undefined}
 			/* The border is the arm state. A Note is dealt wearing its
 			   resting colour; only arming changes it. */
 			initial={false}
 			animate={{ borderColor }}
 			transition={transition(NOTE_BORDER)}
 			style={{
-				/* the origin is the transform's; see `shownX` above */
 				left: 0,
 				top: 0,
 				width,
@@ -1927,32 +2838,29 @@ function NoteView({
 				opacity,
 				boxShadow: shownShadow,
 				zIndex: z,
-				/**
-				 * One origin for the Card's whole life. It used to move to
-				 * the bottom edge while the Card was held, so the remove
-				 * tilt would pivot there — but the open Card rests at
-				 * `OPEN_SCALE`, and scaling about the bottom rather than
-				 * the centre draws it `(OPEN_SCALE - 1) × height / 2`
-				 * higher: 9 px of hover that lasted from the grab until
-				 * the drag state tore down, and dropped away a fifth of a
-				 * second after the Card was home. The tilt pivots about
-				 * the centre now, which is where a Card under a finger
-				 * turns anyway.
-				 */
 				transformOrigin: origin,
 			}}
 			onPointerDown={down}
+			/* the Rooted Ground's Heading press is watched here: the same
+			   hold as a margin, one second long, ended by a move or a release */
+			onPointerMove={holdMove}
+			onPointerUp={stopHold}
+			onPointerCancel={stopHold}
+			onPointerLeave={stopHold}
 			/* `contain` stops the width/height spring's recalc at this Note
 			   rather than letting it walk the deck */
-			className={`pointer-events-auto absolute flex flex-col overflow-hidden rounded-[0.9rem] border bg-paper [contain:layout_paint] select-none ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
+			className={`pointer-events-auto absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : sheet ? "rounded-b-[0.9rem]" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
 		>
 			{/* the content column: one width in every form, centred in a wide box */}
 			<div
 				className="mx-auto flex min-h-0 w-full flex-1 flex-col"
-				style={{ maxWidth: CARD_WIDTH }}
+				style={{
+					maxWidth:
+						sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH,
+				}}
 			>
 				<HeadingBlock
-					note={card.note}
+					subject={subject}
 					form={form}
 					atBottom={below}
 					layout={!held && morphing}
@@ -1960,8 +2868,7 @@ function NoteView({
 					positionSpec={positionSpec}
 				/>
 				{/* the Blocks travel with the Heading: the row it vacates is
-				    the row they take, so bridging one without the other
-				    trades a jump for a slide against a jump */}
+				    the row they take */}
 				<motion.div
 					data-scroller=""
 					layout={!held && morphing ? "position" : false}
@@ -1973,9 +2880,34 @@ function NoteView({
 					<div
 						className={`flex flex-col gap-3 px-4 ${below ? "pt-3" : "pb-4"}`}
 					>
-						<ContextsBlock note={card.note} form={form} />
-						<BodyBlock note={card.note} />
-						<LinksBlock note={card.note} onFollow={onFollow} />
+						{subject.kind === "Text" ? (
+							<TextBlock
+								text={subject.text}
+								focus={subject.focus}
+								form={form}
+								shown={showText}
+								litWord={litWord}
+								onSegment={onSegment}
+								onSegmentDown={onSegmentDown}
+							/>
+						) : (
+							<>
+								<ContextsBlock
+									note={subject.note}
+									form={form}
+									litWord={litWord}
+									onSegment={onSegment}
+									onSegmentDown={onSegmentDown}
+								/>
+								<BodyBlock note={subject.note} />
+								<LinksBlock
+									note={subject.note}
+									form={form}
+									onFollow={onFollow}
+									onSegmentDown={onSegmentDown}
+								/>
+							</>
+						)}
 					</div>
 					{/* the Card's clip fades its content out; the Sheet lifts the fade */}
 					<motion.div
@@ -1987,15 +2919,15 @@ function NoteView({
 					/>
 				</motion.div>
 			</div>
-			{/* a Sheet's own margins: hold one to lift the Sheet as a Card */}
-			{sheet && !covered && allows("lift")
+			{/* a Cover's own margins: hold one to lift the Cover as a Card */}
+			{sheet && !ground && !covered && allows("lift")
 				? MARGINS.map((margin) => (
 						<div
 							key={margin}
 							aria-hidden="true"
 							data-sheet-margin={margin}
-							onPointerDown={marginDown}
-							onPointerMove={marginMove}
+							onPointerDown={(event) => startHold(event)}
+							onPointerMove={holdMove}
 							onPointerUp={stopHold}
 							onPointerCancel={stopHold}
 							onPointerLeave={stopHold}
@@ -2013,7 +2945,7 @@ function NoteView({
 						}
 						exit={ARM_LABEL_FROM}
 						transition={transition(ARM_LABEL)}
-						className={`absolute top-3 z-10 rounded-md border px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${arm === "remove" ? "right-3 border-destructive bg-paper text-destructive" : "left-3 border-link bg-paper text-link"}`}
+						className={`absolute top-3 z-10 rounded-md border px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${arm === "sweep" ? "right-3 border-destructive bg-paper text-destructive" : "left-3 border-link bg-paper text-link"}`}
 					>
 						{armLabel}
 					</motion.div>
@@ -2033,55 +2965,48 @@ const MARGIN_CLASS: Record<(typeof MARGINS)[number], string> = {
 /* --------------------------------------------------------------- blocks */
 
 /**
- * The Heading: pinned first, the lift handle in every form. In Card form
+ * The Heading: pinned first, the Card's lift handle. In Card form
  * it is the one-line row (form, then gloss); in Sheet form the title grows
  * and the kind label shows above it. When the Card is a Card Tail the row
- * sits at the bottom edge. The baseline puts it there immediately;
- * the injected heading-edge transition can make it slide.
+ * sits at the bottom edge.
  */
 function HeadingBlock({
-	note,
+	subject,
 	form,
 	atBottom,
 	layout,
 	offset,
 	positionSpec,
 }: {
-	note: DummyNote;
+	subject: Subject;
 	form: NoteForm;
 	atBottom: boolean;
 	layout: boolean;
 	offset: MotionValue<number>;
-	/** What the row's position rides; see `positionSpec` in `NoteView`. */
+	/** What the row's position rides; see `positionSpec` in `PresentationView`. */
 	positionSpec: ReturnType<typeof motionOf>;
 }) {
 	const { transition, MORPH, KIND_LABEL, KIND_LABEL_Y } = useDeckMotion();
 	const sheet = form === "sheet";
 	const rem = remPx();
+	const kind = subject.kind === "Text" ? "Text" : subject.note.kind;
+	const title =
+		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
+	const gloss = subject.kind === "Text" ? "text" : subject.note.tail.gloss;
 	return (
 		<motion.div
 			data-heading=""
-			/*
-			 * `initial={false}` is the whole of it: without it Motion has no
-			 * first value for a height it was never given in CSS, so on mount
-			 * it measures the row it just rendered — the title's own line box —
-			 * and springs from there to `HEADER_REM`, carrying the Blocks below
-			 * down with it. A Card is dealt at its size; only a change of form
-			 * is a move.
-			 */
+			/* `initial={false}`: a Card is dealt at its size; only a change
+			   of form is a move. */
 			initial={false}
 			layout={layout ? "position" : false}
-			/* Form changes use layout projection; edge variants use the local offset. */
 			layoutDependency={`${form}:${atBottom.toString()}`}
 			transition={{ ...MORPH, layout: positionSpec }}
 			animate={{ height: (sheet ? SHEET_HEADER_REM : HEADER_REM) * rem }}
 			style={{ order: atBottom ? 2 : 0, y: offset }}
-			className={`relative flex w-full shrink-0 items-end gap-4 px-4 ${sheet ? "cursor-grab touch-none active:cursor-grabbing" : ""} ${atBottom ? "" : "pb-2"}`}
+			className={`relative flex w-full shrink-0 items-end gap-4 px-4 ${atBottom ? "" : "pb-2"}`}
 		>
 			<motion.span
-				/* Card form hides it. Without this the label is painted
-				   first and then fades out, so a dealt Card flashes its
-				   kind and slides it away. Same mount rule as the row. */
 				initial={false}
 				animate={{
 					opacity: sheet ? 1 : 0,
@@ -2090,7 +3015,7 @@ function HeadingBlock({
 				transition={transition(KIND_LABEL)}
 				className="pointer-events-none absolute top-3 left-4 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase"
 			>
-				{note.kind}
+				{kind}
 			</motion.span>
 			<motion.span
 				initial={false}
@@ -2098,22 +3023,154 @@ function HeadingBlock({
 				transition={MORPH}
 				className={`min-w-0 flex-1 truncate font-serif leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
 			>
-				{note.tail.form}
+				{title}
 			</motion.span>
 			<span
 				className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
 			>
-				{note.tail.gloss}
+				{gloss}
 			</span>
 		</motion.div>
 	);
 }
 
 /**
- * Source Contexts: pinned, part of the Anchor. A Card shows the two most
- * recent; a Sheet shows a page and can load more.
+ * A Segment: a word that deals when clicked and lifts when dragged, in
+ * Sheet form. In Card form it is inert text (issue 485, provisional).
  */
-function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
+function Segment({
+	word,
+	live,
+	lit,
+	focused,
+	onSegment,
+	onSegmentDown,
+}: {
+	word: string;
+	live: boolean;
+	lit: boolean;
+	focused: boolean;
+	onSegment: (word: string, element: HTMLElement) => void;
+	onSegmentDown: (
+		event: ReactPointerEvent<HTMLElement>,
+		make: () => Subject,
+	) => void;
+}) {
+	if (!live)
+		return (
+			<span data-segment={word} className={lit ? "text-ink" : undefined}>
+				{word}
+			</span>
+		);
+	return (
+		<button
+			type="button"
+			data-word={word}
+			aria-pressed={lit}
+			aria-current={focused ? "location" : undefined}
+			onPointerDown={(event) =>
+				onSegmentDown(event, () => ({
+					kind: "Note",
+					note: noteFor("Reading", word),
+				}))
+			}
+			onClick={(event) => onSegment(word, event.currentTarget)}
+			className="rounded-[0.2rem] px-[0.08em] text-word-unknown decoration-word-resolving decoration-[1.5px] underline-offset-[0.2em] hover:underline aria-[current=location]:bg-selection/40 aria-pressed:bg-selection aria-pressed:text-selection-foreground"
+		>
+			{word}
+		</button>
+	);
+}
+
+/** A Text's Blocks: its Sentences, every word a Segment once it is a Sheet. */
+function TextBlock({
+	text,
+	focus,
+	form,
+	shown,
+	litWord,
+	onSegment,
+	onSegmentDown,
+}: {
+	text: DummyText;
+	focus: TextFocus | null;
+	form: NoteForm;
+	shown: boolean;
+	litWord: string | null;
+	onSegment: (word: string, element: HTMLElement) => void;
+	onSegmentDown: (
+		event: ReactPointerEvent<HTMLElement>,
+		make: () => Subject,
+	) => void;
+}) {
+	const sheet = form === "sheet";
+	const lit = useRef<HTMLParagraphElement>(null);
+	/* a Cover pushed by Go to source arrives scrolled to its Sentence */
+	useEffect(() => {
+		if (sheet && focus) lit.current?.scrollIntoView({ block: "center" });
+	}, [sheet, focus]);
+	if (!shown) return null;
+	return (
+		<div
+			data-block="text"
+			className={`font-serif text-ink ${sheet ? "px-4 pt-4 text-[1.15rem] leading-[1.71rem]" : "text-[0.9rem] leading-relaxed"}`}
+		>
+			{text.sentences.map((sentence, sentenceIndex) => {
+				const focused = focus?.sentence === sentenceIndex;
+				return (
+					<p
+						key={sentence.join(" ")}
+						ref={focused ? lit : undefined}
+						data-sentence={sentenceIndex}
+						className={`${sheet ? "mb-[1.75rem]" : "mb-2"} ${focused ? "rounded-md bg-raised/60 -mx-2 px-2" : ""}`}
+					>
+						{sentence.map((word, index) => (
+							<span key={`${word}-${index.toString()}`}>
+								<Segment
+									word={word}
+									live={sheet}
+									lit={
+										litWord !== null &&
+										cleanWord(word) === litWord
+									}
+									focused={
+										focused &&
+										cleanWord(word) === focus.word
+									}
+									onSegment={onSegment}
+									onSegmentDown={onSegmentDown}
+								/>
+								{index < sentence.length - 1 ? " " : ""}
+							</span>
+						))}
+					</p>
+				);
+			})}
+		</div>
+	);
+}
+
+/**
+ * Source Contexts: pinned, part of the Anchor. A Card shows the two most
+ * recent; a Sheet shows a page and can load more. In a Sheet, every word
+ * is a Segment that deals a Deck belonging to that Sheet.
+ */
+function ContextsBlock({
+	note,
+	form,
+	litWord,
+	onSegment,
+	onSegmentDown,
+}: {
+	note: DummyNote;
+	form: NoteForm;
+	litWord: string | null;
+	onSegment: (word: string, element: HTMLElement) => void;
+	onSegmentDown: (
+		event: ReactPointerEvent<HTMLElement>,
+		make: () => Subject,
+	) => void;
+}) {
 	const allows = useDeckInteractions();
 	const { transition, CONTEXT_ITEM, contextDelayFor } = useDeckMotion();
 	const sheet = form === "sheet";
@@ -2123,14 +3180,9 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 	}, [sheet]);
 	const visible = note.contexts.slice(0, sheet ? shown : CARD_CONTEXTS);
 	const more = note.contexts.length - visible.length;
-	const word = cleanWord(note.word);
 	/**
 	 * Where the arriving group starts, so the stagger counts from the first
 	 * item that is actually new rather than from the top of the list.
-	 *
-	 * Counting from the absolute index would put the whole second page at
-	 * the cap — five items, all 200 ms late, all together, which is the
-	 * flat arrival this is here to break up.
 	 */
 	const settled = useRef(visible.length);
 	const arrivingFrom = settled.current;
@@ -2145,12 +3197,10 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 			</div>
 			<ul className="flex flex-col gap-0.5 text-[0.8rem] leading-relaxed text-ink-soft">
 				<AnimatePresence initial={false}>
-					{visible.map((line, index) => (
+					{visible.map((context, index) => (
 						<motion.li
-							key={line}
+							key={contextKey(context)}
 							initial={{ opacity: 0, height: 0 }}
-							/* the stagger is on the way in only: a group
-							   arrives one after another, and leaves at once */
 							animate={{
 								opacity: 1,
 								height: "auto",
@@ -2168,7 +3218,25 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 							}}
 							className="overflow-hidden"
 						>
-							{highlight(line, word)}
+							{context.words.map((word, wordIndex) => (
+								<span key={`${word}-${wordIndex.toString()}`}>
+									<Segment
+										word={word}
+										live={sheet}
+										lit={
+											cleanWord(word) === note.word ||
+											(litWord !== null &&
+												cleanWord(word) === litWord)
+										}
+										focused={false}
+										onSegment={onSegment}
+										onSegmentDown={onSegmentDown}
+									/>
+									{wordIndex < context.words.length - 1
+										? " "
+										: ""}
+								</span>
+							))}
 						</motion.li>
 					))}
 				</AnimatePresence>
@@ -2191,19 +3259,8 @@ function ContextsBlock({ note, form }: { note: DummyNote; form: NoteForm }) {
 	);
 }
 
-/** Marks the word inside a context sentence. */
-function highlight(line: string, word: string): ReactNode {
-	const index = line.toLowerCase().indexOf(word.toLowerCase());
-	if (index < 0) return line;
-	return (
-		<>
-			{line.slice(0, index)}
-			<span className="text-ink">
-				{line.slice(index, index + word.length)}
-			</span>
-			{line.slice(index + word.length)}
-		</>
-	);
+function contextKey(context: SourceContext): string {
+	return `${context.textId ?? "filler"}:${context.sentence.toString()}:${context.words.join(" ")}`;
 }
 
 /** The Note's lines. The same in every form; a Card only clips them. */
@@ -2220,38 +3277,65 @@ function BodyBlock({ note }: { note: DummyNote }) {
 	);
 }
 
-/** Onward links. The same in every form. */
+/**
+ * Onward Links. In a Sheet a tap pushes a Cover and a drag lifts the
+ * target as a fresh Card; in a Card they are inert (issue 485, provisional).
+ */
 function LinksBlock({
 	note,
+	form,
 	onFollow,
+	onSegmentDown,
 }: {
 	note: DummyNote;
+	form: NoteForm;
 	onFollow: (link: NoteLink) => void;
+	onSegmentDown: (
+		event: ReactPointerEvent<HTMLElement>,
+		make: () => Subject,
+	) => void;
 }) {
 	const allows = useDeckInteractions();
+	const live = form === "sheet";
 	return (
 		<ul
 			data-block="links"
 			className="flex flex-wrap gap-x-4 gap-y-1 text-[0.85rem]"
 		>
-			{note.links.map((link) => (
-				<li key={link.label}>
-					<button
-						type="button"
-						disabled={!allows("follow")}
-						onPointerDown={(event) => event.stopPropagation()}
-						onClick={(event) => {
-							event.stopPropagation();
-							onFollow(link);
-						}}
-						className="text-link decoration-link-shadow decoration-[1.5px] underline-offset-[0.2em] hover:underline"
-					>
-						{link.kind === "Text"
-							? `↩ ${link.label} (${cleanWord(link.word)})`
-							: link.label}
-					</button>
-				</li>
-			))}
+			{note.links.map((link) => {
+				const label =
+					link.kind === "Text"
+						? `↩ ${link.label} (${link.focus.word})`
+						: link.label;
+				return (
+					<li key={link.label}>
+						{live ? (
+							<button
+								type="button"
+								data-link={link.label}
+								disabled={!allows("follow")}
+								onPointerDown={(event) => {
+									event.stopPropagation();
+									onSegmentDown(event, () =>
+										subjectOfLink(link),
+									);
+								}}
+								onClick={(event) => {
+									event.stopPropagation();
+									onFollow(link);
+								}}
+								className="text-link decoration-link-shadow decoration-[1.5px] underline-offset-[0.2em] hover:underline disabled:no-underline"
+							>
+								{label}
+							</button>
+						) : (
+							<span data-link={link.label} className="text-link">
+								{label}
+							</span>
+						)}
+					</li>
+				);
+			})}
 		</ul>
 	);
 }
@@ -2305,7 +3389,7 @@ function DropZones({
 					className="pointer-events-none absolute inset-0 z-30 grid place-items-center bg-link/5 data-[shown=false]:invisible"
 				>
 					<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
-						Open as sheet
+						Open as Cover
 					</span>
 				</div>
 			) : null}
