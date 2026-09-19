@@ -14,6 +14,7 @@ import {
 	type PointerEvent as ReactPointerEvent,
 	useEffect,
 	useLayoutEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -404,9 +405,14 @@ function CompassRuntime({
 	const reduce = useDeckReducedMotion();
 	const { entries, log, clear } = useEventLog();
 	const [selected, setSelected] = useState<string | null>(null);
-	const [deck, setDeck] = useState<readonly DeckCard[]>(
-		initialScene === "sheet" ? seed.slice(1) : seed,
-	);
+	/**
+	 * Every Note dealt for the selected word, in Deck rank: the order the
+	 * deal established, and the one true one. A Note keeps its rank in
+	 * whatever form it takes — opening as a Sheet does not move it, and
+	 * collapsing brings it back to the same slot. Only a remove, or a new
+	 * deal, changes this list. The Deck on screen is derived from it below.
+	 */
+	const [dealt, setDealt] = useState<readonly DeckCard[]>(seed);
 	const [expandedId, setExpandedId] = useState<number | null>(null);
 	const [layout, setLayout] = useState<LayoutNode>({
 		kind: "Pane",
@@ -460,7 +466,7 @@ function CompassRuntime({
 	const nextId = useRef(seed.length + 1);
 	const nextPane = useRef(1);
 	const gestureCheckpoint = useRef<{
-		deck: readonly DeckCard[];
+		dealt: readonly DeckCard[];
 		layout: LayoutNode;
 		expandedId: number | null;
 	} | null>(null);
@@ -473,8 +479,15 @@ function CompassRuntime({
 	} | null>(null);
 	const dismissOnClick = useRef(false);
 
-	const expanded = deck.find((c) => c.id === expandedId) ?? deck[0] ?? null;
 	const rootPane = findPane(layout, ROOT_PANE);
+	/** The Deck's Cards: the dealt Notes that are not open as a Sheet. */
+	const deck = useMemo(() => {
+		const open = new Set(
+			panesOf(layout).flatMap((pane) => pane.sheets.map((c) => c.id)),
+		);
+		return dealt.filter((c) => !open.has(c.id));
+	}, [dealt, layout]);
+	const expanded = deck.find((c) => c.id === expandedId) ?? deck[0] ?? null;
 
 	/* the held Note's offset drives the commit line */
 	useEffect(() => {
@@ -539,15 +552,15 @@ function CompassRuntime({
 		log(
 			`Select "${word}": ${deck.length ? `sweep ${deck.length.toString()}, ` : ""}deal 4`,
 		);
-		setDeck(deckFor(word).map((note) => ({ id: nextId.current++, note })));
+		setDealt(deckFor(word).map((note) => ({ id: nextId.current++, note })));
 	}
 	function removeCard(card: DeckCard, reason: string) {
 		log(`${reason}: ${card.note.kind} removed`);
-		setDeck((d) => d.filter((c) => c.id !== card.id));
+		setDealt((d) => d.filter((c) => c.id !== card.id));
 	}
+	/** A Sheet is a form, not a move: the Card keeps its rank in `dealt`. */
 	function openSheet(card: DeckCard, paneId: string, reason: string) {
 		log(`${reason}: ${card.note.kind} opens as a Sheet in ${paneId}`);
-		setDeck((d) => d.filter((c) => c.id !== card.id));
 		setLayout((node) =>
 			updatePane(node, paneId, (pane) => ({
 				...pane,
@@ -558,7 +571,6 @@ function CompassRuntime({
 	function splitPane(card: DeckCard, paneId: string, edge: Edge) {
 		const id = `pane-${(nextPane.current++).toString()}`;
 		log(`Drop at ${edge} edge: new pane ${id} with ${card.note.kind}`);
-		setDeck((d) => d.filter((c) => c.id !== card.id));
 		setLayout((node) => {
 			const pane = findPane(node, paneId);
 			if (!pane) return node;
@@ -582,7 +594,7 @@ function CompassRuntime({
 				return replacePane(node, paneId, null) ?? node;
 			return replacePane(node, paneId, { ...pane, sheets }) ?? node;
 		});
-		setDeck((d) => (d.some((c) => c.id === card.id) ? d : [...d, card]));
+		/* back in its own slot: the Card never left `dealt` */
 		setExpandedId(card.id);
 	}
 	function follow(paneId: string, link: NoteLink) {
@@ -594,6 +606,9 @@ function CompassRuntime({
 		}
 		const card = { id: nextId.current++, note: noteById(link.noteId) };
 		log(`Follow ${link.label}: Sheet on top in ${paneId}`);
+		/* a followed Note was never dealt: it ranks after the deal, so a
+		   collapse lands it at the bottom of the Deck */
+		setDealt((d) => [...d, card]);
 		setLayout((node) =>
 			updatePane(node, paneId, (pane) => ({
 				...pane,
@@ -609,7 +624,7 @@ function CompassRuntime({
 	function reset() {
 		setSelected(null);
 		setAnchorLeft(null);
-		setDeck([]);
+		setDealt([]);
 		setExpandedId(null);
 		setLayout({ kind: "Pane", id: ROOT_PANE, sheets: [] });
 		dragRef.current = null;
@@ -763,7 +778,7 @@ function CompassRuntime({
 			/* a pointer the browser is not tracking; the frame still hears it */
 		}
 		pagePointer.current = null;
-		gestureCheckpoint.current = { deck, layout, expandedId };
+		gestureCheckpoint.current = { dealt, layout, expandedId };
 		collapseSheet(paneId, card, reason);
 		const frameBox = frame.getBoundingClientRect();
 		const width = cardWidthIn(
@@ -771,9 +786,8 @@ function CompassRuntime({
 			remPx(),
 			OPEN_SCALE,
 		);
-		const count = deck.some((c) => c.id === card.id)
-			? deck.length
-			: deck.length + 1;
+		/* a Sheet is never in `deck`, so the Deck it lands on is one taller */
+		const count = deck.length + 1;
 		const height = cardHeightPx(count);
 		resetTransforms(h);
 		setPastCommit(false);
@@ -1122,7 +1136,7 @@ function CompassRuntime({
 		gestureCheckpoint.current = null;
 		if (d.lifted && checkpoint) {
 			resetTransforms(d.h);
-			setDeck(checkpoint.deck);
+			setDealt(checkpoint.dealt);
 			setLayout(checkpoint.layout);
 			setExpandedId(checkpoint.expandedId);
 			setDrag(null);
@@ -1197,7 +1211,7 @@ function CompassRuntime({
 		if ((event.target as HTMLElement).closest(DISMISS_EXEMPT_SELECTOR))
 			return;
 		log(`Click page: sweep ${deck.length.toString()}`);
-		setDeck([]);
+		setDealt([]);
 		setExpandedId(null);
 	}
 
