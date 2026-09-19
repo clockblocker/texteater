@@ -1369,7 +1369,7 @@
 					"gender": "Neut",
 					"gender[psor]": null,
 					"number": "Sing",
-					"number[psor]": null
+					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {

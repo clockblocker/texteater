@@ -195,7 +195,7 @@
 	},
 	"grammar-de-pron-fixed-seiner-masc": {
 		"input": {
-			"markedContext": "Die Gemeinde gedachte <TARGET>seiner</TARGET> feierlich.",
+			"markedContext": "Der alte Pfarrer war beliebt; die Gemeinde gedachte <TARGET>seiner</TARGET> feierlich.",
 			"members": ["seiner"]
 		},
 		"idealOutput": {
@@ -261,7 +261,7 @@
 	},
 	"grammar-de-pron-fixed-ihrer-fem": {
 		"input": {
-			"markedContext": "Die Nachbarn gedachten <TARGET>ihrer</TARGET> lange.",
+			"markedContext": "Die alte Bäckerin fehlt allen; die Nachbarn gedachten <TARGET>ihrer</TARGET> lange.",
 			"members": ["ihrer"]
 		},
 		"idealOutput": {
@@ -491,7 +491,7 @@
 	},
 	"grammar-de-pron-fixed-ihrer-plur": {
 		"input": {
-			"markedContext": "Die Stadt gedachte <TARGET>ihrer</TARGET> gemeinsam.",
+			"markedContext": "Die Opfer des Unglücks sind nicht vergessen; die Stadt gedachte <TARGET>ihrer</TARGET> gemeinsam.",
 			"members": ["ihrer"]
 		},
 		"idealOutput": {
@@ -753,7 +753,7 @@
 	},
 	"grammar-de-pron-fixed-sein-masc": {
 		"input": {
-			"markedContext": "Der schwarze Koffer ist <TARGET>seiner</TARGET>.",
+			"markedContext": "Paul sucht seinen Koffer; der schwarze Koffer dort ist <TARGET>seiner</TARGET>.",
 			"members": ["seiner"]
 		},
 		"idealOutput": {
@@ -785,7 +785,7 @@
 	},
 	"grammar-de-pron-fixed-sein-neut": {
 		"input": {
-			"markedContext": "Das rote Spielzeug ist <TARGET>seines</TARGET>.",
+			"markedContext": "Das Kind sucht sein Spielzeug; das rote Spielzeug dort ist <TARGET>seines</TARGET>.",
 			"members": ["seines"]
 		},
 		"idealOutput": {
@@ -817,7 +817,7 @@
 	},
 	"grammar-de-pron-fixed-ihr-fem-poss": {
 		"input": {
-			"markedContext": "Der grüne Mantel ist <TARGET>ihrer</TARGET>.",
+			"markedContext": "Lena sucht ihren Mantel; der grüne Mantel dort ist <TARGET>ihrer</TARGET>.",
 			"members": ["ihrer"]
 		},
 		"idealOutput": {
@@ -849,7 +849,7 @@
 	},
 	"grammar-de-pron-fixed-ihr-plur-poss": {
 		"input": {
-			"markedContext": "Die reservierten Plätze sind <TARGET>ihre</TARGET>.",
+			"markedContext": "Die Gäste kommen gleich; die reservierten Plätze sind <TARGET>ihre</TARGET>.",
 			"members": ["ihre"]
 		},
 		"idealOutput": {
@@ -1505,7 +1505,7 @@
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-fem": {
 		"input": {
-			"markedContext": "Von den Frauen kenne ich <TARGET>keine</TARGET>.",
+			"markedContext": "Ich suche eine Ärztin mit Erfahrung, aber ich kenne <TARGET>keine</TARGET>.",
 			"members": ["keine"]
 		},
 		"idealOutput": {
@@ -1703,7 +1703,7 @@
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-fem": {
 		"input": {
-			"markedContext": "Es bedarf <TARGET>keiner</TARGET> der vorgeschlagenen Lösungen.",
+			"markedContext": "Eine Genehmigung? Es bedarf <TARGET>keiner</TARGET>.",
 			"members": ["keiner"]
 		},
 		"idealOutput": {
@@ -1802,7 +1802,7 @@
 	},
 	"grammar-de-pron-fixed-keiner-acc-plur": {
 		"input": {
-			"markedContext": "Von den Gästegruppen sah ich <TARGET>keine</TARGET>.",
+			"markedContext": "Von den Gästen sah ich <TARGET>keine</TARGET>.",
 			"members": ["keine"]
 		},
 		"idealOutput": {
@@ -1868,7 +1868,7 @@
 	},
 	"grammar-de-pron-fixed-keiner-gen-plur": {
 		"input": {
-			"markedContext": "Die Stimmen <TARGET>keiner</TARGET> der Bewerber wurden gezählt.",
+			"markedContext": "Zusätzliche Unterlagen? Es bedarf <TARGET>keiner</TARGET>.",
 			"members": ["keiner"]
 		},
 		"idealOutput": {
@@ -2033,7 +2033,7 @@
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-fem": {
 		"input": {
-			"markedContext": "Von den Frauen kenne ich <TARGET>manche</TARGET>.",
+			"markedContext": "Von den Frauen kenne ich <TARGET>manche</TARGET>, die schon damals dabei war.",
 			"members": ["manche"]
 		},
 		"idealOutput": {
@@ -2396,7 +2396,7 @@
 	},
 	"grammar-de-pron-fixed-mancher-gen-plur": {
 		"input": {
-			"markedContext": "Die Stimmen <TARGET>mancher</TARGET> fehlen.",
+			"markedContext": "Man gedachte <TARGET>mancher</TARGET>, die nicht mehr dabei waren.",
 			"members": ["mancher"]
 		},
 		"idealOutput": {
@@ -4271,8 +4271,8 @@
 	},
 	"grammar-de-pron-fixed-der-paradigm-dem-die-acc-fem": {
 		"input": {
-			"markedContext": "Von den Frauen nehme ich <TARGET>die</TARGET>.",
-			"members": ["die"]
+			"markedContext": "Die Jacke dort? <TARGET>Die</TARGET> nehme ich.",
+			"members": ["Die"]
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Standard"],
@@ -5162,7 +5162,7 @@
 	},
 	"grammar-de-pron-demo-personal-ihm": {
 		"input": {
-			"markedContext": "Anna hilft <TARGET>ihm</TARGET> beim Umzug.",
+			"markedContext": "Ihr Bruder zieht um; Anna hilft <TARGET>ihm</TARGET> beim Umzug.",
 			"members": ["ihm"]
 		},
 		"idealOutput": {

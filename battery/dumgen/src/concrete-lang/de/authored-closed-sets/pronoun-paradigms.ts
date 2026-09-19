@@ -521,6 +521,21 @@ for (const [text, ipa, en, ru] of [
 		),
 	);
 
+// Standalone einander is one invariant reciprocal Lemma (Dumling Context); case
+// is supplied by the governing verb or preposition and is not part of identity.
+reviewed.push(
+	pronounMember(
+		form("einander", "aɪ̯ˈnandɐ"),
+		description(
+			"Rcp",
+			"🤝",
+			"Bezeichnet eine wechselseitige Beziehung zwischen den Mitgliedern einer Gruppe.",
+			["each other; one another"],
+			["друг друга"],
+		),
+	),
+);
+
 // Possessor coordinates and possessed-item agreement are independent.
 // Strong standalone, weak after an article, and article-bound -ig forms:
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de

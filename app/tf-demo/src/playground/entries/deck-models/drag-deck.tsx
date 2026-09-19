@@ -126,6 +126,8 @@ type Cover = {
 	readonly id: number;
 	readonly card: Presentation;
 	readonly deck: Deck | null;
+	/** The Cover a Held Card would push if dropped here: a ghost, gone when it leaves. */
+	readonly preview?: true;
 };
 type PaneNode = {
 	readonly kind: "Pane";
@@ -136,7 +138,7 @@ type PaneNode = {
 	/**
 	 * The Pane a Held Card would spawn if dropped here: inserted while the
 	 * Card hovers an edge so the other Panes make room, and gone when it
-	 * leaves. Its Ground is drawn as a translucent Sheet of the Card.
+	 * leaves. Its Ground is drawn as a ghost Sheet of the Card.
 	 */
 	readonly preview?: true;
 };
@@ -183,6 +185,8 @@ type SheetRef = {
 	readonly card: Presentation | null;
 	readonly deck: Deck | null;
 	readonly ground: boolean;
+	/** A ghost: what a drop would make, not something the reader can touch. */
+	readonly preview: boolean;
 };
 type Drag = {
 	readonly card: Presentation;
@@ -235,17 +239,34 @@ type Checkpoint = {
 
 /**
  * Where a drop lands, read off the Pane the way Obsidian reads it: inside
- * the central rectangle it opens as a Cover here; outside it, the nearest
- * of the left, right and bottom edges spawns a Pane on that side. The
- * ghost occupies exactly the region a drop there produces: the preview
- * Pane takes that half, and the Cover ghost sits in the Cover's box.
+ * the central rectangle it opens as a Cover here; inside the rectangle a
+ * Pane on the left, right or bottom would take, it spawns that Pane; on
+ * the Pane bar, or anywhere else, it lands nowhere. A drop region is the
+ * very rectangle a drop there produces, so the zone drawn, the ghost and
+ * the Pane it becomes are one box, and the centre wins where they meet.
+ * `dropRegions` is the one place this geometry is written; the hit test,
+ * the drawn zones and the preview all read it.
  */
 const CENTER_X = 0.3;
 const CENTER_Y = 0.22;
+/** A destination is left only once the pointer is this far outside its region. */
+const HYSTERESIS_PX = 12;
 const ROOT_PANE = "root";
 const PREVIEW_PANE = "preview";
+/** The Sheet id every ghost wears; never a real Sheet's. */
+const PREVIEW_SHEET = -1;
+/** The stacking bands over the Panes, lowest first. */
+const Z = {
+	/** A Ground; each Cover above it is one higher. */
+	sheet: 1,
+	/** The Deck's Cards, rising toward the expanded one. */
+	deck: 10,
+	zone: 30,
+	returnZone: 35,
+	/** The Held Card, over everything until it has landed. */
+	held: 40,
+} as const;
 const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
-const PILE_HEIGHT = `${PILE_HEIGHT_REM.toString()}rem`;
 /** A Cover's box: the Pane inset by these. A Ground fills its Pane. */
 const SHEET_INSET_X_REM = 1.5;
 const SHEET_INSET_Y_REM = 1;
@@ -253,7 +274,6 @@ const SHEET_INSET_Y_REM = 1;
 const CARD_CONTEXTS = 2;
 /** How far the return zone reaches past the Deck's cards. */
 const PILE_PAD_REM = 0.75;
-const PILE_PAD = `${PILE_PAD_REM.toString()}rem`;
 /** The Heading's inline padding: what a Card's title sits in from its edge. */
 const TITLE_INSET_REM = 1;
 /** The gap between a selected word's baseline box and the dealt Deck. */
@@ -402,8 +422,8 @@ function replacePane(
 const TEXT_COLUMN_REM = 42;
 /** A spawned Pane never takes more than this share of the Pane it splits. */
 const SPAWN_SHARE = 0.5;
-/** A spawned Pane below takes this share: a Note wants height, not a width. */
-const SPAWN_SHARE_BELOW = "40";
+/** A spawned Pane below takes this share, in percent: a Note wants height, not a width. */
+const SPAWN_SHARE_BELOW = 40;
 
 /**
  * How big the Pane a Card spawns opens: as wide as its content column plus
@@ -416,11 +436,78 @@ function spawnSize(
 	paneWidth: number,
 	rem: number,
 ): number | string {
-	if (edge === "bottom") return SPAWN_SHARE_BELOW;
+	if (edge === "bottom") return SPAWN_SHARE_BELOW.toString();
 	const column =
 		card.subject.kind === "Text" ? TEXT_COLUMN_REM : CARD_WIDTH_REM;
 	const natural = (column + 2 * SHEET_INSET_X_REM) * rem;
 	return Math.round(Math.min(natural, paneWidth * SPAWN_SHARE));
+}
+
+type DropRegions = {
+	/** Where a drop opens a Cover in this Pane. */
+	readonly cover: Box;
+	/** Where a drop spawns a Pane on this side: the Pane it spawns. */
+	readonly edges: readonly { readonly edge: Edge; readonly box: Box }[];
+	/** The Pane bar: chrome, never a drop. */
+	readonly bar: Box;
+};
+
+/** A Pane's drop regions, in frame coordinates. */
+function dropRegions(pane: Box, card: Presentation, rem: number): DropRegions {
+	const side = Number(spawnSize(card, "left", pane.width, rem));
+	const below = (pane.height * SPAWN_SHARE_BELOW) / 100;
+	return {
+		cover: {
+			left: pane.left + pane.width * CENTER_X,
+			top: pane.top + pane.height * CENTER_Y,
+			width: pane.width * (1 - 2 * CENTER_X),
+			height: pane.height * (1 - 2 * CENTER_Y),
+		},
+		edges: [
+			{
+				edge: "left",
+				box: {
+					left: pane.left,
+					top: pane.top,
+					width: side,
+					height: pane.height,
+				},
+			},
+			{
+				edge: "right",
+				box: {
+					left: pane.left + pane.width - side,
+					top: pane.top,
+					width: side,
+					height: pane.height,
+				},
+			},
+			{
+				edge: "bottom",
+				box: {
+					left: pane.left,
+					top: pane.top + pane.height - below,
+					width: pane.width,
+					height: below,
+				},
+			},
+		],
+		bar: {
+			left: pane.left,
+			top: pane.top,
+			width: pane.width,
+			height: BAR_REM * rem,
+		},
+	};
+}
+
+function inside(box: Box, x: number, y: number, grow = 0): boolean {
+	return (
+		x >= box.left - grow &&
+		x <= box.left + box.width + grow &&
+		y >= box.top - grow &&
+		y <= box.top + box.height + grow
+	);
 }
 
 /** Puts `fresh` beside the pane `id`, on the side the edge names, at `size`. */
@@ -474,6 +561,7 @@ function sheetsOf(pane: PaneNode): readonly SheetRef[] {
 			card: ground.kind === "Sheet" ? ground.card : null,
 			deck: ground.deck,
 			ground: true,
+			preview: pane.preview === true,
 		},
 		...pane.covers.map((cover) => ({
 			paneId: pane.id,
@@ -481,6 +569,7 @@ function sheetsOf(pane: PaneNode): readonly SheetRef[] {
 			card: cover.card,
 			deck: cover.deck,
 			ground: false,
+			preview: cover.preview === true,
 		})),
 	];
 }
@@ -556,6 +645,17 @@ function sameBox(a: Box | undefined, b: Box): boolean {
 		a.top === b.top &&
 		a.width === b.width &&
 		a.height === b.height
+	);
+}
+
+function sameBoxes(
+	a: Readonly<Record<string, Box>>,
+	b: Readonly<Record<string, Box>>,
+): boolean {
+	const ids = Object.keys(b);
+	return (
+		ids.length === Object.keys(a).length &&
+		ids.every((id) => sameBox(a[id], b[id] as Box))
 	);
 }
 
@@ -696,6 +796,15 @@ function CompassRuntime({
 	const [paneBoxes, setPaneBoxes] = useState<Readonly<Record<string, Box>>>(
 		{},
 	);
+	/**
+	 * The Panes' boxes as they rested before any preview moved them: what
+	 * a drop is read against, and where the zones are drawn, for the whole
+	 * of a drag. Measured only while no preview is up.
+	 */
+	const [restBoxes, setRestBoxes] = useState<Readonly<Record<string, Box>>>(
+		{},
+	);
+	const previewUpRef = useRef(false);
 	const [rem, setRem] = useState(16);
 	/**
 	 * Bumped whenever a Pane's box changes: a split, a preview, a handle
@@ -731,15 +840,12 @@ function CompassRuntime({
 
 	const open = useMemo(() => openIds(layout), [layout]);
 	const previewAt = drag && destination?.kind === "pane" ? destination : null;
-	/**
-	 * What is laid out: the real layout, with the Pane a drop here would
-	 * spawn already in it. The Panes shift to make room the way Obsidian
-	 * previews a split, and the drop only makes the preview real.
-	 */
+	const coverAt =
+		drag && destination?.kind === "sheet" ? destination.paneId : null;
+	previewUpRef.current = previewAt !== null;
 	/**
 	 * The size the preview opened at, kept while it is up: the drop reuses
-	 * it, because by then the Pane it measures against has already made
-	 * room and would give a smaller answer.
+	 * it. It is read off the resting boxes, the same ones the drop was.
 	 */
 	const previewSize = useRef<{
 		paneId: string;
@@ -758,16 +864,44 @@ function CompassRuntime({
 			size: spawnSize(
 				drag.card,
 				previewAt.edge,
-				paneBoxes[previewAt.paneId]?.width ?? 0,
+				restBoxes[previewAt.paneId]?.width ?? 0,
 				rem,
 			),
 		};
+	/**
+	 * What is laid out: the real layout with what a drop here would make
+	 * already in it, marked as a ghost. On an edge, the Pane it would
+	 * spawn, so the others shift to make room the way Obsidian previews a
+	 * split; in the centre, the Cover it would push, so the Pane's Deck is
+	 * hidden under it the way it would be. The drop only makes it real.
+	 */
 	const displayLayout = useMemo(() => {
-		if (!drag || !previewAt || !previewSize.current) return layout;
+		if (!drag) return layout;
+		if (coverAt)
+			return updatePane(layout, coverAt, (pane) => ({
+				...pane,
+				covers: [
+					...pane.covers,
+					{
+						id: PREVIEW_SHEET,
+						card: drag.card,
+						deck: null,
+						preview: true,
+					},
+				],
+			}));
+		if (!previewAt || !previewSize.current) return layout;
 		const fresh: PaneNode = {
 			kind: "Pane",
 			id: PREVIEW_PANE,
-			line: [{ id: -1, kind: "Sheet", card: drag.card, deck: null }],
+			line: [
+				{
+					id: PREVIEW_SHEET,
+					kind: "Sheet",
+					card: drag.card,
+					deck: null,
+				},
+			],
 			covers: [],
 			preview: true,
 		};
@@ -778,7 +912,7 @@ function CompassRuntime({
 			fresh,
 			previewSize.current.size,
 		);
-	}, [layout, drag, previewAt]);
+	}, [layout, drag, previewAt, coverAt]);
 	const destinationRef = useRef<Destination | null>(null);
 	destinationRef.current = destination;
 	/** The Cards a Deck shows: the dealt Notes that are not open as a Sheet. */
@@ -818,13 +952,15 @@ function CompassRuntime({
 			}
 			setRem(remPx());
 			setPaneBoxes((current) => {
-				const ids = Object.keys(next);
-				const same =
-					ids.length === Object.keys(current).length &&
-					ids.every((id) => sameBox(current[id], next[id] as Box));
+				const same = sameBoxes(current, next);
 				if (!same) setLayoutEpoch((epoch) => epoch + 1);
 				return same ? current : next;
 			});
+			/* a preview has moved the Panes; the rest boxes wait it out */
+			if (!previewUpRef.current)
+				setRestBoxes((current) =>
+					sameBoxes(current, next) ? current : next,
+				);
 		};
 		measure();
 		const observer = new ResizeObserver(measure);
@@ -1011,7 +1147,7 @@ function CompassRuntime({
 		const size =
 			previewed?.paneId === paneId && previewed.edge === edge
 				? previewed.size
-				: spawnSize(card, edge, paneBoxes[paneId]?.width ?? 0, rem);
+				: spawnSize(card, edge, restBoxes[paneId]?.width ?? 0, rem);
 		setLayout((node) => splitBeside(node, paneId, edge, fresh, size));
 	}
 	/** Puts a Card back in front on the Deck that still holds it, if one does. */
@@ -1090,63 +1226,93 @@ function CompassRuntime({
 
 	/* --- drag: destination under the pointer --- */
 
-	function destinationAt(px: number, py: number): Destination | null {
+	/** The Deck's column in its Pane: where its Cards sit, in frame coordinates. */
+	function deckColumn(deck: Deck, paneBox: Box): Box {
+		const width = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
+		return {
+			left:
+				paneBox.left +
+				deckLeftIn(
+					paneBox.width,
+					width,
+					rem,
+					deck.anchor?.left ?? null,
+				),
+			top: paneBox.top + (deck.anchor?.top ?? defaultAnchorTop(embedded)),
+			width,
+			height: PILE_HEIGHT_REM * rem,
+		};
+	}
+	/** The return zone: the Deck's column, reaching `PILE_PAD` past it. */
+	function returnZone(deck: Deck, paneBox: Box): Box {
+		const column = deckColumn(deck, paneBox);
+		const pad = PILE_PAD_REM * rem;
+		return {
+			left: column.left - pad,
+			top: column.top - pad,
+			width: column.width + 2 * pad,
+			height: column.height + 2 * pad,
+		};
+	}
+	/**
+	 * What is under the pointer. The return zone follows its Deck, so it
+	 * is read live; everything else is read off the Panes as they rested
+	 * before any preview moved them, so a ghost opening never moves the
+	 * region that opened it. Leaving a region takes a little more than
+	 * entering it did.
+	 */
+	function destinationAt(
+		px: number,
+		py: number,
+		d: Drag,
+	): Destination | null {
 		if (!allows("drop")) return null;
-		const frame = root.current;
-		if (!frame) return null;
-		const inside = (rect: DOMRect) =>
-			px >= rect.left &&
-			px <= rect.right &&
-			py >= rect.top &&
-			py <= rect.bottom;
-		const slot = frame.querySelector<HTMLElement>("[data-return-zone]");
-		if (slot && inside(slot.getBoundingClientRect()))
+		const frameBox = root.current?.getBoundingClientRect();
+		if (!frameBox) return null;
+		const x = px - frameBox.left;
+		const y = py - frameBox.top;
+		const holder =
+			d.deckSheet === null
+				? null
+				: findSheet(layoutRef.current, d.deckSheet);
+		const holderBox = holder ? paneBoxes[holder.paneId] : undefined;
+		if (
+			holder?.deck &&
+			holderBox &&
+			inside(returnZone(holder.deck, holderBox), x, y)
+		)
 			return { kind: "return" };
-		/* while a preview is up, the Pane it split off from and the preview
-		   are read as the one Pane they were: the zones stay where they
-		   were, and the preview is the drop region it shows */
+		/* no drop until the rest boxes describe this layout */
+		const panes = panesOf(layoutRef.current);
+		if (
+			panes.length !== Object.keys(restBoxes).length ||
+			panes.some((pane) => !restBoxes[pane.id])
+		)
+			return null;
+		const regionsOf = (paneId: string) =>
+			dropRegions(restBoxes[paneId] as Box, d.card, rem);
 		const current = destinationRef.current;
-		const preview = frame
-			.querySelector<HTMLElement>(`[data-deck-pane="${PREVIEW_PANE}"]`)
-			?.getBoundingClientRect();
-		for (const element of frame.querySelectorAll<HTMLElement>(
-			"[data-deck-pane]",
-		)) {
-			const paneId = element.dataset.deckPane ?? "";
-			if (paneId === PREVIEW_PANE) continue;
-			let rect = element.getBoundingClientRect();
+		if (current && "paneId" in current) {
+			const regions = regionsOf(current.paneId);
+			const region =
+				current.kind === "sheet"
+					? regions.cover
+					: regions.edges.find((e) => e.edge === current.edge)?.box;
 			if (
-				preview &&
-				current &&
-				"paneId" in current &&
-				current.paneId === paneId
+				region &&
+				inside(region, x, y, HYSTERESIS_PX) &&
+				!inside(regions.bar, x, y)
 			)
-				rect = new DOMRect(
-					Math.min(rect.left, preview.left),
-					Math.min(rect.top, preview.top),
-					Math.max(rect.right, preview.right) -
-						Math.min(rect.left, preview.left),
-					Math.max(rect.bottom, preview.bottom) -
-						Math.min(rect.top, preview.top),
-				);
-			if (!inside(rect)) continue;
-			const cx = (px - rect.left) / rect.width;
-			const cy = (py - rect.top) / rect.height;
-			if (
-				cx > CENTER_X &&
-				cx < 1 - CENTER_X &&
-				cy > CENTER_Y &&
-				cy < 1 - CENTER_Y
-			)
-				return { kind: "sheet", paneId };
-			const nearest = (
-				[
-					{ edge: "left", value: cx },
-					{ edge: "right", value: 1 - cx },
-					{ edge: "bottom", value: 1 - cy },
-				] as const
-			).reduce((a, b) => (b.value < a.value ? b : a));
-			return { kind: "pane", paneId, edge: nearest.edge };
+				return current;
+		}
+		for (const pane of panes) {
+			const regions = regionsOf(pane.id);
+			if (inside(regions.bar, x, y)) return null;
+			if (inside(regions.cover, x, y))
+				return { kind: "sheet", paneId: pane.id };
+			for (const { edge, box } of regions.edges)
+				if (inside(box, x, y))
+					return { kind: "pane", paneId: pane.id, edge };
 		}
 		return null;
 	}
@@ -1292,7 +1458,7 @@ function CompassRuntime({
 		};
 		dragRef.current = d;
 		setDrag(d);
-		setDestination(destinationAt(lift.x, lift.y));
+		setDestination(destinationAt(lift.x, lift.y, d));
 	}
 	/**
 	 * A Sheet lifted by its Heading or a held margin: a Cover leaves its
@@ -1584,7 +1750,7 @@ function CompassRuntime({
 		}
 
 		const next = d.free
-			? destinationAt(event.clientX, event.clientY)
+			? destinationAt(event.clientX, event.clientY, d)
 			: null;
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
@@ -1834,13 +2000,13 @@ function CompassRuntime({
 			return;
 		}
 		if (allows("expand") && vy < -THROW) {
-			const target = destinationAt(event.clientX, event.clientY);
+			const target = destinationAt(event.clientX, event.clientY, d);
 			const paneId =
 				target && "paneId" in target ? target.paneId : d.paneId;
 			growFromHand(d, () => openCover(paneId, card, "Throw ↑"));
 			return;
 		}
-		const target = destinationAt(event.clientX, event.clientY);
+		const target = destinationAt(event.clientX, event.clientY, d);
 		if (!target || target.kind === "return") {
 			goHome(d);
 			return;
@@ -1982,53 +2148,50 @@ function CompassRuntime({
 		else handles.current.delete(id);
 	};
 
-	/** The return zone over a Deck's footprint: a hit area, and an outline on demand. */
+	/** The return zone over a Deck's footprint: drawn on demand, where it is read. */
 	function renderReturnZone(sheet: SheetRef, paneBox: Box) {
 		const deck = sheet.deck;
 		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId)
 			return null;
-		const columnWidth = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
+		const box = returnZone(deck, paneBox);
 		return (
 			<div
 				key={`return-${sheet.sheetId.toString()}`}
-				data-deck-column=""
-				className="pointer-events-none absolute"
+				aria-hidden="true"
+				data-return-zone=""
+				data-active={destination?.kind === "return"}
+				data-shown={zonesVisible}
+				className="pointer-events-none absolute flex items-end justify-center rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 pb-3 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15 data-[shown=false]:invisible"
 				style={{
-					top:
-						paneBox.top +
-						(deck.anchor?.top ?? defaultAnchorTop(embedded)),
-					left:
-						paneBox.left +
-						deckLeftIn(
-							paneBox.width,
-							columnWidth,
-							rem,
-							deck.anchor?.left ?? null,
-						),
-					width: columnWidth,
-					height: PILE_HEIGHT,
+					...box,
+					zIndex: Z.returnZone,
+					transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
 				}}
 			>
-				<div
-					aria-hidden="true"
-					data-return-zone=""
-					data-active={destination?.kind === "return"}
-					data-shown={zonesVisible}
-					className="pointer-events-none absolute z-[35] flex data-[shown=false]:invisible items-end justify-center pb-3 rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15"
-					style={{
-						transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-						insetInlineStart: `calc(-1 * ${PILE_PAD})`,
-						top: `calc(-1 * ${PILE_PAD})`,
-						width: `calc(100% + 2 * ${PILE_PAD})`,
-						height: `calc(${PILE_HEIGHT} + 2 * ${PILE_PAD})`,
-					}}
-				>
-					<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
-						Back on the Deck
-					</span>
-				</div>
+				<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
+					Back on the Deck
+				</span>
 			</div>
 		);
+	}
+
+	/** The drop regions of every resting Pane, drawn on demand where they are read. */
+	function renderZones(): ReactNode[] {
+		if (!showZones || !drag) return [];
+		return panesOf(layout).flatMap((pane) => {
+			const box = restBoxes[pane.id];
+			return box
+				? [
+						<DropZones
+							key={`zones-${pane.id}`}
+							paneId={pane.id}
+							regions={dropRegions(box, drag.card, rem)}
+							destination={destination}
+							shown={zonesVisible}
+						/>,
+					]
+				: [];
+		});
 	}
 
 	function renderPane(pane: PaneNode): ReactNode {
@@ -2073,7 +2236,7 @@ function CompassRuntime({
 						: `Floating pane ${pane.id}`
 				}
 				data-preview={pane.preview}
-				className={`relative h-full min-h-0 overflow-hidden bg-paper ${pane.preview ? "pointer-events-none opacity-60" : ""}`}
+				className={`relative h-full min-h-0 overflow-hidden bg-paper ${pane.preview ? "pointer-events-none" : ""}`}
 			>
 				{/* the Pane bar: Sheet chrome, owned by the Pane, and the
 				    Ground's handle. A hold shrinks the bar a touch. */}
@@ -2091,7 +2254,7 @@ function CompassRuntime({
 					onPointerUp={stopBarHold}
 					onPointerCancel={stopBarHold}
 					onPointerLeave={stopBarHold}
-					className={`absolute inset-x-0 top-0 z-20 flex items-center gap-2 border-b border-line bg-paper ps-2 pe-3 select-none ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
+					className={`absolute inset-x-0 top-0 z-20 flex items-center gap-2 border-b bg-paper ps-2 pe-3 select-none ${pane.preview ? "border-dashed border-link/60" : "border-line"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
 					style={{
 						height: `${BAR_REM.toString()}rem`,
 						transformOrigin: "0% 50%",
@@ -2170,13 +2333,6 @@ function CompassRuntime({
 						onPick={(key) => openText(pane.id, textById(key))}
 					/>
 				) : null}
-				{showZones && !pane.preview ? (
-					<DropZones
-						paneId={pane.id}
-						destination={destination}
-						shown={zonesVisible}
-					/>
-				) : null}
 			</section>
 		);
 	}
@@ -2214,43 +2370,43 @@ function CompassRuntime({
 		);
 	}
 
-	/** The top Sheet's Deck: Cards in slots one Heading row apart. */
-	function renderDeck(sheet: SheetRef, paneBox: Box): ReactNode[] {
+	/**
+	 * The top Sheet's Deck: Cards in slots one Heading row apart. While a
+	 * ghost Cover hides the Deck, only the Card in hand is drawn, in the
+	 * place it has on the Deck it will show again.
+	 */
+	function renderDeck(
+		sheet: SheetRef,
+		paneBox: Box,
+		heldOnly = false,
+	): ReactNode[] {
 		const deck = sheet.deck;
 		if (!deck) return [];
 		const cards = visibleCards(deck);
 		const count = cards.length;
-		const cardWidth = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
 		const headerPx = HEADER_REM * rem;
 		const slotHeight = cardHeightPx(count);
 		const order = [...cards].reverse();
 		const expanded = expandedOf(deck, cards);
 		const openAt = expanded ? order.indexOf(expanded) : count - 1;
-		const anchorTop = deck.anchor?.top ?? defaultAnchorTop(embedded);
-		const left =
-			paneBox.left +
-			deckLeftIn(
-				paneBox.width,
-				cardWidth,
-				rem,
-				deck.anchor?.left ?? null,
-			);
-		return order.map((card, index) => {
+		const column = deckColumn(deck, paneBox);
+		return order.flatMap((card, index) => {
 			const place: Place =
 				index < openAt ? "above" : index > openAt ? "below" : "open";
 			const held = drag?.moved === true && drag.card.id === card.id;
+			if (heldOnly && !held) return [];
 			const slot: Box = {
-				left,
-				top: paneBox.top + anchorTop + index * headerPx,
-				width: cardWidth,
+				left: column.left,
+				top: column.top + index * headerPx,
+				width: column.width,
 				height: slotHeight,
 			};
 			/* z rises toward the expanded Card from both sides; a Held
 			   Card is over all of them until it has landed */
 			const z =
 				held && !landed
-					? 40
-					: 10 +
+					? Z.held
+					: Z.deck +
 						(place === "open"
 							? 9
 							: place === "above"
@@ -2303,19 +2459,25 @@ function CompassRuntime({
 		const label = deckHolding(layout, card.id)
 			? "Collapse back to card"
 			: "Close cover";
+		const ghost = sheet.preview;
+		const grabs = isTop && !ghost && allows("lift");
 		return (
 			<motion.div
-				key={`bar-${sheet.sheetId.toString()}`}
+				key={
+					ghost
+						? `ghost-bar-${sheet.paneId}`
+						: `bar-${sheet.sheetId.toString()}`
+				}
 				data-cover-bar={sheet.sheetId}
 				data-pane={sheet.paneId}
-				initial={{ opacity: 0 }}
+				data-preview={ghost || undefined}
+				/* a ghost is there at once: it previews a state, it does not arrive */
+				initial={ghost ? false : { opacity: 0 }}
 				animate={{ opacity: 1, transition: transition(BAR_ENTER) }}
 				onPointerDown={
-					isTop && allows("lift")
-						? (event) => coverBarDown(event, sheet)
-						: undefined
+					grabs ? (event) => coverBarDown(event, sheet) : undefined
 				}
-				className={`pointer-events-auto absolute flex items-center gap-2 rounded-t-[0.9rem] border border-b-0 border-line-strong bg-paper ps-2 pe-3 select-none ${isTop && allows("lift") ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
+				className={`absolute flex items-center gap-2 rounded-t-[0.9rem] border border-b-0 bg-paper ps-2 pe-3 select-none ${ghost ? "pointer-events-none border-dashed border-link" : "pointer-events-auto border-line-strong"} ${grabs ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
 				style={{
 					left: box.left,
 					top: box.top,
@@ -2326,7 +2488,7 @@ function CompassRuntime({
 			>
 				<button
 					type="button"
-					disabled={!isTop || !allows("collapse")}
+					disabled={ghost || !isTop || !allows("collapse")}
 					aria-label={label}
 					title={label}
 					onClick={() => coverBack(sheet.paneId, sheet.sheetId)}
@@ -2344,12 +2506,15 @@ function CompassRuntime({
 	/**
 	 * Every Note, in whatever form it is in right now, with the box it
 	 * should occupy: each Pane's Ground and Covers, the top Sheet's Deck,
-	 * and a loose Card in hand.
+	 * and a loose Card in hand. Read off the display layout, so a ghost is
+	 * drawn by the same path as the Sheet it previews, and the Deck under
+	 * a ghost Cover is hidden the way it would be. The Card in hand stays
+	 * in hand: a ghost of it is a second element of the same Subject.
 	 */
 	function renderNotes(): ReactNode {
 		const notes: ReactNode[] = [];
 		const rendered = new Set<number>();
-		for (const pane of panesOf(layout)) {
+		for (const pane of panesOf(displayLayout)) {
 			const paneBox = paneBoxes[pane.id];
 			if (!paneBox) continue;
 			const sheets = sheetsOf(pane);
@@ -2357,15 +2522,20 @@ function CompassRuntime({
 			sheets.forEach((sheet, index) => {
 				if (!sheet.card) return;
 				const isTop = index === sheets.length - 1;
-				rendered.add(sheet.card.id);
+				const ghost = sheet.preview;
+				if (!ghost) rendered.add(sheet.card.id);
 				const coverBox = sheet.ground ? null : coverBoxIn(paneBox, rem);
 				if (coverBox)
 					notes.push(
-						renderCoverBar(sheet, coverBox, 1 + index, isTop),
+						renderCoverBar(sheet, coverBox, Z.sheet + index, isTop),
 					);
 				notes.push(
 					<PresentationView
-						key={sheet.card.id}
+						key={
+							ghost
+								? `ghost-${pane.id}-${sheet.sheetId.toString()}`
+								: sheet.card.id
+						}
 						card={sheet.card}
 						form="sheet"
 						place="open"
@@ -2381,20 +2551,21 @@ function CompassRuntime({
 									}
 								: groundBoxIn(paneBox, rem)
 						}
-						z={1 + index}
+						z={Z.sheet + index}
 						held={false}
 						arm={null}
 						free={false}
 						pastCommit={false}
 						armLabel={null}
 						paneId={pane.id}
-						sheetId={sheet.sheetId}
+						sheetId={ghost ? null : sheet.sheetId}
 						ground={sheet.ground}
 						covered={!isTop}
+						preview={ghost}
 						showText={showReader}
 						litWord={isTop ? (sheet.deck?.word ?? null) : null}
 						epoch={layoutEpoch}
-						register={register}
+						register={ghost ? () => {} : register}
 						onDown={() => {}}
 						onHoldLift={(lift) =>
 							liftSheet(sheet, lift, "Hold margin")
@@ -2409,83 +2580,19 @@ function CompassRuntime({
 					/>,
 				);
 			});
-			if (top.deck)
-				for (const card of visibleCards(top.deck))
+			/* the Deck is the real top Sheet's; a ghost Cover hides it, and
+			   the Card in hand is the one thing still drawn from it */
+			const real = findPane(layout, pane.id);
+			const realTop = real ? topSheetOf(real) : null;
+			if (!realTop?.deck) continue;
+			const hidden = top.preview && !top.ground;
+			if (!hidden)
+				for (const card of visibleCards(realTop.deck))
 					rendered.add(card.id);
-			notes.push(...renderDeck(top, paneBox));
-			notes.push(renderReturnZone(top, paneBox));
+			else if (drag) rendered.add(drag.card.id);
+			notes.push(...renderDeck(realTop, paneBox, hidden));
+			notes.push(renderReturnZone(realTop, paneBox));
 		}
-		/* the preview: the held Card as it would sit, translucent, in the
-		   Pane a drop would spawn. A second element of the same Subject
-		   on purpose: the one in hand stays in hand */
-		const coverPane =
-			destination?.kind === "sheet" ? destination.paneId : null;
-		const coverAt = coverPane ? paneBoxes[coverPane] : null;
-		if (drag && coverPane && coverAt) {
-			const coverBox = coverBoxIn(coverAt, rem);
-			notes.push(
-				<PresentationView
-					key={`preview-cover-${drag.card.id.toString()}`}
-					card={drag.card}
-					form="sheet"
-					place="open"
-					box={{
-						...coverBox,
-						top: coverBox.top + BAR_REM * rem,
-						height: Math.max(0, coverBox.height - BAR_REM * rem),
-					}}
-					z={9}
-					held={false}
-					arm={null}
-					free={false}
-					pastCommit={false}
-					armLabel={null}
-					paneId={coverPane}
-					sheetId={null}
-					ground={false}
-					preview
-					showText={showReader}
-					litWord={null}
-					epoch={layoutEpoch}
-					register={() => {}}
-					onDown={() => {}}
-					onHoldLift={() => {}}
-					onFollow={() => {}}
-					onSegment={() => {}}
-					onSegmentDown={() => {}}
-				/>,
-			);
-		}
-		const previewBox = paneBoxes[PREVIEW_PANE];
-		if (drag && previewAt && previewBox)
-			notes.push(
-				<PresentationView
-					key={`preview-${drag.card.id.toString()}-${previewAt.paneId}-${previewAt.edge}`}
-					card={drag.card}
-					form="sheet"
-					place="open"
-					box={groundBoxIn(previewBox, rem)}
-					z={5}
-					held={false}
-					arm={null}
-					free={false}
-					pastCommit={false}
-					armLabel={null}
-					paneId={PREVIEW_PANE}
-					sheetId={null}
-					ground
-					preview
-					showText={showReader}
-					litWord={null}
-					epoch={layoutEpoch}
-					register={() => {}}
-					onDown={() => {}}
-					onHoldLift={() => {}}
-					onFollow={() => {}}
-					onSegment={() => {}}
-					onSegmentDown={() => {}}
-				/>,
-			);
 		/* a Card from nowhere, or a Sheet in hand whose Deck is hidden or
 		   gone: nothing above drew it, and the hand still holds it */
 		const inHand =
@@ -2503,7 +2610,7 @@ function CompassRuntime({
 					form="card"
 					place="open"
 					box={held && drag ? drag.origin : inHand.box}
-					z={40}
+					z={Z.held}
 					held={held}
 					arm={held ? (drag?.arm ?? null) : null}
 					free={held ? (drag?.free ?? false) : false}
@@ -2524,6 +2631,7 @@ function CompassRuntime({
 				/>,
 			);
 		}
+		notes.push(...renderZones());
 		return notes;
 	}
 
@@ -2750,7 +2858,7 @@ function PresentationView({
 	ground: boolean;
 	/** A Sheet under another Sheet in the same Pane. */
 	covered?: boolean;
-	/** The translucent Sheet in a preview Pane: seen, never touched. */
+	/** A ghost: the Sheet a drop would make, where it would sit; seen, never touched. */
 	preview?: boolean;
 	/** The Panes' measurement pass; see `layoutEpoch`. */
 	epoch: number;
@@ -3040,7 +3148,7 @@ function PresentationView({
 	const borderColor =
 		arm === "sweep"
 			? "var(--destructive)"
-			: arm === "expand" || free || holding
+			: arm === "expand" || free || holding || preview
 				? "var(--link)"
 				: ground
 					? "transparent"
@@ -3061,6 +3169,7 @@ function PresentationView({
 			data-holding={holding}
 			data-pane={paneId}
 			data-sheet-id={sheetId ?? undefined}
+			data-preview={preview || undefined}
 			/* The border is the arm state. A Note is dealt wearing its
 			   resting colour; only arming changes it. */
 			initial={false}
@@ -3079,7 +3188,7 @@ function PresentationView({
 				boxShadow: shownShadow,
 				zIndex: z,
 				transformOrigin: origin,
-				...(preview ? { opacity: 0.45 } : {}),
+				...(preview ? { borderStyle: "dashed" } : {}),
 			}}
 			onPointerDown={down}
 			/* the Rooted Ground's Heading press is watched here: the same
@@ -3092,9 +3201,10 @@ function PresentationView({
 			   rather than letting it walk the deck */
 			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : sheet ? "rounded-b-[0.9rem]" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
 		>
-			{/* the content column: one width in every form, centred in a wide box */}
+			{/* the content column: one width in every form, centred in a wide box.
+			    A ghost's ink is quiet, on paper as opaque as any: nothing shows through */}
 			<div
-				className="mx-auto flex min-h-0 w-full flex-1 flex-col"
+				className={`mx-auto flex min-h-0 w-full flex-1 flex-col ${preview ? "opacity-50" : ""}`}
 				style={{
 					maxWidth:
 						sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH,
@@ -3585,10 +3695,12 @@ function LinksBlock({
 
 function DropZones({
 	paneId,
+	regions,
 	destination,
 	shown,
 }: {
 	paneId: string;
+	regions: DropRegions;
 	destination: Destination | null;
 	/** The regions are read whether or not they are drawn; this draws them. */
 	shown: boolean;
@@ -3598,51 +3710,48 @@ function DropZones({
 		destination && "paneId" in destination && destination.paneId === paneId
 			? destination
 			: null;
-	const edges: readonly Edge[] = ["left", "right", "bottom"];
-	const pct = (share: number) => `${(share * 100).toString()}%`;
+	const zoneClass =
+		"pointer-events-none absolute grid place-items-center border border-dashed border-link/40 bg-link/5 transition-colors data-[shown=false]:invisible data-[active=true]:border-link data-[active=true]:bg-link/15";
+	const labelClass =
+		"rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase";
 	return (
 		<>
-			{edges.map((edge) => (
-				<div
-					key={edge}
-					aria-hidden="true"
-					data-edge={edge}
-					data-active={here?.kind === "pane" && here.edge === edge}
-					data-shown={shown}
-					className="pointer-events-none absolute z-30 grid place-items-center border border-dashed border-link/40 bg-link/5 transition-colors data-[shown=false]:invisible data-[active=true]:border-link data-[active=true]:bg-link/15 data-[edge=bottom]:inset-x-0 data-[edge=bottom]:bottom-0 data-[edge=left]:inset-y-0 data-[edge=left]:left-0 data-[edge=right]:inset-y-0 data-[edge=right]:right-0"
-					style={{
-						transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-						/* the half the new Pane takes: what the ghost shows */
-						...(edge === "bottom"
-							? { height: "50%" }
-							: { width: "50%" }),
-					}}
-				>
-					{here?.kind === "pane" && here.edge === edge ? (
-						<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
-							New pane
-						</span>
-					) : null}
-				</div>
-			))}
+			{regions.edges.map(({ edge, box }) => {
+				const active = here?.kind === "pane" && here.edge === edge;
+				return (
+					<div
+						key={edge}
+						aria-hidden="true"
+						data-edge={edge}
+						data-active={active}
+						data-shown={shown}
+						className={zoneClass}
+						style={{
+							...box,
+							zIndex: Z.zone,
+							transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
+						}}
+					>
+						{active ? (
+							<span className={labelClass}>New pane</span>
+						) : null}
+					</div>
+				);
+			})}
 			<div
 				aria-hidden="true"
 				data-zone="cover"
 				data-active={here?.kind === "sheet"}
 				data-shown={shown}
-				className="pointer-events-none absolute z-30 grid place-items-center border border-dashed border-link/40 bg-link/5 transition-colors data-[shown=false]:invisible data-[active=true]:border-link data-[active=true]:bg-link/15"
+				className={zoneClass}
 				style={{
+					...regions.cover,
+					zIndex: Z.zone,
 					transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-					left: pct(CENTER_X),
-					right: pct(CENTER_X),
-					top: pct(CENTER_Y),
-					bottom: pct(CENTER_Y),
 				}}
 			>
 				{here?.kind === "sheet" ? (
-					<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
-						Open as Cover
-					</span>
+					<span className={labelClass}>Open as Cover</span>
 				) : null}
 			</div>
 		</>
