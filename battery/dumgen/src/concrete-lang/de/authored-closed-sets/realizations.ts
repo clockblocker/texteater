@@ -68,6 +68,7 @@ const determinerForms: Readonly<Record<string, readonly string[]>> = {
 	alle: declined("all"),
 	jeder: declined("jed"),
 	jedweder: declined("jedwed"),
+	jeglicher: declined("jeglich"),
 	sämtlich: declined("sämtlich"),
 	beide: declined("beid"),
 	selber: ["selber", "selben"],

@@ -54,6 +54,7 @@ import { member as m38 } from "./members/lexeme/determiner/total/alle.js";
 import { member as m42 } from "./members/lexeme/determiner/total/beide.js";
 import { member as m39 } from "./members/lexeme/determiner/total/jeder.js";
 import { member as m40 } from "./members/lexeme/determiner/total/jedweder.js";
+import { member as m170 } from "./members/lexeme/determiner/total/jeglicher.js";
 import { member as m41 } from "./members/lexeme/determiner/total/samtlich.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
@@ -184,6 +185,7 @@ export const authoredMembers = [
 	m38,
 	m39,
 	m40,
+	m170,
 	m41,
 	m42,
 	m43,
