@@ -11,16 +11,17 @@ const lemma = {
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
+/** One grammatical use of werden; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🔄" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔮" }, lemma },
 	knowledge: {
 		transcription: "ˈveːɐ̯dn̩",
 		definition:
-			"Das Auxiliar „werden“ bildet eine grammatische Verbkonstruktion.",
+			"„werden“ als Hilfsverb des Futurs: Mit dem Infinitiv bildet es Futur I und II (wird kommen, wird angekommen sein).",
 		translations: {
-			en: ["become", "will"],
-			ru: ["вспомогательный глагол будущего времени и пассива"],
+			en: ["will (future auxiliary)"],
+			ru: ["вспомогательный глагол будущего времени"],
 		},
 	},
 	coverage: {

@@ -5,20 +5,24 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "AUX",
-	canonicalForm: "mögen",
+	canonicalForm: "sein",
 	coreFeatures: {
-		verbType: "Mod",
+		verbType: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
+/** One grammatical use of sein; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "❤️" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔒" }, lemma },
 	knowledge: {
-		transcription: "ˈmøːɡn̩",
+		transcription: "zaɪn",
 		definition:
-			"Das Modalauxiliar „mögen“ modifiziert die Geltung oder Möglichkeit einer Handlung.",
-		translations: { en: ["like", "may"], ru: ["нравиться", "мочь"] },
+			"„sein“ als Hilfsverb des Zustandspassivs: Mit dem Partizip II beschreibt es das Ergebnis einer Handlung als Zustand (die Tür ist geschlossen).",
+		translations: {
+			en: ["be (stative passive auxiliary)"],
+			ru: ["быть (вспомогательный глагол пассива состояния)"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

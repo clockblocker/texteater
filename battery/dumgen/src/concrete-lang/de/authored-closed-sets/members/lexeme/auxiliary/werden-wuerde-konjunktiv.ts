@@ -5,20 +5,24 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "AUX",
-	canonicalForm: "sollen",
+	canonicalForm: "werden",
 	coreFeatures: {
-		verbType: "Mod",
+		verbType: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
+/** One grammatical use of werden; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "📋" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "💭" }, lemma },
 	knowledge: {
-		transcription: "ˈzɔlən",
+		transcription: "ˈveːɐ̯dn̩",
 		definition:
-			"Das Modalauxiliar „sollen“ modifiziert die Geltung oder Möglichkeit einer Handlung.",
-		translations: { en: ["should"], ru: ["быть должным"] },
+			"„würde“ als Hilfsverb des Konjunktivs II: Mit dem Infinitiv drückt es Hypothetisches, Irreales oder Höfliches aus (würde kommen, würden Sie bitte warten).",
+		translations: {
+			en: ["would (subjunctive auxiliary)"],
+			ru: ["бы (вспомогательный глагол конъюнктива II)"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

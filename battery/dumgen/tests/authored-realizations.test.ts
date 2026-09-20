@@ -6,6 +6,7 @@ import {
 	locateAuthoredIdentity,
 	validateAuthoredRealizations,
 } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
+import auxiliaryCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
 import { resolveAuthoredGrammarIdentity } from "../src/concrete-lang/de/grammatical-resolution/authored-identity.js";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { operationTask } from "../src/universal/trace.js";
@@ -173,7 +174,11 @@ test("Open PRON population misses copy exact headwords and generate changed text
 	const { validateEncounter } = await import(
 		"../src/universal/validation.js"
 	);
-	for (const attested of ["meinesgleichen", "Meinesgleichen", "meinesgleihcen"]) {
+	for (const attested of [
+		"meinesgleichen",
+		"Meinesgleichen",
+		"meinesgleihcen",
+	]) {
 		const typo = attested === "meinesgleihcen";
 		const core = {
 			case: null,
@@ -236,4 +241,29 @@ test("Open PRON population misses copy exact headwords and generate changed text
 				: ["TypeSafe", "TypeSafe", "Luna"],
 		);
 	}
+});
+
+test("every AUX gold case locates its sein, haben or werden Lemma by spelling", () => {
+	const lemmas = new Set<string>();
+	for (const [id, example] of Object.entries(auxiliaryCases)) {
+		const output = example.idealOutput as {
+			normalizedMembers: string[];
+			lemma: { canonicalForm: string; coreFeatures: { verbType: null } };
+		};
+		const located = locateAuthoredIdentity({
+			kind: "AUX",
+			spelled: output.normalizedMembers[0] ?? "",
+			core: output.lemma.coreFeatures,
+			inflection: null,
+		});
+		expect(located.status, id).toBe("Hit");
+		expect(located.matches[0]?.lemma.canonicalForm, id).toBe(
+			output.lemma.canonicalForm,
+		);
+		lemmas.add(output.lemma.canonicalForm);
+	}
+	expect([...lemmas].sort()).toEqual(["haben", "sein", "werden"]);
+	expect(
+		authoredMembers.filter((member) => member.lemma.kind === "AUX"),
+	).toHaveLength(6);
 });

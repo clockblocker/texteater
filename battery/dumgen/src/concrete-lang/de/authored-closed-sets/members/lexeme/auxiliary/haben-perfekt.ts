@@ -5,20 +5,24 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "AUX",
-	canonicalForm: "können",
+	canonicalForm: "haben",
 	coreFeatures: {
-		verbType: "Mod",
+		verbType: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
+/** One grammatical use of haben; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "💪" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "✅" }, lemma },
 	knowledge: {
-		transcription: "ˈkœnən",
+		transcription: "ˈhaːbn̩",
 		definition:
-			"Das Modalauxiliar „können“ modifiziert die Geltung oder Möglichkeit einer Handlung.",
-		translations: { en: ["can"], ru: ["мочь", "уметь"] },
+			"„haben“ als Hilfsverb des Perfekts: Mit dem Partizip II der meisten Verben bildet es Perfekt und Plusquamperfekt (hat gegessen, hatte gelesen).",
+		translations: {
+			en: ["have (perfect auxiliary)"],
+			ru: ["иметь (вспомогательный глагол перфекта)"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

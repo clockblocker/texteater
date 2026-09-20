@@ -77,6 +77,18 @@ It is an emoji mnemonic whose associations or combinations preserve that meaning
 A participial Surface whose contextual use belongs to a VERB or AUX Lexeme. Its
 Canonical Form is the verbal dictionary form.
 
+**Modal Verb**:
+One of `dürfen`, `können`, `mögen`, `müssen`, `sollen`, `wollen` as a VERB
+Lexeme with `verbType: Mod`, one Lemma whether it governs an infinitive or an
+object.
+_Avoid_: Modal auxiliary, modal AUX
+
+**Auxiliary**:
+`sein`, `haben` or `werden` serving another verb's perfect, future or passive
+composition. An AUX Lexeme is one such grammatical use with its own Reading;
+the same verb standing alone is a VERB Lexeme.
+_Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
+
 **Participial Adjective**:
 A participial form that resolves to an ADJ Lexeme rather than its source verb.
 Its Canonical Form is the adjectival participial form.

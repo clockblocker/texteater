@@ -549,13 +549,13 @@
 					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
-					"verbType": null
+					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
 	},
 	"grammar-de-verb-elliptical-modal-kann": {
 		"input": {
@@ -587,13 +587,13 @@
 					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
-					"verbType": null
+					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
 	},
 	"grammar-de-verb-full-werden": {
 		"input": {
@@ -2367,5 +2367,857 @@
 			"expletiveEvidence": null
 		},
 		"explanation": "Whole verbal Surface hätt bestellt: Konjunktiv II of the past (unreal past, perfect Yes with mood Sub and tense Past), finite as a whole; the Partizip II is only the shape of the head member. hätt is a licensed verse apocope of hätte, not a typo: member orthography Standard, Surface spelling Variant, the literal form kept in normalizedMembers, like muß. The auxiliary member is a Surface of the AUX Reading haben-Perfekt, reachable only from this Surface's sheet (map 487, ticket 507)."
+	},
+	"grammar-de-verb-modal-demo-kann": {
+		"input": {
+			"markedContext": "Das Kind <TARGET>kann</TARGET> schon schwimmen.",
+			"members": ["kann"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["kann"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "können",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-citation-duerfen": {
+		"input": {
+			"markedContext": "Im Wörterbuch steht das Modalverb <TARGET>dürfen</TARGET>.",
+			"members": ["dürfen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dürfen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dürfen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026)."
+	},
+	"grammar-de-verb-modal-darf-bleiben": {
+		"input": {
+			"markedContext": "Der Hund <TARGET>darf</TARGET> heute drinnen bleiben.",
+			"members": ["darf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["darf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "dürfen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-wolltest-gehen": {
+		"input": {
+			"markedContext": "Du <TARGET>wolltest</TARGET> doch früher gehen.",
+			"members": ["wolltest"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wolltest"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "2",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "wollen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-moechte-bleiben": {
+		"input": {
+			"markedContext": "Lea <TARGET>möchte</TARGET> noch etwas bleiben.",
+			"members": ["möchte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["möchte"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Sub",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-sollen-syncretic": {
+		"input": {
+			"markedContext": "In der beschädigten Notiz steht: „Wir <TARGET>sollen</TARGET> …“",
+			"members": ["sollen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sollen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": null,
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sollen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-muessen": {
+		"input": {
+			"markedContext": "Wir <TARGET>müssen</TARGET> jetzt eintreten.",
+			"members": ["müssen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["müssen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "müssen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-mag-infinitive": {
+		"input": {
+			"markedContext": "Tobias <TARGET>mag</TARGET> später mitkommen.",
+			"members": ["mag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mag"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-wollt": {
+		"input": {
+			"markedContext": "Ihr <TARGET>wollt</TARGET> morgen weiterfahren.",
+			"members": ["wollt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["wollt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "2",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "wollen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-typo-sol": {
+		"input": {
+			"markedContext": "Er <TARGET>sol</TARGET> jetzt warten.",
+			"members": ["sol"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["soll"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sollen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-typo-mus": {
+		"input": {
+			"markedContext": "Der Fahrer <TARGET>mus</TARGET> sofort bremsen.",
+			"members": ["mus"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["muss"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "müssen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-variant-muss": {
+		"input": {
+			"markedContext": "Im alten Brief steht: „Er <TARGET>muß</TARGET> morgen abreisen.“",
+			"members": ["muß"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["muß"],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "müssen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-typo-koenen": {
+		"input": {
+			"markedContext": "Wir <TARGET>könen</TARGET> den Termin einhalten.",
+			"members": ["könen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Typo"],
+			"normalizedMembers": ["können"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "können",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+	},
+	"grammar-de-verb-modal-contrast-mag": {
+		"input": {
+			"markedContext": "Sie mag Schokolade, aber heute <TARGET>mag</TARGET> sie lieber kochen.",
+			"members": ["mag"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mag"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "mögen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": "Mod"
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma."
+	},
+	"grammar-de-verb-copula-ist": {
+		"input": {
+			"markedContext": "Der Innenhof <TARGET>ist</TARGET> heute still.",
+			"members": ["ist"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ist"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+	},
+	"grammar-de-verb-copula-imperative-sei": {
+		"input": {
+			"markedContext": "<TARGET>Sei</TARGET> bitte vorsichtig!",
+			"members": ["Sei"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sei"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Imp",
+					"number": "Sing",
+					"person": "2",
+					"tense": null,
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular imperative of VERB sein (ADR 0026). Initial capital is Standard and normalizes lowercase."
+	},
+	"grammar-de-verb-copula-bin-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>bin</TARGET> ich müde.",
+			"members": ["bin"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bin"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+	},
+	"grammar-de-verb-copula-bist-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>bist</TARGET> du müde.",
+			"members": ["bist"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bist"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "2",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+	},
+	"grammar-de-verb-copula-sind-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>sind</TARGET> wir müde.",
+			"members": ["sind"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sind"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "1",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+	},
+	"grammar-de-verb-copula-seid-muede": {
+		"input": {
+			"markedContext": "Nach der Reise <TARGET>seid</TARGET> ihr müde.",
+			"members": ["seid"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["seid"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Plur",
+					"person": "2",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+	},
+	"grammar-de-verb-copula-war-ruhig": {
+		"input": {
+			"markedContext": "Der See <TARGET>war</TARGET> am Morgen ruhig.",
+			"members": ["war"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["war"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+	},
+	"grammar-de-verb-copula-perfect-ist-gewesen": {
+		"input": {
+			"markedContext": "Der Raum <TARGET>ist</TARGET> lange leer <TARGET>gewesen</TARGET>.",
+			"members": ["ist", "gewesen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["ist", "gewesen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": "Yes",
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Perfect of copular VERB sein: ist is its auxiliary member, gewesen the head (ADR 0026). Whole-Surface composition per ADR 0022."
+	},
+	"grammar-de-verb-copula-citation-sein": {
+		"input": {
+			"markedContext": "Der Wörterbucheintrag nennt <TARGET>sein</TARGET> als Kopula.",
+			"members": ["sein"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sein"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sein",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface."
 	}
 }

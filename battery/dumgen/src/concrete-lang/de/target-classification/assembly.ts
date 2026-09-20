@@ -16,8 +16,6 @@ export const routes = {
 	"Lexeme/ADP":
 		"Adposition (preposition, postposition or fixed circumposition)",
 	"Lexeme/ADV": "Adverb, including a whole adverbial correlator",
-	"Lexeme/AUX":
-		"Meaning-bearing modal with an overt infinitive, or copula; includes its own scoped grammatical auxiliaries",
 	"Lexeme/CCONJ":
 		"Coordinating conjunction, including a complete fixed correlator",
 	"Lexeme/DET": "Determiner modifying a noun",
@@ -32,7 +30,7 @@ export const routes = {
 		"Subordinating conjunction, including fixed multi-member conjunctions",
 	"Lexeme/SYM": "Symbol",
 	"Lexeme/VERB":
-		"Whole lexical verb with its own scoped auxiliaries and fixed members",
+		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal or copula",
 	"Phraseme/Aphorism": "Established concise attributed maxim",
 	"Phraseme/DiscourseFormula": "Established fixed discourse formula",
 	"Phraseme/Idiom":

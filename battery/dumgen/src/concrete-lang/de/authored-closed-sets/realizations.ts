@@ -75,6 +75,74 @@ const determinerForms: Readonly<Record<string, readonly string[]>> = {
 	sämtlich: declined("sämtlich"),
 	beide: declined("beid"),
 };
+/** Every form of the three grammatical auxiliaries; the spelling names the Lemma, the served verb's form picks the Reading (ADR 0026). */
+const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
+	sein: [
+		"sein",
+		"bin",
+		"bist",
+		"ist",
+		"sind",
+		"seid",
+		"war",
+		"warst",
+		"waren",
+		"wart",
+		"sei",
+		"seist",
+		"seiest",
+		"seien",
+		"seiet",
+		"wäre",
+		"wärst",
+		"wärest",
+		"wären",
+		"wärt",
+		"wäret",
+		"gewesen",
+	],
+	haben: [
+		"haben",
+		"habe",
+		"hab",
+		"hast",
+		"hat",
+		"habt",
+		"hatte",
+		"hattest",
+		"hatten",
+		"hattet",
+		"habest",
+		"habet",
+		"hätte",
+		"hätt",
+		"hättest",
+		"hätten",
+		"hättet",
+		"gehabt",
+	],
+	werden: [
+		"werden",
+		"werde",
+		"wirst",
+		"wird",
+		"werdet",
+		"wurde",
+		"wurdest",
+		"wurden",
+		"wurdet",
+		// Archaic preterite, attested in the auxiliary corpus.
+		"ward",
+		"wardst",
+		"werdest",
+		"würde",
+		"würdest",
+		"würden",
+		"würdet",
+		"geworden",
+		"worden",
+	],
+};
 const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 	nichts: ["nix"],
 	es: ["s"],
@@ -86,16 +154,23 @@ const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 export const authoredRealizations: readonly AuthoredRealization[] =
 	authoredMembers.flatMap((member) => {
 		const { lemma } = member;
-		if (lemma.kind !== "DET" && lemma.kind !== "PRON") return [];
+		if (
+			lemma.kind !== "DET" &&
+			lemma.kind !== "PRON" &&
+			lemma.kind !== "AUX"
+		)
+			return [];
 		const forms =
 			lemma.kind === "DET"
 				? (determinerForms[lemma.canonicalForm] ?? [])
-				: [
-						...(pronounAliases[lemma.canonicalForm] ?? []),
-						...(reviewedPronouns.find(
-							(entry) => entry.member === member,
-						)?.variants ?? []),
-					];
+				: lemma.kind === "AUX"
+					? (auxiliaryForms[lemma.canonicalForm] ?? [])
+					: [
+							...(pronounAliases[lemma.canonicalForm] ?? []),
+							...(reviewedPronouns.find(
+								(entry) => entry.member === member,
+							)?.variants ?? []),
+						];
 		return [...new Set([lemma.canonicalForm, ...forms])].map((spelled) => ({
 			member,
 			spelled,
@@ -106,7 +181,9 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 // do not cause a quadratic scan for every encountered pronoun.
 const grammaticalMembers = authoredMembers.filter(
 	(member, index) =>
-		(member.lemma.kind === "DET" || member.lemma.kind === "PRON") &&
+		(member.lemma.kind === "DET" ||
+			member.lemma.kind === "PRON" ||
+			member.lemma.kind === "AUX") &&
 		!authoredMembers
 			.slice(0, index)
 			.some((prior) => sameValue(prior.lemma, member.lemma)),
@@ -115,7 +192,7 @@ const grammaticalMembers = authoredMembers.filter(
 /** Core nulls compare literally; no missing spelling map is interpreted as catalog absence. */
 export function locateAuthoredIdentity(
 	input: {
-		kind: "DET" | "PRON";
+		kind: "DET" | "PRON" | "AUX";
 		spelled: string;
 		core: Record<string, unknown>;
 		inflection: unknown;
@@ -177,7 +254,11 @@ export function validateAuthoredRealizations(
 		)
 			throw Error("Invalid authored realization text");
 		const lemma: Dumling.Lemma = mapping.member.lemma;
-		if (lemma.kind !== "DET" && lemma.kind !== "PRON")
+		if (
+			lemma.kind !== "DET" &&
+			lemma.kind !== "PRON" &&
+			lemma.kind !== "AUX"
+		)
 			throw Error("Unsupported authored realization route");
 	}
 }

@@ -24,6 +24,8 @@ export const corpusSource = defineLinguisticCorpus({
 		"grammar-de-verb-dw-separable-aufsetzen",
 		"grammar-de-verb-dw-modal-passive-hergestellt",
 		"grammar-de-verb-dw-perfect-passive-aufgefunden",
+		"grammar-de-verb-modal-demo-kann",
+		"grammar-de-verb-copula-ist",
 	],
 	source: import.meta.url,
 });

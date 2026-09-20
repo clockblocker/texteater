@@ -12,6 +12,7 @@ import { choice } from "../../../universal/questions.js";
 import { recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
+import { sameValue } from "../authored-closed-sets/select.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
@@ -122,7 +123,7 @@ const nounPolicy = {
 };
 
 const verbalIdentityPolicy =
-  "For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX identity is a complete reviewed Lemma; compound membership does not require a singleton identity.";
+  "For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
 
 const partialCoveragePolicy =
   "Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
@@ -176,10 +177,19 @@ export async function resolveGrammarJudgments(
     encounter.target.kind,
   );
   const auxiliary = encounter.target.kind === "AUX";
+  const constructionFeature = (path: string) =>
+    /\.(perfect|future|passive)$/u.test(path);
   const mapped =
     encounter.target.kind === "DET" || encounter.target.kind === "PRON";
+  // Several grammar Readings share one AUX Lemma; the identity is the Lemma.
   const identities = auxiliary
-    ? authoredMembers.filter((member) => member.lemma.kind === "AUX")
+    ? authoredMembers.filter(
+        (member, index) =>
+          member.lemma.kind === "AUX" &&
+          !authoredMembers
+            .slice(0, index)
+            .some((prior) => sameValue(prior.lemma, member.lemma)),
+      )
     : [];
   const questions: Questions = {
     support: choice(
@@ -208,6 +218,7 @@ export async function resolveGrammarJudgments(
     ))
       continue;
     if (auxiliary && path.startsWith("lemma.")) continue;
+    if (auxiliary && constructionFeature(path)) continue; // Construction belongs to the Unit, not the auxiliary.
     if (
       encounter.target.kind === "NOUN" &&
       (path.endsWith(".article") || path.endsWith(".case"))
@@ -244,7 +255,7 @@ export async function resolveGrammarJudgments(
     );
   if (auxiliary)
     questions.identity = choice(
-      "Which exact reviewed AUX Lemma is realized by the complete supplied target? Finite/compound features belong to its Surface. Select the reviewed canonical identity, including exact-form sein identities when applicable.",
+      "Which reviewed AUX Lemma (sein, haben or werden) is realized by the supplied auxiliary? Finite features belong to its Surface; perfect, future and passive belong to the verb it serves.",
       {
         ...Object.fromEntries(
           identities.map((member, index) => [
@@ -376,6 +387,10 @@ export async function resolveGrammarJudgments(
               continue;
             }
             if (verbal && key === "voice") continue;
+            if (auxiliary && constructionFeature(`surface.inflectionalFeatures.${key}`)) {
+              bag[key] = null;
+              continue;
+            }
             if (verbal && key === "participleForm" && form !== "Part") continue;
             if (
               verbal &&

@@ -300,12 +300,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
 			},
-			"explanation": "The complete sentence disambiguates the clicked occurrence as Lexeme/AUX in Dumling's UD-inspired product inventory. Source: https://grammis.ids-mannheim.de/terminologie/155"
+			"explanation": "The modal is a VERB Lemma with verbType Mod and owns its scoped grammatical auxiliaries (ADR 0026); its lexical infinitive is a separate target."
 		},
 		"target-de-route-lexeme-cconj": {
 			"input": {
@@ -1201,12 +1201,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
 			},
-			"explanation": "The complete sentence disambiguates the clicked occurrence as Lexeme/AUX in Dumling's UD-inspired product inventory. Source: https://grammis.ids-mannheim.de/terminologie/155"
+			"explanation": "The modal is a VERB Lemma with verbType Mod and owns its scoped grammatical auxiliaries (ADR 0026); its lexical infinitive is a separate target."
 		},
 		"target-de-demo-default-particle-doch": {
 			"input": {
@@ -1334,12 +1334,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
 			},
-			"explanation": "IDS classifies bleibt as a copula combined with a predicative complement. Issue #82 keeps the meaning-bearing copula as the standalone high-level Lexeme/AUX target rather than grouping it with ruhig. Source: https://grammis.ids-mannheim.de/terminologie/146"
+			"explanation": "IDS classifies bleibt as a copula combined with a predicative complement. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-demo-aphorism-zeit-click-zeit": {
 			"input": {
@@ -1424,7 +1424,7 @@
 					4
 				]
 			},
-			"explanation": "The clicked copular spelling participates in the fixed Aphorism rather than becoming a standalone AUX under this high-level occurrence. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+			"explanation": "The clicked copular spelling participates in the fixed Aphorism rather than becoming a standalone VERB under this high-level occurrence. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 			"contaminationKeys": [
 				"target-phraseme:aphorism:zeit-ist-geld"
 			]
@@ -7830,12 +7830,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4
 				]
 			},
-			"explanation": "TIGER assigns an adjectival Partizip II property to ADJD. Dumgen therefore keeps copular ist separate from ungelesen, whose un- form and coordination with unwichtig support the adjective reading. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns an adjectival Partizip II property to ADJD. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-demo-participial-adjective-brief-click-ungelesen": {
 			"input": {
@@ -7948,12 +7948,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or idiomatized participial properties to ADJD rather than VVPP. Dumgen therefore keeps copular ist separate from adjective verrückt. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or idiomatized participial properties to ADJD rather than VVPP. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-boundary-lexicalized-participle-click-verrueckt": {
 			"input": {
@@ -8144,12 +8144,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
 			},
-			"explanation": "IDS explicitly lists müssen as a modal expressing necessity or conjecture and says a modal plus infinitive forms a verb complex. Issue #82 product policy nevertheless maps muss separately as Lexeme/AUX [2] and schlafen as Lexeme/VERB [6]. Source: https://grammis.ids-mannheim.de/terminologie/155"
+			"explanation": "The modal is a VERB Lemma with verbType Mod and owns its scoped grammatical auxiliaries (ADR 0026); its lexical infinitive is a separate target."
 		},
 		"target-de-boundary-modal-click-schlafen": {
 			"input": {
@@ -8196,7 +8196,7 @@
 					6
 				]
 			},
-			"explanation": "IDS explicitly lists müssen as a modal expressing necessity or conjecture and says a modal plus infinitive forms a verb complex. Issue #82 product policy nevertheless maps muss separately as Lexeme/AUX [2] and schlafen as Lexeme/VERB [6]. Source: https://grammis.ids-mannheim.de/terminologie/155"
+			"explanation": "IDS explicitly lists müssen as a modal expressing necessity or conjecture and says a modal plus infinitive forms a verb complex. Issue #82 product policy nevertheless maps muss separately as Lexeme/VERB [2] and schlafen as Lexeme/VERB [6]. Source: https://grammis.ids-mannheim.de/terminologie/155"
 		},
 		"target-de-boundary-modal-main-predicate-click-kann": {
 			"input": {
@@ -8316,12 +8316,13 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
+					2,
 					6
 				]
 			},
-			"explanation": "gewesen realizes the auxiliary Lemma sein, so current German policy routes the occurrence as a singleton Lexeme/AUX rather than as the adjective schön or a lexical VERB. Source: https://universaldependencies.org/u/pos/AUX.html"
+			"explanation": "wäre ... gewesen is the perfect of copular VERB sein; wäre is its auxiliary member and never a target alone (ADR 0026)."
 		},
 		"target-de-boundary-copula-click-ist": {
 			"input": {
@@ -8363,12 +8364,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
 			},
-			"explanation": "IDS says sein is a copular verb that forms a predicate only with a predicative complement. Issue #82 product policy maps ist separately as Lexeme/AUX [2] and müde as Lexeme/ADJ [6]. Source: https://grammis.ids-mannheim.de/terminologie/146"
+			"explanation": "IDS says sein is a copular verb that forms a predicate only with a predicative complement. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-boundary-copula-click-muede": {
 			"input": {
@@ -8415,7 +8416,7 @@
 					6
 				]
 			},
-			"explanation": "IDS says sein is a copular verb that forms a predicate only with a predicative complement. Issue #82 product policy maps ist separately as Lexeme/AUX [2] and müde as Lexeme/ADJ [6]. Source: https://grammis.ids-mannheim.de/terminologie/146"
+			"explanation": "IDS says sein is a copular verb that forms a predicate only with a predicative complement. Issue #82 product policy maps ist separately as Lexeme/VERB [2] and müde as Lexeme/ADJ [6]. Source: https://grammis.ids-mannheim.de/terminologie/146"
 		},
 		"target-de-diagnostic-copula-click-bleibt": {
 			"input": {
@@ -8465,12 +8466,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4
 				]
 			},
-			"explanation": "IDS classifies bleiben with a predicative complement as a copula. Issue #82 keeps the clicked copula bleibt as standalone Lexeme/AUX rather than grouping it with grau. Source: https://grammis.ids-mannheim.de/terminologie/146"
+			"explanation": "IDS classifies bleiben with a predicative complement as a copula. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-boundary-collocation-click-trifft": {
 			"input": {
@@ -11422,12 +11423,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
 			},
-			"explanation": "IDS explicitly lists müssen as a modal expressing necessity or conjecture and says a modal plus infinitive forms a verb complex. Issue #82 product policy nevertheless maps muss separately as Lexeme/AUX [2] and schlafen as Lexeme/VERB [6]. Source: https://grammis.ids-mannheim.de/terminologie/155"
+			"explanation": "The modal is a VERB Lemma with verbType Mod and owns its scoped grammatical auxiliaries (ADR 0026); its lexical infinitive is a separate target."
 		},
 		"target-de-demo-modal-arbeiten-click-arbeiten": {
 			"input": {
@@ -11474,7 +11475,7 @@
 					6
 				]
 			},
-			"explanation": "IDS explicitly lists müssen as a modal expressing necessity or conjecture and says a modal plus infinitive forms a verb complex. Issue #82 product policy nevertheless maps muss separately as Lexeme/AUX [2] and schlafen as Lexeme/VERB [6]. Source: https://grammis.ids-mannheim.de/terminologie/155"
+			"explanation": "IDS explicitly lists müssen as a modal expressing necessity or conjecture and says a modal plus infinitive forms a verb complex. Issue #82 product policy nevertheless maps muss separately as Lexeme/VERB [2] and schlafen as Lexeme/VERB [6]. Source: https://grammis.ids-mannheim.de/terminologie/155"
 		},
 		"target-de-demo-passive-briefe-click-werden": {
 			"input": {
@@ -21349,12 +21350,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					22
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-11-verrueckt-click-verrueckt": {
 			"input": {
@@ -21513,7 +21514,7 @@
 					34
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-12-verheiratet-click-ist": {
 			"input": {
@@ -21671,12 +21672,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					23
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-12-verheiratet-click-verheiratet": {
 			"input": {
@@ -21839,7 +21840,7 @@
 					35
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-13-bekannt-click-ist": {
 			"input": {
@@ -21969,12 +21970,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					16
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-13-bekannt-click-bekannt": {
 			"input": {
@@ -22109,7 +22110,7 @@
 					28
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-14-gebildet-click-ist": {
 			"input": {
@@ -22263,12 +22264,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					24
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-14-gebildet-click-gebildet": {
 			"input": {
@@ -22427,7 +22428,7 @@
 					34
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-15-begabt-click-ist": {
 			"input": {
@@ -22573,12 +22574,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					18
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-15-begabt-click-begabt": {
 			"input": {
@@ -22729,7 +22730,7 @@
 					32
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-16-ungeoeffnet-click-ist": {
 			"input": {
@@ -22871,12 +22872,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					13
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-16-ungeoeffnet-click-ungeoeffnet": {
 			"input": {
@@ -23023,7 +23024,7 @@
 					31
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-17-ungeloest-click-bleibt": {
 			"input": {
@@ -23177,12 +23178,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					22
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-17-ungeloest-click-ungeloest": {
 			"input": {
@@ -23341,7 +23342,7 @@
 					34
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-18-geschlossen-click-ist": {
 			"input": {
@@ -23535,12 +23536,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					24
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-18-geschlossen-click-geschlossen": {
 			"input": {
@@ -23739,7 +23740,7 @@
 					36
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-19-beleidigt-click-ist": {
 			"input": {
@@ -23889,12 +23890,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					11
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-19-beleidigt-click-beleidigt": {
 			"input": {
@@ -24049,7 +24050,7 @@
 					27
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-participle-benchmark-20-uebertrieben-click-ist": {
 			"input": {
@@ -24195,12 +24196,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					20
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-20-uebertrieben-click-uebertrieben": {
 			"input": {
@@ -24351,7 +24352,7 @@
 					32
 				]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/AUX target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
 		},
 		"target-de-core-unresolved-qzxv": {
 			"input": {
@@ -28769,7 +28770,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
@@ -29155,7 +29156,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2
 				]
@@ -29281,7 +29282,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2,
 					10
@@ -29345,7 +29346,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2,
 					10
@@ -29561,7 +29562,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2,
 					12
@@ -29633,7 +29634,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					2,
 					12
@@ -30239,7 +30240,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4
 				]
@@ -30761,7 +30762,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4
 				]
@@ -30952,7 +30953,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4,
 					10
@@ -31016,7 +31017,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4,
 					10
@@ -31307,7 +31308,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4,
 					12
@@ -31379,7 +31380,7 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "AUX",
+				"kind": "VERB",
 				"memberSegmentIndices": [
 					4,
 					12
@@ -36394,11 +36395,11 @@
 				"decision": "Resolved",
 				"target": {
 					"family": "Lexeme",
-					"kind": "AUX"
+					"kind": "VERB"
 				},
 				"additionalMemberIndices": []
 			},
-			"explanation": "kann means ability. It is not tense or voice glue. AUX only."
+			"explanation": "kann means ability. It is not tense or voice glue. VERB only."
 		},
 		{
 			"input": {
@@ -36674,11 +36675,11 @@
 				"decision": "Resolved",
 				"target": {
 					"family": "Lexeme",
-					"kind": "AUX"
+					"kind": "VERB"
 				},
 				"additionalMemberIndices": []
 			},
-			"explanation": "ungelesen is property here. ist only copula. AUX alone."
+			"explanation": "ungelesen is property here. ist only copula. VERB alone."
 		},
 		{
 			"input": {

@@ -12,7 +12,11 @@ capitalization to lowercase too (Gibt es -> gibt es). Positional, anticipatory, 
 object es remain independent and set no expletive on the verb.
  Its grammatical auxiliaries
 contribute to the whole Surface; a separate modal or other unmarked target
-contributes no finite features. Membership and the VERB/AUX/ADJ route are fixed.
+contributes no finite features. Membership and the VERB/ADJ route are fixed.
+A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB Lemma with
+verbType Mod whether it governs an infinitive or an object. An AUX target is
+sein, haben or werden serving another verb; perfect, future and passive belong
+to the verb it serves and are null on the auxiliary's own Surface.
 
 verbForm is Fin, Inf or Part for the whole construction. Finite indicative and
 subjunctive forms have mood Ind or Sub, applicable person and number, and finite

@@ -25,7 +25,7 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 		"target-de-demo-optional-reflexive-click-dich":
 			"kämmen works without dich. dich is an object, not part of the verb. PRON only.",
 		"target-de-demo-modal-arbeiten-click-kann":
-			"kann means ability. It is not tense or voice glue. AUX only.",
+			"kann means ability, a modal verb with its own meaning. It is not tense or voice glue. VERB alone; arbeiten is a separate target.",
 		"target-de-demo-passive-briefe-click-werden":
 			"werden + verschickt = one passive realization. Whole target is VERB, not AUX. morgen is extra.",
 		"target-de-demo-state-passive-banken-click-sind":
@@ -37,7 +37,7 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 		"target-de-demo-state-passive-absperrung-click-versetzt":
 			"Helfer moved barrier. zwei Meter nach Osten. ist + versetzt. VERB. Take both.",
 		"target-de-demo-participial-adjective-brief-click-ist":
-			"ungelesen is property here. ist only copula. AUX alone.",
+			"ungelesen is property here. ist is the copula verb sein. VERB alone.",
 		"target-de-demo-participial-adjective-brief-click-ungelesen":
 			"un- and unwichtig show adjective. ADJ alone. Leave ist out.",
 		"target-de-demo-repeated-anfangen-click-first-an":

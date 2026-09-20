@@ -32,136 +32,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Future AUX. Finite present third singular. Not passive. VerbType null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-demo-modal-kann": {
-		"input": {
-			"markedContext": "Das Kind <TARGET>kann</TARGET> schon schwimmen.",
-			"members": ["kann"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["kann"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "können",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Meaning-bearing modal AUX. Bare infinitive outside target. VerbType Mod. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-demo-copula-ist": {
-		"input": {
-			"markedContext": "Der Innenhof <TARGET>ist</TARGET> heute still.",
-			"members": ["ist"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["ist"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "ist",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Copular sein is AUX on fixed route. Predicate stays context. VerbType null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-demo-citation-duerfen": {
-		"input": {
-			"markedContext": "Im Wörterbuch steht das Modalauxiliar <TARGET>dürfen</TARGET>.",
-			"members": ["dürfen"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["dürfen"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "dürfen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Explicit dictionary headword. Citation Surface. Modal identity remains Mod."
-	},
-	"grammar-de-aux-demo-imperative-sei": {
-		"input": {
-			"markedContext": "<TARGET>Sei</TARGET> bitte vorsichtig!",
-			"members": ["Sei"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["sei"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Imp",
-					"number": "Sing",
-					"person": "2",
-					"tense": null,
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "sein",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Copular imperative. Initial capital is Standard and normalizes lowercase. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-perfect-hat-gegessen": {
 		"input": {
@@ -196,7 +67,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-perfect-waren-gegangen": {
 		"input": {
@@ -231,7 +102,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-passive-wird-repariert": {
 		"input": {
@@ -250,10 +121,10 @@
 					"person": "3",
 					"tense": "Pres",
 					"verbForm": "Fin",
-					"voice": "Pass",
+					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": "Process",
+					"passive": null,
 					"expletive": null
 				}
 			},
@@ -266,7 +137,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Passive-forming werden. Mark AUX Surface voice Pass. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-passive-wurde-gesperrt": {
 		"input": {
@@ -285,10 +156,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": "Pass",
+					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": "Process",
+					"passive": null,
 					"expletive": null
 				}
 			},
@@ -301,147 +172,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-copula-bin-muede": {
-		"input": {
-			"markedContext": "Nach der Reise <TARGET>bin</TARGET> ich müde.",
-			"members": ["bin"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["bin"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "1",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "bin",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-copula-bist-muede": {
-		"input": {
-			"markedContext": "Nach der Reise <TARGET>bist</TARGET> du müde.",
-			"members": ["bist"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["bist"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "2",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "bist",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-copula-sind-muede": {
-		"input": {
-			"markedContext": "Nach der Reise <TARGET>sind</TARGET> wir müde.",
-			"members": ["sind"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["sind"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Plur",
-					"person": "1",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "sind",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-copula-seid-muede": {
-		"input": {
-			"markedContext": "Nach der Reise <TARGET>seid</TARGET> ihr müde.",
-			"members": ["seid"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["seid"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Plur",
-					"person": "2",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "seid",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-subjunctive-sei-gegangen": {
 		"input": {
@@ -476,7 +207,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Konjunktiv I. Tense Pres in AUX codec. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Konjunktiv I: tense Pres."
 	},
 	"grammar-de-aux-dev-subjunctive-waeren-geblieben": {
 		"input": {
@@ -511,147 +242,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Konjunktiv II. Tense Past in AUX codec. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-modal-darf-bleiben": {
-		"input": {
-			"markedContext": "Der Hund <TARGET>darf</TARGET> heute drinnen bleiben.",
-			"members": ["darf"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["darf"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "dürfen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-modal-wolltest-gehen": {
-		"input": {
-			"markedContext": "Du <TARGET>wolltest</TARGET> doch früher gehen.",
-			"members": ["wolltest"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["wolltest"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "2",
-					"tense": "Past",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "wollen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-modal-moechte-bleiben": {
-		"input": {
-			"markedContext": "Lea <TARGET>möchte</TARGET> noch etwas bleiben.",
-			"members": ["möchte"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["möchte"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Sub",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Past",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "mögen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Modal möchte. Lemma mögen. Konjunktiv II shape. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-modal-sollen-syncretic": {
-		"input": {
-			"markedContext": "In der beschädigten Notiz steht: „Wir <TARGET>sollen</TARGET> …“",
-			"members": ["sollen"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["sollen"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": null,
-					"number": "Plur",
-					"person": "1",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "sollen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Form syncretic for indicative and subjunctive. Context damaged. Mood null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Konjunktiv II: tense Past."
 	},
 	"grammar-de-aux-dev-infinitive-sein": {
 		"input": {
@@ -686,7 +277,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-infinitive-passive-werden": {
 		"input": {
@@ -705,10 +296,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Inf",
-					"voice": "Pass",
+					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": "Process",
+					"passive": null,
 					"expletive": null
 				}
 			},
@@ -721,43 +312,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Passive auxiliary infinitive. Voice Pass. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-participle-gewesen": {
-		"input": {
-			"markedContext": "Der Raum ist lange leer <TARGET>gewesen</TARGET>.",
-			"members": ["gewesen"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["gewesen"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": null,
-					"number": null,
-					"person": null,
-					"tense": null,
-					"verbForm": "Part",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"participleForm": "Past",
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "sein",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-dev-participle-worden": {
 		"input": {
@@ -776,10 +331,10 @@
 					"person": null,
 					"tense": null,
 					"verbForm": "Part",
-					"voice": "Pass",
+					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": "Process",
+					"passive": null,
 					"participleForm": "Past",
 					"expletive": null
 				}
@@ -793,7 +348,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Passive auxiliary participle. Voice Pass. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-accept-perfect-ist-gegangen": {
 		"input": {
@@ -820,7 +375,7 @@
 				}
 			},
 			"lemma": {
-				"canonicalForm": "ist",
+				"canonicalForm": "sein",
 				"coreFeatures": {
 					"verbType": null
 				}
@@ -828,7 +383,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-accept-future-werden-abreisen": {
 		"input": {
@@ -863,7 +418,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-accept-passive-wurden-gerufen": {
 		"input": {
@@ -882,10 +437,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": "Pass",
+					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": "Process",
+					"passive": null,
 					"expletive": null
 				}
 			},
@@ -898,42 +453,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-accept-copula-war-ruhig": {
-		"input": {
-			"markedContext": "Der See <TARGET>war</TARGET> am Morgen ruhig.",
-			"members": ["war"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["war"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Past",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "sein",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-accept-subjunctive-haette": {
 		"input": {
@@ -968,135 +488,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-accept-modal-muessen": {
-		"input": {
-			"markedContext": "Wir <TARGET>müssen</TARGET> jetzt eintreten.",
-			"members": ["müssen"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["müssen"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Plur",
-					"person": "1",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "müssen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-accept-modal-mag": {
-		"input": {
-			"markedContext": "Tobias <TARGET>mag</TARGET> später mitkommen.",
-			"members": ["mag"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["mag"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "mögen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-accept-modal-wollt": {
-		"input": {
-			"markedContext": "Ihr <TARGET>wollt</TARGET> morgen weiterfahren.",
-			"members": ["wollt"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["wollt"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Plur",
-					"person": "2",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "wollen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-accept-citation-sein": {
-		"input": {
-			"markedContext": "Der Wörterbucheintrag nennt <TARGET>sein</TARGET> als Kopula.",
-			"members": ["sein"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["sein"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "sein",
-				"coreFeatures": {
-					"verbType": null
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		}
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-accept-infinitive-haben": {
 		"input": {
@@ -1131,147 +523,7 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-demo-typo-sol": {
-		"input": {
-			"markedContext": "Er <TARGET>sol</TARGET> jetzt warten.",
-			"members": ["sol"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Typo"],
-			"normalizedMembers": ["soll"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "sollen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Missing letter. Mark Typo. Repair member. Keep modal AUX grammar. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-typo-mus": {
-		"input": {
-			"markedContext": "Der Fahrer <TARGET>mus</TARGET> sofort bremsen.",
-			"members": ["mus"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Typo"],
-			"normalizedMembers": ["muss"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "müssen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-variant-muss": {
-		"input": {
-			"markedContext": "Im alten Brief steht: „Er <TARGET>muß</TARGET> morgen abreisen.“",
-			"members": ["muß"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["muß"],
-			"surface": {
-				"spelling": "Variant",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "müssen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Licensed pre-reform spelling. Standard member. Preserve Surface. Variant spelling. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-accept-typo-koenen": {
-		"input": {
-			"markedContext": "Wir <TARGET>könen</TARGET> den Termin einhalten.",
-			"members": ["könen"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Typo"],
-			"normalizedMembers": ["können"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Plur",
-					"person": "1",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "können",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
 	},
 	"grammar-de-aux-accept-archaic-ward": {
 		"input": {
@@ -1292,10 +544,10 @@
 					"person": "3",
 					"tense": "Past",
 					"verbForm": "Fin",
-					"voice": "Pass",
+					"voice": null,
 					"perfect": null,
 					"future": null,
-					"passive": "Process",
+					"passive": null,
 					"expletive": null
 				}
 			},
@@ -1308,41 +560,6 @@
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null
 		},
-		"explanation": "Old passive auxiliary form. Standard attestation. Variant spelling. Surface Archaic. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-	},
-	"grammar-de-aux-dev-contrast-modal-mag": {
-		"input": {
-			"markedContext": "Sie mag Schokolade, aber heute <TARGET>mag</TARGET> sie lieber kochen.",
-			"members": ["mag"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["mag"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"mood": "Ind",
-					"number": "Sing",
-					"person": "3",
-					"tense": "Pres",
-					"verbForm": "Fin",
-					"voice": null,
-					"perfect": null,
-					"future": null,
-					"passive": null,
-					"expletive": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "mögen",
-				"coreFeatures": {
-					"verbType": "Mod"
-				}
-			},
-			"realizationCoverage": "Full",
-			"expletiveEvidence": null
-		},
-		"explanation": "Marked use governs infinitive and is fixed AUX. Earlier nominal-object use stays unmarked lexical contrast. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Old form of werden. Standard attestation, Variant spelling, Surface Archaic."
 	}
 }

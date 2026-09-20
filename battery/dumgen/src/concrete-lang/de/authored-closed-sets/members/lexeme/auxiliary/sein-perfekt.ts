@@ -5,20 +5,24 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "AUX",
-	canonicalForm: "haben",
+	canonicalForm: "sein",
 	coreFeatures: {
 		verbType: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
+/** One grammatical use of sein; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🤲" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🏁" }, lemma },
 	knowledge: {
-		transcription: "ˈhaːbn̩",
+		transcription: "zaɪn",
 		definition:
-			"Das Auxiliar „haben“ bildet eine grammatische Verbkonstruktion.",
-		translations: { en: ["have"], ru: ["вспомогательный глагол перфекта"] },
+			"„sein“ als Hilfsverb des Perfekts: Mit dem Partizip II von Verben der Bewegung und der Zustandsänderung bildet es Perfekt und Plusquamperfekt (ist gegangen, war eingeschlafen).",
+		translations: {
+			en: ["be (perfect auxiliary)"],
+			ru: ["быть (вспомогательный глагол перфекта)"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

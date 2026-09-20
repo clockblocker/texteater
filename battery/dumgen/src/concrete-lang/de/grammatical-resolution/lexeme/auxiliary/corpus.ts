@@ -17,11 +17,10 @@ export const corpusSource = defineLinguisticCorpus({
 	cases,
 	demonstrationIds: [
 		"grammar-de-aux-demo-future-wird",
-		"grammar-de-aux-demo-modal-kann",
-		"grammar-de-aux-demo-copula-ist",
-		"grammar-de-aux-demo-citation-duerfen",
-		"grammar-de-aux-demo-imperative-sei",
-		"grammar-de-aux-demo-typo-sol",
+		"grammar-de-aux-dev-perfect-hat-gegessen",
+		"grammar-de-aux-dev-passive-wurde-gesperrt",
+		"grammar-de-aux-dev-infinitive-sein",
+		"grammar-de-aux-dev-participle-worden",
 	],
 	source: import.meta.url,
 });

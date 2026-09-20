@@ -77,7 +77,7 @@
 					"passive": null
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["muss"],
 					"form": "Fin",
@@ -127,7 +127,7 @@
 					"passive": null
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["muss"],
 					"form": "Fin",
@@ -157,7 +157,7 @@
 					"passive": null
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["hat", "müssen"],
 					"form": "Fin",
@@ -187,7 +187,7 @@
 					"passive": null
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["wird", "müssen"],
 					"form": "Fin",
@@ -277,7 +277,7 @@
 					"passive": "Process"
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["muss"],
 					"form": "Fin",
@@ -327,7 +327,7 @@
 					"passive": "Process"
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["muss"],
 					"form": "Fin",
@@ -357,7 +357,7 @@
 					"passive": "Process"
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["hat", "müssen"],
 					"form": "Fin",
@@ -387,7 +387,7 @@
 					"passive": "Process"
 				},
 				{
-					"kind": "AUX",
+					"kind": "VERB",
 					"canonicalForm": "müssen",
 					"members": ["wird", "müssen"],
 					"form": "Fin",

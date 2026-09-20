@@ -5,20 +5,24 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "AUX",
-	canonicalForm: "wollen",
+	canonicalForm: "werden",
 	coreFeatures: {
-		verbType: "Mod",
+		verbType: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
+/** One grammatical use of werden; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🎯" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔄" }, lemma },
 	knowledge: {
-		transcription: "ˈvɔlən",
+		transcription: "ˈveːɐ̯dn̩",
 		definition:
-			"Das Modalauxiliar „wollen“ modifiziert die Geltung oder Möglichkeit einer Handlung.",
-		translations: { en: ["want"], ru: ["хотеть"] },
+			"„werden“ als Hilfsverb des Vorgangspassivs: Mit dem Partizip II beschreibt es eine Handlung aus Sicht des Betroffenen (wird repariert, ist genehmigt worden).",
+		translations: {
+			en: ["be (processual passive auxiliary)"],
+			ru: ["вспомогательный глагол пассива действия"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

@@ -75,9 +75,20 @@ export function readingJudgment(output: unknown): TypeSafeExecutor {
 			typeof output === "string"
 				? output
 				: (output as { emojiDescription?: string })?.emojiDescription;
-		const candidates = (request.state as { candidates: string[] })
-			.candidates;
-		const index = candidates.indexOf(description ?? "");
+		const state = request.state as {
+			candidates?: string[];
+			readings?: { emojiDescription: string }[];
+		};
+		// Several reviewed Readings on one Lemma: pick the one the expectation names.
+		if (state.readings) {
+			const reviewed = state.readings.findIndex(
+				(reading) => reading.emojiDescription === description,
+			);
+			return choiceAnswers(request.questions, () =>
+				reviewed < 0 ? "Unresolved" : `authored_${reviewed}`,
+			);
+		}
+		const index = (state.candidates ?? []).indexOf(description ?? "");
 		return choiceAnswers(request.questions, () =>
 			index < 0 ? "NoMatch" : `candidate_${index}`,
 		);

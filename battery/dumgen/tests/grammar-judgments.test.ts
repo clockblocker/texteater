@@ -50,15 +50,13 @@ for (const example of review.constructions)
 			const golden = {
 				lemma: {
 					canonicalForm: target.canonicalForm,
-					coreFeatures:
-						target.kind === "AUX"
-							? { verbType: "Mod" }
-							: {
-									hasGovPrep: null,
-									hasSepPrefix: null,
-									lexicallyReflexive: null,
-									verbType: null,
-								},
+					coreFeatures: {
+						hasGovPrep: null,
+						hasSepPrefix: null,
+						lexicallyReflexive: null,
+						verbType:
+							target.canonicalForm === "müssen" ? "Mod" : null,
+					},
 				},
 				surface: {
 					spelling: "Canonical",
@@ -102,10 +100,7 @@ for (const example of review.constructions)
 			expect(
 				traces[0]?.calls.filter((call) => call.executor === "TypeSafe"),
 			).toHaveLength(1);
-			if (
-				target.kind === "AUX" ||
-				target.members.join(" ") === target.canonicalForm
-			)
+			if (target.members.join(" ") === target.canonicalForm)
 				expect(traces[0]?.calls).toHaveLength(1);
 		}
 	});
@@ -226,12 +221,12 @@ test("AUX catalog absence and uncertainty remain distinct and never invoke Luna"
 		sentence: {
 			id: "aux",
 			language: "de",
-			segments: [{ kind: "ResolvableText", text: "muss" }],
+			segments: [{ kind: "ResolvableText", text: "wird" }],
 		},
 		target: { family: "Lexeme", kind: "AUX", memberSegmentIndices: [0] },
 	});
 	const output = {
-		lemma: { canonicalForm: "müssen", coreFeatures: { verbType: "Mod" } },
+		lemma: { canonicalForm: "werden", coreFeatures: { verbType: null } },
 		surface: {
 			spelling: "Canonical",
 			surfaceFeatures: null,
@@ -249,7 +244,7 @@ test("AUX catalog absence and uncertainty remain distinct and never invoke Luna"
 			},
 		},
 		memberOrthographies: ["Standard"],
-		normalizedMembers: ["muss"],
+		normalizedMembers: ["wird"],
 		realizationCoverage: "Full",
 	};
 	for (const [identity, expected] of [

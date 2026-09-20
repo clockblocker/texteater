@@ -1760,8 +1760,11 @@
 						"language": "de",
 						"canonicalForm": "müssen",
 						"family": "Lexeme",
-						"kind": "AUX",
+						"kind": "VERB",
 						"coreFeatures": {
+							"hasGovPrep": null,
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
 							"verbType": "Mod"
 						},
 						"unitKind": "Lemma"
@@ -1784,7 +1787,7 @@
 					"nearSynonym": [
 						{
 							"canonicalForm": "sollen",
-							"kind": "AUX"
+							"kind": "VERB"
 						}
 					],
 					"antonym": null,

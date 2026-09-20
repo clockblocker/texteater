@@ -1,17 +1,9 @@
-import { member as m44 } from "./members/lexeme/auxiliary/bin-first-person-singular-of-sein.js";
-import { member as m45 } from "./members/lexeme/auxiliary/bist-second-person-singular-of-sein.js";
-import { member as m51 } from "./members/lexeme/auxiliary/duerfen-permission-modal.js";
-import { member as m49 } from "./members/lexeme/auxiliary/haben-perfect-auxiliary.js";
-import { member as m46 } from "./members/lexeme/auxiliary/ist-third-person-singular-of-sein.js";
-import { member as m52 } from "./members/lexeme/auxiliary/koennen-ability-modal.js";
-import { member as m53 } from "./members/lexeme/auxiliary/moegen-preference-possibility-modal.js";
-import { member as m54 } from "./members/lexeme/auxiliary/muessen-necessity-modal.js";
-import { member as m48 } from "./members/lexeme/auxiliary/seid-second-person-plural-of-sein.js";
-import { member as m43 } from "./members/lexeme/auxiliary/sein-infinitive.js";
-import { member as m47 } from "./members/lexeme/auxiliary/sind-first-third-person-plural-of-sein.js";
-import { member as m55 } from "./members/lexeme/auxiliary/sollen-obligation-modal.js";
-import { member as m50 } from "./members/lexeme/auxiliary/werden-future-passive.js";
-import { member as m56 } from "./members/lexeme/auxiliary/wollen-intention-modal.js";
+import { member as aux0 } from "./members/lexeme/auxiliary/sein-perfekt.js";
+import { member as aux1 } from "./members/lexeme/auxiliary/sein-zustandspassiv.js";
+import { member as aux2 } from "./members/lexeme/auxiliary/haben-perfekt.js";
+import { member as aux3 } from "./members/lexeme/auxiliary/werden-futur.js";
+import { member as aux4 } from "./members/lexeme/auxiliary/werden-vorgangspassiv.js";
+import { member as aux5 } from "./members/lexeme/auxiliary/werden-wuerde-konjunktiv.js";
 import { member as m2 } from "./members/lexeme/determiner/article/das-definite.js";
 import { member as m0 } from "./members/lexeme/determiner/article/der-definite.js";
 import { member as m1 } from "./members/lexeme/determiner/article/die-definite.js";
@@ -184,20 +176,12 @@ export const authoredMembers = [
 	m170,
 	m41,
 	m42,
-	m43,
-	m44,
-	m45,
-	m46,
-	m47,
-	m48,
-	m49,
-	m50,
-	m51,
-	m52,
-	m53,
-	m54,
-	m55,
-	m56,
+	aux0,
+	aux1,
+	aux2,
+	aux3,
+	aux4,
+	aux5,
 	m57,
 	m58,
 	m59,
