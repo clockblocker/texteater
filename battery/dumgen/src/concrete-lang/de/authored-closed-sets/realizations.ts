@@ -19,7 +19,8 @@ const strong = (stem: string) =>
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de
 const determinerForms: Readonly<Record<string, readonly string[]>> = {
-	ein: [...declined("ein"), "n", "ne", "nen", "nem"],
+	// Apostrophe clitics 'n, 'ne, 'nen, 'nem, 'ner (fusion Entry table).
+	ein: [...declined("ein"), "n", "ne", "nen", "nem", "ner"],
 	mein: declined("mein"),
 	dein: declined("dein"),
 	sein: declined("sein"),

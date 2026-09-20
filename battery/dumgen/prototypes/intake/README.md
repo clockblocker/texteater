@@ -24,6 +24,14 @@ winners recombine. `lab.ts` runs the factorial; `designs.ts` holds the axes.
 `grammar-batch.ts` is the separate fourth question: whether the grammar feature
 judgments can ride along at intake as well.
 
+Three more questions ride the same call (2026-09-20). `identity.ts` selects a
+closed-class word's authored identity from the candidates its spelling
+enumerates (`--identity`), `roles.ts` names each member's role and projects
+the lexical shape in code (`--roles`), and `shapes.ts` moves the rules out of
+state and into the questions (`--shape questions`). `gold.ts` turns the lemma
+gold and the verb and noun gold into sentences so they score like the click
+corpus (`--corpus lemma|grammar`).
+
 ## Scoring
 
 The existing 206 target-classification evaluation cases are click cases, so a
@@ -39,6 +47,9 @@ click-time design can even detect.
     zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route flat,extended,hier --route-policy groupVote --threshold 0.6'
     zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --depth lattice'
     zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/grammar-batch.ts --route noun --sizes 0,2,4,8'
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --runs 2'
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --concurrency 3 --runs 2'
 
 Every run stores its raw answers under `/tmp/intake-*.json`. `--from <file>`
 re-scores a stored run under a different threshold or route policy without
@@ -178,6 +189,103 @@ at click time, and the saving grows with every further click. A sentence nobody
 clicks is pure loss, which is the argument for `pairwise` if intake is ever
 applied to text the learner may not read.
 
+## Identity from authored candidates (2026-09-20)
+
+`anchored` + `extended` + `groupVote`, τ 0.6, plus one Choice per occurrence
+whose spelling enumerates authored DET, PRON or AUX members (mean 4.5 options,
+max 23), each option a rubric of Kind, headword, cell and definition, plus
+NoMatch and Unresolved. Two runs on the 212 lemma-gold evaluation sentences
+(167 PRON, 32 DET, 13 AUX) and two on the 91 click sentences.
+
+| | exact identity | headword and Kind only |
+| --- | --- | --- |
+| PRON (167) | 113, 117 | 142, 144 |
+| DET (32) | 26, 26 | 26, 26 |
+| AUX (13) | 10, 11 | 10, 11 |
+| all (212) | **149, 154** | **178, 181** |
+
+The headword is right 85% of the time; the cell is what fails. 27-29 PRON
+cases pick the right headword in the wrong case, number or gender (`die`
+Nom for Acc, `keine` Plur for Sing Fem, `dessen` with or without `extPos`
+DET), 14-16 pick the DET twin of a standalone form (`keiner`, `mancher`,
+`jeglicher`), 6 are genitive paradigm holes where gold is Unresolved and the
+judge picks the DET, 2-3 subjunctive auxiliaries (`sei`, `wären`, `hätte`)
+answer NoMatch, and 3 are Misses: two typos (`ihc`, `disem`) and `des`, because
+only `der`, `die`, `das` are authored article spellings (articles are Derived
+under ADR 0024). Run-to-run spread is 5 cases.
+
+Identity implies route better than the route vote does. On the 190 DET and
+PRON gold clicks the selected identity's Kind matches gold 165 times; the route
+vote on the same run is right 136 times, and 26 of its errors are PRON routed
+DET. On the 210 classification clicks the identity axis changes nothing
+(165, 168 pass against 165, 166 without it, +2.1 questions and +1.1k input
+tokens per sentence); every selected identity on a closed-class gold click
+agrees with gold (PRON 6, DET 2), and every DET inside a NOUN unit (14), AUX
+inside a VERB unit (28) and `es` inside a VERB unit (8) is the structural
+non-head case. Kind disagreement with the unit's route: 3 of 155 selected
+occurrences on the click sentences, 54-55 of about 485 on the lemma
+sentences, dominated by PRON against DET (23-26) and PRON inside a VERB
+singleton (12-14).
+
+Miss rate, occurrences the vote routed DET or PRON with no candidate: 1-2 of
+66 on the click sentences (`freien`, `des`), 9-11 of about 320 on the lemma
+sentences (typos, foreign `the` and `he`, and open words the vote routed
+closed: `plan`, `mit`, `nächsten`, `versprechen`, `glaubte`). What the
+realization table lacks for this use is `den`, `dem`, `des`.
+
+## Member roles and the projected shape (2026-09-20)
+
+Same design plus one Choice per occurrence over Head, SeparableParticle,
+GovernedPreposition, Reflexive, Expletive, Article, Auxiliary, Free and
+Unresolved. The shape of the unit around each gold head is projected from the
+roles of the members the matrix grouped with it and scored against the 77 verb
+and 43 noun evaluation cases, two runs.
+
+| feature | correct | gold present, projected |
+| --- | --- | --- |
+| lexicallyReflexive | 77, 77 of 77 | 10, 10 of 10 |
+| expletive | 77, 77 of 77 | 6, 6 of 6 |
+| hasGovPrep | 71, 72 of 77 | 9, 10 of 14 |
+| hasSepPrefix | 68, 68 of 77 | 2, 2 of 11 |
+| article (noun) | 28, 29 of 43 | 22, 23 of 35 |
+
+All five features right on 92-93 of 120 units. `hasSepPrefix` cannot come
+from roles: 8 of the 11 gold prefixes are bound inside a participle or
+zu-infinitive (`mitgebracht`, `hinauszulaufen`, `angekündigt`), and of the
+three separated particles two were projected. The article splits by source:
+owned 22-23 of 29, fused (`im`, `zum`, `ins`, `zur`) 0 of 5 until the ADR 0004
+Segment split exists, shared 0 of 1, and two bare plurals (`beide Knie`, `drei
+Mädchen`) were given an article. The genitive misses (`des Mannes`, `der
+Frauen`) are membership misses, not role misses: the article was never grouped.
+
+Role against membership: 216-229 of 852 role answers name a unit the matrix
+did not build, but 155-157 of them are `Head` on a singleton, where the rubric
+asked for `Free`; the judge prefers Head for a word that stands alone, so the
+two options should be one. The remaining 7% are real: `Free` inside a group
+(23-28), `Article` (22-26) and `GovernedPreposition` (13-14) on singletons.
+11-13 multi-member units got two heads, 4-8 none. Asking roles does not
+change the membership answers: 165, 170 clicks pass with roles against 165,
+166 without, +5.4 questions and +2.4k input tokens per sentence.
+
+## Rules in the questions instead of the state (2026-09-20)
+
+Same design, `state` shape (the 900-word `targetCriteria` in state, every
+question says "under `criteria`") against `questions` shape (state is the
+tagged sentence only; the membership rules are the membership question's
+structured instructions, the route rules are structured option descriptions).
+Two runs each on the 210 clicks.
+
+| shape | pass | route ok | members ok | calls / sentence | input tokens / sentence | p50 | p90 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `state` | **165, 166** | 195, 196 | 165, 166 | 1.04 | 9342 | 373, 359 ms | 983, 594 ms |
+| `questions` | 152, 144 | 189, 189 | 157, 150 | 1.85 | 41526 | 472, 435 ms | 1645, 1396 ms |
+
+The membership rules ride in every one of the n² membership questions, so the
+request grows four and a half times, needs 30-question chunks to stay under
+the request budget (80 per call hit `max_tokens_exceeded`), and still loses
+about fifteen clicks with twice the run-to-run spread. The spec keeps the
+criteria in state.
+
 ## Where this leaves the pipeline
 
 `anchored` + `extended` + `groupVote` + `lattice`, one call per sentence:
@@ -198,3 +306,8 @@ Open, in the order they block things:
   ever matters, that is the trade to revisit.
 - Collocation and the Morpheme routes stay unreachable until `targetCriteria`
   says what they are.
+- Identity selection fails on the cell, not the headword. Either the intake
+  Choice selects among headword groups and the cell stays a grammar question,
+  or the candidates need a cell rubric jev can use.
+- `hasSepPrefix` and the fused article stay grammar questions; the Segment
+  split of ADR 0004 is what would let the fused article become a role.

@@ -11,8 +11,6 @@
  * count would exceed the request budget).
  */
 import { choice, noul, type Questions } from "promptsmith/typesafe";
-import { targetCriteria } from "../../src/concrete-lang/de/target-classification/judgments.js";
-import { indexedContext } from "../../src/universal/validation.js";
 import type { Sentence, Unit } from "./corpus.js";
 import {
 	extendedRoutes,
@@ -23,6 +21,7 @@ import {
 	productionRoutes,
 	resolveHierarchical,
 } from "./inventory.js";
+import { type Shape, stateShape } from "./shapes.js";
 
 type Answers = Record<string, unknown>;
 type ChoiceAnswer = {
@@ -42,18 +41,9 @@ function asNoul(answers: Answers, id: string): number | null {
 	return answer?.type === "noul" ? answer.noul : null;
 }
 
-const sentencePreamble =
-	"In `sentence`, <sN> tags identify selectable occurrences by original segment index N. Untagged text supplies context only. Every occurrence belongs to exactly one complete fixed unit; most units have exactly one member. ";
-
-export function sentenceState(sentence: Sentence, preamble = sentencePreamble) {
-	return {
-		sentence: indexedContext({
-			id: sentence.id,
-			language: "de",
-			segments: sentence.segments,
-		} as never),
-		criteria: preamble + targetCriteria,
-	};
+/** The request state for one sentence under a shape (`shapes.ts`); the shipped shape by default. */
+export function sentenceState(sentence: Sentence, shape: Shape = stateShape) {
+	return shape.state(sentence);
 }
 
 function label(sentence: Sentence, index: number): string {
@@ -68,7 +58,7 @@ export type Groups = Map<number, number[] | "Unresolved">;
 export type Grouping = {
 	readonly id: string;
 	readonly summary: string;
-	questions(sentence: Sentence): Questions;
+	questions(sentence: Sentence, shape?: Shape): Questions;
 	solve(sentence: Sentence, answers: Answers, threshold: number): Groups;
 	/** Whether a threshold sweep over returned probabilities is meaningful. */
 	readonly thresholded: boolean;
@@ -282,20 +272,15 @@ const anchored: Grouping = {
 	id: "anchored",
 	summary: "production's membership Choice from every anchor, symmetrized",
 	thresholded: true,
-	questions(sentence) {
+	questions(sentence, shape = stateShape) {
 		const questions: Questions = {};
 		for (const anchor of sentence.resolvable)
 			for (const other of sentence.resolvable) {
 				if (other === anchor) continue;
-				questions[`m_${anchor}_${other}`] = choice(
-					`Under \`criteria\`, does occurrence <s${other}> in \`sentence\` belong to the same complete fixed unit as occurrence <s${anchor}>?`,
-					{
-						Include: "It is a fixed member of that same unit",
-						Exclude:
-							"It belongs to another unit or is free contextual material",
-						Unresolved:
-							"Its membership cannot be defensibly decided",
-					},
+				questions[`m_${anchor}_${other}`] = shape.membership(
+					sentence,
+					anchor,
+					other,
 				);
 			}
 		return questions;
@@ -333,7 +318,7 @@ export type Routing = {
 	readonly summary: string;
 	/** Every Family/Kind this axis can emit, for the reachability report. */
 	readonly offers: readonly string[];
-	questions(sentence: Sentence): Questions;
+	questions(sentence: Sentence, shape?: Shape): Questions;
 	route(sentence: Sentence, answers: Answers, index: number): string;
 	/** Route probability mass per occurrence, for group-level route policies. */
 	distribution(
@@ -350,11 +335,12 @@ function flatRouting(id: string, inventory: Record<string, string>): Routing {
 		offers: Object.keys(inventory).filter(
 			(route) => route !== "Unresolved",
 		),
-		questions(sentence) {
+		questions(sentence, shape = stateShape) {
 			const questions: Questions = {};
 			for (const index of sentence.resolvable)
-				questions[`route_${index}`] = choice(
-					`Under \`criteria\`, what is the Family/Kind of the complete fixed unit that contains occurrence <s${index}> in \`sentence\`? Classify the whole unit, not the standalone part of speech of this word alone.`,
+				questions[`route_${index}`] = shape.route(
+					sentence,
+					index,
 					inventory,
 				);
 			return questions;
