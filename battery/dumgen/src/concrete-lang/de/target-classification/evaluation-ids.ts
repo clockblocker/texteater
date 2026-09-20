@@ -208,4 +208,8 @@ export const evaluationCaseIds = [
 	"target-de-robust-long-click-wird",
 	"target-de-robust-long-click-verstanden",
 	"target-de-robust-unresolved",
+	"target-de-boundary-recipient-passive-click-bekommt",
+	"target-de-boundary-recipient-passive-click-geliefert",
+	"target-de-boundary-lexical-bekommen-click-bekommt",
+	"target-de-boundary-resultative-bekommen-click-bekommt",
 ] as const;

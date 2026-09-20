@@ -3219,5 +3219,157 @@
 			"expletiveEvidence": null
 		},
 		"explanation": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface."
+	},
+	"grammar-de-verb-recipient-passive-bekommt-geliefert": {
+		"input": {
+			"markedContext": "Sie <TARGET>bekommt</TARGET> das Paket <TARGET>geliefert</TARGET>.",
+			"members": ["bekommt", "geliefert"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["bekommt", "geliefert"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Recipient",
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "liefern",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Recipient passive: bekommt is the auxiliary member, geliefert the head. voice Pass, passive Recipient (ADR 0026)."
+	},
+	"grammar-de-verb-recipient-passive-erhielt-ueberreicht": {
+		"input": {
+			"markedContext": "Der Preisträger <TARGET>erhielt</TARGET> die Urkunde <TARGET>überreicht</TARGET>.",
+			"members": ["erhielt", "überreicht"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["erhielt", "überreicht"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Past",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": "Pass",
+					"passive": "Recipient",
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "überreichen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "erhalten as recipient-passive auxiliary; finite past on the whole Surface. überreichen is inseparable, so hasSepPrefix stays null."
+	},
+	"grammar-de-verb-lexical-bekommt-paket": {
+		"input": {
+			"markedContext": "Sie <TARGET>bekommt</TARGET> ein Paket.",
+			"members": ["bekommt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bekommt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bekommen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Lexical bekommen with an object: ordinary VERB, no passive."
+	},
+	"grammar-de-verb-resultative-bekommt-geoeffnet": {
+		"input": {
+			"markedContext": "Sie <TARGET>bekommt</TARGET> das Glas endlich geöffnet.",
+			"members": ["bekommt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bekommt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Fin",
+					"tense": "Pres",
+					"mood": "Ind",
+					"person": "3",
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bekommen",
+				"coreFeatures": {
+					"hasGovPrep": null,
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
 	}
 }

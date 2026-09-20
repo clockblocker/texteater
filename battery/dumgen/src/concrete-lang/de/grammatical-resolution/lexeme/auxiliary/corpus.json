@@ -561,5 +561,75 @@
 			"expletiveEvidence": null
 		},
 		"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Old form of werden. Standard attestation, Variant spelling, Surface Archaic."
+	},
+	"grammar-de-aux-dev-recipient-bekommt-geliefert": {
+		"input": {
+			"markedContext": "Sie <TARGET>bekommt</TARGET> das Paket geliefert.",
+			"members": ["bekommt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bekommt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bekommen",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "Recipient-passive auxiliary: bekommen contributes nothing lexical, so it is an AUX member of the liefern Unit (ADR 0026). Construction features belong to the Unit."
+	},
+	"grammar-de-aux-accept-recipient-kriegt-erklaert": {
+		"input": {
+			"markedContext": "Er <TARGET>kriegt</TARGET> alles erklärt.",
+			"members": ["kriegt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["kriegt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bekommen",
+				"coreFeatures": {
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null
+		},
+		"explanation": "kriegen realizes the same recipient-passive AUX Lemma and Reading as bekommen (ADR 0026)."
 	}
 }

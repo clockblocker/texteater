@@ -1,3 +1,7 @@
+import { member as aux6 } from "./members/lexeme/auxiliary/bekommen-rezipientenpassiv.js";
+import { member as aux7 } from "./members/lexeme/auxiliary/sein-modalpassiv.js";
+import { member as aux8 } from "./members/lexeme/auxiliary/haben-obligation.js";
+import { member as aux9 } from "./members/lexeme/auxiliary/sein-verlaufsform.js";
 import { member as aux0 } from "./members/lexeme/auxiliary/sein-perfekt.js";
 import { member as aux1 } from "./members/lexeme/auxiliary/sein-zustandspassiv.js";
 import { member as aux2 } from "./members/lexeme/auxiliary/haben-perfekt.js";
@@ -182,6 +186,10 @@ export const authoredMembers = [
 	aux3,
 	aux4,
 	aux5,
+	aux6,
+	aux7,
+	aux8,
+	aux9,
 	m57,
 	m58,
 	m59,

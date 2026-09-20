@@ -84,9 +84,11 @@ object.
 _Avoid_: Modal auxiliary, modal AUX
 
 **Auxiliary**:
-`sein`, `haben` or `werden` serving another verb's perfect, future or passive
-composition. An AUX Lexeme is one such grammatical use with its own Reading;
-the same verb standing alone is a VERB Lexeme.
+`sein`, `haben` or `werden` serving another verb's perfect, future, passive,
+modal-passive, obligation or progressive composition, or `bekommen`, `kriegen`
+and `erhalten` serving its recipient passive. An AUX Lexeme is one such
+grammatical use with its own Reading; the same verb standing alone is a VERB
+Lexeme.
 _Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
 
 **Participial Adjective**:

@@ -56,9 +56,9 @@ test("all development selections are disjoint and production assembly uses only 
 				item.id === "target-classification/de/high-level-whole-unit",
 		),
 	).toMatchObject({
-		caseCount: 504,
+		caseCount: 508,
 		demonstrationCount: 34,
-		evaluationCount: 206,
+		evaluationCount: 210,
 	});
 	expect(
 		Object.keys(prompts).some((route) =>
@@ -79,7 +79,7 @@ test("canonical target corpus survives compact representation round-trips", () =
 		);
 	}
 });
-test("all 1084 retained grammar answers project through public operations", async () => {
+test("all 1091 retained grammar answers project through public operations", async () => {
 	let count = 0;
 	const verifiedRoutes = new Set<string>();
 	for (const spec of listExperiments().filter((item) =>
@@ -176,6 +176,6 @@ test("all 1084 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1084);
+	expect(count).toBe(1091);
 	expect(verifiedRoutes.size).toBe(22);
 }, 30_000);

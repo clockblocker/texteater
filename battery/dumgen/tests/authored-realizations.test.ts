@@ -243,7 +243,7 @@ test("Open PRON population misses copy exact headwords and generate changed text
 	}
 });
 
-test("every AUX gold case locates its sein, haben or werden Lemma by spelling", () => {
+test("every AUX gold case locates its sein, haben, werden or bekommen Lemma by spelling", () => {
 	const lemmas = new Set<string>();
 	for (const [id, example] of Object.entries(auxiliaryCases)) {
 		const output = example.idealOutput as {
@@ -262,8 +262,8 @@ test("every AUX gold case locates its sein, haben or werden Lemma by spelling", 
 		);
 		lemmas.add(output.lemma.canonicalForm);
 	}
-	expect([...lemmas].sort()).toEqual(["haben", "sein", "werden"]);
+	expect([...lemmas].sort()).toEqual(["bekommen", "haben", "sein", "werden"]);
 	expect(
 		authoredMembers.filter((member) => member.lemma.kind === "AUX"),
-	).toHaveLength(6);
+	).toHaveLength(10);
 });

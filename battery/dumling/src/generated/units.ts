@@ -527,7 +527,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -551,7 +551,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -575,7 +575,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -601,7 +601,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 				  )
 				| null;
@@ -658,7 +658,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -682,7 +682,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -706,7 +706,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -732,7 +732,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 					  )
 					| null;
@@ -1986,7 +1986,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -2010,7 +2010,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -2034,7 +2034,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -2060,7 +2060,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 				  )
 				| null;
@@ -2127,7 +2127,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -2151,7 +2151,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -2175,7 +2175,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -2201,7 +2201,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 					  )
 					| null;
@@ -2960,7 +2960,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -2984,7 +2984,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -3008,7 +3008,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -3034,7 +3034,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 				  )
 				| null;
@@ -3091,7 +3091,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -3115,7 +3115,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -3139,7 +3139,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -3165,7 +3165,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 					  )
 					| null;
@@ -3354,7 +3354,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -3378,7 +3378,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -3402,7 +3402,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -3428,7 +3428,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State";
+								passive: "Process" | "State" | "Recipient";
 						  }
 				  )
 				| null;
@@ -3485,7 +3485,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -3509,7 +3509,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -3533,7 +3533,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -3559,7 +3559,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State";
+									passive: "Process" | "State" | "Recipient";
 							  }
 					  )
 					| null;

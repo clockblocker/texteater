@@ -10,4 +10,6 @@ export const evaluationCaseIds = [
 	"grammar-de-aux-accept-subjunctive-haette",
 	"grammar-de-aux-accept-infinitive-haben",
 	"grammar-de-aux-accept-archaic-ward",
+	"grammar-de-aux-dev-recipient-bekommt-geliefert",
+	"grammar-de-aux-accept-recipient-kriegt-erklaert",
 ] as const;

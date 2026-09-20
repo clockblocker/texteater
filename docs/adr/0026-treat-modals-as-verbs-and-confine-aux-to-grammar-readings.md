@@ -28,7 +28,18 @@ Reading it can serve. The serving verb's form decides the Reading, not the
 spelling. A reader reaches an AUX Reading from the unit's Surface explanation,
 never from the text. Per-form AUX Lemmas such as `ist` and `bin` are retired.
 
-This amends the AUX examples in ADR 0022 and the "AUX copula" wording of the
+The recipient passive joins AUX: `bekommen`, `kriegen` and `erhalten` with a
+Partizip II that contributes nothing lexical (`Sie bekommt das Paket
+geliefert`) are auxiliary members under one authored Reading on the AUX Lemma
+`bekommen`, and `passive` gains the value `Recipient` beside `Process` and
+`State`. The lexical use (`Sie bekommt ein Paket`) and the resultative use
+(`Sie bekommt das Glas geöffnet`, manages to open it) keep `bekommen` as the
+VERB; only the sentence decides, so both carry gold. Verbs that add a meaning
+beside a construction (`sich lassen`, `gehören` with a participle, `brauchen`,
+`scheinen`, `drohen`, `versprechen`, `pflegen` with `zu`, copular `bleiben`)
+are VERB like the modals; Funktionsverbgefüge are Collocation Phrasemes.
+
+This amends the AUX examples and the passive values in ADR 0022 and the "AUX copula" wording of the
 classification criteria; membership, occurrence alignment and coverage
 contracts in ADRs 0003 and 0004 are unchanged. The rulings are recorded on
 [the lab scope decision](https://github.com/clockblocker/texteater/issues/502),

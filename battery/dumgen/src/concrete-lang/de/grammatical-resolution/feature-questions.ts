@@ -453,11 +453,13 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"surface.inflectionalFeatures.passive": {
 		question:
-			"Does this complete verbal target realize process or state passive? Judge the whole supplied VERB/AUX/Phraseme construction under the fixed route, including perfect passive worden. Do not reclassify an adjectival property or borrow another target's auxiliaries.",
+			"Does this complete verbal target realize a process, state or recipient passive? Judge the whole supplied VERB/Phraseme construction under the fixed route, including perfect passive worden and bekommen/kriegen/erhalten plus Partizip II. Do not reclassify an adjectival property or borrow another target's auxiliaries.",
 		values: {
 			Process:
 				"Process passive (Vorgangspassiv), including werden/worden constructions",
 			State: "State passive (Zustandspassiv) under the verbal route",
+			Recipient:
+				"Recipient passive (Rezipientenpassiv) with bekommen, kriegen or erhalten and a Partizip II",
 		},
 		unmarked:
 			"No passive construction; active or otherwise nonpassive target",

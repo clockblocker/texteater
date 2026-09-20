@@ -844,6 +844,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -1015,6 +1016,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -1134,6 +1136,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -1278,6 +1281,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -3499,6 +3503,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -3670,6 +3675,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -3789,6 +3795,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -3933,6 +3940,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -5202,6 +5210,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -5373,6 +5382,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -5492,6 +5502,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -5636,6 +5647,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -6069,6 +6081,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -6240,6 +6253,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -6359,6 +6373,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},
@@ -6503,6 +6518,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														enum: [
 															"Process",
 															"State",
+															"Recipient",
 														],
 													},
 												},

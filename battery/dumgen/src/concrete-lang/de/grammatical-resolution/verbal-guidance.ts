@@ -27,8 +27,12 @@ participleForm Present or Past. Do not use aspect or gender in this verbal bag.
 
 Every marked verbal bag has independent perfect and future coordinates: Yes
 when the construction is present, null when absent. A Partizip II alone is not
-a perfect construction. voice is Pass with passive Process or State for an
-established passive; otherwise both voice and passive are null.
+a perfect construction. voice is Pass with passive Process, State or Recipient
+for an established passive; otherwise both voice and passive are null. The
+recipient passive is bekommen, kriegen or erhalten with a Partizip II that
+contributes nothing lexical (bekommt ... geliefert); the auxiliary is a member,
+the participle's verb is the Lemma. Lexical bekommen with an object and the
+resultative bekommt ... geöffnet (manages to open it) keep bekommen as the verb.
 
 ist ... geschrieben worden is Fin, Pres, perfect Yes, future null, voice Pass,
 passive Process, mood Ind, person 3, number Sing. geschrieben worden sein under

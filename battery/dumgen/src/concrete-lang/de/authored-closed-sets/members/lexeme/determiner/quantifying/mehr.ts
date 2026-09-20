@@ -8,7 +8,7 @@ const lemma = {
 	canonicalForm: "mehr",
 	coreFeatures: {
 		definite: null,
-		extPos: "DET",
+		extPos: null,
 		foreign: null,
 		numType: null,
 		person: null,

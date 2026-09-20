@@ -74,4 +74,8 @@ export const evaluationCaseIds = [
 	"grammar-de-verb-copula-war-ruhig",
 	"grammar-de-verb-copula-perfect-ist-gewesen",
 	"grammar-de-verb-copula-citation-sein",
+	"grammar-de-verb-recipient-passive-bekommt-geliefert",
+	"grammar-de-verb-recipient-passive-erhielt-ueberreicht",
+	"grammar-de-verb-lexical-bekommt-paket",
+	"grammar-de-verb-resultative-bekommt-geoeffnet",
 ] as const;
