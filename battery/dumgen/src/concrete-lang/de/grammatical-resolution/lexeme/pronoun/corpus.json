@@ -549,7 +549,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -581,7 +581,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -615,7 +615,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -647,7 +647,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Plur"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -679,7 +679,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Plur"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -713,7 +713,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Plur"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -969,7 +969,7 @@
 					"poss": "Yes",
 					"pronType": "Prs",
 					"gender": "Masc",
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4750,7 +4750,7 @@
 					"case": "Gen",
 					"number": "Sing",
 					"gender[psor]": null,
-					"extPos": null,
+					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
@@ -4882,7 +4882,7 @@
 					"case": "Gen",
 					"number": "Sing",
 					"gender[psor]": null,
-					"extPos": null,
+					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
@@ -5014,7 +5014,7 @@
 					"case": "Gen",
 					"number": "Sing",
 					"gender[psor]": null,
-					"extPos": null,
+					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
@@ -5146,7 +5146,7 @@
 					"case": "Gen",
 					"number": "Plur",
 					"gender[psor]": null,
-					"extPos": null,
+					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
@@ -5219,7 +5219,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5380,7 +5380,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5476,7 +5476,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5513,7 +5513,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Addressee count is unstated, so fixed-population selection must miss."
+		"explanation": "Formal address is one identity whatever the addressee count, so an unstated count still resolves (ticket 500)."
 	},
 	"grammar-de-pron-demo-reflexive-sich": {
 		"input": {
@@ -6052,32 +6052,9 @@
 			"members": ["All"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["all"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "all",
-				"coreFeatures": {
-					"case": null,
-					"number": null,
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": "Yes",
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
-		"explanation": "Foreign invariant total PRON. Surface with unmarked inflectionalFeatures."
+		"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
 	},
 	"grammar-de-pron-dev-poss-meiner": {
 		"input": {
@@ -6369,6 +6346,39 @@
 		},
 		"explanation": "Licensed colloquial form. Not Typo."
 	},
+	"grammar-de-pron-dev-comparative-mehr": {
+		"input": {
+			"markedContext": "<TARGET>Mehr</TARGET> als die Hälfte der Gäste blieb bis zum Ende.",
+			"members": ["Mehr"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["mehr"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "mehr",
+				"coreFeatures": {
+					"case": null,
+					"number": null,
+					"gender[psor]": null,
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Ind",
+					"gender": null,
+					"referenceNumber": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "A comparative quantifier without a noun of its own is a substantive use and routes to PRON: mehr is an invariant authored pronoun identity; the attributive comparative stays DET (ticket 503)."
+	},
 	"grammar-de-pron-dev-contraction-s": {
 		"input": {
 			"markedContext": "Wenn '<TARGET>s</TARGET> morgen regnet, bleibt das Turnier in der Halle.",
@@ -6530,7 +6540,7 @@
 					"poss": null,
 					"pronType": "Prs",
 					"gender": null,
-					"referenceNumber": "Sing"
+					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6543,31 +6553,8 @@
 			"members": ["He"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["he"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "he",
-				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
-					"gender[psor]": null,
-					"extPos": null,
-					"foreign": "Yes",
-					"person": "3",
-					"polite": null,
-					"poss": null,
-					"pronType": "Prs",
-					"gender": "Masc",
-					"referenceNumber": "Sing"
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
-		"explanation": "English code-switch PRON. Foreign Yes."
+		"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
 	}
 }

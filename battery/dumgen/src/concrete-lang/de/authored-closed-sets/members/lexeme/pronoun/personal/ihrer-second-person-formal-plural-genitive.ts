@@ -5,7 +5,7 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "Sie",
+	canonicalForm: "Ihrer",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
@@ -13,8 +13,8 @@ const lemma = {
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
-		case: "Acc",
+		referenceNumber: null,
+		case: "Gen",
 		number: "Plur",
 		gender: null,
 		"gender[psor]": null,
@@ -26,8 +26,8 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👤" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „Sie“ verweist auf eine höflich angesprochene Person.",
-		transcription: "ziː",
+			"Die Personalpronomenform „Ihrer“ verweist auf eine oder mehrere höflich angesprochene Personen.",
+		transcription: "ˈiːʁɐ",
 		translations: {
 			en: ["you (formal singular)"],
 			ru: ["Вас (вежл., ед. ч.)"],

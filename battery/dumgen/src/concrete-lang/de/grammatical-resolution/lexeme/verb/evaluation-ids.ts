@@ -51,4 +51,5 @@ export const evaluationCaseIds = [
 	"grammar-de-verb-prep-governed-warnen-vor",
 	"grammar-de-verb-prep-free-arbeiten-mit",
 	"grammar-de-verb-prep-free-spielen-auf",
+	"grammar-de-verb-dev-apocope-haett-bestellt",
 ] as const;

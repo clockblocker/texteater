@@ -13,7 +13,7 @@ const lemma = {
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Plur",
+		referenceNumber: null,
 		case: "Dat",
 		number: "Plur",
 		gender: null,
@@ -26,11 +26,11 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👤" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „Ihnen“ verweist auf mehrere höflich angesprochene Personen.",
+			"Die Personalpronomenform „Ihnen“ verweist auf eine oder mehrere höflich angesprochene Personen.",
 		transcription: "ˈiːnən",
 		translations: {
-			en: ["you (formal plural)"],
-			ru: ["Вам (вежл., мн. ч.)"],
+			en: ["you (formal singular)"],
+			ru: ["Вам (вежл., ед. ч.)"],
 		},
 	},
 	coverage: {

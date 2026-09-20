@@ -298,7 +298,7 @@ const examples: readonly {
 			poss: "Yes",
 			person: "2",
 			polite: "Form",
-			referenceNumber: "Sing",
+			referenceNumber: null,
 			case: "Nom",
 			number: "Sing",
 			gender: "Neut",

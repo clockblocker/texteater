@@ -46,6 +46,9 @@ const determinerForms: Readonly<Record<string, readonly string[]>> = {
 		"desselben",
 		"derselben",
 		"dieselben",
+		// Pieces left after a fused article (am selben, im selben): Partial coverage.
+		"selbe",
+		"selben",
 	],
 	dieser: strong("dies"),
 	jener: strong("jen"),
@@ -71,7 +74,6 @@ const determinerForms: Readonly<Record<string, readonly string[]>> = {
 	jeglicher: declined("jeglich"),
 	sämtlich: declined("sämtlich"),
 	beide: declined("beid"),
-	selber: ["selber", "selben"],
 };
 const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 	nichts: ["nix"],

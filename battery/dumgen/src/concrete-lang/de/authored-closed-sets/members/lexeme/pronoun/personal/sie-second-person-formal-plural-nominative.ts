@@ -13,7 +13,7 @@ const lemma = {
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
+		referenceNumber: null,
 		case: "Nom",
 		number: "Plur",
 		gender: null,
@@ -26,7 +26,7 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👤" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „Sie“ verweist auf eine höflich angesprochene Person.",
+			"Die Personalpronomenform „Sie“ verweist auf eine oder mehrere höflich angesprochene Personen.",
 		transcription: "ziː",
 		translations: {
 			en: ["you (formal singular)"],

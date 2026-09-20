@@ -409,7 +409,7 @@
 				}
 			},
 			"lemma": {
-				"canonicalForm": "selber",
+				"canonicalForm": "derselbe",
 				"coreFeatures": {
 					"definite": null,
 					"extPos": null,
@@ -418,11 +418,12 @@
 					"person": null,
 					"polite": null,
 					"poss": null,
-					"pronType": "Emp"
+					"pronType": "Dem"
 				}
 			},
-			"realizationCoverage": "Full"
-		}
+			"realizationCoverage": "Partial"
+		},
+		"explanation": "am selben is an demselben with the article fused into am: the piece realizes derselbe with Partial coverage, the article half lives in the fusion. selber is the invariant emphatic and never declines (ticket 503)."
 	},
 	"grammar-de-det-dev-exclamative-welch": {
 		"input": {
@@ -672,42 +673,6 @@
 		},
 		"explanation": "The upstream route is DET, not ADJ."
 	},
-	"grammar-de-det-dev-comparative-mehr": {
-		"input": {
-			"markedContext": "<TARGET>Mehr</TARGET> als die Hälfte der Gäste blieb bis zum Ende.",
-			"members": ["Mehr"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["mehr"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": null,
-					"degree": "Cmp",
-					"gender": null,
-					"gender[psor]": null,
-					"number": null,
-					"number[psor]": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "mehr",
-				"coreFeatures": {
-					"definite": null,
-					"extPos": "DET",
-					"foreign": null,
-					"numType": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Ind"
-				}
-			},
-			"realizationCoverage": "Full"
-		}
-	},
 	"grammar-de-det-dev-comparative-weniger": {
 		"input": {
 			"markedContext": "Heute kamen <TARGET>weniger</TARGET> als zwanzig Besucher.",
@@ -732,7 +697,7 @@
 				"canonicalForm": "wenig",
 				"coreFeatures": {
 					"definite": null,
-					"extPos": "ADV",
+					"extPos": null,
 					"foreign": null,
 					"numType": null,
 					"person": null,
@@ -1002,29 +967,9 @@
 			"members": ["the"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["the"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "the",
-				"coreFeatures": {
-					"definite": "Def",
-					"extPos": null,
-					"foreign": "Yes",
-					"numType": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Art"
-				}
-			},
-			"realizationCoverage": "Full"
+			"decision": "Unresolved"
 		},
-		"explanation": "The source-language article is invariant, so the exact German DET Surface codec uses Citation while retaining its source-language article identity."
+		"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
 	},
 	"grammar-de-det-dev-ordinal-wievielte": {
 		"input": {

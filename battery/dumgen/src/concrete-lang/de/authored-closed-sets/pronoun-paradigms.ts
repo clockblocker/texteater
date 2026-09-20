@@ -359,6 +359,35 @@ add(
 	);
 }
 
+// Comparative quantifiers without a noun (Mehr als die Hälfte; Weniger ist mehr)
+// are invariant PRON identities; case comes from the clause (ticket 503). The
+// attributive comparatives stay DET: mehr as its own headword, weniger as wenig.
+for (const [text, ipa, emoji, definition, en, ru] of [
+	[
+		"mehr",
+		"ˈmeːɐ̯",
+		"➕",
+		"Bezeichnet eine größere Menge oder Anzahl als die verglichene.",
+		"more",
+		"больше; более",
+	],
+	[
+		"weniger",
+		"ˈveːnɪɡɐ",
+		"➖",
+		"Bezeichnet eine geringere Menge oder Anzahl als die verglichene.",
+		"less; fewer",
+		"меньше; менее",
+	],
+] as const) {
+	reviewed.push(
+		pronounMember(
+			form(text, ipa),
+			description("Ind", emoji, definition, [en], [ru]),
+		),
+	);
+}
+
 // Strong adjectival genitive -en, not pronominal -es.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-einige3.html?lang=de
 for (const [stem, ipa, en, ru] of [
@@ -687,26 +716,6 @@ for (const [
 		"Form",
 		"yours (formal)",
 		"Ваш (вежливое обращение)",
-	],
-	[
-		"Ihr",
-		"ˈiːʁ",
-		"2",
-		"Sing",
-		null,
-		"Form",
-		"yours (formal, one addressee)",
-		"Ваш (один адресат)",
-	],
-	[
-		"Ihr",
-		"ˈiːʁ",
-		"2",
-		"Plur",
-		null,
-		"Form",
-		"yours (formal, several addressees)",
-		"Ваш (несколько адресатов)",
 	],
 ] as const) {
 	const meaning: PronounDescription = {

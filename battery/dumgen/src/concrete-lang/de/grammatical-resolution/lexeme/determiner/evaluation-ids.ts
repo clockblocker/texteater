@@ -9,7 +9,6 @@ export const evaluationCaseIds = [
 	"grammar-de-det-dev-total-alle",
 	"grammar-de-det-dev-total-beide",
 	"grammar-de-det-dev-indefinite-viele",
-	"grammar-de-det-dev-comparative-mehr",
 	"grammar-de-det-dev-comparative-weniger",
 	"grammar-de-det-dev-superlative-meisten",
 	"grammar-de-det-dev-possessive-deinen",

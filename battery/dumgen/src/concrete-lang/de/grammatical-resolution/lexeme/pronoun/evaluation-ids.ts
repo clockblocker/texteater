@@ -160,6 +160,7 @@ export const evaluationCaseIds = [
 	"grammar-de-pron-accept-v4-negative-niemanden-acc",
 	"grammar-de-pron-accept-v4-reciprocal-einander",
 	"grammar-de-pron-accept-v4-negative-nichts",
+	"grammar-de-pron-dev-comparative-mehr",
 	"grammar-de-pron-dev-contraction-s",
 	"grammar-de-pron-dev-typo-ihc",
 	"grammar-de-pron-dev-archaic-euer",
