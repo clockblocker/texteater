@@ -153,6 +153,9 @@ type LayoutNode = PaneNode | SplitNode;
 type Edge = "left" | "right";
 type Destination =
 	| { readonly kind: "return" }
+	| { readonly kind: "sweep" }
+	/** The Pane the Card was lifted out of: a drop here is a release in place. */
+	| { readonly kind: "home"; readonly paneId: string }
 	| { readonly kind: "sheet"; readonly paneId: string }
 	| { readonly kind: "pane"; readonly paneId: string; readonly edge: Edge };
 type Arm = "sweep" | "expand";
@@ -199,10 +202,11 @@ type Drag = {
 	readonly deckSheet: number | null;
 	/**
 	 * Where a release with nothing under it sends the Note: back to its
-	 * slot on the Deck, back to the Sheet it was lifted out of, or away —
-	 * a Card lifted from a Link or a Segment came from nowhere.
+	 * slot on the Deck, back to the Sheet it was lifted out of, closed (a
+	 * Cover whose Card is on no live Deck), or away — a Card lifted from a
+	 * Link or a Segment came from nowhere.
 	 */
-	readonly home: "slot" | "restore" | "vanish";
+	readonly home: "slot" | "restore" | "close" | "vanish";
 	arm: Arm | null;
 	armedAt: number;
 	free: boolean;
@@ -238,9 +242,12 @@ type Checkpoint = {
 /**
  * Where a drop lands, read off the Pane: inside the rectangle a Pane on
  * the left or right would take, it spawns that Pane; in the band between
- * them that reaches a little past the Deck, it goes back on the Deck;
- * on the Pane bar it lands nowhere; anywhere else in the Pane it opens as
- * a Cover there. An edge region is the very rectangle a drop there
+ * them that reaches a little past the Deck, it goes back on the Deck; in
+ * the band under that one, the Card and its whole Deck are swept; on the
+ * Pane bar it lands nowhere; anywhere else in the Pane it opens as a
+ * Cover there. A Card lifted out of a Sheet reads that last region in
+ * its own Pane as home: a release there is a release in place, and
+ * previews nothing. An edge region is the very rectangle a drop there
  * produces, so the zone drawn, the ghost and the Pane it becomes are one
  * box. `dropRegions` is the one place this geometry is written; the hit
  * test, the drawn zones and the preview all read it.
@@ -258,6 +265,7 @@ const Z = {
 	/** The Deck's Cards, rising toward the expanded one. */
 	deck: 10,
 	zone: 30,
+	/** The return and sweep bands, over the Deck's Pane's zones. */
 	returnZone: 35,
 	/** The Held Card, over everything until it has landed. */
 	held: 40,
@@ -268,7 +276,7 @@ const SHEET_INSET_X_REM = 1.5;
 const SHEET_INSET_Y_REM = 1;
 /** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
 const CARD_CONTEXTS = 2;
-/** How far the return band reaches above and below the Deck's cards. */
+/** How far the return band reaches below the Deck's cards. */
 const RETURN_PAD_REM = 3;
 /** The gap a clicked Sentence keeps above the Deck once the Text has moved. */
 const DEAL_GAP_PX = 8;
@@ -304,7 +312,7 @@ const RULES = [
 	},
 	{
 		move: "Drag a word or link",
-		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, anywhere else in a Pane for a Cover.",
+		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, under that band to sweep the Deck, anywhere else in a Pane for a Cover. A lifted Sheet dropped in its own Pane goes back to its Deck, or closes if it has none.",
 	},
 	{
 		move: "Drag ↑ a Card",
@@ -425,9 +433,17 @@ type DropRegions = {
 	readonly bar: Box;
 };
 
+/** A side region takes at most this share of its Pane, whatever it would spawn. */
+const EDGE_SHARE = 0.3;
+
+/** How wide a Pane's side regions are: the Pane it would spawn, capped at `EDGE_SHARE`. */
+function edgeWidth(card: Presentation, paneWidth: number, rem: number): number {
+	return Math.min(spawnSize(card, paneWidth, rem), paneWidth * EDGE_SHARE);
+}
+
 /** A Pane's drop regions, in frame coordinates. */
 function dropRegions(pane: Box, card: Presentation, rem: number): DropRegions {
-	const side = spawnSize(card, pane.width, rem);
+	const side = edgeWidth(card, pane.width, rem);
 	const bar = BAR_REM * rem;
 	return {
 		cover: {
@@ -1209,26 +1225,40 @@ function CompassRuntime({
 	}
 	/**
 	 * The return band: the Pane's width between its two edge regions, from
-	 * `RETURN_PAD` above the Deck to `RETURN_PAD` below it.
+	 * the Deck's top to `RETURN_PAD` below it.
 	 */
 	function returnZone(paneBox: Box, card: Presentation): Box {
 		const column = deckColumn(paneBox);
-		const side = spawnSize(card, paneBox.width, rem);
+		const side = edgeWidth(card, paneBox.width, rem);
 		const pad = RETURN_PAD_REM * rem;
 		return {
 			left: paneBox.left + side,
-			top: column.top - pad,
+			top: column.top,
 			width: paneBox.width - 2 * side,
-			height: column.height + 2 * pad,
+			height: column.height + pad,
 		};
 	}
 	/**
-	 * What is under the pointer. The return band follows its Deck's Pane,
-	 * so it is read live; everything else is read off the Panes as they
-	 * rested before any preview moved them, so a ghost opening never moves
-	 * the region that opened it. Leaving a region takes a little more than
-	 * entering it did. The Pane bar is chrome, then the band, then the
-	 * sides; the rest of a Pane opens a Cover.
+	 * The sweep band: under the return band, between the two edge regions,
+	 * down to the Pane's bottom. A Card dropped here takes its Deck with it.
+	 */
+	function sweepZone(paneBox: Box, card: Presentation): Box {
+		const band = returnZone(paneBox, card);
+		const top = band.top + band.height;
+		return {
+			left: band.left,
+			top,
+			width: band.width,
+			height: Math.max(0, paneBox.top + paneBox.height - top),
+		};
+	}
+	/**
+	 * What is under the pointer. The return and sweep bands follow their
+	 * Deck's Pane, so they are read live; everything else is read off the
+	 * Panes as they rested before any preview moved them, so a ghost
+	 * opening never moves the region that opened it. Leaving a region
+	 * takes a little more than entering it did. The Pane bar is chrome,
+	 * then the bands, then the sides; the rest of a Pane opens a Cover.
 	 */
 	function destinationAt(
 		px: number,
@@ -1248,10 +1278,13 @@ function CompassRuntime({
 		if (
 			holder?.deck &&
 			holderBox &&
-			!inside(dropRegions(holderBox, d.card, rem).bar, x, y) &&
-			inside(returnZone(holderBox, d.card), x, y)
-		)
-			return { kind: "return" };
+			!inside(dropRegions(holderBox, d.card, rem).bar, x, y)
+		) {
+			if (inside(returnZone(holderBox, d.card), x, y))
+				return { kind: "return" };
+			if (inside(sweepZone(holderBox, d.card), x, y))
+				return { kind: "sweep" };
+		}
 		/* no drop until the rest boxes describe this layout */
 		const panes = panesOf(layoutRef.current);
 		if (
@@ -1265,9 +1298,9 @@ function CompassRuntime({
 		if (current && "paneId" in current) {
 			const regions = regionsOf(current.paneId);
 			const region =
-				current.kind === "sheet"
-					? regions.cover
-					: regions.edges.find((e) => e.edge === current.edge)?.box;
+				current.kind === "pane"
+					? regions.edges.find((e) => e.edge === current.edge)?.box
+					: regions.cover;
 			if (
 				region &&
 				inside(region, x, y, HYSTERESIS_PX) &&
@@ -1282,7 +1315,9 @@ function CompassRuntime({
 				if (inside(box, x, y))
 					return { kind: "pane", paneId: pane.id, edge };
 			if (inside(regions.cover, x, y))
-				return { kind: "sheet", paneId: pane.id };
+				return d.lifted && d.home !== "vanish" && pane.id === d.paneId
+					? { kind: "home", paneId: pane.id }
+					: { kind: "sheet", paneId: pane.id };
 		}
 		return null;
 	}
@@ -1434,7 +1469,7 @@ function CompassRuntime({
 	 * A Sheet lifted by its Heading or a held margin: a Cover leaves its
 	 * stack, a Floating Ground takes its whole Pane with it. If the Card is
 	 * still on a live Deck it shrinks toward its slot there; otherwise it
-	 * is in hand with nowhere to go back to but the Sheet it was.
+	 * is in hand and a release in its own Pane closes it, as ← would.
 	 */
 	function liftSheet(
 		sheet: SheetRef,
@@ -1477,7 +1512,7 @@ function CompassRuntime({
 			handBox(lift, sheet.paneId, height),
 			sheet.paneId,
 			holder?.sheetId ?? null,
-			holder ? "slot" : "restore",
+			holder ? "slot" : "close",
 		);
 	}
 	/**
@@ -1908,10 +1943,20 @@ function CompassRuntime({
 		/* a loose Card is a Sheet now; its Presentation lives in the layout */
 		setLoose(null);
 	}
-	/** A release with nothing under it. */
-	function goHome(d: Drag) {
+	/** A lifted Cover with no Deck to go back to: it closes, as ← would. */
+	function close(d: Drag, reason: string) {
+		gestureCheckpoint.current = null;
+		log(`${reason}: ${subjectLabel(d.card.subject)} closes`);
+		settle(
+			() => Promise.all([animate(d.h.opacity, 0, transition(FLY_FADE))]),
+			() => {},
+		);
+	}
+	/** A release with nothing under it, or in the Card's own Pane. */
+	function goHome(d: Drag, reason = "Released in place") {
 		if (d.home === "slot") snapBack(d.h);
-		else if (d.home === "restore") restore(d, "Released in place");
+		else if (d.home === "restore") restore(d, reason);
+		else if (d.home === "close") close(d, reason);
 		else vanish(d);
 	}
 	function frameUp(event: ReactPointerEvent<HTMLElement>) {
@@ -1934,7 +1979,9 @@ function CompassRuntime({
 			if (d.lifted) {
 				if (d.home === "slot")
 					log("Released in place: stays on the Deck");
-				goHome(d);
+				/* a tap on a bar is not a close: the Sheet stays */
+				if (d.home === "close") restore(d, "Released in place");
+				else goHome(d);
 				return;
 			}
 			setDrag(null);
@@ -1979,6 +2026,14 @@ function CompassRuntime({
 		const target = destinationAt(event.clientX, event.clientY, d);
 		if (!target || target.kind === "return") {
 			goHome(d);
+			return;
+		}
+		if (target.kind === "sweep") {
+			sweepByDrag(d, "Drop under the Deck");
+			return;
+		}
+		if (target.kind === "home") {
+			goHome(d, "Drop in its own Pane");
 			return;
 		}
 		if (target.kind === "sheet")
@@ -2118,31 +2173,54 @@ function CompassRuntime({
 		else handles.current.delete(id);
 	};
 
-	/** The return zone over a Deck's footprint: drawn on demand, where it is read. */
-	function renderReturnZone(sheet: SheetRef, paneBox: Box) {
+	/**
+	 * The return band over a Deck's footprint and the sweep band under it:
+	 * drawn on demand, where they are read.
+	 */
+	function renderReturnZone(sheet: SheetRef, paneBox: Box): ReactNode[] {
 		const deck = sheet.deck;
-		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId)
-			return null;
-		const box = returnZone(paneBox, drag.card);
-		return (
+		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId) return [];
+		const bands = [
+			{
+				name: "return",
+				box: returnZone(paneBox, drag.card),
+				active: destination?.kind === "return",
+				label: "Back on the Deck",
+				className:
+					"rounded-[1.1rem] border-line-strong bg-paper/60 data-[active=true]:border-link data-[active=true]:bg-link/15",
+				labelClass: "text-link",
+			},
+			{
+				name: "sweep",
+				box: sweepZone(paneBox, drag.card),
+				active: destination?.kind === "sweep",
+				label: "Sweep the Deck",
+				className:
+					"border-destructive/40 bg-destructive/5 data-[active=true]:border-destructive data-[active=true]:bg-destructive/15",
+				labelClass: "text-destructive",
+			},
+		] as const;
+		return bands.map((band) => (
 			<div
-				key={`return-${sheet.sheetId.toString()}`}
+				key={`${band.name}-${sheet.sheetId.toString()}`}
 				aria-hidden="true"
-				data-return-zone=""
-				data-active={destination?.kind === "return"}
+				data-return-zone={band.name}
+				data-active={band.active}
 				data-shown={zonesVisible}
-				className="pointer-events-none absolute flex items-end justify-center rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 pb-3 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15 data-[shown=false]:invisible"
+				className={`pointer-events-none absolute flex items-end justify-center border border-dashed pb-3 transition-colors data-[shown=false]:invisible ${band.className}`}
 				style={{
-					...box,
+					...band.box,
 					zIndex: Z.returnZone,
 					transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
 				}}
 			>
-				<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
-					Back on the Deck
+				<span
+					className={`rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${band.labelClass}`}
+				>
+					{band.label}
 				</span>
 			</div>
-		);
+		));
 	}
 
 	/** The drop regions of every resting Pane, drawn on demand where they are read. */
@@ -2157,6 +2235,7 @@ function CompassRuntime({
 							paneId={pane.id}
 							regions={dropRegions(box, drag.card, rem)}
 							destination={destination}
+							homeLabel={homeLabel(drag)}
 							shown={zonesVisible}
 						/>,
 					]
@@ -2561,7 +2640,7 @@ function CompassRuntime({
 					rendered.add(card.id);
 			else if (drag) rendered.add(drag.card.id);
 			notes.push(...renderDeck(realTop, paneBox, hidden));
-			notes.push(renderReturnZone(realTop, paneBox));
+			notes.push(...renderReturnZone(realTop, paneBox));
 		}
 		/* a Card from nowhere, or a Sheet in hand whose Deck is hidden or
 		   gone: nothing above drew it, and the hand still holds it */
@@ -2683,7 +2762,7 @@ function CompassRuntime({
 
 /** The Deck's top inside its Pane, in px: one place, whatever was clicked. */
 function deckTopIn(embedded: boolean): number {
-	return (embedded ? 3 : 8) * 16;
+	return (embedded ? 3 : 12) * 16;
 }
 
 function subjectOfLink(link: NoteLink): Subject {
@@ -3680,15 +3759,30 @@ function LinksBlock({
 
 /* -------------------------------------------------------------- zones */
 
+/** What a release in the held Card's own Pane does, as the zone says it. */
+function homeLabel(drag: Drag): string {
+	switch (drag.home) {
+		case "slot":
+			return "Back on the Deck";
+		case "close":
+			return "Close";
+		default:
+			return "Back in place";
+	}
+}
+
 function DropZones({
 	paneId,
 	regions,
 	destination,
+	homeLabel,
 	shown,
 }: {
 	paneId: string;
 	regions: DropRegions;
 	destination: Destination | null;
+	/** What the cover region says when it is the held Card's home. */
+	homeLabel: string;
 	/** The regions are read whether or not they are drawn; this draws them. */
 	shown: boolean;
 }) {
@@ -3728,7 +3822,7 @@ function DropZones({
 			<div
 				aria-hidden="true"
 				data-zone="cover"
-				data-active={here?.kind === "sheet"}
+				data-active={here?.kind === "sheet" || here?.kind === "home"}
 				data-shown={shown}
 				className={zoneClass}
 				style={{
@@ -3739,6 +3833,8 @@ function DropZones({
 			>
 				{here?.kind === "sheet" ? (
 					<span className={labelClass}>Open as Cover</span>
+				) : here?.kind === "home" ? (
+					<span className={labelClass}>{homeLabel}</span>
 				) : null}
 			</div>
 		</>
