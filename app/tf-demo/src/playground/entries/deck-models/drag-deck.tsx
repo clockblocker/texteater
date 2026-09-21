@@ -107,8 +107,6 @@ type Subject =
 type Presentation = { readonly id: number; readonly subject: Subject };
 type Deck = {
 	readonly word: string;
-	/** Where the Deck sits in its Pane; null centres it (a seeded scene). */
-	readonly anchor: { readonly top: number; readonly left: number } | null;
 	/**
 	 * Every Note dealt, in Deck rank. A Note keeps its rank in whatever form
 	 * it takes: opening as a Cover does not move it, and collapsing brings it
@@ -152,7 +150,7 @@ type SplitNode = {
 	readonly freshSize?: number | string;
 };
 type LayoutNode = PaneNode | SplitNode;
-type Edge = "left" | "right" | "bottom";
+type Edge = "left" | "right";
 type Destination =
 	| { readonly kind: "return" }
 	| { readonly kind: "sheet"; readonly paneId: string }
@@ -238,17 +236,15 @@ type Checkpoint = {
 };
 
 /**
- * Where a drop lands, read off the Pane the way Obsidian reads it: inside
- * the central rectangle it opens as a Cover here; inside the rectangle a
- * Pane on the left, right or bottom would take, it spawns that Pane; on
- * the Pane bar, or anywhere else, it lands nowhere. A drop region is the
- * very rectangle a drop there produces, so the zone drawn, the ghost and
- * the Pane it becomes are one box, and the centre wins where they meet.
- * `dropRegions` is the one place this geometry is written; the hit test,
- * the drawn zones and the preview all read it.
+ * Where a drop lands, read off the Pane: inside the rectangle a Pane on
+ * the left or right would take, it spawns that Pane; in the band between
+ * them that reaches a little past the Deck, it goes back on the Deck;
+ * on the Pane bar it lands nowhere; anywhere else in the Pane it opens as
+ * a Cover there. An edge region is the very rectangle a drop there
+ * produces, so the zone drawn, the ghost and the Pane it becomes are one
+ * box. `dropRegions` is the one place this geometry is written; the hit
+ * test, the drawn zones and the preview all read it.
  */
-const CENTER_X = 0.3;
-const CENTER_Y = 0.22;
 /** A destination is left only once the pointer is this far outside its region. */
 const HYSTERESIS_PX = 12;
 const ROOT_PANE = "root";
@@ -272,11 +268,9 @@ const SHEET_INSET_X_REM = 1.5;
 const SHEET_INSET_Y_REM = 1;
 /** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
 const CARD_CONTEXTS = 2;
-/** How far the return zone reaches past the Deck's cards. */
-const PILE_PAD_REM = 0.75;
-/** The Heading's inline padding: what a Card's title sits in from its edge. */
-const TITLE_INSET_REM = 1;
-/** The gap between a selected word's baseline box and the dealt Deck. */
+/** How far the return band reaches above and below the Deck's cards. */
+const RETURN_PAD_REM = 3;
+/** The gap a clicked Sentence keeps above the Deck once the Text has moved. */
 const DEAL_GAP_PX = 8;
 
 /** A click on one of these is never a dismissive click. */
@@ -310,7 +304,7 @@ const RULES = [
 	},
 	{
 		move: "Drag a word or link",
-		means: "Lifts a Held Card. Drop in a Pane for a Cover, on an edge for a new Pane, anywhere else to let it go.",
+		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, anywhere else in a Pane for a Cover.",
 	},
 	{
 		move: "Drag ↑ a Card",
@@ -374,22 +368,9 @@ function cardHeightPx(count: number): number {
 	return (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * remPx();
 }
 
-/**
- * The Deck's left edge inside its Pane: the Card's title starts where the
- * selected word does, kept inside the Pane by a `PILE_PAD` margin. With no
- * word yet (a seeded scene), the Deck is centred.
- */
-function deckLeftIn(
-	paneWidth: number,
-	cardWidth: number,
-	rem: number,
-	anchorLeft: number | null,
-): number {
-	if (anchorLeft === null) return (paneWidth - cardWidth) / 2;
-	const pad = PILE_PAD_REM * rem;
-	const wanted = anchorLeft - TITLE_INSET_REM * rem;
-	const max = paneWidth - cardWidth - pad;
-	return Math.max(Math.min(pad, max), Math.min(wanted, max));
+/** The Deck's left edge inside its Pane: the Deck is centred. */
+function deckLeftIn(paneWidth: number, cardWidth: number): number {
+	return (paneWidth - cardWidth) / 2;
 }
 
 function panesOf(node: LayoutNode): readonly PaneNode[] {
@@ -422,21 +403,13 @@ function replacePane(
 const TEXT_COLUMN_REM = 42;
 /** A spawned Pane never takes more than this share of the Pane it splits. */
 const SPAWN_SHARE = 0.5;
-/** A spawned Pane below takes this share, in percent: a Note wants height, not a width. */
-const SPAWN_SHARE_BELOW = 40;
 
 /**
  * How big the Pane a Card spawns opens: as wide as its content column plus
  * the Cover insets, so a Note gets the room it lays out in and no more,
- * capped at half of the Pane it splits. Below, a share of the height.
+ * capped at half of the Pane it splits.
  */
-function spawnSize(
-	card: Presentation,
-	edge: Edge,
-	paneWidth: number,
-	rem: number,
-): number | string {
-	if (edge === "bottom") return SPAWN_SHARE_BELOW.toString();
+function spawnSize(card: Presentation, paneWidth: number, rem: number): number {
 	const column =
 		card.subject.kind === "Text" ? TEXT_COLUMN_REM : CARD_WIDTH_REM;
 	const natural = (column + 2 * SHEET_INSET_X_REM) * rem;
@@ -444,7 +417,7 @@ function spawnSize(
 }
 
 type DropRegions = {
-	/** Where a drop opens a Cover in this Pane. */
+	/** Where a drop opens a Cover in this Pane: between the sides, under the bar. */
 	readonly cover: Box;
 	/** Where a drop spawns a Pane on this side: the Pane it spawns. */
 	readonly edges: readonly { readonly edge: Edge; readonly box: Box }[];
@@ -454,14 +427,14 @@ type DropRegions = {
 
 /** A Pane's drop regions, in frame coordinates. */
 function dropRegions(pane: Box, card: Presentation, rem: number): DropRegions {
-	const side = Number(spawnSize(card, "left", pane.width, rem));
-	const below = (pane.height * SPAWN_SHARE_BELOW) / 100;
+	const side = spawnSize(card, pane.width, rem);
+	const bar = BAR_REM * rem;
 	return {
 		cover: {
-			left: pane.left + pane.width * CENTER_X,
-			top: pane.top + pane.height * CENTER_Y,
-			width: pane.width * (1 - 2 * CENTER_X),
-			height: pane.height * (1 - 2 * CENTER_Y),
+			left: pane.left + side,
+			top: pane.top + bar,
+			width: pane.width - 2 * side,
+			height: pane.height - bar,
 		},
 		edges: [
 			{
@@ -482,21 +455,12 @@ function dropRegions(pane: Box, card: Presentation, rem: number): DropRegions {
 					height: pane.height,
 				},
 			},
-			{
-				edge: "bottom",
-				box: {
-					left: pane.left,
-					top: pane.top + pane.height - below,
-					width: pane.width,
-					height: below,
-				},
-			},
 		],
 		bar: {
 			left: pane.left,
 			top: pane.top,
 			width: pane.width,
-			height: BAR_REM * rem,
+			height: bar,
 		},
 	};
 }
@@ -523,7 +487,7 @@ function splitBeside(
 	const split: SplitNode = {
 		kind: "Split",
 		id: `split-${fresh.id}`,
-		axis: edge === "bottom" ? "vertical" : "horizontal",
+		axis: "horizontal",
 		children: edge === "left" ? [fresh, pane] : [pane, fresh],
 		freshId: fresh.id,
 		freshSize: size,
@@ -863,7 +827,6 @@ function CompassRuntime({
 			edge: previewAt.edge,
 			size: spawnSize(
 				drag.card,
-				previewAt.edge,
 				restBoxes[previewAt.paneId]?.width ?? 0,
 				rem,
 			),
@@ -1043,6 +1006,28 @@ function CompassRuntime({
 
 	/* --- decks --- */
 
+	/**
+	 * The Deck sits at one place in its Pane; the Text moves instead. The
+	 * Sheet's body scrolls just far enough that the Sentence the Segment
+	 * was clicked in sits whole above the Deck's top, and not at all when
+	 * it already does.
+	 */
+	function clearSentence(element: HTMLElement, paneId: string) {
+		const frameBox = root.current?.getBoundingClientRect();
+		const paneBox = paneBoxes[paneId];
+		const sentence = element.closest<HTMLElement>("[data-sentence]");
+		const scroller = element.closest<HTMLElement>("[data-scroller]");
+		if (!frameBox || !paneBox || !sentence || !scroller) return;
+		const deckTop = frameBox.top + paneBox.top + deckTopIn(embedded);
+		const overshoot =
+			sentence.getBoundingClientRect().bottom + DEAL_GAP_PX - deckTop;
+		if (overshoot <= 0) return;
+		scroller.scrollBy({
+			top: overshoot,
+			behavior: reduce ? "auto" : "smooth",
+		});
+	}
+
 	/** A Segment clicked in a Sheet deals a Deck that belongs to that Sheet. */
 	function deal(
 		paneId: string,
@@ -1053,20 +1038,7 @@ function CompassRuntime({
 		if (!allows("deal")) return;
 		const pane = findPane(layoutRef.current, paneId);
 		if (!pane || topSheetOf(pane).sheetId !== sheetId) return;
-		const frameBox = root.current?.getBoundingClientRect();
-		const paneBox = paneBoxes[paneId];
-		const box = element.getBoundingClientRect();
-		const anchor =
-			frameBox && paneBox
-				? {
-						top:
-							box.bottom -
-							frameBox.top -
-							paneBox.top +
-							DEAL_GAP_PX,
-						left: box.left - frameBox.left - paneBox.left,
-					}
-				: null;
+		clearSentence(element, paneId);
 		const before = findSheet(layoutRef.current, sheetId)?.deck;
 		log(
 			`Select "${cleanWord(word)}": ${before ? "replace the Deck, " : ""}deal 4`,
@@ -1074,7 +1046,6 @@ function CompassRuntime({
 		setLayout((node) =>
 			updateDeck(node, sheetId, () => ({
 				word: cleanWord(word),
-				anchor,
 				cards: deckFor(word).map((note) =>
 					present({ kind: "Note", note }),
 				),
@@ -1147,7 +1118,7 @@ function CompassRuntime({
 		const size =
 			previewed?.paneId === paneId && previewed.edge === edge
 				? previewed.size
-				: spawnSize(card, edge, restBoxes[paneId]?.width ?? 0, rem);
+				: spawnSize(card, restBoxes[paneId]?.width ?? 0, rem);
 		setLayout((node) => splitBeside(node, paneId, edge, fresh, size));
 	}
 	/** Puts a Card back in front on the Deck that still holds it, if one does. */
@@ -1227,39 +1198,37 @@ function CompassRuntime({
 	/* --- drag: destination under the pointer --- */
 
 	/** The Deck's column in its Pane: where its Cards sit, in frame coordinates. */
-	function deckColumn(deck: Deck, paneBox: Box): Box {
+	function deckColumn(paneBox: Box): Box {
 		const width = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
 		return {
-			left:
-				paneBox.left +
-				deckLeftIn(
-					paneBox.width,
-					width,
-					rem,
-					deck.anchor?.left ?? null,
-				),
-			top: paneBox.top + (deck.anchor?.top ?? defaultAnchorTop(embedded)),
+			left: paneBox.left + deckLeftIn(paneBox.width, width),
+			top: paneBox.top + deckTopIn(embedded),
 			width,
 			height: PILE_HEIGHT_REM * rem,
 		};
 	}
-	/** The return zone: the Deck's column, reaching `PILE_PAD` past it. */
-	function returnZone(deck: Deck, paneBox: Box): Box {
-		const column = deckColumn(deck, paneBox);
-		const pad = PILE_PAD_REM * rem;
+	/**
+	 * The return band: the Pane's width between its two edge regions, from
+	 * `RETURN_PAD` above the Deck to `RETURN_PAD` below it.
+	 */
+	function returnZone(paneBox: Box, card: Presentation): Box {
+		const column = deckColumn(paneBox);
+		const side = spawnSize(card, paneBox.width, rem);
+		const pad = RETURN_PAD_REM * rem;
 		return {
-			left: column.left - pad,
+			left: paneBox.left + side,
 			top: column.top - pad,
-			width: column.width + 2 * pad,
+			width: paneBox.width - 2 * side,
 			height: column.height + 2 * pad,
 		};
 	}
 	/**
-	 * What is under the pointer. The return zone follows its Deck, so it
-	 * is read live; everything else is read off the Panes as they rested
-	 * before any preview moved them, so a ghost opening never moves the
-	 * region that opened it. Leaving a region takes a little more than
-	 * entering it did.
+	 * What is under the pointer. The return band follows its Deck's Pane,
+	 * so it is read live; everything else is read off the Panes as they
+	 * rested before any preview moved them, so a ghost opening never moves
+	 * the region that opened it. Leaving a region takes a little more than
+	 * entering it did. The Pane bar is chrome, then the band, then the
+	 * sides; the rest of a Pane opens a Cover.
 	 */
 	function destinationAt(
 		px: number,
@@ -1279,7 +1248,8 @@ function CompassRuntime({
 		if (
 			holder?.deck &&
 			holderBox &&
-			inside(returnZone(holder.deck, holderBox), x, y)
+			!inside(dropRegions(holderBox, d.card, rem).bar, x, y) &&
+			inside(returnZone(holderBox, d.card), x, y)
 		)
 			return { kind: "return" };
 		/* no drop until the rest boxes describe this layout */
@@ -1308,11 +1278,11 @@ function CompassRuntime({
 		for (const pane of panes) {
 			const regions = regionsOf(pane.id);
 			if (inside(regions.bar, x, y)) return null;
-			if (inside(regions.cover, x, y))
-				return { kind: "sheet", paneId: pane.id };
 			for (const { edge, box } of regions.edges)
 				if (inside(box, x, y))
 					return { kind: "pane", paneId: pane.id, edge };
+			if (inside(regions.cover, x, y))
+				return { kind: "sheet", paneId: pane.id };
 		}
 		return null;
 	}
@@ -2153,7 +2123,7 @@ function CompassRuntime({
 		const deck = sheet.deck;
 		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId)
 			return null;
-		const box = returnZone(deck, paneBox);
+		const box = returnZone(paneBox, drag.card);
 		return (
 			<div
 				key={`return-${sheet.sheetId.toString()}`}
@@ -2389,7 +2359,7 @@ function CompassRuntime({
 		const order = [...cards].reverse();
 		const expanded = expandedOf(deck, cards);
 		const openAt = expanded ? order.indexOf(expanded) : count - 1;
-		const column = deckColumn(deck, paneBox);
+		const column = deckColumn(paneBox);
 		return order.flatMap((card, index) => {
 			const place: Place =
 				index < openAt ? "above" : index > openAt ? "below" : "open";
@@ -2711,8 +2681,8 @@ function CompassRuntime({
 	);
 }
 
-/** Where a seeded Deck sits when no word was selected to anchor it. */
-function defaultAnchorTop(embedded: boolean): number {
+/** The Deck's top inside its Pane, in px: one place, whatever was clicked. */
+function deckTopIn(embedded: boolean): number {
 	return (embedded ? 3 : 8) * 16;
 }
 
@@ -2746,7 +2716,6 @@ function initialLayout(
 	const deck: Deck | null = cards.length
 		? {
 				word: "noch",
-				anchor: null,
 				cards,
 				expandedId: null,
 			}
@@ -3456,13 +3425,28 @@ function TextBlock({
 }) {
 	const sheet = form === "sheet";
 	const lit = useRef<HTMLParagraphElement>(null);
+	const block = useRef<HTMLDivElement>(null);
 	/* a Cover pushed by Go to source arrives scrolled to its Sentence */
 	useEffect(() => {
 		if (sheet && focus) lit.current?.scrollIntoView({ block: "center" });
 	}, [sheet, focus]);
+	/* room under the last Sentence, so any Sentence can be scrolled clear
+	   of the Deck: as tall as the body that scrolls it */
+	const [trailer, setTrailer] = useState(0);
+	useLayoutEffect(() => {
+		if (!sheet) return;
+		const scroller = block.current?.closest<HTMLElement>("[data-scroller]");
+		if (!scroller) return;
+		const measure = () => setTrailer(scroller.clientHeight);
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(scroller);
+		return () => observer.disconnect();
+	}, [sheet, shown]);
 	if (!shown) return null;
 	return (
 		<div
+			ref={block}
 			data-block="text"
 			className={`font-serif text-ink ${sheet ? "px-4 pt-4 text-[1.15rem] leading-[1.71rem]" : "text-[0.9rem] leading-relaxed"}`}
 		>
@@ -3497,6 +3481,9 @@ function TextBlock({
 					</p>
 				);
 			})}
+			{sheet ? (
+				<div aria-hidden="true" style={{ height: trailer }} />
+			) : null}
 		</div>
 	);
 }

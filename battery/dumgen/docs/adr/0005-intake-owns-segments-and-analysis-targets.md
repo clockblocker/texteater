@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Intake owns Segments and Analysis Targets; closed-class identity is selected at intake
@@ -88,5 +88,5 @@ The numbers, measured in `battery/dumgen/prototypes/intake/` (README) on
 
 Decided on the map
 [Wayfinder: intake-owned Pieces and Units](https://github.com/clockblocker/texteater/issues/487)
-and its tickets, 2026-09-19 to 2026-09-21. Awaiting the playground verdict on
-#496 before acceptance; its findings are recorded in the spec.
+and its tickets, 2026-09-19 to 2026-09-21; accepted after the playground
+verdict on #496.

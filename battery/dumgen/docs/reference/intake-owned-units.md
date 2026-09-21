@@ -2,9 +2,7 @@
 
 The contract behind Dumgen ADR 0005: what intake produces for a sentence,
 what a click reads, what the corpora carry, and where the production effort
-starts. Terms are the Dumgen glossary's. Status: draft until the playground
-verdict on [#496](https://github.com/clockblocker/texteater/issues/496) is
-recorded in the last section.
+starts. Terms are the Dumgen glossary's.
 
 ## The Segmented Sentence
 
@@ -180,7 +178,10 @@ for language and stitching.
 
 ## Playground findings
 
-Pending. The human reacts to `/playground/lattice` in tf-demo; what felt
-wrong and what the contract above must change is recorded here on
-[#496](https://github.com/clockblocker/texteater/issues/496) before ADR 0005
-is accepted.
+Reviewed on 2026-09-21 ([#496](https://github.com/clockblocker/texteater/issues/496)):
+accepted as built, no change to the contract requested. What the fixtures
+show wrong is membership, not the contract: an idiom split into verb and
+noun phrase, an adjunct preposition grouped with its noun, a
+Funktionsverbgefüge taking free arguments, a weekday voted PROPN leaving a
+fused article unattached. These are `targetCriteria` and corpus questions
+for the production effort.
