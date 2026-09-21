@@ -21,8 +21,8 @@ The normalized form that names a Lemma and participates in its identity.
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
-The broad grammatical class of a Lemma: Lexeme, Phraseme, Morpheme, or
-Construction. Every Kind belongs to exactly one Family, so a value that
+The broad grammatical class of a Lemma: Lexeme, Phraseme, or Morpheme.
+Every Kind belongs to exactly one Family, so a value that
 carries the Kind carries the Family by inference.
 _Avoid_: Entry Family
 

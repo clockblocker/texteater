@@ -1,11 +1,10 @@
-import { defineLinguisticCorpus } from "../../authoring.js";
-import {
-	knowledgeInputSchema as inputSchema,
-	knowledgeOutputSchema as outputSchema,
-} from "../../model-schemas.js";
+import { defineLinguisticCorpus } from "../authoring.js";
+import { inputSchema, goldSchema as outputSchema } from "./experiment.js";
 import data from "./source-data.json";
 
 export { inputSchema, outputSchema };
+
+/** The offset-keyed sentence corpus, registered like every other route for listing and contamination checks. */
 export const corpusSource = defineLinguisticCorpus({
 	route: data.route,
 	inputSchema,

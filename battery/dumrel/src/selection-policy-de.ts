@@ -111,9 +111,6 @@ const makeDeRelMap = () =>
 			ToneMarking: request(select()),
 			Transfix: request(select()),
 		},
-		Construction: {
-			Fusion: { ...request(select()), lexicalBreakdown: null },
-		},
 	}) satisfies Record<string, Record<string, KnowledgeRequestMask>>;
 
 /** Fully materialized German policy; no runtime inheritance remains. */

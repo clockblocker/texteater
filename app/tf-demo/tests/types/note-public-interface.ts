@@ -1,4 +1,3 @@
-import type { Equal, Expect } from "common-utils";
 import type { FunctionReturnType } from "convex/server";
 import type { api } from "../../convex/_generated/api";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../shared/knowledge-preferences";
@@ -12,14 +11,6 @@ type ReadingNote = Extract<
 type ShadowNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
 	{ readonly kind: "Shadow" }
->;
-
-type ConstructionReadingNoteIdentity = Extract<
-	ReadingNote["reading"],
-	{ lemma: { language: "de"; family: "Construction" } }
->;
-export type ReadingNotesIncludeFusionReadings = Expect<
-	Equal<ConstructionReadingNoteIdentity["lemma"]["kind"], "Fusion">
 >;
 
 declare const reading: ReadingNote;

@@ -5,8 +5,16 @@ import {
 	type DumdictStoragePort,
 	type StoreRevision,
 } from "dumdict";
-import { createDumgen } from "dumgen";
-import type { DumgenOptions, Encounter, ModelExchange } from "dumgen/types";
+import { createDumgen, DumgenFailure } from "dumgen";
+import type {
+	Dumgen,
+	DumgenOptions,
+	Encounter,
+	LexemeTarget,
+	MemberRole,
+	ModelExchange,
+	SentenceAnalysis,
+} from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
@@ -156,7 +164,11 @@ function setup(
 	hooks: Pick<
 		Parameters<typeof createTfDemoOrchestrator>[0],
 		"draftKnowledge" | "observer" | "inspection"
-	> & { execute?: DumgenOptions["execute"] } = {},
+	> & {
+		execute?: DumgenOptions["execute"];
+		analyzeSentence?: Dumgen["analyzeSentence"];
+		resolveGrammar?: Dumgen["resolveGrammar"];
+	} = {},
 ) {
 	const requests: ModelExchange["request"][] = [];
 	const { storage, commits } = createPlanningStorage(candidates);
@@ -243,12 +255,31 @@ function setup(
 		},
 		...overrides,
 	};
-	const dumgen = createDumgen({
+	const production = createDumgen({
 		...pipelineFixture(outputs),
 		...(hooks.execute ? { execute: hooks.execute } : {}),
 		onModelExchange: (exchange) => requests.push(exchange.request),
 		onOperation: (trace) => hooks.inspection?.operation(trace),
 	});
+	// Intake analysis is a separate judgment the queued fixtures do not
+	// answer; it fails unless a test supplies it, and a failed analysis is
+	// tolerated by design.
+	const dumgen: Dumgen = {
+		...production,
+		analyzeSentence:
+			hooks.analyzeSentence ??
+			(() =>
+				Effect.fail(
+					new DumgenFailure(
+						"NotImplemented",
+						"analyzeSentence",
+						"No analysis fixture",
+					),
+				)),
+		...(hooks.resolveGrammar
+			? { resolveGrammar: hooks.resolveGrammar }
+			: {}),
+	};
 	return {
 		orchestrator: createTfDemoOrchestrator({
 			draftKnowledge: hooks.draftKnowledge,
@@ -307,7 +338,16 @@ test("real segmentation, classification, grammar and emoji production reach an a
 	).toHaveLength(1);
 	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
 	expect(run.writes).toHaveLength(1);
-	expect(run.requests).toHaveLength(6);
+	// segment, classifyTarget, resolveGrammar, generateCanonicalForm and the
+	// emoji: classification is one round trip since its singleton-route
+	// pre-check was folded in, and the replay above makes no request.
+	expect(run.requests.map((request) => request.stage)).toEqual([
+		"segment",
+		"classifyTarget",
+		"resolveGrammar",
+		"generateCanonicalForm",
+		"generateReadingEmojiDescription",
+	]);
 });
 
 test("retry uses its exact Grammar checkpoint and skips classification and grammar", async () => {
@@ -842,4 +882,398 @@ test("the occurrence commit waits for the in-flight Reading checkpoint", async (
 	await outcome;
 	expect(savedBeforeCommit).toBe(true);
 	expect(run.writes).toHaveLength(1);
+});
+
+// ------------------------------------------------ Sentence Analysis at intake
+
+const verfuegungText = "Er stellt das Auto zur Verfügung.";
+const verfuegungSegments = [
+	"Er",
+	" ",
+	"stellt",
+	" ",
+	"das",
+	" ",
+	"Auto",
+	" ",
+	"zur",
+	" ",
+	"Verfügung",
+	".",
+].map((text, index) => ({
+	index,
+	kind:
+		text === " "
+			? ("Whitespace" as const)
+			: text === "."
+				? ("Punctuation" as const)
+				: ("ResolvableText" as const),
+	text,
+}));
+const word = (offset: number, text: string, surface = text) => ({
+	offset,
+	kind: "ResolvableText" as const,
+	text,
+	surface,
+});
+const gap = (offset: number) => ({
+	offset,
+	kind: "Whitespace" as const,
+	text: " ",
+	surface: " ",
+});
+function verfuegungAnalysis(options: {
+	readonly collocation: boolean;
+	readonly nounRoute?: Record<string, number>;
+}): SentenceAnalysis {
+	const lexeme = (
+		id: string,
+		members: { offset: number; role: MemberRole }[],
+		kind: string,
+	): LexemeTarget => ({
+		id,
+		members,
+		routeMass: { [kind]: 0.9, Unresolved: 0.1 },
+		identity: null,
+		provenance: "vote",
+	});
+	return {
+		sentenceId: "sentence-1",
+		language: "de",
+		stitchedText: verfuegungText,
+		segments: [
+			word(0, "Er"),
+			gap(2),
+			word(3, "stellt"),
+			gap(9),
+			word(10, "das"),
+			gap(13),
+			word(14, "Auto"),
+			gap(18),
+			word(19, "zu"),
+			word(21, "r", "der"),
+			gap(22),
+			word(23, "Verfügung"),
+			{ offset: 32, kind: "Punctuation", text: ".", surface: "." },
+		],
+		targets: [
+			lexeme("er", [{ offset: 0, role: "Head" }], "PRON"),
+			lexeme("stellt", [{ offset: 3, role: "Head" }], "VERB"),
+			lexeme("das", [{ offset: 10, role: "Head" }], "DET"),
+			lexeme("auto", [{ offset: 14, role: "Head" }], "NOUN"),
+			lexeme("zu", [{ offset: 19, role: "Head" }], "ADP"),
+			{
+				...lexeme(
+					"verfuegung",
+					[
+						{ offset: 21, role: "Article" },
+						{ offset: 23, role: "Head" },
+					],
+					"NOUN",
+				),
+				...(options.nounRoute ? { routeMass: options.nounRoute } : {}),
+			},
+		],
+		phrasemes: options.collocation
+			? [
+					{
+						id: "p1",
+						members: ["stellt", "zu", "verfuegung"],
+						kindMass: { Collocation: 0.8, None: 0.2 },
+						fixedness: 2.5,
+						provenance: "vote",
+					},
+				]
+			: [],
+		fusions: [
+			{
+				offset: 19,
+				form: "zur",
+				components: [
+					{ offset: 19, span: "zu", surface: "zu", role: "ADP" },
+					{ offset: 21, span: "r", surface: "der", role: "Article" },
+				],
+			},
+		],
+	};
+}
+
+/** Real segmentation and classification fixtures, with analysis and grammar under test control. */
+function setupWithAnalysis(
+	outputs: unknown[],
+	hooks: {
+		readonly analyzeSentence?: Dumgen["analyzeSentence"];
+		readonly analysis?: SentenceAnalysis | null;
+		readonly inspection?: ReturnType<typeof createInspectionCapture>;
+	},
+) {
+	const encounters: Encounter<"de">[] = [];
+	const run = setup(
+		outputs,
+		{
+			async loadResolutionContext() {
+				return {
+					recorded: null,
+					reusable: null,
+					lemmaCandidates: [],
+					analysis: hooks.analysis ?? null,
+					sentence: {
+						sentenceId: "sentence-1",
+						textId: "text-1",
+						segmentedSentenceId: "sentence-1",
+						language: "de",
+						stitchedText: verfuegungText,
+						segments: verfuegungSegments,
+					},
+				};
+			},
+		},
+		[],
+		{
+			inspection: hooks.inspection,
+			...(hooks.analyzeSentence
+				? { analyzeSentence: hooks.analyzeSentence }
+				: {}),
+			resolveGrammar: (encounter) => {
+				encounters.push(encounter as Encounter<"de">);
+				return Effect.fail(
+					new DumgenFailure(
+						"Unresolved",
+						"resolveGrammar",
+						"Grammar is not under test",
+					),
+				);
+			},
+		},
+	);
+	return { ...run, encounters };
+}
+
+test("intake analyses every accepted German sentence, stores each analysis with its sentence and tolerates a failed one", async () => {
+	const inspection = createInspectionCapture();
+	const analysed: string[] = [];
+	const run = setup(
+		[
+			{
+				language: "de",
+				items: [
+					{
+						id: "0",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Hallo.",
+					},
+					{
+						id: "1",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Welt!",
+					},
+				],
+			},
+		],
+		{},
+		[],
+		{
+			inspection,
+			analyzeSentence: ({ sentence }) => {
+				const stitchedText = sentence.segments
+					.map(({ text }) => text)
+					.join("");
+				analysed.push(stitchedText);
+				return stitchedText === "Hallo."
+					? Effect.succeed({
+							...verfuegungAnalysis({ collocation: false }),
+							sentenceId: sentence.id,
+							stitchedText,
+						})
+					: Effect.fail(
+							new DumgenFailure(
+								"ProviderFailure",
+								"analyzeSentence",
+								"model unavailable",
+							),
+						);
+			},
+		},
+	);
+	const result = await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "analysed",
+			sourceText: "Hallo. Welt!",
+		}),
+	);
+	expect(result.persisted.textId).toBe("text-1");
+	expect(analysed.sort()).toEqual(["Hallo.", "Welt!"]);
+	const sentences = run.submitted[0]?.sentences ?? [];
+	expect(sentences).toHaveLength(2);
+	expect(sentences[0]?.analysis?.sentenceId).toBe(
+		sentences[0]?.segmentedSentenceId,
+	);
+	expect(sentences[0]?.analysis?.stitchedText).toBe("Hallo.");
+	expect(sentences[1]?.analysis).toBeUndefined();
+	const steps = inspection.steps.filter(
+		(step) => step.name === "Analyze sentence",
+	);
+	expect(steps.map((step) => step.status).sort()).toEqual([
+		"Failure",
+		"Success",
+	]);
+	expect(
+		steps.find((step) => step.status === "Failure")?.payloadJson,
+	).toContain("model unavailable");
+});
+
+test("intake never analyses sentences in other languages", async () => {
+	const analysed: string[] = [];
+	const run = setup(
+		[
+			{
+				items: [
+					{
+						id: "0",
+						decision: "Accepted",
+						language: "en",
+						stitchedText: "The house.",
+					},
+					{
+						id: "1",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Das Haus.",
+					},
+				],
+			},
+		],
+		{},
+		[],
+		{
+			analyzeSentence: ({ sentence }) => {
+				analysed.push(
+					`${sentence.segments.map(({ text }) => text).join("")}:${sentence.language}`,
+				);
+				return Effect.fail(
+					new DumgenFailure("Unresolved", "analyzeSentence", "none"),
+				);
+			},
+		},
+	);
+	await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "mixed-analysis",
+			sourceText: "The house.\nDas Haus.",
+		}),
+	);
+	expect(analysed).toEqual(["Das Haus.:de"]);
+});
+
+// ------------------------------------------------ Sentence Analysis at click
+
+const verfuegungSelection = { ...selection, clickedSegmentIndex: 10 };
+
+test("a click reads the stored analysis: a Collocation over `stellt zur Verfügung` covers the fused `zur` and skips classification", async () => {
+	const inspection = createInspectionCapture();
+	const run = setupWithAnalysis([], {
+		inspection,
+		analysis: verfuegungAnalysis({ collocation: true }),
+	});
+	const result = await Effect.runPromise(
+		run.orchestrator.resolveSegment(verfuegungSelection),
+	);
+	expect(result).toMatchObject({ grammatical: { decision: "Unresolved" } });
+	expect(run.encounters).toHaveLength(1);
+	expect(run.encounters[0]?.target).toEqual({
+		family: "Phraseme",
+		kind: "Collocation",
+		memberSegmentIndices: [2, 8, 10],
+	});
+	expect(
+		run.requests.filter((request) => request.stage === "classifyTarget"),
+	).toHaveLength(0);
+	const step = inspection.steps.find((step) =>
+		step.name.startsWith("Select target"),
+	);
+	expect(step?.name).toBe("Select target · analysis");
+	expect(JSON.parse(step?.payloadJson ?? "null")).toMatchObject({
+		input: { hasAnalysis: true },
+		output: { path: "analysis" },
+	});
+});
+
+test("a NOUN whose Article is the `r` of `zur` leaves the stored `zur` outside its target", async () => {
+	const run = setupWithAnalysis([], {
+		analysis: verfuegungAnalysis({ collocation: false }),
+	});
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(verfuegungSelection),
+	);
+	expect(run.encounters[0]?.target).toEqual({
+		family: "Lexeme",
+		kind: "NOUN",
+		memberSegmentIndices: [10],
+	});
+	expect(run.requests).toHaveLength(0);
+});
+
+test("a click on the fused `zur` itself cannot be expressed by a sub-word unit and is classified", async () => {
+	const run = setupWithAnalysis(
+		[{ family: "Lexeme", kind: "ADP", memberSegmentIndices: [8] }],
+		{ analysis: verfuegungAnalysis({ collocation: false }) },
+	);
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment({
+			...selection,
+			clickedSegmentIndex: 8,
+		}),
+	);
+	expect(run.encounters[0]?.target).toEqual({
+		family: "Lexeme",
+		kind: "ADP",
+		memberSegmentIndices: [8],
+	});
+	expect(
+		run.requests.filter((request) => request.stage === "classifyTarget"),
+	).toHaveLength(1);
+});
+
+test("an Unresolved unit, or no stored analysis, falls back to click-time classification", async () => {
+	const inspection = createInspectionCapture();
+	for (const analysis of [
+		verfuegungAnalysis({
+			collocation: false,
+			nounRoute: { Unresolved: 0.7, NOUN: 0.3 },
+		}),
+		null,
+	]) {
+		const run = setupWithAnalysis(
+			[{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [10] }],
+			{ analysis, inspection },
+		);
+		await Effect.runPromise(
+			run.orchestrator.resolveSegment(verfuegungSelection),
+		);
+		expect(run.encounters[0]?.target).toEqual({
+			family: "Lexeme",
+			kind: "NOUN",
+			memberSegmentIndices: [10],
+		});
+		expect(
+			run.requests.filter(
+				(request) => request.stage === "classifyTarget",
+			),
+		).toHaveLength(1);
+	}
+	const steps = inspection.steps.filter((step) =>
+		step.name.startsWith("Select target"),
+	);
+	expect(steps.map((step) => step.name)).toEqual([
+		"Select target · classified",
+		"Select target · classified",
+	]);
+	expect(
+		steps.map((step) => JSON.parse(step.payloadJson).input.hasAnalysis),
+	).toEqual([true, false]);
+	expect(
+		steps.map((step) => JSON.parse(step.payloadJson).output.path),
+	).toEqual(["classified", "classified"]);
 });

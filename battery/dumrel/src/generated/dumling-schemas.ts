@@ -1,104 +1,101 @@
 // Generated from Dumling concrete schema exports. Run bun run generate.
 
-import * as Route0 from "dumling/schema/de/construction/fusion";
-import * as Route1 from "dumling/schema/de/lexeme/adjective";
-import * as Route2 from "dumling/schema/de/lexeme/adposition";
-import * as Route3 from "dumling/schema/de/lexeme/adverb";
-import * as Route4 from "dumling/schema/de/lexeme/auxiliary";
-import * as Route5 from "dumling/schema/de/lexeme/coordinating-conjunction";
-import * as Route6 from "dumling/schema/de/lexeme/determiner";
-import * as Route7 from "dumling/schema/de/lexeme/interjection";
-import * as Route8 from "dumling/schema/de/lexeme/noun";
-import * as Route9 from "dumling/schema/de/lexeme/numeral";
-import * as Route10 from "dumling/schema/de/lexeme/other";
-import * as Route11 from "dumling/schema/de/lexeme/particle";
-import * as Route12 from "dumling/schema/de/lexeme/pronoun";
-import * as Route13 from "dumling/schema/de/lexeme/proper-noun";
-import * as Route14 from "dumling/schema/de/lexeme/punctuation";
-import * as Route15 from "dumling/schema/de/lexeme/subordinating-conjunction";
-import * as Route16 from "dumling/schema/de/lexeme/symbol";
-import * as Route17 from "dumling/schema/de/lexeme/verb";
-import * as Route18 from "dumling/schema/de/morpheme/circumfix";
-import * as Route19 from "dumling/schema/de/morpheme/clitic";
-import * as Route20 from "dumling/schema/de/morpheme/duplifix";
-import * as Route21 from "dumling/schema/de/morpheme/infix";
-import * as Route22 from "dumling/schema/de/morpheme/interfix";
-import * as Route23 from "dumling/schema/de/morpheme/prefix";
-import * as Route24 from "dumling/schema/de/morpheme/root";
-import * as Route25 from "dumling/schema/de/morpheme/suffix";
-import * as Route26 from "dumling/schema/de/morpheme/suffixoid";
-import * as Route27 from "dumling/schema/de/morpheme/transfix";
-import * as Route28 from "dumling/schema/de/phraseme/aphorism";
-import * as Route29 from "dumling/schema/de/phraseme/collocation";
-import * as Route30 from "dumling/schema/de/phraseme/discourse-formula";
-import * as Route31 from "dumling/schema/de/phraseme/idiom";
-import * as Route32 from "dumling/schema/de/phraseme/proverb";
-import * as Route33 from "dumling/schema/en/construction/fusion";
-import * as Route34 from "dumling/schema/en/lexeme/adjective";
-import * as Route35 from "dumling/schema/en/lexeme/adposition";
-import * as Route36 from "dumling/schema/en/lexeme/adverb";
-import * as Route37 from "dumling/schema/en/lexeme/auxiliary";
-import * as Route38 from "dumling/schema/en/lexeme/coordinating-conjunction";
-import * as Route39 from "dumling/schema/en/lexeme/determiner";
-import * as Route40 from "dumling/schema/en/lexeme/interjection";
-import * as Route41 from "dumling/schema/en/lexeme/noun";
-import * as Route42 from "dumling/schema/en/lexeme/numeral";
-import * as Route43 from "dumling/schema/en/lexeme/other";
-import * as Route44 from "dumling/schema/en/lexeme/particle";
-import * as Route45 from "dumling/schema/en/lexeme/pronoun";
-import * as Route46 from "dumling/schema/en/lexeme/proper-noun";
-import * as Route47 from "dumling/schema/en/lexeme/punctuation";
-import * as Route48 from "dumling/schema/en/lexeme/subordinating-conjunction";
-import * as Route49 from "dumling/schema/en/lexeme/symbol";
-import * as Route50 from "dumling/schema/en/lexeme/verb";
-import * as Route51 from "dumling/schema/en/morpheme/circumfix";
-import * as Route52 from "dumling/schema/en/morpheme/clitic";
-import * as Route53 from "dumling/schema/en/morpheme/duplifix";
-import * as Route54 from "dumling/schema/en/morpheme/infix";
-import * as Route55 from "dumling/schema/en/morpheme/interfix";
-import * as Route56 from "dumling/schema/en/morpheme/prefix";
-import * as Route57 from "dumling/schema/en/morpheme/root";
-import * as Route58 from "dumling/schema/en/morpheme/suffix";
-import * as Route59 from "dumling/schema/en/morpheme/suffixoid";
-import * as Route60 from "dumling/schema/en/morpheme/tone-marking";
-import * as Route61 from "dumling/schema/en/morpheme/transfix";
-import * as Route62 from "dumling/schema/en/phraseme/aphorism";
-import * as Route63 from "dumling/schema/en/phraseme/discourse-formula";
-import * as Route64 from "dumling/schema/en/phraseme/idiom";
-import * as Route65 from "dumling/schema/en/phraseme/proverb";
-import * as Route66 from "dumling/schema/he/construction/fusion";
-import * as Route67 from "dumling/schema/he/lexeme/adjective";
-import * as Route68 from "dumling/schema/he/lexeme/adposition";
-import * as Route69 from "dumling/schema/he/lexeme/adverb";
-import * as Route70 from "dumling/schema/he/lexeme/auxiliary";
-import * as Route71 from "dumling/schema/he/lexeme/coordinating-conjunction";
-import * as Route72 from "dumling/schema/he/lexeme/determiner";
-import * as Route73 from "dumling/schema/he/lexeme/interjection";
-import * as Route74 from "dumling/schema/he/lexeme/noun";
-import * as Route75 from "dumling/schema/he/lexeme/numeral";
-import * as Route76 from "dumling/schema/he/lexeme/other";
-import * as Route77 from "dumling/schema/he/lexeme/particle";
-import * as Route78 from "dumling/schema/he/lexeme/pronoun";
-import * as Route79 from "dumling/schema/he/lexeme/proper-noun";
-import * as Route80 from "dumling/schema/he/lexeme/punctuation";
-import * as Route81 from "dumling/schema/he/lexeme/subordinating-conjunction";
-import * as Route82 from "dumling/schema/he/lexeme/symbol";
-import * as Route83 from "dumling/schema/he/lexeme/verb";
-import * as Route84 from "dumling/schema/he/morpheme/circumfix";
-import * as Route85 from "dumling/schema/he/morpheme/clitic";
-import * as Route86 from "dumling/schema/he/morpheme/duplifix";
-import * as Route87 from "dumling/schema/he/morpheme/infix";
-import * as Route88 from "dumling/schema/he/morpheme/interfix";
-import * as Route89 from "dumling/schema/he/morpheme/prefix";
-import * as Route90 from "dumling/schema/he/morpheme/root";
-import * as Route91 from "dumling/schema/he/morpheme/suffix";
-import * as Route92 from "dumling/schema/he/morpheme/suffixoid";
-import * as Route93 from "dumling/schema/he/morpheme/tone-marking";
-import * as Route94 from "dumling/schema/he/morpheme/transfix";
-import * as Route95 from "dumling/schema/he/phraseme/aphorism";
-import * as Route96 from "dumling/schema/he/phraseme/discourse-formula";
-import * as Route97 from "dumling/schema/he/phraseme/idiom";
-import * as Route98 from "dumling/schema/he/phraseme/proverb";
+import * as Route0 from "dumling/schema/de/lexeme/adjective";
+import * as Route1 from "dumling/schema/de/lexeme/adposition";
+import * as Route2 from "dumling/schema/de/lexeme/adverb";
+import * as Route3 from "dumling/schema/de/lexeme/auxiliary";
+import * as Route4 from "dumling/schema/de/lexeme/coordinating-conjunction";
+import * as Route5 from "dumling/schema/de/lexeme/determiner";
+import * as Route6 from "dumling/schema/de/lexeme/interjection";
+import * as Route7 from "dumling/schema/de/lexeme/noun";
+import * as Route8 from "dumling/schema/de/lexeme/numeral";
+import * as Route9 from "dumling/schema/de/lexeme/other";
+import * as Route10 from "dumling/schema/de/lexeme/particle";
+import * as Route11 from "dumling/schema/de/lexeme/pronoun";
+import * as Route12 from "dumling/schema/de/lexeme/proper-noun";
+import * as Route13 from "dumling/schema/de/lexeme/punctuation";
+import * as Route14 from "dumling/schema/de/lexeme/subordinating-conjunction";
+import * as Route15 from "dumling/schema/de/lexeme/symbol";
+import * as Route16 from "dumling/schema/de/lexeme/verb";
+import * as Route17 from "dumling/schema/de/morpheme/circumfix";
+import * as Route18 from "dumling/schema/de/morpheme/clitic";
+import * as Route19 from "dumling/schema/de/morpheme/duplifix";
+import * as Route20 from "dumling/schema/de/morpheme/infix";
+import * as Route21 from "dumling/schema/de/morpheme/interfix";
+import * as Route22 from "dumling/schema/de/morpheme/prefix";
+import * as Route23 from "dumling/schema/de/morpheme/root";
+import * as Route24 from "dumling/schema/de/morpheme/suffix";
+import * as Route25 from "dumling/schema/de/morpheme/suffixoid";
+import * as Route26 from "dumling/schema/de/morpheme/transfix";
+import * as Route27 from "dumling/schema/de/phraseme/aphorism";
+import * as Route28 from "dumling/schema/de/phraseme/collocation";
+import * as Route29 from "dumling/schema/de/phraseme/discourse-formula";
+import * as Route30 from "dumling/schema/de/phraseme/idiom";
+import * as Route31 from "dumling/schema/de/phraseme/proverb";
+import * as Route32 from "dumling/schema/en/lexeme/adjective";
+import * as Route33 from "dumling/schema/en/lexeme/adposition";
+import * as Route34 from "dumling/schema/en/lexeme/adverb";
+import * as Route35 from "dumling/schema/en/lexeme/auxiliary";
+import * as Route36 from "dumling/schema/en/lexeme/coordinating-conjunction";
+import * as Route37 from "dumling/schema/en/lexeme/determiner";
+import * as Route38 from "dumling/schema/en/lexeme/interjection";
+import * as Route39 from "dumling/schema/en/lexeme/noun";
+import * as Route40 from "dumling/schema/en/lexeme/numeral";
+import * as Route41 from "dumling/schema/en/lexeme/other";
+import * as Route42 from "dumling/schema/en/lexeme/particle";
+import * as Route43 from "dumling/schema/en/lexeme/pronoun";
+import * as Route44 from "dumling/schema/en/lexeme/proper-noun";
+import * as Route45 from "dumling/schema/en/lexeme/punctuation";
+import * as Route46 from "dumling/schema/en/lexeme/subordinating-conjunction";
+import * as Route47 from "dumling/schema/en/lexeme/symbol";
+import * as Route48 from "dumling/schema/en/lexeme/verb";
+import * as Route49 from "dumling/schema/en/morpheme/circumfix";
+import * as Route50 from "dumling/schema/en/morpheme/clitic";
+import * as Route51 from "dumling/schema/en/morpheme/duplifix";
+import * as Route52 from "dumling/schema/en/morpheme/infix";
+import * as Route53 from "dumling/schema/en/morpheme/interfix";
+import * as Route54 from "dumling/schema/en/morpheme/prefix";
+import * as Route55 from "dumling/schema/en/morpheme/root";
+import * as Route56 from "dumling/schema/en/morpheme/suffix";
+import * as Route57 from "dumling/schema/en/morpheme/suffixoid";
+import * as Route58 from "dumling/schema/en/morpheme/tone-marking";
+import * as Route59 from "dumling/schema/en/morpheme/transfix";
+import * as Route60 from "dumling/schema/en/phraseme/aphorism";
+import * as Route61 from "dumling/schema/en/phraseme/discourse-formula";
+import * as Route62 from "dumling/schema/en/phraseme/idiom";
+import * as Route63 from "dumling/schema/en/phraseme/proverb";
+import * as Route64 from "dumling/schema/he/lexeme/adjective";
+import * as Route65 from "dumling/schema/he/lexeme/adposition";
+import * as Route66 from "dumling/schema/he/lexeme/adverb";
+import * as Route67 from "dumling/schema/he/lexeme/auxiliary";
+import * as Route68 from "dumling/schema/he/lexeme/coordinating-conjunction";
+import * as Route69 from "dumling/schema/he/lexeme/determiner";
+import * as Route70 from "dumling/schema/he/lexeme/interjection";
+import * as Route71 from "dumling/schema/he/lexeme/noun";
+import * as Route72 from "dumling/schema/he/lexeme/numeral";
+import * as Route73 from "dumling/schema/he/lexeme/other";
+import * as Route74 from "dumling/schema/he/lexeme/particle";
+import * as Route75 from "dumling/schema/he/lexeme/pronoun";
+import * as Route76 from "dumling/schema/he/lexeme/proper-noun";
+import * as Route77 from "dumling/schema/he/lexeme/punctuation";
+import * as Route78 from "dumling/schema/he/lexeme/subordinating-conjunction";
+import * as Route79 from "dumling/schema/he/lexeme/symbol";
+import * as Route80 from "dumling/schema/he/lexeme/verb";
+import * as Route81 from "dumling/schema/he/morpheme/circumfix";
+import * as Route82 from "dumling/schema/he/morpheme/clitic";
+import * as Route83 from "dumling/schema/he/morpheme/duplifix";
+import * as Route84 from "dumling/schema/he/morpheme/infix";
+import * as Route85 from "dumling/schema/he/morpheme/interfix";
+import * as Route86 from "dumling/schema/he/morpheme/prefix";
+import * as Route87 from "dumling/schema/he/morpheme/root";
+import * as Route88 from "dumling/schema/he/morpheme/suffix";
+import * as Route89 from "dumling/schema/he/morpheme/suffixoid";
+import * as Route90 from "dumling/schema/he/morpheme/tone-marking";
+import * as Route91 from "dumling/schema/he/morpheme/transfix";
+import * as Route92 from "dumling/schema/he/phraseme/aphorism";
+import * as Route93 from "dumling/schema/he/phraseme/discourse-formula";
+import * as Route94 from "dumling/schema/he/phraseme/idiom";
+import * as Route95 from "dumling/schema/he/phraseme/proverb";
 import { z } from "zod";
 import { normalizeText } from "../semantics.js";
 
@@ -200,9 +197,6 @@ export const lemmaSchema = z.union([
 	Route93.lemmaSchema,
 	Route94.lemmaSchema,
 	Route95.lemmaSchema,
-	Route96.lemmaSchema,
-	Route97.lemmaSchema,
-	Route98.lemmaSchema,
 ]);
 export const readingSchema = z.union([
 	Route0.readingSchema,
@@ -301,11 +295,9 @@ export const readingSchema = z.union([
 	Route93.readingSchema,
 	Route94.readingSchema,
 	Route95.readingSchema,
-	Route96.readingSchema,
-	Route97.readingSchema,
-	Route98.readingSchema,
 ]);
 export const morphemeReadingSchema = z.union([
+	Route17.readingSchema,
 	Route18.readingSchema,
 	Route19.readingSchema,
 	Route20.readingSchema,
@@ -315,7 +307,8 @@ export const morphemeReadingSchema = z.union([
 	Route24.readingSchema,
 	Route25.readingSchema,
 	Route26.readingSchema,
-	Route27.readingSchema,
+	Route49.readingSchema,
+	Route50.readingSchema,
 	Route51.readingSchema,
 	Route52.readingSchema,
 	Route53.readingSchema,
@@ -325,8 +318,9 @@ export const morphemeReadingSchema = z.union([
 	Route57.readingSchema,
 	Route58.readingSchema,
 	Route59.readingSchema,
-	Route60.readingSchema,
-	Route61.readingSchema,
+	Route81.readingSchema,
+	Route82.readingSchema,
+	Route83.readingSchema,
 	Route84.readingSchema,
 	Route85.readingSchema,
 	Route86.readingSchema,
@@ -335,9 +329,6 @@ export const morphemeReadingSchema = z.union([
 	Route89.readingSchema,
 	Route90.readingSchema,
 	Route91.readingSchema,
-	Route92.readingSchema,
-	Route93.readingSchema,
-	Route94.readingSchema,
 ]);
 export const unitShadowSchema = z.union([
 	z.strictObject({
@@ -916,26 +907,14 @@ export const unitShadowSchema = z.union([
 		family: Route95.lemmaSchema.shape.family,
 		kind: Route95.lemmaSchema.shape.kind,
 	}),
-	z.strictObject({
-		language: Route96.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route96.lemmaSchema.shape.family,
-		kind: Route96.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route97.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route97.lemmaSchema.shape.family,
-		kind: Route97.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route98.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route98.lemmaSchema.shape.family,
-		kind: Route98.lemmaSchema.shape.kind,
-	}),
 ]);
 export const lexicalUnitShadowSchema = z.union([
+	z.strictObject({
+		language: Route0.lemmaSchema.shape.language,
+		canonicalForm: normalizedTextSchema,
+		family: Route0.lemmaSchema.shape.family,
+		kind: Route0.lemmaSchema.shape.kind,
+	}),
 	z.strictObject({
 		language: Route1.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
@@ -1033,10 +1012,10 @@ export const lexicalUnitShadowSchema = z.union([
 		kind: Route16.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route17.lemmaSchema.shape.language,
+		language: Route27.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route17.lemmaSchema.shape.family,
-		kind: Route17.lemmaSchema.shape.kind,
+		family: Route27.lemmaSchema.shape.family,
+		kind: Route27.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
 		language: Route28.lemmaSchema.shape.language,
@@ -1069,6 +1048,12 @@ export const lexicalUnitShadowSchema = z.union([
 		kind: Route32.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
+		language: Route33.lemmaSchema.shape.language,
+		canonicalForm: normalizedTextSchema,
+		family: Route33.lemmaSchema.shape.family,
+		kind: Route33.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
 		language: Route34.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
 		family: Route34.lemmaSchema.shape.family,
@@ -1159,16 +1144,16 @@ export const lexicalUnitShadowSchema = z.union([
 		kind: Route48.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route49.lemmaSchema.shape.language,
+		language: Route60.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route49.lemmaSchema.shape.family,
-		kind: Route49.lemmaSchema.shape.kind,
+		family: Route60.lemmaSchema.shape.family,
+		kind: Route60.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route50.lemmaSchema.shape.language,
+		language: Route61.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route50.lemmaSchema.shape.family,
-		kind: Route50.lemmaSchema.shape.kind,
+		family: Route61.lemmaSchema.shape.family,
+		kind: Route61.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
 		language: Route62.lemmaSchema.shape.language,
@@ -1193,6 +1178,12 @@ export const lexicalUnitShadowSchema = z.union([
 		canonicalForm: normalizedTextSchema,
 		family: Route65.lemmaSchema.shape.family,
 		kind: Route65.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route66.lemmaSchema.shape.language,
+		canonicalForm: normalizedTextSchema,
+		family: Route66.lemmaSchema.shape.family,
+		kind: Route66.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
 		language: Route67.lemmaSchema.shape.language,
@@ -1279,22 +1270,22 @@ export const lexicalUnitShadowSchema = z.union([
 		kind: Route80.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route81.lemmaSchema.shape.language,
+		language: Route92.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route81.lemmaSchema.shape.family,
-		kind: Route81.lemmaSchema.shape.kind,
+		family: Route92.lemmaSchema.shape.family,
+		kind: Route92.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route82.lemmaSchema.shape.language,
+		language: Route93.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route82.lemmaSchema.shape.family,
-		kind: Route82.lemmaSchema.shape.kind,
+		family: Route93.lemmaSchema.shape.family,
+		kind: Route93.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route83.lemmaSchema.shape.language,
+		language: Route94.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route83.lemmaSchema.shape.family,
-		kind: Route83.lemmaSchema.shape.kind,
+		family: Route94.lemmaSchema.shape.family,
+		kind: Route94.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
 		language: Route95.lemmaSchema.shape.language,
@@ -1302,26 +1293,14 @@ export const lexicalUnitShadowSchema = z.union([
 		family: Route95.lemmaSchema.shape.family,
 		kind: Route95.lemmaSchema.shape.kind,
 	}),
-	z.strictObject({
-		language: Route96.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route96.lemmaSchema.shape.family,
-		kind: Route96.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route97.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route97.lemmaSchema.shape.family,
-		kind: Route97.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route98.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route98.lemmaSchema.shape.family,
-		kind: Route98.lemmaSchema.shape.kind,
-	}),
 ]);
 export const lexemeUnitShadowSchema = z.union([
+	z.strictObject({
+		language: Route0.lemmaSchema.shape.language,
+		canonicalForm: normalizedTextSchema,
+		family: Route0.lemmaSchema.shape.family,
+		kind: Route0.lemmaSchema.shape.kind,
+	}),
 	z.strictObject({
 		language: Route1.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
@@ -1419,10 +1398,16 @@ export const lexemeUnitShadowSchema = z.union([
 		kind: Route16.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route17.lemmaSchema.shape.language,
+		language: Route32.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route17.lemmaSchema.shape.family,
-		kind: Route17.lemmaSchema.shape.kind,
+		family: Route32.lemmaSchema.shape.family,
+		kind: Route32.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route33.lemmaSchema.shape.language,
+		canonicalForm: normalizedTextSchema,
+		family: Route33.lemmaSchema.shape.family,
+		kind: Route33.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
 		language: Route34.lemmaSchema.shape.language,
@@ -1515,16 +1500,22 @@ export const lexemeUnitShadowSchema = z.union([
 		kind: Route48.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route49.lemmaSchema.shape.language,
+		language: Route64.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route49.lemmaSchema.shape.family,
-		kind: Route49.lemmaSchema.shape.kind,
+		family: Route64.lemmaSchema.shape.family,
+		kind: Route64.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
-		language: Route50.lemmaSchema.shape.language,
+		language: Route65.lemmaSchema.shape.language,
 		canonicalForm: normalizedTextSchema,
-		family: Route50.lemmaSchema.shape.family,
-		kind: Route50.lemmaSchema.shape.kind,
+		family: Route65.lemmaSchema.shape.family,
+		kind: Route65.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route66.lemmaSchema.shape.language,
+		canonicalForm: normalizedTextSchema,
+		family: Route66.lemmaSchema.shape.family,
+		kind: Route66.lemmaSchema.shape.kind,
 	}),
 	z.strictObject({
 		language: Route67.lemmaSchema.shape.language,
@@ -1609,23 +1600,5 @@ export const lexemeUnitShadowSchema = z.union([
 		canonicalForm: normalizedTextSchema,
 		family: Route80.lemmaSchema.shape.family,
 		kind: Route80.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route81.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route81.lemmaSchema.shape.family,
-		kind: Route81.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route82.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route82.lemmaSchema.shape.family,
-		kind: Route82.lemmaSchema.shape.kind,
-	}),
-	z.strictObject({
-		language: Route83.lemmaSchema.shape.language,
-		canonicalForm: normalizedTextSchema,
-		family: Route83.lemmaSchema.shape.family,
-		kind: Route83.lemmaSchema.shape.kind,
 	}),
 ]);

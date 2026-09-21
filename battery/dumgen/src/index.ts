@@ -10,6 +10,23 @@ export {
 	selectNounHeadingArticle,
 } from "./concrete-lang/de/grammatical-resolution/noun-article-reference.js";
 export { draftKnowledge } from "./concrete-lang/de/knowledge-production/draft.js";
+export {
+	effectiveRoute,
+	familyOf,
+	fixednessFloor,
+	fusionAt,
+	headOf,
+	largestOf,
+	membersOf,
+	offsetsOf,
+	phrasemeOf,
+	resolvedUnitAt,
+	segmentAt,
+	selectIdentity,
+	selectPhrasemeKind,
+	selectRoute,
+	targetOf,
+} from "./concrete-lang/de/sentence-analysis/analysis.js";
 export type {
 	Dumgen,
 	DumgenOptions,

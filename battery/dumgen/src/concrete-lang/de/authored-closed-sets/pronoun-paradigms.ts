@@ -306,7 +306,12 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 		{
 			Masc: absent,
 			Fem: absent,
-			Neut: [bare(t.Neut[0]), bare(t.Neut[1]), bare(t.Neut[2]), t.Masc[1]],
+			Neut: [
+				bare(t.Neut[0]),
+				bare(t.Neut[1]),
+				bare(t.Neut[2]),
+				t.Masc[1],
+			],
 			Plur: t.Plur,
 		},
 		description("Ind", emoji, definition, [en], [ru]),

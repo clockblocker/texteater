@@ -122,7 +122,6 @@ const NULL_CORE_FEATURES_BY_KIND = {
 	Suffix: {},
 	Suffixoid: {},
 	Transfix: {},
-	Fusion: {},
 } as const;
 
 /** Dumling identity inventory. It deliberately does not contain UI copy. */

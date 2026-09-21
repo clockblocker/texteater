@@ -32,11 +32,12 @@ export const routes = {
 	"Lexeme/VERB":
 		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal or copula",
 	"Phraseme/Aphorism": "Established concise attributed maxim",
+	"Phraseme/Collocation":
+		"Conventional multiword expression with restricted lexical choices and a compositional overall meaning, including Funktionsverbgefüge (eine Entscheidung treffen, zur Verfügung stellen)",
 	"Phraseme/DiscourseFormula": "Established fixed discourse formula",
 	"Phraseme/Idiom":
 		"Established noncompositional expression in this contextual meaning",
 	"Phraseme/Proverb": "Established traditional saying",
-	"Construction/Fusion": "One fused preposition/article source word",
 	Unresolved:
 		"The exact assembled group is invalid, incomplete, includes free material, or has no defensible allowed route",
 };

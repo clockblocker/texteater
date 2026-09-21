@@ -34,7 +34,6 @@ const kinds: Record<string, string> = {
 	"discourse-formula": "DiscourseFormula",
 	collocation: "Collocation",
 	proverb: "Proverb",
-	fusion: "Fusion",
 };
 test("all development selections are disjoint and production assembly uses only demonstrations", () => {
 	for (const item of listExperiments()) {
@@ -176,6 +175,6 @@ test("all 1109 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1109);
-	expect(verifiedRoutes.size).toBe(22);
+	expect(count).toBe(1075);
+	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

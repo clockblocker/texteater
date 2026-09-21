@@ -16,7 +16,7 @@ Start with:
 
 - [/de/entity/](/de/entity/) for \`Lemma\`, \`Surface\`, and \`Attestation\`
 - [/de/entity/lemma/](/de/entity/lemma/) for the four Lemma branches
-- [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/), [/de/entity/lemma/phraseme/](/de/entity/lemma/phraseme/), and [/de/entity/lemma/construction/](/de/entity/lemma/construction/) for concrete inventories
+- [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/), and [/de/entity/lemma/phraseme/](/de/entity/lemma/phraseme/) for concrete inventories
 - [/de/feature/](/de/feature/) and [/de/feature/attestation/](/de/feature/attestation/) for feature pages
 - [/de/classification-instructions/](/de/classification-instructions/) for German-specific classifier instructions
 
@@ -27,9 +27,8 @@ Start with:
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
-| \`Construction\` | \`Fusion\` |
 
-German uses \`Construction/Fusion\` for fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\`. Fixed multi-member identities are Lexemes: for example \`um zu\` is \`Lexeme/SCONJ\`, \`entweder … oder\` is \`Lexeme/CCONJ\`, and \`einerseits … andererseits\` is \`Lexeme/ADV\`.
+Fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\` are not Lemmas; each piece stands for its own word and its Attestation member carries the orthography \`Fused\`. Fixed multi-member identities are Lexemes: for example \`um zu\` is \`Lexeme/SCONJ\`, \`entweder … oder\` is \`Lexeme/CCONJ\`, and \`einerseits … andererseits\` is \`Lexeme/ADV\`.
 
 ## Common Feature Areas
 
@@ -42,8 +41,6 @@ German has richer inflectional coverage than English for nouns and adjectives.
 | \`ADJ\` | \`abbr\`, \`foreign\`, \`numType\`, \`variant\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
-
-\`Construction/Fusion\` currently carries no additional core or inflectional features.
 
 ## Example
 
@@ -72,6 +69,7 @@ const seenSurface = {
 \tinflectionalFeatures: {
 \t\tcase: "Nom",
 \t\tnumber: "Plur",
+\t\tarticle: null,
 \t},
 \tsurfaceFeatures: null,
 } satisfies Dumling.Surface<"de", "Lexeme", "NOUN">;
@@ -80,30 +78,11 @@ const seenAttestation = {
 \tunitKind: "Attestation",
 \tmembers: [{ attested: "Seen", orthography: "Standard" }],
 \trealizationCoverage: "Full",
+\tarticleEvidence: null,
 \tsurface: seenSurface,
 } satisfies Dumling.Attestation<"de">;
 
 parseUnit(seenAttestation);
-\`\`\`
-
-German fusion example:
-
-\`\`\`ts
-const zumLemma = {
-\tunitKind: "Lemma",
-\tlanguage: "de",
-\tcanonicalForm: "zum",
-\tfamily: "Construction",
-\tkind: "Fusion",
-\tcoreFeatures: {},
-} satisfies Dumling.Lemma<"de", "Construction", "Fusion">;
-
-const zumAttestation = {
-\tunitKind: "Attestation",
-\tmembers: [{ attested: "zum", orthography: "Standard" }],
-\trealizationCoverage: "Full",
-\tsurface: { unitKind: "Surface", language: "de", lemma: zumLemma, normalizedSurface: zumLemma.canonicalForm, spelling: "Canonical", surfaceFeatures: null },
-} satisfies Dumling.Attestation<"de">;
 \`\`\`
 
 German multi-member Lexeme example:

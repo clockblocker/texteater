@@ -8,7 +8,6 @@ export const germanKnowledgeFamilies = [
 	"Lexeme",
 	"Phraseme",
 	"Morpheme",
-	"Construction",
 ] as const;
 
 export type GermanKnowledgeFamily = (typeof germanKnowledgeFamilies)[number];

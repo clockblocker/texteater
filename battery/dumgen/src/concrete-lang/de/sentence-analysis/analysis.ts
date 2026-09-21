@@ -1,32 +1,28 @@
 /**
- * The Segmented Sentence as the intake lab emits it (issue 493) and the
- * Resolution Selector that turns its masses into resolved values (issue 494),
- * in two layers (`layers.ts`).
+ * The Sentence Analysis: what intake owns for one accepted German sentence,
+ * in two layers (Dumgen ADR 0006).
  *
- * The Lexeme layer is `targets`: a flat partition of the ResolvableText
- * Segments into Lexeme Targets, each with its members and their roles, one
- * Route Mass keyed by Lexeme Kind, and, when its head enumerates authored
- * candidates, an Identity Mass keyed by headword group (issue 509). The
- * Phraseme layer is `phrasemes`: Phraseme Targets whose members are Lexeme
- * Targets, never Segments, with one Kind Mass and a fixedness score. A
- * Phraseme's Segment span is derived from its members.
- *
- * Nothing resolved is stored. The selector below is the one pure function
- * that applies the policy, and it is what the playground renders and what
- * `fixtures.ts` scores. It has no dependency on the rest of the lab so the
- * playground can import it.
+ * Segments carry their character offset in the Stitched Text, the text they
+ * show and the surface they stand for; a fused word is one Segment per
+ * component. The Lexeme layer partitions the ResolvableText Segments into
+ * Lexeme Targets, each the Segments that realize one word, with member roles,
+ * one Route Mass over Lexeme Kinds and, for a closed-class head, an Identity
+ * Mass over authored headword groups. The Phraseme layer partitions a subset
+ * of the Lexeme Targets into Phraseme Targets, whose members are words, never
+ * Segments, with one Kind Mass and a fixedness score. Nothing resolved is
+ * stored; the Resolution Selector below is the one pure function that applies
+ * the policy.
  */
 
-export type SegmentKind =
+export type AnalyzedSegmentKind =
 	| "ResolvableText"
 	| "OpaqueText"
 	| "Whitespace"
 	| "Punctuation";
 
-/** One clickable piece: offset in the Stitched Text, the text shown, the surface it stands for. */
-export type Segment = {
+export type AnalyzedSegment = {
 	readonly offset: number;
-	readonly kind: SegmentKind;
+	readonly kind: AnalyzedSegmentKind;
 	readonly text: string;
 	readonly surface: string;
 };
@@ -46,7 +42,6 @@ export type Member = {
 	readonly role: MemberRole;
 };
 
-/** One headword group of authored members the head's spelling can realize. */
 export type IdentityCandidate = {
 	/** `Kind:headword:pronType`, the key the mass is stored under. */
 	readonly key: string;
@@ -64,19 +59,17 @@ export type IdentityMass = {
 	readonly mass: Readonly<Record<string, number>>;
 };
 
-/** A Lexeme Target: the Segments that realize one Lexeme occurrence. */
-export type AnalysisTarget = {
+export type LexemeTarget = {
 	readonly id: string;
 	readonly members: readonly Member[];
 	/** Mass per Lexeme Kind, `Unresolved` included. */
 	readonly routeMass: Readonly<Record<string, number>>;
 	/** Present only when the head's spelling enumerates authored candidates. */
 	readonly identity: IdentityMass | null;
-	/** How the target came to be, for the playground: `vote`, `fusion-table`, or an assembly guard. */
+	/** How the target came to be: `vote`, `fusion-table`, or an assembly guard. */
 	readonly provenance: string;
 };
 
-/** A Phraseme Target: the Lexeme Targets that are fixed lexical members of one expression. */
 export type PhrasemeTarget = {
 	readonly id: string;
 	/** Lexeme Target ids, ordered by first offset. */
@@ -101,44 +94,16 @@ export type Fusion = {
 	readonly components: readonly FusionComponent[];
 };
 
-export type SegmentedSentence = {
-	readonly id: string;
+export type SentenceAnalysis = {
+	readonly sentenceId: string;
 	readonly language: "de";
 	readonly stitchedText: string;
-	readonly segments: readonly Segment[];
+	readonly segments: readonly AnalyzedSegment[];
 	/** The Lexeme layer: a flat partition of the ResolvableText Segments. */
-	readonly targets: readonly AnalysisTarget[];
+	readonly targets: readonly LexemeTarget[];
 	/** The Phraseme layer: a partition of a subset of `targets`. */
 	readonly phrasemes: readonly PhrasemeTarget[];
 	readonly fusions: readonly Fusion[];
-};
-
-/** Gold for one target, keyed by offset like the Sentence itself (issue 495). */
-export type GoldTarget = {
-	readonly kind: string;
-	readonly members: readonly {
-		readonly offset: number;
-		/** Scored only when authored; singletons are Head. */
-		readonly role?: MemberRole;
-	}[];
-	/** `Kind:headword` of the closed-class head, when authored. */
-	readonly identity?: string;
-};
-
-/** Gold for one Phraseme: its Kind and the head offset of every member word. */
-export type GoldPhraseme = {
-	readonly kind: string;
-	readonly words: readonly number[];
-};
-
-export type Fixture = {
-	readonly sentence: SegmentedSentence;
-	/** The Lexeme layer's gold. */
-	readonly gold: readonly GoldTarget[];
-	/** The Phraseme layer's gold; empty when the sentence has no expression. */
-	readonly goldPhrasemes: readonly GoldPhraseme[];
-	readonly note: string;
-	readonly produced: { readonly design: string; readonly at: string };
 };
 
 // ------------------------------------------------------- Resolution Selector
@@ -171,7 +136,7 @@ const phrasemeKinds = new Set([
 ]);
 const closedKinds = new Set(["DET", "PRON"]);
 
-export function familyOf(kind: string): string {
+export function familyOf(kind: string): "Lexeme" | "Phraseme" | "Unresolved" {
 	if (lexemeKinds.has(kind)) return "Lexeme";
 	if (phrasemeKinds.has(kind)) return "Phraseme";
 	return "Unresolved";
@@ -189,12 +154,12 @@ export function argmax(mass: Readonly<Record<string, number>>): {
 
 export type SelectedRoute = {
 	readonly kind: string;
-	readonly family: string;
+	readonly family: "Lexeme" | "Phraseme" | "Unresolved";
 	readonly share: number;
 };
 
 /** Route: the argmax of the Route Mass; `Unresolved` is a route the mass can win. */
-export function selectRoute(target: AnalysisTarget): SelectedRoute {
+export function selectRoute(target: LexemeTarget): SelectedRoute {
 	const { key, share } = argmax(target.routeMass);
 	return { kind: key, family: familyOf(key), share };
 }
@@ -210,11 +175,12 @@ export type IdentityState =
 	| { readonly state: "Unresolved" }
 	| { readonly state: "Miss" };
 
-export function headOf(target: AnalysisTarget): Member {
-	return (
-		target.members.find((member) => member.role === "Head") ??
-		target.members[0]!
-	);
+export function headOf(target: LexemeTarget): Member {
+	const head = target.members.find((member) => member.role === "Head");
+	if (head) return head;
+	const first = target.members[0];
+	if (!first) throw Error("A Lexeme Target has at least one member");
+	return first;
 }
 
 /**
@@ -225,10 +191,11 @@ export function headOf(target: AnalysisTarget): Member {
  * and the spelling enumerated nothing.
  */
 export function selectIdentity(
-	target: AnalysisTarget,
+	target: LexemeTarget,
 	member: Member,
 ): IdentityState {
-	if (member !== headOf(target)) return { state: "Derived", from: "head" };
+	if (member.offset !== headOf(target).offset)
+		return { state: "Derived", from: "head" };
 	const route = selectRoute(target);
 	if (!target.identity)
 		return closedKinds.has(route.kind)
@@ -244,7 +211,7 @@ export function selectIdentity(
 }
 
 /** Identity implies route: a Selected head's Kind replaces the vote's Kind. */
-export function effectiveRoute(target: AnalysisTarget): SelectedRoute {
+export function effectiveRoute(target: LexemeTarget): SelectedRoute {
 	const identity = selectIdentity(target, headOf(target));
 	if (identity.state === "Selected" && target.members.length === 1)
 		return {
@@ -256,39 +223,39 @@ export function effectiveRoute(target: AnalysisTarget): SelectedRoute {
 }
 
 export function targetOf(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	offset: number,
-): AnalysisTarget | undefined {
-	return sentence.targets.find((target) =>
+): LexemeTarget | undefined {
+	return analysis.targets.find((target) =>
 		target.members.some((member) => member.offset === offset),
 	);
 }
 
 export function segmentAt(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	offset: number,
-): Segment | undefined {
-	return sentence.segments.find((segment) => segment.offset === offset);
+): AnalyzedSegment | undefined {
+	return analysis.segments.find((segment) => segment.offset === offset);
 }
 
 export function fusionAt(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	offset: number,
 ): Fusion | undefined {
-	return sentence.fusions.find((fusion) =>
+	return analysis.fusions.find((fusion) =>
 		fusion.components.some((component) => component.offset === offset),
 	);
 }
 
 // --------------------------------------------------------- Phraseme layer
 
+/** Below this mean fixedness (0 free, 1 preferred, 2 collocation, 3 fixed) no expression is established. */
+export const fixednessFloor = 1.5;
+
 export type SelectedPhrasemeKind = {
 	readonly kind: string;
 	readonly share: number;
 };
-
-/** Below this mean fixedness (0 free, 1 preferred, 2 collocation, 3 fixed) no expression is established. */
-export const fixednessFloor = 1.5;
 
 /**
  * Kind under the `score` policy: the fixedness Score establishes the
@@ -312,35 +279,39 @@ export function selectPhrasemeKind(
 
 /** The Lexeme Targets a Phraseme is made of, in member order. */
 export function membersOf(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	phraseme: PhrasemeTarget,
-): AnalysisTarget[] {
+): LexemeTarget[] {
 	return phraseme.members.flatMap((id) => {
-		const target = sentence.targets.find((entry) => entry.id === id);
+		const target = analysis.targets.find((entry) => entry.id === id);
 		return target ? [target] : [];
 	});
 }
 
 /** The Phraseme's Segment span is derived: every member word's Segments. */
 export function offsetsOf(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	phraseme: PhrasemeTarget,
 ): number[] {
-	return membersOf(sentence, phraseme)
+	return membersOf(analysis, phraseme)
 		.flatMap((target) => target.members.map((member) => member.offset))
 		.sort((a, b) => a - b);
 }
 
 export function phrasemeOf(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	offset: number,
 ): PhrasemeTarget | undefined {
-	const target = targetOf(sentence, offset);
+	const target = targetOf(analysis, offset);
 	if (!target) return undefined;
-	return sentence.phrasemes.find((phraseme) =>
+	return analysis.phrasemes.find((phraseme) =>
 		phraseme.members.includes(target.id),
 	);
 }
+
+export type LargestUnit =
+	| { readonly layer: "Phraseme"; readonly phraseme: PhrasemeTarget }
+	| { readonly layer: "Lexeme"; readonly target: LexemeTarget };
 
 /**
  * What a click selects: the Phraseme containing the word when there is one,
@@ -348,14 +319,51 @@ export function phrasemeOf(
  * beneath it is reached from the Phraseme.
  */
 export function largestOf(
-	sentence: SegmentedSentence,
+	analysis: SentenceAnalysis,
 	offset: number,
-):
-	| { readonly layer: "Phraseme"; readonly phraseme: PhrasemeTarget }
-	| { readonly layer: "Lexeme"; readonly target: AnalysisTarget }
-	| undefined {
-	const phraseme = phrasemeOf(sentence, offset);
+): LargestUnit | undefined {
+	const phraseme = phrasemeOf(analysis, offset);
 	if (phraseme) return { layer: "Phraseme", phraseme };
-	const target = targetOf(sentence, offset);
+	const target = targetOf(analysis, offset);
 	return target ? { layer: "Lexeme", target } : undefined;
+}
+
+/**
+ * The route and Segment span of the largest unit at an offset, or null when
+ * the unit's route or the Phraseme's Kind is Unresolved or None. This is
+ * what a host reads at click time instead of classifying.
+ */
+export function resolvedUnitAt(
+	analysis: SentenceAnalysis,
+	offset: number,
+): {
+	readonly family: "Lexeme" | "Phraseme";
+	readonly kind: string;
+	readonly offsets: readonly number[];
+} | null {
+	const largest = largestOf(analysis, offset);
+	if (!largest) return null;
+	if (largest.layer === "Phraseme") {
+		const kind = selectPhrasemeKind(largest.phraseme);
+		if (kind.kind !== "None" && kind.kind !== "Unresolved")
+			return {
+				family: "Phraseme",
+				kind: kind.kind,
+				offsets: offsetsOf(analysis, largest.phraseme),
+			};
+		const target = targetOf(analysis, offset);
+		if (!target) return null;
+		return lexemeUnit(target);
+	}
+	return lexemeUnit(largest.target);
+}
+
+function lexemeUnit(target: LexemeTarget) {
+	const route = effectiveRoute(target);
+	if (route.family !== "Lexeme") return null;
+	return {
+		family: "Lexeme" as const,
+		kind: route.kind,
+		offsets: target.members.map((member) => member.offset),
+	};
 }

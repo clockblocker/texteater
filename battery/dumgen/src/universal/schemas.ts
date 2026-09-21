@@ -23,6 +23,92 @@ export const classifyInputSchema = z.strictObject({
 	clickedSegmentIndex: z.number().int().nonnegative(),
 });
 const indexSchema = z.number().int().nonnegative();
+export const analyzeInputSchema = z.strictObject({
+	sentence: segmentedSentenceSchema.extend({ language: z.literal("de") }),
+});
+const offsetSchema = z.number().int().nonnegative();
+const massSchema = z.record(z.string().min(1), z.number().min(0).max(1));
+const memberRoleSchema = z.enum([
+	"Head",
+	"SeparableParticle",
+	"GovernedPreposition",
+	"Reflexive",
+	"Expletive",
+	"Article",
+	"Auxiliary",
+	"Unresolved",
+]);
+/** The Sentence Analysis intake produces for one German sentence (Dumgen ADR 0006). */
+export const sentenceAnalysisSchema = z.strictObject({
+	sentenceId: z.string().min(1),
+	language: z.literal("de"),
+	stitchedText: z.string().min(1),
+	segments: z
+		.array(
+			z.strictObject({
+				offset: offsetSchema,
+				kind: segmentSchema.shape.kind,
+				text: z.string().min(1),
+				surface: z.string().min(1),
+			}),
+		)
+		.min(1),
+	targets: z.array(
+		z.strictObject({
+			id: z.string().min(1),
+			members: z
+				.array(
+					z.strictObject({
+						offset: offsetSchema,
+						role: memberRoleSchema,
+					}),
+				)
+				.min(1),
+			routeMass: massSchema,
+			identity: z
+				.strictObject({
+					candidates: z.array(
+						z.strictObject({
+							key: z.string().min(1),
+							kind: z.enum(["DET", "PRON", "AUX"]),
+							headword: z.string().min(1),
+							pronType: z.string().min(1).nullable(),
+							cells: z.array(z.string()),
+							definition: z.string(),
+						}),
+					),
+					mass: massSchema,
+				})
+				.nullable(),
+			provenance: z.string().min(1),
+		}),
+	),
+	phrasemes: z.array(
+		z.strictObject({
+			id: z.string().min(1),
+			members: z.array(z.string().min(1)).min(2),
+			kindMass: massSchema,
+			fixedness: z.number().min(0).max(3),
+			provenance: z.string().min(1),
+		}),
+	),
+	fusions: z.array(
+		z.strictObject({
+			offset: offsetSchema,
+			form: z.string().min(1),
+			components: z
+				.array(
+					z.strictObject({
+						offset: offsetSchema,
+						span: z.string().min(1),
+						surface: z.string().min(1),
+						role: z.string().min(1),
+					}),
+				)
+				.min(2),
+		}),
+	),
+});
 export const memberIndicesSchema = z.tuple([indexSchema], indexSchema);
 export const knowledgeFailureSchema = z.strictObject({
 	aspect: z.enum([

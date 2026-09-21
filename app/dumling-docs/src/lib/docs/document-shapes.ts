@@ -31,7 +31,6 @@ export type DocCitePageFamily =
 	| "pos"
 	| "morpheme"
 	| "phraseme"
-	| "construction"
 	| "feature"
 	| "feature-attestation"
 	| "feature-surface";

@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { DeConstructionFusionFeatureBagsSchema } from "../src/schemas/concrete-language/de/construction/fusion.js";
 import { DeDeterminerFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/determiner.js";
 import { DeVerbFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/verb.js";
 import { HeAdjectiveFeatureBagsSchema } from "../src/schemas/concrete-language/he/lexeme/adjective.js";
@@ -87,22 +86,6 @@ describe("Feature Bag schemas preserve retained acceptance cases", () => {
 				},
 			],
 		);
-	});
-
-	test("German Construction/Fusion omits inapplicable inflectional features", () => {
-		expect(
-			DeConstructionFusionFeatureBagsSchema.safeParse({ core: {} })
-				.success,
-		).toBe(true);
-		for (const value of [
-			{ core: {}, inflectional: {} },
-			{ core: {}, inflectional: null },
-			{ core: { unexpected: true } },
-			{ core: {}, inflectional: { unexpected: true } },
-		])
-			expect(
-				DeConstructionFusionFeatureBagsSchema.safeParse(value).success,
-			).toBe(false);
 	});
 
 	test("Hebrew Lexeme/ADJ", () => {

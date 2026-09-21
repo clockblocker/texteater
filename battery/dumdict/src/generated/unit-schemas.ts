@@ -1,104 +1,101 @@
 // Generated from Dumling's concrete schema exports.
 
-import * as R0 from "dumling/schema/de/construction/fusion";
-import * as R1 from "dumling/schema/de/lexeme/adjective";
-import * as R2 from "dumling/schema/de/lexeme/adposition";
-import * as R3 from "dumling/schema/de/lexeme/adverb";
-import * as R4 from "dumling/schema/de/lexeme/auxiliary";
-import * as R5 from "dumling/schema/de/lexeme/coordinating-conjunction";
-import * as R6 from "dumling/schema/de/lexeme/determiner";
-import * as R7 from "dumling/schema/de/lexeme/interjection";
-import * as R8 from "dumling/schema/de/lexeme/noun";
-import * as R9 from "dumling/schema/de/lexeme/numeral";
-import * as R10 from "dumling/schema/de/lexeme/other";
-import * as R11 from "dumling/schema/de/lexeme/particle";
-import * as R12 from "dumling/schema/de/lexeme/pronoun";
-import * as R13 from "dumling/schema/de/lexeme/proper-noun";
-import * as R14 from "dumling/schema/de/lexeme/punctuation";
-import * as R15 from "dumling/schema/de/lexeme/subordinating-conjunction";
-import * as R16 from "dumling/schema/de/lexeme/symbol";
-import * as R17 from "dumling/schema/de/lexeme/verb";
-import * as R18 from "dumling/schema/de/morpheme/circumfix";
-import * as R19 from "dumling/schema/de/morpheme/clitic";
-import * as R20 from "dumling/schema/de/morpheme/duplifix";
-import * as R21 from "dumling/schema/de/morpheme/infix";
-import * as R22 from "dumling/schema/de/morpheme/interfix";
-import * as R23 from "dumling/schema/de/morpheme/prefix";
-import * as R24 from "dumling/schema/de/morpheme/root";
-import * as R25 from "dumling/schema/de/morpheme/suffix";
-import * as R26 from "dumling/schema/de/morpheme/suffixoid";
-import * as R27 from "dumling/schema/de/morpheme/transfix";
-import * as R28 from "dumling/schema/de/phraseme/aphorism";
-import * as R29 from "dumling/schema/de/phraseme/collocation";
-import * as R30 from "dumling/schema/de/phraseme/discourse-formula";
-import * as R31 from "dumling/schema/de/phraseme/idiom";
-import * as R32 from "dumling/schema/de/phraseme/proverb";
-import * as R33 from "dumling/schema/en/construction/fusion";
-import * as R34 from "dumling/schema/en/lexeme/adjective";
-import * as R35 from "dumling/schema/en/lexeme/adposition";
-import * as R36 from "dumling/schema/en/lexeme/adverb";
-import * as R37 from "dumling/schema/en/lexeme/auxiliary";
-import * as R38 from "dumling/schema/en/lexeme/coordinating-conjunction";
-import * as R39 from "dumling/schema/en/lexeme/determiner";
-import * as R40 from "dumling/schema/en/lexeme/interjection";
-import * as R41 from "dumling/schema/en/lexeme/noun";
-import * as R42 from "dumling/schema/en/lexeme/numeral";
-import * as R43 from "dumling/schema/en/lexeme/other";
-import * as R44 from "dumling/schema/en/lexeme/particle";
-import * as R45 from "dumling/schema/en/lexeme/pronoun";
-import * as R46 from "dumling/schema/en/lexeme/proper-noun";
-import * as R47 from "dumling/schema/en/lexeme/punctuation";
-import * as R48 from "dumling/schema/en/lexeme/subordinating-conjunction";
-import * as R49 from "dumling/schema/en/lexeme/symbol";
-import * as R50 from "dumling/schema/en/lexeme/verb";
-import * as R51 from "dumling/schema/en/morpheme/circumfix";
-import * as R52 from "dumling/schema/en/morpheme/clitic";
-import * as R53 from "dumling/schema/en/morpheme/duplifix";
-import * as R54 from "dumling/schema/en/morpheme/infix";
-import * as R55 from "dumling/schema/en/morpheme/interfix";
-import * as R56 from "dumling/schema/en/morpheme/prefix";
-import * as R57 from "dumling/schema/en/morpheme/root";
-import * as R58 from "dumling/schema/en/morpheme/suffix";
-import * as R59 from "dumling/schema/en/morpheme/suffixoid";
-import * as R60 from "dumling/schema/en/morpheme/tone-marking";
-import * as R61 from "dumling/schema/en/morpheme/transfix";
-import * as R62 from "dumling/schema/en/phraseme/aphorism";
-import * as R63 from "dumling/schema/en/phraseme/discourse-formula";
-import * as R64 from "dumling/schema/en/phraseme/idiom";
-import * as R65 from "dumling/schema/en/phraseme/proverb";
-import * as R66 from "dumling/schema/he/construction/fusion";
-import * as R67 from "dumling/schema/he/lexeme/adjective";
-import * as R68 from "dumling/schema/he/lexeme/adposition";
-import * as R69 from "dumling/schema/he/lexeme/adverb";
-import * as R70 from "dumling/schema/he/lexeme/auxiliary";
-import * as R71 from "dumling/schema/he/lexeme/coordinating-conjunction";
-import * as R72 from "dumling/schema/he/lexeme/determiner";
-import * as R73 from "dumling/schema/he/lexeme/interjection";
-import * as R74 from "dumling/schema/he/lexeme/noun";
-import * as R75 from "dumling/schema/he/lexeme/numeral";
-import * as R76 from "dumling/schema/he/lexeme/other";
-import * as R77 from "dumling/schema/he/lexeme/particle";
-import * as R78 from "dumling/schema/he/lexeme/pronoun";
-import * as R79 from "dumling/schema/he/lexeme/proper-noun";
-import * as R80 from "dumling/schema/he/lexeme/punctuation";
-import * as R81 from "dumling/schema/he/lexeme/subordinating-conjunction";
-import * as R82 from "dumling/schema/he/lexeme/symbol";
-import * as R83 from "dumling/schema/he/lexeme/verb";
-import * as R84 from "dumling/schema/he/morpheme/circumfix";
-import * as R85 from "dumling/schema/he/morpheme/clitic";
-import * as R86 from "dumling/schema/he/morpheme/duplifix";
-import * as R87 from "dumling/schema/he/morpheme/infix";
-import * as R88 from "dumling/schema/he/morpheme/interfix";
-import * as R89 from "dumling/schema/he/morpheme/prefix";
-import * as R90 from "dumling/schema/he/morpheme/root";
-import * as R91 from "dumling/schema/he/morpheme/suffix";
-import * as R92 from "dumling/schema/he/morpheme/suffixoid";
-import * as R93 from "dumling/schema/he/morpheme/tone-marking";
-import * as R94 from "dumling/schema/he/morpheme/transfix";
-import * as R95 from "dumling/schema/he/phraseme/aphorism";
-import * as R96 from "dumling/schema/he/phraseme/discourse-formula";
-import * as R97 from "dumling/schema/he/phraseme/idiom";
-import * as R98 from "dumling/schema/he/phraseme/proverb";
+import * as R0 from "dumling/schema/de/lexeme/adjective";
+import * as R1 from "dumling/schema/de/lexeme/adposition";
+import * as R2 from "dumling/schema/de/lexeme/adverb";
+import * as R3 from "dumling/schema/de/lexeme/auxiliary";
+import * as R4 from "dumling/schema/de/lexeme/coordinating-conjunction";
+import * as R5 from "dumling/schema/de/lexeme/determiner";
+import * as R6 from "dumling/schema/de/lexeme/interjection";
+import * as R7 from "dumling/schema/de/lexeme/noun";
+import * as R8 from "dumling/schema/de/lexeme/numeral";
+import * as R9 from "dumling/schema/de/lexeme/other";
+import * as R10 from "dumling/schema/de/lexeme/particle";
+import * as R11 from "dumling/schema/de/lexeme/pronoun";
+import * as R12 from "dumling/schema/de/lexeme/proper-noun";
+import * as R13 from "dumling/schema/de/lexeme/punctuation";
+import * as R14 from "dumling/schema/de/lexeme/subordinating-conjunction";
+import * as R15 from "dumling/schema/de/lexeme/symbol";
+import * as R16 from "dumling/schema/de/lexeme/verb";
+import * as R17 from "dumling/schema/de/morpheme/circumfix";
+import * as R18 from "dumling/schema/de/morpheme/clitic";
+import * as R19 from "dumling/schema/de/morpheme/duplifix";
+import * as R20 from "dumling/schema/de/morpheme/infix";
+import * as R21 from "dumling/schema/de/morpheme/interfix";
+import * as R22 from "dumling/schema/de/morpheme/prefix";
+import * as R23 from "dumling/schema/de/morpheme/root";
+import * as R24 from "dumling/schema/de/morpheme/suffix";
+import * as R25 from "dumling/schema/de/morpheme/suffixoid";
+import * as R26 from "dumling/schema/de/morpheme/transfix";
+import * as R27 from "dumling/schema/de/phraseme/aphorism";
+import * as R28 from "dumling/schema/de/phraseme/collocation";
+import * as R29 from "dumling/schema/de/phraseme/discourse-formula";
+import * as R30 from "dumling/schema/de/phraseme/idiom";
+import * as R31 from "dumling/schema/de/phraseme/proverb";
+import * as R32 from "dumling/schema/en/lexeme/adjective";
+import * as R33 from "dumling/schema/en/lexeme/adposition";
+import * as R34 from "dumling/schema/en/lexeme/adverb";
+import * as R35 from "dumling/schema/en/lexeme/auxiliary";
+import * as R36 from "dumling/schema/en/lexeme/coordinating-conjunction";
+import * as R37 from "dumling/schema/en/lexeme/determiner";
+import * as R38 from "dumling/schema/en/lexeme/interjection";
+import * as R39 from "dumling/schema/en/lexeme/noun";
+import * as R40 from "dumling/schema/en/lexeme/numeral";
+import * as R41 from "dumling/schema/en/lexeme/other";
+import * as R42 from "dumling/schema/en/lexeme/particle";
+import * as R43 from "dumling/schema/en/lexeme/pronoun";
+import * as R44 from "dumling/schema/en/lexeme/proper-noun";
+import * as R45 from "dumling/schema/en/lexeme/punctuation";
+import * as R46 from "dumling/schema/en/lexeme/subordinating-conjunction";
+import * as R47 from "dumling/schema/en/lexeme/symbol";
+import * as R48 from "dumling/schema/en/lexeme/verb";
+import * as R49 from "dumling/schema/en/morpheme/circumfix";
+import * as R50 from "dumling/schema/en/morpheme/clitic";
+import * as R51 from "dumling/schema/en/morpheme/duplifix";
+import * as R52 from "dumling/schema/en/morpheme/infix";
+import * as R53 from "dumling/schema/en/morpheme/interfix";
+import * as R54 from "dumling/schema/en/morpheme/prefix";
+import * as R55 from "dumling/schema/en/morpheme/root";
+import * as R56 from "dumling/schema/en/morpheme/suffix";
+import * as R57 from "dumling/schema/en/morpheme/suffixoid";
+import * as R58 from "dumling/schema/en/morpheme/tone-marking";
+import * as R59 from "dumling/schema/en/morpheme/transfix";
+import * as R60 from "dumling/schema/en/phraseme/aphorism";
+import * as R61 from "dumling/schema/en/phraseme/discourse-formula";
+import * as R62 from "dumling/schema/en/phraseme/idiom";
+import * as R63 from "dumling/schema/en/phraseme/proverb";
+import * as R64 from "dumling/schema/he/lexeme/adjective";
+import * as R65 from "dumling/schema/he/lexeme/adposition";
+import * as R66 from "dumling/schema/he/lexeme/adverb";
+import * as R67 from "dumling/schema/he/lexeme/auxiliary";
+import * as R68 from "dumling/schema/he/lexeme/coordinating-conjunction";
+import * as R69 from "dumling/schema/he/lexeme/determiner";
+import * as R70 from "dumling/schema/he/lexeme/interjection";
+import * as R71 from "dumling/schema/he/lexeme/noun";
+import * as R72 from "dumling/schema/he/lexeme/numeral";
+import * as R73 from "dumling/schema/he/lexeme/other";
+import * as R74 from "dumling/schema/he/lexeme/particle";
+import * as R75 from "dumling/schema/he/lexeme/pronoun";
+import * as R76 from "dumling/schema/he/lexeme/proper-noun";
+import * as R77 from "dumling/schema/he/lexeme/punctuation";
+import * as R78 from "dumling/schema/he/lexeme/subordinating-conjunction";
+import * as R79 from "dumling/schema/he/lexeme/symbol";
+import * as R80 from "dumling/schema/he/lexeme/verb";
+import * as R81 from "dumling/schema/he/morpheme/circumfix";
+import * as R82 from "dumling/schema/he/morpheme/clitic";
+import * as R83 from "dumling/schema/he/morpheme/duplifix";
+import * as R84 from "dumling/schema/he/morpheme/infix";
+import * as R85 from "dumling/schema/he/morpheme/interfix";
+import * as R86 from "dumling/schema/he/morpheme/prefix";
+import * as R87 from "dumling/schema/he/morpheme/root";
+import * as R88 from "dumling/schema/he/morpheme/suffix";
+import * as R89 from "dumling/schema/he/morpheme/suffixoid";
+import * as R90 from "dumling/schema/he/morpheme/tone-marking";
+import * as R91 from "dumling/schema/he/morpheme/transfix";
+import * as R92 from "dumling/schema/he/phraseme/aphorism";
+import * as R93 from "dumling/schema/he/phraseme/discourse-formula";
+import * as R94 from "dumling/schema/he/phraseme/idiom";
+import * as R95 from "dumling/schema/he/phraseme/proverb";
 import { z } from "zod";
 export const unitSchemas = {
 	de: {
@@ -135,7 +132,6 @@ export const unitSchemas = {
 			R29.lemmaSchema,
 			R30.lemmaSchema,
 			R31.lemmaSchema,
-			R32.lemmaSchema,
 		]),
 		reading: z.union([
 			R0.readingSchema,
@@ -170,7 +166,6 @@ export const unitSchemas = {
 			R29.readingSchema,
 			R30.readingSchema,
 			R31.readingSchema,
-			R32.readingSchema,
 		]),
 		surface: z.union([
 			R0.surfaceSchema,
@@ -205,7 +200,6 @@ export const unitSchemas = {
 			R29.surfaceSchema,
 			R30.surfaceSchema,
 			R31.surfaceSchema,
-			R32.surfaceSchema,
 		]),
 		attestation: z.union([
 			R0.attestationSchema,
@@ -240,11 +234,11 @@ export const unitSchemas = {
 			R29.attestationSchema,
 			R30.attestationSchema,
 			R31.attestationSchema,
-			R32.attestationSchema,
 		]),
 	},
 	en: {
 		lemma: z.union([
+			R32.lemmaSchema,
 			R33.lemmaSchema,
 			R34.lemmaSchema,
 			R35.lemmaSchema,
@@ -276,10 +270,9 @@ export const unitSchemas = {
 			R61.lemmaSchema,
 			R62.lemmaSchema,
 			R63.lemmaSchema,
-			R64.lemmaSchema,
-			R65.lemmaSchema,
 		]),
 		reading: z.union([
+			R32.readingSchema,
 			R33.readingSchema,
 			R34.readingSchema,
 			R35.readingSchema,
@@ -311,10 +304,9 @@ export const unitSchemas = {
 			R61.readingSchema,
 			R62.readingSchema,
 			R63.readingSchema,
-			R64.readingSchema,
-			R65.readingSchema,
 		]),
 		surface: z.union([
+			R32.surfaceSchema,
 			R33.surfaceSchema,
 			R34.surfaceSchema,
 			R35.surfaceSchema,
@@ -346,10 +338,9 @@ export const unitSchemas = {
 			R61.surfaceSchema,
 			R62.surfaceSchema,
 			R63.surfaceSchema,
-			R64.surfaceSchema,
-			R65.surfaceSchema,
 		]),
 		attestation: z.union([
+			R32.attestationSchema,
 			R33.attestationSchema,
 			R34.attestationSchema,
 			R35.attestationSchema,
@@ -381,12 +372,12 @@ export const unitSchemas = {
 			R61.attestationSchema,
 			R62.attestationSchema,
 			R63.attestationSchema,
-			R64.attestationSchema,
-			R65.attestationSchema,
 		]),
 	},
 	he: {
 		lemma: z.union([
+			R64.lemmaSchema,
+			R65.lemmaSchema,
 			R66.lemmaSchema,
 			R67.lemmaSchema,
 			R68.lemmaSchema,
@@ -417,11 +408,10 @@ export const unitSchemas = {
 			R93.lemmaSchema,
 			R94.lemmaSchema,
 			R95.lemmaSchema,
-			R96.lemmaSchema,
-			R97.lemmaSchema,
-			R98.lemmaSchema,
 		]),
 		reading: z.union([
+			R64.readingSchema,
+			R65.readingSchema,
 			R66.readingSchema,
 			R67.readingSchema,
 			R68.readingSchema,
@@ -452,11 +442,10 @@ export const unitSchemas = {
 			R93.readingSchema,
 			R94.readingSchema,
 			R95.readingSchema,
-			R96.readingSchema,
-			R97.readingSchema,
-			R98.readingSchema,
 		]),
 		surface: z.union([
+			R64.surfaceSchema,
+			R65.surfaceSchema,
 			R66.surfaceSchema,
 			R67.surfaceSchema,
 			R68.surfaceSchema,
@@ -487,11 +476,10 @@ export const unitSchemas = {
 			R93.surfaceSchema,
 			R94.surfaceSchema,
 			R95.surfaceSchema,
-			R96.surfaceSchema,
-			R97.surfaceSchema,
-			R98.surfaceSchema,
 		]),
 		attestation: z.union([
+			R64.attestationSchema,
+			R65.attestationSchema,
 			R66.attestationSchema,
 			R67.attestationSchema,
 			R68.attestationSchema,
@@ -522,9 +510,6 @@ export const unitSchemas = {
 			R93.attestationSchema,
 			R94.attestationSchema,
 			R95.attestationSchema,
-			R96.attestationSchema,
-			R97.attestationSchema,
-			R98.attestationSchema,
 		]),
 	},
 };

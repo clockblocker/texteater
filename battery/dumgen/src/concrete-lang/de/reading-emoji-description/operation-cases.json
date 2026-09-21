@@ -2190,49 +2190,6 @@
 		},
 		"explanation": "Management, not a conducting line. New."
 	},
-	"reading-de-construction-fusion-am-temporal": {
-		"input": {
-			"encounter": {
-				"sentence": {
-					"id": "reading-de-construction-fusion-am-temporal",
-					"language": "de",
-					"segments": [
-						{
-							"kind": "OpaqueText",
-							"text": "Der Kurs beginnt "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "am"
-						},
-						{
-							"kind": "OpaqueText",
-							"text": " Montag."
-						}
-					]
-				},
-				"target": {
-					"family": "Construction",
-					"kind": "Fusion",
-					"memberSegmentIndices": [1]
-				}
-			},
-			"lemma": {
-				"unitKind": "Lemma",
-				"language": "de",
-				"family": "Construction",
-				"kind": "Fusion",
-				"canonicalForm": "am",
-				"coreFeatures": {}
-			},
-			"candidates": ["📍"]
-		},
-		"idealOutput": {
-			"decision": "New",
-			"emojiDescription": "📅"
-		},
-		"explanation": "The fused form marks a calendar-time relation, not a place. New."
-	},
 	"reading-de-lexeme-cconj-entweder-oder": {
 		"input": {
 			"encounter": {

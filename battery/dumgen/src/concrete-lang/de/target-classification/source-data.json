@@ -1970,11 +1970,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "The IDS preposition entry identifies zum as zu plus dem. Issue #82 maps the one fused source segment to Construction/Fusion rather than Lexeme/ADP. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. The IDS preposition entry identifies zum as zu plus dem.",
 			"contaminationKeys": ["target-construction:fusion:zum"]
 		},
 		"target-de-demo-symbol-percent": {
@@ -3176,11 +3176,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [6]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [6, 16, 18]
 			},
-			"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/VERB. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
 		},
 		"target-de-route-phraseme-collocation-verfuegung-click-zur": {
 			"input": {
@@ -3269,11 +3269,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
-				"memberSegmentIndices": [16]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [6, 16, 18]
 			},
-			"explanation": "IDS identifies zur as the fusion of zu plus der. Once this classifier omits the larger Collocation route, the clicked fused source word independently routes as the singleton Construction/Fusion. Source: https://grammis.ids-mannheim.de/praepositionen/299700"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
 		},
 		"target-de-route-phraseme-collocation-verfuegung-click-verfuegung": {
 			"input": {
@@ -3362,11 +3362,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [18]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [6, 16, 18]
 			},
-			"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/NOUN. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
 		},
 		"target-de-route-phraseme-collocation-antrag-click-stellte": {
 			"input": {
@@ -3638,11 +3638,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "The IDS preposition entry explicitly identifies zum as the fusion of zu plus dem. IDS does not assign Dumgen's Construction/Fusion route; issue #82 product policy maps the one fused source Segment at original index 4 to that route. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. The IDS preposition entry explicitly identifies zum as the fusion of zu plus dem.",
 			"contaminationKeys": ["target-construction:fusion:zum"]
 		},
 		"target-de-suspended-compound-and-left": {
@@ -4006,11 +4006,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "IDS establishes the German preposition-article contraction category. In this locative occurrence, am realizes an plus dem; issue #82 maps exactly the clicked fused source segment to Construction/Fusion and excludes Bahnhof. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the German preposition-article contraction category.",
 			"contaminationKeys": ["target-construction:fusion:am"]
 		},
 		"target-de-route-lexeme-cconj-click-je": {
@@ -4512,11 +4512,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [6, 8]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [4, 6, 8]
 			},
-			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -4568,11 +4568,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [4]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [4, 6, 8]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -4624,11 +4624,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [6, 8]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [4, 6, 8]
 			},
-			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -8087,11 +8087,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [4]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [4, 8, 10]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -8151,11 +8151,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [8, 10]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [4, 8, 10]
 			},
-			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -8215,11 +8215,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [8, 10]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [4, 8, 10]
 			},
-			"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -8283,7 +8283,7 @@
 				"kind": "ADV",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton. Source: https://grammis.ids-mannheim.de/vggf/2202",
+			"explanation": "The adverb between the support verb and its predicate noun is free material: Lexeme/ADV [6], outside the Collocation eine Entscheidung treffen (Dumgen ADR 0006). Source: https://grammis.ids-mannheim.de/vggf/2202",
 			"contaminationKeys": [
 				"target-lexical-unit:eine-entscheidung-treffen"
 			]
@@ -11077,11 +11077,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [2]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 10, 12]
 			},
-			"explanation": "IDS lists zur Kenntnis nehmen as a conventional support-verb expression. Revised issue #82 high-level policy does not treat conventionality alone as fixedness: nahm and Kenntnis remain separate Lexemes, while the clicked fused segment zur independently routes as Construction/Fusion. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
 		},
 		"target-de-demo-collocation-kenntnis-click-zur": {
 			"input": {
@@ -11146,11 +11146,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
-				"memberSegmentIndices": [10]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 10, 12]
 			},
-			"explanation": "IDS lists zur Kenntnis nehmen as a conventional support-verb expression. Revised issue #82 high-level policy does not treat conventionality alone as fixedness: nahm and Kenntnis remain separate Lexemes, while the clicked fused segment zur independently routes as Construction/Fusion. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
 		},
 		"target-de-demo-collocation-kenntnis-click-kenntnis": {
 			"input": {
@@ -11215,11 +11215,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [12]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 10, 12]
 			},
-			"explanation": "IDS lists zur Kenntnis nehmen as a conventional support-verb expression. Revised issue #82 high-level policy does not treat conventionality alone as fixedness: nahm and Kenntnis remain separate Lexemes, while the clicked fused segment zur independently routes as Construction/Fusion. Source: https://grammis.ids-mannheim.de/vggf/2202"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
 		},
 		"target-de-demo-repeated-anfangen-click-faengt": {
 			"input": {
@@ -23692,11 +23692,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [2]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 4, 6]
 			},
-			"explanation": "IDS explicitly lists eine Frage stellen as a meaning unit. Revised issue #82 high-level policy nevertheless keeps its non-idiomatic members separate: the clicked stellt, eine, or Frage is respectively Lexeme/VERB [2], Lexeme/DET [4], or Lexeme/NOUN [6], independently of the later abstellen occurrence. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. IDS explicitly lists eine Frage stellen as a meaning unit; the later abstellen occurrence is a separate separable verb. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
 		},
 		"target-de-robust-overlap-collocation-click-eine": {
 			"input": {
@@ -23777,11 +23777,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [4, 6]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 4, 6]
 			},
-			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. IDS explicitly lists eine Frage stellen as a meaning unit; the later abstellen occurrence is a separate separable verb. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
 		},
 		"target-de-robust-overlap-collocation-click-frage": {
 			"input": {
@@ -23862,11 +23862,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Lexeme",
-				"kind": "NOUN",
-				"memberSegmentIndices": [4, 6]
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 4, 6]
 			},
-			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. IDS explicitly lists eine Frage stellen as a meaning unit; the later abstellen occurrence is a separate separable verb. Source: https://grammis.ids-mannheim.de/systematische-grammatik/514"
 		},
 		"target-de-robust-overlap-separable-click-stellt": {
 			"input": {
@@ -25725,11 +25725,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "IDS establishes the fused-preposition category with zum. The same transparent preposition-plus-definite-article analysis applies here; issue #82 maps the single written contraction to Construction/Fusion. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:beim"]
 		},
 		"target-de-adaptive-fusion-vom": {
@@ -25771,11 +25771,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "IDS establishes the fused-preposition category with zum. The same transparent preposition-plus-definite-article analysis applies here; issue #82 maps the single written contraction to Construction/Fusion. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:vom"]
 		},
 		"target-de-adaptive-fusion-ins": {
@@ -25825,11 +25825,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "IDS establishes the fused-preposition category with zum. The same transparent preposition-plus-definite-article analysis applies here; issue #82 maps the single written contraction to Construction/Fusion. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:ins"]
 		},
 		"target-de-adaptive-fusion-ans": {
@@ -25879,11 +25879,11 @@
 				]
 			},
 			"idealOutput": {
-				"family": "Construction",
-				"kind": "Fusion",
+				"family": "Lexeme",
+				"kind": "ADP",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "IDS establishes the fused-preposition category with zum. The same transparent preposition-plus-definite-article analysis applies here; issue #82 maps the single written contraction to Construction/Fusion. Source: https://grammis.ids-mannheim.de/praepositionen/299700",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:ans"]
 		},
 		"target-de-adaptive-paired-weder-click-weder": {

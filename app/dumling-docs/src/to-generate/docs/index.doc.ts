@@ -57,7 +57,7 @@ Dumling focuses on lexical classification for learning tools:
 - **Surface**: the normalized contextual form, such as _"gave up"_
 - **Attestation**: click-independent occurrence evidence with one or more exact, source-ordered members
 - **Reading**: foundational semantic value formed by one Lemma and one emoji description
-- Lemma family: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
+- Lemma family: \`Lexeme\`, \`Morpheme\`, or \`Phraseme\`
 - member orthography: whether each attested member is standard text or a typo
 - Surface spelling and Attestation realization coverage: licensed variants and genuinely partial realizations
 - learner-relevant Surface features, such as archaic status

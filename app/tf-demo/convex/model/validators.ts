@@ -115,12 +115,105 @@ export const attestationValueValidator = v.object({
 	surface: surfaceValueValidator,
 });
 
+const memberRoleValues = [
+	"Head",
+	"SeparableParticle",
+	"GovernedPreposition",
+	"Reflexive",
+	"Expletive",
+	"Article",
+	"Auxiliary",
+	"Unresolved",
+] as const;
+
+/**
+ * A probability mass as stored: `{ key, share }` pairs rather than a record,
+ * because identity keys carry headwords such as `für` and Convex record keys
+ * must be ASCII. The server port converts to and from Dumgen's records.
+ */
+export const storedMassValidator = v.array(
+	v.object({ key: v.string(), share: v.number() }),
+);
+
+/** The Sentence Analysis intake stores with one Sentence (Dumgen ADR 0006). */
+export const storedSentenceAnalysisValidator = v.object({
+	sentenceId: v.string(),
+	language: v.literal("de"),
+	stitchedText: v.string(),
+	segments: v.array(
+		v.object({
+			offset: v.number(),
+			kind: segmentKindValidator,
+			text: v.string(),
+			surface: v.string(),
+		}),
+	),
+	targets: v.array(
+		v.object({
+			id: v.string(),
+			members: v.array(
+				v.object({
+					offset: v.number(),
+					role: literalUnion(memberRoleValues),
+				}),
+			),
+			routeMass: storedMassValidator,
+			identity: v.union(
+				v.null(),
+				v.object({
+					candidates: v.array(
+						v.object({
+							key: v.string(),
+							kind: v.union(
+								v.literal("DET"),
+								v.literal("PRON"),
+								v.literal("AUX"),
+							),
+							headword: v.string(),
+							pronType: v.union(v.null(), v.string()),
+							cells: v.array(v.string()),
+							definition: v.string(),
+						}),
+					),
+					mass: storedMassValidator,
+				}),
+			),
+			provenance: v.string(),
+		}),
+	),
+	phrasemes: v.array(
+		v.object({
+			id: v.string(),
+			members: v.array(v.string()),
+			kindMass: storedMassValidator,
+			fixedness: v.number(),
+			provenance: v.string(),
+		}),
+	),
+	fusions: v.array(
+		v.object({
+			offset: v.number(),
+			form: v.string(),
+			components: v.array(
+				v.object({
+					offset: v.number(),
+					span: v.string(),
+					surface: v.string(),
+					role: v.string(),
+				}),
+			),
+		}),
+	),
+});
+
 export const sentenceInputValidator = v.object({
 	segmentedSentenceId: v.string(),
 	position: v.number(),
 	language: languageValidator,
 	stitchedText: v.string(),
 	segments: v.array(segmentInputValidator),
+	/** Present for an accepted German sentence whose intake analysis succeeded. */
+	analysis: v.optional(storedSentenceAnalysisValidator),
 });
 
 export const semanticRelationValidator = literalUnion(semanticRelationValues);
@@ -143,7 +236,6 @@ export const relationTargetShadowValidator = v.object({
 		v.literal("Lexeme"),
 		v.literal("Phraseme"),
 		v.literal("Morpheme"),
-		v.literal("Construction"),
 	),
 	kind: v.string(),
 });

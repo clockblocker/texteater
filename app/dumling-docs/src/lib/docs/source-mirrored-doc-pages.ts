@@ -80,11 +80,6 @@ function defaultUniversalStubDescription(
 				return "Overview of phraseme subpages in the public concept tree.";
 			}
 			return `${label} page in the public phraseme tree.`;
-		case "construction":
-			if (options.leaf === undefined) {
-				return "Overview of construction subpages in the public concept tree.";
-			}
-			return `${label} page in the public construction tree.`;
 		case "feature":
 			if (options.leaf === undefined) {
 				return "Overview of grammatical, attestation, and surface feature pages.";

@@ -1,0 +1,18 @@
+export const evaluationCaseIds = [
+	"sentence-de-kakao",
+	"sentence-de-kino",
+	"sentence-de-aufstehen",
+	"sentence-de-erinnert",
+	"sentence-de-ausweg",
+	"sentence-de-relativ",
+	"sentence-de-passiv",
+	"sentence-de-faden",
+	"sentence-de-usw",
+	"sentence-de-museum",
+	"sentence-de-genitiv",
+	"sentence-de-typo",
+	"sentence-de-klitik",
+	"sentence-de-verfuegung",
+	"sentence-de-manche",
+	"sentence-de-fremd",
+];

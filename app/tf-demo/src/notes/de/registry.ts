@@ -6,7 +6,6 @@ import { renderDefaultLemmaHeader } from "../universal/blocks/renderers/lemma/he
 import { renderDefaultLemmaRoutes } from "../universal/blocks/renderers/lemma/routes/default";
 import { renderReadingDefinition } from "../universal/blocks/renderers/reading/definition/static";
 import { DefaultReadingHeaderRenderer } from "../universal/blocks/renderers/reading/header/default";
-import { renderReadingLexicalBreakdown } from "../universal/blocks/renderers/reading/lexical-breakdown/default";
 import { renderReadingPersonalAnnotation } from "../universal/blocks/renderers/reading/personal-annotation/default";
 import { renderDefaultReadingRelations } from "../universal/blocks/renderers/reading/relations/default";
 import { renderDefaultReadingSourceContexts } from "../universal/blocks/renderers/reading/source-contexts/default";
@@ -30,12 +29,6 @@ const READING_RELATIONAL = {
 };
 
 const READING = {
-	Construction: {
-		Fusion: {
-			...READING_BASE,
-			LexicalBreakdown: renderReadingLexicalBreakdown,
-		},
-	},
 	Lexeme: {
 		ADJ: READING_RELATIONAL,
 		ADP: READING_RELATIONAL,
@@ -91,7 +84,6 @@ const SHADOW_ROUTE = {
 };
 
 const LEMMA = {
-	Construction: { Fusion: LEMMA_ROUTE },
 	Lexeme: {
 		ADJ: LEMMA_ROUTE,
 		ADP: LEMMA_ROUTE,
@@ -132,7 +124,6 @@ const LEMMA = {
 	},
 } satisfies RendererRegistry<"de", "Lemma">;
 const ATTESTATION = {
-	Construction: { Fusion: ATTESTATION_ROUTE },
 	Lexeme: {
 		ADJ: ATTESTATION_ROUTE,
 		ADP: ATTESTATION_ROUTE,
@@ -173,7 +164,6 @@ const ATTESTATION = {
 	},
 } satisfies RendererRegistry<"de", "Attestation">;
 const SHADOW = {
-	Construction: { Fusion: SHADOW_ROUTE },
 	Lexeme: {
 		ADJ: SHADOW_ROUTE,
 		ADP: SHADOW_ROUTE,

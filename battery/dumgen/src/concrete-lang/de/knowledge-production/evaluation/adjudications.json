@@ -10,7 +10,10 @@
 							"type": "object",
 							"shape": {
 								"markedContext": {
-									"def": { "type": "string", "checks": [{}] },
+									"def": {
+										"type": "string",
+										"checks": [{}]
+									},
 									"type": "string",
 									"format": null,
 									"minLength": 1,
@@ -45,7 +48,9 @@
 											"type": "readonly"
 										},
 										"out": {
-											"def": { "type": "transform" },
+											"def": {
+												"type": "transform"
+											},
 											"type": "transform"
 										}
 									},
@@ -76,7 +81,9 @@
 										"type": "readonly"
 									},
 									"out": {
-										"def": { "type": "transform" },
+										"def": {
+											"type": "transform"
+										},
 										"type": "transform"
 									}
 								},
@@ -259,7 +266,9 @@
 													}
 												},
 												"catchall": {
-													"def": { "type": "never" },
+													"def": {
+														"type": "never"
+													},
 													"type": "never"
 												}
 											},
@@ -270,7 +279,9 @@
 								}
 							},
 							"catchall": {
-								"def": { "type": "never" },
+								"def": {
+									"type": "never"
+								},
 								"type": "never"
 							}
 						},
@@ -279,7 +290,12 @@
 				},
 				"type": "readonly"
 			},
-			"out": { "def": { "type": "transform" }, "type": "transform" }
+			"out": {
+				"def": {
+					"type": "transform"
+				},
+				"type": "transform"
+			}
 		},
 		"type": "pipe",
 		"in": {
@@ -290,7 +306,10 @@
 						"type": "object",
 						"shape": {
 							"markedContext": {
-								"def": { "type": "string", "checks": [{}] },
+								"def": {
+									"type": "string",
+									"checks": [{}]
+								},
 								"type": "string",
 								"format": null,
 								"minLength": 1,
@@ -325,7 +344,9 @@
 										"type": "readonly"
 									},
 									"out": {
-										"def": { "type": "transform" },
+										"def": {
+											"type": "transform"
+										},
 										"type": "transform"
 									}
 								},
@@ -356,7 +377,9 @@
 									"type": "readonly"
 								},
 								"out": {
-									"def": { "type": "transform" },
+									"def": {
+										"type": "transform"
+									},
 									"type": "transform"
 								}
 							},
@@ -539,7 +562,9 @@
 												}
 											},
 											"catchall": {
-												"def": { "type": "never" },
+												"def": {
+													"type": "never"
+												},
 												"type": "never"
 											}
 										},
@@ -550,7 +575,9 @@
 							}
 						},
 						"catchall": {
-							"def": { "type": "never" },
+							"def": {
+								"type": "never"
+							},
 							"type": "never"
 						}
 					},
@@ -559,7 +586,12 @@
 			},
 			"type": "readonly"
 		},
-		"out": { "def": { "type": "transform" }, "type": "transform" }
+		"out": {
+			"def": {
+				"type": "transform"
+			},
+			"type": "transform"
+		}
 	},
 	"outputSchema": {
 		"def": {
@@ -644,7 +676,9 @@
 									}
 								},
 								"catchall": {
-									"def": { "type": "never" },
+									"def": {
+										"type": "never"
+									},
 									"type": "never"
 								}
 							},
@@ -903,7 +937,9 @@
 													}
 												},
 												"catchall": {
-													"def": { "type": "never" },
+													"def": {
+														"type": "never"
+													},
 													"type": "never"
 												}
 											},
@@ -918,7 +954,12 @@
 					"type": "optional"
 				}
 			},
-			"catchall": { "def": { "type": "never" }, "type": "never" }
+			"catchall": {
+				"def": {
+					"type": "never"
+				},
+				"type": "never"
+			}
 		},
 		"type": "object"
 	},
@@ -930,24 +971,36 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Hund", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Hund",
+						"kind": "NOUN"
+					},
 					"reason": "The encountered dog is a contingent bearer, not a category."
 				},
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Hund", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Hund",
+						"kind": "NOUN"
+					},
 					"reason": "Context cannot narrow the generally valid bearer Tier to Hund."
 				}
 			],
 			"inverseJudgments": [
 				{
 					"relation": "hyponym",
-					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Pfote",
+						"kind": "NOUN"
+					},
 					"rationale": "Körperteil → Pfote is the accepted inverse taxonomy judgment."
 				},
 				{
 					"relation": "meronym",
-					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Pfote",
+						"kind": "NOUN"
+					},
 					"rationale": "Tier → Pfote is the accepted inverse part judgment."
 				}
 			]
@@ -959,7 +1012,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "vermieten", "kind": "VERB" },
+					"target": {
+						"canonicalForm": "vermieten",
+						"kind": "VERB"
+					},
 					"reason": "A converse changes viewpoint; it does not reverse or exclude the event."
 				}
 			],
@@ -988,13 +1044,6 @@
 			"harmfulTargets": [],
 			"inverseJudgments": []
 		},
-		"knowledge-demo-construction-fusion-ans": {
-			"rationale": "The thin Construction route owns base leaves only: one definition and one English literal for the fused an + das form; it never requests Semantic Relations.",
-			"failureModes": ["positive"],
-			"authority": "primary-source",
-			"harmfulTargets": [],
-			"inverseJudgments": []
-		},
 		"relation-basic-01-hubschrauber": {
 			"rationale": "Primary lexicography cross-lists Helikopter and supports the shared aircraft Reading; exact-synonym status is an explicit reviewer adjudication, while Luftfahrzeug is the useful category.",
 			"failureModes": ["positive", "null"],
@@ -1016,12 +1065,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Tier", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Tier",
+						"kind": "NOUN"
+					},
 					"reason": "Tier skips the useful intermediate Hund."
 				},
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Pfote",
+						"kind": "NOUN"
+					},
 					"reason": "Pfote is a part, not a broader category."
 				}
 			],
@@ -1035,7 +1090,10 @@
 			"inverseJudgments": [
 				{
 					"relation": "hyponym",
-					"target": { "canonicalForm": "Berlin", "kind": "PROPN" },
+					"target": {
+						"canonicalForm": "Berlin",
+						"kind": "PROPN"
+					},
 					"rationale": "Stadt → Berlin is the inverse of the accepted instance-to-category judgment."
 				}
 			]
@@ -1062,12 +1120,18 @@
 				},
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "Sitzbank", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Sitzbank",
+						"kind": "NOUN"
+					},
 					"reason": "Sitzbank belongs to the furniture Reading."
 				},
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "Bank", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Bank",
+						"kind": "NOUN"
+					},
 					"reason": "A source Lemma may never target itself."
 				}
 			],
@@ -1096,7 +1160,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Schlüssel", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Schlüssel",
+						"kind": "NOUN"
+					},
 					"reason": "A key is an instrument for the lock Reading, not a whole of the building Reading."
 				}
 			],
@@ -1109,12 +1176,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Gebäude", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Gebäude",
+						"kind": "NOUN"
+					},
 					"reason": "The category belongs to the palace Reading."
 				},
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Schlüssel", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Schlüssel",
+						"kind": "NOUN"
+					},
 					"reason": "Instrument use is not part-whole containment."
 				}
 			],
@@ -1127,7 +1200,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "intelligent", "kind": "ADJ" },
+					"target": {
+						"canonicalForm": "intelligent",
+						"kind": "ADJ"
+					},
 					"reason": "The target selects cognitive capacity rather than sensible judgment."
 				}
 			],
@@ -1140,7 +1216,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "heftig", "kind": "ADJ" },
+					"target": {
+						"canonicalForm": "heftig",
+						"kind": "ADJ"
+					},
 					"reason": "A familiar collocation cannot import a target from another Reading."
 				}
 			],
@@ -1158,7 +1237,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "sterben", "kind": "VERB" },
+					"target": {
+						"canonicalForm": "sterben",
+						"kind": "VERB"
+					},
 					"reason": "The lexical paraphrase crosses from the source Phraseme Family into Lexeme."
 				}
 			],
@@ -1171,7 +1253,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "Kiefer", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Kiefer",
+						"kind": "NOUN"
+					},
 					"reason": "Regional distribution blocks exact Synonymy."
 				}
 			],
@@ -1184,7 +1269,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "verkaufen", "kind": "VERB" },
+					"target": {
+						"canonicalForm": "verkaufen",
+						"kind": "VERB"
+					},
 					"reason": "Both descriptions can be true of one transaction from different viewpoints."
 				}
 			],
@@ -1204,7 +1292,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "heiß", "kind": "ADJ" },
+					"target": {
+						"canonicalForm": "heiß",
+						"kind": "ADJ"
+					},
 					"reason": "A different scale value is not the opposing pole."
 				}
 			],
@@ -1217,7 +1308,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearAntonym",
-					"target": { "canonicalForm": "Katze", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Katze",
+						"kind": "NOUN"
+					},
 					"reason": "Arbitrary co-hyponyms do not become established opposites."
 				}
 			],
@@ -1230,19 +1324,28 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Rad",
+						"kind": "NOUN"
+					},
 					"reason": "A wheel is a Meronym, not a category."
 				},
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Garage", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Garage",
+						"kind": "NOUN"
+					},
 					"reason": "A garage is an optional location, not an inherent whole."
 				}
 			],
 			"inverseJudgments": [
 				{
 					"relation": "meronym",
-					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Rad",
+						"kind": "NOUN"
+					},
 					"rationale": "Auto → wheel-sense Rad is the inverse-only conventional part judgment."
 				}
 			]
@@ -1254,7 +1357,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "Fahrrad", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Fahrrad",
+						"kind": "NOUN"
+					},
 					"reason": "That relation holds only for the separate colloquial bicycle Reading of Rad."
 				}
 			],
@@ -1268,7 +1374,10 @@
 			"inverseJudgments": [
 				{
 					"relation": "meronym",
-					"target": { "canonicalForm": "Blutplasma", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Blutplasma",
+						"kind": "NOUN"
+					},
 					"rationale": "Blut → Blutplasma is the inverse constitutive-component judgment."
 				}
 			]
@@ -1281,7 +1390,10 @@
 			"inverseJudgments": [
 				{
 					"relation": "meronym",
-					"target": { "canonicalForm": "Berlin", "kind": "PROPN" },
+					"target": {
+						"canonicalForm": "Berlin",
+						"kind": "PROPN"
+					},
 					"rationale": "Deutschland → Berlin is the inverse administrative-member judgment."
 				}
 			]
@@ -1300,12 +1412,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Person", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Person",
+						"kind": "NOUN"
+					},
 					"reason": "The human-accepted case rejects trivial personal-name categories."
 				},
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Firma", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Firma",
+						"kind": "NOUN"
+					},
 					"reason": "Employment or presence is contingent."
 				}
 			],
@@ -1319,7 +1437,10 @@
 			"inverseJudgments": [
 				{
 					"relation": "meronym",
-					"target": { "canonicalForm": "Spieler", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Spieler",
+						"kind": "NOUN"
+					},
 					"rationale": "Mannschaft → Spieler is the inverse of Spieler → Mannschaft Holonym."
 				}
 			]
@@ -1332,7 +1453,10 @@
 			"inverseJudgments": [
 				{
 					"relation": "hyponym",
-					"target": { "canonicalForm": "Pfote", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Pfote",
+						"kind": "NOUN"
+					},
 					"rationale": "Körperteil → Pfote is the inverse of Pfote → Körperteil Hypernym."
 				}
 			]
@@ -1358,7 +1482,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "manchmal", "kind": "ADV" },
+					"target": {
+						"canonicalForm": "manchmal",
+						"kind": "ADV"
+					},
 					"reason": "An intermediate value is not the opposing pole."
 				}
 			],
@@ -1385,7 +1512,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "oder", "kind": "CCONJ" },
+					"target": {
+						"canonicalForm": "oder",
+						"kind": "CCONJ"
+					},
 					"reason": "Inclusive and contextual uses prevent strict complementary opposition."
 				}
 			],
@@ -1412,12 +1542,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "zwei", "kind": "NUM" },
+					"target": {
+						"canonicalForm": "zwei",
+						"kind": "NUM"
+					},
 					"reason": "A Reading may not target its own Lemma."
 				},
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "zweier", "kind": "NUM" },
+					"target": {
+						"canonicalForm": "zweier",
+						"kind": "NUM"
+					},
 					"reason": "An inflected Surface is not a target Lemma."
 				}
 			],
@@ -1526,19 +1662,10 @@
 			"inverseJudgments": []
 		},
 		"relation-adv-40-gluecklich-family": {
-			"rationale": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme, never Construction.",
+			"rationale": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme.",
 			"failureModes": ["wrong-family", "wrong-kind"],
 			"authority": "human-accepted",
-			"harmfulTargets": [
-				{
-					"relation": "nearSynonym",
-					"target": {
-						"canonicalForm": "in Hochstimmung sein",
-						"kind": "Fusion"
-					},
-					"reason": "Construction targets are forbidden; a lexicalized phrase requires a Phraseme kind."
-				}
-			],
+			"harmfulTargets": [],
 			"inverseJudgments": []
 		},
 		"relation-adv-41-schnell-kind": {
@@ -1548,7 +1675,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "Eile", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Eile",
+						"kind": "NOUN"
+					},
 					"reason": "An associated noun fails grammatical compatibility and shared denotation."
 				}
 			],
@@ -1559,7 +1689,14 @@
 			"failureModes": ["omission", "register"],
 			"authority": "human-accepted",
 			"acceptableTargetSets": {
-				"synonym": [[{ "canonicalForm": "einsetzen", "kind": "VERB" }]]
+				"synonym": [
+					[
+						{
+							"canonicalForm": "einsetzen",
+							"kind": "VERB"
+						}
+					]
+				]
 			},
 			"harmfulTargets": [],
 			"inverseJudgments": []
@@ -1587,12 +1724,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Garten", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Garten",
+						"kind": "NOUN"
+					},
 					"reason": "A garden is a contingent location."
 				},
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Dorn", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Dorn",
+						"kind": "NOUN"
+					},
 					"reason": "A possible part is not a broader category."
 				}
 			],
@@ -1613,19 +1756,28 @@
 				},
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Hof", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Hof",
+						"kind": "NOUN"
+					},
 					"reason": "The encountered location is contingent."
 				},
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Rad",
+						"kind": "NOUN"
+					},
 					"reason": "Wheel-sense Rad is a component, not a category."
 				}
 			],
 			"inverseJudgments": [
 				{
 					"relation": "meronym",
-					"target": { "canonicalForm": "Rad", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Rad",
+						"kind": "NOUN"
+					},
 					"rationale": "Fahrrad → wheel-sense Rad is the inverse-only part judgment."
 				}
 			]
@@ -1637,12 +1789,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "innerhalb", "kind": "ADP" },
+					"target": {
+						"canonicalForm": "innerhalb",
+						"kind": "ADP"
+					},
 					"reason": "The spatial anchoring of innerhalb blocks unrestricted substitution."
 				},
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "solange", "kind": "SCONJ" },
+					"target": {
+						"canonicalForm": "solange",
+						"kind": "SCONJ"
+					},
 					"reason": "The subordinator homograph belongs to the clause-linking Reading."
 				}
 			],
@@ -1655,7 +1813,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "solange", "kind": "SCONJ" },
+					"target": {
+						"canonicalForm": "solange",
+						"kind": "SCONJ"
+					},
 					"reason": "The duration-profile restriction blocks exact equivalence."
 				}
 			],
@@ -1684,7 +1845,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "Zündholz", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Zündholz",
+						"kind": "NOUN"
+					},
 					"reason": "Duden marks this otherwise equivalent form as technical or regional."
 				}
 			],
@@ -1697,7 +1861,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "synonym",
-					"target": { "canonicalForm": "Orange", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Orange",
+						"kind": "NOUN"
+					},
 					"reason": "Same fruit denotation does not erase the sourced regional and compositional restriction."
 				}
 			],
@@ -1710,7 +1877,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "Brot", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Brot",
+						"kind": "NOUN"
+					},
 					"reason": "A broader baked-food category is taxonomy, not near synonymy."
 				}
 			],
@@ -1723,7 +1893,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearSynonym",
-					"target": { "canonicalForm": "Bratsche", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Bratsche",
+						"kind": "NOUN"
+					},
 					"reason": "A co-member of an instrument family is not a Near Synonym."
 				}
 			],
@@ -1736,7 +1909,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "krank", "kind": "ADJ" },
+					"target": {
+						"canonicalForm": "krank",
+						"kind": "ADJ"
+					},
 					"reason": "Illness can coexist with being alive and is not its complement."
 				}
 			],
@@ -1749,7 +1925,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "antonym",
-					"target": { "canonicalForm": "feucht", "kind": "ADJ" },
+					"target": {
+						"canonicalForm": "feucht",
+						"kind": "ADJ"
+					},
 					"reason": "Feucht lies on the same scale and overlaps low wetness rather than opposing it."
 				}
 			],
@@ -1762,7 +1941,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearAntonym",
-					"target": { "canonicalForm": "vermachen", "kind": "VERB" },
+					"target": {
+						"canonicalForm": "vermachen",
+						"kind": "VERB"
+					},
 					"reason": "Vermachen shares the bequeather direction and does not reverse viewpoint."
 				}
 			],
@@ -1775,7 +1957,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "nearAntonym",
-					"target": { "canonicalForm": "wegnehmen", "kind": "VERB" },
+					"target": {
+						"canonicalForm": "wegnehmen",
+						"kind": "VERB"
+					},
 					"reason": "Removal is an opposing event, not the recipient view of the same transfer."
 				}
 			],
@@ -1788,12 +1973,18 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Vogel", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Vogel",
+						"kind": "NOUN"
+					},
 					"reason": "This skips the directly evidenced nearer category Drossel."
 				},
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Singvogel", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Singvogel",
+						"kind": "NOUN"
+					},
 					"reason": "This is also farther than the directly evidenced Drossel category."
 				}
 			],
@@ -1806,7 +1997,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "hypernym",
-					"target": { "canonicalForm": "Zylinder", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Zylinder",
+						"kind": "NOUN"
+					},
 					"reason": "Returning the whole as Hypernym confuses taxonomy with part–whole."
 				}
 			],
@@ -1819,7 +2013,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Schuh", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Schuh",
+						"kind": "NOUN"
+					},
 					"reason": "A shoe may cover a toe but is not its constitutive whole."
 				}
 			],
@@ -1832,7 +2029,10 @@
 			"harmfulTargets": [
 				{
 					"relation": "holonym",
-					"target": { "canonicalForm": "Bauwerk", "kind": "NOUN" },
+					"target": {
+						"canonicalForm": "Bauwerk",
+						"kind": "NOUN"
+					},
 					"reason": "This remote contextual container skips the immediate constitutive whole."
 				}
 			],

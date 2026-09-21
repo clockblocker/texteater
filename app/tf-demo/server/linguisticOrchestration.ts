@@ -1,5 +1,6 @@
 import type { DumdictService, StoreRevision } from "dumdict";
 import { makeSurfaceId } from "dumdict/runtime";
+import { validateEncounter } from "dumgen";
 import type {
 	ComparisonInput,
 	Dumgen,
@@ -7,6 +8,8 @@ import type {
 	KnowledgeDraft,
 	Segment,
 	SegmentedSentence,
+	SentenceAnalysis,
+	Task,
 } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
@@ -21,6 +24,7 @@ import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
+import { selectAnalysisTarget } from "./sentenceAnalysisSelection";
 import { splitInSentences } from "./sentenceSplitting";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
@@ -43,6 +47,8 @@ export type SubmittedSentence = {
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly Segment[];
+	/** Intake's Sentence Analysis; absent for other languages or when it failed. */
+	readonly analysis?: SentenceAnalysis;
 };
 
 export type ResolvedClickPersistence = {
@@ -258,6 +264,8 @@ export type ResolutionContext = {
 	readonly reusable: ReusableAttestation | null;
 	readonly sentence: PersistedSentence | null;
 	readonly lemmaCandidates: readonly Dumling.Lemma<"de">[];
+	/** The stored Sentence Analysis, read before click-time classification. */
+	readonly analysis?: SentenceAnalysis | null;
 };
 
 export type ResolutionCheckpoints = {
@@ -317,21 +325,30 @@ export function createTfDemoOrchestrator(options: {
 				}),
 			);
 
-			const sentences = segmentation.flatMap(
-				(decision, position): SubmittedSentence[] =>
-					decision.decision === "Accepted"
-						? [
-								{
-									segmentedSentenceId: decision.sentence.id,
-									position,
-									language: decision.sentence.language,
-									stitchedText: decision.sentence.segments
-										.map(({ text }) => text)
-										.join(""),
-									segments: decision.sentence.segments,
-								},
-							]
-						: [],
+			const accepted = segmentation.flatMap((decision, position) =>
+				decision.decision === "Accepted"
+					? [{ sentence: decision.sentence, position }]
+					: [],
+			);
+			// One analysis call per accepted German sentence. A failed analysis
+			// is recorded and dropped; the text is never held back by it.
+			const sentences = yield* Effect.forEach(
+				accepted,
+				({ sentence, position }) =>
+					Effect.map(
+						analyzeAcceptedSentence(sentence),
+						(analysis): SubmittedSentence => ({
+							segmentedSentenceId: sentence.id,
+							position,
+							language: sentence.language,
+							stitchedText: sentence.segments
+								.map(({ text }) => text)
+								.join(""),
+							segments: sentence.segments,
+							...(analysis ? { analysis } : {}),
+						}),
+					),
+				{ concurrency: 4 },
 			);
 			const persisted = yield* Effect.tryPromise(() =>
 				options.persistence.persistSubmittedText({
@@ -343,6 +360,34 @@ export function createTfDemoOrchestrator(options: {
 
 			return { decisions: segmentation, persisted };
 		});
+	}
+
+	function analyzeAcceptedSentence(
+		sentence: SegmentedSentence<"de" | "en" | "he">,
+	): Effect.Effect<SentenceAnalysis | null> {
+		if (sentence.language !== "de") return Effect.succeed(null);
+		const german: SegmentedSentence<"de"> = { ...sentence, language: "de" };
+		const analysis = options.dumgen.analyzeSentence({ sentence: german });
+		return (
+			options.inspection
+				? options.inspection.effect(
+						"Analyze sentence",
+						"app/tf-demo · linguisticOrchestration",
+						{ sentenceId: sentence.id },
+						analysis,
+					)
+				: analysis
+		).pipe(
+			Effect.catchAll((failure) =>
+				Effect.sync(() => {
+					console.warn(
+						`Sentence Analysis failed for ${sentence.id}; the sentence is stored without one.`,
+						failure,
+					);
+					return null;
+				}),
+			),
+		);
 	}
 
 	function resolveSegment(
@@ -575,10 +620,11 @@ export function createTfDemoOrchestrator(options: {
 					}
 					const sentence = parseGermanSentence(stored);
 					return yield* Effect.gen(function* () {
-						const target = yield* options.dumgen.classifyTarget({
+						const target = yield* selectTarget(
+							stored,
 							sentence,
-							clickedSegmentIndex: request.clickedSegmentIndex,
-						});
+							request.clickedSegmentIndex,
+						);
 						const encounter: Encounter<"de"> = {
 							sentence,
 							target,
@@ -611,6 +657,83 @@ export function createTfDemoOrchestrator(options: {
 						),
 					);
 				});
+			}
+
+			/**
+			 * The stored Sentence Analysis answers the click when its largest
+			 * unit is resolved at the clicked Segment; otherwise, or without an
+			 * analysis, click-time classification runs as before. The inspection
+			 * step names the path taken.
+			 */
+			function selectTarget(
+				stored: PersistedSentence,
+				sentence: SegmentedSentence<"de">,
+				clickedSegmentIndex: number,
+			) {
+				const fromAnalysis = analysedTarget(
+					stored,
+					sentence,
+					clickedSegmentIndex,
+				);
+				const owner = "app/tf-demo · linguisticOrchestration";
+				const input = {
+					clickedSegmentIndex,
+					hasAnalysis: Boolean(context.analysis),
+				};
+				const selected: Task<{
+					readonly path: "analysis" | "classified";
+					readonly target: Encounter<"de">["target"];
+				}> = fromAnalysis
+					? Effect.succeed({
+							path: "analysis" as const,
+							target: fromAnalysis,
+						})
+					: Effect.map(
+							options.dumgen.classifyTarget({
+								sentence,
+								clickedSegmentIndex,
+							}),
+							(target) => ({
+								path: "classified" as const,
+								target,
+							}),
+						);
+				const name = fromAnalysis
+					? "Select target · analysis"
+					: "Select target · classified";
+				return Effect.map(
+					options.inspection
+						? options.inspection.effect(
+								name,
+								owner,
+								input,
+								selected,
+							)
+						: selected,
+					({ target }) => target,
+				);
+			}
+
+			/** Null when there is no analysis, no resolved unit, or the unit is not a valid Encounter target. */
+			function analysedTarget(
+				stored: PersistedSentence,
+				sentence: SegmentedSentence<"de">,
+				clickedSegmentIndex: number,
+			): Encounter<"de">["target"] | null {
+				if (!context.analysis) return null;
+				const target = selectAnalysisTarget(
+					context.analysis,
+					stored,
+					clickedSegmentIndex,
+				);
+				if (!target) return null;
+				try {
+					validateEncounter({ sentence, target });
+				} catch {
+					return null;
+				}
+				// validateEncounter has checked family, kind and membership.
+				return target as Encounter<"de">["target"];
 			}
 
 			function resolveReading(

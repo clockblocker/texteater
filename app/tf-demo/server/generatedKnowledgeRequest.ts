@@ -39,13 +39,7 @@ export function generationRequestFor(
 		lexicalBreakdown: _lexicalBreakdown,
 		...base
 	} = applicable;
-	const request = {
-		...base,
-		...(reading.lemma.kind === "Fusion" &&
-		applicable.lexicalBreakdown === null
-			? { lexicalBreakdown: null }
-			: {}),
-	};
+	const request = { ...base };
 	const allowed = new Set(qualifiedKinds);
 	const semanticRelations = Object.fromEntries(
 		directSemanticRelationValues.flatMap((relation) =>

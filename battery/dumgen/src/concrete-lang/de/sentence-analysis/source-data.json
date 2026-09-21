@@ -1,0 +1,1782 @@
+{
+	"route": "sentence-analysis/de",
+	"cases": {
+		"sentence-de-kakao": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "heiße"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kakao"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schmeckt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gut"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 10,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 4
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 16
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 25
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "The owned article joins the noun across an adjective."
+		},
+		"sentence-de-kino": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Wir"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gehen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "heute"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ins"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kino"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 0
+							}
+						],
+						"identity": "PRON:wir"
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 4
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 10
+							}
+						]
+					},
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 16
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 18,
+								"role": "Article"
+							},
+							{
+								"offset": 20,
+								"role": "Head"
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "A fused word: `ins` is `in` plus `s` standing for `das`, and the article piece joins the noun."
+		},
+		"sentence-de-aufstehen": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Meine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Schwester"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "steht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "jeden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Morgen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "um"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sechs"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "DET",
+						"members": [
+							{
+								"offset": 0
+							}
+						],
+						"identity": "DET:mein"
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 6
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 16,
+								"role": "Head"
+							},
+							{
+								"offset": 44,
+								"role": "SeparableParticle"
+							}
+						]
+					},
+					{
+						"kind": "DET",
+						"members": [
+							{
+								"offset": 22
+							}
+						],
+						"identity": "DET:jeder"
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 28
+							}
+						]
+					},
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 35
+							}
+						]
+					},
+					{
+						"kind": "NUM",
+						"members": [
+							{
+								"offset": 38
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "A discontinuous separable verb; two determiners with authored identities."
+		},
+		"sentence-de-erinnert": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gestern"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "an"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Bruder"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "erinnert"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 0
+							}
+						],
+						"identity": "PRON:er"
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 3,
+								"role": "Auxiliary"
+							},
+							{
+								"offset": 7,
+								"role": "Reflexive"
+							},
+							{
+								"offset": 20,
+								"role": "GovernedPreposition"
+							},
+							{
+								"offset": 37,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 12
+							}
+						]
+					},
+					{
+						"kind": "DET",
+						"members": [
+							{
+								"offset": 23
+							}
+						],
+						"identity": "DET:sein"
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 30
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "Auxiliary, required reflexive and governed preposition on one verb, spread over the sentence."
+		},
+		"sentence-de-ausweg": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Es"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gibt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "keinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ausweg"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Expletive"
+							},
+							{
+								"offset": 3,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "DET",
+						"members": [
+							{
+								"offset": 8
+							}
+						],
+						"identity": "DET:kein"
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 15
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "Expletive `es` belongs to the verb; `kein` is a determiner, never an article."
+		},
+		"sentence-de-relativ": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Frau"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dort"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartet"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "kennt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "niemanden"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 4,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 10
+							}
+						],
+						"identity": "PRON:die"
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 14
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 19
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 27
+							}
+						]
+					},
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 33
+							}
+						],
+						"identity": "PRON:niemanden"
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "The same spelling as article and as relative pronoun; a negative pronoun with one authored identity."
+		},
+		"sentence-de-passiv": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Paket"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wird"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "morgen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geliefert"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 4,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 10,
+								"role": "Auxiliary"
+							},
+							{
+								"offset": 22,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 15
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "The process passive: `wird` is an Auxiliary member whose AUX Reading derives from the shape."
+		},
+		"sentence-de-faden": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "den"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Faden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verloren"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 0
+							}
+						],
+						"identity": "PRON:er"
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 3,
+								"role": "Auxiliary"
+							},
+							{
+								"offset": 17,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 7,
+								"role": "Article"
+							},
+							{
+								"offset": 11,
+								"role": "Head"
+							}
+						]
+					}
+				],
+				"phrasemes": [
+					{
+						"kind": "Idiom",
+						"words": [11, 17]
+					}
+				]
+			},
+			"explanation": "An idiom over two words: the verb brings its auxiliary, the noun its article, and the whole expression lights up."
+		},
+		"sentence-de-usw": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Anna"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "kauft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Obst"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Gemüse"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "usw."
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dem"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Markt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "PROPN",
+						"members": [
+							{
+								"offset": 0
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 5
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 11
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 17
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 24
+							}
+						]
+					},
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 29
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 33,
+								"role": "Article"
+							},
+							{
+								"offset": 37,
+								"role": "Head"
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "An abbreviation is one Segment whose surface is its expansion."
+		},
+		"sentence-de-museum": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Museum"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "öffnet"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "z.B."
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "am"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Montag"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "erst"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "um"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zehn"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 4,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 11
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 18
+							}
+						]
+					},
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 23
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 24,
+								"role": "Article"
+							},
+							{
+								"offset": 26,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 33
+							}
+						]
+					},
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 38
+							}
+						]
+					},
+					{
+						"kind": "NUM",
+						"members": [
+							{
+								"offset": 41
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "A dotted abbreviation and the fusion `am`."
+		},
+		"sentence-de-genitiv": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Haus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "des"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Nachbarn"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "alt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 4,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 9,
+								"role": "Article"
+							},
+							{
+								"offset": 13,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 22
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 26
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "A genitive article; `des` is not an authored article spelling, so its identity comes from the noun."
+		},
+		"sentence-de-typo": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ihc"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "habe"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "leider"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "keine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Zeit"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 0
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 4
+							}
+						]
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 9
+							}
+						]
+					},
+					{
+						"kind": "DET",
+						"members": [
+							{
+								"offset": 16
+							}
+						],
+						"identity": "DET:kein"
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 22
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "A typo on a pronoun: the route says PRON, the table has no candidate, so the identity is a Miss."
+		},
+		"sentence-de-klitik": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Wie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geht"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "'"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dir"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "heute"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "?"
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 0
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 4,
+								"role": "Head"
+							},
+							{
+								"offset": 9,
+								"role": "Expletive"
+							}
+						]
+					},
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 11
+							}
+						],
+						"identity": "PRON:dir"
+					},
+					{
+						"kind": "ADV",
+						"members": [
+							{
+								"offset": 15
+							}
+						]
+					}
+				],
+				"phrasemes": [
+					{
+						"kind": "DiscourseFormula",
+						"words": [0, 4, 11]
+					}
+				]
+			},
+			"explanation": "An apostrophe clitic: `s` stands for `es`, the expletive of `es geht`; the greeting is a DiscourseFormula over three words."
+		},
+		"sentence-de-verfuegung": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Lehrer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stellt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "den"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Schülern"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Material"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zur"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Verfügung"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 4,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 11
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 18,
+								"role": "Article"
+							},
+							{
+								"offset": 22,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 31
+							}
+						]
+					},
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 40
+							}
+						]
+					},
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 42,
+								"role": "Article"
+							},
+							{
+								"offset": 44,
+								"role": "Head"
+							}
+						]
+					}
+				],
+				"phrasemes": [
+					{
+						"kind": "Collocation",
+						"words": [11, 40, 44]
+					}
+				]
+			},
+			"explanation": "A Funktionsverbgefüge: a Collocation over three words, with the fused article reaching the noun through its own word; `den Schülern` and `Material` are free arguments."
+		},
+		"sentence-de-manche": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Manche"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "kommen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "früh"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "viele"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gehen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "spät"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 0
+							}
+						],
+						"identity": "PRON:manche"
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 7
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 14
+							}
+						]
+					},
+					{
+						"kind": "PRON",
+						"members": [
+							{
+								"offset": 20
+							}
+						],
+						"identity": "PRON:viele"
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 26
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 32
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "Standalone quantifiers are pronouns; the DET twin is the trap."
+		},
+		"sentence-de-fremd": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Meeting"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "war"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "very"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "good"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 0,
+								"role": "Article"
+							},
+							{
+								"offset": 4,
+								"role": "Head"
+							}
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 12
+							}
+						]
+					},
+					{
+						"kind": "X",
+						"members": [
+							{
+								"offset": 16
+							}
+						]
+					},
+					{
+						"kind": "X",
+						"members": [
+							{
+								"offset": 21
+							}
+						]
+					}
+				],
+				"phrasemes": []
+			},
+			"explanation": "Code-switched words: no multilingual support, so they are X or Unresolved."
+		}
+	},
+	"demonstrationIds": []
+}

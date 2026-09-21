@@ -120,8 +120,6 @@ export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
 		(normalized.family === "Lexeme" && lexemeKinds.has(normalized.kind)) ||
 		(normalized.family === "Morpheme" &&
 			morphemeKinds.has(normalized.kind)) ||
-		(normalized.family === "Construction" &&
-			normalized.kind === "Fusion") ||
 		(normalized.family === "Phraseme" &&
 			(commonPhrasemeKinds.has(normalized.kind) ||
 				(normalized.language === "de" &&

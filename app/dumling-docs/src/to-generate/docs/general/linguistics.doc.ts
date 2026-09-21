@@ -17,7 +17,7 @@ The Lemma owns properties that remain stable across forms and attestations:
 
 - \`language\`: the concrete language, such as \`de\`, \`en\`, or \`he\`
 - \`canonicalForm\`: the normalized form used to name the Lemma
-- \`family\`: the broad class: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
+- \`family\`: the broad class: \`Lexeme\`, \`Morpheme\`, or \`Phraseme\`
 - \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Idiom\`
 - \`coreFeatures\`: the stable grammatical features that complete its identity
 
@@ -25,7 +25,7 @@ Together these fields are Lemma identity. Grammatically indistinguishable
 homonyms share one Lemma. Homographs with different grammatical analyses—for
 example a noun and verb with the same spelling—are different Lemmas.
 
-\`Construction\` is the public branch for learner-relevant patterned Lemmas such as fused forms like German \`zum\`, \`zur\`, \`beim\`, or \`ins\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
+A fused word such as German \`zum\`, \`zur\`, \`beim\`, or \`ins\` is not a Lemma: each of its pieces stands for its own word, and an Attestation member realized by such a piece carries the orthography \`Fused\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
 
 ## Surface
 
@@ -72,9 +72,8 @@ IDs, click indices, and marked context belong to the calling application.
 | \`Lexeme\` | lexical identities, including fixed multi-member realizations, categorized by one whole-unit Universal Dependencies-style POS tag |
 | \`Morpheme\` | roots, prefixes, suffixes, clitics, and related sub-word units |
 | \`Phraseme\` | multi-word or formulaic expressions such as idioms and proverbs |
-| \`Construction\` | learner-relevant patterned Lemmas such as fused forms like \`zum\` |
 
-\`kind\` is the public subtype field for all four families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
+\`kind\` is the public subtype field for all three families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
 
 ## Reading
 

@@ -8,15 +8,15 @@ import {
 import { DUM_DIFFERENTIAL_TARGETS } from "../dum-runtime-verification/differential-targets";
 import {
 	evaluateEntrypointRss,
+	evaluateSharedRss,
 	formatRssGateReport,
 	RSS_ENTRYPOINT_POLICIES,
 	RSS_SHARED_BUDGET_BYTES,
-	evaluateSharedRss,
 } from "../dum-runtime-verification/policy";
 
 describe("current compiled validation", () => {
 	test("all replacement validation roots agree with canonical schemas", () => {
-		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(563);
+		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(546);
 		for (const target of DUM_DIFFERENTIAL_TARGETS)
 			expect(
 				compareDifferentialTarget(target).mismatches,

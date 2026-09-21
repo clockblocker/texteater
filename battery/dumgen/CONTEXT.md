@@ -14,36 +14,71 @@ back. The offset is the persisted occurrence coordinate.
 _Avoid_: Piece, token, Segment index as identity
 
 **Segmented Sentence**:
-one Sentence as intake leaves it: language, Stitched Text, Segments, its
-Analysis Targets, and its Fusions with each component pointing at a Segment.
-_Avoid_: Sentence DTO, sentence analysis
+one Sentence as intake leaves it: language, Stitched Text and Segments. Its
+Sentence Analysis carries what intake decided about them.
+_Avoid_: Sentence DTO
+
+**Sentence Analysis**:
+the intake-owned value beside one German Segmented Sentence: its offset-keyed
+Segments with surfaces, its Lexeme Targets, its Phraseme Targets, and its
+Fusions with each component pointing at a Segment. Produced by
+`analyzeSentence`, stored by the host, read at selection time.
+_Avoid_: lattice, precomputed resolution
 
 **Encounter**:
 a Segmented Sentence together with one Analysis Target supplied
 for linguistic resolution or Knowledge production.
 
 **Analysis Target**:
-one clickable group produced at intake: its Members, one Route Mass, and, when
-the head is closed-class, its Identity Candidates. Every ResolvableText
-Segment belongs to exactly one Analysis Target; targets do not nest. A word
-intake cannot place is a singleton target whose Route Mass favours
-Unresolved.
+the unit an Encounter resolves: a Family, a Kind and the ordered Segment
+members. At intake it is a Lexeme Target or a Phraseme Target; at click time
+it is the largest unit containing the clicked Segment, or what
+classification assembled when no analysis resolves it.
 _Avoid_: Unit, group, lattice node
 
+**Lexeme Target**:
+the Segments that realize one Lexeme occurrence, produced at intake: its
+Members with roles, exactly one Head, one Route Mass over Lexeme Kinds, and,
+when the head is closed-class, its Identity Candidates. Every ResolvableText
+Segment belongs to exactly one Lexeme Target. A word intake cannot place is a
+singleton whose Route Mass favours Unresolved. `zur` is two: the ADP `zu`
+and the Article `r` of the noun that follows.
+_Avoid_: word, token group
+
+**Phraseme Target**:
+the Lexeme Targets that are fixed lexical members of one expression,
+produced at intake: its member words, one Kind Mass over Phraseme Kinds with
+`None`, and its fixedness. It never lists a Segment; its span is its
+members' Segments. A word belongs to at most one Phraseme Target.
+_Avoid_: expression, nested target, idiom group
+
+**Kind Mass**:
+a Phraseme Target's distribution over Phraseme Kinds, `None` and
+Unresolved. The fixedness Score establishes the expression; the Kind Mass
+names it.
+_Avoid_: phraseme route
+
+**Fixedness**:
+the mean of the fixedness Score over a Phraseme Target's words: free
+combination, preferred combination, collocation, fixed expression. At or
+above the floor an expression exists.
+_Avoid_: confidence, idiomaticity
+
 **Member**:
-one Segment inside an Analysis Target with its Member Role: Head,
+one Segment inside a Lexeme Target with its Member Role: Head,
 SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
 Auxiliary, or Unresolved. Roles say what a member is inside its target; they
 do not move membership.
 _Avoid_: role mass, Free member
 
 **Route Mass**:
-the Analysis Target's distribution over Kinds, including Unresolved. Family is
-derived from Kind. No route, confidence or Family is stored beside it.
+the Lexeme Target's distribution over Lexeme Kinds, including Unresolved.
+Family is derived from Kind. No route, confidence or Family is stored beside
+it.
 _Avoid_: route, classification
 
 **Identity Candidates**:
-the Analysis Target's distribution over the authored members its closed-class
+the Lexeme Target's distribution over the authored members its closed-class
 head can realize, plus NoMatch and Unresolved. The winning candidate implies
 the route.
 _Avoid_: headword, per-member identity
@@ -56,15 +91,17 @@ Article's surface), Open (no candidates; generation continues), or Miss (a
 closed-class route with no candidate).
 
 **Resolution Selector**:
-the one pure function that turns a Segmented Sentence's masses into resolved
+the one pure function that turns a Sentence Analysis's masses into resolved
 values under the current policy: the Unresolved floor, identity implies
-route, Family from Kind, Identity State from role and candidates. It is
-versioned with the code and is what the intake lab scores.
+route, Family from Kind, Identity State from role and candidates, the
+fixedness floor and the named Kind of a Phraseme, and the largest unit at an
+offset. It ships with the package and is what the sentence corpus scores.
 _Avoid_: stored resolution, threshold migration
 
 **Grammatical Resolution**:
 production of a click-independent Attestation for
-an already classified Analysis Target.
+an already classified Analysis Target, whether the Sentence Analysis or
+classification supplied it.
 
 **Authored Content**:
 reviewed Lemmas, fixed Readings, Knowledge and semantic

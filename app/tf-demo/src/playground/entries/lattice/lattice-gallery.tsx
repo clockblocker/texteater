@@ -1,4 +1,25 @@
 import {
+	effectiveRoute,
+	fusionAt,
+	headOf,
+	largestOf,
+	membersOf,
+	offsetsOf,
+	selectIdentity,
+	selectPhrasemeKind,
+	selectRoute,
+	targetOf,
+} from "dumgen";
+import type {
+	LexemeTarget as AnalysisTarget,
+	Fusion,
+	IdentityState,
+	Member,
+	PhrasemeTarget,
+	AnalyzedSegment as Segment,
+	SentenceAnalysis as SegmentedSentence,
+} from "dumgen/types";
+import {
 	ReaderPlainSegment,
 	ReaderSegment,
 	type ReaderSegmentTone,
@@ -6,30 +27,33 @@ import {
 import { Fragment, type ReactNode, useEffect, useMemo, useState } from "react";
 
 import latticeFixtures from "../../../../../../battery/dumgen/prototypes/intake/fixtures/lattice.json";
-import {
-	type AnalysisTarget,
-	effectiveRoute,
-	type Fixture,
-	type Fusion,
-	fusionAt,
-	type GoldPhraseme,
-	type GoldTarget,
-	headOf,
-	type IdentityState,
-	largestOf,
-	type Member,
-	membersOf,
-	offsetsOf,
-	type PhrasemeTarget,
-	type Segment,
-	type SegmentedSentence,
-	selectIdentity,
-	selectPhrasemeKind,
-	selectRoute,
-	targetOf,
-} from "../../../../../../battery/dumgen/prototypes/intake/segmented-sentence";
 import type { EntryRoute } from "../../playground-router";
 import { Stage } from "../frames";
+
+/** Gold for one Lexeme Target, keyed by offset (issue 495). */
+type GoldTarget = {
+	readonly kind: string;
+	readonly members: readonly {
+		readonly offset: number;
+		readonly role?: string;
+	}[];
+	readonly identity?: string;
+};
+/** Gold for one Phraseme: its Kind and the head offset of every member word. */
+type GoldPhraseme = {
+	readonly kind: string;
+	readonly words: readonly number[];
+};
+/** One fixture as `prototypes/intake/fixtures.ts` emits it: the production analysis and its gold. */
+type Fixture = {
+	readonly analysis: SegmentedSentence;
+	readonly gold: {
+		readonly targets: readonly GoldTarget[];
+		readonly phrasemes: readonly GoldPhraseme[];
+	};
+	readonly note: string;
+	readonly produced: { readonly design: string; readonly at: string };
+};
 
 const fixtures = latticeFixtures as readonly Fixture[];
 
@@ -45,11 +69,11 @@ const fixtures = latticeFixtures as readonly Fixture[];
 export function LatticeGallery({ route }: { readonly route: EntryRoute }) {
 	const [sentenceId] = route.segments;
 	const fixture =
-		fixtures.find((entry) => entry.sentence.id === sentenceId) ??
+		fixtures.find((entry) => entry.analysis.sentenceId === sentenceId) ??
 		fixtures[0];
 	useEffect(() => {
-		if (fixture && fixture.sentence.id !== sentenceId)
-			route.setSegments([fixture.sentence.id], { replace: true });
+		if (fixture && fixture.analysis.sentenceId !== sentenceId)
+			route.setSegments([fixture.analysis.sentenceId], { replace: true });
 	}, [fixture, sentenceId, route]);
 	if (!fixture) return null;
 	return (
@@ -57,9 +81,11 @@ export function LatticeGallery({ route }: { readonly route: EntryRoute }) {
 			<nav aria-label="Sentences" className="grid content-start gap-1">
 				{fixtures.map((entry) => (
 					<button
-						key={entry.sentence.id}
+						key={entry.analysis.sentenceId}
 						type="button"
-						onClick={() => route.setSegments([entry.sentence.id])}
+						onClick={() =>
+							route.setSegments([entry.analysis.sentenceId])
+						}
 						className={`rounded-md border px-2 py-1.5 text-start text-[0.8rem] leading-snug ${
 							entry === fixture
 								? "border-line-strong bg-raised text-ink"
@@ -67,13 +93,13 @@ export function LatticeGallery({ route }: { readonly route: EntryRoute }) {
 						}`}
 					>
 						<span className="block font-mono text-[0.62rem] uppercase tracking-[0.12em] text-ink-soft">
-							{entry.sentence.id}
+							{entry.analysis.sentenceId}
 						</span>
-						{entry.sentence.stitchedText}
+						{entry.analysis.stitchedText}
 					</button>
 				))}
 			</nav>
-			<FixtureView key={fixture.sentence.id} fixture={fixture} />
+			<FixtureView key={fixture.analysis.sentenceId} fixture={fixture} />
 		</div>
 	);
 }
@@ -96,7 +122,7 @@ function selectionOffsets(
 }
 
 function FixtureView({ fixture }: { readonly fixture: Fixture }) {
-	const { sentence } = fixture;
+	const { analysis: sentence } = fixture;
 	const [selection, setSelection] = useState<Selection | undefined>();
 	const [clicked, setClicked] = useState<number | null>(null);
 	const [hovered, setHovered] = useState<number | null>(null);
@@ -142,7 +168,7 @@ function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 					<PhrasemePanel
 						sentence={sentence}
 						phraseme={selection.phraseme}
-						gold={fixture.goldPhrasemes}
+						gold={fixture.gold.phrasemes}
 						onDescend={(target) =>
 							setSelection({ layer: "Lexeme", target })
 						}
@@ -151,7 +177,7 @@ function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 					<TargetPanel
 						sentence={sentence}
 						target={selection.target}
-						gold={fixture.gold}
+						gold={fixture.gold.targets}
 						clicked={clicked}
 						parent={sentence.phrasemes.find((phraseme) =>
 							phraseme.members.includes(selection.target.id),
@@ -172,8 +198,8 @@ function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 			<Stage label="Every target">
 				<TargetList
 					sentence={sentence}
-					gold={fixture.gold}
-					goldPhrasemes={fixture.goldPhrasemes}
+					gold={fixture.gold.targets}
+					goldPhrasemes={fixture.gold.phrasemes}
 					onSelect={setSelection}
 					selection={selection}
 				/>

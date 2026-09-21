@@ -90,3 +90,9 @@ Decided on the map
 [Wayfinder: intake-owned Pieces and Units](https://github.com/clockblocker/texteater/issues/487)
 and its tickets, 2026-09-19 to 2026-09-21; accepted after the playground
 verdict on #496.
+
+Amended by ADR 0006 on 2026-09-21: the flat partition becomes two layers.
+"Targets do not nest" and "sub-unit gold is not authored" no longer hold; a
+Phraseme Target nests exactly one layer of Lexeme Targets and the Phraseme
+layer has its own gold. The membership matrix, the group route vote, the
+roles, the identity selection and the click-time fallback stand.

@@ -57,7 +57,7 @@ test("production linked validators preserve all canonical values and exact error
 			values++;
 		}
 	}
-	expect(values).toBeGreaterThan(11000);
+	expect(values).toBeGreaterThan(10500);
 });
 
 test("providers share readonly objects and package builds reject incompatible provider versions", async () => {

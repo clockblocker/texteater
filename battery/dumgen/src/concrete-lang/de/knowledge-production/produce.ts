@@ -22,7 +22,6 @@ import {
 	authoredReading,
 	closedRoute,
 } from "../authored-closed-sets/select.js";
-import { germanFusion } from "../fusions.js";
 import { draftedRelationCandidates, draftedTexts } from "./draft.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
@@ -142,50 +141,6 @@ export async function produceKnowledge(
 
 	for (const [aspect, selection] of Object.entries(authored.missing)) {
 		if (aspect === "semanticRelations") continue;
-		if (aspect === "lexicalBreakdown" && reading.lemma.kind === "Fusion") {
-			const fusion = germanFusion(reading.lemma.canonicalForm);
-			if (fusion)
-				textOutcomes.push({
-					failures: [],
-					changes: [
-						{
-							kind: "Contribute",
-							aspect: "lexicalBreakdown",
-							value: [
-								{
-									language: "de",
-									family: "Lexeme",
-									kind: "ADP",
-									canonicalForm: fusion.adposition,
-								},
-								{
-									language: "de",
-									family: "Lexeme",
-									kind: "DET",
-									canonicalForm: fusion.articleLemma,
-								},
-							],
-						},
-					],
-				});
-			else
-				textOutcomes.push({
-					changes: [],
-					failures: [
-						failureFor(
-							"lexicalBreakdown",
-							new DumgenFailure(
-								"Unresolved",
-								stage,
-								"No reviewed Fusion breakdown",
-								route,
-							),
-						),
-					],
-				});
-			publishOutcomes();
-			continue;
-		}
 		const leaves =
 			aspect === "translations"
 				? Object.keys(selection ?? {})
@@ -273,7 +228,7 @@ export async function produceKnowledge(
 													options,
 													route,
 												),
-											systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} ${reading.lemma.kind === "Fusion" && aspect === "definition" ? "Explain the expanded preposition plus contextual article and its Case (im = in dem, Dativ; zum = zu dem, Dativ; ins = in das, Akkusativ). These expanded components are an explanation, not separately attested words." : ""} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+											systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
 											outputSchema: {
 												type: "object",
 												properties: {

@@ -21,6 +21,7 @@ import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
 import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
 import { produceKnowledge } from "./knowledge-production/produce.js";
 import { resolveReading } from "./reading-emoji-description/resolve.js";
+import { analyzeGermanSentence } from "./sentence-analysis/operation.js";
 import { classifyGermanTarget } from "./target-classification/judgments.js";
 
 function routeOf(encounter: Encounter): string {
@@ -69,6 +70,16 @@ export function createGermanOperations(
 ): Omit<Dumgen, "segment" | "segmentSentence"> {
 	const task = operationTask(options);
 	const operations = {
+		analyzeSentence(raw: { sentence: SegmentedSentence<"de"> }) {
+			return task("analyzeSentence", raw, async (signal) => {
+				const input = parse<typeof raw>(
+					"analyzeInputSchema",
+					raw,
+					"analyzeSentence",
+				);
+				return analyzeGermanSentence(options, input.sentence, signal);
+			});
+		},
 		classifyTarget<L extends Dumling.Language>(raw: {
 			sentence: SegmentedSentence<L>;
 			clickedSegmentIndex: number;

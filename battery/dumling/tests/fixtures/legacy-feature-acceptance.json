@@ -3,49 +3,6 @@
 	"note": "Frozen legacy acceptance before retirement; German PRON deliberately covered by current identity tests.",
 	"all": [
 		{
-			"route": "de/construction/fusion.ts",
-			"input": {
-				"core": {}
-			},
-			"accepted": true
-		},
-		{
-			"route": "de/construction/fusion.ts",
-			"input": null,
-			"accepted": false
-		},
-		{
-			"route": "de/construction/fusion.ts",
-			"input": {},
-			"accepted": false
-		},
-		{
-			"route": "de/construction/fusion.ts",
-			"input": {
-				"core": {},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "de/construction/fusion.ts",
-			"input": {
-				"core": {
-					"unexpected": true
-				},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "de/construction/fusion.ts",
-			"input": {
-				"core": {},
-				"unexpected": true
-			},
-			"accepted": false
-		},
-		{
 			"route": "de/lexeme/adjective.ts",
 			"input": {
 				"core": {
@@ -1646,49 +1603,6 @@
 		},
 		{
 			"route": "de/phraseme/proverb.ts",
-			"input": {
-				"core": {},
-				"unexpected": true
-			},
-			"accepted": false
-		},
-		{
-			"route": "en/construction/fusion.ts",
-			"input": {
-				"core": {}
-			},
-			"accepted": true
-		},
-		{
-			"route": "en/construction/fusion.ts",
-			"input": null,
-			"accepted": false
-		},
-		{
-			"route": "en/construction/fusion.ts",
-			"input": {},
-			"accepted": false
-		},
-		{
-			"route": "en/construction/fusion.ts",
-			"input": {
-				"core": {},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "en/construction/fusion.ts",
-			"input": {
-				"core": {
-					"unexpected": true
-				},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "en/construction/fusion.ts",
 			"input": {
 				"core": {},
 				"unexpected": true
@@ -3303,49 +3217,6 @@
 		},
 		{
 			"route": "en/phraseme/proverb.ts",
-			"input": {
-				"core": {},
-				"unexpected": true
-			},
-			"accepted": false
-		},
-		{
-			"route": "he/construction/fusion.ts",
-			"input": {
-				"core": {}
-			},
-			"accepted": true
-		},
-		{
-			"route": "he/construction/fusion.ts",
-			"input": null,
-			"accepted": false
-		},
-		{
-			"route": "he/construction/fusion.ts",
-			"input": {},
-			"accepted": false
-		},
-		{
-			"route": "he/construction/fusion.ts",
-			"input": {
-				"core": {},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "he/construction/fusion.ts",
-			"input": {
-				"core": {
-					"unexpected": true
-				},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "he/construction/fusion.ts",
 			"input": {
 				"core": {},
 				"unexpected": true

@@ -2,14 +2,13 @@ import type * as Dumling from "dumling/types";
 
 export type UnitReadingFamily = Extract<
 	Dumling.Family<"de">,
-	"Lexeme" | "Phraseme" | "Morpheme" | "Construction"
+	"Lexeme" | "Phraseme" | "Morpheme"
 >;
 
 const unitReadingFamilies = new Set<UnitReadingFamily>([
 	"Lexeme",
 	"Phraseme",
 	"Morpheme",
-	"Construction",
 ]);
 
 export function isUnitReadingFamily(

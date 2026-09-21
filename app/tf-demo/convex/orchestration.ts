@@ -27,6 +27,10 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
+import {
+	fromStoredSentenceAnalysis,
+	toStoredSentenceAnalysis,
+} from "../server/sentenceAnalysisStorage";
 import { api, internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
@@ -481,11 +485,14 @@ function createConvexPersistence(
 		async persistSubmittedText(input) {
 			return ctx.runMutation(internal.persistence.persistSubmittedText, {
 				...input,
-				sentences: input.sentences.map((sentence) => ({
+				sentences: input.sentences.map(({ analysis, ...sentence }) => ({
 					...sentence,
 					segments: sentence.segments.map((segment) => ({
 						...segment,
 					})),
+					...(analysis
+						? { analysis: toStoredSentenceAnalysis(analysis) }
+						: {}),
 				})),
 			});
 		},
@@ -500,6 +507,9 @@ function createConvexPersistence(
 			return {
 				...context,
 				lemmaCandidates: context.lemmaCandidates.map(parseGermanLemma),
+				analysis: context.analysis
+					? fromStoredSentenceAnalysis(context.analysis)
+					: null,
 			} as ResolutionContext;
 		},
 		async persistResolvedClick(input) {

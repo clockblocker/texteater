@@ -1,6 +1,6 @@
 {
-  "relation-adv-27-jeder": {
-    "expectedFailure": "CatalogMiss",
-    "reason": "The retained prototype Reading uses 🌐; the exact reviewed jeder Reading uses 💯. Production must preserve exact-Reading catalog ownership."
-  }
+	"relation-adv-27-jeder": {
+		"expectedFailure": "CatalogMiss",
+		"reason": "The retained prototype Reading uses 🌐; the exact reviewed jeder Reading uses 💯. Production must preserve exact-Reading catalog ownership."
+	}
 }

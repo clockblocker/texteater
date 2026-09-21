@@ -27,6 +27,21 @@ function assertNonEmpty(value: string, name: string): void {
 		throw new Error(`${name} must not be empty.`);
 }
 
+/** One analysis per Sentence: a retry never duplicates or overwrites it. */
+async function ensureSentenceAnalysis(
+	ctx: MutationCtx,
+	sentenceId: Id<"sentences">,
+	analysis: Infer<typeof sentenceInputValidator>["analysis"],
+): Promise<void> {
+	if (!analysis) return;
+	const existing = await ctx.db
+		.query("sentenceAnalyses")
+		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
+		.unique();
+	if (existing) return;
+	await ctx.db.insert("sentenceAnalyses", { sentenceId, analysis });
+}
+
 function assertIndex(value: number, name: string): void {
 	if (!Number.isSafeInteger(value) || value < 0) {
 		throw new Error(`${name} must be a non-negative safe integer.`);
@@ -145,6 +160,15 @@ export async function persistSubmittedText(
 					"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
 				);
 			}
+			await Promise.all(
+				existingSentences.map((existing, sentenceIndex) =>
+					ensureSentenceAnalysis(
+						ctx,
+						existing._id,
+						submittedSentences[sentenceIndex]?.analysis,
+					),
+				),
+			);
 			return {
 				textId: existingText._id,
 				sentenceIds: existingSentences.map(({ _id }) => _id),
@@ -217,6 +241,11 @@ export async function persistSubmittedText(
 						}),
 					),
 				);
+				await ensureSentenceAnalysis(
+					ctx,
+					sentenceId,
+					submitted.analysis,
+				);
 				return sentenceId;
 			}),
 		);
@@ -266,6 +295,11 @@ export async function persistSubmittedText(
 							...segment,
 						}),
 					),
+				);
+				await ensureSentenceAnalysis(
+					ctx,
+					sentenceId,
+					sentence.analysis,
 				);
 				return sentenceId;
 			}),

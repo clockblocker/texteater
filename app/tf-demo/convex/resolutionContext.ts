@@ -5,6 +5,7 @@ import { lemmaValue } from "./model/occurrenceAttestations";
 import {
 	findAttestationForSegmentValue,
 	findClickResult,
+	loadSentenceAnalysis,
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
 import {
@@ -13,6 +14,7 @@ import {
 	recordedClickValidator,
 	reusableAttestationValidator,
 	segmentKindValidator,
+	storedSentenceAnalysisValidator,
 } from "./model/validators";
 
 export const resolutionContextValidator = v.object({
@@ -36,6 +38,8 @@ export const resolutionContextValidator = v.object({
 		}),
 	),
 	lemmaCandidates: v.array(lemmaValueValidator),
+	/** Intake's Sentence Analysis, read before click-time classification. */
+	analysis: v.union(v.null(), storedSentenceAnalysisValidator),
 });
 
 /** One snapshot of reuse, sentence, and bounded dictionary hints; commit rechecks ownership. */
@@ -56,6 +60,7 @@ export async function loadResolutionContext(
 			reusable: null,
 			sentence: null,
 			lemmaCandidates: [],
+			analysis: null,
 		};
 	const reusable = await findAttestationForSegmentValue(ctx, input);
 	if (reusable)
@@ -64,6 +69,7 @@ export async function loadResolutionContext(
 			reusable,
 			sentence: null,
 			lemmaCandidates: [],
+			analysis: null,
 		};
 	if (!loadGrammar)
 		return {
@@ -71,6 +77,7 @@ export async function loadResolutionContext(
 			reusable: null,
 			sentence: null,
 			lemmaCandidates: [],
+			analysis: null,
 		};
 	const sentence = await loadSentenceForResolution(ctx, input);
 	if (sentence?.language !== "de")
@@ -79,7 +86,9 @@ export async function loadResolutionContext(
 			reusable: null,
 			sentence,
 			lemmaCandidates: [],
+			analysis: null,
 		};
+	const analysis = await loadSentenceAnalysis(ctx, input.sentenceId);
 	const words = sentence.segments.filter(
 		(segment) => segment.kind === "ResolvableText",
 	);
@@ -157,6 +166,7 @@ export async function loadResolutionContext(
 		reusable: null,
 		sentence,
 		lemmaCandidates: [...lemmas.values()].slice(0, 64).map(lemmaValue),
+		analysis,
 	};
 }
 

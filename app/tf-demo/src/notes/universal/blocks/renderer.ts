@@ -16,7 +16,7 @@ import type { NoteKind } from "../note/kind";
 export type GrammaticalNoteKind = Exclude<NoteKind, "Surface">;
 export type NoteFamilyFor<L extends SupportedTargetLanguage> = Extract<
 	Dumling.Family<L>,
-	"Lexeme" | "Phraseme" | "Morpheme" | "Construction"
+	"Lexeme" | "Phraseme" | "Morpheme"
 >;
 export type NoteLemmaKindFor<
 	L extends SupportedTargetLanguage,

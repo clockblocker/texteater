@@ -44,9 +44,7 @@ export const targetInputSchema = z.strictObject({
 const reachable = targetsByLanguage.de.options.filter(
 	(schema) =>
 		schema.shape.family.value !== "Morpheme" &&
-		!(["X", "PUNCT", "Collocation"] as string[]).includes(
-			schema.shape.kind.value,
-		),
+		!(["X", "PUNCT", "AUX"] as string[]).includes(schema.shape.kind.value),
 );
 const compactRoute = z.union(
 	reachable.map((schema) => schema.omit({ memberSegmentIndices: true })),

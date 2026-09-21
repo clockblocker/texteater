@@ -17,7 +17,6 @@ But the classifier is not building a dependency tree. It is resolving a learner 
 
 That is why German dumling can classify:
 
-- \`zum\` as \`Construction/Fusion\`
 - \`Bahnhof\` through a partial realization of the idiom \`nur Bahnhof verstehen\`
 - both occurrences of \`auf\` in \`Pass auf dich auf!\` as ordered members of
   one Attestation for \`aufpassen\`
@@ -51,7 +50,6 @@ German uses the four public dumling Lemma families:
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
-| \`Construction\` | \`Fusion\` |
 
 These families are not interchangeable.
 
@@ -65,8 +63,6 @@ belongs to the larger unit rather than to one token in isolation. A
 expressions such as \`eine Entscheidung treffen\` belong here rather than under
 \`Idiom\`.
 
-\`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\`.
-
 ## Surface and attested evidence
 
 Every Surface carries normalized spelling and the represented grammatical
@@ -76,7 +72,6 @@ An assessment error leaves the distinction undetermined.
 For example, nominative singular \`Mutter\` is Grundform, while \`Kindern\` and
 \`fünften\` carry contrary inflection. Verbal Phraseme Surfaces may be inflected;
 their Attestations can have \`realizationCoverage: "Partial"\`.
-\`Construction/Fusion\` currently has no core or inflectional feature distinctions.
 
 \`Attestation\` records occurrence evidence:
 

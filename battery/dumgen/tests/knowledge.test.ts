@@ -392,14 +392,14 @@ test("interruption retains evidence of completed independent work and starts no 
 	).toBe(true);
 });
 
-test("all four retained Family corpora run through production Knowledge with complete traces", async () => {
+test("all three retained Family corpora run through production Knowledge with complete traces", async () => {
 	const { getExperiment } = await import("../src/development.js");
 	const { knowledgeOperationExperiment } = await import(
 		"../src/evaluation/knowledge-operation.js"
 	);
 	const { knowledgeFixture } = await import("./knowledge-fixture.js");
 	let count = 0;
-	for (const family of ["lexeme", "phraseme", "morpheme", "construction"]) {
+	for (const family of ["lexeme", "phraseme", "morpheme"]) {
 		const definition = getExperiment(`knowledge-analysis/de/${family}`);
 		for (const [id, example] of Object.entries(
 			definition.source.goldenCorpus?.cases ?? {},
@@ -430,115 +430,5 @@ test("all four retained Family corpora run through production Knowledge with com
 			count++;
 		}
 	}
-	expect(count).toBe(70);
+	expect(count).toBe(69);
 }, 30000);
-
-for (const [form, adposition, article] of [
-	["im", "in", "der"],
-	["zum", "zu", "der"],
-	["ins", "in", "das"],
-] as const) {
-	test(`Fusion ${form} exposes component Shadows without new occurrences`, async () => {
-		const result = await Effect.runPromise(
-			createDumgen({
-				judge: async () => {
-					throw Error("Authored breakdown must not judge");
-				},
-				execute: async () => {
-					throw Error("Authored breakdown must not generate");
-				},
-			}).produceKnowledge({
-				encounter: {
-					sentence: {
-						id: "fusion",
-						language: "de",
-						segments: [{ kind: "ResolvableText", text: form }],
-					},
-					target: {
-						family: "Construction",
-						kind: "Fusion",
-						memberSegmentIndices: [0],
-					},
-				},
-				reading: {
-					unitKind: "Reading",
-					lemma: {
-						unitKind: "Lemma",
-						language: "de",
-						family: "Construction",
-						kind: "Fusion",
-						canonicalForm: form,
-						coreFeatures: {},
-					},
-					emojiDescription: "🔗",
-				},
-				request: { lexicalBreakdown: null },
-			}),
-		);
-		expect(result.failures).toEqual([]);
-		expect(result.changes).toEqual([
-			{
-				kind: "Contribute",
-				aspect: "lexicalBreakdown",
-				value: [
-					{
-						language: "de",
-						family: "Lexeme",
-						kind: "ADP",
-						canonicalForm: adposition,
-					},
-					{
-						language: "de",
-						family: "Lexeme",
-						kind: "DET",
-						canonicalForm: article,
-					},
-				],
-			},
-		]);
-	});
-}
-
-test("Fusion breakdown survives independently completed text contributions", async () => {
-	const result = await Effect.runPromise(
-		createDumgen({
-			execute: async () => ({
-				output: { text: "Verschmelzung von in und dem (Dativ)." },
-			}),
-			judge: async () => {
-				throw Error("No judgment needed");
-			},
-		}).produceKnowledge({
-			encounter: {
-				sentence: {
-					id: "fusion-mixed",
-					language: "de",
-					segments: [{ kind: "ResolvableText", text: "im" }],
-				},
-				target: {
-					family: "Construction",
-					kind: "Fusion",
-					memberSegmentIndices: [0],
-				},
-			},
-			reading: {
-				unitKind: "Reading",
-				lemma: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Construction",
-					kind: "Fusion",
-					canonicalForm: "im",
-					coreFeatures: {},
-				},
-				emojiDescription: "🔗",
-			},
-			request: { definition: null, lexicalBreakdown: null },
-		}),
-	);
-	expect(result.failures).toEqual([]);
-	expect(result.changes.map((change) => change.aspect)).toEqual([
-		"definition",
-		"lexicalBreakdown",
-	]);
-});

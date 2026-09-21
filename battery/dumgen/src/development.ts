@@ -23,6 +23,7 @@ import {
 } from "./concrete-lang/de/reading-emoji-description/evaluator.js";
 import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-description/experiment.js";
 import { intakeOperationExperiment } from "./concrete-lang/de/segmentation/experiment.js";
+import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysis/experiment.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import type { DumgenOptions } from "./types.js";
@@ -157,6 +158,8 @@ export function operationExperiment(id: string, options: DumgenOptions) {
 		return knowledgeOperationExperiment(getExperiment(id), options);
 	if (id === "target-classification/de/high-level-whole-unit")
 		return targetOperationExperiment(options);
+	if (id === "sentence-analysis/de")
+		return sentenceOperationExperiment(options);
 	throw Error(`No production operation for ${id}`);
 }
 
@@ -173,6 +176,7 @@ export async function evaluateExperiment(args: {
 	if (
 		args.experimentId ===
 			"target-classification/de/high-level-whole-unit" ||
+		args.experimentId === "sentence-analysis/de" ||
 		args.experimentId.startsWith("grammatical-resolution/") ||
 		args.experimentId.startsWith("reading-") ||
 		args.experimentId === "intake" ||

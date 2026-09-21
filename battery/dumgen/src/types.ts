@@ -2,6 +2,7 @@ import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type { Effect } from "effect";
 import type { Questions, TypeSafeExecutor } from "promptsmith/typesafe";
+import type { SentenceAnalysis } from "./concrete-lang/de/sentence-analysis/analysis.js";
 import type * as Generated from "./generated/types.js";
 import type {
 	Segment,
@@ -11,6 +12,22 @@ import type {
 import type { DumgenFailure } from "./universal/failure.js";
 
 export type { KnowledgeDraft } from "./concrete-lang/de/knowledge-production/draft.js";
+export type {
+	AnalyzedSegment,
+	Fusion,
+	FusionComponent,
+	IdentityCandidate,
+	IdentityMass,
+	IdentityState,
+	LargestUnit,
+	LexemeTarget,
+	Member,
+	MemberRole,
+	PhrasemeTarget,
+	SelectedPhrasemeKind,
+	SelectedRoute,
+	SentenceAnalysis,
+} from "./concrete-lang/de/sentence-analysis/analysis.js";
 export type { Segment, SegmentationDecision } from "./generated/types.js";
 export type DumgenLanguage = Dumling.Language;
 export type SegmentKind = Segment["kind"];
@@ -90,6 +107,16 @@ export interface Dumgen {
 		readonly language: L;
 		readonly stitchedText: string;
 	}): Task<SegmentedSentence<L>>;
+	/**
+	 * Intake-time analysis of one accepted German sentence in two layers:
+	 * the Lexeme Targets its Segments realize and the Phraseme Targets made of
+	 * those words, with fused words split into offset-keyed Segments (Dumgen
+	 * ADR 0006). A host stores it beside the sentence and reads it at click
+	 * time; classifyTarget stays the fallback for an Unresolved unit.
+	 */
+	analyzeSentence(input: {
+		readonly sentence: SegmentedSentence<"de">;
+	}): Task<SentenceAnalysis>;
 	classifyTarget<L extends DumgenLanguage>(input: {
 		readonly sentence: SegmentedSentence<L>;
 		readonly clickedSegmentIndex: number;

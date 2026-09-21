@@ -50,7 +50,6 @@ import {
 	liftShadow,
 	type motionOf,
 	PILE_HEIGHT_REM,
-	SHEET_HEADER_REM,
 } from "./motion-spec";
 import { useDeckReducedMotion } from "./reduced-motion";
 import {
@@ -612,6 +611,11 @@ function subjectLabel(subject: Subject): string {
 	return subject.kind === "Text"
 		? subject.text.title
 		: `${subject.note.kind} · ${subject.note.title}`;
+}
+
+/** A Note's gloss, shown after its label in a bar; a Text has none. */
+function subjectGloss(subject: Subject): string | null {
+	return subject.kind === "Text" ? null : subject.note.tail.gloss;
 }
 
 function rungLabel(rung: Rung): string {
@@ -2248,6 +2252,8 @@ function CompassRuntime({
 		const ground = groundOf(pane);
 		const covered = pane.covers.length > 0;
 		const trail = pane.line.map((rung) => rungLabel(rung));
+		const gloss =
+			ground.kind === "Sheet" ? subjectGloss(ground.card.subject) : null;
 		/* the bar is a handle only while its Ground is a Sheet and uncovered */
 		const handle =
 			ground.kind === "Sheet" && !covered && allows("lift")
@@ -2358,9 +2364,9 @@ function CompassRuntime({
 								</motion.span>
 							))}
 						</AnimatePresence>
-						{handle === "press" ? (
+						{gloss ? (
 							<span className="ms-2 shrink-0 normal-case tracking-normal text-ink-muted">
-								hold to lift
+								{gloss}
 							</span>
 						) : null}
 					</nav>
@@ -2548,6 +2554,11 @@ function CompassRuntime({
 				<span className="min-w-0 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink uppercase">
 					{subjectLabel(card.subject)}
 				</span>
+				{subjectGloss(card.subject) ? (
+					<span className="shrink-0 font-mono text-[0.62rem] text-ink-muted">
+						{subjectGloss(card.subject)}
+					</span>
+				) : null}
 			</motion.div>
 		);
 	}
@@ -3203,6 +3214,8 @@ function PresentationView({
 					: "var(--line-strong)";
 	const subject = card.subject;
 	const dataForm = ground ? "ground" : form;
+	/* one column width in every form: a Text Sheet reads at prose width */
+	const column = sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH;
 
 	return (
 		<motion.article
@@ -3249,14 +3262,12 @@ function PresentationView({
 			   rather than letting it walk the deck */
 			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : sheet ? "rounded-b-[0.9rem]" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
 		>
-			{/* the content column: one width in every form, centred in a wide box.
-			    A ghost's ink is quiet, on paper as opaque as any: nothing shows through */}
+			{/* the content column: one width in every form, centred inside a
+			    Heading and a scroller that both span the Pane, so the scrollbar
+			    sits at the Pane's edge, not the column's. A ghost's ink is
+			    quiet, on paper as opaque as any: nothing shows through */}
 			<div
-				className={`mx-auto flex min-h-0 w-full flex-1 flex-col ${preview ? "opacity-50" : ""}`}
-				style={{
-					maxWidth:
-						sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH,
-				}}
+				className={`flex min-h-0 w-full flex-1 flex-col ${preview ? "opacity-50" : ""}`}
 			>
 				<HeadingBlock
 					subject={subject}
@@ -3265,6 +3276,7 @@ function PresentationView({
 					layout={!held && morphing}
 					offset={headingOffset}
 					positionSpec={positionSpec}
+					column={column}
 				/>
 				{/* the Blocks travel with the Heading: the row it vacates is
 				    the row they take */}
@@ -3277,7 +3289,8 @@ function PresentationView({
 					className={`relative order-1 min-h-0 flex-1 ${sheet ? "overflow-y-auto" : "overflow-hidden"}`}
 				>
 					<div
-						className={`flex flex-col gap-3 px-4 ${below ? "pt-3" : "pb-4"}`}
+						className={`mx-auto flex w-full flex-col gap-3 px-4 ${below ? "pt-3" : sheet ? "pt-4 pb-4" : "pb-4"}`}
+						style={{ maxWidth: column }}
 					>
 						{subject.kind === "Text" ? (
 							<TextBlock
@@ -3376,6 +3389,7 @@ function HeadingBlock({
 	layout,
 	offset,
 	positionSpec,
+	column,
 }: {
 	subject: Subject;
 	form: NoteForm;
@@ -3384,14 +3398,18 @@ function HeadingBlock({
 	offset: MotionValue<number>;
 	/** What the row's position rides; see `positionSpec` in `PresentationView`. */
 	positionSpec: ReturnType<typeof motionOf>;
+	/** The content column's width; the Heading row is centred at it. */
+	column: string;
 }) {
-	const { transition, MORPH, KIND_LABEL, KIND_LABEL_Y } = useDeckMotion();
+	const { MORPH } = useDeckMotion();
 	const sheet = form === "sheet";
 	const rem = remPx();
-	const kind = subject.kind === "Text" ? "Text" : subject.note.kind;
+	/* A Sheet has no Heading row: its bar carries the label and the gloss.
+	   The row folds shut on the morph, so a Card's title travels into the
+	   bar and returns from it. A Card's row shows its form and gloss. */
 	const title =
 		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
-	const gloss = subject.kind === "Text" ? "text" : subject.note.tail.gloss;
+	const gloss = subject.kind === "Text" ? null : subject.note.tail.gloss;
 	return (
 		<motion.div
 			data-heading=""
@@ -3401,34 +3419,30 @@ function HeadingBlock({
 			layout={layout ? "position" : false}
 			layoutDependency={`${form}:${atBottom.toString()}`}
 			transition={{ ...MORPH, layout: positionSpec }}
-			animate={{ height: (sheet ? SHEET_HEADER_REM : HEADER_REM) * rem }}
+			animate={{
+				height: sheet ? 0 : HEADER_REM * rem,
+				opacity: sheet ? 0 : 1,
+			}}
 			style={{ order: atBottom ? 2 : 0, y: offset }}
-			className={`relative flex w-full shrink-0 items-end gap-4 px-4 ${atBottom ? "" : "pb-2"}`}
+			className={`flex w-full shrink-0 justify-center overflow-hidden px-4 ${atBottom || sheet ? "" : "pb-2"}`}
 		>
-			<motion.span
-				initial={false}
-				animate={{
-					opacity: sheet ? 1 : 0,
-					y: sheet ? 0 : KIND_LABEL_Y,
-				}}
-				transition={transition(KIND_LABEL)}
-				className="pointer-events-none absolute top-3 left-4 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase"
+			<div
+				className="relative flex h-full w-full min-w-0 items-end gap-4"
+				style={{ maxWidth: column }}
 			>
-				{kind}
-			</motion.span>
-			<motion.span
-				initial={false}
-				animate={{ fontSize: (sheet ? 1.5 : 1) * rem }}
-				transition={MORPH}
-				className={`min-w-0 flex-1 truncate font-serif leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
-			>
-				{title}
-			</motion.span>
-			<span
-				className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
-			>
-				{gloss}
-			</span>
+				<h2
+					className={`min-w-0 flex-1 truncate font-serif text-[1rem] font-normal leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
+				>
+					{title}
+				</h2>
+				{gloss ? (
+					<span
+						className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
+					>
+						{gloss}
+					</span>
+				) : null}
+			</div>
 		</motion.div>
 	);
 }

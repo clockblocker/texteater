@@ -1,5 +1,12 @@
 # Intake-first click pipeline (2026-09-18)
 
+Production owns the design since 2026-09-21: `analyzeSentence` in
+`src/concrete-lang/de/sentence-analysis/` (Dumgen ADR 0006), evaluated as the
+`sentence-analysis/de` operation experiment. This directory is the lab that
+measured it and still re-scores stored runs; `fixtures.ts` emits the
+playground fixtures through the production operation, and the lab's own
+DTO copy is gone.
+
 The click-path prototypes one directory up asked how few round trips *one
 click* needs. These ask the opposite question: **how much of the work can move
 into intake, so a click only has to run the steps that actually generate
@@ -369,13 +376,13 @@ that shape.
 ## Playground fixtures (2026-09-21)
 
 `fixtures.ts` runs the 16 sentences in `fixtures/sentences.ts` through the
-winning design plus the identity and role axes, splits fused words and
-expands abbreviations with the German fusion table, and writes
-`fixtures/lattice.json`: Segmented Sentences as #493 defined them (offsets,
-members with roles, one Route Mass, an Identity Mass over headword groups)
-with their gold keyed by offset. `segmented-sentence.ts` holds the DTO and
-the Resolution Selector; the tf-demo playground entry `lattice` imports both
-and renders nothing the selector did not derive.
+production `analyzeSentence` operation and writes `fixtures/lattice.json`:
+one Sentence Analysis per sentence (offset-keyed Segments, Lexeme Targets
+with roles, Route Mass and Identity Mass, Phraseme Targets) with the gold
+for both layers keyed by offset. The DTO and the Resolution Selector are the
+package's own (`dumgen`, `dumgen/types`); the tf-demo playground entry
+`lattice` imports them and renders nothing the selector did not derive. The
+same 16 sentences are the `sentence-analysis/de` corpus.
 
 Scored against the authored gold, one run:
 

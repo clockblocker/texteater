@@ -1,5 +1,3 @@
-import { corpusSource as p0 } from "./grammatical-resolution/construction/fusion/corpus.js";
-import { evaluationCaseIds as e0 } from "./grammatical-resolution/construction/fusion/evaluation-ids.js";
 import { corpusSource as p1 } from "./grammatical-resolution/lexeme/adjective/corpus.js";
 import { evaluationCaseIds as e1 } from "./grammatical-resolution/lexeme/adjective/evaluation-ids.js";
 import { corpusSource as p2 } from "./grammatical-resolution/lexeme/adposition/corpus.js";
@@ -42,8 +40,6 @@ import { corpusSource as p20 } from "./grammatical-resolution/phraseme/idiom/cor
 import { evaluationCaseIds as e20 } from "./grammatical-resolution/phraseme/idiom/evaluation-ids.js";
 import { corpusSource as p21 } from "./grammatical-resolution/phraseme/proverb/corpus.js";
 import { evaluationCaseIds as e21 } from "./grammatical-resolution/phraseme/proverb/evaluation-ids.js";
-import { corpusSource as p22 } from "./knowledge-production/construction/corpus.js";
-import { evaluationCaseIds as e22 } from "./knowledge-production/construction/evaluation-ids.js";
 import { corpusSource as p23 } from "./knowledge-production/lexeme/corpus.js";
 import { evaluationCaseIds as e23 } from "./knowledge-production/lexeme/evaluation-ids.js";
 import { evaluationCaseIds as e30 } from "./knowledge-production/lexical-breakdown/resolution/evaluation-ids.js";
@@ -66,10 +62,11 @@ import { corpusSource as p27 } from "./reading-emoji-description/resolve/corpus.
 import { evaluationCaseIds as e27 } from "./reading-emoji-description/resolve/evaluation-ids.js";
 import { corpusSource as p28 } from "./segmentation/corpus.js";
 import { evaluationCaseIds as e28 } from "./segmentation/evaluation-ids.js";
+import { corpusSource as p35 } from "./sentence-analysis/corpus.js";
+import { evaluationCaseIds as e35 } from "./sentence-analysis/evaluation-ids.js";
 import { corpusSource as p29 } from "./target-classification/corpus.js";
 import { evaluationCaseIds as e29 } from "./target-classification/evaluation-ids.js";
 export const corpusRegistrations = [
-	{ source: p0, evaluationCaseIds: e0 },
 	{ source: p1, evaluationCaseIds: e1 },
 	{ source: p2, evaluationCaseIds: e2 },
 	{ source: p3, evaluationCaseIds: e3 },
@@ -91,7 +88,6 @@ export const corpusRegistrations = [
 	{ source: p19, evaluationCaseIds: e19 },
 	{ source: p20, evaluationCaseIds: e20 },
 	{ source: p21, evaluationCaseIds: e21 },
-	{ source: p22, evaluationCaseIds: e22 },
 	{ source: p23, evaluationCaseIds: e23 },
 	{ source: p24, evaluationCaseIds: e24 },
 	{ source: p25, evaluationCaseIds: e25 },
@@ -99,6 +95,7 @@ export const corpusRegistrations = [
 	{ source: p27, evaluationCaseIds: e27 },
 	{ source: p28, evaluationCaseIds: e28 },
 	{ source: p29, evaluationCaseIds: e29 },
+	{ source: p35, evaluationCaseIds: e35 },
 	{ source: p30, evaluationCaseIds: e30 },
 	{ source: p31, evaluationCaseIds: e31 },
 	{ source: p32, evaluationCaseIds: e32 },

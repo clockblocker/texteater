@@ -246,7 +246,7 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 	const db = new RouteDb({
 		lemmas: [
 			lemma("lemma-1", "de", "Bank", "Lexeme", "NOUN"),
-			lemma("lemma-construction", "de", "Bank", "Construction", "Fusion"),
+			lemma("lemma-morpheme", "de", "Bank", "Morpheme", "Prefix"),
 			...unitPeers,
 			lemma("lemma-he", "he", "Bank", "Lexeme", "NOUN"),
 		],
@@ -267,7 +267,7 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 	).toBe(101);
 	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(51);
 	expect(peers).toHaveLength(52);
-	expect(peers.map((peer) => peer.lemmaId)).toContain("lemma-construction");
+	expect(peers.map((peer) => peer.lemmaId)).toContain("lemma-morpheme");
 	expect(db.indexedQueries).toContain(
 		"lemmas.by_language_and_canonical_form",
 	);
@@ -482,67 +482,6 @@ test("homographic demonstrative and relative Lemma navigation keeps exact Readin
 				.flatMap((page) => page.connections.readings)
 				.map(({ readingId }) => readingId),
 		).toEqual([`reading-${pronType}-der`]);
-	}
-});
-
-test("Fusion records expose Lemma, Surface and Attestation routes", async () => {
-	const db = new RouteDb({
-		texts: [{ _id: "text-1", sourceText: "dass" }],
-		sentences: [
-			{
-				_id: "sentence-1",
-				language: "de",
-				segmentedSentenceId: "fixture-sentence",
-				textId: "text-1",
-				position: 0,
-				stitchedText: "dass",
-			},
-		],
-		segments: [
-			{
-				_id: "segment-1",
-				sentenceId: "sentence-1",
-				index: 0,
-				kind: "ResolvableText",
-				text: "dass",
-				attestationMembership: {
-					attestationId: "attestation-1",
-					orthography: "Standard",
-				},
-			},
-		],
-		lemmas: [lemma("lemma-1", "de", "dass", "Construction", "Fusion")],
-		surfaces: [
-			{
-				...surface("surface-1", "lemma-1", "de", "dass"),
-				inflectionalFeatures: undefined,
-			},
-		],
-		readings: [
-			{ _id: "reading-1", lemmaId: "lemma-1", emojiDescription: "🔗" },
-		],
-		attestations: [
-			{
-				_id: "attestation-1",
-				surfaceId: "surface-1",
-				readingId: "reading-1",
-				realizationCoverage: "Full",
-			},
-		],
-	});
-	for (const target of [
-		{ kind: "Lemma", lemmaId: "lemma-1" } as const,
-		{
-			kind: "Surface",
-			language: "de",
-			normalizedSurface: "dass",
-		} as const,
-		{
-			kind: "Attestation",
-			attestationId: "attestation-1",
-		} as const,
-	]) {
-		expect(await routeNote({ db }, { target })).not.toBeNull();
 	}
 });
 

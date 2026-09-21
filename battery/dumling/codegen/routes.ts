@@ -2,7 +2,6 @@ import { readdir } from "node:fs/promises";
 import { z } from "zod";
 import { buildUnitSchemas } from "../src/schemas/units.js";
 import {
-	ConstructionKindSchema,
 	LemmaFamilySchema,
 	MorphemeKindSchema,
 	PhrasemeKindSchema,
@@ -33,7 +32,6 @@ const kindSchemas = {
 	Lexeme: PosSchema,
 	Phraseme: PhrasemeKindSchema,
 	Morpheme: MorphemeKindSchema,
-	Construction: ConstructionKindSchema,
 };
 export async function loadRoutes() {
 	const root = new URL("../src/schemas/concrete-language/", import.meta.url);

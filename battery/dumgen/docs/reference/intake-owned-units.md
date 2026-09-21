@@ -1,44 +1,51 @@
 # Intake-owned units
 
-The contract behind Dumgen ADR 0005: what intake produces for a sentence,
-what a click reads, what the corpora carry, and where the production effort
-starts. Terms are the Dumgen glossary's.
+The contract behind Dumgen ADR 0005 and ADR 0006: what intake produces for a
+sentence, what a click reads, what the corpora carry, and what the host
+stores. Terms are the Dumgen glossary's.
 
-## The Segmented Sentence
+## The Sentence Analysis
+
+`analyzeSentence({ sentence })` takes one accepted German Segmented Sentence
+and returns its Sentence Analysis. The input keeps the frozen shape (`id`,
+`language`, `segments` of kind and text); the analysis is the intake-owned
+value beside it.
 
 ```ts
-type SegmentedSentence = {
-  id: string;
-  language: "de" | "en" | "he";
+type SentenceAnalysis = {
+  sentenceId: string;
+  language: "de";
   stitchedText: string;
-  segments: Segment[];        // concatenated, they give stitchedText back
-  targets: AnalysisTarget[];  // a flat partition of the ResolvableText Segments
-  fusions: Fusion[];          // listed once, components point at Segments
+  segments: AnalyzedSegment[];   // concatenated, they give stitchedText back
+  targets: LexemeTarget[];       // the Lexeme layer: a flat partition of the ResolvableText Segments
+  phrasemes: PhrasemeTarget[];   // the Phraseme layer: a partition of a subset of targets
+  fusions: Fusion[];             // listed once, components point at Segments
 };
 
-type Segment = { offset: number; kind: SegmentKind; text: string; surface: string };
+type AnalyzedSegment = { offset: number; kind: SegmentKind; text: string; surface: string };
 
-type AnalysisTarget = {
-  members: { offset: number; role: MemberRole }[];  // ordered by offset
-  routeMass: Record<Kind | "Unresolved", number>;   // bare Kinds, no Family
+type LexemeTarget = {
+  id: string;
+  members: { offset: number; role: MemberRole }[];  // ordered by offset, exactly one Head
+  routeMass: Record<LexemeKind | "Unresolved", number>;
   identity: {                                        // only when the head enumerates candidates
     candidates: IdentityCandidate[];                 // headword groups
     mass: Record<CandidateKey | "NoMatch" | "Unresolved", number>;
   } | null;
+  provenance: string;
+};
+
+type PhrasemeTarget = {
+  id: string;
+  members: LexemeTarget["id"][];                     // words, never Segments; ordered by first offset
+  kindMass: Record<PhrasemeKind | "None" | "Unresolved", number>;
+  fixedness: number;                                 // mean Score, 0 free to 3 fixed expression
+  provenance: string;
 };
 
 type MemberRole =
   | "Head" | "SeparableParticle" | "GovernedPreposition" | "Reflexive"
   | "Expletive" | "Article" | "Auxiliary" | "Unresolved";
-
-type IdentityCandidate = {
-  key: `${"DET" | "PRON" | "AUX"}:${headword}:${pronType | ""}`;
-  kind: "DET" | "PRON" | "AUX";
-  headword: string;
-  pronType: string | null;
-  cells: string[];        // the authored cells behind the group
-  definition: string;
-};
 
 type Fusion = {
   offset: number;
@@ -49,26 +56,33 @@ type Fusion = {
 
 The offset is the persisted occurrence coordinate. A rule change may re-split
 a word and shift Segment indices; offsets into the same Stitched Text do not
-move. The lab's emitted shape is `prototypes/intake/segmented-sentence.ts`.
+move. Types are exported from `dumgen/types`; the module is
+`src/concrete-lang/de/sentence-analysis/`.
 
 Invariants enforced in code, never asked:
 
-- Every ResolvableText Segment belongs to exactly one target; targets do not
-  nest. A word intake cannot place is a singleton whose Route Mass is
-  `{ Unresolved: 1 }`.
+- Every ResolvableText Segment belongs to exactly one Lexeme Target. A word
+  intake cannot place is a singleton whose Route Mass is `{ Unresolved: 1 }`.
+- A Lexeme Target has exactly one Head. A group the matrix glued around two
+  Heads is split at them; a non-head follows the Head it scored the higher
+  Include with, and a verbal role landing on a non-VERB Head, or an Article
+  on a non-NOUN Head, becomes a singleton.
 - A NOUN target keeps at most one article, and it opens the phrase.
-- A fused word never joins a group as a whole. Its adposition component is a
-  singleton ADP target; its article component joins the next NOUN target
-  that has no article, with role Article (ADR 0024). An unattached fused
-  article is a DET singleton.
+- A fused word never joins a group as a whole, whatever the matrix said about
+  the source word. Its adposition component is a singleton ADP target; its
+  article component joins the next NOUN target that has no article, with
+  role Article (ADR 0024). An unattached fused article is a DET singleton.
 - An abbreviation is one Segment; its surface is the expansion from the
-  fusion table, and its whole-unit Kind is the expansion's.
-- `Free` is not a role: a singleton's only member is its Head.
+  fusion table.
+- A Phraseme Target's members are words, projected by Head from the pair
+  answers, and it has at least two. The fixedness Score establishes it (mean
+  at or above 1.5); the Kind Choice only names it. A word belongs to at most
+  one Phraseme.
 
 ## The Resolution Selector
 
-One pure function per policy version, versioned with the code, scored by the
-lab. Given a target:
+One pure function per policy version, shipped with the package (`dumgen`
+exports), scored by the sentence corpus. Given a Lexeme Target:
 
 - Route: the argmax of the Route Mass. `Unresolved` can win. Family follows
   from the Kind.
@@ -78,110 +92,93 @@ lab. Given a target:
   DET or PRON and no candidate exists.
 - Identity State of a non-head: Derived. Its identity comes from the head:
   the article's DET Lemma and surface by agreement (ADR 0024); the
-  auxiliary's AUX Reading from the head's form and the other auxiliaries
-  (rules in `prototypes/intake/derive-aux.ts`); particle, governed
-  preposition, reflexive and expletive project the head's lexical Core
-  Features.
+  auxiliary's AUX Reading from the head's form and the other auxiliaries;
+  particle, governed preposition, reflexive and expletive project the head's
+  lexical Core Features.
 - Identity implies route: a Selected head's Kind replaces the vote for a
   singleton target.
+
+Given a Phraseme Target: `None` below the fixedness floor, else the best
+named Kind of the Kind Mass; `Unresolved` only when no Kind has mass.
+
+Given an offset: `largestOf` is the Phraseme containing the word when there
+is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and
+Segment span, or null when it is Unresolved or `None`.
 
 ## The intake call, German
 
 One jev call per sentence (chunked at 220 questions), state is the tagged
-sentence plus `targetCriteria`:
+sentence plus two rule fields: `criteria` (the realization rules, the
+shipped `targetCriteria` minus its Phraseme and Fusion sentences) and
+`fixedness` (the fixedness rules).
 
 | questions | count for n resolvable Segments | answer used as |
 | --- | --- | --- |
-| membership Choice from every anchor | n(n-1) | symmetrized Include mass, connected components at tau 0.6 |
-| route Choice over the extended inventory | n | Route Mass, summed per group |
+| membership Choice from every anchor, under `criteria` | n(n-1) | symmetrized Include mass, connected components at tau 0.6 |
+| route Choice over the Lexeme inventory | n | Route Mass, summed per group |
 | role Choice | n | Member Role value |
 | identity Choice over authored members, cell rubric | one per Segment with candidates | Identity Mass, summed per headword group |
+| fixedness Score, under `fixedness` | n | mean per expression |
+| Phraseme Kind Choice | n | Kind Mass, summed per expression |
+| same-expression Noul per unordered pair | n(n-1)/2 | components over Heads at 0.5 |
 
-Cost, measured: 9.4k input tokens per sentence for membership and route,
-plus 1.1k for identity and 2.4k for roles; p50 about 360 ms per call; 2.7
-clicks break even against 3.5k tokens per click today. The 28-occurrence
-sentence needs 5 chunked calls; `pairwise` membership is the trade if intake
-latency ever matters.
+Cost, measured: 16.2k input tokens per sentence, p50 about 370 ms per call;
+the 28-occurrence sentence needs several chunked calls.
 
-English and Hebrew: Segment production only (fusion and clitic tables for
-English, the bounded prefix enumeration for Hebrew from #492). Their
-membership, route and identity questions are not authored; every
-ResolvableText Segment is a singleton target favouring Unresolved until they
-are.
+English and Hebrew: not analysed; `analyzeSentence` accepts German only.
 
 ## The click contract
 
-Decided on [#494](https://github.com/clockblocker/texteater/issues/494).
-
-- A click selects the Analysis Target containing the clicked Segment. A
-  click on a non-head member selects the same target as the head.
-- Grammar features (case, number, gender, tense, mood, the `sein` plus
-  participle fork) run at click for the clicked target only. Intake stops at
-  segmentation, membership, roles, Route Mass and closed-class identity.
-- Selected: the authored Reading and Knowledge show with zero calls; the
-  Surface sheet costs one grammar call.
-- Derived: reached from the head target's Surface explanation, zero calls.
-- Open: one grammar call, then the Luna fan-out; the classification call is
-  gone.
-- Miss and Unresolved: today's path unchanged. A Miss is also an observable
-  Catalog Miss, reported per spelling.
+- A click selects the largest unit containing the clicked Segment: the
+  Phraseme when the word is a fixed member of one, else the word. A click on
+  a non-head member selects the same unit as the head.
+- The host maps the clicked stored Segment to its offset range and reads
+  `resolvedUnitAt`. A resolved unit becomes the Analysis Target for
+  Grammatical Resolution with no classification call; a stored Segment is a
+  member when every analysed Segment inside it belongs to the unit, so a
+  fused `zur` stays outside the NOUN whose article is its `r` and inside the
+  Collocation that covers both.
+- Null (Unresolved route, `None` Phraseme, no analysis) falls back to
+  `classifyTarget`, today's path.
+- Grammar features run at click for the clicked unit only. Selected shows
+  the authored Reading and Knowledge with zero calls; Derived is reached from
+  the head; Open pays one grammar call, then the Luna fan-out.
 
 ## Corpora and evaluation
 
-Decided on [#495](https://github.com/clockblocker/texteater/issues/495).
+- Sentence gold is keyed by offset (`sentence-analysis/de`, source
+  `src/concrete-lang/de/sentence-analysis/source-data.json`): Lexeme
+  Targets with members `{ offset, role? }`, a Kind, and for closed-class
+  heads the headword group `Kind:headword`; Phraseme Targets as a Kind and
+  the head offsets of their member words. Roles are scored only where
+  authored. The scorer (`scoreAnalysis`) reports members found, route,
+  roles, identity, Phrasemes found and correct, and extra Phrasemes;
+  `contractPass` is all of them right and no extra Phraseme.
+- The click corpus keeps scoring per click; its support-verb sentences are
+  Collocation (ADR 0028) and its fused-word sentences ADP (ADR 0027).
+- Held-out split: tau 0.6 was chosen on the evaluation clicks. The authoring
+  cases (`--scope all`) are the held-out set for the threshold.
+- The evaluation is the production operation: `bun cli/evaluate.ts
+  --experiment sentence-analysis/de --revision <rev>` runs `analyzeSentence`
+  on every sentence and records the run with the corpus fingerprint and the
+  effective jev settings. First run, 2026-09-21: 16 sentences, 7 strict
+  passes; the misses are `früh`/`spät` routed ADV, `usw.` and a typo routed
+  X, code-switched words routed as German, and one article left off a
+  genitive noun.
 
-- Sentence gold is keyed by offset in the Segmented Sentence shape: targets
-  with members `{ offset, role? }`, a Kind, and for closed-class heads the
-  headword group `Kind:headword`. Roles are scored only where authored.
-  The lab's `fixtures/sentences.ts` is the first such corpus; the 508
-  classification click cases keep scoring as probes into the sentence.
-- Closed-class classification gold carries the authored member id only
-  through the lemma corpora, which the lab already turns into sentences; the
-  click corpus is not duplicated.
-- Held-out split: tau 0.6 was chosen on the 206 evaluation clicks. The
-  authoring cases (`--scope all`, 292 sentences) are the held-out set for the
-  threshold; report both before the number is quoted again.
-- Sub-unit gold (a DET inside a NOUN target, a VERB inside an idiom) is not
-  authored: targets do not nest, and Derived members are reached from the
-  head, so there is nothing to score below the target.
-- Evaluation Run: the lab's sentence scoring becomes a Promptsmith operation
-  experiment (`runOperationExperiment`) whose cases are Segmented Sentences
-  with offset gold and whose executor is the intake call; the manifest
-  fingerprints the corpus and the effective jev settings so the numbers the
-  ADR quotes can be rerun. This is the first task of the production effort.
-- Applied: the coordinating-conjunction gold for `bzw.` carries the dot
-  inside the member, as the Segment does. Classification cases for
-  `z.B.`, `d.h.`, `usw.` (mid-sentence and sentence-final), `u.a.`, `o.Ä.`,
-  `z.T.`, `v.a.`, `sowie`, `und zwar`, `Dipl.-Ing.` and their expansions
-  (28 clicks); grammar cases with a Variant Surface for each abbreviated
-  form and a multi-member Canonical Surface for each written-out form (14
-  ADV, 3 CCONJ, 1 NOUN). A fused `zum` in `zum Beispiel` is one member with
-  Standard orthography until the Dumling schema carries Fused; the case
-  migrates then. `Dipl.-Ing.` and `o.Ä.` were added to the segmenter and the
-  abbreviation table. tf-demo's sentence splitter keeps a sentence-internal
-  abbreviation or an ordinal with what follows it and still splits after a
-  sentence-final `usw.` before a capital.
+## The host
 
-## Boundary of the production effort
+tf-demo runs `analyzeSentence` at intake for every accepted German sentence,
+stores the analysis beside the sentence, reads it at selection time, and
+strips it with the other derived analysis. Attestation Membership stays keyed
+by stored Segment index; the offset migration and Fused orthography are the
+remaining production items, with the Convex hop cost of the authored
+candidates and live latency per Identity State.
 
-In scope for the follow-on: the intake orchestration calling the sentence
-questions and persisting the Segmented Sentence in Convex; Attestation
-Membership keyed by offset with Fused orthography; the reader's tones for
-Identity States; the Evaluation Run; migration of Fusion-Lemma Attestations;
-Convex hop cost measured with the authored catalog behind the identity
-candidates; live latency per Identity State.
+## Playground
 
-Out of scope: Luna prompt changes, Closed Route activation policy (map 223),
-PRON and DET population authoring (map 236), Hebrew beyond the prefix
-enumeration, speculative Luna prefetch, the morpheme level, one call per text
-for language and stitching.
-
-## Playground findings
-
-Reviewed on 2026-09-21 ([#496](https://github.com/clockblocker/texteater/issues/496)):
-accepted as built, no change to the contract requested. What the fixtures
-show wrong is membership, not the contract: an idiom split into verb and
-noun phrase, an adjunct preposition grouped with its noun, a
-Funktionsverbgefüge taking free arguments, a weekday voted PROPN leaving a
-fused article unattached. These are `targetCriteria` and corpus questions
-for the production effort.
+`/playground/lattice/<sentence id>` renders `prototypes/intake/fixtures/lattice.json`,
+emitted by the production operation for the 16 corpus sentences, through the
+package's Resolution Selector: a click lights up the largest unit, a
+Phraseme's panel lists its member words and descends to each, a word's panel
+ascends to its Phraseme. Re-emit with `bun prototypes/intake/fixtures.ts`.

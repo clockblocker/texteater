@@ -2279,7 +2279,7 @@
 					"nearAntonym": null
 				}
 			},
-			"explanation": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme, never Construction.",
+			"explanation": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme.",
 			"contaminationKeys": ["relation-de-gluecklich-happy"]
 		},
 		"relation-adv-41-schnell-kind": {

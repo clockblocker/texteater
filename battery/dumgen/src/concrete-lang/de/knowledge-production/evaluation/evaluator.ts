@@ -8,13 +8,13 @@ import {
 	directSemanticRelationSchema as requestableRelationSchema,
 } from "../../model-schemas.js";
 import {
-	type RelationCorpusAdjudication,
-	relationCorpusAdjudications,
-} from "./adjudications.js";
-import {
 	germanRelationTargetKindsByFamily,
 	isRelationBearingKnowledgeFamily,
 } from "../families.js";
+import {
+	type RelationCorpusAdjudication,
+	relationCorpusAdjudications,
+} from "./adjudications.js";
 import { assertGermanKnowledgeAnalysisMirrorsRequest } from "./request.js";
 
 type RequestableRelation = Dumrel.DirectSemanticRelation;

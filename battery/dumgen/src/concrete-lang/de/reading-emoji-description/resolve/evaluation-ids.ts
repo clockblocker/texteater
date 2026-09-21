@@ -39,7 +39,6 @@ export const evaluationCaseIds = [
 	"reading-de-kitchen-room",
 	"reading-de-zug-chess-move",
 	"reading-de-leitung-management",
-	"reading-de-construction-fusion-am-temporal",
 	"reading-de-lexeme-cconj-entweder-oder",
 	"reading-de-lexeme-det-der-neighbor-house-isolation",
 	"reading-de-lexeme-pron-das-relative-neighbor-house-isolation",

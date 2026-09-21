@@ -68,6 +68,7 @@ export const resetDemoTableNames = [
 	"surfaces",
 	"lemmas",
 	"segments",
+	"sentenceAnalyses",
 	"sentences",
 	"texts",
 	"dictionaryState",
@@ -432,7 +433,7 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 
 		const workBySentence = await Promise.all(
 			sentences.map(async (sentence) => {
-				const [sessions, segments] = await Promise.all([
+				const [sessions, segments, analyses] = await Promise.all([
 					ctx.db
 						.query("resolutionSessions")
 						.withIndex("by_sentence_id", (q) =>
@@ -445,15 +446,29 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 							q.eq("sentenceId", sentence._id),
 						)
 						.take(BATCH_SIZE),
+					ctx.db
+						.query("sentenceAnalyses")
+						.withIndex("by_sentence_id", (q) =>
+							q.eq("sentenceId", sentence._id),
+						)
+						.take(BATCH_SIZE),
 				]);
-				return { sessions, segments };
+				return { sessions, segments, analyses };
 			}),
 		);
 		const next = workBySentence.find(
-			({ sessions, segments }) =>
-				sessions.length > 0 || segments.length > 0,
+			({ sessions, segments, analyses }) =>
+				sessions.length > 0 ||
+				segments.length > 0 ||
+				analyses.length > 0,
 		);
 		if (!next) return { deleted: 0, hasMore: false };
+		if (next.analyses.length > 0) {
+			await Promise.all(
+				next.analyses.map((analysis) => ctx.db.delete(analysis._id)),
+			);
+			return { deleted: next.analyses.length, hasMore: true };
+		}
 		if (next.sessions.length > 0) {
 			const activeSegmentIds = [
 				...new Set(

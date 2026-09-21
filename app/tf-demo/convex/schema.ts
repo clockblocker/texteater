@@ -26,11 +26,12 @@ import {
 	resolutionReadingProjectionValidator,
 	resolutionRouteProjectionValidator,
 	resolutionRunStateValidator,
-	storedGrammaticalCheckpointValidator,
 	safeGenerationFailureValidator,
 	segmentKindValidator,
 	segmentResolutionStateValidator,
+	storedGrammaticalCheckpointValidator,
 	storedKnowledgeSettingsValidator,
+	storedSentenceAnalysisValidator,
 	surfaceSpellingValidator,
 	textOriginValidator,
 	translationLanguageValidator,
@@ -105,6 +106,12 @@ export default defineSchema({
 		.index("by_segmented_sentence_id", ["segmentedSentenceId"])
 		.index("by_stitched_text", ["stitchedText"])
 		.index("by_text_id_and_position", ["textId", "position"]),
+
+	/** One Sentence Analysis per Sentence, read at click time before classification. */
+	sentenceAnalyses: defineTable({
+		sentenceId: v.id("sentences"),
+		analysis: storedSentenceAnalysisValidator,
+	}).index("by_sentence_id", ["sentenceId"]),
 
 	segments: defineTable({
 		sentenceId: v.id("sentences"),

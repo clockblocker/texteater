@@ -217,7 +217,7 @@ test("a noun schema imports only its noun route", async () => {
 	if (!result.metafile) throw Error("Missing dependency graph");
 	const paths = Object.keys(result.metafile.inputs);
 	const routes = paths.filter((path) =>
-		/schemas\/concrete-language\/[^/]+\/(construction|lexeme|morpheme|phraseme)\//.test(
+		/schemas\/concrete-language\/[^/]+\/(lexeme|morpheme|phraseme)\//.test(
 			path,
 		),
 	);

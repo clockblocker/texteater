@@ -1,0 +1,300 @@
+import { Effect } from "effect";
+import {
+	defineGoldenCaseCollection,
+	defineGoldenCorpus,
+	stableJson,
+} from "promptsmith";
+import type { OperationExperiment } from "promptsmith/evaluation";
+import { z } from "zod";
+import type { DumgenOptions } from "../../../types.js";
+import { createDumgen } from "../../../universal/dumgen.js";
+import { segmentSchema } from "../../../universal/schemas.js";
+import {
+	effectiveRoute,
+	headOf,
+	membersOf,
+	type SentenceAnalysis,
+	selectIdentity,
+	selectPhrasemeKind,
+} from "./analysis.js";
+import { evaluationCaseIds } from "./evaluation-ids.js";
+import data from "./source-data.json";
+
+/**
+ * The sentence corpus (issue 495): gold keyed by character offset in the
+ * Segmented Sentence's Stitched Text, a Lexeme layer of targets with members
+ * and, where authored, roles and the closed-class headword group, and a
+ * Phraseme layer naming member words by head offset.
+ */
+export const inputSchema = z.strictObject({
+	segments: z.array(segmentSchema).min(1),
+});
+const goldTargetSchema = z.strictObject({
+	kind: z.string().min(1),
+	members: z
+		.array(
+			z.strictObject({
+				offset: z.number().int().nonnegative(),
+				role: z.string().min(1).optional(),
+			}),
+		)
+		.min(1),
+	identity: z.string().min(1).optional(),
+});
+export const goldSchema = z.strictObject({
+	targets: z.array(goldTargetSchema),
+	phrasemes: z.array(
+		z.strictObject({
+			kind: z.string().min(1),
+			words: z.array(z.number().int().nonnegative()).min(2),
+		}),
+	),
+});
+export type SentenceGold = z.infer<typeof goldSchema>;
+
+/** What one analysed sentence scores against its gold. */
+export type SentenceScore = {
+	readonly contractPass: boolean;
+	readonly targets: number;
+	readonly membersFound: number;
+	readonly routeCorrect: number;
+	readonly rolesScored: number;
+	readonly rolesCorrect: number;
+	readonly identityScored: number;
+	readonly identityCorrect: number;
+	readonly phrasemes: number;
+	readonly phrasemesFound: number;
+	readonly phrasemesCorrect: number;
+	readonly phrasemesExtra: number;
+	readonly failures: readonly string[];
+};
+
+export function scoreAnalysis(
+	analysis: SentenceAnalysis,
+	gold: SentenceGold,
+): SentenceScore {
+	const failures: string[] = [];
+	const text = (offset: number) =>
+		analysis.segments.find((s) => s.offset === offset)?.text ?? "?";
+	let membersFound = 0;
+	let routeCorrect = 0;
+	let rolesScored = 0;
+	let rolesCorrect = 0;
+	let identityScored = 0;
+	let identityCorrect = 0;
+	for (const target of gold.targets) {
+		const offsets = target.members.map((m) => m.offset).join(",");
+		const found = analysis.targets.find(
+			(candidate) =>
+				candidate.members
+					.map((m) => m.offset)
+					.sort((a, b) => a - b)
+					.join(",") === offsets,
+		);
+		const label = `[${target.members.map((m) => text(m.offset)).join(" ")}] ${target.kind}`;
+		if (!found) {
+			failures.push(`${label}: no target with these members`);
+			continue;
+		}
+		membersFound += 1;
+		const route = effectiveRoute(found);
+		if (route.kind === target.kind) routeCorrect += 1;
+		else failures.push(`${label}: route ${route.kind}`);
+		for (const member of target.members) {
+			if (!member.role) continue;
+			rolesScored += 1;
+			const actual = found.members.find(
+				(m) => m.offset === member.offset,
+			)?.role;
+			if (actual === member.role) rolesCorrect += 1;
+			else
+				failures.push(
+					`${label}: ${text(member.offset)} role ${actual} not ${member.role}`,
+				);
+		}
+		if (target.identity) {
+			identityScored += 1;
+			const identity = selectIdentity(found, headOf(found));
+			const actual =
+				identity.state === "Selected"
+					? `${identity.candidate.kind}:${identity.candidate.headword}`
+					: identity.state;
+			if (actual === target.identity) identityCorrect += 1;
+			else
+				failures.push(
+					`${label}: identity ${actual} not ${target.identity}`,
+				);
+		}
+	}
+	const headOffsets = (phraseme: SentenceAnalysis["phrasemes"][number]) =>
+		membersOf(analysis, phraseme)
+			.map((target) => headOf(target).offset)
+			.sort((a, b) => a - b)
+			.join(",");
+	const matched = new Set<string>();
+	let phrasemesFound = 0;
+	let phrasemesCorrect = 0;
+	for (const expected of gold.phrasemes) {
+		const key = [...expected.words].sort((a, b) => a - b).join(",");
+		const label = `{${expected.words.map(text).join(" ")}} ${expected.kind}`;
+		const phraseme = analysis.phrasemes.find(
+			(candidate) => headOffsets(candidate) === key,
+		);
+		if (!phraseme) {
+			failures.push(`${label}: no Phraseme Target with these words`);
+			continue;
+		}
+		matched.add(phraseme.id);
+		phrasemesFound += 1;
+		const kind = selectPhrasemeKind(phraseme).kind;
+		if (kind === expected.kind) phrasemesCorrect += 1;
+		else failures.push(`${label}: kind ${kind}`);
+	}
+	const extra = analysis.phrasemes.filter((p) => !matched.has(p.id));
+	for (const phraseme of extra)
+		failures.push(
+			`extra Phraseme ${selectPhrasemeKind(phraseme).kind} over {${membersOf(
+				analysis,
+				phraseme,
+			)
+				.map((target) => text(headOf(target).offset))
+				.join(" ")}}`,
+		);
+	return {
+		contractPass: failures.length === 0,
+		targets: gold.targets.length,
+		membersFound,
+		routeCorrect,
+		rolesScored,
+		rolesCorrect,
+		identityScored,
+		identityCorrect,
+		phrasemes: gold.phrasemes.length,
+		phrasemesFound,
+		phrasemesCorrect,
+		phrasemesExtra: extra.length,
+		failures,
+	};
+}
+
+const corpus = defineGoldenCorpus({
+	route: data.route,
+	inputSchema,
+	outputSchema: goldSchema,
+	collections: {
+		canonical: defineGoldenCaseCollection(import.meta.url, {
+			cases: Object.fromEntries(
+				Object.entries(data.cases).map(([id, value]) => [
+					id,
+					{
+						input: inputSchema.parse(value.input),
+						idealOutput: goldSchema.parse(value.idealOutput),
+					},
+				]),
+			),
+		}),
+	},
+	fingerprintInput: (input) =>
+		(input as { segments: { text: string }[] }).segments
+			.map((s) => s.text)
+			.join("")
+			.normalize("NFC")
+			.toLocaleLowerCase("de"),
+});
+
+/**
+ * Runs the production `analyzeSentence` on every corpus sentence and scores
+ * both layers; the recorded output is the gold-shaped projection of the
+ * analysis so runs stay comparable across policy versions.
+ */
+export function sentenceOperationExperiment(
+	options: DumgenOptions,
+): OperationExperiment<typeof inputSchema, typeof goldSchema, SentenceScore> {
+	const demonstrations = corpus.select(data.demonstrationIds);
+	const analyses = new Map<string, SentenceAnalysis>();
+	return {
+		corpus,
+		demonstrations,
+		evaluation: corpus.select(evaluationCaseIds).difference(demonstrations),
+		run: async (input, { signal, recordTrace }) => {
+			const dumgen = createDumgen({
+				...options,
+				onOperation: (trace) => {
+					options.onOperation?.(trace);
+					recordTrace(trace);
+				},
+			});
+			const result = await Effect.runPromise(
+				Effect.either(
+					dumgen.analyzeSentence({
+						sentence: {
+							id: "evaluation",
+							language: "de",
+							segments: input.segments,
+						},
+					}),
+				),
+				{ signal },
+			);
+			if (result._tag === "Left") throw result.left;
+			const analysis = result.right;
+			analyses.set(stableJson(input), analysis);
+			return projectGold(analysis);
+		},
+		evaluator: ({ input, output, idealOutput }) => {
+			const analysis = analyses.get(stableJson(input));
+			if (!analysis)
+				return {
+					...emptyScore(idealOutput),
+					contractPass:
+						stableJson(output) === stableJson(idealOutput),
+				};
+			return scoreAnalysis(analysis, idealOutput);
+		},
+	};
+}
+
+/** The analysis in the gold's shape: targets with roles, closed-class identity, Phrasemes by head. */
+export function projectGold(analysis: SentenceAnalysis): SentenceGold {
+	return {
+		targets: analysis.targets.map((target) => {
+			const identity = selectIdentity(target, headOf(target));
+			return {
+				kind: effectiveRoute(target).kind,
+				members: target.members.map((m) => ({
+					offset: m.offset,
+					role: m.role,
+				})),
+				...(identity.state === "Selected"
+					? {
+							identity: `${identity.candidate.kind}:${identity.candidate.headword}`,
+						}
+					: {}),
+			};
+		}),
+		phrasemes: analysis.phrasemes.map((phraseme) => ({
+			kind: selectPhrasemeKind(phraseme).kind,
+			words: membersOf(analysis, phraseme)
+				.map((target) => headOf(target).offset)
+				.sort((a, b) => a - b),
+		})),
+	};
+}
+
+function emptyScore(gold: SentenceGold): SentenceScore {
+	return {
+		contractPass: false,
+		targets: gold.targets.length,
+		membersFound: 0,
+		routeCorrect: 0,
+		rolesScored: 0,
+		rolesCorrect: 0,
+		identityScored: 0,
+		identityCorrect: 0,
+		phrasemes: gold.phrasemes.length,
+		phrasemesFound: 0,
+		phrasemesCorrect: 0,
+		phrasemesExtra: 0,
+		failures: ["no analysis recorded"],
+	};
+}

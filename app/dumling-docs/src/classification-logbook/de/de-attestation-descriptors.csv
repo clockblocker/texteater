@@ -1,5 +1,4 @@
 sentence_markdown,normalizedSurface,grundform,family,kind
-[Am] nächsten Morgen war alles anders.,am,Grundform,Construction,Fusion
 Am [nächsten] Morgen war alles anders.,nächsten,Not Grundform,Lexeme,ADJ
 Am nächsten Morgen war alles [anders].,anders,Undetermined,Lexeme,ADJ
 Auf der Karte sind drei [Seen] eingezeichnet.,Seen,Not Grundform,Lexeme,NOUN
@@ -73,7 +72,6 @@ Einst [ging] er an Ufers Rand mit der Mappe in der Hand.,ging,Not Grundform,Lexe
 Einst ging er [an] Ufers Rand mit der Mappe in der Hand.,an,Grundform,Lexeme,ADP
 Einst ging er an [Ufers] Rand mit der Mappe in der Hand.,Ufers,Not Grundform,Lexeme,NOUN
 Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Undetermined,Lexeme,NOUN
-Er ging [zum] Bahnhof.,zum,Grundform,Construction,Fusion
 Er lief erst nach links und dann [hinaus].,hinaus,Undetermined,Lexeme,ADV
 Er [muss] heute arbeiten.,muss,Not Grundform,Lexeme,AUX
 Er saß [schweigend] am Fenster.,schweigend,Grundform,Lexeme,ADJ
@@ -114,7 +112,6 @@ Mit [keinem] Wort erwähnte sie den Plan.,keinem,Not Grundform,Lexeme,DET
 Nach [manchem] Fehler lernt man schneller.,manchem,Not Grundform,Lexeme,DET
 "nahm Ranzen, Pulverhorn und Flint und [lief] hinaus ins Feld geschwind",lief,Not Grundform,Lexeme,VERB
 "nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Undetermined,Lexeme,ADV
-"nahm Ranzen, Pulverhorn und Flint und lief hinaus [ins] Feld geschwind",ins,Grundform,Construction,Fusion
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Undetermined,Lexeme,ADV
 [Pass] auf dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
 Pass [auf] dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
@@ -126,7 +123,6 @@ Sie [erinnert] sich an den Geruch.,erinnert sich an,Not Grundform,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Not Grundform,Lexeme,NOUN
 Sie ist [verheiratet].,verheiratet,Grundform,Lexeme,ADJ
 Sie kam [lachend] herein.,lachend,Grundform,Lexeme,ADJ
-Sie sprang [ins] kalte Wasser.,ins,Grundform,Construction,Fusion
 Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Not Grundform,Lexeme,VERB
 Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Not Grundform,Lexeme,VERB
 Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB

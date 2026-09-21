@@ -59,10 +59,16 @@ members.
 _Avoid_: Segment index link
 
 **Sentence Analysis**:
-The Analysis Targets and Fusions intake produced for one Sentence, stored with
-it and read at selection time. It is a hint for resolution, not linguistic
-identity; a Segment whose target favours Unresolved resolves as before.
-_Avoid_: precomputed resolution, Unit map
+What intake produced for one German Sentence, stored with it and read at
+selection time. It holds two offset-keyed layers: Lexeme Targets, the analysed
+Segments that realize each word, and Phraseme Targets, the words that form an
+expression. A fused word is one analysed Segment per component, so analysed
+Segments do not map one-to-one onto stored Segments. A click selects the
+largest resolved unit at the clicked Segment; a stored Segment joins that unit
+only when all of its analysed Segments do. It is a hint for resolution, not
+linguistic identity; a Segment whose unit is Unresolved, or that the analysis
+cannot express at stored granularity, is classified at click time as before.
+_Avoid_: precomputed resolution, Unit map, Analysis Target list
 
 **Shared Demo Dictionary**:
 The universal tf-demo set of Lemmas, Surfaces, Readings, and Knowledge. Visitor
@@ -86,8 +92,8 @@ reviewed member. The selected Reading can be opened before it has been
 encountered in a Text.
 
 **Unit Reading**:
-A Reading whose Lemma family is Lexeme, Phraseme, Morpheme, or Construction. The grouping adds
-no identity.
+A Reading whose Lemma family is Lexeme, Phraseme, or Morpheme. The grouping
+adds no identity.
 
 **Reading Note**:
 The learner-facing Note for one Unit Reading, combining its Knowledge, Lemma,
@@ -169,6 +175,6 @@ A rejected occurrence proposal that overlaps a committed Occurrence
 Attestation without matching all and only its members.
 
 **Analysis Stripping**:
-Removal of derived analysis for the Texts in scope while preserving those Texts
-and their Sentences. Apart from full reset, it is the only operation that ends
+Removal of derived analysis, including each Sentence Analysis, for the Texts in
+scope while preserving those Texts and their Sentences. Apart from full reset, it is the only operation that ends
 Occurrence Attestations and memberships.

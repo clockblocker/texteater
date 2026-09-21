@@ -1,214 +1,211 @@
 {
-  "intake-de-core": {
-    "input": {
-      "sourceSentences": [
-        "Das Haus ist groß.",
-        "Das H au s ist groß.",
-        "Ich sehe dasHaus.",
-        "Der Kaffe ist heiß.",
-        "Digga, das ist krass!",
-        "  äh\t ich   geh jetz  ",
-        "Das Update ist ready.",
-        "%$#@  !!!"
-      ]
-    },
-    "idealOutput": [
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Das Haus ist groß."
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Das Haus ist groß."
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Ich sehe das Haus."
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Der Kaffe ist heiß."
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Digga, das ist krass!"
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "äh ich geh jetz"
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Das Update ist ready."
-      },
-      {
-        "decision": "Unintelligible"
-      }
-    ]
-  },
-  "intake-he-core": {
-    "input": {
-      "sourceSentences": [
-        "אני הולך הביתה.",
-        "אניהולך הביתה.",
-        "אני הו לך הביתה.",
-        "  אהה\t אני   הולך הביתה  ",
-        "מה נשמע אחי?",
-        "העדכון ready.",
-        "אניי הולך.",
-        "asdf qwer zxcv"
-      ]
-    },
-    "idealOutput": [
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "אני הולך הביתה."
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "אני הולך הביתה."
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "אני הולך הביתה."
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "אהה אני הולך הביתה"
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "מה נשמע אחי?"
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "העדכון ready."
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "אניי הולך."
-      },
-      {
-        "decision": "Unintelligible"
-      }
-    ]
-  },
-  "intake-unsupported": {
-    "input": {
-      "sourceSentences": [
-        "Je rentre à la maison.",
-        "  Je\t rentre  chez moi. ",
-        "أنا ذاهب إلى البيت."
-      ]
-    },
-    "idealOutput": [
-      {
-        "decision": "UnsupportedLanguage"
-      },
-      {
-        "decision": "UnsupportedLanguage"
-      },
-      {
-        "decision": "UnsupportedLanguage"
-      }
-    ]
-  },
-  "intake-de-boundary-isolation": {
-    "input": {
-      "sourceSentences": [
-        "Das H au",
-        "s ist groß."
-      ]
-    },
-    "idealOutput": [
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Das Hau"
-      },
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "s ist groß."
-      }
-    ]
-  },
-  "intake-en-core": {
-    "input": {
-      "sourceSentences": [
-        "It's a lovely day.",
-        "The hou se is large.",
-        "Isee the house.",
-        "  Hello\t there!  ",
-        "Mr. Jones owns a well-known shop."
-      ]
-    },
-    "idealOutput": [
-      {
-        "decision": "Accepted",
-        "language": "en",
-        "stitchedText": "It's a lovely day."
-      },
-      {
-        "decision": "Accepted",
-        "language": "en",
-        "stitchedText": "The house is large."
-      },
-      {
-        "decision": "Accepted",
-        "language": "en",
-        "stitchedText": "I see the house."
-      },
-      {
-        "decision": "Accepted",
-        "language": "en",
-        "stitchedText": "Hello there!"
-      },
-      {
-        "decision": "Accepted",
-        "language": "en",
-        "stitchedText": "Mr. Jones owns a well-known shop."
-      }
-    ]
-  },
-  "intake-mixed-languages": {
-    "input": {
-      "sourceSentences": [
-        "Das Haus ist groß.",
-        "The house is large.",
-        "הבית גדול."
-      ]
-    },
-    "idealOutput": [
-      {
-        "decision": "Accepted",
-        "language": "de",
-        "stitchedText": "Das Haus ist groß."
-      },
-      {
-        "decision": "Accepted",
-        "language": "en",
-        "stitchedText": "The house is large."
-      },
-      {
-        "decision": "Accepted",
-        "language": "he",
-        "stitchedText": "הבית גדול."
-      }
-    ]
-  }
+	"intake-de-core": {
+		"input": {
+			"sourceSentences": [
+				"Das Haus ist groß.",
+				"Das H au s ist groß.",
+				"Ich sehe dasHaus.",
+				"Der Kaffe ist heiß.",
+				"Digga, das ist krass!",
+				"  äh\t ich   geh jetz  ",
+				"Das Update ist ready.",
+				"%$#@  !!!"
+			]
+		},
+		"idealOutput": [
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Das Haus ist groß."
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Das Haus ist groß."
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Ich sehe das Haus."
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Der Kaffe ist heiß."
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Digga, das ist krass!"
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "äh ich geh jetz"
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Das Update ist ready."
+			},
+			{
+				"decision": "Unintelligible"
+			}
+		]
+	},
+	"intake-he-core": {
+		"input": {
+			"sourceSentences": [
+				"אני הולך הביתה.",
+				"אניהולך הביתה.",
+				"אני הו לך הביתה.",
+				"  אהה\t אני   הולך הביתה  ",
+				"מה נשמע אחי?",
+				"העדכון ready.",
+				"אניי הולך.",
+				"asdf qwer zxcv"
+			]
+		},
+		"idealOutput": [
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "אני הולך הביתה."
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "אני הולך הביתה."
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "אני הולך הביתה."
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "אהה אני הולך הביתה"
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "מה נשמע אחי?"
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "העדכון ready."
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "אניי הולך."
+			},
+			{
+				"decision": "Unintelligible"
+			}
+		]
+	},
+	"intake-unsupported": {
+		"input": {
+			"sourceSentences": [
+				"Je rentre à la maison.",
+				"  Je\t rentre  chez moi. ",
+				"أنا ذاهب إلى البيت."
+			]
+		},
+		"idealOutput": [
+			{
+				"decision": "UnsupportedLanguage"
+			},
+			{
+				"decision": "UnsupportedLanguage"
+			},
+			{
+				"decision": "UnsupportedLanguage"
+			}
+		]
+	},
+	"intake-de-boundary-isolation": {
+		"input": {
+			"sourceSentences": ["Das H au", "s ist groß."]
+		},
+		"idealOutput": [
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Das Hau"
+			},
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "s ist groß."
+			}
+		]
+	},
+	"intake-en-core": {
+		"input": {
+			"sourceSentences": [
+				"It's a lovely day.",
+				"The hou se is large.",
+				"Isee the house.",
+				"  Hello\t there!  ",
+				"Mr. Jones owns a well-known shop."
+			]
+		},
+		"idealOutput": [
+			{
+				"decision": "Accepted",
+				"language": "en",
+				"stitchedText": "It's a lovely day."
+			},
+			{
+				"decision": "Accepted",
+				"language": "en",
+				"stitchedText": "The house is large."
+			},
+			{
+				"decision": "Accepted",
+				"language": "en",
+				"stitchedText": "I see the house."
+			},
+			{
+				"decision": "Accepted",
+				"language": "en",
+				"stitchedText": "Hello there!"
+			},
+			{
+				"decision": "Accepted",
+				"language": "en",
+				"stitchedText": "Mr. Jones owns a well-known shop."
+			}
+		]
+	},
+	"intake-mixed-languages": {
+		"input": {
+			"sourceSentences": [
+				"Das Haus ist groß.",
+				"The house is large.",
+				"הבית גדול."
+			]
+		},
+		"idealOutput": [
+			{
+				"decision": "Accepted",
+				"language": "de",
+				"stitchedText": "Das Haus ist groß."
+			},
+			{
+				"decision": "Accepted",
+				"language": "en",
+				"stitchedText": "The house is large."
+			},
+			{
+				"decision": "Accepted",
+				"language": "he",
+				"stitchedText": "הבית גדול."
+			}
+		]
+	}
 }
