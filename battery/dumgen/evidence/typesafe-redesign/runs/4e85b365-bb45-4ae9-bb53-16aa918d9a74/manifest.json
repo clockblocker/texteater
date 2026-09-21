@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "4e85b365-bb45-4ae9-bb53-16aa918d9a74",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:02.378Z",
-  "corpus": {
-    "fingerprint": "a448e62f95a129b1ba451058f68fa77b351ea2a2327bfdb7ae602881b1d8c011",
-    "caseIds": [
-      "grammar-de-aux-dev-perfect-waren-gegangen"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "4e85b365-bb45-4ae9-bb53-16aa918d9a74",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:02.378Z",
+	"corpus": {
+		"fingerprint": "a448e62f95a129b1ba451058f68fa77b351ea2a2327bfdb7ae602881b1d8c011",
+		"caseIds": ["grammar-de-aux-dev-perfect-waren-gegangen"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

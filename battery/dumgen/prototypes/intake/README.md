@@ -50,15 +50,15 @@ signal: occurrence coverage, the route inventory actually produced, and
 disagree about their own unit, which the corpus criteria forbids and no
 click-time design can even detect.
 
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping link,head,pairwise,anchored --route flat --sweep'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route flat,extended,hier --route-policy groupVote --threshold 0.6'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --depth lattice'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/grammar-batch.ts --route noun --sizes 0,2,4,8'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --runs 2'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --concurrency 3 --runs 2'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --identity-shape rubric --runs 2'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/fixtures.ts'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping link,head,pairwise,anchored --route flat --sweep'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route flat,extended,hier --route-policy groupVote --threshold 0.6'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --depth lattice'
+    zsh -ic 'bun prototypes/intake/grammar-batch.ts --route noun --sizes 0,2,4,8'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --runs 2'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --concurrency 3 --runs 2'
+    zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --identity-shape rubric --runs 2'
+    zsh -ic 'bun prototypes/intake/fixtures.ts'
 
 Every run stores its raw answers under `/tmp/intake-*.json`. `--from <file>`
 re-scores a stored run under a different threshold or route policy without
@@ -418,8 +418,8 @@ sentence:
   Segment. The one-Head invariant (`splitMultiHead`) breaks a word the matrix
   glued around two Heads.
 
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --layered --layers lexeme --shape layered-trimmed --route-policy groupVote --threshold 0.6'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --layered --layers both --shape layered-trimmed --route-policy groupVote --threshold 0.6 --phraseme-policy score'
+    zsh -ic 'bun prototypes/intake/lab.ts --layered --layers lexeme --shape layered-trimmed --route-policy groupVote --threshold 0.6'
+    zsh -ic 'bun prototypes/intake/lab.ts --layered --layers both --shape layered-trimmed --route-policy groupVote --threshold 0.6 --phraseme-policy score'
     bun prototypes/intake/lab.ts --layered --shape layered-trimmed --route-policy groupVote --threshold 0.6 --phraseme-threshold 0.7 --phraseme-policy vote --from /tmp/intake-clicks-anchored-lexeme-top-layered-trimmed-roles-phraseme-score-1.json
 
 Same day, 238 evaluation clicks (the 206 plus the abbreviation cases of

@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "524bb958-1443-465f-903a-2043e2bcf25f",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:06.228Z",
-  "corpus": {
-    "fingerprint": "482dd589dc62aa775f54ccb4eb2ba67f0c47f46a525c2bb0d80c40b005b0f02b",
-    "caseIds": [
-      "grammar-de-x-dev-unknown-blarg-nom"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "524bb958-1443-465f-903a-2043e2bcf25f",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:06.228Z",
+	"corpus": {
+		"fingerprint": "482dd589dc62aa775f54ccb4eb2ba67f0c47f46a525c2bb0d80c40b005b0f02b",
+		"caseIds": ["grammar-de-x-dev-unknown-blarg-nom"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

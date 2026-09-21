@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "7abf6ed2-36b4-474f-8a95-5914f18b5430",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:16.154Z",
-  "corpus": {
-    "fingerprint": "1a129dcc0fbc69afd99617b999d199f186a271e28a10ccf2f46031f2de030da8",
-    "caseIds": [
-      "grammar-de-proverb-dev-andere-laender"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "7abf6ed2-36b4-474f-8a95-5914f18b5430",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:16.154Z",
+	"corpus": {
+		"fingerprint": "1a129dcc0fbc69afd99617b999d199f186a271e28a10ccf2f46031f2de030da8",
+		"caseIds": ["grammar-de-proverb-dev-andere-laender"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "5bbc8ab3-3107-40c4-a23d-58216e3660c8",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:03.256Z",
-  "corpus": {
-    "fingerprint": "be72790af1668ee2329acd6d6c077b0ed69bd095bf428231b79b6d9077f7492f",
-    "caseIds": [
-      "grammar-de-det-dev-indefinite-article-einen"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "5bbc8ab3-3107-40c4-a23d-58216e3660c8",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:03.256Z",
+	"corpus": {
+		"fingerprint": "be72790af1668ee2329acd6d6c077b0ed69bd095bf428231b79b6d9077f7492f",
+		"caseIds": ["grammar-de-det-dev-indefinite-article-einen"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

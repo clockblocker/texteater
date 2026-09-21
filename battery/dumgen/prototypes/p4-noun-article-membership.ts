@@ -10,7 +10,7 @@
  * Production assembly (incl. the noun article guard) scores every variant, and
  * "stray" counts assemblies the guard would have to catch.
  *
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/p4-noun-article-membership.ts [articles|eval|all] [head|tightened|owned]...'
+ *   zsh -ic 'bun prototypes/p4-noun-article-membership.ts [articles|eval|all] [head|tightened|owned]...'
  */
 import type { Questions } from "promptsmith/typesafe";
 import {

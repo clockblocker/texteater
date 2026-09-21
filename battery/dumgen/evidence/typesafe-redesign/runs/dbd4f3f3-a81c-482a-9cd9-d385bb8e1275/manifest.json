@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "dbd4f3f3-a81c-482a-9cd9-d385bb8e1275",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:38.267Z",
-  "corpus": {
-    "fingerprint": "135dd4b6563433af997a79a4e0615ae713fe281c0e6a40ce0994454d30da450c",
-    "caseIds": [
-      "reading-de-adj-sauer-acidic"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "dbd4f3f3-a81c-482a-9cd9-d385bb8e1275",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:38.267Z",
+	"corpus": {
+		"fingerprint": "135dd4b6563433af997a79a4e0615ae713fe281c0e6a40ce0994454d30da450c",
+		"caseIds": ["reading-de-adj-sauer-acidic"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

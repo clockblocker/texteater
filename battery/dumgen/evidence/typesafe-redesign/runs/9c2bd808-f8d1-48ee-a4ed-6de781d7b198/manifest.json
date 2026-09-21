@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "9c2bd808-f8d1-48ee-a4ed-6de781d7b198",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:09.924Z",
-  "corpus": {
-    "fingerprint": "fdbc58b896be1210b3f9364674ff0b0a53d60568443e87c9eca370f58c3b57aa",
-    "caseIds": [
-      "grammar-de-sym-dev-math-minus"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "9c2bd808-f8d1-48ee-a4ed-6de781d7b198",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:09.924Z",
+	"corpus": {
+		"fingerprint": "fdbc58b896be1210b3f9364674ff0b0a53d60568443e87c9eca370f58c3b57aa",
+		"caseIds": ["grammar-de-sym-dev-math-minus"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

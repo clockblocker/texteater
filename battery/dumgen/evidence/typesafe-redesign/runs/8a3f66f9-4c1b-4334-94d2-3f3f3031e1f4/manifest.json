@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "8a3f66f9-4c1b-4334-94d2-3f3f3031e1f4",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:01.477Z",
-  "corpus": {
-    "fingerprint": "7acf8fbcfbfda961545abb441e758349c68edc6f4df89162d862e0838a22bf73",
-    "caseIds": [
-      "grammar-de-adv-dev-temporal-morgen"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "8a3f66f9-4c1b-4334-94d2-3f3f3031e1f4",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:01.477Z",
+	"corpus": {
+		"fingerprint": "7acf8fbcfbfda961545abb441e758349c68edc6f4df89162d862e0838a22bf73",
+		"caseIds": ["grammar-de-adv-dev-temporal-morgen"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

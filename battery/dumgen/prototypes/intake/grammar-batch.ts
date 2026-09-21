@@ -14,7 +14,7 @@
  * production's projection; it compares feature answers to the corpus gold so
  * the batching question is answered on its own.
  *
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/grammar-batch.ts --route noun --sizes 0,2,4,8'
+ *   zsh -ic 'bun prototypes/intake/grammar-batch.ts --route noun --sizes 0,2,4,8'
  *
  * Flags: --route noun|verb|adjective|pronoun   --sizes 0,2,4,8
  *        --decoy same|mixed   --scope eval|all   --concurrency N

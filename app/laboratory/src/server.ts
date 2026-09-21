@@ -126,9 +126,7 @@ export function startLaboratoryServer(
 				options.judge ??
 				((request, requestOptions) =>
 					createTypeSafeExecutor({
-						apiKey:
-							process.env.TYPESAFE_API_KEY ??
-							process.env.TYPESAFE_TOKEN,
+						apiKey: process.env.TYPESAFE_API_KEY,
 					})(request, requestOptions)),
 			judgmentConfiguration: options.judgmentConfiguration ?? {
 				model: process.env.TYPESAFE_DEFAULT_MODEL ?? "jev-latest",
@@ -234,10 +232,7 @@ export function startLaboratoryServer(
 						options.judgmentConfiguration?.model ??
 						process.env.TYPESAFE_DEFAULT_MODEL ??
 						"jev-latest",
-					apiKeyConfigured: Boolean(
-						process.env.TYPESAFE_API_KEY ??
-							process.env.TYPESAFE_TOKEN,
-					),
+					apiKeyConfigured: Boolean(process.env.TYPESAFE_API_KEY),
 					maxRetries: 0,
 				},
 			}),

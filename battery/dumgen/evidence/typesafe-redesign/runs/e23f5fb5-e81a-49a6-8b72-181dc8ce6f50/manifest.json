@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "e23f5fb5-e81a-49a6-8b72-181dc8ce6f50",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:04.504Z",
-  "corpus": {
-    "fingerprint": "f28095607240babeaaf4c5229cb712dc67bb2994458973737d67e36b917d5809",
-    "caseIds": [
-      "grammar-de-intj-dev-wupp-onomatopoeia"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "e23f5fb5-e81a-49a6-8b72-181dc8ce6f50",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:04.504Z",
+	"corpus": {
+		"fingerprint": "f28095607240babeaaf4c5229cb712dc67bb2994458973737d67e36b917d5809",
+		"caseIds": ["grammar-de-intj-dev-wupp-onomatopoeia"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

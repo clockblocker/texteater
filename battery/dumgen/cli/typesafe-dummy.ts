@@ -1,11 +1,9 @@
 import { createTypeSafeExecutor, noul } from "promptsmith/typesafe";
 
-const TYPESAFE_API_KEY = (
-	process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_TOKEN
-)?.trim();
+const TYPESAFE_API_KEY = process.env.TYPESAFE_API_KEY?.trim();
 
 if (!TYPESAFE_API_KEY) {
-	throw new Error("TYPESAFE_API_KEY (or TYPESAFE_TOKEN) is not set");
+	throw new Error("TYPESAFE_API_KEY is not set");
 }
 
 const execute = createTypeSafeExecutor({ apiKey: TYPESAFE_API_KEY });

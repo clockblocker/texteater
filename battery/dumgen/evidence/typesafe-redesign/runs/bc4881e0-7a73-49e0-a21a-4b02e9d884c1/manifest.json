@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "bc4881e0-7a73-49e0-a21a-4b02e9d884c1",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:05.361Z",
-  "corpus": {
-    "fingerprint": "e87c0b20c79131ea5dbc6ce10ec72c88b8991ea8017ef1d766b00e8b7ea670a2",
-    "caseIds": [
-      "grammar-de-noun-dev-dat-sing-bibliothek"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "bc4881e0-7a73-49e0-a21a-4b02e9d884c1",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:05.361Z",
+	"corpus": {
+		"fingerprint": "e87c0b20c79131ea5dbc6ce10ec72c88b8991ea8017ef1d766b00e8b7ea670a2",
+		"caseIds": ["grammar-de-noun-dev-dat-sing-bibliothek"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

@@ -16,7 +16,7 @@ bun run --cwd battery/dumgen evaluate --open RUN_ID --output .runs/dumgen
 
 `--model` and `--settings` configure text generation; `--judgment-model` and
 `--judgment-timeout` configure bounded judgments. Live operations require
-`OPENAI_API_KEY` and `TYPESAFE_API_KEY` (or `TYPESAFE_TOKEN`). Both transports
+`OPENAI_API_KEY` and `TYPESAFE_API_KEY`. Both transports
 disable automatic retries. Laboratory's **Evaluation runs** view uses the same definitions
 and immutable version-2 records, with separate domain results, failures and
 TypeSafe/Luna calls. The four structured-Knowledge prototypes remain deferred

@@ -3,7 +3,7 @@
  * run through the production `analyzeSentence` operation (Dumgen ADR 0006)
  * and emitted with their two-layer gold, scored by the production scorer.
  *
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/fixtures.ts'
+ *   zsh -ic 'bun prototypes/intake/fixtures.ts'
  *
  * Output: `prototypes/intake/fixtures/lattice.json`, which the tf-demo
  * playground entry `lattice` imports. The DTO and the Resolution Selector
@@ -33,7 +33,7 @@ export type Fixture = {
 
 const dumgen = createDumgen({
 	judge: createTypeSafeExecutor({
-		apiKey: process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_TOKEN,
+		apiKey: process.env.TYPESAFE_API_KEY,
 	}),
 	execute: async () => {
 		throw Error("Sentence analysis must not generate text");

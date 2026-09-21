@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "a199a5e4-bdab-442c-bb1c-78d563901fb6",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:15.844Z",
-  "corpus": {
-    "fingerprint": "d9efb36ccceba4e866df7576aa2caaec904f20eff9cdde8b56825cf95b6de91f",
-    "caseIds": [
-      "grammar-de-idiom-faeustchen-perfect-full"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "a199a5e4-bdab-442c-bb1c-78d563901fb6",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:15.844Z",
+	"corpus": {
+		"fingerprint": "d9efb36ccceba4e866df7576aa2caaec904f20eff9cdde8b56825cf95b6de91f",
+		"caseIds": ["grammar-de-idiom-faeustchen-perfect-full"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

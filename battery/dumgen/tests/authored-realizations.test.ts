@@ -6,8 +6,8 @@ import {
 	locateAuthoredIdentity,
 	validateAuthoredRealizations,
 } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
-import auxiliaryCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
 import { resolveAuthoredGrammarIdentity } from "../src/concrete-lang/de/grammatical-resolution/authored-identity.js";
+import auxiliaryCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { operationTask } from "../src/universal/trace.js";
 import { choiceAnswers } from "./execution-fixture.js";

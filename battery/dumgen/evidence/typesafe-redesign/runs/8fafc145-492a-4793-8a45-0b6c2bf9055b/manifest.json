@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "8fafc145-492a-4793-8a45-0b6c2bf9055b",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:14.023Z",
-  "corpus": {
-    "fingerprint": "87b9608dbabde79329b76fd8c91135443f092a792b25e0deb64243eb9f187eed",
-    "caseIds": [
-      "grammar-de-aphorism-nachsicht"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "8fafc145-492a-4793-8a45-0b6c2bf9055b",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:14.023Z",
+	"corpus": {
+		"fingerprint": "87b9608dbabde79329b76fd8c91135443f092a792b25e0deb64243eb9f187eed",
+		"caseIds": ["grammar-de-aphorism-nachsicht"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "ef41b786-4b37-4686-a7cd-f5ec86722285",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:08.083Z",
-  "corpus": {
-    "fingerprint": "093d36c41bb31975245fd7130a9417aa9cfcd4cf74638c53209a2619050a178e",
-    "caseIds": [
-      "grammar-de-pron-fixed-du"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "ef41b786-4b37-4686-a7cd-f5ec86722285",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:08.083Z",
+	"corpus": {
+		"fingerprint": "093d36c41bb31975245fd7130a9417aa9cfcd4cf74638c53209a2619050a178e",
+		"caseIds": ["grammar-de-pron-fixed-du"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "4425586e-c434-40c9-9ff4-e9f9098c5fae",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:05.632Z",
-  "corpus": {
-    "fingerprint": "e63f64f4c9744ec75c833d0b0729895ee699a0cc2190c305baca23ae77f9f118",
-    "caseIds": [
-      "grammar-de-num-dev-initial-fuenf"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "4425586e-c434-40c9-9ff4-e9f9098c5fae",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:05.632Z",
+	"corpus": {
+		"fingerprint": "e63f64f4c9744ec75c833d0b0729895ee699a0cc2190c305baca23ae77f9f118",
+		"caseIds": ["grammar-de-num-dev-initial-fuenf"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

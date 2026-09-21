@@ -14,12 +14,12 @@
  * `--shape questions` moves the rules out of state and into the questions
  * (`shapes.ts`).
  *
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping link,head --route flat'
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping pairwise --route hier --depth lattice --sweep'
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --runs 2'
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --runs 2'
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
- *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --runs 2'
+ *   zsh -ic 'bun prototypes/intake/lab.ts --grouping link,head --route flat'
+ *   zsh -ic 'bun prototypes/intake/lab.ts --grouping pairwise --route hier --depth lattice --sweep'
+ *   zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --runs 2'
+ *   zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --runs 2'
+ *   zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
+ *   zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --runs 2'
  *
  * Flags: --grouping link|head|pairwise|anchored (comma separated)
  *        --route flat|extended|hier (comma separated)

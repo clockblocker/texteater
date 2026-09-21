@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "adcbaa6e-a521-45ec-a354-6d4198c6b751",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:24:39.913Z",
-  "corpus": {
-    "fingerprint": "6aa1f35b809ffc1346690ad2cc7de58ba5dd0736dfff9430ec620e16f00ec43e",
-    "caseIds": [
-      "ids-verbal-13-target-0-click-10"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "adcbaa6e-a521-45ec-a354-6d4198c6b751",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:24:39.913Z",
+	"corpus": {
+		"fingerprint": "6aa1f35b809ffc1346690ad2cc7de58ba5dd0736dfff9430ec620e16f00ec43e",
+		"caseIds": ["ids-verbal-13-target-0-click-10"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

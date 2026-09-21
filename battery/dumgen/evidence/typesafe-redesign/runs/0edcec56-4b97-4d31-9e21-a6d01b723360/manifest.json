@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "0edcec56-4b97-4d31-9e21-a6d01b723360",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:22:56.103Z",
-  "corpus": {
-    "fingerprint": "04b3d7fffc7e58016308fcf78f6e4e670f96541518f42f080d262936c493d76f",
-    "caseIds": [
-      "grammar-de-adj-accept-citation-mild"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "0edcec56-4b97-4d31-9e21-a6d01b723360",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:22:56.103Z",
+	"corpus": {
+		"fingerprint": "04b3d7fffc7e58016308fcf78f6e4e670f96541518f42f080d262936c493d76f",
+		"caseIds": ["grammar-de-adj-accept-citation-mild"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

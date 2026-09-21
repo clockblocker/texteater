@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "9e0ef83c-5119-41db-9b3c-2569b625a24a",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:42.270Z",
-  "corpus": {
-    "fingerprint": "9b80a57a7f1becdd00c7fa3842834bbcdf1c7d237cc108a0bacb36b7bbd6b6c2",
-    "caseIds": [
-      "translation-cover-concise-paraphrase"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "9e0ef83c-5119-41db-9b3c-2569b625a24a",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:42.270Z",
+	"corpus": {
+		"fingerprint": "9b80a57a7f1becdd00c7fa3842834bbcdf1c7d237cc108a0bacb36b7bbd6b6c2",
+		"caseIds": ["translation-cover-concise-paraphrase"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

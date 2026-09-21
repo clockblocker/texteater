@@ -38,10 +38,7 @@ export function createTypeSafeExecutor(
 ): TypeSafeExecutor {
 	const client = new TypeSafeClient({
 		...config,
-		apiKey:
-			config.apiKey ??
-			process.env.TYPESAFE_API_KEY ??
-			process.env.TYPESAFE_TOKEN,
+		apiKey: config.apiKey ?? process.env.TYPESAFE_API_KEY,
 		retry: { ...config.retry, maxRetries: 0 },
 	});
 	return async (request, options) => {

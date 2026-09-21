@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "e7f183e4-5842-4015-8e3e-21d60b628b53",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:25:05.511Z",
-  "corpus": {
-    "fingerprint": "61c6b64a1e5780ec84c91e4bf20c73cc82622d38fc3a65ca1410b81d68f4eaf1",
-    "caseIds": [
-      "rewrite-reading-empty"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "e7f183e4-5842-4015-8e3e-21d60b628b53",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:25:05.511Z",
+	"corpus": {
+		"fingerprint": "61c6b64a1e5780ec84c91e4bf20c73cc82622d38fc3a65ca1410b81d68f4eaf1",
+		"caseIds": ["rewrite-reading-empty"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

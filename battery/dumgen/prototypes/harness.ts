@@ -8,7 +8,7 @@ export function judge(
 	...args: Parameters<ReturnType<typeof createTypeSafeExecutor>>
 ) {
 	executor ??= createTypeSafeExecutor({
-		apiKey: process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_TOKEN,
+		apiKey: process.env.TYPESAFE_API_KEY,
 	});
 	return executor(...args);
 }

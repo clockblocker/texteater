@@ -1,33 +1,31 @@
 {
-  "version": 2,
-  "runId": "da3e3833-68e2-4eb4-9157-3ab861882973",
-  "experimentId": "typesafe-redesign/finite-review",
-  "evaluatorVersion": "finite-review-1",
-  "sourceRevision": "616a7225",
-  "startedAt": "2026-09-17T07:23:00.901Z",
-  "corpus": {
-    "fingerprint": "c49d1649e9dc0e5e8618926ddbfd663d94dca7ba764fc67af98eb22b22e7658a",
-    "caseIds": [
-      "grammar-de-adp-dev-prep-durch-acc"
-    ]
-  },
-  "operationVersion": "judgments-2",
-  "configurations": {
-    "generation": {
-      "model": "gpt-5.6-luna",
-      "settings": {
-        "reasoning": {
-          "effort": "none"
-        },
-        "maxRetries": 0
-      }
-    },
-    "judgment": {
-      "model": "jev-latest",
-      "settings": {
-        "timeoutMs": 30000,
-        "maxRetries": 0
-      }
-    }
-  }
+	"version": 2,
+	"runId": "da3e3833-68e2-4eb4-9157-3ab861882973",
+	"experimentId": "typesafe-redesign/finite-review",
+	"evaluatorVersion": "finite-review-1",
+	"sourceRevision": "616a7225",
+	"startedAt": "2026-09-17T07:23:00.901Z",
+	"corpus": {
+		"fingerprint": "c49d1649e9dc0e5e8618926ddbfd663d94dca7ba764fc67af98eb22b22e7658a",
+		"caseIds": ["grammar-de-adp-dev-prep-durch-acc"]
+	},
+	"operationVersion": "judgments-2",
+	"configurations": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"maxRetries": 0
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	}
 }

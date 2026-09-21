@@ -3,11 +3,11 @@
 Live jev experiments answering: how many System One round trips does one click
 really need, and what does folding them cost in accuracy?
 
-Run with the login shell so `TYPESAFE_TOKEN` is exported:
+Run with the login shell so `TYPESAFE_API_KEY` is exported:
 
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/p1-classify-one-call.ts eval'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/p2-intake-precompute.ts eval'
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/p3-noun-one-call.ts fold'       # or head-only
+    zsh -ic 'bun prototypes/p1-classify-one-call.ts eval'
+    zsh -ic 'bun prototypes/p2-intake-precompute.ts eval'
+    zsh -ic 'bun prototypes/p3-noun-one-call.ts fold'       # or head-only
 
 Baselines were produced with the production CLI on the same evaluation sets:
 
@@ -87,7 +87,7 @@ Changes measured here:
 - 24 golden cases `target-de-noun-article-cross-*` (four sentences with several
   articles across clauses, every noun and article click), listed in `evaluation-ids.ts`.
 
-    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/p4-noun-article-membership.ts eval'
+    zsh -ic 'bun prototypes/p4-noun-article-membership.ts eval'
 
 | variant | legacy 182 pass | new 24 pass | stray article assemblies (206) |
 | --- | --- | --- | --- |
