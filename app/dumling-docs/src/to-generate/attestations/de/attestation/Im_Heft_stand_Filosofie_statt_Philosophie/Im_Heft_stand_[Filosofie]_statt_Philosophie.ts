@@ -9,6 +9,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -16,6 +17,7 @@ const occurrenceAttestation = {
 		spelling: "Variant",
 
 		inflectionalFeatures: {
+			article: null,
 			case: "Nom",
 			number: "Sing",
 		},

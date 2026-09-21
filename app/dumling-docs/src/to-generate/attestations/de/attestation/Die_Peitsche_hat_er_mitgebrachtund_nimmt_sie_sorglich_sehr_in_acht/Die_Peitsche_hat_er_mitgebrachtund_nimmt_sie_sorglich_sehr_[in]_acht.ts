@@ -13,6 +13,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	expletiveEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		inflectionalFeatures: null,

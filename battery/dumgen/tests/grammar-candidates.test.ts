@@ -151,7 +151,11 @@ test("missing headword text still generates and its trace preserves the actual r
     }).resolveGrammar(inflected),
   );
   expect(output.surface.lemma.canonicalForm).toBe("Aufstieg");
-  expect(output.surface.inflectionalFeatures).toMatchObject({
+  expect(
+    "inflectionalFeatures" in output.surface
+      ? output.surface.inflectionalFeatures
+      : null,
+  ).toMatchObject({
     article: "Definite",
     case: "Dat",
   });

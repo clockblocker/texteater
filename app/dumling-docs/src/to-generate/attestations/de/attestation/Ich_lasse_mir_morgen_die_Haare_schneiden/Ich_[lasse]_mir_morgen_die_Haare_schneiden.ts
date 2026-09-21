@@ -9,6 +9,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	expletiveEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -21,6 +22,7 @@ const occurrenceAttestation = {
 			person: "1",
 			tense: "Pres",
 			verbForm: "Fin",
+			expletive: null,
 			perfect: null,
 			future: null,
 			voice: null,
