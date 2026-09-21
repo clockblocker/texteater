@@ -22,7 +22,8 @@ _Avoid_: Citation Form, Lemma Form
 
 **Family**:
 The broad grammatical class of a Lemma: Lexeme, Phraseme, Morpheme, or
-Construction.
+Construction. Every Kind belongs to exactly one Family, so a value that
+carries the Kind carries the Family by inference.
 _Avoid_: Entry Family
 
 **Kind**:
@@ -51,13 +52,24 @@ _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 **Attestation**:
 A fleeting occurrence of one Surface, represented by ordered attested members
 and Full or Partial Realization Coverage. It has value equality but no durable
-identity. German noun Attestations retain article source orthography separately
-from their members when an article is included. A shared article or an article supplied by a Fusion gives Partial
-coverage without becoming a second owned member. Fusion evidence retains the
-fused source spelling; noun grammar determines its DET component. German verbal
-Attestations retain subject-expletive source orthography as evidence for an owned
-member.
+identity. A member's orthography is Standard, Typo, or Fused. German noun Attestations
+retain article source orthography separately from their members when an
+article is included. A shared article gives Partial coverage without becoming
+a second owned member; a fused article is an owned Fused member with Full
+coverage, and a component with no letters of its own leaves the unit Partial
+with evidence pointing at the Fusion. German verbal Attestations retain
+subject-expletive source orthography as evidence for an owned member.
 _Avoid_: Selection, click result, selected Surface
+
+**Fusion**:
+A coordinate-free occurrence value for one source spelling that realizes more
+than one grammatical component: the spelling and its ordered components, each
+a surface plus the Attestation member it realizes or a marker that it has no
+letters of its own. `im` is `in` realized by `i` and `dem` realized by `m`.
+It has value equality and no durable identity; Attestations in different
+units may reference the same Fusion, and nothing targets it with Knowledge or
+relations.
+_Avoid_: Construction, contraction Lemma, fused route
 
 ### Semantic identity
 

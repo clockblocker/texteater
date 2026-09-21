@@ -52,8 +52,17 @@ Sentence. Its database ID is application identity and is absent from the public
 Dumling Attestation value.
 
 **Attestation Membership**:
-The exclusive link from one Segment to at most one Occurrence Attestation. It
-carries member orthography; ordered memberships reconstruct Attestation members.
+The exclusive link from one Segment, keyed by its character offset in the
+Sentence, to at most one Occurrence Attestation. It carries member
+orthography, including Fused; ordered memberships reconstruct Attestation
+members.
+_Avoid_: Segment index link
+
+**Sentence Analysis**:
+The Analysis Targets and Fusions intake produced for one Sentence, stored with
+it and read at selection time. It is a hint for resolution, not linguistic
+identity; a Segment whose target favours Unresolved resolves as before.
+_Avoid_: precomputed resolution, Unit map
 
 **Shared Demo Dictionary**:
 The universal tf-demo set of Lemmas, Surfaces, Readings, and Knowledge. Visitor

@@ -286,6 +286,41 @@ the request budget (80 per call hit `max_tokens_exceeded`), and still loses
 about fifteen clicks with twice the run-to-run spread. The spec keeps the
 criteria in state.
 
+## Auxiliary identity derived from shape (2026-09-21)
+
+`derive-aux.ts` asks whether a non-head auxiliary member needs an identity
+distribution at all. It takes the members of every verb gold target and the
+sentence of every AUX gold case, reads the auxiliary's lemma, the head's form
+and the other auxiliaries, and derives the serving AUX Reading plus the
+target's perfect, future, passive and voice features. No jev call.
+
+    bun prototypes/intake/derive-aux.ts
+
+| Gold | Cases | Derived right | Lexical fork | Wrong |
+| --- | --- | --- | --- | --- |
+| verb targets with an auxiliary | 22 | 21 | 1 | 0 |
+| AUX corpus (serving Reading) | 18 | 18 | 0 | 0 |
+
+The rules: `bekommen`/`kriegen`/`erhalten` with a participle is the recipient
+passive; `worden`, preterite `werden` or `werden` with a participle is the
+process passive; present `werden` with an infinitive is the future, `würde` the
+Konjunktiv II periphrasis; `haben` is perfect, or obligation with `zu`; `sein`
+is perfect when `worden`, `gewesen` or `geworden` is in the target, the modal
+passive with `zu`, and the Verlaufsform with `am`.
+
+The one fork the shape cannot close is `sein` plus a participle with no
+`worden`: `ist geschlossen` (state passive) against `ist gegangen` (perfect).
+It is lexical, whether the verb takes `sein` as its perfect auxiliary, so it
+belongs on the verb's Lemma or in the grammar step's existing `passive`
+Choice, not in a per-member distribution. The head's own form (participle,
+infinitive, zu-infinitive) is a grammar feature already; the script reads it
+off the spelling with a heuristic.
+
+So for #493: identity needs a distribution in one place, a closed-class head,
+and it lives on the target. Auxiliary and article members carry a role only.
+Roles were 100% for reflexive and expletive and projectable for the rest in
+the roles axis, so they persist as values with Unresolved, not as masses.
+
 ## Where this leaves the pipeline
 
 `anchored` + `extended` + `groupVote` + `lattice`, one call per sentence:
