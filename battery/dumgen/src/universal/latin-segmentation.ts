@@ -10,7 +10,7 @@ import {
 const graphemes = new Intl.Segmenter("de", { granularity: "grapheme" });
 const abbreviation = /^(?:[\p{L}]\.){2,}|^[\p{L}]\.(?: [\p{L}]\.)+/u;
 const commonAbbreviations = {
-	de: /^(?:Abb|bzw|ca|Dr|Nr|Prof|usw)\./iu,
+	de: /^(?:Abb|bzw|ca|Dr|Nr|Prof|usw|Dipl\.-Ing)\./iu,
 	en: /^(?:Mr|Mrs|Ms|Dr|Prof|St|etc|vs)\./iu,
 };
 const contraction = /^([\p{L}\p{M}]{2,})([’'])([ms])(?=$|[^\p{L}\p{M}])/iu;

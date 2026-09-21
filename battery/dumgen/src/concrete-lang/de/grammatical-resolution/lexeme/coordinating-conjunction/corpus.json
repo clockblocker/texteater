@@ -1088,12 +1088,12 @@
 	},
 	"grammar-de-cconj-demo-variant-bzw": {
 		"input": {
-			"markedContext": "Die Eltern <TARGET>bzw</TARGET>. Sorgeberechtigten unterschreiben.",
-			"members": ["bzw"]
+			"markedContext": "Die Eltern <TARGET>bzw.</TARGET> Sorgeberechtigten unterschreiben.",
+			"members": ["bzw."]
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["bzw"],
+			"normalizedMembers": ["bzw."],
 			"surface": {
 				"spelling": "Variant",
 				"surfaceFeatures": null
@@ -1176,12 +1176,12 @@
 	},
 	"grammar-de-cconj-dev-variant-bzw-initial": {
 		"input": {
-			"markedContext": "<TARGET>Bzw</TARGET>. die gesetzliche Vertretung muss zustimmen.",
-			"members": ["Bzw"]
+			"markedContext": "<TARGET>Bzw.</TARGET> die gesetzliche Vertretung muss zustimmen.",
+			"members": ["Bzw."]
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["bzw"],
+			"normalizedMembers": ["bzw."],
 			"surface": {
 				"spelling": "Variant",
 				"surfaceFeatures": null
@@ -1238,5 +1238,71 @@
 			},
 			"realizationCoverage": "Full"
 		}
+	},
+	"grammar-de-cconj-dev-abbreviation-dh": {
+		"input": {
+			"markedContext": "Er kam spät, <TARGET>d.h.</TARGET> nach Mitternacht.",
+			"members": ["d.h."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["d.h."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "das heißt",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-cconj-dev-written-das-heisst": {
+		"input": {
+			"markedContext": "Er kam spät, <TARGET>das</TARGET> <TARGET>heißt</TARGET> nach Mitternacht.",
+			"members": ["das", "heißt"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["das", "heißt"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "das heißt",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word conjunction with both members attested (issue 495)."
+	},
+	"grammar-de-cconj-dev-written-und-zwar": {
+		"input": {
+			"markedContext": "Sie kommt morgen, <TARGET>und</TARGET> <TARGET>zwar</TARGET> früh.",
+			"members": ["und", "zwar"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["und", "zwar"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und zwar",
+				"coreFeatures": {
+					"conjType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "und zwar is one specifying conjunction unit (issue 495)."
 	}
 }

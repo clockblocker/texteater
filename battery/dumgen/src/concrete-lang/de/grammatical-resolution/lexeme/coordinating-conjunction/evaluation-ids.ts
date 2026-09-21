@@ -48,4 +48,7 @@ export const evaluationCaseIds = [
 	"grammar-de-cconj-dev-variant-bzw-initial",
 	"grammar-de-cconj-accept-typo-jedcoh",
 	"grammar-de-cconj-accept-archaic-allein",
+	"grammar-de-cconj-dev-abbreviation-dh",
+	"grammar-de-cconj-dev-written-das-heisst",
+	"grammar-de-cconj-dev-written-und-zwar",
 ] as const;

@@ -50,6 +50,8 @@ click-time design can even detect.
     zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --runs 2'
     zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
     zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --concurrency 3 --runs 2'
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --identity-shape rubric --runs 2'
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/fixtures.ts'
 
 Every run stores its raw answers under `/tmp/intake-*.json`. `--from <file>`
 re-scores a stored run under a different threshold or route policy without
@@ -321,6 +323,73 @@ and it lives on the target. Auxiliary and article members carry a role only.
 Roles were 100% for reflexive and expletive and projectable for the rest in
 the roles axis, so they persist as values with Unresolved, not as masses.
 
+## Identity candidates: headword groups or per-cell with a rubric (2026-09-21)
+
+Issue 509. Same design, `--identity-shape` on the 212 lemma-gold sentences,
+two runs each, plus one same-day run of the #489 shape (`authored`: one
+option per member, the cell as bare feature pairs). `headword` collapses the
+options to Kind, headword and pronType; `rubric` keeps one option per member
+and describes the cell in the syntactic terms the sentence shows (which
+object, which preposition, which agreement).
+
+| shape | exact Lemma | headword and Kind | PRON (167) | DET (32) | AUX (13) | options / question | input tokens / sentence | wrong cell only | DET twin | genitive hole |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `authored` | 154 | 178 | 141 | 26 | 11 | 4.25 | 12.4k | 24 | 21 | 6 |
+| `headword` | 177, 177 | 179, 180 | 143, 143 | 28, 28 | 8, 9 | 2.03 | 12.0k | 2, 3 | 16, 15 | 6, 6 |
+| `rubric` | 161, 162 | **186, 186** | **149, 149** | 26, 26 | 11, 11 | 4.25 | 13.0k | 25, 24 | 13, 14 | 6, 6 |
+
+"Exact" for `headword` counts a group that contains the gold member, so it
+equals its headword score minus the DET-twin and NoMatch errors; the cell is
+not asked. Run-to-run spread is 4 cases.
+
+What moves and what does not:
+
+- The rubric lifts headword and Kind by 8 over the bare features, above the
+  spread, and every gain is PRON: the syntactic cell description separates a
+  standalone form from its DET twin (21 to 13). It does not fix the cell:
+  24-25 selections still name the right headword in the wrong case, number or
+  gender, the same as without the rubric. The cell stays a grammar question.
+- Headword groups halve the options and match the bare-feature shape on
+  headword accuracy, but the AUX groups lose 2-3 cases: one rubric per Lemma
+  hides the per-use Readings (`sei`, `wären` answer NoMatch). Under #493 AUX
+  is never a target and its Reading derives from shape, so this costs nothing
+  in production, but it says a group rubric must describe the whole group.
+- Summing per-cell mass by headword group before the argmax changes 0-2
+  cases against taking the winning member's group (186 → 187, 186 → 186,
+  178 → 180). So the Choice can keep per-cell rubric options and the stored
+  mass can still be keyed by headword group.
+- Neither shape closes the genitive holes: all 6 gold-Unresolved cases get a
+  DET selected. That is a candidate-list problem (the hole is not an option),
+  not a rubric problem.
+
+Recommendation: options as per-cell rubrics, mass stored per headword group
+(`Kind:headword:pronType`), cell to the grammar step. `fixtures.ts` emits
+that shape.
+
+## Playground fixtures (2026-09-21)
+
+`fixtures.ts` runs the 16 sentences in `fixtures/sentences.ts` through the
+winning design plus the identity and role axes, splits fused words and
+expands abbreviations with the German fusion table, and writes
+`fixtures/lattice.json`: Segmented Sentences as #493 defined them (offsets,
+members with roles, one Route Mass, an Identity Mass over headword groups)
+with their gold keyed by offset. `segmented-sentence.ts` holds the DTO and
+the Resolution Selector; the tf-demo playground entry `lattice` imports both
+and renders nothing the selector did not derive.
+
+Scored against the authored gold, one run:
+
+| | gold targets | members found | route correct | roles | identity |
+| --- | --- | --- | --- | --- | --- |
+| 16 sentences | 77 | 67 | 60 | 26 of 26 | 12 of 12 |
+
+The ten membership misses are the things the playground exists to show: the
+idiom `den Faden verloren` split into a verb and a noun phrase, `auf dem
+Markt` grouped whole, `geht's dir` grouped whole, the Funktionsverbgefüge
+`zur Verfügung stellen` taking `Material` and `den Schülern` with it, and a
+fused `m` in `am Montag` left unattached because `Montag` was voted PROPN.
+`usw.` was routed X, `früh` and `spät` ADV against gold ADJ.
+
 ## Where this leaves the pipeline
 
 `anchored` + `extended` + `groupVote` + `lattice`, one call per sentence:
@@ -341,8 +410,8 @@ Open, in the order they block things:
   ever matters, that is the trade to revisit.
 - Collocation and the Morpheme routes stay unreachable until `targetCriteria`
   says what they are.
-- Identity selection fails on the cell, not the headword. Either the intake
-  Choice selects among headword groups and the cell stays a grammar question,
-  or the candidates need a cell rubric jev can use.
+- Identity selection fails on the cell, not the headword (measured on #509:
+  a cell rubric helps the headword, not the cell). The cell stays a grammar
+  question; the stored mass is keyed by headword group.
 - `hasSepPrefix` and the fused article stay grammar questions; the Segment
   split of ADR 0004 is what would let the fused article become a role.

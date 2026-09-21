@@ -369,6 +369,12 @@ export const germanAbbreviations: readonly AbbreviationEntry[] = [
 		"„o.ä.“ steht für „oder Ähnliches“ am Ende einer Aufzählung.",
 	),
 	abbreviation(
+		"o.Ä.",
+		"oder Ähnliches",
+		"ADV",
+		"„o.Ä.“ ist die Duden-Schreibung von „o.ä.“: oder Ähnliches.",
+	),
+	abbreviation(
 		"z.T.",
 		"zum Teil",
 		"ADV",

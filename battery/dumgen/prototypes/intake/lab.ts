@@ -28,6 +28,7 @@
  *        --limit N (first N sentences, for a cheap smoke run)
  *        --route-policy perOccurrence|groupVote|groupHead (comma separated)
  *        --corpus clicks|lemma|grammar   --identity   --roles
+ *        --identity-shape authored|headword|rubric (issue 509)
  *        --shape state|questions         --chunk N (questions per call)
  *        --from /tmp/intake-<design>.json (re-score stored answers, no calls)
  */
@@ -52,6 +53,7 @@ import {
 import { loadGrammarSentences, loadLemmaSentences, skipped } from "./gold.js";
 import {
 	type Identity,
+	type IdentityShape,
 	identityQuestions,
 	reportIdentity,
 	solveIdentity,
@@ -79,6 +81,7 @@ const routePolicies = flag("route-policy", "perOccurrence").split(
 ) as RoutePolicy[];
 const corpus = flag("corpus", "clicks");
 const withIdentity = has("identity");
+const identityShape = flag("identity-shape", "authored") as IdentityShape;
 const withRoles = has("roles");
 const shape =
 	shapes[flag("shape", "state")] ??
@@ -166,7 +169,7 @@ function solve(
 		true,
 	);
 	const identities = withIdentity
-		? solveIdentity(sentence, raw.answers)
+		? solveIdentity(sentence, raw.answers, identityShape)
 		: null;
 	const roles = withRoles ? solveRoles(sentence, raw.answers) : null;
 	if (depth !== "lattice")
@@ -206,7 +209,7 @@ async function runDesign(
 		throw Error(`Unknown design ${groupingId}/${routeId}`);
 	const limit = Number(flag("limit", "0"));
 	const sentences = limit ? loadCorpus().slice(0, limit) : loadCorpus();
-	const axes = `${withIdentity ? "+identity" : ""}${withRoles ? "+roles" : ""}`;
+	const axes = `${withIdentity ? `+identity:${identityShape}` : ""}${withRoles ? "+roles" : ""}`;
 	const name = `${corpus}:${groupingId}+${routeId}+${policy}+${depth}${axes} ${shape.id}${runs > 1 ? ` run${run}` : ""}`;
 	console.error(`\n=== ${name}: ${sentences.length} sentences (${scope})`);
 
@@ -234,7 +237,9 @@ async function runDesign(
 				...grouping!.questions(sentence, shape),
 				...routing!.questions(sentence, shape),
 				...(depth === "lattice" ? latticeQuestions(sentence) : {}),
-				...(withIdentity ? identityQuestions(sentence) : {}),
+				...(withIdentity
+					? identityQuestions(sentence, identityShape)
+					: {}),
 				...(withRoles ? roleQuestions(sentence) : {}),
 			};
 			try {
@@ -325,6 +330,7 @@ async function runDesign(
 					units: analysis?.units ?? null,
 					identities: analysis?.identities ?? null,
 				})),
+				identityShape,
 			)
 		: null;
 	if (identity) extra.identity = identity.summary;
@@ -352,7 +358,7 @@ async function runDesign(
 			summary: { ...result.summary, replayedFrom: replay },
 		};
 	await save(
-		`/tmp/intake-${corpus}-${groupingId}-${routeId}-${depth}-${shape.id}${withIdentity ? "-identity" : ""}${withRoles ? "-roles" : ""}-${run}.json`,
+		`/tmp/intake-${corpus}-${groupingId}-${routeId}-${depth}-${shape.id}${withIdentity ? `-identity-${identityShape}` : ""}${withRoles ? "-roles" : ""}-${run}.json`,
 		{
 			summary: result.summary,
 			scores: result.scores,
@@ -380,6 +386,7 @@ for (const groupingId of groupingIds)
 		for (const policy of routePolicies) {
 			const passes: number[] = [];
 			const identityPasses: number[] = [];
+			const headwordPasses: number[] = [];
 			const shapePasses: number[] = [];
 			let previous: {
 				clicks: Set<string>;
@@ -396,13 +403,15 @@ for (const groupingId of groupingIds)
 				passes.push(result.summary.passed);
 				const summary = result.summary as Record<string, unknown>;
 				const identitySummary = summary.identity as
-					| { identityPassed: number }
+					| { identityPassed: number; identityHeadwordPassed: number }
 					| undefined;
 				const rolesSummary = summary.roles as
 					| { shapeAllCorrect: number }
 					| undefined;
-				if (identitySummary)
+				if (identitySummary) {
 					identityPasses.push(identitySummary.identityPassed);
+					headwordPasses.push(identitySummary.identityHeadwordPassed);
+				}
 				if (rolesSummary)
 					shapePasses.push(rolesSummary.shapeAllCorrect);
 				const passing = {
@@ -443,7 +452,9 @@ for (const groupingId of groupingIds)
 				`${corpus}:${groupingId}+${routeId}+${policy}+${depth} ${shape.id}`
 			] = {
 				passes,
-				...(identityPasses.length ? { identityPasses } : {}),
+				...(identityPasses.length
+					? { identityPasses, headwordPasses }
+					: {}),
 				...(shapePasses.length ? { shapePasses } : {}),
 			};
 		}

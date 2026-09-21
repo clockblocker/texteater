@@ -44,4 +44,5 @@ export const evaluationCaseIds = [
 	"grammar-de-noun-regression-fusion-ins-haus",
 	"grammar-de-noun-regression-fusion-shared-feld",
 	"grammar-de-noun-regression-fusion-zur-schule",
+	"grammar-de-noun-dev-abbreviation-dipl-ing",
 ] as const;

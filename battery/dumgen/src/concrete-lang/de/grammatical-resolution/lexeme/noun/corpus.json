@@ -1559,5 +1559,34 @@
 				"orthography": "Standard"
 			}
 		}
+	},
+	"grammar-de-noun-dev-abbreviation-dipl-ing": {
+		"input": {
+			"markedContext": "<TARGET>Dipl.-Ing.</TARGET> Müller leitet das Projekt.",
+			"members": ["Dipl.-Ing."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Dipl.-Ing."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing",
+					"article": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Diplom-Ingenieur",
+				"coreFeatures": {
+					"gender": "Masc",
+					"hyph": "Yes"
+				}
+			},
+			"realizationCoverage": "Full",
+			"articleEvidence": null
+		},
+		"explanation": "A title abbreviation: one Standard member, a Variant Surface of the hyphenated Lemma; the name stays outside (issue 495)."
 	}
 }

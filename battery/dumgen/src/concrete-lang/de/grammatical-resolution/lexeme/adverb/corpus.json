@@ -1040,5 +1040,355 @@
 			"realizationCoverage": "Full"
 		},
 		"explanation": "The supplied target is an ordinary ADV occurrence, not a member of an upstream correlating CCONJ payload."
+	},
+	"grammar-de-adv-dev-abbreviation-zb": {
+		"input": {
+			"markedContext": "Das Museum öffnet <TARGET>z.B.</TARGET> am Montag.",
+			"members": ["z.B."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["z.B."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum Beispiel",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-written-zum-beispiel": {
+		"input": {
+			"markedContext": "Das Museum öffnet <TARGET>zum</TARGET> <TARGET>Beispiel</TARGET> am Montag.",
+			"members": ["zum", "Beispiel"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["zum", "Beispiel"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum Beispiel",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
+	},
+	"grammar-de-adv-dev-abbreviation-usw": {
+		"input": {
+			"markedContext": "Anna kauft Obst, Gemüse <TARGET>usw.</TARGET> auf dem Markt.",
+			"members": ["usw."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["usw."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und so weiter",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-abbreviation-usw-final": {
+		"input": {
+			"markedContext": "Anna kauft Obst, Gemüse, Brot <TARGET>usw.</TARGET>",
+			"members": ["usw."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["usw."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und so weiter",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-written-und-so-weiter": {
+		"input": {
+			"markedContext": "Anna kauft Obst, Gemüse <TARGET>und</TARGET> <TARGET>so</TARGET> <TARGET>weiter</TARGET> auf dem Markt.",
+			"members": ["und", "so", "weiter"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["und", "so", "weiter"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "und so weiter",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
+	},
+	"grammar-de-adv-dev-abbreviation-ua": {
+		"input": {
+			"markedContext": "Sie kam <TARGET>u.a.</TARGET> wegen des Wetters.",
+			"members": ["u.a."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["u.a."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "unter anderem",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-written-unter-anderem": {
+		"input": {
+			"markedContext": "Sie kam <TARGET>unter</TARGET> <TARGET>anderem</TARGET> wegen des Wetters.",
+			"members": ["unter", "anderem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["unter", "anderem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "unter anderem",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
+	},
+	"grammar-de-adv-dev-abbreviation-oae": {
+		"input": {
+			"markedContext": "Sie mag Äpfel, Birnen <TARGET>o.Ä.</TARGET> sehr gern.",
+			"members": ["o.Ä."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["o.Ä."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "oder Ähnliches",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-written-oder-aehnliches": {
+		"input": {
+			"markedContext": "Sie mag Äpfel, Birnen <TARGET>oder</TARGET> <TARGET>Ähnliches</TARGET> sehr gern.",
+			"members": ["oder", "Ähnliches"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["oder", "Ähnliches"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "oder Ähnliches",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
+	},
+	"grammar-de-adv-dev-abbreviation-zt": {
+		"input": {
+			"markedContext": "Die Straße ist <TARGET>z.T.</TARGET> gesperrt.",
+			"members": ["z.T."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["z.T."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum Teil",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-written-zum-teil": {
+		"input": {
+			"markedContext": "Die Straße ist <TARGET>zum</TARGET> <TARGET>Teil</TARGET> gesperrt.",
+			"members": ["zum", "Teil"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["zum", "Teil"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "zum Teil",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
+	},
+	"grammar-de-adv-dev-abbreviation-va": {
+		"input": {
+			"markedContext": "Sie liest <TARGET>v.a.</TARGET> Romane.",
+			"members": ["v.a."]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["v.a."],
+			"surface": {
+				"spelling": "Variant",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vor allem",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+	},
+	"grammar-de-adv-dev-written-vor-allem": {
+		"input": {
+			"markedContext": "Sie liest <TARGET>vor</TARGET> <TARGET>allem</TARGET> Romane.",
+			"members": ["vor", "allem"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["vor", "allem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "vor allem",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
+	},
+	"grammar-de-adv-dev-written-im-allgemeinen": {
+		"input": {
+			"markedContext": "<TARGET>Im</TARGET> <TARGET>Allgemeinen</TARGET> ist der Zug pünktlich.",
+			"members": ["Im", "Allgemeinen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["im", "Allgemeinen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "im Allgemeinen",
+				"coreFeatures": {
+					"foreign": null,
+					"numType": null,
+					"pronType": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
 	}
 }

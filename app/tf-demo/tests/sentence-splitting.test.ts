@@ -31,6 +31,24 @@ describe("splitInSentences", () => {
 		expect(splitInSentences(" \n\t ")).toEqual([]);
 	});
 
+	test("keeps a sentence-internal abbreviation with what follows it", () => {
+		expect(
+			splitInSentences(
+				"Dr. Müller kommt heute. Das gilt z.B. für Kinder, bzw. Eltern. Am 3. Mai ist Ruhe.",
+			),
+		).toEqual([
+			"Dr. Müller kommt heute.",
+			"Das gilt z.B. für Kinder, bzw. Eltern.",
+			"Am 3. Mai ist Ruhe.",
+		]);
+	});
+
+	test("splits after a sentence-final abbreviation before a capital", () => {
+		expect(
+			splitInSentences("Wir kaufen Obst, Gemüse usw. Dann gehen wir."),
+		).toEqual(["Wir kaufen Obst, Gemüse usw.", "Dann gehen wir."]);
+	});
+
 	test("returns an immutable collection", () => {
 		expect(Object.isFrozen(splitInSentences("Hallo."))).toBe(true);
 	});

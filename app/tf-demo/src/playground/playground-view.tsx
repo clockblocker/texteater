@@ -3,12 +3,14 @@ import {
 	LayersIcon,
 	LoaderIcon,
 	type LucideIcon,
+	NetworkIcon,
 	PaletteIcon,
 	StickyNoteIcon,
 } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
 import { AnimationWorkbench } from "./entries/animation-workbench/workbench";
 import { DeckModelsGallery } from "./entries/deck-models-gallery";
+import { LatticeGallery } from "./entries/lattice/lattice-gallery";
 import { LoadingGallery } from "./entries/loading-gallery";
 import { NotesGallery } from "./entries/notes-gallery";
 import { PaletteGallery } from "./entries/palette-gallery";
@@ -64,6 +66,14 @@ export const PLAYGROUND_ENTRIES: readonly PlaygroundEntry[] = [
 		description:
 			"The deck’s live animations and gestures, isolated in scenarios. Compare the baseline with named parameter variants.",
 		render: (route) => <AnimationWorkbench route={route} />,
+	},
+	{
+		key: "lattice",
+		title: "Lattice",
+		icon: NetworkIcon,
+		description:
+			"Lab-produced Segmented Sentences: hover a fused word for its pieces, click a word to light its whole Analysis Target with route mass, roles and identity candidates; Miss and Unresolved stay visible.",
+		render: (route) => <LatticeGallery route={route} />,
 	},
 	{
 		key: "palette",
