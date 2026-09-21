@@ -107,6 +107,46 @@ test("bulk-discovered semantic failures cannot be counted as successful mnemonic
 		).toMatchObject({ contractPass: false, needsReview: false });
 	}
 });
+test("neighbour bleed and padding are rejected, the bare complete symbol passes", () => {
+	const evaluate = (id: string, emojiDescription: string, ideal: string) =>
+		evaluateGeneratedEmoji(
+			`reading-generation-${id}`,
+			{ decision: "New", emojiDescription },
+			{ decision: "New", emojiDescription: ideal },
+		);
+	// Production failures: bleiben took geschlossen's lock; geschlossen gained
+	// a redundant negation sign.
+	for (const [id, emojiDescription, ideal] of [
+		["remain-closed", "🚪🔒", "📍"],
+		["remain-cold", "🥶", "📍"],
+		["seem-tired", "😴", "👀"],
+		["find-boring", "🥱", "🤔"],
+		["make-tired", "😴", "➡️"],
+		["look-delicious", "👀😋", "👀"],
+		["become-longer", "⬆️", "➡️"],
+		["closed-tomorrow", "🔒🚫", "🔒"],
+		["forbidden-smoking", "🚭", "🚫"],
+		["silent-forest", "🌲🤫", "🤫"],
+	] as const)
+		expect(evaluate(id, emojiDescription, ideal)).toMatchObject({
+			contractPass: false,
+			needsReview: false,
+		});
+	expect(evaluate("closed-tomorrow", "🔒", "🔒")).toMatchObject({
+		contractPass: true,
+		exactMatch: true,
+	});
+	expect(evaluate("remain-closed", "📍", "📍")).toMatchObject({
+		contractPass: true,
+	});
+	expect(evaluate("remain-closed", "🔒🚪", "📍")).toMatchObject({
+		contractPass: false,
+	});
+	expect(evaluate("save-money", "💰🐷", "🐷💰")).toMatchObject({
+		contractPass: true,
+		exactMatch: false,
+	});
+});
 for (const scenario of [
 	{
 		selection: "candidate_0",

@@ -206,7 +206,7 @@ export async function evaluateExperiment(args: {
 					: "judgments-2",
 			evaluatorVersion:
 				args.experimentId === "reading-generation/de"
-					? "reading-mnemonic-1"
+					? "reading-mnemonic-2"
 					: "canonical-operation-2",
 			sourceRevision: args.sourceRevision,
 			configurations: {

@@ -14,6 +14,14 @@ bun run --cwd battery/dumgen evaluate --experiment grammatical-resolution/de/lex
 bun run --cwd battery/dumgen evaluate --open RUN_ID --output .runs/dumgen
 ```
 
+Reading generation failures are often stochastic. `cli/sample-reading.ts`
+samples selected held-out cases several times per prompt, optionally against
+the prompt at a baseline revision, and reports pass, fail and review rates:
+
+```sh
+bun --env-file=.env.local battery/dumgen/cli/sample-reading.ts --baseline main --samples 6 --cases remain-closed,closed-tomorrow
+```
+
 `--model` and `--settings` configure text generation; `--judgment-model` and
 `--judgment-timeout` configure bounded judgments. Live operations require
 `OPENAI_API_KEY` and `TYPESAFE_API_KEY`. Both transports

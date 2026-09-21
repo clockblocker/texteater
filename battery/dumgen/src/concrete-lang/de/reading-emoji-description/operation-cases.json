@@ -658,7 +658,7 @@
 		},
 		"idealOutput": {
 			"decision": "New",
-			"emojiDescription": "🍺"
+			"emojiDescription": "🥴"
 		},
 		"explanation": "Drunk, not blue-coloured. New."
 	},
@@ -1204,7 +1204,7 @@
 		},
 		"idealOutput": {
 			"decision": "New",
-			"emojiDescription": "🟰"
+			"emojiDescription": "👃"
 		},
 		"explanation": "A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New."
 	},
@@ -1304,7 +1304,7 @@
 		},
 		"idealOutput": {
 			"decision": "New",
-			"emojiDescription": "⚡"
+			"emojiDescription": "💥➡️"
 		},
 		"explanation": "Cause, not before. New."
 	},
@@ -3231,7 +3231,7 @@
 		},
 		"idealOutput": {
 			"decision": "New",
-			"emojiDescription": "🐺🗣️🤝"
+			"emojiDescription": "👥🤝"
 		},
 		"explanation": "Follow the group despite disagreement. Whole idiom. New."
 	},
@@ -3489,11 +3489,11 @@
 				"canonicalForm": "den Faden verlieren",
 				"coreFeatures": {}
 			},
-			"candidates": ["🧵❌"]
+			"candidates": ["🧠❓"]
 		},
 		"idealOutput": {
 			"decision": "Reuse",
-			"emojiDescription": "🧵❌"
+			"emojiDescription": "🧠❓"
 		},
 		"explanation": "Losing one's train of thought, not losing literal thread. Reuse."
 	},

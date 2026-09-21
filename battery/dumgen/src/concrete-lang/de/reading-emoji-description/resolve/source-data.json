@@ -119,7 +119,7 @@
 				"existingEmojiDescriptions": ["🟦"]
 			},
 			"idealOutput": {
-				"emojiDescription": "🍺"
+				"emojiDescription": "🥴"
 			},
 			"explanation": "Drunk, not blue-coloured. New."
 		},
@@ -241,7 +241,7 @@
 				"existingEmojiDescriptions": ["🧭", "⏭️", "🔗"]
 			},
 			"idealOutput": {
-				"emojiDescription": "🟰"
+				"emojiDescription": "👃"
 			},
 			"explanation": "A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New."
 		},
@@ -263,7 +263,7 @@
 				"existingEmojiDescriptions": ["⏮️", "🔗"]
 			},
 			"idealOutput": {
-				"emojiDescription": "⚡"
+				"emojiDescription": "💥➡️"
 			},
 			"explanation": "Cause, not before. New."
 		},
@@ -714,7 +714,7 @@
 				"existingEmojiDescriptions": []
 			},
 			"idealOutput": {
-				"emojiDescription": "🐺🗣️🤝"
+				"emojiDescription": "👥🤝"
 			},
 			"explanation": "Follow the group despite disagreement. Whole idiom. New."
 		},
@@ -755,10 +755,10 @@
 			"input": {
 				"markedContext": "Bei der dritten Zwischenfrage <TARGET>verlor</TARGET> die Rednerin <TARGET>den</TARGET> <TARGET>Faden</TARGET>.",
 				"lemma": "den Faden verlieren",
-				"existingEmojiDescriptions": ["🧵❌"]
+				"existingEmojiDescriptions": ["🧠❓"]
 			},
 			"idealOutput": {
-				"emojiDescription": "🧵❌"
+				"emojiDescription": "🧠❓"
 			},
 			"explanation": "Losing one's train of thought, not losing literal thread. Reuse."
 		},

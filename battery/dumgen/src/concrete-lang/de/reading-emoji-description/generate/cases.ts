@@ -107,7 +107,7 @@ export const examples: readonly Example[] = [
 		gender: "Fem",
 		context: "Sie genießt ihre <TARGET>Freiheit</TARGET>.",
 		meaning: "Being free from constraint",
-		accepted: ["🕊️", "🔓"],
+		accepted: ["🕊️"],
 		demo: true,
 	},
 	{
@@ -215,13 +215,54 @@ export const examples: readonly Example[] = [
 		demo: true,
 	},
 	{
+		id: "demo-remain",
+		kind: "VERB",
+		lemma: "bleiben",
+		context: "Sie <TARGET>bleibt</TARGET> trotz der Kritik ruhig.",
+		meaning:
+			"Remain in a state. bleiben contributes only the staying; the calm belongs to ruhig, so no calm face.",
+		accepted: ["📍", "⏸️", "🟰⏳", "⏳🟰", "📍⏳"],
+		demo: true,
+	},
+	{
+		id: "demo-closed",
+		kind: "ADJ",
+		lemma: "geschlossen",
+		context: "Das Museum ist montags <TARGET>geschlossen</TARGET>.",
+		meaning:
+			"Closed, not open. The lock already says it; a negation sign would add nothing.",
+		accepted: ["🔒", "🔐"],
+		rejected: ["🔒🚫", "🚫🔒", "🔒❌", "🏛️🔒"],
+		demo: true,
+	},
+	{
+		id: "demo-seem",
+		kind: "VERB",
+		lemma: "scheinen",
+		context: "Der Kuchen <TARGET>scheint</TARGET> lecker zu sein.",
+		meaning:
+			"Seem, look, give an impression. Depict only the impression; lecker belongs to its own lemma, so no yummy face.",
+		accepted: ["👀💭", "👀"],
+		demo: true,
+	},
+	{
+		id: "demo-consider",
+		kind: "VERB",
+		lemma: "finden",
+		context: "Ich <TARGET>finde</TARGET> das Buch spannend.",
+		meaning:
+			"Consider; hold an opinion. Not the searching sense, and spannend belongs to its own lemma.",
+		accepted: ["🧠💭", "🤔💭", "💭"],
+		demo: true,
+	},
+	{
 		id: "strenuous-hike",
 		kind: "ADJ",
 		lemma: "anstrengend",
 		context:
 			"Der Aufstieg und Abstieg waren gestern <TARGET>anstrengend</TARGET>.",
 		meaning: "Requiring effort; tiring or demanding",
-		accepted: ["😓", "🥵", "💪😓", "😮‍💨", "😩", "😓💪"],
+		accepted: ["😓", "🥵", "💪😓", "😮‍💨", "😩", "😓💪", "🥵💪"],
 		rejected: ["💪", "🏋️", "🏔️"],
 	},
 	{
@@ -286,8 +327,8 @@ export const examples: readonly Example[] = [
 		lemma: "leicht",
 		context: "Diese Aufgabe ist <TARGET>leicht</TARGET> zu lösen.",
 		meaning: "Easy to do",
-		accepted: ["👌", "✅", "🟢", "😌", "🙂👍", "🙂✅"],
-		rejected: ["🪶"],
+		accepted: ["👌", "✅", "😌", "🙂👍", "🙂✅", "😌👌"],
+		rejected: ["🪶", "🟢"],
 	},
 	{
 		id: "light-bag",
@@ -474,8 +515,193 @@ export const examples: readonly Example[] = [
 		lemma: "sparen",
 		context: "Wir <TARGET>sparen</TARGET> für eine Reise.",
 		meaning: "Set aside money or use resources economically",
-		accepted: ["🐷💰", "💰", "💰📥", "🏦", "💰🐖"],
-		rejected: ["✈️", "💰⬇️"],
+		accepted: ["🐷💰", "💰", "💰📥", "💰🐖"],
+		rejected: ["✈️", "💰⬇️", "🏦"],
+	},
+	// Neighbour bleed: a copula or light verb must not take its complement's
+	// meaning. Rejected sequences depict the complement or its object.
+	{
+		id: "remain-closed",
+		kind: "VERB",
+		lemma: "bleiben",
+		context: "Morgen <TARGET>bleiben</TARGET> sie geschlossen.",
+		meaning: "Remain in a state",
+		accepted: ["📍", "⏸️", "🟰⏳", "⏳🟰", "📍⏳"],
+		rejected: [
+			"🚪🔒",
+			"🔒",
+			"🔒🚪",
+			"🚪",
+			"🔐",
+			"🚫",
+			"🔒🚫",
+			"🔒⏳",
+			"🚫🏢",
+			"🏢🔒",
+			"⏳🔒",
+		],
+	},
+	{
+		id: "remain-cold",
+		kind: "VERB",
+		lemma: "bleiben",
+		context:
+			"Das Wasser im See <TARGET>bleibt</TARGET> den ganzen Sommer kalt.",
+		meaning: "Remain in a state",
+		accepted: ["📍", "⏸️", "🟰⏳", "⏳🟰", "📍⏳"],
+		rejected: ["🥶", "🧊", "❄️", "🥶⏳", "🧊⏳", "🏞️", "❄️⏳", "🌊"],
+	},
+	{
+		id: "become-longer",
+		kind: "VERB",
+		lemma: "werden",
+		context: "Im Frühling <TARGET>werden</TARGET> die Tage länger.",
+		meaning: "Become; change into a state",
+		accepted: ["➡️", "🔄", "🐛➡️🦋", "🔜", "⏩"],
+		rejected: ["📏", "☀️", "🌸", "📅", "🌞", "⏳", "📏⬆️", "⬆️", "↗️", "📈"],
+	},
+	{
+		id: "seem-tired",
+		kind: "VERB",
+		lemma: "wirken",
+		context: "Der Hund <TARGET>wirkt</TARGET> heute müde.",
+		meaning: "Give an impression; seem",
+		accepted: ["👀", "👀❓", "🤔👀", "👁️", "👀💭"],
+		rejected: [
+			"😴",
+			"🥱",
+			"😪",
+			"🐶",
+			"🐕",
+			"🐶😴",
+			"👀💤",
+			"👀😴",
+			"👀🥱",
+			"💤",
+		],
+	},
+	{
+		id: "look-delicious",
+		kind: "VERB",
+		lemma: "aussehen",
+		context:
+			"Die Suppe <TARGET>sieht</TARGET> lecker <TARGET>aus</TARGET>.",
+		meaning: "Have a visual appearance",
+		accepted: ["👀", "👁️", "👀✨", "👀💭"],
+		rejected: [
+			"😋",
+			"🤤",
+			"🍲",
+			"🍜",
+			"😋🍲",
+			"🍲👀",
+			"👀😋",
+			"👀🤤",
+			"😋👀",
+		],
+	},
+	{
+		id: "make-tired",
+		kind: "VERB",
+		lemma: "machen",
+		context: "Der Lärm <TARGET>macht</TARGET> mich müde.",
+		meaning: "Cause someone or something to be in a state",
+		accepted: ["➡️", "🛠️", "🔨", "👉➡️", "⚙️"],
+		rejected: ["😴", "🥱", "💤", "🔊", "😴🔊", "🔊😴", "🥱🔊", "😩"],
+	},
+	{
+		id: "find-boring",
+		kind: "VERB",
+		lemma: "finden",
+		context: "Ich <TARGET>finde</TARGET> den Film langweilig.",
+		meaning: "Consider; hold an opinion about something",
+		accepted: ["🤔", "💭", "🤔💭", "🧠💭"],
+		rejected: [
+			"🥱",
+			"😴",
+			"😑",
+			"🎬",
+			"🎥",
+			"🔍",
+			"🎬🥱",
+			"🔍🧠",
+			"🔎🧠",
+			"🔎",
+			"🧠🔍",
+		],
+	},
+	{
+		id: "leave-open",
+		kind: "VERB",
+		lemma: "lassen",
+		context: "<TARGET>Lass</TARGET> das Fenster bitte offen.",
+		meaning: "Let something stay as it is; not interfere",
+		accepted: [
+			"🙌",
+			"👐",
+			"✋",
+			"🆗",
+			"🤷",
+			"👐⏸️",
+			"🫳⏸️",
+			"🫳",
+			"🫳🏽⏸️",
+			"👐📍",
+		],
+		rejected: [
+			"🪟",
+			"🔓",
+			"🚪",
+			"🔓🪟",
+			"🪟🔓",
+			"👐🪟",
+			"🤲🪟",
+			"✋🪟",
+			"🙌🪟",
+			"🫳🚪",
+			"👐🚪",
+			"🖐️🚪",
+			"🫳🪟",
+			"🖐️🪟",
+		],
+	},
+	// Padding: a complete single symbol must not gain a negation, emphasis, or
+	// incidental object.
+	{
+		id: "closed-tomorrow",
+		kind: "ADJ",
+		lemma: "geschlossen",
+		context: "Morgen bleiben sie <TARGET>geschlossen</TARGET>.",
+		meaning: "Closed, not open",
+		accepted: ["🔒", "🔐"],
+		rejected: ["🔒🚫", "🚫🔒", "🔒❌", "❌🔒", "🚫", "❌", "🔓"],
+	},
+	{
+		id: "forbidden-smoking",
+		kind: "ADJ",
+		lemma: "verboten",
+		context: "Rauchen ist hier <TARGET>verboten</TARGET>.",
+		meaning: "Not allowed",
+		accepted: ["🚫", "⛔"],
+		rejected: ["🚭", "🚫❌", "⛔🚫", "🚬🚫", "🚫🚬", "🚬"],
+	},
+	{
+		id: "open-bakery",
+		kind: "ADJ",
+		lemma: "geöffnet",
+		context: "Die Bäckerei ist sonntags <TARGET>geöffnet</TARGET>.",
+		meaning: "Open for entry or business",
+		accepted: ["🔓"],
+		rejected: ["🔓✅", "✅🔓", "🔒", "🥐", "🥖", "🔓🥐", "🥐🔓"],
+	},
+	{
+		id: "silent-forest",
+		kind: "ADJ",
+		lemma: "still",
+		context: "Im Wald ist es ganz <TARGET>still</TARGET>.",
+		meaning: "Without sound",
+		accepted: ["🤫", "🔇"],
+		rejected: ["🔇🚫", "🔊🚫", "🚫🔊", "🌲🤫", "🌳", "🌲", "🌲🔇"],
 	},
 	// Fresh validation occurrences: not used to develop the prompt or its examples.
 	{
@@ -520,8 +746,8 @@ export const examples: readonly Example[] = [
 		lemma: "mutig",
 		context: "Trotz ihrer Angst handelte sie <TARGET>mutig</TARGET>.",
 		meaning: "Acting with courage despite fear",
-		accepted: ["🦁", "💪", "🦁💪"],
-		rejected: ["😨"],
+		accepted: ["🦁"],
+		rejected: ["😨", "💪", "🦁💪"],
 	},
 	{
 		id: "fresh-careful",
@@ -529,8 +755,8 @@ export const examples: readonly Example[] = [
 		lemma: "vorsichtig",
 		context: "Sei beim Öffnen bitte <TARGET>vorsichtig</TARGET>.",
 		meaning: "Acting carefully to avoid harm or mistakes",
-		accepted: ["⚠️", "👀⚠️", "⚠️👀"],
-		rejected: ["🚪"],
+		accepted: ["👀⚠️", "⚠️👀", "⚠️👐", "👐⚠️", "⚠️🐢", "🐢⚠️", "🧐"],
+		rejected: ["🚪", "⚠️"],
 	},
 	{
 		id: "fresh-fragile",
@@ -538,8 +764,8 @@ export const examples: readonly Example[] = [
 		lemma: "zerbrechlich",
 		context: "Das Glas ist <TARGET>zerbrechlich</TARGET>.",
 		meaning: "Easily broken",
-		accepted: ["💔", "🥚", "🥚⚠️", "⚠️💔"],
-		rejected: ["💪"],
+		accepted: ["🥚", "🥚⚠️", "🫧⚠️", "⚠️🫧"],
+		rejected: ["💪", "💔", "⚠️💔"],
 	},
 	{
 		id: "fresh-rescue",
@@ -647,6 +873,17 @@ export const additionalOperationCases = Object.fromEntries(
 	}),
 );
 
+// Reviewed sequences are order-insensitive: 🐷💰 and 💰🐷 carry one meaning.
+const graphemes = new Intl.Segmenter("und", { granularity: "grapheme" });
+function sameGraphemes(left: string, right: string) {
+	const sorted = (value: string) =>
+		[...graphemes.segment(value)]
+			.map((segment) => segment.segment)
+			.sort()
+			.join("");
+	return sorted(left) === sorted(right);
+}
+
 export function evaluateGeneratedEmoji(
 	caseId: string,
 	output: { decision: string; emojiDescription: string },
@@ -657,8 +894,10 @@ export function evaluateGeneratedEmoji(
 	const accepted = example?.accepted ?? [ideal.emojiDescription];
 	const rejected = example?.rejected ?? [];
 	const wrongDecision = output.decision !== ideal.decision;
-	const recognized = accepted.includes(description);
-	const knownFailure = wrongDecision || rejected.includes(description);
+	const matches = (reviewed: readonly string[]) =>
+		reviewed.some((value) => sameGraphemes(value, description));
+	const recognized = matches(accepted);
+	const knownFailure = wrongDecision || matches(rejected);
 	return {
 		contractPass: knownFailure ? false : recognized ? true : null,
 		needsReview: !knownFailure && !recognized,
