@@ -16,6 +16,7 @@ import {
 	extendedRoutes,
 	hierarchicalQuestions,
 	lexemeKinds,
+	lexemeRoutes,
 	morphemeKinds,
 	phrasemeKinds,
 	productionRoutes,
@@ -409,6 +410,8 @@ export const routings: Record<string, Routing> = {
 	flat: flatRouting("flat", productionRoutes),
 	extended: flatRouting("extended", extendedRoutes),
 	hier: hierarchical,
+	/** The Lexeme layer of `layers.ts`: Lexeme Kinds only. */
+	lexeme: flatRouting("lexeme", lexemeRoutes),
 };
 
 // ---------------------------------------------------------------- Axis C

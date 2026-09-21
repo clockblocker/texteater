@@ -1,13 +1,20 @@
 /**
  * The Segmented Sentence as the intake lab emits it (issue 493) and the
- * Resolution Selector that turns its masses into resolved values (issue 494).
+ * Resolution Selector that turns its masses into resolved values (issue 494),
+ * in two layers (`layers.ts`).
  *
- * Nothing resolved is stored: a target carries its members with roles, one
- * Route Mass keyed by bare Kind, and, when its head enumerates authored
+ * The Lexeme layer is `targets`: a flat partition of the ResolvableText
+ * Segments into Lexeme Targets, each with its members and their roles, one
+ * Route Mass keyed by Lexeme Kind, and, when its head enumerates authored
  * candidates, an Identity Mass keyed by headword group (issue 509). The
- * selector below is the one pure function that applies the policy, and it is
- * what the playground renders and what `fixtures.ts` scores. It has no
- * dependency on the rest of the lab so the playground can import it.
+ * Phraseme layer is `phrasemes`: Phraseme Targets whose members are Lexeme
+ * Targets, never Segments, with one Kind Mass and a fixedness score. A
+ * Phraseme's Segment span is derived from its members.
+ *
+ * Nothing resolved is stored. The selector below is the one pure function
+ * that applies the policy, and it is what the playground renders and what
+ * `fixtures.ts` scores. It has no dependency on the rest of the lab so the
+ * playground can import it.
  */
 
 export type SegmentKind =
@@ -57,14 +64,27 @@ export type IdentityMass = {
 	readonly mass: Readonly<Record<string, number>>;
 };
 
+/** A Lexeme Target: the Segments that realize one Lexeme occurrence. */
 export type AnalysisTarget = {
 	readonly id: string;
 	readonly members: readonly Member[];
-	/** Mass per bare Kind, `Unresolved` included. */
+	/** Mass per Lexeme Kind, `Unresolved` included. */
 	readonly routeMass: Readonly<Record<string, number>>;
 	/** Present only when the head's spelling enumerates authored candidates. */
 	readonly identity: IdentityMass | null;
 	/** How the target came to be, for the playground: `vote`, `fusion-table`, or an assembly guard. */
+	readonly provenance: string;
+};
+
+/** A Phraseme Target: the Lexeme Targets that are fixed lexical members of one expression. */
+export type PhrasemeTarget = {
+	readonly id: string;
+	/** Lexeme Target ids, ordered by first offset. */
+	readonly members: readonly string[];
+	/** Mass per Phraseme Kind plus `None` and `Unresolved`. */
+	readonly kindMass: Readonly<Record<string, number>>;
+	/** Mean fixedness Score of the member words, 0 (free) to 3 (fixed expression). */
+	readonly fixedness: number;
 	readonly provenance: string;
 };
 
@@ -86,7 +106,10 @@ export type SegmentedSentence = {
 	readonly language: "de";
 	readonly stitchedText: string;
 	readonly segments: readonly Segment[];
+	/** The Lexeme layer: a flat partition of the ResolvableText Segments. */
 	readonly targets: readonly AnalysisTarget[];
+	/** The Phraseme layer: a partition of a subset of `targets`. */
+	readonly phrasemes: readonly PhrasemeTarget[];
 	readonly fusions: readonly Fusion[];
 };
 
@@ -102,9 +125,18 @@ export type GoldTarget = {
 	readonly identity?: string;
 };
 
+/** Gold for one Phraseme: its Kind and the head offset of every member word. */
+export type GoldPhraseme = {
+	readonly kind: string;
+	readonly words: readonly number[];
+};
+
 export type Fixture = {
 	readonly sentence: SegmentedSentence;
+	/** The Lexeme layer's gold. */
 	readonly gold: readonly GoldTarget[];
+	/** The Phraseme layer's gold; empty when the sentence has no expression. */
+	readonly goldPhrasemes: readonly GoldPhraseme[];
 	readonly note: string;
 	readonly produced: { readonly design: string; readonly at: string };
 };
@@ -142,7 +174,6 @@ const closedKinds = new Set(["DET", "PRON"]);
 export function familyOf(kind: string): string {
 	if (lexemeKinds.has(kind)) return "Lexeme";
 	if (phrasemeKinds.has(kind)) return "Phraseme";
-	if (kind === "Fusion") return "Construction";
 	return "Unresolved";
 }
 
@@ -247,4 +278,84 @@ export function fusionAt(
 	return sentence.fusions.find((fusion) =>
 		fusion.components.some((component) => component.offset === offset),
 	);
+}
+
+// --------------------------------------------------------- Phraseme layer
+
+export type SelectedPhrasemeKind = {
+	readonly kind: string;
+	readonly share: number;
+};
+
+/** Below this mean fixedness (0 free, 1 preferred, 2 collocation, 3 fixed) no expression is established. */
+export const fixednessFloor = 1.5;
+
+/**
+ * Kind under the `score` policy: the fixedness Score establishes the
+ * expression and the Kind Mass only names it. Below the floor the Phraseme
+ * is `None`; above it the best named Kind wins even when `None` carries
+ * more mass, and `Unresolved` wins only when no Kind has any mass.
+ */
+export function selectPhrasemeKind(
+	phraseme: PhrasemeTarget,
+): SelectedPhrasemeKind {
+	if (phraseme.fixedness < fixednessFloor)
+		return { kind: "None", share: phraseme.kindMass.None ?? 0 };
+	const named = Object.fromEntries(
+		Object.entries(phraseme.kindMass).filter(
+			([key]) => key !== "None" && key !== "Unresolved",
+		),
+	);
+	const { key, share } = argmax(named);
+	return { kind: key, share };
+}
+
+/** The Lexeme Targets a Phraseme is made of, in member order. */
+export function membersOf(
+	sentence: SegmentedSentence,
+	phraseme: PhrasemeTarget,
+): AnalysisTarget[] {
+	return phraseme.members.flatMap((id) => {
+		const target = sentence.targets.find((entry) => entry.id === id);
+		return target ? [target] : [];
+	});
+}
+
+/** The Phraseme's Segment span is derived: every member word's Segments. */
+export function offsetsOf(
+	sentence: SegmentedSentence,
+	phraseme: PhrasemeTarget,
+): number[] {
+	return membersOf(sentence, phraseme)
+		.flatMap((target) => target.members.map((member) => member.offset))
+		.sort((a, b) => a - b);
+}
+
+export function phrasemeOf(
+	sentence: SegmentedSentence,
+	offset: number,
+): PhrasemeTarget | undefined {
+	const target = targetOf(sentence, offset);
+	if (!target) return undefined;
+	return sentence.phrasemes.find((phraseme) =>
+		phraseme.members.includes(target.id),
+	);
+}
+
+/**
+ * What a click selects: the Phraseme containing the word when there is one,
+ * else the word. The learner is after the largest semantic unit; the word
+ * beneath it is reached from the Phraseme.
+ */
+export function largestOf(
+	sentence: SegmentedSentence,
+	offset: number,
+):
+	| { readonly layer: "Phraseme"; readonly phraseme: PhrasemeTarget }
+	| { readonly layer: "Lexeme"; readonly target: AnalysisTarget }
+	| undefined {
+	const phraseme = phrasemeOf(sentence, offset);
+	if (phraseme) return { layer: "Phraseme", phraseme };
+	const target = targetOf(sentence, offset);
+	return target ? { layer: "Lexeme", target } : undefined;
 }

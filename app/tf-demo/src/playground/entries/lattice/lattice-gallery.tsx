@@ -12,13 +12,19 @@ import {
 	type Fixture,
 	type Fusion,
 	fusionAt,
+	type GoldPhraseme,
 	type GoldTarget,
 	headOf,
 	type IdentityState,
+	largestOf,
 	type Member,
+	membersOf,
+	offsetsOf,
+	type PhrasemeTarget,
 	type Segment,
 	type SegmentedSentence,
 	selectIdentity,
+	selectPhrasemeKind,
 	selectRoute,
 	targetOf,
 } from "../../../../../../battery/dumgen/prototypes/intake/segmented-sentence";
@@ -28,10 +34,13 @@ import { Stage } from "../frames";
 const fixtures = latticeFixtures as readonly Fixture[];
 
 /**
- * Lab-produced lattices for real sentences (issue 496). Every value shown is
- * read off the fixture through the Resolution Selector; nothing here calls a
- * model or Convex. The URL carries the shown sentence:
- * `/playground/lattice/<sentence id>`.
+ * Lab-produced lattices for real sentences (issue 496), in two layers: the
+ * Lexeme Targets a sentence's Segments realize, and the Phraseme Targets made
+ * of those words. A click selects the largest unit containing the word; a
+ * Phraseme's panel lists its member words, and each descends to its own
+ * panel. Every value shown is read off the fixture through the Resolution
+ * Selector; nothing here calls a model or Convex. The URL carries the shown
+ * sentence: `/playground/lattice/<sentence id>`.
  */
 export function LatticeGallery({ route }: { readonly route: EntryRoute }) {
 	const [sentenceId] = route.segments;
@@ -69,14 +78,36 @@ export function LatticeGallery({ route }: { readonly route: EntryRoute }) {
 	);
 }
 
+/** What the panel shows: the largest unit at a click, or one word descended into. */
+type Selection =
+	| { readonly layer: "Phraseme"; readonly phraseme: PhrasemeTarget }
+	| { readonly layer: "Lexeme"; readonly target: AnalysisTarget };
+
+function selectionOffsets(
+	sentence: SegmentedSentence,
+	selection: Selection | undefined,
+): ReadonlySet<number> {
+	if (!selection) return new Set();
+	return new Set(
+		selection.layer === "Phraseme"
+			? offsetsOf(sentence, selection.phraseme)
+			: selection.target.members.map((member) => member.offset),
+	);
+}
+
 function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 	const { sentence } = fixture;
-	const [selected, setSelected] = useState<number | null>(null);
+	const [selection, setSelection] = useState<Selection | undefined>();
+	const [clicked, setClicked] = useState<number | null>(null);
 	const [hovered, setHovered] = useState<number | null>(null);
-	const selectedTarget =
-		selected === null ? undefined : targetOf(sentence, selected);
-	const hoveredTarget =
-		hovered === null ? undefined : targetOf(sentence, hovered);
+	const select = (offset: number) => {
+		setClicked(offset);
+		setSelection(largestOf(sentence, offset));
+	};
+	const hoveredSelection =
+		hovered === null ? undefined : largestOf(sentence, hovered);
+	const selectedOffsets = selectionOffsets(sentence, selection);
+	const hoveredOffsets = selectionOffsets(sentence, hoveredSelection);
 	const hoveredSegment =
 		hovered === null
 			? undefined
@@ -93,10 +124,10 @@ function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 							key={segment.offset}
 							sentence={sentence}
 							segment={segment}
-							selectedTarget={selectedTarget}
-							hoveredTarget={hoveredTarget}
+							selectedOffsets={selectedOffsets}
+							hoveredOffsets={hoveredOffsets}
 							onHover={setHovered}
-							onSelect={setSelected}
+							onSelect={select}
 						/>
 					))}
 				</p>
@@ -107,18 +138,34 @@ function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 				/>
 			</Stage>
 			<Stage label="Target">
-				{selectedTarget ? (
+				{selection?.layer === "Phraseme" ? (
+					<PhrasemePanel
+						sentence={sentence}
+						phraseme={selection.phraseme}
+						gold={fixture.goldPhrasemes}
+						onDescend={(target) =>
+							setSelection({ layer: "Lexeme", target })
+						}
+					/>
+				) : selection?.layer === "Lexeme" ? (
 					<TargetPanel
 						sentence={sentence}
-						target={selectedTarget}
+						target={selection.target}
 						gold={fixture.gold}
-						clicked={selected}
+						clicked={clicked}
+						parent={sentence.phrasemes.find((phraseme) =>
+							phraseme.members.includes(selection.target.id),
+						)}
+						onAscend={(phraseme) =>
+							setSelection({ layer: "Phraseme", phraseme })
+						}
 					/>
 				) : (
 					<p className="text-[0.8rem] text-ink-muted">
-						Click a word. The whole Analysis Target it belongs to
-						lights up, and its masses are shown here as the
-						Resolution Selector reads them.
+						Click a word. The largest unit it belongs to lights up:
+						the Phraseme when the word is a fixed member of one,
+						else the word with its grammatical members. The masses
+						are shown here as the Resolution Selector reads them.
 					</p>
 				)}
 			</Stage>
@@ -126,8 +173,9 @@ function FixtureView({ fixture }: { readonly fixture: Fixture }) {
 				<TargetList
 					sentence={sentence}
 					gold={fixture.gold}
-					onSelect={setSelected}
-					selected={selectedTarget}
+					goldPhrasemes={fixture.goldPhrasemes}
+					onSelect={setSelection}
+					selection={selection}
 				/>
 			</Stage>
 			<Stage label="Legend">
@@ -159,15 +207,15 @@ function toneOf(
 function Word({
 	sentence,
 	segment,
-	selectedTarget,
-	hoveredTarget,
+	selectedOffsets,
+	hoveredOffsets,
 	onHover,
 	onSelect,
 }: {
 	readonly sentence: SegmentedSentence;
 	readonly segment: Segment;
-	readonly selectedTarget: AnalysisTarget | undefined;
-	readonly hoveredTarget: AnalysisTarget | undefined;
+	readonly selectedOffsets: ReadonlySet<number>;
+	readonly hoveredOffsets: ReadonlySet<number>;
 	readonly onHover: (offset: number | null) => void;
 	readonly onSelect: (offset: number) => void;
 }) {
@@ -176,12 +224,11 @@ function Word({
 	const target = targetOf(sentence, segment.offset);
 	const member = target?.members.find((m) => m.offset === segment.offset);
 	const fusion = fusionAt(sentence, segment.offset);
-	const interaction =
-		target && target === selectedTarget
-			? "selected"
-			: target && target === hoveredTarget
-				? "previewed"
-				: "idle";
+	const interaction = selectedOffsets.has(segment.offset)
+		? "selected"
+		: hoveredOffsets.has(segment.offset)
+			? "previewed"
+			: "idle";
 	const title = fusion
 		? `${fusion.form}: ${fusion.components.map((c) => `${c.span} → ${c.surface}`).join(" + ")}`
 		: segment.surface !== segment.text
@@ -226,6 +273,9 @@ function HoverLine({
 			</p>
 		);
 	const target = targetOf(sentence, segment.offset);
+	const phraseme = target
+		? sentence.phrasemes.find((entry) => entry.members.includes(target.id))
+		: undefined;
 	return (
 		<p className="min-h-[1.5rem] text-[0.8rem] text-ink-muted">
 			{fusion ? (
@@ -259,12 +309,144 @@ function HoverLine({
 			{target ? (
 				<>
 					{" "}
-					· target <Mono>{target.id}</Mono>, {target.members.length}{" "}
-					member{target.members.length === 1 ? "" : "s"}
+					· word <Mono>{target.id}</Mono>, {target.members.length}{" "}
+					Segment{target.members.length === 1 ? "" : "s"}
+				</>
+			) : null}
+			{phraseme ? (
+				<>
+					{" "}
+					· inside Phraseme <Mono>{phraseme.id}</Mono>,{" "}
+					{phraseme.members.length} words
 				</>
 			) : null}
 		</p>
 	);
+}
+
+/* ---------- the phraseme panel ---------- */
+
+function PhrasemePanel({
+	sentence,
+	phraseme,
+	gold,
+	onDescend,
+}: {
+	readonly sentence: SegmentedSentence;
+	readonly phraseme: PhrasemeTarget;
+	readonly gold: readonly GoldPhraseme[];
+	readonly onDescend: (target: AnalysisTarget) => void;
+}) {
+	const text = (offset: number) =>
+		sentence.segments.find((s) => s.offset === offset)?.text ?? "?";
+	const kind = selectPhrasemeKind(phraseme);
+	const words = membersOf(sentence, phraseme);
+	const verdict = phrasemeVerdict(sentence, phraseme, gold);
+	return (
+		<div className="grid gap-5 rounded-[0.7rem] border border-line bg-paper p-4">
+			<header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+				<span className="font-serif text-[1.2rem] text-ink">
+					{offsetsOf(sentence, phraseme).map(text).join(" ")}
+				</span>
+				<RouteBadge
+					kind={kind.kind}
+					family={
+						kind.kind === "None" || kind.kind === "Unresolved"
+							? "Unresolved"
+							: "Phraseme"
+					}
+					share={kind.share}
+				/>
+				<span className="text-[0.75rem] text-ink-muted">
+					fixedness {phraseme.fixedness.toFixed(2)} of 3
+				</span>
+				<span className="font-mono text-[0.65rem] text-ink-soft">
+					{phraseme.id} · {phraseme.provenance}
+				</span>
+			</header>
+			<p
+				className={`text-[0.8rem] ${verdict.ok ? "text-ink-muted" : "text-word-unknown"}`}
+			>
+				{verdict.text}
+			</p>
+			<div className="grid gap-4 md:grid-cols-2">
+				<section className="grid content-start gap-2">
+					<Label>Member words</Label>
+					<p className="text-[0.75rem] text-ink-soft">
+						The Phraseme lists words, never Segments. Each word
+						brings its own article, auxiliary or particle; click one
+						to descend to it.
+					</p>
+					<ul className="grid gap-1">
+						{words.map((target) => {
+							const route = effectiveRoute(target);
+							return (
+								<li key={target.id}>
+									<button
+										type="button"
+										onClick={() => onDescend(target)}
+										className="flex w-full flex-wrap items-baseline gap-x-2 rounded-md px-2 py-1 text-start hover:bg-raised"
+									>
+										<span className="font-serif text-[0.95rem] text-ink">
+											{target.members
+												.map((m) => text(m.offset))
+												.join(" ")}
+										</span>
+										<RouteBadge
+											kind={route.kind}
+											family={route.family}
+											share={route.share}
+										/>
+										<span className="text-[0.75rem] text-ink-muted">
+											{target.members
+												.map((m) => m.role)
+												.join(" + ")}
+										</span>
+									</button>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+				<section className="grid content-start gap-2">
+					<Label>Kind mass</Label>
+					<Bars mass={phraseme.kindMass} winner={kind.kind} />
+				</section>
+			</div>
+		</div>
+	);
+}
+
+function phrasemeVerdict(
+	sentence: SegmentedSentence,
+	phraseme: PhrasemeTarget,
+	gold: readonly GoldPhraseme[],
+): { readonly ok: boolean; readonly text: string } {
+	const text = (offset: number) =>
+		sentence.segments.find((s) => s.offset === offset)?.text ?? "?";
+	const heads = membersOf(sentence, phraseme)
+		.map((target) => headOf(target).offset)
+		.sort((a, b) => a - b)
+		.join(",");
+	const same = gold.find(
+		(entry) => [...entry.words].sort((a, b) => a - b).join(",") === heads,
+	);
+	const kind = selectPhrasemeKind(phraseme).kind;
+	if (!same)
+		return {
+			ok: false,
+			text: gold.length
+				? `Gold has no Phraseme over these words; gold: ${gold
+						.map(
+							(entry) =>
+								`{${entry.words.map(text).join(" ")}} ${entry.kind}`,
+						)
+						.join(", ")}.`
+				: "Gold has no Phraseme in this sentence.",
+		};
+	if (kind === same.kind)
+		return { ok: true, text: "Matches gold: same words, same Kind." };
+	return { ok: false, text: `Gold has these words but Kind ${same.kind}.` };
 }
 
 /* ---------- the target panel ---------- */
@@ -274,11 +456,15 @@ function TargetPanel({
 	target,
 	gold,
 	clicked,
+	parent,
+	onAscend,
 }: {
 	readonly sentence: SegmentedSentence;
 	readonly target: AnalysisTarget;
 	readonly gold: readonly GoldTarget[];
 	readonly clicked: number | null;
+	readonly parent: PhrasemeTarget | undefined;
+	readonly onAscend: (phraseme: PhrasemeTarget) => void;
 }) {
 	const text = (offset: number) =>
 		sentence.segments.find((s) => s.offset === offset);
@@ -310,6 +496,15 @@ function TargetPanel({
 				<span className="font-mono text-[0.65rem] text-ink-soft">
 					{target.id} · {target.provenance}
 				</span>
+				{parent ? (
+					<button
+						type="button"
+						onClick={() => onAscend(parent)}
+						className="text-[0.75rem] text-link underline-offset-2 hover:underline"
+					>
+						↑ inside Phraseme {parent.id}
+					</button>
+				) : null}
 			</header>
 			<p
 				className={`text-[0.8rem] ${verdict.ok ? "text-ink-muted" : "text-word-unknown"}`}
@@ -318,7 +513,7 @@ function TargetPanel({
 			</p>
 			<div className="grid gap-4 md:grid-cols-2">
 				<section className="grid content-start gap-2">
-					<Label>Members</Label>
+					<Label>Segments</Label>
 					<table className="w-full text-[0.8rem]">
 						<tbody>
 							{target.members.map((member) => {
@@ -505,59 +700,138 @@ function DerivedNotes({
 function TargetList({
 	sentence,
 	gold,
+	goldPhrasemes,
 	onSelect,
-	selected,
+	selection,
 }: {
 	readonly sentence: SegmentedSentence;
 	readonly gold: readonly GoldTarget[];
-	readonly onSelect: (offset: number) => void;
-	readonly selected: AnalysisTarget | undefined;
+	readonly goldPhrasemes: readonly GoldPhraseme[];
+	readonly onSelect: (selection: Selection) => void;
+	readonly selection: Selection | undefined;
 }) {
 	const text = (offset: number) =>
 		sentence.segments.find((s) => s.offset === offset)?.text ?? "?";
+	const selectedTarget =
+		selection?.layer === "Lexeme" ? selection.target : undefined;
+	const selectedPhraseme =
+		selection?.layer === "Phraseme" ? selection.phraseme : undefined;
 	return (
-		<ul className="grid gap-1 text-[0.8rem]">
-			{sentence.targets.map((target) => {
-				const route = effectiveRoute(target);
-				const identity = selectIdentity(target, headOf(target));
-				const verdict = goldVerdict(
-					target,
-					gold,
-					target.members[0]?.offset ?? null,
-					sentence,
-				);
-				return (
-					<li key={target.id}>
-						<button
-							type="button"
-							onClick={() =>
-								onSelect(target.members[0]?.offset ?? 0)
-							}
-							className={`flex w-full flex-wrap items-baseline gap-x-2 rounded-md px-2 py-1 text-start hover:bg-raised ${target === selected ? "bg-raised" : ""}`}
-						>
-							<span className="font-serif text-[0.95rem] text-ink">
-								{target.members
-									.map((m) => text(m.offset))
-									.join(" ")}
-							</span>
-							<RouteBadge
-								kind={route.kind}
-								family={route.family}
-								share={route.share}
-							/>
-							<span className="text-ink-muted">
-								{identity.state}
-							</span>
-							<span
-								className={`ms-auto font-mono text-[0.62rem] ${verdict.ok ? "text-ink-soft" : "text-word-unknown"}`}
-							>
-								{verdict.ok ? "gold ✓" : "gold ✗"}
-							</span>
-						</button>
-					</li>
-				);
-			})}
-		</ul>
+		<div className="grid gap-3">
+			<section className="grid gap-1">
+				<Label>Phrasemes</Label>
+				{sentence.phrasemes.length === 0 ? (
+					<p className="text-[0.75rem] text-ink-soft">
+						{goldPhrasemes.length
+							? `None produced; gold expects ${goldPhrasemes
+									.map(
+										(entry) =>
+											`{${entry.words.map(text).join(" ")}} ${entry.kind}`,
+									)
+									.join(", ")}.`
+							: "None, and gold expects none."}
+					</p>
+				) : null}
+				<ul className="grid gap-1 text-[0.8rem]">
+					{sentence.phrasemes.map((phraseme) => {
+						const kind = selectPhrasemeKind(phraseme);
+						const verdict = phrasemeVerdict(
+							sentence,
+							phraseme,
+							goldPhrasemes,
+						);
+						return (
+							<li key={phraseme.id}>
+								<button
+									type="button"
+									onClick={() =>
+										onSelect({
+											layer: "Phraseme",
+											phraseme,
+										})
+									}
+									className={`flex w-full flex-wrap items-baseline gap-x-2 rounded-md px-2 py-1 text-start hover:bg-raised ${phraseme === selectedPhraseme ? "bg-raised" : ""}`}
+								>
+									<span className="font-serif text-[0.95rem] text-ink">
+										{offsetsOf(sentence, phraseme)
+											.map(text)
+											.join(" ")}
+									</span>
+									<RouteBadge
+										kind={kind.kind}
+										family="Phraseme"
+										share={kind.share}
+									/>
+									<span className="text-ink-muted">
+										{phraseme.members.length} words ·
+										fixedness{" "}
+										{phraseme.fixedness.toFixed(2)}
+									</span>
+									<span
+										className={`ms-auto font-mono text-[0.62rem] ${verdict.ok ? "text-ink-soft" : "text-word-unknown"}`}
+									>
+										{verdict.ok ? "gold ✓" : "gold ✗"}
+									</span>
+								</button>
+							</li>
+						);
+					})}
+				</ul>
+			</section>
+			<section className="grid gap-1">
+				<Label>Words</Label>
+				<ul className="grid gap-1 text-[0.8rem]">
+					{sentence.targets.map((target) => {
+						const route = effectiveRoute(target);
+						const identity = selectIdentity(target, headOf(target));
+						const verdict = goldVerdict(
+							target,
+							gold,
+							target.members[0]?.offset ?? null,
+							sentence,
+						);
+						const inside = sentence.phrasemes.find((phraseme) =>
+							phraseme.members.includes(target.id),
+						);
+						return (
+							<li key={target.id}>
+								<button
+									type="button"
+									onClick={() =>
+										onSelect({ layer: "Lexeme", target })
+									}
+									className={`flex w-full flex-wrap items-baseline gap-x-2 rounded-md px-2 py-1 text-start hover:bg-raised ${target === selectedTarget ? "bg-raised" : ""}`}
+								>
+									<span className="font-serif text-[0.95rem] text-ink">
+										{target.members
+											.map((m) => text(m.offset))
+											.join(" ")}
+									</span>
+									<RouteBadge
+										kind={route.kind}
+										family={route.family}
+										share={route.share}
+									/>
+									<span className="text-ink-muted">
+										{identity.state}
+									</span>
+									{inside ? (
+										<span className="font-mono text-[0.62rem] text-ink-soft">
+											in {inside.id}
+										</span>
+									) : null}
+									<span
+										className={`ms-auto font-mono text-[0.62rem] ${verdict.ok ? "text-ink-soft" : "text-word-unknown"}`}
+									>
+										{verdict.ok ? "gold ✓" : "gold ✗"}
+									</span>
+								</button>
+							</li>
+						);
+					})}
+				</ul>
+			</section>
+		</div>
 	);
 }
 
@@ -701,7 +975,8 @@ function Legend({
 				))}
 			</ul>
 			<p className="text-ink-soft">
-				A dotted outline marks a piece of a fused word. Produced {at} by{" "}
+				A dotted outline marks a piece of a fused word. Selecting a word
+				inside a Phraseme lights up the whole Phraseme. Produced {at} by{" "}
 				<Mono>{design}</Mono>; re-emit with{" "}
 				<Mono>bun prototypes/intake/fixtures.ts</Mono> in dumgen.
 			</p>

@@ -1,10 +1,13 @@
 /**
- * The fixed sentences the playground renders, with their gold (issue 496).
+ * The fixed sentences the playground renders, with their gold (issue 496),
+ * in two layers.
  *
- * Gold members are written as `text[#n][@fused][:Role]`: the n-th occurrence
- * of `text` as a whole Segment, or the component `text` of the fused word
- * `fused`; the role is scored only when written. `identity` names the
- * closed-class head's headword group as `Kind:headword`.
+ * Lexeme gold members are written as `text[#n][@fused][:Role]`: the n-th
+ * occurrence of `text` as a whole Segment, or the component `text` of the
+ * fused word `fused`; the role is scored only when written. `identity` names
+ * the closed-class head's headword group as `Kind:headword`. Phraseme gold
+ * names the head Segment of every member word the same way; the Phraseme's
+ * Segment span follows from the words.
  */
 export type GoldSpec = {
 	readonly kind: string;
@@ -12,11 +15,18 @@ export type GoldSpec = {
 	readonly identity?: string;
 };
 
+export type GoldPhrasemeSpec = {
+	readonly kind: string;
+	/** Head Segment of every member word, `text[#n][@fused]`. */
+	readonly words: readonly string[];
+};
+
 export type FixtureSpec = {
 	readonly id: string;
 	readonly text: string;
 	readonly note: string;
 	readonly gold: readonly GoldSpec[];
+	readonly phrasemes?: readonly GoldPhrasemeSpec[];
 };
 
 const t = (
@@ -24,6 +34,11 @@ const t = (
 	members: readonly string[],
 	identity?: string,
 ): GoldSpec => ({ kind, members, ...(identity ? { identity } : {}) });
+
+const p = (kind: string, words: readonly string[]): GoldPhrasemeSpec => ({
+	kind,
+	words,
+});
 
 export const fixtureSentences: readonly FixtureSpec[] = [
 	{
@@ -116,11 +131,13 @@ export const fixtureSentences: readonly FixtureSpec[] = [
 	{
 		id: "faden",
 		text: "Er hat den Faden verloren.",
-		note: "An idiom: the whole expression lights up, auxiliary and article included.",
+		note: "An idiom over two words: the verb brings its auxiliary, the noun its article, and the whole expression lights up.",
 		gold: [
 			t("PRON", ["Er"], "PRON:er"),
-			t("Idiom", ["hat:Auxiliary", "den", "Faden", "verloren"]),
+			t("VERB", ["hat:Auxiliary", "verloren:Head"]),
+			t("NOUN", ["den:Article", "Faden:Head"]),
 		],
+		phrasemes: [p("Idiom", ["verloren", "Faden"])],
 	},
 	{
 		id: "usw",
@@ -177,24 +194,28 @@ export const fixtureSentences: readonly FixtureSpec[] = [
 	{
 		id: "klitik",
 		text: "Wie geht's dir heute?",
-		note: "An apostrophe clitic: `s` stands for `es`, the expletive of `es geht`.",
+		note: "An apostrophe clitic: `s` stands for `es`, the expletive of `es geht`; the greeting is a DiscourseFormula over three words.",
 		gold: [
 			t("ADV", ["Wie"]),
 			t("VERB", ["geht:Head", "s:Expletive"]),
 			t("PRON", ["dir"], "PRON:dir"),
 			t("ADV", ["heute"]),
 		],
+		phrasemes: [p("DiscourseFormula", ["Wie", "geht", "dir"])],
 	},
 	{
 		id: "verfuegung",
 		text: "Der Lehrer stellt den Schülern Material zur Verfügung.",
-		note: "A Funktionsverbgefüge that should be one Collocation and today never fires; `zur` is fused.",
+		note: "A Funktionsverbgefüge: a Collocation over three words, with the fused article reaching the noun through its own word; `den Schülern` and `Material` are free arguments.",
 		gold: [
 			t("NOUN", ["Der:Article", "Lehrer:Head"]),
-			t("Collocation", ["stellt", "zu@zur", "r@zur", "Verfügung"]),
+			t("VERB", ["stellt"]),
 			t("NOUN", ["den:Article", "Schülern:Head"]),
 			t("NOUN", ["Material"]),
+			t("ADP", ["zu@zur"]),
+			t("NOUN", ["r@zur:Article", "Verfügung:Head"]),
 		],
+		phrasemes: [p("Collocation", ["stellt", "zu@zur", "Verfügung"])],
 	},
 	{
 		id: "manche",

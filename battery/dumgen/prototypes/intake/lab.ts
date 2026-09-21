@@ -31,6 +31,18 @@
  *        --identity-shape authored|headword|rubric (issue 509)
  *        --shape state|questions         --chunk N (questions per call)
  *        --from /tmp/intake-<design>.json (re-score stored answers, no calls)
+ *        --layered                       two layers (`layers.ts`): the Lexeme
+ *                                        layer under the realization rules and
+ *                                        the Phraseme layer under the fixedness
+ *                                        rules, one call; implies --shape layered,
+ *                                        --grouping anchored, --route lexeme, roles
+ *        --phraseme-threshold 0.5        Noul threshold for the pair answers
+ *        --phraseme-policy vote|score    how an expression is established
+ *        --layers lexeme|both            with --layered: ask only the Lexeme
+ *                                        layer (no `fixedness` state, no
+ *                                        Phraseme questions) or both
+ *        --shape layered|layered-original with --layered: the realization
+ *                                        wording or the shipped wording
  */
 import type { Questions } from "promptsmith/typesafe";
 import { ask, type Call, save } from "../harness.js";
@@ -59,6 +71,16 @@ import {
 	solveIdentity,
 } from "./identity.js";
 import { morphemeKinds, routeReachability } from "./inventory.js";
+import {
+	type Layered,
+	lexemeRoleQuestions,
+	type PhrasemePolicy,
+	phrasemeQuestions,
+	solveExpressions,
+	splitMultiHead,
+	summarizeExpressions,
+	topLevel,
+} from "./layers.js";
 import { type Role, reportRoles, roleQuestions, solveRoles } from "./roles.js";
 import { shapes } from "./shapes.js";
 
@@ -74,17 +96,24 @@ const depth = flag("depth", "top");
 const threshold = Number(flag("threshold", "0.5"));
 const runs = Number(flag("runs", "1"));
 const concurrency = Number(flag("concurrency", "6"));
-const groupingIds = flag("grouping", "link").split(",");
-const routeIds = flag("route", "flat").split(",");
+const layered = has("layered");
+const layers = flag("layers", "both");
+const withPhrasemes = layered && layers === "both";
+const phrasemeThreshold = Number(flag("phraseme-threshold", "0.5"));
+const phrasemePolicies = flag("phraseme-policy", "vote").split(
+	",",
+) as PhrasemePolicy[];
+const groupingIds = flag("grouping", layered ? "anchored" : "link").split(",");
+const routeIds = flag("route", layered ? "lexeme" : "flat").split(",");
 const routePolicies = flag("route-policy", "perOccurrence").split(
 	",",
 ) as RoutePolicy[];
 const corpus = flag("corpus", "clicks");
 const withIdentity = has("identity");
 const identityShape = flag("identity-shape", "authored") as IdentityShape;
-const withRoles = has("roles");
+const withRoles = has("roles") || layered;
 const shape =
-	shapes[flag("shape", "state")] ??
+	shapes[flag("shape", layered ? "layered" : "state")] ??
 	(() => {
 		throw Error(`Unknown shape ${flag("shape", "state")}`);
 	})();
@@ -134,7 +163,12 @@ async function askSentence(
 	route: string,
 ): Promise<Raw> {
 	const calls: Call[] = [];
-	const state = sentenceState(sentence, shape);
+	const full = sentenceState(sentence, shape) as Record<string, unknown>;
+	const state = withPhrasemes
+		? full
+		: Object.fromEntries(
+				Object.entries(full).filter(([key]) => key !== "fixedness"),
+			);
 	const parts = chunk(questions);
 	const results = await Promise.all(
 		parts.map((part) => askWithBackoff(calls, route, state, part)),
@@ -147,6 +181,7 @@ async function askSentence(
 type Solved = Analysis & {
 	identities: Map<number, Identity> | null;
 	roles: Map<number, Role> | null;
+	layered?: Layered;
 };
 
 function solve(
@@ -156,11 +191,12 @@ function solve(
 	routeId: string,
 	tau: number,
 	policy: RoutePolicy,
+	phrasemePolicy: PhrasemePolicy = "vote",
 ): Solved {
 	const grouping = groupings[groupingId]!;
 	const routing = routings[routeId]!;
 	const groups = grouping.solve(sentence, raw.answers, tau);
-	const units = assemble(
+	const unitsBeforeSplit = assemble(
 		sentence,
 		groups,
 		routing,
@@ -168,10 +204,48 @@ function solve(
 		policy,
 		true,
 	);
+	const units = unitsBeforeSplit;
 	const identities = withIdentity
 		? solveIdentity(sentence, raw.answers, identityShape)
 		: null;
 	const roles = withRoles ? solveRoles(sentence, raw.answers) : null;
+	if (layered && roles) {
+		const units = splitMultiHead(
+			sentence,
+			unitsBeforeSplit,
+			roles,
+			raw.answers,
+			(members) =>
+				assemble(
+					sentence,
+					new Map(members.map((member) => [member, [...members]])),
+					routing,
+					raw.answers,
+					policy,
+					true,
+				).get(members[0]!) ?? { decision: "Unresolved" },
+		);
+		const expressions = withPhrasemes
+			? solveExpressions(
+					sentence,
+					raw.answers,
+					units,
+					roles,
+					phrasemeThreshold,
+					phrasemePolicy,
+				)
+			: [];
+		const layers: Layered = { words: units, roles, expressions };
+		const top = topLevel(sentence, layers);
+		return {
+			units: top.units,
+			sub: top.sub,
+			calls: raw.calls,
+			identities,
+			roles,
+			layered: layers,
+		};
+	}
 	if (depth !== "lattice")
 		return { units, calls: raw.calls, identities, roles };
 	const lattice = solveLattice(sentence, raw.answers, units);
@@ -202,6 +276,7 @@ async function runDesign(
 	routeId: string,
 	policy: RoutePolicy,
 	run: number,
+	phrasemePolicy: PhrasemePolicy = "vote",
 ) {
 	const grouping = groupings[groupingId];
 	const routing = routings[routeId];
@@ -209,7 +284,7 @@ async function runDesign(
 		throw Error(`Unknown design ${groupingId}/${routeId}`);
 	const limit = Number(flag("limit", "0"));
 	const sentences = limit ? loadCorpus().slice(0, limit) : loadCorpus();
-	const axes = `${withIdentity ? `+identity:${identityShape}` : ""}${withRoles ? "+roles" : ""}`;
+	const axes = `${withIdentity ? `+identity:${identityShape}` : ""}${withRoles ? "+roles" : ""}${withPhrasemes ? `+phraseme:${phrasemePolicy}@${phrasemeThreshold}` : layered ? "+lexemeOnly" : ""}`;
 	const name = `${corpus}:${groupingId}+${routeId}+${policy}+${depth}${axes} ${shape.id}${runs > 1 ? ` run${run}` : ""}`;
 	console.error(`\n=== ${name}: ${sentences.length} sentences (${scope})`);
 
@@ -240,7 +315,13 @@ async function runDesign(
 				...(withIdentity
 					? identityQuestions(sentence, identityShape)
 					: {}),
-				...(withRoles ? roleQuestions(sentence) : {}),
+				...(withRoles && shape.id !== "layered"
+					? roleQuestions(sentence)
+					: {}),
+				...(shape.id === "layered"
+					? lexemeRoleQuestions(sentence)
+					: {}),
+				...(withPhrasemes ? phrasemeQuestions(sentence) : {}),
 			};
 			try {
 				raws[position] = await askSentence(sentence, questions, name);
@@ -265,6 +346,7 @@ async function runDesign(
 					routeId,
 					threshold,
 					policy,
+					phrasemePolicy,
 				)
 			: null,
 	}));
@@ -344,6 +426,13 @@ async function runDesign(
 			)
 		: null;
 	if (roles) extra.roles = roles.summary;
+	if (withPhrasemes)
+		extra.phrasemes = summarizeExpressions(
+			pairs.map(({ sentence, analysis }) => ({
+				sentence,
+				layered: analysis?.layered ?? null,
+			})),
+		);
 
 	const result = report(name, pairs, extra);
 	console.log(JSON.stringify(result.summary, null, 2));
@@ -358,7 +447,7 @@ async function runDesign(
 			summary: { ...result.summary, replayedFrom: replay },
 		};
 	await save(
-		`/tmp/intake-${corpus}-${groupingId}-${routeId}-${depth}-${shape.id}${withIdentity ? `-identity-${identityShape}` : ""}${withRoles ? "-roles" : ""}-${run}.json`,
+		`/tmp/intake-${corpus}-${groupingId}-${routeId}-${depth}-${shape.id}${withIdentity ? `-identity-${identityShape}` : ""}${withRoles ? "-roles" : ""}${withPhrasemes ? `-phraseme-${phrasemePolicy}` : layered ? "-lexeme-only" : ""}-${run}.json`,
 		{
 			summary: result.summary,
 			scores: result.scores,
@@ -383,79 +472,91 @@ function flips(previous: Set<string>, current: Set<string>): number {
 const table: Record<string, Record<string, number[]>> = {};
 for (const groupingId of groupingIds)
 	for (const routeId of routeIds)
-		for (const policy of routePolicies) {
-			const passes: number[] = [];
-			const identityPasses: number[] = [];
-			const headwordPasses: number[] = [];
-			const shapePasses: number[] = [];
-			let previous: {
-				clicks: Set<string>;
-				identity: Set<string>;
-				shape: Set<string>;
-			} | null = null;
-			for (let run = 1; run <= runs; run += 1) {
-				const result = await runDesign(
-					groupingId,
-					routeId,
-					policy,
-					run,
-				);
-				passes.push(result.summary.passed);
-				const summary = result.summary as Record<string, unknown>;
-				const identitySummary = summary.identity as
-					| { identityPassed: number; identityHeadwordPassed: number }
-					| undefined;
-				const rolesSummary = summary.roles as
-					| { shapeAllCorrect: number }
-					| undefined;
-				if (identitySummary) {
-					identityPasses.push(identitySummary.identityPassed);
-					headwordPasses.push(identitySummary.identityHeadwordPassed);
-				}
-				if (rolesSummary)
-					shapePasses.push(rolesSummary.shapeAllCorrect);
-				const passing = {
-					clicks: new Set(
-						result.scores
-							.filter((score) => score.pass)
-							.map((score) => score.id),
-					),
-					identity: new Set(
-						result.identityScores
-							.filter((score) => score.pass)
-							.map((score) => score.id),
-					),
-					shape: new Set(
-						result.shapeScores
-							.filter((score) => score.allCorrect)
-							.map((score) => score.id),
-					),
-				};
-				if (previous)
-					console.log(
-						JSON.stringify({
-							design: `${corpus}:${groupingId}+${routeId}+${policy} ${shape.id}`,
-							runToRunFlips: flips(
-								previous.clicks,
-								passing.clicks,
-							),
-							identityFlips: flips(
-								previous.identity,
-								passing.identity,
-							),
-							shapeFlips: flips(previous.shape, passing.shape),
-						}),
+		for (const policy of routePolicies)
+			for (const phrasemePolicy of layered
+				? phrasemePolicies
+				: ["vote" as const]) {
+				const passes: number[] = [];
+				const identityPasses: number[] = [];
+				const headwordPasses: number[] = [];
+				const shapePasses: number[] = [];
+				let previous: {
+					clicks: Set<string>;
+					identity: Set<string>;
+					shape: Set<string>;
+				} | null = null;
+				for (let run = 1; run <= runs; run += 1) {
+					const result = await runDesign(
+						groupingId,
+						routeId,
+						policy,
+						run,
+						phrasemePolicy,
 					);
-				previous = passing;
+					passes.push(result.summary.passed);
+					const summary = result.summary as Record<string, unknown>;
+					const identitySummary = summary.identity as
+						| {
+								identityPassed: number;
+								identityHeadwordPassed: number;
+						  }
+						| undefined;
+					const rolesSummary = summary.roles as
+						| { shapeAllCorrect: number }
+						| undefined;
+					if (identitySummary) {
+						identityPasses.push(identitySummary.identityPassed);
+						headwordPasses.push(
+							identitySummary.identityHeadwordPassed,
+						);
+					}
+					if (rolesSummary)
+						shapePasses.push(rolesSummary.shapeAllCorrect);
+					const passing = {
+						clicks: new Set(
+							result.scores
+								.filter((score) => score.pass)
+								.map((score) => score.id),
+						),
+						identity: new Set(
+							result.identityScores
+								.filter((score) => score.pass)
+								.map((score) => score.id),
+						),
+						shape: new Set(
+							result.shapeScores
+								.filter((score) => score.allCorrect)
+								.map((score) => score.id),
+						),
+					};
+					if (previous)
+						console.log(
+							JSON.stringify({
+								design: `${corpus}:${groupingId}+${routeId}+${policy} ${shape.id}`,
+								runToRunFlips: flips(
+									previous.clicks,
+									passing.clicks,
+								),
+								identityFlips: flips(
+									previous.identity,
+									passing.identity,
+								),
+								shapeFlips: flips(
+									previous.shape,
+									passing.shape,
+								),
+							}),
+						);
+					previous = passing;
+				}
+				table[
+					`${corpus}:${groupingId}+${routeId}+${policy}+${depth} ${shape.id}${layered ? ` phraseme:${phrasemePolicy}` : ""}`
+				] = {
+					passes,
+					...(identityPasses.length
+						? { identityPasses, headwordPasses }
+						: {}),
+					...(shapePasses.length ? { shapePasses } : {}),
+				};
 			}
-			table[
-				`${corpus}:${groupingId}+${routeId}+${policy}+${depth} ${shape.id}`
-			] = {
-				passes,
-				...(identityPasses.length
-					? { identityPasses, headwordPasses }
-					: {}),
-				...(shapePasses.length ? { shapePasses } : {}),
-			};
-		}
 console.log(JSON.stringify({ passesByDesign: table }, null, 2));

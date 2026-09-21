@@ -28,6 +28,36 @@ export const extendedRoutes: Record<string, string> = {
 		"Conventional multiword expression with restricted lexical choices and a compositional overall meaning",
 };
 
+/**
+ * The Lexeme layer's route inventory (`layers.ts`): Lexeme Kinds only. AUX is
+ * not a route (ADR 0026), PUNCT and X keep every occurrence resolvable, and
+ * no Phraseme Kind competes with a word for its own mass.
+ */
+export const lexemeRoutes: Record<string, string> = {
+	...Object.fromEntries(
+		Object.entries({
+			ADJ: "Adjective, including adjectival participles, established property predicates, comparative and adverbially used adjectives",
+			ADP: "Adposition (preposition, postposition or fixed circumposition), including one that is a fixed part of a larger expression",
+			ADV: "Adverb, including a whole adverbial correlator (einerseits/andererseits, teils/teils)",
+			CCONJ: "Coordinating conjunction, including a complete fixed correlator (entweder/oder, weder/noch, sowohl/als/auch, nicht nur/sondern auch, je/desto)",
+			DET: "A determiner directly modifying a noun (mein, dieser, kein, welcher, jeder), never the absorbed article der/die/das/ein of a noun",
+			INTJ: "Interjection",
+			NOUN: "Common noun with its one absorbed overt article, including substantivized participles, whether or not it is part of a larger expression",
+			NUM: "Numeral",
+			PART: "Particle",
+			PRON: "Pronoun used substantively, or attributive genitive dessen/deren/wessen",
+			PROPN: "Proper noun",
+			PUNCT: "Punctuation resolvable as its own unit",
+			SCONJ: "Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass)",
+			SYM: "Symbol",
+			VERB: "One lexical verb with its own auxiliaries, separable particle, required reflexive, governed preposition and lexically selected es; modals and copulas included; whether or not it is part of a larger expression",
+			X: "Unanalyzable or foreign material",
+		}).map(([kind, description]) => [`Lexeme/${kind}`, description]),
+	),
+	Unresolved:
+		"No defensible word contains this occurrence: its exact grammatical members cannot be decided",
+};
+
 export const lexemeKinds: Record<string, string> = {
 	ADJ: "Adjective, including adjectival participles and adverbial adjective uses",
 	ADP: "Adposition (preposition, postposition or fixed circumposition)",

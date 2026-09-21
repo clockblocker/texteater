@@ -1,10 +1,12 @@
 /**
  * Writes the playground fixtures: the fixed sentences in `fixtures/sentences.ts`
- * run through the winning intake design (anchored membership, extended
- * routes, group vote at tau 0.6, per-cell identity rubric collapsed to
- * headword groups, member roles) and emitted as Segmented Sentences with
- * fused words split by the German fusion table. Each fixture carries its
- * gold keyed by offset and is scored here against the Resolution Selector.
+ * run through the layered intake design (`layers.ts`: anchored membership
+ * over the Lexeme-only inventory, group vote at tau 0.6, per-cell identity
+ * rubric collapsed to headword groups, member roles, and the Phraseme layer
+ * projected onto the words) and emitted as Segmented Sentences with fused
+ * words split by the German fusion table. Each fixture carries its gold for
+ * both layers keyed by offset and is scored here against the Resolution
+ * Selector.
  *
  *   zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/fixtures.ts'
  *   bun prototypes/intake/fixtures.ts --from /tmp/intake-fixtures.json   (re-emit without calls)
@@ -24,38 +26,54 @@ import {
 import { ask, type Call, save } from "../harness.js";
 import type { Sentence, Unit } from "./corpus.js";
 import { assemble, groupings, routings, sentenceState } from "./designs.js";
-import { fixtureSentences, type GoldSpec } from "./fixtures/sentences.js";
+import {
+	fixtureSentences,
+	type GoldPhrasemeSpec,
+	type GoldSpec,
+} from "./fixtures/sentences.js";
 import {
 	candidatesFor,
 	headwordGroups,
 	identityQuestions,
 } from "./identity.js";
+import {
+	type PhrasemePolicy,
+	phrasemeQuestions,
+	solveExpressions,
+	splitMultiHead,
+} from "./layers.js";
 import { type Role, roleQuestions, solveRoles } from "./roles.js";
 import {
 	type AnalysisTarget,
 	effectiveRoute,
 	type Fixture,
 	type Fusion,
+	type GoldPhraseme,
 	type GoldTarget,
 	headOf,
 	type IdentityCandidate,
 	type Member,
 	type MemberRole,
+	type PhrasemeTarget,
 	type Segment,
 	type SegmentedSentence,
 	selectIdentity,
+	selectPhrasemeKind,
 } from "./segmented-sentence.js";
+import { layeredTrimmedShape } from "./shapes.js";
 
 const argv = process.argv.slice(2);
 const replay = (() => {
 	const index = argv.indexOf("--from");
 	return index >= 0 ? argv[index + 1] : "";
 })();
-const design =
-	"anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles";
+const shape = layeredTrimmedShape;
+const phrasemePolicy: PhrasemePolicy = "score";
+const phrasemeTau = 0.5;
+const design = `layered(${shape.id}): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:${phrasemePolicy}@${phrasemeTau}`;
 const tau = 0.6;
 const grouping = groupings.anchored!;
-const routing = routings.extended!;
+const routing = routings.lexeme!;
 
 type Answers = Record<string, unknown>;
 type ChoiceAnswer = {
@@ -257,17 +275,25 @@ function buildTargets(
 	sentence: Sentence,
 	answers: Answers,
 	placed: Placed,
-): AnalysisTarget[] {
+): { targets: AnalysisTarget[]; phrasemes: PhrasemeTarget[] } {
 	const groups = grouping.solve(sentence, answers, tau);
-	const units = assemble(
-		sentence,
-		groups,
-		routing,
-		answers,
-		"groupVote",
-		true,
-	);
 	const roles = solveRoles(sentence, answers);
+	const routeOf = (members: readonly number[]): Unit =>
+		assemble(
+			sentence,
+			new Map(members.map((member) => [member, [...members]])),
+			routing,
+			answers,
+			"groupVote",
+			true,
+		).get(members[0]!) ?? { decision: "Unresolved" };
+	const units = splitMultiHead(
+		sentence,
+		assemble(sentence, groups, routing, answers, "groupVote", true),
+		roles,
+		answers,
+		routeOf,
+	);
 	const roleOf = (index: number, singleton: boolean): MemberRole => {
 		const role: Role = roles.get(index) ?? "Unresolved";
 		if (role === "Free") return "Head";
@@ -279,6 +305,8 @@ function buildTargets(
 	const seen = new Set<string>();
 	let counter = 0;
 	const nextId = () => `t${++counter}`;
+	/** Lab index of the head behind each emitted target, for the Phraseme layer. */
+	const headIndexOf = new Map<string, number>();
 
 	for (const index of sentence.resolvable) {
 		const unit: Unit | undefined = units.get(index);
@@ -293,15 +321,17 @@ function buildTargets(
 		if (memberIndices.length === 1 && fusion) {
 			// The table decides a fused word: adposition alone, article to the noun.
 			for (const component of fusion.components)
-				if (component.role === "Adposition")
+				if (component.role === "Adposition") {
+					const id = nextId();
+					headIndexOf.set(id, index);
 					targets.push({
-						id: nextId(),
+						id,
 						members: [{ offset: component.offset, role: "Head" }],
 						routeMass: { ADP: 1 },
 						identity: null,
 						provenance: "fusion-table",
 					});
-				else
+				} else
 					fusedArticles.push({
 						offset: component.offset,
 						surface: component.surface,
@@ -326,8 +356,10 @@ function buildTargets(
 			memberIndices.find(
 				(memberIndex) => roleOf(memberIndex, false) === "Head",
 			) ?? memberIndices[0]!;
+		const id = nextId();
+		headIndexOf.set(id, headIndex);
 		targets.push({
-			id: nextId(),
+			id,
 			members,
 			routeMass: unresolvedReason ? { Unresolved: 1 } : routeMass,
 			identity: identityMassOf(sentence, answers, headIndex),
@@ -367,7 +399,41 @@ function buildTargets(
 				provenance: "fusion-table:unattached-article",
 			});
 	}
-	return targets.sort((a, b) => a.members[0]!.offset - b.members[0]!.offset);
+	const sorted = targets.sort(
+		(a, b) => a.members[0]!.offset - b.members[0]!.offset,
+	);
+	// The Phraseme layer: expressions over the words, projected by head.
+	const expressions = solveExpressions(
+		sentence,
+		answers,
+		units,
+		roles,
+		phrasemeTau,
+		phrasemePolicy,
+	);
+	const phrasemes: PhrasemeTarget[] = expressions.flatMap(
+		(expression, position) => {
+			const members = sorted
+				.filter((target) => {
+					const head = headIndexOf.get(target.id);
+					return (
+						head !== undefined && expression.words.includes(head)
+					);
+				})
+				.map((target) => target.id);
+			if (members.length < 2) return [];
+			return [
+				{
+					id: `p${position + 1}`,
+					members,
+					kindMass: expression.kindMass,
+					fixedness: expression.fixedness,
+					provenance: `${phrasemePolicy}@${phrasemeTau}`,
+				},
+			];
+		},
+	);
+	return { targets: sorted, phrasemes };
 }
 
 // ----------------------------------------------------------------- Gold
@@ -414,11 +480,26 @@ function resolveGold(spec: GoldSpec, placed: Placed): GoldTarget {
 	};
 }
 
+function resolvePhrasemeGold(
+	spec: GoldPhrasemeSpec,
+	placed: Placed,
+): GoldPhraseme {
+	const words = resolveGold(
+		{ kind: spec.kind, members: spec.words },
+		placed,
+	).members.map((member) => member.offset);
+	return { kind: spec.kind, words };
+}
+
 type Score = {
 	readonly id: string;
 	readonly gold: number;
 	readonly membersFound: number;
 	readonly routeCorrect: number;
+	readonly phrasemesGold: number;
+	readonly phrasemesFound: number;
+	readonly phrasemesCorrect: number;
+	readonly phrasemesExtra: number;
 	readonly rolesCorrect: number;
 	readonly rolesScored: number;
 	readonly identityCorrect: number;
@@ -430,6 +511,8 @@ function score(fixture: Fixture): Score {
 	const failures: string[] = [];
 	let membersFound = 0,
 		routeCorrect = 0,
+		phrasemesFound = 0,
+		phrasemesCorrect = 0,
 		rolesCorrect = 0,
 		rolesScored = 0,
 		identityCorrect = 0,
@@ -480,11 +563,58 @@ function score(fixture: Fixture): Score {
 				);
 		}
 	}
+	// The Phraseme layer: a gold expression is found when one Phraseme Target
+	// has exactly its member words, by head offset.
+	const headOffsets = (phraseme: PhrasemeTarget) =>
+		phraseme.members
+			.flatMap((id) => {
+				const target = fixture.sentence.targets.find(
+					(t) => t.id === id,
+				);
+				return target ? [headOf(target).offset] : [];
+			})
+			.sort((a, b) => a - b)
+			.join(",");
+	const matched = new Set<string>();
+	for (const gold of fixture.goldPhrasemes) {
+		const key = [...gold.words].sort((a, b) => a - b).join(",");
+		const label = `{${gold.words.map(text).join(" ")}} ${gold.kind}`;
+		const phraseme = fixture.sentence.phrasemes.find(
+			(candidate) => headOffsets(candidate) === key,
+		);
+		if (!phraseme) {
+			failures.push(`${label}: no Phraseme Target with these words`);
+			continue;
+		}
+		matched.add(phraseme.id);
+		phrasemesFound += 1;
+		const kind = selectPhrasemeKind(phraseme).kind;
+		if (kind === gold.kind) phrasemesCorrect += 1;
+		else failures.push(`${label}: kind ${kind}`);
+	}
+	const extra = fixture.sentence.phrasemes.filter(
+		(phraseme) => !matched.has(phraseme.id),
+	);
+	for (const phraseme of extra)
+		failures.push(
+			`extra Phraseme ${selectPhrasemeKind(phraseme).kind} over {${phraseme.members
+				.map((id) => {
+					const target = fixture.sentence.targets.find(
+						(t) => t.id === id,
+					);
+					return target ? text(headOf(target).offset) : id;
+				})
+				.join(" ")}}`,
+		);
 	return {
 		id: fixture.sentence.id,
 		gold: fixture.gold.length,
 		membersFound,
 		routeCorrect,
+		phrasemesGold: fixture.goldPhrasemes.length,
+		phrasemesFound,
+		phrasemesCorrect,
+		phrasemesExtra: extra.length,
 		rolesCorrect,
 		rolesScored,
 		identityCorrect,
@@ -507,15 +637,16 @@ for (const spec of fixtureSentences) {
 	let answers = stored?.answers.find((row) => row.id === spec.id)?.answers;
 	if (!answers) {
 		const questions: Questions = {
-			...grouping.questions(sentence),
-			...routing.questions(sentence),
+			...grouping.questions(sentence, shape),
+			...routing.questions(sentence, shape),
 			...identityQuestions(sentence, "rubric"),
 			...roleQuestions(sentence),
+			...phrasemeQuestions(sentence),
 		};
 		const calls: Call[] = [];
 		answers = await askWithBackoff(
 			calls,
-			sentenceState(sentence),
+			sentenceState(sentence, shape),
 			questions,
 		);
 		console.error(
@@ -529,16 +660,21 @@ if (!replay) await save("/tmp/intake-fixtures.json", { answers: raws });
 const fixtures: Fixture[] = fixtureSentences.map((spec) => {
 	const { sentence, answers } = asked.get(spec.id)!;
 	const placed = placeSegments(sentence);
+	const built = buildTargets(sentence, answers, placed);
 	return {
 		sentence: {
 			id: spec.id,
 			language: "de",
 			stitchedText: spec.text,
 			segments: placed.segments,
-			targets: buildTargets(sentence, answers, placed),
+			targets: built.targets,
+			phrasemes: built.phrasemes,
 			fusions: placed.fusions,
 		},
 		gold: spec.gold.map((gold) => resolveGold(gold, placed)),
+		goldPhrasemes: (spec.phrasemes ?? []).map((gold) =>
+			resolvePhrasemeGold(gold, placed),
+		),
 		note: spec.note,
 		produced: { design, at: new Date().toISOString().slice(0, 10) },
 	};
@@ -557,6 +693,7 @@ console.log(
 			goldTargets: total((s) => s.gold),
 			membersFound: total((s) => s.membersFound),
 			routeCorrect: total((s) => s.routeCorrect),
+			phrasemes: `${total((s) => s.phrasemesCorrect)}/${total((s) => s.phrasemesFound)} of ${total((s) => s.phrasemesGold)} gold, ${total((s) => s.phrasemesExtra)} extra`,
 			roles: `${total((s) => s.rolesCorrect)}/${total((s) => s.rolesScored)}`,
 			identity: `${total((s) => s.identityCorrect)}/${total((s) => s.identityScored)}`,
 			failures: Object.fromEntries(

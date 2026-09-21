@@ -182,7 +182,139 @@ export const questionsShape: Shape = {
 	},
 };
 
+// ------------------------------------------------------------ layered
+
+/**
+ * The realization rules of `targetCriteria`: which Segments realize one
+ * Lexeme. Nothing here is about multiword expressions; a word that sits
+ * inside an idiom or a Funktionsverbgefüge is still one word with its own
+ * grammatical members.
+ */
+export const realizationCriteria = `A word is one Lexeme occurrence: one dictionary word together with the Segments that realize its grammatical form. Identity is occurrence position, never spelling. Every grammatical member of a word selects exactly the same word; most words have exactly one Segment. Whether a word is also part of a larger established expression is not asked here and must not change its members.
+A German lexical verb includes, across word-order changes and intervening free words: its separable particle (steht ... auf); its inherently required reflexive (schämt sich, erinnert sich), not an optional reflexive object; its lexically governed preposition (wartet auf, erinnert sich an), not an adjunct preposition, and an adposition with its own nominal complement is not a separable particle; its own perfect, future or passive auxiliaries sein, haben, werden (ist ... aufgefunden worden is one word) and recipient-passive bekommen, kriegen, erhalten with a participle that adds no meaning; its lexically selected nonreferential subject es (es gibt, es gab, es regnet, es geht um, es handelt sich um). Referential es, positional es (Es kamen Gäste), anticipatory es (Es freut mich, dass du kommst) and object es (Sie meint es gut mit dir) are their own words; never invent omitted es.
+Modals (dürfen, können, mögen, müssen, sollen, wollen) are words of their own with their own scoped auxiliaries, and the lexical infinitive they govern is a separate word: hat ... schreiben müssen gives [hat, müssen] and [schreiben]. Copular sein and bleiben are words; copula and predicate are separate words. Lexical change-of-state werden is a word; future or passive werden joins the verb it marks. An auxiliary is never a word on its own. Lexical bekommen with an object, and resultative bekommt ... geöffnet, keep the participle outside. Verbs adding a meaning beside a construction (sich lassen, gehören plus participle, brauchen, scheinen, drohen, versprechen or pflegen plus zu) are words like modals.
+A German common noun includes the one overt definite or indefinite article (der, die, das, den, dem, des, ein, eine, einen, einem, einer, eines) that opens its own phrase, even across adjectives: der steile Aufstieg gives [der, Aufstieg] and [steile]. At most one article; an article separated from the noun by a verb, a clause boundary or another noun belongs to that other noun: Der Weg ist das Ziel gives [Der, Weg] and [das, Ziel]. In compatible coordination only the closest eligible noun owns the article (der Aufstieg und Abstieg gives [der, Aufstieg] and [Abstieg]); ties are Unresolved. mein, dieser, kein and other determiners never join a noun (kein Haus is [kein] and [Haus]); the article of an article-bound possessive (der meine) and the noun after attributive dessen, deren, wessen or was für ein stay separate. Bare nouns stay bare. The article inside a fused im, zum, ins, zur is the noun's article.
+Fixed correlators are one word made of their anchors only, never the payload: entweder/oder, weder/noch, sowohl/als/auch, nicht nur/sondern auch, je/desto (CCONJ); um/zu, ohne/zu, statt/zu, so/dass (SCONJ); einerseits/andererseits, teils/teils (ADV). was für einer and was für welche are one PRON word; was für ein before a noun is one DET word; their anchors may be discontinuous.
+Free substantive interrogatives, demonstratives, relatives, quantifiers and negatives are PRON; adnominal forms directly modifying a noun are DET. Attributive genitives dessen, deren, wessen are PRON. Comparative and adverbially used adjectives remain ADJ. Established property predicate participles are ADJ; substantivized participles are NOUN. Do not infer lemma or inflection here.
+A word is defensible only when its exact realized Segments form the complete word, with no omitted grammatical member and no added free material. Uncertainty or contradictory membership must remain Unresolved; do not repair, trim, extend or replace the group.`;
+
+/**
+ * The fixedness rules: which words are fixed lexical members of one
+ * established multiword expression. Members are words, so an expression
+ * never lists an article, auxiliary or particle on its own; those come with
+ * the word that realizes them.
+ */
+export const fixednessCriteria = `An expression is an established multiword unit with its own dictionary identity, made of words that are its fixed lexical members. A word is a fixed lexical member when the expression requires this particular word or a narrow set of alternatives in this slot: replacing it with an ordinary synonym would break the expression. A fixed preposition or fixed article of the expression counts as a member through the word that carries it (ins Feuer, zur Verfügung, das Eis). Free arguments, modifiers and fillers are never members, however close they stand: in stellt den Schülern Material zur Verfügung the expression is stellt ... zur Verfügung and den Schülern and Material are free.
+Degrees of fixedness. A free combination lets every word be replaced by a synonym (ein Buch kaufen). A preferred combination is conventional but freely replaceable and has no expression of its own (starker Regen). A collocation restricts the lexical choice while the meaning stays compositional: German Funktionsverbgefüge (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, Abschied nehmen). An idiom is established and noncompositional in this contextual meaning (den Faden verlieren, das Eis brechen, Öl ins Feuer gießen); identical literal wording used literally is not an idiom. A discourse formula is a fixed conversational routine (Guten Morgen, Herzlichen Dank, Wie geht's). A proverb is a traditional complete saying (Morgenstund hat Gold im Mund); an aphorism is an established attributed maxim (Zeit ist Geld).
+Mere proximity, frequency or ordinary compositional combination never establishes an expression. When membership is uncertain or contradictory, answer Unresolved instead of repairing, trimming or extending the expression.`;
+
+/**
+ * Two layers (`layers.ts`): the state carries the realization rules under
+ * `criteria` so the Lexeme layer's membership and route questions keep their
+ * shape, and the fixedness rules under `fixedness` for the Phraseme layer.
+ * Each question references only the field it needs.
+ */
+export const layeredShape: Shape = {
+	id: "layered",
+	summary:
+		"realization rules in `criteria` for the Lexeme layer, fixedness rules in `fixedness` for the Phraseme layer",
+	chunk: 220,
+	state(sentence) {
+		return {
+			sentence: tagged(sentence),
+			criteria: `${notation} ${realizationCriteria}`,
+			fixedness: fixednessCriteria,
+		};
+	},
+	membership(_sentence, anchor, other) {
+		return choice(
+			`Under \`criteria\`, does occurrence <s${other}> in \`sentence\` realize the same word as occurrence <s${anchor}>: is one of them a grammatical member (article, auxiliary, separable particle, required reflexive, governed preposition, lexically selected es, correlator anchor) of the word the other heads?`,
+			{
+				Include: "Both Segments realize the same one word",
+				Exclude:
+					"They realize different words, or one is free material",
+				Unresolved: "Its membership cannot be defensibly decided",
+			},
+		);
+	},
+	route(_sentence, index, inventory) {
+		return choice(
+			`Under \`criteria\`, what is the Kind of the word that occurrence <s${index}> in \`sentence\` realizes? Classify the whole word with its grammatical members, not this Segment alone, and ignore any larger expression the word may be part of.`,
+			inventory,
+		);
+	},
+};
+
+/**
+ * The control for `layeredShape`: the shipped criteria and the shipped
+ * membership and route wording, with only the Lexeme-only inventory and the
+ * `fixedness` field added. Separates "the layering hurts" from "the new
+ * wording hurts".
+ */
+export const layeredOriginalShape: Shape = {
+	id: "layered-original",
+	summary:
+		"shipped targetCriteria and wording for the Lexeme layer, fixedness rules in `fixedness` for the Phraseme layer",
+	chunk: 220,
+	state(sentence) {
+		return {
+			...stateShape.state(sentence),
+			fixedness: fixednessCriteria,
+		};
+	},
+	membership: stateShape.membership,
+	route: stateShape.route,
+};
+
+/**
+ * The shipped `targetCriteria` with only its Phraseme and Fusion sentences
+ * removed and one sentence added: inside an expression every word is its own
+ * unit. The membership and route wording stay verbatim. This is the smallest
+ * change that stops the Lexeme layer from grouping whole idioms and proverbs
+ * as one word.
+ */
+export const trimmedCriteria = targetCriteria
+	.replace(
+		"Select the largest complete fixed learner-facing unit containing the clicked occurrence.",
+		"Select the complete fixed unit containing the clicked occurrence: one dictionary word together with its fixed grammatical members. A multiword expression (an idiom, a collocation, a Funktionsverbgefüge, a proverb, a formula) is not a unit here: every word inside it is its own unit with its own grammatical members, and the expression is judged separately.",
+	)
+	.replace(
+		"; Funktionsverbgefüge (zur Verfügung stellen, in Frage kommen) are Collocation.",
+		".",
+	)
+	.replace(
+		/An established noncompositional expression is an Idiom;[^\n]*?Ordinary conventional verb\/noun combinations have no larger classification route\.\n/u,
+		"A fused preposition and article (im, zum, ins, zur) is one ADP unit whose article part belongs to the following noun.\n",
+	)
+	.replace(
+		"im/zum/ins remain Fusion and do not join nouns. Their internal article may supply noun grammar later without adding the Fusion to noun membership.",
+		"im/zum/ins do not join nouns as a whole.",
+	)
+	.replace(
+		" These noun rules preserve any larger established idiom boundary.",
+		"",
+	);
+
+export const layeredTrimmedShape: Shape = {
+	id: "layered-trimmed",
+	summary:
+		"shipped wording; targetCriteria minus its Phraseme and Fusion sentences for the Lexeme layer, fixedness rules in `fixedness` for the Phraseme layer",
+	chunk: 220,
+	state(sentence) {
+		return {
+			sentence: tagged(sentence),
+			criteria: `${notation} Every occurrence belongs to exactly one complete fixed unit; most units have exactly one member. ${trimmedCriteria}`,
+			fixedness: fixednessCriteria,
+		};
+	},
+	membership: stateShape.membership,
+	route: stateShape.route,
+};
+
 export const shapes: Record<string, Shape> = {
 	state: stateShape,
 	questions: questionsShape,
+	layered: layeredShape,
+	"layered-original": layeredOriginalShape,
+	"layered-trimmed": layeredTrimmedShape,
 };

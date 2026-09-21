@@ -390,11 +390,95 @@ Markt` grouped whole, `geht's dir` grouped whole, the Funktionsverbgefüge
 fused `m` in `am Montag` left unattached because `Montag` was voted PROPN.
 `usw.` was routed X, `früh` and `spät` ADV against gold ADJ.
 
+## Two layers: Lexeme Targets and Phraseme Targets (2026-09-21)
+
+The flat partition asks one membership question for two relations: which
+Segments realize one word (an article, an auxiliary, a particle) and which
+words are fixed lexical members of one expression. The Verfügung fixture
+showed the cost: one target with three Heads, a fused article labelled a
+governed preposition, and a free argument swallowed. `layers.ts` splits the
+partition into two, both asked in the same call over the same tagged
+sentence:
+
+- the Lexeme layer: the anchored membership matrix, roles, and a route
+  Choice over Lexeme Kinds only (`lexemeRoutes`, 16 options), under
+  `criteria`;
+- the Phraseme layer: per occurrence a fixedness Score (free, preferred,
+  collocation, fixed expression) and a Phraseme Kind Choice, per pair a Noul
+  "fixed lexical members of the same expression", under a second state field
+  `fixedness`. Code projects the pairs onto the words by Head, so a word
+  brings its article or auxiliary along and the expression never lists a
+  Segment. The one-Head invariant (`splitMultiHead`) breaks a word the matrix
+  glued around two Heads.
+
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --layered --layers lexeme --shape layered-trimmed --route-policy groupVote --threshold 0.6'
+    zsh -ic 'export TYPESAFE_API_KEY=$TYPESAFE_TOKEN; bun prototypes/intake/lab.ts --layered --layers both --shape layered-trimmed --route-policy groupVote --threshold 0.6 --phraseme-policy score'
+    bun prototypes/intake/lab.ts --layered --shape layered-trimmed --route-policy groupVote --threshold 0.6 --phraseme-threshold 0.7 --phraseme-policy vote --from /tmp/intake-clicks-anchored-lexeme-top-layered-trimmed-roles-phraseme-score-1.json
+
+Same day, 238 evaluation clicks (the 206 plus the abbreviation cases of
+#495), 110 sentences, one run each unless noted:
+
+| design | pass | route ok | members ok | questions / sentence | input tokens | p50 |
+| --- | --- | --- | --- | --- | --- | --- |
+| flat `anchored` + `extended` + `groupVote` τ0.6 + roles (baseline) | 167 | 204 | 173 | 47.5 | 12.1k | 359 ms |
+| Lexeme layer only, rewritten realization criteria and wording (`layered`) | 114 | 198 | 122 | 47.5 | 13.2k | 347 ms |
+| Lexeme layer only, shipped criteria and wording (`layered-original`) | 159 | 195 | 173 | 47.5 | 12.0k | 349 ms |
+| Lexeme layer only, shipped wording, criteria minus Phraseme and Fusion sentences (`layered-trimmed`) | **164** | 197 | 172 | 47.5 | 12.0k | 361 ms |
+| both layers, `layered-trimmed`, `score` policy, τ2 0.5 | 156 | 194 | 177 | 76.8 | 16.2k | 371 ms |
+| both layers, re-scored `vote` or `score`, τ2 0.7 | **159** | 194–197 | 174–178 | 76.8 | 16.2k | 371 ms |
+
+What the runs say:
+
+- The Lexeme layer on its own is the flat design: 164 against 167, members
+  correct 172 against 173, inside the ±7 spread. Removing the Phraseme and
+  Fusion sentences from `targetCriteria` costs nothing and stops the matrix
+  from gluing a whole proverb into one NOUN word (which the shipped criteria
+  still did: `Morgenstund hat Gold im Mund` was one Lexeme target under
+  `layered-original`).
+- Rewriting the realization rules and the membership wording is what fails,
+  not the layering: the Include probability on `Der ... Kakao`-type
+  articles fell from 0.99 to 0.3–0.5 while the role answers stayed right.
+  The shipped wording stays, verbatim.
+- The Phraseme layer wins the Phraseme gold the flat design could not
+  reach: 10 of 17 clicks pass (`Herzlichen Dank`, `Morgenstund hat Gold im
+  Mund`, `brach das Eis`), against 3 to 7 for the flat design across runs.
+  It misses `Wissen ist Macht` on this run (found on the previous) and
+  `heult mit den Wölfen`, where the Lexeme layer left `den` off `Wölfen`.
+- Its losses are of two kinds. Six clicks are `trifft eine Entscheidung`
+  and `stellt eine Frage`, which the click corpus rules Lexeme (issue 82
+  policy: "non-idiomatic members separate") while `targetCriteria`, the
+  Dumling classification docs and the fixture gold call Funktionsverbgefüge
+  Collocation; the judge's fixedness Score puts them at 1.1–1.9, right on
+  the line. The rest are literal wording taken as idiom (`brach das Eis`
+  literal, 2 clicks), `meint es gut mit` (1), and a free adjective grouped
+  into `heult mit den hungrigen Wölfen`. With the gold conflict resolved
+  either way the two-layer design is within spread of the flat one, and it
+  carries the structure the flat one cannot.
+- The extra layer costs 29 questions and 4.2k input tokens per sentence;
+  latency is flat.
+
+Policy: the fixedness Score establishes an expression (mean ≥ 1.5 over its
+words) and the Kind Choice names it; the pair Noul at 0.5 to 0.7 draws the
+members. `vote` (argmax of the summed Kind mass, `None` can win) scores the
+same; `score` finds more expressions at the same pass count, so the
+fixtures use it.
+
+`fixtures.ts` now emits both layers: `targets` are Lexeme Targets, `phrasemes`
+are Phraseme Targets whose members are target ids, and the gold has a
+`phrasemes` list per sentence naming member words by head. On the 16
+sentences: Idiom `den Faden verloren` over `[hat verloren]` and `[den
+Faden]`, Collocation `stellt ... zur Verfügung` over `[stellt]`, `[zu]` and
+`[r Verfügung]` with `den Schülern` and `Material` outside, DiscourseFormula
+`Wie geht's dir`; one over-fire, `steht ... auf` as a Collocation when the
+Lexeme layer missed the particle on that run.
+
 ## Where this leaves the pipeline
 
 `anchored` + `extended` + `groupVote` + `lattice`, one call per sentence:
 155-162 of 206 across four runs of the same design, against 146 for the
-click-time baseline measured the same day. Every occurrence resolved, zero
+click-time baseline measured the same day. In two layers (`layered-trimmed`,
+above): the Lexeme layer alone 164 of 238, both layers 156-159, with the
+Phraseme gold reachable for the first time. Every occurrence resolved, zero
 classification calls at click time, and the level below the click already
 computed. Run-to-run spread is about ±7, the same the click-path prototypes
 measured, so the accuracy gain over click-time classification is real but

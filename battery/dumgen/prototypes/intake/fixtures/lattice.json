@@ -80,29 +80,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.97,
-            "DET": 0.02,
-            "Unresolved": 0.01,
-            "ADV": 0,
-            "SYM": 0,
-            "VERB": 0,
-            "PUNCT": 0,
-            "CCONJ": 0,
-            "ADP": 0,
-            "Idiom": 0,
-            "PART": 0,
-            "ADJ": 0,
-            "Collocation": 0,
-            "Aphorism": 0,
+            "NOUN": 0.98,
+            "Unresolved": 0.02,
             "INTJ": 0,
-            "X": 0,
-            "NUM": 0,
             "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
-            "SCONJ": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0
+            "DET": 0,
+            "ADP": 0,
+            "SYM": 0,
+            "NUM": 0,
+            "ADV": 0,
+            "PUNCT": 0,
+            "ADJ": 0,
+            "VERB": 0,
+            "CCONJ": 0,
+            "PART": 0,
+            "PRON": 0,
+            "X": 0,
+            "SCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -116,29 +110,23 @@
             }
           ],
           "routeMass": {
-            "ADJ": 0.65,
-            "NOUN": 0.24,
-            "Unresolved": 0.04,
-            "Collocation": 0.03,
-            "DET": 0.02,
-            "VERB": 0.02,
-            "ADV": 0,
-            "SYM": 0,
+            "ADJ": 0.92,
+            "NOUN": 0.06,
+            "VERB": 0.01,
+            "Unresolved": 0.01,
+            "INTJ": 0,
+            "PROPN": 0,
+            "DET": 0,
             "ADP": 0,
+            "SYM": 0,
+            "NUM": 0,
+            "ADV": 0,
             "PUNCT": 0,
             "CCONJ": 0,
-            "Idiom": 0,
             "PART": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
+            "PRON": 0,
             "X": 0,
-            "NUM": 0,
-            "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
-            "SCONJ": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0
+            "SCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -152,29 +140,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.95,
-            "Collocation": 0.02,
-            "ADJ": 0.01,
-            "NOUN": 0.01,
-            "Unresolved": 0.01,
-            "DET": 0,
-            "ADV": 0,
-            "SYM": 0,
-            "ADP": 0,
-            "PUNCT": 0,
-            "CCONJ": 0,
-            "Idiom": 0,
-            "PART": 0,
-            "Aphorism": 0,
+            "VERB": 1,
             "INTJ": 0,
-            "NUM": 0,
             "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
+            "DET": 0,
+            "ADP": 0,
+            "SYM": 0,
+            "NUM": 0,
+            "ADV": 0,
             "SCONJ": 0,
-            "DiscourseFormula": 0,
+            "ADJ": 0,
+            "PRON": 0,
+            "CCONJ": 0,
+            "PART": 0,
             "X": 0,
-            "PRON": 0
+            "Unresolved": 0,
+            "NOUN": 0,
+            "PUNCT": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -188,34 +170,29 @@
             }
           ],
           "routeMass": {
-            "ADJ": 0.85,
-            "Collocation": 0.08,
-            "VERB": 0.04,
-            "Unresolved": 0.03,
+            "ADJ": 0.98,
+            "VERB": 0.02,
+            "INTJ": 0,
+            "PROPN": 0,
             "DET": 0,
-            "ADV": 0,
-            "SYM": 0,
             "ADP": 0,
+            "SYM": 0,
+            "NUM": 0,
+            "ADV": 0,
             "PUNCT": 0,
             "CCONJ": 0,
-            "Idiom": 0,
             "PART": 0,
-            "NOUN": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
+            "PRON": 0,
             "X": 0,
-            "SCONJ": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0
+            "Unresolved": 0,
+            "NOUN": 0,
+            "SCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -257,9 +234,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "The owned article joins the noun across an adjective.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -346,29 +324,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.93,
-            "Unresolved": 0.06,
-            "VERB": 0.01,
-            "ADP": 0,
-            "NOUN": 0,
-            "SYM": 0,
-            "Idiom": 0,
-            "X": 0,
-            "CCONJ": 0,
-            "PROPN": 0,
-            "NUM": 0,
-            "SCONJ": 0,
-            "Fusion": 0,
-            "PART": 0,
-            "DET": 0,
+            "PRON": 0.99,
+            "Unresolved": 0.01,
             "PUNCT": 0,
+            "SCONJ": 0,
+            "PROPN": 0,
+            "CCONJ": 0,
+            "NUM": 0,
             "ADV": 0,
-            "Proverb": 0,
-            "DiscourseFormula": 0,
-            "Aphorism": 0,
+            "SYM": 0,
+            "DET": 0,
             "ADJ": 0,
-            "INTJ": 0,
-            "Collocation": 0
+            "X": 0,
+            "VERB": 0,
+            "NOUN": 0,
+            "ADP": 0,
+            "PART": 0,
+            "INTJ": 0
           },
           "identity": {
             "candidates": [
@@ -400,28 +372,22 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.96,
-            "Unresolved": 0.03,
-            "Collocation": 0.01,
-            "NOUN": 0,
-            "ADP": 0,
-            "SYM": 0,
-            "Idiom": 0,
-            "X": 0,
+            "VERB": 1,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "NUM": 0,
             "CCONJ": 0,
             "PROPN": 0,
-            "PRON": 0,
-            "NUM": 0,
-            "SCONJ": 0,
-            "PUNCT": 0,
-            "PART": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
+            "Unresolved": 0,
             "ADV": 0,
-            "Proverb": 0,
-            "Fusion": 0,
-            "Aphorism": 0,
+            "SYM": 0,
+            "DET": 0,
             "ADJ": 0,
+            "PRON": 0,
+            "X": 0,
+            "NOUN": 0,
+            "ADP": 0,
+            "PART": 0,
             "INTJ": 0
           },
           "identity": null,
@@ -436,29 +402,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.92,
-            "Unresolved": 0.07,
-            "VERB": 0.01,
-            "ADP": 0,
-            "NOUN": 0,
-            "SYM": 0,
-            "Idiom": 0,
-            "X": 0,
+            "ADV": 0.99,
+            "Unresolved": 0.01,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "NUM": 0,
             "CCONJ": 0,
             "PROPN": 0,
-            "PRON": 0,
-            "NUM": 0,
+            "SYM": 0,
             "DET": 0,
-            "PUNCT": 0,
-            "PART": 0,
-            "DiscourseFormula": 0,
-            "SCONJ": 0,
-            "Proverb": 0,
-            "Fusion": 0,
-            "Aphorism": 0,
             "ADJ": 0,
-            "INTJ": 0,
-            "Collocation": 0
+            "PRON": 0,
+            "X": 0,
+            "VERB": 0,
+            "NOUN": 0,
+            "ADP": 0,
+            "PART": 0,
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -490,34 +450,29 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.85,
-            "Fusion": 0.04,
-            "Collocation": 0.04,
-            "Unresolved": 0.03,
-            "Idiom": 0.02,
+            "NOUN": 0.95,
+            "Unresolved": 0.02,
             "PROPN": 0.01,
             "VERB": 0.01,
-            "ADP": 0,
-            "SYM": 0,
-            "X": 0,
-            "CCONJ": 0,
-            "PRON": 0,
-            "NUM": 0,
-            "DET": 0,
+            "ADP": 0.01,
             "PUNCT": 0,
-            "PART": 0,
             "SCONJ": 0,
+            "NUM": 0,
+            "CCONJ": 0,
             "ADV": 0,
-            "Proverb": 0,
-            "DiscourseFormula": 0,
-            "Aphorism": 0,
+            "SYM": 0,
+            "DET": 0,
             "ADJ": 0,
+            "PRON": 0,
+            "X": 0,
+            "PART": 0,
             "INTJ": 0
           },
           "identity": null,
           "provenance": "vote+fusion-table"
         }
       ],
+      "phrasemes": [],
       "fusions": [
         {
           "offset": 16,
@@ -587,9 +542,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "A fused word: `ins` is `in` plus `s` standing for `das`, and the article piece joins the noun.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -706,29 +662,23 @@
             }
           ],
           "routeMass": {
-            "DET": 0.99,
-            "Unresolved": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
-            "NOUN": 0,
+            "DET": 1,
+            "ADJ": 0,
+            "PROPN": 0,
+            "ADV": 0,
+            "ADP": 0,
+            "PRON": 0,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "Unresolved": 0,
+            "PART": 0,
+            "INTJ": 0,
             "CCONJ": 0,
             "NUM": 0,
-            "INTJ": 0,
-            "DiscourseFormula": 0,
-            "ADJ": 0,
-            "PUNCT": 0,
-            "PROPN": 0,
-            "Collocation": 0,
-            "PRON": 0,
-            "Idiom": 0,
-            "VERB": 0,
-            "Aphorism": 0,
-            "ADV": 0,
-            "SYM": 0,
-            "ADP": 0,
-            "PART": 0,
-            "SCONJ": 0,
-            "X": 0
+            "NOUN": 0,
+            "X": 0,
+            "VERB": 0
           },
           "identity": {
             "candidates": [
@@ -797,29 +747,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.9,
-            "Unresolved": 0.06,
-            "DET": 0.03,
-            "VERB": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
-            "CCONJ": 0,
-            "INTJ": 0,
-            "NUM": 0,
+            "NOUN": 0.91,
+            "DET": 0.06,
+            "Unresolved": 0.03,
             "ADJ": 0,
-            "PUNCT": 0,
-            "DiscourseFormula": 0,
             "PROPN": 0,
-            "Aphorism": 0,
-            "PRON": 0,
-            "Idiom": 0,
-            "Collocation": 0,
-            "SYM": 0,
             "ADV": 0,
-            "PART": 0,
             "ADP": 0,
+            "PRON": 0,
+            "PUNCT": 0,
             "SCONJ": 0,
-            "X": 0
+            "SYM": 0,
+            "PART": 0,
+            "INTJ": 0,
+            "CCONJ": 0,
+            "NUM": 0,
+            "X": 0,
+            "VERB": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -830,36 +774,26 @@
             {
               "offset": 16,
               "role": "Head"
-            },
-            {
-              "offset": 44,
-              "role": "SeparableParticle"
             }
           ],
           "routeMass": {
-            "VERB": 0.78,
-            "PART": 0.125,
-            "ADP": 0.03,
-            "Idiom": 0.03,
-            "Collocation": 0.025,
-            "Unresolved": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
-            "NOUN": 0,
+            "VERB": 1,
+            "ADJ": 0,
+            "PROPN": 0,
+            "ADV": 0,
+            "ADP": 0,
+            "PRON": 0,
+            "DET": 0,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "Unresolved": 0,
+            "PART": 0,
+            "INTJ": 0,
             "CCONJ": 0,
             "NUM": 0,
-            "INTJ": 0,
-            "DiscourseFormula": 0,
-            "ADJ": 0,
-            "PUNCT": 0,
-            "PROPN": 0,
-            "PRON": 0,
-            "Aphorism": 0,
-            "ADV": 0,
-            "SYM": 0,
-            "DET": 0,
-            "SCONJ": 0,
-            "X": 0
+            "X": 0,
+            "NOUN": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -873,29 +807,23 @@
             }
           ],
           "routeMass": {
-            "DET": 0.83,
-            "PRON": 0.07,
-            "ADV": 0.04,
-            "Unresolved": 0.02,
-            "Collocation": 0.02,
-            "NOUN": 0.01,
-            "ADJ": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
+            "DET": 0.97,
+            "NOUN": 0.02,
+            "ADV": 0.01,
+            "PROPN": 0,
+            "ADJ": 0,
+            "ADP": 0,
+            "PRON": 0,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "Unresolved": 0,
+            "INTJ": 0,
+            "PART": 0,
             "CCONJ": 0,
             "NUM": 0,
-            "INTJ": 0,
-            "DiscourseFormula": 0,
-            "PUNCT": 0,
-            "PROPN": 0,
-            "Aphorism": 0,
-            "Idiom": 0,
-            "VERB": 0,
-            "SYM": 0,
-            "ADP": 0,
-            "PART": 0,
-            "SCONJ": 0,
-            "X": 0
+            "X": 0,
+            "VERB": 0
           },
           "identity": {
             "candidates": [
@@ -921,10 +849,10 @@
               }
             ],
             "mass": {
-              "DET:jeder:Tot": 0.98,
+              "DET:jeder:Tot": 0.96,
               "PRON:jeden:Tot": 0.02,
-              "NoMatch": 0,
-              "Unresolved": 0
+              "NoMatch": 0.01,
+              "Unresolved": 0.01
             }
           },
           "provenance": "vote"
@@ -938,28 +866,22 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.54,
-            "Collocation": 0.14,
-            "ADV": 0.12,
-            "DET": 0.08,
-            "Unresolved": 0.04,
-            "VERB": 0.03,
-            "PROPN": 0.02,
+            "NOUN": 0.76,
+            "DET": 0.1,
+            "PROPN": 0.05,
+            "ADV": 0.05,
+            "Unresolved": 0.02,
             "NUM": 0.01,
-            "Idiom": 0.01,
-            "SCONJ": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
-            "CCONJ": 0,
-            "INTJ": 0,
-            "PUNCT": 0,
+            "VERB": 0.01,
             "ADJ": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0,
-            "Aphorism": 0,
-            "SYM": 0,
             "ADP": 0,
+            "PRON": 0,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "INTJ": 0,
             "PART": 0,
+            "CCONJ": 0,
             "X": 0
           },
           "identity": null,
@@ -974,29 +896,23 @@
             }
           ],
           "routeMass": {
-            "ADP": 0.55,
-            "SCONJ": 0.16,
-            "VERB": 0.08,
-            "Collocation": 0.07,
-            "Unresolved": 0.06,
-            "Idiom": 0.03,
-            "ADV": 0.02,
-            "Fusion": 0.01,
-            "NOUN": 0.01,
-            "NUM": 0.01,
-            "Proverb": 0,
-            "CCONJ": 0,
-            "INTJ": 0,
+            "ADP": 0.86,
+            "SCONJ": 0.09,
+            "VERB": 0.03,
+            "Unresolved": 0.02,
             "ADJ": 0,
-            "DiscourseFormula": 0,
-            "PUNCT": 0,
             "PROPN": 0,
+            "ADV": 0,
             "PRON": 0,
-            "Aphorism": 0,
+            "DET": 0,
+            "PUNCT": 0,
             "SYM": 0,
             "PART": 0,
-            "DET": 0,
-            "X": 0
+            "INTJ": 0,
+            "CCONJ": 0,
+            "NUM": 0,
+            "X": 0,
+            "NOUN": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -1010,32 +926,76 @@
             }
           ],
           "routeMass": {
-            "NUM": 0.67,
-            "Collocation": 0.09,
-            "Unresolved": 0.06,
-            "VERB": 0.05,
-            "ADP": 0.03,
-            "SCONJ": 0.03,
-            "Fusion": 0.02,
-            "NOUN": 0.02,
-            "Idiom": 0.02,
-            "Proverb": 0,
-            "CCONJ": 0,
-            "INTJ": 0,
-            "PUNCT": 0,
-            "ADJ": 0,
-            "DiscourseFormula": 0,
+            "NUM": 0.93,
+            "ADP": 0.02,
+            "VERB": 0.02,
+            "SCONJ": 0.01,
+            "Unresolved": 0.01,
+            "NOUN": 0.01,
             "PROPN": 0,
-            "PRON": 0,
-            "Aphorism": 0,
+            "ADJ": 0,
             "ADV": 0,
+            "PRON": 0,
+            "DET": 0,
+            "PUNCT": 0,
             "SYM": 0,
             "PART": 0,
-            "DET": 0,
+            "INTJ": 0,
+            "CCONJ": 0,
             "X": 0
           },
           "identity": null,
           "provenance": "vote"
+        },
+        {
+          "id": "t8",
+          "members": [
+            {
+              "offset": 44,
+              "role": "SeparableParticle"
+            }
+          ],
+          "routeMass": {
+            "VERB": 0.72,
+            "ADP": 0.16,
+            "PART": 0.1,
+            "ADV": 0.01,
+            "Unresolved": 0.01,
+            "ADJ": 0,
+            "PROPN": 0,
+            "PRON": 0,
+            "DET": 0,
+            "PUNCT": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "INTJ": 0,
+            "CCONJ": 0,
+            "NUM": 0,
+            "NOUN": 0,
+            "X": 0
+          },
+          "identity": null,
+          "provenance": "vote"
+        }
+      ],
+      "phrasemes": [
+        {
+          "id": "p1",
+          "members": [
+            "t3",
+            "t8"
+          ],
+          "kindMass": {
+            "None": 0.705,
+            "Collocation": 0.175,
+            "Idiom": 0.085,
+            "Unresolved": 0.025,
+            "DiscourseFormula": 0.01,
+            "Aphorism": 0,
+            "Proverb": 0
+          },
+          "fixedness": 1.63,
+          "provenance": "score@0.5"
         }
       ],
       "fusions": []
@@ -1105,9 +1065,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "A discontinuous separable verb; two determiners with authored identities.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -1224,29 +1185,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.83,
-            "Unresolved": 0.09,
-            "PROPN": 0.04,
-            "VERB": 0.03,
-            "X": 0.01,
-            "CCONJ": 0,
-            "Aphorism": 0,
-            "ADJ": 0,
-            "Collocation": 0,
-            "DiscourseFormula": 0,
-            "ADP": 0,
-            "SCONJ": 0,
+            "PRON": 0.85,
+            "PROPN": 0.08,
+            "VERB": 0.05,
+            "Unresolved": 0.02,
             "PUNCT": 0,
-            "SYM": 0,
-            "DET": 0,
-            "ADV": 0,
-            "Idiom": 0,
-            "NOUN": 0,
-            "Proverb": 0,
-            "PART": 0,
             "NUM": 0,
+            "PART": 0,
+            "SYM": 0,
+            "CCONJ": 0,
+            "ADJ": 0,
+            "SCONJ": 0,
+            "NOUN": 0,
+            "ADP": 0,
+            "ADV": 0,
+            "X": 0,
             "INTJ": 0,
-            "Fusion": 0
+            "DET": 0
           },
           "identity": {
             "candidates": [
@@ -1290,29 +1245,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.835,
-            "ADP": 0.083,
-            "Collocation": 0.025,
-            "PRON": 0.025,
-            "Unresolved": 0.017,
-            "Idiom": 0.005,
-            "Fusion": 0.003,
+            "VERB": 0.765,
+            "ADP": 0.175,
+            "PRON": 0.048,
+            "PART": 0.005,
+            "Unresolved": 0.005,
             "NOUN": 0.003,
-            "PART": 0.003,
-            "CCONJ": 0,
-            "Aphorism": 0,
-            "DiscourseFormula": 0,
-            "PROPN": 0,
-            "SCONJ": 0,
             "PUNCT": 0,
+            "NUM": 0,
+            "PROPN": 0,
             "SYM": 0,
-            "DET": 0,
+            "ADJ": 0,
+            "CCONJ": 0,
+            "SCONJ": 0,
             "ADV": 0,
             "X": 0,
-            "Proverb": 0,
-            "NUM": 0,
-            "INTJ": 0,
-            "ADJ": 0
+            "DET": 0,
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -1326,29 +1275,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.78,
-            "VERB": 0.12,
-            "Unresolved": 0.09,
-            "X": 0.01,
-            "CCONJ": 0,
-            "Fusion": 0,
-            "Aphorism": 0,
-            "Collocation": 0,
-            "DiscourseFormula": 0,
-            "ADP": 0,
-            "PROPN": 0,
-            "SCONJ": 0,
-            "PRON": 0,
+            "ADV": 0.98,
+            "VERB": 0.01,
+            "Unresolved": 0.01,
             "PUNCT": 0,
-            "DET": 0,
-            "SYM": 0,
-            "Idiom": 0,
-            "NOUN": 0,
-            "Proverb": 0,
-            "PART": 0,
             "NUM": 0,
-            "INTJ": 0,
-            "ADJ": 0
+            "PART": 0,
+            "PROPN": 0,
+            "SYM": 0,
+            "ADJ": 0,
+            "CCONJ": 0,
+            "PRON": 0,
+            "SCONJ": 0,
+            "NOUN": 0,
+            "ADP": 0,
+            "X": 0,
+            "DET": 0,
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -1362,29 +1305,23 @@
             }
           ],
           "routeMass": {
-            "DET": 0.96,
+            "DET": 0.97,
             "VERB": 0.02,
-            "Collocation": 0.01,
             "PRON": 0.01,
-            "CCONJ": 0,
-            "Unresolved": 0,
-            "Aphorism": 0,
-            "ADJ": 0,
-            "DiscourseFormula": 0,
-            "ADP": 0,
-            "PROPN": 0,
-            "SCONJ": 0,
             "PUNCT": 0,
+            "NUM": 0,
+            "PART": 0,
+            "PROPN": 0,
             "SYM": 0,
+            "Unresolved": 0,
+            "CCONJ": 0,
+            "ADJ": 0,
+            "SCONJ": 0,
+            "NOUN": 0,
+            "ADP": 0,
             "ADV": 0,
             "X": 0,
-            "Idiom": 0,
-            "NOUN": 0,
-            "Proverb": 0,
-            "PART": 0,
-            "NUM": 0,
-            "INTJ": 0,
-            "Fusion": 0
+            "INTJ": 0
           },
           "identity": {
             "candidates": [
@@ -1467,14 +1404,14 @@
               }
             ],
             "mass": {
-              "DET:sein:Prs": 0.76,
+              "DET:sein:Prs": 0.68,
               "PRON:seine:Prs": 0,
-              "PRON:seinem:Prs": 0.05,
-              "PRON:seinen:Prs": 0.14,
+              "PRON:seinem:Prs": 0.04,
+              "PRON:seinen:Prs": 0.19,
               "PRON:seiner:Prs": 0,
               "PRON:seines:Prs": 0,
-              "NoMatch": 0.05,
-              "Unresolved": 0
+              "NoMatch": 0.07,
+              "Unresolved": 0.01
             }
           },
           "provenance": "vote"
@@ -1488,34 +1425,29 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.85,
-            "VERB": 0.07,
+            "NOUN": 0.93,
             "Unresolved": 0.03,
-            "Collocation": 0.02,
-            "PROPN": 0.01,
-            "DET": 0.01,
-            "Idiom": 0.01,
-            "CCONJ": 0,
-            "Aphorism": 0,
-            "ADJ": 0,
-            "DiscourseFormula": 0,
-            "ADP": 0,
-            "SCONJ": 0,
-            "PRON": 0,
+            "VERB": 0.02,
+            "DET": 0.02,
             "PUNCT": 0,
+            "NUM": 0,
+            "PART": 0,
+            "PROPN": 0,
             "SYM": 0,
+            "ADJ": 0,
+            "CCONJ": 0,
+            "PRON": 0,
+            "SCONJ": 0,
+            "ADP": 0,
             "ADV": 0,
             "X": 0,
-            "Proverb": 0,
-            "PART": 0,
-            "NUM": 0,
-            "INTJ": 0,
-            "Fusion": 0
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -1575,9 +1507,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "Auxiliary, required reflexive and governed preposition on one verb, spread over the sentence.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -1650,29 +1583,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.945,
-            "Collocation": 0.02,
-            "Idiom": 0.015,
+            "VERB": 0.99,
             "PRON": 0.01,
-            "Unresolved": 0.005,
-            "PROPN": 0,
-            "ADJ": 0,
-            "Fusion": 0,
-            "ADV": 0,
-            "SCONJ": 0,
-            "ADP": 0,
-            "Aphorism": 0,
+            "X": 0,
             "DET": 0,
-            "CCONJ": 0,
-            "INTJ": 0,
-            "NUM": 0,
+            "PUNCT": 0,
+            "ADP": 0,
             "PART": 0,
             "NOUN": 0,
+            "Unresolved": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "INTJ": 0,
             "SYM": 0,
-            "Proverb": 0,
-            "X": 0,
-            "PUNCT": 0,
-            "DiscourseFormula": 0
+            "SCONJ": 0,
+            "ADV": 0,
+            "PROPN": 0,
+            "CCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -1686,29 +1613,23 @@
             }
           ],
           "routeMass": {
-            "DET": 0.9,
-            "Idiom": 0.05,
-            "PRON": 0.01,
-            "Aphorism": 0.01,
-            "VERB": 0.01,
-            "Unresolved": 0.01,
-            "Collocation": 0.01,
-            "Fusion": 0,
-            "ADV": 0,
-            "SCONJ": 0,
-            "ADP": 0,
-            "ADJ": 0,
-            "NOUN": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "PART": 0,
-            "CCONJ": 0,
-            "SYM": 0,
-            "Proverb": 0,
+            "DET": 1,
             "X": 0,
             "PUNCT": 0,
-            "DiscourseFormula": 0,
-            "PROPN": 0
+            "ADP": 0,
+            "PART": 0,
+            "NOUN": 0,
+            "Unresolved": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "INTJ": 0,
+            "SYM": 0,
+            "SCONJ": 0,
+            "ADV": 0,
+            "PRON": 0,
+            "PROPN": 0,
+            "CCONJ": 0,
+            "VERB": 0
           },
           "identity": {
             "candidates": [
@@ -1735,10 +1656,10 @@
               }
             ],
             "mass": {
-              "DET:kein:Neg": 0.97,
-              "PRON:keinen:Neg": 0.02,
+              "DET:kein:Neg": 0.99,
+              "PRON:keinen:Neg": 0.01,
               "NoMatch": 0,
-              "Unresolved": 0.01
+              "Unresolved": 0
             }
           },
           "provenance": "vote"
@@ -1752,34 +1673,29 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.74,
-            "Idiom": 0.08,
-            "Collocation": 0.07,
-            "VERB": 0.06,
+            "NOUN": 0.97,
             "Unresolved": 0.02,
             "DET": 0.01,
-            "Aphorism": 0.01,
-            "DiscourseFormula": 0.01,
-            "PRON": 0,
-            "ADP": 0,
-            "Fusion": 0,
-            "ADV": 0,
-            "SCONJ": 0,
-            "ADJ": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "PART": 0,
-            "CCONJ": 0,
-            "SYM": 0,
-            "Proverb": 0,
+            "VERB": 0,
             "PUNCT": 0,
-            "X": 0,
-            "PROPN": 0
+            "ADP": 0,
+            "PART": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "SCONJ": 0,
+            "INTJ": 0,
+            "SYM": 0,
+            "ADV": 0,
+            "PRON": 0,
+            "PROPN": 0,
+            "CCONJ": 0,
+            "X": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -1814,9 +1730,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "Expletive `es` belongs to the verb; `kein` is a determiner, never an article.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -1937,29 +1854,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.745,
-            "DET": 0.18,
-            "VERB": 0.03,
-            "Unresolved": 0.02,
-            "SCONJ": 0.01,
-            "X": 0.005,
-            "PART": 0.005,
-            "CCONJ": 0.005,
-            "SYM": 0,
+            "NOUN": 0.955,
+            "Unresolved": 0.03,
+            "VERB": 0.01,
+            "DET": 0.005,
             "NUM": 0,
             "ADV": 0,
-            "DiscourseFormula": 0,
-            "Collocation": 0,
-            "Idiom": 0,
-            "Aphorism": 0,
+            "ADJ": 0,
+            "X": 0,
+            "PROPN": 0,
+            "PART": 0,
+            "CCONJ": 0,
             "ADP": 0,
             "INTJ": 0,
-            "ADJ": 0,
-            "Fusion": 0,
-            "PRON": 0,
+            "SCONJ": 0,
             "PUNCT": 0,
-            "PROPN": 0,
-            "Proverb": 0
+            "SYM": 0,
+            "PRON": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -1973,29 +1884,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.88,
-            "SCONJ": 0.08,
-            "Unresolved": 0.04,
-            "Idiom": 0,
-            "NUM": 0,
-            "INTJ": 0,
-            "DET": 0,
-            "Collocation": 0,
-            "DiscourseFormula": 0,
-            "Aphorism": 0,
-            "NOUN": 0,
-            "ADP": 0,
+            "PRON": 0.86,
+            "SCONJ": 0.13,
+            "Unresolved": 0.01,
             "ADV": 0,
-            "SYM": 0,
-            "VERB": 0,
+            "NUM": 0,
             "ADJ": 0,
-            "Fusion": 0,
+            "VERB": 0,
             "X": 0,
-            "PUNCT": 0,
             "PROPN": 0,
             "PART": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "CCONJ": 0,
+            "DET": 0,
+            "ADP": 0,
+            "INTJ": 0,
+            "NOUN": 0,
+            "PUNCT": 0,
+            "SYM": 0
           },
           "identity": {
             "candidates": [
@@ -2055,29 +1960,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.76,
-            "PRON": 0.15,
-            "Unresolved": 0.05,
-            "SCONJ": 0.02,
-            "VERB": 0.01,
+            "ADV": 0.86,
+            "PRON": 0.12,
+            "Unresolved": 0.01,
             "PART": 0.01,
-            "SYM": 0,
-            "INTJ": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
-            "Collocation": 0,
             "NUM": 0,
-            "Aphorism": 0,
-            "ADP": 0,
-            "Idiom": 0,
-            "NOUN": 0,
-            "Fusion": 0,
-            "X": 0,
             "ADJ": 0,
-            "PUNCT": 0,
+            "VERB": 0,
+            "X": 0,
             "PROPN": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "CCONJ": 0,
+            "DET": 0,
+            "ADP": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
+            "NOUN": 0,
+            "PUNCT": 0,
+            "SYM": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2091,29 +1990,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.87,
-            "ADV": 0.1,
-            "Unresolved": 0.02,
-            "PRON": 0.01,
-            "Idiom": 0,
+            "VERB": 0.98,
+            "ADV": 0.02,
             "NUM": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
-            "SYM": 0,
-            "Aphorism": 0,
-            "NOUN": 0,
-            "Collocation": 0,
-            "ADP": 0,
+            "Unresolved": 0,
             "ADJ": 0,
-            "SCONJ": 0,
-            "Fusion": 0,
             "X": 0,
-            "PUNCT": 0,
             "PROPN": 0,
-            "Proverb": 0,
             "PART": 0,
-            "CCONJ": 0
+            "CCONJ": 0,
+            "ADP": 0,
+            "DET": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
+            "NOUN": 0,
+            "PUNCT": 0,
+            "SYM": 0,
+            "PRON": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2127,29 +2020,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.98,
-            "Unresolved": 0.01,
-            "PRON": 0.01,
-            "SYM": 0,
+            "VERB": 1,
             "NUM": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
             "ADV": 0,
-            "Aphorism": 0,
-            "ADP": 0,
-            "NOUN": 0,
-            "Collocation": 0,
-            "Idiom": 0,
-            "SCONJ": 0,
-            "X": 0,
+            "Unresolved": 0,
             "ADJ": 0,
-            "Fusion": 0,
-            "PUNCT": 0,
+            "X": 0,
             "PROPN": 0,
             "PART": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "CCONJ": 0,
+            "ADP": 0,
+            "DET": 0,
+            "INTJ": 0,
+            "NOUN": 0,
+            "SCONJ": 0,
+            "PUNCT": 0,
+            "SYM": 0,
+            "PRON": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2163,29 +2050,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.96,
-            "Unresolved": 0.02,
-            "VERB": 0.02,
-            "SYM": 0,
-            "ADV": 0,
-            "DET": 0,
-            "Collocation": 0,
-            "INTJ": 0,
-            "DiscourseFormula": 0,
-            "Aphorism": 0,
-            "NOUN": 0,
-            "ADP": 0,
+            "PRON": 0.91,
+            "VERB": 0.05,
+            "Unresolved": 0.01,
+            "PART": 0.01,
+            "DET": 0.01,
+            "NOUN": 0.01,
             "NUM": 0,
-            "Idiom": 0,
+            "ADV": 0,
             "ADJ": 0,
-            "Fusion": 0,
             "X": 0,
+            "PROPN": 0,
+            "CCONJ": 0,
+            "ADP": 0,
+            "INTJ": 0,
             "SCONJ": 0,
             "PUNCT": 0,
-            "PROPN": 0,
-            "Proverb": 0,
-            "PART": 0,
-            "CCONJ": 0
+            "SYM": 0
           },
           "identity": {
             "candidates": [
@@ -2209,6 +2090,7 @@
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -2268,9 +2150,10 @@
         "identity": "PRON:niemanden"
       }
     ],
+    "goldPhrasemes": [],
     "note": "The same spelling as article and as relative pronoun; a negative pronoun with one authored identity.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -2355,29 +2238,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.88,
-            "DET": 0.1,
-            "Unresolved": 0.015,
+            "NOUN": 0.935,
+            "Unresolved": 0.035,
+            "DET": 0.02,
             "VERB": 0.005,
-            "INTJ": 0,
-            "ADP": 0,
-            "CCONJ": 0,
-            "Idiom": 0,
-            "DiscourseFormula": 0,
-            "X": 0,
-            "Fusion": 0,
-            "Collocation": 0,
-            "SYM": 0,
-            "PART": 0,
-            "PROPN": 0,
-            "PRON": 0,
-            "ADJ": 0,
-            "SCONJ": 0,
+            "PRON": 0.005,
             "PUNCT": 0,
             "NUM": 0,
+            "PART": 0,
+            "PROPN": 0,
+            "SYM": 0,
+            "ADJ": 0,
+            "CCONJ": 0,
+            "SCONJ": 0,
             "ADV": 0,
-            "Aphorism": 0,
-            "Proverb": 0
+            "ADP": 0,
+            "X": 0,
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2395,29 +2272,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.985,
-            "Collocation": 0.01,
+            "VERB": 0.99,
             "Unresolved": 0.005,
-            "INTJ": 0,
-            "ADP": 0,
-            "CCONJ": 0,
-            "Idiom": 0,
-            "X": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
+            "NOUN": 0.005,
             "PUNCT": 0,
-            "Fusion": 0,
+            "NUM": 0,
             "PART": 0,
             "PROPN": 0,
-            "PRON": 0,
-            "ADJ": 0,
-            "SCONJ": 0,
-            "NUM": 0,
             "SYM": 0,
+            "ADJ": 0,
+            "CCONJ": 0,
+            "PRON": 0,
+            "SCONJ": 0,
+            "ADP": 0,
             "ADV": 0,
-            "Aphorism": 0,
-            "NOUN": 0,
-            "Proverb": 0
+            "X": 0,
+            "INTJ": 0,
+            "DET": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2431,34 +2302,29 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.87,
-            "VERB": 0.08,
-            "Unresolved": 0.05,
-            "INTJ": 0,
-            "ADP": 0,
-            "CCONJ": 0,
-            "Idiom": 0,
-            "DiscourseFormula": 0,
-            "DET": 0,
-            "X": 0,
-            "Fusion": 0,
-            "Collocation": 0,
-            "SYM": 0,
-            "PART": 0,
-            "PROPN": 0,
-            "PRON": 0,
-            "SCONJ": 0,
+            "ADV": 0.96,
+            "VERB": 0.02,
+            "Unresolved": 0.01,
+            "NOUN": 0.01,
             "PUNCT": 0,
             "NUM": 0,
+            "PART": 0,
+            "PROPN": 0,
+            "SYM": 0,
+            "CCONJ": 0,
             "ADJ": 0,
-            "Aphorism": 0,
-            "NOUN": 0,
-            "Proverb": 0
+            "PRON": 0,
+            "SCONJ": 0,
+            "ADP": 0,
+            "X": 0,
+            "INTJ": 0,
+            "DET": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -2497,9 +2363,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "The process passive: `wird` is an Auxiliary member whose AUX Reading derives from the shape.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -2580,29 +2447,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.84,
-            "Unresolved": 0.07,
-            "PROPN": 0.06,
+            "PRON": 0.87,
+            "PROPN": 0.08,
             "VERB": 0.03,
-            "SCONJ": 0,
-            "Collocation": 0,
+            "Unresolved": 0.02,
             "INTJ": 0,
             "ADP": 0,
-            "ADJ": 0,
-            "DET": 0,
             "NUM": 0,
+            "DET": 0,
+            "SYM": 0,
+            "CCONJ": 0,
+            "PUNCT": 0,
+            "SCONJ": 0,
             "X": 0,
             "PART": 0,
-            "Proverb": 0,
-            "ADV": 0,
-            "CCONJ": 0,
-            "DiscourseFormula": 0,
             "NOUN": 0,
-            "Fusion": 0,
-            "Idiom": 0,
-            "PUNCT": 0,
-            "Aphorism": 0,
-            "SYM": 0
+            "ADV": 0,
+            "ADJ": 0
           },
           "identity": {
             "candidates": [
@@ -2638,29 +2499,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.975,
-            "Unresolved": 0.01,
-            "Idiom": 0.01,
-            "PART": 0.005,
-            "ADJ": 0,
-            "SCONJ": 0,
-            "Proverb": 0,
+            "VERB": 0.96,
+            "Unresolved": 0.015,
+            "NOUN": 0.015,
+            "PART": 0.01,
             "ADP": 0,
-            "DET": 0,
-            "NUM": 0,
-            "X": 0,
-            "Collocation": 0,
             "INTJ": 0,
-            "ADV": 0,
-            "CCONJ": 0,
-            "DiscourseFormula": 0,
-            "NOUN": 0,
-            "PRON": 0,
-            "Fusion": 0,
-            "Aphorism": 0,
+            "PROPN": 0,
+            "NUM": 0,
+            "DET": 0,
             "SYM": 0,
+            "CCONJ": 0,
             "PUNCT": 0,
-            "PROPN": 0
+            "SCONJ": 0,
+            "X": 0,
+            "PRON": 0,
+            "ADV": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2678,32 +2533,46 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.85,
-            "DET": 0.125,
+            "NOUN": 0.97,
+            "VERB": 0.015,
             "Unresolved": 0.01,
-            "VERB": 0.01,
-            "Idiom": 0.005,
-            "PART": 0,
-            "PROPN": 0,
-            "ADJ": 0,
-            "Proverb": 0,
-            "ADP": 0,
-            "NUM": 0,
-            "X": 0,
-            "SCONJ": 0,
-            "CCONJ": 0,
-            "ADV": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0,
-            "Fusion": 0,
+            "DET": 0.005,
             "INTJ": 0,
+            "ADP": 0,
+            "PROPN": 0,
+            "NUM": 0,
             "SYM": 0,
-            "Aphorism": 0,
+            "CCONJ": 0,
             "PUNCT": 0,
-            "Collocation": 0
+            "SCONJ": 0,
+            "X": 0,
+            "PART": 0,
+            "PRON": 0,
+            "ADV": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
+        }
+      ],
+      "phrasemes": [
+        {
+          "id": "p1",
+          "members": [
+            "t2",
+            "t3"
+          ],
+          "kindMass": {
+            "Idiom": 0.97,
+            "None": 0.015,
+            "Unresolved": 0.01,
+            "Collocation": 0.005,
+            "Proverb": 0,
+            "Aphorism": 0,
+            "DiscourseFormula": 0
+          },
+          "fixedness": 2.73,
+          "provenance": "score@0.5"
         }
       ],
       "fusions": []
@@ -2719,27 +2588,44 @@
         "identity": "PRON:er"
       },
       {
-        "kind": "Idiom",
+        "kind": "VERB",
         "members": [
           {
             "offset": 3,
             "role": "Auxiliary"
           },
           {
-            "offset": 7
+            "offset": 17,
+            "role": "Head"
+          }
+        ]
+      },
+      {
+        "kind": "NOUN",
+        "members": [
+          {
+            "offset": 7,
+            "role": "Article"
           },
           {
-            "offset": 11
-          },
-          {
-            "offset": 17
+            "offset": 11,
+            "role": "Head"
           }
         ]
       }
     ],
-    "note": "An idiom: the whole expression lights up, auxiliary and article included.",
+    "goldPhrasemes": [
+      {
+        "kind": "Idiom",
+        "words": [
+          11,
+          17
+        ]
+      }
+    ],
+    "note": "An idiom over two words: the verb brings its auxiliary, the noun its article, and the whole expression lights up.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -2862,29 +2748,23 @@
             }
           ],
           "routeMass": {
-            "PROPN": 0.99,
-            "Unresolved": 0.01,
-            "Idiom": 0,
-            "NUM": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
-            "SYM": 0,
-            "INTJ": 0,
-            "Aphorism": 0,
-            "NOUN": 0,
-            "Collocation": 0,
-            "ADV": 0,
+            "PROPN": 1,
             "ADP": 0,
-            "ADJ": 0,
             "SCONJ": 0,
             "X": 0,
-            "Fusion": 0,
-            "VERB": 0,
+            "SYM": 0,
+            "CCONJ": 0,
             "PRON": 0,
             "PUNCT": 0,
-            "PART": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "INTJ": 0,
+            "DET": 0,
+            "Unresolved": 0,
+            "ADV": 0,
+            "VERB": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "NOUN": 0,
+            "PART": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2898,29 +2778,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.99,
-            "Unresolved": 0.01,
-            "Idiom": 0,
-            "ADV": 0,
-            "NUM": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
-            "SYM": 0,
-            "Aphorism": 0,
+            "VERB": 1,
             "ADP": 0,
-            "NOUN": 0,
-            "Collocation": 0,
-            "INTJ": 0,
             "SCONJ": 0,
-            "Fusion": 0,
-            "ADJ": 0,
             "X": 0,
+            "SYM": 0,
+            "CCONJ": 0,
             "PRON": 0,
             "PUNCT": 0,
+            "INTJ": 0,
+            "DET": 0,
+            "Unresolved": 0,
+            "ADV": 0,
             "PROPN": 0,
-            "PART": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "NUM": 0,
+            "ADJ": 0,
+            "NOUN": 0,
+            "PART": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2934,29 +2808,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.96,
-            "Unresolved": 0.04,
-            "Idiom": 0,
-            "INTJ": 0,
-            "DET": 0,
-            "Collocation": 0,
-            "DiscourseFormula": 0,
-            "ADV": 0,
-            "Aphorism": 0,
+            "NOUN": 0.98,
+            "Unresolved": 0.02,
             "ADP": 0,
-            "SYM": 0,
-            "NUM": 0,
-            "ADJ": 0,
             "SCONJ": 0,
             "X": 0,
-            "Fusion": 0,
-            "VERB": 0,
+            "SYM": 0,
+            "CCONJ": 0,
             "PRON": 0,
             "PUNCT": 0,
+            "INTJ": 0,
+            "DET": 0,
+            "ADV": 0,
+            "VERB": 0,
             "PROPN": 0,
-            "PART": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "NUM": 0,
+            "ADJ": 0,
+            "PART": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -2970,29 +2838,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.9,
-            "Unresolved": 0.08,
-            "Collocation": 0.01,
+            "NOUN": 0.97,
+            "Unresolved": 0.02,
             "CCONJ": 0.01,
-            "Idiom": 0,
-            "NUM": 0,
-            "INTJ": 0,
-            "DET": 0,
-            "DiscourseFormula": 0,
-            "ADV": 0,
-            "SYM": 0,
-            "Aphorism": 0,
             "ADP": 0,
-            "ADJ": 0,
             "SCONJ": 0,
-            "Fusion": 0,
             "X": 0,
-            "VERB": 0,
+            "SYM": 0,
             "PRON": 0,
             "PUNCT": 0,
+            "INTJ": 0,
+            "DET": 0,
+            "ADV": 0,
+            "VERB": 0,
+            "NUM": 0,
             "PROPN": 0,
-            "PART": 0,
-            "Proverb": 0
+            "ADJ": 0,
+            "PART": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3006,29 +2868,23 @@
             }
           ],
           "routeMass": {
-            "X": 0.29,
-            "Unresolved": 0.22,
-            "ADV": 0.16,
-            "SYM": 0.1,
-            "DiscourseFormula": 0.06,
-            "Collocation": 0.05,
-            "PART": 0.03,
-            "Idiom": 0.02,
+            "X": 0.34,
+            "ADV": 0.25,
+            "PART": 0.13,
+            "SYM": 0.09,
+            "Unresolved": 0.09,
+            "PUNCT": 0.03,
+            "CCONJ": 0.02,
+            "NOUN": 0.02,
             "ADP": 0.01,
-            "NOUN": 0.01,
-            "Fusion": 0.01,
-            "VERB": 0.01,
             "PRON": 0.01,
-            "PUNCT": 0.01,
-            "CCONJ": 0.01,
-            "INTJ": 0,
-            "DET": 0,
-            "Aphorism": 0,
-            "NUM": 0,
+            "VERB": 0.01,
             "SCONJ": 0,
-            "ADJ": 0,
+            "DET": 0,
+            "INTJ": 0,
             "PROPN": 0,
-            "Proverb": 0
+            "NUM": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3039,7 +2895,33 @@
             {
               "offset": 29,
               "role": "Head"
-            },
+            }
+          ],
+          "routeMass": {
+            "ADP": 0.97,
+            "NOUN": 0.02,
+            "Unresolved": 0.01,
+            "SCONJ": 0,
+            "X": 0,
+            "SYM": 0,
+            "CCONJ": 0,
+            "PRON": 0,
+            "PUNCT": 0,
+            "DET": 0,
+            "INTJ": 0,
+            "ADV": 0,
+            "VERB": 0,
+            "PROPN": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "PART": 0
+          },
+          "identity": null,
+          "provenance": "vote"
+        },
+        {
+          "id": "t7",
+          "members": [
             {
               "offset": 33,
               "role": "Article"
@@ -3050,34 +2932,29 @@
             }
           ],
           "routeMass": {
-            "Fusion": 0.333,
-            "NOUN": 0.297,
-            "ADP": 0.257,
-            "DET": 0.073,
-            "Unresolved": 0.02,
-            "Collocation": 0.017,
-            "Idiom": 0.003,
-            "ADV": 0,
-            "DiscourseFormula": 0,
-            "SYM": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "ADJ": 0,
-            "VERB": 0,
-            "X": 0,
+            "NOUN": 0.845,
+            "DET": 0.07,
+            "ADP": 0.05,
+            "Unresolved": 0.03,
+            "VERB": 0.005,
             "SCONJ": 0,
+            "X": 0,
+            "SYM": 0,
+            "CCONJ": 0,
             "PRON": 0,
             "PUNCT": 0,
+            "INTJ": 0,
+            "ADV": 0,
+            "NUM": 0,
             "PROPN": 0,
-            "PART": 0,
-            "Proverb": 0,
-            "CCONJ": 0
+            "ADJ": 0,
+            "PART": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -3143,9 +3020,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "An abbreviation is one Segment whose surface is its expansion.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -3284,29 +3162,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.9,
-            "DET": 0.075,
-            "Unresolved": 0.015,
-            "Fusion": 0.005,
-            "ADP": 0,
-            "CCONJ": 0,
-            "PRON": 0,
-            "ADV": 0,
-            "VERB": 0,
-            "Collocation": 0,
-            "Proverb": 0,
-            "Idiom": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
-            "PART": 0,
-            "NUM": 0,
-            "ADJ": 0,
-            "PROPN": 0,
-            "PUNCT": 0,
+            "NOUN": 0.94,
+            "Unresolved": 0.045,
+            "DET": 0.01,
+            "PRON": 0.005,
             "SCONJ": 0,
+            "PUNCT": 0,
+            "NUM": 0,
+            "ADV": 0,
+            "ADP": 0,
+            "PROPN": 0,
+            "VERB": 0,
             "SYM": 0,
             "X": 0,
-            "Aphorism": 0
+            "PART": 0,
+            "CCONJ": 0,
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3320,29 +3192,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.98,
-            "Unresolved": 0.02,
-            "ADP": 0,
-            "CCONJ": 0,
-            "PRON": 0,
+            "VERB": 1,
+            "SCONJ": 0,
+            "PUNCT": 0,
+            "NUM": 0,
             "DET": 0,
             "ADV": 0,
-            "Collocation": 0,
-            "Proverb": 0,
-            "Idiom": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
-            "ADJ": 0,
-            "NUM": 0,
-            "PART": 0,
             "PROPN": 0,
-            "PUNCT": 0,
-            "SCONJ": 0,
+            "ADP": 0,
             "SYM": 0,
-            "NOUN": 0,
-            "Fusion": 0,
             "X": 0,
-            "Aphorism": 0
+            "PRON": 0,
+            "PART": 0,
+            "NOUN": 0,
+            "CCONJ": 0,
+            "INTJ": 0,
+            "Unresolved": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3356,29 +3222,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.55,
-            "Unresolved": 0.23,
-            "DiscourseFormula": 0.11,
-            "X": 0.03,
-            "PART": 0.02,
-            "SYM": 0.02,
-            "Collocation": 0.01,
-            "VERB": 0.01,
-            "PUNCT": 0.01,
-            "PRON": 0,
-            "ADP": 0,
-            "CCONJ": 0,
-            "DET": 0,
-            "Proverb": 0,
-            "Idiom": 0,
-            "ADJ": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "PROPN": 0,
+            "ADV": 0.66,
+            "SYM": 0.1,
+            "X": 0.1,
+            "Unresolved": 0.07,
+            "PART": 0.04,
+            "PUNCT": 0.02,
             "SCONJ": 0,
+            "NUM": 0,
+            "DET": 0,
+            "ADP": 0,
+            "PROPN": 0,
+            "VERB": 0,
+            "PRON": 0,
             "NOUN": 0,
-            "Fusion": 0,
-            "Aphorism": 0
+            "CCONJ": 0,
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3451,29 +3311,23 @@
             }
           ],
           "routeMass": {
-            "PROPN": 0.52,
-            "NOUN": 0.31,
-            "Unresolved": 0.08,
-            "Fusion": 0.03,
-            "ADP": 0.02,
-            "ADV": 0.02,
-            "Collocation": 0.01,
-            "X": 0.01,
-            "PRON": 0,
-            "CCONJ": 0,
+            "PROPN": 0.74,
+            "NOUN": 0.23,
+            "ADV": 0.01,
+            "ADP": 0.01,
+            "Unresolved": 0.01,
+            "SCONJ": 0,
+            "PUNCT": 0,
+            "NUM": 0,
             "DET": 0,
             "VERB": 0,
-            "Proverb": 0,
-            "Idiom": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
-            "ADJ": 0,
-            "NUM": 0,
-            "PART": 0,
-            "PUNCT": 0,
-            "SCONJ": 0,
             "SYM": 0,
-            "Aphorism": 0
+            "X": 0,
+            "CCONJ": 0,
+            "PART": 0,
+            "PRON": 0,
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3487,29 +3341,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.7,
-            "PART": 0.12,
-            "Unresolved": 0.1,
-            "Collocation": 0.02,
-            "VERB": 0.02,
-            "ADP": 0.01,
-            "Idiom": 0.01,
-            "Fusion": 0.01,
-            "X": 0.01,
-            "PRON": 0,
-            "CCONJ": 0,
-            "DET": 0,
-            "Proverb": 0,
-            "DiscourseFormula": 0,
-            "ADJ": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "PROPN": 0,
-            "PUNCT": 0,
+            "ADV": 0.82,
+            "PART": 0.14,
+            "Unresolved": 0.02,
+            "VERB": 0.01,
             "SCONJ": 0,
+            "PUNCT": 0,
+            "NUM": 0,
+            "DET": 0,
+            "ADP": 0,
+            "PROPN": 0,
             "SYM": 0,
+            "X": 0,
+            "CCONJ": 0,
             "NOUN": 0,
-            "Aphorism": 0
+            "PRON": 0,
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3523,29 +3371,23 @@
             }
           ],
           "routeMass": {
-            "ADP": 0.57,
-            "SCONJ": 0.11,
-            "Unresolved": 0.09,
-            "Collocation": 0.08,
-            "Fusion": 0.04,
+            "ADP": 0.84,
+            "SCONJ": 0.06,
             "PART": 0.03,
-            "ADV": 0.02,
-            "Idiom": 0.02,
             "NUM": 0.02,
-            "VERB": 0.01,
-            "CCONJ": 0,
-            "PRON": 0,
-            "DET": 0,
-            "Proverb": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
-            "ADJ": 0,
-            "PROPN": 0,
+            "ADV": 0.02,
+            "VERB": 0.02,
+            "Unresolved": 0.01,
             "PUNCT": 0,
+            "DET": 0,
+            "PROPN": 0,
             "SYM": 0,
-            "NOUN": 0,
             "X": 0,
-            "Aphorism": 0
+            "CCONJ": 0,
+            "NOUN": 0,
+            "PRON": 0,
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3559,34 +3401,29 @@
             }
           ],
           "routeMass": {
-            "NUM": 0.68,
-            "Unresolved": 0.11,
-            "Collocation": 0.05,
-            "ADP": 0.03,
+            "NUM": 0.85,
+            "ADP": 0.05,
             "NOUN": 0.03,
-            "Fusion": 0.03,
-            "VERB": 0.01,
-            "Idiom": 0.01,
-            "PART": 0.01,
-            "PROPN": 0.01,
+            "VERB": 0.02,
+            "Unresolved": 0.02,
             "SCONJ": 0.01,
+            "PROPN": 0.01,
             "X": 0.01,
-            "CCONJ": 0,
-            "PRON": 0,
+            "PUNCT": 0,
             "DET": 0,
             "ADV": 0,
-            "Proverb": 0,
-            "DiscourseFormula": 0,
-            "INTJ": 0,
-            "ADJ": 0,
-            "PUNCT": 0,
             "SYM": 0,
-            "Aphorism": 0
+            "CCONJ": 0,
+            "PART": 0,
+            "PRON": 0,
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": [
         {
           "offset": 23,
@@ -3684,9 +3521,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "A dotted abbreviation and the fusion `am`.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -3783,29 +3621,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.755,
-            "DET": 0.18,
-            "Unresolved": 0.04,
-            "PRON": 0.015,
+            "NOUN": 0.84,
+            "Unresolved": 0.105,
+            "PRON": 0.02,
+            "DET": 0.02,
+            "X": 0.005,
+            "PROPN": 0.005,
             "VERB": 0.005,
-            "Fusion": 0.005,
+            "ADJ": 0,
+            "ADV": 0,
+            "INTJ": 0,
+            "ADP": 0,
+            "SYM": 0,
             "SCONJ": 0,
             "PART": 0,
-            "ADJ": 0,
-            "ADP": 0,
-            "Collocation": 0,
-            "NUM": 0,
-            "X": 0,
             "PUNCT": 0,
-            "Proverb": 0,
-            "ADV": 0,
-            "CCONJ": 0,
-            "DiscourseFormula": 0,
-            "Aphorism": 0,
-            "SYM": 0,
-            "INTJ": 0,
-            "Idiom": 0,
-            "PROPN": 0
+            "NUM": 0,
+            "CCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3815,33 +3647,27 @@
           "members": [
             {
               "offset": 9,
-              "role": "Article"
+              "role": "Head"
             }
           ],
           "routeMass": {
-            "DET": 0.5,
-            "Fusion": 0.28,
-            "ADP": 0.09,
-            "NOUN": 0.08,
+            "ADP": 0.53,
+            "NOUN": 0.2,
+            "DET": 0.2,
             "Unresolved": 0.04,
-            "PRON": 0.01,
-            "SCONJ": 0,
-            "PART": 0,
-            "PROPN": 0,
+            "PRON": 0.02,
+            "VERB": 0.01,
             "ADJ": 0,
-            "NUM": 0,
             "X": 0,
-            "SYM": 0,
-            "Proverb": 0,
-            "CCONJ": 0,
             "ADV": 0,
-            "VERB": 0,
-            "DiscourseFormula": 0,
-            "Idiom": 0,
-            "PUNCT": 0,
+            "PROPN": 0,
             "INTJ": 0,
-            "Aphorism": 0,
-            "Collocation": 0
+            "SYM": 0,
+            "PUNCT": 0,
+            "PART": 0,
+            "SCONJ": 0,
+            "NUM": 0,
+            "CCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3855,29 +3681,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.88,
-            "Unresolved": 0.06,
-            "PROPN": 0.02,
-            "DET": 0.01,
-            "Collocation": 0.01,
+            "NOUN": 0.93,
+            "Unresolved": 0.03,
+            "PROPN": 0.01,
+            "ADP": 0.01,
             "PRON": 0.01,
-            "Fusion": 0.01,
-            "PART": 0,
-            "SCONJ": 0,
-            "SYM": 0,
-            "Proverb": 0,
             "ADJ": 0,
-            "NUM": 0,
             "X": 0,
-            "ADP": 0,
-            "CCONJ": 0,
             "ADV": 0,
-            "VERB": 0,
-            "DiscourseFormula": 0,
-            "Idiom": 0,
-            "PUNCT": 0,
             "INTJ": 0,
-            "Aphorism": 0
+            "VERB": 0,
+            "SYM": 0,
+            "SCONJ": 0,
+            "PART": 0,
+            "PUNCT": 0,
+            "DET": 0,
+            "NUM": 0,
+            "CCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -3893,27 +3713,21 @@
           "routeMass": {
             "VERB": 1,
             "ADJ": 0,
-            "SCONJ": 0,
+            "X": 0,
+            "ADV": 0,
+            "PROPN": 0,
+            "INTJ": 0,
             "Unresolved": 0,
-            "Collocation": 0,
-            "Proverb": 0,
             "ADP": 0,
+            "SYM": 0,
+            "PUNCT": 0,
+            "PART": 0,
+            "NOUN": 0,
+            "SCONJ": 0,
+            "PRON": 0,
             "DET": 0,
             "NUM": 0,
-            "X": 0,
-            "PART": 0,
-            "Aphorism": 0,
-            "CCONJ": 0,
-            "ADV": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0,
-            "NOUN": 0,
-            "Fusion": 0,
-            "Idiom": 0,
-            "SYM": 0,
-            "INTJ": 0,
-            "PUNCT": 0,
-            "PROPN": 0
+            "CCONJ": 0
           },
           "identity": {
             "candidates": [
@@ -3948,34 +3762,29 @@
             }
           ],
           "routeMass": {
-            "ADJ": 0.95,
-            "VERB": 0.04,
-            "Unresolved": 0.01,
-            "PART": 0,
-            "SCONJ": 0,
-            "Collocation": 0,
+            "ADJ": 1,
+            "X": 0,
+            "ADV": 0,
+            "PROPN": 0,
+            "INTJ": 0,
+            "Unresolved": 0,
             "ADP": 0,
-            "Proverb": 0,
+            "VERB": 0,
+            "SYM": 0,
+            "PUNCT": 0,
+            "PART": 0,
+            "NOUN": 0,
+            "SCONJ": 0,
+            "PRON": 0,
             "DET": 0,
             "NUM": 0,
-            "X": 0,
-            "SYM": 0,
-            "ADV": 0,
-            "CCONJ": 0,
-            "DiscourseFormula": 0,
-            "PRON": 0,
-            "NOUN": 0,
-            "Fusion": 0,
-            "INTJ": 0,
-            "PUNCT": 0,
-            "Idiom": 0,
-            "Aphorism": 0,
-            "PROPN": 0
+            "CCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -4022,9 +3831,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "A genitive article; `des` is not an authored article spelling, so its identity comes from the noun.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -4105,10 +3915,26 @@
             }
           ],
           "routeMass": {
-            "Unresolved": 1
+            "X": 0.34,
+            "PROPN": 0.23,
+            "Unresolved": 0.17,
+            "PRON": 0.17,
+            "VERB": 0.07,
+            "NOUN": 0.01,
+            "SCONJ": 0,
+            "CCONJ": 0,
+            "NUM": 0,
+            "SYM": 0,
+            "ADV": 0,
+            "INTJ": 0,
+            "PUNCT": 0,
+            "PART": 0,
+            "DET": 0,
+            "ADJ": 0,
+            "ADP": 0
           },
           "identity": null,
-          "provenance": "guard:route"
+          "provenance": "vote"
         },
         {
           "id": "t2",
@@ -4119,29 +3945,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.54,
-            "Unresolved": 0.35,
-            "X": 0.04,
-            "PART": 0.02,
-            "Idiom": 0.01,
-            "NOUN": 0.01,
-            "DiscourseFormula": 0.01,
-            "Collocation": 0.01,
-            "DET": 0,
-            "ADV": 0,
-            "SYM": 0,
-            "PUNCT": 0,
-            "CCONJ": 0,
-            "ADP": 0,
-            "ADJ": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "NUM": 0,
-            "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
+            "VERB": 0.87,
+            "Unresolved": 0.11,
+            "X": 0.01,
+            "PART": 0.01,
+            "PRON": 0,
             "SCONJ": 0,
-            "PRON": 0
+            "NOUN": 0,
+            "PROPN": 0,
+            "NUM": 0,
+            "CCONJ": 0,
+            "SYM": 0,
+            "DET": 0,
+            "INTJ": 0,
+            "PUNCT": 0,
+            "ADV": 0,
+            "ADJ": 0,
+            "ADP": 0
           },
           "identity": {
             "candidates": [
@@ -4158,9 +3978,9 @@
               }
             ],
             "mass": {
-              "AUX:haben:": 0.05,
-              "NoMatch": 0.94,
-              "Unresolved": 0.01
+              "AUX:haben:": 0.07,
+              "NoMatch": 0.91,
+              "Unresolved": 0.02
             }
           },
           "provenance": "vote"
@@ -4174,29 +3994,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.86,
-            "Unresolved": 0.06,
-            "DiscourseFormula": 0.02,
-            "DET": 0.01,
-            "VERB": 0.01,
-            "Idiom": 0.01,
-            "PART": 0.01,
-            "Collocation": 0.01,
+            "ADV": 0.95,
+            "Unresolved": 0.03,
             "X": 0.01,
-            "SYM": 0,
-            "ADP": 0,
-            "PUNCT": 0,
+            "PART": 0.01,
+            "PRON": 0,
             "CCONJ": 0,
-            "ADJ": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "NUM": 0,
             "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
-            "NOUN": 0,
             "SCONJ": 0,
-            "PRON": 0
+            "VERB": 0,
+            "NUM": 0,
+            "SYM": 0,
+            "NOUN": 0,
+            "INTJ": 0,
+            "PUNCT": 0,
+            "DET": 0,
+            "ADJ": 0,
+            "ADP": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -4210,29 +4024,23 @@
             }
           ],
           "routeMass": {
-            "DET": 0.98,
-            "Unresolved": 0.01,
-            "PRON": 0.01,
-            "ADV": 0,
-            "SYM": 0,
-            "VERB": 0,
-            "PUNCT": 0,
-            "CCONJ": 0,
-            "ADP": 0,
-            "Idiom": 0,
-            "PART": 0,
-            "ADJ": 0,
-            "Collocation": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "X": 0,
-            "NUM": 0,
-            "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
+            "DET": 1,
+            "Unresolved": 0,
+            "PRON": 0,
             "SCONJ": 0,
-            "DiscourseFormula": 0,
-            "NOUN": 0
+            "PROPN": 0,
+            "CCONJ": 0,
+            "VERB": 0,
+            "NUM": 0,
+            "SYM": 0,
+            "NOUN": 0,
+            "X": 0,
+            "INTJ": 0,
+            "ADV": 0,
+            "PART": 0,
+            "PUNCT": 0,
+            "ADJ": 0,
+            "ADP": 0
           },
           "identity": {
             "candidates": [
@@ -4278,34 +4086,29 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.9,
-            "Unresolved": 0.04,
-            "Collocation": 0.02,
-            "DET": 0.01,
-            "VERB": 0.01,
-            "Idiom": 0.01,
-            "DiscourseFormula": 0.01,
-            "ADV": 0,
-            "SYM": 0,
-            "PUNCT": 0,
+            "NOUN": 0.99,
+            "Unresolved": 0.01,
+            "PRON": 0,
             "CCONJ": 0,
-            "ADP": 0,
-            "PART": 0,
-            "ADJ": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "X": 0,
-            "NUM": 0,
             "PROPN": 0,
-            "Proverb": 0,
-            "Fusion": 0,
+            "SYM": 0,
+            "NUM": 0,
             "SCONJ": 0,
-            "PRON": 0
+            "VERB": 0,
+            "ADV": 0,
+            "X": 0,
+            "INTJ": 0,
+            "PUNCT": 0,
+            "PART": 0,
+            "DET": 0,
+            "ADJ": 0,
+            "ADP": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -4351,9 +4154,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "A typo on a pronoun: the route says PRON, the table has no candidate, so the identity is a Miss.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -4434,29 +4238,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.56,
-            "DiscourseFormula": 0.18,
-            "Unresolved": 0.1,
-            "Collocation": 0.06,
-            "Idiom": 0.04,
-            "VERB": 0.02,
-            "ADV": 0.02,
-            "Aphorism": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
-            "INTJ": 0,
-            "ADP": 0,
-            "PROPN": 0,
-            "ADJ": 0,
-            "NUM": 0,
+            "PRON": 0.77,
+            "VERB": 0.11,
+            "Unresolved": 0.07,
+            "PART": 0.01,
+            "INTJ": 0.01,
+            "SCONJ": 0.01,
+            "ADV": 0.01,
+            "X": 0.01,
             "DET": 0,
-            "SYM": 0,
-            "CCONJ": 0,
             "PUNCT": 0,
-            "SCONJ": 0,
-            "X": 0,
-            "PART": 0,
-            "NOUN": 0
+            "ADP": 0,
+            "NOUN": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "SYM": 0,
+            "PROPN": 0,
+            "CCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -4470,37 +4268,27 @@
             },
             {
               "offset": 9,
-              "role": "Head"
-            },
-            {
-              "offset": 11,
-              "role": "Head"
+              "role": "SeparableParticle"
             }
           ],
           "routeMass": {
-            "VERB": 0.34,
-            "DiscourseFormula": 0.243,
-            "PRON": 0.213,
-            "Idiom": 0.083,
-            "Collocation": 0.047,
-            "Unresolved": 0.033,
-            "PART": 0.017,
-            "PROPN": 0.01,
-            "Fusion": 0.007,
-            "PUNCT": 0.003,
-            "INTJ": 0,
-            "Proverb": 0,
-            "ADP": 0,
-            "NUM": 0,
+            "VERB": 0.9,
+            "PART": 0.05,
+            "Unresolved": 0.02,
+            "PUNCT": 0.015,
+            "PRON": 0.015,
             "DET": 0,
-            "SYM": 0,
-            "CCONJ": 0,
-            "Aphorism": 0,
-            "SCONJ": 0,
-            "X": 0,
+            "ADP": 0,
             "NOUN": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "SYM": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
             "ADV": 0,
-            "ADJ": 0
+            "PROPN": 0,
+            "CCONJ": 0,
+            "X": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -4509,37 +4297,100 @@
           "id": "t3",
           "members": [
             {
+              "offset": 11,
+              "role": "Head"
+            }
+          ],
+          "routeMass": {
+            "PRON": 0.89,
+            "VERB": 0.1,
+            "Unresolved": 0.01,
+            "X": 0,
+            "DET": 0,
+            "PUNCT": 0,
+            "ADP": 0,
+            "PART": 0,
+            "NOUN": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "INTJ": 0,
+            "ADV": 0,
+            "PROPN": 0,
+            "CCONJ": 0
+          },
+          "identity": {
+            "candidates": [
+              {
+                "key": "PRON:dir:Prs",
+                "kind": "PRON",
+                "headword": "dir",
+                "pronType": "Prs",
+                "cells": [
+                  "person=2 polite=Infm referenceNumber=Sing case=Dat number=Sing"
+                ],
+                "definition": "Die Personalpronomenform „dir“ verweist auf die angesprochene Einzahl."
+              }
+            ],
+            "mass": {
+              "PRON:dir:Prs": 1,
+              "NoMatch": 0,
+              "Unresolved": 0
+            }
+          },
+          "provenance": "vote"
+        },
+        {
+          "id": "t4",
+          "members": [
+            {
               "offset": 15,
               "role": "Head"
             }
           ],
           "routeMass": {
-            "ADV": 0.51,
-            "DiscourseFormula": 0.24,
-            "Unresolved": 0.11,
-            "Collocation": 0.05,
-            "VERB": 0.04,
-            "Idiom": 0.02,
-            "Aphorism": 0.01,
-            "X": 0.01,
+            "ADV": 0.94,
+            "VERB": 0.02,
+            "Unresolved": 0.02,
             "NOUN": 0.01,
-            "Fusion": 0,
-            "Proverb": 0,
-            "INTJ": 0,
-            "PROPN": 0,
-            "ADP": 0,
-            "NUM": 0,
             "DET": 0,
-            "SYM": 0,
-            "CCONJ": 0,
             "PUNCT": 0,
-            "SCONJ": 0,
+            "ADP": 0,
             "PART": 0,
+            "NUM": 0,
+            "ADJ": 0,
+            "SCONJ": 0,
+            "SYM": 0,
+            "INTJ": 0,
             "PRON": 0,
-            "ADJ": 0
+            "PROPN": 0,
+            "CCONJ": 0,
+            "X": 0
           },
           "identity": null,
           "provenance": "vote"
+        }
+      ],
+      "phrasemes": [
+        {
+          "id": "p1",
+          "members": [
+            "t1",
+            "t2",
+            "t3"
+          ],
+          "kindMass": {
+            "DiscourseFormula": 0.94,
+            "None": 0.05,
+            "Collocation": 0.007,
+            "Unresolved": 0.003,
+            "Aphorism": 0,
+            "Proverb": 0,
+            "Idiom": 0
+          },
+          "fixedness": 2.7,
+          "provenance": "score@0.5"
         }
       ],
       "fusions": []
@@ -4584,9 +4435,19 @@
         ]
       }
     ],
-    "note": "An apostrophe clitic: `s` stands for `es`, the expletive of `es geht`.",
+    "goldPhrasemes": [
+      {
+        "kind": "DiscourseFormula",
+        "words": [
+          0,
+          4,
+          11
+        ]
+      }
+    ],
+    "note": "An apostrophe clitic: `s` stands for `es`, the expletive of `es geht`; the greeting is a DiscourseFormula over three words.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -4713,28 +4574,22 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.925,
-            "DET": 0.035,
-            "Collocation": 0.03,
-            "Unresolved": 0.01,
-            "Idiom": 0,
-            "PROPN": 0,
-            "Fusion": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "ADP": 0,
-            "SYM": 0,
-            "NUM": 0,
-            "DiscourseFormula": 0,
-            "ADV": 0,
-            "SCONJ": 0,
-            "Proverb": 0,
-            "PRON": 0,
+            "NOUN": 0.955,
+            "Unresolved": 0.035,
+            "DET": 0.01,
+            "X": 0,
             "CCONJ": 0,
+            "VERB": 0,
+            "ADV": 0,
             "PART": 0,
             "ADJ": 0,
-            "X": 0,
-            "VERB": 0,
+            "SYM": 0,
+            "ADP": 0,
+            "SCONJ": 0,
+            "INTJ": 0,
+            "NUM": 0,
+            "PROPN": 0,
+            "PRON": 0,
             "PUNCT": 0
           },
           "identity": null,
@@ -4746,48 +4601,26 @@
             {
               "offset": 11,
               "role": "Head"
-            },
-            {
-              "offset": 31,
-              "role": "Head"
-            },
-            {
-              "offset": 40,
-              "role": "GovernedPreposition"
-            },
-            {
-              "offset": 42,
-              "role": "GovernedPreposition"
-            },
-            {
-              "offset": 44,
-              "role": "Head"
             }
           ],
           "routeMass": {
-            "Collocation": 0.795,
-            "NOUN": 0.098,
-            "VERB": 0.043,
-            "Fusion": 0.035,
-            "ADP": 0.018,
-            "SCONJ": 0.007,
-            "Unresolved": 0.005,
-            "Idiom": 0,
-            "PROPN": 0,
-            "Aphorism": 0,
-            "DET": 0,
-            "INTJ": 0,
-            "SYM": 0,
-            "NUM": 0,
-            "DiscourseFormula": 0,
-            "ADV": 0,
-            "PUNCT": 0,
-            "Proverb": 0,
-            "CCONJ": 0,
-            "PART": 0,
-            "PRON": 0,
+            "VERB": 0.99,
+            "Unresolved": 0.01,
             "X": 0,
-            "ADJ": 0
+            "DET": 0,
+            "PART": 0,
+            "CCONJ": 0,
+            "ADV": 0,
+            "NOUN": 0,
+            "ADJ": 0,
+            "SYM": 0,
+            "ADP": 0,
+            "PROPN": 0,
+            "NUM": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
+            "PRON": 0,
+            "PUNCT": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -4797,33 +4630,27 @@
           "members": [
             {
               "offset": 18,
-              "role": "Article"
+              "role": "Head"
             }
           ],
           "routeMass": {
-            "DET": 0.46,
-            "NOUN": 0.36,
-            "Collocation": 0.14,
-            "Unresolved": 0.02,
-            "Fusion": 0.01,
+            "NOUN": 0.82,
+            "DET": 0.1,
+            "Unresolved": 0.06,
             "VERB": 0.01,
-            "INTJ": 0,
-            "PROPN": 0,
-            "Aphorism": 0,
-            "Idiom": 0,
-            "ADP": 0,
-            "SYM": 0,
-            "NUM": 0,
-            "DiscourseFormula": 0,
-            "ADV": 0,
-            "SCONJ": 0,
-            "Proverb": 0,
-            "CCONJ": 0,
-            "PART": 0,
-            "ADJ": 0,
             "X": 0,
-            "PUNCT": 0,
-            "PRON": 0
+            "PART": 0,
+            "CCONJ": 0,
+            "ADV": 0,
+            "ADJ": 0,
+            "SYM": 0,
+            "ADP": 0,
+            "SCONJ": 0,
+            "PROPN": 0,
+            "NUM": 0,
+            "INTJ": 0,
+            "PRON": 0,
+            "PUNCT": 0
           },
           "identity": {
             "candidates": [
@@ -4850,9 +4677,9 @@
             ],
             "mass": {
               "PRON:den:Dem": 0.03,
-              "PRON:den:Rel": 0.01,
-              "NoMatch": 0.92,
-              "Unresolved": 0.04
+              "PRON:den:Rel": 0,
+              "NoMatch": 0.91,
+              "Unresolved": 0.06
             }
           },
           "provenance": "vote"
@@ -4866,32 +4693,125 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.42,
-            "Collocation": 0.33,
+            "NOUN": 0.71,
             "Unresolved": 0.15,
-            "Fusion": 0.02,
-            "DET": 0.02,
+            "VERB": 0.05,
+            "PRON": 0.03,
             "ADP": 0.02,
-            "VERB": 0.02,
-            "PRON": 0.01,
             "X": 0.01,
-            "Idiom": 0,
-            "PROPN": 0,
-            "Aphorism": 0,
-            "INTJ": 0,
-            "SYM": 0,
-            "NUM": 0,
-            "DiscourseFormula": 0,
-            "ADV": 0,
-            "PUNCT": 0,
-            "Proverb": 0,
+            "DET": 0.01,
+            "PART": 0.01,
+            "PROPN": 0.01,
             "CCONJ": 0,
-            "PART": 0,
+            "ADV": 0,
             "ADJ": 0,
-            "SCONJ": 0
+            "SYM": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
+            "NUM": 0,
+            "PUNCT": 0
           },
           "identity": null,
           "provenance": "vote"
+        },
+        {
+          "id": "t5",
+          "members": [
+            {
+              "offset": 31,
+              "role": "Head"
+            }
+          ],
+          "routeMass": {
+            "NOUN": 0.95,
+            "VERB": 0.02,
+            "Unresolved": 0.02,
+            "ADP": 0.01,
+            "X": 0,
+            "DET": 0,
+            "CCONJ": 0,
+            "ADV": 0,
+            "PART": 0,
+            "ADJ": 0,
+            "SYM": 0,
+            "PROPN": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
+            "NUM": 0,
+            "PRON": 0,
+            "PUNCT": 0
+          },
+          "identity": null,
+          "provenance": "vote"
+        },
+        {
+          "id": "t6",
+          "members": [
+            {
+              "offset": 40,
+              "role": "Head"
+            }
+          ],
+          "routeMass": {
+            "ADP": 1
+          },
+          "identity": null,
+          "provenance": "fusion-table"
+        },
+        {
+          "id": "t7",
+          "members": [
+            {
+              "offset": 42,
+              "role": "Article"
+            },
+            {
+              "offset": 44,
+              "role": "Head"
+            }
+          ],
+          "routeMass": {
+            "NOUN": 0.53,
+            "VERB": 0.23,
+            "ADP": 0.21,
+            "PART": 0.01,
+            "Unresolved": 0.01,
+            "SCONJ": 0.01,
+            "X": 0,
+            "DET": 0,
+            "CCONJ": 0,
+            "ADV": 0,
+            "ADJ": 0,
+            "SYM": 0,
+            "NUM": 0,
+            "PROPN": 0,
+            "INTJ": 0,
+            "PRON": 0,
+            "PUNCT": 0
+          },
+          "identity": null,
+          "provenance": "vote+fusion-table"
+        }
+      ],
+      "phrasemes": [
+        {
+          "id": "p1",
+          "members": [
+            "t2",
+            "t6",
+            "t7"
+          ],
+          "kindMass": {
+            "Collocation": 0.98,
+            "None": 0.013,
+            "Idiom": 0.007,
+            "Proverb": 0,
+            "Aphorism": 0,
+            "DiscourseFormula": 0,
+            "Unresolved": 0
+          },
+          "fixedness": 1.9,
+          "provenance": "score@0.5"
         }
       ],
       "fusions": [
@@ -4930,19 +4850,10 @@
         ]
       },
       {
-        "kind": "Collocation",
+        "kind": "VERB",
         "members": [
           {
             "offset": 11
-          },
-          {
-            "offset": 40
-          },
-          {
-            "offset": 42
-          },
-          {
-            "offset": 44
           }
         ]
       },
@@ -4966,11 +4877,42 @@
             "offset": 31
           }
         ]
+      },
+      {
+        "kind": "ADP",
+        "members": [
+          {
+            "offset": 40
+          }
+        ]
+      },
+      {
+        "kind": "NOUN",
+        "members": [
+          {
+            "offset": 42,
+            "role": "Article"
+          },
+          {
+            "offset": 44,
+            "role": "Head"
+          }
+        ]
       }
     ],
-    "note": "A Funktionsverbgefüge that should be one Collocation and today never fires; `zur` is fused.",
+    "goldPhrasemes": [
+      {
+        "kind": "Collocation",
+        "words": [
+          11,
+          40,
+          44
+        ]
+      }
+    ],
+    "note": "A Funktionsverbgefüge: a Collocation over three words, with the fused article reaching the noun through its own word; `den Schülern` and `Material` are free arguments.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -5069,29 +5011,23 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.87,
-            "Unresolved": 0.07,
-            "DET": 0.04,
-            "ADV": 0.02,
-            "Proverb": 0,
-            "PUNCT": 0,
-            "ADJ": 0,
-            "PROPN": 0,
-            "X": 0,
-            "ADP": 0,
+            "PRON": 0.79,
+            "DET": 0.16,
+            "Unresolved": 0.03,
+            "NUM": 0.01,
+            "ADV": 0.01,
             "NOUN": 0,
+            "PUNCT": 0,
+            "PROPN": 0,
+            "ADP": 0,
             "SYM": 0,
-            "Aphorism": 0,
-            "DiscourseFormula": 0,
-            "VERB": 0,
-            "Idiom": 0,
-            "SCONJ": 0,
-            "Collocation": 0,
             "CCONJ": 0,
+            "ADJ": 0,
+            "PART": 0,
             "INTJ": 0,
-            "Fusion": 0,
-            "NUM": 0,
-            "PART": 0
+            "SCONJ": 0,
+            "X": 0,
+            "VERB": 0
           },
           "identity": {
             "candidates": [
@@ -5137,29 +5073,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.96,
-            "Unresolved": 0.03,
-            "PRON": 0.01,
-            "Proverb": 0,
-            "PUNCT": 0,
-            "ADJ": 0,
-            "PROPN": 0,
-            "X": 0,
-            "ADP": 0,
+            "VERB": 0.99,
+            "Unresolved": 0.01,
             "NOUN": 0,
-            "SYM": 0,
-            "Aphorism": 0,
-            "SCONJ": 0,
-            "Idiom": 0,
-            "DiscourseFormula": 0,
-            "DET": 0,
-            "Collocation": 0,
-            "INTJ": 0,
+            "PUNCT": 0,
+            "PROPN": 0,
+            "ADP": 0,
+            "PRON": 0,
             "CCONJ": 0,
-            "NUM": 0,
-            "ADV": 0,
+            "SYM": 0,
+            "DET": 0,
+            "ADJ": 0,
             "PART": 0,
-            "Fusion": 0
+            "NUM": 0,
+            "INTJ": 0,
+            "X": 0,
+            "SCONJ": 0,
+            "ADV": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -5173,29 +5103,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.78,
-            "ADJ": 0.11,
-            "Unresolved": 0.07,
-            "VERB": 0.02,
-            "Collocation": 0.02,
-            "Proverb": 0,
-            "PUNCT": 0,
-            "PROPN": 0,
-            "X": 0,
-            "ADP": 0,
+            "ADV": 0.88,
+            "ADJ": 0.1,
+            "VERB": 0.01,
+            "Unresolved": 0.01,
             "NOUN": 0,
-            "SYM": 0,
-            "Aphorism": 0,
-            "Fusion": 0,
-            "Idiom": 0,
-            "SCONJ": 0,
             "PRON": 0,
-            "DET": 0,
+            "PROPN": 0,
+            "ADP": 0,
+            "PUNCT": 0,
+            "SYM": 0,
             "CCONJ": 0,
-            "INTJ": 0,
-            "DiscourseFormula": 0,
+            "DET": 0,
+            "PART": 0,
             "NUM": 0,
-            "PART": 0
+            "INTJ": 0,
+            "X": 0,
+            "SCONJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -5209,28 +5133,22 @@
             }
           ],
           "routeMass": {
-            "PRON": 0.87,
-            "Unresolved": 0.08,
+            "PRON": 0.86,
+            "DET": 0.06,
+            "Unresolved": 0.03,
+            "NUM": 0.02,
             "NOUN": 0.01,
-            "VERB": 0.01,
-            "DET": 0.01,
-            "NUM": 0.01,
             "ADV": 0.01,
-            "Proverb": 0,
+            "VERB": 0.01,
             "PUNCT": 0,
-            "ADJ": 0,
             "PROPN": 0,
-            "X": 0,
             "ADP": 0,
             "SYM": 0,
-            "Aphorism": 0,
-            "Fusion": 0,
-            "Collocation": 0,
-            "Idiom": 0,
             "CCONJ": 0,
-            "INTJ": 0,
-            "DiscourseFormula": 0,
+            "ADJ": 0,
             "PART": 0,
+            "INTJ": 0,
+            "X": 0,
             "SCONJ": 0
           },
           "identity": {
@@ -5259,9 +5177,9 @@
             ],
             "mass": {
               "DET:viel:Ind": 0,
-              "PRON:viele:Ind": 1,
-              "NoMatch": 0,
-              "Unresolved": 0
+              "PRON:viele:Ind": 0.98,
+              "NoMatch": 0.01,
+              "Unresolved": 0.01
             }
           },
           "provenance": "vote"
@@ -5275,29 +5193,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.91,
-            "PRON": 0.05,
-            "Unresolved": 0.03,
-            "ADV": 0.01,
-            "Proverb": 0,
-            "PUNCT": 0,
-            "ADJ": 0,
-            "PROPN": 0,
-            "X": 0,
-            "ADP": 0,
+            "VERB": 0.99,
+            "PRON": 0.01,
             "NOUN": 0,
+            "PUNCT": 0,
+            "PROPN": 0,
+            "ADP": 0,
             "SYM": 0,
-            "Aphorism": 0,
-            "DiscourseFormula": 0,
-            "Collocation": 0,
-            "Idiom": 0,
-            "Fusion": 0,
             "CCONJ": 0,
             "DET": 0,
-            "INTJ": 0,
-            "NUM": 0,
+            "ADJ": 0,
             "PART": 0,
-            "SCONJ": 0
+            "NUM": 0,
+            "INTJ": 0,
+            "SCONJ": 0,
+            "X": 0,
+            "Unresolved": 0,
+            "ADV": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -5311,34 +5223,29 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.56,
-            "VERB": 0.2,
-            "ADJ": 0.07,
-            "Unresolved": 0.05,
-            "PRON": 0.04,
-            "Collocation": 0.02,
-            "Proverb": 0.01,
-            "NOUN": 0.01,
-            "DET": 0.01,
-            "CCONJ": 0.01,
-            "SCONJ": 0.01,
+            "ADV": 0.79,
+            "VERB": 0.16,
+            "ADJ": 0.04,
+            "Unresolved": 0.01,
+            "NOUN": 0,
             "PUNCT": 0,
             "PROPN": 0,
-            "X": 0,
             "ADP": 0,
+            "PRON": 0,
             "SYM": 0,
-            "Aphorism": 0,
-            "DiscourseFormula": 0,
-            "Idiom": 0,
-            "Fusion": 0,
-            "INTJ": 0,
+            "CCONJ": 0,
+            "DET": 0,
+            "PART": 0,
             "NUM": 0,
-            "PART": 0
+            "INTJ": 0,
+            "SCONJ": 0,
+            "X": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -5393,9 +5300,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "Standalone quantifiers are pronouns; the DET twin is the trap.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   },
@@ -5480,29 +5388,23 @@
             }
           ],
           "routeMass": {
-            "NOUN": 0.85,
-            "DET": 0.115,
-            "Unresolved": 0.03,
+            "NOUN": 0.935,
+            "Unresolved": 0.045,
+            "DET": 0.015,
             "PRON": 0.005,
-            "DiscourseFormula": 0,
-            "Idiom": 0,
-            "ADP": 0,
-            "ADV": 0,
-            "PROPN": 0,
-            "PUNCT": 0,
-            "Collocation": 0,
-            "SCONJ": 0,
-            "Proverb": 0,
-            "Aphorism": 0,
-            "ADJ": 0,
-            "VERB": 0,
-            "X": 0,
-            "Fusion": 0,
-            "PART": 0,
             "CCONJ": 0,
+            "VERB": 0,
+            "ADP": 0,
+            "PROPN": 0,
+            "SCONJ": 0,
+            "PUNCT": 0,
+            "X": 0,
+            "ADV": 0,
+            "SYM": 0,
+            "PART": 0,
             "NUM": 0,
             "INTJ": 0,
-            "SYM": 0
+            "ADJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -5516,29 +5418,23 @@
             }
           ],
           "routeMass": {
-            "VERB": 0.98,
-            "Unresolved": 0.01,
-            "NOUN": 0.01,
-            "DiscourseFormula": 0,
-            "DET": 0,
-            "INTJ": 0,
-            "ADV": 0,
-            "ADP": 0,
-            "PRON": 0,
-            "PROPN": 0,
-            "PUNCT": 0,
-            "Collocation": 0,
-            "SCONJ": 0,
-            "Proverb": 0,
-            "Aphorism": 0,
-            "ADJ": 0,
-            "X": 0,
-            "Fusion": 0,
-            "PART": 0,
+            "VERB": 1,
             "CCONJ": 0,
+            "Unresolved": 0,
+            "ADP": 0,
+            "PROPN": 0,
+            "SCONJ": 0,
+            "PRON": 0,
+            "PUNCT": 0,
+            "SYM": 0,
+            "DET": 0,
+            "ADV": 0,
+            "X": 0,
+            "NOUN": 0,
+            "PART": 0,
             "NUM": 0,
-            "Idiom": 0,
-            "SYM": 0
+            "INTJ": 0,
+            "ADJ": 0
           },
           "identity": {
             "candidates": [
@@ -5557,8 +5453,8 @@
               }
             ],
             "mass": {
-              "AUX:sein:": 0,
-              "NoMatch": 1,
+              "AUX:sein:": 0.01,
+              "NoMatch": 0.99,
               "Unresolved": 0
             }
           },
@@ -5573,29 +5469,23 @@
             }
           ],
           "routeMass": {
-            "ADV": 0.81,
-            "Unresolved": 0.11,
-            "Collocation": 0.04,
-            "ADJ": 0.02,
-            "VERB": 0.01,
+            "ADV": 0.97,
+            "Unresolved": 0.01,
             "PART": 0.01,
-            "DiscourseFormula": 0,
-            "DET": 0,
-            "Idiom": 0,
-            "PRON": 0,
+            "ADJ": 0.01,
+            "CCONJ": 0,
+            "VERB": 0,
             "ADP": 0,
             "PROPN": 0,
-            "PUNCT": 0,
             "SCONJ": 0,
-            "Aphorism": 0,
-            "Proverb": 0,
+            "PRON": 0,
+            "PUNCT": 0,
             "X": 0,
+            "DET": 0,
+            "SYM": 0,
             "NOUN": 0,
-            "Fusion": 0,
-            "CCONJ": 0,
             "NUM": 0,
-            "INTJ": 0,
-            "SYM": 0
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
@@ -5609,34 +5499,29 @@
             }
           ],
           "routeMass": {
-            "ADJ": 0.92,
-            "Unresolved": 0.04,
-            "Collocation": 0.04,
-            "DiscourseFormula": 0,
-            "DET": 0,
-            "Idiom": 0,
-            "PRON": 0,
-            "ADV": 0,
+            "ADJ": 1,
+            "CCONJ": 0,
+            "Unresolved": 0,
+            "VERB": 0,
             "ADP": 0,
             "PROPN": 0,
-            "PUNCT": 0,
             "SCONJ": 0,
-            "Proverb": 0,
-            "Aphorism": 0,
-            "VERB": 0,
+            "PRON": 0,
+            "PUNCT": 0,
+            "SYM": 0,
+            "DET": 0,
+            "ADV": 0,
             "X": 0,
-            "Fusion": 0,
             "NOUN": 0,
             "PART": 0,
-            "CCONJ": 0,
             "NUM": 0,
-            "INTJ": 0,
-            "SYM": 0
+            "INTJ": 0
           },
           "identity": null,
           "provenance": "vote"
         }
       ],
+      "phrasemes": [],
       "fusions": []
     },
     "gold": [
@@ -5678,9 +5563,10 @@
         ]
       }
     ],
+    "goldPhrasemes": [],
     "note": "Code-switched words: no multilingual support, so they are X or Unresolved.",
     "produced": {
-      "design": "anchored+extended+groupVote τ0.6 +identity:rubric→headword +roles",
+      "design": "layered(layered-trimmed): anchored+lexeme+groupVote τ0.6 +identity:rubric→headword +roles +phraseme:score@0.5",
       "at": "2026-09-21"
     }
   }
