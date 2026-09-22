@@ -33,7 +33,8 @@
 		"access": "public"
 	},
 	"scripts": {
-		"build": "bun ../../tooling/manifest-policy.ts package && rm -rf dist && bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && rm -rf dist && bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",

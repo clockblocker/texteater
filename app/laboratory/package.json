@@ -7,9 +7,11 @@
 		"node": "24.x"
 	},
 	"scripts": {
-		"build": "bun ../../tooling/manifest-policy.ts package && vite build && bun build src/server.ts --outdir dist/server --target bun",
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && vite build && bun build src/server.ts --outdir dist/server --target bun",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
-		"dev": "bun scripts/dev.ts",
+		"dev": "turbo run dev:package",
+		"dev:package": "bun scripts/dev.ts",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"test": "bun test",

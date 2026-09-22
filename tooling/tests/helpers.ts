@@ -11,7 +11,7 @@ export async function temporaryRepository(): Promise<string> {
 		engines: { node: "24.x" },
 		workspaces: ["app/*", "battery/*"],
 		scripts: {
-			build: "bun tooling/manifest-policy.ts repository && bun tooling/run-workspaces.ts build",
+			build: "bun tooling/manifest-policy.ts repository && turbo run build:package",
 			validate: "bun tooling/validate-repository.ts",
 		},
 		devDependencies: {
@@ -52,7 +52,9 @@ export async function addWorkspace(
 		exports: options.exports ?? { ".": "./dist/index.js" },
 		files: ["dist"],
 		scripts: {
-			build: "bun ../../tooling/manifest-policy.ts package && bun build src/index.ts",
+			build: "turbo run build:package",
+			"build:package":
+				"bun ../../tooling/manifest-policy.ts package && bun build src/index.ts",
 			test: "bun test",
 			validate: "bun ../../tooling/validate-package.ts",
 		},

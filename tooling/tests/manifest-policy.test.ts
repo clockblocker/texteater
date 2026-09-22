@@ -98,3 +98,27 @@ test("package policy inspects only the caller workspace", async () => {
 
 	expect(issues).toEqual([]);
 });
+
+test("package policy requires build and dev to enter through Turbo", async () => {
+	const root = await temporaryRepository();
+	const workspace = await addWorkspace(root, {
+		kind: "app",
+		name: "direct",
+	});
+	const manifest = await Bun.file(join(workspace, "package.json")).json();
+	manifest.scripts.build =
+		"bun ../../tooling/manifest-policy.ts package && bun build src/index.ts";
+	manifest.scripts.dev = "vite";
+	await writeJson(join(workspace, "package.json"), manifest);
+
+	const issues = await validateManifestPolicy({
+		cwd: workspace,
+		mode: "package",
+	});
+
+	expect(issues.map((issue) => issue.message)).toEqual([
+		'build must be "turbo run build:package"',
+		'dev must be "turbo run dev:package"',
+		'dev requires a "dev:package" script for Turbo to run',
+	]);
+});

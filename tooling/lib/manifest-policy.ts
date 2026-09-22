@@ -25,7 +25,22 @@ export const governedDependencies = [
 	"knip",
 ] as const;
 
-const requiredWorkspaceScripts = ["build", "test", "validate"] as const;
+const requiredWorkspaceScripts = [
+	"build",
+	"build:package",
+	"test",
+	"validate",
+] as const;
+
+/**
+ * Turbo entry points. `build` and `dev` delegate to Turbo so that every
+ * workspace dependency is built first; the package-local work lives in the
+ * `:package` script that Turbo runs.
+ */
+const turboEntryScripts = {
+	build: "turbo run build:package",
+	dev: "turbo run dev:package",
+} as const;
 const dependencyFields = [
 	"dependencies",
 	"devDependencies",
@@ -84,7 +99,23 @@ function validateWorkspaceManifest(
 		scripts.validate === "bun ../../tooling/validate-package.ts",
 		'validate must be "bun ../../tooling/validate-package.ts"',
 	);
-	for (const script of ["build", "run"] as const) {
+	for (const [entry, expected] of Object.entries(turboEntryScripts)) {
+		const local = `${entry}:package`;
+		if (!scripts[entry] && !scripts[local]) continue;
+		add(
+			issues,
+			location,
+			scripts[entry] === expected,
+			`${entry} must be "${expected}"`,
+		);
+		add(
+			issues,
+			location,
+			typeof scripts[local] === "string",
+			`${entry} requires a "${local}" script for Turbo to run`,
+		);
+	}
+	for (const script of ["build:package", "run"] as const) {
 		if (!scripts[script]) continue;
 		add(
 			issues,

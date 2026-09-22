@@ -41,7 +41,8 @@
 		"node": "24.x"
 	},
 	"scripts": {
-		"build": "bun ../../tooling/manifest-policy.ts package && bun run check && bun run build:js && bun run build:types",
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && bun run build:js && bun run build:types",
 		"build:js": "rm -rf dist && bun run esbuild lib/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.js && bun run esbuild lib/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.cjs && bun run esbuild workspace/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.js && bun run esbuild workspace/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.cjs && cp workspace/workspace.css dist/workspace.css",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json && mv dist/index.d.ts dist/react-resizable-panels.d.ts && bun ../../node_modules/typescript/bin/tsc -p tsconfig.workspace.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",

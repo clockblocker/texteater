@@ -12,10 +12,10 @@
 	"scripts": {
 		"benchmark:dum-shared": "bun tooling/dum-entrypoint-rss/shared.ts",
 		"benchmark:dum-entrypoints": "bun tooling/dum-entrypoint-rss/benchmark.ts",
-		"build": "bun tooling/manifest-policy.ts repository && turbo run build",
+		"build": "bun tooling/manifest-policy.ts repository && turbo run build:package",
 		"check": "bun tooling/run-workspaces.ts check --if-present",
 		"check:docs": "bun tooling/documentation-integrity.ts",
-		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev --filter=@texteater/tf-demo",
+		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev:package --filter=@texteater/tf-demo",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",
 		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",
