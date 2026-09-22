@@ -14,6 +14,7 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
+	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		inflectionalFeatures: null,

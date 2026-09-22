@@ -18,6 +18,7 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
+	governedPrepositionEvidence: { attested: "um", orthography: "Standard" },
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -43,7 +44,6 @@ const occurrenceAttestation = {
 			family: "Lexeme",
 			kind: "VERB",
 			coreFeatures: {
-				hasGovPrep: "um",
 				hasSepPrefix: null,
 				lexicallyReflexive: null,
 				verbType: null,

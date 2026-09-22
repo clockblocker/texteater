@@ -730,7 +730,6 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 		kind: "VERB",
 		canonicalForm: "geben",
 		coreFeatures: {
-			hasGovPrep: null,
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
 			verbType: null,
@@ -789,12 +788,14 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 				],
 				realizationCoverage: "Full",
 				expletiveEvidence: { attested: "Es", orthography: "Standard" },
+				governedPrepositionEvidence: null,
 			},
 		},
 	});
 	expect(db.rows("attestations")).toHaveLength(1);
 	expect(db.rows("attestations")[0]).toMatchObject({
 		expletiveEvidence: { attested: "Es", orthography: "Standard" },
+		governedPrepositionEvidence: null,
 	});
 	const componentLemma = db.rows("lemmas").find((row) => row.kind === "PRON");
 	const componentReading = db

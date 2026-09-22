@@ -27,7 +27,6 @@ const occurrenceAttestation = {
 			family: "Lexeme",
 			kind: "VERB",
 			coreFeatures: {
-				hasGovPrep: "on",
 				abbr: null,
 				extPos: null,
 				phrasal: null,
@@ -42,5 +41,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "We [depend] on accurate labels.",
 	classifierNotes:
-		"Depend on uses hasGovPrep rather than phrasal because on is governed by the verb.",
+		"Depend on does not use phrasal: on is a preposition the verb governs, not a particle, and government is not a Lemma feature.",
 } as const;

@@ -2,8 +2,9 @@ export const verbalCompositionGuidance = `
 Analyze the complete supplied verbal target. A fixed nonreferential subject es
 plus its verb is a supported VERB target in this domain, even though es is a
 pronoun when analyzed alone. es gibt, gibt es and es gab have Lemma geben;
-es regnet has regnen. es geht um has gehen with hasGovPrep um; es handelt sich
-um has sich handeln with hasGovPrep um and lexicallyReflexive Yes. These are
+es regnet has regnen. es geht um has gehen, es handelt sich um has sich
+handeln with lexicallyReflexive Yes; in both, um is the owned member named as
+governed-preposition evidence, never a Lemma feature. These are
 not unsupported mixed-POS groups and do not require a new es-prefixed Lemma.
 Use expletive Subject for these complete targets, person 3 and number Sing
 when finite. Retain tense from the verb and lowercase normalized es while

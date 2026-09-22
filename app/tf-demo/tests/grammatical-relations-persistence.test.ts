@@ -317,7 +317,10 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 	await db.patch(restored._id, {
 		knowledge: { definition: "My edited definition" },
 	});
-	await completeAuthoredComponentKnowledge({ db } as never, reference.reading);
+	await completeAuthoredComponentKnowledge(
+		{ db } as never,
+		reference.reading,
+	);
 	expect(
 		(
 			db.rows("accumulatedKnowledge")[0]?.knowledge as

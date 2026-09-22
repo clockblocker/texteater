@@ -315,15 +315,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		values: { Mod: "A meaning-bearing modal lexical identity" },
 		unmarked: "Not a modal identity",
 	},
-	"lemma.coreFeatures.hasGovPrep": {
-		question:
-			"Does this verb's lexical identity select a fixed governed preposition? A free adjunct preposition or detached separable prefix does not qualify.",
-		values: {
-			Present:
-				"A preposition is lexically selected by this verb identity",
-		},
-		unmarked: "No lexically governed preposition",
-	},
 	"lemma.coreFeatures.hasSepPrefix": {
 		question:
 			"Does this verb's lexical identity contain a separable prefix, whether attached or detached here? Distinguish it from a governed preposition and an adposition with its own complement.",

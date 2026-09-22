@@ -3337,17 +3337,14 @@ type _Output970 = {
 };
 type _Output979 = "Reading";
 type _Output981 = "Lemma";
-type _Output984 = string;
-type _Output983 = _Output984 | null;
-type _Output985 = _Output596 | null;
-type _Output987 = "Yes";
-type _Output986 = _Output987 | null;
-type _Output988 = _Output848 | null;
+type _Output983 = _Output596 | null;
+type _Output985 = "Yes";
+type _Output984 = _Output985 | null;
+type _Output986 = _Output848 | null;
 type _Output982 = {
-	hasGovPrep: _Output983;
-	hasSepPrefix: _Output985;
-	lexicallyReflexive: _Output986;
-	verbType: _Output988;
+	hasSepPrefix: _Output983;
+	lexicallyReflexive: _Output984;
+	verbType: _Output986;
 };
 type _Output980 = {
 	unitKind: _Output981;
@@ -3362,41 +3359,41 @@ type _Output978 = {
 	lemma: _Output980;
 	emojiDescription: _Output569;
 };
-type _Output990 = "Reading";
-type _Output992 = "Lemma";
-type _Output993 = Record<string, never>;
-type _Output991 = {
-	unitKind: _Output992;
+type _Output988 = "Reading";
+type _Output990 = "Lemma";
+type _Output991 = Record<string, never>;
+type _Output989 = {
+	unitKind: _Output990;
 	language: _Output125;
 	family: _Output126;
 	kind: _Output127;
 	canonicalForm: _Output567;
-	coreFeatures: _Output993;
+	coreFeatures: _Output991;
 };
-type _Output989 = {
-	unitKind: _Output990;
-	lemma: _Output991;
+type _Output987 = {
+	unitKind: _Output988;
+	lemma: _Output989;
 	emojiDescription: _Output569;
 };
-type _Output995 = "Reading";
-type _Output997 = "Lemma";
-type _Output998 = Record<string, never>;
-type _Output996 = {
-	unitKind: _Output997;
+type _Output993 = "Reading";
+type _Output995 = "Lemma";
+type _Output996 = Record<string, never>;
+type _Output994 = {
+	unitKind: _Output995;
 	language: _Output129;
 	family: _Output130;
 	kind: _Output131;
 	canonicalForm: _Output567;
-	coreFeatures: _Output998;
+	coreFeatures: _Output996;
 };
-type _Output994 = {
-	unitKind: _Output995;
-	lemma: _Output996;
+type _Output992 = {
+	unitKind: _Output993;
+	lemma: _Output994;
 	emojiDescription: _Output569;
 };
-type _Output1000 = "Reading";
-type _Output1002 = "Lemma";
-type _Output1005 =
+type _Output998 = "Reading";
+type _Output1000 = "Lemma";
+type _Output1003 =
 	| "Greeting"
 	| "Farewell"
 	| "Apology"
@@ -3407,189 +3404,189 @@ type _Output1005 =
 	| "Reaction"
 	| "Initiation"
 	| "Transition";
-type _Output1004 = _Output1005 | null;
-type _Output1003 = { discourseFormulaRole: _Output1004 };
-type _Output1001 = {
-	unitKind: _Output1002;
+type _Output1002 = _Output1003 | null;
+type _Output1001 = { discourseFormulaRole: _Output1002 };
+type _Output999 = {
+	unitKind: _Output1000;
 	language: _Output133;
 	family: _Output134;
 	kind: _Output135;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1003;
+	coreFeatures: _Output1001;
 };
-type _Output999 = {
-	unitKind: _Output1000;
-	lemma: _Output1001;
+type _Output997 = {
+	unitKind: _Output998;
+	lemma: _Output999;
 	emojiDescription: _Output569;
 };
-type _Output1007 = "Reading";
-type _Output1009 = "Lemma";
-type _Output1010 = Record<string, never>;
-type _Output1008 = {
-	unitKind: _Output1009;
+type _Output1005 = "Reading";
+type _Output1007 = "Lemma";
+type _Output1008 = Record<string, never>;
+type _Output1006 = {
+	unitKind: _Output1007;
 	language: _Output137;
 	family: _Output138;
 	kind: _Output139;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1010;
+	coreFeatures: _Output1008;
 };
-type _Output1006 = {
-	unitKind: _Output1007;
-	lemma: _Output1008;
+type _Output1004 = {
+	unitKind: _Output1005;
+	lemma: _Output1006;
 	emojiDescription: _Output569;
 };
-type _Output1012 = "Reading";
-type _Output1014 = "Lemma";
-type _Output1015 = Record<string, never>;
-type _Output1013 = {
-	unitKind: _Output1014;
+type _Output1010 = "Reading";
+type _Output1012 = "Lemma";
+type _Output1013 = Record<string, never>;
+type _Output1011 = {
+	unitKind: _Output1012;
 	language: _Output141;
 	family: _Output142;
 	kind: _Output143;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1015;
+	coreFeatures: _Output1013;
 };
-type _Output1011 = {
-	unitKind: _Output1012;
-	lemma: _Output1013;
+type _Output1009 = {
+	unitKind: _Output1010;
+	lemma: _Output1011;
 	emojiDescription: _Output569;
 };
-type _Output1017 = "Reading";
-type _Output1019 = "Lemma";
-type _Output1021 = _Output810 | null;
-type _Output1023 = "ADP" | "ADV" | "SCONJ";
+type _Output1015 = "Reading";
+type _Output1017 = "Lemma";
+type _Output1019 = _Output810 | null;
+type _Output1021 = "ADP" | "ADV" | "SCONJ";
+type _Output1020 = _Output1021 | null;
+type _Output1023 = "Combi" | "Word";
 type _Output1022 = _Output1023 | null;
-type _Output1025 = "Combi" | "Word";
+type _Output1025 = "Frac" | "Ord";
 type _Output1024 = _Output1025 | null;
-type _Output1027 = "Frac" | "Ord";
+type _Output1027 = "Expr";
 type _Output1026 = _Output1027 | null;
-type _Output1029 = "Expr";
-type _Output1028 = _Output1029 | null;
-type _Output1020 = {
-	abbr: _Output1021;
-	extPos: _Output1022;
-	numForm: _Output1024;
-	numType: _Output1026;
-	style: _Output1028;
-};
 type _Output1018 = {
-	unitKind: _Output1019;
+	abbr: _Output1019;
+	extPos: _Output1020;
+	numForm: _Output1022;
+	numType: _Output1024;
+	style: _Output1026;
+};
+type _Output1016 = {
+	unitKind: _Output1017;
 	language: _Output145;
 	family: _Output146;
 	kind: _Output147;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1020;
+	coreFeatures: _Output1018;
 };
-type _Output1016 = {
-	unitKind: _Output1017;
-	lemma: _Output1018;
+type _Output1014 = {
+	unitKind: _Output1015;
+	lemma: _Output1016;
 	emojiDescription: _Output569;
 };
-type _Output1031 = "Reading";
-type _Output1033 = "Lemma";
-type _Output1035 = _Output810 | null;
-type _Output1037 = "ADP" | "ADV" | "SCONJ";
-type _Output1036 = _Output1037 | null;
-type _Output1034 = { abbr: _Output1035; extPos: _Output1036 };
-type _Output1032 = {
-	unitKind: _Output1033;
+type _Output1029 = "Reading";
+type _Output1031 = "Lemma";
+type _Output1033 = _Output810 | null;
+type _Output1035 = "ADP" | "ADV" | "SCONJ";
+type _Output1034 = _Output1035 | null;
+type _Output1032 = { abbr: _Output1033; extPos: _Output1034 };
+type _Output1030 = {
+	unitKind: _Output1031;
 	language: _Output149;
 	family: _Output150;
 	kind: _Output151;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1034;
+	coreFeatures: _Output1032;
 };
-type _Output1030 = {
-	unitKind: _Output1031;
-	lemma: _Output1032;
+type _Output1028 = {
+	unitKind: _Output1029;
+	lemma: _Output1030;
 	emojiDescription: _Output569;
 };
-type _Output1039 = "Reading";
-type _Output1041 = "Lemma";
-type _Output1043 = _Output810 | null;
-type _Output1045 = "ADP" | "ADV" | "CCONJ" | "SCONJ";
+type _Output1037 = "Reading";
+type _Output1039 = "Lemma";
+type _Output1041 = _Output810 | null;
+type _Output1043 = "ADP" | "ADV" | "CCONJ" | "SCONJ";
+type _Output1042 = _Output1043 | null;
+type _Output1045 = "Word";
 type _Output1044 = _Output1045 | null;
-type _Output1047 = "Word";
+type _Output1047 = "Frac" | "Mult" | "Ord";
 type _Output1046 = _Output1047 | null;
-type _Output1049 = "Frac" | "Mult" | "Ord";
+type _Output1050 = "Dem" | "Ind" | "Int" | "Neg" | "Rel" | "Tot";
+type _Output1051 = [_Output1050, ...Array<_Output1050>];
+type _Output1049 = _Output1050 | _Output1051;
 type _Output1048 = _Output1049 | null;
-type _Output1052 = "Dem" | "Ind" | "Int" | "Neg" | "Rel" | "Tot";
-type _Output1053 = [_Output1052, ...Array<_Output1052>];
-type _Output1051 = _Output1052 | _Output1053;
-type _Output1050 = _Output1051 | null;
-type _Output1055 = "Expr" | "Slng";
-type _Output1054 = _Output1055 | null;
-type _Output1042 = {
-	abbr: _Output1043;
-	extPos: _Output1044;
-	numForm: _Output1046;
-	numType: _Output1048;
-	pronType: _Output1050;
-	style: _Output1054;
-};
+type _Output1053 = "Expr" | "Slng";
+type _Output1052 = _Output1053 | null;
 type _Output1040 = {
-	unitKind: _Output1041;
+	abbr: _Output1041;
+	extPos: _Output1042;
+	numForm: _Output1044;
+	numType: _Output1046;
+	pronType: _Output1048;
+	style: _Output1052;
+};
+type _Output1038 = {
+	unitKind: _Output1039;
 	language: _Output153;
 	family: _Output154;
 	kind: _Output155;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1042;
+	coreFeatures: _Output1040;
 };
-type _Output1038 = {
-	unitKind: _Output1039;
-	lemma: _Output1040;
+type _Output1036 = {
+	unitKind: _Output1037;
+	lemma: _Output1038;
 	emojiDescription: _Output569;
 };
-type _Output1057 = "Reading";
-type _Output1059 = "Lemma";
-type _Output1061 = _Output810 | null;
-type _Output1063 = "Arch" | "Vrnc";
-type _Output1062 = _Output1063 | null;
-type _Output1060 = { abbr: _Output1061; style: _Output1062 };
-type _Output1058 = {
-	unitKind: _Output1059;
+type _Output1055 = "Reading";
+type _Output1057 = "Lemma";
+type _Output1059 = _Output810 | null;
+type _Output1061 = "Arch" | "Vrnc";
+type _Output1060 = _Output1061 | null;
+type _Output1058 = { abbr: _Output1059; style: _Output1060 };
+type _Output1056 = {
+	unitKind: _Output1057;
 	language: _Output157;
 	family: _Output158;
 	kind: _Output159;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1060;
+	coreFeatures: _Output1058;
 };
-type _Output1056 = {
-	unitKind: _Output1057;
-	lemma: _Output1058;
+type _Output1054 = {
+	unitKind: _Output1055;
+	lemma: _Output1056;
 	emojiDescription: _Output569;
 };
-type _Output1065 = "Reading";
-type _Output1067 = "Lemma";
-type _Output1069 = _Output810 | null;
-type _Output1071 = "Neg";
-type _Output1070 = _Output1071 | null;
-type _Output1068 = { abbr: _Output1069; polarity: _Output1070 };
-type _Output1066 = {
-	unitKind: _Output1067;
+type _Output1063 = "Reading";
+type _Output1065 = "Lemma";
+type _Output1067 = _Output810 | null;
+type _Output1069 = "Neg";
+type _Output1068 = _Output1069 | null;
+type _Output1066 = { abbr: _Output1067; polarity: _Output1068 };
+type _Output1064 = {
+	unitKind: _Output1065;
 	language: _Output161;
 	family: _Output162;
 	kind: _Output163;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1068;
+	coreFeatures: _Output1066;
 };
-type _Output1064 = {
-	unitKind: _Output1065;
-	lemma: _Output1066;
+type _Output1062 = {
+	unitKind: _Output1063;
+	lemma: _Output1064;
 	emojiDescription: _Output569;
 };
-type _Output1073 = "Reading";
-type _Output1075 = "Lemma";
-type _Output1077 = _Output810 | null;
-type _Output1079 = "Def" | "Ind";
+type _Output1071 = "Reading";
+type _Output1073 = "Lemma";
+type _Output1075 = _Output810 | null;
+type _Output1077 = "Def" | "Ind";
+type _Output1076 = _Output1077 | null;
+type _Output1079 = "ADV" | "PRON";
 type _Output1078 = _Output1079 | null;
-type _Output1081 = "ADV" | "PRON";
+type _Output1081 = "Word";
 type _Output1080 = _Output1081 | null;
-type _Output1083 = "Word";
+type _Output1083 = "Frac";
 type _Output1082 = _Output1083 | null;
-type _Output1085 = "Frac";
-type _Output1084 = _Output1085 | null;
-type _Output1088 =
+type _Output1086 =
 	| "Art"
 	| "Dem"
 	| "Ind"
@@ -3598,174 +3595,174 @@ type _Output1088 =
 	| "Rcp"
 	| "Rel"
 	| "Tot";
-type _Output1089 = [_Output1088, ...Array<_Output1088>];
-type _Output1087 = _Output1088 | _Output1089;
-type _Output1086 = _Output1087 | null;
-type _Output1091 = "Vrnc";
-type _Output1090 = _Output1091 | null;
-type _Output1076 = {
-	abbr: _Output1077;
-	definite: _Output1078;
-	extPos: _Output1080;
-	numForm: _Output1082;
-	numType: _Output1084;
-	pronType: _Output1086;
-	style: _Output1090;
-};
+type _Output1087 = [_Output1086, ...Array<_Output1086>];
+type _Output1085 = _Output1086 | _Output1087;
+type _Output1084 = _Output1085 | null;
+type _Output1089 = "Vrnc";
+type _Output1088 = _Output1089 | null;
 type _Output1074 = {
-	unitKind: _Output1075;
+	abbr: _Output1075;
+	definite: _Output1076;
+	extPos: _Output1078;
+	numForm: _Output1080;
+	numType: _Output1082;
+	pronType: _Output1084;
+	style: _Output1088;
+};
+type _Output1072 = {
+	unitKind: _Output1073;
 	language: _Output165;
 	family: _Output166;
 	kind: _Output167;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1076;
+	coreFeatures: _Output1074;
 };
-type _Output1072 = {
-	unitKind: _Output1073;
-	lemma: _Output1074;
+type _Output1070 = {
+	unitKind: _Output1071;
+	lemma: _Output1072;
 	emojiDescription: _Output569;
 };
-type _Output1093 = "Reading";
-type _Output1095 = "Lemma";
-type _Output1097 = _Output810 | null;
-type _Output1098 = _Output812 | null;
-type _Output1100 = "Neg" | "Pos";
+type _Output1091 = "Reading";
+type _Output1093 = "Lemma";
+type _Output1095 = _Output810 | null;
+type _Output1096 = _Output812 | null;
+type _Output1098 = "Neg" | "Pos";
+type _Output1097 = _Output1098 | null;
+type _Output1100 = "Expr";
 type _Output1099 = _Output1100 | null;
-type _Output1102 = "Expr";
-type _Output1101 = _Output1102 | null;
-type _Output1096 = {
-	abbr: _Output1097;
-	foreign: _Output1098;
-	polarity: _Output1099;
-	style: _Output1101;
-};
 type _Output1094 = {
-	unitKind: _Output1095;
+	abbr: _Output1095;
+	foreign: _Output1096;
+	polarity: _Output1097;
+	style: _Output1099;
+};
+type _Output1092 = {
+	unitKind: _Output1093;
 	language: _Output169;
 	family: _Output170;
 	kind: _Output171;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1096;
+	coreFeatures: _Output1094;
 };
-type _Output1092 = {
-	unitKind: _Output1093;
-	lemma: _Output1094;
+type _Output1090 = {
+	unitKind: _Output1091;
+	lemma: _Output1092;
 	emojiDescription: _Output569;
 };
-type _Output1104 = "Reading";
-type _Output1106 = "Lemma";
-type _Output1108 = _Output810 | null;
-type _Output1110 = "ADV" | "PROPN";
-type _Output1109 = _Output1110 | null;
-type _Output1111 = _Output812 | null;
-type _Output1113 = "Combi" | "Digit" | "Word";
+type _Output1102 = "Reading";
+type _Output1104 = "Lemma";
+type _Output1106 = _Output810 | null;
+type _Output1108 = "ADV" | "PROPN";
+type _Output1107 = _Output1108 | null;
+type _Output1109 = _Output812 | null;
+type _Output1111 = "Combi" | "Digit" | "Word";
+type _Output1110 = _Output1111 | null;
+type _Output1113 = "Card" | "Frac" | "Ord";
 type _Output1112 = _Output1113 | null;
-type _Output1115 = "Card" | "Frac" | "Ord";
+type _Output1115 = "Expr" | "Vrnc";
 type _Output1114 = _Output1115 | null;
-type _Output1117 = "Expr" | "Vrnc";
-type _Output1116 = _Output1117 | null;
-type _Output1107 = {
-	abbr: _Output1108;
-	extPos: _Output1109;
-	foreign: _Output1111;
-	numForm: _Output1112;
-	numType: _Output1114;
-	style: _Output1116;
-};
 type _Output1105 = {
-	unitKind: _Output1106;
+	abbr: _Output1106;
+	extPos: _Output1107;
+	foreign: _Output1109;
+	numForm: _Output1110;
+	numType: _Output1112;
+	style: _Output1114;
+};
+type _Output1103 = {
+	unitKind: _Output1104;
 	language: _Output173;
 	family: _Output174;
 	kind: _Output175;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1107;
+	coreFeatures: _Output1105;
 };
-type _Output1103 = {
-	unitKind: _Output1104;
-	lemma: _Output1105;
+type _Output1101 = {
+	unitKind: _Output1102;
+	lemma: _Output1103;
 	emojiDescription: _Output569;
 };
-type _Output1119 = "Reading";
-type _Output1121 = "Lemma";
-type _Output1123 = _Output810 | null;
-type _Output1125 = "PROPN";
+type _Output1117 = "Reading";
+type _Output1119 = "Lemma";
+type _Output1121 = _Output810 | null;
+type _Output1123 = "PROPN";
+type _Output1122 = _Output1123 | null;
+type _Output1125 = "Digit" | "Roman" | "Word";
 type _Output1124 = _Output1125 | null;
-type _Output1127 = "Digit" | "Roman" | "Word";
+type _Output1127 = "Card" | "Frac";
 type _Output1126 = _Output1127 | null;
-type _Output1129 = "Card" | "Frac";
-type _Output1128 = _Output1129 | null;
-type _Output1122 = {
-	abbr: _Output1123;
-	extPos: _Output1124;
-	numForm: _Output1126;
-	numType: _Output1128;
-};
 type _Output1120 = {
-	unitKind: _Output1121;
+	abbr: _Output1121;
+	extPos: _Output1122;
+	numForm: _Output1124;
+	numType: _Output1126;
+};
+type _Output1118 = {
+	unitKind: _Output1119;
 	language: _Output177;
 	family: _Output178;
 	kind: _Output179;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1122;
+	coreFeatures: _Output1120;
 };
-type _Output1118 = {
-	unitKind: _Output1119;
-	lemma: _Output1120;
+type _Output1116 = {
+	unitKind: _Output1117;
+	lemma: _Output1118;
 	emojiDescription: _Output569;
 };
-type _Output1131 = "Reading";
-type _Output1133 = "Lemma";
-type _Output1136 = "PROPN";
-type _Output1135 = _Output1136 | null;
-type _Output1137 = _Output812 | null;
-type _Output1134 = { extPos: _Output1135; foreign: _Output1137 };
-type _Output1132 = {
-	unitKind: _Output1133;
+type _Output1129 = "Reading";
+type _Output1131 = "Lemma";
+type _Output1134 = "PROPN";
+type _Output1133 = _Output1134 | null;
+type _Output1135 = _Output812 | null;
+type _Output1132 = { extPos: _Output1133; foreign: _Output1135 };
+type _Output1130 = {
+	unitKind: _Output1131;
 	language: _Output181;
 	family: _Output182;
 	kind: _Output183;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1134;
+	coreFeatures: _Output1132;
 };
-type _Output1130 = {
-	unitKind: _Output1131;
-	lemma: _Output1132;
+type _Output1128 = {
+	unitKind: _Output1129;
+	lemma: _Output1130;
 	emojiDescription: _Output569;
 };
-type _Output1139 = "Reading";
-type _Output1141 = "Lemma";
-type _Output1143 = _Output810 | null;
-type _Output1145 = "CCONJ";
+type _Output1137 = "Reading";
+type _Output1139 = "Lemma";
+type _Output1141 = _Output810 | null;
+type _Output1143 = "CCONJ";
+type _Output1142 = _Output1143 | null;
+type _Output1145 = "Neg";
 type _Output1144 = _Output1145 | null;
-type _Output1147 = "Neg";
-type _Output1146 = _Output1147 | null;
-type _Output1142 = {
-	abbr: _Output1143;
-	extPos: _Output1144;
-	polarity: _Output1146;
-};
 type _Output1140 = {
-	unitKind: _Output1141;
+	abbr: _Output1141;
+	extPos: _Output1142;
+	polarity: _Output1144;
+};
+type _Output1138 = {
+	unitKind: _Output1139;
 	language: _Output185;
 	family: _Output186;
 	kind: _Output187;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1142;
+	coreFeatures: _Output1140;
 };
-type _Output1138 = {
-	unitKind: _Output1139;
-	lemma: _Output1140;
+type _Output1136 = {
+	unitKind: _Output1137;
+	lemma: _Output1138;
 	emojiDescription: _Output569;
 };
-type _Output1149 = "Reading";
-type _Output1151 = "Lemma";
-type _Output1153 = _Output810 | null;
-type _Output1155 = "ADV" | "PRON";
+type _Output1147 = "Reading";
+type _Output1149 = "Lemma";
+type _Output1151 = _Output810 | null;
+type _Output1153 = "ADV" | "PRON";
+type _Output1152 = _Output1153 | null;
+type _Output1155 = "1" | "2" | "3";
 type _Output1154 = _Output1155 | null;
-type _Output1157 = "1" | "2" | "3";
-type _Output1156 = _Output1157 | null;
-type _Output1158 = _Output873 | null;
-type _Output1161 =
+type _Output1156 = _Output873 | null;
+type _Output1159 =
 	| "Dem"
 	| "Emp"
 	| "Ind"
@@ -3775,503 +3772,501 @@ type _Output1161 =
 	| "Rcp"
 	| "Rel"
 	| "Tot";
-type _Output1162 = [_Output1161, ...Array<_Output1161>];
-type _Output1160 = _Output1161 | _Output1162;
-type _Output1159 = _Output1160 | null;
-type _Output1164 = "Arch" | "Coll" | "Expr" | "Slng" | "Vrnc";
-type _Output1163 = _Output1164 | null;
-type _Output1152 = {
-	abbr: _Output1153;
-	extPos: _Output1154;
-	person: _Output1156;
-	poss: _Output1158;
-	pronType: _Output1159;
-	style: _Output1163;
-};
+type _Output1160 = [_Output1159, ...Array<_Output1159>];
+type _Output1158 = _Output1159 | _Output1160;
+type _Output1157 = _Output1158 | null;
+type _Output1162 = "Arch" | "Coll" | "Expr" | "Slng" | "Vrnc";
+type _Output1161 = _Output1162 | null;
 type _Output1150 = {
-	unitKind: _Output1151;
+	abbr: _Output1151;
+	extPos: _Output1152;
+	person: _Output1154;
+	poss: _Output1156;
+	pronType: _Output1157;
+	style: _Output1161;
+};
+type _Output1148 = {
+	unitKind: _Output1149;
 	language: _Output189;
 	family: _Output190;
 	kind: _Output191;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1152;
+	coreFeatures: _Output1150;
 };
-type _Output1148 = {
-	unitKind: _Output1149;
-	lemma: _Output1150;
+type _Output1146 = {
+	unitKind: _Output1147;
+	lemma: _Output1148;
 	emojiDescription: _Output569;
 };
-type _Output1166 = "Reading";
-type _Output1168 = "Lemma";
-type _Output1170 = _Output810 | null;
-type _Output1172 = "PROPN";
+type _Output1164 = "Reading";
+type _Output1166 = "Lemma";
+type _Output1168 = _Output810 | null;
+type _Output1170 = "PROPN";
+type _Output1169 = _Output1170 | null;
+type _Output1172 = "Expr";
 type _Output1171 = _Output1172 | null;
-type _Output1174 = "Expr";
-type _Output1173 = _Output1174 | null;
-type _Output1169 = {
-	abbr: _Output1170;
-	extPos: _Output1171;
-	style: _Output1173;
-};
 type _Output1167 = {
-	unitKind: _Output1168;
+	abbr: _Output1168;
+	extPos: _Output1169;
+	style: _Output1171;
+};
+type _Output1165 = {
+	unitKind: _Output1166;
 	language: _Output193;
 	family: _Output194;
 	kind: _Output195;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1169;
+	coreFeatures: _Output1167;
 };
-type _Output1165 = {
-	unitKind: _Output1166;
-	lemma: _Output1167;
+type _Output1163 = {
+	unitKind: _Output1164;
+	lemma: _Output1165;
 	emojiDescription: _Output569;
 };
-type _Output1176 = "Reading";
-type _Output1178 = "Lemma";
-type _Output1179 = Record<string, never>;
-type _Output1177 = {
-	unitKind: _Output1178;
+type _Output1174 = "Reading";
+type _Output1176 = "Lemma";
+type _Output1177 = Record<string, never>;
+type _Output1175 = {
+	unitKind: _Output1176;
 	language: _Output197;
 	family: _Output198;
 	kind: _Output199;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1179;
+	coreFeatures: _Output1177;
 };
-type _Output1175 = {
-	unitKind: _Output1176;
-	lemma: _Output1177;
+type _Output1173 = {
+	unitKind: _Output1174;
+	lemma: _Output1175;
 	emojiDescription: _Output569;
 };
-type _Output1181 = "Reading";
-type _Output1183 = "Lemma";
-type _Output1185 = _Output810 | null;
-type _Output1187 = "ADP" | "SCONJ";
+type _Output1179 = "Reading";
+type _Output1181 = "Lemma";
+type _Output1183 = _Output810 | null;
+type _Output1185 = "ADP" | "SCONJ";
+type _Output1184 = _Output1185 | null;
+type _Output1187 = "Vrnc";
 type _Output1186 = _Output1187 | null;
-type _Output1189 = "Vrnc";
-type _Output1188 = _Output1189 | null;
-type _Output1184 = {
-	abbr: _Output1185;
-	extPos: _Output1186;
-	style: _Output1188;
-};
 type _Output1182 = {
-	unitKind: _Output1183;
+	abbr: _Output1183;
+	extPos: _Output1184;
+	style: _Output1186;
+};
+type _Output1180 = {
+	unitKind: _Output1181;
 	language: _Output201;
 	family: _Output202;
 	kind: _Output203;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1184;
+	coreFeatures: _Output1182;
 };
-type _Output1180 = {
-	unitKind: _Output1181;
-	lemma: _Output1182;
+type _Output1178 = {
+	unitKind: _Output1179;
+	lemma: _Output1180;
 	emojiDescription: _Output569;
 };
-type _Output1191 = "Reading";
-type _Output1193 = "Lemma";
-type _Output1195 = _Output810 | null;
-type _Output1197 = "ADP" | "PROPN";
-type _Output1196 = _Output1197 | null;
-type _Output1194 = { abbr: _Output1195; extPos: _Output1196 };
-type _Output1192 = {
-	unitKind: _Output1193;
+type _Output1189 = "Reading";
+type _Output1191 = "Lemma";
+type _Output1193 = _Output810 | null;
+type _Output1195 = "ADP" | "PROPN";
+type _Output1194 = _Output1195 | null;
+type _Output1192 = { abbr: _Output1193; extPos: _Output1194 };
+type _Output1190 = {
+	unitKind: _Output1191;
 	language: _Output205;
 	family: _Output206;
 	kind: _Output207;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1194;
+	coreFeatures: _Output1192;
 };
-type _Output1190 = {
-	unitKind: _Output1191;
-	lemma: _Output1192;
+type _Output1188 = {
+	unitKind: _Output1189;
+	lemma: _Output1190;
 	emojiDescription: _Output569;
 };
-type _Output1199 = "Reading";
-type _Output1201 = "Lemma";
-type _Output1203 = _Output810 | null;
-type _Output1205 = "ADP" | "CCONJ" | "PROPN";
+type _Output1197 = "Reading";
+type _Output1199 = "Lemma";
+type _Output1201 = _Output810 | null;
+type _Output1203 = "ADP" | "CCONJ" | "PROPN";
+type _Output1202 = _Output1203 | null;
+type _Output1205 = "Yes";
 type _Output1204 = _Output1205 | null;
-type _Output1206 = _Output984 | null;
-type _Output1208 = "Yes";
-type _Output1207 = _Output1208 | null;
-type _Output1210 = "Expr" | "Vrnc";
-type _Output1209 = _Output1210 | null;
-type _Output1202 = {
-	abbr: _Output1203;
-	extPos: _Output1204;
-	hasGovPrep: _Output1206;
-	phrasal: _Output1207;
-	style: _Output1209;
-};
+type _Output1207 = "Expr" | "Vrnc";
+type _Output1206 = _Output1207 | null;
 type _Output1200 = {
-	unitKind: _Output1201;
+	abbr: _Output1201;
+	extPos: _Output1202;
+	phrasal: _Output1204;
+	style: _Output1206;
+};
+type _Output1198 = {
+	unitKind: _Output1199;
 	language: _Output209;
 	family: _Output210;
 	kind: _Output211;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1202;
+	coreFeatures: _Output1200;
 };
-type _Output1198 = {
-	unitKind: _Output1199;
-	lemma: _Output1200;
+type _Output1196 = {
+	unitKind: _Output1197;
+	lemma: _Output1198;
 	emojiDescription: _Output569;
 };
-type _Output1212 = "Reading";
-type _Output1214 = "Lemma";
-type _Output1215 = Record<string, never>;
-type _Output1213 = {
-	unitKind: _Output1214;
+type _Output1209 = "Reading";
+type _Output1211 = "Lemma";
+type _Output1212 = Record<string, never>;
+type _Output1210 = {
+	unitKind: _Output1211;
 	language: _Output257;
 	family: _Output258;
 	kind: _Output259;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1215;
+	coreFeatures: _Output1212;
 };
-type _Output1211 = {
-	unitKind: _Output1212;
-	lemma: _Output1213;
+type _Output1208 = {
+	unitKind: _Output1209;
+	lemma: _Output1210;
 	emojiDescription: _Output569;
 };
-type _Output1217 = "Reading";
-type _Output1219 = "Lemma";
-type _Output1221 = _Output1005 | null;
-type _Output1220 = { discourseFormulaRole: _Output1221 };
-type _Output1218 = {
-	unitKind: _Output1219;
+type _Output1214 = "Reading";
+type _Output1216 = "Lemma";
+type _Output1218 = _Output1003 | null;
+type _Output1217 = { discourseFormulaRole: _Output1218 };
+type _Output1215 = {
+	unitKind: _Output1216;
 	language: _Output261;
 	family: _Output262;
 	kind: _Output263;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1220;
+	coreFeatures: _Output1217;
 };
-type _Output1216 = {
-	unitKind: _Output1217;
-	lemma: _Output1218;
+type _Output1213 = {
+	unitKind: _Output1214;
+	lemma: _Output1215;
 	emojiDescription: _Output569;
 };
-type _Output1223 = "Reading";
-type _Output1225 = "Lemma";
-type _Output1226 = Record<string, never>;
-type _Output1224 = {
-	unitKind: _Output1225;
+type _Output1220 = "Reading";
+type _Output1222 = "Lemma";
+type _Output1223 = Record<string, never>;
+type _Output1221 = {
+	unitKind: _Output1222;
 	language: _Output265;
 	family: _Output266;
 	kind: _Output267;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1226;
+	coreFeatures: _Output1223;
 };
-type _Output1222 = {
-	unitKind: _Output1223;
-	lemma: _Output1224;
+type _Output1219 = {
+	unitKind: _Output1220;
+	lemma: _Output1221;
 	emojiDescription: _Output569;
 };
-type _Output1228 = "Reading";
-type _Output1230 = "Lemma";
-type _Output1231 = Record<string, never>;
-type _Output1229 = {
-	unitKind: _Output1230;
+type _Output1225 = "Reading";
+type _Output1227 = "Lemma";
+type _Output1228 = Record<string, never>;
+type _Output1226 = {
+	unitKind: _Output1227;
 	language: _Output269;
 	family: _Output270;
 	kind: _Output271;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1231;
+	coreFeatures: _Output1228;
 };
-type _Output1227 = {
-	unitKind: _Output1228;
-	lemma: _Output1229;
+type _Output1224 = {
+	unitKind: _Output1225;
+	lemma: _Output1226;
 	emojiDescription: _Output569;
 };
-type _Output1233 = "Reading";
-type _Output1235 = "Lemma";
-type _Output1237 = _Output810 | null;
-type _Output1236 = { abbr: _Output1237 };
-type _Output1234 = {
-	unitKind: _Output1235;
+type _Output1230 = "Reading";
+type _Output1232 = "Lemma";
+type _Output1234 = _Output810 | null;
+type _Output1233 = { abbr: _Output1234 };
+type _Output1231 = {
+	unitKind: _Output1232;
 	language: _Output273;
 	family: _Output274;
 	kind: _Output275;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1236;
+	coreFeatures: _Output1233;
 };
-type _Output1232 = {
-	unitKind: _Output1233;
-	lemma: _Output1234;
+type _Output1229 = {
+	unitKind: _Output1230;
+	lemma: _Output1231;
 	emojiDescription: _Output569;
 };
-type _Output1239 = "Reading";
-type _Output1241 = "Lemma";
-type _Output1243 = _Output810 | null;
-type _Output1245 = "Acc" | "Gen";
-type _Output1244 = _Output1245 | null;
-type _Output1242 = { abbr: _Output1243; case: _Output1244 };
-type _Output1240 = {
-	unitKind: _Output1241;
+type _Output1236 = "Reading";
+type _Output1238 = "Lemma";
+type _Output1240 = _Output810 | null;
+type _Output1242 = "Acc" | "Gen";
+type _Output1241 = _Output1242 | null;
+type _Output1239 = { abbr: _Output1240; case: _Output1241 };
+type _Output1237 = {
+	unitKind: _Output1238;
 	language: _Output277;
 	family: _Output278;
 	kind: _Output279;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1242;
+	coreFeatures: _Output1239;
 };
-type _Output1238 = {
-	unitKind: _Output1239;
-	lemma: _Output1240;
+type _Output1235 = {
+	unitKind: _Output1236;
+	lemma: _Output1237;
 	emojiDescription: _Output569;
 };
-type _Output1247 = "Reading";
-type _Output1249 = "Lemma";
-type _Output1252 = "Yes";
-type _Output1251 = _Output1252 | null;
-type _Output1250 = { prefix: _Output1251 };
-type _Output1248 = {
-	unitKind: _Output1249;
+type _Output1244 = "Reading";
+type _Output1246 = "Lemma";
+type _Output1249 = "Yes";
+type _Output1248 = _Output1249 | null;
+type _Output1247 = { prefix: _Output1248 };
+type _Output1245 = {
+	unitKind: _Output1246;
 	language: _Output281;
 	family: _Output282;
 	kind: _Output283;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1250;
+	coreFeatures: _Output1247;
 };
-type _Output1246 = {
-	unitKind: _Output1247;
-	lemma: _Output1248;
+type _Output1243 = {
+	unitKind: _Output1244;
+	lemma: _Output1245;
 	emojiDescription: _Output569;
 };
-type _Output1254 = "Reading";
-type _Output1256 = "Lemma";
-type _Output1259 = "Cop" | "Mod";
-type _Output1258 = _Output1259 | null;
-type _Output1257 = { verbType: _Output1258 };
-type _Output1255 = {
-	unitKind: _Output1256;
+type _Output1251 = "Reading";
+type _Output1253 = "Lemma";
+type _Output1256 = "Cop" | "Mod";
+type _Output1255 = _Output1256 | null;
+type _Output1254 = { verbType: _Output1255 };
+type _Output1252 = {
+	unitKind: _Output1253;
 	language: _Output285;
 	family: _Output286;
 	kind: _Output287;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1257;
+	coreFeatures: _Output1254;
 };
-type _Output1253 = {
-	unitKind: _Output1254;
-	lemma: _Output1255;
+type _Output1250 = {
+	unitKind: _Output1251;
+	lemma: _Output1252;
 	emojiDescription: _Output569;
 };
-type _Output1261 = "Reading";
-type _Output1263 = "Lemma";
-type _Output1264 = Record<string, never>;
-type _Output1262 = {
-	unitKind: _Output1263;
+type _Output1258 = "Reading";
+type _Output1260 = "Lemma";
+type _Output1261 = Record<string, never>;
+type _Output1259 = {
+	unitKind: _Output1260;
 	language: _Output289;
 	family: _Output290;
 	kind: _Output291;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1264;
+	coreFeatures: _Output1261;
 };
-type _Output1260 = {
-	unitKind: _Output1261;
-	lemma: _Output1262;
+type _Output1257 = {
+	unitKind: _Output1258;
+	lemma: _Output1259;
 	emojiDescription: _Output569;
 };
-type _Output1266 = "Reading";
-type _Output1268 = "Lemma";
-type _Output1271 = "Art" | "Int";
-type _Output1270 = _Output1271 | null;
-type _Output1269 = { pronType: _Output1270 };
-type _Output1267 = {
-	unitKind: _Output1268;
+type _Output1263 = "Reading";
+type _Output1265 = "Lemma";
+type _Output1268 = "Art" | "Int";
+type _Output1267 = _Output1268 | null;
+type _Output1266 = { pronType: _Output1267 };
+type _Output1264 = {
+	unitKind: _Output1265;
 	language: _Output293;
 	family: _Output294;
 	kind: _Output295;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1269;
+	coreFeatures: _Output1266;
 };
-type _Output1265 = {
-	unitKind: _Output1266;
-	lemma: _Output1267;
+type _Output1262 = {
+	unitKind: _Output1263;
+	lemma: _Output1264;
 	emojiDescription: _Output569;
 };
-type _Output1273 = "Reading";
-type _Output1275 = "Lemma";
-type _Output1276 = Record<string, never>;
-type _Output1274 = {
-	unitKind: _Output1275;
+type _Output1270 = "Reading";
+type _Output1272 = "Lemma";
+type _Output1273 = Record<string, never>;
+type _Output1271 = {
+	unitKind: _Output1272;
 	language: _Output297;
 	family: _Output298;
 	kind: _Output299;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1276;
+	coreFeatures: _Output1273;
 };
-type _Output1272 = {
-	unitKind: _Output1273;
-	lemma: _Output1274;
+type _Output1269 = {
+	unitKind: _Output1270;
+	lemma: _Output1271;
 	emojiDescription: _Output569;
 };
-type _Output1278 = "Reading";
-type _Output1280 = "Lemma";
-type _Output1282 = _Output810 | null;
-type _Output1285 = "Fem" | "Masc";
-type _Output1286 = [_Output1285, ...Array<_Output1285>];
-type _Output1284 = _Output1285 | _Output1286;
-type _Output1283 = _Output1284 | null;
-type _Output1281 = { abbr: _Output1282; gender: _Output1283 };
-type _Output1279 = {
-	unitKind: _Output1280;
+type _Output1275 = "Reading";
+type _Output1277 = "Lemma";
+type _Output1279 = _Output810 | null;
+type _Output1282 = "Fem" | "Masc";
+type _Output1283 = [_Output1282, ...Array<_Output1282>];
+type _Output1281 = _Output1282 | _Output1283;
+type _Output1280 = _Output1281 | null;
+type _Output1278 = { abbr: _Output1279; gender: _Output1280 };
+type _Output1276 = {
+	unitKind: _Output1277;
 	language: _Output301;
 	family: _Output302;
 	kind: _Output303;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1281;
+	coreFeatures: _Output1278;
 };
-type _Output1277 = {
-	unitKind: _Output1278;
-	lemma: _Output1279;
+type _Output1274 = {
+	unitKind: _Output1275;
+	lemma: _Output1276;
 	emojiDescription: _Output569;
 };
-type _Output1288 = "Reading";
-type _Output1290 = "Lemma";
-type _Output1291 = Record<string, never>;
-type _Output1289 = {
-	unitKind: _Output1290;
+type _Output1285 = "Reading";
+type _Output1287 = "Lemma";
+type _Output1288 = Record<string, never>;
+type _Output1286 = {
+	unitKind: _Output1287;
 	language: _Output305;
 	family: _Output306;
 	kind: _Output307;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1291;
+	coreFeatures: _Output1288;
 };
-type _Output1287 = {
-	unitKind: _Output1288;
-	lemma: _Output1289;
+type _Output1284 = {
+	unitKind: _Output1285;
+	lemma: _Output1286;
 	emojiDescription: _Output569;
 };
-type _Output1293 = "Reading";
-type _Output1295 = "Lemma";
-type _Output1296 = Record<string, never>;
-type _Output1294 = {
-	unitKind: _Output1295;
+type _Output1290 = "Reading";
+type _Output1292 = "Lemma";
+type _Output1293 = Record<string, never>;
+type _Output1291 = {
+	unitKind: _Output1292;
 	language: _Output309;
 	family: _Output310;
 	kind: _Output311;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1296;
+	coreFeatures: _Output1293;
 };
-type _Output1292 = {
-	unitKind: _Output1293;
-	lemma: _Output1294;
+type _Output1289 = {
+	unitKind: _Output1290;
+	lemma: _Output1291;
 	emojiDescription: _Output569;
 };
-type _Output1298 = "Reading";
-type _Output1300 = "Lemma";
-type _Output1301 = Record<string, never>;
-type _Output1299 = {
-	unitKind: _Output1300;
+type _Output1295 = "Reading";
+type _Output1297 = "Lemma";
+type _Output1298 = Record<string, never>;
+type _Output1296 = {
+	unitKind: _Output1297;
 	language: _Output313;
 	family: _Output314;
 	kind: _Output315;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1301;
+	coreFeatures: _Output1298;
 };
-type _Output1297 = {
-	unitKind: _Output1298;
-	lemma: _Output1299;
+type _Output1294 = {
+	unitKind: _Output1295;
+	lemma: _Output1296;
 	emojiDescription: _Output569;
 };
-type _Output1303 = "Reading";
-type _Output1305 = "Lemma";
-type _Output1308 = "Def";
-type _Output1307 = _Output1308 | null;
-type _Output1310 = "Dem" | "Ind" | "Int" | "Prs";
-type _Output1309 = _Output1310 | null;
-type _Output1312 = "Yes";
-type _Output1311 = _Output1312 | null;
-type _Output1306 = {
-	definite: _Output1307;
-	pronType: _Output1309;
-	reflex: _Output1311;
+type _Output1300 = "Reading";
+type _Output1302 = "Lemma";
+type _Output1305 = "Def";
+type _Output1304 = _Output1305 | null;
+type _Output1307 = "Dem" | "Ind" | "Int" | "Prs";
+type _Output1306 = _Output1307 | null;
+type _Output1309 = "Yes";
+type _Output1308 = _Output1309 | null;
+type _Output1303 = {
+	definite: _Output1304;
+	pronType: _Output1306;
+	reflex: _Output1308;
 };
-type _Output1304 = {
-	unitKind: _Output1305;
+type _Output1301 = {
+	unitKind: _Output1302;
 	language: _Output317;
 	family: _Output318;
 	kind: _Output319;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1306;
+	coreFeatures: _Output1303;
 };
-type _Output1302 = {
-	unitKind: _Output1303;
-	lemma: _Output1304;
+type _Output1299 = {
+	unitKind: _Output1300;
+	lemma: _Output1301;
 	emojiDescription: _Output569;
 };
-type _Output1314 = "Reading";
-type _Output1316 = "Lemma";
-type _Output1318 = _Output810 | null;
-type _Output1321 = "Fem" | "Masc";
-type _Output1322 = [_Output1321, ...Array<_Output1321>];
-type _Output1320 = _Output1321 | _Output1322;
-type _Output1319 = _Output1320 | null;
-type _Output1317 = { abbr: _Output1318; gender: _Output1319 };
-type _Output1315 = {
-	unitKind: _Output1316;
+type _Output1311 = "Reading";
+type _Output1313 = "Lemma";
+type _Output1315 = _Output810 | null;
+type _Output1318 = "Fem" | "Masc";
+type _Output1319 = [_Output1318, ...Array<_Output1318>];
+type _Output1317 = _Output1318 | _Output1319;
+type _Output1316 = _Output1317 | null;
+type _Output1314 = { abbr: _Output1315; gender: _Output1316 };
+type _Output1312 = {
+	unitKind: _Output1313;
 	language: _Output321;
 	family: _Output322;
 	kind: _Output323;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1317;
+	coreFeatures: _Output1314;
 };
-type _Output1313 = {
-	unitKind: _Output1314;
-	lemma: _Output1315;
+type _Output1310 = {
+	unitKind: _Output1311;
+	lemma: _Output1312;
 	emojiDescription: _Output569;
 };
-type _Output1324 = "Reading";
-type _Output1326 = "Lemma";
-type _Output1327 = Record<string, never>;
-type _Output1325 = {
-	unitKind: _Output1326;
+type _Output1321 = "Reading";
+type _Output1323 = "Lemma";
+type _Output1324 = Record<string, never>;
+type _Output1322 = {
+	unitKind: _Output1323;
 	language: _Output325;
 	family: _Output326;
 	kind: _Output327;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1327;
+	coreFeatures: _Output1324;
 };
-type _Output1323 = {
-	unitKind: _Output1324;
-	lemma: _Output1325;
+type _Output1320 = {
+	unitKind: _Output1321;
+	lemma: _Output1322;
 	emojiDescription: _Output569;
 };
-type _Output1329 = "Reading";
-type _Output1331 = "Lemma";
-type _Output1334 = "Tem";
-type _Output1333 = _Output1334 | null;
-type _Output1332 = { case: _Output1333 };
-type _Output1330 = {
-	unitKind: _Output1331;
+type _Output1326 = "Reading";
+type _Output1328 = "Lemma";
+type _Output1331 = "Tem";
+type _Output1330 = _Output1331 | null;
+type _Output1329 = { case: _Output1330 };
+type _Output1327 = {
+	unitKind: _Output1328;
 	language: _Output329;
 	family: _Output330;
 	kind: _Output331;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1332;
+	coreFeatures: _Output1329;
 };
-type _Output1328 = {
-	unitKind: _Output1329;
-	lemma: _Output1330;
+type _Output1325 = {
+	unitKind: _Output1326;
+	lemma: _Output1327;
 	emojiDescription: _Output569;
 };
-type _Output1336 = "Reading";
-type _Output1338 = "Lemma";
-type _Output1339 = Record<string, never>;
-type _Output1337 = {
-	unitKind: _Output1338;
+type _Output1333 = "Reading";
+type _Output1335 = "Lemma";
+type _Output1336 = Record<string, never>;
+type _Output1334 = {
+	unitKind: _Output1335;
 	language: _Output333;
 	family: _Output334;
 	kind: _Output335;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1339;
+	coreFeatures: _Output1336;
 };
-type _Output1335 = {
-	unitKind: _Output1336;
-	lemma: _Output1337;
+type _Output1332 = {
+	unitKind: _Output1333;
+	lemma: _Output1334;
 	emojiDescription: _Output569;
 };
-type _Output1341 = "Reading";
-type _Output1343 = "Lemma";
-type _Output1346 =
+type _Output1338 = "Reading";
+type _Output1340 = "Lemma";
+type _Output1343 =
 	| "HIFIL"
 	| "HITPAEL"
 	| "HUFAL"
@@ -4279,85 +4274,85 @@ type _Output1346 =
 	| "PAAL"
 	| "PIEL"
 	| "PUAL";
-type _Output1345 = _Output1346 | null;
-type _Output1348 = "Yes";
-type _Output1347 = _Output1348 | null;
-type _Output1344 = { hebBinyan: _Output1345; hebExistential: _Output1347 };
-type _Output1342 = {
-	unitKind: _Output1343;
+type _Output1342 = _Output1343 | null;
+type _Output1345 = "Yes";
+type _Output1344 = _Output1345 | null;
+type _Output1341 = { hebBinyan: _Output1342; hebExistential: _Output1344 };
+type _Output1339 = {
+	unitKind: _Output1340;
 	language: _Output337;
 	family: _Output338;
 	kind: _Output339;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1344;
+	coreFeatures: _Output1341;
 };
-type _Output1340 = {
-	unitKind: _Output1341;
-	lemma: _Output1342;
+type _Output1337 = {
+	unitKind: _Output1338;
+	lemma: _Output1339;
 	emojiDescription: _Output569;
 };
-type _Output1350 = "Reading";
-type _Output1352 = "Lemma";
-type _Output1353 = Record<string, never>;
-type _Output1351 = {
-	unitKind: _Output1352;
+type _Output1347 = "Reading";
+type _Output1349 = "Lemma";
+type _Output1350 = Record<string, never>;
+type _Output1348 = {
+	unitKind: _Output1349;
 	language: _Output385;
 	family: _Output386;
 	kind: _Output387;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1353;
+	coreFeatures: _Output1350;
 };
-type _Output1349 = {
-	unitKind: _Output1350;
-	lemma: _Output1351;
+type _Output1346 = {
+	unitKind: _Output1347;
+	lemma: _Output1348;
 	emojiDescription: _Output569;
 };
-type _Output1355 = "Reading";
-type _Output1357 = "Lemma";
-type _Output1358 = Record<string, never>;
-type _Output1356 = {
-	unitKind: _Output1357;
+type _Output1352 = "Reading";
+type _Output1354 = "Lemma";
+type _Output1355 = Record<string, never>;
+type _Output1353 = {
+	unitKind: _Output1354;
 	language: _Output389;
 	family: _Output390;
 	kind: _Output391;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1358;
+	coreFeatures: _Output1355;
 };
-type _Output1354 = {
-	unitKind: _Output1355;
-	lemma: _Output1356;
+type _Output1351 = {
+	unitKind: _Output1352;
+	lemma: _Output1353;
 	emojiDescription: _Output569;
 };
-type _Output1360 = "Reading";
-type _Output1362 = "Lemma";
-type _Output1363 = Record<string, never>;
-type _Output1361 = {
-	unitKind: _Output1362;
+type _Output1357 = "Reading";
+type _Output1359 = "Lemma";
+type _Output1360 = Record<string, never>;
+type _Output1358 = {
+	unitKind: _Output1359;
 	language: _Output393;
 	family: _Output394;
 	kind: _Output395;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1363;
+	coreFeatures: _Output1360;
 };
-type _Output1359 = {
-	unitKind: _Output1360;
-	lemma: _Output1361;
+type _Output1356 = {
+	unitKind: _Output1357;
+	lemma: _Output1358;
 	emojiDescription: _Output569;
 };
-type _Output1365 = "Reading";
-type _Output1367 = "Lemma";
-type _Output1368 = Record<string, never>;
-type _Output1366 = {
-	unitKind: _Output1367;
+type _Output1362 = "Reading";
+type _Output1364 = "Lemma";
+type _Output1365 = Record<string, never>;
+type _Output1363 = {
+	unitKind: _Output1364;
 	language: _Output397;
 	family: _Output398;
 	kind: _Output399;
 	canonicalForm: _Output567;
-	coreFeatures: _Output1368;
+	coreFeatures: _Output1365;
 };
-type _Output1364 = {
-	unitKind: _Output1365;
-	lemma: _Output1366;
+type _Output1361 = {
+	unitKind: _Output1362;
+	lemma: _Output1363;
 	emojiDescription: _Output569;
 };
 type _Output803 =
@@ -4388,28 +4383,28 @@ type _Output803 =
 	| _Output602
 	| _Output607
 	| _Output612
-	| _Output989
-	| _Output994
-	| _Output999
-	| _Output1006
-	| _Output1011
-	| _Output1016
-	| _Output1030
-	| _Output1038
-	| _Output1056
-	| _Output1064
-	| _Output1072
-	| _Output1092
-	| _Output1103
-	| _Output1118
-	| _Output1130
-	| _Output1138
-	| _Output1148
-	| _Output1165
-	| _Output1175
-	| _Output1180
-	| _Output1190
-	| _Output1198
+	| _Output987
+	| _Output992
+	| _Output997
+	| _Output1004
+	| _Output1009
+	| _Output1014
+	| _Output1028
+	| _Output1036
+	| _Output1054
+	| _Output1062
+	| _Output1070
+	| _Output1090
+	| _Output1101
+	| _Output1116
+	| _Output1128
+	| _Output1136
+	| _Output1146
+	| _Output1163
+	| _Output1173
+	| _Output1178
+	| _Output1188
+	| _Output1196
 	| _Output617
 	| _Output622
 	| _Output627
@@ -4421,27 +4416,27 @@ type _Output803 =
 	| _Output657
 	| _Output662
 	| _Output667
-	| _Output1211
-	| _Output1216
-	| _Output1222
-	| _Output1227
-	| _Output1232
-	| _Output1238
-	| _Output1246
-	| _Output1253
-	| _Output1260
-	| _Output1265
-	| _Output1272
-	| _Output1277
-	| _Output1287
-	| _Output1292
-	| _Output1297
-	| _Output1302
-	| _Output1313
-	| _Output1323
-	| _Output1328
-	| _Output1335
-	| _Output1340
+	| _Output1208
+	| _Output1213
+	| _Output1219
+	| _Output1224
+	| _Output1229
+	| _Output1235
+	| _Output1243
+	| _Output1250
+	| _Output1257
+	| _Output1262
+	| _Output1269
+	| _Output1274
+	| _Output1284
+	| _Output1289
+	| _Output1294
+	| _Output1299
+	| _Output1310
+	| _Output1320
+	| _Output1325
+	| _Output1332
+	| _Output1337
 	| _Output672
 	| _Output677
 	| _Output682
@@ -4453,16 +4448,16 @@ type _Output803 =
 	| _Output712
 	| _Output717
 	| _Output722
-	| _Output1349
-	| _Output1354
-	| _Output1359
-	| _Output1364;
+	| _Output1346
+	| _Output1351
+	| _Output1356
+	| _Output1361;
 type _Output802 = Array<_Output803>;
 type _Output801 = _Output802 | undefined;
 type _Output799 = { targetKind: _Output800; synonym?: _Output801 };
-type _Output1371 = "lemma";
-type _Output1370 = _Output1371 | undefined;
-type _Output1374 =
+type _Output1368 = "lemma";
+type _Output1367 = _Output1368 | undefined;
+type _Output1371 =
 	| _Output806
 	| _Output819
 	| _Output834
@@ -4490,28 +4485,28 @@ type _Output1374 =
 	| _Output604
 	| _Output609
 	| _Output614
-	| _Output991
-	| _Output996
-	| _Output1001
-	| _Output1008
-	| _Output1013
-	| _Output1018
-	| _Output1032
-	| _Output1040
-	| _Output1058
-	| _Output1066
-	| _Output1074
-	| _Output1094
-	| _Output1105
-	| _Output1120
-	| _Output1132
-	| _Output1140
-	| _Output1150
-	| _Output1167
-	| _Output1177
-	| _Output1182
-	| _Output1192
-	| _Output1200
+	| _Output989
+	| _Output994
+	| _Output999
+	| _Output1006
+	| _Output1011
+	| _Output1016
+	| _Output1030
+	| _Output1038
+	| _Output1056
+	| _Output1064
+	| _Output1072
+	| _Output1092
+	| _Output1103
+	| _Output1118
+	| _Output1130
+	| _Output1138
+	| _Output1148
+	| _Output1165
+	| _Output1175
+	| _Output1180
+	| _Output1190
+	| _Output1198
 	| _Output619
 	| _Output624
 	| _Output629
@@ -4523,27 +4518,27 @@ type _Output1374 =
 	| _Output659
 	| _Output664
 	| _Output669
-	| _Output1213
-	| _Output1218
-	| _Output1224
-	| _Output1229
-	| _Output1234
-	| _Output1240
-	| _Output1248
-	| _Output1255
-	| _Output1262
-	| _Output1267
-	| _Output1274
-	| _Output1279
-	| _Output1289
-	| _Output1294
-	| _Output1299
-	| _Output1304
-	| _Output1315
-	| _Output1325
-	| _Output1330
-	| _Output1337
-	| _Output1342
+	| _Output1210
+	| _Output1215
+	| _Output1221
+	| _Output1226
+	| _Output1231
+	| _Output1237
+	| _Output1245
+	| _Output1252
+	| _Output1259
+	| _Output1264
+	| _Output1271
+	| _Output1276
+	| _Output1286
+	| _Output1291
+	| _Output1296
+	| _Output1301
+	| _Output1312
+	| _Output1322
+	| _Output1327
+	| _Output1334
+	| _Output1339
 	| _Output674
 	| _Output679
 	| _Output684
@@ -4555,144 +4550,144 @@ type _Output1374 =
 	| _Output714
 	| _Output719
 	| _Output724
-	| _Output1351
-	| _Output1356
-	| _Output1361
-	| _Output1366;
-type _Output1373 = Array<_Output1374>;
+	| _Output1348
+	| _Output1353
+	| _Output1358
+	| _Output1363;
+type _Output1370 = Array<_Output1371>;
+type _Output1369 = _Output1370 | undefined;
+type _Output1373 = Array<_Output1371>;
 type _Output1372 = _Output1373 | undefined;
-type _Output1376 = Array<_Output1374>;
-type _Output1375 = _Output1376 | undefined;
-type _Output1378 = Array<_Output1374>;
-type _Output1377 = _Output1378 | undefined;
-type _Output1380 = Array<_Output1374>;
-type _Output1379 = _Output1380 | undefined;
-type _Output1382 = Array<_Output1374>;
-type _Output1381 = _Output1382 | undefined;
-type _Output1384 = Array<_Output1374>;
+type _Output1375 = Array<_Output1371>;
+type _Output1374 = _Output1375 | undefined;
+type _Output1377 = Array<_Output1371>;
+type _Output1376 = _Output1377 | undefined;
+type _Output1379 = Array<_Output1371>;
+type _Output1378 = _Output1379 | undefined;
+type _Output1381 = Array<_Output1371>;
+type _Output1380 = _Output1381 | undefined;
+type _Output1366 = {
+	targetKind?: _Output1367;
+	synonym?: _Output1369;
+	nearSynonym?: _Output1372;
+	antonym?: _Output1374;
+	nearAntonym?: _Output1376;
+	hypernym?: _Output1378;
+	holonym?: _Output1380;
+};
+type _Output798 = _Output799 | _Output1366;
+type _Output1384 = string;
 type _Output1383 = _Output1384 | undefined;
-type _Output1369 = {
-	targetKind?: _Output1370;
-	synonym?: _Output1372;
-	nearSynonym?: _Output1375;
-	antonym?: _Output1377;
-	nearAntonym?: _Output1379;
-	hypernym?: _Output1381;
-	holonym?: _Output1383;
-};
-type _Output798 = _Output799 | _Output1369;
-type _Output1387 = string;
+type _Output1385 = _Output1384 | undefined;
+type _Output1389 = Array<_Output1384>;
+type _Output1388 = _Output1389 | undefined;
+type _Output1390 = _Output1389 | undefined;
+type _Output1387 = { en?: _Output1388; ru?: _Output1390 };
 type _Output1386 = _Output1387 | undefined;
-type _Output1388 = _Output1387 | undefined;
-type _Output1392 = Array<_Output1387>;
-type _Output1391 = _Output1392 | undefined;
-type _Output1393 = _Output1392 | undefined;
-type _Output1390 = { en?: _Output1391; ru?: _Output1393 };
-type _Output1389 = _Output1390 | undefined;
-type _Output1394 = _Output554 | undefined;
-type _Output1395 = _Output501 | undefined;
-type _Output1396 = _Output798 | undefined;
-type _Output1385 = {
-	transcription?: _Output1386;
-	definition?: _Output1388;
-	translations?: _Output1389;
-	morphologicalTree?: _Output1394;
-	lexicalBreakdown?: _Output1395;
-	semanticRelations?: _Output1396;
+type _Output1391 = _Output554 | undefined;
+type _Output1392 = _Output501 | undefined;
+type _Output1393 = _Output798 | undefined;
+type _Output1382 = {
+	transcription?: _Output1383;
+	definition?: _Output1385;
+	translations?: _Output1386;
+	morphologicalTree?: _Output1391;
+	lexicalBreakdown?: _Output1392;
+	semanticRelations?: _Output1393;
 };
-type _Output1399 = "Contribute" | "Correct";
-type _Output1400 = "transcription" | "definition";
-type _Output1398 = {
-	kind: _Output1399;
-	aspect: _Output1400;
-	value: _Output1387;
+type _Output1396 = "Contribute" | "Correct";
+type _Output1397 = "transcription" | "definition";
+type _Output1395 = {
+	kind: _Output1396;
+	aspect: _Output1397;
+	value: _Output1384;
 };
-type _Output1402 = "Retract";
-type _Output1401 = { kind: _Output1402; aspect: _Output1400 };
+type _Output1399 = "Retract";
+type _Output1398 = { kind: _Output1399; aspect: _Output1397 };
+type _Output1401 = "translations";
+type _Output1400 = {
+	kind: _Output1396;
+	aspect: _Output1401;
+	language: _Output402;
+	value: _Output1389;
+};
+type _Output1403 = "Retract";
 type _Output1404 = "translations";
-type _Output1403 = {
-	kind: _Output1399;
+type _Output1402 = {
+	kind: _Output1403;
 	aspect: _Output1404;
 	language: _Output402;
-	value: _Output1392;
 };
-type _Output1406 = "Retract";
-type _Output1407 = "translations";
+type _Output1406 = "semanticRelations";
+type _Output1407 = "synonym";
+type _Output1408 = "reading";
+type _Output1409 = Array<_Output803>;
 type _Output1405 = {
-	kind: _Output1406;
-	aspect: _Output1407;
-	language: _Output402;
+	kind: _Output1396;
+	aspect: _Output1406;
+	relation: _Output1407;
+	targetKind: _Output1408;
+	value: _Output1409;
 };
-type _Output1409 = "semanticRelations";
-type _Output1410 = "synonym";
-type _Output1411 = "reading";
-type _Output1412 = Array<_Output803>;
-type _Output1408 = {
-	kind: _Output1399;
-	aspect: _Output1409;
-	relation: _Output1410;
-	targetKind: _Output1411;
-	value: _Output1412;
-};
-type _Output1414 = "semanticRelations";
-type _Output1416 = "lemma";
-type _Output1415 = _Output1416 | undefined;
-type _Output1417 = Array<_Output1374>;
-type _Output1413 = {
-	kind: _Output1399;
-	aspect: _Output1414;
+type _Output1411 = "semanticRelations";
+type _Output1413 = "lemma";
+type _Output1412 = _Output1413 | undefined;
+type _Output1414 = Array<_Output1371>;
+type _Output1410 = {
+	kind: _Output1396;
+	aspect: _Output1411;
 	relation: _Output401;
-	targetKind?: _Output1415;
-	value: _Output1417;
+	targetKind?: _Output1412;
+	value: _Output1414;
 };
-type _Output1419 = "Retract";
-type _Output1420 = "semanticRelations";
-type _Output1421 = "synonym";
-type _Output1422 = "reading";
-type _Output1418 = {
-	kind: _Output1419;
-	aspect: _Output1420;
-	relation: _Output1421;
-	targetKind: _Output1422;
+type _Output1416 = "Retract";
+type _Output1417 = "semanticRelations";
+type _Output1418 = "synonym";
+type _Output1419 = "reading";
+type _Output1415 = {
+	kind: _Output1416;
+	aspect: _Output1417;
+	relation: _Output1418;
+	targetKind: _Output1419;
 };
-type _Output1424 = "Retract";
-type _Output1425 = "semanticRelations";
-type _Output1427 = "lemma";
-type _Output1426 = _Output1427 | undefined;
-type _Output1423 = {
-	kind: _Output1424;
-	aspect: _Output1425;
+type _Output1421 = "Retract";
+type _Output1422 = "semanticRelations";
+type _Output1424 = "lemma";
+type _Output1423 = _Output1424 | undefined;
+type _Output1420 = {
+	kind: _Output1421;
+	aspect: _Output1422;
 	relation: _Output401;
-	targetKind?: _Output1426;
+	targetKind?: _Output1423;
 };
-type _Output1429 = "morphologicalTree";
-type _Output1428 = {
-	kind: _Output1399;
-	aspect: _Output1429;
+type _Output1426 = "morphologicalTree";
+type _Output1425 = {
+	kind: _Output1396;
+	aspect: _Output1426;
 	value: _Output554;
 };
-type _Output1431 = "lexicalBreakdown";
-type _Output1430 = {
-	kind: _Output1399;
-	aspect: _Output1431;
+type _Output1428 = "lexicalBreakdown";
+type _Output1427 = {
+	kind: _Output1396;
+	aspect: _Output1428;
 	value: _Output501;
 };
-type _Output1433 = "Retract";
-type _Output1434 = "morphologicalTree" | "lexicalBreakdown";
-type _Output1432 = { kind: _Output1433; aspect: _Output1434 };
-type _Output1397 =
+type _Output1430 = "Retract";
+type _Output1431 = "morphologicalTree" | "lexicalBreakdown";
+type _Output1429 = { kind: _Output1430; aspect: _Output1431 };
+type _Output1394 =
+	| _Output1395
 	| _Output1398
-	| _Output1401
-	| _Output1403
+	| _Output1400
+	| _Output1402
 	| _Output1405
-	| _Output1408
-	| _Output1413
-	| _Output1418
-	| _Output1423
-	| _Output1428
-	| _Output1430
-	| _Output1432;
-type _Output1435 =
+	| _Output1410
+	| _Output1415
+	| _Output1420
+	| _Output1425
+	| _Output1427
+	| _Output1429;
+type _Output1432 =
 	| "synonym"
 	| "nearSynonym"
 	| "antonym"
@@ -4701,13 +4696,13 @@ type _Output1435 =
 	| "hyponym"
 	| "meronym"
 	| "holonym";
-type _Output1437 = _Output1374 | _Output803;
-type _Output1438 = "direct" | "inferred";
-type _Output1436 = {
+type _Output1434 = _Output1371 | _Output803;
+type _Output1435 = "direct" | "inferred";
+type _Output1433 = {
 	source: _Output803;
-	relation: _Output1435;
-	target: _Output1437;
-	provenance: _Output1438;
+	relation: _Output1432;
+	target: _Output1434;
+	provenance: _Output1435;
 };
 export type KnowledgeSettings = _Output0;
 export type KnowledgeRequestMask = _Output7;
@@ -4719,7 +4714,7 @@ export type LexicalBreakdown = _Output501;
 export type MorphologicalTree = _Output554;
 export type PendingSemanticRelation = _Output797;
 export type SemanticRelations = _Output798;
-export type ReadingKnowledge = _Output1385;
-export type KnowledgeChange = _Output1397;
-export type SemanticRelation = _Output1435;
-export type SemanticRelationProjection = _Output1436;
+export type ReadingKnowledge = _Output1382;
+export type KnowledgeChange = _Output1394;
+export type SemanticRelation = _Output1432;
+export type SemanticRelationProjection = _Output1433;

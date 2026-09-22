@@ -207,7 +207,11 @@ export async function loadOccurrenceAttestation(
 		realizationCoverage: attestation.realizationCoverage,
 		...(lemma.language === "de" &&
 		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind)
-			? { expletiveEvidence: attestation.expletiveEvidence ?? null }
+			? {
+					expletiveEvidence: attestation.expletiveEvidence ?? null,
+					governedPrepositionEvidence:
+						attestation.governedPrepositionEvidence ?? null,
+				}
 			: {}),
 		...(attestation.articleEvidence === undefined
 			? {}

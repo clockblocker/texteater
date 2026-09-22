@@ -62,6 +62,7 @@ for (const construction of review.constructions) {
 			const result = parseUnit({
 				unitKind: "Attestation",
 				expletiveEvidence: null,
+				governedPrepositionEvidence: null,
 				members: target.members.map((attested) => ({
 					attested,
 					orthography: "Standard",
@@ -85,7 +86,6 @@ for (const construction of review.constructions) {
 								? { verbType: "Mod" }
 								: {
 										verbType: null,
-										hasGovPrep: null,
 										hasSepPrefix: null,
 										lexicallyReflexive: null,
 									},

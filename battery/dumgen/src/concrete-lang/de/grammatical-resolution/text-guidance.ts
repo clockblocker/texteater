@@ -5,7 +5,7 @@ export const textSystemPrompt =
 	"Supply exactly the requested missing German text fields. All grammatical judgments and target membership are fixed and are not restated here; never emit bounded labels, add attested members, modernize a licensed variant, or use a different identity.";
 
 export const canonicalFormGuidance: Readonly<Record<string, string>> = {
-	VERB: "Canonical Form is the lexical infinitive with required reflexive/prefix material (sich handeln, aufstehen), never the whole auxiliary chain. Governed prepositions stay out of the headword: es geht um -> gehen. A subject expletive keeps the ordinary verb Lemma: geben for es gibt/es gab/gibt es, regnen for es regnet; never prefix a headword with es. Lowercase.",
+	VERB: "Canonical Form is the lexical infinitive with required reflexive/prefix material (sich handeln, aufstehen), never the whole auxiliary chain. Governed prepositions stay out of the headword: es geht um -> gehen, and a supplied `governedPreposition` member is never part of the Canonical Form (erinnert sich an -> sich erinnern). A subject expletive keeps the ordinary verb Lemma: geben for es gibt/es gab/gibt es, regnen for es regnet; never prefix a headword with es. Lowercase.",
 	NOUN: "Canonical Form is the bare singular dictionary headword with noun capitalization and without its article.",
 	PROPN: "Canonical Form is the registered name with its capitalization, internal capitals, brand styling and name-internal punctuation, minus any contextual genitive suffix or apostrophe.",
 	ADJ: "Canonical Form is the uninflected positive base, preserving irregular paradigms (besser/beste -> gut, höher -> hoch, näher -> nah). An adjectival participle stays participial (geschlossene -> geschlossen), not a verbal infinitive.",

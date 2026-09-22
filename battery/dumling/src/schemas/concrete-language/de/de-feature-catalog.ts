@@ -56,7 +56,6 @@ const DeInfinitiveFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 const DeParticipleFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 	VerbForm.Part,
 ]);
-const DeHasGovPrepSchema = UNIVERSAL_FEATURE_SCHEMA.hasGovPrep;
 const DeHasSepPrefixSchema = UNIVERSAL_FEATURE_SCHEMA.hasSepPrefix;
 const DeLexicallyReflexiveSchema = UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive;
 const DeModalVerbTypeSchema = UNIVERSAL_FEATURE_SCHEMA.verbType.extract([
@@ -115,7 +114,6 @@ export const DE_FEATURE_SCHEMA = {
 	finiteForm: DeFiniteFormSchema,
 	infinitiveForm: DeInfinitiveFormSchema,
 	participleForm: DeParticipleFormSchema,
-	hasGovPrep: DeHasGovPrepSchema,
 	hasSepPrefix: DeHasSepPrefixSchema,
 	lexicallyReflexive: DeLexicallyReflexiveSchema,
 	modalVerbType: DeModalVerbTypeSchema,

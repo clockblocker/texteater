@@ -11,6 +11,10 @@ export type GrammarOutput = {
 		attested: string;
 		orthography: DeMemberOrthography;
 	} | null;
+	governedPrepositionEvidence?: {
+		attested: string;
+		orthography: DeMemberOrthography;
+	} | null;
 	articleEvidence?: {
 		attested: string;
 		orthography: DeMemberOrthography;

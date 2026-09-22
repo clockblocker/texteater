@@ -36423,6 +36423,335 @@
 			},
 			"explanation": "A title abbreviation is one Segment resolving to the NOUN Diplom-Ingenieur; the name stays outside.",
 			"contaminationKeys": ["abbreviation:dipl-ing"]
+		},
+		"target-de-pronominal-adverb-stolz-click-stolz": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "waren"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "darauf"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ganz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "normal"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sein"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "stolz governs auf, but a governed preposition joins only a VERB head, and darauf is a pronominal adverb standing for the whole auf-phrase that points forward to the zu-clause. Each word is its own target: stolz ADJ, darauf ADV."
+		},
+		"target-de-pronominal-adverb-stolz-click-darauf": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "waren"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "darauf"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ganz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "normal"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sein"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADV",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "stolz governs auf, but a governed preposition joins only a VERB head, and darauf is a pronominal adverb standing for the whole auf-phrase that points forward to the zu-clause. Each word is its own target: stolz ADJ, darauf ADV."
+		},
+		"target-de-pronominal-adverb-warten-click-warte": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "warte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "darauf"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dass"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "kommt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "warten governs auf, yet darauf is not that preposition: it is a pronominal adverb standing for the whole auf-phrase (the dass-clause). warte VERB alone and darauf ADV alone."
+		},
+		"target-de-pronominal-adverb-warten-click-darauf": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "warte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "darauf"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dass"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "kommt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADV",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "warten governs auf, yet darauf is not that preposition: it is a pronominal adverb standing for the whole auf-phrase (the dass-clause). warte VERB alone and darauf ADV alone."
+		},
+		"target-de-pronominal-adverb-worauf-click-worauf": {
+			"input": {
+				"clickedSegmentIndex": 0,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Worauf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartest"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "du"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "?"
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADV",
+				"memberSegmentIndices": [0]
+			},
+			"explanation": "Worauf is an interrogative pronominal adverb (wo + auf) asking for the whole auf-phrase of wartest. Singleton ADV; the verb stays separate."
 		}
 	},
 	"demonstrationIds": [

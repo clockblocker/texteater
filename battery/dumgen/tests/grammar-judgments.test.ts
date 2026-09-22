@@ -51,7 +51,6 @@ for (const example of review.constructions)
 				lemma: {
 					canonicalForm: target.canonicalForm,
 					coreFeatures: {
-						hasGovPrep: null,
 						hasSepPrefix: null,
 						lexicallyReflexive: null,
 						verbType:
@@ -143,7 +142,6 @@ test("finite homograph canonical candidate resolves without generation", async (
 		lemma: {
 			canonicalForm: "gehen",
 			coreFeatures: {
-				hasGovPrep: null,
 				hasSepPrefix: null,
 				lexicallyReflexive: null,
 				verbType: null,

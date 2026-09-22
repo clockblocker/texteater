@@ -686,6 +686,10 @@ export interface UnitMap {
 				attested: string;
 				orthography: "Standard" | "Typo";
 			} | null;
+			governedPrepositionEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Lexeme/CCONJ": {
@@ -1874,7 +1878,6 @@ export interface UnitMap {
 			kind: "VERB";
 			canonicalForm: string;
 			coreFeatures: {
-				hasGovPrep: string | null;
 				hasSepPrefix: string | null;
 				lexicallyReflexive: "Yes" | null;
 				verbType: "Mod" | null;
@@ -1890,7 +1893,6 @@ export interface UnitMap {
 				kind: "VERB";
 				canonicalForm: string;
 				coreFeatures: {
-					hasGovPrep: string | null;
 					hasSepPrefix: string | null;
 					lexicallyReflexive: "Yes" | null;
 					verbType: "Mod" | null;
@@ -2011,7 +2013,6 @@ export interface UnitMap {
 				kind: "VERB";
 				canonicalForm: string;
 				coreFeatures: {
-					hasGovPrep: string | null;
 					hasSepPrefix: string | null;
 					lexicallyReflexive: "Yes" | null;
 					verbType: "Mod" | null;
@@ -2031,7 +2032,6 @@ export interface UnitMap {
 					kind: "VERB";
 					canonicalForm: string;
 					coreFeatures: {
-						hasGovPrep: string | null;
 						hasSepPrefix: string | null;
 						lexicallyReflexive: "Yes" | null;
 						verbType: "Mod" | null;
@@ -2152,6 +2152,10 @@ export interface UnitMap {
 			];
 			realizationCoverage: "Full" | "Partial";
 			expletiveEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
+			governedPrepositionEvidence: {
 				attested: string;
 				orthography: "Standard" | "Typo";
 			} | null;
@@ -3119,6 +3123,10 @@ export interface UnitMap {
 				attested: string;
 				orthography: "Standard" | "Typo";
 			} | null;
+			governedPrepositionEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
 		};
 	};
 	"de/Phraseme/DiscourseFormula": {
@@ -3510,6 +3518,10 @@ export interface UnitMap {
 			];
 			realizationCoverage: "Full" | "Partial";
 			expletiveEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null;
+			governedPrepositionEvidence: {
 				attested: string;
 				orthography: "Standard" | "Typo";
 			} | null;
@@ -5327,7 +5339,6 @@ export interface UnitMap {
 			coreFeatures: {
 				abbr: "Yes" | null;
 				extPos: ("ADP" | "CCONJ" | "PROPN") | null;
-				hasGovPrep: string | null;
 				phrasal: "Yes" | null;
 				style: ("Expr" | "Vrnc") | null;
 			};
@@ -5344,7 +5355,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					extPos: ("ADP" | "CCONJ" | "PROPN") | null;
-					hasGovPrep: string | null;
 					phrasal: "Yes" | null;
 					style: ("Expr" | "Vrnc") | null;
 				};
@@ -5372,7 +5382,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					extPos: ("ADP" | "CCONJ" | "PROPN") | null;
-					hasGovPrep: string | null;
 					phrasal: "Yes" | null;
 					style: ("Expr" | "Vrnc") | null;
 				};
@@ -5393,7 +5402,6 @@ export interface UnitMap {
 					coreFeatures: {
 						abbr: "Yes" | null;
 						extPos: ("ADP" | "CCONJ" | "PROPN") | null;
-						hasGovPrep: string | null;
 						phrasal: "Yes" | null;
 						style: ("Expr" | "Vrnc") | null;
 					};

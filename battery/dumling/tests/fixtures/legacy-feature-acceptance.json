@@ -2509,7 +2509,6 @@
 				"core": {
 					"abbr": "Yes",
 					"extPos": "ADP",
-					"hasGovPrep": "value",
 					"phrasal": "Yes",
 					"style": "Expr"
 				},
@@ -2558,7 +2557,6 @@
 				"core": {
 					"abbr": "Yes",
 					"extPos": "ADP",
-					"hasGovPrep": "value",
 					"phrasal": "Yes",
 					"style": "Expr"
 				},

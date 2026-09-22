@@ -67,7 +67,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 			kind: "VERB",
 			canonicalForm: "aufpassen",
 			coreFeatures: {
-				hasGovPrep: null,
 				hasSepPrefix: "auf",
 				lexicallyReflexive: null,
 				verbType: null,
@@ -81,7 +80,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 	});
 
 	expect(reading.lemma.coreFeatures).toEqual({
-		hasGovPrep: null,
 		hasSepPrefix: "auf",
 		lexicallyReflexive: null,
 		verbType: null,
@@ -103,7 +101,6 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		kind: "VERB",
 		canonicalForm: "aufpassen",
 		coreFeatures: {
-			hasGovPrep: null,
 			hasSepPrefix: "auf",
 			lexicallyReflexive: null,
 			verbType: null,

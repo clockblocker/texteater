@@ -101,7 +101,6 @@ const NULL_CORE_FEATURES_BY_KIND = {
 	SCONJ: { conjType: null },
 	SYM: { foreign: null, numType: null },
 	VERB: {
-		hasGovPrep: null,
 		hasSepPrefix: null,
 		lexicallyReflexive: null,
 		verbType: null,
@@ -295,7 +294,7 @@ function occurrenceFor(
 		realizationCoverage: "Full",
 		...(reading.lemma.kind === "NOUN" ? { articleEvidence: null } : {}),
 		...(["VERB", "AUX", "Idiom", "Collocation"].includes(reading.lemma.kind)
-			? { expletiveEvidence: null }
+			? { expletiveEvidence: null, governedPrepositionEvidence: null }
 			: {}),
 		surface: citationSurface,
 	});

@@ -25,7 +25,6 @@ const occurrenceAttestation = {
 			coreFeatures: {
 				abbr: null,
 				extPos: null,
-				hasGovPrep: null,
 				phrasal: null,
 				style: null,
 			},

@@ -86,7 +86,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -372,7 +371,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -885,7 +883,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -959,7 +956,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -1762,7 +1758,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": "Mod"
@@ -2200,7 +2195,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -2342,7 +2336,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -2653,7 +2646,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -3010,7 +3002,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
@@ -3071,7 +3062,6 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasGovPrep": null,
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null

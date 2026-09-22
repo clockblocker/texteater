@@ -87,7 +87,11 @@ function buildBaseUnitSchemas<
 	return { Lemma, Surface, Reading, Attestation };
 }
 
-/** Composition stores grammatical features; source evidence belongs to the Attestation. */
+/**
+ * Composition stores grammatical features; source evidence belongs to the
+ * Attestation. A German verbal Attestation names its owned subject-expletive
+ * and lexically governed preposition members as evidence (ADR 0022, ADR 0029).
+ */
 export function buildUnitSchemas<
 	L extends string,
 	F extends string,
@@ -117,7 +121,12 @@ export function buildUnitSchemas<
 	let Attestation = base.Attestation.extend({
 		surface: Surface,
 		...(noun ? { articleEvidence: memberSchema.nullable() } : {}),
-		...(verbal ? { expletiveEvidence: memberSchema.nullable() } : {}),
+		...(verbal
+			? {
+					expletiveEvidence: memberSchema.nullable(),
+					governedPrepositionEvidence: memberSchema.nullable(),
+				}
+			: {}),
 	}) as unknown as z.ZodObject<
 		Omit<typeof base.Attestation.shape, "surface"> & {
 			surface: typeof Surface;
@@ -134,7 +143,14 @@ export function buildUnitSchemas<
 				: Record<never, never>) &
 			(L extends "de"
 				? K extends "VERB" | "AUX" | "Idiom" | "Collocation"
-					? { expletiveEvidence: z.ZodNullable<typeof memberSchema> }
+					? {
+							expletiveEvidence: z.ZodNullable<
+								typeof memberSchema
+							>;
+							governedPrepositionEvidence: z.ZodNullable<
+								typeof memberSchema
+							>;
+						}
 					: Record<never, never>
 				: Record<never, never>)
 	>;

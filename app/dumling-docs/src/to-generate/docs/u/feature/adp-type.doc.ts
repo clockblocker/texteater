@@ -32,7 +32,7 @@ Use \`adpType\` on [\`ADP\`](/u/entity/lemma/lexeme/adp/) Lemmas when the subtyp
 
 Choose \`Prep\` when the adposition normally precedes its complement, \`Post\` when it follows it, and \`Circ\` for circumpositional analyses. Use \`Voc\` only when your UD analysis treats a vocative marker as adpositional.
 
-Do not use \`adpType\` to encode a verb's governed preposition. That is a separate Lemma-level fact modeled by [\`HasGovPrep\`](/u/feature/has-gov-prep/).
+Do not use \`adpType\` to encode a verb's governed preposition. That is not a Lemma-level fact; it is recorded as \`governedPrepositionEvidence\` on the [\`Attestation\`](/u/entity/attestation/).
 `,
 		},
 		{

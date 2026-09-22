@@ -217,6 +217,7 @@ export default defineSchema({
 	attestations: defineTable({
 		articleEvidence: v.optional(v.any()),
 		expletiveEvidence: v.optional(v.any()),
+		governedPrepositionEvidence: v.optional(v.any()),
 		surfaceId: v.id("surfaces"),
 		readingId: v.id("readings"),
 		realizationCoverage: realizationCoverageValidator,

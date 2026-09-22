@@ -76,6 +76,24 @@ export function grammarFixture(
 						? "Marked"
 						: "Citation";
 				if (id === "coverage") return output.realizationCoverage;
+				if (id === "governedPreposition") {
+					const evidence = (
+						output as {
+							governedPrepositionEvidence?: {
+								attested: string;
+								orthography: string;
+							} | null;
+						}
+					).governedPrepositionEvidence;
+					if (!evidence) return "Absent";
+					const index = state.members.findIndex(
+						(member: string, position: number) =>
+							member === evidence.attested &&
+							output.memberOrthographies[position] ===
+								evidence.orthography,
+					);
+					return index === -1 ? "Unresolved" : `member_${index}`;
+				}
 				if (id === "identity") {
 					const index = state.reviewedIdentities.findIndex(
 						(lemma) =>
@@ -141,7 +159,7 @@ export function grammarFixture(
 						value && typeof value === "object"
 							? (value as Record<string, unknown>)[key]
 							: undefined;
-				if (id.endsWith("hasSepPrefix") || id.endsWith("hasGovPrep"))
+				if (id.endsWith("hasSepPrefix"))
 					return value ? "Present" : "Absent";
 				return value === undefined
 					? "Unresolved"

@@ -31,7 +31,6 @@ export function pipelineFixture(
 			if (
 				Object.hasOwn(request.questions, "support") ||
 				Object.hasOwn(request.questions, "identity") ||
-				Object.hasOwn(request.questions, "hasGovPrep") ||
 				Object.hasOwn(request.questions, "hasSepPrefix") ||
 				Object.hasOwn(
 					request.questions,

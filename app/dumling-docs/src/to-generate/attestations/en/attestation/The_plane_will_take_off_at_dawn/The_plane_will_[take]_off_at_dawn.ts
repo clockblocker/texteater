@@ -30,7 +30,6 @@ const occurrenceAttestation = {
 				phrasal: "Yes",
 				abbr: null,
 				extPos: null,
-				hasGovPrep: null,
 				style: null,
 			},
 		},

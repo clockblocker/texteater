@@ -11,7 +11,6 @@ const walkLemma = {unitKind: "Lemma" as const,
 	coreFeatures: {
 		style: null,
 		phrasal: null,
-		hasGovPrep: null,
 		extPos: null,
 		abbr: null,
 	},

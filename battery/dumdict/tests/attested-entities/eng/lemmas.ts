@@ -7,7 +7,6 @@ export const englishWalkLemma = {
 	coreFeatures: {
 		style: null,
 		phrasal: null,
-		hasGovPrep: null,
 		extPos: null,
 		abbr: null,
 	},
@@ -22,7 +21,6 @@ export const englishGiveUpLemma = {
 	canonicalForm: "give up",
 	coreFeatures: {
 		phrasal: "Yes",
-		hasGovPrep: null,
 		style: null,
 		extPos: null,
 		abbr: null,
@@ -190,7 +188,6 @@ export const englishLookUpLemma = {
 	canonicalForm: "look up",
 	coreFeatures: {
 		phrasal: "Yes",
-		hasGovPrep: null,
 		style: null,
 		extPos: null,
 		abbr: null,
@@ -207,7 +204,6 @@ export const englishLookLemma = {
 	coreFeatures: {
 		style: null,
 		phrasal: null,
-		hasGovPrep: null,
 		extPos: null,
 		abbr: null,
 	},

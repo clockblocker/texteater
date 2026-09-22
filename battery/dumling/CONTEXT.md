@@ -58,7 +58,8 @@ article is included. A shared article gives Partial coverage without becoming
 a second owned member; a fused article is an owned Fused member with Full
 coverage, and a component with no letters of its own leaves the unit Partial
 with evidence pointing at the Fusion. German verbal Attestations retain
-subject-expletive source orthography as evidence for an owned member.
+subject-expletive source orthography as evidence for an owned member, and name
+the owned member the verb lexically governs as governed-preposition evidence.
 _Avoid_: Selection, click result, selected Surface
 
 **Fusion**:

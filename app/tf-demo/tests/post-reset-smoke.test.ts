@@ -30,7 +30,6 @@ const verbFeatures = {
 	verbType: null,
 	lexicallyReflexive: null,
 	hasSepPrefix: null,
-	hasGovPrep: null,
 } as const;
 
 const gehenLemma = {

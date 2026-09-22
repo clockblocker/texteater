@@ -61,11 +61,20 @@ export async function migrateCompositionAttestation(
 	const verbal =
 		lemma?.language === "de" &&
 		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind);
-	if (surface.redirectedTo || (verbal && row.expletiveEvidence === undefined))
+	if (
+		surface.redirectedTo ||
+		(verbal &&
+			(row.expletiveEvidence === undefined ||
+				row.governedPrepositionEvidence === undefined))
+	)
 		await ctx.db.patch(row._id, {
 			surfaceId: surface.redirectedTo ?? row.surfaceId,
 			...(verbal
-				? { expletiveEvidence: row.expletiveEvidence ?? null }
+				? {
+						expletiveEvidence: row.expletiveEvidence ?? null,
+						governedPrepositionEvidence:
+							row.governedPrepositionEvidence ?? null,
+					}
 				: {}),
 		});
 }

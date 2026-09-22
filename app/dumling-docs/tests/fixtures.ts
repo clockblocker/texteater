@@ -8,7 +8,6 @@ export const lemma: Dumling.Lemma<"en", "Lexeme", "VERB"> = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		hasGovPrep: null,
 		phrasal: null,
 		style: null,
 	},

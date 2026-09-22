@@ -72,6 +72,8 @@ export function restoreStoredGrammar(input: {
 					? {
 							expletiveEvidence:
 								attestation.expletiveEvidence ?? null,
+							governedPrepositionEvidence:
+								attestation.governedPrepositionEvidence ?? null,
 						}
 					: {}),
 			},

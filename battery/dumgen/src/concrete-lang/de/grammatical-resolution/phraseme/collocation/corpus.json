@@ -28,7 +28,8 @@
 				"canonicalForm": "eine Entscheidung treffen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:entscheidung-treffen"]
@@ -51,7 +52,8 @@
 				"canonicalForm": "eine Frage stellen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "An explicit dictionary entry is Citation rather than a contextual Inflection.",
 		"contaminationKeys": ["de-coll-lemma:frage-stellen"]
@@ -85,7 +87,8 @@
 				"canonicalForm": "zur Verfügung stellen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:verfuegung-stellen"]
@@ -119,7 +122,8 @@
 				"canonicalForm": "Anerkennung finden",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:anerkennung-finden"]
@@ -153,7 +157,8 @@
 				"canonicalForm": "einen Antrag stellen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:antrag-stellen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -187,7 +192,8 @@
 				"canonicalForm": "einen Antrag stellen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:antrag-stellen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -221,7 +227,8 @@
 				"canonicalForm": "eine Vereinbarung treffen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:vereinbarung-treffen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -255,7 +262,8 @@
 				"canonicalForm": "Abbitte leisten",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -289,7 +297,8 @@
 				"canonicalForm": "Abschied nehmen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -323,7 +332,8 @@
 				"canonicalForm": "Zustimmung erteilen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:zustimmung-erteilen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -357,7 +367,8 @@
 				"canonicalForm": "zum Ende kommen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:ende-kommen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -396,7 +407,8 @@
 				"canonicalForm": "in Anspruch nehmen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:anspruch-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -430,7 +442,8 @@
 				"canonicalForm": "zum Ausdruck bringen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:ausdruck-bringen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -464,7 +477,8 @@
 				"canonicalForm": "Einfluss nehmen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:einfluss-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -498,7 +512,8 @@
 				"canonicalForm": "in Erscheinung treten",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:erscheinung-treten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -521,7 +536,8 @@
 				"canonicalForm": "Abschied nehmen",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"]
 	},
@@ -554,7 +570,8 @@
 				"canonicalForm": "Abbitte leisten",
 				"coreFeatures": {}
 			},
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."

@@ -12,7 +12,6 @@ export const EnVerbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADP", "CCONJ", "PROPN"]),
-		hasGovPrep: EN_FEATURE_SCHEMA.hasGovPrep,
 		phrasal: EN_FEATURE_SCHEMA.phrasal,
 		style: EN_FEATURE_SCHEMA.style.extract(["Expr", "Vrnc"]),
 	}),

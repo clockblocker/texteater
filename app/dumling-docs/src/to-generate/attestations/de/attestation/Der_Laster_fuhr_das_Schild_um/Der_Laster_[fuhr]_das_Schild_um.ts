@@ -14,6 +14,7 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
+	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -40,7 +41,6 @@ const occurrenceAttestation = {
 			kind: "VERB",
 			coreFeatures: {
 				hasSepPrefix: "um",
-				hasGovPrep: null,
 				lexicallyReflexive: null,
 				verbType: null,
 			},

@@ -56,7 +56,7 @@
 		"fix": "bun run --silent biome check --write .",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:catalog": "bun codegen/validate-authored-catalog.ts",
-		"evaluate": "bun cli/evaluate.ts",
+		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
 		"typesafe:dummy": "bun cli/typesafe-dummy.ts"
 	},
 	"dependencies": {

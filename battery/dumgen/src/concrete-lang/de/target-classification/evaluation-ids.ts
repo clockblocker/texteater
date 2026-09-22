@@ -240,4 +240,10 @@ export const evaluationCaseIds = [
 	"target-de-abbreviation-und-zwar-click-und",
 	"target-de-abbreviation-sowie-click-sowie",
 	"target-de-abbreviation-dipl-ing-click-dipling",
+
+	"target-de-pronominal-adverb-stolz-click-stolz",
+	"target-de-pronominal-adverb-stolz-click-darauf",
+	"target-de-pronominal-adverb-warten-click-warte",
+	"target-de-pronominal-adverb-warten-click-darauf",
+	"target-de-pronominal-adverb-worauf-click-worauf",
 ] as const;

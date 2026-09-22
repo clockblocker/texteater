@@ -74,7 +74,9 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	};
 	const Attestation = {
 		unitKind: "Attestation",
-		...(verbal ? { expletiveEvidence: null } : {}),
+		...(verbal
+			? { expletiveEvidence: null, governedPrepositionEvidence: null }
+			: {}),
 		surface: Surface,
 		members: [{ attested: "example", orthography: "Standard" }],
 		realizationCoverage: "Full",

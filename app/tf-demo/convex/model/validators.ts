@@ -104,6 +104,7 @@ export const surfaceValueValidator = v.object({
 export const attestationValueValidator = v.object({
 	articleEvidence: v.optional(v.any()),
 	expletiveEvidence: v.optional(v.any()),
+	governedPrepositionEvidence: v.optional(v.any()),
 	unitKind: v.literal("Attestation"),
 	members: v.array(
 		v.object({

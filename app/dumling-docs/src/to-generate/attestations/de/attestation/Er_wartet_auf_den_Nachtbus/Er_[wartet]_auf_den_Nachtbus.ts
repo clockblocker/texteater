@@ -14,6 +14,7 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
+	governedPrepositionEvidence: { attested: "auf", orthography: "Standard" },
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -39,7 +40,6 @@ const occurrenceAttestation = {
 			family: "Lexeme",
 			kind: "VERB",
 			coreFeatures: {
-				hasGovPrep: "auf",
 				hasSepPrefix: null,
 				lexicallyReflexive: null,
 				verbType: null,
@@ -53,6 +53,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Er [wartet] auf den Nachtbus.",
 	classifierNotes:
-		"The realized governed preposition auf is a fixed occurrence member and remains recorded as the Lemma feature hasGovPrep.",
+		"The realized governed preposition auf is a fixed occurrence member and is recorded as governedPrepositionEvidence on the Attestation, not as a Lemma feature.",
 	isVerified: true,
 } as const;

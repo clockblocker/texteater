@@ -47,7 +47,6 @@ export const germanGehenLemma = {
 		verbType: null,
 		lexicallyReflexive: null,
 		hasSepPrefix: null,
-		hasGovPrep: null,
 	},
 	language: "de",
 	family: "Lexeme",

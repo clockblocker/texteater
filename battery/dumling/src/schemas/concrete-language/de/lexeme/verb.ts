@@ -10,7 +10,6 @@ import {
 } from "../de-feature-catalog.js";
 
 const DeVerbCoreFeatureBagSchema = z.strictObject({
-	hasGovPrep: DE_FEATURE_SCHEMA.hasGovPrep.nullable(),
 	hasSepPrefix: DE_FEATURE_SCHEMA.hasSepPrefix.nullable(),
 	lexicallyReflexive: DE_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
 	verbType: DE_FEATURE_SCHEMA.modalVerbType.nullable(),

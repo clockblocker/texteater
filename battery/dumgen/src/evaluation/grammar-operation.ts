@@ -122,7 +122,11 @@ export function grammarOperationExperiment(
 					? { articleEvidence: attestation.articleEvidence }
 					: {}),
 				...("expletiveEvidence" in attestation
-					? { expletiveEvidence: attestation.expletiveEvidence }
+					? {
+							expletiveEvidence: attestation.expletiveEvidence,
+							governedPrepositionEvidence:
+								attestation.governedPrepositionEvidence,
+						}
 					: {}),
 			};
 		},

@@ -26,14 +26,14 @@
 			"lemma": {
 				"canonicalForm": "lesen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -53,14 +53,14 @@
 			"lemma": {
 				"canonicalForm": "arbeiten",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		}
 	},
 	"grammar-de-verb-past-ging": {
@@ -90,14 +90,14 @@
 			"lemma": {
 				"canonicalForm": "gehen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -128,14 +128,14 @@
 			"lemma": {
 				"canonicalForm": "laufen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -166,14 +166,14 @@
 			"lemma": {
 				"canonicalForm": "hinauslaufen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "hinaus",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -204,14 +204,14 @@
 			"lemma": {
 				"canonicalForm": "mitbringen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "mit",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -242,14 +242,14 @@
 			"lemma": {
 				"canonicalForm": "singen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -280,14 +280,17 @@
 			"lemma": {
 				"canonicalForm": "aufpassen",
 				"coreFeatures": {
-					"hasGovPrep": "auf",
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "auf",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Two auf. First governed preposition. Second separable prefix. dich free. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -318,14 +321,17 @@
 			"lemma": {
 				"canonicalForm": "sich erinnern",
 				"coreFeatures": {
-					"hasGovPrep": "an",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "an",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -356,14 +362,17 @@
 			"lemma": {
 				"canonicalForm": "warten",
 				"coreFeatures": {
-					"hasGovPrep": "auf",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "auf",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -394,14 +403,14 @@
 			"lemma": {
 				"canonicalForm": "aufstehen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -432,14 +441,14 @@
 			"lemma": {
 				"canonicalForm": "sich schämen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -470,14 +479,14 @@
 			"lemma": {
 				"canonicalForm": "reisen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "wird member. reisen head. Head stays Inf. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -508,14 +517,17 @@
 			"lemma": {
 				"canonicalForm": "bitten",
 				"coreFeatures": {
-					"hasGovPrep": "um",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "um",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -546,14 +558,14 @@
 			"lemma": {
 				"canonicalForm": "mögen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
 	},
@@ -584,14 +596,14 @@
 			"lemma": {
 				"canonicalForm": "können",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
 	},
@@ -622,14 +634,14 @@
 			"lemma": {
 				"canonicalForm": "werden",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -660,14 +672,14 @@
 			"lemma": {
 				"canonicalForm": "haben",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -698,14 +710,14 @@
 			"lemma": {
 				"canonicalForm": "tanzen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -736,14 +748,14 @@
 			"lemma": {
 				"canonicalForm": "schließen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -774,14 +786,14 @@
 			"lemma": {
 				"canonicalForm": "schließen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "TIGER productive state passive. ist member. geschlossen head stays Part under schließen. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -812,14 +824,14 @@
 			"lemma": {
 				"canonicalForm": "warten",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -855,14 +867,17 @@
 			"lemma": {
 				"canonicalForm": "sich beteiligen",
 				"coreFeatures": {
-					"hasGovPrep": "an",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "an",
+				"orthography": "Standard"
+			}
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
@@ -896,14 +911,14 @@
 			"lemma": {
 				"canonicalForm": "aufsetzen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "sich ordinary object. Not member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -937,14 +952,14 @@
 			"lemma": {
 				"canonicalForm": "sich etablieren",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
@@ -978,14 +993,14 @@
 			"lemma": {
 				"canonicalForm": "sich einpendeln",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "ein",
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
@@ -1019,14 +1034,17 @@
 			"lemma": {
 				"canonicalForm": "ausschließen",
 				"coreFeatures": {
-					"hasGovPrep": "von",
 					"hasSepPrefix": "aus",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "von",
+				"orthography": "Standard"
+			}
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
@@ -1060,14 +1078,14 @@
 			"lemma": {
 				"canonicalForm": "nachwirken",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "nach",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
@@ -1101,14 +1119,17 @@
 			"lemma": {
 				"canonicalForm": "weiterleiten",
 				"coreFeatures": {
-					"hasGovPrep": "an",
 					"hasSepPrefix": "weiter",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "an",
+				"orthography": "Standard"
+			}
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
@@ -1142,14 +1163,14 @@
 			"lemma": {
 				"canonicalForm": "finden",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "First wird member. Last wird other verb. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -1183,14 +1204,14 @@
 			"lemma": {
 				"canonicalForm": "herstellen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "her",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "soll modal. Not member. werden passive member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -1224,14 +1245,14 @@
 			"lemma": {
 				"canonicalForm": "ankündigen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "an",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
@@ -1265,14 +1286,14 @@
 			"lemma": {
 				"canonicalForm": "auffressen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
@@ -1311,14 +1332,17 @@
 			"lemma": {
 				"canonicalForm": "sich aussprechen",
 				"coreFeatures": {
-					"hasGovPrep": "für",
 					"hasSepPrefix": "aus",
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "für",
+				"orthography": "Standard"
+			}
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
@@ -1352,14 +1376,14 @@
 			"lemma": {
 				"canonicalForm": "auffinden",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
@@ -1393,14 +1417,14 @@
 			"lemma": {
 				"canonicalForm": "verschiffen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
@@ -1439,14 +1463,17 @@
 			"lemma": {
 				"canonicalForm": "sich vorbereiten",
 				"coreFeatures": {
-					"hasGovPrep": "auf",
 					"hasSepPrefix": "vor",
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "auf",
+				"orthography": "Standard"
+			}
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
@@ -1480,14 +1507,17 @@
 			"lemma": {
 				"canonicalForm": "warten",
 				"coreFeatures": {
-					"hasGovPrep": "auf",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "auf",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1518,14 +1548,14 @@
 			"lemma": {
 				"canonicalForm": "warten",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1556,14 +1586,17 @@
 			"lemma": {
 				"canonicalForm": "verzichten",
 				"coreFeatures": {
-					"hasGovPrep": "auf",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "auf",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1594,14 +1627,14 @@
 			"lemma": {
 				"canonicalForm": "sprechen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1632,14 +1665,17 @@
 			"lemma": {
 				"canonicalForm": "sich erinnern",
 				"coreFeatures": {
-					"hasGovPrep": "an",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "an",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1670,14 +1706,17 @@
 			"lemma": {
 				"canonicalForm": "sich sehnen",
 				"coreFeatures": {
-					"hasGovPrep": "nach",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "nach",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1708,14 +1747,14 @@
 			"lemma": {
 				"canonicalForm": "sich erholen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1746,14 +1785,17 @@
 			"lemma": {
 				"canonicalForm": "warnen",
 				"coreFeatures": {
-					"hasGovPrep": "vor",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": {
+				"attested": "vor",
+				"orthography": "Standard"
+			}
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1784,14 +1826,14 @@
 			"lemma": {
 				"canonicalForm": "arbeiten",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1822,14 +1864,14 @@
 			"lemma": {
 				"canonicalForm": "spielen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1842,7 +1884,6 @@
 			"lemma": {
 				"canonicalForm": "geben",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -1870,7 +1911,8 @@
 			"expletiveEvidence": {
 				"attested": "Es",
 				"orthography": "Standard"
-			}
+			},
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:demo-exists"]
@@ -1884,7 +1926,6 @@
 			"lemma": {
 				"canonicalForm": "regnen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -1912,7 +1953,8 @@
 			"expletiveEvidence": {
 				"attested": "Es",
 				"orthography": "Standard"
-			}
+			},
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:demo-weather"]
@@ -1926,7 +1968,6 @@
 			"lemma": {
 				"canonicalForm": "geben",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -1954,7 +1995,8 @@
 			"expletiveEvidence": {
 				"attested": "es",
 				"orthography": "Standard"
-			}
+			},
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-question"]
@@ -1968,7 +2010,6 @@
 			"lemma": {
 				"canonicalForm": "geben",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -1996,7 +2037,8 @@
 			"expletiveEvidence": {
 				"attested": "Es",
 				"orthography": "Standard"
-			}
+			},
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-past"]
@@ -2010,7 +2052,6 @@
 			"lemma": {
 				"canonicalForm": "geben",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2038,7 +2079,8 @@
 			"expletiveEvidence": {
 				"attested": "es",
 				"orthography": "Standard"
-			}
+			},
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-subordinate"]
@@ -2052,7 +2094,6 @@
 			"lemma": {
 				"canonicalForm": "regnen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2080,7 +2121,8 @@
 			"expletiveEvidence": {
 				"attested": "es",
 				"orthography": "Standard"
-			}
+			},
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-weather"]
@@ -2094,7 +2136,6 @@
 			"lemma": {
 				"canonicalForm": "gehen",
 				"coreFeatures": {
-					"hasGovPrep": "um",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2122,6 +2163,10 @@
 			"expletiveEvidence": {
 				"attested": "Es",
 				"orthography": "Standard"
+			},
+			"governedPrepositionEvidence": {
+				"attested": "um",
+				"orthography": "Standard"
 			}
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
@@ -2136,7 +2181,6 @@
 			"lemma": {
 				"canonicalForm": "sich handeln",
 				"coreFeatures": {
-					"hasGovPrep": "um",
 					"hasSepPrefix": null,
 					"lexicallyReflexive": "Yes",
 					"verbType": null
@@ -2169,6 +2213,10 @@
 			"expletiveEvidence": {
 				"attested": "Es",
 				"orthography": "Standard"
+			},
+			"governedPrepositionEvidence": {
+				"attested": "um",
+				"orthography": "Standard"
 			}
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
@@ -2183,7 +2231,6 @@
 			"lemma": {
 				"canonicalForm": "liegen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2208,7 +2255,8 @@
 			"normalizedMembers": ["liegt"],
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:referential-es"]
@@ -2222,7 +2270,6 @@
 			"lemma": {
 				"canonicalForm": "kommen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2247,7 +2294,8 @@
 			"normalizedMembers": ["kamen"],
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:positional-es"]
@@ -2261,7 +2309,6 @@
 			"lemma": {
 				"canonicalForm": "freuen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2286,7 +2333,8 @@
 			"normalizedMembers": ["freut"],
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:anticipatory-es"]
@@ -2300,7 +2348,6 @@
 			"lemma": {
 				"canonicalForm": "meinen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -2325,7 +2372,8 @@
 			"normalizedMembers": ["meint"],
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:object-es"]
@@ -2357,14 +2405,14 @@
 			"lemma": {
 				"canonicalForm": "bestellen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Whole verbal Surface hätt bestellt: Konjunktiv II of the past (unreal past, perfect Yes with mood Sub and tense Past), finite as a whole; the Partizip II is only the shape of the head member. hätt is a licensed verse apocope of hätte, not a typo: member orthography Standard, Surface spelling Variant, the literal form kept in normalizedMembers, like muß. The auxiliary member is a Surface of the AUX Reading haben-Perfekt, reachable only from this Surface's sheet (map 487, ticket 507)."
 	},
@@ -2395,14 +2443,14 @@
 			"lemma": {
 				"canonicalForm": "können",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2422,14 +2470,14 @@
 			"lemma": {
 				"canonicalForm": "dürfen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026)."
 	},
@@ -2460,14 +2508,14 @@
 			"lemma": {
 				"canonicalForm": "dürfen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2498,14 +2546,14 @@
 			"lemma": {
 				"canonicalForm": "wollen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2536,14 +2584,14 @@
 			"lemma": {
 				"canonicalForm": "mögen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2574,14 +2622,14 @@
 			"lemma": {
 				"canonicalForm": "sollen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2612,14 +2660,14 @@
 			"lemma": {
 				"canonicalForm": "müssen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2650,14 +2698,14 @@
 			"lemma": {
 				"canonicalForm": "mögen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2688,14 +2736,14 @@
 			"lemma": {
 				"canonicalForm": "wollen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2726,14 +2774,14 @@
 			"lemma": {
 				"canonicalForm": "sollen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2764,14 +2812,14 @@
 			"lemma": {
 				"canonicalForm": "müssen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2802,14 +2850,14 @@
 			"lemma": {
 				"canonicalForm": "müssen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2840,14 +2888,14 @@
 			"lemma": {
 				"canonicalForm": "können",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2878,14 +2926,14 @@
 			"lemma": {
 				"canonicalForm": "mögen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": "Mod"
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma."
 	},
@@ -2916,14 +2964,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -2954,14 +3002,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular imperative of VERB sein (ADR 0026). Initial capital is Standard and normalizes lowercase."
 	},
@@ -2992,14 +3040,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3030,14 +3078,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3068,14 +3116,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3106,14 +3154,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3144,14 +3192,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3182,14 +3230,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Perfect of copular VERB sein: ist is its auxiliary member, gewesen the head (ADR 0026). Whole-Surface composition per ADR 0022."
 	},
@@ -3209,14 +3257,14 @@
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface."
 	},
@@ -3247,14 +3295,14 @@
 			"lemma": {
 				"canonicalForm": "liefern",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Recipient passive: bekommt is the auxiliary member, geliefert the head. voice Pass, passive Recipient (ADR 0026)."
 	},
@@ -3285,14 +3333,14 @@
 			"lemma": {
 				"canonicalForm": "überreichen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "erhalten as recipient-passive auxiliary; finite past on the whole Surface. überreichen is inseparable, so hasSepPrefix stays null."
 	},
@@ -3323,14 +3371,14 @@
 			"lemma": {
 				"canonicalForm": "bekommen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Lexical bekommen with an object: ordinary VERB, no passive."
 	},
@@ -3361,14 +3409,14 @@
 			"lemma": {
 				"canonicalForm": "bekommen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
 				}
 			},
 			"realizationCoverage": "Full",
-			"expletiveEvidence": null
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
 		},
 		"explanation": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
 	}

@@ -24,7 +24,6 @@ export const ranSurface = {
 		coreFeatures: {
 			abbr: null,
 			extPos: null,
-			hasGovPrep: null,
 			phrasal: null,
 			style: null,
 		},

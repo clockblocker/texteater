@@ -37,7 +37,7 @@ German has richer inflectional coverage than English for nouns and adjectives.
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
 | \`NOUN\` | \`gender\`, \`hyph\` | \`case\`, \`number\` |
-| \`VERB\` | \`hasGovPrep\`, \`hasSepPrefix\`, \`lexicallyReflexive\`, \`verbType\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
+| \`VERB\` | \`hasSepPrefix\`, \`lexicallyReflexive\`, \`verbType\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`foreign\`, \`numType\`, \`variant\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.

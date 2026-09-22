@@ -24,7 +24,7 @@ English feature schemas are intentionally narrower than the abstract ontology.
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
 | \`NOUN\` | \`abbr\`, \`foreign\`, \`numForm\`, \`numType\`, \`style\` | \`number\` |
-| \`VERB\` | \`hasGovPrep\`, \`phrasal\`, \`style\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
+| \`VERB\` | \`phrasal\`, \`style\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`numForm\`, \`numType\`, \`style\` | \`degree\` |
 
 English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. English verb \`tense\` supports \`Past\` and \`Pres\`, and \`verbForm\` supports \`Fin\`, \`Ger\`, \`Inf\`, and \`Part\`.
@@ -57,7 +57,6 @@ const runLemma = {
 \tcoreFeatures: {
 \t\tabbr: null,
 \t\textPos: null,
-\t\thasGovPrep: null,
 \t\tphrasal: null,
 \t\tstyle: null,
 \t},

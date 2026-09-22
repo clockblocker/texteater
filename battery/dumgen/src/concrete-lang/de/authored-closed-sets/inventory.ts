@@ -134,6 +134,7 @@ import { member as m157 } from "./members/lexeme/pronoun/relative/die-feminine-s
 import { member as m156 } from "./members/lexeme/pronoun/relative/die-feminine-singular-nominative.js";
 import { member as m159 } from "./members/lexeme/pronoun/relative/die-plural-accusative.js";
 import { member as m158 } from "./members/lexeme/pronoun/relative/die-plural-nominative.js";
+import { pronominalAdverbs } from "./pronominal-adverbs.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
 export const authoredMembers = [
 	m0,
@@ -273,4 +274,5 @@ export const authoredMembers = [
 	m169,
 	subjectEs,
 	...reviewedPronouns.map(({ member }) => member),
+	...pronominalAdverbs,
 ];

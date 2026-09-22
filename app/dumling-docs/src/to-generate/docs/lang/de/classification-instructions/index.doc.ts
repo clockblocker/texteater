@@ -95,7 +95,7 @@ The classifier should keep the payload split cleanly:
 
 This split matters in German because many tempting distinctions belong in different places.
 
-\`hasGovPrep\`, \`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts.
+\`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German verbal \`Attestation\` records it as \`governedPrepositionEvidence\`.
 
 \`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form.
 
@@ -136,7 +136,6 @@ German \`VERB\` and \`AUX\` reuse a narrow UD-style verbal core:
 
 The German pack also uses a small set of custom verbal features that matter a lot in classification:
 
-- \`hasGovPrep\`
 - \`hasSepPrefix\`
 - \`lexicallyReflexive\`
 - \`verbType: "Mod"\`

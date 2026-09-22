@@ -614,6 +614,14 @@ export const persistResolvedClick = internalMutation({
 						expletiveEvidence:
 							args.occurrence.attestation.expletiveEvidence,
 					}),
+			...(args.occurrence.attestation.governedPrepositionEvidence ===
+			undefined
+				? {}
+				: {
+						governedPrepositionEvidence:
+							args.occurrence.attestation
+								.governedPrepositionEvidence,
+					}),
 			...(args.occurrence.attestation.articleEvidence === undefined
 				? {}
 				: {

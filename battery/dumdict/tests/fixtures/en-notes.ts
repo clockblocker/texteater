@@ -6,7 +6,6 @@ import { derivePendingEntryId } from "../../src/core/pending";
 const englishVerbFeatures = {
 	style: null,
 	phrasal: null,
-	hasGovPrep: null,
 	extPos: null,
 	abbr: null,
 } as const;

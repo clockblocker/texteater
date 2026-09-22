@@ -36,7 +36,6 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 			canonicalForm: "aufmachen",
 			coreFeatures: {
 				hasSepPrefix: "Yes",
-				hasGovPrep: null,
 				lexicallyReflexive: null,
 				verbType: null,
 			},

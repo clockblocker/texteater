@@ -710,7 +710,7 @@ function DerivedNotes({
 											? "is the verb's required reflexive; not a free sich."
 											: member.role ===
 													"GovernedPreposition"
-												? "is the preposition the verb governs; projected as hasGovPrep."
+												? "is the preposition the verb governs; recorded as governed-preposition evidence on the Attestation, not as a Lemma feature."
 												: member.role ===
 														"SeparableParticle"
 													? "is the separated prefix; projected as hasSepPrefix."

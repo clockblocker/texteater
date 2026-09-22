@@ -30,7 +30,6 @@ const verb = {
 		kind: "VERB",
 		canonicalForm: "geben",
 		coreFeatures: {
-			hasGovPrep: null,
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
 			verbType: null,
@@ -122,6 +121,7 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 			realizationCoverage: "Full",
 			members: [evidence, { attested: "gibt", orthography: "Standard" }],
 			expletiveEvidence: evidence,
+			governedPrepositionEvidence: null,
 		};
 		expect(parseUnit(attestation).success).toBe(true);
 		expect(
@@ -138,4 +138,42 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 				.success,
 		).toBe(false);
 	}
+});
+test("governed-preposition evidence must be an owned member of the verbal Attestation", () => {
+	const auf = { attested: "auf", orthography: "Standard" };
+	const attestation = {
+		unitKind: "Attestation",
+		surface: {
+			...verb,
+			normalizedSurface: "wartet auf",
+			inflectionalFeatures: {
+				...verb.inflectionalFeatures,
+				expletive: null,
+			},
+		},
+		realizationCoverage: "Full",
+		members: [{ attested: "wartet", orthography: "Standard" }, auf],
+		expletiveEvidence: null,
+		governedPrepositionEvidence: auf,
+	};
+	expect(parseUnit(attestation).success).toBe(true);
+	expect(
+		parseUnit({ ...attestation, governedPrepositionEvidence: null })
+			.success,
+	).toBe(true);
+	expect(
+		parseUnit({
+			...attestation,
+			governedPrepositionEvidence: {
+				attested: "an",
+				orthography: "Standard",
+			},
+		}).success,
+	).toBe(false);
+	expect(
+		parseUnit({
+			...attestation,
+			governedPrepositionEvidence: { ...auf, orthography: "Typo" },
+		}).success,
+	).toBe(false);
 });

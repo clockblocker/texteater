@@ -52,8 +52,8 @@ function transformed(text: string, mode: string): string {
 
 const lexicalStringLimit = 254;
 /**
- * Candidate strings for open lexical features (separable prefix, governed
- * preposition) derived from raw members only, so they can be asked in the same
+ * Candidate strings for open lexical features (the separable prefix) derived
+ * from raw members only, so they can be asked in the same
  * round trip as the feature questions. Casing follows ordinary normalization;
  * the judged canonical form may still add candidates in the follow-up.
  */
@@ -91,7 +91,7 @@ function speculativeLexicalStringCandidates(
 }
 function lexicalStringQuestion(key: string, candidates: readonly string[]) {
 	return choice(
-		`If the lexical feature judgment establishes ${key} as Present, which exact text in \`lexicalStringCandidates.${key}\` is it? Prefixes are separable prefixes; governed prepositions must be lexically selected and cannot be a detached prefix or adjunct.`,
+		`If the lexical feature judgment establishes ${key} as Present, which exact text in \`lexicalStringCandidates.${key}\` is it? Prefixes are separable lexical prefixes, never a governed preposition or an adposition with its own complement.`,
 		{
 			...Object.fromEntries(
 				candidates.map((text, index) => [`text_${index}`, text]),
@@ -122,7 +122,7 @@ const nounPolicy = {
 };
 
 const verbalIdentityPolicy =
-	"For VERB, hasSepPrefix is only a separable lexical prefix, hasGovPrep only a lexically selected preposition (never an adjunct or a detached prefix), lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
+	"For VERB, hasSepPrefix is only a separable lexical prefix, lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb lexically selects for its complement (wartet auf, erinnert sich an, geht um) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
 
 const partialCoveragePolicy =
 	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
@@ -310,6 +310,22 @@ export async function resolveGrammarJudgments(
 		: speculativeLexicalStringCandidates(catalog, input.members);
 	for (const [key, candidates] of Object.entries(lexicalStringCandidates))
 		questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
+	const governedPreposition =
+		verbal && !auxiliary && input.members.length > 1;
+	if (governedPreposition)
+		questions.governedPreposition = choice(
+			"Under `policy.verbalIdentity`, which supplied member is the preposition this verbal target lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.",
+			{
+				...Object.fromEntries(
+					input.members.map((text, index) => [
+						`member_${index}`,
+						`\`members[${index}]\` (${text}) is the lexically governed preposition`,
+					]),
+				),
+				Absent: "No member is a lexically governed preposition",
+				Unresolved: "Government cannot be defensibly decided",
+			},
+		);
 	const judge = judgmentCaller(options);
 	const state = {
 		...input,
@@ -451,6 +467,21 @@ export async function resolveGrammarJudgments(
 		const normalizationModes = input.members.map((_, index) =>
 			selected(`normalization_${index}`),
 		);
+		let governedPrepositionEvidence: {
+			attested: string;
+			orthography: "Standard" | "Typo";
+		} | null = null;
+		if (governedPreposition) {
+			const answer = selected("governedPreposition");
+			if (answer !== "Absent") {
+				const position = Number(answer.slice("member_".length));
+				const attested = input.members[position];
+				const orthography = memberOrthographies[position];
+				if (attested === undefined || orthography === undefined)
+					return fail("Unaligned governed-preposition evidence");
+				governedPrepositionEvidence = { attested, orthography };
+			}
+		}
 		const normalizedMembers = input.members.map((text, index) =>
 			transformed(text, normalizationModes[index]!),
 		);
@@ -552,7 +583,12 @@ export async function resolveGrammarJudgments(
 					memberOrthographies,
 					normalizedMembers,
 					realizationCoverage: coverage,
-					...(verbal ? { expletiveEvidence: null } : {}),
+					...(verbal
+						? {
+								expletiveEvidence: null,
+								governedPrepositionEvidence: null,
+							}
+						: {}),
 					...(encounter.target.kind === "NOUN"
 						? { articleEvidence: null }
 						: {}),
@@ -589,6 +625,12 @@ export async function resolveGrammarJudgments(
 						...(wantsCanonical
 							? {
 									judgedCore: core,
+									...(governedPrepositionEvidence
+										? {
+												governedPreposition:
+													governedPrepositionEvidence.attested,
+											}
+										: {}),
 									canonicalFormPolicy:
 										canonicalFormGuidance[
 											encounter.target.kind
@@ -683,7 +725,7 @@ export async function resolveGrammarJudgments(
 				if (candidates[key]!.length > 254)
 					return fail("Too many complete lexical-string candidates");
 				followup[key] = choice(
-					`Choose the exact ${key} established by the lexical feature judgment. Prefixes are separable prefixes; governed prepositions must be lexically selected and cannot be a detached prefix or adjunct.`,
+					`Choose the exact ${key} established by the lexical feature judgment. Prefixes are separable lexical prefixes, never a governed preposition or an adposition with its own complement.`,
 					{
 						...Object.fromEntries(
 							candidates[key]!.map((text, index) => [
@@ -768,7 +810,9 @@ export async function resolveGrammarJudgments(
 			};
 		}
 		const output = {
-			...(verbal ? { expletiveEvidence } : {}),
+			...(verbal
+				? { expletiveEvidence, governedPrepositionEvidence }
+				: {}),
 			...(encounter.target.kind === "NOUN"
 				? { articleEvidence: article?.evidence ?? null }
 				: {}),

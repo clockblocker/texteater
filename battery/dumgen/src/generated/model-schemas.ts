@@ -1259,6 +1259,23 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
+					governedPrepositionEvidence: {
+						anyOf: [
+							{
+								type: "object",
+								properties: {
+									attested: { type: "string", minLength: 1 },
+									orthography: {
+										type: "string",
+										enum: ["Standard", "Typo"],
+									},
+								},
+								required: ["attested", "orthography"],
+								additionalProperties: false,
+							},
+							{ type: "null" },
+						],
+					},
 				},
 				required: [
 					"lemma",
@@ -1267,6 +1284,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
+					"governedPrepositionEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -3157,12 +3175,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							coreFeatures: {
 								type: "object",
 								properties: {
-									hasGovPrep: {
-										anyOf: [
-											{ type: "string", minLength: 1 },
-											{ type: "null" },
-										],
-									},
 									hasSepPrefix: {
 										anyOf: [
 											{ type: "string", minLength: 1 },
@@ -3183,7 +3195,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									},
 								},
 								required: [
-									"hasGovPrep",
 									"hasSepPrefix",
 									"lexicallyReflexive",
 									"verbType",
@@ -3918,6 +3929,23 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
+					governedPrepositionEvidence: {
+						anyOf: [
+							{
+								type: "object",
+								properties: {
+									attested: { type: "string", minLength: 1 },
+									orthography: {
+										type: "string",
+										enum: ["Standard", "Typo"],
+									},
+								},
+								required: ["attested", "orthography"],
+								additionalProperties: false,
+							},
+							{ type: "null" },
+						],
+					},
 				},
 				required: [
 					"lemma",
@@ -3926,6 +3954,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
+					"governedPrepositionEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -5625,6 +5654,23 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
+					governedPrepositionEvidence: {
+						anyOf: [
+							{
+								type: "object",
+								properties: {
+									attested: { type: "string", minLength: 1 },
+									orthography: {
+										type: "string",
+										enum: ["Standard", "Typo"],
+									},
+								},
+								required: ["attested", "orthography"],
+								additionalProperties: false,
+							},
+							{ type: "null" },
+						],
+					},
 				},
 				required: [
 					"lemma",
@@ -5633,6 +5679,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
+					"governedPrepositionEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -6496,6 +6543,23 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
+					governedPrepositionEvidence: {
+						anyOf: [
+							{
+								type: "object",
+								properties: {
+									attested: { type: "string", minLength: 1 },
+									orthography: {
+										type: "string",
+										enum: ["Standard", "Typo"],
+									},
+								},
+								required: ["attested", "orthography"],
+								additionalProperties: false,
+							},
+							{ type: "null" },
+						],
+					},
 				},
 				required: [
 					"lemma",
@@ -6504,6 +6568,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
+					"governedPrepositionEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -8936,12 +9001,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{ type: "null" },
 										],
 									},
-									hasGovPrep: {
-										anyOf: [
-											{ type: "string", minLength: 1 },
-											{ type: "null" },
-										],
-									},
 									phrasal: {
 										anyOf: [
 											{ type: "string", enum: ["Yes"] },
@@ -8961,7 +9020,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 								required: [
 									"abbr",
 									"extPos",
-									"hasGovPrep",
 									"phrasal",
 									"style",
 								],

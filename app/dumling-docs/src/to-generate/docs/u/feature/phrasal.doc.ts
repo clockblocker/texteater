@@ -42,7 +42,7 @@ Partial Attestations may include only the verbal component, as in \`take\` from 
 		{
 			heading: "Distinguish From Other Features",
 			body: `
-Do not use \`phrasal\` for ordinary verb-plus-preposition government. That is modeled by [\`HasGovPrep\`](/u/feature/has-gov-prep/).
+Do not use \`phrasal\` for ordinary verb-plus-preposition government. A governed preposition is not a Lemma feature; it is recorded as \`governedPrepositionEvidence\` on the [\`Attestation\`](/u/entity/attestation/).
 
 Do not use it for German separable prefixes either. Those are modeled by [\`HasSepPrefix\`](/u/feature/has-sep-prefix/).
 `,

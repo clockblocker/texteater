@@ -24,7 +24,9 @@ bun --env-file=.env.local battery/dumgen/cli/sample-reading.ts --baseline main -
 
 `--model` and `--settings` configure text generation; `--judgment-model` and
 `--judgment-timeout` configure bounded judgments. Live operations require
-`OPENAI_API_KEY` and `TYPESAFE_API_KEY`. Both transports
+`OPENAI_API_KEY` and `TYPESAFE_API_KEY`. The `evaluate` script reads the
+repository-root `.env.local` for any key the shell does not already export,
+so a non-login shell can run it too; a missing file is ignored. Both transports
 disable automatic retries. Laboratory's **Evaluation runs** view uses the same definitions
 and immutable version-2 records, with separate domain results, failures and
 TypeSafe/Luna calls. The four structured-Knowledge prototypes remain deferred

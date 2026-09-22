@@ -837,7 +837,6 @@ export const additionalOperationCases = Object.fromEntries(
 				: example.kind === "NOUN"
 					? { gender: example.gender, hyph: null }
 					: {
-							hasGovPrep: null,
 							hasSepPrefix: null,
 							lexicallyReflexive: null,
 							verbType: null,

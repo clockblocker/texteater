@@ -3531,7 +3531,6 @@
 				"kind": "VERB",
 				"canonicalForm": "laufen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -3579,7 +3578,6 @@
 				"kind": "VERB",
 				"canonicalForm": "laufen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": null,
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -3635,7 +3633,6 @@
 				"kind": "VERB",
 				"canonicalForm": "aufstehen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null
@@ -3691,7 +3688,6 @@
 				"kind": "VERB",
 				"canonicalForm": "aufstehen",
 				"coreFeatures": {
-					"hasGovPrep": null,
 					"hasSepPrefix": "auf",
 					"lexicallyReflexive": null,
 					"verbType": null

@@ -154,9 +154,15 @@ export function isGermanVerbalAttestation(input: unknown): boolean {
 			} | null;
 		};
 		expletiveEvidence: { attested: string; orthography: string } | null;
+		governedPrepositionEvidence: {
+			attested: string;
+			orthography: string;
+		} | null;
 		members: { attested: string; orthography: string }[];
 		realizationCoverage: string;
 	};
+	if (!isOwnedEvidence(value.governedPrepositionEvidence, value.members))
+		return false;
 	const bag = value.surface.inflectionalFeatures;
 	if (!bag?.expletive) return value.expletiveEvidence === null;
 	const evidence = value.expletiveEvidence;
@@ -175,7 +181,22 @@ export function isGermanVerbalAttestation(input: unknown): boolean {
 	);
 }
 export function germanVerbalAttestationError(): string {
-	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization";
+	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization; governed-preposition evidence must be an owned member";
+}
+
+/** Null evidence is fine; present evidence must equal one owned member. */
+function isOwnedEvidence(
+	evidence: { attested: string; orthography: string } | null,
+	members: readonly { attested: string; orthography: string }[],
+): boolean {
+	return (
+		evidence === null ||
+		members.some(
+			(member) =>
+				member.attested === evidence.attested &&
+				member.orthography === evidence.orthography,
+		)
+	);
 }
 
 export function isGermanVerbalSurface(input: unknown): boolean {

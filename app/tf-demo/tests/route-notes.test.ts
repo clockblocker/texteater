@@ -575,7 +575,6 @@ function lemmaCoreFeatures(_id: string, canonicalForm: string, kind: string) {
 			verbType: null,
 			lexicallyReflexive: null,
 			hasSepPrefix: null,
-			hasGovPrep: null,
 		};
 	}
 	if (kind !== "PRON") return {};
