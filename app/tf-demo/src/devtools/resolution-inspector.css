@@ -33,6 +33,15 @@
 	padding: 1rem;
 	border-bottom: 1px solid var(--border);
 }
+.resolution-inspector-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+.resolution-inspector-filter[aria-pressed="true"] {
+	background: var(--accent);
+	color: var(--accent-foreground);
+}
 .resolution-inspector-history header p,
 .inspection-footer {
 	font-size: 0.75rem;

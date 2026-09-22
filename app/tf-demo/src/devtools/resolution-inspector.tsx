@@ -6,6 +6,9 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
 } from "lego";
 import {
 	ActivityIcon,
@@ -14,9 +17,10 @@ import {
 	CheckIcon,
 	ChevronRightIcon,
 	CopyIcon,
+	FilterIcon,
 	XIcon,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
@@ -25,6 +29,8 @@ import { transportBreakdown } from "./resolution-transport";
 import "./resolution-inspector.css";
 
 type Step = Doc<"inspectionSteps">;
+type Click = Doc<"inspectionClicks">;
+const GENERATING_ONLY_KEY = "tf-demo:resolution-inspector:generating-only";
 const time = (ms: number) =>
 	ms < 1
 		? "<1 ms"
@@ -42,11 +48,24 @@ export function ResolutionInspector() {
 	const visitorId = useAnonymousVisitorId();
 	const [open, setOpen] = useState(false);
 	const [selected, setSelected] = useState<string | null>(null);
+	const [generatingOnly, setGeneratingOnly] = useState(
+		() => localStorage.getItem(GENERATING_ONLY_KEY) === "true",
+	);
+	useEffect(() => {
+		localStorage.setItem(GENERATING_ONLY_KEY, String(generatingOnly));
+	}, [generatingOnly]);
 	const history = usePaginatedQuery(
 		api.resolutionInspection.list,
-		open ? { visitorId } : "skip",
+		open ? { visitorId, generatingOnly } : "skip",
 		{ initialNumItems: 25 },
 	);
+	// Changing the filter restarts pagination; keep the previous entries on
+	// screen until the refiltered page arrives so the panel does not flicker.
+	const settled = useRef<Click[]>([]);
+	if (history.status !== "LoadingFirstPage")
+		settled.current = history.results;
+	const loadingFirstPage = history.status === "LoadingFirstPage";
+	const results = loadingFirstPage ? settled.current : history.results;
 	return (
 		<>
 			<Button
@@ -67,29 +86,55 @@ export function ResolutionInspector() {
 					<header>
 						<div>
 							<strong>Resolution inspector</strong>
-							<p>Analyses and clicks from this browser</p>
 						</div>
-						<Button
-							size="icon-sm"
-							variant="ghost"
-							aria-label="Close inspection history"
-							onClick={() => setOpen(false)}
-						>
-							<XIcon />
-						</Button>
+						<div className="resolution-inspector-header-actions">
+							<Tooltip>
+								<TooltipTrigger
+									render={
+										<Button
+											type="button"
+											size="icon-sm"
+											variant="outline"
+											className="resolution-inspector-filter"
+											aria-pressed={generatingOnly}
+											aria-label="Show generating runs only"
+											onClick={() =>
+												setGeneratingOnly(
+													(value) => !value,
+												)
+											}
+										>
+											<FilterIcon size={14} />
+										</Button>
+									}
+								/>
+								<TooltipContent side="bottom">
+									{generatingOnly
+										? "Showing generating runs only. Stored-result selections are hidden."
+										: "Showing all runs. Click to hide stored-result selections."}
+								</TooltipContent>
+							</Tooltip>
+							<Button
+								size="icon-sm"
+								variant="ghost"
+								aria-label="Close inspection history"
+								onClick={() => setOpen(false)}
+							>
+								<XIcon />
+							</Button>
+						</div>
 					</header>
 					<div className="resolution-inspector-clicks">
-						{history.status === "LoadingFirstPage" ? (
+						{loadingFirstPage && results.length === 0 ? (
 							<p className="inspection-empty">Loading history…</p>
-						) : history.results.length === 0 ? (
+						) : results.length === 0 ? (
 							<p className="inspection-empty">
-								Submit or re-analyze a text to inspect sentence
-								splitting and segmentation, or click a word to
-								inspect its resolution. New runs are recorded
-								even while this panel is closed.
+								{generatingOnly
+									? "No generating runs yet. Stored-result selections are hidden by the filter."
+									: "Submit or re-analyze a text to inspect sentence splitting and segmentation, or click a word to inspect its resolution. New runs are recorded even while this panel is closed."}
 							</p>
 						) : (
-							history.results.map((click) => (
+							results.map((click) => (
 								<div
 									className="inspection-click"
 									key={click._id}

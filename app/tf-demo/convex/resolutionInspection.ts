@@ -140,16 +140,28 @@ export const recordSteps = internalMutation({
 	},
 });
 export const list = query({
-	args: { visitorId: v.string(), paginationOpts: paginationOptsValidator },
+	args: {
+		visitorId: v.string(),
+		/** Hide selections that reused a stored result and generated nothing. */
+		generatingOnly: v.optional(v.boolean()),
+		paginationOpts: paginationOptsValidator,
+	},
 	returns: paginationResultValidator(schema.doc("inspectionClicks")),
-	handler: (ctx, args) =>
-		ctx.db
+	handler: (ctx, args) => {
+		const clicks = ctx.db
 			.query("inspectionClicks")
 			.withIndex("by_visitor_id_and_started_at", (q) =>
 				q.eq("visitorId", args.visitorId),
 			)
-			.order("desc")
-			.paginate(args.paginationOpts),
+			.order("desc");
+		return (
+			args.generatingOnly
+				? clicks.filter((q) =>
+						q.neq(q.field("selectionKind"), "Available"),
+					)
+				: clicks
+		).paginate(args.paginationOpts);
+	},
 });
 export const detail = query({
 	args: { visitorId: v.string(), requestId: v.string() },
