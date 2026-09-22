@@ -1,9 +1,13 @@
-# Laya instead of jev (2026-09-22)
+# Laya instead of jev — failed experiment (2026-09-22)
+
+**Outcome: rejected. This branch is the record, not a proposal.** Nothing here
+is meant to merge, and the machine it was measured on has been cleaned of
+Laya. Read it to avoid paying for the same measurement twice.
 
 [Laya](https://github.com/NandhaKishorM/laya) is a local, non-generative
 decision model with the same question shape as System One: `choice`, `score`
-and `noul` over a state, probabilities out, no generated text. This directory
-measured whether it can replace jev as dumgen's judgment transport.
+and `noul` over a state, probabilities out, no generated text. The question
+was whether it can replace jev as dumgen's judgment transport.
 
 **It cannot, and the reason is structural rather than a matter of tuning.**
 On the 243-case target-classification evaluation corpus, run through the
@@ -12,9 +16,10 @@ production `classifyTarget` path with only the judge swapped, jev scores
 calls: 8.5x per `classifyTarget` judgment, and 77x on the 178-question
 `analyzeSentence` call for a single 10-word sentence.
 
-The transport itself is kept (`promptsmith/laya`, `tooling/laya-sidecar.py`):
-it works, and it is the thing that would have to exist for any later attempt
-at a narrower question. What does not work is pointing it at these questions.
+The transport code (`promptsmith/laya`, `tooling/laya-sidecar.py`) is left on
+the branch because it is what any later attempt would have to rebuild, and
+because the budget arithmetic in `budgetFor`/`overflowing` is the part that
+explains the result. It is not wired into anything on `main`.
 
 ## The machine
 
