@@ -7,11 +7,11 @@ import type {
 	SegmentedSentence,
 } from "../types.js";
 import { DumgenFailure } from "./failure.js";
-import { judgmentCaller } from "./judgment.js";
+import { judgmentCaller, recordedJudgment } from "./judgment.js";
 import { effectiveConfiguration, executeGeneration } from "./model.js";
 import { choice } from "./questions.js";
 import { assertStitchedText } from "./segmentation.js";
-import { contextFor, operationTask, recordEvent } from "./trace.js";
+import { operationTask, recordEvent } from "./trace.js";
 import { parse } from "./validation.js";
 
 const segmenters = { de: segmentGerman, en: segmentEnglish, he: segmentHebrew };
@@ -32,12 +32,17 @@ export function createSegmentation(options: DumgenOptions) {
 					"segment",
 					"Source sentences must contain text",
 				);
-			const decisions: SegmentationDecision[] = [];
-			for (const [index, sourceText] of input.sourceSentences.entries()) {
+			// Sentences are judged independently, so every intake judgment is
+			// issued at once; the result keeps the input order by index.
+			const decide = async (
+				index: number,
+				sourceText: string,
+			): Promise<SegmentationDecision> => {
+				const state = { id: String(index), sourceText };
 				const result = await judgmentCaller(options)(
 					"segment",
 					"intake",
-					{ id: String(index), sourceText },
+					state,
 					{
 						language: choice(
 							"Determine this sentence's primary language independently of any neighboring sentence. Typos, slang, spacing damage and a local foreign span do not change its primary language.",
@@ -88,12 +93,10 @@ export function createSegmentation(options: DumgenOptions) {
 					answers: result.answers,
 				});
 				if (validity === "Unintelligible") {
-					decisions.push({ decision: "Unintelligible" });
-					continue;
+					return { decision: "Unintelligible" };
 				}
 				if (language === "UnsupportedLanguage") {
-					decisions.push({ decision: "UnsupportedLanguage" });
-					continue;
+					return { decision: "UnsupportedLanguage" };
 				}
 				if (
 					validity !== "Accepted" ||
@@ -109,7 +112,6 @@ export function createSegmentation(options: DumgenOptions) {
 				const supportedLanguage = language as "de" | "en" | "he";
 				let stitchedText = sourceText;
 				if (answer("stitching") === "Needed") {
-					const parent = contextFor(signal).calls.at(-1);
 					const output = await executeGeneration(
 						options,
 						{
@@ -153,7 +155,7 @@ export function createSegmentation(options: DumgenOptions) {
 							assertStitchedText(value.stitchedText);
 							return value.stitchedText;
 						},
-						parent ? [parent.id] : [],
+						[recordedJudgment(signal, state).id],
 					);
 					stitchedText = output;
 				}
@@ -179,9 +181,13 @@ export function createSegmentation(options: DumgenOptions) {
 					decision,
 					rules: segmented.trace,
 				});
-				decisions.push(decision);
-			}
-			return decisions;
+				return decision;
+			};
+			return Promise.all(
+				input.sourceSentences.map((sourceText, index) =>
+					decide(index, sourceText),
+				),
+			);
 		});
 	};
 }

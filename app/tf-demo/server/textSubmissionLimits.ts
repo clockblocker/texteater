@@ -1,5 +1,9 @@
+// TODO: https://github.com/clockblocker/texteater/issues/510
+// These three limits were picked together as a Convex audit stopgap and are
+// not coherent with each other; the sentence count is decided by the splitter,
+// not the user. See the issue before changing any of them.
 export const MAX_SOURCE_TEXT_CHARACTERS = 10_000;
-export const MAX_SOURCE_SENTENCES = 9;
+export const MAX_SOURCE_SENTENCES = 25;
 export const MAX_SOURCE_SENTENCE_CHARACTERS = 2_000;
 
 function exceedsCharacterLimit(value: string, limit: number): boolean {

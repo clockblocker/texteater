@@ -3,18 +3,23 @@ import { choiceAnswers } from "./execution-fixture.js";
 export function intakeFixture(
 	output: unknown,
 ): Pick<DumgenOptions, "judge" | "execute"> {
-	let current:
-		| { decision: string; language: string | null; stitchedText: string }
-		| undefined;
+	type Item = {
+		decision: string;
+		language: string | null;
+		stitchedText: string;
+	};
+	// Judgments run concurrently, so stitching finds its item by source text
+	// rather than by whichever judgment happened to run last.
+	const bySourceText = new Map<string, Item>();
 	return {
 		judge: async (request) => {
 			if (output instanceof Error) throw output;
 			const state = request.state as { id: string; sourceText: string };
-			current = (output as { items: (typeof current)[] }).items[
+			const item = (output as { items: (Item | undefined)[] }).items[
 				Number(state.id)
 			];
-			if (!current) throw Error("Missing intake expectation");
-			const item = current;
+			if (!item) throw Error("Missing intake expectation");
+			bySourceText.set(state.sourceText, item);
 			return choiceAnswers(request.questions, (id) =>
 				id === "language"
 					? (item.language ??
@@ -30,8 +35,13 @@ export function intakeFixture(
 							: "Needed",
 			);
 		},
-		execute: async () => ({
-			output: { stitchedText: current?.stitchedText },
-		}),
+		execute: async (request) => {
+			const { sourceText } = request.input as { sourceText: string };
+			return {
+				output: {
+					stitchedText: bySourceText.get(sourceText)?.stitchedText,
+				},
+			};
+		},
 	};
 }

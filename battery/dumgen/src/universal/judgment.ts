@@ -173,3 +173,22 @@ export function judgmentCaller(options: DumgenOptions) {
 		}
 	};
 }
+
+/**
+ * The recorded call of a finished judgment, found by the identity of the state
+ * object handed to judgmentCaller. Concurrent judgments finish in any order,
+ * so a dependent generation must link to its own judgment this way rather
+ * than to the most recent call.
+ */
+export function recordedJudgment(
+	signal: AbortSignal,
+	state: EntryType,
+): CallTrace {
+	const call = contextFor(signal).calls.find(
+		(candidate) =>
+			candidate.executor === "TypeSafe" &&
+			candidate.request.input === state,
+	);
+	if (!call) throw Error("Judgment was not recorded for this state");
+	return call;
+}

@@ -120,6 +120,61 @@ for (const mode of [
 		);
 		expect(traces[0]?.outcome).toBe("Failure");
 	});
+test("intake judges every sentence at once and links stitching to its own judgment", async () => {
+	const sourceSentences = [
+		"Hal lo Welt.",
+		"Guten Tag.",
+		"Wie geht es dir?",
+	] as const;
+	const traces: OperationTrace[] = [];
+	let inFlight = 0,
+		peak = 0;
+	const dumgen = createDumgen({
+		judge: async ({ state, questions }) => {
+			inFlight++;
+			peak = Math.max(peak, inFlight);
+			await new Promise((resolve) => setTimeout(resolve, 20));
+			inFlight--;
+			const { sourceText } = state as { sourceText: string };
+			return choiceAnswers(questions, (id) =>
+				id === "language"
+					? "de"
+					: id === "validity"
+						? "Accepted"
+						: sourceText === sourceSentences[0]
+							? "Needed"
+							: "Unchanged",
+			);
+		},
+		execute: async () => ({ output: { stitchedText: "Hallo Welt." } }),
+		onOperation: (trace) => traces.push(trace),
+	});
+	const output = await Effect.runPromise(
+		dumgen.segment({
+			sourceSentences: [
+				sourceSentences[0] ?? "",
+				...sourceSentences.slice(1),
+			],
+		}),
+	);
+	expect(peak).toBe(sourceSentences.length);
+	expect(
+		output.map((item) =>
+			item.decision === "Accepted"
+				? item.sentence.segments.map(({ text }) => text).join("")
+				: item.decision,
+		),
+	).toEqual(["Hallo Welt.", "Guten Tag.", "Wie geht es dir?"]);
+	const calls = traces[0]?.calls ?? [];
+	const stitching = calls.filter((call) => call.executor === "Luna");
+	expect(stitching).toHaveLength(1);
+	const parent = calls.find((call) => call.id === stitching[0]?.dependsOn[0]);
+	if (!parent) throw Error("Stitching is not linked to a recorded call");
+	expect(parent.executor).toBe("TypeSafe");
+	expect(parent.request.input).toMatchObject({
+		sourceText: sourceSentences[0],
+	});
+});
 test("English contractions and abbreviations remain lossless local source units", async () => {
 	const dumgen = createDumgen({
 		judge: async () => {
