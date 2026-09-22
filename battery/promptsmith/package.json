@@ -34,6 +34,10 @@
 			"types": "./dist/openai.d.ts",
 			"import": "./dist/openai.js"
 		},
+		"./laya": {
+			"types": "./dist/laya.d.ts",
+			"import": "./dist/laya.js"
+		},
 		"./typesafe": {
 			"types": "./dist/typesafe.d.ts",
 			"import": "./dist/typesafe.js"
@@ -50,7 +54,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/codegen.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/codegen.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/laya.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
