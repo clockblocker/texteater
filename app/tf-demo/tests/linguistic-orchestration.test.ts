@@ -1050,6 +1050,7 @@ function verfuegungAnalysis(options: {
 				],
 			},
 		],
+		government: [],
 	};
 }
 

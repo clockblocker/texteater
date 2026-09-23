@@ -11,6 +11,7 @@ import { createDumgen } from "../../../universal/dumgen.js";
 import { segmentSchema } from "../../../universal/schemas.js";
 import {
 	effectiveRoute,
+	type Government,
 	headOf,
 	membersOf,
 	type SentenceAnalysis,
@@ -23,8 +24,10 @@ import data from "./source-data.json";
 /**
  * The sentence corpus (issue 495): gold keyed by character offset in the
  * Segmented Sentence's Stitched Text, a Lexeme layer of targets with members
- * and, where authored, roles and the closed-class headword group, and a
- * Phraseme layer naming member words by head offset.
+ * and, where authored, roles and the closed-class headword group, a Phraseme
+ * layer naming member words by head offset, and government naming each
+ * governed preposition's Segment with the words that may govern it. A layer
+ * a case leaves out is not scored.
  */
 export const inputSchema = z.strictObject({
 	segments: z.array(segmentSchema).min(1),
@@ -42,13 +45,26 @@ const goldTargetSchema = z.strictObject({
 	identity: z.string().min(1).optional(),
 });
 export const goldSchema = z.strictObject({
-	targets: z.array(goldTargetSchema),
-	phrasemes: z.array(
-		z.strictObject({
-			kind: z.string().min(1),
-			words: z.array(z.number().int().nonnegative()).min(2),
-		}),
-	),
+	targets: z.array(goldTargetSchema).optional(),
+	phrasemes: z
+		.array(
+			z.strictObject({
+				kind: z.string().min(1),
+				words: z.array(z.number().int().nonnegative()).min(2),
+			}),
+		)
+		.optional(),
+	government: z
+		.array(
+			z.strictObject({
+				/** Any member offset of an acceptable governing word. */
+				governors: z.array(z.number().int().nonnegative()).min(1),
+				offset: z.number().int().nonnegative(),
+				preposition: z.string().min(1),
+				case: z.enum(["Acc", "Dat", "Gen"]),
+			}),
+		)
+		.optional(),
 });
 export type SentenceGold = z.infer<typeof goldSchema>;
 
@@ -66,6 +82,9 @@ export type SentenceScore = {
 	readonly phrasemesFound: number;
 	readonly phrasemesCorrect: number;
 	readonly phrasemesExtra: number;
+	readonly government: number;
+	readonly governmentCorrect: number;
+	readonly governmentExtra: number;
 	readonly failures: readonly string[];
 };
 
@@ -82,7 +101,7 @@ export function scoreAnalysis(
 	let rolesCorrect = 0;
 	let identityScored = 0;
 	let identityCorrect = 0;
-	for (const target of gold.targets) {
+	for (const target of gold.targets ?? []) {
 		const offsets = target.members.map((m) => m.offset).join(",");
 		const found = analysis.targets.find(
 			(candidate) =>
@@ -134,7 +153,7 @@ export function scoreAnalysis(
 	const matched = new Set<string>();
 	let phrasemesFound = 0;
 	let phrasemesCorrect = 0;
-	for (const expected of gold.phrasemes) {
+	for (const expected of gold.phrasemes ?? []) {
 		const key = [...expected.words].sort((a, b) => a - b).join(",");
 		const label = `{${expected.words.map(text).join(" ")}} ${expected.kind}`;
 		const phraseme = analysis.phrasemes.find(
@@ -150,7 +169,9 @@ export function scoreAnalysis(
 		if (kind === expected.kind) phrasemesCorrect += 1;
 		else failures.push(`${label}: kind ${kind}`);
 	}
-	const extra = analysis.phrasemes.filter((p) => !matched.has(p.id));
+	const extra = gold.phrasemes
+		? analysis.phrasemes.filter((p) => !matched.has(p.id))
+		: [];
 	for (const phraseme of extra)
 		failures.push(
 			`extra Phraseme ${selectPhrasemeKind(phraseme).kind} over {${membersOf(
@@ -160,21 +181,70 @@ export function scoreAnalysis(
 				.map((target) => text(headOf(target).offset))
 				.join(" ")}}`,
 		);
+	const government = scoreGovernment(analysis, gold, text);
+	failures.push(...government.failures);
 	return {
 		contractPass: failures.length === 0,
-		targets: gold.targets.length,
+		targets: gold.targets?.length ?? 0,
 		membersFound,
 		routeCorrect,
 		rolesScored,
 		rolesCorrect,
 		identityScored,
 		identityCorrect,
-		phrasemes: gold.phrasemes.length,
+		phrasemes: gold.phrasemes?.length ?? 0,
 		phrasemesFound,
 		phrasemesCorrect,
 		phrasemesExtra: extra.length,
+		government: gold.government?.length ?? 0,
+		governmentCorrect: government.correct,
+		governmentExtra: government.extra,
 		failures,
 	};
+}
+
+/** A gold entry matches the Government on its Segment with its preposition, case and one of its governors. */
+function scoreGovernment(
+	analysis: SentenceAnalysis,
+	gold: SentenceGold,
+	text: (offset: number) => string,
+) {
+	const failures: string[] = [];
+	if (!gold.government) return { correct: 0, extra: 0, failures };
+	const governorOf = (id: string) =>
+		analysis.targets.find((target) => target.id === id);
+	const matched = new Set<Government>();
+	let correct = 0;
+	for (const expected of gold.government) {
+		const label = `${expected.governors.map(text).join("/")} + ${expected.preposition} ${expected.case}`;
+		const found = analysis.government.find(
+			(entry) => entry.offset === expected.offset,
+		);
+		if (!found) {
+			failures.push(`${label}: no government`);
+			continue;
+		}
+		matched.add(found);
+		const governor = governorOf(found.governor);
+		const actual = `${governor ? text(headOf(governor).offset) : "?"} + ${found.preposition} ${found.case}`;
+		if (
+			found.preposition === expected.preposition &&
+			found.case === expected.case &&
+			governor?.members.some((member) =>
+				expected.governors.includes(member.offset),
+			)
+		)
+			correct += 1;
+		else failures.push(`${label}: got ${actual}`);
+	}
+	const extra = analysis.government.filter((entry) => !matched.has(entry));
+	for (const entry of extra) {
+		const governor = governorOf(entry.governor);
+		failures.push(
+			`extra government ${governor ? text(headOf(governor).offset) : "?"} + ${text(entry.offset)} ${entry.case}`,
+		);
+	}
+	return { correct, extra: extra.length, failures };
 }
 
 const corpus = defineGoldenCorpus({
@@ -278,23 +348,34 @@ export function projectGold(analysis: SentenceAnalysis): SentenceGold {
 				.map((target) => headOf(target).offset)
 				.sort((a, b) => a - b),
 		})),
+		government: analysis.government.map((entry) => ({
+			governors: analysis.targets
+				.filter((target) => target.id === entry.governor)
+				.map((target) => headOf(target).offset),
+			offset: entry.offset,
+			preposition: entry.preposition,
+			case: entry.case,
+		})),
 	};
 }
 
 function emptyScore(gold: SentenceGold): SentenceScore {
 	return {
 		contractPass: false,
-		targets: gold.targets.length,
+		targets: gold.targets?.length ?? 0,
 		membersFound: 0,
 		routeCorrect: 0,
 		rolesScored: 0,
 		rolesCorrect: 0,
 		identityScored: 0,
 		identityCorrect: 0,
-		phrasemes: gold.phrasemes.length,
+		phrasemes: gold.phrasemes?.length ?? 0,
 		phrasemesFound: 0,
 		phrasemesCorrect: 0,
 		phrasemesExtra: 0,
+		government: gold.government?.length ?? 0,
+		governmentCorrect: 0,
+		governmentExtra: 0,
 		failures: ["no analysis recorded"],
 	};
 }

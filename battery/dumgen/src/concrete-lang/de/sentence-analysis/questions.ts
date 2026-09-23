@@ -5,6 +5,7 @@
  * for a spelling with authored candidates, one identity Choice, all under
  * `criteria`. The Phraseme layer asks one fixedness Score and one Kind
  * Choice per occurrence and one Noul per unordered pair, under `fixedness`.
+ * Government questions (`government.ts`) join the same call.
  */
 
 import type { Questions } from "promptsmith/typesafe";
@@ -20,13 +21,19 @@ import {
 	realizationCriteria,
 	roles,
 } from "./criteria.js";
+import { governmentCriteria } from "./government.js";
 import { candidatesFor, identityInstructions, rubricOf } from "./identity.js";
 
-export function analysisState(sentence: SegmentedSentence<"de">) {
+/** `government` joins the state only when the sentence asks government questions. */
+export function analysisState(
+	sentence: SegmentedSentence<"de">,
+	governs = false,
+) {
 	return {
 		sentence: indexedContext(sentence),
 		criteria: `${notation} ${realizationCriteria}`,
 		fixedness: fixednessCriteria,
+		...(governs ? { government: governmentCriteria } : {}),
 	};
 }
 

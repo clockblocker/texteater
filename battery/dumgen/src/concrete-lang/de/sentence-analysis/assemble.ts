@@ -6,7 +6,8 @@
  * (a group glued around two Heads is split at them); a fused word never
  * joins a group whole, its adposition is a singleton and its article joins
  * the next NOUN without one; a Phraseme's members are words, projected by
- * Head, and the fixedness Score establishes it.
+ * Head, and the fixedness Score establishes it. Government comes last,
+ * over the finished Lexeme Targets.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -19,6 +20,7 @@ import type {
 	SentenceAnalysis,
 } from "./analysis.js";
 import { articleForms, type RoleAnswer } from "./criteria.js";
+import { assembleGovernment } from "./government.js";
 import { candidateOf, candidatesFor, headwordGroups } from "./identity.js";
 import type { Placement } from "./placement.js";
 
@@ -453,5 +455,6 @@ export function assembleAnalysis(
 		targets,
 		phrasemes,
 		fusions: placement.fusions,
+		government: assembleGovernment(placement, targets, answers),
 	};
 }

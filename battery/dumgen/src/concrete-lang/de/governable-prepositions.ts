@@ -33,6 +33,32 @@ export const governablePrepositionForms = Object.keys(
 	governablePrepositions,
 ) as GovernablePreposition[];
 
+/** A governed preposition with the case it assigns in its construction. */
+export type GovernedPrepositionDraft = {
+	readonly preposition: GovernablePreposition;
+	readonly case: Dumrel.GovernedCase;
+};
+
+const pronominalAdverb = new RegExp(
+	`^(?:(?:da|wo)r?|hier|dr)(${governablePrepositionForms.join("|")})$`,
+	"u",
+);
+
+/**
+ * The governable preposition a Segment surface realizes: the preposition
+ * itself, or the one inside a pronominal adverb (`darauf`, `worüber`,
+ * `hierfür`, colloquial `dran`). A fused word's adposition component already
+ * carries the preposition as its surface (`am` places `an`).
+ */
+export function governablePrepositionIn(
+	surface: string,
+): GovernablePreposition | null {
+	const form = surface.normalize("NFC").toLocaleLowerCase("de");
+	if (isGovernablePreposition(form)) return form;
+	const inner = pronominalAdverb.exec(form)?.[1];
+	return inner && isGovernablePreposition(inner) ? inner : null;
+}
+
 export function isGovernablePreposition(
 	form: string,
 ): form is GovernablePreposition {

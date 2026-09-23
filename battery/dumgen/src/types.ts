@@ -11,11 +11,13 @@ import type {
 } from "./generated/types.js";
 import type { DumgenFailure } from "./universal/failure.js";
 
+export type { GovernedPrepositionDraft } from "./concrete-lang/de/governable-prepositions.js";
 export type { KnowledgeDraft } from "./concrete-lang/de/knowledge-production/draft.js";
 export type {
 	AnalyzedSegment,
 	Fusion,
 	FusionComponent,
+	Government,
 	IdentityCandidate,
 	IdentityMass,
 	IdentityState,

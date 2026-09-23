@@ -400,12 +400,7 @@ test("all retained Knowledge corpora run through production Knowledge with compl
 	);
 	const { knowledgeFixture } = await import("./knowledge-fixture.js");
 	let count = 0;
-	for (const family of [
-		"lexeme",
-		"phraseme",
-		"morpheme",
-		"governed-prepositions",
-	]) {
+	for (const family of ["lexeme", "phraseme", "morpheme"]) {
 		const definition = getExperiment(`knowledge-analysis/de/${family}`);
 		for (const [id, example] of Object.entries(
 			definition.source.goldenCorpus?.cases ?? {},
@@ -433,15 +428,10 @@ test("all retained Knowledge corpora run through production Knowledge with compl
 			})) as { failures: unknown[] };
 			expect(output.failures, id).toEqual([]);
 			expect(traces[0]?.operation, id).toBe("produceKnowledge");
-			if (family === "governed-prepositions")
-				expect(output, id).toEqual({
-					...(example.idealOutput as object),
-					failures: [],
-				});
 			count++;
 		}
 	}
-	expect(count).toBe(88);
+	expect(count).toBe(69);
 }, 30000);
 
 const governor = {
@@ -494,32 +484,30 @@ const adposition = (
 	},
 });
 
-test("governed prepositions resolve to ADP Lemmas, keep fixed cases and publish only at the end", async () => {
+test("governed prepositions come from intake without a model call, resolve to ADP Lemmas, keep fixed cases and publish only at the end", async () => {
 	const incremental: unknown[] = [];
+	const aspects: unknown[] = [];
 	const result = await Effect.runPromise(
 		createDumgen({
 			execute: async (request) => {
-				const { aspect } = request.input as { aspect?: string };
-				return {
-					output:
-						aspect === "governedPrepositions"
-							? {
-									governedPrepositions: [
-										{ preposition: "auf", case: "Acc" },
-										{ preposition: "für", case: "Dat" },
-										{ preposition: "auf", case: "Acc" },
-									],
-								}
-							: { text: "Auf etwas harren." },
-				};
+				aspects.push((request.input as { aspect?: string }).aspect);
+				return { output: { text: "Auf etwas harren." } };
 			},
 			judge: async () => {
 				throw Error("No judgment expected");
 			},
 			onKnowledgeContribution: (changes) =>
 				incremental.push(...changes.map((change) => change.aspect)),
-		}).produceKnowledge(governor),
+		}).produceKnowledge({
+			...governor,
+			governedPrepositions: [
+				{ preposition: "auf", case: "Acc" },
+				{ preposition: "für", case: "Dat" },
+				{ preposition: "auf", case: "Acc" },
+			],
+		}),
 	);
+	expect(aspects).not.toContain("governedPrepositions");
 	expect(result.failures).toEqual([]);
 	expect(
 		result.changes.find(
@@ -536,17 +524,22 @@ test("governed prepositions resolve to ADP Lemmas, keep fixed cases and publish 
 	expect(incremental).toEqual(["definition"]);
 });
 
-test("an empty government list is no contribution, and an unlisted preposition is an attributable failure", async () => {
-	const run = (governedPrepositions: unknown) =>
+test("no attested government is no contribution, and an unlisted preposition is an attributable failure", async () => {
+	const run = (
+		governedPrepositions: KnowledgeInput<"de">["governedPrepositions"],
+	) =>
 		Effect.runPromise(
 			createDumgen({
-				execute: async () => ({ output: { governedPrepositions } }),
+				execute: async () => {
+					throw Error("No generation expected");
+				},
 				judge: async () => {
 					throw Error("No judgment expected");
 				},
 			}).produceKnowledge({
 				...governor,
 				request: { governedPrepositions: null },
+				governedPrepositions,
 			}),
 		);
 	expect(await run([])).toEqual({
@@ -557,6 +550,6 @@ test("an empty government list is no contribution, and an unlisted preposition i
 	const invalid = await run([{ preposition: "wegen", case: "Gen" }]);
 	expect(invalid.changes).toEqual([]);
 	expect(invalid.failures).toMatchObject([
-		{ aspect: "governedPrepositions", code: "InvalidModelOutput" },
+		{ aspect: "governedPrepositions", code: "InvalidInput" },
 	]);
 });

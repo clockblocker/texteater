@@ -71,6 +71,13 @@ Auxiliary, or Unresolved. Roles say what a member is inside its target; they
 do not move membership.
 _Avoid_: role mass, Free member
 
+**Government**:
+intake's link from a governed preposition's Segment (a preposition, a fused
+word's adposition, or a pronominal adverb) to the Lexeme Target that
+lexically selects it, with the case the government requires. It is the only
+source of the `governedPrepositions` Knowledge aspect (ADR 0030).
+_Avoid_: valency guess, governed-preposition prompt
+
 **Route Mass**:
 the Lexeme Target's distribution over Lexeme Kinds, including Unresolved.
 Family is derived from Kind. No route, confidence or Family is stored beside

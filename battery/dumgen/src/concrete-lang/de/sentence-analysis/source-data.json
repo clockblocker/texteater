@@ -184,7 +184,8 @@
 						]
 					}
 				],
-				"phrasemes": []
+				"phrasemes": [],
+				"government": []
 			},
 			"explanation": "A fused word: `ins` is `in` plus `s` standing for `das`, and the article piece joins the noun."
 		},
@@ -323,7 +324,8 @@
 						]
 					}
 				],
-				"phrasemes": []
+				"phrasemes": [],
+				"government": []
 			},
 			"explanation": "A discontinuous separable verb; two determiners with authored identities."
 		},
@@ -454,7 +456,15 @@
 						]
 					}
 				],
-				"phrasemes": []
+				"phrasemes": [],
+				"government": [
+					{
+						"governors": [37],
+						"offset": 20,
+						"preposition": "an",
+						"case": "Acc"
+					}
+				]
 			},
 			"explanation": "Auxiliary, required reflexive and governed preposition on one verb, spread over the sentence."
 		},
@@ -978,7 +988,8 @@
 						]
 					}
 				],
-				"phrasemes": []
+				"phrasemes": [],
+				"government": []
 			},
 			"explanation": "An abbreviation is one Segment whose surface is its expansion."
 		},
@@ -1136,7 +1147,8 @@
 						]
 					}
 				],
-				"phrasemes": []
+				"phrasemes": [],
+				"government": []
 			},
 			"explanation": "A dotted abbreviation and the fusion `am`."
 		},
@@ -1776,6 +1788,1206 @@
 				"phrasemes": []
 			},
 			"explanation": "Code-switched words: no multilingual support, so they are X or Unresolved."
+		},
+		"sentence-de-government-warten-auf": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartet"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "den"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Nachtbus"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [3],
+						"offset": 10,
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "warten governs auf with the accusative."
+		},
+		"sentence-de-government-warten-adjunct": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartet"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seit"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "einer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Stunde"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "am"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Bahnhof"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "seit and am are free adjuncts of time and place; the sentence attests no government."
+		},
+		"sentence-de-government-bestehen-auf": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "besteht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "einer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Entschuldigung"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [4],
+						"offset": 12,
+						"preposition": "auf",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "bestehen auf (insist) takes the dative."
+		},
+		"sentence-de-government-bestehen-aus": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Team"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "besteht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "aus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "fünf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Leuten"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [9],
+						"offset": 17,
+						"preposition": "aus",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "bestehen aus (consist of) governs aus."
+		},
+		"sentence-de-government-bestehen-none": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Prüfung"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "endlich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bestanden"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "No preposition, so no government question is asked."
+		},
+		"sentence-de-government-stolz-auf": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ihren"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sohn"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [13],
+						"offset": 19,
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "The adjective stolz governs auf with the accusative."
+		},
+		"sentence-de-government-abhaengig-von": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ausflug"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "abhängig"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "vom"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wetter"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [16],
+						"offset": 25,
+						"preposition": "von",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "The adposition component of vom is the governed von."
+		},
+		"sentence-de-government-angst-vor": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kind"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Angst"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "vor"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hunden"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [13],
+						"offset": 19,
+						"preposition": "vor",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "The noun Angst governs vor with the dative."
+		},
+		"sentence-de-government-interesse-an": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zeigt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "großes"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Interesse"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "an"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Musik"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [16],
+						"offset": 26,
+						"preposition": "an",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "The noun Interesse governs an with the dative."
+		},
+		"sentence-de-government-bedanken-two": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bedanke"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bei"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dir"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "für"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hilfe"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [4],
+						"offset": 17,
+						"preposition": "bei",
+						"case": "Dat"
+					},
+					{
+						"governors": [4],
+						"offset": 25,
+						"preposition": "für",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "sich bedanken governs both bei and für."
+		},
+		"sentence-de-government-freuen-darauf": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "freue"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schon"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "darauf"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [4],
+						"offset": 26,
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "The pronominal adverb darauf realizes the governed auf."
+		},
+		"sentence-de-government-denken-an": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "denke"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "oft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "an"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dich"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [4],
+						"offset": 14,
+						"preposition": "an",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "denken an takes the accusative."
+		},
+		"sentence-de-government-teilnehmen-an": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "nimmt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "an"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dem"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kurs"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "teil"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [4, 22],
+						"offset": 10,
+						"preposition": "an",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "teilnehmen governs an with the dative; the preposition is not the separable particle."
+		},
+		"sentence-de-government-bescheid-wissen": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "weiß"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "über"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Projekt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gut"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Bescheid"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": [
+					{
+						"governors": [4, 30],
+						"offset": 9,
+						"preposition": "über",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "The Collocation Bescheid wissen governs über with the accusative."
+		},
+		"sentence-de-government-spielen-adjunct": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kinder"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "spielen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "im"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Garten"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "im is a free place adjunct."
+		},
+		"sentence-de-government-schneiden-adjunct": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schneidet"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Brot"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mit"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dem"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Messer"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "mit is a free instrument adjunct."
+		},
+		"sentence-de-government-abfahren-adjunct": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Zug"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "fährt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "um"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "acht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Uhr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ab"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "um is a time adjunct and ab a separable particle."
+		},
+		"sentence-de-government-gross-none": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Haus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ziemlich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "groß"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "No preposition, so no government question is asked."
+		},
+		"sentence-de-government-tisch-adjunct": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tisch"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "steht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "am"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Fenster"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"government": []
+			},
+			"explanation": "am is a free place adjunct."
 		}
 	},
 	"demonstrationIds": []

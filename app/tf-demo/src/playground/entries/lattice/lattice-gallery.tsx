@@ -55,7 +55,15 @@ type Fixture = {
 	readonly produced: { readonly design: string; readonly at: string };
 };
 
-const fixtures = latticeFixtures as readonly Fixture[];
+// The lab fixtures predate intake government; they attest none.
+const fixtures: readonly Fixture[] = (
+	latticeFixtures as readonly (Omit<Fixture, "analysis"> & {
+		readonly analysis: Omit<SegmentedSentence, "government">;
+	})[]
+).map((fixture) => ({
+	...fixture,
+	analysis: { ...fixture.analysis, government: [] },
+}));
 
 /**
  * Lab-produced lattices for real sentences (issue 496), in two layers: the

@@ -15,6 +15,7 @@ export {
 	familyOf,
 	fixednessFloor,
 	fusionAt,
+	governedPrepositionsAt,
 	headOf,
 	largestOf,
 	membersOf,

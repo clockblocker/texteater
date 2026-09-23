@@ -1,5 +1,6 @@
 import { headOf, resolvedUnitAt, selectIdentity, targetOf } from "dumgen";
 import type { SentenceAnalysis } from "dumgen/types";
+import { storedSegmentRanges } from "./attestedGovernment";
 
 export type StoredSegmentForSelection = {
 	readonly index: number;
@@ -71,17 +72,8 @@ export function selectAnalysisTarget(
 	const ordered = [...stored.segments].sort(
 		(left, right) => left.index - right.index,
 	);
-	const ranges = new Map<number, { start: number; end: number }>();
-	let cursor = 0;
-	for (const segment of ordered) {
-		ranges.set(segment.index, {
-			start: cursor,
-			end: cursor + segment.text.length,
-		});
-		cursor += segment.text.length;
-	}
-	if (cursor !== stored.stitchedText.length)
-		return { target: null, reason: "lengthMismatch" };
+	const ranges = storedSegmentRanges(stored);
+	if (!ranges) return { target: null, reason: "lengthMismatch" };
 	const clicked = ranges.get(clickedSegmentIndex);
 	if (!clicked) return { target: null, reason: "noAnchor" };
 	const analysed = [...analysis.segments].sort(

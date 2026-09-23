@@ -46,6 +46,29 @@ test("text output stays raw and the optional cache breakpoint precedes dynamic i
 	}
 });
 
+test("string input reaches the model verbatim", async () => {
+	let body: { input?: { content: unknown }[] } = {};
+	const execute = createOpenAIExecutor({
+		apiKey: "fixture",
+		fetch: async (_url, init) => {
+			body = JSON.parse(String(init?.body));
+			return Response.json({
+				status: "completed",
+				output: [{ content: [{ type: "output_text", text: "sein" }] }],
+			});
+		},
+	});
+	const input =
+		'<target_lemma>sein</target_lemma>\n<marked_sentence>Sie "sind" da.</marked_sentence>';
+	await execute({
+		systemPrompt: "Stable",
+		input,
+		outputFormat: "text",
+		configuration: { model: "fixture", settings: {} },
+	});
+	expect(body.input?.[1]?.content).toBe(input);
+});
+
 test("Responses adapter transports arbitrary output shapes, settings, cancellation and usage", async () => {
 	const controller = new AbortController();
 	let body: Record<string, unknown> = {};

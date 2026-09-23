@@ -22,7 +22,7 @@ import { authoredFor, closedRoute } from "../authored-closed-sets/select.js";
 
 /** Transcription belongs to the Lemma headword; no sentence or Reading is needed. */
 const transcriptionPrompt =
-	"Write the broad standard-German IPA transcription of the supplied German Lemma headword, without slash or bracket delimiters. Preserve the Lemma exactly. Return {text:string}, or {text:null} if the pronunciation is uncertain.";
+	"Write the broad standard-German IPA transcription of the German headword in <target_lemma>, without slash or bracket delimiters. Reply with the transcription only.";
 
 /**
  * A translation is the target-language dictionary form of the Reading's
@@ -38,7 +38,25 @@ function senseTextPrompt(
 	aspect: "definition" | "translations",
 	language: string | undefined,
 ) {
-	return `Draft only the requested ${aspect} for the fixed German Lemma at <TARGET> in markedContext. The sentence is the sense anchor: determine what the marked expression means HERE, including figurative uses, and describe that meaning, not another sense of the same Lemma and not the surrounding scene. Describe the meaning so the text also fits other sentences with that meaning; do not add incidental participants or objects from this sentence. Never change the Lemma, Kind or Core Features, and do not borrow a neighboring word's meaning. ${aspect === "definition" ? "Write a concise German definition." : `Translate only the marked target into ${language}; return one concise word or phrase, never the whole sentence. ${translationFormClause(String(language))}`} Return {text:string}, or {text:null} if no defensible contribution exists. The caller attaches this text to the Reading after local validation.`;
+	return `${aspect === "definition" ? "Write a concise German definition of" : `Translate into ${language}`} the German headword in <target_lemma>, as used at <TARGET> in <marked_sentence>. The sentence is the sense anchor: determine what the marked expression means HERE, including figurative uses, and describe that meaning, not another sense of the same headword and not the surrounding scene. Describe the meaning so the text also fits other sentences with that meaning; do not add incidental participants or objects from this sentence, and do not borrow a neighboring word's meaning. ${aspect === "definition" ? "Reply with the definition only." : `Return one concise word or phrase, never the whole sentence. ${translationFormClause(String(language))} Reply with the translation only.`}`;
+}
+
+/** Drafts see the headword and the marked sentence as tagged text, never the Lemma DTO. */
+function draftInput(lemma: Dumling.Lemma, encounter?: Encounter, extra = "") {
+	return [
+		`<target_lemma>${lemma.canonicalForm}</target_lemma>`,
+		...(encounter
+			? [
+					`<marked_sentence>${markedContext(encounter).markedContext}</marked_sentence>`,
+				]
+			: []),
+		...(extra ? [extra] : []),
+	].join("\n");
+}
+
+function draftText(output: unknown) {
+	if (typeof output !== "string") throw Error("Expected text");
+	return output.trim();
 }
 
 export type KnowledgeDraft = {
@@ -128,18 +146,8 @@ export function draftKnowledge(
 										),
 										input:
 											aspect === "transcription"
-												? { lemma, aspect }
-												: {
-														lemma,
-														markedContext:
-															markedContext(
-																encounter,
-															).markedContext,
-														aspect,
-														...(language
-															? { language }
-															: {}),
-													},
+												? draftInput(lemma)
+												: draftInput(lemma, encounter),
 										systemPrompt:
 											aspect === "transcription"
 												? transcriptionPrompt
@@ -147,31 +155,9 @@ export function draftKnowledge(
 														aspect,
 														language,
 													),
-										outputSchema: {
-											type: "object",
-											properties: {
-												text: {
-													type: ["string", "null"],
-												},
-											},
-											required: ["text"],
-											additionalProperties: false,
-										},
+										outputFormat: "text",
 									},
-									(output) => {
-										if (
-											!output ||
-											typeof output !== "object" ||
-											!("text" in output) ||
-											Object.keys(output).length !== 1 ||
-											(output.text !== null &&
-												typeof output.text !== "string")
-										)
-											throw Error(
-												"Expected text or null",
-											);
-										return output.text;
-									},
+									draftText,
 									[],
 								);
 								return text
@@ -214,52 +200,24 @@ export function draftKnowledge(
 										options,
 										route,
 									),
-									input: {
+									input: draftInput(
 										lemma,
-										markedContext:
-											markedContext(encounter)
-												.markedContext,
-										requestedRelations: requested,
-									},
+										encounter,
+										`<requested_relations>${requested.join(", ")}</requested_relations>`,
+									),
 									systemPrompt:
-										"Propose up to 16 distinct German Canonical Forms for the requested semantic relations of the fixed German Lemma at <TARGET> in markedContext. The sentence is the sense anchor: relate only to the meaning the marked target carries here, not another sense of the same Lemma. Preserve the source Family. Return only {candidates:string[]}. Do not include the source itself, incidental neighbors or inflected forms. The relation Kind and label are selected separately.",
-									outputSchema: {
-										type: "object",
-										properties: {
-											candidates: {
-												type: "array",
-												items: { type: "string" },
-												maxItems: 16,
-											},
-										},
-										required: ["candidates"],
-										additionalProperties: false,
-									},
+										"Propose up to 16 distinct German dictionary forms that stand in the relations listed in <requested_relations> to the German headword in <target_lemma>, as used at <TARGET> in <marked_sentence>. The sentence is the sense anchor: relate only to the meaning the marked target carries here, not another sense of the same headword. Keep a single word for a single word and a fixed expression for a fixed expression. Do not include the headword itself, incidental neighbors or inflected forms. Reply with one dictionary form per line and nothing else.",
+									outputFormat: "text",
 								},
-								(value) => {
-									if (
-										!value ||
-										typeof value !== "object" ||
-										!("candidates" in value) ||
-										!Array.isArray(value.candidates) ||
-										value.candidates.length > 16 ||
-										!value.candidates.every(
-											(candidate): candidate is string =>
-												typeof candidate === "string" &&
-												!!candidate.trim(),
-										)
-									)
-										throw Error(
-											"Expected bounded candidate text",
-										);
-									return [
+								(output) =>
+									[
 										...new Set(
-											value.candidates.map((candidate) =>
-												candidate.trim(),
-											),
+											draftText(output)
+												.split("\n")
+												.map((line) => line.trim())
+												.filter(Boolean),
 										),
-									];
-								},
+									].slice(0, 16),
 								[],
 							);
 							return { requested, candidates };

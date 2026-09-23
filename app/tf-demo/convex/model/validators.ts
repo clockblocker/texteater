@@ -205,6 +205,21 @@ export const storedSentenceAnalysisValidator = v.object({
 			),
 		}),
 	),
+	/** Absent on analyses stored before intake resolved government. */
+	government: v.optional(
+		v.array(
+			v.object({
+				offset: v.number(),
+				preposition: v.string(),
+				case: v.union(
+					v.literal("Acc"),
+					v.literal("Dat"),
+					v.literal("Gen"),
+				),
+				governor: v.string(),
+			}),
+		),
+	),
 });
 
 export const sentenceInputValidator = v.object({

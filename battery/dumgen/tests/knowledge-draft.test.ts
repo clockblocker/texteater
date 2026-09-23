@@ -43,6 +43,17 @@ const input = {
 const unexpectedJudge: DumgenOptions["judge"] = async () => {
 	throw Error("Unexpected judgment");
 };
+/** Draft requests carry tagged text, so the prompt names the aspect. */
+function draftAspect(request: { stage: string; systemPrompt: string }) {
+	if (request.stage === "draftRelationCandidates") return "relations";
+	if (request.systemPrompt.includes("IPA")) return "transcription";
+	return request.systemPrompt.startsWith("Write a concise German definition")
+		? "definition"
+		: "translations";
+}
+function draftLanguage(request: { systemPrompt: string }) {
+	return request.systemPrompt.match(/^Translate into (\w+)/)?.[1];
+}
 
 async function fixtureDraft() {
 	return {
@@ -67,28 +78,21 @@ test("text and relation drafts start concurrently, anchored on the Lemma and sen
 		draftKnowledge(
 			{
 				execute: async (request) => {
-					const state = request.input as {
-						aspect?: string;
-						lemma?: { canonicalForm?: string };
-						markedContext?: string;
-						reading?: unknown;
-					};
-					expect(state.lemma?.canonicalForm).toBe("Bank");
-					expect(state.reading).toBeUndefined();
-					if (state.aspect !== "transcription")
-						expect(state.markedContext).toContain("<TARGET>");
-					calls.push(state.aspect ?? "relations");
+					const aspect = draftAspect(request);
+					expect(request.outputFormat).toBe("text");
+					expect(request.input).toStartWith(
+						"<target_lemma>Bank</target_lemma>\n<marked_sentence><TARGET>Bank</TARGET></marked_sentence>",
+					);
+					calls.push(aspect);
 					if (calls.length === 3) started.resolve();
 					await release.promise;
 					return {
-						output: state.aspect
-							? {
-									text:
-										state.aspect === "definition"
-											? "Ein Geldinstitut."
-											: "bank",
-								}
-							: { candidates: ["Geldinstitut"] },
+						output:
+							aspect === "definition"
+								? "Ein Geldinstitut."
+								: aspect === "relations"
+									? "Geldinstitut\n Geldinstitut \n\nSparkasse"
+									: "bank",
 					};
 				},
 				judge: unexpectedJudge,
@@ -111,7 +115,7 @@ test("text and relation drafts start concurrently, anchored on the Lemma and sen
 	release.resolve();
 	const draft = await pending;
 	expect(draft.texts).toHaveLength(2);
-	expect(draft.relations?.candidates).toEqual(["Geldinstitut"]);
+	expect(draft.relations?.candidates).toEqual(["Geldinstitut", "Sparkasse"]);
 	expect(traces[0]?.calls).toHaveLength(3);
 	expect(traces[0]?.calls.every((call) => call.dependsOn.length === 0)).toBe(
 		true,
@@ -187,12 +191,9 @@ test("draft failure preserves successful siblings and leaves fallback generation
 		draftKnowledge(
 			{
 				execute: async (request) => {
-					if (
-						(request.input as { aspect: string }).aspect ===
-						"definition"
-					)
+					if (draftAspect(request) === "definition")
 						throw Error("offline");
-					return { output: { text: "bank" } };
+					return { output: "bank" };
 				},
 				judge: unexpectedJudge,
 			},
@@ -234,14 +235,14 @@ test("unclassified relation candidates receive their first Kind and relation dec
 	expect(result.pendingRelations).toHaveLength(1);
 });
 
-test("transcription drafts see only the Lemma while sense texts see the Lemma and marked context", async () => {
-	const inputs: Record<string, unknown>[] = [];
+test("transcription drafts see only the headword while sense texts see the headword and marked sentence", async () => {
+	const inputs: Record<string, unknown> = {};
 	await Effect.runPromise(
 		draftKnowledge(
 			{
 				execute: async (request) => {
-					inputs.push(request.input as Record<string, unknown>);
-					return { output: { text: "x" } };
+					inputs[draftAspect(request)] = request.input;
+					return { output: "x" };
 				},
 				judge: unexpectedJudge,
 			},
@@ -252,19 +253,28 @@ test("transcription drafts see only the Lemma while sense texts see the Lemma an
 			},
 		),
 	);
-	const transcription = inputs.find(
-		(item) => item.aspect === "transcription",
+	expect(inputs).toEqual({
+		transcription: "<target_lemma>Bank</target_lemma>",
+		definition:
+			"<target_lemma>Bank</target_lemma>\n<marked_sentence><TARGET>Bank</TARGET></marked_sentence>",
+	});
+});
+
+test("an empty draft reply leaves the aspect for fallback generation", async () => {
+	const draft = await Effect.runPromise(
+		draftKnowledge(
+			{
+				execute: async () => ({ output: "  \n" }),
+				judge: unexpectedJudge,
+			},
+			{
+				encounter: input.encounter,
+				lemma: input.reading.lemma,
+				request: { definition: null },
+			},
+		),
 	);
-	const definition = inputs.find((item) => item.aspect === "definition");
-	expect(transcription).toEqual({
-		lemma: input.reading.lemma,
-		aspect: "transcription",
-	});
-	expect(definition).toMatchObject({
-		lemma: input.reading.lemma,
-		markedContext: "<TARGET>Bank</TARGET>",
-	});
-	expect(definition).not.toHaveProperty("reading");
+	expect(draft.texts).toEqual([]);
 });
 
 test("drafts written for another Lemma are not reused", async () => {
@@ -292,6 +302,11 @@ test("drafts written for another Lemma are not reused", async () => {
 test("draft and fallback translations both ask for the target-language dictionary form", async () => {
 	const prompts: Record<string, string> = {};
 	const execute: DumgenOptions["execute"] = async (request) => {
+		if (request.stage === "draftKnowledge") {
+			prompts[`draftKnowledge/${draftLanguage(request)}`] =
+				request.systemPrompt;
+			return { output: "bank" };
+		}
 		const state = request.input as { aspect?: string; language?: string };
 		if (state.aspect === "translations")
 			prompts[`${request.stage}/${state.language}`] =
@@ -344,10 +359,9 @@ test("the draft translation corpus runs through draftKnowledge and its evaluator
 		const languages: string[] = [];
 		const run = draftTranslationOperationExperiment({
 			execute: async (request) => {
-				const language = (request.input as { language: "en" | "ru" })
-					.language;
+				const language = draftLanguage(request) as "en" | "ru";
 				languages.push(language);
-				return { output: { text: ideal[language] ?? null } };
+				return { output: ideal[language] ?? "" };
 			},
 			judge: unexpectedJudge,
 		});

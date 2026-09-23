@@ -343,6 +343,149 @@ function occurrenceRows(): Record<string, readonly Row[]> {
 	};
 }
 
+/** "Angst vor Hunden": intake says the NOUN Angst governs vor + Dat. */
+function governedOccurrenceRows(): Record<string, readonly Row[]> {
+	const rows = occurrenceRows();
+	const segment = (
+		offset: number,
+		text: string,
+		kind = "ResolvableText",
+	) => ({
+		offset,
+		kind,
+		text,
+		surface: text,
+	});
+	const target = (id: string, offset: number, kind: string) => ({
+		id,
+		members: [{ offset, role: "Head" }],
+		routeMass: [{ key: kind, share: 1 }],
+		identity: null,
+		provenance: "vote",
+	});
+	return {
+		...rows,
+		lemmas: [
+			{
+				...(rows.lemmas?.[0] as Row),
+				canonicalForm: "Angst",
+			},
+		],
+		sentences: [
+			{
+				_id: "sentence-1",
+				segmentedSentenceId: "segmented-sentence-1",
+				language: "de",
+				stitchedText: "Angst vor Hunden",
+			},
+		],
+		segments: [
+			{
+				...(rows.segments?.[0] as Row),
+				text: "Angst",
+			},
+			{
+				_id: "segment-2",
+				sentenceId: "sentence-1",
+				index: 1,
+				kind: "OpaqueText",
+				text: " vor Hunden",
+			},
+		],
+		sentenceAnalyses: [
+			{
+				_id: "analysis-1",
+				sentenceId: "sentence-1",
+				analysis: {
+					sentenceId: "segmented-sentence-1",
+					language: "de",
+					stitchedText: "Angst vor Hunden",
+					segments: [
+						segment(0, "Angst"),
+						segment(5, " ", "Whitespace"),
+						segment(6, "vor"),
+						segment(9, " ", "Whitespace"),
+						segment(10, "Hunden"),
+					],
+					targets: [
+						target("t1", 0, "NOUN"),
+						target("t2", 6, "ADP"),
+						target("t3", 10, "NOUN"),
+					],
+					phrasemes: [],
+					fusions: [],
+					government: [
+						{
+							offset: 6,
+							preposition: "vor",
+							case: "Dat",
+							governor: "t1",
+						},
+					],
+				},
+			},
+		],
+	};
+}
+
+test("a Full Reading still tops up government its new sentence attests, and only once", async () => {
+	const fullKnowledge = (knowledge: Row["knowledge"]) => [
+		{
+			_id: "knowledge-full",
+			ownerReadingKey: "reading-key",
+			knowledge,
+			status: "Full",
+			coveredTranslationLanguages: ["en", "ru"],
+			updatedAt: 1,
+		},
+	];
+	const input = {
+		attemptKey: "government-top-up",
+		visitorId: "visitor-1",
+		readingId: "reading-1",
+		attestationId: "attestation-1",
+	};
+	const db = new GenerationDb({
+		...governedOccurrenceRows(),
+		accumulatedKnowledge: fullKnowledge({
+			translations: { en: ["fear"], ru: ["страх"] },
+		}),
+	});
+	await scheduleKnowledgeGeneration(
+		{ db, scheduler: { async runAfter() {} } } as never,
+		input as never,
+	);
+	expect(db.rows("knowledgeGenerationAttempts")).toHaveLength(1);
+	expect(
+		await handler<{ attemptKey: string }, unknown>(begin)(
+			{ db },
+			{ attemptKey: input.attemptKey },
+		),
+	).toEqual(
+		expect.objectContaining({
+			kind: "Generate",
+			topUpOnly: true,
+			translationLanguages: [],
+			governedPrepositions: [{ preposition: "vor", case: "Dat" }],
+		}),
+	);
+
+	const coveredDb = new GenerationDb({
+		...governedOccurrenceRows(),
+		accumulatedKnowledge: fullKnowledge({
+			translations: { en: ["fear"], ru: ["страх"] },
+			governedPrepositions: [
+				{ preposition: { canonicalForm: "vor" }, case: "Dat" },
+			],
+		}),
+	});
+	await scheduleKnowledgeGeneration(
+		{ db: coveredDb, scheduler: { async runAfter() {} } } as never,
+		input as never,
+	);
+	expect(coveredDb.rows("knowledgeGenerationAttempts")).toEqual([]);
+});
+
 test("existing requested content completes an empty generated batch and the first complete writer wins", async () => {
 	const db = new GenerationDb({
 		...dictionaryRows({
@@ -533,11 +676,11 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		},
 		[],
 	);
+	// Government is asked only when intake attested it in the sentence.
 	expect(request).toEqual({
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
-		governedPrepositions: null,
 	});
 	expect(
 		generationRequestFor(
@@ -556,10 +699,37 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 			[],
 			{
 				translationLanguages: ["ru"],
-				translationsOnly: true,
+				topUpOnly: true,
 			},
 		),
 	).toEqual({ translations: { ru: null } });
+	const angst = {
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Angst",
+			coreFeatures: { gender: "Fem", hyph: null },
+		},
+		emojiDescription: "😨",
+	} as const;
+	expect(
+		generationRequestFor(angst, [], { attestsGovernment: true }),
+	).toEqual({
+		transcription: null,
+		definition: null,
+		translations: { en: null, ru: null },
+		governedPrepositions: null,
+	});
+	expect(
+		generationRequestFor(angst, [], {
+			translationLanguages: [],
+			topUpOnly: true,
+			attestsGovernment: true,
+		}),
+	).toEqual({ governedPrepositions: null });
 });
 
 test("production publication remains empty without a reviewed verdict", () => {
@@ -809,7 +979,8 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		expect.objectContaining({
 			kind: "Generate",
 			translationLanguages: ["ru"],
-			translationsOnly: true,
+			topUpOnly: true,
+			governedPrepositions: [],
 		}),
 	);
 

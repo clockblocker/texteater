@@ -9,7 +9,6 @@ type Analysis = {
 		string,
 		{ canonicalForm: string; kind: string }[] | null
 	>;
-	governedPrepositions?: { preposition: string; case: string }[] | null;
 };
 export function knowledgeFixture(
 	output: unknown,
@@ -23,13 +22,6 @@ export function knowledgeFixture(
 				language?: string;
 			};
 			if (!analysis || typeof analysis !== "object") return { output };
-			if (input.aspect === "governedPrepositions")
-				return {
-					output: {
-						governedPrepositions:
-							analysis.governedPrepositions ?? [],
-					},
-				};
 			if (input.aspect)
 				return {
 					output: {

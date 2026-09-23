@@ -5,8 +5,10 @@ import type { KnowledgeProduction, KnowledgeRequest } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { parse } from "../../../universal/validation.js";
 import type { AuthoredMember } from "../authored-closed-sets/member.js";
-import { governablePrepositionLemma } from "./governed-prepositions/prepositions.js";
-import type { GovernedPrepositionDraft } from "./governed-prepositions/prompt.js";
+import {
+	type GovernedPrepositionDraft,
+	governablePrepositionLemma,
+} from "../governable-prepositions.js";
 import { assertRequestShape } from "./request-shape.js";
 
 export function validateRequest(

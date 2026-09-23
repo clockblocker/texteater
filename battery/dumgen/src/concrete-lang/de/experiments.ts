@@ -42,8 +42,6 @@ import { corpusSource as p21 } from "./grammatical-resolution/phraseme/proverb/c
 import { evaluationCaseIds as e21 } from "./grammatical-resolution/phraseme/proverb/evaluation-ids.js";
 import { corpusSource as p37 } from "./knowledge-production/draft-translations/corpus.js";
 import { evaluationCaseIds as e37 } from "./knowledge-production/draft-translations/evaluation-ids.js";
-import { corpusSource as p36 } from "./knowledge-production/governed-prepositions/corpus.js";
-import { evaluationCaseIds as e36 } from "./knowledge-production/governed-prepositions/evaluation-ids.js";
 import { corpusSource as p23 } from "./knowledge-production/lexeme/corpus.js";
 import { evaluationCaseIds as e23 } from "./knowledge-production/lexeme/evaluation-ids.js";
 import { evaluationCaseIds as e30 } from "./knowledge-production/lexical-breakdown/resolution/evaluation-ids.js";
@@ -105,6 +103,5 @@ export const corpusRegistrations = [
 	{ source: p32, evaluationCaseIds: e32 },
 	{ source: p33, evaluationCaseIds: e33 },
 	{ source: p34, evaluationCaseIds: e34 },
-	{ source: p36, evaluationCaseIds: e36 },
 	{ source: p37, evaluationCaseIds: e37 },
 ] as const;

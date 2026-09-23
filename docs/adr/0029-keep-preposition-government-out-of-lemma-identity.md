@@ -40,6 +40,7 @@ already separates senses such as `es geht um` from `gehen`. Only verbs
 absorb a governed preposition as a member. Intake never assembles one into an
 ADJ, NOUN or Phraseme target, so clicking `auf` in `stolz auf` opens the
 preposition, and adjective and noun government has no Attestation evidence.
-The Reading's Knowledge carries it instead, and the preposition reaches its
+Intake's Sentence Analysis still links such a preposition to its governor,
+the Reading's Knowledge carries the claim, and the preposition reaches its
 Governors through the projection in ADR 0030. ADR 0030 records the governor-to-preposition link as Knowledge
 rather than as a separate Grammatical Relation.

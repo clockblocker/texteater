@@ -5,8 +5,10 @@ import type {
 	SystemOneResult,
 	TypeSafeExecutor,
 } from "promptsmith/typesafe";
+import { governablePrepositionIn } from "../src/concrete-lang/de/governable-prepositions.js";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
 import {
+	governedPrepositionsAt,
 	headOf,
 	largestOf,
 	resolvedUnitAt,
@@ -45,6 +47,10 @@ type Plan = {
 		readonly kind: string;
 		readonly fixedness: number;
 	}[];
+	/** Governor and case per governable preposition index; every other one is None. */
+	readonly government?: Readonly<
+		Record<number, { readonly governor?: number; readonly case?: string }>
+	>;
 };
 
 /** An injected judge answering every question of the one call from a plan. */
@@ -111,6 +117,15 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 					else if (prefix === "id") chosen = "NoMatch";
 					else if (prefix === "pk")
 						chosen = expression(numbers[0] ?? -1)?.kind ?? "None";
+					else if (prefix === "gov") {
+						const governor =
+							plan.government?.[numbers[0] ?? -1]?.governor;
+						chosen =
+							governor === undefined ? "None" : `s${governor}`;
+					} else if (prefix === "case")
+						chosen =
+							plan.government?.[numbers[0] ?? -1]?.case ??
+							"Unresolved";
 					else throw Error(`Unexpected question ${id}`);
 					if (!options.includes(chosen))
 						throw Error(`${chosen} is not an option of ${id}`);
@@ -438,6 +453,7 @@ test("a closed-class word whose spelling enumerated no candidate is a Miss and r
 		targets: [singleton("xyz", 0, "PRON"), singleton("an", 4, "ADP")],
 		phrasemes: [],
 		fusions: [],
+		government: [],
 	};
 	const [pron, adp] = analysis.targets;
 	if (!pron || !adp) throw Error("Expected two targets");
@@ -449,4 +465,128 @@ test("a closed-class word whose spelling enumerated no candidate is a Miss and r
 		kind: "ADP",
 		offsets: [4],
 	});
+});
+
+test("a preposition, a fused adposition or a pronominal adverb realizes a governable preposition", () => {
+	expect(
+		[
+			"auf",
+			"Für",
+			"darauf",
+			"worüber",
+			"hierfür",
+			"dran",
+			"dabei",
+			"dazwischen",
+			"Haus",
+			"seit",
+		].map(governablePrepositionIn),
+	).toEqual([
+		"auf",
+		"für",
+		"auf",
+		"über",
+		"für",
+		"an",
+		"bei",
+		"zwischen",
+		null,
+		null,
+	]);
+});
+
+// Input indices: Das0 Kind2 hat4 im6 Winter8 Angst10 vor12 Hunden14 .15
+// Offsets: Das0 Kind4 hat9 i13 m14 Winter16 Angst23 vor29 Hunden33
+test("intake links a governed preposition to its governor and leaves an adjunct ungoverned", async () => {
+	const sentence = sentenceOf(
+		"angst",
+		"Das Kind hat im Winter Angst vor Hunden.",
+	);
+	const { dumgen, traces } = dumgenWith({
+		words: [[0, 2], [4], [6], [8], [10], [12], [14]],
+		routes: {
+			0: "Lexeme/NOUN",
+			2: "Lexeme/NOUN",
+			4: "Lexeme/VERB",
+			6: "Lexeme/ADP",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/NOUN",
+			12: "Lexeme/ADP",
+			14: "Lexeme/NOUN",
+		},
+		// A lone preposition labelled GovernedPreposition still needs a governor.
+		roles: { 0: "Article", 2: "Head", 12: "GovernedPreposition" },
+		expressions: [],
+		government: { 12: { governor: 10, case: "Dat" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({ sentence }),
+	);
+	const angst = targetOf(analysis, 23);
+	if (!angst) throw Error("Expected the Angst target");
+	expect(analysis.government).toEqual([
+		{ offset: 29, preposition: "vor", case: "Dat", governor: angst.id },
+	]);
+	expect(
+		governedPrepositionsAt(
+			analysis,
+			angst.members.map((member) => member.offset),
+		),
+	).toEqual([{ preposition: "vor", case: "Dat" }]);
+	const hat = analysis.segments.find((s) => s.text === "hat");
+	expect(governedPrepositionsAt(analysis, [hat?.offset ?? -1])).toEqual([]);
+	expect(JSON.stringify(traces)).toContain("gov_12");
+	expect(JSON.stringify(traces)).toContain("case_12");
+});
+
+// Input indices: Er0 wartet2 auf4 den6 Bus8; offsets: Er0 wartet3 auf10 den14 Bus18
+test("a verb's GovernedPreposition member falls back to its verb when no word wins the vote", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2, 4], [6, 8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/VERB",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+		},
+		roles: { 2: "Head", 4: "GovernedPreposition", 6: "Article", 8: "Head" },
+		expressions: [],
+		government: { 4: { case: "Acc" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("warten", "Er wartet auf den Bus."),
+		}),
+	);
+	const verb = targetOf(analysis, 3);
+	if (!verb) throw Error("Expected the verbal target");
+	expect(verb.members.map((member) => member.role)).toEqual([
+		"Head",
+		"GovernedPreposition",
+	]);
+	expect(analysis.government).toEqual([
+		{ offset: 10, preposition: "auf", case: "Acc", governor: verb.id },
+	]);
+});
+
+test("a sentence without a governable preposition asks no government question", async () => {
+	const { dumgen, traces } = dumgenWith({
+		words: [[0, 2], [4], [6]],
+		routes: {
+			0: "Lexeme/NOUN",
+			2: "Lexeme/NOUN",
+			4: "Lexeme/VERB",
+			6: "Lexeme/ADJ",
+		},
+		roles: { 0: "Article", 2: "Head" },
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("banken", "Die Banken sind geöffnet."),
+		}),
+	);
+	expect(analysis.government).toEqual([]);
+	expect(JSON.stringify(traces)).not.toContain("gov_");
 });

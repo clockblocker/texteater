@@ -3,6 +3,10 @@ import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import type { KnowledgeFailure, KnowledgeRequest } from "dumgen/types";
 import { translationLanguageValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import {
+	attestedGovernment,
+	uncoveredGovernment,
+} from "../server/attestedGovernment";
 import { knowledgeRequestComplete } from "../server/knowledgeCompletion";
 import { parseGermanReading } from "../server/operationalParsing";
 import { internal } from "./_generated/api";
@@ -21,6 +25,7 @@ import { inspectionRequested } from "./model/inspection";
 import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
+import { loadSentenceAnalysis } from "./model/resolutionLookup";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
 import {
 	directSemanticRelationValidator,
@@ -132,6 +137,23 @@ function missingTranslationLanguages(
 	return requested.filter((language) => !covered.has(language));
 }
 
+/** The governed prepositions intake attested for this occurrence (ADR 0030). */
+async function occurrenceGovernment(
+	ctx: MutationCtx,
+	occurrence: NonNullable<
+		Awaited<ReturnType<typeof loadOccurrenceAttestation>>
+	>,
+) {
+	return attestedGovernment(
+		await loadSentenceAnalysis(ctx, occurrence.sentence._id),
+		{
+			stitchedText: occurrence.sentence.stitchedText,
+			segments: occurrence.segments,
+		},
+		occurrence.memberSegmentIndices,
+	);
+}
+
 export async function scheduleKnowledgeGeneration(
 	ctx: MutationCtx,
 	input: {
@@ -165,7 +187,11 @@ export async function scheduleKnowledgeGeneration(
 	if (
 		accumulated?.status === "Full" &&
 		missingTranslationLanguages(accumulated, translationLanguages)
-			.length === 0
+			.length === 0 &&
+		uncoveredGovernment(
+			await occurrenceGovernment(ctx, occurrence),
+			accumulated.knowledge,
+		).length === 0
 	) {
 		return;
 	}
@@ -272,7 +298,19 @@ const generationInputValidator = v.union(
 		knowledgeDraftJson: v.optional(v.string()),
 		runNumber: v.number(),
 		translationLanguages: v.array(translationLanguageValidator),
-		translationsOnly: v.boolean(),
+		/** Knowledge is Full: ask only for what this occurrence adds. */
+		topUpOnly: v.boolean(),
+		/** Attested government the Reading does not store yet. */
+		governedPrepositions: v.array(
+			v.object({
+				preposition: v.string(),
+				case: v.union(
+					v.literal("Acc"),
+					v.literal("Dat"),
+					v.literal("Gen"),
+				),
+			}),
+		),
 		authorization: publicationAuthorizationValidator,
 	}),
 );
@@ -301,9 +339,20 @@ export const begin = internalMutation({
 			accumulated,
 			translationLanguages,
 		);
+		const occurrence = await loadOccurrenceAttestation(
+			ctx,
+			attempt.attestationId,
+		);
+		const governedPrepositions = occurrence
+			? uncoveredGovernment(
+					await occurrenceGovernment(ctx, occurrence),
+					accumulated?.knowledge,
+				)
+			: [];
 		if (
 			accumulated?.status === "Full" &&
-			missingTranslations.length === 0
+			missingTranslations.length === 0 &&
+			governedPrepositions.length === 0
 		) {
 			await ctx.db.patch(attempt._id, {
 				state: "LostRace",
@@ -327,10 +376,6 @@ export const begin = internalMutation({
 				updatedAt: Date.now(),
 			});
 		}
-		const occurrence = await loadOccurrenceAttestation(
-			ctx,
-			attempt.attestationId,
-		);
 		if (
 			!occurrence ||
 			occurrence.reading._id !== attempt.readingId ||
@@ -351,7 +396,8 @@ export const begin = internalMutation({
 				: {}),
 			runNumber,
 			translationLanguages: missingTranslations,
-			translationsOnly: accumulated?.status === "Full",
+			topUpOnly: accumulated?.status === "Full",
+			governedPrepositions,
 			authorization: await loadRelationPublicationAuthorization(ctx),
 		};
 	},
@@ -479,7 +525,11 @@ export const publish = internalMutation({
 			!attempt.publicationSequence &&
 			accumulated?.status === "Full" &&
 			missingTranslationLanguages(accumulated, requestedTranslations)
-				.length === 0
+				.length === 0 &&
+			// A Full Reading still takes government a new sentence attests.
+			!args.changes.some(
+				(change) => change?.aspect === "governedPrepositions",
+			)
 		) {
 			await ctx.db.patch(attempt._id, {
 				state: "LostRace",

@@ -1,5 +1,5 @@
 import type { Infer } from "convex/values";
-import type { SentenceAnalysis } from "dumgen/types";
+import type { Government, SentenceAnalysis } from "dumgen/types";
 import type { storedSentenceAnalysisValidator } from "../convex/model/validators";
 
 export type StoredSentenceAnalysis = Infer<
@@ -60,6 +60,7 @@ export function toStoredSentenceAnalysis(
 				...component,
 			})),
 		})),
+		government: analysis.government.map((entry) => ({ ...entry })),
 	};
 }
 
@@ -91,5 +92,9 @@ export function fromStoredSentenceAnalysis(
 			provenance: phraseme.provenance,
 		})),
 		fusions: stored.fusions,
+		government: (stored.government ?? []).map((entry) => ({
+			...entry,
+			preposition: entry.preposition as Government["preposition"],
+		})),
 	};
 }

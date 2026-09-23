@@ -108,6 +108,14 @@ export const sentenceAnalysisSchema = z.strictObject({
 				.min(2),
 		}),
 	),
+	government: z.array(
+		z.strictObject({
+			offset: offsetSchema,
+			preposition: z.string().min(1),
+			case: z.enum(["Acc", "Dat", "Gen"]),
+			governor: z.string().min(1),
+		}),
+	),
 });
 export const memberIndicesSchema = z.tuple([indexSchema], indexSchema);
 export const knowledgeFailureSchema = z.strictObject({

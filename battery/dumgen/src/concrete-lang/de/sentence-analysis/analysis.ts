@@ -9,10 +9,16 @@
  * one Route Mass over Lexeme Kinds and, for a closed-class head, an Identity
  * Mass over authored headword groups. The Phraseme layer partitions a subset
  * of the Lexeme Targets into Phraseme Targets, whose members are words, never
- * Segments, with one Kind Mass and a fixedness score. Nothing resolved is
- * stored; the Resolution Selector below is the one pure function that applies
- * the policy.
+ * Segments, with one Kind Mass and a fixedness score. Government links each
+ * governed preposition to the Lexeme Target that selects it (ADR 0030).
+ * Nothing resolved is stored; the Resolution Selector below is the one pure
+ * function that applies the policy.
  */
+
+import type {
+	GovernablePreposition,
+	GovernedPrepositionDraft,
+} from "../governable-prepositions.js";
 
 export type AnalyzedSegmentKind =
 	| "ResolvableText"
@@ -94,6 +100,18 @@ export type Fusion = {
 	readonly components: readonly FusionComponent[];
 };
 
+/**
+ * One governed preposition: the Segment realizing it (the preposition, a
+ * fused word's adposition or a pronominal adverb), its ADP headword, the case
+ * the government requires and the governing Lexeme Target's id.
+ */
+export type Government = {
+	readonly offset: number;
+	readonly preposition: GovernablePreposition;
+	readonly case: "Acc" | "Dat" | "Gen";
+	readonly governor: string;
+};
+
 export type SentenceAnalysis = {
 	readonly sentenceId: string;
 	readonly language: "de";
@@ -104,6 +122,7 @@ export type SentenceAnalysis = {
 	/** The Phraseme layer: a partition of a subset of `targets`. */
 	readonly phrasemes: readonly PhrasemeTarget[];
 	readonly fusions: readonly Fusion[];
+	readonly government: readonly Government[];
 };
 
 // ------------------------------------------------------- Resolution Selector
@@ -369,4 +388,30 @@ function lexemeUnit(target: LexemeTarget) {
 		kind: route.kind,
 		offsets: target.members.map((member) => member.offset),
 	};
+}
+
+// ------------------------------------------------------------- Government
+
+/**
+ * The governed prepositions a unit attests in this sentence: every
+ * Government whose governor has a member among the unit's offsets. A
+ * Phraseme reaches the government of its member words.
+ */
+export function governedPrepositionsAt(
+	analysis: SentenceAnalysis,
+	offsets: readonly number[],
+): GovernedPrepositionDraft[] {
+	const covered = new Set(offsets);
+	const found = new Map<string, GovernedPrepositionDraft>();
+	for (const entry of analysis.government) {
+		const governor = analysis.targets.find(
+			(target) => target.id === entry.governor,
+		);
+		if (governor?.members.some((member) => covered.has(member.offset)))
+			found.set(`${entry.preposition}/${entry.case}`, {
+				preposition: entry.preposition,
+				case: entry.case,
+			});
+	}
+	return [...found.values()];
 }

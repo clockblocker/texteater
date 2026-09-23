@@ -23,16 +23,16 @@ import {
 	closedRoute,
 } from "../authored-closed-sets/select.js";
 import {
+	type GovernedPrepositionDraft,
+	governedCaseFor,
+	isGovernablePreposition,
+} from "../governable-prepositions.js";
+import {
 	draftedRelationCandidates,
 	draftedTexts,
 	translationFormClause,
 } from "./draft.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
-import {
-	governedPrepositionsOutputSchema,
-	governedPrepositionsPrompt,
-	parseGovernedPrepositionsOutput,
-} from "./governed-prepositions/prompt.js";
 import {
 	authoredKnowledge,
 	projectKnowledge,
@@ -64,6 +64,11 @@ export async function produceKnowledge(
 		encounter: Encounter;
 		reading: Dumling.Reading;
 		request: KnowledgeRequest;
+		/** What intake attested for this occurrence (`governedPrepositionsAt`). */
+		governedPrepositions?: readonly {
+			preposition: string;
+			case: Dumrel.GovernedCase;
+		}[];
 	},
 	signal: AbortSignal,
 ): Promise<KnowledgeProduction> {
@@ -137,26 +142,33 @@ export async function produceKnowledge(
 		changes: readonly Dumrel.KnowledgeChange[];
 		failures: KnowledgeFailure[];
 	};
-	/** Valency of the fixed Reading; published with the final batch, never incrementally. */
-	const governedPrepositions = async () => {
-		const drafts = await executeGeneration(
-			options,
-			{
-				stage,
-				route,
-				input: { ...state, aspect: "governedPrepositions" },
-				signal,
-				configuration: effectiveConfiguration(options, route),
-				systemPrompt: governedPrepositionsPrompt,
-				outputSchema: governedPrepositionsOutputSchema,
-			},
-			parseGovernedPrepositionsOutput,
-			[],
-		);
+	/**
+	 * Valency comes from intake, never from a model call: the governed
+	 * prepositions this sentence attests. Published with the final batch.
+	 */
+	const governedPrepositions = () => {
+		const drafts = new Map<string, GovernedPrepositionDraft>();
+		for (const {
+			preposition,
+			case: governedCase,
+		} of input.governedPrepositions ?? []) {
+			if (!isGovernablePreposition(preposition))
+				throw new DumgenFailure(
+					"InvalidInput",
+					stage,
+					`${preposition} is not a governable preposition`,
+					route,
+				);
+			const draft = {
+				preposition,
+				case: governedCaseFor(preposition, governedCase),
+			};
+			drafts.set(`${draft.preposition}/${draft.case}`, draft);
+		}
 		const contribution = projectKnowledge(
 			reading,
 			{ governedPrepositions: null },
-			{ governedPrepositions: drafts },
+			{ governedPrepositions: [...drafts.values()] },
 		);
 		return contribution.changes.length ? contribution : null;
 	};
@@ -186,7 +198,11 @@ export async function produceKnowledge(
 					const targetAspect = aspect as KnowledgeFailure["aspect"];
 					let outcome: TextOutcome;
 					try {
-						if (closed || exact)
+						// Intake attests government for authored Readings too.
+						if (
+							(closed || exact) &&
+							aspect !== "governedPrepositions"
+						)
 							throw new DumgenFailure(
 								"CatalogMiss",
 								stage,
@@ -233,7 +249,7 @@ export async function produceKnowledge(
 						);
 						const contribution =
 							aspect === "governedPrepositions"
-								? await governedPrepositions()
+								? governedPrepositions()
 								: draftText !== undefined
 									? validateText({ text: draftText })
 									: await executeGeneration(

@@ -50,7 +50,10 @@ export function createOpenAIExecutor(
 						: { role: "system", content: request.systemPrompt },
 					{
 						role: "user",
-						content: JSON.stringify(request.input),
+						content:
+							typeof request.input === "string"
+								? request.input
+								: JSON.stringify(request.input),
 					},
 				],
 				text: {
