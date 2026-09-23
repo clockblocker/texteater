@@ -138,6 +138,88 @@ test("incompatible applicable features stop before missing-text generation", asy
 	expect(traces[0]?.calls).toHaveLength(1);
 });
 
+test("a bare mass noun keeps its click: NOUN Number never offers Unmarked", async () => {
+	const expected = {
+		lemma: {
+			canonicalForm: "Obst",
+			coreFeatures: { gender: "Neut", hyph: null },
+		},
+		surface: {
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				case: "Acc",
+				number: "Sing",
+				article: null,
+			},
+		},
+		articleEvidence: null,
+		memberOrthographies: ["Standard"],
+		normalizedMembers: ["Obst"],
+		realizationCoverage: "Full",
+	};
+	const numberPath = "surface.inflectionalFeatures.number";
+	// Like jev, take Unmarked whenever it is offered; that answer contradicts
+	// Marked inflection and used to lose the whole click.
+	const prefersUnmarked = grammarFixture(expected, {
+		[numberPath]: "Unmarked",
+	}).judge;
+	const { judge, ...options } = grammarFixture(expected);
+	if (!judge || !prefersUnmarked) throw Error("Missing fixture judge");
+	const traces: OperationTrace[] = [];
+	const output = await Effect.runPromise(
+		createDumgen({
+			...options,
+			judge: (request, settings) => {
+				const number = request.questions[numberPath];
+				return number?.type === "choice" &&
+					"Unmarked" in number.criteria
+					? prefersUnmarked(request, settings)
+					: judge(request, settings);
+			},
+			onOperation: (trace) => traces.push(trace),
+		}).resolveGrammar(
+			validateEncounter({
+				sentence: {
+					id: "bare-mass-noun",
+					language: "de",
+					segments: [
+						{ kind: "ResolvableText", text: "Wir" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "kaufen" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "Obst" },
+						{ kind: "Punctuation", text: "." },
+					],
+				},
+				target: {
+					family: "Lexeme",
+					kind: "NOUN",
+					memberSegmentIndices: [4],
+				},
+			}),
+		),
+	);
+	const request = traces[0]?.calls[0]?.request;
+	if (!request || !("questions" in request))
+		throw Error("Expected feature judgment");
+	expect(request.input).toHaveProperty(
+		"markedContext",
+		"Wir kaufen <TARGET>Obst</TARGET>.",
+	);
+	expect(Object.keys(request.questions[numberPath]?.criteria ?? {})).toEqual([
+		"Plur",
+		"Sing",
+		"Unresolved",
+	]);
+	expect(output.surface.lemma.canonicalForm).toBe("Obst");
+	expect(output.surface).toHaveProperty("inflectionalFeatures", {
+		case: "Acc",
+		number: "Sing",
+		article: null,
+	});
+});
+
 test("finite homograph canonical candidate resolves without generation", async () => {
 	const expected = {
 		lemma: {

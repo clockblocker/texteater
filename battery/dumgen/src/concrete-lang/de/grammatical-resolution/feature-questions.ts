@@ -507,7 +507,12 @@ export function featureQuestion(
 		criteria.Present = present;
 		criteria.Absent = unmarked;
 	} else {
+		// A contextual common noun always has Number, so offering Unmarked only
+		// lets bare, mass and plural-only nouns (Obst, Holz) lose the click.
+		const numberAlwaysMarked =
+			kind === "NOUN" && path === "surface.inflectionalFeatures.number";
 		for (const value of field.values) {
+			if (value === null && numberAlwaysMarked) continue;
 			const label = value === null ? "Unmarked" : String(value);
 			const description =
 				value === null ? unmarked : meaning.values[label];

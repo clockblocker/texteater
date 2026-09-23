@@ -11,6 +11,8 @@ const verbal = new Set(["VERB", "AUX", "Idiom", "Collocation"]);
 test("every enabled German grammatical feature has explicit meanings for all schema choices", () => {
 	const lexemes = new Set<string>();
 	let checked = 0;
+	let nounNumberChecked = false;
+	let propnNumberChecked = false;
 	for (const key of Object.keys(modelSchemas)) {
 		if (!key.startsWith("grammar/de/")) continue;
 		const route = key.slice("grammar/".length);
@@ -38,15 +40,32 @@ test("every enabled German grammatical feature has explicit meanings for all sch
 			if (kind === "AUX" && path.startsWith("lemma.")) continue;
 			if (verbal.has(kind) && path.endsWith(".voice")) continue;
 			const question = featureQuestion(kind, path, field);
+			// A contextual common noun always has Number: no Unmarked choice.
+			const nounNumber =
+				kind === "NOUN" &&
+				path === "surface.inflectionalFeatures.number";
 			const expected = field.open
 				? ["Present", "Absent", "Unresolved"]
 				: [
-						...field.values.map((value) =>
-							value === null ? "Unmarked" : String(value),
-						),
+						...field.values
+							.filter((value) => !(nounNumber && value === null))
+							.map((value) =>
+								value === null ? "Unmarked" : String(value),
+							),
 						"Unresolved",
 					];
 			expect(Object.keys(question.criteria)).toEqual(expected);
+			if (nounNumber) {
+				nounNumberChecked = true;
+				expect(expected).toEqual(["Plur", "Sing", "Unresolved"]);
+			}
+			if (
+				kind === "PROPN" &&
+				path === "surface.inflectionalFeatures.number"
+			) {
+				propnNumberChecked = true;
+				expect(Object.keys(question.criteria)).toContain("Unmarked");
+			}
 			expect(question.instructions).toContain("`markedContext`");
 			expect(question.instructions).toContain(kind);
 			for (const description of Object.values(question.criteria)) {
@@ -56,6 +75,8 @@ test("every enabled German grammatical feature has explicit meanings for all sch
 			checked++;
 		}
 	}
+	expect(nounNumberChecked).toBe(true);
+	expect(propnNumberChecked).toBe(true);
 	expect(lexemes.size).toBe(16);
 	expect(checked).toBeGreaterThan(100);
 });
