@@ -44,6 +44,19 @@ export function knowledgeComparison(
 			result.lexicalBreakdown = change.value;
 		if (change.aspect === "definition" || change.aspect === "transcription")
 			result[change.aspect] = change.value;
+		if (change.aspect === "governedPrepositions")
+			result.governedPrepositions = change.value
+				.map((governed) => ({
+					preposition: governed.preposition.canonicalForm,
+					case: governed.case,
+				}))
+				.sort(
+					(left, right) =>
+						left.preposition.localeCompare(
+							right.preposition,
+							"de",
+						) || left.case.localeCompare(right.case),
+				);
 		if (change.aspect === "translations")
 			(result.translations as Record<string, unknown>)[change.language] =
 				change.value[0] ?? null;

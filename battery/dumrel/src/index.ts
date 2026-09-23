@@ -1,6 +1,7 @@
 export { ParsingError } from "common-utils";
 export { applyKnowledgeChange } from "./apply-knowledge-change.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";
+export { projectPrepositionalGovernment } from "./project-prepositional-government.js";
 export { projectSemanticRelations } from "./project-semantic-relations.js";
 export {
 	KnowledgePolicyUnavailable,
@@ -9,6 +10,10 @@ export {
 export { normalizeText } from "./semantics.js";
 export type {
 	DirectSemanticRelation,
+	GovernedCase,
+	GovernedPreposition,
+	GovernmentProjection,
+	GovernmentRelation,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSelectionInput,
@@ -31,5 +36,6 @@ export type {
 } from "./types.js";
 export {
 	directSemanticRelationValues,
+	governedCaseValues,
 	translationLanguageValues,
 } from "./vocabulary.js";

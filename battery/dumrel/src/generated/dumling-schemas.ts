@@ -296,6 +296,11 @@ export const readingSchema = z.union([
 	Route94.readingSchema,
 	Route95.readingSchema,
 ]);
+export const adpositionLemmaSchema = z.union([
+	Route1.lemmaSchema,
+	Route33.lemmaSchema,
+	Route65.lemmaSchema,
+]);
 export const morphemeReadingSchema = z.union([
 	Route17.readingSchema,
 	Route18.readingSchema,

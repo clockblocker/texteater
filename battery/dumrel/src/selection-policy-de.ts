@@ -8,11 +8,18 @@ const select = (
 	...relations: readonly SemanticRelation[]
 ): readonly SemanticRelation[] => relations;
 
-function request(relations: readonly SemanticRelation[]): KnowledgeRequestMask {
+/** Kinds that lexically select a preposition: `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
+const governs = { governedPrepositions: null } as const;
+
+function request(
+	relations: readonly SemanticRelation[],
+	extra: Pick<KnowledgeRequestMask, "governedPrepositions"> = {},
+): KnowledgeRequestMask {
 	const base = {
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
+		...extra,
 	} as const;
 	if (relations.length === 0) return base;
 	return {
@@ -28,6 +35,7 @@ const makeDeRelMap = () =>
 		Lexeme: {
 			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				governs,
 			),
 			ADP: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
@@ -54,6 +62,7 @@ const makeDeRelMap = () =>
 					"hypernym",
 					"holonym",
 				),
+				governs,
 			),
 			NUM: request(select("synonym")),
 			PART: request(
@@ -78,6 +87,7 @@ const makeDeRelMap = () =>
 					"nearAntonym",
 					"hypernym",
 				),
+				governs,
 			),
 			X: request(select()),
 		},
@@ -87,12 +97,14 @@ const makeDeRelMap = () =>
 			),
 			Collocation: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				governs,
 			),
 			DiscourseFormula: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 			),
 			Idiom: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				governs,
 			),
 			Proverb: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),

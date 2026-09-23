@@ -8,6 +8,10 @@ import { registrations as dumlingOperations } from "../../dumling/codegen/operat
 import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import {
 	directSemanticRelationSchema,
+	governedCaseSchema,
+	governedPrepositionSchema,
+	governmentProjectionSchema,
+	governmentRelationSchema,
 	knowledgeChangeSchema,
 	lexicalBreakdownSchema,
 	morphologicalTreeSchema,
@@ -54,6 +58,10 @@ const compiled = compileZodValidationArtifacts({
 		semanticProjectionInput: semanticProjectionInputSchema,
 		semanticRelation: semanticRelationSchema,
 		semanticRelationProjection: semanticRelationProjectionSchema,
+		governedCase: governedCaseSchema,
+		governedPreposition: governedPrepositionSchema,
+		governmentRelation: governmentRelationSchema,
+		governmentProjection: governmentProjectionSchema,
 	},
 	operations,
 });
@@ -80,6 +88,10 @@ const outputs = {
 				KnowledgeChange: "knowledgeChange",
 				SemanticRelation: "semanticRelation",
 				SemanticRelationProjection: "semanticRelationProjection",
+				GovernedCase: "governedCase",
+				GovernedPreposition: "governedPreposition",
+				GovernmentRelation: "governmentRelation",
+				GovernmentProjection: "governmentProjection",
 			},
 			typePreservingOperations: [
 				"dumling.feature-bag.marked",

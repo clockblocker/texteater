@@ -114,5 +114,14 @@ export const knowledgeOutputSchema = z.strictObject({
 			holonym: targets,
 		})
 		.optional(),
+	governedPrepositions: z
+		.array(
+			z.strictObject({
+				preposition: z.string().min(1),
+				case: z.enum(["Acc", "Dat", "Gen"]),
+			}),
+		)
+		.nullable()
+		.optional(),
 });
 export { directSemanticRelationSchema };

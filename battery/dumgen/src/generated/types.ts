@@ -3490,6 +3490,7 @@ type _Output1530 = {
 	definition?: _Output1531;
 	morphologicalTree?: _Output1531;
 	lexicalBreakdown?: _Output1531;
+	governedPrepositions?: _Output1531;
 	translations?: _Output1533;
 	semanticRelations?: _Output1535;
 };
@@ -4912,10 +4913,23 @@ type _Output1859 = {
 	relation: _Output1849;
 	targetKind?: _Output1862;
 };
-type _Output1865 = "morphologicalTree";
-type _Output1868 = "structure";
-type _Output1873 = "morphemeReading";
-type _Output1874 =
+type _Output1865 = "governedPrepositions";
+type _Output1868 = _Output622 | _Output885 | _Output1147;
+type _Output1869 = "Acc" | "Dat" | "Gen";
+type _Output1867 = { preposition: _Output1868; case: _Output1869 };
+type _Output1866 = Array<_Output1867>;
+type _Output1864 = {
+	kind: _Output1829;
+	aspect: _Output1865;
+	value: _Output1866;
+};
+type _Output1871 = "Retract";
+type _Output1872 = "governedPrepositions";
+type _Output1870 = { kind: _Output1871; aspect: _Output1872 };
+type _Output1874 = "morphologicalTree";
+type _Output1877 = "structure";
+type _Output1882 = "morphemeReading";
+type _Output1883 =
 	| _Output1586
 	| _Output1589
 	| _Output1592
@@ -4948,404 +4962,395 @@ type _Output1874 =
 	| _Output1802
 	| _Output1805
 	| _Output1808;
-type _Output1872 = { nodeKind: _Output1873; reading: _Output1874 };
-type _Output1876 = "unitShadow";
-type _Output1879 = string;
-type _Output1878 = {
+type _Output1881 = { nodeKind: _Output1882; reading: _Output1883 };
+type _Output1885 = "unitShadow";
+type _Output1888 = string;
+type _Output1887 = {
 	language: _Output610;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output32;
 	kind: _Output33;
 };
-type _Output1880 = {
+type _Output1889 = {
 	language: _Output624;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output40;
 	kind: _Output41;
 };
-type _Output1881 = {
+type _Output1890 = {
 	language: _Output639;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output46;
 	kind: _Output47;
 };
-type _Output1882 = {
+type _Output1891 = {
 	language: _Output649;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output52;
 	kind: _Output53;
 };
-type _Output1883 = {
+type _Output1892 = {
 	language: _Output656;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output58;
 	kind: _Output59;
 };
-type _Output1884 = {
+type _Output1893 = {
 	language: _Output663;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output64;
 	kind: _Output65;
 };
-type _Output1885 = {
+type _Output1894 = {
 	language: _Output683;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output70;
 	kind: _Output71;
 };
-type _Output1886 = {
+type _Output1895 = {
 	language: _Output690;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output76;
 	kind: _Output77;
 };
-type _Output1887 = {
+type _Output1896 = {
 	language: _Output699;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output82;
 	kind: _Output83;
 };
-type _Output1888 = {
+type _Output1897 = {
 	language: _Output708;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output88;
 	kind: _Output89;
 };
-type _Output1889 = {
+type _Output1898 = {
 	language: _Output718;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output94;
 	kind: _Output95;
 };
-type _Output1890 = {
+type _Output1899 = {
 	language: _Output729;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output100;
 	kind: _Output101;
 };
-type _Output1891 = {
+type _Output1900 = {
 	language: _Output754;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output106;
 	kind: _Output107;
 };
-type _Output1892 = {
+type _Output1901 = {
 	language: _Output763;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output112;
 	kind: _Output113;
 };
-type _Output1893 = {
+type _Output1902 = {
 	language: _Output770;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output118;
 	kind: _Output119;
 };
-type _Output1894 = {
+type _Output1903 = {
 	language: _Output777;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output124;
 	kind: _Output125;
 };
-type _Output1895 = {
+type _Output1904 = {
 	language: _Output785;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output130;
 	kind: _Output131;
 };
-type _Output1896 = {
+type _Output1905 = {
 	language: _Output846;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output196;
 	kind: _Output197;
 };
-type _Output1897 = {
+type _Output1906 = {
 	language: _Output851;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output202;
 	kind: _Output203;
 };
-type _Output1898 = {
+type _Output1907 = {
 	language: _Output856;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output208;
 	kind: _Output209;
 };
-type _Output1899 = {
+type _Output1908 = {
 	language: _Output863;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output214;
 	kind: _Output215;
 };
-type _Output1900 = {
+type _Output1909 = {
 	language: _Output868;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output220;
 	kind: _Output221;
 };
-type _Output1901 = {
+type _Output1910 = {
 	language: _Output873;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output226;
 	kind: _Output227;
 };
-type _Output1902 = {
+type _Output1911 = {
 	language: _Output887;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output232;
 	kind: _Output233;
 };
-type _Output1903 = {
+type _Output1912 = {
 	language: _Output895;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output238;
 	kind: _Output239;
 };
-type _Output1904 = {
+type _Output1913 = {
 	language: _Output913;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output244;
 	kind: _Output245;
 };
-type _Output1905 = {
+type _Output1914 = {
 	language: _Output921;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output250;
 	kind: _Output251;
 };
-type _Output1906 = {
+type _Output1915 = {
 	language: _Output929;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output256;
 	kind: _Output257;
 };
-type _Output1907 = {
+type _Output1916 = {
 	language: _Output949;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output262;
 	kind: _Output263;
 };
-type _Output1908 = {
+type _Output1917 = {
 	language: _Output960;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output268;
 	kind: _Output269;
 };
-type _Output1909 = {
+type _Output1918 = {
 	language: _Output975;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output274;
 	kind: _Output275;
 };
-type _Output1910 = {
+type _Output1919 = {
 	language: _Output987;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output280;
 	kind: _Output281;
 };
-type _Output1911 = {
+type _Output1920 = {
 	language: _Output995;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output286;
 	kind: _Output287;
 };
-type _Output1912 = {
+type _Output1921 = {
 	language: _Output1005;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output292;
 	kind: _Output293;
 };
-type _Output1913 = {
+type _Output1922 = {
 	language: _Output1022;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output298;
 	kind: _Output299;
 };
-type _Output1914 = {
+type _Output1923 = {
 	language: _Output1032;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output304;
 	kind: _Output305;
 };
-type _Output1915 = {
+type _Output1924 = {
 	language: _Output1037;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output310;
 	kind: _Output311;
 };
-type _Output1916 = {
+type _Output1925 = {
 	language: _Output1047;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output316;
 	kind: _Output317;
 };
-type _Output1917 = {
+type _Output1926 = {
 	language: _Output1055;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output322;
 	kind: _Output323;
 };
-type _Output1918 = {
+type _Output1927 = {
 	language: _Output1122;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output394;
 	kind: _Output395;
 };
-type _Output1919 = {
+type _Output1928 = {
 	language: _Output1127;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output400;
 	kind: _Output401;
 };
-type _Output1920 = {
+type _Output1929 = {
 	language: _Output1133;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output406;
 	kind: _Output407;
 };
-type _Output1921 = {
+type _Output1930 = {
 	language: _Output1138;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output412;
 	kind: _Output413;
 };
-type _Output1922 = {
+type _Output1931 = {
 	language: _Output1143;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output418;
 	kind: _Output419;
 };
-type _Output1923 = {
+type _Output1932 = {
 	language: _Output1149;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output424;
 	kind: _Output425;
 };
-type _Output1924 = {
+type _Output1933 = {
 	language: _Output1157;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output430;
 	kind: _Output431;
 };
-type _Output1925 = {
+type _Output1934 = {
 	language: _Output1164;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output436;
 	kind: _Output437;
 };
-type _Output1926 = {
+type _Output1935 = {
 	language: _Output1171;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output442;
 	kind: _Output443;
 };
-type _Output1927 = {
+type _Output1936 = {
 	language: _Output1176;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output448;
 	kind: _Output449;
 };
-type _Output1928 = {
+type _Output1937 = {
 	language: _Output1183;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output454;
 	kind: _Output455;
 };
-type _Output1929 = {
+type _Output1938 = {
 	language: _Output1188;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output460;
 	kind: _Output461;
 };
-type _Output1930 = {
+type _Output1939 = {
 	language: _Output1198;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output466;
 	kind: _Output467;
 };
-type _Output1931 = {
+type _Output1940 = {
 	language: _Output1203;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output472;
 	kind: _Output473;
 };
-type _Output1932 = {
+type _Output1941 = {
 	language: _Output1208;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output478;
 	kind: _Output479;
 };
-type _Output1933 = {
+type _Output1942 = {
 	language: _Output1213;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output484;
 	kind: _Output485;
 };
-type _Output1934 = {
+type _Output1943 = {
 	language: _Output1224;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output490;
 	kind: _Output491;
 };
-type _Output1935 = {
+type _Output1944 = {
 	language: _Output1234;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output496;
 	kind: _Output497;
 };
-type _Output1936 = {
+type _Output1945 = {
 	language: _Output1239;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output502;
 	kind: _Output503;
 };
-type _Output1937 = {
+type _Output1946 = {
 	language: _Output1246;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output508;
 	kind: _Output509;
 };
-type _Output1938 = {
+type _Output1947 = {
 	language: _Output1251;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output514;
 	kind: _Output515;
 };
-type _Output1939 = {
+type _Output1948 = {
 	language: _Output1315;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output586;
 	kind: _Output587;
 };
-type _Output1940 = {
+type _Output1949 = {
 	language: _Output1320;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output592;
 	kind: _Output593;
 };
-type _Output1941 = {
+type _Output1950 = {
 	language: _Output1325;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output598;
 	kind: _Output599;
 };
-type _Output1942 = {
+type _Output1951 = {
 	language: _Output1330;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output604;
 	kind: _Output605;
 };
-type _Output1877 =
-	| _Output1878
-	| _Output1880
-	| _Output1881
-	| _Output1882
-	| _Output1883
-	| _Output1884
-	| _Output1885
-	| _Output1886
+type _Output1886 =
 	| _Output1887
-	| _Output1888
 	| _Output1889
 	| _Output1890
 	| _Output1891
@@ -5399,338 +5404,338 @@ type _Output1877 =
 	| _Output1939
 	| _Output1940
 	| _Output1941
-	| _Output1942;
-type _Output1875 = { nodeKind: _Output1876; unitShadow: _Output1877 };
-type _Output1944 = "structure";
-type _Output1945 = Array<_Output1870>;
-type _Output1943 = { nodeKind: _Output1944; children: _Output1945 };
-type _Output1871 = _Output1872 | _Output1875 | _Output1943;
-type _Output1870 = _Output1871;
-type _Output1869 = Array<_Output1870>;
-type _Output1867 = { nodeKind: _Output1868; children: _Output1869 };
-type _Output1866 = { root: _Output1867 };
-type _Output1864 = {
+	| _Output1942
+	| _Output1943
+	| _Output1944
+	| _Output1945
+	| _Output1946
+	| _Output1947
+	| _Output1948
+	| _Output1949
+	| _Output1950
+	| _Output1951;
+type _Output1884 = { nodeKind: _Output1885; unitShadow: _Output1886 };
+type _Output1953 = "structure";
+type _Output1954 = Array<_Output1879>;
+type _Output1952 = { nodeKind: _Output1953; children: _Output1954 };
+type _Output1880 = _Output1881 | _Output1884 | _Output1952;
+type _Output1879 = _Output1880;
+type _Output1878 = Array<_Output1879>;
+type _Output1876 = { nodeKind: _Output1877; children: _Output1878 };
+type _Output1875 = { root: _Output1876 };
+type _Output1873 = {
 	kind: _Output1829;
-	aspect: _Output1865;
-	value: _Output1866;
+	aspect: _Output1874;
+	value: _Output1875;
 };
-type _Output1947 = "lexicalBreakdown";
-type _Output1950 = {
+type _Output1956 = "lexicalBreakdown";
+type _Output1959 = {
 	language: _Output610;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output32;
 	kind: _Output33;
 };
-type _Output1951 = {
+type _Output1960 = {
 	language: _Output624;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output40;
 	kind: _Output41;
 };
-type _Output1952 = {
+type _Output1961 = {
 	language: _Output639;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output46;
 	kind: _Output47;
 };
-type _Output1953 = {
+type _Output1962 = {
 	language: _Output649;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output52;
 	kind: _Output53;
 };
-type _Output1954 = {
+type _Output1963 = {
 	language: _Output656;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output58;
 	kind: _Output59;
 };
-type _Output1955 = {
+type _Output1964 = {
 	language: _Output663;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output64;
 	kind: _Output65;
 };
-type _Output1956 = {
+type _Output1965 = {
 	language: _Output683;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output70;
 	kind: _Output71;
 };
-type _Output1957 = {
+type _Output1966 = {
 	language: _Output690;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output76;
 	kind: _Output77;
 };
-type _Output1958 = {
+type _Output1967 = {
 	language: _Output699;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output82;
 	kind: _Output83;
 };
-type _Output1959 = {
+type _Output1968 = {
 	language: _Output708;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output88;
 	kind: _Output89;
 };
-type _Output1960 = {
+type _Output1969 = {
 	language: _Output718;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output94;
 	kind: _Output95;
 };
-type _Output1961 = {
+type _Output1970 = {
 	language: _Output729;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output100;
 	kind: _Output101;
 };
-type _Output1962 = {
+type _Output1971 = {
 	language: _Output754;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output106;
 	kind: _Output107;
 };
-type _Output1963 = {
+type _Output1972 = {
 	language: _Output763;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output112;
 	kind: _Output113;
 };
-type _Output1964 = {
+type _Output1973 = {
 	language: _Output770;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output118;
 	kind: _Output119;
 };
-type _Output1965 = {
+type _Output1974 = {
 	language: _Output777;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output124;
 	kind: _Output125;
 };
-type _Output1966 = {
+type _Output1975 = {
 	language: _Output785;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output130;
 	kind: _Output131;
 };
-type _Output1967 = {
+type _Output1976 = {
 	language: _Output873;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output226;
 	kind: _Output227;
 };
-type _Output1968 = {
+type _Output1977 = {
 	language: _Output887;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output232;
 	kind: _Output233;
 };
-type _Output1969 = {
+type _Output1978 = {
 	language: _Output895;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output238;
 	kind: _Output239;
 };
-type _Output1970 = {
+type _Output1979 = {
 	language: _Output913;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output244;
 	kind: _Output245;
 };
-type _Output1971 = {
+type _Output1980 = {
 	language: _Output921;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output250;
 	kind: _Output251;
 };
-type _Output1972 = {
+type _Output1981 = {
 	language: _Output929;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output256;
 	kind: _Output257;
 };
-type _Output1973 = {
+type _Output1982 = {
 	language: _Output949;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output262;
 	kind: _Output263;
 };
-type _Output1974 = {
+type _Output1983 = {
 	language: _Output960;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output268;
 	kind: _Output269;
 };
-type _Output1975 = {
+type _Output1984 = {
 	language: _Output975;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output274;
 	kind: _Output275;
 };
-type _Output1976 = {
+type _Output1985 = {
 	language: _Output987;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output280;
 	kind: _Output281;
 };
-type _Output1977 = {
+type _Output1986 = {
 	language: _Output995;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output286;
 	kind: _Output287;
 };
-type _Output1978 = {
+type _Output1987 = {
 	language: _Output1005;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output292;
 	kind: _Output293;
 };
-type _Output1979 = {
+type _Output1988 = {
 	language: _Output1022;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output298;
 	kind: _Output299;
 };
-type _Output1980 = {
+type _Output1989 = {
 	language: _Output1032;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output304;
 	kind: _Output305;
 };
-type _Output1981 = {
+type _Output1990 = {
 	language: _Output1037;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output310;
 	kind: _Output311;
 };
-type _Output1982 = {
+type _Output1991 = {
 	language: _Output1047;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output316;
 	kind: _Output317;
 };
-type _Output1983 = {
+type _Output1992 = {
 	language: _Output1055;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output322;
 	kind: _Output323;
 };
-type _Output1984 = {
+type _Output1993 = {
 	language: _Output1143;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output418;
 	kind: _Output419;
 };
-type _Output1985 = {
+type _Output1994 = {
 	language: _Output1149;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output424;
 	kind: _Output425;
 };
-type _Output1986 = {
+type _Output1995 = {
 	language: _Output1157;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output430;
 	kind: _Output431;
 };
-type _Output1987 = {
+type _Output1996 = {
 	language: _Output1164;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output436;
 	kind: _Output437;
 };
-type _Output1988 = {
+type _Output1997 = {
 	language: _Output1171;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output442;
 	kind: _Output443;
 };
-type _Output1989 = {
+type _Output1998 = {
 	language: _Output1176;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output448;
 	kind: _Output449;
 };
-type _Output1990 = {
+type _Output1999 = {
 	language: _Output1183;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output454;
 	kind: _Output455;
 };
-type _Output1991 = {
+type _Output2000 = {
 	language: _Output1188;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output460;
 	kind: _Output461;
 };
-type _Output1992 = {
+type _Output2001 = {
 	language: _Output1198;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output466;
 	kind: _Output467;
 };
-type _Output1993 = {
+type _Output2002 = {
 	language: _Output1203;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output472;
 	kind: _Output473;
 };
-type _Output1994 = {
+type _Output2003 = {
 	language: _Output1208;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output478;
 	kind: _Output479;
 };
-type _Output1995 = {
+type _Output2004 = {
 	language: _Output1213;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output484;
 	kind: _Output485;
 };
-type _Output1996 = {
+type _Output2005 = {
 	language: _Output1224;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output490;
 	kind: _Output491;
 };
-type _Output1997 = {
+type _Output2006 = {
 	language: _Output1234;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output496;
 	kind: _Output497;
 };
-type _Output1998 = {
+type _Output2007 = {
 	language: _Output1239;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output502;
 	kind: _Output503;
 };
-type _Output1999 = {
+type _Output2008 = {
 	language: _Output1246;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output508;
 	kind: _Output509;
 };
-type _Output2000 = {
+type _Output2009 = {
 	language: _Output1251;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output514;
 	kind: _Output515;
 };
-type _Output1949 =
-	| _Output1950
-	| _Output1951
-	| _Output1952
-	| _Output1953
-	| _Output1954
-	| _Output1955
-	| _Output1956
-	| _Output1957
-	| _Output1958
+type _Output1958 =
 	| _Output1959
 	| _Output1960
 	| _Output1961
@@ -5772,16 +5777,25 @@ type _Output1949 =
 	| _Output1997
 	| _Output1998
 	| _Output1999
-	| _Output2000;
-type _Output1948 = [_Output1949, _Output1949, ...Array<_Output1949>];
-type _Output1946 = {
+	| _Output2000
+	| _Output2001
+	| _Output2002
+	| _Output2003
+	| _Output2004
+	| _Output2005
+	| _Output2006
+	| _Output2007
+	| _Output2008
+	| _Output2009;
+type _Output1957 = [_Output1958, _Output1958, ...Array<_Output1958>];
+type _Output1955 = {
 	kind: _Output1829;
-	aspect: _Output1947;
-	value: _Output1948;
+	aspect: _Output1956;
+	value: _Output1957;
 };
-type _Output2002 = "Retract";
-type _Output2003 = "morphologicalTree" | "lexicalBreakdown";
-type _Output2001 = { kind: _Output2002; aspect: _Output2003 };
+type _Output2011 = "Retract";
+type _Output2012 = "morphologicalTree" | "lexicalBreakdown";
+type _Output2010 = { kind: _Output2011; aspect: _Output2012 };
 type _Output1827 =
 	| _Output1828
 	| _Output1832
@@ -5792,595 +5806,588 @@ type _Output1827 =
 	| _Output1854
 	| _Output1859
 	| _Output1864
-	| _Output1946
-	| _Output2001;
+	| _Output1870
+	| _Output1873
+	| _Output1955
+	| _Output2010;
 type _Output1826 = Array<_Output1827>;
-type _Output2007 = {
+type _Output2016 = {
 	language: _Output610;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output32;
 	kind: _Output33;
 };
-type _Output2008 = {
+type _Output2017 = {
 	language: _Output624;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output40;
 	kind: _Output41;
 };
-type _Output2009 = {
+type _Output2018 = {
 	language: _Output639;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output46;
 	kind: _Output47;
 };
-type _Output2010 = {
+type _Output2019 = {
 	language: _Output649;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output52;
 	kind: _Output53;
 };
-type _Output2011 = {
+type _Output2020 = {
 	language: _Output656;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output58;
 	kind: _Output59;
 };
-type _Output2012 = {
+type _Output2021 = {
 	language: _Output663;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output64;
 	kind: _Output65;
 };
-type _Output2013 = {
+type _Output2022 = {
 	language: _Output683;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output70;
 	kind: _Output71;
 };
-type _Output2014 = {
+type _Output2023 = {
 	language: _Output690;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output76;
 	kind: _Output77;
 };
-type _Output2015 = {
+type _Output2024 = {
 	language: _Output699;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output82;
 	kind: _Output83;
 };
-type _Output2016 = {
+type _Output2025 = {
 	language: _Output708;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output88;
 	kind: _Output89;
 };
-type _Output2017 = {
+type _Output2026 = {
 	language: _Output718;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output94;
 	kind: _Output95;
 };
-type _Output2018 = {
+type _Output2027 = {
 	language: _Output729;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output100;
 	kind: _Output101;
 };
-type _Output2019 = {
+type _Output2028 = {
 	language: _Output754;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output106;
 	kind: _Output107;
 };
-type _Output2020 = {
+type _Output2029 = {
 	language: _Output763;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output112;
 	kind: _Output113;
 };
-type _Output2021 = {
+type _Output2030 = {
 	language: _Output770;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output118;
 	kind: _Output119;
 };
-type _Output2022 = {
+type _Output2031 = {
 	language: _Output777;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output124;
 	kind: _Output125;
 };
-type _Output2023 = {
+type _Output2032 = {
 	language: _Output785;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output130;
 	kind: _Output131;
 };
-type _Output2024 = {
+type _Output2033 = {
 	language: _Output795;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output136;
 	kind: _Output137;
 };
-type _Output2025 = {
+type _Output2034 = {
 	language: _Output800;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output142;
 	kind: _Output143;
 };
-type _Output2026 = {
+type _Output2035 = {
 	language: _Output805;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output148;
 	kind: _Output149;
 };
-type _Output2027 = {
+type _Output2036 = {
 	language: _Output810;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output154;
 	kind: _Output155;
 };
-type _Output2028 = {
+type _Output2037 = {
 	language: _Output815;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output160;
 	kind: _Output161;
 };
-type _Output2029 = {
+type _Output2038 = {
 	language: _Output820;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output166;
 	kind: _Output167;
 };
-type _Output2030 = {
+type _Output2039 = {
 	language: _Output826;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output172;
 	kind: _Output173;
 };
-type _Output2031 = {
+type _Output2040 = {
 	language: _Output831;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output178;
 	kind: _Output179;
 };
-type _Output2032 = {
+type _Output2041 = {
 	language: _Output836;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output184;
 	kind: _Output185;
 };
-type _Output2033 = {
+type _Output2042 = {
 	language: _Output841;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output190;
 	kind: _Output191;
 };
-type _Output2034 = {
+type _Output2043 = {
 	language: _Output846;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output196;
 	kind: _Output197;
 };
-type _Output2035 = {
+type _Output2044 = {
 	language: _Output851;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output202;
 	kind: _Output203;
 };
-type _Output2036 = {
+type _Output2045 = {
 	language: _Output856;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output208;
 	kind: _Output209;
 };
-type _Output2037 = {
+type _Output2046 = {
 	language: _Output863;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output214;
 	kind: _Output215;
 };
-type _Output2038 = {
+type _Output2047 = {
 	language: _Output868;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output220;
 	kind: _Output221;
 };
-type _Output2039 = {
+type _Output2048 = {
 	language: _Output873;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output226;
 	kind: _Output227;
 };
-type _Output2040 = {
+type _Output2049 = {
 	language: _Output887;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output232;
 	kind: _Output233;
 };
-type _Output2041 = {
+type _Output2050 = {
 	language: _Output895;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output238;
 	kind: _Output239;
 };
-type _Output2042 = {
+type _Output2051 = {
 	language: _Output913;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output244;
 	kind: _Output245;
 };
-type _Output2043 = {
+type _Output2052 = {
 	language: _Output921;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output250;
 	kind: _Output251;
 };
-type _Output2044 = {
+type _Output2053 = {
 	language: _Output929;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output256;
 	kind: _Output257;
 };
-type _Output2045 = {
+type _Output2054 = {
 	language: _Output949;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output262;
 	kind: _Output263;
 };
-type _Output2046 = {
+type _Output2055 = {
 	language: _Output960;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output268;
 	kind: _Output269;
 };
-type _Output2047 = {
+type _Output2056 = {
 	language: _Output975;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output274;
 	kind: _Output275;
 };
-type _Output2048 = {
+type _Output2057 = {
 	language: _Output987;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output280;
 	kind: _Output281;
 };
-type _Output2049 = {
+type _Output2058 = {
 	language: _Output995;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output286;
 	kind: _Output287;
 };
-type _Output2050 = {
+type _Output2059 = {
 	language: _Output1005;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output292;
 	kind: _Output293;
 };
-type _Output2051 = {
+type _Output2060 = {
 	language: _Output1022;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output298;
 	kind: _Output299;
 };
-type _Output2052 = {
+type _Output2061 = {
 	language: _Output1032;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output304;
 	kind: _Output305;
 };
-type _Output2053 = {
+type _Output2062 = {
 	language: _Output1037;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output310;
 	kind: _Output311;
 };
-type _Output2054 = {
+type _Output2063 = {
 	language: _Output1047;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output316;
 	kind: _Output317;
 };
-type _Output2055 = {
+type _Output2064 = {
 	language: _Output1055;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output322;
 	kind: _Output323;
 };
-type _Output2056 = {
+type _Output2065 = {
 	language: _Output1067;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output328;
 	kind: _Output329;
 };
-type _Output2057 = {
+type _Output2066 = {
 	language: _Output1072;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output334;
 	kind: _Output335;
 };
-type _Output2058 = {
+type _Output2067 = {
 	language: _Output1077;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output340;
 	kind: _Output341;
 };
-type _Output2059 = {
+type _Output2068 = {
 	language: _Output1082;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output346;
 	kind: _Output347;
 };
-type _Output2060 = {
+type _Output2069 = {
 	language: _Output1087;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output352;
 	kind: _Output353;
 };
-type _Output2061 = {
+type _Output2070 = {
 	language: _Output1092;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output358;
 	kind: _Output359;
 };
-type _Output2062 = {
+type _Output2071 = {
 	language: _Output1097;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output364;
 	kind: _Output365;
 };
-type _Output2063 = {
+type _Output2072 = {
 	language: _Output1102;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output370;
 	kind: _Output371;
 };
-type _Output2064 = {
+type _Output2073 = {
 	language: _Output1107;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output376;
 	kind: _Output377;
 };
-type _Output2065 = {
+type _Output2074 = {
 	language: _Output1112;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output382;
 	kind: _Output383;
 };
-type _Output2066 = {
+type _Output2075 = {
 	language: _Output1117;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output388;
 	kind: _Output389;
 };
-type _Output2067 = {
+type _Output2076 = {
 	language: _Output1122;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output394;
 	kind: _Output395;
 };
-type _Output2068 = {
+type _Output2077 = {
 	language: _Output1127;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output400;
 	kind: _Output401;
 };
-type _Output2069 = {
+type _Output2078 = {
 	language: _Output1133;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output406;
 	kind: _Output407;
 };
-type _Output2070 = {
+type _Output2079 = {
 	language: _Output1138;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output412;
 	kind: _Output413;
 };
-type _Output2071 = {
+type _Output2080 = {
 	language: _Output1143;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output418;
 	kind: _Output419;
 };
-type _Output2072 = {
+type _Output2081 = {
 	language: _Output1149;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output424;
 	kind: _Output425;
 };
-type _Output2073 = {
+type _Output2082 = {
 	language: _Output1157;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output430;
 	kind: _Output431;
 };
-type _Output2074 = {
+type _Output2083 = {
 	language: _Output1164;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output436;
 	kind: _Output437;
 };
-type _Output2075 = {
+type _Output2084 = {
 	language: _Output1171;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output442;
 	kind: _Output443;
 };
-type _Output2076 = {
+type _Output2085 = {
 	language: _Output1176;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output448;
 	kind: _Output449;
 };
-type _Output2077 = {
+type _Output2086 = {
 	language: _Output1183;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output454;
 	kind: _Output455;
 };
-type _Output2078 = {
+type _Output2087 = {
 	language: _Output1188;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output460;
 	kind: _Output461;
 };
-type _Output2079 = {
+type _Output2088 = {
 	language: _Output1198;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output466;
 	kind: _Output467;
 };
-type _Output2080 = {
+type _Output2089 = {
 	language: _Output1203;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output472;
 	kind: _Output473;
 };
-type _Output2081 = {
+type _Output2090 = {
 	language: _Output1208;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output478;
 	kind: _Output479;
 };
-type _Output2082 = {
+type _Output2091 = {
 	language: _Output1213;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output484;
 	kind: _Output485;
 };
-type _Output2083 = {
+type _Output2092 = {
 	language: _Output1224;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output490;
 	kind: _Output491;
 };
-type _Output2084 = {
+type _Output2093 = {
 	language: _Output1234;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output496;
 	kind: _Output497;
 };
-type _Output2085 = {
+type _Output2094 = {
 	language: _Output1239;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output502;
 	kind: _Output503;
 };
-type _Output2086 = {
+type _Output2095 = {
 	language: _Output1246;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output508;
 	kind: _Output509;
 };
-type _Output2087 = {
+type _Output2096 = {
 	language: _Output1251;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output514;
 	kind: _Output515;
 };
-type _Output2088 = {
+type _Output2097 = {
 	language: _Output1260;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output520;
 	kind: _Output521;
 };
-type _Output2089 = {
+type _Output2098 = {
 	language: _Output1265;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output526;
 	kind: _Output527;
 };
-type _Output2090 = {
+type _Output2099 = {
 	language: _Output1270;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output532;
 	kind: _Output533;
 };
-type _Output2091 = {
+type _Output2100 = {
 	language: _Output1275;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output538;
 	kind: _Output539;
 };
-type _Output2092 = {
+type _Output2101 = {
 	language: _Output1280;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output544;
 	kind: _Output545;
 };
-type _Output2093 = {
+type _Output2102 = {
 	language: _Output1285;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output550;
 	kind: _Output551;
 };
-type _Output2094 = {
+type _Output2103 = {
 	language: _Output1290;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output556;
 	kind: _Output557;
 };
-type _Output2095 = {
+type _Output2104 = {
 	language: _Output1295;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output562;
 	kind: _Output563;
 };
-type _Output2096 = {
+type _Output2105 = {
 	language: _Output1300;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output568;
 	kind: _Output569;
 };
-type _Output2097 = {
+type _Output2106 = {
 	language: _Output1305;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output574;
 	kind: _Output575;
 };
-type _Output2098 = {
+type _Output2107 = {
 	language: _Output1310;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output580;
 	kind: _Output581;
 };
-type _Output2099 = {
+type _Output2108 = {
 	language: _Output1315;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output586;
 	kind: _Output587;
 };
-type _Output2100 = {
+type _Output2109 = {
 	language: _Output1320;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output592;
 	kind: _Output593;
 };
-type _Output2101 = {
+type _Output2110 = {
 	language: _Output1325;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output598;
 	kind: _Output599;
 };
-type _Output2102 = {
+type _Output2111 = {
 	language: _Output1330;
-	canonicalForm: _Output1879;
+	canonicalForm: _Output1888;
 	family: _Output604;
 	kind: _Output605;
 };
-type _Output2006 =
-	| _Output2007
-	| _Output2008
-	| _Output2009
-	| _Output2010
-	| _Output2011
-	| _Output2012
-	| _Output2013
-	| _Output2014
-	| _Output2015
+type _Output2015 =
 	| _Output2016
 	| _Output2017
 	| _Output2018
@@ -6467,40 +6474,50 @@ type _Output2006 =
 	| _Output2099
 	| _Output2100
 	| _Output2101
-	| _Output2102;
-type _Output2005 = { relation: _Output1849; target: _Output2006 };
-type _Output2004 = Array<_Output2005>;
-type _Output2105 =
+	| _Output2102
+	| _Output2103
+	| _Output2104
+	| _Output2105
+	| _Output2106
+	| _Output2107
+	| _Output2108
+	| _Output2109
+	| _Output2110
+	| _Output2111;
+type _Output2014 = { relation: _Output1849; target: _Output2015 };
+type _Output2013 = Array<_Output2014>;
+type _Output2114 =
 	| "transcription"
 	| "definition"
 	| "translations"
 	| "semanticRelations"
+	| "governedPrepositions"
 	| "morphologicalTree"
 	| "lexicalBreakdown";
-type _Output2107 = string;
-type _Output2106 = _Output2107 | undefined;
-type _Output2109 = string;
-type _Output2108 = _Output2109 | undefined;
-type _Output2110 =
+type _Output2116 = string;
+type _Output2115 = _Output2116 | undefined;
+type _Output2118 = string;
+type _Output2117 = _Output2118 | undefined;
+type _Output2119 =
 	| "InvalidInput"
 	| "ProviderFailure"
 	| "InvalidModelOutput"
 	| "Unresolved"
 	| "NotImplemented"
 	| "CatalogMiss";
-type _Output2111 = string;
-type _Output2104 = {
-	aspect: _Output2105;
-	leaf?: _Output2106;
-	candidate?: _Output2108;
-	code: _Output2110;
-	message: _Output2111;
+type _Output2120 = string;
+type _Output2113 = {
+	aspect: _Output2114;
+	leaf?: _Output2115;
+	candidate?: _Output2117;
+	code: _Output2119;
+	message: _Output2120;
 };
-type _Output2103 = Array<_Output2104>;
+type _Output2112 = Array<_Output2113>;
 type _Output1825 = {
 	changes: _Output1826;
-	pendingRelations: _Output2004;
-	failures: _Output2103;
+	pendingRelations: _Output2013;
+	failures: _Output2112;
 };
 export type Segment = _Output0;
 export type SegmentedSentence = _Output3;

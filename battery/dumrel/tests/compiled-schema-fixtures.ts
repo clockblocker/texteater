@@ -1,4 +1,10 @@
-import { houseLemma, houseReading, prefixLemma } from "./fixtures";
+import {
+	aufLemma,
+	houseLemma,
+	houseReading,
+	prefixLemma,
+	wartenReading,
+} from "./fixtures";
 
 const shadow = {
 	language: "de",
@@ -11,6 +17,7 @@ export const samples: Record<string, unknown[]> = {
 		{},
 		{ definition: "  Geba\u0308ude  ", translations: { en: [" house "] } },
 		{ semanticRelations: { synonym: [houseLemma] } },
+		{ governedPrepositions: [{ preposition: aufLemma, case: "Acc" }] },
 		{
 			semanticRelations: {
 				targetKind: "reading",
@@ -44,6 +51,24 @@ export const samples: Record<string, unknown[]> = {
 			relation: "synonym",
 			targetKind: "reading",
 			value: [houseReading],
+		},
+		{
+			kind: "Contribute",
+			aspect: "governedPrepositions",
+			value: [{ preposition: aufLemma, case: "Acc" }],
+		},
+		{ kind: "Retract", aspect: "governedPrepositions" },
+	],
+	governedCase: ["Acc", "Gen"],
+	governedPreposition: [{ preposition: aufLemma, case: "Dat" }],
+	governmentRelation: ["governs", "governedBy"],
+	governmentProjection: [
+		{
+			source: wartenReading,
+			relation: "governs",
+			target: aufLemma,
+			case: "Acc",
+			provenance: "direct",
 		},
 	],
 	knowledgeSettings: [

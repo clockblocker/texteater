@@ -5,6 +5,8 @@ import type { KnowledgeProduction, KnowledgeRequest } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { parse } from "../../../universal/validation.js";
 import type { AuthoredMember } from "../authored-closed-sets/member.js";
+import { governablePrepositionLemma } from "./governed-prepositions/prepositions.js";
+import type { GovernedPrepositionDraft } from "./governed-prepositions/prompt.js";
 import { assertRequestShape } from "./request-shape.js";
 
 export function validateRequest(
@@ -57,6 +59,8 @@ export type KnowledgeAnalysis = {
 			{ canonicalForm: string; kind: string }[] | null
 		>
 	>;
+	/** An empty list or null means no governed preposition was found. */
+	governedPrepositions?: readonly GovernedPrepositionDraft[] | null;
 };
 export function projectKnowledge(
 	reading: Dumling.Reading,
@@ -76,6 +80,19 @@ export function projectKnowledge(
 		if (aspect === "transcription" || aspect === "definition") {
 			if (value !== null)
 				changes.push({ kind: "Contribute", aspect, value });
+		} else if (aspect === "governedPrepositions") {
+			const drafts = analysis.governedPrepositions ?? [];
+			if (drafts.length)
+				changes.push({
+					kind: "Contribute",
+					aspect,
+					value: drafts.map((draft) => ({
+						preposition: governablePrepositionLemma(
+							draft.preposition,
+						),
+						case: draft.case,
+					})),
+				});
 		} else if (aspect === "translations")
 			for (const [language, text] of Object.entries(value ?? {})) {
 				if (!Object.hasOwn(request.translations ?? {}, language))

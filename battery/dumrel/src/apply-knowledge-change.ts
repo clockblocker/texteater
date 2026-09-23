@@ -13,7 +13,8 @@ import { parseChangeShape } from "./validation.js";
  * Applies one source-aware change atomically. Contribute adds absent atomic
  * aspects or distinct bucket values; Correct replaces; Retract removes. Exact
  * Reading targets support synonym only and require targetKind: "reading",
- * including retractions. Failure returns ParsingError without a partial value.
+ * including retractions. Governed prepositions form one bucket: Contribute
+ * adds distinct preposition-and-case pairs, Correct replaces the list. Failure returns ParsingError without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
@@ -51,6 +52,9 @@ function apply<R extends Dumling.Reading>(
 			return;
 		case "semanticRelations":
 			return applyRelation(knowledge, canonical);
+		case "governedPrepositions":
+			applyGovernedPrepositions(knowledge, canonical);
+			return;
 		case "transcription":
 		case "definition":
 		case "morphologicalTree":
@@ -75,6 +79,21 @@ function applyTranslation<R extends Dumling.Reading>(
 					]);
 	if (Object.keys(translations).length === 0) delete knowledge.translations;
 	else knowledge.translations = translations;
+}
+
+function applyGovernedPrepositions<R extends Dumling.Reading>(
+	knowledge: ReadingKnowledge<R>,
+	change: Extract<KnowledgeChange, { aspect: "governedPrepositions" }>,
+): void {
+	if (change.kind === "Retract") delete knowledge.governedPrepositions;
+	else
+		knowledge.governedPrepositions =
+			change.kind === "Correct"
+				? unique(change.value)
+				: unique([
+						...(knowledge.governedPrepositions ?? []),
+						...change.value,
+					]);
 }
 
 function applyRelation<R extends Dumling.Reading>(

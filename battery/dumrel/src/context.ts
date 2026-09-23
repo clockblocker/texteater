@@ -1,7 +1,11 @@
 import { ParsingError } from "common-utils";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
+import type {
+	GovernedPreposition,
+	KnowledgeChange,
+	ReadingKnowledge,
+} from "./types.js";
 
 type Path = (number | string)[];
 
@@ -53,11 +57,70 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 	return target;
 }
 
+/**
+ * A governed preposition shares the source Language. A preposition whose Lemma
+ * fixes its case (`für` + Acc) cannot be claimed with another case; a two-way
+ * preposition (`auf`, governed case null) takes the construction's case.
+ */
+function parseGovernedPrepositions<R extends Dumling.Reading>(
+	source: R,
+	values: readonly GovernedPreposition[],
+	path: Path,
+): GovernedPreposition[] | ParsingError {
+	const result: GovernedPreposition[] = [];
+	for (const [index, value] of values.entries()) {
+		const parsed = parseUnit(value.preposition);
+		if (!parsed.success)
+			return new ParsingError(
+				parsed.error.issues.map((entry) => ({
+					...entry,
+					path: [...path, index, "preposition", ...entry.path],
+				})),
+			);
+		const preposition = parsed.chain.value as Dumling.Lemma;
+		if (
+			parsed.chain.unitKind !== "Lemma" ||
+			preposition.family !== "Lexeme" ||
+			preposition.kind !== "ADP"
+		)
+			return issue(
+				[...path, index, "preposition"],
+				"A governed preposition must be an ADP Lemma",
+			);
+		if (preposition.language !== source.lemma.language)
+			return issue(
+				[...path, index, "preposition", "language"],
+				"A governed preposition must use the source Language",
+			);
+		const fixed = Reflect.get(preposition.coreFeatures, "governedCase");
+		if (fixed != null && fixed !== value.case)
+			return issue(
+				[...path, index, "case"],
+				`${preposition.canonicalForm} always governs ${fixed}`,
+			);
+		result.push({
+			preposition,
+			case: value.case,
+		} as GovernedPreposition);
+	}
+	return result;
+}
+
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge<R> | ParsingError {
 	const result = structuredClone(knowledge) as ReadingKnowledge;
+	if (result.governedPrepositions) {
+		const governed = parseGovernedPrepositions(
+			source,
+			result.governedPrepositions,
+			["knowledge", "governedPrepositions"],
+		);
+		if (governed instanceof ParsingError) return governed;
+		result.governedPrepositions =
+			governed as typeof result.governedPrepositions;
+	}
 	const relations = result.semanticRelations;
 	if (!relations) return result as ReadingKnowledge<R>;
 	const targetKind = relations.targetKind === "reading" ? "Reading" : "Lemma";
@@ -81,6 +144,14 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange<R> | ParsingError {
+	if (change.aspect === "governedPrepositions" && change.kind !== "Retract") {
+		const governed = parseGovernedPrepositions(source, change.value, [
+			"change",
+			"value",
+		]);
+		if (governed instanceof ParsingError) return governed;
+		return { ...change, value: governed } as KnowledgeChange<R>;
+	}
 	if (change.aspect !== "semanticRelations" || change.kind === "Retract")
 		return change as KnowledgeChange<R>;
 	const targetKind = change.targetKind === "reading" ? "Reading" : "Lemma";

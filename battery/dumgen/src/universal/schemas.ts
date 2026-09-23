@@ -116,6 +116,7 @@ export const knowledgeFailureSchema = z.strictObject({
 		"definition",
 		"translations",
 		"semanticRelations",
+		"governedPrepositions",
 		"morphologicalTree",
 		"lexicalBreakdown",
 	]),

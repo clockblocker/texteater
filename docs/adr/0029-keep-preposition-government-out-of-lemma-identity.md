@@ -21,9 +21,11 @@ Government lives in two places, neither of them the Lemma:
   resolves the whole unit to `warten`. Grammar answers which member, if any,
   is governed and may still refuse a unit whose glued preposition is an
   adjunct.
-- On the Reading, as Knowledge. The learner-facing fact `warten auf +
-  Akkusativ` belongs beside the definition and applies to adjectives like
-  `stolz auf` without any schema difference between Kinds.
+- On the Reading, as the structured Knowledge aspect `governedPrepositions`
+  (ADR 0030): the ADP Lemma and the case it assigns, such as `auf` + Acc for
+  `warten`. It applies to adjectives like `stolz auf` without any schema
+  difference between Kinds, and the learner-facing `warten auf + Akkusativ`
+  is rendered from it.
 
 A German pronominal adverb (`darauf`, `dafür`, `damit`, the `wo(r)-` and
 `hier-` compounds) is its own single-member ADV Lexeme (`pronType: Dem` for
@@ -34,8 +36,10 @@ stays on the governor.
 
 Consequences: stored VERB Lemmas that differed only by `hasGovPrep` collapse
 into one Lemma, so their Readings merge under the Emoji Description that
-already separates senses such as `es geht um` from `gehen`. Adjective
-government has no Attestation evidence yet, because intake does not assemble
-a governed preposition into an ADJ target; that is a membership question for
-intake, not an identity question. A grammatical relation from the governor to
-the ADP Lemma under ADR 0019 remains possible and unbuilt.
+already separates senses such as `es geht um` from `gehen`. Only verbs
+absorb a governed preposition as a member. Intake never assembles one into an
+ADJ, NOUN or Phraseme target, so clicking `auf` in `stolz auf` opens the
+preposition, and adjective and noun government has no Attestation evidence.
+The Reading's Knowledge carries it instead, and the preposition reaches its
+Governors through the projection in ADR 0030. ADR 0030 records the governor-to-preposition link as Knowledge
+rather than as a separate Grammatical Relation.

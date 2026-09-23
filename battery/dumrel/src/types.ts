@@ -9,6 +9,10 @@ import type {
 
 export type {
 	DirectSemanticRelation,
+	GovernedCase,
+	GovernedPreposition,
+	GovernmentProjection,
+	GovernmentRelation,
 	LexicalBreakdown,
 	MorphologicalTree,
 	PendingSemanticRelation,

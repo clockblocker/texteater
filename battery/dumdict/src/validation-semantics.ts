@@ -101,6 +101,12 @@ function knowledgeUsesLanguage(
 		!visitMorphologyNode(knowledge.morphologicalTree.root)
 	)
 		return false;
+	if (
+		(knowledge.governedPrepositions ?? []).some(
+			({ preposition }) => !lemmaUsesLanguage(preposition, language),
+		)
+	)
+		return false;
 	return (knowledge.lexicalBreakdown ?? []).every(
 		(shadow) => shadow.language === language,
 	);
@@ -123,6 +129,10 @@ function knowledgeChangeUsesLanguage(
 		);
 	if (change.aspect === "lexicalBreakdown" && "value" in change)
 		return change.value.every((shadow) => shadow.language === language);
+	if (change.aspect === "governedPrepositions" && "value" in change)
+		return change.value.every(({ preposition }) =>
+			lemmaUsesLanguage(preposition, language),
+		);
 	return true;
 }
 

@@ -25,6 +25,11 @@ import {
 import { draftedRelationCandidates, draftedTexts } from "./draft.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
+	governedPrepositionsOutputSchema,
+	governedPrepositionsPrompt,
+	parseGovernedPrepositionsOutput,
+} from "./governed-prepositions/prompt.js";
+import {
 	authoredKnowledge,
 	projectKnowledge,
 	validateRequest,
@@ -128,6 +133,29 @@ export async function produceKnowledge(
 		changes: readonly Dumrel.KnowledgeChange[];
 		failures: KnowledgeFailure[];
 	};
+	/** Valency of the fixed Reading; published with the final batch, never incrementally. */
+	const governedPrepositions = async () => {
+		const drafts = await executeGeneration(
+			options,
+			{
+				stage,
+				route,
+				input: { ...state, aspect: "governedPrepositions" },
+				signal,
+				configuration: effectiveConfiguration(options, route),
+				systemPrompt: governedPrepositionsPrompt,
+				outputSchema: governedPrepositionsOutputSchema,
+			},
+			parseGovernedPrepositionsOutput,
+			[],
+		);
+		const contribution = projectKnowledge(
+			reading,
+			{ governedPrepositions: null },
+			{ governedPrepositions: drafts },
+		);
+		return contribution.changes.length ? contribution : null;
+	};
 	const textOutcomes: Array<TextOutcome | undefined> = [];
 	const textJobs: Array<Promise<void>> = [];
 	const publishOutcomes = () => {
@@ -164,7 +192,8 @@ export async function produceKnowledge(
 						if (
 							aspect !== "definition" &&
 							aspect !== "transcription" &&
-							aspect !== "translations"
+							aspect !== "translations" &&
+							aspect !== "governedPrepositions"
 						)
 							throw new DumgenFailure(
 								"NotImplemented",
@@ -199,53 +228,55 @@ export async function produceKnowledge(
 							`${aspect}/${leaf ?? ""}`,
 						);
 						const contribution =
-							draftText !== undefined
-								? validateText({ text: draftText })
-								: await executeGeneration(
-										options,
-										{
-											stage,
-											route,
-											input:
-												aspect === "transcription"
-													? {
-															lemma: reading.lemma,
-															aspect,
-														}
-													: {
-															...state,
-															aspect,
-															...(leaf
-																? {
-																		language:
-																			leaf,
-																	}
-																: {}),
+							aspect === "governedPrepositions"
+								? await governedPrepositions()
+								: draftText !== undefined
+									? validateText({ text: draftText })
+									: await executeGeneration(
+											options,
+											{
+												stage,
+												route,
+												input:
+													aspect === "transcription"
+														? {
+																lemma: reading.lemma,
+																aspect,
+															}
+														: {
+																...state,
+																aspect,
+																...(leaf
+																	? {
+																			language:
+																				leaf,
+																		}
+																	: {}),
+															},
+												signal,
+												configuration:
+													effectiveConfiguration(
+														options,
+														route,
+													),
+												systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+												outputSchema: {
+													type: "object",
+													properties: {
+														text: {
+															type: [
+																"string",
+																"null",
+															],
 														},
-											signal,
-											configuration:
-												effectiveConfiguration(
-													options,
-													route,
-												),
-											systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
-											outputSchema: {
-												type: "object",
-												properties: {
-													text: {
-														type: [
-															"string",
-															"null",
-														],
 													},
+													required: ["text"],
+													additionalProperties: false,
 												},
-												required: ["text"],
-												additionalProperties: false,
 											},
-										},
-										validateText,
-										[],
-									);
+											validateText,
+											[],
+										);
 						if (contribution)
 							outcome = {
 								changes: contribution.changes,
@@ -270,7 +301,10 @@ export async function produceKnowledge(
 					}
 					textOutcomes[outcomeIndex] = outcome;
 					publishOutcomes();
-					if (outcome.changes.length) {
+					if (
+						outcome.changes.length &&
+						aspect !== "governedPrepositions"
+					) {
 						signal.throwIfAborted();
 						options.onKnowledgeContribution?.(outcome.changes);
 					}

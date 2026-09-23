@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
 import { Effect, Fiber } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import expectedOutcomes from "../src/concrete-lang/de/knowledge-production/evaluation/operation-outcomes.json";
@@ -392,14 +393,19 @@ test("interruption retains evidence of completed independent work and starts no 
 	).toBe(true);
 });
 
-test("all three retained Family corpora run through production Knowledge with complete traces", async () => {
+test("all retained Knowledge corpora run through production Knowledge with complete traces", async () => {
 	const { getExperiment } = await import("../src/development.js");
 	const { knowledgeOperationExperiment } = await import(
 		"../src/evaluation/knowledge-operation.js"
 	);
 	const { knowledgeFixture } = await import("./knowledge-fixture.js");
 	let count = 0;
-	for (const family of ["lexeme", "phraseme", "morpheme"]) {
+	for (const family of [
+		"lexeme",
+		"phraseme",
+		"morpheme",
+		"governed-prepositions",
+	]) {
 		const definition = getExperiment(`knowledge-analysis/de/${family}`);
 		for (const [id, example] of Object.entries(
 			definition.source.goldenCorpus?.cases ?? {},
@@ -427,8 +433,130 @@ test("all three retained Family corpora run through production Knowledge with co
 			})) as { failures: unknown[] };
 			expect(output.failures, id).toEqual([]);
 			expect(traces[0]?.operation, id).toBe("produceKnowledge");
+			if (family === "governed-prepositions")
+				expect(output, id).toEqual({
+					...(example.idealOutput as object),
+					failures: [],
+				});
 			count++;
 		}
 	}
-	expect(count).toBe(69);
+	expect(count).toBe(88);
 }, 30000);
+
+const governor = {
+	encounter: {
+		sentence: {
+			id: "government",
+			language: "de",
+			segments: [
+				{ kind: "OpaqueText", text: "Er " },
+				{ kind: "ResolvableText", text: "wartet" },
+				{ kind: "OpaqueText", text: " auf den Bus." },
+			],
+		},
+		target: { family: "Lexeme", kind: "VERB", memberSegmentIndices: [1] },
+	},
+	reading: {
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm: "warten",
+			coreFeatures: {
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
+			},
+		},
+		emojiDescription: "⏳",
+	},
+	request: { definition: null, governedPrepositions: null },
+} as const satisfies KnowledgeInput<"de">;
+const adposition = (
+	canonicalForm: string,
+	governedCase: "Acc" | null,
+): Dumling.Lemma<"de", "Lexeme", "ADP"> => ({
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "ADP",
+	canonicalForm,
+	coreFeatures: {
+		abbr: null,
+		adpType: "Prep",
+		extPos: null,
+		foreign: null,
+		governedCase,
+		partType: null,
+	},
+});
+
+test("governed prepositions resolve to ADP Lemmas, keep fixed cases and publish only at the end", async () => {
+	const incremental: unknown[] = [];
+	const result = await Effect.runPromise(
+		createDumgen({
+			execute: async (request) => {
+				const { aspect } = request.input as { aspect?: string };
+				return {
+					output:
+						aspect === "governedPrepositions"
+							? {
+									governedPrepositions: [
+										{ preposition: "auf", case: "Acc" },
+										{ preposition: "für", case: "Dat" },
+										{ preposition: "auf", case: "Acc" },
+									],
+								}
+							: { text: "Auf etwas harren." },
+				};
+			},
+			judge: async () => {
+				throw Error("No judgment expected");
+			},
+			onKnowledgeContribution: (changes) =>
+				incremental.push(...changes.map((change) => change.aspect)),
+		}).produceKnowledge(governor),
+	);
+	expect(result.failures).toEqual([]);
+	expect(
+		result.changes.find(
+			(change) => change.aspect === "governedPrepositions",
+		),
+	).toEqual({
+		kind: "Contribute",
+		aspect: "governedPrepositions",
+		value: [
+			{ preposition: adposition("auf", null), case: "Acc" },
+			{ preposition: adposition("für", "Acc"), case: "Acc" },
+		],
+	});
+	expect(incremental).toEqual(["definition"]);
+});
+
+test("an empty government list is no contribution, and an unlisted preposition is an attributable failure", async () => {
+	const run = (governedPrepositions: unknown) =>
+		Effect.runPromise(
+			createDumgen({
+				execute: async () => ({ output: { governedPrepositions } }),
+				judge: async () => {
+					throw Error("No judgment expected");
+				},
+			}).produceKnowledge({
+				...governor,
+				request: { governedPrepositions: null },
+			}),
+		);
+	expect(await run([])).toEqual({
+		changes: [],
+		pendingRelations: [],
+		failures: [],
+	});
+	const invalid = await run([{ preposition: "wegen", case: "Gen" }]);
+	expect(invalid.changes).toEqual([]);
+	expect(invalid.failures).toMatchObject([
+		{ aspect: "governedPrepositions", code: "InvalidModelOutput" },
+	]);
+});

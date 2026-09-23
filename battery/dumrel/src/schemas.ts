@@ -7,6 +7,7 @@
  */
 import { z } from "zod";
 import {
+	adpositionLemmaSchema,
 	lemmaSchema,
 	lexemeUnitShadowSchema,
 	lexicalUnitShadowSchema,
@@ -18,6 +19,7 @@ import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
 import {
 	directSemanticRelationValues,
+	governedCaseValues,
 	translationLanguageValues,
 } from "./vocabulary.js";
 
@@ -30,6 +32,21 @@ export const directSemanticRelationSchema = z.enum(
 export const translationLanguageSchema = z.enum(translationLanguageValues);
 
 export { unitShadowSchema };
+
+export const governedCaseSchema = z.enum(governedCaseValues);
+/**
+ * One lexically governed preposition of the owning Reading: the ADP Lemma it
+ * selects and the case that preposition assigns in this construction
+ * (`warten auf` + Acc, `bestehen auf` + Dat). The governor owns the claim; the
+ * preposition's side is a read-time projection.
+ */
+export const governedPrepositionSchema = z.strictObject({
+	preposition: adpositionLemmaSchema,
+	case: governedCaseSchema,
+});
+export const governedPrepositionsSchema = z
+	.array(governedPrepositionSchema)
+	.min(1);
 
 type MorphologicalNode =
 	| {
@@ -100,6 +117,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	morphologicalTree: morphologicalTreeSchema.optional(),
 	lexicalBreakdown: lexicalBreakdownSchema.optional(),
 	semanticRelations: semanticRelationsSchema.optional(),
+	governedPrepositions: governedPrepositionsSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
@@ -157,6 +175,15 @@ export const knowledgeChangeSchema = z.union([
 	}),
 	z.strictObject({
 		kind: setKinds,
+		aspect: z.literal("governedPrepositions"),
+		value: governedPrepositionsSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.literal("governedPrepositions"),
+	}),
+	z.strictObject({
+		kind: setKinds,
 		aspect: z.literal("morphologicalTree"),
 		value: morphologicalTreeSchema,
 	}),
@@ -195,5 +222,19 @@ export const semanticRelationProjectionSchema = z.strictObject({
 	source: readingSchema,
 	relation: semanticRelationSchema,
 	target: z.union([lemmaSchema, readingSchema]),
+	provenance: z.enum(["direct", "inferred"]),
+});
+
+export const governmentRelationSchema = z.enum(["governs", "governedBy"]);
+/**
+ * One edge of Prepositional Government. `governs` runs from the governor
+ * Reading to the ADP Lemma it stores; `governedBy` is the inferred inverse from
+ * each supplied Reading of that ADP Lemma back to the exact governor Reading.
+ */
+export const governmentProjectionSchema = z.strictObject({
+	source: readingSchema,
+	relation: governmentRelationSchema,
+	target: z.union([lemmaSchema, readingSchema]),
+	case: governedCaseSchema,
 	provenance: z.enum(["direct", "inferred"]),
 });

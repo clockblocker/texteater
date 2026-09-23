@@ -19,6 +19,7 @@ type _Output0 = {
 	definition?: _Output1;
 	morphologicalTree?: _Output1;
 	lexicalBreakdown?: _Output1;
+	governedPrepositions?: _Output1;
 	translations?: _Output3;
 	semanticRelations?: _Output5;
 };
@@ -42,6 +43,7 @@ type _Output7 = {
 	definition?: _Output8;
 	morphologicalTree?: _Output8;
 	lexicalBreakdown?: _Output8;
+	governedPrepositions?: _Output8;
 	translations?: _Output10;
 	semanticRelations?: _Output12;
 };
@@ -4587,6 +4589,11 @@ type _Output1386 = _Output1387 | undefined;
 type _Output1391 = _Output554 | undefined;
 type _Output1392 = _Output501 | undefined;
 type _Output1393 = _Output798 | undefined;
+type _Output1397 = _Output819 | _Output1030 | _Output1237;
+type _Output1398 = "Acc" | "Dat" | "Gen";
+type _Output1396 = { preposition: _Output1397; case: _Output1398 };
+type _Output1395 = Array<_Output1396>;
+type _Output1394 = _Output1395 | undefined;
 type _Output1382 = {
 	transcription?: _Output1383;
 	definition?: _Output1385;
@@ -4594,100 +4601,112 @@ type _Output1382 = {
 	morphologicalTree?: _Output1391;
 	lexicalBreakdown?: _Output1392;
 	semanticRelations?: _Output1393;
+	governedPrepositions?: _Output1394;
 };
-type _Output1396 = "Contribute" | "Correct";
-type _Output1397 = "transcription" | "definition";
-type _Output1395 = {
-	kind: _Output1396;
-	aspect: _Output1397;
+type _Output1401 = "Contribute" | "Correct";
+type _Output1402 = "transcription" | "definition";
+type _Output1400 = {
+	kind: _Output1401;
+	aspect: _Output1402;
 	value: _Output1384;
 };
-type _Output1399 = "Retract";
-type _Output1398 = { kind: _Output1399; aspect: _Output1397 };
-type _Output1401 = "translations";
-type _Output1400 = {
-	kind: _Output1396;
-	aspect: _Output1401;
+type _Output1404 = "Retract";
+type _Output1403 = { kind: _Output1404; aspect: _Output1402 };
+type _Output1406 = "translations";
+type _Output1405 = {
+	kind: _Output1401;
+	aspect: _Output1406;
 	language: _Output402;
 	value: _Output1389;
 };
-type _Output1403 = "Retract";
-type _Output1404 = "translations";
-type _Output1402 = {
-	kind: _Output1403;
-	aspect: _Output1404;
+type _Output1408 = "Retract";
+type _Output1409 = "translations";
+type _Output1407 = {
+	kind: _Output1408;
+	aspect: _Output1409;
 	language: _Output402;
 };
-type _Output1406 = "semanticRelations";
-type _Output1407 = "synonym";
-type _Output1408 = "reading";
-type _Output1409 = Array<_Output803>;
-type _Output1405 = {
-	kind: _Output1396;
-	aspect: _Output1406;
-	relation: _Output1407;
-	targetKind: _Output1408;
-	value: _Output1409;
-};
 type _Output1411 = "semanticRelations";
-type _Output1413 = "lemma";
-type _Output1412 = _Output1413 | undefined;
-type _Output1414 = Array<_Output1371>;
+type _Output1412 = "synonym";
+type _Output1413 = "reading";
+type _Output1414 = Array<_Output803>;
 type _Output1410 = {
-	kind: _Output1396;
+	kind: _Output1401;
 	aspect: _Output1411;
-	relation: _Output401;
-	targetKind?: _Output1412;
+	relation: _Output1412;
+	targetKind: _Output1413;
 	value: _Output1414;
 };
-type _Output1416 = "Retract";
-type _Output1417 = "semanticRelations";
-type _Output1418 = "synonym";
-type _Output1419 = "reading";
+type _Output1416 = "semanticRelations";
+type _Output1418 = "lemma";
+type _Output1417 = _Output1418 | undefined;
+type _Output1419 = Array<_Output1371>;
 type _Output1415 = {
-	kind: _Output1416;
-	aspect: _Output1417;
-	relation: _Output1418;
-	targetKind: _Output1419;
+	kind: _Output1401;
+	aspect: _Output1416;
+	relation: _Output401;
+	targetKind?: _Output1417;
+	value: _Output1419;
 };
 type _Output1421 = "Retract";
 type _Output1422 = "semanticRelations";
-type _Output1424 = "lemma";
-type _Output1423 = _Output1424 | undefined;
+type _Output1423 = "synonym";
+type _Output1424 = "reading";
 type _Output1420 = {
 	kind: _Output1421;
 	aspect: _Output1422;
-	relation: _Output401;
-	targetKind?: _Output1423;
+	relation: _Output1423;
+	targetKind: _Output1424;
 };
-type _Output1426 = "morphologicalTree";
+type _Output1426 = "Retract";
+type _Output1427 = "semanticRelations";
+type _Output1429 = "lemma";
+type _Output1428 = _Output1429 | undefined;
 type _Output1425 = {
-	kind: _Output1396;
-	aspect: _Output1426;
+	kind: _Output1426;
+	aspect: _Output1427;
+	relation: _Output401;
+	targetKind?: _Output1428;
+};
+type _Output1431 = "governedPrepositions";
+type _Output1430 = {
+	kind: _Output1401;
+	aspect: _Output1431;
+	value: _Output1395;
+};
+type _Output1433 = "Retract";
+type _Output1434 = "governedPrepositions";
+type _Output1432 = { kind: _Output1433; aspect: _Output1434 };
+type _Output1436 = "morphologicalTree";
+type _Output1435 = {
+	kind: _Output1401;
+	aspect: _Output1436;
 	value: _Output554;
 };
-type _Output1428 = "lexicalBreakdown";
-type _Output1427 = {
-	kind: _Output1396;
-	aspect: _Output1428;
+type _Output1438 = "lexicalBreakdown";
+type _Output1437 = {
+	kind: _Output1401;
+	aspect: _Output1438;
 	value: _Output501;
 };
-type _Output1430 = "Retract";
-type _Output1431 = "morphologicalTree" | "lexicalBreakdown";
-type _Output1429 = { kind: _Output1430; aspect: _Output1431 };
-type _Output1394 =
-	| _Output1395
-	| _Output1398
+type _Output1440 = "Retract";
+type _Output1441 = "morphologicalTree" | "lexicalBreakdown";
+type _Output1439 = { kind: _Output1440; aspect: _Output1441 };
+type _Output1399 =
 	| _Output1400
-	| _Output1402
+	| _Output1403
 	| _Output1405
+	| _Output1407
 	| _Output1410
 	| _Output1415
 	| _Output1420
 	| _Output1425
-	| _Output1427
-	| _Output1429;
-type _Output1432 =
+	| _Output1430
+	| _Output1432
+	| _Output1435
+	| _Output1437
+	| _Output1439;
+type _Output1442 =
 	| "synonym"
 	| "nearSynonym"
 	| "antonym"
@@ -4696,13 +4715,23 @@ type _Output1432 =
 	| "hyponym"
 	| "meronym"
 	| "holonym";
-type _Output1434 = _Output1371 | _Output803;
-type _Output1435 = "direct" | "inferred";
-type _Output1433 = {
+type _Output1444 = _Output1371 | _Output803;
+type _Output1445 = "direct" | "inferred";
+type _Output1443 = {
 	source: _Output803;
-	relation: _Output1432;
-	target: _Output1434;
-	provenance: _Output1435;
+	relation: _Output1442;
+	target: _Output1444;
+	provenance: _Output1445;
+};
+type _Output1446 = "governs" | "governedBy";
+type _Output1448 = _Output1371 | _Output803;
+type _Output1449 = "direct" | "inferred";
+type _Output1447 = {
+	source: _Output803;
+	relation: _Output1446;
+	target: _Output1448;
+	case: _Output1398;
+	provenance: _Output1449;
 };
 export type KnowledgeSettings = _Output0;
 export type KnowledgeRequestMask = _Output7;
@@ -4715,6 +4744,10 @@ export type MorphologicalTree = _Output554;
 export type PendingSemanticRelation = _Output797;
 export type SemanticRelations = _Output798;
 export type ReadingKnowledge = _Output1382;
-export type KnowledgeChange = _Output1394;
-export type SemanticRelation = _Output1432;
-export type SemanticRelationProjection = _Output1433;
+export type KnowledgeChange = _Output1399;
+export type SemanticRelation = _Output1442;
+export type SemanticRelationProjection = _Output1443;
+export type GovernedCase = _Output1398;
+export type GovernedPreposition = _Output1396;
+export type GovernmentRelation = _Output1446;
+export type GovernmentProjection = _Output1447;

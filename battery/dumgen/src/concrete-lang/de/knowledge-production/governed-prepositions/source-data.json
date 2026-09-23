@@ -1,0 +1,635 @@
+{
+	"path": "knowledge-analysis/de/governed-prepositions/prompt-source.ts",
+	"route": "knowledge-analysis/de/governed-prepositions",
+	"cases": {
+		"government-demo-warten-auf": {
+			"input": {
+				"markedContext": "Er <TARGET>wartet</TARGET> auf den Nachtbus.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "warten",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⏳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "The waiting Reading governs auf with accusative; the realised complement confirms the frame.",
+			"sources": [
+				{
+					"title": "Duden: warten",
+					"url": "https://www.duden.de/rechtschreibung/warten",
+					"supports": "Lists warten auf jemanden, etwas as the governed construction."
+				}
+			]
+		},
+		"government-demo-warten-unrealised": {
+			"input": {
+				"markedContext": "Er <TARGET>wartet</TARGET> seit einer Stunde am Bahnhof.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "warten",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⏳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "Government belongs to the Reading, not the sentence: am Bahnhof and seit einer Stunde are adjuncts, and auf + Acc stays governed although this sentence omits it."
+		},
+		"government-bestehen-insist": {
+			"input": {
+				"markedContext": "Sie <TARGET>besteht</TARGET> auf einer Entschuldigung.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "bestehen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "☝️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "auf",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "The insist Reading governs dative auf, unlike warten auf, so the two-way preposition's case comes from the government.",
+			"sources": [
+				{
+					"title": "Duden: bestehen",
+					"url": "https://www.duden.de/rechtschreibung/bestehen",
+					"supports": "Separates bestehen auf + Dativ (insist) from bestehen aus (consist of)."
+				}
+			]
+		},
+		"government-bestehen-consist": {
+			"input": {
+				"markedContext": "Das Team <TARGET>besteht</TARGET> aus fünf Leuten.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "bestehen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🧩",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "aus",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "The consist-of Reading of the same Lemma governs aus; government separates Readings, not Lemmas."
+		},
+		"government-bestehen-exam-none": {
+			"input": {
+				"markedContext": "Er hat die Prüfung endlich <TARGET>bestanden</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "bestehen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🎓",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": null
+			},
+			"explanation": "Passing an exam takes a direct object and governs no preposition, although other Readings of bestehen do."
+		},
+		"government-stolz-auf": {
+			"input": {
+				"markedContext": "Sie ist sehr <TARGET>stolz</TARGET> auf ihren Sohn.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "stolz",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🦚",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "Adjectives govern prepositions too; stolz auf takes accusative.",
+			"sources": [
+				{
+					"title": "Duden: stolz",
+					"url": "https://www.duden.de/rechtschreibung/stolz",
+					"supports": "Gives stolz auf jemanden, etwas."
+				}
+			]
+		},
+		"government-abhaengig-von": {
+			"input": {
+				"markedContext": "Der Ausflug ist <TARGET>abhängig</TARGET> vom Wetter.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "abhängig",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🔗",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "von",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "abhängig selects von; the fused vom still realises von with its fixed dative."
+		},
+		"government-angst-vor": {
+			"input": {
+				"markedContext": "Das Kind hat <TARGET>Angst</TARGET> vor Hunden.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Angst",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "😨",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "vor",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "Nouns govern prepositions: Angst vor takes dative, not the directional accusative of vor.",
+			"sources": [
+				{
+					"title": "Duden: Angst",
+					"url": "https://www.duden.de/rechtschreibung/Angst",
+					"supports": "Gives Angst vor jemandem, etwas."
+				}
+			]
+		},
+		"government-interesse-an": {
+			"input": {
+				"markedContext": "Er zeigt großes <TARGET>Interesse</TARGET> an Musik.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Interesse",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🧐",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "an",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "Interesse an takes dative."
+		},
+		"government-sich-bedanken-two": {
+			"input": {
+				"markedContext": "Ich <TARGET>bedanke</TARGET> mich bei dir für die Hilfe.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "sich bedanken",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🙏",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "bei",
+						"case": "Dat"
+					},
+					{
+						"preposition": "für",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "One Reading can govern two prepositions: the addressee with bei and the reason with für."
+		},
+		"government-sich-freuen-pronominal-adverb": {
+			"input": {
+				"markedContext": "Ich <TARGET>freue</TARGET> mich schon sehr darauf.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "sich freuen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🤩",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "auf",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "The look-forward Reading governs auf + Acc; the complement is realised by the pronominal adverb darauf, which stays its own ADV unit (ADR 0029) while the government stays on the verb."
+		},
+		"government-denken-an": {
+			"input": {
+				"markedContext": "Ich <TARGET>denke</TARGET> oft an dich.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "denken",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "💭",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "an",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "The think-of Reading governs accusative an, not the locative dative."
+		},
+		"government-teilnehmen-an": {
+			"input": {
+				"markedContext": "Sie <TARGET>nimmt</TARGET> an dem Kurs <TARGET>teil</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "teilnehmen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": "teil",
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🙋",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "an",
+						"case": "Dat"
+					}
+				]
+			},
+			"explanation": "The separable particle teil belongs to the Lemma; the governed preposition is an + Dat."
+		},
+		"government-bescheid-wissen-collocation": {
+			"input": {
+				"markedContext": "Sie <TARGET>weiß</TARGET> über das Projekt gut <TARGET>Bescheid</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Bescheid wissen",
+						"family": "Phraseme",
+						"kind": "Collocation",
+						"coreFeatures": {},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "💡",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": [
+					{
+						"preposition": "über",
+						"case": "Acc"
+					}
+				]
+			},
+			"explanation": "A Collocation governs a preposition Lexeme across Families: Bescheid wissen über + Acc."
+		},
+		"government-spielen-adjunct-none": {
+			"input": {
+				"markedContext": "Die Kinder <TARGET>spielen</TARGET> im Garten.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "spielen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🧸",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": null
+			},
+			"explanation": "im Garten is a locative adjunct; the play Reading governs no preposition."
+		},
+		"government-schneiden-instrument-none": {
+			"input": {
+				"markedContext": "Sie <TARGET>schneidet</TARGET> das Brot mit dem Messer.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "schneiden",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🔪",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": null
+			},
+			"explanation": "mit dem Messer is an instrument adjunct, not government."
+		},
+		"government-abfahren-particle-none": {
+			"input": {
+				"markedContext": "Der Zug <TARGET>fährt</TARGET> um acht Uhr <TARGET>ab</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "abfahren",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": "ab",
+							"lexicallyReflexive": null,
+							"verbType": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🚆",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": null
+			},
+			"explanation": "ab is a separable particle, and um acht Uhr is a time adjunct; neither is a governed preposition."
+		},
+		"government-gross-none": {
+			"input": {
+				"markedContext": "Das Haus ist ziemlich <TARGET>groß</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "groß",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🐘",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": null
+			},
+			"explanation": "An ordinary gradable adjective governs no preposition."
+		},
+		"government-tisch-none": {
+			"input": {
+				"markedContext": "Der <TARGET>Tisch</TARGET> steht am Fenster.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "Tisch",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🪑",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"governedPrepositions": null
+				}
+			},
+			"idealOutput": {
+				"governedPrepositions": null
+			},
+			"explanation": "A concrete noun governs no preposition; am Fenster belongs to the verb's locative adjunct."
+		}
+	},
+	"demonstrationIds": [
+		"government-demo-warten-auf",
+		"government-demo-warten-unrealised"
+	]
+}

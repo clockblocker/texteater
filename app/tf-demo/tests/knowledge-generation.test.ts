@@ -537,6 +537,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
+		governedPrepositions: null,
 	});
 	expect(
 		generationRequestFor(
