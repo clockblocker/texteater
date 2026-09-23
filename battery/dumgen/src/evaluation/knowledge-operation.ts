@@ -84,6 +84,32 @@ export function knowledgeComparison(
 	}
 	return knowledgeOutputSchema.parse(result);
 }
+/** An evaluation Encounter whose Segments are the marked context split at its <TARGET> members. */
+export function markedContextEncounter(
+	markedContext: string,
+	lemma: { language: string; family: string; kind: string },
+) {
+	const segments: { kind: "OpaqueText" | "ResolvableText"; text: string }[] =
+			[],
+		memberSegmentIndices: number[] = [];
+	for (const part of markedContext.split(/(<TARGET>.*?<\/TARGET>)/gu)) {
+		if (!part) continue;
+		const marked = part.startsWith("<TARGET>");
+		if (marked) memberSegmentIndices.push(segments.length);
+		segments.push({
+			kind: marked ? "ResolvableText" : "OpaqueText",
+			text: marked ? part.slice(8, -9) : part,
+		});
+	}
+	return validateEncounter({
+		sentence: { id: "evaluation", language: lemma.language, segments },
+		target: {
+			family: lemma.family,
+			kind: lemma.kind,
+			memberSegmentIndices,
+		},
+	});
+}
 export function knowledgeOperationExperiment(
 	definition: Definition,
 	options: DumgenOptions,
@@ -131,35 +157,11 @@ export function knowledgeOperationExperiment(
 		demonstrations: corpus.select(demoIds),
 		evaluation: corpus.select(definition.evaluation.ids),
 		run: async (raw, { signal, recordTrace }) => {
-			const input = knowledgeInputSchema.parse(raw),
-				segments: {
-					kind: "OpaqueText" | "ResolvableText";
-					text: string;
-				}[] = [],
-				memberSegmentIndices: number[] = [];
-			for (const part of input.markedContext.split(
-				/(<TARGET>.*?<\/TARGET>)/gu,
-			)) {
-				if (!part) continue;
-				const marked = part.startsWith("<TARGET>");
-				if (marked) memberSegmentIndices.push(segments.length);
-				segments.push({
-					kind: marked ? "ResolvableText" : "OpaqueText",
-					text: marked ? part.slice(8, -9) : part,
-				});
-			}
-			const encounter = validateEncounter({
-				sentence: {
-					id: "evaluation",
-					language: input.reading.lemma.language,
-					segments,
-				},
-				target: {
-					family: input.reading.lemma.family,
-					kind: input.reading.lemma.kind,
-					memberSegmentIndices,
-				},
-			});
+			const input = knowledgeInputSchema.parse(raw);
+			const encounter = markedContextEncounter(
+				input.markedContext,
+				input.reading.lemma,
+			);
 			const dumgen = createDumgen({
 				...options,
 				onOperation: (trace) => {

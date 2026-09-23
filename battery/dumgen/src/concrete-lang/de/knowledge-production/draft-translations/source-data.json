@@ -1,0 +1,964 @@
+{
+	"route": "knowledge-draft/de/translations",
+	"cases": {
+		"draft-translation-verb-past-copula": {
+			"input": {
+				"markedContext": "Das Konzert <TARGET>war</TARGET> gestern sehr laut.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "be",
+					"ru": "быть"
+				}
+			},
+			"explanation": "A past-tense copula translates as the infinitive, never the sentence's tense or person."
+		},
+		"draft-translation-verb-present-copula": {
+			"input": {
+				"markedContext": "Das Haus des Nachbarn <TARGET>ist</TARGET> alt.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "be",
+					"ru": "быть"
+				}
+			},
+			"explanation": "A present-tense copula translates as the infinitive; Russian есть would mirror the finite form."
+		},
+		"draft-translation-verb-past-ging": {
+			"input": {
+				"markedContext": "Er <TARGET>ging</TARGET> nach Hause.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "gehen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "go",
+					"ru": "идти"
+				}
+			},
+			"explanation": "A simple past translates as the infinitive."
+		},
+		"draft-translation-verb-intransitive-reflexive": {
+			"input": {
+				"markedContext": "Das Museum <TARGET>öffnet</TARGET> z.B. am Montag erst um zehn.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "öffnen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "open",
+					"ru": "открываться"
+				}
+			},
+			"explanation": "Intransitive öffnen (the museum opens) needs the Russian reflexive -ся; transitive открывать is another valency."
+		},
+		"draft-translation-verb-passive": {
+			"input": {
+				"markedContext": "Das Paket <TARGET>wird</TARGET> morgen <TARGET>geliefert</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "liefern",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "deliver",
+					"ru": "доставлять"
+				}
+			},
+			"explanation": "The passive belongs to the sentence; the Lemma translates as an active infinitive."
+		},
+		"draft-translation-verb-separable": {
+			"input": {
+				"markedContext": "Meine Schwester <TARGET>steht</TARGET> jeden Morgen um sechs <TARGET>auf</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "aufstehen",
+					"coreFeatures": {
+						"hasSepPrefix": "auf",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "get up",
+					"ru": "вставать"
+				}
+			},
+			"explanation": "A separable verb translates as one infinitive with its particle."
+		},
+		"draft-translation-verb-lexically-reflexive": {
+			"input": {
+				"markedContext": "Nach der anstrengenden Sitzung <TARGET>erholt</TARGET> <TARGET>sich</TARGET> die Ministerin im stillen Garten hinter dem Kanzleramt.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "sich erholen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "recover",
+					"ru": "отдыхать"
+				}
+			},
+			"explanation": "A lexically reflexive verb translates as an infinitive; the sentence's person is not carried over."
+		},
+		"draft-translation-verb-governed-preposition": {
+			"input": {
+				"markedContext": "Sie <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den nächsten Zug.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "VERB",
+					"canonicalForm": "warten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "wait",
+					"ru": "ждать"
+				}
+			},
+			"explanation": "A governed preposition may stay in English, but the verb stays infinitive."
+		},
+		"draft-translation-noun-dative-plural": {
+			"input": {
+				"markedContext": "Er hilft <TARGET>den</TARGET> <TARGET>Kindern</TARGET> bei den Aufgaben.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Kind",
+					"coreFeatures": {
+						"gender": "Neut",
+						"hyph": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "child",
+					"ru": "ребёнок"
+				}
+			},
+			"explanation": "A dative plural noun translates in the nominative singular."
+		},
+		"draft-translation-noun-genitive-singular": {
+			"input": {
+				"markedContext": "Das Fahrrad <TARGET>des</TARGET> <TARGET>Mannes</TARGET> ist neu.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Mann",
+					"coreFeatures": {
+						"gender": "Masc",
+						"hyph": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "man",
+					"ru": "мужчина"
+				}
+			},
+			"explanation": "A genitive noun translates in the nominative singular."
+		},
+		"draft-translation-noun-oblique-plural": {
+			"input": {
+				"markedContext": "Der Lehrer stellt den <TARGET>Schülern</TARGET> Material zur Verfügung.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Schüler",
+					"coreFeatures": {
+						"gender": "Masc",
+						"hyph": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "pupil",
+					"ru": "ученик"
+				}
+			},
+			"explanation": "A dative plural noun translates in the nominative singular."
+		},
+		"draft-translation-noun-abbreviation": {
+			"input": {
+				"markedContext": "<TARGET>Dipl.-Ing.</TARGET> Müller leitet das Projekt.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Diplom-Ingenieur",
+					"coreFeatures": {
+						"gender": "Masc",
+						"hyph": "Yes"
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "graduate engineer",
+					"ru": "дипломированный инженер"
+				}
+			},
+			"explanation": "An abbreviation translates as the established equivalent of its expansion, a phrase where no single word exists."
+		},
+		"draft-translation-adj-attributive-genitive": {
+			"input": {
+				"markedContext": "Wegen <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "neu",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "new",
+					"ru": "новый"
+				}
+			},
+			"explanation": "An inflected attributive adjective translates in the masculine nominative singular."
+		},
+		"draft-translation-adj-comparative": {
+			"input": {
+				"markedContext": "Der zweite Plan ist <TARGET>besser</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "gut",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "good",
+					"ru": "хороший"
+				}
+			},
+			"explanation": "Degree is inflection of the Lemma gut, so the comparative translates as the positive."
+		},
+		"draft-translation-adj-superlative": {
+			"input": {
+				"markedContext": "Der <TARGET>höchste</TARGET> Turm steht am Fluss.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "hoch",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "high",
+					"ru": "высокий"
+				}
+			},
+			"explanation": "The superlative translates as the positive."
+		},
+		"draft-translation-adj-adverbial-comparative": {
+			"input": {
+				"markedContext": "Heute fährt der Zug <TARGET>schneller</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "schnell",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "fast",
+					"ru": "быстрый"
+				}
+			},
+			"explanation": "An adverbial comparative translates as the positive adjective."
+		},
+		"draft-translation-adj-no-neighbour-bleed": {
+			"input": {
+				"markedContext": "Der heiße Kakao schmeckt <TARGET>gut</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"canonicalForm": "gut",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "good",
+					"ru": "хороший"
+				}
+			},
+			"explanation": "gut keeps its own meaning; tasty belongs to schmecken, and an adverb changes the part of speech."
+		},
+		"draft-translation-idiom-stays-verbal": {
+			"input": {
+				"markedContext": "Während der Wärter das historische Bett hütete, <TARGET>hütete</TARGET> die kranke Kuratorin <TARGET>das</TARGET> <TARGET>Bett</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"canonicalForm": "das Bett hüten",
+					"coreFeatures": {}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "stay in bed",
+					"ru": "соблюдать постельный режим"
+				}
+			},
+			"explanation": "A verbal idiom translates as a verb phrase with its figurative meaning (being ill in bed), not as a noun or the literal tending."
+		},
+		"draft-translation-idiom-past": {
+			"input": {
+				"markedContext": "Mitten in der Erklärung <TARGET>hat</TARGET> er völlig <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verloren</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"canonicalForm": "den Faden verlieren",
+					"coreFeatures": {}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "lose the thread",
+					"ru": "потерять нить"
+				}
+			},
+			"explanation": "A perfect-tense idiom translates as an infinitive phrase."
+		},
+		"draft-translation-idiom-established-equivalent": {
+			"input": {
+				"markedContext": "Ohne Mantel <TARGET>fror</TARGET> sie <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"canonicalForm": "frieren wie ein Schneider",
+					"coreFeatures": {}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "freeze to the bone",
+					"ru": "сильно мёрзнуть"
+				}
+			},
+			"explanation": "An idiom translates as an established equivalent, not a word-for-word calque."
+		},
+		"draft-translation-idiom-not-neighbouring-idiom": {
+			"input": {
+				"markedContext": "Durch die neuen Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>ins</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"canonicalForm": "Licht ins Dunkel bringen",
+					"coreFeatures": {}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "shed light on",
+					"ru": "пролить свет на"
+				}
+			},
+			"explanation": "Licht ins Dunkel bringen clarifies an obscure matter; bring to light is ans Licht bringen (reveal), a different idiom."
+		},
+		"draft-translation-noun-false-friend": {
+			"input": {
+				"markedContext": "<TARGET>Das</TARGET> <TARGET>Paket</TARGET> wird morgen geliefert.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"canonicalForm": "Paket",
+					"coreFeatures": {
+						"gender": "Neut",
+						"hyph": null
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "parcel",
+					"ru": "посылка"
+				}
+			},
+			"explanation": "A delivered Paket is a parcel; Russian пакет is a bag, a false friend."
+		},
+		"draft-translation-collocation-past": {
+			"input": {
+				"markedContext": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Phraseme",
+					"kind": "Collocation",
+					"canonicalForm": "Abschied nehmen",
+					"coreFeatures": {}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "say goodbye",
+					"ru": "прощаться"
+				}
+			},
+			"explanation": "A past-tense collocation translates as an infinitive phrase."
+		},
+		"draft-translation-discourse-formula": {
+			"input": {
+				"markedContext": "<TARGET>Wie</TARGET> <TARGET>geht</TARGET>'<TARGET>s</TARGET> <TARGET>dir</TARGET> heute?",
+				"lemma": {
+					"unitKind": "Lemma",
+					"language": "de",
+					"family": "Phraseme",
+					"kind": "DiscourseFormula",
+					"canonicalForm": "wie geht's dir",
+					"coreFeatures": {
+						"discourseFormulaRole": "Greeting"
+					}
+				},
+				"request": {
+					"translations": {
+						"en": null,
+						"ru": null
+					}
+				}
+			},
+			"idealOutput": {
+				"translations": {
+					"en": "how are you",
+					"ru": "как дела"
+				}
+			},
+			"explanation": "A discourse formula is translated as it is said, not turned into an infinitive."
+		}
+	},
+	"demonstrationIds": [],
+	"reviewedAlternatives": {
+		"draft-translation-verb-past-copula": {
+			"accepted": {
+				"en": [],
+				"ru": []
+			},
+			"rejected": {
+				"en": ["was"],
+				"ru": ["был", "было", "была"]
+			}
+		},
+		"draft-translation-verb-present-copula": {
+			"accepted": {
+				"en": [],
+				"ru": []
+			},
+			"rejected": {
+				"en": ["is"],
+				"ru": ["есть", "является"]
+			}
+		},
+		"draft-translation-verb-past-ging": {
+			"accepted": {
+				"en": [],
+				"ru": ["пойти", "уйти", "уходить"]
+			},
+			"rejected": {
+				"en": ["went"],
+				"ru": ["пошёл", "ушёл"]
+			}
+		},
+		"draft-translation-verb-intransitive-reflexive": {
+			"accepted": {
+				"en": [],
+				"ru": ["открыться"]
+			},
+			"rejected": {
+				"en": ["opens"],
+				"ru": ["открывать", "открывается"]
+			}
+		},
+		"draft-translation-verb-passive": {
+			"accepted": {
+				"en": [],
+				"ru": ["доставить"]
+			},
+			"rejected": {
+				"en": ["delivered", "be delivered", "is delivered"],
+				"ru": ["доставляться", "будет доставлено"]
+			}
+		},
+		"draft-translation-verb-separable": {
+			"accepted": {
+				"en": [],
+				"ru": ["встать"]
+			},
+			"rejected": {
+				"en": ["gets up"],
+				"ru": ["встаёт"]
+			}
+		},
+		"draft-translation-verb-lexically-reflexive": {
+			"accepted": {
+				"en": ["rest", "relax"],
+				"ru": ["восстанавливаться", "восстановиться", "отдохнуть"]
+			},
+			"rejected": {
+				"en": ["recovers", "rests"],
+				"ru": ["отдыхает", "восстанавливается"]
+			}
+		},
+		"draft-translation-verb-governed-preposition": {
+			"accepted": {
+				"en": ["wait for"],
+				"ru": ["подождать"]
+			},
+			"rejected": {
+				"en": ["waits", "waits for"],
+				"ru": ["ждёт"]
+			}
+		},
+		"draft-translation-noun-dative-plural": {
+			"accepted": {
+				"en": [],
+				"ru": ["ребенок"]
+			},
+			"rejected": {
+				"en": ["children"],
+				"ru": ["детям", "дети"]
+			}
+		},
+		"draft-translation-noun-genitive-singular": {
+			"accepted": {
+				"en": [],
+				"ru": []
+			},
+			"rejected": {
+				"en": [],
+				"ru": ["мужчины"]
+			}
+		},
+		"draft-translation-noun-oblique-plural": {
+			"accepted": {
+				"en": ["student", "schoolchild"],
+				"ru": ["школьник"]
+			},
+			"rejected": {
+				"en": ["pupils", "students"],
+				"ru": ["ученикам", "ученики"]
+			}
+		},
+		"draft-translation-noun-abbreviation": {
+			"accepted": {
+				"en": ["qualified engineer", "certified engineer"],
+				"ru": []
+			},
+			"rejected": {
+				"en": [],
+				"ru": ["инженер-дипломант"]
+			}
+		},
+		"draft-translation-adj-attributive-genitive": {
+			"accepted": {
+				"en": [],
+				"ru": []
+			},
+			"rejected": {
+				"en": [],
+				"ru": ["новых", "новые"]
+			}
+		},
+		"draft-translation-adj-comparative": {
+			"accepted": {
+				"en": [],
+				"ru": []
+			},
+			"rejected": {
+				"en": ["better"],
+				"ru": ["лучше", "лучший"]
+			}
+		},
+		"draft-translation-adj-superlative": {
+			"accepted": {
+				"en": ["tall"],
+				"ru": []
+			},
+			"rejected": {
+				"en": ["highest", "tallest"],
+				"ru": ["самый высокий", "высочайший"]
+			}
+		},
+		"draft-translation-adj-adverbial-comparative": {
+			"accepted": {
+				"en": ["quick"],
+				"ru": []
+			},
+			"rejected": {
+				"en": ["faster"],
+				"ru": ["быстрее"]
+			}
+		},
+		"draft-translation-adj-no-neighbour-bleed": {
+			"accepted": {
+				"en": [],
+				"ru": []
+			},
+			"rejected": {
+				"en": ["tasty"],
+				"ru": ["вкусный", "хорошо"]
+			}
+		},
+		"draft-translation-idiom-stays-verbal": {
+			"accepted": {
+				"en": ["keep to one's bed", "be laid up", "be confined to bed"],
+				"ru": ["лежать в постели"]
+			},
+			"rejected": {
+				"en": ["bed", "bedridden", "tend", "tend the bed"],
+				"ru": ["постель", "больничный режим", "постельный режим"]
+			}
+		},
+		"draft-translation-idiom-past": {
+			"accepted": {
+				"en": ["lose one's train of thought", "lose track"],
+				"ru": [
+					"потерять нить рассуждения",
+					"потерять нить разговора",
+					"сбиться"
+				]
+			},
+			"rejected": {
+				"en": ["lost the thread", "has lost the thread"],
+				"ru": ["потерял нить", "потерял нить разговора"]
+			}
+		},
+		"draft-translation-idiom-established-equivalent": {
+			"accepted": {
+				"en": [
+					"be freezing cold",
+					"be very cold",
+					"freeze one's butt off"
+				],
+				"ru": [
+					"мёрзнуть как цуцик",
+					"мёрзнуть как собака",
+					"продрогнуть до костей",
+					"дрожать от холода"
+				]
+			},
+			"rejected": {
+				"en": ["freeze like a tailor", "froze like a tailor"],
+				"ru": ["мёрзнуть как портной", "мёрзла как собака"]
+			}
+		},
+		"draft-translation-idiom-not-neighbouring-idiom": {
+			"accepted": {
+				"en": ["shed light on something", "clarify"],
+				"ru": ["пролить свет", "прояснить ситуацию", "внести ясность"]
+			},
+			"rejected": {
+				"en": ["bring to light", "light", "was brought to light"],
+				"ru": ["null", "свет"]
+			}
+		},
+		"draft-translation-noun-false-friend": {
+			"accepted": {
+				"en": ["package"],
+				"ru": []
+			},
+			"rejected": {
+				"en": [],
+				"ru": ["пакет"]
+			}
+		},
+		"draft-translation-collocation-past": {
+			"accepted": {
+				"en": ["take leave", "bid farewell"],
+				"ru": ["попрощаться", "проститься"]
+			},
+			"rejected": {
+				"en": ["said goodbye", "took leave"],
+				"ru": ["попрощались", "простились"]
+			}
+		},
+		"draft-translation-discourse-formula": {
+			"accepted": {
+				"en": [],
+				"ru": [
+					"как ты",
+					"как поживаешь",
+					"как ты поживаешь",
+					"как у тебя дела"
+				]
+			},
+			"rejected": {
+				"en": [],
+				"ru": ["как поживать"]
+			}
+		}
+	}
+}

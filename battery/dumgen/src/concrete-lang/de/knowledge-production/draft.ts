@@ -24,12 +24,21 @@ import { authoredFor, closedRoute } from "../authored-closed-sets/select.js";
 const transcriptionPrompt =
 	"Write the broad standard-German IPA transcription of the supplied German Lemma headword, without slash or bracket delimiters. Preserve the Lemma exactly. Return {text:string}, or {text:null} if the pronunciation is uncertain.";
 
+/**
+ * A translation is the target-language dictionary form of the Reading's
+ * Lemma, never the sentence's inflection of it: war gives "be", not "was";
+ * besser gives "good", not "better".
+ */
+export function translationFormClause(language: string) {
+	return `Write that translation in its ${language} dictionary headword form; do not carry over the tense, person, number or case of the German sentence. It translates the supplied Lemma: a comparative or superlative gives the positive, and a noun stays singular unless it exists only in the plural. A verb or verbal idiom becomes a verb phrase that keeps any reflexive or particle its meaning needs. Leave a discourse formula as it is said.`;
+}
+
 /** Definitions and translations describe the sense the marked target carries in this sentence. */
 function senseTextPrompt(
 	aspect: "definition" | "translations",
 	language: string | undefined,
 ) {
-	return `Draft only the requested ${aspect} for the fixed German Lemma at <TARGET> in markedContext. The sentence is the sense anchor: determine what the marked expression means HERE, including figurative uses, and describe that meaning, not another sense of the same Lemma and not the surrounding scene. Describe the meaning so the text also fits other sentences with that meaning; do not add incidental participants or objects from this sentence. Never change the Lemma, Kind or Core Features, and do not borrow a neighboring word's meaning. ${aspect === "definition" ? "Write a concise German definition." : `Translate only the marked target into ${language}; return one concise word or phrase, never the whole sentence.`} Return {text:string}, or {text:null} if no defensible contribution exists. The caller attaches this text to the Reading after local validation.`;
+	return `Draft only the requested ${aspect} for the fixed German Lemma at <TARGET> in markedContext. The sentence is the sense anchor: determine what the marked expression means HERE, including figurative uses, and describe that meaning, not another sense of the same Lemma and not the surrounding scene. Describe the meaning so the text also fits other sentences with that meaning; do not add incidental participants or objects from this sentence. Never change the Lemma, Kind or Core Features, and do not borrow a neighboring word's meaning. ${aspect === "definition" ? "Write a concise German definition." : `Translate only the marked target into ${language}; return one concise word or phrase, never the whole sentence. ${translationFormClause(String(language))}`} Return {text:string}, or {text:null} if no defensible contribution exists. The caller attaches this text to the Reading after local validation.`;
 }
 
 export type KnowledgeDraft = {

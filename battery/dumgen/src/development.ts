@@ -13,6 +13,7 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
+import { draftTranslationOperationExperiment } from "./concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
 import phases from "./concrete-lang/de/knowledge-production/evaluation/phases.json";
@@ -154,6 +155,8 @@ export function operationExperiment(id: string, options: DumgenOptions) {
 	if (id === "intake") return intakeOperationExperiment(options);
 	if (id === "knowledge-analysis/translation")
 		return translationOperationExperiment(options);
+	if (id === "knowledge-draft/de/translations")
+		return draftTranslationOperationExperiment(options);
 	if (id.startsWith("knowledge-analysis/de/"))
 		return knowledgeOperationExperiment(getExperiment(id), options);
 	if (id === "target-classification/de/high-level-whole-unit")
@@ -181,6 +184,7 @@ export async function evaluateExperiment(args: {
 		args.experimentId.startsWith("reading-") ||
 		args.experimentId === "intake" ||
 		args.experimentId === "knowledge-analysis/translation" ||
+		args.experimentId === "knowledge-draft/de/translations" ||
 		args.experimentId.startsWith("knowledge-analysis/de/")
 	) {
 		if (!args.judge)

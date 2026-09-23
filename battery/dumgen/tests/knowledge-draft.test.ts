@@ -3,7 +3,12 @@ import { Effect } from "effect";
 import {
 	draftKnowledge,
 	knowledgeDraftFingerprint,
+	translationFormClause,
 } from "../src/concrete-lang/de/knowledge-production/draft.js";
+import {
+	draftTranslationOperationExperiment,
+	reviewedAlternatives,
+} from "../src/concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import type {
 	DumgenOptions,
 	KnowledgeInput,
@@ -282,4 +287,103 @@ test("drafts written for another Lemma are not reused", async () => {
 	);
 	expect(generated).toBe(2);
 	expect(result.failures).toEqual([]);
+});
+
+test("draft and fallback translations both ask for the target-language dictionary form", async () => {
+	const prompts: Record<string, string> = {};
+	const execute: DumgenOptions["execute"] = async (request) => {
+		const state = request.input as { aspect?: string; language?: string };
+		if (state.aspect === "translations")
+			prompts[`${request.stage}/${state.language}`] =
+				request.systemPrompt;
+		return { output: { text: "bank" } };
+	};
+	await Effect.runPromise(
+		draftKnowledge(
+			{ execute, judge: unexpectedJudge },
+			{
+				encounter: input.encounter,
+				lemma: input.reading.lemma,
+				request: { translations: { en: null, ru: null } },
+			},
+		),
+	);
+	await Effect.runPromise(
+		createDumgen({ execute, judge: unexpectedJudge }).produceKnowledge({
+			...input,
+			request: { translations: { ru: null } },
+		}),
+	);
+	const keys = Object.keys(prompts).sort();
+	expect(keys).toHaveLength(3);
+	expect(keys.filter((key) => key.startsWith("draftKnowledge/"))).toEqual([
+		"draftKnowledge/en",
+		"draftKnowledge/ru",
+	]);
+	for (const key of keys)
+		expect(prompts[key]).toContain(
+			translationFormClause(key.endsWith("/en") ? "en" : "ru"),
+		);
+});
+
+test("the draft translation corpus runs through draftKnowledge and its evaluator separates reviewed answers", async () => {
+	const experiment = draftTranslationOperationExperiment({
+		execute: async () => {
+			throw Error("offline");
+		},
+		judge: unexpectedJudge,
+	});
+	const cases = Object.entries(experiment.corpus.cases);
+	expect(cases).toHaveLength(24);
+	expect(Object.keys(reviewedAlternatives).sort()).toEqual(
+		cases.map(([id]) => id).sort(),
+	);
+	expect(experiment.evaluation.cases).toHaveLength(24);
+	for (const [id, example] of cases) {
+		const ideal = example.idealOutput.translations;
+		const languages: string[] = [];
+		const run = draftTranslationOperationExperiment({
+			execute: async (request) => {
+				const language = (request.input as { language: "en" | "ru" })
+					.language;
+				languages.push(language);
+				return { output: { text: ideal[language] ?? null } };
+			},
+			judge: unexpectedJudge,
+		});
+		const output = await run.run(example.input, {
+			signal: new AbortController().signal,
+			recordTrace: () => {},
+		});
+		expect(languages.sort(), id).toEqual(["en", "ru"]);
+		const evaluate = (translations: typeof output.translations) =>
+			run.evaluator({
+				caseId: id,
+				input: example.input,
+				output: { translations },
+				idealOutput: example.idealOutput,
+			});
+		expect(evaluate(output.translations), id).toMatchObject({
+			contractPass: true,
+			exactMatch: true,
+		});
+		const reviewed = reviewedAlternatives[id];
+		for (const language of ["en", "ru"] as const) {
+			for (const accepted of reviewed?.accepted[language] ?? [])
+				expect(
+					evaluate({ ...ideal, [language]: accepted }).contractPass,
+					`${id} ${language} ${accepted}`,
+				).toBe(true);
+			for (const rejected of reviewed?.rejected[language] ?? [])
+				expect(
+					evaluate({ ...ideal, [language]: rejected }).contractPass,
+					`${id} ${language} ${rejected}`,
+				).toBe(false);
+		}
+		expect(evaluate({ ...ideal, en: "unreviewed wording" })).toMatchObject({
+			contractPass: null,
+			needsReview: true,
+		});
+		expect(evaluate({ ...ideal, ru: null }).contractPass).toBe(false);
+	}
 });
