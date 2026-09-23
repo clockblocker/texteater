@@ -172,7 +172,7 @@ function setup(
 	candidates: Dumling.Reading<"de">[] = [],
 	hooks: Pick<
 		Parameters<typeof createTfDemoOrchestrator>[0],
-		"draftKnowledge" | "observer" | "inspection"
+		"draftKnowledge" | "draftGraceMs" | "observer" | "inspection"
 	> & {
 		execute?: DumgenOptions["execute"];
 		analyzeSentence?: Dumgen["analyzeSentence"];
@@ -298,6 +298,7 @@ function setup(
 	return {
 		orchestrator: createTfDemoOrchestrator({
 			draftKnowledge: hooks.draftKnowledge,
+			draftGraceMs: hooks.draftGraceMs,
 			observer: hooks.observer,
 			inspection: hooks.inspection,
 			dumgen,
@@ -692,6 +693,59 @@ test("Knowledge drafts start from the Lemma before the Emoji Description and are
 	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
 		draft,
 	);
+});
+
+test("a new Reading commits after the draft grace with the leaves that finished", async () => {
+	const finished = {
+		aspect: "translations" as const,
+		language: "en",
+		text: "bank",
+	};
+	const run = setup(["🏦"], {}, [], {
+		draftGraceMs: 20,
+		draftKnowledge: ({ settle }) =>
+			Effect.promise(
+				() =>
+					new Promise((resolve) =>
+						settle.addEventListener("abort", () =>
+							resolve({
+								sourceFingerprint: "fixture",
+								texts: [finished],
+							}),
+						),
+					),
+			),
+	});
+	const started = performance.now();
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	expect(performance.now() - started).toBeLessThan(1_000);
+	expect(run.writes).toHaveLength(1);
+	expect(
+		JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null").texts,
+	).toEqual([finished]);
+});
+
+test("a draft that ignores the settle is dropped instead of holding the commit", async () => {
+	let interrupted = false;
+	const run = setup(["🏦"], {}, [], {
+		draftGraceMs: 20,
+		draftKnowledge: () =>
+			Effect.never.pipe(
+				Effect.onInterrupt(() =>
+					Effect.sync(() => {
+						interrupted = true;
+					}),
+				),
+			),
+	});
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	expect(interrupted).toBe(true);
+	expect(run.writes).toHaveLength(1);
+	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });
 
 test("emoji failure interrupts an in-flight Knowledge draft and hands nothing to persistence", async () => {

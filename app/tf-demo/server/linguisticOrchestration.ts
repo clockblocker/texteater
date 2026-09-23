@@ -15,6 +15,7 @@ import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import type { UnknownException } from "effect/Cause";
+import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
@@ -30,6 +31,12 @@ import {
 } from "./sentenceAnalysisSelection";
 import { splitInSentences } from "./sentenceSplitting";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
+
+/**
+ * Drafts usually land before the Emoji Description (~1.3 s against ~2 s), but
+ * one provider stall can hold a leaf for up to the Luna deadline.
+ */
+export const DRAFT_GRACE_MS = 1_500;
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -296,13 +303,42 @@ export function createTfDemoOrchestrator(options: {
 	readonly dictionary: Pick<DumdictService<"de">, "findStoredReadings">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
-	/** Drafts are anchored on the marked sentence and Lemma; they run concurrently with Reading resolution. */
+	/**
+	 * Drafts are anchored on the marked sentence and Lemma; they run concurrently
+	 * with Reading resolution. `settle` aborts the leaves still in flight so the
+	 * draft returns the ones that finished.
+	 */
 	readonly draftKnowledge?: (input: {
 		encounter: Encounter<"de">;
 		lemma: Dumling.Lemma<"de">;
 		visitorId: string;
+		settle: AbortSignal;
 	}) => Effect.Effect<KnowledgeDraft, unknown>;
+	/** How long a new Reading waits for unfinished drafts before committing. */
+	readonly draftGraceMs?: number;
 }) {
+	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
+	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
+	function settleDraft(
+		fiber: Fiber.RuntimeFiber<KnowledgeDraft | null, never>,
+		settle: AbortController,
+	) {
+		return Effect.gen(function* () {
+			const finished = yield* Effect.timeoutOption(
+				Fiber.join(fiber),
+				draftGrace,
+			);
+			if (Option.isSome(finished)) return finished.value;
+			settle.abort();
+			const settled = yield* Effect.timeoutOption(
+				Fiber.join(fiber),
+				draftGrace,
+			);
+			if (Option.isSome(settled)) return settled.value;
+			yield* Fiber.interrupt(fiber);
+			return null;
+		});
+	}
 	function submitText(input: SubmitTextInput) {
 		return Effect.gen(function* () {
 			assertNonEmpty(input.submissionKey, "submissionKey");
@@ -404,6 +440,7 @@ export function createTfDemoOrchestrator(options: {
 			let knowledgeDraft:
 				| Fiber.RuntimeFiber<KnowledgeDraft | null, never>
 				| undefined;
+			const settleDrafts = new AbortController();
 			assertNonEmpty(input.requestId, "requestId");
 			assertNonEmpty(input.visitorId, "visitorId");
 			assertNonEmpty(input.sentenceId, "sentenceId");
@@ -486,6 +523,7 @@ export function createTfDemoOrchestrator(options: {
 						encounter: grammatical.encounter,
 						lemma,
 						visitorId: input.visitorId,
+						settle: settleDrafts.signal,
 					})
 					.pipe(
 						Effect.catchAll(() => Effect.succeed(null)),
@@ -552,13 +590,15 @@ export function createTfDemoOrchestrator(options: {
 						}) ?? Promise.resolve(),
 				);
 
-			// A new Reading waits for its drafts. A reused Reading usually has
+			// A new Reading waits a short grace for its drafts, then settles the
+			// leaves still in flight and commits with the finished ones; Knowledge
+			// production generates the missing leaves. A reused Reading usually has
 			// its Knowledge already, so only a draft that already finished is
 			// handed on; an unfinished one is dropped rather than delaying the commit.
 			const draft = !knowledgeDraft
 				? null
 				: readingResolution.decision === "New"
-					? yield* Fiber.join(knowledgeDraft)
+					? yield* settleDraft(knowledgeDraft, settleDrafts)
 					: yield* Fiber.poll(knowledgeDraft).pipe(
 							Effect.flatMap((exit) =>
 								Option.isSome(exit) &&

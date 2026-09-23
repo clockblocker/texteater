@@ -12,9 +12,13 @@ import type { GenerationEvent } from "./resolutionFailure";
  */
 export const LUNA_DEADLINE_MS = 30_000;
 
-/** Test seam: the promptsmith transport and its deadline. */
+/**
+ * Test seam: the promptsmith transport and its deadline. `settle` ends the
+ * calls still in flight early, the way the deadline does.
+ */
 export type LunaTransport = Parameters<typeof createOpenAIExecutor>[0] & {
 	readonly deadlineMs?: number;
+	readonly settle?: AbortSignal;
 };
 
 /** Model transport stays behind Dumgen's injected execution boundary. */
@@ -50,7 +54,7 @@ function productionOptions(
 	onEvent: ((event: GenerationEvent) => void) | undefined,
 	configuration: Partial<DumgenOptions>,
 	inspection?: InspectionCapture,
-	{ deadlineMs = LUNA_DEADLINE_MS, ...transport }: LunaTransport = {},
+	{ deadlineMs = LUNA_DEADLINE_MS, settle, ...transport }: LunaTransport = {},
 ): DumgenOptions {
 	const execute = createOpenAIExecutor(transport);
 	return {
@@ -106,9 +110,18 @@ function productionOptions(
 					configuration: configurationSchema.parse(
 						request.configuration,
 					),
-					signal: AbortSignal.any([request.signal, deadline]),
+					signal: AbortSignal.any([
+						request.signal,
+						deadline,
+						...(settle ? [settle] : []),
+					]),
 				});
 			} catch (error) {
+				if (settle?.aborted && !request.signal.aborted)
+					throw Error(
+						"DraftSettled: the Reading committed without this leaf",
+						{ cause: error },
+					);
 				if (deadline.aborted && !request.signal.aborted)
 					throw Error(
 						`LunaDeadlineExceeded: no response within ${deadlineMs} ms`,

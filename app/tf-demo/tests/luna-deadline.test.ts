@@ -25,12 +25,11 @@ const lemma = {
 	coreFeatures: { gender: "Fem", hyph: null },
 } as const;
 
-/** Stalls every request matching `stalls` until its signal aborts; answers the rest. */
-function stallingFetch(stalls: (input: { aspect?: string }) => boolean) {
+/** Stalls every request whose system prompt matches `stalls` until its signal aborts; answers the rest. */
+function stallingFetch(stalls: (systemPrompt: string) => boolean) {
 	return async (_url: string | URL | Request, init?: RequestInit) => {
 		const body = JSON.parse(String(init?.body));
-		const input = JSON.parse(body.input[1].content) as { aspect?: string };
-		if (stalls(input))
+		if (stalls(JSON.stringify(body.input[0])))
 			return await new Promise<Response>((_resolve, reject) => {
 				init?.signal?.addEventListener("abort", () =>
 					reject(init.signal?.reason),
@@ -38,18 +37,7 @@ function stallingFetch(stalls: (input: { aspect?: string }) => boolean) {
 			});
 		return Response.json({
 			status: "completed",
-			output: [
-				{
-					content: [
-						{
-							type: "output_text",
-							text: JSON.stringify({
-								value: { text: `${input.aspect} text` },
-							}),
-						},
-					],
-				},
-			],
+			output: [{ content: [{ type: "output_text", text: "answer" }] }],
 		});
 	};
 }
@@ -72,7 +60,9 @@ test("a stalled draft leaf settles at the deadline while sibling leaves keep the
 			{
 				apiKey: "fixture",
 				deadlineMs,
-				fetch: stallingFetch(({ aspect }) => aspect === "definition"),
+				fetch: stallingFetch((prompt) =>
+					prompt.includes("German definition"),
+				),
 			},
 		),
 	);
@@ -99,6 +89,45 @@ test("a stalled draft leaf settles at the deadline while sibling leaves keep the
 		.map((step) => JSON.parse(step.payloadJson).failure);
 	expect(failed).toEqual([
 		`LunaDeadlineExceeded: no response within ${deadlineMs} ms`,
+	]);
+});
+
+test("settling a draft ends its stalled leaf and keeps the finished siblings", async () => {
+	const inspection = createInspectionCapture();
+	const settle = new AbortController();
+	const pending = Effect.runPromise(
+		createProductionKnowledgeDraft(
+			{
+				encounter,
+				lemma,
+				request: {
+					definition: null,
+					transcription: null,
+					translations: { en: null },
+				},
+			},
+			inspection,
+			{
+				apiKey: "fixture",
+				settle: settle.signal,
+				fetch: stallingFetch((prompt) =>
+					prompt.includes("German definition"),
+				),
+			},
+		),
+	);
+	await Bun.sleep(20);
+	settle.abort();
+	const draft = await pending;
+	expect(draft.texts.map((text) => text.aspect).sort()).toEqual([
+		"transcription",
+		"translations",
+	]);
+	const failed = inspection.steps
+		.filter((step) => step.status === "Failure")
+		.map((step) => JSON.parse(step.payloadJson).failure);
+	expect(failed).toEqual([
+		"DraftSettled: the Reading committed without this leaf",
 	]);
 });
 

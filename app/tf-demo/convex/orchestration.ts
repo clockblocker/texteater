@@ -429,7 +429,7 @@ function orchestratorFor(
 			}
 		: persistence;
 	return createTfDemoOrchestrator({
-		draftKnowledge: ({ encounter, lemma, visitorId }) =>
+		draftKnowledge: ({ encounter, lemma, visitorId, settle }) =>
 			Effect.gen(function* () {
 				const [settings, authorization] = yield* Effect.tryPromise(() =>
 					Promise.all([
@@ -463,6 +463,7 @@ function orchestratorFor(
 						),
 					},
 					inspection,
+					{ settle },
 				);
 			}),
 		dumgen: createProductionDumgen(
