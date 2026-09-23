@@ -534,6 +534,12 @@ export async function resolveGrammarJudgments(
 							core,
 							inflection: surface.inflectionalFeatures,
 							markedContext: input.markedContext,
+							sentenceInitial:
+								encounter.target.memberSegmentIndices[0] ===
+								encounter.sentence.segments.findIndex(
+									(segment) =>
+										segment.kind === "ResolvableText",
+								),
 						},
 						signal,
 					)

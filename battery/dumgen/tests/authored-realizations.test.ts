@@ -115,6 +115,7 @@ test("a map gap and ambiguous maps make one dependent selection over compatible 
 						core: der.lemma.coreFeatures,
 						inflection: null,
 						markedContext: "<TARGET>der</TARGET> Mann",
+						sentenceInitial: false,
 					},
 					signal,
 					mappings,
@@ -155,6 +156,7 @@ test("confirmed absence is Closed DET CatalogMiss, Open PRON miss, or explicit u
 							core: base.lemma.coreFeatures,
 							inflection: null,
 							markedContext: "unknown",
+							sentenceInitial: false,
 						},
 						signal,
 					),
@@ -165,6 +167,149 @@ test("confirmed absence is Closed DET CatalogMiss, Open PRON miss, or explicit u
 			expected,
 		);
 		if (result._tag === "Right") expect(result.right).toBeNull();
+	}
+});
+
+test("a sentence-initial capital retries its lowercase spelling; a mid-sentence capital never does", async () => {
+	/** A Hit never reaches the judge; its judge throws if called. */
+	const identify = async (
+		spelled: string,
+		expected: ReturnType<typeof member>,
+		sentenceInitial: boolean,
+		lookup: "Hit" | "Judged",
+	) => {
+		const options: DumgenOptions = {
+			execute: async () => {
+				throw Error("No generation during identity selection");
+			},
+			judge: async (request) => {
+				if (lookup === "Hit")
+					throw Error(`Judge called for ${spelled}`);
+				const state = request.state as {
+					reviewedIdentities: (typeof expected.lemma)[];
+				};
+				return choiceAnswers(
+					request.questions,
+					() =>
+						`identity_${state.reviewedIdentities.indexOf(expected.lemma)}`,
+				);
+			},
+		};
+		const traces: OperationTrace[] = [];
+		const result = await Effect.runPromise(
+			operationTask({
+				...options,
+				onOperation: (trace) => traces.push(trace),
+			})("resolveGrammar", {}, (signal) =>
+				resolveAuthoredGrammarIdentity(
+					options,
+					{
+						kind: expected.lemma.kind as "DET" | "PRON",
+						spelled,
+						core: expected.lemma.coreFeatures,
+						inflection: null,
+						markedContext: `<TARGET>${spelled}</TARGET> kommt`,
+						sentenceInitial,
+					},
+					signal,
+				),
+			),
+		);
+		expect(result, spelled).toBe(expected);
+		expect(traces[0]?.calls, spelled).toHaveLength(
+			lookup === "Hit" ? 0 : 1,
+		);
+	};
+	const welcher = authoredMembers.find(
+		(value) =>
+			value.lemma.kind === "DET" &&
+			value.lemma.canonicalForm === "welcher" &&
+			(value.lemma.coreFeatures as Record<string, unknown>).pronType ===
+				"Int",
+	);
+	if (!welcher) throw Error("Missing fixture welcher");
+	for (const [spelled, expected] of [
+		["Er", member("er", "PRON")],
+		["Wer", member("wer", "PRON")],
+		["Welchen", welcher],
+	] as const) {
+		await identify(spelled, expected, true, "Hit");
+		await identify(spelled, expected, false, "Judged");
+	}
+	const formal = member("Sie", "PRON", "Nom");
+	const third = authoredMembers.find(
+		(value) =>
+			value.lemma.kind === "PRON" &&
+			value.lemma.canonicalForm === "sie" &&
+			(value.lemma.coreFeatures as Record<string, unknown>).number ===
+				"Plur" &&
+			(value.lemma.coreFeatures as Record<string, unknown>).case ===
+				"Nom",
+	);
+	if (!third) throw Error("Missing fixture sie");
+	await identify("Sie", third, false, "Judged");
+	await identify("Sie", formal, false, "Hit");
+	await identify("Sie", formal, true, "Hit");
+});
+
+test("the sentence-initial flag marks a target whose first member is the first ResolvableText Segment", async () => {
+	const { grammarFixture } = await import("./grammar-fixture.js");
+	const { createDumgen } = await import("../src/universal/dumgen.js");
+	const { validateEncounter } = await import(
+		"../src/universal/validation.js"
+	);
+	const er = member("er", "PRON");
+	for (const [segments, index, calls] of [
+		[
+			[
+				{ kind: "OpaqueText", text: "„" },
+				{ kind: "ResolvableText", text: "Er" },
+				{ kind: "OpaqueText", text: " kommt.“" },
+			],
+			1,
+			1,
+		],
+		[
+			[
+				{ kind: "ResolvableText", text: "Dann" },
+				{ kind: "OpaqueText", text: " kommt " },
+				{ kind: "ResolvableText", text: "Er" },
+			],
+			2,
+			2,
+		],
+	] as const) {
+		const traces: OperationTrace[] = [];
+		const output = await Effect.runPromise(
+			createDumgen({
+				...grammarFixture({
+					lemma: {
+						canonicalForm: "er",
+						coreFeatures: er.lemma.coreFeatures,
+					},
+					surface: {
+						spelling: "Canonical",
+						surfaceFeatures: null,
+						inflectionalFeatures: null,
+					},
+					normalizedMembers: ["Er"],
+					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
+				}),
+				onOperation: (trace) => traces.push(trace),
+			}).resolveGrammar(
+				validateEncounter({
+					sentence: { id: "casing", language: "de", segments },
+					target: {
+						family: "Lexeme",
+						kind: "PRON",
+						memberSegmentIndices: [index],
+					},
+				}),
+			),
+		);
+		expect(output.surface.lemma.canonicalForm).toBe("er");
+		expect(traces[0]?.calls).toHaveLength(calls);
 	}
 });
 
