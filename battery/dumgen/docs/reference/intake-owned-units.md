@@ -103,7 +103,8 @@ named Kind of the Kind Mass; `Unresolved` only when no Kind has mass.
 
 Given an offset: `largestOf` is the Phraseme containing the word when there
 is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and
-Segment span, or null when it is Unresolved or `None`.
+Segment span, or null when it is Unresolved or `None`, or when the word's
+head Identity State is Miss.
 
 ## The intake call, German
 
@@ -138,8 +139,8 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
   member when every analysed Segment inside it belongs to the unit, so a
   fused `zur` stays outside the NOUN whose article is its `r` and inside the
   Collocation that covers both.
-- Null (Unresolved route, `None` Phraseme, no analysis) falls back to
-  `classifyTarget`, today's path.
+- Null (Unresolved route, Miss identity, `None` Phraseme, no analysis)
+  falls back to `classifyTarget`, today's path.
 - Grammar features run at click for the clicked unit only. Selected shows
   the authored Reading and Knowledge with zero calls; Derived is reached from
   the head; Open pays one grammar call, then the Luna fan-out.

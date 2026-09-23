@@ -94,12 +94,15 @@ export async function loadSentenceForResolution(
 ) {
 	const sentence = await ctx.db.get(sentenceId);
 	if (!sentence) return null;
-	const segments = await ctx.db
-		.query("segments")
-		.withIndex("by_sentence_id_and_index", (q) =>
-			q.eq("sentenceId", sentenceId),
-		)
-		.take(MAX_SEGMENTS_PER_SENTENCE);
+	const [segments, text] = await Promise.all([
+		ctx.db
+			.query("segments")
+			.withIndex("by_sentence_id_and_index", (q) =>
+				q.eq("sentenceId", sentenceId),
+			)
+			.take(MAX_SEGMENTS_PER_SENTENCE),
+		ctx.db.get(sentence.textId),
+	]);
 	return {
 		sentenceId,
 		textId: sentence.textId,
@@ -111,6 +114,7 @@ export async function loadSentenceForResolution(
 			kind,
 			text,
 		})),
+		definitionText: text?.origin?.kind === "Definition",
 	};
 }
 

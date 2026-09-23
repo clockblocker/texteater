@@ -66,8 +66,10 @@ expression. A fused word is one analysed Segment per component, so analysed
 Segments do not map one-to-one onto stored Segments. A click selects the
 largest resolved unit at the clicked Segment; a stored Segment joins that unit
 only when all of its analysed Segments do. It is a hint for resolution, not
-linguistic identity; a Segment whose unit is Unresolved, or that the analysis
-cannot express at stored granularity, is classified at click time as before.
+linguistic identity. A Sentence without one, such as a Definition Text, a
+Segment whose word has an Unresolved route or a Miss identity, and a Segment
+the analysis cannot express at stored granularity are classified at click
+time as before.
 _Avoid_: precomputed resolution, Unit map, Analysis Target list
 
 **Shared Demo Dictionary**:

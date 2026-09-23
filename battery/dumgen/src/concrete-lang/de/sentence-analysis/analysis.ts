@@ -330,8 +330,10 @@ export function largestOf(
 
 /**
  * The route and Segment span of the largest unit at an offset, or null when
- * the unit's route or the Phraseme's Kind is Unresolved or None. This is
- * what a host reads at click time instead of classifying.
+ * the unit's route or the Phraseme's Kind is Unresolved or None, or when the
+ * selected word's head Identity State is a Miss: a closed-class route whose
+ * spelling enumerated no authored candidate. This is what a host reads at
+ * click time instead of classifying.
  */
 export function resolvedUnitAt(
 	analysis: SentenceAnalysis,
@@ -359,6 +361,7 @@ export function resolvedUnitAt(
 }
 
 function lexemeUnit(target: LexemeTarget) {
+	if (selectIdentity(target, headOf(target)).state === "Miss") return null;
 	const route = effectiveRoute(target);
 	if (route.family !== "Lexeme") return null;
 	return {

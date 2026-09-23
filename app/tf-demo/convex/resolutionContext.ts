@@ -35,6 +35,8 @@ export const resolutionContextValidator = v.object({
 					text: v.string(),
 				}),
 			),
+			/** Whether the Sentence belongs to a hidden Definition Text. */
+			definitionText: v.boolean(),
 		}),
 	),
 	lemmaCandidates: v.array(lemmaValueValidator),

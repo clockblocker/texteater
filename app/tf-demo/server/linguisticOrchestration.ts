@@ -24,7 +24,10 @@ import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
-import { selectAnalysisTarget } from "./sentenceAnalysisSelection";
+import {
+	type ClassificationReason,
+	selectAnalysisTarget,
+} from "./sentenceAnalysisSelection";
 import { splitInSentences } from "./sentenceSplitting";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
@@ -39,6 +42,8 @@ export type PersistedSentence = {
 		readonly kind: string;
 		readonly text: string;
 	}[];
+	/** Whether the Sentence belongs to a hidden Definition Text; absent reads as false. */
+	readonly definitionText?: boolean;
 };
 
 export type SubmittedSentence = {
@@ -670,15 +675,18 @@ export function createTfDemoOrchestrator(options: {
 				sentence: SegmentedSentence<"de">,
 				clickedSegmentIndex: number,
 			) {
-				const fromAnalysis = analysedTarget(
+				const selection = analysedTarget(
 					stored,
 					sentence,
 					clickedSegmentIndex,
 				);
+				const fromAnalysis = selection.target;
 				const owner = "app/tf-demo · linguisticOrchestration";
 				const input = {
 					clickedSegmentIndex,
 					hasAnalysis: Boolean(context.analysis),
+					definitionText: stored.definitionText ?? false,
+					...(selection.target ? {} : { reason: selection.reason }),
 				};
 				const selected: Task<{
 					readonly path: "analysis" | "classified";
@@ -714,26 +722,31 @@ export function createTfDemoOrchestrator(options: {
 				);
 			}
 
-			/** Null when there is no analysis, no resolved unit, or the unit is not a valid Encounter target. */
+			/** The analysis target, or why the click is classified instead. */
 			function analysedTarget(
 				stored: PersistedSentence,
 				sentence: SegmentedSentence<"de">,
 				clickedSegmentIndex: number,
-			): Encounter<"de">["target"] | null {
-				if (!context.analysis) return null;
-				const target = selectAnalysisTarget(
+			):
+				| { readonly target: Encounter<"de">["target"] }
+				| {
+						readonly target: null;
+						readonly reason: ClassificationReason;
+				  } {
+				const selection = selectAnalysisTarget(
 					context.analysis,
 					stored,
 					clickedSegmentIndex,
 				);
-				if (!target) return null;
+				if (!selection.target) return selection;
+				const target = selection.target;
 				try {
 					validateEncounter({ sentence, target });
 				} catch {
-					return null;
+					return { target: null, reason: "invalidEncounter" };
 				}
 				// validateEncounter has checked family, kind and membership.
-				return target as Encounter<"de">["target"];
+				return { target: target as Encounter<"de">["target"] };
 			}
 
 			function resolveReading(

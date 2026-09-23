@@ -1,4 +1,6 @@
+import type { SentenceAnalysis } from "dumgen/types";
 import type { InspectionCapture } from "../server/inspectionCapture";
+import type { ResolutionContext } from "../server/linguisticOrchestration";
 import {
 	parseGermanLemma,
 	parseGermanReading,
@@ -7,6 +9,7 @@ import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
 } from "../server/resolutionSessionExecution";
+import { fromStoredSentenceAnalysis } from "../server/sentenceAnalysisStorage";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import type { ActionCtx } from "./_generated/server";
@@ -55,13 +58,25 @@ export function createResolutionSessionLifecycle(
 					{ guard },
 				);
 				if (!input) return null;
+				const { recorded, reusable, sentence } = input.context;
+				// Convex stores masses as `[{key, share}]`; the selector reads records.
+				const analysis: SentenceAnalysis | null = input.context.analysis
+					? fromStoredSentenceAnalysis(input.context.analysis)
+					: null;
 				const restored: ResolutionSessionRunInput = {
 					selection: input.selection,
 					context: {
-						...input.context,
+						// Recorded and reusable Readings are loosely typed at the
+						// Convex boundary; parsing them is separate work.
+						...({ recorded, reusable } as Pick<
+							ResolutionContext,
+							"recorded" | "reusable"
+						>),
+						sentence,
 						lemmaCandidates:
 							input.context.lemmaCandidates.map(parseGermanLemma),
-					} as ResolutionSessionRunInput["context"],
+						analysis,
+					},
 					checkpoints: {
 						...(input.checkpoints.grammatical
 							? {

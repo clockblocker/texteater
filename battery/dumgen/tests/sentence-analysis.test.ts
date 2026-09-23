@@ -7,13 +7,20 @@ import type {
 } from "promptsmith/typesafe";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
 import {
+	headOf,
 	largestOf,
 	resolvedUnitAt,
+	selectIdentity,
 	selectPhrasemeKind,
 	targetOf,
 } from "../src/concrete-lang/de/sentence-analysis/analysis.js";
 import { placeSegments } from "../src/concrete-lang/de/sentence-analysis/placement.js";
-import type { OperationTrace, SegmentedSentence } from "../src/types.js";
+import type {
+	LexemeTarget,
+	OperationTrace,
+	SegmentedSentence,
+	SentenceAnalysis,
+} from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 
 function sentenceOf(id: string, text: string): SegmentedSentence<"de"> {
@@ -405,4 +412,41 @@ test("an NFD umlaut fusion is cut after its combining mark", () => {
 		["Fu\u0308r", "für"],
 		["s", "das"],
 	]);
+});
+
+test("a closed-class word whose spelling enumerated no candidate is a Miss and resolves nothing; an open-class one still resolves", () => {
+	const singleton = (
+		id: string,
+		offset: number,
+		kind: string,
+	): LexemeTarget => ({
+		id,
+		members: [{ offset, role: "Head" }],
+		routeMass: { [kind]: 1 },
+		identity: null,
+		provenance: "vote",
+	});
+	const analysis: SentenceAnalysis = {
+		sentenceId: "miss",
+		language: "de",
+		stitchedText: "xyz an",
+		segments: [
+			{ offset: 0, kind: "ResolvableText", text: "xyz", surface: "xyz" },
+			{ offset: 3, kind: "Whitespace", text: " ", surface: " " },
+			{ offset: 4, kind: "ResolvableText", text: "an", surface: "an" },
+		],
+		targets: [singleton("xyz", 0, "PRON"), singleton("an", 4, "ADP")],
+		phrasemes: [],
+		fusions: [],
+	};
+	const [pron, adp] = analysis.targets;
+	if (!pron || !adp) throw Error("Expected two targets");
+	expect(selectIdentity(pron, headOf(pron))).toEqual({ state: "Miss" });
+	expect(resolvedUnitAt(analysis, 0)).toBeNull();
+	expect(selectIdentity(adp, headOf(adp))).toEqual({ state: "Open" });
+	expect(resolvedUnitAt(analysis, 4)).toEqual({
+		family: "Lexeme",
+		kind: "ADP",
+		offsets: [4],
+	});
 });

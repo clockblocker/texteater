@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { type FunctionReference, getFunctionName } from "convex/server";
 import {
 	type CommitChangesRequest,
 	createDumdictService,
@@ -18,6 +19,9 @@ import type {
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
+import type { Id } from "../convex/_generated/dataModel";
+import type { ActionCtx } from "../convex/_generated/server";
+import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
 import { createInspectionCapture } from "../server/inspectionCapture";
 import {
 	applyValidatedReadingKnowledgeChange,
@@ -27,6 +31,7 @@ import {
 	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
+import { toStoredSentenceAnalysis } from "../server/sentenceAnalysisStorage";
 import {
 	MAX_SOURCE_SENTENCE_CHARACTERS,
 	MAX_SOURCE_SENTENCES,
@@ -1266,9 +1271,10 @@ test("a NOUN whose Article is the `r` of `zur` leaves the stored `zur` outside i
 });
 
 test("a click on the fused `zur` itself cannot be expressed by a sub-word unit and is classified", async () => {
+	const inspection = createInspectionCapture();
 	const run = setupWithAnalysis(
 		[{ family: "Lexeme", kind: "ADP", memberSegmentIndices: [8] }],
-		{ analysis: verfuegungAnalysis({ collocation: false }) },
+		{ analysis: verfuegungAnalysis({ collocation: false }), inspection },
 	);
 	await Effect.runPromise(
 		run.orchestrator.resolveSegment({
@@ -1284,29 +1290,89 @@ test("a click on the fused `zur` itself cannot be expressed by a sub-word unit a
 	expect(
 		run.requests.filter((request) => request.stage === "classifyTarget"),
 	).toHaveLength(1);
+	const step = inspection.steps.find((step) =>
+		step.name.startsWith("Select target"),
+	);
+	expect(JSON.parse(step?.payloadJson ?? "null")).toMatchObject({
+		input: { reason: "clickedNotMember" },
+	});
 });
 
-test("an Unresolved unit, or no stored analysis, falls back to click-time classification", async () => {
+test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored analysis, falls back to click-time classification and names why", async () => {
 	const inspection = createInspectionCapture();
-	for (const analysis of [
-		verfuegungAnalysis({
-			collocation: false,
-			nounRoute: { Unresolved: 0.7, NOUN: 0.3 },
-		}),
-		null,
-	]) {
-		const run = setupWithAnalysis(
-			[{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [10] }],
-			{ analysis, inspection },
-		);
+	const plain = verfuegungAnalysis({ collocation: false });
+	// `stellt` read as a Selected AUX identity: ADR 0026 forbids AUX targets.
+	const loneAux: SentenceAnalysis = {
+		...plain,
+		targets: plain.targets.map((target) =>
+			target.id === "stellt"
+				? {
+						...target,
+						identity: {
+							candidates: [
+								{
+									key: "AUX:haben:null",
+									kind: "AUX",
+									headword: "haben",
+									pronType: null,
+									cells: [],
+									definition: "",
+								},
+							],
+							mass: { "AUX:haben:null": 0.9, NoMatch: 0.1 },
+						},
+					}
+				: target,
+		),
+	};
+	const cases = [
+		{
+			analysis: verfuegungAnalysis({
+				collocation: false,
+				nounRoute: { Unresolved: 0.7, NOUN: 0.3 },
+			}),
+			target: {
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [10],
+			},
+		},
+		{
+			// `das` is routed DET with no authored candidate: a Miss.
+			analysis: plain,
+			target: {
+				family: "Lexeme",
+				kind: "DET",
+				memberSegmentIndices: [4],
+			},
+		},
+		{
+			analysis: loneAux,
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [2],
+			},
+		},
+		{
+			analysis: null,
+			target: {
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [10],
+			},
+		},
+	] as const;
+	for (const { analysis, target } of cases) {
+		const run = setupWithAnalysis([target], { analysis, inspection });
 		await Effect.runPromise(
-			run.orchestrator.resolveSegment(verfuegungSelection),
+			run.orchestrator.resolveSegment({
+				...selection,
+				clickedSegmentIndex: target.memberSegmentIndices[0],
+			}),
 		);
-		expect(run.encounters[0]?.target).toEqual({
-			family: "Lexeme",
-			kind: "NOUN",
-			memberSegmentIndices: [10],
-		});
+		expect(run.encounters).toHaveLength(1);
+		expect(run.encounters[0]?.target).toEqual(target);
 		expect(
 			run.requests.filter(
 				(request) => request.stage === "classifyTarget",
@@ -1316,14 +1382,85 @@ test("an Unresolved unit, or no stored analysis, falls back to click-time classi
 	const steps = inspection.steps.filter((step) =>
 		step.name.startsWith("Select target"),
 	);
-	expect(steps.map((step) => step.name)).toEqual([
-		"Select target · classified",
-		"Select target · classified",
+	expect(steps.map((step) => step.name)).toEqual(
+		cases.map(() => "Select target · classified"),
+	);
+	expect(
+		steps.map((step) => JSON.parse(step.payloadJson).input),
+	).toMatchObject([
+		{ hasAnalysis: true, definitionText: false, reason: "noResolvedUnit" },
+		{ hasAnalysis: true, definitionText: false, reason: "identityMiss" },
+		{ hasAnalysis: true, definitionText: false, reason: "auxSingleton" },
+		{ hasAnalysis: false, definitionText: false, reason: "noAnalysis" },
 	]);
 	expect(
-		steps.map((step) => JSON.parse(step.payloadJson).input.hasAnalysis),
-	).toEqual([true, false]);
-	expect(
 		steps.map((step) => JSON.parse(step.payloadJson).output.path),
-	).toEqual(["classified", "classified"]);
+	).toEqual(cases.map(() => "classified"));
+});
+
+test("a Resolution Session run restores the stored analysis to record masses and its click selects from the analysis", async () => {
+	const analysis = verfuegungAnalysis({ collocation: true });
+	const calls: string[] = [];
+	const ctx = {
+		async runMutation(reference: FunctionReference<"mutation">) {
+			calls.push(getFunctionName(reference));
+			return {
+				selection: verfuegungSelection,
+				checkpoints: {},
+				context: {
+					recorded: null,
+					reusable: null,
+					sentence: {
+						sentenceId: "sentence-1",
+						textId: "text-1",
+						segmentedSentenceId: "sentence-1",
+						language: "de",
+						stitchedText: verfuegungText,
+						segments: verfuegungSegments,
+						definitionText: false,
+					},
+					lemmaCandidates: [],
+					analysis: toStoredSentenceAnalysis(analysis),
+				},
+			};
+		},
+	} as unknown as ActionCtx;
+	const input = await createResolutionSessionLifecycle(ctx, {
+		requestId: "request-1",
+		runToken: "run-1",
+		segmentId: "segment-1" as Id<"segments">,
+	}).begin();
+	expect(calls).toEqual(["resolutionSessions:beginRun"]);
+	if (!input?.context) throw new Error("Expected a restored context.");
+	expect(input.context.analysis?.targets[0]?.routeMass).toEqual({
+		PRON: 0.9,
+		Unresolved: 0.1,
+	});
+	expect(input.context.analysis?.phrasemes[0]?.kindMass).toEqual({
+		Collocation: 0.8,
+		None: 0.2,
+	});
+	expect(input.context.analysis).toEqual(analysis);
+
+	const inspection = createInspectionCapture();
+	const run = setupWithAnalysis([], { inspection });
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(
+			input.selection,
+			input.checkpoints,
+			input.context,
+		),
+	);
+	expect(run.encounters[0]?.target).toEqual({
+		family: "Phraseme",
+		kind: "Collocation",
+		memberSegmentIndices: [2, 8, 10],
+	});
+	expect(
+		run.requests.filter((request) => request.stage === "classifyTarget"),
+	).toHaveLength(0);
+	expect(
+		inspection.steps.find((step) => step.name.startsWith("Select target"))
+			?.name,
+	).toBe("Select target · analysis");
 });

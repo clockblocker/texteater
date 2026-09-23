@@ -1,4 +1,4 @@
-import { resolvedUnitAt } from "dumgen";
+import { headOf, resolvedUnitAt, selectIdentity, targetOf } from "dumgen";
 import type { SentenceAnalysis } from "dumgen/types";
 
 export type StoredSegmentForSelection = {
@@ -12,6 +12,29 @@ export type SelectedAnalysisTarget = {
 	readonly kind: string;
 	readonly memberSegmentIndices: readonly number[];
 };
+
+/**
+ * Why a click was classified instead of read from the analysis. The selector
+ * reports all but `invalidEncounter`, which the caller names when the
+ * selected target fails Encounter validation.
+ */
+export type ClassificationReason =
+	| "noAnalysis"
+	| "stitchedMismatch"
+	| "lengthMismatch"
+	| "noAnchor"
+	| "noResolvedUnit"
+	| "identityMiss"
+	| "auxSingleton"
+	| "clickedNotMember"
+	| "invalidEncounter";
+
+export type AnalysisSelection =
+	| { readonly target: SelectedAnalysisTarget }
+	| {
+			readonly target: null;
+			readonly reason: Exclude<ClassificationReason, "invalidEncounter">;
+	  };
 
 /**
  * Reads the stored Sentence Analysis for one click instead of classifying.
@@ -29,16 +52,22 @@ export type SelectedAnalysisTarget = {
  * a separate ADP; that NOUN does not cover the stored `zur`, but a Collocation
  * over both does. When the clicked Segment itself is not a member the unit
  * cannot be expressed at stored granularity and the caller classifies.
+ *
+ * A lone word whose selected identity is AUX is classified as well: ADR 0026
+ * forbids AUX as a target, and texteater#523 decides what the selector should
+ * do instead. Every classified outcome names its reason.
  */
 export function selectAnalysisTarget(
-	analysis: SentenceAnalysis,
+	analysis: SentenceAnalysis | null | undefined,
 	stored: {
 		readonly stitchedText: string;
 		readonly segments: readonly StoredSegmentForSelection[];
 	},
 	clickedSegmentIndex: number,
-): SelectedAnalysisTarget | null {
-	if (analysis.stitchedText !== stored.stitchedText) return null;
+): AnalysisSelection {
+	if (!analysis) return { target: null, reason: "noAnalysis" };
+	if (analysis.stitchedText !== stored.stitchedText)
+		return { target: null, reason: "stitchedMismatch" };
 	const ordered = [...stored.segments].sort(
 		(left, right) => left.index - right.index,
 	);
@@ -51,9 +80,10 @@ export function selectAnalysisTarget(
 		});
 		cursor += segment.text.length;
 	}
-	if (cursor !== stored.stitchedText.length) return null;
+	if (cursor !== stored.stitchedText.length)
+		return { target: null, reason: "lengthMismatch" };
 	const clicked = ranges.get(clickedSegmentIndex);
-	if (!clicked) return null;
+	if (!clicked) return { target: null, reason: "noAnchor" };
 	const analysed = [...analysis.segments].sort(
 		(left, right) => left.offset - right.offset,
 	);
@@ -65,9 +95,24 @@ export function selectAnalysisTarget(
 	const anchor = within(clicked).find(
 		(segment) => segment.kind === "ResolvableText",
 	);
-	if (!anchor) return null;
+	if (!anchor) return { target: null, reason: "noAnchor" };
 	const unit = resolvedUnitAt(analysis, anchor.offset);
-	if (!unit) return null;
+	// Without a resolved Phraseme the unit is the anchor's word.
+	const word = targetOf(analysis, anchor.offset);
+	const identity = word ? selectIdentity(word, headOf(word)) : null;
+	if (!unit)
+		return {
+			target: null,
+			reason:
+				identity?.state === "Miss" ? "identityMiss" : "noResolvedUnit",
+		};
+	if (
+		unit.family === "Lexeme" &&
+		word?.members.length === 1 &&
+		identity?.state === "Selected" &&
+		identity.candidate.kind === "AUX"
+	)
+		return { target: null, reason: "auxSingleton" };
 	const covered = new Set(unit.offsets);
 	const memberSegmentIndices = ordered.flatMap((segment) => {
 		const range = ranges.get(segment.index);
@@ -78,6 +123,9 @@ export function selectAnalysisTarget(
 			? [segment.index]
 			: [];
 	});
-	if (!memberSegmentIndices.includes(clickedSegmentIndex)) return null;
-	return { family: unit.family, kind: unit.kind, memberSegmentIndices };
+	if (!memberSegmentIndices.includes(clickedSegmentIndex))
+		return { target: null, reason: "clickedNotMember" };
+	return {
+		target: { family: unit.family, kind: unit.kind, memberSegmentIndices },
+	};
 }
