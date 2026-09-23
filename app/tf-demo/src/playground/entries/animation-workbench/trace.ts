@@ -112,7 +112,8 @@ export function feed(
 	markers: readonly Marker[] = [],
 ): RecorderState {
 	if (state.open) {
-		const active = markers.length > 0 || moved(state.open.frames.at(-1), frame);
+		const active =
+			markers.length > 0 || moved(state.open.frames.at(-1), frame);
 		const open: Open = {
 			...state.open,
 			frames: [...state.open.frames, frame],
@@ -225,6 +226,36 @@ export function summarize(recording: Recording): ChannelSummary[] {
 	return summaries.sort(
 		(a, b) => firstEvent(a) - firstEvent(b) || a.key.localeCompare(b.key),
 	);
+}
+
+export type Presence = {
+	readonly element: string;
+	readonly appears: number | null;
+	readonly leaves: number | null;
+};
+
+/**
+ * Splits a summary into the channels that moved and, per element, the
+ * comings and goings of the ones that did not: an element that mounts or
+ * unmounts without moving is one row, not five.
+ */
+export function partition(summaries: readonly ChannelSummary[]): {
+	readonly moving: readonly ChannelSummary[];
+	readonly presence: readonly Presence[];
+} {
+	const moving = summaries.filter((summary) => summary.starts !== null);
+	const movers = new Set(moving.map((summary) => summary.element));
+	const presence = new Map<string, Presence>();
+	for (const summary of summaries) {
+		if (movers.has(summary.element) || presence.has(summary.element))
+			continue;
+		presence.set(summary.element, {
+			element: summary.element,
+			appears: summary.appears,
+			leaves: summary.leaves,
+		});
+	}
+	return { moving, presence: [...presence.values()] };
 }
 
 export function durationOf(recording: Recording): number {

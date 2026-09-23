@@ -1,14 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import {
 	durationOf,
-	feed,
 	type Frame,
+	feed,
 	frameIntervalOf,
 	IDLE,
 	KEEP,
 	MAX_MS,
 	moved,
 	PREROLL_MS,
+	partition,
 	QUIET_MS,
 	type RecorderState,
 	summarize,
@@ -37,18 +38,18 @@ function still(
 describe("moved", () => {
 	test("geometry moves past half a pixel, opacity past half a percent", () => {
 		const base = at(0, { "Note:top": 10, "Bar:opacity": 0 });
-		expect(moved(base, at(16, { "Note:top": 10.4, "Bar:opacity": 0 }))).toBe(
-			false,
-		);
-		expect(moved(base, at(16, { "Note:top": 10.6, "Bar:opacity": 0 }))).toBe(
-			true,
-		);
-		expect(moved(base, at(16, { "Note:top": 10, "Bar:opacity": 0.004 }))).toBe(
-			false,
-		);
-		expect(moved(base, at(16, { "Note:top": 10, "Bar:opacity": 0.006 }))).toBe(
-			true,
-		);
+		expect(
+			moved(base, at(16, { "Note:top": 10.4, "Bar:opacity": 0 })),
+		).toBe(false);
+		expect(
+			moved(base, at(16, { "Note:top": 10.6, "Bar:opacity": 0 })),
+		).toBe(true);
+		expect(
+			moved(base, at(16, { "Note:top": 10, "Bar:opacity": 0.004 })),
+		).toBe(false);
+		expect(
+			moved(base, at(16, { "Note:top": 10, "Bar:opacity": 0.006 })),
+		).toBe(true);
 	});
 
 	test("an element appearing or leaving is movement", () => {
@@ -146,7 +147,8 @@ describe("summarize", () => {
 	for (let t = -48; t <= 600; t += STEP) {
 		const values: Record<string, number> = {
 			/* moves from 100 to 40 between 0 and 200 ms, then holds */
-			"Note haus:top": t <= 0 ? 100 : t >= 200 ? 40 : 100 - (60 * t) / 200,
+			"Note haus:top":
+				t <= 0 ? 100 : t >= 200 ? 40 : 100 - (60 * t) / 200,
 			"Note haus:left": 12,
 		};
 		/* the bar mounts at 32 ms, fades in from 180 ms to 340 ms */
@@ -204,5 +206,32 @@ describe("summarize", () => {
 		expect(durationOf(recording)).toBe(640);
 		expect(frameIntervalOf(recording)).toBe(STEP);
 		expect(frameIntervalOf({ frames: [], markers: [] })).toBeNull();
+	});
+
+	test("an element that only comes or goes is one presence row", () => {
+		const split = partition(
+			summarize({
+				frames: [
+					at(0, {
+						"Zone cover:top": 5,
+						"Zone cover:left": 5,
+						"Note:top": 1,
+					}),
+					at(16, {
+						"Zone cover:top": 5,
+						"Zone cover:left": 5,
+						"Note:top": 4,
+					}),
+					at(32, { "Note:top": 4 }),
+				],
+				markers: [],
+			}),
+		);
+		expect(split.moving.map((summary) => summary.key)).toEqual([
+			"Note:top",
+		]);
+		expect(split.presence).toEqual([
+			{ element: "Zone cover", appears: null, leaves: 16 },
+		]);
 	});
 });

@@ -3,6 +3,7 @@ import {
 	type ChannelSummary,
 	durationOf,
 	frameIntervalOf,
+	partition,
 	type Recording,
 	summarize,
 } from "./trace";
@@ -16,7 +17,9 @@ function ms(value: number | null): string {
 }
 
 function measure(value: number, property: string): string {
-	return property === "opacity" ? value.toFixed(2) : Math.round(value).toString();
+	return property === "opacity"
+		? value.toFixed(2)
+		: Math.round(value).toString();
 }
 
 /** A tick every 100 ms, thinned so the axis never shows more than eight. */
@@ -78,8 +81,10 @@ export function TraceView({
 }) {
 	/* the newest recording shows unless the reader stepped back */
 	const [pinned, setPinned] = useState<number | null>(null);
-	// biome-ignore lint/correctness/useExhaustiveDependencies: a new recording unpins
-	useEffect(() => setPinned(null), [recordings.length, recordings.at(-1)]);
+	const newest = recordings.at(-1);
+	useEffect(() => {
+		if (newest) setPinned(null);
+	}, [newest]);
 	const index = Math.min(
 		pinned ?? recordings.length - 1,
 		recordings.length - 1,
@@ -88,6 +93,10 @@ export function TraceView({
 	const summaries = useMemo(
 		() => (recording ? summarize(recording) : []),
 		[recording],
+	);
+	const { moving, presence } = useMemo(
+		() => partition(summaries),
+		[summaries],
 	);
 	if (!recording)
 		return (
@@ -107,10 +116,7 @@ export function TraceView({
 			JSON.stringify(
 				{
 					markers: recording.markers,
-					channels: summaries.map(({ points, ...rest }) => ({
-						...rest,
-						points,
-					})),
+					channels: summaries,
 				},
 				null,
 				"\t",
@@ -144,7 +150,9 @@ export function TraceView({
 				<span className="tabular-nums">
 					{Math.round(duration).toString()} ms ·{" "}
 					{recording.frames.length.toString()} frames
-					{interval === null ? "" : ` · ${interval.toFixed(1)} ms/frame`}
+					{interval === null
+						? ""
+						: ` · ${interval.toFixed(1)} ms/frame`}
 				</span>
 				<button
 					type="button"
@@ -170,7 +178,7 @@ export function TraceView({
 						</span>
 					))}
 				</div>
-				{summaries.map((summary) => (
+				{moving.map((summary) => (
 					<div key={summary.key} className="contents">
 						<span
 							className="truncate font-mono text-[0.65rem] text-ink-muted"
@@ -227,7 +235,7 @@ export function TraceView({
 					</tr>
 				</thead>
 				<tbody>
-					{summaries.map((summary) => (
+					{moving.map((summary) => (
 						<tr
 							key={summary.key}
 							data-trace-channel={summary.key}
@@ -261,6 +269,40 @@ export function TraceView({
 					))}
 				</tbody>
 			</table>
+			{presence.length > 0 ? (
+				<ul
+					aria-label="Comings and goings"
+					className="space-y-0.5 font-mono text-[0.65rem] text-ink-muted"
+				>
+					{presence.map((item) => (
+						<li
+							key={item.element}
+							data-trace-presence={item.element}
+							className="tabular-nums"
+						>
+							{item.element}
+							{item.appears !== null ? (
+								<>
+									{" "}
+									appears{" "}
+									<span className="text-ink">
+										{ms(item.appears)} ms
+									</span>
+								</>
+							) : null}
+							{item.leaves !== null ? (
+								<>
+									{" "}
+									leaves{" "}
+									<span className="text-ink">
+										{ms(item.leaves)} ms
+									</span>
+								</>
+							) : null}
+						</li>
+					))}
+				</ul>
+			) : null}
 		</div>
 	);
 }

@@ -1,17 +1,24 @@
 import { SlidersHorizontalIcon, XIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CompassModel } from "../deck-models/drag-deck";
 import {
 	DEFAULT_DECK_MOTION,
 	type DeckMotionOverrides,
 } from "../deck-models/runtime-config";
 import type { Entry } from "./catalog";
+import { KEEP, type Recording } from "./trace";
+import { TraceView } from "./trace-view";
+import { useTrace } from "./use-trace";
 import {
 	PARAMETERS,
 	readVariants,
 	saveVariants,
 	type Variant,
 } from "./variants";
+
+type Kind = "baseline" | "candidate";
+type Recordings = Readonly<Record<Kind, readonly Recording[]>>;
+const NO_RECORDINGS: Recordings = { baseline: [], candidate: [] };
 
 type Nav = {
 	readonly onBack: () => void;
@@ -26,15 +33,20 @@ function Specimen({
 	kind,
 	motion,
 	revision,
+	onRecording,
 }: {
 	entry: Entry;
 	label: string;
-	kind: "baseline" | "candidate";
+	kind: Kind;
 	motion?: DeckMotionOverrides;
 	revision: number;
+	onRecording: (kind: Kind, recording: Recording) => void;
 }) {
+	const root = useRef<HTMLElement>(null);
+	useTrace(root, (recording) => onRecording(kind, recording));
 	return (
 		<section
+			ref={root}
 			data-specimen={kind}
 			aria-label={label}
 			className="relative h-full min-h-0 min-w-0 overflow-hidden bg-paper"
@@ -63,6 +75,15 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 	const [compare, setCompare] = useState(true);
 	const [revision, setRevision] = useState(0);
 	const [controlsOpen, setControlsOpen] = useState(false);
+	const [recordings, setRecordings] = useState<Recordings>(NO_RECORDINGS);
+	const record = useCallback(
+		(kind: Kind, recording: Recording) =>
+			setRecordings((current) => ({
+				...current,
+				[kind]: [...current[kind], recording].slice(-KEEP),
+			})),
+		[],
+	);
 	const controlsToggle = useRef<HTMLButtonElement>(null);
 	const closeControls = () => {
 		setControlsOpen(false);
@@ -115,7 +136,7 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 						closeControls();
 					}
 				}}
-				className={`absolute end-4 top-4 z-50 flex max-h-[calc(100%_-_6rem)] w-[23.5rem] max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-xl border border-line-strong bg-paper/95 shadow-2xl backdrop-blur-md transition-[opacity,transform] duration-150 motion-reduce:transition-none ${controlsOpen ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"}`}
+				className={`absolute end-4 top-4 z-50 flex max-h-[calc(100%_-_6rem)] w-[30rem] max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-xl border border-line-strong bg-paper/95 shadow-2xl backdrop-blur-md transition-[opacity,transform] duration-150 motion-reduce:transition-none ${controlsOpen ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"}`}
 			>
 				<div className="flex items-center justify-between border-b border-line px-4 py-3">
 					<h1 className="text-sm text-ink">{entry.title}</h1>
@@ -375,6 +396,44 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 							</div>
 						</section>
 					) : null}
+					<section
+						aria-label="Frame trace"
+						className="space-y-4 border-t border-line pt-4"
+					>
+						<h2 className="font-mono text-xs tracking-wide text-ink-muted">
+							Frame trace
+						</h2>
+						{(["baseline", "candidate"] as const)
+							.filter((kind) =>
+								kind === "baseline"
+									? !candidate || compare
+									: Boolean(candidate),
+							)
+							.map((kind) => (
+								<div
+									key={kind}
+									data-trace={kind}
+									className="space-y-2"
+								>
+									{candidate && compare ? (
+										<h3 className="font-mono text-[0.65rem] text-ink">
+											{kind === "baseline"
+												? "Baseline"
+												: candidate.name || "Variant"}
+										</h3>
+									) : null}
+									<TraceView
+										recordings={recordings[kind]}
+										onClear={() =>
+											setRecordings((current) => ({
+												...current,
+												[kind]: [],
+											}))
+										}
+									/>
+								</div>
+							))}
+					</section>
 				</div>
 			</aside>
 			<button
@@ -397,6 +456,7 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 						kind="baseline"
 						label="Baseline"
 						revision={revision}
+						onRecording={record}
 					/>
 				) : null}
 				{candidate ? (
@@ -407,6 +467,7 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 						label={candidate.name || "Variant"}
 						motion={candidate.motion}
 						revision={revision}
+						onRecording={record}
 					/>
 				) : null}
 			</div>

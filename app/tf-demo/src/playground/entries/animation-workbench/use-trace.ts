@@ -1,11 +1,11 @@
 import { type RefObject, useEffect, useRef } from "react";
 import {
-	feed,
 	type Frame,
+	feed,
 	IDLE,
 	type Marker,
-	type Recording,
 	type RecorderState,
+	type Recording,
 } from "./trace";
 
 /**
@@ -16,7 +16,7 @@ import {
  */
 const PROBES: readonly {
 	readonly selector: string;
-	readonly name: (element: HTMLElement, nth: number) => string;
+	readonly name: (element: HTMLElement) => string;
 }[] = [
 	{
 		selector: "[data-deck-pane]",
@@ -46,8 +46,11 @@ const PROBES: readonly {
 	},
 	{
 		selector: '[data-block="contexts"] li',
-		name: (element, nth) =>
-			`Context ${(nth + 1).toString()} of ${element.closest<HTMLElement>("[data-card-id]")?.dataset.cardId ?? ""}`,
+		name: (element) => {
+			const list = element.parentElement;
+			const nth = list ? Array.from(list.children).indexOf(element) : 0;
+			return `Context ${(nth + 1).toString()} of ${element.closest<HTMLElement>("[data-card-id]")?.dataset.cardId ?? ""}`;
+		},
 	},
 ];
 
@@ -79,10 +82,10 @@ function sample(root: HTMLElement, t: number): Frame {
 	const values: Record<string, number> = {};
 	for (const probe of PROBES) {
 		const elements = frame.querySelectorAll<HTMLElement>(probe.selector);
-		elements.forEach((element, nth) => {
+		for (const element of elements) {
 			const box = element.getBoundingClientRect();
 			const ghost = element.dataset.preview !== undefined ? " ghost" : "";
-			const name = `${probe.name(element, nth)}${ghost}`;
+			const name = `${probe.name(element)}${ghost}`;
 			const read = {
 				top: box.top - origin.top,
 				left: box.left - origin.left,
@@ -92,7 +95,7 @@ function sample(root: HTMLElement, t: number): Frame {
 			};
 			for (const property of PROPERTIES)
 				values[`${name}:${property}`] = read[property];
-		});
+		}
 	}
 	return { t, values };
 }
