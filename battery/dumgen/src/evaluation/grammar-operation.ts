@@ -1,3 +1,4 @@
+import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import type { OperationExperiment } from "promptsmith/evaluation";
 import type { z } from "zod";
@@ -7,7 +8,11 @@ import type { DumgenOptions, Segment } from "../types.js";
 import { createDumgen } from "../universal/dumgen.js";
 import { validateEncounter } from "../universal/validation.js";
 
-/** Retained grammar corpora describe the operation projection, never a model response. */
+/**
+ * Retained grammar corpora describe the operation projection, never a model response.
+ * A variant case input may add the stored Lemma candidates tf-demo passes; without
+ * them the operation is called exactly as before.
+ */
 export function grammarOperationExperiment(
 	definition: {
 		source: LinguisticCorpus;
@@ -42,7 +47,11 @@ export function grammarOperationExperiment(
 		),
 		evaluator: definition.evaluator,
 		run: async (raw, { signal, recordTrace }) => {
-			const input = raw as { markedContext: string; members: string[] };
+			const input = raw as {
+				markedContext: string;
+				members: string[];
+				lemmaCandidates?: readonly Dumling.Lemma[];
+			};
 			const segments: Segment[] = [],
 				members: number[] = [];
 			for (const chunk of input.markedContext.split(
@@ -91,7 +100,14 @@ export function grammarOperationExperiment(
 				},
 			});
 			const result = await Effect.runPromise(
-				Effect.either(dumgen.resolveGrammar(encounter)),
+				Effect.either(
+					input.lemmaCandidates
+						? dumgen.resolveGrammar(
+								encounter,
+								input.lemmaCandidates,
+							)
+						: dumgen.resolveGrammar(encounter),
+				),
 				{ signal },
 			);
 			if (result._tag === "Left") throw result.left;
