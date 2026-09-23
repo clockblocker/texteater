@@ -12,6 +12,7 @@ import {
 	selectPhrasemeKind,
 	targetOf,
 } from "../src/concrete-lang/de/sentence-analysis/analysis.js";
+import { placeSegments } from "../src/concrete-lang/de/sentence-analysis/placement.js";
 import type { OperationTrace, SegmentedSentence } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 
@@ -325,4 +326,83 @@ test("an unresolved membership yields an Unresolved singleton and no expression 
 	const second = await Effect.runPromise(other.analyzeSentence({ sentence }));
 	expect(targetOf(second, 3)?.routeMass).toEqual({ Unresolved: 1 });
 	expect(resolvedUnitAt(second, 3)).toBeNull();
+});
+
+const sourceOf = (sentence: SegmentedSentence<"de">) =>
+	sentence.segments.map((segment) => segment.text).join("");
+
+test("placed Segments keep the source casing of a fused word and spell the Stitched Text", () => {
+	for (const [text, fused, components] of [
+		[
+			"Im Sommer fahren viele Deutsche ans Meer.",
+			"Im",
+			[
+				["I", "in"],
+				["m", "dem"],
+			],
+		],
+		[
+			"Beim Nähen verlor sie den roten Faden.",
+			"Beim",
+			[
+				["Bei", "bei"],
+				["m", "dem"],
+			],
+		],
+		[
+			"ZUM Beispiel",
+			"ZUM",
+			[
+				["ZU", "zu"],
+				["M", "dem"],
+			],
+		],
+	] as const) {
+		const sentence = sentenceOf(fused, text);
+		const placement = placeSegments(sentence);
+		expect(placement.stitchedText).toBe(sourceOf(sentence));
+		expect(placement.stitchedText).toBe(text);
+		expect(placement.segments.map((segment) => segment.text).join("")).toBe(
+			text,
+		);
+		const fusion = placement.fusions[0];
+		expect(fusion?.form).toBe(fused);
+		expect(
+			fusion?.components.map((component) => [
+				component.span,
+				component.surface,
+			]),
+		).toEqual(components.map((pair) => [...pair]));
+		for (const component of fusion?.components ?? [])
+			expect(
+				text.slice(
+					component.offset,
+					component.offset + component.span.length,
+				),
+			).toBe(component.span);
+	}
+});
+
+test("an NFD umlaut fusion is cut after its combining mark", () => {
+	const fuers = "Fu\u0308rs";
+	const sentence: SegmentedSentence<"de"> = {
+		id: "fuers",
+		language: "de",
+		segments: [
+			{ kind: "ResolvableText", text: fuers },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Erste" },
+		],
+	};
+	const placement = placeSegments(sentence);
+	expect(placement.stitchedText).toBe(sourceOf(sentence));
+	expect(
+		placement.fusions[0]?.components.map((component) => [
+			component.span,
+			component.surface,
+		]),
+	).toEqual([
+		["Fu\u0308r", "für"],
+		["s", "das"],
+	]);
 });

@@ -3,7 +3,8 @@
  * analysed Segments, with fused words split by the German fusion table,
  * apostrophe clitics expanded and abbreviations given their expansion as
  * surface (Dumgen ADR 0004). Concatenated, the placed Segments give the
- * Stitched Text back.
+ * Stitched Text back: fused components keep the source letters and casing
+ * (`Im` places `I` + `m`) while their surface stays the authored one.
  */
 import type { SegmentedSentence } from "../../../types.js";
 import {
@@ -29,6 +30,29 @@ const first = (surface: string | readonly string[]) => {
 	if (!value) throw Error("A fusion component has a surface");
 	return value;
 };
+
+/**
+ * The source letters of each fusion component, cut by the lengths of the
+ * authored spans. The authored spans are NFC; a combining mark stays with the
+ * letter before it, so an NFD `fu\u0308rs` still cuts after `für`.
+ */
+function componentTexts(
+	text: string,
+	spans: readonly string[],
+): readonly string[] {
+	const characters = Array.from(text);
+	let position = 0;
+	return spans.map((span, index) => {
+		const start = position;
+		if (index === spans.length - 1) position = characters.length;
+		else
+			for (let letter = 0; letter < Array.from(span).length; letter++) {
+				position++;
+				while (/^\p{M}$/u.test(characters[position] ?? "")) position++;
+			}
+		return characters.slice(start, position).join("");
+	});
+}
 
 export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 	const segments: AnalyzedSegment[] = [];
@@ -63,10 +87,14 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 				: null;
 		if (fusion) {
 			const start = offset;
-			for (const component of fusion.components)
+			const texts = componentTexts(
+				segment.text,
+				fusion.components.map((component) => component.span),
+			);
+			for (const [position, component] of fusion.components.entries())
 				push(
 					"ResolvableText",
-					component.span,
+					texts[position] ?? "",
 					first(component.surface),
 				);
 			fusions.push({
