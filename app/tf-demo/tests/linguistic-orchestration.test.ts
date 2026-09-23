@@ -27,7 +27,11 @@ import {
 	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
-import { MAX_SOURCE_TEXT_CHARACTERS } from "../server/textSubmissionLimits";
+import {
+	MAX_SOURCE_SENTENCE_CHARACTERS,
+	MAX_SOURCE_SENTENCES,
+	MAX_SOURCE_TEXT_CHARACTERS,
+} from "../server/textSubmissionLimits";
 
 const revision = "revision-0" as StoreRevision;
 function createPlanningStorage(candidates: Dumling.Reading<"de">[]) {
@@ -255,8 +259,14 @@ function setup(
 		},
 		...overrides,
 	};
+	const judgments: Parameters<DumgenOptions["judge"]>[0][] = [];
+	const fixture = pipelineFixture(outputs);
 	const production = createDumgen({
-		...pipelineFixture(outputs),
+		...fixture,
+		judge: (request, options) => {
+			judgments.push(request);
+			return fixture.judge(request, options);
+		},
 		...(hooks.execute ? { execute: hooks.execute } : {}),
 		onModelExchange: (exchange) => requests.push(exchange.request),
 		onOperation: (trace) => hooks.inspection?.operation(trace),
@@ -291,6 +301,7 @@ function setup(
 		}),
 		storage,
 		requests,
+		judgments,
 		writes,
 		submitted,
 		commits,
@@ -452,6 +463,45 @@ test("invalid model output and provider failures leave no partial dictionary rec
 		expect(run.commits).toHaveLength(0);
 	}
 });
+
+test.each([
+	{
+		name: "more sentences than allowed",
+		sourceText: Array.from(
+			{ length: MAX_SOURCE_SENTENCES + 1 },
+			(_, index) => `Satz ${index + 1} ist hier.`,
+		).join(" "),
+		message: `At most ${MAX_SOURCE_SENTENCES} sentences are allowed.`,
+	},
+	{
+		name: "a sentence over the character limit",
+		sourceText: `${"a".repeat(MAX_SOURCE_SENTENCE_CHARACTERS)}.`,
+		message: `Each sentence is limited to ${MAX_SOURCE_SENTENCE_CHARACTERS} characters.`,
+	},
+])(
+	"a submission with $name fails before any segment or analyze call",
+	async ({ sourceText, message }) => {
+		const analysed: unknown[] = [];
+		const run = setup([], {}, [], {
+			analyzeSentence: (input) => {
+				analysed.push(input);
+				return Effect.die("analysis is not under test");
+			},
+		});
+		await expect(
+			Effect.runPromise(
+				run.orchestrator.submitText({
+					submissionKey: "limit",
+					sourceText,
+				}),
+			),
+		).rejects.toThrow(message);
+		expect(run.judgments).toHaveLength(0);
+		expect(run.requests).toHaveLength(0);
+		expect(analysed).toHaveLength(0);
+		expect(run.submitted).toHaveLength(0);
+	},
+);
 
 test("mismatched Reading checkpoints and oversized submissions fail before writes", async () => {
 	const run = setup([]);

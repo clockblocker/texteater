@@ -31,6 +31,8 @@ import {
 	fromStoredSentenceAnalysis,
 	toStoredSentenceAnalysis,
 } from "../server/sentenceAnalysisStorage";
+import { splitInSentences } from "../server/sentenceSplitting";
+import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { api, internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
@@ -243,6 +245,14 @@ export const submitText = action({
 	},
 	returns: submitTextResultValidator,
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
+		// Only limit violations become Rejected, checked here before any
+		// work; every other failure still throws.
+		const limitViolation = textSubmissionLimitViolation(
+			args.sourceText,
+			splitInSentences(args.sourceText),
+		);
+		if (limitViolation !== undefined)
+			return { status: "Rejected", message: limitViolation };
 		const requestId = crypto.randomUUID();
 		if (args.inspectionVisitorId) {
 			await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
