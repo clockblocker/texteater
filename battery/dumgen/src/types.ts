@@ -123,7 +123,10 @@ export interface Dumgen {
 	}): Task<AnalysisTarget<L>>;
 	resolveGrammar<L extends DumgenLanguage>(
 		input: Encounter<L>,
-		/** Stored dictionary hints; context still decides the grammatical identity. */
+		/**
+		 * Same-target Canonical Form candidates. Measured: jev takes an offered
+		 * same-target candidate almost always, so pass only candidates you trust.
+		 */
 		lemmaCandidates?: readonly Dumling.Lemma<L>[],
 	): Task<Dumling.Attestation<L>>;
 	resolveOrGenerateReadingEmojiDescription<L extends DumgenLanguage>(

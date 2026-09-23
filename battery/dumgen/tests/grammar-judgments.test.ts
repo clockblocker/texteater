@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
+import { infinitiveShaped } from "../src/concrete-lang/de/grammatical-resolution/infinitive-shape.js";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
 import review from "../src/evaluation/redesign/review-cases.json";
 import type { OperationTrace } from "../src/types.js";
@@ -408,4 +409,76 @@ test("uncertain headword judgment stops without copying or generating", async ()
 		left: { _tag: "Unresolved" },
 	});
 	expect(traces[0]?.calls).toHaveLength(1);
+});
+
+/** A VERB encounter from a corpus `<TARGET>` context. */
+function markedVerbEncounter(id: string, markedContext: string) {
+	const segments: { text: string; kind: string }[] = [];
+	const members: number[] = [];
+	for (const [, target, text = ""] of markedContext.matchAll(
+		/(<TARGET>)?(\s+|[\p{L}\p{N}]+|[^\s\p{L}\p{N}<])(?:<\/TARGET>)?/gu,
+	)) {
+		if (target) members.push(segments.length);
+		segments.push({
+			text,
+			kind: /^\s+$/u.test(text)
+				? "Whitespace"
+				: /^[\p{L}\p{N}]+$/u.test(text)
+					? "ResolvableText"
+					: "Punctuation",
+		});
+	}
+	return validateEncounter({
+		sentence: { id, language: "de", segments },
+		target: {
+			family: "Lexeme",
+			kind: "VERB",
+			memberSegmentIndices: members,
+		},
+	});
+}
+
+for (const [id, rejected] of [
+	["grammar-de-verb-prep-free-reflexive-erholen-im", "erholt sich"],
+	["grammar-de-verb-imperative-lauf", "Lauf"],
+] as const)
+	test(`CandidateIsCanonical for finite ${rejected} generates the Canonical Form`, async () => {
+		const example = verbCases[id];
+		const traces: OperationTrace[] = [];
+		const output = await Effect.runPromise(
+			createDumgen({
+				...grammarFixture(example.idealOutput, {
+					canonical: "CandidateIsCanonical",
+				}),
+				onOperation: (trace) => traces.push(trace),
+			}).resolveGrammar(
+				markedVerbEncounter(id, example.input.markedContext),
+			),
+		);
+		expect(output.surface.lemma.canonicalForm).toBe(
+			example.idealOutput.lemma.canonicalForm,
+		);
+		const request = traces[0]?.calls[0]?.request;
+		if (!request || !("questions" in request))
+			throw Error("Expected feature judgment");
+		expect(request.input).toHaveProperty(
+			"canonicalFormCandidate",
+			rejected,
+		);
+		const generation = traces[0]?.calls[1]?.request;
+		expect(generation).toHaveProperty("stage", "generateCanonicalForm");
+		expect(generation).toHaveProperty("input.needed.canonicalForm");
+		expect(traces[0]?.events).toContainEqual({
+			kind: "NonInfinitiveCanonicalForm",
+			data: { rejected, answer: "CandidateIsCanonical" },
+		});
+	});
+
+test("every reviewed VERB Canonical Form is infinitive-shaped", () => {
+	for (const example of Object.values(verbCases))
+		expect(
+			infinitiveShaped(example.idealOutput.lemma.canonicalForm),
+		).toBeTrue();
+	for (const text of ["erholt sich", "Lauf", "lauf", "gehst", "sich"])
+		expect(infinitiveShaped(text)).toBeFalse();
 });

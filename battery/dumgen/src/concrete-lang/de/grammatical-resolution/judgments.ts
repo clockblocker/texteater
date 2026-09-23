@@ -16,6 +16,7 @@ import { sameValue } from "../authored-closed-sets/select.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
+import { infinitiveShaped } from "./infinitive-shape.js";
 import {
 	nounArticleCandidates,
 	nounArticleQuestions,
@@ -155,6 +156,8 @@ export async function resolveGrammarJudgments(
 			lemma.family === encounter.target.family &&
 			lemma.kind === encounter.target.kind,
 	);
+	// Every source here sets Lemma precision: jev takes an offered same-target
+	// candidate almost always (E2: CandidateIsNotCanonical 102 → 0/154).
 	const canonicalFormAlternatives = [
 		...new Set([
 			...storedLemmas.map((lemma) => lemma.canonicalForm),
@@ -550,22 +553,33 @@ export async function resolveGrammarJudgments(
 				};
 			} else {
 				const canonical = selected("canonical");
+				const chosen =
+					canonical === "CandidateIsCanonical"
+						? canonicalFormCandidate
+						: canonical.startsWith("candidate_")
+							? canonicalFormAlternatives[
+									Number(canonical.slice("candidate_".length))
+								]
+							: undefined;
+				// A VERB Canonical Form is infinitive-shaped. A chosen supplied
+				// text that is not means no exact text is available, so Luna
+				// supplies the required missing text (#442 Canonical Form row,
+				// #445); code enforcing a domain invariant is not a review judge
+				// (ADR 0023). Generated text is never checked.
+				const rejected =
+					encounter.target.kind === "VERB" &&
+					chosen !== undefined &&
+					!infinitiveShaped(chosen);
+				if (rejected)
+					recordEvent(signal, "NonInfinitiveCanonicalForm", {
+						rejected: chosen,
+						answer: canonical,
+					});
 				lemma = {
-					canonicalForm:
-						canonical === "CandidateIsCanonical"
-							? canonicalFormCandidate
-							: canonical.startsWith("candidate_")
-								? canonicalFormAlternatives[
-										Number(
-											canonical.slice(
-												"candidate_".length,
-											),
-										)
-									]
-								: undefined,
+					canonicalForm: rejected ? undefined : chosen,
 					coreFeatures: core,
 				};
-				if (canonical === "CandidateIsNotCanonical")
+				if (canonical === "CandidateIsNotCanonical" || rejected)
 					needed.canonicalForm =
 						"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
 			}
