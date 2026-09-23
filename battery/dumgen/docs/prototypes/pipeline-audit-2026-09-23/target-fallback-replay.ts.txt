@@ -1,0 +1,215 @@
+/**
+ * Offline replay for the target-classification audit (2026-09-23). No model
+ * calls: it re-assembles a stored two-layer intake run (production question
+ * ids and wording, `layered-trimmed`, 110 sentences, 238 gold clicks) with
+ * the production `placeSegments` + `assembleAnalysis` + `resolvedUnitAt`,
+ * applies a verbatim copy of tf-demo's `selectAnalysisTarget`, and counts
+ * which clicks would fall back to click-time `classifyTarget`, and why.
+ * It then scores cheap selector variants against the same gold.
+ *
+ *   bun prototypes/audit/target-fallback-replay.ts [/tmp/intake-...json]
+ */
+import { readFileSync } from "node:fs";
+import type { SegmentedSentence } from "../../src/types.js";
+import {
+	type SentenceAnalysis,
+	resolvedUnitAt,
+	targetOf,
+} from "../../src/concrete-lang/de/sentence-analysis/analysis.js";
+import { assembleAnalysis } from "../../src/concrete-lang/de/sentence-analysis/assemble.js";
+import { placeSegments } from "../../src/concrete-lang/de/sentence-analysis/placement.js";
+import { loadSentences } from "../intake/corpus.js";
+
+const file =
+	process.argv[2] ??
+	"/tmp/intake-clicks-anchored-lexeme-top-layered-trimmed-roles-phraseme-score-1.json";
+const stored = JSON.parse(readFileSync(file, "utf8")) as {
+	answers: { id: string; answers: Record<string, unknown> | null }[];
+};
+const byId = new Map(stored.answers.map((row) => [row.id, row.answers]));
+const sentences = loadSentences("eval");
+
+type Stored = {
+	stitchedText: string;
+	segments: { index: number; kind: string; text: string }[];
+};
+
+/** Verbatim copy of app/tf-demo/server/sentenceAnalysisSelection.ts, with a variant switch. */
+function select(
+	analysis: SentenceAnalysis,
+	stored: Stored,
+	clickedSegmentIndex: number,
+	variant: "shipped" | "anchorMember",
+): { family: string; kind: string; memberSegmentIndices: number[] } | { miss: string } {
+	if (analysis.stitchedText !== stored.stitchedText) return { miss: "stitched" };
+	const ordered = [...stored.segments].sort((l, r) => l.index - r.index);
+	const ranges = new Map<number, { start: number; end: number }>();
+	let cursor = 0;
+	for (const segment of ordered) {
+		ranges.set(segment.index, { start: cursor, end: cursor + segment.text.length });
+		cursor += segment.text.length;
+	}
+	const clicked = ranges.get(clickedSegmentIndex);
+	if (!clicked) return { miss: "range" };
+	const analysed = [...analysis.segments].sort((l, r) => l.offset - r.offset);
+	const within = (range: { start: number; end: number }) =>
+		analysed.filter((s) => s.offset >= range.start && s.offset < range.end);
+	const anchor = within(clicked).find((s) => s.kind === "ResolvableText");
+	if (!anchor) return { miss: "anchor" };
+	const unit = resolvedUnitAt(analysis, anchor.offset);
+	if (!unit) {
+		const target = targetOf(analysis, anchor.offset);
+		return { miss: `unresolved:${target?.provenance ?? "none"}` };
+	}
+	const covered = new Set(unit.offsets);
+	const memberSegmentIndices = ordered.flatMap((segment) => {
+		const range = ranges.get(segment.index);
+		if (!range) return [];
+		const inside = within(range);
+		if (variant === "anchorMember") {
+			// A stored Segment belongs when its own anchor (first resolvable
+			// piece) is in the unit: the same rule the click itself uses.
+			const own = inside.find((s) => s.kind === "ResolvableText");
+			return own && covered.has(own.offset) ? [segment.index] : [];
+		}
+		return inside.length > 0 && inside.every((e) => covered.has(e.offset))
+			? [segment.index]
+			: [];
+	});
+	if (!memberSegmentIndices.includes(clickedSegmentIndex))
+		return { miss: "clickedNotMember" };
+	return { family: unit.family, kind: unit.kind, memberSegmentIndices };
+}
+
+const same = (
+	a: { family: string; kind: string; memberSegmentIndices: number[] },
+	gold: Record<string, unknown>,
+) =>
+	gold.family === a.family &&
+	gold.kind === a.kind &&
+	JSON.stringify(gold.memberSegmentIndices) ===
+		JSON.stringify(a.memberSegmentIndices);
+
+const tally: Record<string, Record<string, number>> = {};
+const bump = (variant: string, key: string) => {
+	tally[variant] ??= {};
+	tally[variant][key] = (tally[variant][key] ?? 0) + 1;
+};
+const examples: string[] = [];
+let clicks = 0;
+let resolvableTotal = 0;
+let fusedOccurrences = 0;
+for (const sentence of sentences) {
+	const answers = byId.get(sentence.id);
+	if (!answers) continue;
+	const segmented: SegmentedSentence<"de"> = {
+		id: sentence.id,
+		language: "de",
+		segments: sentence.segments as SegmentedSentence<"de">["segments"],
+	};
+	const placement = placeSegments(segmented);
+	resolvableTotal += placement.resolvable.length;
+	fusedOccurrences += placement.fusions.length;
+	const assembled = assembleAnalysis(segmented, placement, answers as never);
+	const analysis: SentenceAnalysis = {
+		sentenceId: sentence.id,
+		language: "de",
+		...assembled,
+	};
+	const sourceText = sentence.segments.map((s) => s.text).join("");
+	// Placement writes the fusion table's lowercase span, so `Im` stitches as
+	// `im`; the repaired variant re-slices the source text at the same offsets.
+	const repaired: SentenceAnalysis = {
+		...analysis,
+		stitchedText: sourceText,
+		segments: analysis.segments.map((segment) => ({
+			...segment,
+			text: sourceText.slice(segment.offset, segment.offset + segment.text.length),
+		})),
+	};
+	const storedSentence: Stored = {
+		stitchedText: sentence.segments.map((s) => s.text).join(""),
+		segments: sentence.segments.map((s, index) => ({ index, ...s })),
+	};
+	for (const probe of sentence.cases) {
+		clicks += 1;
+		const gold = probe.idealOutput;
+		const goldUnresolved = gold.decision === "Unresolved";
+		for (const variant of ["shipped", "anchorMember", "repaired", "repaired+anchorMember"] as const) {
+			const got = select(
+				variant.startsWith("repaired") ? repaired : analysis,
+				storedSentence,
+				probe.clickedSegmentIndex,
+				variant.endsWith("anchorMember") ? "anchorMember" : "shipped",
+			);
+			if ("miss" in got) {
+				bump(variant, `fallback:${got.miss}`);
+				bump(variant, `fallback:total`);
+				if (goldUnresolved) bump(variant, "fallback:goldUnresolved");
+				if (variant === "shipped")
+					examples.push(
+						`${got.miss.padEnd(28)} ${probe.id} click="${sentence.segments[probe.clickedSegmentIndex]?.text}" gold=${JSON.stringify(gold)}`,
+					);
+			} else {
+				bump(variant, "analysis:total");
+				bump(variant, same(got, gold) ? "analysis:goldMatch" : "analysis:goldMiss");
+			}
+		}
+	}
+}
+console.log({ file, clicks, sentences: byId.size, resolvableTotal, fusedOccurrences });
+console.log(JSON.stringify(tally, null, 1));
+console.log(examples.join("\n"));
+
+// ---- every resolvable occurrence clicked once (not only gold clicks)
+const every: Record<string, number> = {};
+const provenances: Record<string, number> = {};
+for (const sentence of sentences) {
+	const answers = byId.get(sentence.id);
+	if (!answers) continue;
+	const segmented: SegmentedSentence<"de"> = {
+		id: sentence.id,
+		language: "de",
+		segments: sentence.segments as SegmentedSentence<"de">["segments"],
+	};
+	const placement = placeSegments(segmented);
+	const analysis: SentenceAnalysis = {
+		sentenceId: sentence.id,
+		language: "de",
+		...assembleAnalysis(segmented, placement, answers as never),
+	};
+	for (const target of analysis.targets)
+		provenances[target.provenance] = (provenances[target.provenance] ?? 0) + 1;
+	const storedSentence: Stored = {
+		stitchedText: sentence.segments.map((s) => s.text).join(""),
+		segments: sentence.segments.map((s, index) => ({ index, ...s })),
+	};
+	for (const index of placement.resolvable) {
+		const got = select(analysis, storedSentence, index, "shipped");
+		const key = "miss" in got ? `fallback:${got.miss}` : "analysis";
+		every[key] = (every[key] ?? 0) + 1;
+	}
+}
+console.log("every occurrence clicked:", every);
+console.log("target provenance:", provenances);
+
+// ---- fused-word clicks: what each selector variant returns
+const fusedForms = new Set(["im", "ins", "zum", "zur", "am", "ans", "beim", "vom", "aufs", "durchs", "fürs", "ums", "übers", "unters", "hinters", "vors"]);
+for (const sentence of sentences) {
+	const answers = byId.get(sentence.id);
+	if (!answers) continue;
+	const segmented: SegmentedSentence<"de"> = { id: sentence.id, language: "de", segments: sentence.segments as SegmentedSentence<"de">["segments"] };
+	const placement = placeSegments(segmented);
+	const analysis: SentenceAnalysis = { sentenceId: sentence.id, language: "de", ...assembleAnalysis(segmented, placement, answers as never) };
+	const sourceText = sentence.segments.map((s) => s.text).join("");
+	const repaired: SentenceAnalysis = { ...analysis, stitchedText: sourceText, segments: analysis.segments.map((s) => ({ ...s, text: sourceText.slice(s.offset, s.offset + s.text.length) })) };
+	const storedSentence: Stored = { stitchedText: sourceText, segments: sentence.segments.map((s, index) => ({ index, ...s })) };
+	for (const probe of sentence.cases) {
+		const text = sentence.segments[probe.clickedSegmentIndex]?.text ?? "";
+		if (!fusedForms.has(text.toLowerCase())) continue;
+		const shipped = select(analysis, storedSentence, probe.clickedSegmentIndex, "shipped");
+		const fixed = select(repaired, storedSentence, probe.clickedSegmentIndex, "anchorMember");
+		const show = (r: ReturnType<typeof select>) => ("miss" in r ? `FALLBACK(${r.miss})` : `${r.family}/${r.kind} ${JSON.stringify(r.memberSegmentIndices)}`);
+		console.log(probe.id.slice(0, 55).padEnd(55), JSON.stringify(text), "gold", `${probe.idealOutput.family}/${probe.idealOutput.kind} ${JSON.stringify(probe.idealOutput.memberSegmentIndices)}`, "| shipped", show(shipped), "| fixed", show(fixed));
+	}
+}
