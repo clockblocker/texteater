@@ -1,0 +1,2698 @@
+{
+  "label": "main",
+  "calls": 2568,
+  "spendUsd": 0.32612,
+  "firstStartedAt": "2026-09-23T14:13:02.371Z",
+  "statusOverall": {
+    "T": {
+      "n": 428,
+      "Valid": 371,
+      "Invalid": 57,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 0,
+      "Skipped": 0,
+      "lost": 57,
+      "lostOf": "57/428",
+      "lostRate": 0.1332
+    },
+    "J4": {
+      "n": 428,
+      "Valid": 408,
+      "Invalid": 19,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 1,
+      "Skipped": 0,
+      "lost": 19,
+      "lostOf": "19/427",
+      "lostRate": 0.0445
+    },
+    "RS": {
+      "n": 428,
+      "Valid": 412,
+      "Invalid": 15,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 1,
+      "Skipped": 0,
+      "lost": 15,
+      "lostOf": "15/427",
+      "lostRate": 0.0351
+    },
+    "RS!": {
+      "n": 428,
+      "Valid": 410,
+      "Invalid": 18,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 0,
+      "Skipped": 0,
+      "lost": 18,
+      "lostOf": "18/428",
+      "lostRate": 0.0421
+    },
+    "RO": {
+      "n": 428,
+      "Valid": 408,
+      "Invalid": 19,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 1,
+      "Skipped": 0,
+      "lost": 19,
+      "lostOf": "19/427",
+      "lostRate": 0.0445
+    },
+    "RO!": {
+      "n": 428,
+      "Valid": 409,
+      "Invalid": 18,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 1,
+      "Skipped": 0,
+      "lost": 18,
+      "lostOf": "18/427",
+      "lostRate": 0.0422
+    }
+  },
+  "heldOut": {
+    "cases": 52,
+    "perArm": {
+      "T": {
+        "status": {
+          "n": 208,
+          "Valid": 206,
+          "Invalid": 2,
+          "ShapeInvalid": 0,
+          "ParseFailure": 0,
+          "ProviderFailure": 0,
+          "Skipped": 0,
+          "lost": 2,
+          "lostOf": "2/208",
+          "lostRate": 0.0096
+        },
+        "quality": {
+          "n": 208,
+          "pass": 181,
+          "fail": 7,
+          "review": 18,
+          "lost": 2,
+          "providerFailure": 0,
+          "passRate": 0.8702
+        }
+      },
+      "J4": {
+        "status": {
+          "n": 208,
+          "Valid": 208,
+          "Invalid": 0,
+          "ShapeInvalid": 0,
+          "ParseFailure": 0,
+          "ProviderFailure": 0,
+          "Skipped": 0,
+          "lost": 0,
+          "lostOf": "0/208",
+          "lostRate": 0
+        },
+        "quality": {
+          "n": 208,
+          "pass": 182,
+          "fail": 3,
+          "review": 23,
+          "lost": 0,
+          "providerFailure": 0,
+          "passRate": 0.875
+        }
+      },
+      "RS": {
+        "status": {
+          "n": 208,
+          "Valid": 207,
+          "Invalid": 0,
+          "ShapeInvalid": 0,
+          "ParseFailure": 0,
+          "ProviderFailure": 1,
+          "Skipped": 0,
+          "lost": 0,
+          "lostOf": "0/207",
+          "lostRate": 0
+        },
+        "quality": {
+          "n": 208,
+          "pass": 196,
+          "fail": 1,
+          "review": 10,
+          "lost": 0,
+          "providerFailure": 1,
+          "passRate": 0.9469
+        }
+      },
+      "RS!": {
+        "status": {
+          "n": 208,
+          "Valid": 208,
+          "Invalid": 0,
+          "ShapeInvalid": 0,
+          "ParseFailure": 0,
+          "ProviderFailure": 0,
+          "Skipped": 0,
+          "lost": 0,
+          "lostOf": "0/208",
+          "lostRate": 0
+        },
+        "quality": {
+          "n": 208,
+          "pass": 192,
+          "fail": 1,
+          "review": 15,
+          "lost": 0,
+          "providerFailure": 0,
+          "passRate": 0.9231
+        }
+      },
+      "RO": {
+        "status": {
+          "n": 208,
+          "Valid": 207,
+          "Invalid": 0,
+          "ShapeInvalid": 0,
+          "ParseFailure": 0,
+          "ProviderFailure": 1,
+          "Skipped": 0,
+          "lost": 0,
+          "lostOf": "0/207",
+          "lostRate": 0
+        },
+        "quality": {
+          "n": 208,
+          "pass": 189,
+          "fail": 0,
+          "review": 18,
+          "lost": 0,
+          "providerFailure": 1,
+          "passRate": 0.913
+        }
+      },
+      "RO!": {
+        "status": {
+          "n": 208,
+          "Valid": 208,
+          "Invalid": 0,
+          "ShapeInvalid": 0,
+          "ParseFailure": 0,
+          "ProviderFailure": 0,
+          "Skipped": 0,
+          "lost": 0,
+          "lostOf": "0/208",
+          "lostRate": 0
+        },
+        "quality": {
+          "n": 208,
+          "pass": 191,
+          "fail": 0,
+          "review": 17,
+          "lost": 0,
+          "providerFailure": 0,
+          "passRate": 0.9183
+        }
+      }
+    },
+    "passVsT": {
+      "J4": {
+        "diffRate": 0.0048,
+        "ci95": [
+          -0.0529,
+          0.0673
+        ],
+        "pBelowZero": 0.4255
+      },
+      "RS": {
+        "diffRate": 0.0767,
+        "ci95": [
+          0.0086,
+          0.1538
+        ],
+        "pBelowZero": 0.0149
+      },
+      "RS!": {
+        "diffRate": 0.0529,
+        "ci95": [
+          -0.0096,
+          0.125
+        ],
+        "pBelowZero": 0.0415
+      },
+      "RO": {
+        "diffRate": 0.0429,
+        "ci95": [
+          -0.0144,
+          0.1058
+        ],
+        "pBelowZero": 0.0798
+      },
+      "RO!": {
+        "diffRate": 0.0481,
+        "ci95": [
+          -0.0144,
+          0.1202
+        ],
+        "pBelowZero": 0.0622
+      }
+    },
+    "failVsT": {
+      "J4": {
+        "diffRate": -0.0192,
+        "ci95": [
+          -0.0769,
+          0.0288
+        ],
+        "pBelowZero": 0.7091
+      },
+      "RS": {
+        "diffRate": -0.0288,
+        "ci95": [
+          -0.0817,
+          0.0097
+        ],
+        "pBelowZero": 0.8552
+      },
+      "RS!": {
+        "diffRate": -0.0288,
+        "ci95": [
+          -0.0817,
+          0.0096
+        ],
+        "pBelowZero": 0.8512
+      },
+      "RO": {
+        "diffRate": -0.0337,
+        "ci95": [
+          -0.0865,
+          0
+        ],
+        "pBelowZero": 0.873
+      },
+      "RO!": {
+        "diffRate": -0.0337,
+        "ci95": [
+          -0.0865,
+          0
+        ],
+        "pBelowZero": 0.8654
+      }
+    },
+    "knownBadVsT": {
+      "J4": {
+        "diffRate": -0.0288,
+        "ci95": [
+          -0.0865,
+          0.024
+        ],
+        "pBelowZero": 0.8277
+      },
+      "RS": {
+        "diffRate": -0.0384,
+        "ci95": [
+          -0.0961,
+          0
+        ],
+        "pBelowZero": 0.9537
+      },
+      "RS!": {
+        "diffRate": -0.0385,
+        "ci95": [
+          -0.0913,
+          0.0048
+        ],
+        "pBelowZero": 0.9449
+      },
+      "RO": {
+        "diffRate": -0.0433,
+        "ci95": [
+          -0.0962,
+          -0.0048
+        ],
+        "pBelowZero": 0.9816
+      },
+      "RO!": {
+        "diffRate": -0.0433,
+        "ci95": [
+          -0.0962,
+          -0.0048
+        ],
+        "pBelowZero": 0.985
+      }
+    },
+    "passVsTWithoutFreshCompare": {
+      "J4": {
+        "diffRate": 0.0049,
+        "ci95": [
+          -0.0539,
+          0.0686
+        ],
+        "pBelowZero": 0.4152
+      },
+      "RS": {
+        "diffRate": 0.0586,
+        "ci95": [
+          -0.0049,
+          0.1275
+        ],
+        "pBelowZero": 0.0349
+      },
+      "RS!": {
+        "diffRate": 0.0343,
+        "ci95": [
+          -0.0196,
+          0.0931
+        ],
+        "pBelowZero": 0.0993
+      },
+      "RO": {
+        "diffRate": 0.0438,
+        "ci95": [
+          -0.015,
+          0.1078
+        ],
+        "pBelowZero": 0.0796
+      },
+      "RO!": {
+        "diffRate": 0.049,
+        "ci95": [
+          -0.0147,
+          0.1176
+        ],
+        "pBelowZero": 0.0633
+      }
+    },
+    "passPairs": {
+      "RS!_vs_RS": {
+        "diffRate": -0.0238,
+        "ci95": [
+          -0.0622,
+          0.0049
+        ],
+        "pBelowZero": 0.9139
+      },
+      "RO!_vs_RO": {
+        "diffRate": 0.0052,
+        "ci95": [
+          -0.0288,
+          0.0446
+        ],
+        "pBelowZero": 0.3624
+      },
+      "RO_vs_RS": {
+        "diffRate": -0.0338,
+        "ci95": [
+          -0.0913,
+          0.01
+        ],
+        "pBelowZero": 0.9083
+      },
+      "RO_vs_J4": {
+        "diffRate": 0.038,
+        "ci95": [
+          -0.0144,
+          0.0956
+        ],
+        "pBelowZero": 0.0735
+      }
+    },
+    "noiseT_halfSplit_pass": {
+      "absDiffRateP50": 0.0288,
+      "absDiffRateP90": 0.0481
+    },
+    "flipsVsT": {
+      "J4": {
+        "gainedFailOrLost": [
+          "fresh-careful"
+        ],
+        "lostFailOrLost": [
+          "lock-door",
+          "become-longer",
+          "fresh-fragile",
+          "fresh-rescue"
+        ],
+        "casesWithPassCountChange": 9,
+        "passCountNet": 1
+      },
+      "RS": {
+        "gainedFailOrLost": [],
+        "lostFailOrLost": [
+          "lock-door",
+          "become-longer",
+          "fresh-rescue"
+        ],
+        "casesWithPassCountChange": 12,
+        "passCountNet": 15
+      },
+      "RS!": {
+        "gainedFailOrLost": [
+          "fresh-careful"
+        ],
+        "lostFailOrLost": [
+          "lock-door",
+          "become-longer",
+          "fresh-fragile",
+          "fresh-rescue"
+        ],
+        "casesWithPassCountChange": 12,
+        "passCountNet": 11
+      },
+      "RO": {
+        "gainedFailOrLost": [],
+        "lostFailOrLost": [
+          "lock-door",
+          "become-longer",
+          "fresh-fragile",
+          "fresh-rescue"
+        ],
+        "casesWithPassCountChange": 12,
+        "passCountNet": 8
+      },
+      "RO!": {
+        "gainedFailOrLost": [],
+        "lostFailOrLost": [
+          "lock-door",
+          "become-longer",
+          "fresh-fragile",
+          "fresh-rescue"
+        ],
+        "casesWithPassCountChange": 12,
+        "passCountNet": 10
+      }
+    },
+    "fixedSplitT": {
+      "T01": {
+        "n": 104,
+        "pass": 92,
+        "fail": 3,
+        "review": 9,
+        "lost": 0,
+        "providerFailure": 0,
+        "passRate": 0.8846
+      },
+      "T23": {
+        "n": 104,
+        "pass": 89,
+        "fail": 4,
+        "review": 9,
+        "lost": 2,
+        "providerFailure": 0,
+        "passRate": 0.8558
+      }
+    },
+    "agreement": {
+      "withinArm": {
+        "T": {
+          "pairs": 306,
+          "rate": 0.817
+        },
+        "J4": {
+          "pairs": 312,
+          "rate": 0.881
+        },
+        "RS": {
+          "pairs": 309,
+          "rate": 0.867
+        },
+        "RS!": {
+          "pairs": 312,
+          "rate": 0.856
+        },
+        "RO": {
+          "pairs": 309,
+          "rate": 0.89
+        },
+        "RO!": {
+          "pairs": 312,
+          "rate": 0.897
+        }
+      },
+      "withT": {
+        "J4": {
+          "pairs": 824,
+          "rate": 0.766
+        },
+        "RS": {
+          "pairs": 820,
+          "rate": 0.724
+        },
+        "RS!": {
+          "pairs": 824,
+          "rate": 0.734
+        },
+        "RO": {
+          "pairs": 820,
+          "rate": 0.773
+        },
+        "RO!": {
+          "pairs": 824,
+          "rate": 0.789
+        }
+      }
+    }
+  },
+  "q2": {
+    "inputs": 22,
+    "perArm": {
+      "T": {
+        "n": 220,
+        "Valid": 165,
+        "Invalid": 55,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 55,
+        "lostOf": "55/220",
+        "lostRate": 0.25
+      },
+      "J4": {
+        "n": 220,
+        "Valid": 200,
+        "Invalid": 19,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 1,
+        "Skipped": 0,
+        "lost": 19,
+        "lostOf": "19/219",
+        "lostRate": 0.0868
+      },
+      "RS": {
+        "n": 220,
+        "Valid": 205,
+        "Invalid": 15,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 15,
+        "lostOf": "15/220",
+        "lostRate": 0.0682
+      },
+      "RS!": {
+        "n": 220,
+        "Valid": 202,
+        "Invalid": 18,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 18,
+        "lostOf": "18/220",
+        "lostRate": 0.0818
+      },
+      "RO": {
+        "n": 220,
+        "Valid": 201,
+        "Invalid": 19,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 19,
+        "lostOf": "19/220",
+        "lostRate": 0.0864
+      },
+      "RO!": {
+        "n": 220,
+        "Valid": 201,
+        "Invalid": 18,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 1,
+        "Skipped": 0,
+        "lost": 18,
+        "lostOf": "18/219",
+        "lostRate": 0.0822
+      }
+    },
+    "baselineFailuresOnly": {
+      "T": {
+        "n": 50,
+        "Valid": 25,
+        "Invalid": 25,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 25,
+        "lostOf": "25/50",
+        "lostRate": 0.5
+      },
+      "J4": {
+        "n": 50,
+        "Valid": 50,
+        "Invalid": 0,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 0,
+        "lostOf": "0/50",
+        "lostRate": 0
+      },
+      "RS": {
+        "n": 50,
+        "Valid": 50,
+        "Invalid": 0,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 0,
+        "lostOf": "0/50",
+        "lostRate": 0
+      },
+      "RS!": {
+        "n": 50,
+        "Valid": 49,
+        "Invalid": 1,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 1,
+        "lostOf": "1/50",
+        "lostRate": 0.02
+      },
+      "RO": {
+        "n": 50,
+        "Valid": 50,
+        "Invalid": 0,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 0,
+        "lostOf": "0/50",
+        "lostRate": 0
+      },
+      "RO!": {
+        "n": 50,
+        "Valid": 50,
+        "Invalid": 0,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 0,
+        "lostOf": "0/50",
+        "lostRate": 0
+      }
+    },
+    "lostVsT": {
+      "J4": {
+        "diffRate": -0.1632,
+        "ci95": [
+          -0.2814,
+          -0.0674
+        ],
+        "pBelowZero": 1
+      },
+      "RS": {
+        "diffRate": -0.1818,
+        "ci95": [
+          -0.3045,
+          -0.0818
+        ],
+        "pBelowZero": 1
+      },
+      "RS!": {
+        "diffRate": -0.1682,
+        "ci95": [
+          -0.2818,
+          -0.0727
+        ],
+        "pBelowZero": 1
+      },
+      "RO": {
+        "diffRate": -0.1636,
+        "ci95": [
+          -0.2818,
+          -0.0682
+        ],
+        "pBelowZero": 1
+      },
+      "RO!": {
+        "diffRate": -0.1678,
+        "ci95": [
+          -0.2864,
+          -0.0727
+        ],
+        "pBelowZero": 1
+      }
+    },
+    "lostPairs": {
+      "RS!_vs_RS": {
+        "diffRate": 0.0136,
+        "ci95": [
+          0,
+          0.0364
+        ],
+        "pBelowZero": 0
+      },
+      "RO!_vs_RO": {
+        "diffRate": -0.0042,
+        "ci95": [
+          -0.0136,
+          0.0008
+        ],
+        "pBelowZero": 0.6338
+      },
+      "RO_vs_RS": {
+        "diffRate": 0.0182,
+        "ci95": [
+          0,
+          0.0545
+        ],
+        "pBelowZero": 0
+      },
+      "RO_vs_J4": {
+        "diffRate": -0.0004,
+        "ci95": [
+          -0.0017,
+          0
+        ],
+        "pBelowZero": 0.5596
+      },
+      "RS_vs_J4": {
+        "diffRate": -0.0186,
+        "ci95": [
+          -0.0561,
+          0
+        ],
+        "pBelowZero": 0.7929
+      }
+    },
+    "noiseT_halfSplit_lost": {
+      "absDiffRateP50": 0.0273,
+      "absDiffRateP90": 0.0636
+    },
+    "idealMatch": {
+      "T": "18/94",
+      "J4": "25/99",
+      "RS": "24/100",
+      "RS!": "27/100",
+      "RO": "25/100",
+      "RO!": "28/99"
+    },
+    "perInput": [
+      {
+        "caseId": "baseline-fail-ausweg#6",
+        "group": "NOUN",
+        "ideal": null,
+        "lemma": "Ausweg",
+        "T": {
+          "lost": "1/10",
+          "lostRaw": [
+            "Invalid:\"🚪escape\\n\""
+          ],
+          "valid": "🚪🏃‍♂️x5 🚪🏃x2 🚪🏃‍♂️❌x1 🚪🛣️x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚪➡️x8 🚪🏃x2"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚪🏃x3 🚪↗️x2 🚪↩️x2 🚪🚫x1 🚪x1 🚪➡️x1"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚪🏃x3 🚪➡️x3 🚪↗️x2 🚪🚫x2"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚪➡️x8 🚪🏃x2"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚪↗️x8 🚪➡️x2"
+        }
+      },
+      {
+        "caseId": "baseline-fail-typo#4",
+        "group": "ADV",
+        "ideal": null,
+        "lemma": "leider",
+        "T": {
+          "lost": "9/10",
+          "lostRaw": [
+            "Invalid:\"😔 unfortunately\"",
+            "Invalid:\"😔 alas\"",
+            "Invalid:\"😔 alas\"",
+            "Invalid:\"😔 unfortunately\"",
+            "Invalid:\"😔 unfortunately\"",
+            "Invalid:\"😔 unfortunately\"",
+            "Invalid:\"😔 unfortunately\"",
+            "Invalid:\"😔 unfortunately\"",
+            "Invalid:\"😔 unfortunately\""
+          ],
+          "valid": "😔x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😔x10"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😔x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😔x10"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😔x10"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😔x10"
+        }
+      },
+      {
+        "caseId": "baseline-fail-relativ#5",
+        "group": "PRON-Rel",
+        "ideal": null,
+        "lemma": "die",
+        "T": {
+          "lost": "2/10",
+          "lostRaw": [
+            "Invalid:\"👩‍🦰 rel\\n\"",
+            "Invalid:\"👩‍🦰 relative clause marker\""
+          ],
+          "valid": "👩‍🦰x8"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👩‍🦰x9 👩‍🦰↩️x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👩‍🦰x10"
+        },
+        "RS!": {
+          "lost": "1/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":\\\"👩‍🗨️\\\"}\""
+          ],
+          "valid": "👩‍🦰x8 👩‍🦰➡️⏳x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👩‍🦰x9 👩x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👩‍🦰x9 👩‍🦰↩️x1"
+        }
+      },
+      {
+        "caseId": "baseline-fail-genitiv#4",
+        "group": "ADP",
+        "ideal": null,
+        "lemma": "des",
+        "T": {
+          "lost": "9/10",
+          "lostRaw": [
+            "Invalid:\"🔗 принадлежност\\n\"",
+            "Invalid:\"🔗 принадлеж принадлеж belongs?\"",
+            "Invalid:\"🔗 принадлежность\"",
+            "Invalid:\"🔗 собственности\"",
+            "Invalid:\"🔗 принадлежность\"",
+            "Invalid:\"🔗The developer requires only one to four emoji graphemes directly as text. Need depict genitive article/possessive relation \\\"of the\\\". Link? 🔗 perhaps. But \\\"des\\\" is inflected definite article/genitive, relation ownership. Could use 🏠? Incidental houses no. 🔗 is relation. final only emoji.\"",
+            "Invalid:\"🔗 ownership\"",
+            "Invalid:\"🔗 принадлеж?\"",
+            "Invalid:\"🔗 принадлеж.\""
+          ],
+          "valid": "🔗👤x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x9 🏠👤x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x9 🏠👤x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠x4 🔗x2 🏠➡️👤x2 🏠👤x2"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠x3 🔗🏠x2 🏠🔑x1 👤🔑x1 👤🏠x1 🏠👤x1 🏠➡️👤x1"
+        }
+      },
+      {
+        "caseId": "baseline-fail-museum#8",
+        "group": "ADP",
+        "ideal": null,
+        "lemma": "am",
+        "T": {
+          "lost": "4/10",
+          "lostRaw": [
+            "Invalid:\"📅േരള\"",
+            "Invalid:\"📅 Monday\"",
+            "Invalid:\"📅 Monday\"",
+            "Invalid:\"📅 lunes\""
+          ],
+          "valid": "📅x6"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "📅x10"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "📅x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "📅x10"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "📅x10"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "📅x10"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-ueber-connector",
+        "group": "ADP",
+        "ideal": "🔗",
+        "lemma": "über",
+        "T": {
+          "lost": "3/10",
+          "lostRaw": [
+            "Invalid:\"🔑 принадҩцәа\"",
+            "Invalid:\"🛠️ disponponible?\"",
+            "Invalid:\"🔑 наличии\""
+          ],
+          "valid": "🔗x2 🛎️✅x1 🛎️🏊x1 🔑x1 🏨✅x1 🧰x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏨✅x9 🏨➕x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏨✅x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏨✅x10"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏨✅x10"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏨✅x10"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-ueber-topic-unfall",
+        "group": "ADP",
+        "ideal": "💬",
+        "lemma": "über",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "💬🔄x3 💬🔝x3 💬🗣️x3 💬➡️x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "💬🗣️x3 🗣️💬x3 💬x2 💬🔝x1 💬➡️x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🗣️💬x5 💬➡️x4 💬🔄x1"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "💬🔝x3 💬🔄x3 💬➡️x2 🗣️➡️x1 🗣️💬x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "💬x4 💬🔝x3 💬🔄x2 💬🗣️x1"
+        },
+        "RO!": {
+          "lost": "0/9",
+          "lostRaw": [],
+          "valid": "💬x4 🗣️💬x2 💬🔄x1 💬🔝x1 💬🗣️x1"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-mit-means",
+        "group": "ADP",
+        "ideal": "🛠️",
+        "lemma": "mit",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔪➕x5 🔪x3 🔪🤝x2"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔪➕x5 🔪x4 🔪🤝x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔪x7 🔪➕x2 🔪🤝x1"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔪x5 🔪🤝x3 🔪➕x2"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔪➕x5 🔪x4 🔪🤝x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔪x5 🔪➕x5"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-um-clock-time",
+        "group": "ADP",
+        "ideal": "⏰",
+        "lemma": "um",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🕗x6 ⏰x3 ⏰8️⃣x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🕗x7 ⏰x3"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🕗x8 ⏰x2"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🕗x8 ⏰x2"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🕗x7 ⏰x3"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "⏰x6 🕗x4"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-nach-sensory-characteristic",
+        "group": "ADP",
+        "ideal": "👃",
+        "lemma": "nach",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👃💨x7 👃➡️x3"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👃➡️x9 👃💨x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👃➡️x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👃➡️x10"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👃💨x9 👃➡️x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👃💨x7 👃➡️x3"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-vor-cause",
+        "group": "ADP",
+        "ideal": "💥➡️",
+        "lemma": "vor",
+        "T": {
+          "lost": "1/10",
+          "lostRaw": [
+            "Invalid:\"😨 fear\""
+          ],
+          "valid": "😨↩️x6 😨➡️x2 🔗x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😨➡️x8 😨x1 😨↔️x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😨➡️x8 😨x2"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😨➡️x7 😨x2 😨↔️x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😨➡️x9 😨x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "😨➡️x10"
+        }
+      },
+      {
+        "caseId": "reading-de-adp-gegen-approximation",
+        "group": "ADP",
+        "ideal": "🤏",
+        "lemma": "gegen",
+        "T": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"⏰≈8️⃣\"",
+            "Invalid:\"⏰≈\"",
+            "Invalid:\"🕗≈\"",
+            "Invalid:\"⏰≈\"",
+            "Invalid:\"⏰≈\"",
+            "Invalid:\"⏰≈\"",
+            "Invalid:\"🕗≈\"",
+            "Invalid:\"⏰≈\"",
+            "Invalid:\"⏰≈\"",
+            "Invalid:\"🕗≈\""
+          ],
+          "valid": ""
+        },
+        "J4": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\""
+          ],
+          "valid": ""
+        },
+        "RS": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\""
+          ],
+          "valid": ""
+        },
+        "RS!": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"⏰≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🕗≈\\\"}\""
+          ],
+          "valid": ""
+        },
+        "RO": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\""
+          ],
+          "valid": ""
+        },
+        "RO!": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"⏰≈\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🕗≈\\\"}}\""
+          ],
+          "valid": ""
+        }
+      },
+      {
+        "caseId": "e4-adp-ins",
+        "group": "ADP",
+        "ideal": null,
+        "lemma": "ins",
+        "T": {
+          "lost": "2/10",
+          "lostRaw": [
+            "Invalid:\"➡️ in\"",
+            "Invalid:\"➡️♀♀♀♀\""
+          ],
+          "valid": "➡️🎬x5 🎬➡️x3"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "➡️x6 ➡️🏢x3 🎬➡️x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🎬➡️x8 ➡️🎬x2"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🎬➡️x8 ➡️🎬x2"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "➡️x9 🎬➡️x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "➡️x7 🎬➡️x2 ➡️🎬x1"
+        }
+      },
+      {
+        "caseId": "reading-de-lexeme-cconj-entweder-oder",
+        "group": "CCONJ",
+        "ideal": "🔀",
+        "lemma": "entweder … oder",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x7 ☝️↔️x2 ☝️🔀x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔀x6 ↔️❓x2 ↔️x1 ↔️1️⃣2️⃣x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x7 🔀x3"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔀x6 ↔️x4"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x9 🔀x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x8 🔀x2"
+        }
+      },
+      {
+        "caseId": "reading-de-lexeme-cconj-aber-contrast-reuse",
+        "group": "CCONJ",
+        "ideal": "↔️",
+        "lemma": "aber",
+        "T": {
+          "lost": "2/10",
+          "lostRaw": [
+            "Invalid:\"🔄 contrast\"",
+            "Invalid:\"🔄 contrast\""
+          ],
+          "valid": "↔️x4 ⚖️x2 ⚖️↔️x2"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x10"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x10"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x10"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️x10"
+        }
+      },
+      {
+        "caseId": "reading-de-lexeme-sconj-waehrend-adversative",
+        "group": "SCONJ",
+        "ideal": "↔️",
+        "lemma": "während",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "⏳↔️x10"
+        },
+        "J4": {
+          "lost": "0/9",
+          "lostRaw": [],
+          "valid": "↔️⏳x4 ⚖️x3 ⏳↔️x2"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "⚖️x4 ↔️⏳x4 ⚖️⏳x1 ⏳↔️x1"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "↔️⏳x6 ⚖️x4"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "⚖️x4 ↔️⏳x4 ⚖️↔️x2"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "⚖️↔️x4 ↔️⏳x3 ⏳↔️x2 ↔️⏱️x1"
+        }
+      },
+      {
+        "caseId": "e4-sconj-weil",
+        "group": "SCONJ",
+        "ideal": null,
+        "lemma": "weil",
+        "T": {
+          "lost": "10/10",
+          "lostRaw": [
+            "Invalid:\"કારણ કે\"",
+            "Invalid:\"કારણ કે\"",
+            "Invalid:\"🔗કાર\"",
+            "Invalid:\"કારણ કે\"",
+            "Invalid:\"कारણ❓\"",
+            "Invalid:\"কারण: বৃষ্টি হওয়ায় আমি বাড়িতে থাকি.\"",
+            "Invalid:\"કારણ કે\"",
+            "Invalid:\"કારણકે\"",
+            "Invalid:\"કારણ કે\"",
+            "Invalid:\"कारण?\""
+          ],
+          "valid": ""
+        },
+        "J4": {
+          "lost": "9/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗കാര\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कार\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗കാര\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗കാര\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗കാര\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\""
+          ],
+          "valid": "🔗x1"
+        },
+        "RS": {
+          "lost": "5/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗കാരണം\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗কারণ\\\"}\""
+          ],
+          "valid": "🔗x5"
+        },
+        "RS!": {
+          "lost": "7/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\"",
+            "Invalid:\"{\\\"value\\\":\\\"🔗कारण\\\"}\""
+          ],
+          "valid": "🔗x3"
+        },
+        "RO": {
+          "lost": "9/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\""
+          ],
+          "valid": "🔗❓x1"
+        },
+        "RO!": {
+          "lost": "8/10",
+          "lostRaw": [
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\"",
+            "Invalid:\"{\\\"value\\\":{\\\"emoji\\\":\\\"🔗कारण\\\"}}\""
+          ],
+          "valid": "🔗❓x2"
+        }
+      },
+      {
+        "caseId": "e4-sconj-dass",
+        "group": "SCONJ",
+        "ideal": null,
+        "lemma": "dass",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x8 🧩x2"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x10"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x10"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x10"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x10"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x10"
+        }
+      },
+      {
+        "caseId": "reading-de-lexeme-part-nicht-negation-reuse",
+        "group": "PART",
+        "ideal": "🚫",
+        "lemma": "nicht",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚫x9 ❌x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "❌x6 🚫x4"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚫x9 ❌x1"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚫x9 ❌x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚫x7 ❌x3"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🚫x6 ❌x4"
+        }
+      },
+      {
+        "caseId": "e4-part-zu",
+        "group": "PART",
+        "ideal": null,
+        "lemma": "zu",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🔗x5 ▶️x1 ⬇️x1 ➕x1 🌧️⏱️x1 🔜x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "▶️x7 🔜x2 🌧️▶️x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "▶️x8 🔜x2"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "▶️x7 🌧️▶️x2 🔜x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "▶️x9 🔛x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "▶️x7 🔜x2 🔛x1"
+        }
+      },
+      {
+        "caseId": "e4-pron-rel-das",
+        "group": "PRON-Rel",
+        "ideal": null,
+        "lemma": "das",
+        "T": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠👉x5 🏠☝️x2 🏠👈x1 🏠👇x1 🏠↩️x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠👉x5 🔗x3 🏠x1 🏠👈x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠👉x8 🏠↩️x2"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠👉x8 👉🏠x1 🏠➡️x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠x8 🏠👉x2"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "🏠x9 🏠👉x1"
+        }
+      },
+      {
+        "caseId": "e4-pron-rel-dem",
+        "group": "PRON-Rel",
+        "ideal": null,
+        "lemma": "dem",
+        "T": {
+          "lost": "2/10",
+          "lostRaw": [
+            "Invalid:\"👤⬅️ મદદ\"",
+            "Invalid:\"👤↔️ મદદ\""
+          ],
+          "valid": "👤🤝x2 👤🔗x2 👶❓x1 👦🤝x1 👤➡️🤝x1 👤🤲x1"
+        },
+        "J4": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👤➡️🤝x4 👦🤝x2 👤➡️x2 👦➡️🤝x1 👤↩️x1"
+        },
+        "RS": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👤➡️x4 👤🎯x3 👤🔗x1 👤↔️x1 👤➡️🤝x1"
+        },
+        "RS!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👤➡️🤝x6 👦➡️🤝x1 👤🤝x1 👤➡️🤲x1 👤↩️x1"
+        },
+        "RO": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👤🤝x4 👤↔️x3 👤↩️x1 👤➡️🤝x1 👤➡️x1"
+        },
+        "RO!": {
+          "lost": "0/10",
+          "lostRaw": [],
+          "valid": "👤➡️x4 👤🤝x3 👤↔️x2 👤🎯x1"
+        }
+      }
+    ]
+  },
+  "risky": null,
+  "latency": {
+    "all": {
+      "T": {
+        "n": 428,
+        "uncached": 0,
+        "p50": 1168,
+        "p90": 1771,
+        "mean": 1262,
+        "warmP50": 1168,
+        "warmP90": 1771,
+        "providerP50": 915,
+        "providerP90": 1490,
+        "outputTokensMean": 7.74,
+        "outputTokensP50": 7,
+        "inputTokensMean": 1952.1,
+        "costPerCallUsd": 0.0001075,
+        "costPerWarmCallUsd": 0.0001075
+      },
+      "J4": {
+        "n": 427,
+        "uncached": 0,
+        "p50": 1014,
+        "p90": 1642,
+        "mean": 1164,
+        "warmP50": 1014,
+        "warmP90": 1642,
+        "providerP50": 750,
+        "providerP90": 1342,
+        "outputTokensMean": 17.23,
+        "outputTokensP50": 17,
+        "inputTokensMean": 1997.1,
+        "costPerCallUsd": 0.0001321,
+        "costPerWarmCallUsd": 0.0001321
+      },
+      "RS": {
+        "n": 427,
+        "uncached": 0,
+        "p50": 1205,
+        "p90": 1648,
+        "mean": 1321,
+        "warmP50": 1205,
+        "warmP90": 1648,
+        "providerP50": 949,
+        "providerP90": 1388,
+        "outputTokensMean": 15.14,
+        "outputTokensP50": 15,
+        "inputTokensMean": 1998.1,
+        "costPerCallUsd": 0.0001271,
+        "costPerWarmCallUsd": 0.0001271
+      },
+      "RS!": {
+        "n": 428,
+        "uncached": 0,
+        "p50": 1273,
+        "p90": 1783,
+        "mean": 1347,
+        "warmP50": 1273,
+        "warmP90": 1783,
+        "providerP50": 1018,
+        "providerP90": 1508,
+        "outputTokensMean": 15.19,
+        "outputTokensP50": 15,
+        "inputTokensMean": 1998.1,
+        "costPerCallUsd": 0.0001272,
+        "costPerWarmCallUsd": 0.0001272
+      },
+      "RO": {
+        "n": 427,
+        "uncached": 0,
+        "p50": 1100,
+        "p90": 1553,
+        "mean": 1210,
+        "warmP50": 1100,
+        "warmP90": 1553,
+        "providerP50": 826,
+        "providerP90": 1305,
+        "outputTokensMean": 17.27,
+        "outputTokensP50": 17,
+        "inputTokensMean": 2058.1,
+        "costPerCallUsd": 0.0001346,
+        "costPerWarmCallUsd": 0.0001346
+      },
+      "RO!": {
+        "n": 427,
+        "uncached": 0,
+        "p50": 1086,
+        "p90": 1700,
+        "mean": 1231,
+        "warmP50": 1086,
+        "warmP90": 1700,
+        "providerP50": 816,
+        "providerP90": 1419,
+        "outputTokensMean": 17.33,
+        "outputTokensP50": 17,
+        "inputTokensMean": 2058.1,
+        "costPerCallUsd": 0.0001347,
+        "costPerWarmCallUsd": 0.0001347
+      }
+    },
+    "heldOut": {
+      "T": {
+        "n": 208,
+        "uncached": 0,
+        "p50": 1151,
+        "p90": 1707,
+        "mean": 1212,
+        "warmP50": 1151,
+        "warmP90": 1707,
+        "providerP50": 906,
+        "providerP90": 1346,
+        "outputTokensMean": 7.23,
+        "outputTokensP50": 7,
+        "inputTokensMean": 1952.2,
+        "costPerCallUsd": 0.0001063,
+        "costPerWarmCallUsd": 0.0001063
+      },
+      "J4": {
+        "n": 208,
+        "uncached": 0,
+        "p50": 988,
+        "p90": 1700,
+        "mean": 1151,
+        "warmP50": 988,
+        "warmP90": 1700,
+        "providerP50": 739,
+        "providerP90": 1375,
+        "outputTokensMean": 17.07,
+        "outputTokensP50": 17,
+        "inputTokensMean": 1997.2,
+        "costPerCallUsd": 0.0001317,
+        "costPerWarmCallUsd": 0.0001317
+      },
+      "RS": {
+        "n": 207,
+        "uncached": 0,
+        "p50": 1228,
+        "p90": 1633,
+        "mean": 1350,
+        "warmP50": 1228,
+        "warmP90": 1633,
+        "providerP50": 976,
+        "providerP90": 1380,
+        "outputTokensMean": 14.97,
+        "outputTokensP50": 15,
+        "inputTokensMean": 1998.1,
+        "costPerCallUsd": 0.0001267,
+        "costPerWarmCallUsd": 0.0001267
+      },
+      "RS!": {
+        "n": 208,
+        "uncached": 0,
+        "p50": 1261,
+        "p90": 1695,
+        "mean": 1312,
+        "warmP50": 1261,
+        "warmP90": 1695,
+        "providerP50": 1014,
+        "providerP90": 1372,
+        "outputTokensMean": 14.96,
+        "outputTokensP50": 15,
+        "inputTokensMean": 1998.2,
+        "costPerCallUsd": 0.0001267,
+        "costPerWarmCallUsd": 0.0001267
+      },
+      "RO": {
+        "n": 207,
+        "uncached": 0,
+        "p50": 1110,
+        "p90": 1625,
+        "mean": 1261,
+        "warmP50": 1110,
+        "warmP90": 1625,
+        "providerP50": 852,
+        "providerP90": 1326,
+        "outputTokensMean": 17.19,
+        "outputTokensP50": 17,
+        "inputTokensMean": 2058.2,
+        "costPerCallUsd": 0.0001344,
+        "costPerWarmCallUsd": 0.0001344
+      },
+      "RO!": {
+        "n": 208,
+        "uncached": 0,
+        "p50": 1075,
+        "p90": 1756,
+        "mean": 1251,
+        "warmP50": 1075,
+        "warmP90": 1756,
+        "providerP50": 815,
+        "providerP90": 1424,
+        "outputTokensMean": 17.21,
+        "outputTokensP50": 17,
+        "inputTokensMean": 2058.2,
+        "costPerCallUsd": 0.0001345,
+        "costPerWarmCallUsd": 0.0001345
+      }
+    },
+    "q2": {
+      "T": {
+        "n": 220,
+        "uncached": 0,
+        "p50": 1203,
+        "p90": 1834,
+        "mean": 1308,
+        "warmP50": 1203,
+        "warmP90": 1834,
+        "providerP50": 938,
+        "providerP90": 1573,
+        "outputTokensMean": 8.23,
+        "outputTokensP50": 8,
+        "inputTokensMean": 1952,
+        "costPerCallUsd": 0.0001086,
+        "costPerWarmCallUsd": 0.0001086
+      },
+      "J4": {
+        "n": 219,
+        "uncached": 0,
+        "p50": 1039,
+        "p90": 1627,
+        "mean": 1177,
+        "warmP50": 1039,
+        "warmP90": 1627,
+        "providerP50": 782,
+        "providerP90": 1339,
+        "outputTokensMean": 17.39,
+        "outputTokensP50": 17,
+        "inputTokensMean": 1997,
+        "costPerCallUsd": 0.0001324,
+        "costPerWarmCallUsd": 0.0001324
+      },
+      "RS": {
+        "n": 220,
+        "uncached": 0,
+        "p50": 1197,
+        "p90": 1675,
+        "mean": 1294,
+        "warmP50": 1197,
+        "warmP90": 1675,
+        "providerP50": 929,
+        "providerP90": 1396,
+        "outputTokensMean": 15.3,
+        "outputTokensP50": 15,
+        "inputTokensMean": 1998,
+        "costPerCallUsd": 0.0001274,
+        "costPerWarmCallUsd": 0.0001274
+      },
+      "RS!": {
+        "n": 220,
+        "uncached": 0,
+        "p50": 1284,
+        "p90": 1887,
+        "mean": 1380,
+        "warmP50": 1284,
+        "warmP90": 1887,
+        "providerP50": 1026,
+        "providerP90": 1538,
+        "outputTokensMean": 15.41,
+        "outputTokensP50": 15,
+        "inputTokensMean": 1998,
+        "costPerCallUsd": 0.0001277,
+        "costPerWarmCallUsd": 0.0001277
+      },
+      "RO": {
+        "n": 220,
+        "uncached": 0,
+        "p50": 1072,
+        "p90": 1513,
+        "mean": 1162,
+        "warmP50": 1072,
+        "warmP90": 1513,
+        "providerP50": 811,
+        "providerP90": 1216,
+        "outputTokensMean": 17.34,
+        "outputTokensP50": 17,
+        "inputTokensMean": 2058,
+        "costPerCallUsd": 0.0001347,
+        "costPerWarmCallUsd": 0.0001347
+      },
+      "RO!": {
+        "n": 219,
+        "uncached": 0,
+        "p50": 1103,
+        "p90": 1677,
+        "mean": 1213,
+        "warmP50": 1103,
+        "warmP90": 1677,
+        "providerP50": 821,
+        "providerP90": 1406,
+        "outputTokensMean": 17.44,
+        "outputTokensP50": 17,
+        "inputTokensMean": 2058,
+        "costPerCallUsd": 0.000135,
+        "costPerWarmCallUsd": 0.000135
+      }
+    },
+    "risky": null,
+    "pairedVsT": {
+      "J4": {
+        "ref": "T",
+        "pairs": 427,
+        "diffP50": -118,
+        "diffP50ci95": [
+          -155,
+          -69
+        ],
+        "diffMean": -97,
+        "diffMeanCi95": [
+          -174,
+          -16
+        ],
+        "diffP10": -743,
+        "diffP90": 537,
+        "armFaster": 257
+      },
+      "RS": {
+        "ref": "T",
+        "pairs": 427,
+        "diffP50": 32,
+        "diffP50ci95": [
+          -22,
+          88
+        ],
+        "diffMean": 59,
+        "diffMeanCi95": [
+          -25,
+          146
+        ],
+        "diffP10": -652,
+        "diffP90": 625,
+        "armFaster": 197
+      },
+      "RS!": {
+        "ref": "T",
+        "pairs": 428,
+        "diffP50": 76,
+        "diffP50ci95": [
+          5,
+          137
+        ],
+        "diffMean": 86,
+        "diffMeanCi95": [
+          10,
+          153
+        ],
+        "diffP10": -583,
+        "diffP90": 719,
+        "armFaster": 193
+      },
+      "RO": {
+        "ref": "T",
+        "pairs": 427,
+        "diffP50": -49,
+        "diffP50ci95": [
+          -97,
+          17
+        ],
+        "diffMean": -52,
+        "diffMeanCi95": [
+          -128,
+          21
+        ],
+        "diffP10": -659,
+        "diffP90": 567,
+        "armFaster": 227
+      },
+      "RO!": {
+        "ref": "T",
+        "pairs": 427,
+        "diffP50": -31,
+        "diffP50ci95": [
+          -83,
+          15
+        ],
+        "diffMean": -30,
+        "diffMeanCi95": [
+          -108,
+          50
+        ],
+        "diffP10": -777,
+        "diffP90": 590,
+        "armFaster": 225
+      }
+    },
+    "pairedOther": {
+      "RS!_vs_RS": {
+        "ref": "RS",
+        "pairs": 427,
+        "diffP50": 38,
+        "diffP50ci95": [
+          -31,
+          100
+        ],
+        "diffMean": 26,
+        "diffMeanCi95": [
+          -68,
+          107
+        ],
+        "diffP10": -579,
+        "diffP90": 643,
+        "armFaster": 199
+      },
+      "RO!_vs_RO": {
+        "ref": "RO",
+        "pairs": 426,
+        "diffP50": -16,
+        "diffP50ci95": [
+          -65,
+          30
+        ],
+        "diffMean": 22,
+        "diffMeanCi95": [
+          -51,
+          92
+        ],
+        "diffP10": -574,
+        "diffP90": 622,
+        "armFaster": 217
+      },
+      "RO_vs_RS": {
+        "ref": "RS",
+        "pairs": 426,
+        "diffP50": -73,
+        "diffP50ci95": [
+          -111,
+          -22
+        ],
+        "diffMean": -110,
+        "diffMeanCi95": [
+          -202,
+          -30
+        ],
+        "diffP10": -661,
+        "diffP90": 416,
+        "armFaster": 246
+      },
+      "RO_vs_J4": {
+        "ref": "J4",
+        "pairs": 426,
+        "diffP50": 65,
+        "diffP50ci95": [
+          20,
+          119
+        ],
+        "diffMean": 46,
+        "diffMeanCi95": [
+          -38,
+          130
+        ],
+        "diffP10": -589,
+        "diffP90": 612,
+        "armFaster": 183
+      }
+    }
+  },
+  "nonContentFailures": [
+    "heldOut reading-generation-sharp-knife RO#0 ProviderFailure  http 503 null",
+    "q2 reading-de-lexeme-sconj-waehrend-adversative J4#1 ProviderFailure  http 503 null",
+    "heldOut reading-generation-sour-mood RS#1 ProviderFailure  http 503 null",
+    "q2 reading-de-adp-ueber-topic-unfall RO!#5 ProviderFailure  http null null"
+  ],
+  "heldOutPerCase": [
+    {
+      "caseId": "bank-seat",
+      "T": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "J4": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RS": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RS!": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RO": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RO!": "4p/0f/0r/0x 🪑 🪑 🪑 🪑"
+    },
+    {
+      "caseId": "maus-computer",
+      "T": "4p/0f/0r/0x 🖱️ 🖱️ 🖱️ 🖱️",
+      "J4": "4p/0f/0r/0x 🖱️ 🖱️ 🖱️ 🖱️",
+      "RS": "4p/0f/0r/0x 🖱️ 🖱️ 🖱️ 🖱️",
+      "RS!": "4p/0f/0r/0x 🖱️ 🖱️ 🖱️ 🖱️",
+      "RO": "4p/0f/0r/0x 🖱️ 🖱️ 🖱️ 🖱️",
+      "RO!": "4p/0f/0r/0x 🖱️ 🖱️ 🖱️ 🖱️"
+    },
+    {
+      "caseId": "strenuous-hike",
+      "T": "4p/0f/0r/0x 🥵💪 🥵💪 😓💪 🥵💪",
+      "J4": "4p/0f/0r/0x 🥵💪 🥵💪 🥵💪 🥵💪",
+      "RS": "4p/0f/0r/0x 😓💪 😓💪 😓💪 😓💪",
+      "RS!": "3p/0f/1r/0x 😮‍💨💪 💪😓 🥵💪 🥵💪",
+      "RO": "4p/0f/0r/0x 🥵💪 🥵💪 🥵💪 🥵💪",
+      "RO!": "4p/0f/0r/0x 🥵💪 😓💪 🥵💪 🥵💪"
+    },
+    {
+      "caseId": "strenuous-admin",
+      "T": "2p/0f/2r/0x 😩💪 😓💪 😓💪 🥵💪",
+      "J4": "2p/0f/2r/0x 😩💪 😓💪 😩💪 😓💪",
+      "RS": "3p/0f/1r/0x 😓💪 😓 🥵💪 😓",
+      "RS!": "3p/0f/1r/0x 🥵💪 😓💪 😓💪 😓",
+      "RO": "3p/0f/1r/0x 😓💪 😓💪 😓💪 😩💪",
+      "RO!": "3p/0f/1r/0x 😓💪 😩💪 😓💪 😓💪"
+    },
+    {
+      "caseId": "strong-person",
+      "T": "4p/0f/0r/0x 💪 💪 💪 💪",
+      "J4": "4p/0f/0r/0x 💪 💪 💪 💪",
+      "RS": "4p/0f/0r/0x 💪 💪 💪 💪",
+      "RS!": "4p/0f/0r/0x 💪 💪 💪 💪",
+      "RO": "4p/0f/0r/0x 💪 💪 💪 💪",
+      "RO!": "4p/0f/0r/0x 💪 💪 💪 💪"
+    },
+    {
+      "caseId": "tired-after-work",
+      "T": "4p/0f/0r/0x 🥱 🥱 🥱 🥱",
+      "J4": "4p/0f/0r/0x 🥱 😴 😴 😴",
+      "RS": "4p/0f/0r/0x 😴 😴 😴 🥱",
+      "RS!": "4p/0f/0r/0x 😴 🥱 😴 😴",
+      "RO": "4p/0f/0r/0x 🥱 😴 😴 😴",
+      "RO!": "4p/0f/0r/0x 🥱 😴 🥱 😴"
+    },
+    {
+      "caseId": "boring-talk",
+      "T": "4p/0f/0r/0x 🥱 🥱 🥱 🥱",
+      "J4": "4p/0f/0r/0x 🥱 🥱 🥱 🥱",
+      "RS": "4p/0f/0r/0x 🥱 🥱 🥱 🥱",
+      "RS!": "4p/0f/0r/0x 🥱 🥱 🥱 🥱",
+      "RO": "4p/0f/0r/0x 🥱 🥱 🥱 🥱",
+      "RO!": "4p/0f/0r/0x 🥱 🥱 🥱 🥱"
+    },
+    {
+      "caseId": "exciting-story",
+      "T": "4p/0f/0r/0x 🤩 🤩 🤩 🤩",
+      "J4": "4p/0f/0r/0x 🤩 🤩 🤩 🤩",
+      "RS": "4p/0f/0r/0x 🤩 🤩 🤩 🤩",
+      "RS!": "4p/0f/0r/0x 🤩 🤩 🤩 🤩",
+      "RO": "4p/0f/0r/0x 🤩 🤩 🤩 🤩",
+      "RO!": "4p/0f/0r/0x 🤩 🤩 🤩 🤩"
+    },
+    {
+      "caseId": "difficult-problem",
+      "T": "1p/0f/3r/0x 🤯 🤯🧩 😣🧩 😓🧩",
+      "J4": "1p/0f/3r/0x 🤔💪 🤯 😓🧩 🤔💪",
+      "RS": "4p/0f/0r/0x 🧩🤔 🤔 😓🧩 😓🧩",
+      "RS!": "1p/0f/3r/0x 🤔💪 🤔💪 🤔 🤔💪",
+      "RO": "2p/0f/2r/0x 😣🧩 😓🧩 😓🧩 🤔💪",
+      "RO!": "3p/0f/1r/0x 😣🧩 😓🧩 😓🧩 😓🧩"
+    },
+    {
+      "caseId": "easy-problem",
+      "T": "4p/0f/0r/0x 😌👌 😌👌 😌👌 😌👌",
+      "J4": "4p/0f/0r/0x 😌👌 😌👌 😌👌 😌👌",
+      "RS": "4p/0f/0r/0x 😌👌 😌👌 😌👌 😌👌",
+      "RS!": "4p/0f/0r/0x 😌👌 😌👌 😌👌 😌👌",
+      "RO": "4p/0f/0r/0x 😌👌 😌👌 😌👌 😌👌",
+      "RO!": "4p/0f/0r/0x 😌👌 😌👌 😌👌 😌👌"
+    },
+    {
+      "caseId": "light-bag",
+      "T": "4p/0f/0r/0x 🪶 🪶 🪶 🪶",
+      "J4": "4p/0f/0r/0x 🪶 🪶 🪶 🪶",
+      "RS": "4p/0f/0r/0x 🪶 🪶 🪶 🪶",
+      "RS!": "4p/0f/0r/0x 🪶 🪶 🪶 🪶",
+      "RO": "4p/0f/0r/0x 🪶 🪶 🪶 🪶",
+      "RO!": "4p/0f/0r/0x 🪶 🪶 🪶 🪶"
+    },
+    {
+      "caseId": "sour-taste",
+      "T": "3p/0f/1r/0x 🍋 😝🍋 🍋😖 🍋",
+      "J4": "3p/0f/1r/0x 😖🍋 😖 😖🍋 🍋",
+      "RS": "3p/0f/1r/0x 😖🍋 😖 🍋 🍋",
+      "RS!": "3p/0f/1r/0x 🍋 🍋 🍋 😖",
+      "RO": "4p/0f/0r/0x 🍋 🍋 🍋 🍋",
+      "RO!": "4p/0f/0r/0x 🍋 😖🍋 🍋 🍋"
+    },
+    {
+      "caseId": "sour-mood",
+      "T": "4p/0f/0r/0x 😠 😠 😠 😠",
+      "J4": "4p/0f/0r/0x 😠 😠 😠 😠",
+      "RS": "3p/0f/0r/0x 😠 !null 😠 😠",
+      "RS!": "4p/0f/0r/0x 😠 😠 😠 😠",
+      "RO": "4p/0f/0r/0x 😠 😠 😠 😠",
+      "RO!": "4p/0f/0r/0x 😠 😠 😠 😠"
+    },
+    {
+      "caseId": "sharp-knife",
+      "T": "4p/0f/0r/0x 🔪✨ 🔪✨ 🔪✨ 🔪✨",
+      "J4": "4p/0f/0r/0x 🔪 🔪 🔪 🔪",
+      "RS": "4p/0f/0r/0x 🔪 🔪 🔪 🔪✨",
+      "RS!": "4p/0f/0r/0x 🔪✨ 🔪 🔪 🔪",
+      "RO": "3p/0f/0r/0x !null 🔪✨ 🔪 🔪",
+      "RO!": "4p/0f/0r/0x 🔪✨ 🔪 🔪 🔪"
+    },
+    {
+      "caseId": "spicy-soup",
+      "T": "4p/0f/0r/0x 🌶️🔥 🌶️🔥 🌶️🔥 🌶️🔥",
+      "J4": "4p/0f/0r/0x 🌶️🔥 🌶️🔥 🌶️🔥 🌶️🔥",
+      "RS": "4p/0f/0r/0x 🌶️🔥 🌶️🔥 🌶️🔥 🌶️🔥",
+      "RS!": "4p/0f/0r/0x 🌶️🔥 🌶️🔥 🌶️🔥 🌶️🔥",
+      "RO": "4p/0f/0r/0x 🌶️🔥 🌶️🔥 🌶️🔥 🌶️🔥",
+      "RO!": "4p/0f/0r/0x 🌶️🔥 🌶️🔥 🌶️🔥 🌶️🔥"
+    },
+    {
+      "caseId": "reliable-person",
+      "T": "4p/0f/0r/0x 🤝✅ 🤝✅ 🤝✅ 🤝✅",
+      "J4": "4p/0f/0r/0x 🤝✅ 🤝✅ 🤝✅ 🤝✅",
+      "RS": "4p/0f/0r/0x 🤝✅ 🤝✅ 🤝✅ 🤝✅",
+      "RS!": "4p/0f/0r/0x 🤝✅ 🤝✅ 🤝✅ 🤝✅",
+      "RO": "4p/0f/0r/0x 🤝✅ 🤝✅ 🤝✅ 🤝✅",
+      "RO!": "4p/0f/0r/0x 🤝✅ 🤝✅ 🤝✅ 🤝✅"
+    },
+    {
+      "caseId": "unfair-rule",
+      "T": "4p/0f/0r/0x ⚖️❌ ⚖️❌ ⚖️❌ ⚖️❌",
+      "J4": "4p/0f/0r/0x ⚖️❌ ⚖️❌ ⚖️❌ ⚖️❌",
+      "RS": "4p/0f/0r/0x ⚖️❌ ⚖️❌ ⚖️❌ ⚖️❌",
+      "RS!": "4p/0f/0r/0x ⚖️❌ ⚖️❌ ⚖️❌ ⚖️❌",
+      "RO": "4p/0f/0r/0x ⚖️❌ ⚖️❌ ⚖️❌ ⚖️❌",
+      "RO!": "4p/0f/0r/0x ⚖️❌ ⚖️❌ ⚖️❌ ⚖️❌"
+    },
+    {
+      "caseId": "lock-door",
+      "T": "0p/4f/0r/0x 🏰 🏰 🏰 🏰",
+      "J4": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RS": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RS!": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RO": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RO!": "4p/0f/0r/0x 🔒 🔒 🔒 🔒"
+    },
+    {
+      "caseId": "castle-visit",
+      "T": "4p/0f/0r/0x 🏰 🏰 🏰 🏰",
+      "J4": "4p/0f/0r/0x 🏰 🏰 🏰 🏰",
+      "RS": "4p/0f/0r/0x 🏰 🏰 🏰 🏰",
+      "RS!": "4p/0f/0r/0x 🏰 🏰 🏰 🏰",
+      "RO": "4p/0f/0r/0x 🏰 🏰 🏰 🏰",
+      "RO!": "4p/0f/0r/0x 🏰 🏰 🏰 🏰"
+    },
+    {
+      "caseId": "bank-credit",
+      "T": "4p/0f/0r/0x 🏦 🏦 🏦 🏦",
+      "J4": "4p/0f/0r/0x 🏦 🏦 🏦 🏦",
+      "RS": "4p/0f/0r/0x 🏦 🏦 🏦 🏦",
+      "RS!": "4p/0f/0r/0x 🏦 🏦 🏦 🏦",
+      "RO": "4p/0f/0r/0x 🏦 🏦 🏦 🏦",
+      "RO!": "4p/0f/0r/0x 🏦 🏦 🏦 🏦"
+    },
+    {
+      "caseId": "bank-rest",
+      "T": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "J4": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RS": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RS!": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RO": "4p/0f/0r/0x 🪑 🪑 🪑 🪑",
+      "RO!": "4p/0f/0r/0x 🪑 🪑 🪑 🪑"
+    },
+    {
+      "caseId": "rise-mountain",
+      "T": "4p/0f/0r/0x ⬆️⛰️ 🥾⬆️ 🥾⬆️ ⬆️🥾",
+      "J4": "4p/0f/0r/0x 🥾⬆️ 🥾⬆️ 🥾⬆️ 🥾⬆️",
+      "RS": "4p/0f/0r/0x 🥾⬆️ 🥾⬆️ 🥾⬆️ 🥾⬆️",
+      "RS!": "4p/0f/0r/0x 🥾⬆️ 🥾⬆️ 🥾⬆️ 🥾⬆️",
+      "RO": "4p/0f/0r/0x 🥾⬆️ 🥾⬆️ 🥾⬆️ 🥾⬆️",
+      "RO!": "4p/0f/0r/0x 🥾⬆️ 🥾⬆️ 🥾⬆️ 🥾⬆️"
+    },
+    {
+      "caseId": "descent-mountain",
+      "T": "3p/0f/1r/0x ⬇️ ⬇️ ⬇️ ⬇️🚶",
+      "J4": "2p/0f/2r/0x ⬇️ 🚶⬇️ ⬇️ 🚶⬇️",
+      "RS": "4p/0f/0r/0x ⬇️ ⬇️ ⬇️ ⬇️",
+      "RS!": "4p/0f/0r/0x ⬇️ ⬇️ ⬇️ ⬇️",
+      "RO": "4p/0f/0r/0x ⬇️ ⬇️ ⬇️ ⬇️",
+      "RO!": "4p/0f/0r/0x ⬇️ ⬇️ ⬇️ ⬇️"
+    },
+    {
+      "caseId": "remember-name",
+      "T": "3p/0f/1r/0x 🧠❌ 🧠❌ 🧠❌ 🧠💨",
+      "J4": "4p/0f/0r/0x 🧠❌ 🧠❌ 🧠❌ 🧠❌",
+      "RS": "4p/0f/0r/0x 🧠❌ 🧠❌ 🧠❌ 🧠❌",
+      "RS!": "4p/0f/0r/0x 🧠❌ 🧠❌ 🧠❌ 🧠❌",
+      "RO": "4p/0f/0r/0x 🧠❌ 🧠❌ 🧠❌ 🧠❌",
+      "RO!": "4p/0f/0r/0x 🧠❌ 🧠❌ 🧠❌ 🧠❌"
+    },
+    {
+      "caseId": "wait-bus",
+      "T": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "J4": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RS": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RS!": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RO": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RO!": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳"
+    },
+    {
+      "caseId": "wait-answer",
+      "T": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "J4": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RS": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RS!": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RO": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳",
+      "RO!": "4p/0f/0r/0x ⏳ ⏳ ⏳ ⏳"
+    },
+    {
+      "caseId": "protect-child",
+      "T": "4p/0f/0r/0x 🛡️ 🛡️ 🛡️ 🛡️",
+      "J4": "4p/0f/0r/0x 🛡️ 🛡️ 🛡️ 🛡️",
+      "RS": "4p/0f/0r/0x 🛡️ 🛡️ 🛡️ 🛡️",
+      "RS!": "4p/0f/0r/0x 🛡️ 🛡️ 🛡️ 🛡️",
+      "RO": "4p/0f/0r/0x 🛡️ 🛡️ 🛡️ 🛡️",
+      "RO!": "4p/0f/0r/0x 🛡️ 🛡️ 🛡️ 🛡️"
+    },
+    {
+      "caseId": "grow-plant",
+      "T": "4p/0f/0r/0x 🌱⬆️ 🌱⬆️ 🌱⬆️ 🌱⬆️",
+      "J4": "4p/0f/0r/0x 🌱⬆️ 🌱⬆️ 🌱⬆️ 🌱⬆️",
+      "RS": "4p/0f/0r/0x 🌱⬆️ 🌱⬆️ 🌱⬆️ 🌱⬆️",
+      "RS!": "4p/0f/0r/0x 🌱⬆️ 🌱⬆️ 🌱⬆️ 🌱⬆️",
+      "RO": "4p/0f/0r/0x 🌱⬆️ 🌱⬆️ 🌱⬆️ 🌱⬆️",
+      "RO!": "4p/0f/0r/0x 🌱⬆️ 🌱⬆️ 🌱⬆️ 🌱⬆️"
+    },
+    {
+      "caseId": "grow-business",
+      "T": "4p/0f/0r/0x 📈 📈 📈 📈",
+      "J4": "4p/0f/0r/0x 📈 📈 📈 📈",
+      "RS": "4p/0f/0r/0x 📈 📈 📈 📈",
+      "RS!": "4p/0f/0r/0x 📈 📈 📈 📈",
+      "RO": "4p/0f/0r/0x 📈 📈 📈 📈",
+      "RO!": "4p/0f/0r/0x 📈 📈 📈 📈"
+    },
+    {
+      "caseId": "save-money",
+      "T": "4p/0f/0r/0x 💰🐖 💰🐷 💰📥 💰📥",
+      "J4": "4p/0f/0r/0x 💰📥 💰📥 💰📥 💰📥",
+      "RS": "4p/0f/0r/0x 💰📥 💰📥 💰📥 💰📥",
+      "RS!": "4p/0f/0r/0x 💰📥 💰🐖 💰📥 💰📥",
+      "RO": "4p/0f/0r/0x 💰📥 💰📥 💰📥 💰📥",
+      "RO!": "4p/0f/0r/0x 💰📥 💰📥 💰📥 💰📥"
+    },
+    {
+      "caseId": "remain-closed",
+      "T": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "J4": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RS": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RS!": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RO": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RO!": "4p/0f/0r/0x 📍 📍 📍 📍"
+    },
+    {
+      "caseId": "remain-cold",
+      "T": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "J4": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RS": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RS!": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RO": "4p/0f/0r/0x 📍 📍 📍 📍",
+      "RO!": "4p/0f/0r/0x 📍 📍 📍 📍"
+    },
+    {
+      "caseId": "become-longer",
+      "T": "1p/3f/0r/0x ↗️ 🔄 ⬆️ ⬆️",
+      "J4": "4p/0f/0r/0x 🔄 🔄 🔄 🔄",
+      "RS": "4p/0f/0r/0x 🔄 🔄 🔄 🔄",
+      "RS!": "4p/0f/0r/0x 🔄 🔄 🔄 🔄",
+      "RO": "4p/0f/0r/0x 🔄 🔄 🔄 🔄",
+      "RO!": "4p/0f/0r/0x 🔄 🔄 🔄 🔄"
+    },
+    {
+      "caseId": "seem-tired",
+      "T": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "J4": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "RS": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "RS!": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "RO": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "RO!": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭"
+    },
+    {
+      "caseId": "look-delicious",
+      "T": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "J4": "4p/0f/0r/0x 👀💭 👀💭 👀💭 👀💭",
+      "RS": "4p/0f/0r/0x 👀 👀✨ 👀 👀",
+      "RS!": "4p/0f/0r/0x 👀 👀 👀✨ 👀",
+      "RO": "4p/0f/0r/0x 👀 👀 👀 👀",
+      "RO!": "4p/0f/0r/0x 👀💭 👀 👀💭 👀💭"
+    },
+    {
+      "caseId": "make-tired",
+      "T": "4p/0f/0r/0x 🛠️ ⚙️ ⚙️ 🛠️",
+      "J4": "2p/0f/2r/0x ⚙️ ➡️ 🔄 🔄",
+      "RS": "2p/0f/2r/0x ➡️ 🔄 🔄 🛠️",
+      "RS!": "3p/0f/1r/0x 🛠️ ➡️ 🔄 ➡️",
+      "RO": "3p/0f/1r/0x ➡️ 🔄 ➡️ ➡️",
+      "RO!": "1p/0f/3r/0x 🔄 ➡️ 🔄 🔄"
+    },
+    {
+      "caseId": "find-boring",
+      "T": "4p/0f/0r/0x 🧠💭 🧠💭 🧠💭 🧠💭",
+      "J4": "4p/0f/0r/0x 🧠💭 🧠💭 🧠💭 🧠💭",
+      "RS": "4p/0f/0r/0x 🧠💭 🧠💭 🧠💭 🧠💭",
+      "RS!": "4p/0f/0r/0x 🧠💭 🧠💭 🧠💭 🧠💭",
+      "RO": "4p/0f/0r/0x 🧠💭 🧠💭 🧠💭 🧠💭",
+      "RO!": "4p/0f/0r/0x 🧠💭 🧠💭 🧠💭 🧠💭"
+    },
+    {
+      "caseId": "leave-open",
+      "T": "3p/0f/1r/0x 👐📍 👐📍 🫳📍 👐📍",
+      "J4": "4p/0f/0r/0x 👐 👐 👐 👐📍",
+      "RS": "4p/0f/0r/0x 👐 👐 👐 👐",
+      "RS!": "4p/0f/0r/0x 👐 👐 👐 👐",
+      "RO": "1p/0f/3r/0x 🫳📍 🤲➡️ 🫳 🤲",
+      "RO!": "4p/0f/0r/0x 🫳 🫳 🫳 🫳"
+    },
+    {
+      "caseId": "closed-tomorrow",
+      "T": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "J4": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RS": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RS!": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RO": "4p/0f/0r/0x 🔒 🔒 🔒 🔒",
+      "RO!": "4p/0f/0r/0x 🔒 🔒 🔒 🔒"
+    },
+    {
+      "caseId": "forbidden-smoking",
+      "T": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "J4": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RS": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RS!": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RO": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RO!": "4p/0f/0r/0x 🚫 🚫 🚫 🚫"
+    },
+    {
+      "caseId": "open-bakery",
+      "T": "4p/0f/0r/0x 🔓 🔓 🔓 🔓",
+      "J4": "4p/0f/0r/0x 🔓 🔓 🔓 🔓",
+      "RS": "4p/0f/0r/0x 🔓 🔓 🔓 🔓",
+      "RS!": "4p/0f/0r/0x 🔓 🔓 🔓 🔓",
+      "RO": "4p/0f/0r/0x 🔓 🔓 🔓 🔓",
+      "RO!": "4p/0f/0r/0x 🔓 🔓 🔓 🔓"
+    },
+    {
+      "caseId": "silent-forest",
+      "T": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "J4": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RS": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RS!": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RO": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RO!": "4p/0f/0r/0x 🤫 🤫 🤫 🤫"
+    },
+    {
+      "caseId": "fresh-slow",
+      "T": "4p/0f/0r/0x 🐢 🐢 🐢 🐌",
+      "J4": "4p/0f/0r/0x 🐌 🐌 🐌 🐌",
+      "RS": "4p/0f/0r/0x 🐌 🐌 🐢 🐌",
+      "RS!": "4p/0f/0r/0x 🐢 🐢 🐌 🐌",
+      "RO": "4p/0f/0r/0x 🐌 🐌 🐌 🐢",
+      "RO!": "4p/0f/0r/0x 🐌 🐌 🐢 🐌"
+    },
+    {
+      "caseId": "fresh-fast",
+      "T": "4p/0f/0r/0x ⚡ ⚡ ⚡ ⚡",
+      "J4": "4p/0f/0r/0x ⚡ ⚡ ⚡ ⚡",
+      "RS": "4p/0f/0r/0x ⚡ ⚡ ⚡ ⚡",
+      "RS!": "4p/0f/0r/0x ⚡ ⚡ ⚡ ⚡",
+      "RO": "4p/0f/0r/0x ⚡ ⚡ ⚡ ⚡",
+      "RO!": "4p/0f/0r/0x ⚡ ⚡ ⚡ ⚡"
+    },
+    {
+      "caseId": "fresh-quiet",
+      "T": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "J4": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RS": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RS!": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RO": "4p/0f/0r/0x 🤫 🤫 🤫 🤫",
+      "RO!": "4p/0f/0r/0x 🤫 🤫 🤫 🤫"
+    },
+    {
+      "caseId": "fresh-loud",
+      "T": "4p/0f/0r/0x 🔊 🔊 🔊 🔊",
+      "J4": "4p/0f/0r/0x 🔊 🔊 🔊 🔊",
+      "RS": "4p/0f/0r/0x 🔊 🔊 🔊 🔊",
+      "RS!": "4p/0f/0r/0x 🔊 🔊 🔊 🔊",
+      "RO": "4p/0f/0r/0x 🔊 🔊 🔊 🔊",
+      "RO!": "4p/0f/0r/0x 🔊 🔊 🔊 🔊"
+    },
+    {
+      "caseId": "fresh-brave",
+      "T": "4p/0f/0r/0x 🦁 🦁 🦁 🦁",
+      "J4": "4p/0f/0r/0x 🦁 🦁 🦁 🦁",
+      "RS": "4p/0f/0r/0x 🦁 🦁 🦁 🦁",
+      "RS!": "4p/0f/0r/0x 🦁 🦁 🦁 🦁",
+      "RO": "4p/0f/0r/0x 🦁 🦁 🦁 🦁",
+      "RO!": "4p/0f/0r/0x 🦁 🦁 🦁 🦁"
+    },
+    {
+      "caseId": "fresh-careful",
+      "T": "2p/0f/2r/0x ⚠️🖐️ ⚠️👐 ⚠️👐 ⚠️🖐️",
+      "J4": "0p/3f/1r/0x ⚠️ ⚠️ ⚠️🖐️ ⚠️",
+      "RS": "4p/0f/0r/0x ⚠️👐 ⚠️👐 ⚠️🐢 ⚠️🐢",
+      "RS!": "3p/1f/0r/0x ⚠️👐 ⚠️ ⚠️👐 ⚠️🐢",
+      "RO": "4p/0f/0r/0x ⚠️👐 ⚠️👐 ⚠️🐢 ⚠️👐",
+      "RO!": "4p/0f/0r/0x ⚠️👐 ⚠️👐 ⚠️👐 ⚠️👐"
+    },
+    {
+      "caseId": "fresh-fragile",
+      "T": "1p/0f/2r/1x ⚠️🫳 🫧⚠️ !\"💔 fragilespeech?\" ⚠️🫳",
+      "J4": "0p/0f/4r/0x ⚠️🫳 🫳💥 ⚠️🫳 💥",
+      "RS": "1p/1f/2r/0x ⚠️🫳 ⚠️🥚 ⚠️🫳 ⚠️💔",
+      "RS!": "0p/0f/4r/0x ⚠️🫳 ⚠️🥂 ⚠️🫳 ⚠️🫳",
+      "RO": "1p/0f/3r/0x ⚠️🫳 ⚠️🫳 🫧⚠️ ⚠️🫳",
+      "RO!": "0p/0f/4r/0x ⚠️🫳 ⚠️🫳 ⚠️🫳 ⚠️🫳"
+    },
+    {
+      "caseId": "fresh-rescue",
+      "T": "2p/0f/1r/1x 🛟🙋 🛟 🛟 !\"🛟 спасение\"",
+      "J4": "0p/0f/4r/0x 🛟✅ 🛟✅ 🛟✅ 🛟✅",
+      "RS": "0p/0f/4r/0x 🛟✅ 🛟✅ 🛟✅ 🛟✅",
+      "RS!": "0p/0f/4r/0x 🛟✅ 🛟✅ 🛟✅ 🛟✅",
+      "RO": "0p/0f/4r/0x 🛟🤲 🛟✅ 🛟✅ 🛟✅",
+      "RO!": "0p/0f/4r/0x 🛟🤲 🛟✅ 🛟✅ 🛟🤲"
+    },
+    {
+      "caseId": "fresh-compare",
+      "T": "0p/0f/4r/0x ⚖️↔️ ⚖️↔️ ⚖️↔️ ⚖️↔️",
+      "J4": "0p/0f/4r/0x ⚖️↔️ ⚖️↔️ ⚖️↔️ ⚖️↔️",
+      "RS": "4p/0f/0r/0x ⚖️ ⚖️ ⚖️ ⚖️",
+      "RS!": "4p/0f/0r/0x ⚖️ ⚖️ ⚖️ ⚖️",
+      "RO": "0p/0f/4r/0x ⚖️↔️ ⚖️↔️ ⚖️↔️ ⚖️↔️",
+      "RO!": "0p/0f/4r/0x ⚖️↔️ ⚖️↔️ ⚖️↔️ ⚖️↔️"
+    },
+    {
+      "caseId": "fresh-forbid",
+      "T": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "J4": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RS": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RS!": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RO": "4p/0f/0r/0x 🚫 🚫 🚫 🚫",
+      "RO!": "4p/0f/0r/0x 🚫 🚫 🚫 🚫"
+    }
+  ]
+}

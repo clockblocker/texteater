@@ -1,0 +1,691 @@
+/**
+ * E12 (dumgen audit follow-up, 2026-09-23): speculative emoji while the
+ * Knowledge drafts run. Live, paired, interleaved arms on the same
+ * first-encounter clicks of the audit waterfall (results/baseline-baseline.json).
+ *
+ *   A  today (app/tf-demo/server/linguisticOrchestration.ts, as waterfall.ts
+ *      runClick): t0 = target selected -> resolveGrammar(encounter, [])
+ *      -> fork draftKnowledge (tf-demo request, 4 Luna calls) concurrently with
+ *      resolveOrGenerateReadingEmojiDescription(candidates []) -> join.
+ *   S  speculative (E4 recommendation 3, exact-match with lemmaGuessRules):
+ *      at t0 fork the production emoji call with lemma = headword guess, on the
+ *      same Dumgen executor, while resolveGrammar runs; drafts fork after
+ *      grammar exactly as in A. Keep the speculative emoji only when
+ *      guess === canonicalForm and the lemma is a Luna route; otherwise abort it
+ *      and run the production emoji call after grammar (same as A).
+ *      A speculative transport failure also falls back; an invalid speculative
+ *      output fails the click, as production would with the same input.
+ *   E  the production emoji operation alone (recorded waterfall lemma).
+ *   D  the production draft set alone (recorded waterfall lemma).
+ *
+ * Every arm builds a fresh production Dumgen (modelExecution.ts) and drafts get
+ * their own options, as createProductionKnowledgeDraft does. Arm order rotates
+ * per click and reverses on odd reps; reps are the outer loop. Clicks run one at
+ * a time (a single user), so the only concurrency is the click's own calls.
+ *
+ *   cd battery/dumgen
+ *   bun --env-file=../../.env.local prototypes/audit/e12-speculative-emoji-contention/run.ts --label pilot --only kakao#6,aufstehen#4 --reps 1 --cap 0.02
+ *   bun --env-file=../../.env.local prototypes/audit/e12-speculative-emoji-contention/run.ts --label main --reps 2 --cap 0.33
+ */
+import { writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import { configurationSchema } from "promptsmith/schemas";
+import { createTypeSafeExecutor } from "promptsmith/typesafe";
+import { effectiveRelationPublicationPolicy } from "../../../../../app/tf-demo/convex/model/generatedKnowledgeContainment.ts";
+import { generationRequestFor } from "../../../../../app/tf-demo/server/generatedKnowledgeRequest.ts";
+import { authoredMembers } from "../../../src/concrete-lang/de/authored-closed-sets/inventory.ts";
+import {
+	authoredFor,
+	closedRoute,
+	sameValue,
+} from "../../../src/concrete-lang/de/authored-closed-sets/select.ts";
+import { createDumgen, draftKnowledge } from "../../../src/index.ts";
+import type {
+	CallTrace,
+	DumgenOptions,
+	Encounter,
+	OperationTrace,
+} from "../../../src/types.ts";
+import { textModelCaller } from "../../../src/universal/model.ts";
+import { operationTask } from "../../../src/universal/trace.ts";
+import { markedContext } from "../../../src/universal/validation.ts";
+import { lemmaGuess, lemmaGuessRules } from "../e4-emoji/guess.ts";
+import {
+	appendJsonl,
+	callCost,
+	here,
+	isBillingOrAuth,
+	resultsDir,
+	Spend,
+} from "./lib.ts";
+
+const { values: args } = parseArgs({
+	options: {
+		label: { type: "string", default: "main" },
+		reps: { type: "string", default: "2" },
+		"rep-offset": { type: "string", default: "0" },
+		arms: { type: "string", default: "A,S,E,D" },
+		only: { type: "string" },
+		clicks: { type: "string", default: "999" },
+		cap: { type: "string", default: "0.33" },
+		/** Resume: skip the first N selected clicks in the first rep only. */
+		skip: { type: "string", default: "0" },
+	},
+});
+
+// ------------------------------------------------------------------ clicks
+type Segment = { start: number; end: number };
+type BaselineClick = {
+	clickId: string;
+	caseId: string;
+	route: string | null;
+	outcome: string;
+	readingDecision?: string;
+	lemma?: Record<string, unknown> & { canonicalForm: string };
+	target: {
+		family: string;
+		kind: string;
+		memberSegmentIndices: number[];
+	} | null;
+	timeline: Record<string, Segment>;
+};
+const baseline = JSON.parse(
+	readFileSync(resolve(here, "../results/baseline-baseline.json"), "utf8"),
+) as {
+	clicks: BaselineClick[];
+	intake: { sentences: { caseId: string; sentence: unknown }[] };
+};
+/** Speculation never starts for these kinds (E4: no Luna emoji on their routes). */
+const skipKinds = new Set(["DET", "AUX", "PRON"]);
+const speculable = baseline.clicks
+	.filter((click) => click.target && !skipKinds.has(click.target.kind))
+	.sort((a, b) =>
+		`${a.route}|${a.clickId}`.localeCompare(`${b.route}|${b.clickId}`),
+	);
+const only = args.only ? new Set(args.only.split(",")) : null;
+const pool = only ? speculable.filter((c) => only.has(c.clickId)) : speculable;
+const want = Math.min(Number(args.clicks), pool.length);
+const selected = Array.from(
+	{ length: want },
+	(_, i) => pool[Math.floor((i * pool.length) / want)] as BaselineClick,
+);
+
+// ---------------------------------------------------------------- records
+type CallRecord = {
+	operation: string;
+	label: string;
+	executor: "jev" | "Luna";
+	relStartMs: number;
+	durationMs: number;
+	providerMs: number | null;
+	headersMs: number | null;
+	serviceTier: string | null;
+	inputTokens: number;
+	cachedTokens: number;
+	outputTokens: number;
+	costUsd: number;
+	costEstimated: boolean;
+	transport: CallTrace["transport"];
+	validation: CallTrace["validation"];
+	failure?: string;
+	input?: unknown;
+	output?: unknown;
+};
+
+function labelOf(operation: string, call: CallTrace): string {
+	const request = call.request as {
+		stage: string;
+		route: string;
+		input?: Record<string, unknown>;
+	};
+	if (call.executor === "TypeSafe") {
+		if (operation === "resolveGrammar") {
+			if (request.route.endsWith("/features")) return "grammar.features";
+			if (request.route.endsWith("/lexical-strings"))
+				return "grammar.lexicalStrings";
+			if (request.route.endsWith("/case")) return "grammar.nounCase";
+			if (request.route.endsWith("/identity"))
+				return "grammar.authoredIdentity";
+			return "grammar.other";
+		}
+		if (operation === "resolveOrGenerateReadingEmojiDescription")
+			return request.input && "readings" in request.input
+				? "reading.authoredChoice"
+				: "reading.compare";
+		return `${operation}.judge`;
+	}
+	if (operation === "resolveGrammar") return "grammar.text";
+	if (operation === "resolveOrGenerateReadingEmojiDescription")
+		return "reading.generate";
+	if (operation === "generateReadingEmojiDraft") return "spec.generate";
+	if (operation === "draftKnowledge") {
+		const input = request.input ?? {};
+		return `draft.${String(input.aspect)}${input.language ? `.${String(input.language)}` : ""}`;
+	}
+	return `${operation}.generate`;
+}
+
+let billingStop: string | null = null;
+const spend = await Spend.open("run", args.label, Number(args.cap));
+
+class Recorder {
+	readonly epochStart = Date.now();
+	readonly t0 = performance.now();
+	readonly calls: CallRecord[] = [];
+	at = () => performance.now() - this.t0;
+	sink = (trace: OperationTrace) => {
+		for (const call of trace.calls) {
+			const cost = callCost(call);
+			const metadata = call.metadata as
+				| {
+						timing?: {
+							providerProcessingMs?: number | null;
+							headersMs?: number;
+						};
+						serviceTier?: string | null;
+				  }
+				| undefined;
+			let costUsd = cost.costUsd;
+			let costEstimated = false;
+			if (cost.executor === "Luna" && !cost.hasUsage) {
+				// Aborted or failed before usage came back: charge a full call.
+				if (call.transport !== "Failure" || call.failure?.includes("abort")) {
+					spend.addAbortedEstimate();
+					costUsd = 0.00013;
+					costEstimated = true;
+				}
+			} else spend.add(costUsd, cost.executor);
+			if (call.failure && isBillingOrAuth(call.failure))
+				billingStop ??= call.failure.slice(0, 400);
+			const label = labelOf(trace.operation, call);
+			const emojiCall = label === "reading.generate" || label === "spec.generate";
+			this.calls.push({
+				operation: trace.operation,
+				label,
+				executor: cost.executor,
+				relStartMs: (call.startedAt ?? this.epochStart) - this.epochStart,
+				durationMs: call.durationMs,
+				providerMs: metadata?.timing?.providerProcessingMs ?? null,
+				headersMs: metadata?.timing?.headersMs ?? null,
+				serviceTier: metadata?.serviceTier ?? null,
+				inputTokens: cost.inputTokens,
+				cachedTokens: cost.cachedTokens,
+				outputTokens: cost.outputTokens,
+				costUsd,
+				costEstimated,
+				transport: call.transport,
+				validation: call.validation,
+				...(call.failure ? { failure: call.failure.slice(0, 300) } : {}),
+				...(emojiCall
+					? {
+							input: (call.request as { input?: unknown }).input,
+							output: call.output,
+						}
+					: {}),
+			});
+		}
+	};
+}
+
+/** Mirrors productionOptions in app/tf-demo/server/modelExecution.ts. */
+function productionOptions(
+	onOperation: (trace: OperationTrace) => void,
+): DumgenOptions {
+	const execute = createOpenAIExecutor();
+	return {
+		judge: (request, options) => createTypeSafeExecutor()(request, options),
+		onOperation,
+		execute: async (request) =>
+			await execute({
+				...request,
+				configuration: configurationSchema.parse(request.configuration),
+			}),
+	};
+}
+
+type Outcome<T> =
+	| { ok: true; value: T }
+	| { ok: false; tag: string; failure: string };
+async function run<T>(
+	task: Effect.Effect<T, unknown>,
+	signal?: AbortSignal,
+): Promise<Outcome<T>> {
+	try {
+		const result = await Effect.runPromise(Effect.either(task), { signal });
+		if (result._tag === "Right") return { ok: true, value: result.right };
+		const error = result.left as { _tag?: string; message?: string };
+		return {
+			ok: false,
+			tag: error?._tag ?? "Unknown",
+			failure: `${error?._tag ?? "Unknown"}: ${error?.message ?? String(error)}`,
+		};
+	} catch (error) {
+		return {
+			ok: false,
+			tag: signal?.aborted ? "Interrupted" : "Defect",
+			failure: String(error).slice(0, 300),
+		};
+	}
+}
+
+function lunaWouldRun(lemma: Record<string, unknown>) {
+	const reviewed = authoredMembers.filter((member) =>
+		sameValue(member.lemma, lemma as never),
+	);
+	return (
+		reviewed.length <= 1 &&
+		!authoredFor(lemma as never) &&
+		!closedRoute(lemma as never)
+	);
+}
+
+const qualifiedKinds = effectiveRelationPublicationPolicy().qualifiedKinds;
+function draftTask(
+	sink: (trace: OperationTrace) => void,
+	encounter: Encounter<"de">,
+	lemma: Record<string, unknown>,
+) {
+	return draftKnowledge(productionOptions(sink), {
+		encounter,
+		lemma: lemma as never,
+		request: generationRequestFor({ lemma: lemma as never }, qualifiedKinds, {
+			translationLanguages: ["en", "ru"],
+		}) as never,
+	});
+}
+function draftSummary(result: Outcome<unknown>) {
+	if (!result.ok) return { ok: false, texts: 0, failure: result.failure };
+	const value = result.value as { texts?: unknown[] };
+	return { ok: true, texts: value.texts?.length ?? 0 };
+}
+
+type ArmRow = {
+	clickId: string;
+	route: string | null;
+	kind: string;
+	arm: string;
+	rep: number;
+	position: number;
+	order: string;
+	epochStart: number;
+	guess?: string;
+	guessPlain?: string;
+	recordedCanonical: string | null;
+	canonical?: string | null;
+	grammar?: { start: number; end: number; ok: boolean; failure?: string; lunaFollowUp: boolean };
+	speculative?: {
+		start: number;
+		end: number;
+		accepted: boolean;
+		discardReason: string | null;
+		status: string;
+		emoji: string | null;
+		aborted: boolean;
+	};
+	reading?: {
+		source: "production" | "speculative" | "fallback";
+		start: number;
+		end: number;
+		ok: boolean;
+		emoji: string | null;
+		failure?: string;
+	};
+	drafts?: { start: number; end: number; ok: boolean; texts: number; failure?: string };
+	timeToReadingMs: number | null;
+	timeToDraftsMs: number | null;
+	timeToCommitMs: number | null;
+	wallMs: number;
+	costUsd: number;
+	calls: CallRecord[];
+};
+
+// -------------------------------------------------------------------- arms
+async function armA(encounter: Encounter<"de">) {
+	const rec = new Recorder();
+	const dumgen = createDumgen(productionOptions(rec.sink));
+	const g0 = rec.at();
+	const grammar = await run(dumgen.resolveGrammar(encounter, []));
+	const g1 = rec.at();
+	const lunaFollowUp = () =>
+		rec.calls.some((c) => c.label === "grammar.text");
+	if (!grammar.ok)
+		return {
+			rec,
+			row: {
+				grammar: { start: g0, end: g1, ok: false, failure: grammar.failure, lunaFollowUp: lunaFollowUp() },
+				canonical: null,
+				timeToReadingMs: null,
+				timeToDraftsMs: null,
+				timeToCommitMs: null,
+			},
+		};
+	const lemma = (grammar.value as { surface: { lemma: Record<string, unknown> } })
+		.surface.lemma;
+	const d0 = rec.at();
+	const draftPromise = run(draftTask(rec.sink, encounter, lemma)).then(
+		(result) => ({ result, end: rec.at() }),
+	);
+	const r0 = rec.at();
+	const reading = await run(
+		dumgen.resolveOrGenerateReadingEmojiDescription({
+			encounter,
+			lemma,
+			candidates: [],
+		} as never),
+	);
+	const r1 = rec.at();
+	const draft = await draftPromise;
+	const drafts = { start: d0, end: draft.end, ...draftSummary(draft.result) };
+	return {
+		rec,
+		row: {
+			canonical: String(lemma.canonicalForm),
+			grammar: { start: g0, end: g1, ok: true, lunaFollowUp: lunaFollowUp() },
+			reading: {
+				source: "production" as const,
+				start: r0,
+				end: r1,
+				ok: reading.ok,
+				emoji: reading.ok
+					? (reading.value as { emojiDescription: string }).emojiDescription
+					: null,
+				...(reading.ok ? {} : { failure: reading.failure }),
+			},
+			drafts,
+			timeToReadingMs: reading.ok ? r1 : null,
+			timeToDraftsMs: draft.end,
+			timeToCommitMs: reading.ok ? Math.max(r1, draft.end) : null,
+		},
+	};
+}
+
+async function armS(encounter: Encounter<"de">, kind: string, family: string) {
+	const rec = new Recorder();
+	const options = productionOptions(rec.sink);
+	const dumgen = createDumgen(options);
+	const context = markedContext(encounter);
+	const guess = lemmaGuessRules(context.members, kind, false);
+	const controller = new AbortController();
+	const s0 = rec.at();
+	// The proposed dumgen entry point generateReadingEmojiDraft: the production
+	// reading-generation call with {markedContext, lemma: guess}.
+	const speculation = run(
+		operationTask(options)(
+			"generateReadingEmojiDraft",
+			{ markedContext: context.markedContext, lemma: guess },
+			(signal) =>
+				textModelCaller(options)<string>(
+					"generateReadingEmojiDescription",
+					`de/${family}/${kind}`,
+					"reading-generation/de",
+					"emojiGenerationOutput",
+					{ markedContext: context.markedContext, lemma: guess },
+					signal,
+				),
+		),
+		controller.signal,
+	).then((result) => ({ result, end: rec.at() }));
+	let specDone = false;
+	void speculation.then(() => {
+		specDone = true;
+	});
+	const g0 = rec.at();
+	const grammar = await run(dumgen.resolveGrammar(encounter, []));
+	const g1 = rec.at();
+	const lunaFollowUp = () =>
+		rec.calls.some((c) => c.label === "grammar.text");
+	const discard = async (reason: string) => {
+		const aborted = !specDone;
+		controller.abort();
+		const spec = await speculation;
+		return {
+			start: s0,
+			end: spec.end,
+			accepted: false,
+			discardReason: reason,
+			status: spec.result.ok ? "Valid" : spec.result.tag,
+			emoji: spec.result.ok ? String(spec.result.value) : null,
+			aborted,
+		};
+	};
+	if (!grammar.ok) {
+		const speculative = await discard("grammarFailure");
+		return {
+			rec,
+			row: {
+				guess,
+				canonical: null,
+				grammar: { start: g0, end: g1, ok: false, failure: grammar.failure, lunaFollowUp: lunaFollowUp() },
+				speculative,
+				timeToReadingMs: null,
+				timeToDraftsMs: null,
+				timeToCommitMs: null,
+			},
+		};
+	}
+	const lemma = (grammar.value as { surface: { lemma: Record<string, unknown> } })
+		.surface.lemma;
+	const canonical = String(lemma.canonicalForm);
+	const d0 = rec.at();
+	const draftPromise = run(draftTask(rec.sink, encounter, lemma)).then(
+		(result) => ({ result, end: rec.at() }),
+	);
+	const production = async (source: "production" | "fallback") => {
+		const r0 = rec.at();
+		const reading = await run(
+			dumgen.resolveOrGenerateReadingEmojiDescription({
+				encounter,
+				lemma,
+				candidates: [],
+			} as never),
+		);
+		const r1 = rec.at();
+		return {
+			source,
+			start: r0,
+			end: r1,
+			ok: reading.ok,
+			emoji: reading.ok
+				? (reading.value as { emojiDescription: string }).emojiDescription
+				: null,
+			...(reading.ok ? {} : { failure: reading.failure }),
+		};
+	};
+	let speculative: NonNullable<ArmRow["speculative"]>;
+	let reading: NonNullable<ArmRow["reading"]>;
+	if (!lunaWouldRun(lemma)) {
+		speculative = await discard("authoredOrClosed");
+		reading = await production("production");
+	} else if (guess !== canonical) {
+		speculative = await discard("mismatch");
+		reading = await production("fallback");
+	} else {
+		const spec = await speculation;
+		const r1 = rec.at();
+		if (spec.result.ok || spec.result.tag === "InvalidModelOutput") {
+			speculative = {
+				start: s0,
+				end: spec.end,
+				accepted: spec.result.ok,
+				discardReason: spec.result.ok ? null : "invalidOutput",
+				status: spec.result.ok ? "Valid" : spec.result.tag,
+				emoji: spec.result.ok ? String(spec.result.value) : null,
+				aborted: false,
+			};
+			// Same input as production, so an invalid output fails the click as today.
+			reading = {
+				source: "speculative",
+				start: s0,
+				end: r1,
+				ok: spec.result.ok,
+				emoji: spec.result.ok ? String(spec.result.value) : null,
+				...(spec.result.ok ? {} : { failure: spec.result.failure }),
+			};
+		} else {
+			speculative = {
+				start: s0,
+				end: spec.end,
+				accepted: false,
+				discardReason: `transport:${spec.result.tag}`,
+				status: spec.result.tag,
+				emoji: null,
+				aborted: false,
+			};
+			reading = await production("fallback");
+		}
+	}
+	const draft = await draftPromise;
+	const drafts = { start: d0, end: draft.end, ...draftSummary(draft.result) };
+	return {
+		rec,
+		row: {
+			guess,
+			canonical,
+			grammar: { start: g0, end: g1, ok: true, lunaFollowUp: lunaFollowUp() },
+			speculative,
+			reading,
+			drafts,
+			timeToReadingMs: reading.ok ? reading.end : null,
+			timeToDraftsMs: draft.end,
+			timeToCommitMs: reading.ok ? Math.max(reading.end, draft.end) : null,
+		},
+	};
+}
+
+async function armE(encounter: Encounter<"de">, lemma: Record<string, unknown>) {
+	const rec = new Recorder();
+	const dumgen = createDumgen(productionOptions(rec.sink));
+	const r0 = rec.at();
+	const reading = await run(
+		dumgen.resolveOrGenerateReadingEmojiDescription({
+			encounter,
+			lemma,
+			candidates: [],
+		} as never),
+	);
+	const r1 = rec.at();
+	return {
+		rec,
+		row: {
+			canonical: String(lemma.canonicalForm),
+			reading: {
+				source: "production" as const,
+				start: r0,
+				end: r1,
+				ok: reading.ok,
+				emoji: reading.ok
+					? (reading.value as { emojiDescription: string }).emojiDescription
+					: null,
+				...(reading.ok ? {} : { failure: reading.failure }),
+			},
+			timeToReadingMs: reading.ok ? r1 : null,
+			timeToDraftsMs: null,
+			timeToCommitMs: null,
+		},
+	};
+}
+
+async function armD(encounter: Encounter<"de">, lemma: Record<string, unknown>) {
+	const rec = new Recorder();
+	const d0 = rec.at();
+	const result = await run(draftTask(rec.sink, encounter, lemma));
+	const d1 = rec.at();
+	return {
+		rec,
+		row: {
+			canonical: String(lemma.canonicalForm),
+			drafts: { start: d0, end: d1, ...draftSummary(result) },
+			timeToReadingMs: null,
+			timeToDraftsMs: d1,
+			timeToCommitMs: null,
+		},
+	};
+}
+
+// -------------------------------------------------------------------- main
+function rotation(arms: string[], clickIndex: number, rep: number) {
+	const k = arms.length;
+	const offset = (clickIndex + rep) % k;
+	const rotated = arms.map((_, i) => arms[(i + offset) % k] as string);
+	return rep % 2 === 1 ? rotated.reverse() : rotated;
+}
+
+const rawPath = resolve(resultsDir, `run-${args.label}.jsonl`);
+await writeFile(rawPath, "");
+const arms = String(args.arms).split(",");
+const estimatePerClickRep = { A: 0.0011, S: 0.0012, E: 0.00013, D: 0.0006 } as Record<string, number>;
+console.log(
+	`E12 ${args.label}: ${selected.length} clicks x ${args.reps} reps, arms ${arms.join(",")} -> ${rawPath}`,
+);
+let stopReason: string | undefined;
+outer: for (
+	let rep = Number(args["rep-offset"]);
+	rep < Number(args["rep-offset"]) + Number(args.reps);
+	rep++
+) {
+	for (const [index, click] of selected.entries()) {
+		if (rep === Number(args["rep-offset"]) && index < Number(args.skip)) continue;
+		const sentence = baseline.intake.sentences.find(
+			(s) => s.caseId === click.caseId,
+		)?.sentence;
+		if (!sentence || !click.target) throw Error(`no sentence ${click.clickId}`);
+		const encounter = { sentence, target: click.target } as unknown as Encounter<"de">;
+		const recordedLemma = click.lemma ?? null;
+		const order = rotation(arms, index, rep).filter(
+			(arm) => (arm !== "E" && arm !== "D") || recordedLemma,
+		);
+		const estimate = order.reduce((s, a) => s + (estimatePerClickRep[a] ?? 0), 0);
+		if (!spend.allows(estimate)) {
+			stopReason = `budget: $${spend.total.toFixed(4)} + ${estimate} would pass the cap`;
+			break outer;
+		}
+		const summary: string[] = [];
+		for (const [position, arm] of order.entries()) {
+			const result =
+				arm === "A"
+					? await armA(encounter)
+					: arm === "S"
+						? await armS(encounter, click.target.kind, click.target.family)
+						: arm === "E"
+							? await armE(encounter, recordedLemma as Record<string, unknown>)
+							: await armD(encounter, recordedLemma as Record<string, unknown>);
+			const members = markedContext(encounter).members;
+			const row: ArmRow = {
+				clickId: click.clickId,
+				route: click.route,
+				kind: click.target.kind,
+				arm,
+				rep,
+				position,
+				order: order.join(""),
+				epochStart: result.rec.epochStart,
+				recordedCanonical: recordedLemma?.canonicalForm ?? null,
+				guessPlain: lemmaGuess(members, click.target.kind, false),
+				...result.row,
+				wallMs: result.rec.at(),
+				costUsd: result.rec.calls.reduce((s, c) => s + c.costUsd, 0),
+				calls: result.rec.calls,
+			};
+			await appendJsonl(rawPath, row);
+			const r = (v: number | null | undefined) =>
+				v === null || v === undefined ? "-" : String(Math.round(v));
+			summary.push(
+				`${arm}[ttr ${r(row.timeToReadingMs)} drafts ${r(row.timeToDraftsMs)}${row.speculative ? ` spec ${row.speculative.accepted ? "ok" : row.speculative.discardReason}` : ""}${row.reading && !row.reading.ok ? " FAIL" : ""}${row.grammar && !row.grammar.ok ? " GFAIL" : ""}]`,
+			);
+			if (billingStop) {
+				stopReason = `billing/auth: ${billingStop}`;
+				console.error(`STOP ${stopReason}`);
+				break outer;
+			}
+		}
+		console.log(
+			`rep ${rep} ${click.clickId} ${click.route} ${summary.join(" ")} $${spend.total.toFixed(4)}`,
+		);
+	}
+}
+await spend.close(stopReason);
+if (stopReason) console.log(`stopped: ${stopReason}`);

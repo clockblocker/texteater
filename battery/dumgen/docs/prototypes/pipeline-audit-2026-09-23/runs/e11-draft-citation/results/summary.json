@@ -1,0 +1,2305 @@
+{
+ "runs": [
+  "pilot",
+  "main-e5",
+  "main-heldout",
+  "main-e5-rep2",
+  "main-heldout-rep1"
+ ],
+ "spendUsd": 0.280638,
+ "ledger": [
+  {
+   "script": "run.ts",
+   "label": "smoke",
+   "startedAt": "2026-09-23T14:13:07.210Z",
+   "spentUsd": 0.0009504,
+   "lunaCalls": 6,
+   "finishedAt": "2026-09-23T14:13:11.092Z"
+  },
+  {
+   "script": "run.ts",
+   "label": "pilot",
+   "startedAt": "2026-09-23T14:13:24.458Z",
+   "spentUsd": 0.023664000000000008,
+   "lunaCalls": 144,
+   "finishedAt": "2026-09-23T14:14:18.764Z"
+  },
+  {
+   "script": "run.ts",
+   "label": "main-e5",
+   "startedAt": "2026-09-23T14:14:44.488Z",
+   "spentUsd": 0.11041200000000005,
+   "lunaCalls": 768,
+   "finishedAt": "2026-09-23T14:17:36.878Z"
+  },
+  {
+   "script": "run.ts",
+   "label": "main-heldout",
+   "startedAt": "2026-09-23T14:17:45.414Z",
+   "spentUsd": 0.04515040000000001,
+   "lunaCalls": 288,
+   "finishedAt": "2026-09-23T14:19:41.546Z"
+  },
+  {
+   "script": "run.ts",
+   "label": "main-e5-rep2",
+   "startedAt": "2026-09-23T14:25:53.832Z",
+   "spentUsd": 0.05528880000000007,
+   "lunaCalls": 384,
+   "finishedAt": "2026-09-23T14:27:16.212Z"
+  },
+  {
+   "script": "run.ts",
+   "label": "main-heldout-rep1",
+   "startedAt": "2026-09-23T14:27:29.303Z",
+   "spentUsd": 0.04517200000000001,
+   "lunaCalls": 288,
+   "finishedAt": "2026-09-23T14:29:21.320Z"
+  }
+ ],
+ "quality": {
+  "pilot.A.en": {
+   "outputs": 24,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 7,
+    "n": 24,
+    "rate": 0.292
+   },
+   "nonCitationExDegree": {
+    "k": 4,
+    "n": 24,
+    "rate": 0.167
+   },
+   "byCite": {
+    "form": 4,
+    "ok": 17,
+    "degree": 3
+   },
+   "nonCitationOnInflected": {
+    "k": 7,
+    "n": 24,
+    "rate": 0.292
+   },
+   "nonCitationExSuspended": {
+    "k": 6,
+    "n": 23,
+    "rate": 0.261
+   },
+   "senseProblems": {
+    "partial": 1
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 5,
+    "n": 24,
+    "rate": 0.208
+   }
+  },
+  "pilot.A.ru": {
+   "outputs": 24,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 9,
+    "n": 24,
+    "rate": 0.375
+   },
+   "nonCitationExDegree": {
+    "k": 6,
+    "n": 24,
+    "rate": 0.25
+   },
+   "byCite": {
+    "ok": 15,
+    "form": 6,
+    "degree": 3
+   },
+   "nonCitationOnInflected": {
+    "k": 9,
+    "n": 24,
+    "rate": 0.375
+   },
+   "nonCitationExSuspended": {
+    "k": 8,
+    "n": 23,
+    "rate": 0.348
+   },
+   "senseProblems": {
+    "partial": 1
+   },
+   "formatProblems": {
+    "gloss": 1,
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 8,
+    "n": 24,
+    "rate": 0.333
+   }
+  },
+  "pilot.A.both": {
+   "outputs": 48,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 16,
+    "n": 48,
+    "rate": 0.333
+   },
+   "nonCitationExDegree": {
+    "k": 10,
+    "n": 48,
+    "rate": 0.208
+   },
+   "byCite": {
+    "form": 10,
+    "ok": 32,
+    "degree": 6
+   },
+   "nonCitationOnInflected": {
+    "k": 16,
+    "n": 48,
+    "rate": 0.333
+   },
+   "nonCitationExSuspended": {
+    "k": 14,
+    "n": 46,
+    "rate": 0.304
+   },
+   "senseProblems": {
+    "partial": 2
+   },
+   "formatProblems": {
+    "gloss": 1,
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 13,
+    "n": 48,
+    "rate": 0.271
+   }
+  },
+  "pilot.W1.en": {
+   "outputs": 24,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   },
+   "nonCitationExDegree": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   },
+   "byCite": {
+    "ok": 22,
+    "form": 1,
+    "degree": 1
+   },
+   "nonCitationOnInflected": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   },
+   "nonCitationExSuspended": {
+    "k": 1,
+    "n": 23,
+    "rate": 0.043
+   },
+   "senseProblems": {
+    "partial": 1
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   }
+  },
+  "pilot.W1.ru": {
+   "outputs": 24,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   },
+   "nonCitationExDegree": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   },
+   "byCite": {
+    "ok": 22,
+    "pos": 1,
+    "degree": 1
+   },
+   "nonCitationOnInflected": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   },
+   "nonCitationExSuspended": {
+    "k": 1,
+    "n": 23,
+    "rate": 0.043
+   },
+   "senseProblems": {
+    "partial": 1
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   }
+  },
+  "pilot.W1.both": {
+   "outputs": 48,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 4,
+    "n": 48,
+    "rate": 0.083
+   },
+   "nonCitationExDegree": {
+    "k": 2,
+    "n": 48,
+    "rate": 0.042
+   },
+   "byCite": {
+    "ok": 44,
+    "form": 1,
+    "pos": 1,
+    "degree": 2
+   },
+   "nonCitationOnInflected": {
+    "k": 4,
+    "n": 48,
+    "rate": 0.083
+   },
+   "nonCitationExSuspended": {
+    "k": 2,
+    "n": 46,
+    "rate": 0.043
+   },
+   "senseProblems": {
+    "partial": 2
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 3,
+    "n": 48,
+    "rate": 0.062
+   }
+  },
+  "pilot.W2.en": {
+   "outputs": 24,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   },
+   "nonCitationExDegree": {
+    "k": 0,
+    "n": 24,
+    "rate": 0.0
+   },
+   "byCite": {
+    "ok": 23,
+    "degree": 1
+   },
+   "nonCitationOnInflected": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   },
+   "nonCitationExSuspended": {
+    "k": 1,
+    "n": 23,
+    "rate": 0.043
+   },
+   "senseProblems": {},
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   }
+  },
+  "pilot.W2.ru": {
+   "outputs": 24,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   },
+   "nonCitationExDegree": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   },
+   "byCite": {
+    "ok": 22,
+    "pos": 1,
+    "degree": 1
+   },
+   "nonCitationOnInflected": {
+    "k": 2,
+    "n": 24,
+    "rate": 0.083
+   },
+   "nonCitationExSuspended": {
+    "k": 1,
+    "n": 23,
+    "rate": 0.043
+   },
+   "senseProblems": {
+    "partial": 1
+   },
+   "formatProblems": {
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 1,
+    "n": 24,
+    "rate": 0.042
+   }
+  },
+  "pilot.W2.both": {
+   "outputs": 48,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 3,
+    "n": 48,
+    "rate": 0.062
+   },
+   "nonCitationExDegree": {
+    "k": 1,
+    "n": 48,
+    "rate": 0.021
+   },
+   "byCite": {
+    "ok": 45,
+    "pos": 1,
+    "degree": 2
+   },
+   "nonCitationOnInflected": {
+    "k": 3,
+    "n": 48,
+    "rate": 0.062
+   },
+   "nonCitationExSuspended": {
+    "k": 2,
+    "n": 46,
+    "rate": 0.043
+   },
+   "senseProblems": {
+    "partial": 1
+   },
+   "formatProblems": {
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 3,
+    "n": 48,
+    "rate": 0.062
+   }
+  },
+  "e5.A.en": {
+   "outputs": 144,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 34,
+    "n": 144,
+    "rate": 0.236
+   },
+   "nonCitationExDegree": {
+    "k": 34,
+    "n": 144,
+    "rate": 0.236
+   },
+   "byCite": {
+    "ok": 107,
+    "form": 34,
+    "na": 3
+   },
+   "nonCitationOnInflected": {
+    "k": 31,
+    "n": 93,
+    "rate": 0.333
+   },
+   "nonCitationExSuspended": {
+    "k": 34,
+    "n": 144,
+    "rate": 0.236
+   },
+   "senseProblems": {
+    "bleed": 3
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 34,
+    "n": 144,
+    "rate": 0.236
+   }
+  },
+  "e5.A.ru": {
+   "outputs": 144,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 37,
+    "n": 144,
+    "rate": 0.257
+   },
+   "nonCitationExDegree": {
+    "k": 37,
+    "n": 144,
+    "rate": 0.257
+   },
+   "byCite": {
+    "ok": 104,
+    "form": 31,
+    "pos": 6,
+    "na": 3
+   },
+   "nonCitationOnInflected": {
+    "k": 28,
+    "n": 93,
+    "rate": 0.301
+   },
+   "nonCitationExSuspended": {
+    "k": 37,
+    "n": 144,
+    "rate": 0.257
+   },
+   "senseProblems": {
+    "bleed": 5
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 36,
+    "n": 144,
+    "rate": 0.25
+   }
+  },
+  "e5.A.both": {
+   "outputs": 288,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 71,
+    "n": 288,
+    "rate": 0.247
+   },
+   "nonCitationExDegree": {
+    "k": 71,
+    "n": 288,
+    "rate": 0.247
+   },
+   "byCite": {
+    "ok": 211,
+    "form": 65,
+    "pos": 6,
+    "na": 6
+   },
+   "nonCitationOnInflected": {
+    "k": 59,
+    "n": 186,
+    "rate": 0.317
+   },
+   "nonCitationExSuspended": {
+    "k": 71,
+    "n": 288,
+    "rate": 0.247
+   },
+   "senseProblems": {
+    "bleed": 8
+   },
+   "formatProblems": {},
+   "autoNonCitation": {
+    "k": 70,
+    "n": 288,
+    "rate": 0.243
+   }
+  },
+  "e5.W1.en": {
+   "outputs": 144,
+   "nullLeaves": 2,
+   "nonCitation": {
+    "k": 0,
+    "n": 142,
+    "rate": 0.0
+   },
+   "nonCitationExDegree": {
+    "k": 0,
+    "n": 142,
+    "rate": 0.0
+   },
+   "byCite": {
+    "ok": 139,
+    "na": 3
+   },
+   "nonCitationOnInflected": {
+    "k": 0,
+    "n": 91,
+    "rate": 0.0
+   },
+   "nonCitationExSuspended": {
+    "k": 0,
+    "n": 142,
+    "rate": 0.0
+   },
+   "senseProblems": {},
+   "formatProblems": {
+    "null": 2
+   },
+   "autoNonCitation": {
+    "k": 0,
+    "n": 142,
+    "rate": 0.0
+   }
+  },
+  "e5.W1.ru": {
+   "outputs": 144,
+   "nullLeaves": 1,
+   "nonCitation": {
+    "k": 0,
+    "n": 143,
+    "rate": 0.0
+   },
+   "nonCitationExDegree": {
+    "k": 0,
+    "n": 143,
+    "rate": 0.0
+   },
+   "byCite": {
+    "ok": 140,
+    "na": 3
+   },
+   "nonCitationOnInflected": {
+    "k": 0,
+    "n": 92,
+    "rate": 0.0
+   },
+   "nonCitationExSuspended": {
+    "k": 0,
+    "n": 143,
+    "rate": 0.0
+   },
+   "senseProblems": {
+    "bleed": 6,
+    "shift": 2
+   },
+   "formatProblems": {
+    "null": 1,
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 0,
+    "n": 143,
+    "rate": 0.0
+   }
+  },
+  "e5.W1.both": {
+   "outputs": 288,
+   "nullLeaves": 3,
+   "nonCitation": {
+    "k": 0,
+    "n": 285,
+    "rate": 0.0
+   },
+   "nonCitationExDegree": {
+    "k": 0,
+    "n": 285,
+    "rate": 0.0
+   },
+   "byCite": {
+    "ok": 279,
+    "na": 6
+   },
+   "nonCitationOnInflected": {
+    "k": 0,
+    "n": 183,
+    "rate": 0.0
+   },
+   "nonCitationExSuspended": {
+    "k": 0,
+    "n": 285,
+    "rate": 0.0
+   },
+   "senseProblems": {
+    "bleed": 6,
+    "shift": 2
+   },
+   "formatProblems": {
+    "null": 3,
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 0,
+    "n": 285,
+    "rate": 0.0
+   }
+  },
+  "heldout.A.en": {
+   "outputs": 144,
+   "nullLeaves": 1,
+   "nonCitation": {
+    "k": 65,
+    "n": 143,
+    "rate": 0.455
+   },
+   "nonCitationExDegree": {
+    "k": 59,
+    "n": 143,
+    "rate": 0.413
+   },
+   "byCite": {
+    "form": 59,
+    "ok": 78,
+    "degree": 6
+   },
+   "nonCitationOnInflected": {
+    "k": 65,
+    "n": 143,
+    "rate": 0.455
+   },
+   "nonCitationExSuspended": {
+    "k": 59,
+    "n": 137,
+    "rate": 0.431
+   },
+   "senseProblems": {
+    "partial": 4,
+    "wrong": 2
+   },
+   "formatProblems": {
+    "null": 1,
+    "long": 1
+   },
+   "autoNonCitation": {
+    "k": 63,
+    "n": 143,
+    "rate": 0.441
+   }
+  },
+  "heldout.A.ru": {
+   "outputs": 144,
+   "nullLeaves": 1,
+   "nonCitation": {
+    "k": 58,
+    "n": 143,
+    "rate": 0.406
+   },
+   "nonCitationExDegree": {
+    "k": 52,
+    "n": 143,
+    "rate": 0.364
+   },
+   "byCite": {
+    "form": 52,
+    "ok": 85,
+    "degree": 6
+   },
+   "nonCitationOnInflected": {
+    "k": 58,
+    "n": 143,
+    "rate": 0.406
+   },
+   "nonCitationExSuspended": {
+    "k": 53,
+    "n": 137,
+    "rate": 0.387
+   },
+   "senseProblems": {
+    "partial": 3,
+    "wrong": 2
+   },
+   "formatProblems": {
+    "gloss": 2,
+    "long": 2,
+    "broken": 1,
+    "null": 1
+   },
+   "autoNonCitation": {
+    "k": 52,
+    "n": 143,
+    "rate": 0.364
+   }
+  },
+  "heldout.A.both": {
+   "outputs": 288,
+   "nullLeaves": 2,
+   "nonCitation": {
+    "k": 123,
+    "n": 286,
+    "rate": 0.43
+   },
+   "nonCitationExDegree": {
+    "k": 111,
+    "n": 286,
+    "rate": 0.388
+   },
+   "byCite": {
+    "form": 111,
+    "ok": 163,
+    "degree": 12
+   },
+   "nonCitationOnInflected": {
+    "k": 123,
+    "n": 286,
+    "rate": 0.43
+   },
+   "nonCitationExSuspended": {
+    "k": 112,
+    "n": 274,
+    "rate": 0.409
+   },
+   "senseProblems": {
+    "partial": 7,
+    "wrong": 4
+   },
+   "formatProblems": {
+    "gloss": 2,
+    "long": 3,
+    "null": 2,
+    "broken": 1
+   },
+   "autoNonCitation": {
+    "k": 115,
+    "n": 286,
+    "rate": 0.402
+   }
+  },
+  "heldout.W1.en": {
+   "outputs": 144,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 8,
+    "n": 144,
+    "rate": 0.056
+   },
+   "nonCitationExDegree": {
+    "k": 4,
+    "n": 144,
+    "rate": 0.028
+   },
+   "byCite": {
+    "ok": 136,
+    "form": 4,
+    "degree": 4
+   },
+   "nonCitationOnInflected": {
+    "k": 8,
+    "n": 144,
+    "rate": 0.056
+   },
+   "nonCitationExSuspended": {
+    "k": 6,
+    "n": 138,
+    "rate": 0.043
+   },
+   "senseProblems": {
+    "shift": 1,
+    "wrong": 2
+   },
+   "formatProblems": {
+    "long": 2
+   },
+   "autoNonCitation": {
+    "k": 13,
+    "n": 144,
+    "rate": 0.09
+   }
+  },
+  "heldout.W1.ru": {
+   "outputs": 144,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 4,
+    "n": 144,
+    "rate": 0.028
+   },
+   "nonCitationExDegree": {
+    "k": 2,
+    "n": 144,
+    "rate": 0.014
+   },
+   "byCite": {
+    "ok": 140,
+    "degree": 2,
+    "pos": 2
+   },
+   "nonCitationOnInflected": {
+    "k": 4,
+    "n": 144,
+    "rate": 0.028
+   },
+   "nonCitationExSuspended": {
+    "k": 4,
+    "n": 138,
+    "rate": 0.029
+   },
+   "senseProblems": {
+    "wrong": 3,
+    "partial": 1
+   },
+   "formatProblems": {
+    "gloss": 2
+   },
+   "autoNonCitation": {
+    "k": 8,
+    "n": 144,
+    "rate": 0.056
+   }
+  },
+  "heldout.W1.both": {
+   "outputs": 288,
+   "nullLeaves": 0,
+   "nonCitation": {
+    "k": 12,
+    "n": 288,
+    "rate": 0.042
+   },
+   "nonCitationExDegree": {
+    "k": 6,
+    "n": 288,
+    "rate": 0.021
+   },
+   "byCite": {
+    "ok": 276,
+    "form": 4,
+    "degree": 6,
+    "pos": 2
+   },
+   "nonCitationOnInflected": {
+    "k": 12,
+    "n": 288,
+    "rate": 0.042
+   },
+   "nonCitationExSuspended": {
+    "k": 10,
+    "n": 276,
+    "rate": 0.036
+   },
+   "senseProblems": {
+    "shift": 1,
+    "wrong": 5,
+    "partial": 1
+   },
+   "formatProblems": {
+    "gloss": 2,
+    "long": 2
+   },
+   "autoNonCitation": {
+    "k": 21,
+    "n": 288,
+    "rate": 0.073
+   }
+  }
+ },
+ "heuristicVsHand": {
+  "handBad_autoBad": 205,
+  "handBad_autoOk(missed)": 24,
+  "handOk_autoBad(false flag)": 20,
+  "handOk_autoOk": 1042,
+  "disagreements": [
+   "grammar-de-idiom-bett-literal-figurative-full ru 'больничный режим': hand pos, auto ok",
+   "grammar-de-idiom-bett-literal-figurative-full ru 'постель': hand pos, auto ok",
+   "grammar-de-idiom-haende-present-full en 'have one's hands full': hand ok, auto form: inflected verb 'hands'",
+   "grammar-de-idiom-haende-present-full en 'to have one's hands full': hand ok, auto form: inflected verb 'hands'",
+   "grammar-de-idiom-licht-passive-full en 'light': hand form, auto ok",
+   "grammar-de-idiom-schlauch-present-full en 'be completely stumped': hand ok, auto form: inflected verb 'stumped'",
+   "grammar-de-idiom-tomaten-present-full en 'be oblivious to what is obvious': hand ok, auto form: inflected verb 'is'",
+   "grammar-de-idiom-tomaten-present-full en 'be oblivious to what is plainly visible': hand ok, auto sentence-like",
+   "grammar-de-idiom-tomaten-present-full en 'have tomatoes on one's eyes': hand ok, auto form: inflected verb 'eyes'",
+   "grammar-de-noun-accept-plural-only-ferien en 'holidays': hand ok, auto form: plural noun 'holidays'",
+   "grammar-de-noun-accept-plural-only-ferien en 'school holidays': hand ok, auto form: plural noun 'holidays'",
+   "grammar-de-noun-accept-suspended-dativ-plural en 'children’s': hand form, auto ok",
+   "grammar-de-noun-accept-suspended-dativ-plural ru 'детские': hand form, auto ok",
+   "grammar-de-noun-accept-suspended-nonbreaking en 'children’s': hand form, auto ok",
+   "grammar-de-noun-accept-suspended-nonbreaking ru 'детские': hand form, auto ok",
+   "grammar-de-noun-accept-suspended-nonbreaking ru 'детский': hand pos, auto ok",
+   "grammar-de-noun-dev-suspended-typo en 'children’s': hand form, auto ok",
+   "grammar-de-noun-dev-suspended-typo ru 'детские': hand form, auto ok",
+   "grammar-de-verb-dw-passive-aufgefressen ru 'съедаться': hand form, auto ok",
+   "grammar-de-verb-dw-perfect-passive-aufgefunden en 'found': hand form, auto ok",
+   "grammar-de-verb-dw-perfect-passive-aufgefunden ru 'быть найденным': hand form, auto ok",
+   "grammar-de-verb-elliptical-modal-kann ru 'мочь': hand ok, auto pos: no verb word",
+   "grammar-de-verb-modal-darf-bleiben en 'be allowed to': hand ok, auto form: inflected verb 'allowed'",
+   "grammar-de-verb-modal-darf-bleiben ru 'мочь': hand ok, auto pos: no verb word",
+   "grammar-de-verb-modal-demo-kann ru 'мочь': hand ok, auto pos: no verb word",
+   "grammar-de-verb-modal-wolltest-gehen en 'wanted to': hand form, auto ok",
+   "grammar-de-verb-state-passive-geschlossen en 'closed': hand form, auto ok",
+   "passiv#8 ru 'доставляться': hand form, auto ok"
+  ]
+ },
+ "pairedQuality": {
+  "pilot: W1 vs A": {
+   "citation": {
+    "fixed": 12,
+    "bothOk": 32,
+    "bothBad": 4
+   },
+   "senseOrFormatRegressions": [],
+   "senseOrFormatImprovements": [
+    "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig r0 ru: A 'самый тщательно' -> W1 'тщательный' [A broken]",
+    "grammar-de-verb-subject-governed r0 ru: A 'идти (о чём-либо)' -> W1 'касаться' [A gloss]"
+   ]
+  },
+  "pilot: W2 vs A": {
+   "citation": {
+    "fixed": 13,
+    "bothOk": 32,
+    "bothBad": 3
+   },
+   "senseOrFormatRegressions": [
+    "grammar-de-verb-subject-governed r0 ru: A 'идти (о чём-либо)' -> W2 'идти о' [broken]"
+   ],
+   "senseOrFormatImprovements": [
+    "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig r0 ru: A 'самый тщательно' -> W2 'тщательный' [A broken]",
+    "grammar-de-noun-accept-suspended-nonbreaking r0 en: A 'children’s' -> W2 'children's book' [A partial]"
+   ]
+  },
+  "e5: W1 vs A": {
+   "citation": {
+    "bothOk": 217,
+    "fixed": 71
+   },
+   "senseOrFormatRegressions": [
+    "genitiv#8 r0 en: A 'is' -> W1 'None' [null]",
+    "genitiv#8 r1 ru: A 'есть' -> W1 'None' [null]",
+    "genitiv#8 r2 en: A 'is' -> W1 'None' [null]",
+    "kakao#8 r0 ru: A 'хорошо' -> W1 'вкусный' [bleed]",
+    "kakao#8 r1 ru: A 'хорошо' -> W1 'вкусный' [bleed]",
+    "kakao#8 r2 ru: A 'хорошо' -> W1 'вкусный' [bleed]",
+    "klitik#0 r1 ru: A 'как ты себя чувствуешь' -> W1 'как поживать' [broken]",
+    "museum#4 r0 ru: A 'открывается' -> W1 'открывать' [shift]",
+    "museum#4 r1 ru: A 'открывается' -> W1 'открывать' [shift]"
+   ],
+   "senseOrFormatImprovements": [
+    "kakao#4 r0 en: A 'hot chocolate' -> W1 'cocoa' [A bleed]",
+    "kakao#4 r0 ru: A 'горячий какао' -> W1 'какао' [A bleed]",
+    "kakao#4 r1 en: A 'hot cocoa' -> W1 'cocoa' [A bleed]",
+    "kakao#4 r2 en: A 'hot cocoa' -> W1 'cocoa' [A bleed]",
+    "kakao#4 r2 ru: A 'горячий какао' -> W1 'какао' [A bleed]"
+   ]
+  },
+  "heldout: W1 vs A": {
+   "citation": {
+    "fixed": 113,
+    "bothOk": 163,
+    "bothBad": 10,
+    "broken": 2
+   },
+   "senseOrFormatRegressions": [
+    "grammar-de-idiom-bett-literal-figurative-full r0 ru: A 'соблюдать постельный режим' -> W1 'больничный режим' [citation pos]",
+    "grammar-de-idiom-bett-literal-figurative-full r0 ru: A 'соблюдать постельный режим' -> W1 'больничный режим' [wrong]",
+    "grammar-de-idiom-bett-literal-figurative-full r1 ru: A 'лежать в постели из-за болезни' -> W1 'постель' [citation pos]",
+    "grammar-de-idiom-bett-literal-figurative-full r1 ru: A 'лежать в постели из-за болезни' -> W1 'постель' [partial]",
+    "grammar-de-idiom-schneider-past-full r1 en: A 'freeze one's butt off' -> W1 'freeze like a tailor' [wrong]",
+    "grammar-de-idiom-tomaten-present-full r0 en: A 'have tomatoes on one's eyes' -> W1 'be oblivious to what is plainly visible' [long]",
+    "grammar-de-noun-dev-abbreviation-dipl-ing r0 ru: A 'дипломированный инженер' -> W1 'инженер-дипломант' [wrong]",
+    "grammar-de-noun-dev-abbreviation-dipl-ing r1 ru: A 'дипломированный инженер' -> W1 'инженер-дипломант' [wrong]",
+    "grammar-de-verb-subject-question r0 en: A 'is there' -> W1 'be available' [shift]"
+   ],
+   "senseOrFormatImprovements": [
+    "grammar-de-idiom-licht-passive-full r0 ru: A 'пролить свет на тёмную, неясную ситуацию' -> W1 'прояснить ситуацию' [A long]",
+    "grammar-de-idiom-licht-passive-full r1 en: A 'light' -> W1 'shed light on' [A partial]",
+    "grammar-de-idiom-tomaten-present-full r0 ru: A 'иметь помидоры на глазах' -> W1 'не замечать очевидного' [A wrong]",
+    "grammar-de-idiom-tomaten-present-full r1 ru: A 'иметь помидоры на глазах' -> W1 'не замечать очевидного' [A wrong]",
+    "grammar-de-noun-accept-suspended-dativ-plural r0 en: A 'children’s' -> W1 'children’s books' [A partial]",
+    "grammar-de-noun-accept-suspended-dativ-plural r0 ru: A 'детские' -> W1 'детская литература' [A partial]",
+    "grammar-de-noun-accept-suspended-dativ-plural r1 en: A 'children’s' -> W1 'children's books' [A partial]",
+    "grammar-de-noun-accept-suspended-dativ-plural r1 ru: A 'детские' -> W1 'детская литература' [A partial]",
+    "grammar-de-noun-demo-owned-aufstieg r1 ru: A 'None' -> W1 'подъём' [A null]",
+    "grammar-de-noun-dev-suspended-typo r0 en: A 'children’s' -> W1 'children’s book' [A partial]",
+    "grammar-de-noun-dev-suspended-typo r1 ru: A 'детские' -> W1 'детская книга' [A partial]",
+    "grammar-de-verb-resultative-bekommt-geoeffnet r1 en: A 'None' -> W1 'get' [A null]",
+    "grammar-de-verb-resultative-bekommt-geoeffnet r1 ru: A 'добивается того, чтобы' -> W1 'добиваться' [A broken]"
+   ]
+  }
+ },
+ "caseLevelNonCitation": {
+  "e5.A.en": {
+   "cases": 12,
+   "ids": [
+    "aufstehen#4",
+    "ausweg#2",
+    "erinnert#14",
+    "faden#2",
+    "fremd#4",
+    "genitiv#8",
+    "kakao#6",
+    "museum#4",
+    "passiv#8",
+    "relativ#9",
+    "usw#2",
+    "verfuegung#8"
+   ]
+  },
+  "e5.A.ru": {
+   "cases": 16,
+   "ids": [
+    "ausweg#2",
+    "faden#2",
+    "fremd#4",
+    "genitiv#6",
+    "genitiv#8",
+    "kakao#6",
+    "kakao#8",
+    "manche#9",
+    "museum#4",
+    "passiv#8",
+    "typo#2",
+    "typo#8",
+    "usw#15",
+    "usw#2",
+    "verfuegung#4",
+    "verfuegung#8"
+   ]
+  },
+  "e5.W1.en": {
+   "cases": 0,
+   "ids": []
+  },
+  "e5.W1.ru": {
+   "cases": 0,
+   "ids": []
+  },
+  "heldout.A.en": {
+   "cases": 35,
+   "ids": [
+    "grammar-de-adj-accept-adverbial-comparative-schnell",
+    "grammar-de-adj-demo-comparative-besser",
+    "grammar-de-adj-dev-attributive-superlative-hoch",
+    "grammar-de-idiom-licht-passive-full",
+    "grammar-de-noun-accept-dat-plur-haeusern",
+    "grammar-de-noun-accept-suspended-dativ-plural",
+    "grammar-de-noun-demo-dat-plur-kindern",
+    "grammar-de-noun-dev-acc-plur-buecher",
+    "grammar-de-noun-dev-gen-plur-frauen",
+    "grammar-de-noun-dev-nom-plur-banken",
+    "grammar-de-noun-dev-substantivized-reisenden",
+    "grammar-de-noun-dev-suspended-right-jugendbuecher",
+    "grammar-de-noun-dev-suspended-typo",
+    "grammar-de-verb-anticipatory-es",
+    "grammar-de-verb-demo-weather",
+    "grammar-de-verb-dw-passive-aufgefressen",
+    "grammar-de-verb-dw-passive-weitergeleitet",
+    "grammar-de-verb-dw-perfect-ausgeschlossen",
+    "grammar-de-verb-dw-perfect-passive-aufgefunden",
+    "grammar-de-verb-dw-pluperfect-angekuendigt",
+    "grammar-de-verb-finite-liest",
+    "grammar-de-verb-full-modal-mag",
+    "grammar-de-verb-governed-preposition-wartet",
+    "grammar-de-verb-lexical-bekommt-paket",
+    "grammar-de-verb-modal-darf-bleiben",
+    "grammar-de-verb-participle-gesungen",
+    "grammar-de-verb-past-ging",
+    "grammar-de-verb-positional-es",
+    "grammar-de-verb-prep-free-arbeiten-mit",
+    "grammar-de-verb-prep-free-reflexive-erholen-im",
+    "grammar-de-verb-recipient-passive-erhielt-ueberreicht",
+    "grammar-de-verb-referential-es",
+    "grammar-de-verb-resultative-bekommt-geoeffnet",
+    "grammar-de-verb-state-passive-geschlossen",
+    "grammar-de-verb-subject-question"
+   ]
+  },
+  "heldout.A.ru": {
+   "cases": 35,
+   "ids": [
+    "grammar-de-adj-accept-adverbial-comparative-schnell",
+    "grammar-de-adj-demo-comparative-besser",
+    "grammar-de-adj-dev-attributive-dat-neut-kalt",
+    "grammar-de-adj-dev-attributive-gen-plur-neu",
+    "grammar-de-adj-dev-attributive-superlative-hoch",
+    "grammar-de-adj-dev-participial-geschlossen",
+    "grammar-de-coll-abschied-past-full",
+    "grammar-de-idiom-segel-ellipsis-partial",
+    "grammar-de-noun-accept-dat-plur-haeusern",
+    "grammar-de-noun-accept-suspended-dativ-plural",
+    "grammar-de-noun-demo-dat-plur-kindern",
+    "grammar-de-noun-dev-acc-plur-buecher",
+    "grammar-de-noun-dev-gen-plur-frauen",
+    "grammar-de-noun-dev-nested",
+    "grammar-de-noun-dev-nom-plur-banken",
+    "grammar-de-noun-dev-substantivized-reisenden",
+    "grammar-de-noun-dev-suspended-right-jugendbuecher",
+    "grammar-de-noun-dev-suspended-typo",
+    "grammar-de-verb-anticipatory-es",
+    "grammar-de-verb-dw-passive-aufgefressen",
+    "grammar-de-verb-dw-perfect-passive-aufgefunden",
+    "grammar-de-verb-elliptical-modal-kann",
+    "grammar-de-verb-finite-liest",
+    "grammar-de-verb-full-werden",
+    "grammar-de-verb-lexical-bekommt-paket",
+    "grammar-de-verb-modal-darf-bleiben",
+    "grammar-de-verb-participle-gesungen",
+    "grammar-de-verb-past-ging",
+    "grammar-de-verb-positional-es",
+    "grammar-de-verb-prep-free-arbeiten-mit",
+    "grammar-de-verb-prep-free-reflexive-erholen-im",
+    "grammar-de-verb-prep-governed-verzichten-auf",
+    "grammar-de-verb-resultative-bekommt-geoeffnet",
+    "grammar-de-verb-state-passive-geschlossen",
+    "grammar-de-verb-subject-question"
+   ]
+  },
+  "heldout.W1.en": {
+   "cases": 5,
+   "ids": [
+    "grammar-de-adj-demo-comparative-besser",
+    "grammar-de-adj-dev-attributive-superlative-hoch",
+    "grammar-de-noun-accept-suspended-dativ-plural",
+    "grammar-de-noun-dev-acc-plur-buecher",
+    "grammar-de-verb-state-passive-geschlossen"
+   ]
+  },
+  "heldout.W1.ru": {
+   "cases": 2,
+   "ids": [
+    "grammar-de-adj-demo-comparative-besser",
+    "grammar-de-idiom-bett-literal-figurative-full"
+   ]
+  },
+  "pilot.A.en": {
+   "cases": 7,
+   "ids": [
+    "grammar-de-adj-accept-irregular-superlative-beste",
+    "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+    "grammar-de-adj-dev-attributive-comparative-teuer",
+    "grammar-de-noun-accept-substantivized-angestellten",
+    "grammar-de-noun-accept-suspended-nonbreaking",
+    "grammar-de-verb-copula-sind-muede",
+    "grammar-de-verb-modal-wolltest-gehen"
+   ]
+  },
+  "pilot.A.ru": {
+   "cases": 9,
+   "ids": [
+    "grammar-de-adj-accept-irregular-superlative-beste",
+    "grammar-de-adj-accept-ordinal-zweite",
+    "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+    "grammar-de-adj-dev-attributive-comparative-teuer",
+    "grammar-de-idiom-handtuch-ellipsis-partial",
+    "grammar-de-noun-accept-substantivized-angestellten",
+    "grammar-de-noun-accept-suspended-nonbreaking",
+    "grammar-de-noun-dev-dat-sing-chef",
+    "grammar-de-noun-dev-gen-sing-mannes"
+   ]
+  },
+  "pilot.W1.en": {
+   "cases": 2,
+   "ids": [
+    "grammar-de-adj-accept-irregular-superlative-beste",
+    "grammar-de-noun-accept-suspended-nonbreaking"
+   ]
+  },
+  "pilot.W1.ru": {
+   "cases": 2,
+   "ids": [
+    "grammar-de-adj-accept-irregular-superlative-beste",
+    "grammar-de-noun-accept-suspended-nonbreaking"
+   ]
+  },
+  "pilot.W2.en": {
+   "cases": 1,
+   "ids": [
+    "grammar-de-adj-accept-irregular-superlative-beste"
+   ]
+  },
+  "pilot.W2.ru": {
+   "cases": 2,
+   "ids": [
+    "grammar-de-adj-accept-irregular-superlative-beste",
+    "grammar-de-noun-accept-suspended-nonbreaking"
+   ]
+  }
+ },
+ "noise": {
+  "e5: A across reps": {
+   "pairs": 288,
+   "textChanged": 33,
+   "citationLabelChanged": 16,
+   "senseOrFormatLabelChanged": 2
+  },
+  "e5: W1 across reps": {
+   "pairs": 288,
+   "textChanged": 16,
+   "citationLabelChanged": 0,
+   "senseOrFormatLabelChanged": 8
+  },
+  "e5: A vs W1 same rep": {
+   "pairs": 288,
+   "textChanged": 88
+  },
+  "heldout: A across reps": {
+   "pairs": 144,
+   "textChanged": 36,
+   "citationLabelChanged": 17,
+   "senseOrFormatLabelChanged": 10
+  },
+  "heldout: W1 across reps": {
+   "pairs": 144,
+   "textChanged": 16,
+   "citationLabelChanged": 2,
+   "senseOrFormatLabelChanged": 2
+  },
+  "heldout: A vs W1 same rep": {
+   "pairs": 288,
+   "textChanged": 167
+  }
+ },
+ "regressionReplication": {
+  "e5 genitiv#8 en": {
+   "reps": 3,
+   "W1problem": 2,
+   "Aproblem": 0,
+   "W1texts": [
+    null,
+    "be",
+    null
+   ],
+   "Atexts": [
+    "is",
+    "is",
+    "is"
+   ]
+  },
+  "e5 genitiv#8 ru": {
+   "reps": 3,
+   "W1problem": 1,
+   "Aproblem": 0,
+   "W1texts": [
+    "быть",
+    null,
+    "быть"
+   ],
+   "Atexts": [
+    "есть",
+    "есть",
+    "есть"
+   ]
+  },
+  "e5 kakao#4 en": {
+   "reps": 3,
+   "W1problem": 0,
+   "Aproblem": 3,
+   "W1texts": [
+    "cocoa",
+    "cocoa",
+    "cocoa"
+   ],
+   "Atexts": [
+    "hot chocolate",
+    "hot cocoa",
+    "hot cocoa"
+   ]
+  },
+  "e5 kakao#4 ru": {
+   "reps": 3,
+   "W1problem": 0,
+   "Aproblem": 2,
+   "W1texts": [
+    "какао",
+    "какао",
+    "какао"
+   ],
+   "Atexts": [
+    "горячий какао",
+    "какао",
+    "горячий какао"
+   ]
+  },
+  "e5 kakao#6 ru": {
+   "reps": 3,
+   "W1problem": 3,
+   "Aproblem": 3,
+   "W1texts": [
+    "быть вкусным",
+    "быть вкусным",
+    "быть вкусным"
+   ],
+   "Atexts": [
+    "вкусен",
+    "вкусный",
+    "вкусный"
+   ]
+  },
+  "e5 kakao#8 ru": {
+   "reps": 3,
+   "W1problem": 3,
+   "Aproblem": 0,
+   "W1texts": [
+    "вкусный",
+    "вкусный",
+    "вкусный"
+   ],
+   "Atexts": [
+    "хорошо",
+    "хорошо",
+    "хорошо"
+   ]
+  },
+  "e5 klitik#0 ru": {
+   "reps": 3,
+   "W1problem": 1,
+   "Aproblem": 0,
+   "W1texts": [
+    "как дела",
+    "как поживать",
+    "как дела"
+   ],
+   "Atexts": [
+    "как ты",
+    "как ты себя чувствуешь",
+    "как ты поживаешь"
+   ]
+  },
+  "e5 museum#4 ru": {
+   "reps": 3,
+   "W1problem": 2,
+   "Aproblem": 0,
+   "W1texts": [
+    "открывать",
+    "открывать",
+    "открываться"
+   ],
+   "Atexts": [
+    "открывается",
+    "открывается",
+    "открывается"
+   ]
+  },
+  "heldout grammar-de-idiom-bett-literal-figurative-full ru": {
+   "reps": 2,
+   "W1problem": 2,
+   "Aproblem": 1,
+   "W1texts": [
+    "больничный режим",
+    "постель"
+   ],
+   "Atexts": [
+    "соблюдать постельный режим",
+    "лежать в постели из-за болезни"
+   ]
+  },
+  "heldout grammar-de-idiom-licht-passive-full en": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "shed light on",
+    "shed light on"
+   ],
+   "Atexts": [
+    "shed light on",
+    "light"
+   ]
+  },
+  "heldout grammar-de-idiom-licht-passive-full ru": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "прояснить ситуацию",
+    "пролить свет"
+   ],
+   "Atexts": [
+    "пролить свет на тёмную, неясную ситуацию",
+    "пролить свет на тайное"
+   ]
+  },
+  "heldout grammar-de-idiom-schneider-past-full en": {
+   "reps": 2,
+   "W1problem": 2,
+   "Aproblem": 1,
+   "W1texts": [
+    "freeze like a tailor",
+    "freeze like a tailor"
+   ],
+   "Atexts": [
+    "freeze like a tailor",
+    "freeze one's butt off"
+   ]
+  },
+  "heldout grammar-de-idiom-tomaten-present-full en": {
+   "reps": 2,
+   "W1problem": 2,
+   "Aproblem": 2,
+   "W1texts": [
+    "be oblivious to what is plainly visible",
+    "be oblivious to what is obvious"
+   ],
+   "Atexts": [
+    "have tomatoes on one's eyes",
+    "be oblivious to what is plainly visible"
+   ]
+  },
+  "heldout grammar-de-idiom-tomaten-present-full ru": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 2,
+   "W1texts": [
+    "не замечать очевидного",
+    "не замечать очевидного"
+   ],
+   "Atexts": [
+    "иметь помидоры на глазах",
+    "иметь помидоры на глазах"
+   ]
+  },
+  "heldout grammar-de-noun-accept-suspended-dativ-plural en": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 2,
+   "W1texts": [
+    "children’s books",
+    "children's books"
+   ],
+   "Atexts": [
+    "children’s",
+    "children’s"
+   ]
+  },
+  "heldout grammar-de-noun-accept-suspended-dativ-plural ru": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 2,
+   "W1texts": [
+    "детская литература",
+    "детская литература"
+   ],
+   "Atexts": [
+    "детские",
+    "детские"
+   ]
+  },
+  "heldout grammar-de-noun-demo-owned-aufstieg ru": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "подъём",
+    "подъём"
+   ],
+   "Atexts": [
+    "подъём",
+    null
+   ]
+  },
+  "heldout grammar-de-noun-dev-abbreviation-dipl-ing ru": {
+   "reps": 2,
+   "W1problem": 2,
+   "Aproblem": 0,
+   "W1texts": [
+    "инженер-дипломант",
+    "инженер-дипломант"
+   ],
+   "Atexts": [
+    "дипломированный инженер",
+    "дипломированный инженер"
+   ]
+  },
+  "heldout grammar-de-noun-dev-suspended-typo en": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "children’s book",
+    "children's book"
+   ],
+   "Atexts": [
+    "children’s",
+    "children’s books"
+   ]
+  },
+  "heldout grammar-de-noun-dev-suspended-typo ru": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "детская книга",
+    "детская книга"
+   ],
+   "Atexts": [
+    "детские книги",
+    "детские"
+   ]
+  },
+  "heldout grammar-de-verb-demo-weather ru": {
+   "reps": 2,
+   "W1problem": 2,
+   "Aproblem": 2,
+   "W1texts": [
+    "идти (о дожде)",
+    "идти (о дожде)"
+   ],
+   "Atexts": [
+    "идти (о дожде)",
+    "идти (о дожде)"
+   ]
+  },
+  "heldout grammar-de-verb-resultative-bekommt-geoeffnet en": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "get",
+    "get"
+   ],
+   "Atexts": [
+    "gets",
+    null
+   ]
+  },
+  "heldout grammar-de-verb-resultative-bekommt-geoeffnet ru": {
+   "reps": 2,
+   "W1problem": 0,
+   "Aproblem": 1,
+   "W1texts": [
+    "добиться",
+    "добиваться"
+   ],
+   "Atexts": [
+    "добивается",
+    "добивается того, чтобы"
+   ]
+  },
+  "heldout grammar-de-verb-subject-question en": {
+   "reps": 2,
+   "W1problem": 1,
+   "Aproblem": 0,
+   "W1texts": [
+    "be available",
+    "exist"
+   ],
+   "Atexts": [
+    "is there",
+    "is there"
+   ]
+  }
+ },
+ "heuristicE5OriginalVsHand": {
+  "handBad_autoBad": 186,
+  "handBad_autoOk(missed)": 43,
+  "handOk_autoBad(false flag)": 19,
+  "handOk_autoOk": 1043,
+  "missedDistinct": [
+   "ausweg#2 ru 'есть' (form)",
+   "genitiv#8 ru 'есть' (form)",
+   "grammar-de-adj-accept-adverbial-comparative-schnell ru 'быстрее' (degree)",
+   "grammar-de-adj-accept-irregular-superlative-beste ru 'лучший' (degree)",
+   "grammar-de-adj-demo-comparative-besser ru 'лучше' (degree)",
+   "grammar-de-adj-demo-comparative-besser ru 'лучший' (degree)",
+   "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig ru 'самый тщательно' (degree)",
+   "grammar-de-adj-dev-attributive-superlative-hoch ru 'самый высокий' (degree)",
+   "grammar-de-idiom-bett-literal-figurative-full ru 'больничный режим' (pos)",
+   "grammar-de-idiom-bett-literal-figurative-full ru 'постель' (pos)",
+   "grammar-de-idiom-licht-passive-full en 'light' (form)",
+   "grammar-de-noun-accept-suspended-dativ-plural en 'children’s' (form)",
+   "grammar-de-noun-accept-suspended-dativ-plural ru 'детские' (form)",
+   "grammar-de-noun-accept-suspended-nonbreaking en 'children’s' (form)",
+   "grammar-de-noun-accept-suspended-nonbreaking ru 'детские' (form)",
+   "grammar-de-noun-accept-suspended-nonbreaking ru 'детский' (pos)",
+   "grammar-de-noun-dev-suspended-typo en 'children’s' (form)",
+   "grammar-de-noun-dev-suspended-typo ru 'детские' (form)",
+   "grammar-de-verb-dw-passive-aufgefressen ru 'съедаться' (form)",
+   "grammar-de-verb-dw-perfect-passive-aufgefunden en 'found' (form)",
+   "grammar-de-verb-dw-perfect-passive-aufgefunden ru 'быть найденным' (form)",
+   "grammar-de-verb-modal-wolltest-gehen en 'wanted to' (form)",
+   "grammar-de-verb-state-passive-geschlossen en 'closed' (form)",
+   "kakao#6 ru 'вкусен' (pos)",
+   "kakao#6 ru 'вкусный' (pos)",
+   "passiv#8 ru 'доставляться' (form)"
+  ]
+ },
+ "latency": {
+  "pilot.A": {
+   "translationCallMs": {
+    "n": 48,
+    "p50": 1256,
+    "p90": 1895,
+    "mean": 1338,
+    "max": 2541
+   },
+   "translationProviderMs": {
+    "n": 48,
+    "p50": 969,
+    "p90": 1605,
+    "mean": 1068,
+    "max": 2253
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 24,
+    "p50": 1346,
+    "p90": 2090,
+    "mean": 1511,
+    "max": 2541
+   },
+   "inputTokensPerTranslationCall": 277.3,
+   "outputTokensPerTranslationCall": 16.75,
+   "costPerTranslationCallUsd": 0.0001511,
+   "translationCalls": 48,
+   "invalidOrFailedCalls": 0,
+   "callsOver4s": 0
+  },
+  "pilot.W1": {
+   "translationCallMs": {
+    "n": 48,
+    "p50": 1089,
+    "p90": 2107,
+    "mean": 1264,
+    "max": 2899
+   },
+   "translationProviderMs": {
+    "n": 48,
+    "p50": 783,
+    "p90": 1789,
+    "mean": 987,
+    "max": 2515
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 24,
+    "p50": 1187,
+    "p90": 2614,
+    "mean": 1494,
+    "max": 2899
+   },
+   "inputTokensPerTranslationCall": 305.3,
+   "outputTokensPerTranslationCall": 16.75,
+   "costPerTranslationCallUsd": 0.0001623,
+   "translationCalls": 48,
+   "invalidOrFailedCalls": 0,
+   "callsOver4s": 0
+  },
+  "pilot.W2": {
+   "translationCallMs": {
+    "n": 48,
+    "p50": 1161,
+    "p90": 1781,
+    "mean": 1254,
+    "max": 3250
+   },
+   "translationProviderMs": {
+    "n": 48,
+    "p50": 899,
+    "p90": 1465,
+    "mean": 997,
+    "max": 2843
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 24,
+    "p50": 1255,
+    "p90": 1809,
+    "mean": 1439,
+    "max": 3250
+   },
+   "inputTokensPerTranslationCall": 348.3,
+   "outputTokensPerTranslationCall": 16.75,
+   "costPerTranslationCallUsd": 0.0001795,
+   "translationCalls": 48,
+   "invalidOrFailedCalls": 0,
+   "callsOver4s": 0
+  },
+  "e5.A": {
+   "translationCallMs": {
+    "n": 288,
+    "p50": 1214,
+    "p90": 1821,
+    "mean": 1364,
+    "max": 8303
+   },
+   "translationProviderMs": {
+    "n": 288,
+    "p50": 968,
+    "p90": 1515,
+    "mean": 1093,
+    "max": 8031
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 144,
+    "p50": 1431,
+    "p90": 2076,
+    "mean": 1622,
+    "max": 8303
+   },
+   "inputTokensPerTranslationCall": 271.2,
+   "outputTokensPerTranslationCall": 16.07,
+   "costPerTranslationCallUsd": 0.0001471,
+   "translationCalls": 288,
+   "invalidOrFailedCalls": 0,
+   "callsOver4s": 3,
+   "draftSetWallMs": {
+    "n": 144,
+    "p50": 1662,
+    "p90": 2514,
+    "mean": 1843,
+    "max": 8307
+   },
+   "draftSetWallMsByRep": {
+    "0": {
+     "n": 48,
+     "p50": 1678,
+     "p90": 2752,
+     "mean": 1988,
+     "max": 8191
+    },
+    "1": {
+     "n": 48,
+     "p50": 1549,
+     "p90": 2241,
+     "mean": 1634,
+     "max": 3649
+    },
+    "2": {
+     "n": 48,
+     "p50": 1725,
+     "p90": 2582,
+     "mean": 1908,
+     "max": 8307
+    }
+   },
+   "draftSetWallMsByPosition": {
+    "0": {
+     "n": 72,
+     "p50": 1764,
+     "p90": 2752,
+     "mean": 2122,
+     "max": 8307
+    },
+    "1": {
+     "n": 72,
+     "p50": 1460,
+     "p90": 1971,
+     "mean": 1565,
+     "max": 2905
+    }
+   },
+   "perLeafCallMs": {
+    "definition": {
+     "n": 144,
+     "p50": 1243,
+     "p90": 1687,
+     "mean": 1318,
+     "max": 2666
+    },
+    "transcription": {
+     "n": 144,
+     "p50": 1100,
+     "p90": 1789,
+     "mean": 1282,
+     "max": 8190
+    },
+    "translations.en": {
+     "n": 144,
+     "p50": 1268,
+     "p90": 1791,
+     "mean": 1385,
+     "max": 8303
+    },
+    "translations.ru": {
+     "n": 144,
+     "p50": 1156,
+     "p90": 1895,
+     "mean": 1343,
+     "max": 6191
+    }
+   },
+   "slowestLeaf": {
+    "transcription": 28,
+    "translations.en": 47,
+    "definition": 31,
+    "translations.ru": 38
+   },
+   "costPerDraftSetUsd": 0.0005644,
+   "outputTokensPerDraftSet": 79.1,
+   "inputTokensPerDraftSet": 936.1
+  },
+  "e5.W1": {
+   "translationCallMs": {
+    "n": 288,
+    "p50": 1062,
+    "p90": 1558,
+    "mean": 1151,
+    "max": 8179
+   },
+   "translationProviderMs": {
+    "n": 288,
+    "p50": 801,
+    "p90": 1271,
+    "mean": 892,
+    "max": 7941
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 144,
+    "p50": 1219,
+    "p90": 1734,
+    "mean": 1337,
+    "max": 8179
+   },
+   "inputTokensPerTranslationCall": 299.2,
+   "outputTokensPerTranslationCall": 16.05,
+   "costPerTranslationCallUsd": 0.0001582,
+   "translationCalls": 288,
+   "invalidOrFailedCalls": 3,
+   "callsOver4s": 4,
+   "draftSetWallMs": {
+    "n": 144,
+    "p50": 1453,
+    "p90": 2134,
+    "mean": 1680,
+    "max": 8266
+   },
+   "draftSetWallMsByRep": {
+    "0": {
+     "n": 48,
+     "p50": 1528,
+     "p90": 2419,
+     "mean": 2034,
+     "max": 8266
+    },
+    "1": {
+     "n": 48,
+     "p50": 1376,
+     "p90": 1876,
+     "mean": 1498,
+     "max": 4386
+    },
+    "2": {
+     "n": 48,
+     "p50": 1404,
+     "p90": 2061,
+     "mean": 1509,
+     "max": 3296
+    }
+   },
+   "draftSetWallMsByPosition": {
+    "0": {
+     "n": 72,
+     "p50": 1439,
+     "p90": 2127,
+     "mean": 1695,
+     "max": 8181
+    },
+    "1": {
+     "n": 72,
+     "p50": 1457,
+     "p90": 2282,
+     "mean": 1666,
+     "max": 8266
+    }
+   },
+   "perLeafCallMs": {
+    "definition": {
+     "n": 144,
+     "p50": 1255,
+     "p90": 1828,
+     "mean": 1404,
+     "max": 8265
+    },
+    "transcription": {
+     "n": 144,
+     "p50": 1073,
+     "p90": 1492,
+     "mean": 1200,
+     "max": 8060
+    },
+    "translations.en": {
+     "n": 144,
+     "p50": 1052,
+     "p90": 1519,
+     "mean": 1141,
+     "max": 8179
+    },
+    "translations.ru": {
+     "n": 144,
+     "p50": 1081,
+     "p90": 1580,
+     "mean": 1162,
+     "max": 2280
+    }
+   },
+   "slowestLeaf": {
+    "translations.ru": 32,
+    "transcription": 31,
+    "definition": 60,
+    "translations.en": 21
+   },
+   "costPerDraftSetUsd": 0.0005863,
+   "outputTokensPerDraftSet": 79.0,
+   "inputTokensPerDraftSet": 992.1
+  },
+  "heldout.A": {
+   "translationCallMs": {
+    "n": 288,
+    "p50": 1234,
+    "p90": 1910,
+    "mean": 1400,
+    "max": 9926
+   },
+   "translationProviderMs": {
+    "n": 288,
+    "p50": 976,
+    "p90": 1596,
+    "mean": 1125,
+    "max": 9544
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 144,
+    "p50": 1430,
+    "p90": 2262,
+    "mean": 1673,
+    "max": 9926
+   },
+   "inputTokensPerTranslationCall": 277.8,
+   "outputTokensPerTranslationCall": 16.78,
+   "costPerTranslationCallUsd": 0.0001514,
+   "translationCalls": 288,
+   "invalidOrFailedCalls": 2,
+   "callsOver4s": 3
+  },
+  "heldout.W1": {
+   "translationCallMs": {
+    "n": 288,
+    "p50": 1059,
+    "p90": 1605,
+    "mean": 1224,
+    "max": 8365
+   },
+   "translationProviderMs": {
+    "n": 288,
+    "p50": 803,
+    "p90": 1315,
+    "mean": 952,
+    "max": 8123
+   },
+   "translationLegMs(max en,ru)": {
+    "n": 144,
+    "p50": 1200,
+    "p90": 1974,
+    "mean": 1462,
+    "max": 8365
+   },
+   "inputTokensPerTranslationCall": 305.8,
+   "outputTokensPerTranslationCall": 16.61,
+   "costPerTranslationCallUsd": 0.0001622,
+   "translationCalls": 288,
+   "invalidOrFailedCalls": 0,
+   "callsOver4s": 3
+  }
+ },
+ "pairedLatency": {
+  "pilot: W1 - A, translationPairWallMs": {
+   "n": 24,
+   "cases": 24,
+   "p50": [
+    1190,
+    1349
+   ],
+   "p50DiffMs": -159,
+   "p50DiffCI95(cluster)": [
+    -390,
+    51
+   ],
+   "p90": [
+    2618,
+    2091
+   ],
+   "p90DiffMs": 527,
+   "p90DiffCI95(cluster)": [
+    -432,
+    1027
+   ],
+   "medianPairDiffMs": -119,
+   "meanDiffMs": -17,
+   "W1FasterShare": 0.667,
+   "p50DiffMs(no>4s)": -159,
+   "p90DiffMs(no>4s)": 527
+  },
+  "pilot: W1 - A, translationLegMs": {
+   "n": 24,
+   "cases": 24,
+   "p50": [
+    1187,
+    1346
+   ],
+   "p50DiffMs": -159,
+   "p50DiffCI95(cluster)": [
+    -391,
+    47
+   ],
+   "p90": [
+    2614,
+    2090
+   ],
+   "p90DiffMs": 524,
+   "p90DiffCI95(cluster)": [
+    -433,
+    1027
+   ],
+   "medianPairDiffMs": -120,
+   "meanDiffMs": -17,
+   "W1FasterShare": 0.667,
+   "p50DiffMs(no>4s)": -159,
+   "p90DiffMs(no>4s)": 524
+  },
+  "pilot: W2 - A, translationPairWallMs": {
+   "n": 24,
+   "cases": 24,
+   "p50": [
+    1259,
+    1349
+   ],
+   "p50DiffMs": -90,
+   "p50DiffCI95(cluster)": [
+    -320,
+    82
+   ],
+   "p90": [
+    1812,
+    2091
+   ],
+   "p90DiffMs": -279,
+   "p90DiffCI95(cluster)": [
+    -776,
+    869
+   ],
+   "medianPairDiffMs": -60,
+   "meanDiffMs": -72,
+   "W2FasterShare": 0.583,
+   "p50DiffMs(no>4s)": -90,
+   "p90DiffMs(no>4s)": -279
+  },
+  "pilot: W2 - A, translationLegMs": {
+   "n": 24,
+   "cases": 24,
+   "p50": [
+    1255,
+    1346
+   ],
+   "p50DiffMs": -90,
+   "p50DiffCI95(cluster)": [
+    -319,
+    80
+   ],
+   "p90": [
+    1809,
+    2090
+   ],
+   "p90DiffMs": -281,
+   "p90DiffCI95(cluster)": [
+    -774,
+    870
+   ],
+   "medianPairDiffMs": -60,
+   "meanDiffMs": -72,
+   "W2FasterShare": 0.583,
+   "p50DiffMs(no>4s)": -90,
+   "p90DiffMs(no>4s)": -281
+  },
+  "e5: W1 - A, draftSetWallMs": {
+   "n": 144,
+   "cases": 48,
+   "p50": [
+    1453,
+    1662
+   ],
+   "p50DiffMs": -209,
+   "p50DiffCI95(cluster)": [
+    -305,
+    -91
+   ],
+   "p90": [
+    2134,
+    2514
+   ],
+   "p90DiffMs": -380,
+   "p90DiffCI95(cluster)": [
+    -617,
+    41
+   ],
+   "medianPairDiffMs": -160,
+   "meanDiffMs": -163,
+   "W1FasterShare": 0.646,
+   "p50DiffMs(no>4s)": -196,
+   "p90DiffMs(no>4s)": -258,
+   "rep0": {
+    "n": 48,
+    "p50DiffMs": -150,
+    "fasterShare": 0.583
+   },
+   "rep1": {
+    "n": 48,
+    "p50DiffMs": -174,
+    "fasterShare": 0.583
+   },
+   "rep2": {
+    "n": 48,
+    "p50DiffMs": -321,
+    "fasterShare": 0.771
+   }
+  },
+  "e5: W1 - A, translationLegMs": {
+   "n": 144,
+   "cases": 48,
+   "p50": [
+    1219,
+    1431
+   ],
+   "p50DiffMs": -212,
+   "p50DiffCI95(cluster)": [
+    -345,
+    -139
+   ],
+   "p90": [
+    1734,
+    2076
+   ],
+   "p90DiffMs": -342,
+   "p90DiffCI95(cluster)": [
+    -722,
+    -86
+   ],
+   "medianPairDiffMs": -159,
+   "meanDiffMs": -285,
+   "W1FasterShare": 0.701,
+   "p50DiffMs(no>4s)": -211,
+   "p90DiffMs(no>4s)": -298,
+   "rep0": {
+    "n": 48,
+    "p50DiffMs": -258,
+    "fasterShare": 0.646
+   },
+   "rep1": {
+    "n": 48,
+    "p50DiffMs": -197,
+    "fasterShare": 0.708
+   },
+   "rep2": {
+    "n": 48,
+    "p50DiffMs": -179,
+    "fasterShare": 0.75
+   }
+  },
+  "heldout: W1 - A, translationPairWallMs": {
+   "n": 144,
+   "cases": 72,
+   "p50": [
+    1202,
+    1431
+   ],
+   "p50DiffMs": -230,
+   "p50DiffCI95(cluster)": [
+    -325,
+    -119
+   ],
+   "p90": [
+    1978,
+    2264
+   ],
+   "p90DiffMs": -286,
+   "p90DiffCI95(cluster)": [
+    -872,
+    255
+   ],
+   "medianPairDiffMs": -173,
+   "meanDiffMs": -211,
+   "W1FasterShare": 0.646,
+   "p50DiffMs(no>4s)": -219,
+   "p90DiffMs(no>4s)": -370
+  },
+  "heldout: W1 - A, translationLegMs": {
+   "n": 144,
+   "cases": 72,
+   "p50": [
+    1200,
+    1430
+   ],
+   "p50DiffMs": -230,
+   "p50DiffCI95(cluster)": [
+    -324,
+    -119
+   ],
+   "p90": [
+    1974,
+    2262
+   ],
+   "p90DiffMs": -288,
+   "p90DiffCI95(cluster)": [
+    -872,
+    255
+   ],
+   "medianPairDiffMs": -173,
+   "meanDiffMs": -211,
+   "W1FasterShare": 0.646,
+   "p50DiffMs(no>4s)": -220,
+   "p90DiffMs(no>4s)": -371
+  },
+  "e5: W1 - A, translationCallMs": {
+   "n": 288,
+   "p50DiffMs": -152,
+   "p50DiffCI95(cluster)": [
+    -207,
+    -111
+   ],
+   "p90DiffMs": -264,
+   "p90DiffCI95(cluster)": [
+    -484,
+    -158
+   ],
+   "fasterShare": 0.698
+  },
+  "heldout: W1 - A, translationCallMs": {
+   "n": 288,
+   "p50DiffMs": -175,
+   "p50DiffCI95(cluster)": [
+    -229,
+    -112
+   ],
+   "p90DiffMs": -305,
+   "p90DiffCI95(cluster)": [
+    -516,
+    -87
+   ],
+   "fasterShare": 0.667
+  },
+  "pilot: W1 - A, translationCallMs": {
+   "n": 48,
+   "p50DiffMs": -167,
+   "p50DiffCI95(cluster)": [
+    -288,
+    -33
+   ],
+   "p90DiffMs": 212,
+   "p90DiffCI95(cluster)": [
+    -462,
+    998
+   ],
+   "fasterShare": 0.646
+  },
+  "pilot: W2 - A, translationCallMs": {
+   "n": 48,
+   "p50DiffMs": -95,
+   "p50DiffCI95(cluster)": [
+    -228,
+    71
+   ],
+   "p90DiffMs": -114,
+   "p90DiffCI95(cluster)": [
+    -559,
+    560
+   ],
+   "fasterShare": 0.625
+  },
+  "e5: A repY - A repX (noise floor), draftSetWallMs": {
+   "n": 144,
+   "medianAbsDiffMs": 386,
+   "p50DiffMs": 10
+  }
+ }
+}

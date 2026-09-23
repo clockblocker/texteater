@@ -1,0 +1,354 @@
+/**
+ * E3 runner over the grammatical-resolution/de/* evaluation selections.
+ *
+ *   bun --env-file=../../../../../.env.local run-corpora.ts --run 1
+ *   ... --run 2 --corpora verb,noun,collocation
+ *   ... --run 1 --phase variants          (offline replay + live follow-ups only)
+ *   ... --run 1 --phase live-variants --policies noun-number-no-unmarked --corpora noun
+ *
+ * Phases (default: baseline then variants):
+ *   baseline  src code, jev live, Luna deferred (tape-only). Records + tape.
+ *   variants  every offline policy replays the SAME tape through a judge
+ *             wrapper that rewrites answers before src consumes them. When a
+ *             policy changed anything in a case, missing follow-ups (Luna,
+ *             identity, case, lexical strings) run live for that case; the
+ *             baseline arm of those cases is then resolved live too, so both
+ *             arms of every changed case end with a known outcome.
+ *   live-variants  question-changing policies (live features calls).
+ *
+ * Spend: a cumulative ledger (results/spend-ledger.json) caps all scripts at
+ * $0.20 together; the meter stops new live calls before the cap.
+ */
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { parseArgs } from "node:util";
+import {
+	type CaseRecord,
+	type EvalCase,
+	evaluationCases,
+	grammarExperimentIds,
+	liveJudge,
+	loadTape,
+	pool,
+	runCase,
+	SpendMeter,
+	saveTape,
+	type Tape,
+	tapedExecutor,
+	tapedJudge,
+} from "./lib.ts";
+import {
+	authoredIdentitySkip,
+	closedClassCatalogFill,
+	closedClassCorePruning,
+	closedClassUnresolvedFromCatalog,
+	combine,
+	identityCasefoldLookup,
+	identityPolicy,
+	lowStakesDefaults,
+	nounMarkedNumber,
+	nounNumberNoUnmarked,
+	type Policy,
+	policyJudge,
+	pronReferenceNumberArgmax,
+	pronReferenceNumberInapplicable,
+	type Rewrite,
+	spellingDefault,
+	spellingTypoCanonical,
+	supportDropAll,
+	supportDropLexeme,
+	supportThreshold,
+} from "./policies.ts";
+
+const here = dirname(new URL(import.meta.url).pathname);
+const results = resolve(here, "results");
+const { values: args } = parseArgs({
+	options: {
+		run: { type: "string", default: "1" },
+		corpora: { type: "string" },
+		phase: { type: "string", default: "baseline,variants" },
+		policies: { type: "string" },
+		concurrency: { type: "string", default: "6" },
+		cap: { type: "string", default: "0.20" },
+		/** Corpora run on a deterministic half (even evaluation index) plus every gold-Unresolved case. */
+		half: { type: "string" },
+		/** Spend limit for this invocation (within the ledger cap). */
+		"max-spend": { type: "string" },
+	},
+});
+const run = Number(args.run);
+const concurrency = Number(args.concurrency);
+
+// ------------------------------------------------------------------ ledger
+
+const ledgerFile = resolve(results, "spend-ledger.json");
+type Ledger = {
+	capUsd: number;
+	spentUsd: number;
+	entries: { at: string; what: string; spentUsd: number; liveJev: number; liveLuna: number }[];
+};
+const ledger: Ledger = existsSync(ledgerFile)
+	? JSON.parse(readFileSync(ledgerFile, "utf8"))
+	: { capUsd: Number(args.cap), spentUsd: 0, entries: [] };
+const meter = new SpendMeter(
+	Math.min(
+		ledger.capUsd - ledger.spentUsd,
+		args["max-spend"] ? Number(args["max-spend"]) + 0.004 : Infinity,
+	),
+);
+function commitLedger(what: string, before: { spent: number; jev: number; luna: number }) {
+	const spent = meter.spentUsd - before.spent;
+	ledger.spentUsd += spent;
+	ledger.entries.push({
+		at: new Date().toISOString(),
+		what,
+		spentUsd: spent,
+		liveJev: meter.liveJev - before.jev,
+		liveLuna: meter.liveLuna - before.luna,
+	});
+	writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2));
+	console.error(
+		`[spend] ${what}: +$${spent.toFixed(4)} (total $${ledger.spentUsd.toFixed(4)} of $${ledger.capUsd})`,
+	);
+}
+const snapshot = () => ({
+	spent: meter.spentUsd,
+	jev: meter.liveJev,
+	luna: meter.liveLuna,
+});
+
+// ------------------------------------------------------------------- cases
+
+const wanted = args.corpora?.split(",").map((name) => name.trim());
+const experimentIds = grammarExperimentIds.filter(
+	(id) => !wanted || wanted.some((name) => id.endsWith(`/${name}`)),
+);
+const halved = args.half?.split(",").map((name) => name.trim()) ?? [];
+const cases: EvalCase[] = experimentIds.flatMap((id) => {
+	const all = evaluationCases(id);
+	if (!halved.some((name) => id.endsWith(`/${name}`))) return all;
+	return all.filter(
+		(item, index) =>
+			index % 2 === 0 ||
+			(!!item.idealOutput &&
+				typeof item.idealOutput === "object" &&
+				"decision" in item.idealOutput),
+	);
+});
+const caseKey = (item: { experimentId: string; caseId: string }) =>
+	`${item.experimentId}|${item.caseId}`;
+
+const tapeFile = resolve(results, `tape-run${run}.json`);
+const tape: Tape = loadTape(tapeFile);
+const judge = { value: liveJudge() };
+
+function recordsFile(name: string) {
+	return resolve(results, `run${run}-${name}.json`);
+}
+function loadRecords(name: string): Map<string, CaseRecord> {
+	const file = recordsFile(name);
+	if (!existsSync(file)) return new Map();
+	return new Map(
+		(JSON.parse(readFileSync(file, "utf8")) as CaseRecord[]).map((record) => [
+			caseKey(record),
+			record,
+		]),
+	);
+}
+function saveRecords(name: string, records: Map<string, CaseRecord>) {
+	writeFileSync(recordsFile(name), JSON.stringify([...records.values()]));
+}
+
+// ---------------------------------------------------------------- baseline
+
+async function baseline() {
+	const before = snapshot();
+	const records = loadRecords("baseline");
+	const todo = cases.filter((item) => !records.has(caseKey(item)));
+	console.error(`[baseline run ${run}] ${todo.length} cases (${records.size} stored)`);
+	let done = 0;
+	await pool(todo, concurrency, async (item) => {
+		if (meter.exhausted) return;
+		const record = await runCase(
+			item,
+			{
+				judge: tapedJudge(tape, meter, "baseline", judge),
+				execute: tapedExecutor(tape, meter, "baseline", () => false),
+			},
+			"baseline",
+			run,
+		);
+		if (record.status === "CapReached") return;
+		records.set(caseKey(item), record);
+		if (++done % 40 === 0) {
+			console.error(`  ${done}/${todo.length} $${meter.spentUsd.toFixed(4)}`);
+			saveRecords("baseline", records);
+			saveTape(tapeFile, tape);
+		}
+	});
+	saveRecords("baseline", records);
+	saveTape(tapeFile, tape);
+	commitLedger(`run${run} baseline ${experimentIds.length} corpora`, before);
+	return records;
+}
+
+// ---------------------------------------------------------------- variants
+
+export const offlinePolicies: Policy[] = [
+	identityPolicy,
+	supportThreshold(0.8),
+	supportThreshold(0.65),
+	supportDropLexeme,
+	supportDropAll,
+	nounMarkedNumber,
+	pronReferenceNumberInapplicable,
+	pronReferenceNumberArgmax,
+	lowStakesDefaults,
+	closedClassCatalogFill,
+	closedClassUnresolvedFromCatalog("unique"),
+	closedClassUnresolvedFromCatalog("argmax"),
+	authoredIdentitySkip,
+	identityCasefoldLookup,
+	combine("identity-skip+casefold", authoredIdentitySkip, identityCasefoldLookup),
+	combine(
+		"combined-safe",
+		supportThreshold(0.8),
+		nounMarkedNumber,
+		pronReferenceNumberInapplicable,
+		lowStakesDefaults,
+		closedClassUnresolvedFromCatalog("unique"),
+	),
+	combine(
+		"combined-drop-lexeme",
+		supportDropLexeme,
+		nounMarkedNumber,
+		pronReferenceNumberInapplicable,
+		lowStakesDefaults,
+		closedClassUnresolvedFromCatalog("unique"),
+	),
+	combine("support-drop-lexeme+spelling-default", supportDropLexeme, spellingDefault),
+	combine("support-0.8+spelling-default", supportThreshold(0.8), spellingDefault),
+	combine(
+		"combined-safe-v2",
+		supportThreshold(0.8),
+		spellingDefault,
+		nounMarkedNumber,
+		pronReferenceNumberInapplicable,
+		lowStakesDefaults,
+		closedClassUnresolvedFromCatalog("unique"),
+	),
+	combine(
+		"combined-drop-lexeme-v2",
+		supportDropLexeme,
+		spellingDefault,
+		nounMarkedNumber,
+		pronReferenceNumberInapplicable,
+		lowStakesDefaults,
+		closedClassUnresolvedFromCatalog("unique"),
+	),
+];
+const livePolicies: Policy[] = [nounNumberNoUnmarked, closedClassCorePruning];
+
+async function variantArm(
+	policy: Policy,
+	item: EvalCase,
+	armLabel: string,
+	liveFollowups: boolean,
+): Promise<CaseRecord & { shortCircuits: number; editedQuestions: number }> {
+	const log = {
+		rewrites: {} as Record<string, Rewrite>,
+		raw: {} as { value?: Record<string, unknown> },
+		shortCircuits: 0,
+		editedQuestions: 0,
+	};
+	const changed = () =>
+		liveFollowups &&
+		(Object.keys(log.rewrites).length > 0 ||
+			log.shortCircuits > 0 ||
+			log.editedQuestions > 0);
+	const record = await runCase(
+		item,
+		{
+			judge: policyJudge(tapedJudge(tape, meter, armLabel, judge), policy, log),
+			execute: tapedExecutor(tape, meter, armLabel, changed),
+		},
+		armLabel,
+		run,
+		{ rewrites: log.rewrites, rawFeatures: log.raw },
+	);
+	return {
+		...record,
+		shortCircuits: log.shortCircuits,
+		editedQuestions: log.editedQuestions,
+	};
+}
+
+async function variants(policies: Policy[], live: boolean) {
+	const before = snapshot();
+	const baselineRecords = loadRecords("baseline");
+	const scope = cases.filter((item) => baselineRecords.has(caseKey(item)));
+	const needsResolution = new Set<string>();
+	for (const policy of policies) {
+		const name = `variant-${policy.name}`;
+		const records = loadRecords(name);
+		const todo = scope.filter((item) => !records.has(caseKey(item)));
+		console.error(`[${name} run ${run}] ${todo.length} cases`);
+		await pool(todo, concurrency, async (item) => {
+			if (meter.exhausted) return;
+			const record = await variantArm(policy, item, policy.name, true);
+			if (record.status === "CapReached") return;
+			records.set(caseKey(item), record);
+		});
+		saveRecords(name, records);
+		saveTape(tapeFile, tape);
+		for (const record of records.values()) {
+			const changed =
+				Object.keys(record.rewrites ?? {}).length > 0 ||
+				record.shortCircuits > 0 ||
+				record.editedQuestions > 0;
+			if (changed && baselineRecords.get(caseKey(record))?.status === "Deferred")
+				needsResolution.add(caseKey(record));
+		}
+	}
+	// Resolve the baseline arm of every changed case whose baseline outcome is
+	// still unknown, so each changed case has a known outcome on both arms.
+	const resolved = loadRecords("baseline-resolved");
+	const todo = scope.filter(
+		(item) => needsResolution.has(caseKey(item)) && !resolved.has(caseKey(item)),
+	);
+	console.error(`[baseline-resolved run ${run}] ${todo.length} cases`);
+	await pool(todo, concurrency, async (item) => {
+		if (meter.exhausted) return;
+		const record = await runCase(
+			item,
+			{
+				judge: tapedJudge(tape, meter, "baseline-resolved", judge),
+				execute: tapedExecutor(tape, meter, "baseline-resolved", () => true),
+			},
+			"baseline-resolved",
+			run,
+		);
+		if (record.status === "CapReached") return;
+		resolved.set(caseKey(item), record);
+	});
+	saveRecords("baseline-resolved", resolved);
+	saveTape(tapeFile, tape);
+	commitLedger(
+		`run${run} ${live ? "live-" : ""}variants ${policies.map((p) => p.name).join(",")} over ${experimentIds.length} corpora`,
+		before,
+	);
+}
+
+// --------------------------------------------------------------------- main
+
+const phases = args.phase.split(",");
+const selected = (list: Policy[]) =>
+	args.policies
+		? list.filter((policy) => args.policies!.split(",").includes(policy.name))
+		: list;
+if (phases.includes("baseline")) await baseline();
+if (phases.includes("variants")) await variants(selected(offlinePolicies), false);
+if (phases.includes("live-variants")) await variants(selected(livePolicies), true);
+console.error(
+	`[done] meter $${meter.spentUsd.toFixed(4)} liveJev=${meter.liveJev} liveLuna=${meter.liveLuna} retries=${meter.transportRetries}`,
+);

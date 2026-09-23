@@ -1,0 +1,250 @@
+/**
+ * E9 copy of prototypes/audit/e7-intake-headwords/lib.ts. Changes: the cap is
+ * E9's $0.55, the ledger lives in e9-headwords-adj-idiom/results, imports
+ * point one folder over, and any billing/auth failure (HTTP 401/402/403,
+ * "credits", "quota") sets `billing.failure`, after which Spend.allows()
+ * refuses new work so a 402 is never retried in a loop.
+ *
+ * E7 shared helpers: pricing, a persistent spend ledger that enforces the
+ * experiment cap across every E7 script, metered production executors (jev
+ * through createTypeSafeExecutor, Luna through createOpenAIExecutor, exactly
+ * as app/tf-demo/server/modelExecution.ts wires them), and small statistics.
+ */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import { configurationSchema } from "promptsmith/schemas";
+import { createTypeSafeExecutor } from "promptsmith/typesafe";
+import type { DumgenOptions } from "../../../src/types.js";
+
+export const here = new URL(".", import.meta.url).pathname;
+export const resultsDir = resolve(here, "results");
+mkdirSync(resultsDir, { recursive: true });
+
+export const price = {
+	lunaInput: 0.4 / 1e6,
+	lunaCached: 0.04 / 1e6,
+	lunaOutput: 2.4 / 1e6,
+	jevInput: 0.042 / 1e6,
+};
+export const CAP_USD = 0.55;
+
+// ------------------------------------------------------------------ ledger
+
+const ledgerPath = resolve(resultsDir, "ledger.json");
+type LedgerEntry = {
+	script: string;
+	label: string;
+	startedAt: string;
+	finishedAt?: string;
+	spentUsd: number;
+	jevCalls: number;
+	lunaCalls: number;
+};
+function readLedger(): LedgerEntry[] {
+	return existsSync(ledgerPath)
+		? (JSON.parse(readFileSync(ledgerPath, "utf8")) as LedgerEntry[])
+		: [];
+}
+export class Spend {
+	readonly prior: number;
+	spent = 0;
+	jevCalls = 0;
+	lunaCalls = 0;
+	private readonly entry: LedgerEntry;
+	constructor(
+		script: string,
+		label: string,
+		/** No new unit of work starts once prior + spent reaches this. */
+		readonly stopAt: number,
+	) {
+		this.prior = readLedger().reduce((sum, entry) => sum + entry.spentUsd, 0);
+		this.entry = {
+			script,
+			label,
+			startedAt: new Date().toISOString(),
+			spentUsd: 0,
+			jevCalls: 0,
+			lunaCalls: 0,
+		};
+		if (stopAt > CAP_USD - 0.005)
+			throw Error(`stopAt ${stopAt} too close to the $${CAP_USD} cap`);
+		console.error(
+			`[spend] ${script}/${label}: prior $${this.prior.toFixed(4)}, stop at $${stopAt}`,
+		);
+	}
+	total() {
+		return this.prior + this.spent;
+	}
+	allows() {
+		return !billing.failure && this.total() < this.stopAt;
+	}
+	commit() {
+		const ledger = readLedger();
+		ledger.push({
+			...this.entry,
+			finishedAt: new Date().toISOString(),
+			spentUsd: this.spent,
+			jevCalls: this.jevCalls,
+			lunaCalls: this.lunaCalls,
+		});
+		writeFileSync(ledgerPath, JSON.stringify(ledger, null, 1));
+	}
+}
+
+// ---------------------------------------------------------- usage + cost
+
+export type Usage = {
+	inputTokens: number;
+	cachedTokens: number;
+	outputTokens: number;
+	costUsd: number;
+};
+export function jevUsage(output: unknown): Usage {
+	const input =
+		(output as { usage?: { input_tokens?: number } })?.usage?.input_tokens ?? 0;
+	return {
+		inputTokens: input,
+		cachedTokens: 0,
+		outputTokens: 0,
+		costUsd: input * price.jevInput,
+	};
+}
+export function lunaUsage(metadata: unknown): Usage {
+	const usage =
+		(
+			metadata as {
+				usage?: {
+					input_tokens?: number;
+					output_tokens?: number;
+					input_tokens_details?: { cached_tokens?: number };
+				} | null;
+			}
+		)?.usage ?? {};
+	const input = usage.input_tokens ?? 0;
+	const cached = usage.input_tokens_details?.cached_tokens ?? 0;
+	const output = usage.output_tokens ?? 0;
+	return {
+		inputTokens: input,
+		cachedTokens: cached,
+		outputTokens: output,
+		costUsd:
+			(input - cached) * price.lunaInput +
+			cached * price.lunaCached +
+			output * price.lunaOutput,
+	};
+}
+
+// ---------------------------------------------------------- billing stop
+
+export const billing: { failure: string | null } = { failure: null };
+export function noteBillingFailure(error: unknown) {
+	const text = error instanceof Error ? `${error.message} ${String((error as { cause?: unknown }).cause ?? "")}` : String(error);
+	if (/\b40[123]\b|credits|quota|billing|unauthori[sz]ed|invalid api key/iu.test(text)) {
+		if (!billing.failure) console.error(`[billing] STOP: ${text.slice(0, 300)}`);
+		billing.failure ??= text.slice(0, 500);
+	}
+}
+
+// ------------------------------------------------------ metered executors
+
+// Created on first use so offline scripts (summarize.ts) need no API keys.
+let typesafeExecutor: ReturnType<typeof createTypeSafeExecutor> | undefined;
+let openaiExecutor: ReturnType<typeof createOpenAIExecutor> | undefined;
+const typesafe: ReturnType<typeof createTypeSafeExecutor> = (request, options) =>
+	(typesafeExecutor ??= createTypeSafeExecutor())(request, options);
+const openai: ReturnType<typeof createOpenAIExecutor> = (request) =>
+	(openaiExecutor ??= createOpenAIExecutor())(request);
+
+export type MeteredCall = {
+	scope: string;
+	executor: "jev" | "luna";
+	route?: string;
+	stage?: string;
+} & Usage;
+
+/** Production executors that add every call's cost to `spend`. */
+export function meteredOptions(
+	spend: Spend,
+	scope: string,
+	sink: MeteredCall[],
+	extra: Partial<DumgenOptions> = {},
+): DumgenOptions {
+	return {
+		...extra,
+		judge: async (request, options) => {
+			if (billing.failure) throw Error(`billing stop: ${billing.failure.slice(0, 120)}`);
+			let output: Awaited<ReturnType<typeof typesafe>>;
+			try {
+				output = await typesafe(request, options);
+			} catch (error) {
+				noteBillingFailure(error);
+				throw error;
+			}
+			const usage = jevUsage(output);
+			spend.spent += usage.costUsd;
+			spend.jevCalls++;
+			sink.push({ scope, executor: "jev", ...usage });
+			return output;
+		},
+		execute: async (request) => {
+			if (billing.failure) throw Error(`billing stop: ${billing.failure.slice(0, 120)}`);
+			let response: Awaited<ReturnType<typeof openai>>;
+			try {
+				response = await openai({
+					...request,
+					configuration: configurationSchema.parse(request.configuration),
+				});
+			} catch (error) {
+				noteBillingFailure(error);
+				throw error;
+			}
+			const usage = lunaUsage(response.metadata);
+			spend.spent += usage.costUsd;
+			spend.lunaCalls++;
+			sink.push({
+				scope,
+				executor: "luna",
+				route: request.route,
+				stage: request.stage,
+				...usage,
+			});
+			return response;
+		},
+	};
+}
+
+/** The raw Luna executor, for the intake headword call (not a dumgen operation). */
+export const rawLuna = openai;
+
+// ------------------------------------------------------------- statistics
+
+export function percentile(values: readonly number[], p: number) {
+	if (!values.length) return null;
+	const sorted = [...values].sort((a, b) => a - b);
+	const rank = (p / 100) * (sorted.length - 1);
+	const low = Math.floor(rank);
+	const high = Math.ceil(rank);
+	const lowValue = sorted[low] as number;
+	const highValue = sorted[high] as number;
+	return Math.round(lowValue + (highValue - lowValue) * (rank - low));
+}
+
+export async function pool<T, R>(
+	items: readonly T[],
+	concurrency: number,
+	work: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+	const results: R[] = new Array(items.length);
+	let next = 0;
+	async function worker() {
+		while (next < items.length) {
+			const index = next++;
+			results[index] = await work(items[index] as T, index);
+		}
+	}
+	await Promise.all(
+		Array.from({ length: Math.min(concurrency, items.length) }, worker),
+	);
+	return results;
+}

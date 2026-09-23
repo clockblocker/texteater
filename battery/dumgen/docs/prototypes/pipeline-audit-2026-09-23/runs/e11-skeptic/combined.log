@@ -1,0 +1,60 @@
+e5 W1 citation: fixed 71 broken 0 bothBad 0 bothOk 217  sign p=8.5e-22
+e5 W1 any: fixed 65 broken 1 bothBad 11 bothOk 211  sign p=1.8e-18
+e5 W1 any+border: fixed 62 broken 4 bothBad 14 bothOk 208  sign p=2.1e-14
+heldout W1 citation: fixed 113 broken 2 bothBad 10 bothOk 163  sign p=3.2e-31
+heldout W1 any: fixed 117 broken 4 bothBad 17 bothOk 150  sign p=6.6e-30
+heldout W1 any+border: fixed 119 broken 6 bothBad 19 bothOk 144  sign p=2.3e-28
+pilot W1 citation: fixed 12 broken 0 bothBad 4 bothOk 32  sign p=0.00049
+pilot W1 any: fixed 13 broken 0 bothBad 4 bothOk 31  sign p=0.00024
+pilot W1 any+border: fixed 13 broken 0 bothBad 4 bothOk 31  sign p=0.00024
+pilot W2 citation: fixed 13 broken 0 bothBad 3 bothOk 32  sign p=0.00024
+pilot W2 any: fixed 13 broken 0 bothBad 4 bothOk 31  sign p=0.00024
+pilot W2 any+border: fixed 13 broken 0 bothBad 4 bothOk 31  sign p=0.00024
+
+'citation-fixed' pairs whose W1 output has a sense/format problem:
+   e5 genitiv#8 r 0 en 'is' -> None ok null
+   e5 kakao#6 r 0 ru 'вкусен' -> 'быть вкусным' bleed ok
+   e5 kakao#8 r 0 ru 'хорошо' -> 'вкусный' bleed ok
+   e5 museum#4 r 0 ru 'открывается' -> 'открывать' shift ok
+   e5 genitiv#8 r 1 ru 'есть' -> None ok null
+   e5 kakao#8 r 1 ru 'хорошо' -> 'вкусный' bleed ok
+   e5 kakao#6 r 1 ru 'вкусный' -> 'быть вкусным' bleed ok
+   e5 museum#4 r 1 ru 'открывается' -> 'открывать' shift ok
+   heldout grammar-de-verb-subject-question r 0 en 'is there' -> 'be available' shift ok
+   e5 genitiv#8 r 2 en 'is' -> None ok null
+   e5 kakao#6 r 2 ru 'вкусный' -> 'быть вкусным' bleed ok
+   e5 kakao#8 r 2 ru 'хорошо' -> 'вкусный' bleed ok
+
+per-rep A non-citation (present outputs):
+  e5 rep0 A: 21/96
+  e5 rep0 W1: 0/95
+  e5 rep1 A: 25/96
+  e5 rep1 W1: 0/95
+  e5 rep2 A: 25/96
+  e5 rep2 W1: 0/95
+  heldout rep0 A: 61/144
+  heldout rep0 W1: 6/144
+  heldout rep1 A: 62/142
+  heldout rep1 W1: 6/144
+
+sense/format problem outputs per arm (E11 labels, and + skeptic borderline):
+  e5 A: 8/288  +borderline 0
+  e5 W1: 12/288  +borderline 6
+  heldout A: 19/288  +borderline 4
+  heldout W1: 11/288  +borderline 4
+
+sense-only (excluding null/format) per arm:
+  e5 A: sense 8  fmt(non-null) 0
+  e5 W1: sense 8  fmt(non-null) 1
+  heldout A: sense 11  fmt(non-null) 6
+  heldout W1: sense 7  fmt(non-null) 4
+
+labels for skeptic-named traps:
+   ausweg#2|ru|есть {'cite': 'form', 'sense': 'ok', 'fmt': 'ok'}
+   genitiv#8|ru|есть {'cite': 'form', 'sense': 'ok', 'fmt': 'ok'}
+   kakao#6|en|taste {'cite': 'ok', 'sense': 'ok', 'fmt': 'ok'}
+   kakao#6|en|tastes {'cite': 'form', 'sense': 'ok', 'fmt': 'ok'}
+   kakao#6|ru|быть вкусным {'cite': 'ok', 'sense': 'bleed', 'fmt': 'ok'}
+   kakao#6|ru|вкусен {'cite': 'pos', 'sense': 'bleed', 'fmt': 'ok'}
+   kakao#6|ru|вкусный {'cite': 'pos', 'sense': 'bleed', 'fmt': 'ok'}
+   kakao#8|ru|вкусный {'cite': 'ok', 'sense': 'bleed', 'fmt': 'ok'}

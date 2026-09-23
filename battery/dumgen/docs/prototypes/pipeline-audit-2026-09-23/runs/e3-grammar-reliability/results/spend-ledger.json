@@ -1,0 +1,125 @@
+{
+  "capUsd": 0.2,
+  "spentUsd": 0.193063494,
+  "entries": [
+    {
+      "at": "2026-09-23T07:54:13.575Z",
+      "what": "run1 baseline 1 corpora",
+      "spentUsd": 0.0025508700000000002,
+      "liveJev": 35,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T07:54:13.910Z",
+      "what": "run1 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,authored-identity-skip,combined-safe,combined-drop-lexeme over 1 corpora",
+      "spentUsd": 0,
+      "liveJev": 0,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T07:55:09.183Z",
+      "what": "run1 baseline 21 corpora",
+      "spentUsd": 0.13411179599999998,
+      "liveJev": 894,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T07:56:37.516Z",
+      "what": "run1 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,closed-class-unresolved-unique,closed-class-unresolved-argmax,authored-identity-skip,combined-safe,combined-drop-lexeme over 21 corpora",
+      "spentUsd": 0.006179731999999999,
+      "liveJev": 37,
+      "liveLuna": 33
+    },
+    {
+      "at": "2026-09-23T07:59:25.600Z",
+      "what": "run1 variants support-drop-lexeme+spelling-default,support-0.8+spelling-default,combined-safe-v2,combined-drop-lexeme-v2 over 21 corpora",
+      "spentUsd": 0.0029860000000000004,
+      "liveJev": 0,
+      "liveLuna": 24
+    },
+    {
+      "at": "2026-09-23T08:00:20.261Z",
+      "what": "natural clicks replay (waterfall answers) + live follow-ups for changed clicks",
+      "spentUsd": 0.00011314800000000001,
+      "liveJev": 1,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:01:00.838Z",
+      "what": "run1 baseline 21 corpora",
+      "spentUsd": 0,
+      "liveJev": 0,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:01:01.448Z",
+      "what": "run1 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,closed-class-unresolved-unique,closed-class-unresolved-argmax,authored-identity-skip,combined-safe,combined-drop-lexeme,support-drop-lexeme+spelling-default,support-0.8+spelling-default,combined-safe-v2,combined-drop-lexeme-v2 over 21 corpora",
+      "spentUsd": 0,
+      "liveJev": 0,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:01:27.301Z",
+      "what": "run2 baseline 5 corpora",
+      "spentUsd": 0.034058556000000025,
+      "liveJev": 244,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:01:51.316Z",
+      "what": "run2 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,closed-class-unresolved-unique,closed-class-unresolved-argmax,authored-identity-skip,combined-safe,combined-drop-lexeme,support-drop-lexeme+spelling-default,support-0.8+spelling-default,combined-safe-v2,combined-drop-lexeme-v2 over 5 corpora",
+      "spentUsd": 0.004050408,
+      "liveJev": 15,
+      "liveLuna": 27
+    },
+    {
+      "at": "2026-09-23T08:03:24.382Z",
+      "what": "P4 garbage NOUN targets (23) baseline + replayed policies",
+      "spentUsd": 0.003375708000000001,
+      "liveJev": 22,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:03:42.465Z",
+      "what": "P4 garbage NOUN targets (23) baseline + replayed policies",
+      "spentUsd": 0.001082628,
+      "liveJev": 1,
+      "liveLuna": 8
+    },
+    {
+      "at": "2026-09-23T08:04:19.242Z",
+      "what": "natural clicks LIVE question variants (noun-number-no-unmarked, closed-class-core-pruning)",
+      "spentUsd": 0.0016288440000000004,
+      "liveJev": 13,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:04:40.542Z",
+      "what": "natural clicks LIVE question variants (noun-number-no-unmarked, closed-class-core-pruning)",
+      "spentUsd": 0.002925804,
+      "liveJev": 20,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:07:44.071Z",
+      "what": "run1 variants identity-casefold-lookup,identity-skip+casefold over 2 corpora",
+      "spentUsd": 0,
+      "liveJev": 0,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:07:44.794Z",
+      "what": "run2 variants identity-casefold-lookup,identity-skip+casefold over 2 corpora",
+      "spentUsd": 0,
+      "liveJev": 0,
+      "liveLuna": 0
+    },
+    {
+      "at": "2026-09-23T08:08:16.086Z",
+      "what": "natural clicks replay (waterfall answers) + live follow-ups for changed clicks",
+      "spentUsd": 0,
+      "liveJev": 0,
+      "liveLuna": 0
+    }
+  ]
+}

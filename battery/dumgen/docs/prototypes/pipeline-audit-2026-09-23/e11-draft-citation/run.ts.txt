@@ -1,0 +1,217 @@
+/**
+ * E11 runner: production draft translations vs the same separate per-leaf
+ * prompts plus a citation clause. Arms run interleaved per case, one after
+ * another, in a rotated order (reversed on odd reps), `--concurrency` cases
+ * in flight, as in e5-drafts/drafts.ts.
+ *
+ *   A        src draftKnowledge, unmodified (tf-demo request).
+ *   W1, W2   variant-draft.ts with that citation clause on the translations
+ *            leaves only; definition/transcription prompts are untouched.
+ *
+ * Modes: `full` = the production request (transcription, definition,
+ * translations en+ru in parallel, as tf-demo drafts); `translations` = only
+ * the two translation leaves (same prompts; cheaper, for quality).
+ *
+ *   bun --env-file=<root>/.env.local prototypes/audit/e11-draft-citation/run.ts \
+ *     --label pilot --set heldout-pilot --arms A,W1,W2 --mode translations --reps 1 --stop-at 0.03
+ *
+ * Output: results/<label>.jsonl (one line per case x rep x arm) and
+ * results/<label>-meta.json. Every call is metered into ../ledger.json.
+ */
+import { appendFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import { generationRequestFor } from "../../../../../app/tf-demo/server/generatedKnowledgeRequest.ts";
+import { draftKnowledge } from "../../../src/index.js";
+import { type Case, e5Cases, heldoutCases } from "./cases.ts";
+import {
+	type CallRecord,
+	fatal,
+	meteredOptions,
+	pool,
+	resultsDir,
+	Spend,
+} from "./lib.ts";
+import { type ClauseId, clauses, draftKnowledgeVariant, senseTextPrompt } from "./variant-draft.ts";
+
+const { values: args } = parseArgs({
+	options: {
+		label: { type: "string" },
+		set: { type: "string", default: "e5" },
+		ids: { type: "string" },
+		limit: { type: "string", default: "9999" },
+		arms: { type: "string", default: "A,W1" },
+		mode: { type: "string", default: "full" },
+		reps: { type: "string", default: "1" },
+		"rep-offset": { type: "string", default: "0" },
+		concurrency: { type: "string", default: "2" },
+		"stop-at": { type: "string" },
+	},
+});
+if (!args.label || !args["stop-at"]) throw Error("--label and --stop-at are required");
+const label = args.label;
+const mode = args.mode as "full" | "translations";
+if (mode !== "full" && mode !== "translations") throw Error(`bad --mode ${mode}`);
+const arms = String(args.arms).split(",");
+for (const arm of arms) if (arm !== "A" && !(arm in clauses)) throw Error(`unknown arm ${arm}`);
+
+const sets = String(args.set).split(",");
+const idFilter = args.ids ? new Set(String(args.ids).split(",")) : null;
+const cases: Case[] = [...e5Cases, ...heldoutCases]
+	.filter((c) => sets.includes(c.set))
+	.filter((c) => !idFilter || idFilter.has(c.caseId))
+	.slice(0, Number(args.limit));
+if (!cases.length) throw Error("no cases selected");
+
+const spend = new Spend("run.ts", label, Number(args["stop-at"]));
+const out = resolve(resultsDir, `${label}.jsonl`);
+writeFileSync(out, "");
+
+type Leaf = { aspect: string; language?: string; text: string };
+type ArmResult = {
+	label: string;
+	set: string;
+	caseId: string;
+	rep: number;
+	arm: string;
+	mode: string;
+	position: number;
+	order: string;
+	epochStart: number;
+	wallMs: number;
+	ok: boolean;
+	failure?: string;
+	texts: Leaf[];
+	calls: Omit<CallRecord, "systemPrompt">[];
+};
+
+async function runArm(arm: string, item: Case, rep: number) {
+	const calls: CallRecord[] = [];
+	const options = meteredOptions(spend, calls);
+	const full = generationRequestFor({ lemma: item.lemma as never }, [], {
+		translationLanguages: ["en", "ru"],
+	}) as Record<string, unknown>;
+	const request = mode === "full" ? full : { translations: full.translations };
+	const task =
+		arm === "A"
+			? draftKnowledge(options, {
+					encounter: item.encounter,
+					lemma: item.lemma as never,
+					request: request as never,
+				})
+			: draftKnowledgeVariant(
+					options,
+					{ encounter: item.encounter, lemma: item.lemma, request: request as never },
+					arm as ClauseId,
+				);
+	const epochStart = Date.now();
+	const t0 = performance.now();
+	const result = await Effect.runPromise(Effect.either(task));
+	const wallMs = performance.now() - t0;
+	const ok = result._tag === "Right";
+	return {
+		set: item.set,
+		caseId: item.caseId,
+		rep,
+		arm,
+		mode,
+		epochStart,
+		wallMs,
+		ok,
+		...(ok ? {} : { failure: String((result.left as { message?: string })?.message ?? result.left) }),
+		texts: ok ? ([...(result.right as { texts: Leaf[] }).texts] as Leaf[]) : [],
+		calls: calls.map(({ systemPrompt: _prompt, ...rest }) => rest),
+	};
+}
+
+function rotation(list: string[], caseIndex: number, rep: number) {
+	const offset = caseIndex % list.length;
+	const rotated = list.map((_, i) => list[(i + offset) % list.length] as string);
+	return rep % 2 === 1 ? rotated.reverse() : rotated;
+}
+
+// Initial per-unit estimate: E5 A cost $0.000563 per 4-call set; translations are ~half.
+let unitEstimate = arms.length * (mode === "full" ? 0.0007 : 0.00035);
+let units = 0;
+const startedAt = new Date().toISOString();
+const repOffset = Number(args["rep-offset"]);
+console.error(
+	`E11 ${label}: ${cases.length} cases (${sets.join(",")}), arms ${arms.join(",")}, mode ${mode}, reps ${args.reps} (from ${repOffset})`,
+);
+for (let r = 0; r < Number(args.reps); r++) {
+	const rep = r + repOffset;
+	await pool(cases, Number(args.concurrency), async (item, index) => {
+		if (spend.stoppedBy) return;
+		if (fatal.error) {
+			spend.stoppedBy = `fatal: ${fatal.error}`;
+			return;
+		}
+		if (!spend.allows(unitEstimate * Number(args.concurrency))) {
+			spend.stoppedBy = `budget at $${spend.total().toFixed(5)}`;
+			console.error(`[stop] ${spend.stoppedBy}`);
+			return;
+		}
+		const before = spend.spent;
+		const order = rotation(arms, index, rep);
+		const own: ArmResult[] = [];
+		for (const [position, arm] of order.entries()) {
+			if (fatal.error) break;
+			const result = { label, ...(await runArm(arm, item, rep)), position, order: order.join("") };
+			own.push(result);
+			appendFileSync(out, `${JSON.stringify(result)}\n`);
+		}
+		units++;
+		unitEstimate = Math.max(unitEstimate * 0.5 + (spend.spent - before) * 0.5, spend.spent - before);
+		const show = (r: ArmResult) =>
+			`${r.arm}=${Math.round(r.wallMs)}[${r.texts
+				.filter((t) => t.aspect === "translations")
+				.map((t) => `${t.language}:${t.text}`)
+				.join("|")}]`;
+		console.error(
+			`  rep ${rep} ${item.caseId} ${item.lemma.canonicalForm} ${own.map(show).join(" ")}  $${spend.total().toFixed(5)}`,
+		);
+		const failed = own.flatMap((r) => r.calls.filter((c) => c.transport !== "Success"));
+		for (const call of failed) console.error(`    call ${call.label} ${call.transport}: ${call.failure}`);
+	});
+	if (spend.stoppedBy) break;
+}
+if (fatal.error && !spend.stoppedBy) spend.stoppedBy = `fatal: ${fatal.error}`;
+spend.commit();
+writeFileSync(
+	resolve(resultsDir, `${label}-meta.json`),
+	JSON.stringify(
+		{
+			label,
+			args,
+			startedAt,
+			finishedAt: new Date().toISOString(),
+			cases: cases.map((c) => ({
+				set: c.set,
+				caseId: c.caseId,
+				lemma: c.lemma,
+				markedContext: c.markedContext,
+				clickedText: c.clickedText,
+				surface: c.surface,
+				features: c.features,
+			})),
+			prompts: Object.fromEntries(
+				arms.map((arm) => [
+					arm,
+					{
+						en: senseTextPrompt("translations", "en", arm === "A" ? "none" : (arm as ClauseId)),
+						ru: senseTextPrompt("translations", "ru", arm === "A" ? "none" : (arm as ClauseId)),
+					},
+				]),
+			),
+			units,
+			spentUsd: spend.spent,
+			ledgerTotalUsd: spend.total(),
+			stoppedBy: spend.stoppedBy ?? null,
+		},
+		null,
+		1,
+	),
+);
+console.error(`raw: ${out}`);
+if (fatal.error) process.exitCode = 2;

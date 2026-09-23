@@ -1,0 +1,208 @@
+/**
+ * E10 run: emoji output as JSON on a properly regenerated prompt, paired
+ * against the production text artifact. Six arms (lib.ts armSpecs):
+ *   T    production text artifact
+ *   J4   E4's hand-edited JSON arm (bridge to E4)
+ *   RS   regenerated json, string value, strict false
+ *   RS!  RS, strict true
+ *   RO   regenerated json, {emoji} value, strict false
+ *   RO!  RO, strict true
+ *
+ * Sets (from ../e4-emoji/cases.ts, unchanged):
+ *   heldOut  52 reading-generation/de held-out cases, production input
+ *            {markedContext, lemma: canonical}, --heldout-samples per arm
+ *   q2       E4's 22 function-word / baseline-failure inputs, --q2-samples
+ *   risky    E4's risky set minus held-out (70: resolution 13, grammar
+ *            corpus 32, waterfall 25), --risky-samples; only with --sets risky
+ *
+ * Interleaving: rounds 0..q2Samples-1; every round has all Q2 inputs, and
+ * held-out sample k runs in round round(k*(R-1)/(K-1)). Within a case the arm
+ * order rotates by (caseIndex + sample + offset) % 6, as E4 did.
+ * The first job runs alone as a gate: any failure stops the run.
+ *
+ *   bun --env-file=/Users/annagorelova/work/textfresser-batteries/.env.local \
+ *     prototypes/audit/e10-emoji-json/run.ts --label pilot --pilot 2 --budget 0.01
+ *   ... --label main --budget 0.36
+ *   ... --label risky --sets risky --arms T,RS,RO --risky-samples 2 --budget 0.058
+ */
+import { appendFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { parseArgs } from "node:util";
+import { heldOut, risky, robustness } from "../e4-emoji/cases.ts";
+import { pool } from "../e4-emoji/lib.ts";
+import {
+	type Arm,
+	abortReason,
+	armOrder,
+	armSpecs,
+	type CallResult,
+	emojiCall,
+	resultsDir,
+	Spend,
+} from "./lib.ts";
+
+const { values: args } = parseArgs({
+	options: {
+		label: { type: "string", default: "main" },
+		pilot: { type: "string" },
+		"heldout-samples": { type: "string", default: "4" },
+		"q2-samples": { type: "string", default: "10" },
+		concurrency: { type: "string", default: "6" },
+		budget: { type: "string", default: "0.36" },
+		arms: { type: "string" },
+		/** Comma list of heldOut, q2, risky. */
+		sets: { type: "string" },
+		"risky-samples": { type: "string", default: "2" },
+	},
+});
+const arms: Arm[] = args.arms
+	? (args.arms.split(",") as Arm[])
+	: [...armOrder];
+for (const arm of arms) if (!armSpecs[arm]) throw Error(`unknown arm ${arm}`);
+const pilot = args.pilot ? Number(args.pilot) : null;
+const heldOutSamples = pilot ? 1 : Number(args["heldout-samples"]);
+const q2Samples = pilot ? 1 : Number(args["q2-samples"]);
+const sets = new Set((args.sets ?? "heldOut,q2").split(","));
+const heldOutCases = !sets.has("heldOut")
+	? []
+	: pilot
+		? heldOut.slice(0, pilot)
+		: heldOut;
+const q2Cases = !sets.has("q2")
+	? []
+	: pilot
+		? robustness.slice(0, pilot)
+		: robustness;
+/** E4's risky set minus the held-out cases (surface differs from lemma). */
+const riskyCases = sets.has("risky") ? risky.filter((c) => !c.heldOut) : [];
+const riskySamples = Number(args["risky-samples"]);
+
+type Job = {
+	set: "heldOut" | "q2" | "risky";
+	caseIndex: number;
+	caseId: string;
+	group: string | null;
+	arm: Arm;
+	sample: number;
+	round: number;
+	input: Record<string, unknown>;
+};
+const rounds = Math.max(
+	q2Cases.length ? q2Samples : 0,
+	heldOutCases.length ? heldOutSamples : 0,
+	riskyCases.length ? riskySamples : 0,
+);
+const heldOutRound = (k: number) =>
+	heldOutSamples === 1 ? 0 : Math.round((k * (rounds - 1)) / (heldOutSamples - 1));
+const jobs: Job[] = [];
+for (let round = 0; round < rounds; round++) {
+	const pushCase = (
+		set: Job["set"],
+		caseIndex: number,
+		caseId: string,
+		group: string | null,
+		input: Record<string, unknown>,
+		sample: number,
+	) => {
+		for (let offset = 0; offset < arms.length; offset++)
+			jobs.push({
+				set,
+				caseIndex,
+				caseId,
+				group,
+				arm: arms[(caseIndex + sample + offset) % arms.length] as Arm,
+				sample,
+				round,
+				input,
+			});
+	};
+	for (let k = 0; k < heldOutSamples; k++)
+		if (heldOutRound(k) === round)
+			for (const [index, entry] of heldOutCases.entries())
+				pushCase(
+					"heldOut",
+					index,
+					entry.id,
+					entry.kind,
+					{ markedContext: entry.markedContext, lemma: entry.lemma },
+					k,
+				);
+	if (round < riskySamples)
+		for (const [index, entry] of riskyCases.entries())
+			pushCase(
+				"risky",
+				index,
+				entry.id,
+				entry.source,
+				{ markedContext: entry.markedContext, lemma: entry.lemma },
+				round,
+			);
+	if (round < q2Samples)
+		for (const [index, entry] of q2Cases.entries())
+			pushCase(
+				"q2",
+				index,
+				entry.id,
+				entry.group,
+				{ markedContext: entry.markedContext, lemma: entry.lemma },
+				round,
+			);
+}
+
+const spend = await Spend.open("run", args.label, Number(args.budget));
+const rawPath = resolve(resultsDir, `run-${args.label}.jsonl`);
+const logPath = resolve(resultsDir, `run-${args.label}.log`);
+const bodiesPath = resolve(resultsDir, `request-bodies-${args.label}.json`);
+writeFileSync(rawPath, "");
+writeFileSync(logPath, "");
+const log = (line: string) => {
+	console.log(line);
+	appendFileSync(logPath, `${line}\n`);
+};
+log(
+	`E10 ${args.label}: arms ${arms.join(",")}; heldOut ${heldOutCases.length}x${heldOutSamples}, q2 ${q2Cases.length}x${q2Samples}, risky ${riskyCases.length}x${riskySamples}; ${jobs.length} calls planned; concurrency ${args.concurrency}; started ${new Date().toISOString()}`,
+);
+
+type Row = Omit<Job, "input"> & { input: Record<string, unknown> } & CallResult;
+const firstBodies: Partial<Record<Arm, string>> = {};
+let done = 0;
+async function runJob(job: Job): Promise<Row> {
+	const keep = !firstBodies[job.arm];
+	const result = await emojiCall(spend, job.arm, job.input, {
+		keepRequestBody: keep,
+	});
+	if (result.requestBody && !firstBodies[job.arm])
+		firstBodies[job.arm] = result.requestBody;
+	const { requestBody: _body, ...rest } = result;
+	const row: Row = { ...job, ...rest };
+	appendFileSync(rawPath, `${JSON.stringify(row)}\n`);
+	done++;
+	if (done % 100 === 0 || (row.status !== "Valid" && row.status !== "Skipped"))
+		log(
+			`[${done}/${jobs.length}] ${row.set} ${row.caseId.replace("reading-generation-", "")} ${row.arm}#${row.sample} ${row.status}${row.reason ? ` (${row.reason})` : ""} ${JSON.stringify(row.rawText)} ${Math.round(row.durationMs)}ms $${spend.spent.toFixed(4)}`,
+		);
+	return row;
+}
+
+const started = performance.now();
+// Gate: the first call runs alone; any failure stops the run.
+const gate = await runJob(jobs[0] as Job);
+if (gate.status === "ProviderFailure" || gate.status === "Skipped") {
+	log(
+		`GATE FAILED: ${gate.status} http ${gate.httpStatus} ${gate.error ?? gate.reason ?? ""}`,
+	);
+	await spend.close(`gate failed: ${gate.error ?? gate.reason}`);
+	process.exit(2);
+}
+log(
+	`gate ok: ${gate.arm} ${gate.status} ${JSON.stringify(gate.rawText)} http ${gate.httpStatus}`,
+);
+await pool(
+	jobs.slice(1).map((job) => () => runJob(job)),
+	Number(args.concurrency),
+);
+writeFileSync(bodiesPath, `${JSON.stringify(firstBodies, null, 2)}\n`);
+log(
+	`wall ${Math.round(performance.now() - started)} ms; abort ${abortReason ?? "none"}; finished ${new Date().toISOString()}`,
+);
+await spend.close(abortReason ? `aborted: ${abortReason}` : undefined);

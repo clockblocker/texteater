@@ -1,0 +1,172 @@
+/**
+ * Copy of the text leaves of draftKnowledge in
+ * src/concrete-lang/de/knowledge-production/draft.ts (unchanged since
+ * bf914bb4/1777ff4f; the E5 run used the same source). The only change is
+ * that the translations prompt takes an optional citation clause, appended
+ * after "never the whole sentence." With clause "" the requests are
+ * byte-identical to src (checked by selftest.ts with a fake executor).
+ *
+ * Relations are not drafted: the tf-demo request uses qualifiedKinds [] and
+ * so never asks for semanticRelations (asserted below).
+ */
+import type * as Dumling from "dumling/types";
+import {
+	authoredFor,
+	closedRoute,
+} from "../../../src/concrete-lang/de/authored-closed-sets/select.js";
+import { knowledgeDraftFingerprint } from "../../../src/concrete-lang/de/knowledge-production/draft.js";
+import type {
+	DumgenOptions,
+	Encounter,
+	KnowledgeRequest,
+} from "../../../src/types.js";
+import {
+	effectiveConfiguration,
+	executeGeneration,
+} from "../../../src/universal/model.js";
+import { operationTask, recordEvent } from "../../../src/universal/trace.js";
+import {
+	markedContext,
+	parse,
+	validateEncounter,
+} from "../../../src/universal/validation.js";
+
+/** Verbatim from draft.ts. */
+const transcriptionPrompt =
+	"Write the broad standard-German IPA transcription of the supplied German Lemma headword, without slash or bracket delimiters. Preserve the Lemma exactly. Return {text:string}, or {text:null} if the pronunciation is uncertain.";
+
+/** Candidate citation clauses. `language` is the request key ("en"/"ru"), as production interpolates it. */
+export const clauses = {
+	/** No clause: production. */
+	none: (_language: string) => "",
+	/** W1: short, language-agnostic, anchored on "that translation". */
+	W1: (language: string) =>
+		` Write that translation in its ${language} dictionary headword form; do not carry over the tense, person, number or case of the German sentence.`,
+	/** W2: explicit per part of speech (adapted from E5 arm D's citationTranslationLine to a single leaf). */
+	W2: (language: string) =>
+		` Put that translation in the ${language} citation form: verbs in the infinitive (English without "to"), nouns in the nominative singular unless the word only exists in the plural, adjectives in the masculine nominative singular where ${language} inflects them. Keep a multiword expression as a phrase. Never mirror the sentence's tense, person, case or number.`,
+} as const;
+export type ClauseId = keyof typeof clauses;
+
+/** draft.ts senseTextPrompt with the clause inserted into the translations branch. */
+export function senseTextPrompt(
+	aspect: "definition" | "translations",
+	language: string | undefined,
+	clause: ClauseId,
+) {
+	return `Draft only the requested ${aspect} for the fixed German Lemma at <TARGET> in markedContext. The sentence is the sense anchor: determine what the marked expression means HERE, including figurative uses, and describe that meaning, not another sense of the same Lemma and not the surrounding scene. Describe the meaning so the text also fits other sentences with that meaning; do not add incidental participants or objects from this sentence. Never change the Lemma, Kind or Core Features, and do not borrow a neighboring word's meaning. ${aspect === "definition" ? "Write a concise German definition." : `Translate only the marked target into ${language}; return one concise word or phrase, never the whole sentence.${clauses[clause](String(language))}`} Return {text:string}, or {text:null} if no defensible contribution exists. The caller attaches this text to the Reading after local validation.`;
+}
+
+type DraftText = {
+	readonly aspect: "definition" | "transcription" | "translations";
+	readonly language?: string;
+	readonly text: string;
+};
+
+/** draftKnowledge (text leaves) with a citation clause on the translations prompt. */
+export function draftKnowledgeVariant(
+	options: DumgenOptions,
+	input: {
+		encounter: Encounter;
+		lemma: Dumling.Lemma;
+		request: KnowledgeRequest;
+	},
+	clause: ClauseId,
+) {
+	return operationTask(options)(
+		"draftKnowledge",
+		input,
+		async (signal) => {
+			const encounter = validateEncounter(input.encounter, "draftKnowledge");
+			const lemma = parse<Dumling.Lemma>(
+				"lemmaSchema",
+				input.lemma,
+				"draftKnowledge",
+			);
+			if (
+				lemma.language !== encounter.sentence.language ||
+				lemma.family !== encounter.target.family ||
+				lemma.kind !== encounter.target.kind
+			)
+				throw Error("Draft Lemma and Encounter routes disagree");
+			if (Object.keys(input.request.semanticRelations ?? {}).length)
+				throw Error("E11 variant does not draft relations");
+			const sourceFingerprint = await knowledgeDraftFingerprint(
+				encounter,
+				lemma,
+			);
+			if (lemma.language !== "de" || authoredFor(lemma) || closedRoute(lemma))
+				return { sourceFingerprint, texts: [] as DraftText[] };
+			const route = `de/${lemma.family}/${lemma.kind}`;
+			const jobs = Object.entries(input.request).flatMap(
+				([aspect, selection]) => {
+					if (
+						aspect !== "definition" &&
+						aspect !== "transcription" &&
+						aspect !== "translations"
+					)
+						return [];
+					return (
+						aspect === "translations" ? Object.keys(selection ?? {}) : [undefined]
+					).map(async (language): Promise<DraftText[]> => {
+						try {
+							const text = await executeGeneration(
+								options,
+								{
+									stage: "draftKnowledge",
+									route,
+									signal,
+									configuration: effectiveConfiguration(options, route),
+									input:
+										aspect === "transcription"
+											? { lemma, aspect }
+											: {
+													lemma,
+													markedContext: markedContext(encounter).markedContext,
+													aspect,
+													...(language ? { language } : {}),
+												},
+									systemPrompt:
+										aspect === "transcription"
+											? transcriptionPrompt
+											: senseTextPrompt(aspect, language, clause),
+									outputSchema: {
+										type: "object",
+										properties: { text: { type: ["string", "null"] } },
+										required: ["text"],
+										additionalProperties: false,
+									},
+								},
+								(output) => {
+									if (
+										!output ||
+										typeof output !== "object" ||
+										!("text" in output) ||
+										Object.keys(output).length !== 1 ||
+										(output.text !== null && typeof output.text !== "string")
+									)
+										throw Error("Expected text or null");
+									return output.text as string | null;
+								},
+								[],
+							);
+							return text
+								? [{ aspect, ...(language ? { language } : {}), text }]
+								: [];
+						} catch (error) {
+							signal.throwIfAborted();
+							recordEvent(signal, "KnowledgeDraftFailed", {
+								aspect,
+								language: language ?? null,
+								message: String(error),
+							});
+							return [];
+						}
+					});
+				},
+			);
+			const texts = await Promise.all(jobs);
+			return { sourceFingerprint, texts: texts.flat() };
+		},
+	);
+}

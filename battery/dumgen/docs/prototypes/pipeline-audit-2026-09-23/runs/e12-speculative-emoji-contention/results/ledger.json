@@ -1,0 +1,23 @@
+[
+  {
+    "script": "run",
+    "label": "pilot",
+    "startedAt": "2026-09-23T14:49:52.873Z",
+    "spentUsd": 0.00541114,
+    "lunaCalls": 35,
+    "jevCalls": 4,
+    "abortedEstimates": 0,
+    "finishedAt": "2026-09-23T14:50:20.032Z"
+  },
+  {
+    "script": "run",
+    "label": "main",
+    "startedAt": "2026-09-23T14:50:30Z",
+    "finishedAt": "2026-09-23T14:52:30Z",
+    "spentUsd": 0.031121,
+    "lunaCalls": 202,
+    "jevCalls": 27,
+    "abortedEstimates": 1,
+    "stoppedBy": "process killed mid-run (previous agent session ended) during klitik#8 rep 0 arm D; no close() ran. spentUsd reconstructed from run-main.jsonl call costs ($0.030521) plus $0.0006 estimate for the killed D arm; startedAt/finishedAt approximate from file mtimes"
+  }
+]

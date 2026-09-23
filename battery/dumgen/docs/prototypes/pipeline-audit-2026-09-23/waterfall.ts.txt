@@ -1,0 +1,2023 @@
+/**
+ * Live waterfall of the production intake and click pipeline, built for the
+ * dumgen stage audit (2026-09-23). It constructs Dumgen exactly like
+ * `app/tf-demo/server/modelExecution.ts` (OpenAI executor per Dumgen, a fresh
+ * TypeSafe client per judgment, default Luna fast tier and jev-latest) and
+ * replays what `app/tf-demo/server/linguisticOrchestration.ts` does, minus
+ * Convex:
+ *
+ *   intake: segment(all sentences, one call) -> analyzeSentence (concurrency 4)
+ *   click:  select (stored analysis, else classifyTarget)
+ *           -> resolveGrammar(encounter, [])            first encounter
+ *           -> fork draftKnowledge (tf-demo request)    concurrently with
+ *              resolveOrGenerateReadingEmojiDescription(candidates [])
+ *           -> join the draft when the Reading is New
+ *   pass 2: the Reading step again with stored candidates (own + distractors
+ *           and distractors only) to time compare-then-generate.
+ *
+ * Imports come from `src` so every run measures current source. Every model
+ * call is recorded from the operation traces with its tokens and cost.
+ *
+ *   bun --env-file=../../.env.local prototypes/audit/waterfall.ts --label baseline
+ *   ... --sentences kakao,kino --clicks 12 --concurrency 1 --label serial
+ *   ... --intake-only --intake-repeats 3 --label intake
+ *   bun prototypes/audit/waterfall.ts --summarize prototypes/audit/results/baseline-baseline.json
+ *
+ * Flags: --label NAME (output file suffix), --sentences kakao,kino (corpus
+ * ids, prefix optional), --clicks N (100), --per-sentence N (8),
+ * --all-members (click every member, not one click per analysed unit),
+ * --concurrency N (clicks in flight, 4), --intake-concurrency N (4, as
+ * tf-demo), --intake-repeats N / --intake-serial-repeats N (extra
+ * analyzeSentence passes for latency statistics), --intake-only,
+ * --pass2 N (20) / --pass2-nomatch N (10), --budget USD (0.25; no new click
+ * starts past budget minus $0.01), --convex-hop-ms N (simulated Convex hop
+ * before the Reading step), --model/--settings JSON and --judgment-timeout
+ * (overrides, as tf-demo's createProductionDumgen configuration),
+ * --out DIR, --summarize RAW.json (re-score and re-summarize a stored run,
+ * no model calls).
+ *
+ * Outputs: results/baseline-<label>.json (every call with stage, route,
+ * start, duration, dependsOn, questions, tokens, cost; every click timeline)
+ * and results/summary-<label>.json.
+ *
+ * Convex hops (grammarAvailable, findStoredReadings, commits) are not
+ * simulated unless `--convex-hop-ms` is given; the reported critical path is
+ * model time plus local code.
+ */
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import { configurationSchema } from "promptsmith/schemas";
+import { createTypeSafeExecutor } from "promptsmith/typesafe";
+import { effectiveRelationPublicationPolicy } from "../../../../app/tf-demo/convex/model/generatedKnowledgeContainment.ts";
+import { generationRequestFor } from "../../../../app/tf-demo/server/generatedKnowledgeRequest.ts";
+import {
+	type SentenceGold,
+	scoreAnalysis,
+} from "../../src/concrete-lang/de/sentence-analysis/experiment.js";
+import { placeSegments } from "../../src/concrete-lang/de/sentence-analysis/placement.js";
+import corpusData from "../../src/concrete-lang/de/sentence-analysis/source-data.json";
+import {
+	createDumgen,
+	draftKnowledge,
+	headOf,
+	resolvedUnitAt,
+	targetOf,
+	validateEncounter,
+} from "../../src/index.js";
+import type {
+	CallTrace,
+	DumgenOptions,
+	Encounter,
+	OperationTrace,
+	SegmentedSentence,
+	SentenceAnalysis,
+} from "../../src/types.js";
+
+// ------------------------------------------------------------------ pricing
+
+const price = {
+	lunaInput: 0.4 / 1e6,
+	lunaCached: 0.04 / 1e6,
+	lunaOutput: 2.4 / 1e6,
+	jevInput: 0.042 / 1e6,
+};
+
+// ---------------------------------------------------------------------- CLI
+
+const { values: args } = parseArgs({
+	options: {
+		label: { type: "string", default: "baseline" },
+		sentences: { type: "string" },
+		clicks: { type: "string", default: "100" },
+		"per-sentence": { type: "string", default: "8" },
+		concurrency: { type: "string", default: "4" },
+		"intake-concurrency": { type: "string", default: "4" },
+		"intake-repeats": { type: "string", default: "0" },
+		"intake-serial-repeats": { type: "string", default: "0" },
+		"intake-only": { type: "boolean", default: false },
+		/** Click every member of a unit, not one click per analysed unit. */
+		"all-members": { type: "boolean", default: false },
+		pass2: { type: "string", default: "20" },
+		"pass2-nomatch": { type: "string", default: "10" },
+		budget: { type: "string", default: "0.25" },
+		"convex-hop-ms": { type: "string", default: "0" },
+		model: { type: "string" },
+		settings: { type: "string" },
+		"judgment-timeout": { type: "string" },
+		out: { type: "string" },
+		summarize: { type: "string" },
+	},
+});
+
+const resultsDirectory = resolve(
+	args.out ?? resolve(dirname(new URL(import.meta.url).pathname), "results"),
+);
+
+// ------------------------------------------------------------ call records
+
+type Scope = "intake" | "intakeRepeat" | "click" | "pass2";
+
+export type CallRecord = {
+	readonly scope: Scope;
+	readonly scopeId: string;
+	readonly operation: string;
+	readonly operationId: string;
+	readonly id: string;
+	readonly dependsOn: readonly string[];
+	readonly executor: "TypeSafe" | "Luna";
+	readonly stage: string;
+	readonly route: string;
+	readonly label: string;
+	readonly startedAt: number;
+	readonly durationMs: number;
+	readonly questions: number | null;
+	readonly stateChars: number | null;
+	readonly inputTokens: number;
+	readonly cachedTokens: number;
+	readonly outputTokens: number;
+	readonly costUsd: number;
+	readonly transport: CallTrace["transport"];
+	readonly validation: CallTrace["validation"];
+	readonly failure?: string;
+	readonly providerMs?: number | null;
+	readonly headersMs?: number | null;
+	readonly serviceTier?: string | null;
+	readonly model?: string | null;
+	/** Luna inputs are small; jev answers explain Unresolved outcomes. */
+	readonly input?: unknown;
+	readonly output?: unknown;
+};
+
+function labelOf(operation: string, call: CallTrace): string {
+	const request = call.request as {
+		stage: string;
+		route: string;
+		input?: Record<string, unknown>;
+	};
+	if (call.executor === "TypeSafe") {
+		if (operation === "segment") return "intake.segment";
+		if (operation === "analyzeSentence") return "intake.analyze";
+		if (operation === "classifyTarget") return "click.classify";
+		if (operation === "resolveGrammar") {
+			if (request.route.endsWith("/features")) return "grammar.features";
+			if (request.route.endsWith("/lexical-strings"))
+				return "grammar.lexicalStrings";
+			if (request.route.endsWith("/case")) return "grammar.nounCase";
+			if (request.route.endsWith("/identity"))
+				return "grammar.authoredIdentity";
+			return "grammar.other";
+		}
+		if (operation === "resolveOrGenerateReadingEmojiDescription")
+			return request.input && "readings" in request.input
+				? "reading.authoredChoice"
+				: "reading.compare";
+		return `${operation}.judge`;
+	}
+	if (operation === "segment") return "intake.stitch";
+	if (operation === "resolveGrammar") return "grammar.text";
+	if (operation === "resolveOrGenerateReadingEmojiDescription")
+		return "reading.generate";
+	if (operation === "draftKnowledge") {
+		if (request.stage === "draftRelationCandidates")
+			return "draft.relations";
+		const input = request.input ?? {};
+		return `draft.${String(input.aspect)}${input.language ? `.${String(input.language)}` : ""}`;
+	}
+	return `${operation}.generate`;
+}
+
+function usageOf(call: CallTrace) {
+	if (call.executor === "TypeSafe") {
+		const usage = (call.output as { usage?: { input_tokens?: number } })
+			?.usage;
+		const input = usage?.input_tokens ?? 0;
+		return {
+			inputTokens: input,
+			cachedTokens: 0,
+			outputTokens: 0,
+			costUsd: input * price.jevInput,
+		};
+	}
+	const metadata = call.metadata as
+		| {
+				usage?: {
+					input_tokens?: number;
+					output_tokens?: number;
+					input_tokens_details?: { cached_tokens?: number };
+				} | null;
+		  }
+		| undefined;
+	const usage = metadata?.usage ?? {};
+	const input = usage.input_tokens ?? 0;
+	const cached = usage.input_tokens_details?.cached_tokens ?? 0;
+	const output = usage.output_tokens ?? 0;
+	return {
+		inputTokens: input,
+		cachedTokens: cached,
+		outputTokens: output,
+		costUsd:
+			(input - cached) * price.lunaInput +
+			cached * price.lunaCached +
+			output * price.lunaOutput,
+	};
+}
+
+function recordsOf(
+	scope: Scope,
+	scopeId: string,
+	trace: OperationTrace,
+): CallRecord[] {
+	return trace.calls.map((call) => {
+		const request = call.request as {
+			stage: string;
+			route: string;
+			input?: unknown;
+			questions?: Record<string, unknown>;
+		};
+		const metadata = call.metadata as
+			| {
+					timing?: {
+						providerProcessingMs?: number | null;
+						headersMs?: number;
+					};
+					serviceTier?: string | null;
+					model?: string | null;
+			  }
+			| undefined;
+		const tokens = usageOf(call);
+		return {
+			scope,
+			scopeId,
+			operation: trace.operation,
+			operationId: trace.id,
+			id: call.id,
+			dependsOn: call.dependsOn,
+			executor: call.executor,
+			stage: request.stage,
+			route: request.route,
+			label: labelOf(trace.operation, call),
+			startedAt: call.startedAt ?? 0,
+			durationMs: call.durationMs,
+			questions: request.questions
+				? Object.keys(request.questions).length
+				: null,
+			stateChars:
+				call.executor === "TypeSafe"
+					? JSON.stringify(request.input ?? null).length
+					: null,
+			...tokens,
+			transport: call.transport,
+			validation: call.validation,
+			...(call.failure ? { failure: call.failure } : {}),
+			...(call.executor === "Luna"
+				? {
+						providerMs:
+							metadata?.timing?.providerProcessingMs ?? null,
+						headersMs: metadata?.timing?.headersMs ?? null,
+						serviceTier: metadata?.serviceTier ?? null,
+						model: metadata?.model ?? null,
+						input: request.input,
+						output: call.output,
+					}
+				: {
+						output: (call.output as { answers?: unknown })?.answers,
+					}),
+		};
+	});
+}
+
+// -------------------------------------------------------------- spend meter
+
+let spentUsd = 0;
+const budgetUsd = Number(args.budget);
+const reserveUsd = 0.01;
+function overBudget() {
+	return spentUsd >= budgetUsd - reserveUsd;
+}
+
+// ------------------------------------------------------ production options
+
+const configurationOverride = args.model
+	? {
+			model: args.model,
+			settings: args.settings ? JSON.parse(args.settings) : {},
+		}
+	: undefined;
+const judgmentOverride = args["judgment-timeout"]
+	? { timeoutMs: Number(args["judgment-timeout"]) }
+	: undefined;
+
+/** Mirrors productionOptions in app/tf-demo/server/modelExecution.ts. */
+function productionOptions(
+	onOperation: (trace: OperationTrace) => void,
+): DumgenOptions {
+	const execute = createOpenAIExecutor();
+	return {
+		...(configurationOverride
+			? { configuration: configurationOverride }
+			: {}),
+		...(judgmentOverride
+			? { judgmentConfiguration: judgmentOverride }
+			: {}),
+		judge: (request, options) => createTypeSafeExecutor()(request, options),
+		onOperation,
+		execute: async (request) =>
+			await execute({
+				...request,
+				configuration: configurationSchema.parse(request.configuration),
+			}),
+	};
+}
+
+type Failure = {
+	readonly tag: string;
+	readonly stage: string;
+	readonly message: string;
+	readonly route?: string;
+};
+async function run<T>(
+	task: Effect.Effect<T, unknown>,
+): Promise<{ ok: true; value: T } | { ok: false; failure: Failure }> {
+	const result = await Effect.runPromise(Effect.either(task));
+	if (result._tag === "Right") return { ok: true, value: result.right };
+	const error = result.left as {
+		_tag?: string;
+		stage?: string;
+		message?: string;
+		route?: string;
+	};
+	return {
+		ok: false,
+		failure: {
+			tag: error?._tag ?? "Unknown",
+			stage: error?.stage ?? "?",
+			message: error?.message ?? String(error),
+			...(error?.route ? { route: error.route } : {}),
+		},
+	};
+}
+
+async function pool<T, R>(
+	items: readonly T[],
+	concurrency: number,
+	work: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+	const results: R[] = new Array(items.length);
+	let next = 0;
+	async function worker() {
+		while (next < items.length) {
+			const index = next++;
+			results[index] = await work(items[index] as T, index);
+		}
+	}
+	await Promise.all(
+		Array.from({ length: Math.min(concurrency, items.length) }, worker),
+	);
+	return results;
+}
+
+// ----------------------------------------------------------------- corpus
+
+type CorpusCase = {
+	readonly id: string;
+	readonly text: string;
+	readonly gold: SentenceGold;
+};
+const corpus: CorpusCase[] = Object.entries(
+	corpusData.cases as Record<
+		string,
+		{ input: { segments: { text: string }[] }; idealOutput: SentenceGold }
+	>,
+).map(([id, value]) => ({
+	id,
+	text: value.input.segments.map((segment) => segment.text).join(""),
+	gold: value.idealOutput,
+}));
+
+function selectedCorpus(): CorpusCase[] {
+	if (!args.sentences) return corpus;
+	const wanted = args.sentences.split(",").map((name) => name.trim());
+	return corpus.filter((entry) =>
+		wanted.some(
+			(name) => entry.id === name || entry.id === `sentence-de-${name}`,
+		),
+	);
+}
+
+// --------------------------------------------------------------- selection
+
+type SelectedTarget = {
+	readonly family: "Lexeme" | "Phraseme";
+	readonly kind: string;
+	readonly memberSegmentIndices: readonly number[];
+};
+type Selection =
+	| { readonly target: SelectedTarget; readonly reason: "analysis" }
+	| {
+			readonly target: null;
+			readonly reason:
+				| "noAnalysis"
+				| "stitchedMismatch"
+				| "noAnchor"
+				| "noResolvedUnit"
+				| "clickedNotMember"
+				| "invalidEncounter";
+	  };
+
+type OffsetSegment = { offset: number; kind: string; text: string };
+
+function storedRanges(sentence: SegmentedSentence<"de">) {
+	const ranges = new Map<number, { start: number; end: number }>();
+	let cursor = 0;
+	for (const [index, segment] of sentence.segments.entries()) {
+		ranges.set(index, { start: cursor, end: cursor + segment.text.length });
+		cursor += segment.text.length;
+	}
+	return ranges;
+}
+
+/** Stored Segments whose analysed pieces are all covered by the offsets. */
+function coveredIndices(
+	sentence: SegmentedSentence<"de">,
+	analysed: readonly OffsetSegment[],
+	offsets: ReadonlySet<number>,
+): number[] {
+	const ranges = storedRanges(sentence);
+	return sentence.segments.flatMap((_, index) => {
+		const range = ranges.get(index);
+		if (!range) return [];
+		const inside = analysed.filter(
+			(entry) => entry.offset >= range.start && entry.offset < range.end,
+		);
+		return inside.length > 0 &&
+			inside.every((entry) => offsets.has(entry.offset))
+			? [index]
+			: [];
+	});
+}
+
+/**
+ * Mirrors selectAnalysisTarget in app/tf-demo/server/sentenceAnalysisSelection.ts
+ * plus the validateEncounter guard of linguisticOrchestration, and names why
+ * a click falls back to classification.
+ */
+function selectFromAnalysis(
+	analysis: SentenceAnalysis | null,
+	sentence: SegmentedSentence<"de">,
+	clickedSegmentIndex: number,
+): Selection {
+	if (!analysis) return { target: null, reason: "noAnalysis" };
+	const stitched = sentence.segments.map((segment) => segment.text).join("");
+	if (analysis.stitchedText !== stitched)
+		return { target: null, reason: "stitchedMismatch" };
+	const clicked = storedRanges(sentence).get(clickedSegmentIndex);
+	if (!clicked) return { target: null, reason: "noAnchor" };
+	const analysed = [...analysis.segments].sort((a, b) => a.offset - b.offset);
+	const anchor = analysed.find(
+		(segment) =>
+			segment.offset >= clicked.start &&
+			segment.offset < clicked.end &&
+			segment.kind === "ResolvableText",
+	);
+	if (!anchor) return { target: null, reason: "noAnchor" };
+	const unit = resolvedUnitAt(analysis, anchor.offset);
+	if (!unit) return { target: null, reason: "noResolvedUnit" };
+	const memberSegmentIndices = coveredIndices(
+		sentence,
+		analysed,
+		new Set(unit.offsets),
+	);
+	if (!memberSegmentIndices.includes(clickedSegmentIndex))
+		return { target: null, reason: "clickedNotMember" };
+	const target = {
+		family: unit.family,
+		kind: unit.kind,
+		memberSegmentIndices,
+	};
+	try {
+		validateEncounter({ sentence, target });
+	} catch {
+		return { target: null, reason: "invalidEncounter" };
+	}
+	return { target, reason: "analysis" };
+}
+
+/** The largest gold unit at the clicked Segment, in stored indices. */
+function goldTargetAt(
+	gold: SentenceGold,
+	sentence: SegmentedSentence<"de">,
+	clickedSegmentIndex: number,
+): { kind: string; memberSegmentIndices: number[] } | null {
+	const analysed = placeSegments(sentence).segments;
+	const clicked = storedRanges(sentence).get(clickedSegmentIndex);
+	if (!clicked) return null;
+	const anchor = analysed.find(
+		(segment) =>
+			segment.offset >= clicked.start &&
+			segment.offset < clicked.end &&
+			segment.kind === "ResolvableText",
+	);
+	if (!anchor) return null;
+	const headOffset = (target: SentenceGold["targets"][number]) =>
+		(
+			target.members.find((member) => member.role === "Head") ??
+			target.members[0]
+		)?.offset;
+	const target = gold.targets.find((entry) =>
+		entry.members.some((member) => member.offset === anchor.offset),
+	);
+	if (!target) return null;
+	const head = headOffset(target);
+	const phraseme = gold.phrasemes.find(
+		(entry) => head !== undefined && entry.words.includes(head),
+	);
+	const offsets = phraseme
+		? gold.targets
+				.filter((entry) => {
+					const own = headOffset(entry);
+					return own !== undefined && phraseme.words.includes(own);
+				})
+				.flatMap((entry) =>
+					entry.members.map((member) => member.offset),
+				)
+		: target.members.map((member) => member.offset);
+	const memberSegmentIndices = coveredIndices(
+		sentence,
+		analysed,
+		new Set(offsets),
+	);
+	// A fused word (ins, am, zur) outside a larger unit is a singleton ADP
+	// at stored granularity (targetCriteria), though its article piece
+	// serves the noun.
+	return memberSegmentIndices.includes(clickedSegmentIndex)
+		? { kind: phraseme ? phraseme.kind : target.kind, memberSegmentIndices }
+		: { kind: target.kind, memberSegmentIndices: [clickedSegmentIndex] };
+}
+
+// ------------------------------------------------------------------ intake
+
+type IntakeSentence = {
+	readonly caseId: string;
+	readonly text: string;
+	readonly sentence: SegmentedSentence<"de"> | null;
+	readonly segmentDecision: string;
+	readonly analysis: SentenceAnalysis | null;
+	readonly analyzeMs: number | null;
+	readonly analyzeStartOffsetMs: number | null;
+	readonly resolvable: number;
+	readonly questions: number | null;
+	readonly chunks: number | null;
+	readonly inputTokens: number;
+	readonly failure?: Failure;
+	readonly score?: ReturnType<typeof scoreAnalysis>;
+};
+
+async function runIntake(cases: CorpusCase[], calls: CallRecord[]) {
+	const sink = (scopeId: string) => (trace: OperationTrace) => {
+		const records = recordsOf("intake", scopeId, trace);
+		for (const record of records) spentUsd += record.costUsd;
+		calls.push(...records);
+	};
+	// One Dumgen per submitText action, as orchestratorFor builds it.
+	const operations: OperationTrace[] = [];
+	const dumgen = createDumgen(
+		productionOptions((trace) => {
+			operations.push(trace);
+			const scopeId =
+				trace.operation === "segment"
+					? "segment"
+					: String(
+							(trace.input as { sentence?: { id?: string } })
+								.sentence?.id,
+						);
+			sink(scopeId)(trace);
+		}),
+	);
+	const intakeStart = performance.now();
+	const segmentStart = performance.now();
+	const segmented = await run(
+		dumgen.segment({
+			sourceSentences: cases.map((entry) => entry.text) as [
+				string,
+				...string[],
+			],
+		}),
+	);
+	const segmentMs = performance.now() - segmentStart;
+	if (!segmented.ok)
+		throw Error(`segment failed: ${JSON.stringify(segmented.failure)}`);
+	const analyzeStart = performance.now();
+	const sentences = await pool(
+		cases,
+		Number(args["intake-concurrency"]),
+		async (entry, index): Promise<IntakeSentence> => {
+			const decision = segmented.value[index];
+			if (!decision || decision.decision !== "Accepted")
+				return {
+					caseId: entry.id,
+					text: entry.text,
+					sentence: null,
+					segmentDecision: decision?.decision ?? "Missing",
+					analysis: null,
+					analyzeMs: null,
+					analyzeStartOffsetMs: null,
+					resolvable: 0,
+					questions: null,
+					chunks: null,
+					inputTokens: 0,
+				};
+			const sentence = decision.sentence as SegmentedSentence<"de">;
+			const resolvable = sentence.segments.filter(
+				(segment) => segment.kind === "ResolvableText",
+			).length;
+			if (sentence.language !== "de")
+				return {
+					caseId: entry.id,
+					text: entry.text,
+					sentence,
+					segmentDecision: `Accepted:${sentence.language}`,
+					analysis: null,
+					analyzeMs: null,
+					analyzeStartOffsetMs: null,
+					resolvable,
+					questions: null,
+					chunks: null,
+					inputTokens: 0,
+				};
+			const started = performance.now();
+			const result = await run(dumgen.analyzeSentence({ sentence }));
+			const analyzeMs = performance.now() - started;
+			const trace = operations.find(
+				(candidate) =>
+					candidate.operation === "analyzeSentence" &&
+					(candidate.input as { sentence: { id: string } }).sentence
+						.id === sentence.id,
+			);
+			const questionsEvent = trace?.events.find(
+				(event) => event.kind === "SentenceQuestions",
+			)?.data as { questions: number; calls: number } | undefined;
+			const inputTokens = calls
+				.filter(
+					(call) =>
+						call.label === "intake.analyze" &&
+						call.scopeId === sentence.id,
+				)
+				.reduce((sum, call) => sum + call.inputTokens, 0);
+			return {
+				caseId: entry.id,
+				text: entry.text,
+				sentence,
+				segmentDecision: "Accepted",
+				analysis: result.ok ? result.value : null,
+				analyzeMs,
+				analyzeStartOffsetMs: started - analyzeStart,
+				resolvable,
+				questions: questionsEvent?.questions ?? null,
+				chunks: questionsEvent?.calls ?? trace?.calls.length ?? null,
+				inputTokens,
+				...(result.ok
+					? { score: scoreAnalysis(result.value, entry.gold) }
+					: { failure: result.failure }),
+			};
+		},
+	);
+	const analyzePhaseMs = performance.now() - analyzeStart;
+	return {
+		segmentMs,
+		analyzePhaseMs,
+		wallMs: performance.now() - intakeStart,
+		segmentOperation: operations.find(
+			(trace) => trace.operation === "segment",
+		)
+			? {
+					durationMs: operations.find(
+						(trace) => trace.operation === "segment",
+					)?.durationMs,
+					calls: operations.find(
+						(trace) => trace.operation === "segment",
+					)?.calls.length,
+				}
+			: null,
+		sentences,
+	};
+}
+
+/** Repeats only analyzeSentence over already segmented sentences, for latency statistics. */
+async function repeatIntake(
+	sentences: IntakeSentence[],
+	concurrency: number,
+	repetition: string,
+	calls: CallRecord[],
+) {
+	const dumgen = createDumgen(
+		productionOptions((trace) => {
+			const records = recordsOf(
+				"intakeRepeat",
+				`${repetition}:${String((trace.input as { sentence?: { id?: string } }).sentence?.id)}`,
+				trace,
+			);
+			for (const record of records) spentUsd += record.costUsd;
+			calls.push(...records);
+		}),
+	);
+	const started = performance.now();
+	const rows = await pool(
+		sentences.filter((entry) => entry.sentence?.language === "de"),
+		concurrency,
+		async (entry) => {
+			const start = performance.now();
+			const result = await run(
+				dumgen.analyzeSentence({
+					sentence: entry.sentence as SegmentedSentence<"de">,
+				}),
+			);
+			return {
+				caseId: entry.caseId,
+				questions: entry.questions,
+				resolvable: entry.resolvable,
+				analyzeMs: performance.now() - start,
+				ok: result.ok,
+				...(result.ok ? {} : { failure: result.failure }),
+			};
+		},
+	);
+	return {
+		repetition,
+		concurrency,
+		wallMs: performance.now() - started,
+		rows,
+	};
+}
+
+// ------------------------------------------------------------------ clicks
+
+type ClickPlan = {
+	readonly clickId: string;
+	readonly caseId: string;
+	readonly sentence: SegmentedSentence<"de">;
+	readonly analysis: SentenceAnalysis | null;
+	readonly clickedSegmentIndex: number;
+	readonly clickedText: string;
+	readonly selection: Selection;
+	readonly gold: { kind: string; memberSegmentIndices: number[] } | null;
+};
+
+function planClicks(intake: IntakeSentence[]): ClickPlan[] {
+	const perSentence = Number(args["per-sentence"]);
+	const bySentence: ClickPlan[][] = [];
+	const caseById = new Map(corpus.map((entry) => [entry.id, entry]));
+	for (const entry of intake) {
+		const sentence = entry.sentence;
+		if (!sentence || sentence.language !== "de") continue;
+		const gold = caseById.get(entry.caseId)?.gold;
+		const units = new Map<string, ClickPlan>();
+		const plans: ClickPlan[] = [];
+		const analysed = entry.analysis
+			? [...entry.analysis.segments].sort((a, b) => a.offset - b.offset)
+			: [];
+		const ranges = storedRanges(sentence);
+		for (const [index, segment] of sentence.segments.entries()) {
+			if (segment.kind !== "ResolvableText") continue;
+			const selection = selectFromAnalysis(
+				entry.analysis,
+				sentence,
+				index,
+			);
+			const plan: ClickPlan = {
+				clickId: `${entry.caseId.replace("sentence-de-", "")}#${index}`,
+				caseId: entry.caseId,
+				sentence,
+				analysis: entry.analysis,
+				clickedSegmentIndex: index,
+				clickedText: segment.text,
+				selection,
+				gold: gold ? goldTargetAt(gold, sentence, index) : null,
+			};
+			if (!selection.target || args["all-members"]) {
+				plans.push(plan);
+				continue;
+			}
+			// A second click on a member of an already clicked unit is a reuse
+			// in tf-demo (no model call), so one click per analysed unit; prefer
+			// the member holding the Lexeme head.
+			const key = `${selection.target.kind}:${selection.target.memberSegmentIndices.join(",")}`;
+			const range = ranges.get(index);
+			const lexeme =
+				entry.analysis && range
+					? analysed
+							.filter(
+								(piece) =>
+									piece.offset >= range.start &&
+									piece.offset < range.end,
+							)
+							.map((piece) =>
+								targetOf(
+									entry.analysis as SentenceAnalysis,
+									piece.offset,
+								),
+							)
+							.find(Boolean)
+					: undefined;
+			const isHead =
+				lexeme !== undefined &&
+				range !== undefined &&
+				headOf(lexeme).offset >= range.start &&
+				headOf(lexeme).offset < range.end &&
+				(selection.target.family === "Lexeme" ||
+					selection.target.memberSegmentIndices[0] === index);
+			const existing = units.get(key);
+			if (!existing) {
+				units.set(key, plan);
+				plans.push(plan);
+			} else if (isHead && selection.target.family === "Lexeme") {
+				plans[plans.indexOf(existing)] = plan;
+				units.set(key, plan);
+			}
+		}
+		// Spread across kinds when the cap binds.
+		const byKind = new Map<string, ClickPlan[]>();
+		for (const plan of plans) {
+			const kind = plan.selection.target?.kind ?? "fallback";
+			byKind.set(kind, [...(byKind.get(kind) ?? []), plan]);
+		}
+		const spread: ClickPlan[] = [];
+		while (spread.length < Math.min(perSentence, plans.length))
+			for (const group of byKind.values()) {
+				const next = group.shift();
+				if (next && spread.length < perSentence) spread.push(next);
+			}
+		spread.sort((a, b) => a.clickedSegmentIndex - b.clickedSegmentIndex);
+		bySentence.push(spread);
+	}
+	// Round-robin across sentences so a click limit still covers every sentence.
+	const limit = Number(args.clicks);
+	const ordered: ClickPlan[] = [];
+	for (let round = 0; ordered.length < limit; round++) {
+		let added = false;
+		for (const plans of bySentence) {
+			const plan = plans[round];
+			if (plan && ordered.length < limit) {
+				ordered.push(plan);
+				added = true;
+			}
+		}
+		if (!added) break;
+	}
+	return ordered;
+}
+
+type Segment = { start: number; end: number };
+type ClickRecord = {
+	readonly clickId: string;
+	readonly caseId: string;
+	readonly clickedText: string;
+	readonly clickedSegmentIndex: number;
+	readonly path: "analysis" | "classified";
+	readonly fallbackReason: string | null;
+	readonly target: SelectedTarget | null;
+	readonly gold: ClickPlan["gold"];
+	readonly targetMatchesGold: boolean | null;
+	readonly route: string | null;
+	readonly outcome: string;
+	readonly failure?: Failure;
+	readonly lemma?: unknown;
+	readonly surface?: unknown;
+	readonly readingDecision?: string;
+	readonly emojiDescription?: string;
+	readonly draftTexts?: unknown;
+	readonly draftFailures?: unknown;
+	/** Offsets in ms from click start (monotonic clock). */
+	readonly timeline: {
+		select: Segment;
+		grammar?: Segment;
+		reading?: Segment;
+		draft?: Segment;
+	};
+	readonly criticalPathMs: number;
+	readonly epochStart: number;
+	readonly grammarEvents?: unknown;
+	readonly readingEvents?: unknown;
+};
+
+const qualifiedKinds = effectiveRelationPublicationPolicy().qualifiedKinds;
+const hopMs = Number(args["convex-hop-ms"]);
+const sleep = (ms: number) =>
+	new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+
+async function runClick(
+	plan: ClickPlan,
+	calls: CallRecord[],
+): Promise<ClickRecord> {
+	const traces: OperationTrace[] = [];
+	const sink = (trace: OperationTrace) => {
+		traces.push(trace);
+		const records = recordsOf("click", plan.clickId, trace);
+		for (const record of records) spentUsd += record.costUsd;
+		calls.push(...records);
+	};
+	// orchestratorFor builds one production Dumgen per action.
+	const dumgen = createDumgen(productionOptions(sink));
+	const epochStart = Date.now();
+	const t0 = performance.now();
+	const at = () => performance.now() - t0;
+	const base = {
+		clickId: plan.clickId,
+		caseId: plan.caseId,
+		clickedText: plan.clickedText,
+		clickedSegmentIndex: plan.clickedSegmentIndex,
+		gold: plan.gold,
+		epochStart,
+	};
+	// ---- select target
+	const selection = selectFromAnalysis(
+		plan.analysis,
+		plan.sentence,
+		plan.clickedSegmentIndex,
+	);
+	let target: SelectedTarget;
+	let path: "analysis" | "classified";
+	const selectStart = at();
+	if (selection.target) {
+		target = selection.target;
+		path = "analysis";
+	} else {
+		path = "classified";
+		const classified = await run(
+			dumgen.classifyTarget({
+				sentence: plan.sentence,
+				clickedSegmentIndex: plan.clickedSegmentIndex,
+			}),
+		);
+		if (!classified.ok) {
+			const end = at();
+			return {
+				...base,
+				path,
+				fallbackReason: selection.reason,
+				target: null,
+				targetMatchesGold: plan.gold ? false : null,
+				route: null,
+				outcome: `classify:${classified.failure.tag}`,
+				failure: classified.failure,
+				timeline: { select: { start: selectStart, end } },
+				criticalPathMs: end,
+			};
+		}
+		target = classified.value as SelectedTarget;
+	}
+	const select = { start: selectStart, end: at() };
+	const route = `${target.family}/${target.kind}`;
+	const targetMatchesGold = plan.gold
+		? plan.gold.kind === target.kind &&
+			plan.gold.memberSegmentIndices.join(",") ===
+				target.memberSegmentIndices.join(",")
+		: null;
+	const common = {
+		...base,
+		path,
+		fallbackReason: selection.target ? null : selection.reason,
+		target,
+		targetMatchesGold,
+		route,
+	};
+	// ---- grammar (first encounter: no stored Lemma candidates)
+	const encounter = {
+		sentence: plan.sentence,
+		target,
+	} as unknown as Encounter<"de">;
+	const grammarStart = at();
+	const grammar = await run(dumgen.resolveGrammar(encounter, []));
+	const grammarSegment = { start: grammarStart, end: at() };
+	const grammarTrace = traces.find(
+		(trace) => trace.operation === "resolveGrammar",
+	);
+	const grammarEvents = grammarTrace?.events.filter((event) =>
+		[
+			"JudgmentApplicability",
+			"IncoherentApplicableFeatures",
+			"AuthoredRealizationLookup",
+			"AuthoredPopulationMiss",
+		].includes(event.kind),
+	);
+	if (!grammar.ok)
+		return {
+			...common,
+			outcome: `grammar:${grammar.failure.tag}`,
+			failure: grammar.failure,
+			timeline: { select, grammar: grammarSegment },
+			criticalPathMs: grammarSegment.end,
+			grammarEvents,
+		};
+	const attestation = grammar.value as {
+		surface: { lemma: Record<string, unknown> } & Record<string, unknown>;
+	};
+	const lemma = attestation.surface.lemma;
+	// ---- fork the draft, as tf-demo does before loading stored Readings
+	const draftStart = at();
+	let draftEnd = draftStart;
+	const draftPromise = run(
+		draftKnowledge(productionOptions(sink), {
+			encounter,
+			lemma: lemma as never,
+			request: generationRequestFor(
+				{ lemma: lemma as never },
+				qualifiedKinds,
+				{ translationLanguages: ["en", "ru"] },
+			) as never,
+		}),
+	).then((result) => {
+		draftEnd = at();
+		return result;
+	});
+	if (hopMs > 0) await sleep(hopMs);
+	const readingStart = at();
+	const reading = await run(
+		dumgen.resolveOrGenerateReadingEmojiDescription({
+			encounter,
+			lemma: lemma as never,
+			candidates: [],
+		} as never),
+	);
+	const readingSegment = { start: readingStart, end: at() };
+	const draft = await draftPromise;
+	const draftSegment = { start: draftStart, end: draftEnd };
+	const draftTrace = traces.find(
+		(trace) => trace.operation === "draftKnowledge",
+	);
+	const readingTrace = traces.find(
+		(trace) =>
+			trace.operation === "resolveOrGenerateReadingEmojiDescription",
+	);
+	if (!reading.ok)
+		return {
+			...common,
+			outcome: `reading:${reading.failure.tag}`,
+			failure: reading.failure,
+			lemma,
+			surface: attestation.surface,
+			timeline: {
+				select,
+				grammar: grammarSegment,
+				reading: readingSegment,
+				draft: draftSegment,
+			},
+			criticalPathMs: readingSegment.end,
+			grammarEvents,
+			readingEvents: readingTrace?.events,
+		};
+	const resolution = reading.value as {
+		decision: "Reuse" | "New";
+		emojiDescription: string;
+	};
+	// A New Reading waits for its draft; a reused one never does.
+	const criticalPathMs =
+		resolution.decision === "New"
+			? Math.max(readingSegment.end, draftSegment.end)
+			: readingSegment.end;
+	return {
+		...common,
+		outcome: "Resolved",
+		lemma,
+		surface: attestation.surface,
+		readingDecision: resolution.decision,
+		emojiDescription: resolution.emojiDescription,
+		draftTexts: draft.ok
+			? (draft.value as { texts: unknown }).texts
+			: { failure: draft.failure },
+		draftFailures: draftTrace?.events.filter(
+			(event) => event.kind === "KnowledgeDraftFailed",
+		),
+		timeline: {
+			select,
+			grammar: grammarSegment,
+			reading: readingSegment,
+			draft: draftSegment,
+		},
+		criticalPathMs,
+		grammarEvents,
+		readingEvents: readingTrace?.events,
+	};
+}
+
+// ------------------------------------------------------------------ pass 2
+
+type Pass2Record = {
+	readonly clickId: string;
+	readonly variant: "withOwn" | "distractorsOnly";
+	readonly candidates: readonly string[];
+	readonly own: string;
+	readonly outcome: string;
+	readonly decision?: string;
+	readonly emojiDescription?: string;
+	readonly pickedOwn?: boolean;
+	readonly pickedDistractor?: boolean;
+	readonly readingMs: number;
+	/** pass-1 select + grammar + this reading, joined with the pass-1 draft when New. */
+	readonly compositeCriticalPathMs: number;
+	readonly failure?: Failure;
+};
+
+function shuffled<T>(items: readonly T[], seed: number): T[] {
+	const copy = [...items];
+	let state = seed || 1;
+	for (let index = copy.length - 1; index > 0; index--) {
+		state = (state * 1103515245 + 12345) % 2147483648;
+		const other = state % (index + 1);
+		[copy[index], copy[other]] = [copy[other] as T, copy[index] as T];
+	}
+	return copy;
+}
+
+async function runPass2(
+	clicks: ClickRecord[],
+	plans: ClickPlan[],
+	calls: CallRecord[],
+): Promise<Pass2Record[]> {
+	const generated = clicks.filter(
+		(click) =>
+			click.outcome === "Resolved" &&
+			click.readingDecision === "New" &&
+			calls.some(
+				(call) =>
+					call.scopeId === click.clickId &&
+					call.label === "reading.generate",
+			),
+	);
+	const planById = new Map(plans.map((plan) => [plan.clickId, plan]));
+	const withOwn = generated.slice(0, Number(args.pass2));
+	const noMatch = generated
+		.slice(Number(args.pass2))
+		.concat(generated.slice(0, Number(args.pass2)))
+		.slice(0, Number(args["pass2-nomatch"]));
+	const lemmaKey = (click: ClickRecord) =>
+		JSON.stringify(
+			(click.lemma as { canonicalForm?: string })?.canonicalForm,
+		);
+	const distractorsFor = (
+		click: ClickRecord,
+		count: number,
+		seed: number,
+	) => {
+		const others = generated.filter(
+			(other) => lemmaKey(other) !== lemmaKey(click),
+		);
+		const sameKind = others.filter(
+			(other) => other.target?.kind === click.target?.kind,
+		);
+		const pool = shuffled(
+			sameKind.length >= count ? sameKind : others,
+			seed,
+		);
+		return pool
+			.slice(0, count)
+			.map((other) => other.emojiDescription as string);
+	};
+	const jobs = [
+		...withOwn.map((click, index) => ({
+			click,
+			variant: "withOwn" as const,
+			candidates: shuffled(
+				[
+					click.emojiDescription as string,
+					...distractorsFor(click, 2, index + 7),
+				],
+				index + 3,
+			),
+		})),
+		...noMatch.map((click, index) => ({
+			click,
+			variant: "distractorsOnly" as const,
+			candidates: distractorsFor(click, 3, index + 101),
+		})),
+	];
+	return pool(jobs, Number(args.concurrency), async (job) => {
+		const scopeId = `${job.click.clickId}:${job.variant}`;
+		if (overBudget())
+			return {
+				clickId: job.click.clickId,
+				variant: job.variant,
+				candidates: job.candidates,
+				own: job.click.emojiDescription as string,
+				outcome: "SkippedBudget",
+				readingMs: 0,
+				compositeCriticalPathMs: 0,
+			};
+		const dumgen = createDumgen(
+			productionOptions((trace) => {
+				const records = recordsOf("pass2", scopeId, trace);
+				for (const record of records) spentUsd += record.costUsd;
+				calls.push(...records);
+			}),
+		);
+		const plan = planById.get(job.click.clickId);
+		const encounter = {
+			sentence: plan?.sentence,
+			target: job.click.target,
+		};
+		const start = performance.now();
+		const result = await run(
+			dumgen.resolveOrGenerateReadingEmojiDescription({
+				encounter,
+				lemma: job.click.lemma,
+				candidates: job.candidates,
+			} as never),
+		);
+		const readingMs = performance.now() - start;
+		const grammarEnd = job.click.timeline.grammar?.end ?? 0;
+		const draftMs = job.click.timeline.draft
+			? job.click.timeline.draft.end - job.click.timeline.draft.start
+			: 0;
+		if (!result.ok)
+			return {
+				clickId: job.click.clickId,
+				variant: job.variant,
+				candidates: job.candidates,
+				own: job.click.emojiDescription as string,
+				outcome: `reading:${result.failure.tag}`,
+				failure: result.failure,
+				readingMs,
+				compositeCriticalPathMs: grammarEnd + readingMs,
+			};
+		const value = result.value as {
+			decision: string;
+			emojiDescription: string;
+		};
+		return {
+			clickId: job.click.clickId,
+			variant: job.variant,
+			candidates: job.candidates,
+			own: job.click.emojiDescription as string,
+			outcome: "Resolved",
+			decision: value.decision,
+			emojiDescription: value.emojiDescription,
+			pickedOwn:
+				value.decision === "Reuse" &&
+				value.emojiDescription === job.click.emojiDescription,
+			pickedDistractor:
+				value.decision === "Reuse" &&
+				value.emojiDescription !== job.click.emojiDescription,
+			readingMs,
+			compositeCriticalPathMs:
+				grammarEnd +
+				(value.decision === "New"
+					? Math.max(readingMs, draftMs)
+					: readingMs),
+		};
+	});
+}
+
+// ----------------------------------------------------------------- summary
+
+function quantile(values: readonly number[], p: number): number {
+	if (!values.length) return Number.NaN;
+	const sorted = [...values].sort((a, b) => a - b);
+	return (
+		sorted[Math.min(sorted.length - 1, Math.ceil(p * sorted.length) - 1)] ??
+		Number.NaN
+	);
+}
+const round = (value: number) => Math.round(value);
+function stats(values: readonly number[]) {
+	return {
+		n: values.length,
+		p50: round(quantile(values, 0.5)),
+		p90: round(quantile(values, 0.9)),
+		mean: values.length
+			? round(values.reduce((a, b) => a + b, 0) / values.length)
+			: Number.NaN,
+		max: values.length ? round(Math.max(...values)) : Number.NaN,
+	};
+}
+function mean(values: readonly number[]) {
+	return values.length
+		? values.reduce((a, b) => a + b, 0) / values.length
+		: 0;
+}
+function linearFit(points: readonly [number, number][]) {
+	const n = points.length;
+	if (n < 3) return null;
+	const mx = mean(points.map(([x]) => x));
+	const my = mean(points.map(([, y]) => y));
+	let sxy = 0;
+	let sxx = 0;
+	let syy = 0;
+	for (const [x, y] of points) {
+		sxy += (x - mx) * (y - my);
+		sxx += (x - mx) ** 2;
+		syy += (y - my) ** 2;
+	}
+	const slope = sxy / sxx;
+	return {
+		n,
+		slopeMsPerUnit: +slope.toFixed(2),
+		interceptMs: round(my - slope * mx),
+		r: +(sxy / Math.sqrt(sxx * syy)).toFixed(2),
+	};
+}
+
+type Raw = {
+	meta: Record<string, unknown>;
+	intake: Awaited<ReturnType<typeof runIntake>> | null;
+	intakeRepeats: Awaited<ReturnType<typeof repeatIntake>>[];
+	clicks: ClickRecord[];
+	pass2: Pass2Record[];
+	calls: CallRecord[];
+	spendUsd: number;
+};
+
+/** Gold is recomputed so re-summarizing a stored run picks up scorer fixes. */
+function withGold(raw: Raw): ClickRecord[] {
+	const goldById = new Map(corpus.map((entry) => [entry.id, entry.gold]));
+	return raw.clicks.map((click) => {
+		const sentence = raw.intake?.sentences.find(
+			(row) => row.caseId === click.caseId,
+		)?.sentence;
+		const gold = goldById.get(click.caseId);
+		if (!sentence || !gold) return click;
+		const expected = goldTargetAt(
+			gold,
+			sentence,
+			click.clickedSegmentIndex,
+		);
+		return {
+			...click,
+			gold: expected,
+			targetMatchesGold: expected
+				? click.target !== null &&
+					expected.kind === click.target.kind &&
+					expected.memberSegmentIndices.join(",") ===
+						click.target.memberSegmentIndices.join(",")
+				: null,
+		};
+	});
+}
+
+function summarize(raw: Raw) {
+	const { calls, pass2 } = raw;
+	const clicks = withGold(raw);
+	const byLabel = new Map<string, CallRecord[]>();
+	for (const call of calls)
+		byLabel.set(call.label, [...(byLabel.get(call.label) ?? []), call]);
+	const stageStats = [...byLabel.entries()]
+		.map(([label, own]) => ({
+			stage: label,
+			calls: own.length,
+			failures: own.filter(
+				(call) =>
+					call.transport !== "Success" ||
+					call.validation === "Invalid",
+			).length,
+			...(({ p50, p90, mean: m, max }) => ({
+				p50Ms: p50,
+				p90Ms: p90,
+				meanMs: m,
+				maxMs: max,
+			}))(stats(own.map((call) => call.durationMs))),
+			meanQuestions:
+				own[0]?.questions === null
+					? null
+					: +mean(own.map((call) => call.questions ?? 0)).toFixed(1),
+			meanInputTokens: round(mean(own.map((call) => call.inputTokens))),
+			meanCachedTokens: round(mean(own.map((call) => call.cachedTokens))),
+			meanOutputTokens: round(mean(own.map((call) => call.outputTokens))),
+			costUsd: +own
+				.reduce((sum, call) => sum + call.costUsd, 0)
+				.toFixed(5),
+			...(own[0]?.executor === "Luna"
+				? {
+						providerMsP50: round(
+							quantile(
+								own.flatMap((call) =>
+									typeof call.providerMs === "number"
+										? [call.providerMs]
+										: [],
+								),
+								0.5,
+							),
+						),
+						serviceTiers: [
+							...new Set(own.map((call) => call.serviceTier)),
+						],
+					}
+				: {}),
+		}))
+		.sort((a, b) => b.calls - a.calls);
+
+	// ---- intake
+	const intakeRows = (raw.intake?.sentences ?? []).filter(
+		(row) => row.analyzeMs !== null,
+	);
+	const analyzeCalls = calls.filter(
+		(call) => call.label === "intake.analyze",
+	);
+	const repeatRows = raw.intakeRepeats.flatMap((repeat) =>
+		repeat.rows.map((row) => ({ ...row, concurrency: repeat.concurrency })),
+	);
+	const intake = raw.intake
+		? {
+				sentences: intakeRows.length,
+				segmentMs: round(raw.intake.segmentMs),
+				analyzePhaseMs: round(raw.intake.analyzePhaseMs),
+				wallMs: round(raw.intake.wallMs),
+				analyzeLatency: stats(
+					intakeRows.map((row) => row.analyzeMs as number),
+				),
+				meanQuestions: +mean(
+					intakeRows.map((row) => row.questions ?? 0),
+				).toFixed(1),
+				meanChunks: +mean(
+					intakeRows.map((row) => row.chunks ?? 0),
+				).toFixed(2),
+				meanInputTokens: round(
+					mean(intakeRows.map((row) => row.inputTokens)),
+				),
+				failures: intakeRows
+					.filter((row) => row.failure)
+					.map((row) => ({
+						caseId: row.caseId,
+						failure: row.failure,
+					})),
+				perCallFitMsPerQuestion: linearFit(
+					analyzeCalls.map((call) => [
+						call.questions ?? 0,
+						call.durationMs,
+					]),
+				),
+				perCallFitMsPerKiloToken: linearFit(
+					analyzeCalls.map((call) => [
+						call.inputTokens / 1000,
+						call.durationMs,
+					]),
+				),
+				repeatFitMsPerQuestion: repeatRows.length
+					? linearFit(
+							repeatRows.flatMap((row) =>
+								row.questions === null
+									? []
+									: [[row.questions, row.analyzeMs]],
+							),
+						)
+					: null,
+				repeatsByConcurrency: Object.fromEntries(
+					[...new Set(repeatRows.map((row) => row.concurrency))].map(
+						(concurrency) => [
+							`c${concurrency}`,
+							stats(
+								repeatRows
+									.filter(
+										(row) =>
+											row.concurrency === concurrency,
+									)
+									.map((row) => row.analyzeMs),
+							),
+						],
+					),
+				),
+				rows: intakeRows.map((row) => ({
+					caseId: row.caseId.replace("sentence-de-", ""),
+					resolvable: row.resolvable,
+					questions: row.questions,
+					chunks: row.chunks,
+					inputTokens: row.inputTokens,
+					analyzeMs: round(row.analyzeMs as number),
+					contractPass: row.score?.contractPass ?? null,
+					membersFound: row.score
+						? `${row.score.membersFound}/${row.score.targets}`
+						: null,
+					routeCorrect: row.score
+						? `${row.score.routeCorrect}/${row.score.targets}`
+						: null,
+					phrasemes: row.score
+						? `${row.score.phrasemesCorrect}/${row.score.phrasemes} (+${row.score.phrasemesExtra})`
+						: null,
+					scoreFailures: row.score?.failures ?? [],
+				})),
+			}
+		: null;
+
+	// ---- clicks
+	const resolved = clicks.filter((click) => click.outcome === "Resolved");
+	const callsOf = (click: ClickRecord) =>
+		calls.filter(
+			(call) => call.scope === "click" && call.scopeId === click.clickId,
+		);
+	const critical = stats(clicks.map((click) => click.criticalPathMs));
+	const criticalResolved = stats(
+		resolved.map((click) => click.criticalPathMs),
+	);
+	const segment = (
+		click: ClickRecord,
+		name: "select" | "grammar" | "reading" | "draft",
+	) => {
+		const value = click.timeline[name];
+		return value ? value.end - value.start : 0;
+	};
+	const tail = (click: ClickRecord) =>
+		click.criticalPathMs -
+		(click.timeline.grammar?.end ?? click.timeline.select.end);
+	const groupBy = <T>(items: T[], key: (item: T) => string) => {
+		const groups = new Map<string, T[]>();
+		for (const item of items)
+			groups.set(key(item), [...(groups.get(key(item)) ?? []), item]);
+		return groups;
+	};
+	const byRoute = Object.fromEntries(
+		[...groupBy(clicks, (click) => click.route ?? "unclassified").entries()]
+			.sort((a, b) => b[1].length - a[1].length)
+			.map(([route, own]) => {
+				const ok = own.filter((click) => click.outcome === "Resolved");
+				return [
+					route,
+					{
+						clicks: own.length,
+						resolved: ok.length,
+						critical: stats(
+							own.map((click) => click.criticalPathMs),
+						),
+						grammar: stats(
+							own.map((click) => segment(click, "grammar")),
+						),
+						reading: stats(
+							ok.map((click) => segment(click, "reading")),
+						),
+						draft: stats(
+							ok.map((click) => segment(click, "draft")),
+						),
+					},
+				];
+			}),
+	);
+	const byDecision = Object.fromEntries(
+		[
+			...groupBy(
+				resolved,
+				(click) =>
+					`${click.readingDecision}${callsOf(click).some((call) => call.label === "reading.generate") ? ":generated" : ":authored"}`,
+			).entries(),
+		].map(([decision, own]) => [
+			decision,
+			stats(own.map((click) => click.criticalPathMs)),
+		]),
+	);
+	const newGenerated = resolved.filter(
+		(click) =>
+			click.readingDecision === "New" &&
+			callsOf(click).some((call) => call.label === "reading.generate"),
+	);
+	const draftLongPole = newGenerated.filter(
+		(click) =>
+			(click.timeline.draft?.end ?? 0) >
+			(click.timeline.reading?.end ?? 0),
+	);
+	const breakdown = {
+		meanSelectMs: round(
+			mean(clicks.map((click) => segment(click, "select"))),
+		),
+		meanSelectClassifiedMs: round(
+			mean(
+				clicks
+					.filter((click) => click.path === "classified")
+					.map((click) => segment(click, "select")),
+			),
+		),
+		meanGrammarMs: round(
+			mean(clicks.map((click) => segment(click, "grammar"))),
+		),
+		meanTailAfterGrammarMs: round(mean(resolved.map(tail))),
+		meanReadingMs: round(
+			mean(resolved.map((click) => segment(click, "reading"))),
+		),
+		meanDraftMs: round(
+			mean(resolved.map((click) => segment(click, "draft"))),
+		),
+		draftIsLongPole: `${draftLongPole.length}/${newGenerated.length} generated New readings (mean excess ${round(mean(draftLongPole.map((click) => (click.timeline.draft?.end ?? 0) - (click.timeline.reading?.end ?? 0))))} ms)`,
+		shareOfCriticalPath: {
+			select: +(
+				mean(clicks.map((click) => segment(click, "select"))) /
+				mean(clicks.map((click) => click.criticalPathMs))
+			).toFixed(2),
+			grammar: +(
+				mean(clicks.map((click) => segment(click, "grammar"))) /
+				mean(clicks.map((click) => click.criticalPathMs))
+			).toFixed(2),
+			tail: +(
+				mean(clicks.map(tail).map((value) => Math.max(0, value))) /
+				mean(clicks.map((click) => click.criticalPathMs))
+			).toFixed(2),
+		},
+		grammarRoundTrips: stats(
+			clicks
+				.filter((click) => click.timeline.grammar)
+				.map(
+					(click) =>
+						callsOf(click).filter(
+							(call) => call.operation === "resolveGrammar",
+						).length,
+				),
+		),
+		sequentialRoundTripsResolved: stats(
+			resolved.map((click) => {
+				const own = callsOf(click);
+				return (
+					own.filter((call) => call.operation === "classifyTarget")
+						.length +
+					own.filter((call) => call.operation === "resolveGrammar")
+						.length +
+					own.filter(
+						(call) =>
+							call.operation ===
+							"resolveOrGenerateReadingEmojiDescription",
+					).length
+				);
+			}),
+		),
+	};
+
+	// ---- follow-up rates, per route
+	const grammarClicks = clicks.filter((click) => click.timeline.grammar);
+	const rate = (own: ClickRecord[], label: string) => {
+		const fired = own.filter((click) =>
+			callsOf(click).some((call) => call.label === label),
+		).length;
+		return `${fired}/${own.length}`;
+	};
+	const followUpLabels = [
+		"grammar.text",
+		"grammar.lexicalStrings",
+		"grammar.nounCase",
+		"grammar.authoredIdentity",
+		"reading.authoredChoice",
+		"reading.compare",
+		"reading.generate",
+	];
+	const followUps = {
+		all: Object.fromEntries(
+			followUpLabels.map((label) => [label, rate(grammarClicks, label)]),
+		),
+		byRoute: Object.fromEntries(
+			[
+				...groupBy(
+					grammarClicks,
+					(click) => click.route ?? "?",
+				).entries(),
+			].map(([route, own]) => [
+				route,
+				Object.fromEntries(
+					followUpLabels
+						.map((label) => [label, rate(own, label)] as const)
+						.filter(([, value]) => !value.startsWith("0/")),
+				),
+			]),
+		),
+		grammarTextStages: Object.fromEntries(
+			[
+				...groupBy(
+					calls.filter((call) => call.label === "grammar.text"),
+					(call) => call.stage,
+				).entries(),
+			].map(([stage, own]) => [stage, own.length]),
+		),
+		draftCallsPerResolvedClick: +mean(
+			resolved.map(
+				(click) =>
+					callsOf(click).filter(
+						(call) => call.operation === "draftKnowledge",
+					).length,
+			),
+		).toFixed(2),
+	};
+
+	// ---- failure modes
+	const failureGroups = groupBy(
+		clicks.filter((click) => click.failure),
+		(click) => `${click.outcome} :: ${click.failure?.message}`,
+	);
+	const failureModes = [...failureGroups.entries()]
+		.sort((a, b) => b[1].length - a[1].length)
+		.map(([key, own]) => ({
+			stage: key.split(" :: ")[0],
+			message: own[0]?.failure?.message ?? "",
+			count: own.length,
+			examples: own
+				.slice(0, 4)
+				.map(
+					(click) =>
+						`${click.clickId} "${click.clickedText}" ${click.route ?? ""} [${click.target?.memberSegmentIndices.map((index) => raw.intake?.sentences.find((row) => row.caseId === click.caseId)?.sentence?.segments[index]?.text).join(" ") ?? ""}]`,
+				)
+				.join("; "),
+		}));
+	const callFailures = calls
+		.filter(
+			(call) =>
+				call.transport !== "Success" || call.validation === "Invalid",
+		)
+		.map((call) => ({
+			label: call.label,
+			scopeId: call.scopeId,
+			failure: call.failure,
+		}));
+	const draftFailures = resolved.flatMap((click) =>
+		((click.draftFailures as { data: unknown }[] | undefined) ?? []).map(
+			(event) => ({
+				clickId: click.clickId,
+				data: event.data,
+			}),
+		),
+	);
+
+	// ---- analysis coverage and target correctness
+	const coverage = {
+		analysis: clicks.filter((click) => click.path === "analysis").length,
+		classified: clicks.filter((click) => click.path === "classified")
+			.length,
+		fallbackReasons: Object.fromEntries(
+			[
+				...groupBy(
+					clicks.filter((click) => click.fallbackReason),
+					(click) => click.fallbackReason as string,
+				).entries(),
+			].map(([reason, own]) => [
+				reason,
+				own
+					.map((click) => `${click.clickId} "${click.clickedText}"`)
+					.join(", "),
+			]),
+		),
+		targetMatchesGold: {
+			analysis: `${clicks.filter((click) => click.path === "analysis" && click.targetMatchesGold).length}/${clicks.filter((click) => click.path === "analysis" && click.targetMatchesGold !== null).length}`,
+			classified: `${clicks.filter((click) => click.path === "classified" && click.targetMatchesGold).length}/${clicks.filter((click) => click.path === "classified" && click.targetMatchesGold !== null).length}`,
+		},
+		goldMismatches: clicks
+			.filter((click) => click.targetMatchesGold === false)
+			.map((click) => {
+				const sentence = raw.intake?.sentences.find(
+					(row) => row.caseId === click.caseId,
+				)?.sentence;
+				const words = (indices: readonly number[] | undefined) =>
+					indices
+						?.map((index) => sentence?.segments[index]?.text)
+						.join(" ") ?? "-";
+				return `${click.clickId} ${click.path}: got [${words(click.target?.memberSegmentIndices)}] ${click.target?.kind ?? "-"}, gold [${words(click.gold?.memberSegmentIndices)}] ${click.gold?.kind}`;
+			}),
+	};
+
+	// ---- concurrency: latency by calls in flight at start
+	const intervals = calls.map((call) => ({
+		call,
+		start: call.startedAt,
+		end: call.startedAt + call.durationMs,
+	}));
+	const inflightAtStart = (target: (typeof intervals)[number]) =>
+		intervals.filter(
+			(other) =>
+				other !== target &&
+				other.start <= target.start &&
+				other.end > target.start,
+		).length;
+	const bucket = (count: number) =>
+		count <= 1 ? "0-1" : count <= 4 ? "2-4" : count <= 8 ? "5-8" : "9+";
+	const concurrencyEffect = Object.fromEntries(
+		[
+			"grammar.features",
+			"reading.generate",
+			"draft.definition",
+			"draft.transcription",
+			"click.classify",
+			"intake.analyze",
+		].map((label) => {
+			const own = intervals.filter((entry) => entry.call.label === label);
+			return [
+				label,
+				Object.fromEntries(
+					[
+						...groupBy(own, (entry) =>
+							bucket(inflightAtStart(entry)),
+						).entries(),
+					]
+						.sort()
+						.map(([key, entries]) => [
+							key,
+							stats(
+								entries.map((entry) => entry.call.durationMs),
+							),
+						]),
+				),
+			];
+		}),
+	);
+
+	// ---- pass 2
+	const pass2Summary = {
+		withOwn: (() => {
+			const own = pass2.filter(
+				(row) =>
+					row.variant === "withOwn" &&
+					row.outcome !== "SkippedBudget",
+			);
+			return {
+				runs: own.length,
+				pickedOwn: own.filter((row) => row.pickedOwn).length,
+				pickedDistractor: own.filter((row) => row.pickedDistractor)
+					.length,
+				generatedNew: own.filter((row) => row.decision === "New")
+					.length,
+				failed: own
+					.filter((row) => row.outcome !== "Resolved")
+					.map((row) => `${row.clickId}: ${row.failure?.message}`),
+				readingMs: stats(own.map((row) => row.readingMs)),
+				compositeCriticalPathMs: stats(
+					own.map((row) => row.compositeCriticalPathMs),
+				),
+			};
+		})(),
+		distractorsOnly: (() => {
+			const own = pass2.filter(
+				(row) =>
+					row.variant === "distractorsOnly" &&
+					row.outcome !== "SkippedBudget",
+			);
+			return {
+				runs: own.length,
+				noMatchThenGenerated: own.filter(
+					(row) => row.decision === "New",
+				).length,
+				wronglyReused: own.filter((row) => row.pickedDistractor).length,
+				failed: own
+					.filter((row) => row.outcome !== "Resolved")
+					.map((row) => `${row.clickId}: ${row.failure?.message}`),
+				readingMs: stats(own.map((row) => row.readingMs)),
+				compositeCriticalPathMs: stats(
+					own.map((row) => row.compositeCriticalPathMs),
+				),
+			};
+		})(),
+		compareCall: stats(
+			calls
+				.filter(
+					(call) =>
+						call.scope === "pass2" &&
+						call.label === "reading.compare",
+				)
+				.map((call) => call.durationMs),
+		),
+		generateAfterCompare: stats(
+			calls
+				.filter(
+					(call) =>
+						call.scope === "pass2" &&
+						call.label === "reading.generate",
+				)
+				.map((call) => call.durationMs),
+		),
+	};
+
+	// ---- waterfalls of the slowest clicks
+	const waterfalls = [...clicks]
+		.sort((a, b) => b.criticalPathMs - a.criticalPathMs)
+		.slice(0, 6)
+		.map((click) => waterfall(click, callsOf(click)));
+
+	return {
+		label: raw.meta.label,
+		spendUsd: +raw.spendUsd.toFixed(4),
+		sentences: raw.intake?.sentences.length ?? 0,
+		clicks: clicks.length,
+		outcomes: Object.fromEntries(
+			[...groupBy(clicks, (click) => click.outcome).entries()].map(
+				([key, own]) => [key, own.length],
+			),
+		),
+		intake,
+		clickCriticalPath: {
+			all: critical,
+			resolved: criticalResolved,
+			byDecision: byDecision,
+		},
+		breakdown,
+		byRoute,
+		followUps,
+		stageStats,
+		failureModes,
+		callFailures,
+		draftFailures,
+		coverage,
+		concurrencyEffect,
+		pass2: pass2Summary,
+		waterfalls,
+	};
+}
+
+function waterfall(click: ClickRecord, own: CallRecord[]): string {
+	const scale = 40 / Math.max(click.criticalPathMs, 1);
+	const bar = (start: number, end: number) =>
+		`${" ".repeat(Math.max(0, Math.round(start * scale)))}${"#".repeat(Math.max(1, Math.round((end - start) * scale)))}`;
+	const lines = [
+		`${click.clickId} "${click.clickedText}" ${click.route} ${click.path} ${click.outcome} ${click.readingDecision ?? ""} critical ${round(click.criticalPathMs)} ms`,
+	];
+	for (const call of [...own].sort((a, b) => a.startedAt - b.startedAt)) {
+		const start = call.startedAt - click.epochStart;
+		lines.push(
+			`  ${call.label.padEnd(26)} ${String(round(start)).padStart(5)} +${String(round(call.durationMs)).padStart(5)} ms |${bar(start, start + call.durationMs)}`,
+		);
+	}
+	return lines.join("\n");
+}
+
+function printSummary(summary: ReturnType<typeof summarize>) {
+	const { waterfalls, ...rest } = summary;
+	console.log(JSON.stringify(rest, null, 2));
+	console.log("\nSlowest click waterfalls (ms from click start):\n");
+	for (const entry of waterfalls) console.log(`${entry}\n`);
+}
+
+// -------------------------------------------------------------------- main
+
+async function main() {
+	if (args.summarize) {
+		const rawPath = resolve(args.summarize);
+		const raw = JSON.parse(await readFile(rawPath, "utf8")) as Raw;
+		const summary = summarize(raw);
+		await writeFile(
+			resolve(dirname(rawPath), `summary-${String(raw.meta.label)}.json`),
+			JSON.stringify(summary, null, 2),
+		);
+		printSummary(summary);
+		return;
+	}
+	await mkdir(resultsDirectory, { recursive: true });
+	const calls: CallRecord[] = [];
+	const cases = selectedCorpus();
+	if (!cases.length) throw Error("No sentences selected");
+	const startedAt = new Date().toISOString();
+	console.error(`intake: ${cases.length} sentences`);
+	const intake = await runIntake(cases, calls);
+	console.error(
+		`intake done in ${round(intake.wallMs)} ms (segment ${round(intake.segmentMs)} ms), spend $${spentUsd.toFixed(4)}`,
+	);
+	const intakeRepeats: Awaited<ReturnType<typeof repeatIntake>>[] = [];
+	for (let index = 0; index < Number(args["intake-repeats"]); index++)
+		intakeRepeats.push(
+			await repeatIntake(
+				intake.sentences,
+				Number(args["intake-concurrency"]),
+				`c${args["intake-concurrency"]}#${index}`,
+				calls,
+			),
+		);
+	for (let index = 0; index < Number(args["intake-serial-repeats"]); index++)
+		intakeRepeats.push(
+			await repeatIntake(intake.sentences, 1, `c1#${index}`, calls),
+		);
+	const clicks: ClickRecord[] = [];
+	let plans: ClickPlan[] = [];
+	let pass2: Pass2Record[] = [];
+	if (!args["intake-only"]) {
+		plans = planClicks(intake.sentences);
+		console.error(`clicks planned: ${plans.length}`);
+		let done = 0;
+		await pool(plans, Number(args.concurrency), async (plan) => {
+			if (overBudget()) return;
+			const record = await runClick(plan, calls);
+			clicks.push(record);
+			done++;
+			console.error(
+				`  [${done}/${plans.length}] ${record.clickId} "${record.clickedText}" ${record.route ?? "-"} ${record.path} ${record.outcome} ${record.readingDecision ?? ""} ${round(record.criticalPathMs)} ms  $${spentUsd.toFixed(4)}`,
+			);
+		});
+		pass2 = await runPass2(clicks, plans, calls);
+		console.error(
+			`pass 2: ${pass2.length} runs, spend $${spentUsd.toFixed(4)}`,
+		);
+	}
+	const raw: Raw = {
+		meta: {
+			label: args.label,
+			startedAt,
+			finishedAt: new Date().toISOString(),
+			args,
+			qualifiedKinds,
+			pricing: price,
+			note: "Convex hops are not simulated unless convex-hop-ms > 0",
+		},
+		intake,
+		intakeRepeats,
+		clicks: clicks.sort((a, b) => a.clickId.localeCompare(b.clickId)),
+		pass2,
+		calls,
+		spendUsd: spentUsd,
+	};
+	const rawPath = resolve(resultsDirectory, `baseline-${args.label}.json`);
+	await writeFile(rawPath, JSON.stringify(raw, null, 1));
+	const summary = summarize(raw);
+	await writeFile(
+		resolve(resultsDirectory, `summary-${args.label}.json`),
+		JSON.stringify(summary, null, 2),
+	);
+	printSummary(summary);
+	console.error(`raw: ${rawPath}\nspend: $${spentUsd.toFixed(4)}`);
+}
+
+await main();

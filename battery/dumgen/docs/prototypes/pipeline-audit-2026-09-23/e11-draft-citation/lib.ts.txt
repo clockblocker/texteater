@@ -1,0 +1,228 @@
+/**
+ * E11 shared helpers (adapted from e7-intake-headwords/lib.ts): pricing, a
+ * persistent spend ledger (ledger.json in this folder) that enforces the E11
+ * cap across every script, a metered Luna executor wired exactly like
+ * app/tf-demo/server/modelExecution.ts createProductionKnowledgeDraft, a
+ * fatal-error latch for billing/auth failures, and small statistics.
+ */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import { configurationSchema } from "promptsmith/schemas";
+import type { CallTrace, DumgenOptions, OperationTrace } from "../../../src/types.js";
+
+export const here = new URL(".", import.meta.url).pathname;
+export const resultsDir = resolve(here, "results");
+mkdirSync(resultsDir, { recursive: true });
+
+export const price = {
+	lunaInput: 0.4 / 1e6,
+	lunaCached: 0.04 / 1e6,
+	lunaOutput: 2.4 / 1e6,
+};
+/** Hard cap for the whole E11 experiment (all scripts, all runs). */
+export const CAP_USD = 0.3;
+
+// ------------------------------------------------------------------ ledger
+
+const ledgerPath = resolve(here, "ledger.json");
+type LedgerEntry = {
+	script: string;
+	label: string;
+	startedAt: string;
+	finishedAt?: string;
+	spentUsd: number;
+	lunaCalls: number;
+	stoppedBy?: string;
+};
+export function readLedger(): LedgerEntry[] {
+	return existsSync(ledgerPath)
+		? (JSON.parse(readFileSync(ledgerPath, "utf8")) as LedgerEntry[])
+		: [];
+}
+export class Spend {
+	readonly prior: number;
+	spent = 0;
+	lunaCalls = 0;
+	stoppedBy: string | undefined;
+	private readonly entry: LedgerEntry;
+	constructor(
+		script: string,
+		label: string,
+		/** No new unit of work starts once prior + spent + next estimate reaches this. */
+		readonly stopAt: number,
+	) {
+		this.prior = readLedger().reduce((sum, entry) => sum + entry.spentUsd, 0);
+		this.entry = {
+			script,
+			label,
+			startedAt: new Date().toISOString(),
+			spentUsd: 0,
+			lunaCalls: 0,
+		};
+		if (stopAt > CAP_USD - 0.005)
+			throw Error(`stopAt ${stopAt} too close to the $${CAP_USD} cap`);
+		console.error(
+			`[spend] ${script}/${label}: prior $${this.prior.toFixed(5)}, stop at $${stopAt}`,
+		);
+	}
+	total() {
+		return this.prior + this.spent;
+	}
+	/** True when a unit of about `estimate` USD still fits under stopAt. */
+	allows(estimate: number) {
+		return !fatal.error && this.total() + estimate < this.stopAt;
+	}
+	commit() {
+		const ledger = readLedger();
+		ledger.push({
+			...this.entry,
+			finishedAt: new Date().toISOString(),
+			spentUsd: this.spent,
+			lunaCalls: this.lunaCalls,
+			...(this.stoppedBy ? { stoppedBy: this.stoppedBy } : {}),
+		});
+		writeFileSync(ledgerPath, JSON.stringify(ledger, null, 1));
+		console.error(
+			`[spend] this run $${this.spent.toFixed(5)} (${this.lunaCalls} Luna calls); E11 ledger total $${(this.prior + this.spent).toFixed(5)}`,
+		);
+	}
+}
+
+// ------------------------------------------------------ fatal error latch
+
+/** Set on the first billing/auth/quota failure; every loop stops on it. */
+export const fatal: { error?: string } = {};
+const FATAL = /\b(401|402|403|429)\b|insufficient|quota|billing|payment|unauthori[sz]ed|invalid api key|incorrect api key|not configured/i;
+
+// ---------------------------------------------------------- usage + cost
+
+export type CallRecord = {
+	operation: string;
+	label: string;
+	startedAt: number;
+	durationMs: number;
+	providerMs: number | null;
+	headersMs: number | null;
+	serviceTier: string | null;
+	inputTokens: number;
+	cachedTokens: number;
+	outputTokens: number;
+	costUsd: number;
+	transport: CallTrace["transport"];
+	validation: CallTrace["validation"];
+	failure?: string;
+	systemPrompt: string;
+	input: unknown;
+	output: unknown;
+};
+
+export function recordOf(trace: OperationTrace, call: CallTrace): CallRecord {
+	const metadata = call.metadata as
+		| {
+				usage?: {
+					input_tokens?: number;
+					output_tokens?: number;
+					input_tokens_details?: { cached_tokens?: number };
+				} | null;
+				timing?: { providerProcessingMs?: number | null; headersMs?: number };
+				serviceTier?: string | null;
+		  }
+		| undefined;
+	const usage = metadata?.usage ?? {};
+	const input = usage.input_tokens ?? 0;
+	const cached = usage.input_tokens_details?.cached_tokens ?? 0;
+	const output = usage.output_tokens ?? 0;
+	const request = call.request as {
+		input?: Record<string, unknown>;
+		systemPrompt?: string;
+	};
+	const aspect = request.input?.aspect;
+	const language = request.input?.language;
+	return {
+		operation: trace.operation,
+		label: `${String(aspect)}${language ? `.${String(language)}` : ""}`,
+		startedAt: call.startedAt ?? 0,
+		durationMs: call.durationMs,
+		providerMs: metadata?.timing?.providerProcessingMs ?? null,
+		headersMs: metadata?.timing?.headersMs ?? null,
+		serviceTier: metadata?.serviceTier ?? null,
+		inputTokens: input,
+		cachedTokens: cached,
+		outputTokens: output,
+		costUsd:
+			(input - cached) * price.lunaInput +
+			cached * price.lunaCached +
+			output * price.lunaOutput,
+		transport: call.transport,
+		validation: call.validation,
+		...(call.failure ? { failure: call.failure } : {}),
+		systemPrompt: request.systemPrompt ?? "",
+		input: request.input,
+		output: call.output,
+	};
+}
+
+// Created on first use so offline scripts need no API key.
+let openaiExecutor: ReturnType<typeof createOpenAIExecutor> | undefined;
+
+/**
+ * Mirrors productionOptions in app/tf-demo/server/modelExecution.ts as used by
+ * createProductionKnowledgeDraft (empty configuration). Every call is metered
+ * into `spend` (from the trace, as E5 did) and recorded into `sink`.
+ */
+export function meteredOptions(spend: Spend, sink: CallRecord[]): DumgenOptions {
+	return {
+		judge: () => {
+			throw Error("no judgments in E11");
+		},
+		onOperation: (trace) => {
+			for (const call of trace.calls) {
+				const record = recordOf(trace, call);
+				spend.spent += record.costUsd;
+				spend.lunaCalls++;
+				sink.push(record);
+			}
+		},
+		execute: async (request) => {
+			try {
+				return await (openaiExecutor ??= createOpenAIExecutor())({
+					...request,
+					configuration: configurationSchema.parse(request.configuration),
+				});
+			} catch (error) {
+				const message = error instanceof Error ? error.message : String(error);
+				if (FATAL.test(message) && !fatal.error) {
+					fatal.error = message;
+					console.error(`[fatal] billing/auth failure, stopping: ${message}`);
+				}
+				throw error;
+			}
+		},
+	} as DumgenOptions;
+}
+
+// ------------------------------------------------------------- statistics
+
+/** Nearest-rank quantile, same as waterfall.ts and E5 score.py. */
+export function quantile(values: readonly number[], p: number) {
+	if (!values.length) return null;
+	const sorted = [...values].sort((a, b) => a - b);
+	return sorted[Math.min(sorted.length - 1, Math.ceil(p * sorted.length) - 1)] as number;
+}
+
+export async function pool<T>(
+	items: readonly T[],
+	concurrency: number,
+	work: (item: T, index: number) => Promise<void>,
+) {
+	let next = 0;
+	await Promise.all(
+		Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+			while (next < items.length) {
+				const index = next++;
+				await work(items[index] as T, index);
+			}
+		}),
+	);
+}

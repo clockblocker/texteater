@@ -1,0 +1,1390 @@
+{
+ "labels": [
+  "main",
+  "main2"
+ ],
+ "rows": 78,
+ "clicks": 20,
+ "reps": [
+  0
+ ],
+ "armRows": {
+  "A": 20,
+  "S": 20,
+  "E": 19,
+  "D": 19
+ },
+ "spendUsd": 0.04313,
+ "endToEnd": {
+  "timeToReading_A_minus_S": {
+   "clicks": 17,
+   "pairs": 17,
+   "left": {
+    "n": 17,
+    "p50": 1775,
+    "p90": 2321,
+    "p99": 3022,
+    "mean": 1755,
+    "max": 3135
+   },
+   "right": {
+    "n": 17,
+    "p50": 1259,
+    "p90": 2411,
+    "p99": 4150,
+    "mean": 1534,
+    "max": 4463
+   },
+   "diffOfP50": 516,
+   "diffOfP50Ci": [
+    112,
+    789
+   ],
+   "diffOfP90": -90,
+   "diffOfP90Ci": [
+    -2382,
+    684
+   ],
+   "pairedDiff": {
+    "n": 17,
+    "p50": 315,
+    "p90": 957,
+    "p99": 1077,
+    "mean": 221,
+    "max": 1096
+   },
+   "perClickMeanDiff": 221,
+   "perClickMeanDiffCi": [
+    -260,
+    573
+   ],
+   "perClickMedianDiff": 315,
+   "perClickMedianDiffCi": [
+    -174,
+    840
+   ],
+   "leftGreaterInPairs": "12/17",
+   "leftGreaterInClicks": "12/17"
+  },
+  "timeToReading_whenAccepted": {
+   "clicks": 16,
+   "pairs": 16,
+   "left": {
+    "n": 16,
+    "p50": 1720,
+    "p90": 2109,
+    "p99": 2400,
+    "mean": 1668,
+    "max": 2426
+   },
+   "right": {
+    "n": 16,
+    "p50": 1257,
+    "p90": 2218,
+    "p99": 4146,
+    "mean": 1473,
+    "max": 4463
+   },
+   "diffOfP50": 463,
+   "diffOfP50Ci": [
+    121,
+    818
+   ],
+   "diffOfP90": -109,
+   "diffOfP90Ci": [
+    -2534,
+    808
+   ],
+   "pairedDiff": {
+    "n": 16,
+    "p50": 311,
+    "p90": 961,
+    "p99": 1078,
+    "mean": 195,
+    "max": 1096
+   },
+   "perClickMeanDiff": 195,
+   "perClickMeanDiffCi": [
+    -295,
+    577
+   ],
+   "perClickMedianDiff": 311,
+   "perClickMedianDiffCi": [
+    -174,
+    840
+   ],
+   "leftGreaterInPairs": "11/16",
+   "leftGreaterInClicks": "11/16"
+  },
+  "timeToReading_whenFallback": {
+   "clicks": 1,
+   "pairs": 1,
+   "left": {
+    "n": 1,
+    "p50": 3135,
+    "p90": 3135,
+    "p99": 3135,
+    "mean": 3135,
+    "max": 3135
+   },
+   "right": {
+    "n": 1,
+    "p50": 2508,
+    "p90": 2508,
+    "p99": 2508,
+    "mean": 2508,
+    "max": 2508
+   },
+   "diffOfP50": 627,
+   "diffOfP50Ci": [
+    627,
+    627
+   ],
+   "diffOfP90": 627,
+   "diffOfP90Ci": [
+    627,
+    627
+   ],
+   "pairedDiff": {
+    "n": 1,
+    "p50": 627,
+    "p90": 627,
+    "p99": 627,
+    "mean": 627,
+    "max": 627
+   },
+   "perClickMeanDiff": 627,
+   "perClickMeanDiffCi": null,
+   "perClickMedianDiff": 627,
+   "perClickMedianDiffCi": null,
+   "leftGreaterInPairs": "1/1",
+   "leftGreaterInClicks": "1/1"
+  },
+  "timeToAllDrafts_A_minus_S": {
+   "clicks": 18,
+   "pairs": 18,
+   "left": {
+    "n": 18,
+    "p50": 2124,
+    "p90": 3733,
+    "p99": 3908,
+    "mean": 2331,
+    "max": 3910
+   },
+   "right": {
+    "n": 18,
+    "p50": 2154,
+    "p90": 3510,
+    "p99": 3870,
+    "mean": 2332,
+    "max": 3943
+   },
+   "diffOfP50": -31,
+   "diffOfP50Ci": [
+    -376,
+    334
+   ],
+   "diffOfP90": 223,
+   "diffOfP90Ci": [
+    -799,
+    1353
+   ],
+   "pairedDiff": {
+    "n": 18,
+    "p50": -242,
+    "p90": 892,
+    "p99": 1507,
+    "mean": -1,
+    "max": 1554
+   },
+   "perClickMeanDiff": -1,
+   "perClickMeanDiffCi": [
+    -294,
+    337
+   ],
+   "perClickMedianDiff": -242,
+   "perClickMedianDiffCi": [
+    -434,
+    426
+   ],
+   "leftGreaterInPairs": "7/18",
+   "leftGreaterInClicks": "7/18"
+  },
+  "timeToCommit_A_minus_S": {
+   "clicks": 17,
+   "pairs": 17,
+   "left": {
+    "n": 17,
+    "p50": 2103,
+    "p90": 3353,
+    "p99": 3861,
+    "mean": 2266,
+    "max": 3898
+   },
+   "right": {
+    "n": 17,
+    "p50": 2126,
+    "p90": 3685,
+    "p99": 4380,
+    "mean": 2426,
+    "max": 4463
+   },
+   "diffOfP50": -22,
+   "diffOfP50Ci": [
+    -359,
+    312
+   ],
+   "diffOfP90": -332,
+   "diffOfP90Ci": [
+    -1823,
+    921
+   ],
+   "pairedDiff": {
+    "n": 17,
+    "p50": -211,
+    "p90": 599,
+    "p99": 1190,
+    "mean": -161,
+    "max": 1278
+   },
+   "perClickMeanDiff": -161,
+   "perClickMeanDiffCi": [
+    -523,
+    181
+   ],
+   "perClickMedianDiff": -211,
+   "perClickMedianDiffCi": [
+    -359,
+    385
+   ],
+   "leftGreaterInPairs": "6/17",
+   "leftGreaterInClicks": "6/17"
+  },
+  "grammarMs_A_minus_S": {
+   "clicks": 20,
+   "pairs": 20,
+   "left": {
+    "n": 20,
+    "p50": 331,
+    "p90": 622,
+    "p99": 1751,
+    "mean": 478,
+    "max": 1765
+   },
+   "right": {
+    "n": 20,
+    "p50": 370,
+    "p90": 607,
+    "p99": 2181,
+    "mean": 521,
+    "max": 2343
+   },
+   "diffOfP50": -39,
+   "diffOfP50Ci": [
+    -69,
+    -1
+   ],
+   "diffOfP90": 15,
+   "diffOfP90Ci": [
+    -651,
+    273
+   ],
+   "pairedDiff": {
+    "n": 20,
+    "p50": -25,
+    "p90": 79,
+    "p99": 240,
+    "mean": -44,
+    "max": 273
+   },
+   "perClickMeanDiff": -44,
+   "perClickMeanDiffCi": [
+    -125,
+    23
+   ],
+   "perClickMedianDiff": -25,
+   "perClickMedianDiffCi": [
+    -55,
+    -1
+   ],
+   "leftGreaterInPairs": "5/20",
+   "leftGreaterInClicks": "5/20"
+  },
+  "noiseFloor": {
+   "timeToReading_A": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   },
+   "timeToReading_S": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   },
+   "timeToAllDrafts_A": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   },
+   "timeToAllDrafts_S": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   }
+  },
+  "draftsFinishAfterReading": {
+   "A": "16/18",
+   "S": "17/18"
+  },
+  "byRoute": {
+   "Lexeme/ADJ": {
+    "clicks": 3,
+    "A_p50": 1775,
+    "S_p50": 1331,
+    "meanSaving": 195
+   },
+   "Lexeme/ADP": {
+    "clicks": 5,
+    "A_p50": 1889,
+    "S_p50": 1303,
+    "meanSaving": 465
+   },
+   "Lexeme/ADV": {
+    "clicks": 9,
+    "A_p50": 1665,
+    "S_p50": 1131,
+    "meanSaving": 93
+   }
+  },
+  "failures": [
+   "fremd#8 S#0: grammar Unresolved: Unresolved applicable question support",
+   "genitiv#4 E#0: reading InvalidModelOutput: [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"",
+   "genitiv#4 A#0: reading InvalidModelOutput: [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"",
+   "museum#8 E#0: reading InvalidModelOutput: [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"",
+   "museum#6 S#0: grammar Unresolved: Unresolved applicable question support",
+   "museum#6 A#0: grammar Unresolved: Unresolved applicable question support"
+  ]
+ },
+ "waste": {
+  "speculatedClicks": 20,
+  "accepted": 17,
+  "discarded": 3,
+  "wasteRate": 0.15,
+  "byReason": {
+   "grammarFailure": 2,
+   "mismatch": 1
+  },
+  "discardedBeforeCompletion_aborted": 2,
+  "wasteCostUsd": 0.000378,
+  "wasteCostPerSpeculatedClickUsd": 0.0000189,
+  "wasteCallsWithEstimatedCost": 2,
+  "armCostPerClickUsd": {
+   "A": 0.000768,
+   "S": 0.000756
+  },
+  "mismatchDetail": [
+   "usw#11: guess 'auf dem Markt' vs 'auf … dem … Markt'"
+  ],
+  "plainGuessWouldAccept": "16/20",
+  "rulesGuessAccepted": "17/20"
+ },
+ "contention": {
+  "emojiCall_A_withDrafts_minus_E_alone": {
+   "clicks": 19,
+   "pairs": 19,
+   "left": {
+    "n": 19,
+    "p50": 1308,
+    "p90": 1619,
+    "p99": 1889,
+    "mean": 1263,
+    "max": 1948
+   },
+   "right": {
+    "n": 19,
+    "p50": 1235,
+    "p90": 1780,
+    "p99": 3084,
+    "mean": 1378,
+    "max": 3364
+   },
+   "diffOfP50": 73,
+   "diffOfP50Ci": [
+    -217,
+    274
+   ],
+   "diffOfP90": -160,
+   "diffOfP90Ci": [
+    -1804,
+    407
+   ],
+   "pairedDiff": {
+    "n": 19,
+    "p50": -45,
+    "p90": 536,
+    "p99": 649,
+    "mean": -115,
+    "max": 651
+   },
+   "perClickMeanDiff": -115,
+   "perClickMeanDiffCi": [
+    -436,
+    119
+   ],
+   "perClickMedianDiff": -45,
+   "perClickMedianDiffCi": [
+    -323,
+    296
+   ],
+   "leftGreaterInPairs": "8/19",
+   "leftGreaterInClicks": "8/19"
+  },
+  "emojiProviderMs_A_minus_E": {
+   "clicks": 19,
+   "pairs": 19,
+   "left": {
+    "n": 19,
+    "p50": 1036,
+    "p90": 1319,
+    "p99": 1661,
+    "mean": 1002,
+    "max": 1727
+   },
+   "right": {
+    "n": 19,
+    "p50": 995,
+    "p90": 1385,
+    "p99": 2119,
+    "mean": 1065,
+    "max": 2272
+   },
+   "diffOfP50": 41,
+   "diffOfP50Ci": [
+    -290,
+    269
+   ],
+   "diffOfP90": -66,
+   "diffOfP90Ci": [
+    -970,
+    449
+   ],
+   "pairedDiff": {
+    "n": 19,
+    "p50": -55,
+    "p90": 509,
+    "p99": 638,
+    "mean": -62,
+    "max": 655
+   },
+   "perClickMeanDiff": -62,
+   "perClickMeanDiffCi": [
+    -293,
+    129
+   ],
+   "perClickMedianDiff": -55,
+   "perClickMedianDiffCi": [
+    -308,
+    327
+   ],
+   "leftGreaterInPairs": "9/19",
+   "leftGreaterInClicks": "9/19"
+  },
+  "emojiClientOverheadMs_A_minus_E": {
+   "clicks": 19,
+   "pairs": 19,
+   "left": {
+    "n": 19,
+    "p50": 239,
+    "p90": 287,
+    "p99": 440,
+    "mean": 260,
+    "max": 467
+   },
+   "right": {
+    "n": 19,
+    "p50": 250,
+    "p90": 392,
+    "p99": 971,
+    "mean": 314,
+    "max": 1092
+   },
+   "diffOfP50": -11,
+   "diffOfP50Ci": [
+    -30,
+    20
+   ],
+   "diffOfP90": -105,
+   "diffOfP90Ci": [
+    -812,
+    157
+   ],
+   "pairedDiff": {
+    "n": 19,
+    "p50": -8,
+    "p90": 29,
+    "p99": 206,
+    "mean": -53,
+    "max": 231
+   },
+   "perClickMeanDiff": -53,
+   "perClickMeanDiffCi": [
+    -162,
+    21
+   ],
+   "perClickMedianDiff": -8,
+   "perClickMedianDiffCi": [
+    -31,
+    9
+   ],
+   "leftGreaterInPairs": "9/19",
+   "leftGreaterInClicks": "9/19"
+  },
+  "specEmojiAccepted_S_minus_E_alone": {
+   "clicks": 17,
+   "pairs": 17,
+   "left": {
+    "n": 17,
+    "p50": 1254,
+    "p90": 1733,
+    "p99": 4081,
+    "mean": 1377,
+    "max": 4460
+   },
+   "right": {
+    "n": 17,
+    "p50": 1218,
+    "p90": 1786,
+    "p99": 3115,
+    "mean": 1382,
+    "max": 3364
+   },
+   "diffOfP50": 36,
+   "diffOfP50Ci": [
+    -290,
+    142
+   ],
+   "diffOfP90": -53,
+   "diffOfP90Ci": [
+    -1969,
+    2781
+   ],
+   "pairedDiff": {
+    "n": 17,
+    "p50": -37,
+    "p90": 673,
+    "p99": 2750,
+    "mean": -6,
+    "max": 3107
+   },
+   "perClickMeanDiff": -6,
+   "perClickMeanDiffCi": [
+    -456,
+    505
+   ],
+   "perClickMedianDiff": -37,
+   "perClickMedianDiffCi": [
+    -384,
+    175
+   ],
+   "leftGreaterInPairs": "8/17",
+   "leftGreaterInClicks": "8/17"
+  },
+  "specEmojiProviderMs_S_minus_E": {
+   "clicks": 17,
+   "pairs": 17,
+   "left": {
+    "n": 17,
+    "p50": 964,
+    "p90": 1491,
+    "p99": 3851,
+    "mean": 1121,
+    "max": 4234
+   },
+   "right": {
+    "n": 17,
+    "p50": 968,
+    "p90": 1394,
+    "p99": 2136,
+    "mean": 1061,
+    "max": 2272
+   },
+   "diffOfP50": -4,
+   "diffOfP50Ci": [
+    -297,
+    164
+   ],
+   "diffOfP90": 97,
+   "diffOfP90Ci": [
+    -1111,
+    2871
+   ],
+   "pairedDiff": {
+    "n": 17,
+    "p50": -50,
+    "p90": 694,
+    "p99": 2782,
+    "mean": 60,
+    "max": 3143
+   },
+   "perClickMeanDiff": 60,
+   "perClickMeanDiffCi": [
+    -307,
+    544
+   ],
+   "perClickMedianDiff": -50,
+   "perClickMedianDiffCi": [
+    -391,
+    120
+   ],
+   "leftGreaterInPairs": "7/17",
+   "leftGreaterInClicks": "7/17"
+  },
+  "specEmojiAccepted_S_minus_A_emoji": {
+   "clicks": 17,
+   "pairs": 17,
+   "left": {
+    "n": 17,
+    "p50": 1254,
+    "p90": 1733,
+    "p99": 4081,
+    "mean": 1377,
+    "max": 4460
+   },
+   "right": {
+    "n": 17,
+    "p50": 1308,
+    "p90": 1620,
+    "p99": 1896,
+    "mean": 1263,
+    "max": 1948
+   },
+   "diffOfP50": -55,
+   "diffOfP50Ci": [
+    -448,
+    243
+   ],
+   "diffOfP90": 113,
+   "diffOfP90Ci": [
+    -552,
+    2884
+   ],
+   "pairedDiff": {
+    "n": 17,
+    "p50": 12,
+    "p90": 588,
+    "p99": 2753,
+    "mean": 114,
+    "max": 3152
+   },
+   "perClickMeanDiff": 114,
+   "perClickMeanDiffCi": [
+    -241,
+    577
+   ],
+   "perClickMedianDiff": 12,
+   "perClickMedianDiffCi": [
+    -430,
+    499
+   ],
+   "leftGreaterInPairs": "9/17",
+   "leftGreaterInClicks": "9/17"
+  },
+  "fallbackEmoji_S_minus_E": {
+   "clicks": 1,
+   "pairs": 1,
+   "left": {
+    "n": 1,
+    "p50": 1007,
+    "p90": 1007,
+    "p99": 1007,
+    "mean": 1007,
+    "max": 1007
+   },
+   "right": {
+    "n": 1,
+    "p50": 1384,
+    "p90": 1384,
+    "p99": 1384,
+    "mean": 1384,
+    "max": 1384
+   },
+   "diffOfP50": -377,
+   "diffOfP50Ci": [
+    -377,
+    -377
+   ],
+   "diffOfP90": -377,
+   "diffOfP90Ci": [
+    -377,
+    -377
+   ],
+   "pairedDiff": {
+    "n": 1,
+    "p50": -377,
+    "p90": -377,
+    "p99": -377,
+    "mean": -377,
+    "max": -377
+   },
+   "perClickMeanDiff": -377,
+   "perClickMeanDiffCi": null,
+   "perClickMedianDiff": -377,
+   "perClickMedianDiffCi": null,
+   "leftGreaterInPairs": "0/1",
+   "leftGreaterInClicks": "0/1"
+  },
+  "draftSetWall_A_withEmoji_minus_D_alone": {
+   "clicks": 19,
+   "pairs": 19,
+   "left": {
+    "n": 19,
+    "p50": 1593,
+    "p90": 2432,
+    "p99": 3566,
+    "mean": 1835,
+    "max": 3617
+   },
+   "right": {
+    "n": 19,
+    "p50": 1796,
+    "p90": 3235,
+    "p99": 4935,
+    "mean": 2106,
+    "max": 5092
+   },
+   "diffOfP50": -203,
+   "diffOfP50Ci": [
+    -676,
+    309
+   ],
+   "diffOfP90": -803,
+   "diffOfP90Ci": [
+    -2895,
+    1072
+   ],
+   "pairedDiff": {
+    "n": 19,
+    "p50": -239,
+    "p90": 987,
+    "p99": 2001,
+    "mean": -272,
+    "max": 2043
+   },
+   "perClickMeanDiff": -272,
+   "perClickMeanDiffCi": [
+    -857,
+    245
+   ],
+   "perClickMedianDiff": -239,
+   "perClickMedianDiffCi": [
+    -332,
+    -74
+   ],
+   "leftGreaterInPairs": "5/19",
+   "leftGreaterInClicks": "5/19"
+  },
+  "draftSetWall_S_minus_D_alone": {
+   "clicks": 18,
+   "pairs": 18,
+   "left": {
+    "n": 18,
+    "p50": 1732,
+    "p90": 2465,
+    "p99": 3012,
+    "mean": 1794,
+    "max": 3117
+   },
+   "right": {
+    "n": 18,
+    "p50": 1811,
+    "p90": 3358,
+    "p99": 4943,
+    "mean": 2158,
+    "max": 5092
+   },
+   "diffOfP50": -78,
+   "diffOfP50Ci": [
+    -781,
+    259
+   ],
+   "diffOfP90": -893,
+   "diffOfP90Ci": [
+    -2929,
+    387
+   ],
+   "pairedDiff": {
+    "n": 18,
+    "p50": 18,
+    "p90": 506,
+    "p99": 579,
+    "mean": -364,
+    "max": 591
+   },
+   "perClickMeanDiff": -364,
+   "perClickMeanDiffCi": [
+    -853,
+    90
+   ],
+   "perClickMedianDiff": 18,
+   "perClickMedianDiffCi": [
+    -765,
+    355
+   ],
+   "leftGreaterInPairs": "11/18",
+   "leftGreaterInClicks": "11/18"
+  },
+  "draftSetWall_A_minus_S": {
+   "clicks": 18,
+   "pairs": 18,
+   "left": {
+    "n": 18,
+    "p50": 1661,
+    "p90": 2544,
+    "p99": 3569,
+    "mean": 1848,
+    "max": 3617
+   },
+   "right": {
+    "n": 18,
+    "p50": 1732,
+    "p90": 2465,
+    "p99": 3012,
+    "mean": 1794,
+    "max": 3117
+   },
+   "diffOfP50": -72,
+   "diffOfP50Ci": [
+    -411,
+    407
+   ],
+   "diffOfP90": 79,
+   "diffOfP90Ci": [
+    -919,
+    1467
+   ],
+   "pairedDiff": {
+    "n": 18,
+    "p50": -153,
+    "p90": 1114,
+    "p99": 1604,
+    "mean": 54,
+    "max": 1668
+   },
+   "perClickMeanDiff": 54,
+   "perClickMeanDiffCi": [
+    -282,
+    425
+   ],
+   "perClickMedianDiff": -153,
+   "perClickMedianDiffCi": [
+    -483,
+    492
+   ],
+   "leftGreaterInPairs": "7/18",
+   "leftGreaterInClicks": "7/18"
+  },
+  "draftCallMean_A_minus_D": {
+   "clicks": 19,
+   "pairs": 19,
+   "left": {
+    "n": 19,
+    "p50": 1345,
+    "p90": 1597,
+    "p99": 1963,
+    "mean": 1357,
+    "max": 2010
+   },
+   "right": {
+    "n": 19,
+    "p50": 1338,
+    "p90": 2013,
+    "p99": 2629,
+    "mean": 1485,
+    "max": 2731
+   },
+   "diffOfP50": 7,
+   "diffOfP50Ci": [
+    -222,
+    200
+   ],
+   "diffOfP90": -417,
+   "diffOfP90Ci": [
+    -1203,
+    244
+   ],
+   "pairedDiff": {
+    "n": 19,
+    "p50": -167,
+    "p90": 304,
+    "p99": 744,
+    "mean": -129,
+    "max": 775
+   },
+   "perClickMeanDiff": -129,
+   "perClickMeanDiffCi": [
+    -345,
+    64
+   ],
+   "perClickMedianDiff": -167,
+   "perClickMedianDiffCi": [
+    -231,
+    -25
+   ],
+   "leftGreaterInPairs": "5/19",
+   "leftGreaterInClicks": "5/19"
+  },
+  "draftProviderMean_A_minus_D": {
+   "clicks": 19,
+   "pairs": 19,
+   "left": {
+    "n": 19,
+    "p50": 1093,
+    "p90": 1352,
+    "p99": 1687,
+    "mean": 1094,
+    "max": 1728
+   },
+   "right": {
+    "n": 19,
+    "p50": 1099,
+    "p90": 1747,
+    "p99": 2382,
+    "mean": 1232,
+    "max": 2490
+   },
+   "diffOfP50": -7,
+   "diffOfP50Ci": [
+    -226,
+    200
+   ],
+   "diffOfP90": -395,
+   "diffOfP90Ci": [
+    -1234,
+    227
+   ],
+   "pairedDiff": {
+    "n": 19,
+    "p50": -146,
+    "p90": 280,
+    "p99": 729,
+    "mean": -139,
+    "max": 757
+   },
+   "perClickMeanDiff": -139,
+   "perClickMeanDiffCi": [
+    -354,
+    53
+   ],
+   "perClickMedianDiff": -146,
+   "perClickMedianDiffCi": [
+    -248,
+    -7
+   ],
+   "leftGreaterInPairs": "5/19",
+   "leftGreaterInClicks": "5/19"
+  },
+  "draftPerLabel_A_minus_D": {
+   "draft.definition": {
+    "n": 19,
+    "A_p50": 1283,
+    "D_p50": 1238,
+    "meanDiff": 173,
+    "meanDiffCi": [
+     -166,
+     536
+    ]
+   },
+   "draft.transcription": {
+    "n": 19,
+    "A_p50": 1149,
+    "D_p50": 1258,
+    "meanDiff": -552,
+    "meanDiffCi": [
+     -1130,
+     -110
+    ]
+   },
+   "draft.translations.en": {
+    "n": 19,
+    "A_p50": 1346,
+    "D_p50": 1314,
+    "meanDiff": -147,
+    "meanDiffCi": [
+     -416,
+     66
+    ]
+   },
+   "draft.translations.ru": {
+    "n": 19,
+    "A_p50": 1115,
+    "D_p50": 1210,
+    "meanDiff": 10,
+    "meanDiffCi": [
+     -231,
+     249
+    ]
+   }
+  },
+  "grammar_S_minus_A": {
+   "clicks": 20,
+   "pairs": 20,
+   "left": {
+    "n": 20,
+    "p50": 370,
+    "p90": 607,
+    "p99": 2181,
+    "mean": 521,
+    "max": 2343
+   },
+   "right": {
+    "n": 20,
+    "p50": 331,
+    "p90": 622,
+    "p99": 1751,
+    "mean": 478,
+    "max": 1765
+   },
+   "diffOfP50": 39,
+   "diffOfP50Ci": [
+    1,
+    69
+   ],
+   "diffOfP90": -15,
+   "diffOfP90Ci": [
+    -273,
+    651
+   ],
+   "pairedDiff": {
+    "n": 20,
+    "p50": 25,
+    "p90": 123,
+    "p99": 565,
+    "mean": 44,
+    "max": 651
+   },
+   "perClickMeanDiff": 44,
+   "perClickMeanDiffCi": [
+    -23,
+    125
+   ],
+   "perClickMedianDiff": 25,
+   "perClickMedianDiffCi": [
+    1,
+    55
+   ],
+   "leftGreaterInPairs": "15/20",
+   "leftGreaterInClicks": "15/20"
+  },
+  "grammarLunaFollowUp_S_minus_A": {
+   "clicks": 2,
+   "pairs": 2,
+   "left": {
+    "n": 2,
+    "p50": 1584,
+    "p90": 1919,
+    "p99": 1994,
+    "mean": 1584,
+    "max": 2002
+   },
+   "right": {
+    "n": 2,
+    "p50": 1382,
+    "p90": 1406,
+    "p99": 1411,
+    "mean": 1382,
+    "max": 1412
+   },
+   "diffOfP50": 202,
+   "diffOfP50Ci": [
+    -246,
+    650
+   ],
+   "diffOfP90": 513,
+   "diffOfP90Ci": [
+    -246,
+    650
+   ],
+   "pairedDiff": {
+    "n": 2,
+    "p50": 202,
+    "p90": 561,
+    "p99": 641,
+    "mean": 202,
+    "max": 650
+   },
+   "perClickMeanDiff": 202,
+   "perClickMeanDiffCi": null,
+   "perClickMedianDiff": 202,
+   "perClickMedianDiffCi": null,
+   "leftGreaterInPairs": "1/2",
+   "leftGreaterInClicks": "1/2"
+  },
+  "noiseFloor": {
+   "emoji_E": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   },
+   "emoji_A": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   },
+   "draftSet_D": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   },
+   "draftSet_A": {
+    "pairs": 0,
+    "absDiffP50": null,
+    "absDiffP90": null,
+    "meanDiff": null,
+    "sdDiff": null
+   }
+  },
+  "specOverlapWithDraftsFraction": {
+   "n": 17,
+   "p50": 68,
+   "p90": 79,
+   "p99": 91,
+   "mean": 65,
+   "max": 92
+  },
+  "lunaCallsInFlightAtAEmojiStart": {
+   "n": 19,
+   "p50": 4,
+   "p90": 4,
+   "p99": 4,
+   "mean": 4,
+   "max": 4
+  },
+  "positionEffect_E_emoji_by_position": {
+   "0": {
+    "n": 5,
+    "p50": 1160,
+    "p90": 1271,
+    "p99": 1303,
+    "mean": 1146,
+    "max": 1307
+   },
+   "1": {
+    "n": 4,
+    "p50": 1056,
+    "p90": 1328,
+    "p99": 1378,
+    "mean": 1087,
+    "max": 1384
+   },
+   "2": {
+    "n": 5,
+    "p50": 1353,
+    "p90": 2741,
+    "p99": 3302,
+    "mean": 1808,
+    "max": 3364
+   },
+   "3": {
+    "n": 5,
+    "p50": 1482,
+    "p90": 1711,
+    "p99": 1766,
+    "mean": 1413,
+    "max": 1773
+   }
+  }
+ },
+ "distributions": {
+  "emojiCall": {
+   "A_withDrafts": {
+    "n": 19,
+    "p50": 1308,
+    "p90": 1619,
+    "p99": 1889,
+    "mean": 1263,
+    "max": 1948
+   },
+   "S_speculativeAccepted": {
+    "n": 17,
+    "p50": 1254,
+    "p90": 1733,
+    "p99": 4081,
+    "mean": 1377,
+    "max": 4460
+   },
+   "S_fallback": {
+    "n": 1,
+    "p50": 1007,
+    "p90": 1007,
+    "p99": 1007,
+    "mean": 1007,
+    "max": 1007
+   },
+   "E_alone": {
+    "n": 19,
+    "p50": 1235,
+    "p90": 1780,
+    "p99": 3084,
+    "mean": 1378,
+    "max": 3364
+   },
+   "allCompleted": {
+    "n": 57,
+    "p50": 1254,
+    "p90": 1682,
+    "p99": 3847,
+    "mean": 1324,
+    "max": 4460
+   }
+  },
+  "draftSetWall": {
+   "A": {
+    "n": 19,
+    "p50": 1593,
+    "p90": 2432,
+    "p99": 3566,
+    "mean": 1835,
+    "max": 3617
+   },
+   "S": {
+    "n": 18,
+    "p50": 1732,
+    "p90": 2465,
+    "p99": 3012,
+    "mean": 1794,
+    "max": 3117
+   },
+   "D_alone": {
+    "n": 19,
+    "p50": 1796,
+    "p90": 3235,
+    "p99": 4935,
+    "mean": 2106,
+    "max": 5092
+   }
+  },
+  "draftCall": {
+   "n": 224,
+   "p50": 1249,
+   "p90": 1944,
+   "p99": 3545,
+   "mean": 1419,
+   "max": 5087
+  },
+  "draftCallByLabel": {
+   "draft.definition": {
+    "n": 56,
+    "p50": 1267,
+    "p90": 1877,
+    "p99": 3454,
+    "mean": 1446,
+    "max": 3611
+   },
+   "draft.transcription": {
+    "n": 56,
+    "p50": 1148,
+    "p90": 1944,
+    "p99": 4608,
+    "mean": 1399,
+    "max": 5087
+   },
+   "draft.translations.en": {
+    "n": 56,
+    "p50": 1367,
+    "p90": 2180,
+    "p99": 3194,
+    "mean": 1513,
+    "max": 3294
+   },
+   "draft.translations.ru": {
+    "n": 56,
+    "p50": 1179,
+    "p90": 1852,
+    "p99": 2723,
+    "mean": 1318,
+    "max": 2964
+   }
+  },
+  "timeToReading": {
+   "A": {
+    "n": 18,
+    "p50": 1726,
+    "p90": 2304,
+    "p99": 3015,
+    "mean": 1750,
+    "max": 3135
+   },
+   "S": {
+    "n": 18,
+    "p50": 1265,
+    "p90": 2395,
+    "p99": 4131,
+    "mean": 1520,
+    "max": 4463
+   }
+  },
+  "timeToAllDrafts": {
+   "A": {
+    "n": 19,
+    "p50": 2103,
+    "p90": 3710,
+    "p99": 3908,
+    "mean": 2319,
+    "max": 3910
+   },
+   "S": {
+    "n": 18,
+    "p50": 2154,
+    "p90": 3510,
+    "p99": 3870,
+    "mean": 2332,
+    "max": 3943
+   }
+  },
+  "timeToCommit": {
+   "A": {
+    "n": 18,
+    "p50": 2100,
+    "p90": 3301,
+    "p99": 3858,
+    "mean": 2256,
+    "max": 3898
+   },
+   "S": {
+    "n": 18,
+    "p50": 2154,
+    "p90": 3642,
+    "p99": 4375,
+    "mean": 2422,
+    "max": 4463
+   }
+  }
+ },
+ "timeoutHere": {
+  "emojiCalls": 57,
+  "over3s": 2,
+  "over4s": 1,
+  "over6s": 0,
+  "over6sDurations": [],
+  "cutWithRetryAtMedianMs": [],
+  "retryMedianMs": 1254,
+  "retryP90Ms": 1682,
+  "draftCalls": 224,
+  "draftOver6s": [],
+  "draftOver3s": 6
+ }
+}

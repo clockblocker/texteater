@@ -1,0 +1,4044 @@
+{
+ "generatedAt": "2026-09-23T07:58:11.325Z",
+ "sources": [
+  "clicks-raw-capfix.json",
+  "clicks-raw-main.json"
+ ],
+ "spend": {
+  "ledger": [
+   {
+    "phase": "intake",
+    "usd": 0.0026780040000000003,
+    "at": "2026-09-23T07:53:03.508Z"
+   },
+   {
+    "phase": "clicks:capfix",
+    "usd": 0.006605616000000003,
+    "at": "2026-09-23T07:55:10.276Z"
+   },
+   {
+    "phase": "clicks:main",
+    "usd": 0.088698244,
+    "at": "2026-09-23T07:57:14.409Z"
+   }
+  ],
+  "totalUsd": 0.09798,
+  "clickCallSpendUsd": 0.0953,
+  "callCounts": {
+   "classifyTarget:TypeSafe": 300,
+   "resolveGrammar:TypeSafe": 287,
+   "resolveGrammar:Luna": 41
+  }
+ },
+ "offlineSelection": {
+  "corpus": {
+   "clicks": 99,
+   "shippedStoredHits": 0,
+   "shippedConvertedHits": 97,
+   "capfixOnlyHits": 97,
+   "armBHits": 99,
+   "armBFusedClickHits": 2,
+   "hostMitigationSameAsArmB": 99,
+   "armBMatchesGold": 89,
+   "withGold": 99,
+   "armBNullReasons": []
+  },
+  "capfix": {
+   "clicks": 14,
+   "shippedStoredHits": 0,
+   "shippedConvertedHits": 0,
+   "capfixOnlyHits": 11,
+   "armBHits": 14,
+   "armBFusedClickHits": 3,
+   "hostMitigationSameAsArmB": 14,
+   "armBMatchesGold": 0,
+   "withGold": 0,
+   "armBNullReasons": []
+  },
+  "prod": {
+   "clicks": 138,
+   "shippedStoredHits": 0,
+   "shippedConvertedHits": 137,
+   "capfixOnlyHits": 137,
+   "armBHits": 138,
+   "armBFusedClickHits": 1,
+   "hostMitigationSameAsArmB": 138,
+   "armBMatchesGold": 0,
+   "withGold": 0,
+   "armBNullReasons": []
+  },
+  "all": {
+   "clicks": 251,
+   "shippedStoredHits": 0,
+   "shippedConvertedHits": 234,
+   "capfixOnlyHits": 245,
+   "armBHits": 251,
+   "armBFusedClickHits": 6,
+   "hostMitigationSameAsArmB": 251,
+   "armBMatchesGold": 89,
+   "withGold": 99,
+   "armBNullReasons": []
+  }
+ },
+ "capfixConfirmation": [
+  {
+   "caseId": "capfix-sommer",
+   "source": "Im Sommer fahren viele Deutsche ans Meer.",
+   "srcPlacementStitched": "im Sommer fahren viele Deutsche ans Meer.",
+   "fixedPlacementStitched": "Im Sommer fahren viele Deutsche ans Meer.",
+   "reassemblyMatchesLive": true
+  },
+  {
+   "caseId": "capfix-naehen",
+   "source": "Beim Nähen verlor sie den roten Faden.",
+   "srcPlacementStitched": "beim Nähen verlor sie den roten Faden.",
+   "fixedPlacementStitched": "Beim Nähen verlor sie den roten Faden.",
+   "reassemblyMatchesLive": true
+  }
+ ],
+ "minimalFixStillClassified": [
+  "sentence-de-kino:ins",
+  "sentence-de-museum:am",
+  "capfix-sommer:Im",
+  "capfix-sommer:Sommer",
+  "capfix-sommer:fahren",
+  "capfix-sommer:viele",
+  "capfix-sommer:Deutsche",
+  "capfix-sommer:ans",
+  "capfix-sommer:Meer",
+  "capfix-naehen:Beim",
+  "capfix-naehen:Nähen",
+  "capfix-naehen:verlor",
+  "capfix-naehen:sie",
+  "capfix-naehen:den",
+  "capfix-naehen:roten",
+  "capfix-naehen:Faden",
+  "prod-05:im"
+ ],
+ "byRun": {
+  "A1": {
+   "corpus": {
+    "clicks": 99,
+    "ran": 99,
+    "skippedBudget": 0,
+    "fresh": 83,
+    "available": 16,
+    "outcomes": {
+     "Resolved": 53,
+     "MembershipConflict": 8,
+     "Available": 16,
+     "grammar:Unresolved": 16,
+     "grammar:ProviderFailure": 1,
+     "classify:Unresolved": 5
+    },
+    "servedClicks": 69,
+    "servedRate": 0.697,
+    "lostClicks": 30,
+    "freshNotServed": 30,
+    "freshNotServedRate": 0.361,
+    "grammarRuns": 70,
+    "grammarResolved": 53,
+    "grammarResolvedRate": 0.757,
+    "targetMatchesGold": 56,
+    "withGold": 99,
+    "goldRate": 0.566,
+    "failureCauses": {
+     "MembershipConflict | ADJ | members 4 already belong to kakao#0": 1,
+     "grammar:Unresolved | de/Lexeme/SCONJ | Unresolved applicable question support": 1,
+     "MembershipConflict | NUM | members 14 already belong to aufstehen#4": 1,
+     "MembershipConflict | DET | members 0 already belong to ausweg#0": 1,
+     "grammar:ProviderFailure | de/Lexeme/VERB/features | Connection error: The socket connection was closed unexpectedly. For m": 1,
+     "MembershipConflict | ADV | members 2,4,14 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | VERB | members 2,4,14 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | DET | members 2,4 already belong to erinnert#2,erinnert#2": 1,
+     "MembershipConflict | NOUN | members 2,4 already belong to erinnert#2,erinnert#2": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question support": 4,
+     "grammar:Unresolved | de/Lexeme/NOUN | Applicable grammatical answers do not compose into a legal analysis": 2,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question support": 1,
+     "classify:Unresolved |  | Assembled target is not defensible": 5,
+     "MembershipConflict | NOUN | members 4 already belong to genitiv#4": 1,
+     "grammar:Unresolved | de/Lexeme/NUM | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Phraseme/DiscourseFormula | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Phraseme/Collocation | Unresolved applicable question support": 3,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.referenceNumber": 2,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question support": 1
+    },
+    "criticalPathMs": {
+     "n": 70,
+     "p50": 667,
+     "p90": 1597,
+     "mean": 882
+    },
+    "selectMsFresh": {
+     "p50": 320,
+     "p90": 380
+    },
+    "grammarMsFresh": {
+     "p50": 339,
+     "p90": 1261
+    },
+    "jevCallsPerFreshClick": 1.93,
+    "jevCallsPerClick": 1.62,
+    "lunaCallsPerFreshClick": 0.133,
+    "classifyCalls": 83,
+    "classifyMs": {
+     "p50": 320,
+     "p90": 380
+    },
+    "attributedCostUsdPerClick": 0.000263,
+    "freshTargetKinds": {
+     "Lexeme/NOUN": 16,
+     "Lexeme/DET": 7,
+     "Lexeme/PRON": 8,
+     "Lexeme/VERB": 21,
+     "Lexeme/ADV": 6,
+     "Lexeme/ADJ": 5,
+     "Lexeme/ADP": 4,
+     "Lexeme/SCONJ": 1,
+     "Lexeme/NUM": 2,
+     "Lexeme/PROPN": 2,
+     "Phraseme/DiscourseFormula": 2,
+     "Phraseme/Collocation": 4
+    },
+    "paths": {
+     "classified": 83,
+     "reused": 16
+    }
+   },
+   "capfix": {
+    "clicks": 14,
+    "ran": 14,
+    "skippedBudget": 0,
+    "fresh": 12,
+    "available": 2,
+    "outcomes": {
+     "Resolved": 11,
+     "grammar:Unresolved": 1,
+     "Available": 2
+    },
+    "servedClicks": 13,
+    "servedRate": 0.929,
+    "lostClicks": 1,
+    "freshNotServed": 1,
+    "freshNotServedRate": 0.083,
+    "grammarRuns": 12,
+    "grammarResolved": 11,
+    "grammarResolvedRate": 0.917,
+    "targetMatchesGold": 0,
+    "withGold": 0,
+    "goldRate": null,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.gender": 1
+    },
+    "criticalPathMs": {
+     "n": 12,
+     "p50": 667,
+     "p90": 1595,
+     "mean": 892
+    },
+    "selectMsFresh": {
+     "p50": 339,
+     "p90": 379
+    },
+    "grammarMsFresh": {
+     "p50": 337,
+     "p90": 1230
+    },
+    "jevCallsPerFreshClick": 2,
+    "jevCallsPerClick": 1.71,
+    "lunaCallsPerFreshClick": 0.167,
+    "classifyCalls": 12,
+    "classifyMs": {
+     "p50": 339,
+     "p90": 379
+    },
+    "attributedCostUsdPerClick": 0.000284,
+    "freshTargetKinds": {
+     "Lexeme/ADP": 3,
+     "Lexeme/NOUN": 5,
+     "Lexeme/VERB": 2,
+     "Lexeme/DET": 1,
+     "Lexeme/PRON": 1
+    },
+    "paths": {
+     "classified": 12,
+     "reused": 2
+    }
+   },
+   "prod": {
+    "clicks": 138,
+    "ran": 138,
+    "skippedBudget": 0,
+    "fresh": 129,
+    "available": 9,
+    "outcomes": {
+     "Resolved": 66,
+     "Available": 9,
+     "grammar:Unresolved": 50,
+     "classify:Unresolved": 8,
+     "MembershipConflict": 4,
+     "grammar:ProviderFailure": 1
+    },
+    "servedClicks": 75,
+    "servedRate": 0.543,
+    "lostClicks": 63,
+    "freshNotServed": 63,
+    "freshNotServedRate": 0.488,
+    "grammarRuns": 117,
+    "grammarResolved": 66,
+    "grammarResolvedRate": 0.564,
+    "targetMatchesGold": 0,
+    "withGold": 0,
+    "goldRate": null,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question support": 4,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.number": 1,
+     "classify:Unresolved |  | Assembled target is not defensible": 7,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question support": 3,
+     "MembershipConflict | NOUN | members 4 already belong to prod-02#4": 1,
+     "grammar:Unresolved | de/Lexeme/SCONJ | Unresolved applicable question support": 8,
+     "grammar:Unresolved | de/Lexeme/CCONJ | Unresolved applicable question support": 5,
+     "grammar:Unresolved | de/Lexeme/NOUN | Unresolved applicable question support": 3,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question surface.inflectionalFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question support": 7,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question surface.inflectionalFeatures.mood": 2,
+     "grammar:Unresolved | de/Lexeme/ADP | Unresolved applicable question support": 2,
+     "classify:Unresolved |  | A noun target may absorb only the one article opening its phrase": 1,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question lemma.coreFeatures.person": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question support": 5,
+     "MembershipConflict | ADV | members 4,6 already belong to prod-09#4,prod-09#4": 1,
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "MembershipConflict | DET | members 4,6 already belong to prod-09#4,prod-09#4": 1,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question surface.inflectionalFeatures.case": 1,
+     "grammar:ProviderFailure | de/Lexeme/VERB/features | Connection error: The socket connection was closed unexpectedly. For m": 1,
+     "grammar:Unresolved | de/Phraseme/Collocation | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.referenceNumber": 2,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question support": 1,
+     "MembershipConflict | VERB | members 18 already belong to prod-12#18": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question surface.inflectionalFeatures.number": 1
+    },
+    "criticalPathMs": {
+     "n": 117,
+     "p50": 646,
+     "p90": 1480,
+     "mean": 801
+    },
+    "selectMsFresh": {
+     "p50": 316,
+     "p90": 355
+    },
+    "grammarMsFresh": {
+     "p50": 325,
+     "p90": 1134
+    },
+    "jevCallsPerFreshClick": 1.93,
+    "jevCallsPerClick": 1.8,
+    "lunaCallsPerFreshClick": 0.124,
+    "classifyCalls": 129,
+    "classifyMs": {
+     "p50": 316,
+     "p90": 355
+    },
+    "attributedCostUsdPerClick": 0.000301,
+    "freshTargetKinds": {
+     "Lexeme/NOUN": 18,
+     "Lexeme/PRON": 8,
+     "Lexeme/VERB": 26,
+     "Lexeme/ADJ": 18,
+     "Lexeme/PROPN": 11,
+     "Lexeme/CCONJ": 10,
+     "Lexeme/ADP": 6,
+     "Lexeme/DET": 7,
+     "Lexeme/SCONJ": 9,
+     "Lexeme/ADV": 5,
+     "Phraseme/Idiom": 1,
+     "Phraseme/Collocation": 2
+    },
+    "paths": {
+     "classified": 129,
+     "reused": 9
+    }
+   },
+   "all": {
+    "clicks": 251,
+    "ran": 251,
+    "skippedBudget": 0,
+    "fresh": 224,
+    "available": 27,
+    "outcomes": {
+     "Resolved": 130,
+     "grammar:Unresolved": 67,
+     "Available": 27,
+     "MembershipConflict": 12,
+     "grammar:ProviderFailure": 2,
+     "classify:Unresolved": 13
+    },
+    "servedClicks": 157,
+    "servedRate": 0.625,
+    "lostClicks": 94,
+    "freshNotServed": 94,
+    "freshNotServedRate": 0.42,
+    "grammarRuns": 199,
+    "grammarResolved": 130,
+    "grammarResolvedRate": 0.653,
+    "targetMatchesGold": 56,
+    "withGold": 99,
+    "goldRate": 0.566,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "MembershipConflict | ADJ | members 4 already belong to kakao#0": 1,
+     "grammar:Unresolved | de/Lexeme/SCONJ | Unresolved applicable question support": 9,
+     "MembershipConflict | NUM | members 14 already belong to aufstehen#4": 1,
+     "MembershipConflict | DET | members 0 already belong to ausweg#0": 1,
+     "grammar:ProviderFailure | de/Lexeme/VERB/features | Connection error: The socket connection was closed unexpectedly. For m": 2,
+     "MembershipConflict | ADV | members 2,4,14 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | VERB | members 2,4,14 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | DET | members 2,4 already belong to erinnert#2,erinnert#2": 1,
+     "MembershipConflict | NOUN | members 2,4 already belong to erinnert#2,erinnert#2": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question support": 9,
+     "grammar:Unresolved | de/Lexeme/NOUN | Applicable grammatical answers do not compose into a legal analysis": 2,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question support": 4,
+     "classify:Unresolved |  | Assembled target is not defensible": 12,
+     "MembershipConflict | NOUN | members 4 already belong to genitiv#4": 1,
+     "grammar:Unresolved | de/Lexeme/NUM | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Phraseme/DiscourseFormula | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Phraseme/Collocation | Unresolved applicable question support": 5,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.referenceNumber": 4,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question support": 4,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.number": 1,
+     "MembershipConflict | NOUN | members 4 already belong to prod-02#4": 1,
+     "grammar:Unresolved | de/Lexeme/CCONJ | Unresolved applicable question support": 5,
+     "grammar:Unresolved | de/Lexeme/NOUN | Unresolved applicable question support": 3,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question surface.inflectionalFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question support": 7,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question surface.inflectionalFeatures.mood": 2,
+     "grammar:Unresolved | de/Lexeme/ADP | Unresolved applicable question support": 2,
+     "classify:Unresolved |  | A noun target may absorb only the one article opening its phrase": 1,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question lemma.coreFeatures.person": 1,
+     "MembershipConflict | ADV | members 4,6 already belong to prod-09#4,prod-09#4": 1,
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "MembershipConflict | DET | members 4,6 already belong to prod-09#4,prod-09#4": 1,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question surface.inflectionalFeatures.case": 1,
+     "MembershipConflict | VERB | members 18 already belong to prod-12#18": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question surface.inflectionalFeatures.number": 1
+    },
+    "criticalPathMs": {
+     "n": 199,
+     "p50": 656,
+     "p90": 1552,
+     "mean": 835
+    },
+    "selectMsFresh": {
+     "p50": 319,
+     "p90": 362
+    },
+    "grammarMsFresh": {
+     "p50": 331,
+     "p90": 1238
+    },
+    "jevCallsPerFreshClick": 1.93,
+    "jevCallsPerClick": 1.73,
+    "lunaCallsPerFreshClick": 0.129,
+    "classifyCalls": 224,
+    "classifyMs": {
+     "p50": 319,
+     "p90": 362
+    },
+    "attributedCostUsdPerClick": 0.000285,
+    "freshTargetKinds": {
+     "Lexeme/ADP": 13,
+     "Lexeme/NOUN": 39,
+     "Lexeme/VERB": 49,
+     "Lexeme/DET": 15,
+     "Lexeme/PRON": 17,
+     "Lexeme/ADV": 11,
+     "Lexeme/ADJ": 23,
+     "Lexeme/SCONJ": 10,
+     "Lexeme/NUM": 2,
+     "Lexeme/PROPN": 13,
+     "Phraseme/DiscourseFormula": 2,
+     "Phraseme/Collocation": 6,
+     "Lexeme/CCONJ": 10,
+     "Phraseme/Idiom": 1
+    },
+    "paths": {
+     "classified": 224,
+     "reused": 27
+    }
+   }
+  },
+  "A2": {
+   "corpus": {
+    "clicks": 99,
+    "ran": 82,
+    "skippedBudget": 17,
+    "fresh": 63,
+    "available": 19,
+    "outcomes": {
+     "Resolved": 50,
+     "MembershipConflict": 6,
+     "Available": 19,
+     "grammar:Unresolved": 4,
+     "classify:Unresolved": 3
+    },
+    "servedClicks": 69,
+    "servedRate": 0.841,
+    "lostClicks": 13,
+    "freshNotServed": 13,
+    "freshNotServedRate": 0.206,
+    "grammarRuns": 54,
+    "grammarResolved": 50,
+    "grammarResolvedRate": 0.926,
+    "targetMatchesGold": 53,
+    "withGold": 82,
+    "goldRate": 0.646,
+    "failureCauses": {
+     "MembershipConflict | ADJ | members 0,4 already belong to kakao#0,kakao#0": 1,
+     "MembershipConflict | DET | members 0 already belong to ausweg#0": 1,
+     "MembershipConflict | ADV | members 2,4,8,14 already belong to erinnert#2,erinnert#2,erinnert#2,er": 1,
+     "MembershipConflict | DET | members 2,4,8 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | NOUN | members 2,4,8 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | VERB | members 4,8 already belong to passiv#4,passiv#4": 1,
+     "grammar:Unresolved | de/Lexeme/NOUN | Applicable grammatical answers do not compose into a legal analysis": 2,
+     "classify:Unresolved |  | Assembled target is not defensible": 3,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Authored identity remains uncertain": 1
+    },
+    "criticalPathMs": {
+     "n": 54,
+     "p50": 684,
+     "p90": 1834,
+     "mean": 963
+    },
+    "selectMsFresh": {
+     "p50": 315,
+     "p90": 350
+    },
+    "grammarMsFresh": {
+     "p50": 353,
+     "p90": 1540
+    },
+    "jevCallsPerFreshClick": 1.98,
+    "jevCallsPerClick": 1.52,
+    "lunaCallsPerFreshClick": 0.19,
+    "classifyCalls": 63,
+    "classifyMs": {
+     "p50": 315,
+     "p90": 350
+    },
+    "attributedCostUsdPerClick": 0.000248,
+    "freshTargetKinds": {
+     "Lexeme/DET": 7,
+     "Lexeme/PRON": 6,
+     "Lexeme/NOUN": 15,
+     "Lexeme/ADJ": 3,
+     "Lexeme/VERB": 14,
+     "Lexeme/ADV": 5,
+     "Lexeme/ADP": 6,
+     "Lexeme/NUM": 1,
+     "Lexeme/PROPN": 2,
+     "Phraseme/Collocation": 1
+    },
+    "paths": {
+     "classified": 63,
+     "reused": 19
+    }
+   },
+   "capfix": {
+    "clicks": 14,
+    "ran": 14,
+    "skippedBudget": 0,
+    "fresh": 13,
+    "available": 1,
+    "outcomes": {
+     "Resolved": 11,
+     "grammar:Unresolved": 1,
+     "MembershipConflict": 1,
+     "Available": 1
+    },
+    "servedClicks": 12,
+    "servedRate": 0.857,
+    "lostClicks": 2,
+    "freshNotServed": 2,
+    "freshNotServedRate": 0.154,
+    "grammarRuns": 12,
+    "grammarResolved": 11,
+    "grammarResolvedRate": 0.917,
+    "targetMatchesGold": 0,
+    "withGold": 0,
+    "goldRate": null,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "MembershipConflict | ADJ | members 8,12 already belong to capfix-naehen#8,capfix-naehen#8": 1
+    },
+    "criticalPathMs": {
+     "n": 12,
+     "p50": 677,
+     "p90": 1546,
+     "mean": 884
+    },
+    "selectMsFresh": {
+     "p50": 321,
+     "p90": 363
+    },
+    "grammarMsFresh": {
+     "p50": 337,
+     "p90": 1233
+    },
+    "jevCallsPerFreshClick": 1.92,
+    "jevCallsPerClick": 1.79,
+    "lunaCallsPerFreshClick": 0.154,
+    "classifyCalls": 13,
+    "classifyMs": {
+     "p50": 321,
+     "p90": 363
+    },
+    "attributedCostUsdPerClick": 0.000294,
+    "freshTargetKinds": {
+     "Lexeme/ADP": 3,
+     "Lexeme/NOUN": 5,
+     "Lexeme/VERB": 2,
+     "Lexeme/DET": 1,
+     "Lexeme/PRON": 1,
+     "Lexeme/ADJ": 1
+    },
+    "paths": {
+     "classified": 13,
+     "reused": 1
+    }
+   },
+   "prod": {
+    "clicks": 138,
+    "ran": 0,
+    "skippedBudget": 138,
+    "fresh": 0,
+    "available": 0,
+    "outcomes": {},
+    "servedClicks": 0,
+    "servedRate": null,
+    "lostClicks": 0,
+    "freshNotServed": 0,
+    "freshNotServedRate": null,
+    "grammarRuns": 0,
+    "grammarResolved": 0,
+    "grammarResolvedRate": null,
+    "targetMatchesGold": 0,
+    "withGold": 0,
+    "goldRate": null,
+    "failureCauses": {},
+    "criticalPathMs": {
+     "n": 0,
+     "p50": null,
+     "p90": null,
+     "mean": null
+    },
+    "selectMsFresh": {
+     "p50": null,
+     "p90": null
+    },
+    "grammarMsFresh": {
+     "p50": null,
+     "p90": null
+    },
+    "jevCallsPerFreshClick": null,
+    "jevCallsPerClick": null,
+    "lunaCallsPerFreshClick": null,
+    "classifyCalls": 0,
+    "classifyMs": {
+     "p50": null,
+     "p90": null
+    },
+    "attributedCostUsdPerClick": null,
+    "freshTargetKinds": {},
+    "paths": {}
+   },
+   "all": {
+    "clicks": 251,
+    "ran": 96,
+    "skippedBudget": 155,
+    "fresh": 76,
+    "available": 20,
+    "outcomes": {
+     "Resolved": 61,
+     "grammar:Unresolved": 5,
+     "MembershipConflict": 7,
+     "Available": 20,
+     "classify:Unresolved": 3
+    },
+    "servedClicks": 81,
+    "servedRate": 0.844,
+    "lostClicks": 15,
+    "freshNotServed": 15,
+    "freshNotServedRate": 0.197,
+    "grammarRuns": 66,
+    "grammarResolved": 61,
+    "grammarResolvedRate": 0.924,
+    "targetMatchesGold": 53,
+    "withGold": 82,
+    "goldRate": 0.646,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "MembershipConflict | ADJ | members 8,12 already belong to capfix-naehen#8,capfix-naehen#8": 1,
+     "MembershipConflict | ADJ | members 0,4 already belong to kakao#0,kakao#0": 1,
+     "MembershipConflict | DET | members 0 already belong to ausweg#0": 1,
+     "MembershipConflict | ADV | members 2,4,8,14 already belong to erinnert#2,erinnert#2,erinnert#2,er": 1,
+     "MembershipConflict | DET | members 2,4,8 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | NOUN | members 2,4,8 already belong to erinnert#2,erinnert#2,erinnert#2": 1,
+     "MembershipConflict | VERB | members 4,8 already belong to passiv#4,passiv#4": 1,
+     "grammar:Unresolved | de/Lexeme/NOUN | Applicable grammatical answers do not compose into a legal analysis": 2,
+     "classify:Unresolved |  | Assembled target is not defensible": 3,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Authored identity remains uncertain": 1
+    },
+    "criticalPathMs": {
+     "n": 66,
+     "p50": 682,
+     "p90": 1813,
+     "mean": 949
+    },
+    "selectMsFresh": {
+     "p50": 316,
+     "p90": 351
+    },
+    "grammarMsFresh": {
+     "p50": 349,
+     "p90": 1517
+    },
+    "jevCallsPerFreshClick": 1.97,
+    "jevCallsPerClick": 1.56,
+    "lunaCallsPerFreshClick": 0.184,
+    "classifyCalls": 76,
+    "classifyMs": {
+     "p50": 316,
+     "p90": 351
+    },
+    "attributedCostUsdPerClick": 0.000255,
+    "freshTargetKinds": {
+     "Lexeme/ADP": 9,
+     "Lexeme/NOUN": 20,
+     "Lexeme/VERB": 16,
+     "Lexeme/DET": 8,
+     "Lexeme/PRON": 7,
+     "Lexeme/ADJ": 4,
+     "Lexeme/ADV": 5,
+     "Lexeme/NUM": 1,
+     "Lexeme/PROPN": 2,
+     "Phraseme/Collocation": 1
+    },
+    "paths": {
+     "classified": 76,
+     "reused": 20
+    }
+   }
+  },
+  "B": {
+   "corpus": {
+    "clicks": 99,
+    "ran": 99,
+    "skippedBudget": 0,
+    "fresh": 77,
+    "available": 22,
+    "outcomes": {
+     "Resolved": 68,
+     "Available": 22,
+     "grammar:Unresolved": 9
+    },
+    "servedClicks": 90,
+    "servedRate": 0.909,
+    "lostClicks": 9,
+    "freshNotServed": 9,
+    "freshNotServedRate": 0.117,
+    "grammarRuns": 77,
+    "grammarResolved": 68,
+    "grammarResolvedRate": 0.883,
+    "targetMatchesGold": 89,
+    "withGold": 99,
+    "goldRate": 0.899,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/NOUN | Applicable grammatical answers do not compose into a legal analysis": 3,
+     "grammar:Unresolved | de/Lexeme/ADV | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/X | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/NOUN | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.referenceNumber": 2
+    },
+    "criticalPathMs": {
+     "n": 77,
+     "p50": 346,
+     "p90": 1284,
+     "mean": 537
+    },
+    "selectMsFresh": {
+     "p50": 0,
+     "p90": 1
+    },
+    "grammarMsFresh": {
+     "p50": 345,
+     "p90": 1284
+    },
+    "jevCallsPerFreshClick": 1.08,
+    "jevCallsPerClick": 0.84,
+    "lunaCallsPerFreshClick": 0.143,
+    "classifyCalls": 0,
+    "classifyMs": {
+     "p50": null,
+     "p90": null
+    },
+    "attributedCostUsdPerClick": 0.000146,
+    "freshTargetKinds": {
+     "Lexeme/NOUN": 20,
+     "Lexeme/DET": 5,
+     "Lexeme/PRON": 7,
+     "Lexeme/VERB": 15,
+     "Lexeme/ADJ": 4,
+     "Lexeme/ADV": 12,
+     "Lexeme/ADP": 6,
+     "Lexeme/NUM": 2,
+     "Lexeme/PROPN": 2,
+     "Phraseme/Idiom": 1,
+     "Lexeme/X": 1,
+     "Phraseme/DiscourseFormula": 1,
+     "Phraseme/Collocation": 1
+    },
+    "paths": {
+     "analysis:unit": 75,
+     "reused": 22,
+     "analysis:fusedClick": 2
+    }
+   },
+   "capfix": {
+    "clicks": 14,
+    "ran": 14,
+    "skippedBudget": 0,
+    "fresh": 12,
+    "available": 2,
+    "outcomes": {
+     "Resolved": 10,
+     "grammar:Unresolved": 2,
+     "Available": 2
+    },
+    "servedClicks": 12,
+    "servedRate": 0.857,
+    "lostClicks": 2,
+    "freshNotServed": 2,
+    "freshNotServedRate": 0.167,
+    "grammarRuns": 12,
+    "grammarResolved": 10,
+    "grammarResolvedRate": 0.833,
+    "targetMatchesGold": 0,
+    "withGold": 0,
+    "goldRate": null,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.gender": 1
+    },
+    "criticalPathMs": {
+     "n": 12,
+     "p50": 337,
+     "p90": 1241,
+     "mean": 550
+    },
+    "selectMsFresh": {
+     "p50": 0,
+     "p90": 1
+    },
+    "grammarMsFresh": {
+     "p50": 336,
+     "p90": 1241
+    },
+    "jevCallsPerFreshClick": 1,
+    "jevCallsPerClick": 0.86,
+    "lunaCallsPerFreshClick": 0.167,
+    "classifyCalls": 0,
+    "classifyMs": {
+     "p50": null,
+     "p90": null
+    },
+    "attributedCostUsdPerClick": 0.000157,
+    "freshTargetKinds": {
+     "Lexeme/ADP": 3,
+     "Lexeme/NOUN": 3,
+     "Lexeme/VERB": 1,
+     "Lexeme/DET": 1,
+     "Lexeme/PROPN": 1,
+     "Phraseme/Idiom": 1,
+     "Lexeme/PRON": 1,
+     "Lexeme/ADJ": 1
+    },
+    "paths": {
+     "analysis:fusedClick": 3,
+     "analysis:unit": 9,
+     "reused": 2
+    }
+   },
+   "prod": {
+    "clicks": 138,
+    "ran": 138,
+    "skippedBudget": 0,
+    "fresh": 129,
+    "available": 9,
+    "outcomes": {
+     "Resolved": 88,
+     "Available": 9,
+     "grammar:Unresolved": 41
+    },
+    "servedClicks": 97,
+    "servedRate": 0.703,
+    "lostClicks": 41,
+    "freshNotServed": 41,
+    "freshNotServedRate": 0.318,
+    "grammarRuns": 129,
+    "grammarResolved": 88,
+    "grammarResolvedRate": 0.682,
+    "targetMatchesGold": 0,
+    "withGold": 0,
+    "goldRate": null,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.number": 2,
+     "grammar:Unresolved | de/Lexeme/NOUN | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/SCONJ | Unresolved applicable question support": 8,
+     "grammar:Unresolved | de/Lexeme/CCONJ | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question surface.inflectionalFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question surface.inflectionalFeatures.number": 4,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Phraseme/Collocation | Unresolved applicable question support": 9,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question lemma.coreFeatures.person": 1,
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question surface.inflectionalFeatures.case": 1,
+     "grammar:Unresolved | de/Lexeme/AUX | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.referenceNumber": 2,
+     "grammar:Unresolved | de/Lexeme/ADP | Unresolved applicable question support": 1
+    },
+    "criticalPathMs": {
+     "n": 129,
+     "p50": 329,
+     "p90": 1206,
+     "mean": 499
+    },
+    "selectMsFresh": {
+     "p50": 0,
+     "p90": 1
+    },
+    "grammarMsFresh": {
+     "p50": 329,
+     "p90": 1206
+    },
+    "jevCallsPerFreshClick": 1.02,
+    "jevCallsPerClick": 0.96,
+    "lunaCallsPerFreshClick": 0.155,
+    "classifyCalls": 0,
+    "classifyMs": {
+     "p50": null,
+     "p90": null
+    },
+    "attributedCostUsdPerClick": 0.00017,
+    "freshTargetKinds": {
+     "Lexeme/NOUN": 18,
+     "Lexeme/PRON": 11,
+     "Lexeme/VERB": 23,
+     "Lexeme/ADJ": 15,
+     "Lexeme/PROPN": 12,
+     "Lexeme/CCONJ": 10,
+     "Lexeme/ADP": 5,
+     "Lexeme/ADV": 8,
+     "Lexeme/DET": 5,
+     "Lexeme/SCONJ": 9,
+     "Lexeme/NUM": 2,
+     "Phraseme/Collocation": 9,
+     "Phraseme/Idiom": 1,
+     "Lexeme/AUX": 1
+    },
+    "paths": {
+     "analysis:unit": 128,
+     "reused": 9,
+     "analysis:fusedClick": 1
+    }
+   },
+   "all": {
+    "clicks": 251,
+    "ran": 251,
+    "skippedBudget": 0,
+    "fresh": 218,
+    "available": 33,
+    "outcomes": {
+     "Resolved": 166,
+     "grammar:Unresolved": 52,
+     "Available": 33
+    },
+    "servedClicks": 199,
+    "servedRate": 0.793,
+    "lostClicks": 52,
+    "freshNotServed": 52,
+    "freshNotServedRate": 0.239,
+    "grammarRuns": 218,
+    "grammarResolved": 166,
+    "grammarResolvedRate": 0.761,
+    "targetMatchesGold": 89,
+    "withGold": 99,
+    "goldRate": 0.899,
+    "failureCauses": {
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question support": 3,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/NOUN | Applicable grammatical answers do not compose into a legal analysis": 3,
+     "grammar:Unresolved | de/Lexeme/ADV | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/X | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/NOUN | Unresolved applicable question support": 3,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.referenceNumber": 4,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question lemma.coreFeatures.number": 2,
+     "grammar:Unresolved | de/Lexeme/SCONJ | Unresolved applicable question support": 8,
+     "grammar:Unresolved | de/Lexeme/CCONJ | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question surface.inflectionalFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question surface.inflectionalFeatures.number": 4,
+     "grammar:Unresolved | de/Lexeme/VERB | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Phraseme/Collocation | Unresolved applicable question support": 9,
+     "grammar:Unresolved | de/Lexeme/DET | Unresolved applicable question lemma.coreFeatures.person": 1,
+     "grammar:Unresolved | de/Lexeme/PROPN | Unresolved applicable question lemma.coreFeatures.gender": 1,
+     "grammar:Unresolved | de/Lexeme/PRON | Unresolved applicable question support": 2,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question surface.inflectionalFeatures.case": 1,
+     "grammar:Unresolved | de/Lexeme/AUX | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/ADJ | Unresolved applicable question support": 1,
+     "grammar:Unresolved | de/Lexeme/ADP | Unresolved applicable question support": 1
+    },
+    "criticalPathMs": {
+     "n": 218,
+     "p50": 337,
+     "p90": 1253,
+     "mean": 515
+    },
+    "selectMsFresh": {
+     "p50": 0,
+     "p90": 1
+    },
+    "grammarMsFresh": {
+     "p50": 337,
+     "p90": 1252
+    },
+    "jevCallsPerFreshClick": 1.04,
+    "jevCallsPerClick": 0.9,
+    "lunaCallsPerFreshClick": 0.151,
+    "classifyCalls": 0,
+    "classifyMs": {
+     "p50": null,
+     "p90": null
+    },
+    "attributedCostUsdPerClick": 0.00016,
+    "freshTargetKinds": {
+     "Lexeme/ADP": 14,
+     "Lexeme/NOUN": 41,
+     "Lexeme/VERB": 39,
+     "Lexeme/DET": 11,
+     "Lexeme/PROPN": 15,
+     "Phraseme/Idiom": 3,
+     "Lexeme/PRON": 19,
+     "Lexeme/ADJ": 20,
+     "Lexeme/ADV": 20,
+     "Lexeme/NUM": 4,
+     "Lexeme/X": 1,
+     "Phraseme/DiscourseFormula": 1,
+     "Phraseme/Collocation": 10,
+     "Lexeme/CCONJ": 10,
+     "Lexeme/SCONJ": 9,
+     "Lexeme/AUX": 1
+    },
+    "paths": {
+     "analysis:fusedClick": 6,
+     "analysis:unit": 212,
+     "reused": 33
+    }
+   }
+  }
+ },
+ "distinctTargets": {
+  "A1": {
+   "distinctTargets": 193,
+   "outcomes": {
+    "Resolved": 130,
+    "Unresolved": 62,
+    "ProviderFailure": 1
+   }
+  },
+  "A2": {
+   "distinctTargets": 66,
+   "outcomes": {
+    "Resolved": 61,
+    "Unresolved": 5
+   }
+  },
+  "B": {
+   "distinctTargets": 207,
+   "outcomes": {
+    "Resolved": 166,
+    "Unresolved": 41
+   }
+  }
+ },
+ "grammarRunsTotal": 275,
+ "a1VsB": {
+  "pairedClicks": 251,
+  "targetDiffers": 105,
+  "servedFlips": 52,
+  "A1ServedOnly": 5,
+  "BServedOnly": 47,
+  "pairedWithGold": 99,
+  "A1GoldOnly": 2,
+  "BGoldOnly": 35,
+  "pairedLatency": {
+   "n": 239,
+   "A1MinusRightMs_p10": 0,
+   "p50": 312,
+   "p90": 410
+  },
+  "differingClicks": [
+   {
+    "click": "capfix-sommer#8",
+    "text": "Deutsche",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Deutsche"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[8]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "capfix-naehen#4",
+    "text": "verlor",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "verlieren"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[4,8,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "verlor den Faden"
+    }
+   },
+   {
+    "click": "capfix-naehen#8",
+    "text": "den",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8,10,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[4,8,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "verlor den Faden"
+    }
+   },
+   {
+    "click": "capfix-naehen#10",
+    "text": "roten",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8,10,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "rot"
+    }
+   },
+   {
+    "click": "capfix-naehen#12",
+    "text": "Faden",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8,10,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[4,8,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "verlor den Faden"
+    }
+   },
+   {
+    "click": "sentence-de-kakao#2",
+    "text": "heiße",
+    "gold": "ADJ[2]",
+    "A1": {
+     "target": "Lexeme/ADJ[2,4]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 4 already belong to kakao#0"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "heiß"
+    }
+   },
+   {
+    "click": "sentence-de-aufstehen#10",
+    "text": "um",
+    "gold": "ADP[10]",
+    "A1": {
+     "target": "Lexeme/SCONJ[10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADP[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "um"
+    }
+   },
+   {
+    "click": "sentence-de-aufstehen#12",
+    "text": "sechs",
+    "gold": "NUM[12]",
+    "A1": {
+     "target": "Lexeme/NUM[12,14]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 14 already belong to aufstehen#4"
+    },
+    "B": {
+     "target": "Lexeme/NUM[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "sechs"
+    }
+   },
+   {
+    "click": "sentence-de-ausweg#4",
+    "text": "keinen",
+    "gold": "DET[4]",
+    "A1": {
+     "target": "Lexeme/DET[0,4]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 0 already belong to ausweg#0"
+    },
+    "B": {
+     "target": "Lexeme/DET[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "kein"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#2",
+    "text": "hat",
+    "gold": "VERB[2,4,8,14]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "sich erinnern"
+    },
+    "B": {
+     "target": "Lexeme/VERB[2,4,8,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "sich erinnern"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#4",
+    "text": "sich",
+    "gold": "VERB[2,4,8,14]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "sich erinnern"
+    },
+    "B": {
+     "target": "Lexeme/VERB[2,4,8,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "sich erinnern"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#6",
+    "text": "gestern",
+    "gold": "ADV[6]",
+    "A1": {
+     "target": "Lexeme/ADV[2,4,6,8,14]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 2,4,14 already belong to erinnert#2,erinnert#2,erinnert#2"
+    },
+    "B": {
+     "target": "Lexeme/ADV[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "gestern"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#10",
+    "text": "seinen",
+    "gold": "DET[10]",
+    "A1": {
+     "target": "Lexeme/DET[2,4,8,10]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 2,4 already belong to erinnert#2,erinnert#2"
+    },
+    "B": {
+     "target": "Lexeme/DET[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "sein"
+    }
+   },
+   {
+    "click": "sentence-de-passiv#6",
+    "text": "morgen",
+    "gold": "ADV[6]",
+    "A1": {
+     "target": "Lexeme/VERB[4,6,8]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADV[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "morgen"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#12",
+    "text": "Bruder",
+    "gold": "NOUN[12]",
+    "A1": {
+     "target": "Lexeme/NOUN[2,4,8,12]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 2,4 already belong to erinnert#2,erinnert#2"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Bruder"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#14",
+    "text": "erinnert",
+    "gold": "VERB[2,4,8,14]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "sich erinnern"
+    },
+    "B": {
+     "target": "Lexeme/VERB[2,4,8,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "sich erinnern"
+    }
+   },
+   {
+    "click": "sentence-de-faden#2",
+    "text": "hat",
+    "gold": "Idiom[2,4,6,8]",
+    "A1": {
+     "target": "Lexeme/VERB[2,8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "haben"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-faden#4",
+    "text": "den",
+    "gold": "Idiom[2,4,6,8]",
+    "A1": {
+     "target": "Lexeme/NOUN[4,6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-faden#6",
+    "text": "Faden",
+    "gold": "Idiom[2,4,6,8]",
+    "A1": {
+     "target": "Lexeme/NOUN[4,6]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-faden#8",
+    "text": "verloren",
+    "gold": "Idiom[2,4,6,8]",
+    "A1": {
+     "target": "Lexeme/VERB[2,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "haben"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-genitiv#0",
+    "text": "Das",
+    "gold": "NOUN[0,2]",
+    "A1": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Haus"
+    }
+   },
+   {
+    "click": "sentence-de-usw#9",
+    "text": "usw.",
+    "gold": "ADV[9]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADV[9]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": true,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-usw#11",
+    "text": "auf",
+    "gold": "ADP[11]",
+    "A1": {
+     "target": "Lexeme/ADP[11,13,15]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "auf ... dem ... Markt"
+    },
+    "B": {
+     "target": "Lexeme/ADP[11]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "auf"
+    }
+   },
+   {
+    "click": "sentence-de-museum#6",
+    "text": "z.B.",
+    "gold": "ADV[6]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADV[6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": true,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-usw#13",
+    "text": "dem",
+    "gold": "NOUN[13,15]",
+    "A1": {
+     "target": "Lexeme/ADP[11,13,15]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "auf ... dem ... Markt"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[13,15]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Markt"
+    }
+   },
+   {
+    "click": "sentence-de-genitiv#6",
+    "text": "Nachbarn",
+    "gold": "NOUN[4,6]",
+    "A1": {
+     "target": "Lexeme/NOUN[4,6]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": true,
+     "failure": "members 4 already belong to genitiv#4"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "Nachbar"
+    }
+   },
+   {
+    "click": "sentence-de-usw#15",
+    "text": "Markt",
+    "gold": "NOUN[13,15]",
+    "A1": {
+     "target": "Lexeme/ADP[11,13,15]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "auf ... dem ... Markt"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[13,15]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "Markt"
+    }
+   },
+   {
+    "click": "sentence-de-typo#0",
+    "text": "Ihc",
+    "gold": "PRON[0]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/X[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-museum#14",
+    "text": "um",
+    "gold": "ADP[14]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADP[14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "um"
+    }
+   },
+   {
+    "click": "sentence-de-typo#2",
+    "text": "habe",
+    "gold": "VERB[2]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/VERB[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "habe"
+    }
+   },
+   {
+    "click": "sentence-de-museum#16",
+    "text": "zehn",
+    "gold": "NUM[16]",
+    "A1": {
+     "target": "Lexeme/NUM[14,16]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NUM[16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "zehn"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#0",
+    "text": "Wie",
+    "gold": "DiscourseFormula[0,2,4,6]",
+    "A1": {
+     "target": "Phraseme/DiscourseFormula[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/DiscourseFormula[0,2,4,6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "wie geht s dir"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#2",
+    "text": "geht",
+    "gold": "DiscourseFormula[0,2,4,6]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/DiscourseFormula[0,2,4,6]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "wie geht s dir"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#4",
+    "text": "stellt",
+    "gold": "Collocation[4,12,14]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,6,10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[4,12,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "stellt zur Verfügung"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#4",
+    "text": "s",
+    "gold": "DiscourseFormula[0,2,4,6]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/DiscourseFormula[0,2,4,6]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "wie geht s dir"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#6",
+    "text": "dir",
+    "gold": "DiscourseFormula[0,2,4,6]",
+    "A1": {
+     "target": "Lexeme/PRON[2,4,6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/DiscourseFormula[0,2,4,6]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "wie geht s dir"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#6",
+    "text": "den",
+    "gold": "NOUN[6,8]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,6,10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#8",
+    "text": "heute",
+    "gold": "ADV[8]",
+    "A1": {
+     "target": "Phraseme/DiscourseFormula[2,4,6,8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "geht s dir heute"
+    },
+    "B": {
+     "target": "Lexeme/ADV[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "heute"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#8",
+    "text": "Schülern",
+    "gold": "NOUN[6,8]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,8,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "Schüler"
+    }
+   },
+   {
+    "click": "sentence-de-manche#4",
+    "text": "früh",
+    "gold": "ADJ[4]",
+    "A1": {
+     "target": "Lexeme/ADJ[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "früh"
+    },
+    "B": {
+     "target": "Lexeme/ADV[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "früh"
+    }
+   },
+   {
+    "click": "sentence-de-fremd#0",
+    "text": "Das",
+    "gold": "NOUN[0,2]",
+    "A1": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "das"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Meeting"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#10",
+    "text": "Material",
+    "gold": "NOUN[10]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": true,
+     "failure": "Applicable grammatical answers do not compose into a legal analysis"
+    }
+   },
+   {
+    "click": "sentence-de-fremd#2",
+    "text": "Meeting",
+    "gold": "NOUN[0,2]",
+    "A1": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "das"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "Meeting"
+    }
+   },
+   {
+    "click": "sentence-de-manche#11",
+    "text": "spät",
+    "gold": "ADJ[11]",
+    "A1": {
+     "target": "Lexeme/VERB[11]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADV[11]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "spät"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#12",
+    "text": "zur",
+    "gold": "Collocation[4,12,14]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[4,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "stellt zur Verfügung"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#14",
+    "text": "Verfügung",
+    "gold": "Collocation[4,12,14]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[4,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "stellt zur Verfügung"
+    }
+   },
+   {
+    "click": "prod-02#10",
+    "text": "den",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/DET[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "der"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-03#12",
+    "text": "und",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/CCONJ[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "und"
+    }
+   },
+   {
+    "click": "prod-01#14",
+    "text": "fast",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/DET[14,16]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADV[14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "fast"
+    }
+   },
+   {
+    "click": "prod-02#12",
+    "text": "Gartenzaun",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[4,12]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": null,
+     "failure": "members 4 already belong to prod-02#4"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Gartenzaun"
+    }
+   },
+   {
+    "click": "prod-01#16",
+    "text": "keinen",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/DET[14,16,18]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/DET[16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "kein"
+    }
+   },
+   {
+    "click": "prod-02#18",
+    "text": "zu",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/SCONJ[18,20]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/SCONJ[18]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-03#16",
+    "text": "doppelt",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/SCONJ[16,18,20]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NUM[16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "doppelt"
+    }
+   },
+   {
+    "click": "prod-03#18",
+    "text": "so",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/SCONJ[16,18,20]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/SCONJ[18]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-01#25",
+    "text": "einen",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[25]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/DET[25]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "ein"
+    }
+   },
+   {
+    "click": "prod-03#20",
+    "text": "viel",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[20]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-01#27",
+    "text": "sehr",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[25,27]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADV[27]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "sehr"
+    }
+   },
+   {
+    "click": "prod-05#0",
+    "text": "Mr",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PROPN[0,4]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-05#2",
+    "text": "und",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/CCONJ[2,4,6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/CCONJ[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "und"
+    }
+   },
+   {
+    "click": "prod-07#0",
+    "text": "sich",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[0,2,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question surface.inflectionalFeatures.mood"
+    },
+    "B": {
+     "target": "Lexeme/VERB[0,2,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question surface.inflectionalFeatures.number"
+    }
+   },
+   {
+    "click": "prod-07#2",
+    "text": "in",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADP[0,2,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/VERB[0,2,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question surface.inflectionalFeatures.number"
+    }
+   },
+   {
+    "click": "prod-05#4",
+    "text": "Mrs",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PROPN[0,2,4,6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Mrs"
+    }
+   },
+   {
+    "click": "prod-07#4",
+    "text": "eine",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/DET[0,2,4,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[4,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Geschichte"
+    }
+   },
+   {
+    "click": "prod-04#6",
+    "text": "einen",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[6,10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Sohn"
+    }
+   },
+   {
+    "click": "prod-05#6",
+    "text": "Dursley",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PROPN[4,6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Mrs Dursley"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Dursley"
+    }
+   },
+   {
+    "click": "prod-04#8",
+    "text": "kleinen",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[6,8]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "klein"
+    }
+   },
+   {
+    "click": "prod-07#6",
+    "text": "merkwürdige",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[0,2,6,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "merkwürdig"
+    }
+   },
+   {
+    "click": "prod-07#8",
+    "text": "und",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/CCONJ[0,2,8,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/CCONJ[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "und"
+    }
+   },
+   {
+    "click": "prod-04#12",
+    "text": "namens",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/VERB[12]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-05#12",
+    "text": "Nummer",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[12,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Nummer"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Nummer"
+    }
+   },
+   {
+    "click": "prod-04#14",
+    "text": "Dudley",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PROPN[12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Dudley"
+    }
+   },
+   {
+    "click": "prod-05#14",
+    "text": "4",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Nummer"
+    },
+    "B": {
+     "target": "Lexeme/NUM[14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "4"
+    }
+   },
+   {
+    "click": "prod-07#10",
+    "text": "geheimnisvolle",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[0,2,4,10,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "geheimnisvoll"
+    }
+   },
+   {
+    "click": "prod-07#12",
+    "text": "Geschichte",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "A noun target may absorb only the one article opening its phrase"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[4,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Geschichte"
+    }
+   },
+   {
+    "click": "prod-07#14",
+    "text": "verstricken",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[0,2,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question surface.inflectionalFeatures.mood"
+    },
+    "B": {
+     "target": "Lexeme/VERB[0,2,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question surface.inflectionalFeatures.number"
+    }
+   },
+   {
+    "click": "prod-05#18",
+    "text": "stolz",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[18]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "stolz"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[18,20]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-08#0",
+    "text": "Die",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Banken"
+    },
+    "B": {
+     "target": "Lexeme/DET[0]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "die"
+    }
+   },
+   {
+    "click": "prod-05#20",
+    "text": "darauf",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADV[20]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "darauf"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[18,20]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-10#0",
+    "text": "normal",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[0]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "normal"
+    }
+   },
+   {
+    "click": "prod-08#2",
+    "text": "Banken",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Banken"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Bank"
+    }
+   },
+   {
+    "click": "prod-10#4",
+    "text": "sein",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[2,4]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/SCONJ[2,4]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-10#7",
+    "text": "sehr",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[7]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADV[7]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "sehr"
+    }
+   },
+   {
+    "click": "prod-09#8",
+    "text": "nirgendwo",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADV[4,6,8]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": null,
+     "failure": "members 4,6 already belong to prod-09#4,prod-09#4"
+    },
+    "B": {
+     "target": "Lexeme/ADV[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "nirgendwo"
+    }
+   },
+   {
+    "click": "prod-12#3",
+    "text": "wie",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/PRON[3]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-09#10",
+    "text": "einen",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/DET[4,6,10]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": null,
+     "failure": "members 4,6 already belong to prod-09#4,prod-09#4"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[10,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Jungen"
+    }
+   },
+   {
+    "click": "prod-13#2",
+    "text": "wäre",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[2,10]",
+     "status": "Fresh",
+     "outcome": "grammar:ProviderFailure",
+     "gold": null,
+     "failure": "Connection error: The socket connection was closed unexpectedly. For more information, pas"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[2,4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-09#12",
+    "text": "prächtigeren",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[12]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-12#7",
+    "text": "gewesen",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[5,7,9]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/AUX[7]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-13#4",
+    "text": "auf",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADP[4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[2,4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-13#6",
+    "text": "die",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[2,4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-14#0",
+    "text": "solchem",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/PRON[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-12#9",
+    "text": "wäre",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[7,9]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/VERB[9]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "sein"
+    }
+   },
+   {
+    "click": "prod-13#8",
+    "text": "Idee",
+    "gold": null,
+    "A1": {
+     "target": "Phraseme/Collocation[4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[2,4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-13#10",
+    "text": "gekommen",
+    "gold": null,
+    "A1": {
+     "target": "Phraseme/Collocation[2,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[2,4,6,8,10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-13#13",
+    "text": "sie",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[13]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/PRON[13]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question lemma.coreFeatures.number"
+    }
+   },
+   {
+    "click": "prod-12#16",
+    "text": "sehr",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/ADJ[16]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/ADV[16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "sehr"
+    }
+   },
+   {
+    "click": "prod-14#8",
+    "text": "nichts",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PRON[8,10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/PRON[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "nichts"
+    }
+   },
+   {
+    "click": "prod-14#10",
+    "text": "zu",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/SCONJ[10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/SCONJ[10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-12#20",
+    "text": "war",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[18,20]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": null,
+     "failure": "members 18 already belong to prod-12#18"
+    },
+    "B": {
+     "target": "Lexeme/VERB[20]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "sein"
+    }
+   },
+   {
+    "click": "prod-14#12",
+    "text": "tun",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/SCONJ[8,10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-14#14",
+    "text": "haben",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/VERB[10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-12#23",
+    "text": "denn",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/CCONJ[23,25]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/SCONJ[23,25]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "prod-17#0",
+    "text": "Mr",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PROPN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Mr Dursley"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[0]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Mr"
+    }
+   },
+   {
+    "click": "prod-17#2",
+    "text": "Dursley",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/PROPN[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Mr Dursley"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Dursley"
+    }
+   },
+   {
+    "click": "prod-17#12",
+    "text": "namens",
+    "gold": null,
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": null,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADP[12]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   }
+  ]
+ },
+ "a2VsB": {
+  "pairedClicks": 96,
+  "targetDiffers": 31,
+  "servedFlips": 11,
+  "A2ServedOnly": 2,
+  "BServedOnly": 9,
+  "pairedWithGold": 82,
+  "A2GoldOnly": 0,
+  "BGoldOnly": 25,
+  "pairedLatency": {
+   "n": 89,
+   "A2MinusRightMs_p10": 0,
+   "p50": 314,
+   "p90": 584
+  },
+  "differingClicks": [
+   {
+    "click": "capfix-sommer#8",
+    "text": "Deutsche",
+    "gold": null,
+    "A2": {
+     "target": "Lexeme/NOUN[8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Deutsche"
+    },
+    "B": {
+     "target": "Lexeme/PROPN[8]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": null,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "capfix-naehen#4",
+    "text": "verlor",
+    "gold": null,
+    "A2": {
+     "target": "Lexeme/VERB[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "verlieren"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[4,8,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "verlor den Faden"
+    }
+   },
+   {
+    "click": "capfix-naehen#8",
+    "text": "den",
+    "gold": null,
+    "A2": {
+     "target": "Lexeme/NOUN[8,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[4,8,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "verlor den Faden"
+    }
+   },
+   {
+    "click": "capfix-naehen#10",
+    "text": "roten",
+    "gold": null,
+    "A2": {
+     "target": "Lexeme/ADJ[8,10,12]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": null,
+     "failure": "members 8,12 already belong to capfix-naehen#8,capfix-naehen#8"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "rot"
+    }
+   },
+   {
+    "click": "capfix-naehen#12",
+    "text": "Faden",
+    "gold": null,
+    "A2": {
+     "target": "Lexeme/NOUN[8,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[4,8,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "verlor den Faden"
+    }
+   },
+   {
+    "click": "sentence-de-kakao#2",
+    "text": "heiße",
+    "gold": "ADJ[2]",
+    "A2": {
+     "target": "Lexeme/ADJ[0,2,4]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 0,4 already belong to kakao#0,kakao#0"
+    },
+    "B": {
+     "target": "Lexeme/ADJ[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "heiß"
+    }
+   },
+   {
+    "click": "sentence-de-ausweg#4",
+    "text": "keinen",
+    "gold": "DET[4]",
+    "A2": {
+     "target": "Lexeme/DET[0,4]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 0 already belong to ausweg#0"
+    },
+    "B": {
+     "target": "Lexeme/DET[4]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "kein"
+    }
+   },
+   {
+    "click": "sentence-de-relativ#0",
+    "text": "Die",
+    "gold": "NOUN[0,2]",
+    "A2": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "die"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Frau"
+    }
+   },
+   {
+    "click": "sentence-de-relativ#2",
+    "text": "Frau",
+    "gold": "NOUN[0,2]",
+    "A2": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "die"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "Frau"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#6",
+    "text": "gestern",
+    "gold": "ADV[6]",
+    "A2": {
+     "target": "Lexeme/ADV[2,4,6,8,14]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 2,4,8,14 already belong to erinnert#2,erinnert#2,erinnert#2,erinnert#2"
+    },
+    "B": {
+     "target": "Lexeme/ADV[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "gestern"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#10",
+    "text": "seinen",
+    "gold": "DET[10]",
+    "A2": {
+     "target": "Lexeme/DET[2,4,8,10]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 2,4,8 already belong to erinnert#2,erinnert#2,erinnert#2"
+    },
+    "B": {
+     "target": "Lexeme/DET[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "sein"
+    }
+   },
+   {
+    "click": "sentence-de-passiv#6",
+    "text": "morgen",
+    "gold": "ADV[6]",
+    "A2": {
+     "target": "Lexeme/VERB[4,6,8]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 4,8 already belong to passiv#4,passiv#4"
+    },
+    "B": {
+     "target": "Lexeme/ADV[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "morgen"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#12",
+    "text": "Bruder",
+    "gold": "NOUN[12]",
+    "A2": {
+     "target": "Lexeme/NOUN[2,4,8,12]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 2,4,8 already belong to erinnert#2,erinnert#2,erinnert#2"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Bruder"
+    }
+   },
+   {
+    "click": "sentence-de-faden#2",
+    "text": "hat",
+    "gold": "Idiom[2,4,6,8]",
+    "A2": {
+     "target": "Lexeme/VERB[2,8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "haben"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-faden#4",
+    "text": "den",
+    "gold": "Idiom[2,4,6,8]",
+    "A2": {
+     "target": "Lexeme/NOUN[4,6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-faden#6",
+    "text": "Faden",
+    "gold": "Idiom[2,4,6,8]",
+    "A2": {
+     "target": "Lexeme/NOUN[4,6]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "Faden"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-faden#8",
+    "text": "verloren",
+    "gold": "Idiom[2,4,6,8]",
+    "A2": {
+     "target": "Lexeme/VERB[2,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "haben"
+    },
+    "B": {
+     "target": "Phraseme/Idiom[2,4,6,8]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "hat den Faden verloren"
+    }
+   },
+   {
+    "click": "sentence-de-genitiv#0",
+    "text": "Das",
+    "gold": "NOUN[0,2]",
+    "A2": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Haus"
+    }
+   },
+   {
+    "click": "sentence-de-usw#9",
+    "text": "usw.",
+    "gold": "ADV[9]",
+    "A2": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADV[9]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": true,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-usw#11",
+    "text": "auf",
+    "gold": "ADP[11]",
+    "A2": {
+     "target": "Lexeme/ADP[11,13,15]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "auf ... dem ... Markt"
+    },
+    "B": {
+     "target": "Lexeme/ADP[11]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "auf"
+    }
+   },
+   {
+    "click": "sentence-de-museum#6",
+    "text": "z.B.",
+    "gold": "ADV[6]",
+    "A2": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/ADV[6]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": true,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-usw#13",
+    "text": "dem",
+    "gold": "NOUN[13,15]",
+    "A2": {
+     "target": "Lexeme/ADP[11,13,15]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "auf ... dem ... Markt"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[13,15]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Markt"
+    }
+   },
+   {
+    "click": "sentence-de-usw#15",
+    "text": "Markt",
+    "gold": "NOUN[13,15]",
+    "A2": {
+     "target": "Lexeme/ADP[11,13,15]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "auf ... dem ... Markt"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[13,15]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "Markt"
+    }
+   },
+   {
+    "click": "sentence-de-typo#0",
+    "text": "Ihc",
+    "gold": "PRON[0]",
+    "A2": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "B": {
+     "target": "Lexeme/X[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    }
+   },
+   {
+    "click": "sentence-de-museum#14",
+    "text": "um",
+    "gold": "ADP[14]",
+    "A2": {
+     "target": "Lexeme/ADP[14,16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "um … zehn"
+    },
+    "B": {
+     "target": "Lexeme/ADP[14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "um"
+    }
+   },
+   {
+    "click": "sentence-de-museum#16",
+    "text": "zehn",
+    "gold": "NUM[16]",
+    "A2": {
+     "target": "Lexeme/ADP[14,16]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "um … zehn"
+    },
+    "B": {
+     "target": "Lexeme/NUM[16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "zehn"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#0",
+    "text": "Wie",
+    "gold": "DiscourseFormula[0,2,4,6]",
+    "A2": {
+     "target": "Lexeme/PRON[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Authored identity remains uncertain"
+    },
+    "B": {
+     "target": "Phraseme/DiscourseFormula[0,2,4,6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "wie geht s dir"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#4",
+    "text": "stellt",
+    "gold": "Collocation[4,12,14]",
+    "A2": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[4,12,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "stellt zur Verfügung"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#10",
+    "text": "Material",
+    "gold": "NOUN[10]",
+    "A2": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Lexeme/NOUN[10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": true,
+     "failure": "Applicable grammatical answers do not compose into a legal analysis"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#12",
+    "text": "zur",
+    "gold": "Collocation[4,12,14]",
+    "A2": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[4,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "stellt zur Verfügung"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#14",
+    "text": "Verfügung",
+    "gold": "Collocation[4,12,14]",
+    "A2": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    },
+    "B": {
+     "target": "Phraseme/Collocation[4,12,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "stellt zur Verfügung"
+    }
+   }
+  ]
+ },
+ "a1VsA2": {
+  "pairedClicks": 96,
+  "targetDiffers": 17,
+  "servedFlips": 10,
+  "A1ServedOnly": 1,
+  "A2ServedOnly": 9,
+  "pairedWithGold": 82,
+  "A1GoldOnly": 3,
+  "A2GoldOnly": 6,
+  "pairedLatency": {
+   "n": 86,
+   "A1MinusRightMs_p10": -120,
+   "p50": 0,
+   "p90": 72
+  },
+  "differingClicks": [
+   {
+    "click": "capfix-naehen#8",
+    "text": "den",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8,10,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "A2": {
+     "target": "Lexeme/NOUN[8,12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": null,
+     "lemma": "Faden"
+    }
+   },
+   {
+    "click": "capfix-naehen#10",
+    "text": "roten",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8,10,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "A2": {
+     "target": "Lexeme/ADJ[8,10,12]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": null,
+     "failure": "members 8,12 already belong to capfix-naehen#8,capfix-naehen#8"
+    }
+   },
+   {
+    "click": "capfix-naehen#12",
+    "text": "Faden",
+    "gold": null,
+    "A1": {
+     "target": "Lexeme/NOUN[8,10,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Faden"
+    },
+    "A2": {
+     "target": "Lexeme/NOUN[8,12]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": null,
+     "lemma": "Faden"
+    }
+   },
+   {
+    "click": "sentence-de-kakao#2",
+    "text": "heiße",
+    "gold": "ADJ[2]",
+    "A1": {
+     "target": "Lexeme/ADJ[2,4]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 4 already belong to kakao#0"
+    },
+    "A2": {
+     "target": "Lexeme/ADJ[0,2,4]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 0,4 already belong to kakao#0,kakao#0"
+    }
+   },
+   {
+    "click": "sentence-de-aufstehen#10",
+    "text": "um",
+    "gold": "ADP[10]",
+    "A1": {
+     "target": "Lexeme/SCONJ[10]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "A2": {
+     "target": "Lexeme/ADP[10]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "um"
+    }
+   },
+   {
+    "click": "sentence-de-aufstehen#12",
+    "text": "sechs",
+    "gold": "NUM[12]",
+    "A1": {
+     "target": "Lexeme/NUM[12,14]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": false,
+     "failure": "members 14 already belong to aufstehen#4"
+    },
+    "A2": {
+     "target": "Lexeme/NUM[12]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "sechs"
+    }
+   },
+   {
+    "click": "sentence-de-relativ#0",
+    "text": "Die",
+    "gold": "NOUN[0,2]",
+    "A1": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "Frau"
+    },
+    "A2": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "die"
+    }
+   },
+   {
+    "click": "sentence-de-relativ#2",
+    "text": "Frau",
+    "gold": "NOUN[0,2]",
+    "A1": {
+     "target": "Lexeme/NOUN[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "Frau"
+    },
+    "A2": {
+     "target": "Lexeme/DET[0,2]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "die"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#2",
+    "text": "hat",
+    "gold": "VERB[2,4,8,14]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "sich erinnern"
+    },
+    "A2": {
+     "target": "Lexeme/VERB[2,4,8,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "sich erinnern"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#4",
+    "text": "sich",
+    "gold": "VERB[2,4,8,14]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "sich erinnern"
+    },
+    "A2": {
+     "target": "Lexeme/VERB[2,4,8,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "sich erinnern"
+    }
+   },
+   {
+    "click": "sentence-de-erinnert#14",
+    "text": "erinnert",
+    "gold": "VERB[2,4,8,14]",
+    "A1": {
+     "target": "Lexeme/VERB[2,4,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "sich erinnern"
+    },
+    "A2": {
+     "target": "Lexeme/VERB[2,4,8,14]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": true,
+     "lemma": "sich erinnern"
+    }
+   },
+   {
+    "click": "sentence-de-genitiv#6",
+    "text": "Nachbarn",
+    "gold": "NOUN[4,6]",
+    "A1": {
+     "target": "Lexeme/NOUN[4,6]",
+     "status": "Fresh",
+     "outcome": "MembershipConflict",
+     "gold": true,
+     "failure": "members 4 already belong to genitiv#4"
+    },
+    "A2": {
+     "target": "Lexeme/NOUN[6]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "Nachbar"
+    }
+   },
+   {
+    "click": "sentence-de-museum#14",
+    "text": "um",
+    "gold": "ADP[14]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "A2": {
+     "target": "Lexeme/ADP[14,16]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "um … zehn"
+    }
+   },
+   {
+    "click": "sentence-de-typo#2",
+    "text": "habe",
+    "gold": "VERB[2]",
+    "A1": {
+     "target": "none",
+     "status": "Fresh",
+     "outcome": "classify:Unresolved",
+     "gold": false,
+     "failure": "Assembled target is not defensible"
+    },
+    "A2": {
+     "target": "Lexeme/VERB[2]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": true,
+     "lemma": "habe"
+    }
+   },
+   {
+    "click": "sentence-de-museum#16",
+    "text": "zehn",
+    "gold": "NUM[16]",
+    "A1": {
+     "target": "Lexeme/NUM[14,16]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "A2": {
+     "target": "Lexeme/ADP[14,16]",
+     "status": "Available",
+     "outcome": "Available",
+     "gold": false,
+     "lemma": "um … zehn"
+    }
+   },
+   {
+    "click": "sentence-de-klitik#0",
+    "text": "Wie",
+    "gold": "DiscourseFormula[0,2,4,6]",
+    "A1": {
+     "target": "Phraseme/DiscourseFormula[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "A2": {
+     "target": "Lexeme/PRON[0]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Authored identity remains uncertain"
+    }
+   },
+   {
+    "click": "sentence-de-verfuegung#4",
+    "text": "stellt",
+    "gold": "Collocation[4,12,14]",
+    "A1": {
+     "target": "Phraseme/Collocation[4,6,10,12,14]",
+     "status": "Fresh",
+     "outcome": "grammar:Unresolved",
+     "gold": false,
+     "failure": "Unresolved applicable question support"
+    },
+    "A2": {
+     "target": "Phraseme/Collocation[4,10,12,14]",
+     "status": "Fresh",
+     "outcome": "Resolved",
+     "gold": false,
+     "lemma": "jemandem etwas zur Verfügung stellen"
+    }
+   }
+  ]
+ },
+ "a1VsBOnA2Covered": {
+  "clicksCovered": 96,
+  "targetDiffersOnCovered": 36
+ }
+}

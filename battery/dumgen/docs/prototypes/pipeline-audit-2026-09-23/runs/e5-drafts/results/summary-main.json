@@ -1,0 +1,3179 @@
+{
+ "label": "main",
+ "rawFile": "results/raw-main.json",
+ "cases": 48,
+ "reps": [
+  0,
+  1
+ ],
+ "arms": [
+  "A",
+  "B",
+  "C",
+  "D"
+ ],
+ "unitsRun": 96,
+ "stoppedByBudget": false,
+ "spendUsd": 0.12681,
+ "latency": {
+  "A": {
+   "wallMs": {
+    "n": 96,
+    "p50": 1306,
+    "p90": 1934,
+    "mean": 1630,
+    "max": 17814
+   },
+   "wallMsByRep": {
+    "0": {
+     "n": 48,
+     "p50": 1386,
+     "p90": 2295,
+     "mean": 1853,
+     "max": 17814
+    },
+    "1": {
+     "n": 48,
+     "p50": 1203,
+     "p90": 1934,
+     "mean": 1408,
+     "max": 3829
+    }
+   },
+   "calls": {
+    "definition": {
+     "n": 96,
+     "p50": 1096,
+     "p90": 1592,
+     "mean": 1189,
+     "max": 3827
+    },
+    "transcription": {
+     "n": 96,
+     "p50": 944,
+     "p90": 1300,
+     "mean": 1188,
+     "max": 17813
+    },
+    "translations.en": {
+     "n": 96,
+     "p50": 1168,
+     "p90": 1598,
+     "mean": 1255,
+     "max": 3797
+    },
+    "translations.ru": {
+     "n": 96,
+     "p50": 951,
+     "p90": 1228,
+     "mean": 984,
+     "max": 1692
+    }
+   },
+   "providerMs": {
+    "definition": {
+     "n": 96,
+     "p50": 852,
+     "p90": 1280,
+     "mean": 936,
+     "max": 3492
+    },
+    "transcription": {
+     "n": 96,
+     "p50": 701,
+     "p90": 1016,
+     "mean": 936,
+     "max": 17099
+    },
+    "translations.en": {
+     "n": 96,
+     "p50": 936,
+     "p90": 1347,
+     "mean": 1003,
+     "max": 3417
+    },
+    "translations.ru": {
+     "n": 96,
+     "p50": 711,
+     "p90": 924,
+     "mean": 734,
+     "max": 1397
+    }
+   },
+   "outputTokensPerDraft": {
+    "n": 96,
+    "p50": 77,
+    "p90": 95,
+    "mean": 79,
+    "max": 116
+   },
+   "inputTokensPerDraft": {
+    "n": 96,
+    "p50": 934,
+    "p90": 959,
+    "mean": 936,
+    "max": 1014
+   },
+   "outputTokensPerCall": {
+    "definition": 23.8,
+    "transcription": 22.7,
+    "translations.ru": 16.7,
+    "translations.en": 15.4
+   },
+   "costPerDraftUsd": 0.000563,
+   "callsPerDraft": 4.0,
+   "failedCalls": 1,
+   "draftsWithLeafFailures": 0,
+   "leafFailures": [],
+   "wallMsByPosition": {
+    "0": {
+     "n": 28,
+     "p50": 1304,
+     "p90": 2295,
+     "mean": 1516,
+     "max": 3801
+    },
+    "1": {
+     "n": 28,
+     "p50": 1256,
+     "p90": 2701,
+     "mean": 2030,
+     "max": 17814
+    },
+    "2": {
+     "n": 28,
+     "p50": 1300,
+     "p90": 1934,
+     "mean": 1444,
+     "max": 2482
+    },
+    "3": {
+     "n": 12,
+     "p50": 1344,
+     "p90": 1849,
+     "mean": 1400,
+     "max": 1873
+    }
+   },
+   "withoutTranscriptionMs": {
+    "n": 96,
+    "p50": 1256,
+    "p90": 1902,
+    "mean": 1425,
+    "max": 3829
+   },
+   "slowestLeaf": {
+    "definition": 27,
+    "transcription": 15,
+    "translations.en": 43,
+    "translations.ru": 11
+   },
+   "overheadMs": {
+    "n": 96,
+    "p50": 4,
+    "p90": 5,
+    "mean": 4,
+    "max": 7
+   }
+  },
+  "B": {
+   "wallMs": {
+    "n": 96,
+    "p50": 1426,
+    "p90": 1807,
+    "mean": 1477,
+    "max": 3205
+   },
+   "wallMsByRep": {
+    "0": {
+     "n": 48,
+     "p50": 1426,
+     "p90": 1782,
+     "mean": 1456,
+     "max": 2151
+    },
+    "1": {
+     "n": 48,
+     "p50": 1423,
+     "p90": 1922,
+     "mean": 1498,
+     "max": 3205
+    }
+   },
+   "calls": {
+    "merged": {
+     "n": 96,
+     "p50": 1425,
+     "p90": 1806,
+     "mean": 1476,
+     "max": 3203
+    }
+   },
+   "providerMs": {
+    "merged": {
+     "n": 96,
+     "p50": 1188,
+     "p90": 1549,
+     "mean": 1233,
+     "max": 2907
+    }
+   },
+   "outputTokensPerDraft": {
+    "n": 96,
+    "p50": 48,
+    "p90": 60,
+    "mean": 50,
+    "max": 76
+   },
+   "inputTokensPerDraft": {
+    "n": 96,
+    "p50": 393,
+    "p90": 402,
+    "mean": 394,
+    "max": 418
+   },
+   "outputTokensPerCall": {
+    "merged": 50.1
+   },
+   "costPerDraftUsd": 0.000278,
+   "callsPerDraft": 1.0,
+   "failedCalls": 0,
+   "draftsWithLeafFailures": 0,
+   "leafFailures": [],
+   "wallMsByPosition": {
+    "0": {
+     "n": 28,
+     "p50": 1393,
+     "p90": 1807,
+     "mean": 1428,
+     "max": 2163
+    },
+    "1": {
+     "n": 28,
+     "p50": 1380,
+     "p90": 1816,
+     "mean": 1433,
+     "max": 2119
+    },
+    "2": {
+     "n": 28,
+     "p50": 1458,
+     "p90": 2151,
+     "mean": 1579,
+     "max": 3205
+    },
+    "3": {
+     "n": 12,
+     "p50": 1410,
+     "p90": 1782,
+     "mean": 1456,
+     "max": 1809
+    }
+   }
+  },
+  "C": {
+   "wallMs": {
+    "n": 96,
+    "p50": 1130,
+    "p90": 1814,
+    "mean": 1244,
+    "max": 3360
+   },
+   "wallMsByRep": {
+    "0": {
+     "n": 48,
+     "p50": 1220,
+     "p90": 2096,
+     "mean": 1374,
+     "max": 3360
+    },
+    "1": {
+     "n": 48,
+     "p50": 1037,
+     "p90": 1348,
+     "mean": 1114,
+     "max": 2248
+    }
+   },
+   "calls": {
+    "merged": {
+     "n": 96,
+     "p50": 1038,
+     "p90": 1439,
+     "mean": 1139,
+     "max": 3358
+    },
+    "transcription": {
+     "n": 96,
+     "p50": 964,
+     "p90": 1338,
+     "mean": 1055,
+     "max": 2092
+    }
+   },
+   "providerMs": {
+    "merged": {
+     "n": 96,
+     "p50": 807,
+     "p90": 1214,
+     "mean": 890,
+     "max": 3029
+    },
+    "transcription": {
+     "n": 96,
+     "p50": 740,
+     "p90": 1053,
+     "mean": 809,
+     "max": 1871
+    }
+   },
+   "outputTokensPerDraft": {
+    "n": 96,
+    "p50": 58,
+    "p90": 70,
+    "mean": 59,
+    "max": 89
+   },
+   "inputTokensPerDraft": {
+    "n": 96,
+    "p50": 465,
+    "p90": 478,
+    "mean": 467,
+    "max": 497
+   },
+   "outputTokensPerCall": {
+    "transcription": 22.7,
+    "merged": 36.8
+   },
+   "costPerDraftUsd": 0.000329,
+   "callsPerDraft": 2.0,
+   "failedCalls": 0,
+   "draftsWithLeafFailures": 0,
+   "leafFailures": [],
+   "wallMsByPosition": {
+    "0": {
+     "n": 28,
+     "p50": 1083,
+     "p90": 1989,
+     "mean": 1249,
+     "max": 2376
+    },
+    "1": {
+     "n": 28,
+     "p50": 1181,
+     "p90": 1793,
+     "mean": 1236,
+     "max": 2096
+    },
+    "2": {
+     "n": 28,
+     "p50": 1091,
+     "p90": 1715,
+     "mean": 1180,
+     "max": 2214
+    },
+    "3": {
+     "n": 12,
+     "p50": 1078,
+     "p90": 2131,
+     "mean": 1396,
+     "max": 3360
+    }
+   }
+  },
+  "D": {
+   "wallMs": {
+    "n": 48,
+    "p50": 1241,
+    "p90": 1608,
+    "mean": 1339,
+    "max": 4521
+   },
+   "wallMsByRep": {
+    "0": {
+     "n": 48,
+     "p50": 1241,
+     "p90": 1608,
+     "mean": 1339,
+     "max": 4521
+    },
+    "1": {
+     "n": 0
+    }
+   },
+   "calls": {
+    "merged": {
+     "n": 48,
+     "p50": 1239,
+     "p90": 1606,
+     "mean": 1337,
+     "max": 4520
+    }
+   },
+   "providerMs": {
+    "merged": {
+     "n": 48,
+     "p50": 989,
+     "p90": 1327,
+     "mean": 1051,
+     "max": 2231
+    }
+   },
+   "outputTokensPerDraft": {
+    "n": 48,
+    "p50": 47,
+    "p90": 61,
+    "mean": 49,
+    "max": 79
+   },
+   "inputTokensPerDraft": {
+    "n": 48,
+    "p50": 455,
+    "p90": 464,
+    "mean": 456,
+    "max": 480
+   },
+   "outputTokensPerCall": {
+    "merged": 49.3
+   },
+   "costPerDraftUsd": 0.000301,
+   "callsPerDraft": 1.0,
+   "failedCalls": 0,
+   "draftsWithLeafFailures": 0,
+   "leafFailures": [],
+   "wallMsByPosition": {
+    "0": {
+     "n": 12,
+     "p50": 1227,
+     "p90": 1608,
+     "mean": 1521,
+     "max": 4521
+    },
+    "1": {
+     "n": 12,
+     "p50": 1132,
+     "p90": 1347,
+     "mean": 1186,
+     "max": 1395
+    },
+    "2": {
+     "n": 12,
+     "p50": 1257,
+     "p90": 2049,
+     "mean": 1368,
+     "max": 2422
+    },
+    "3": {
+     "n": 12,
+     "p50": 1255,
+     "p90": 1531,
+     "mean": 1281,
+     "max": 1671
+    }
+   }
+  }
+ },
+ "paired": {
+  "B-A": {
+   "n": 96,
+   "medianDiffMs": 82,
+   "meanDiffMs": -153,
+   "BFasterShare": 0.417,
+   "p50DiffMs": 120,
+   "p50DiffCI95": [
+    41,
+    210
+   ],
+   "p90DiffMs": -127,
+   "p90DiffCI95": [
+    -689,
+    114
+   ],
+   "medianAbsDiffMs": 311
+  },
+  "C-A": {
+   "n": 96,
+   "medianDiffMs": -188,
+   "meanDiffMs": -387,
+   "CFasterShare": 0.729,
+   "p50DiffMs": -176,
+   "p50DiffCI95": [
+    -281,
+    -86
+   ],
+   "p90DiffMs": -120,
+   "p90DiffCI95": [
+    -891,
+    197
+   ],
+   "medianAbsDiffMs": 248
+  },
+  "D-A": {
+   "n": 48,
+   "medianDiffMs": -134,
+   "meanDiffMs": -514,
+   "DFasterShare": 0.729,
+   "p50DiffMs": -144,
+   "p50DiffCI95": [
+    -324,
+    -89
+   ],
+   "p90DiffMs": -688,
+   "p90DiffCI95": [
+    -1170,
+    520
+   ]
+  },
+  "C-B": {
+   "n": 96,
+   "medianDiffMs": -240,
+   "meanDiffMs": -233,
+   "CFasterShare": 0.781,
+   "p50DiffMs": -296,
+   "p50DiffCI95": [
+    -380,
+    -232
+   ],
+   "p90DiffMs": 7,
+   "p90DiffCI95": [
+    -433,
+    314
+   ]
+  },
+  "D-B": {
+   "n": 48,
+   "medianDiffMs": -219,
+   "meanDiffMs": -117,
+   "DFasterShare": 0.792,
+   "p50DiffMs": -185,
+   "p50DiffCI95": [
+    -255,
+    -128
+   ],
+   "p90DiffMs": -174,
+   "p90DiffCI95": [
+    -463,
+    707
+   ]
+  },
+  "A(rep1)-A(rep0)": {
+   "n": 48,
+   "medianDiffMs": -160,
+   "medianAbsDiffMs": 346,
+   "p50DiffMs": -183,
+   "p90DiffMs": -361
+  }
+ },
+ "counterfactual": {
+  "openClassNewReadings": {
+   "arm A": {
+    "clickPathMs": {
+     "n": 96,
+     "p50": 1933,
+     "p90": 3533,
+     "mean": 2421,
+     "max": 18401
+    },
+    "draftIsLongPole": "53/96",
+    "meanExcessMs": 429,
+    "meanExcessWhenLongPoleMs": 776
+   },
+   "arm B": {
+    "clickPathMs": {
+     "n": 96,
+     "p50": 1902,
+     "p90": 3142,
+     "mean": 2242,
+     "max": 4884
+    },
+    "draftIsLongPole": "63/96",
+    "meanExcessMs": 250,
+    "meanExcessWhenLongPoleMs": 380
+   },
+   "arm C": {
+    "clickPathMs": {
+     "n": 96,
+     "p50": 1819,
+     "p90": 3054,
+     "mean": 2132,
+     "max": 3926
+    },
+    "draftIsLongPole": "33/96",
+    "meanExcessMs": 140,
+    "meanExcessWhenLongPoleMs": 407
+   },
+   "arm D": {
+    "clickPathMs": {
+     "n": 48,
+     "p50": 1767,
+     "p90": 3054,
+     "mean": 2157,
+     "max": 4869
+    },
+    "draftIsLongPole": "20/48",
+    "meanExcessMs": 165,
+    "meanExcessWhenLongPoleMs": 396
+   },
+   "arm A minus transcription": {
+    "clickPathMs": {
+     "n": 96,
+     "p50": 1870,
+     "p90": 3533,
+     "mean": 2245,
+     "max": 4250
+    },
+    "draftIsLongPole": "48/96",
+    "meanExcessMs": 253,
+    "meanExcessWhenLongPoleMs": 506
+   },
+   "detached (no join)": {
+    "clickPathMs": {
+     "n": 48,
+     "p50": 1705,
+     "p90": 3009,
+     "mean": 1992,
+     "max": 3926
+    },
+    "draftIsLongPole": "0",
+    "meanExcessMs": 0
+   },
+   "recorded baseline draft": {
+    "clickPathMs": {
+     "n": 48,
+     "p50": 2029,
+     "p90": 3500,
+     "mean": 2345,
+     "max": 4054
+    },
+    "draftIsLongPole": "40/48",
+    "meanExcessMs": 353
+   }
+  },
+  "pairedClickPathVsA": {
+   "B - A": {
+    "n": 96,
+    "medianDiffMs": 0,
+    "meanDiffMs": -179,
+    "meanDiffExcludingA17sStallMs": -10,
+    "shareFaster": 0.323,
+    "shareSlower": 0.448,
+    "p50": [
+     1902,
+     1933
+    ],
+    "p50DiffCI95": [
+     -269,
+     160
+    ],
+    "p90": [
+     3142,
+     3533
+    ],
+    "p90DiffCI95": [
+     -839,
+     135
+    ]
+   },
+   "C - A": {
+    "n": 96,
+    "medianDiffMs": 0,
+    "meanDiffMs": -289,
+    "meanDiffExcludingA17sStallMs": -118,
+    "shareFaster": 0.479,
+    "shareSlower": 0.177,
+    "p50": [
+     1819,
+     1933
+    ],
+    "p50DiffCI95": [
+     -349,
+     113
+    ],
+    "p90": [
+     3054,
+     3533
+    ],
+    "p90DiffCI95": [
+     -1034,
+     0
+    ]
+   },
+   "D - A": {
+    "n": 48,
+    "medianDiffMs": -19,
+    "meanDiffMs": -463,
+    "meanDiffExcludingA17sStallMs": -117,
+    "shareFaster": 0.5,
+    "shareSlower": 0.125,
+    "p50": [
+     1767,
+     2125
+    ],
+    "p50DiffCI95": [
+     -470,
+     -7
+    ],
+    "p90": [
+     3054,
+     3623
+    ],
+    "p90DiffCI95": [
+     -1349,
+     428
+    ]
+   },
+   "A minus transcription - A": {
+    "n": 96,
+    "medianDiffMs": 0,
+    "meanDiffMs": -176,
+    "meanDiffExcludingA17sStallMs": -22,
+    "shareFaster": 0.094,
+    "shareSlower": 0.0,
+    "p50": [
+     1870,
+     1933
+    ],
+    "p50DiffCI95": [
+     -206,
+     0
+    ],
+    "p90": [
+     3533,
+     3533
+    ],
+    "p90DiffCI95": [
+     -295,
+     0
+    ]
+   },
+   "detached - A": {
+    "n": 96,
+    "medianDiffMs": -59,
+    "meanDiffMs": -429,
+    "meanDiffExcludingA17sStallMs": -255,
+    "shareFaster": 0.552,
+    "shareSlower": 0.0,
+    "p50": [
+     1705,
+     1933
+    ],
+    "p50DiffCI95": [
+     -480,
+     -78
+    ],
+    "p90": [
+     3009,
+     3533
+    ],
+    "p90DiffCI95": [
+     -1210,
+     0
+    ]
+   }
+  },
+  "recordedDraftWallMs": {
+   "n": 48,
+   "p50": 1478,
+   "p90": 2234,
+   "mean": 1615,
+   "max": 3440
+  },
+  "recordedEmojiFromForkMs": {
+   "n": 48,
+   "p50": 1270,
+   "p90": 1657,
+   "mean": 1348,
+   "max": 3441
+  },
+  "all78Clicks": {
+   "recorded": {
+    "p50": 1860,
+    "p90": 3033,
+    "mean": 1843
+   },
+   "arm A rep0": {
+    "p50": 1742,
+    "p90": 3054,
+    "mean": 2012
+   },
+   "arm A rep1": {
+    "p50": 1687,
+    "p90": 3054,
+    "mean": 1767
+   },
+   "arm B rep0": {
+    "p50": 1814,
+    "p90": 3009,
+    "mean": 1764
+   },
+   "arm B rep1": {
+    "p50": 1819,
+    "p90": 2941,
+    "mean": 1794
+   },
+   "arm C rep0": {
+    "p50": 1733,
+    "p90": 2880,
+    "mean": 1766
+   },
+   "arm C rep1": {
+    "p50": 1669,
+    "p90": 2737,
+    "mean": 1657
+   },
+   "arm D rep0": {
+    "p50": 1690,
+    "p90": 2807,
+    "mean": 1727
+   },
+   "arm A minus transcription rep0": {
+    "p50": 1733,
+    "p90": 3054,
+    "mean": 1814
+   },
+   "arm A minus transcription rep1": {
+    "p50": 1676,
+    "p90": 3009,
+    "mean": 1748
+   },
+   "detached (open-class New only)": {
+    "p50": 1631,
+    "p90": 2737,
+    "mean": 1626
+   },
+   "detached (all New Readings, audit counterfactual)": {
+    "p50": 1613,
+    "p90": 2706,
+    "mean": 1598
+   }
+  }
+ },
+ "hedgeSimulation": {
+  "A": {
+   "hedgeAt1500": {
+    "draftWallMs": {
+     "n": 96,
+     "p50": 1306,
+     "p90": 1934,
+     "mean": 1449,
+     "max": 3001
+    },
+    "extraCallShare": 0.096
+   },
+   "hedgeAt2000": {
+    "draftWallMs": {
+     "n": 96,
+     "p50": 1306,
+     "p90": 1934,
+     "mean": 1467,
+     "max": 3501
+    },
+    "extraCallShare": 0.023
+   },
+   "hedgeAt2500": {
+    "draftWallMs": {
+     "n": 96,
+     "p50": 1306,
+     "p90": 1934,
+     "mean": 1477,
+     "max": 3801
+    },
+    "extraCallShare": 0.016
+   }
+  },
+  "B": {
+   "hedgeAt1500": {
+    "draftWallMs": {
+     "n": 96,
+     "p50": 1426,
+     "p90": 1807,
+     "mean": 1474,
+     "max": 2957
+    },
+    "extraCallShare": 0.365
+   },
+   "hedgeAt2000": {
+    "draftWallMs": {
+     "n": 96,
+     "p50": 1426,
+     "p90": 1807,
+     "mean": 1477,
+     "max": 3205
+    },
+    "extraCallShare": 0.052
+   },
+   "hedgeAt2500": {
+    "draftWallMs": {
+     "n": 96,
+     "p50": 1426,
+     "p90": 1807,
+     "mean": 1477,
+     "max": 3205
+    },
+    "extraCallShare": 0.021
+   }
+  }
+ },
+ "slowCalls": {
+  ">2000ms": 23,
+  ">2500ms": 10,
+  ">3000ms": 7,
+  ">4000ms": 2,
+  ">6000ms": 1,
+  "calls": 720,
+  "maxMs": 17813
+ },
+ "quality": {
+  "agreement": {
+   "A(rep0) vs A(waterfall run) [noise floor]": {
+    "definition": {
+     "n": 48,
+     "exact": 0.354,
+     "normalized": 0.354,
+     "meanContentJaccard": 0.583,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.894,
+     "normalized": 0.915,
+     "missingInX": 0
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.979,
+     "normalized": 0.979,
+     "lemmaMatch": 0.979,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.896,
+     "normalized": 0.896,
+     "lemmaMatch": 0.917,
+     "missingInX": 0
+    }
+   },
+   "A(rep1) vs A(rep0) [noise floor]": {
+    "definition": {
+     "n": 48,
+     "exact": 0.438,
+     "normalized": 0.438,
+     "meanContentJaccard": 0.674,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.851,
+     "normalized": 0.894,
+     "missingInX": 0
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.938,
+     "normalized": 0.938,
+     "lemmaMatch": 0.938,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.896,
+     "normalized": 0.896,
+     "lemmaMatch": 0.917,
+     "missingInX": 1
+    }
+   },
+   "A(rep1) vs A(waterfall run) [noise floor]": {
+    "definition": {
+     "n": 48,
+     "exact": 0.333,
+     "normalized": 0.333,
+     "meanContentJaccard": 0.59,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.787,
+     "normalized": 0.851,
+     "missingInX": 0
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.958,
+     "normalized": 0.958,
+     "lemmaMatch": 0.958,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.833,
+     "normalized": 0.833,
+     "lemmaMatch": 0.875,
+     "missingInX": 1
+    }
+   },
+   "B(rep0) vs A(rep0)": {
+    "definition": {
+     "n": 48,
+     "exact": 0.229,
+     "normalized": 0.229,
+     "meanContentJaccard": 0.553,
+     "missingInX": 1
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.872,
+     "normalized": 0.936,
+     "missingInX": 0
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.729,
+     "normalized": 0.729,
+     "lemmaMatch": 0.833,
+     "missingInX": 1
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.667,
+     "normalized": 0.667,
+     "lemmaMatch": 0.833,
+     "missingInX": 1
+    }
+   },
+   "B(rep1) vs A(rep1)": {
+    "definition": {
+     "n": 48,
+     "exact": 0.188,
+     "normalized": 0.188,
+     "meanContentJaccard": 0.525,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 48,
+     "exact": 0.792,
+     "normalized": 0.875,
+     "missingInX": 1
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.729,
+     "normalized": 0.75,
+     "lemmaMatch": 0.854,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 47,
+     "exact": 0.745,
+     "normalized": 0.745,
+     "lemmaMatch": 0.872,
+     "missingInX": 0
+    }
+   },
+   "B(rep1) vs B(rep0) [self-consistency]": {
+    "definition": {
+     "n": 47,
+     "exact": 0.404,
+     "normalized": 0.404,
+     "meanContentJaccard": 0.635,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.894,
+     "normalized": 0.957,
+     "missingInX": 0
+    },
+    "tr.en": {
+     "n": 47,
+     "exact": 0.936,
+     "normalized": 0.957,
+     "lemmaMatch": 0.979,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 47,
+     "exact": 0.915,
+     "normalized": 0.936,
+     "lemmaMatch": 0.957,
+     "missingInX": 0
+    }
+   },
+   "C(rep0) vs A(rep0)": {
+    "definition": {
+     "n": 48,
+     "exact": 0.188,
+     "normalized": 0.188,
+     "meanContentJaccard": 0.541,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.851,
+     "normalized": 0.915,
+     "missingInX": 0
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.75,
+     "normalized": 0.771,
+     "lemmaMatch": 0.896,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.708,
+     "normalized": 0.708,
+     "lemmaMatch": 0.854,
+     "missingInX": 0
+    }
+   },
+   "C(rep1) vs A(rep1)": {
+    "definition": {
+     "n": 48,
+     "exact": 0.146,
+     "normalized": 0.146,
+     "meanContentJaccard": 0.489,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 48,
+     "exact": 0.75,
+     "normalized": 0.833,
+     "missingInX": 1
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.729,
+     "normalized": 0.75,
+     "lemmaMatch": 0.875,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 47,
+     "exact": 0.702,
+     "normalized": 0.702,
+     "lemmaMatch": 0.83,
+     "missingInX": 0
+    }
+   },
+   "C(rep1) vs C(rep0) [self-consistency]": {
+    "definition": {
+     "n": 48,
+     "exact": 0.354,
+     "normalized": 0.375,
+     "meanContentJaccard": 0.644,
+     "missingInX": 0
+    },
+    "transcription": {
+     "n": 48,
+     "exact": 0.792,
+     "normalized": 0.896,
+     "missingInX": 1
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.958,
+     "normalized": 0.958,
+     "lemmaMatch": 0.958,
+     "missingInX": 0
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.958,
+     "normalized": 0.958,
+     "lemmaMatch": 0.958,
+     "missingInX": 0
+    }
+   },
+   "D(rep0) vs A(rep0)": {
+    "definition": {
+     "n": 48,
+     "exact": 0.25,
+     "normalized": 0.25,
+     "meanContentJaccard": 0.557,
+     "missingInX": 1
+    },
+    "transcription": {
+     "n": 47,
+     "exact": 0.894,
+     "normalized": 0.936,
+     "missingInX": 1
+    },
+    "tr.en": {
+     "n": 48,
+     "exact": 0.667,
+     "normalized": 0.667,
+     "lemmaMatch": 0.812,
+     "missingInX": 1
+    },
+    "tr.ru": {
+     "n": 48,
+     "exact": 0.625,
+     "normalized": 0.625,
+     "lemmaMatch": 0.792,
+     "missingInX": 1
+    }
+   }
+  },
+  "citationForm": {
+   "A.en": {
+    "translations": 96,
+    "nonCitation": 22,
+    "nonCitationRate": 0.229,
+    "checkedPOS": 72,
+    "inflectedTargets": 62,
+    "nonCitationOnInflectedTargets": 20,
+    "rateOnInflectedTargets": 0.323
+   },
+   "A.ru": {
+    "translations": 95,
+    "nonCitation": 20,
+    "nonCitationRate": 0.211,
+    "checkedPOS": 75,
+    "inflectedTargets": 61,
+    "nonCitationOnInflectedTargets": 14,
+    "rateOnInflectedTargets": 0.23
+   },
+   "B.en": {
+    "translations": 95,
+    "nonCitation": 5,
+    "nonCitationRate": 0.053,
+    "checkedPOS": 72,
+    "inflectedTargets": 62,
+    "nonCitationOnInflectedTargets": 5,
+    "rateOnInflectedTargets": 0.081
+   },
+   "B.ru": {
+    "translations": 95,
+    "nonCitation": 1,
+    "nonCitationRate": 0.011,
+    "checkedPOS": 76,
+    "inflectedTargets": 62,
+    "nonCitationOnInflectedTargets": 1,
+    "rateOnInflectedTargets": 0.016
+   },
+   "C.en": {
+    "translations": 96,
+    "nonCitation": 8,
+    "nonCitationRate": 0.083,
+    "checkedPOS": 72,
+    "inflectedTargets": 62,
+    "nonCitationOnInflectedTargets": 6,
+    "rateOnInflectedTargets": 0.097
+   },
+   "C.ru": {
+    "translations": 96,
+    "nonCitation": 5,
+    "nonCitationRate": 0.052,
+    "checkedPOS": 76,
+    "inflectedTargets": 62,
+    "nonCitationOnInflectedTargets": 3,
+    "rateOnInflectedTargets": 0.048
+   },
+   "D.en": {
+    "translations": 47,
+    "nonCitation": 0,
+    "nonCitationRate": 0.0,
+    "checkedPOS": 35,
+    "inflectedTargets": 31,
+    "nonCitationOnInflectedTargets": 0,
+    "rateOnInflectedTargets": 0.0
+   },
+   "D.ru": {
+    "translations": 47,
+    "nonCitation": 0,
+    "nonCitationRate": 0.0,
+    "checkedPOS": 37,
+    "inflectedTargets": 31,
+    "nonCitationOnInflectedTargets": 0,
+    "rateOnInflectedTargets": 0.0
+   }
+  },
+  "citationFlags": {
+   "A.en": [
+    "rep0 aufstehen#4 steht auf (VERB, clicked 'steht') -> 'gets up': inflected verb 'gets'",
+    "rep0 ausweg#2 geben (VERB, clicked 'gibt') -> 'there is': inflected verb 'is'",
+    "rep0 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'lost the thread': inflected verb 'lost'",
+    "rep0 fremd#4 sein (VERB, clicked 'war') -> 'was': inflected verb 'was'",
+    "rep0 genitiv#8 ist (VERB, clicked 'ist') -> 'is': inflected verb 'is'",
+    "rep0 kakao#6 schmeckt (VERB, clicked 'schmeckt') -> 'tastes': inflected verb 'tastes'",
+    "rep0 museum#4 öffnen (VERB, clicked 'öffnet') -> 'opens': inflected verb 'opens'",
+    "rep0 passiv#8 liefern (VERB, clicked 'geliefert') -> 'be delivered': inflected verb 'delivered'",
+    "rep0 relativ#9 warten (VERB, clicked 'wartet') -> 'waits': inflected verb 'waits'",
+    "rep0 usw#2 kaufen (VERB, clicked 'kauft') -> 'buys': inflected verb 'buys'",
+    "rep0 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'students': plural noun 'students'",
+    "rep1 aufstehen#4 steht auf (VERB, clicked 'steht') -> 'gets up': inflected verb 'gets'",
+    "rep1 ausweg#2 geben (VERB, clicked 'gibt') -> 'there is': inflected verb 'is'",
+    "rep1 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'has lost the thread': inflected verb 'has'",
+    "rep1 fremd#4 sein (VERB, clicked 'war') -> 'was': inflected verb 'was'",
+    "rep1 genitiv#8 ist (VERB, clicked 'ist') -> 'is': inflected verb 'is'",
+    "rep1 kakao#6 schmeckt (VERB, clicked 'schmeckt') -> 'tastes': inflected verb 'tastes'",
+    "rep1 museum#4 öffnen (VERB, clicked 'öffnet') -> 'opens': inflected verb 'opens'",
+    "rep1 passiv#8 liefern (VERB, clicked 'geliefert') -> 'be delivered': inflected verb 'delivered'",
+    "rep1 relativ#9 warten (VERB, clicked 'wartet') -> 'waits': inflected verb 'waits'",
+    "rep1 usw#2 kaufen (VERB, clicked 'kauft') -> 'buys': inflected verb 'buys'",
+    "rep1 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'students': plural noun 'students'"
+   ],
+   "A.ru": [
+    "rep0 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'потерял нить разговора': finite/participle 'потерял' (VERB,perf,tran masc,sing,past,indc)",
+    "rep0 fremd#4 sein (VERB, clicked 'war') -> 'было': finite/participle 'было' (VERB,impf,intr neut,sing,past,indc)",
+    "rep0 genitiv#6 Nachbar (NOUN, clicked 'Nachbarn') -> 'соседа': oblique/plural noun 'соседа' (NOUN,anim,masc sing,gent)",
+    "rep0 kakao#6 schmeckt (VERB, clicked 'schmeckt') -> 'имеет вкус': finite/participle 'имеет' (VERB,impf,tran sing,3per,pres,indc)",
+    "rep0 kakao#8 gut (ADJ, clicked 'gut') -> 'вкусно': adverb for ADJ 'вкусно'",
+    "rep0 museum#4 öffnen (VERB, clicked 'öffnet') -> 'открывается': finite/participle 'открывается' (VERB,impf,intr sing,3per,pres,indc)",
+    "rep0 typo#8 Zeit (NOUN, clicked 'Zeit') -> 'времени': oblique/plural noun 'времени' (NOUN,inan,neut sing,gent)",
+    "rep0 usw#2 kaufen (VERB, clicked 'kauft') -> 'покупает': finite/participle 'покупает' (VERB,impf,tran sing,3per,pres,indc)",
+    "rep0 verfuegung#4 stellt zur Verfügung (Phraseme/Collocation, clicked 'stellt') -> 'предоставляет': finite/participle 'предоставляет' (VERB,impf,tran sing,3per,pres,indc)",
+    "rep0 usw#15 Markt (NOUN, clicked 'Markt') -> 'рынке': oblique/plural noun 'рынке' (NOUN,inan,masc sing,loct)",
+    "rep0 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'ученикам': oblique/plural noun 'ученикам' (NOUN,anim,masc plur,datv)",
+    "rep1 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'потерял нить разговора': finite/participle 'потерял' (VERB,perf,tran masc,sing,past,indc)",
+    "rep1 fremd#4 sein (VERB, clicked 'war') -> 'было': finite/participle 'было' (VERB,impf,intr neut,sing,past,indc)",
+    "rep1 genitiv#6 Nachbar (NOUN, clicked 'Nachbarn') -> 'соседа': oblique/plural noun 'соседа' (NOUN,anim,masc sing,gent)",
+    "rep1 kakao#8 gut (ADJ, clicked 'gut') -> 'хорошо': adverb for ADJ 'хорошо'",
+    "rep1 museum#4 öffnen (VERB, clicked 'öffnet') -> 'открывается': finite/participle 'открывается' (VERB,impf,intr sing,3per,pres,indc)",
+    "rep1 typo#8 Zeit (NOUN, clicked 'Zeit') -> 'времени': oblique/plural noun 'времени' (NOUN,inan,neut sing,gent)",
+    "rep1 usw#2 kaufen (VERB, clicked 'kauft') -> 'покупает': finite/participle 'покупает' (VERB,impf,tran sing,3per,pres,indc)",
+    "rep1 verfuegung#4 stellt zur Verfügung (Phraseme/Collocation, clicked 'stellt') -> 'предоставляет': finite/participle 'предоставляет' (VERB,impf,tran sing,3per,pres,indc)",
+    "rep1 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'ученикам': oblique/plural noun 'ученикам' (NOUN,anim,masc plur,datv)"
+   ],
+   "B.en": [
+    "rep0 aufstehen#4 steht auf (VERB, clicked 'steht') -> 'gets up': inflected verb 'gets'",
+    "rep0 ausweg#2 geben (VERB, clicked 'gibt') -> 'there is': inflected verb 'is'",
+    "rep0 genitiv#8 ist (VERB, clicked 'ist') -> 'is': inflected verb 'is'",
+    "rep1 ausweg#2 geben (VERB, clicked 'gibt') -> 'there is': inflected verb 'is'",
+    "rep1 genitiv#8 ist (VERB, clicked 'ist') -> 'is': inflected verb 'is'"
+   ],
+   "B.ru": [
+    "rep0 aufstehen#4 steht auf (VERB, clicked 'steht') -> 'встаёт': finite/participle 'встаёт' (VERB,impf,intr sing,3per,pres,indc)"
+   ],
+   "C.en": [
+    "rep0 ausweg#2 geben (VERB, clicked 'gibt') -> 'there is': inflected verb 'is'",
+    "rep0 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'has lost the thread': inflected verb 'has'",
+    "rep0 passiv#8 liefern (VERB, clicked 'geliefert') -> 'be delivered': inflected verb 'delivered'",
+    "rep0 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'students': plural noun 'students'",
+    "rep1 ausweg#2 geben (VERB, clicked 'gibt') -> 'there is': inflected verb 'is'",
+    "rep1 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'has lost the thread': inflected verb 'has'",
+    "rep1 passiv#8 liefern (VERB, clicked 'geliefert') -> 'be delivered': inflected verb 'delivered'",
+    "rep1 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'students': plural noun 'students'"
+   ],
+   "C.ru": [
+    "rep0 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'потерял нить': finite/participle 'потерял' (VERB,perf,tran masc,sing,past,indc)",
+    "rep0 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'ученикам': oblique/plural noun 'ученикам' (NOUN,anim,masc plur,datv)",
+    "rep1 ausweg#2 geben (VERB, clicked 'gibt') -> 'имеется': finite/participle 'имеется' (VERB,impf,intr sing,3per,pres,indc)",
+    "rep1 faden#2 hat den Faden verloren (Phraseme/Idiom, clicked 'hat') -> 'потерял нить': finite/participle 'потерял' (VERB,perf,tran masc,sing,past,indc)",
+    "rep1 verfuegung#8 Schüler (NOUN, clicked 'Schülern') -> 'ученикам': oblique/plural noun 'ученикам' (NOUN,anim,masc plur,datv)"
+   ]
+  },
+  "inflectedTargetCases": 31,
+  "sideBySide": [
+   {
+    "clickId": "usw#2",
+    "lemma": "kaufen",
+    "kind": "VERB",
+    "markedContext": "Anna <TARGET>kauft</TARGET> Obst, Gemüse usw. auf dem Markt.",
+    "A": {
+     "transcription": "ˈkaʊ̯fn̩",
+     "definition": "gegen Bezahlung erwerben",
+     "tr.en": "buys",
+     "tr.ru": "покупает"
+    },
+    "B": {
+     "definition": "etwas gegen Bezahlung erwerben",
+     "transcription": "ˈkaʊ̯fn̩",
+     "tr.en": "buy",
+     "tr.ru": "покупать"
+    },
+    "C": {
+     "definition": "etwas gegen Bezahlung erwerben",
+     "tr.en": "buy",
+     "tr.ru": "покупать",
+     "transcription": "ˈkaʊ̯fən"
+    },
+    "D": {
+     "definition": "etwas gegen Bezahlung erwerben",
+     "transcription": "ˈkaʊ̯fn̩",
+     "tr.en": "buy",
+     "tr.ru": "покупать"
+    },
+    "A_rep1": {
+     "transcription": "ˈkaʊ̯fn̩",
+     "definition": "gegen Bezahlung erwerben",
+     "tr.en": "buys",
+     "tr.ru": "покупает"
+    },
+    "diffs": 10
+   },
+   {
+    "clickId": "faden#2",
+    "lemma": "hat den Faden verloren",
+    "kind": "Phraseme/Idiom",
+    "markedContext": "Er <TARGET>hat</TARGET> <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verloren</TARGET>.",
+    "A": {
+     "transcription": "hat deːn ˈfaːdn̩ fɛɐ̯ˈloːʁən",
+     "definition": "den gedanklichen oder inhaltlichen Zusammenhang verlieren und nicht mehr wissen, wie man etwas fortsetzen soll",
+     "tr.en": "lost the thread",
+     "tr.ru": "потерял нить разговора"
+    },
+    "B": {
+     "definition": "den gedanklichen oder argumentativen Zusammenhang nicht mehr verfolgen können",
+     "transcription": "hat deːn ˈfaːdn̩ fɛɐ̯ˈloːʁən",
+     "tr.en": "lose the thread",
+     "tr.ru": "потерять нить"
+    },
+    "C": {
+     "definition": "Den Gedankengang oder Gesprächszusammenhang nicht mehr verfolgen können.",
+     "tr.en": "has lost the thread",
+     "tr.ru": "потерял нить",
+     "transcription": "hat deːn ˈfaːdn̩ fɛɐ̯ˈloːʁən"
+    },
+    "D": {
+     "definition": "nicht mehr wissen, worüber man gesprochen oder gedacht hat",
+     "transcription": "hat deːn ˈfaːdn̩ fɛɐ̯ˈloːʁən",
+     "tr.en": "lose one's train of thought",
+     "tr.ru": "потерять нить рассуждения"
+    },
+    "A_rep1": {
+     "transcription": "hat deːn ˈfaːdn̩ fɛɐ̯ˈloːʁən",
+     "definition": "den gedanklichen oder sprachlichen Zusammenhang nicht mehr haben und dadurch nicht weiterwissen oder nicht fortfahren können",
+     "tr.en": "has lost the thread",
+     "tr.ru": "потерял нить разговора"
+    },
+    "diffs": 9
+   },
+   {
+    "clickId": "fremd#4",
+    "lemma": "sein",
+    "kind": "VERB",
+    "markedContext": "Das Meeting <TARGET>war</TARGET> very good.",
+    "A": {
+     "transcription": "zaɪ̯n",
+     "definition": "sich in einem bestimmten Zustand befinden",
+     "tr.en": "was",
+     "tr.ru": "было"
+    },
+    "B": {
+     "definition": "sich in einem bestimmten Zustand befinden oder eine bestimmte Eigenschaft haben",
+     "transcription": "zaɪ̯n",
+     "tr.en": "be",
+     "tr.ru": "быть"
+    },
+    "C": {
+     "definition": "in einem bestimmten Zustand oder einer bestimmten Beschaffenheit sein",
+     "tr.en": "be",
+     "tr.ru": "быть",
+     "transcription": "zaɪ̯n"
+    },
+    "D": {
+     "definition": "sich in einem bestimmten Zustand befinden oder eine bestimmte Eigenschaft haben",
+     "transcription": "zaɪ̯n",
+     "tr.en": "be",
+     "tr.ru": "быть"
+    },
+    "A_rep1": {
+     "transcription": "zaɪ̯n",
+     "definition": "sich in einem bestimmten Zustand oder einer bestimmten Beschaffenheit befinden",
+     "tr.en": "was",
+     "tr.ru": "было"
+    },
+    "diffs": 9
+   },
+   {
+    "clickId": "museum#4",
+    "lemma": "öffnen",
+    "kind": "VERB",
+    "markedContext": "Das Museum <TARGET>öffnet</TARGET> z.B. am Montag erst um zehn.",
+    "A": {
+     "transcription": "ˈœfnən",
+     "definition": "für Besucher zugänglich sein",
+     "tr.en": "opens",
+     "tr.ru": "открывается"
+    },
+    "B": {
+     "definition": "für Besucher zugänglich werden",
+     "transcription": "ˈœfnən",
+     "tr.en": "open",
+     "tr.ru": "открываться"
+    },
+    "C": {
+     "definition": "seinen Betrieb beginnen und für Besucher zugänglich werden",
+     "tr.en": "open",
+     "tr.ru": "открываться",
+     "transcription": "ˈœfnən"
+    },
+    "D": {
+     "definition": "für Besucher zugänglich werden",
+     "transcription": "ˈœfnən",
+     "tr.en": "open",
+     "tr.ru": "открываться"
+    },
+    "A_rep1": {
+     "transcription": "ˈœfnən",
+     "definition": "für Besucher zugänglich sein",
+     "tr.en": "opens",
+     "tr.ru": "открывается"
+    },
+    "diffs": 9
+   },
+   {
+    "clickId": "fremd#8",
+    "lemma": "good",
+    "kind": "ADJ",
+    "markedContext": "Das Meeting war very <TARGET>good</TARGET>.",
+    "A": {
+     "transcription": "ɡuːd",
+     "definition": "von guter Qualität oder Beschaffenheit",
+     "tr.en": "good",
+     "tr.ru": "хороший"
+    },
+    "B": {
+     "definition": "von guter Qualität oder positiv bewertet",
+     "transcription": "ɡʊt",
+     "tr.en": "good",
+     "tr.ru": "хороший"
+    },
+    "C": {
+     "definition": "von guter Qualität oder angenehm",
+     "tr.en": "good",
+     "tr.ru": "хороший",
+     "transcription": "ɡʊt"
+    },
+    "D": {},
+    "A_rep1": {
+     "transcription": "ɡʊt",
+     "definition": "von guter Qualität oder Beschaffenheit",
+     "tr.en": "good",
+     "tr.ru": "хороший"
+    },
+    "diffs": 8
+   },
+   {
+    "clickId": "klitik#0",
+    "lemma": "wie geht s dir",
+    "kind": "Phraseme/DiscourseFormula",
+    "markedContext": "<TARGET>Wie</TARGET> <TARGET>geht</TARGET>'<TARGET>s</TARGET> <TARGET>dir</TARGET> heute?",
+    "A": {
+     "transcription": "viː ɡeːt͡s diːɐ̯",
+     "definition": "Als Grußformel: Frage nach dem gegenwärtigen Befinden des Gegenübers.",
+     "tr.en": "how are you",
+     "tr.ru": "как ты себя чувствуешь"
+    },
+    "B": {
+     "definition": "Eine Grußformel, mit der man nach dem Befinden einer Person fragt.",
+     "transcription": "viː ɡeːt ɛs diːɐ̯",
+     "tr.en": "how are you",
+     "tr.ru": "как ты"
+    },
+    "C": {
+     "definition": "Frage nach dem aktuellen Befinden einer Person als Grußformel.",
+     "tr.en": "How are you?",
+     "tr.ru": "Как ты?",
+     "transcription": "viː ɡeːt͡s diːɐ̯"
+    },
+    "D": {
+     "definition": "Grußformel, mit der man sich nach dem Befinden einer Person erkundigt",
+     "transcription": "viː ɡeːt ɛs diːɐ̯",
+     "tr.en": "how are you",
+     "tr.ru": "как ты"
+    },
+    "A_rep1": {
+     "transcription": "viː geːt ɛs diːɐ̯",
+     "definition": "Als Grußformel: eine Person nach ihrem aktuellen Befinden fragen",
+     "tr.en": "how are you",
+     "tr.ru": "как ты себя чувствуешь"
+    },
+    "diffs": 8
+   },
+   {
+    "clickId": "passiv#8",
+    "lemma": "liefern",
+    "kind": "VERB",
+    "markedContext": "Das Paket <TARGET>wird</TARGET> morgen <TARGET>geliefert</TARGET>.",
+    "A": {
+     "transcription": "ˈliːfɐn",
+     "definition": "an einen bestimmten Ort oder Empfänger bringen",
+     "tr.en": "be delivered",
+     "tr.ru": "доставить"
+    },
+    "B": {
+     "definition": "etwas zu einem bestimmten Ort oder Empfänger bringen",
+     "transcription": "ˈliːfɐn",
+     "tr.en": "deliver",
+     "tr.ru": "доставлять"
+    },
+    "C": {
+     "definition": "an einen bestimmten Ort oder Empfänger gebracht werden",
+     "tr.en": "be delivered",
+     "tr.ru": "быть доставленным",
+     "transcription": "ˈliːfɐn"
+    },
+    "D": {
+     "definition": "etwas an einen bestimmten Ort oder Empfänger bringen",
+     "transcription": "ˈliːfɐn",
+     "tr.en": "deliver",
+     "tr.ru": "доставлять"
+    },
+    "A_rep1": {
+     "transcription": "ˈliːfɐn",
+     "definition": "an einen bestimmten Ort oder Empfänger gebracht werden",
+     "tr.en": "be delivered",
+     "tr.ru": "доставлять"
+    },
+    "diffs": 8
+   },
+   {
+    "clickId": "verfuegung#4",
+    "lemma": "stellt zur Verfügung",
+    "kind": "Phraseme/Collocation",
+    "markedContext": "Der Lehrer <TARGET>stellt</TARGET> den Schülern Material <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
+    "A": {
+     "transcription": "ʃtɛlt tsuːɐ̯ fɛɐ̯ˈfyːɡʊŋ",
+     "definition": "jemandem etwas bereitstellen oder zugänglich machen",
+     "tr.en": "make available",
+     "tr.ru": "предоставляет"
+    },
+    "B": {
+     "definition": "jemandem etwas verfügbar machen oder bereitstellen",
+     "transcription": "ʃtɛlt tsuːɐ̯ fɛɐ̯fyːɡʊŋ",
+     "tr.en": "provide",
+     "tr.ru": "предоставлять"
+    },
+    "C": {
+     "definition": "jemandem etwas verfügbar machen oder bereitstellen",
+     "tr.en": "make available",
+     "tr.ru": "предоставлять",
+     "transcription": "ʃtɛlt tsuːɐ̯ fɛɐ̯ˈfyːɡʊŋ"
+    },
+    "D": {
+     "definition": "jemandem etwas verfügbar machen oder bereitstellen",
+     "transcription": "ʃtɛlt tsuːɐ̯ fɛɐ̯ˈfyːɡʊŋ",
+     "tr.en": "make available",
+     "tr.ru": "предоставлять"
+    },
+    "A_rep1": {
+     "transcription": "ʃtɛlt tsuːɐ̯ fɛɐ̯ˈfyːɡʊŋ",
+     "definition": "jemandem etwas verfügbar machen oder bereitstellen",
+     "tr.en": "make available",
+     "tr.ru": "предоставляет"
+    },
+    "diffs": 8
+   },
+   {
+    "clickId": "genitiv#6",
+    "lemma": "Nachbar",
+    "kind": "NOUN",
+    "markedContext": "Das Haus des <TARGET>Nachbarn</TARGET> ist alt.",
+    "A": {
+     "transcription": "ˈnaːxbaːɐ̯",
+     "definition": "männliche Person, die in unmittelbarer Nähe zu jemandem oder etwas wohnt",
+     "tr.en": "neighbor",
+     "tr.ru": "соседа"
+    },
+    "B": {
+     "definition": "Person, die in unmittelbarer Nähe wohnt oder lebt",
+     "transcription": "ˈnaːxbaːɐ̯",
+     "tr.en": "neighbor",
+     "tr.ru": "сосед"
+    },
+    "C": {
+     "definition": "Person, die in unmittelbarer Nähe wohnt",
+     "tr.en": "neighbor",
+     "tr.ru": "сосед",
+     "transcription": "ˈnaːxbaːɐ̯"
+    },
+    "D": {
+     "definition": "Person, die neben jemandem oder in dessen unmittelbarer Nähe wohnt",
+     "transcription": "ˈnaːxbaʁ",
+     "tr.en": "neighbor",
+     "tr.ru": "сосед"
+    },
+    "A_rep1": {
+     "transcription": "ˈnaːxbaːɐ̯",
+     "definition": "männliche Person, die in unmittelbarer Nähe, insbesondere nebenan, wohnt",
+     "tr.en": "neighbor",
+     "tr.ru": "соседа"
+    },
+    "diffs": 7
+   },
+   {
+    "clickId": "kakao#4",
+    "lemma": "Kakao",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Der</TARGET> heiße <TARGET>Kakao</TARGET> schmeckt gut.",
+    "A": {
+     "transcription": "kaˈkaːo",
+     "definition": "heißes Getränk aus Kakaopulver und meist Milch",
+     "tr.en": "hot cocoa",
+     "tr.ru": "какао"
+    },
+    "B": {
+     "definition": "ein heißes Getränk aus Kakaopulver und meist Milch oder Wasser",
+     "transcription": "kaˈkaːo",
+     "tr.en": "hot chocolate",
+     "tr.ru": "горячий шоколад"
+    },
+    "C": {
+     "definition": "aus Kakaobohnen zubereitetes heißes Getränk",
+     "tr.en": "hot cocoa",
+     "tr.ru": "горячее какао",
+     "transcription": "kaˈkaːo"
+    },
+    "D": {
+     "definition": "heißes Getränk aus Kakaopulver und meist Milch",
+     "transcription": "kaˈkaːo",
+     "tr.en": "hot chocolate",
+     "tr.ru": "горячий шоколад"
+    },
+    "A_rep1": {
+     "transcription": "kaˈkaːo",
+     "definition": "heißes Getränk aus Kakaopulver",
+     "tr.en": "hot cocoa",
+     "tr.ru": "какао"
+    },
+    "diffs": 7
+   },
+   {
+    "clickId": "usw#15",
+    "lemma": "Markt",
+    "kind": "NOUN",
+    "markedContext": "Anna kauft Obst, Gemüse usw. auf <TARGET>dem</TARGET> <TARGET>Markt</TARGET>.",
+    "A": {
+     "transcription": "maʁkt",
+     "definition": "Ort oder Veranstaltung, an dem Waren angeboten und gekauft werden",
+     "tr.en": "market",
+     "tr.ru": "рынке"
+    },
+    "B": {
+     "definition": "Ort, an dem Waren angeboten und gekauft werden",
+     "transcription": "maʁkt",
+     "tr.en": "market",
+     "tr.ru": "рынок"
+    },
+    "C": {
+     "definition": "Ort, an dem Waren angeboten und gekauft werden",
+     "tr.en": "market",
+     "tr.ru": "рынок",
+     "transcription": "markt"
+    },
+    "D": {
+     "definition": "Ort, an dem Waren verkauft und gekauft werden",
+     "transcription": "maʁkt",
+     "tr.en": "market",
+     "tr.ru": "рынок"
+    },
+    "A_rep1": {
+     "transcription": "maʁkt",
+     "definition": "Ort oder Veranstaltung, an dem Waren angeboten und gekauft werden",
+     "tr.en": "market",
+     "tr.ru": "рынок"
+    },
+    "diffs": 7
+   },
+   {
+    "clickId": "verfuegung#8",
+    "lemma": "Schüler",
+    "kind": "NOUN",
+    "markedContext": "Der Lehrer stellt den <TARGET>Schülern</TARGET> Material zur Verfügung.",
+    "A": {
+     "transcription": "ˈʃyːlɐ",
+     "definition": "männliche Lernende, die von einer Lehrkraft unterrichtet werden",
+     "tr.en": "students",
+     "tr.ru": "ученикам"
+    },
+    "B": {
+     "definition": "männliche Person, die eine Schule besucht und dort unterrichtet wird",
+     "transcription": "ˈʃyːlɐ",
+     "tr.en": "schoolboy",
+     "tr.ru": "школьник"
+    },
+    "C": {
+     "definition": "Lernende, die von einer Lehrkraft unterrichtet werden",
+     "tr.en": "students",
+     "tr.ru": "ученикам",
+     "transcription": "ˈʃyːlɐ"
+    },
+    "D": {
+     "definition": "männliche Person, die eine Schule besucht und dort lernt",
+     "transcription": "ˈʃyːlɐ",
+     "tr.en": "student",
+     "tr.ru": "ученик"
+    },
+    "A_rep1": {
+     "transcription": "ˈʃyːlɐ",
+     "definition": "Person, die von einer Lehrkraft unterrichtet wird",
+     "tr.en": "students",
+     "tr.ru": "ученикам"
+    },
+    "diffs": 7
+   },
+   {
+    "clickId": "aufstehen#4",
+    "lemma": "steht auf",
+    "kind": "VERB",
+    "markedContext": "Meine Schwester <TARGET>steht</TARGET> jeden Morgen um sechs <TARGET>auf</TARGET>.",
+    "A": {
+     "transcription": "ʃteːt ˈaʊ̯f",
+     "definition": "sich aus dem Sitzen oder Liegen erheben",
+     "tr.en": "gets up",
+     "tr.ru": "вставать"
+    },
+    "B": {
+     "definition": "sich aus dem Sitzen oder Liegen erheben",
+     "transcription": "ʃteːt aʊ̯f",
+     "tr.en": "gets up",
+     "tr.ru": "встаёт"
+    },
+    "C": {
+     "definition": "sich aus dem Sitzen oder Liegen erheben",
+     "tr.en": "get up",
+     "tr.ru": "вставать",
+     "transcription": "ʃteːt aʊ̯f"
+    },
+    "D": {
+     "definition": "sich aus dem Sitzen oder Liegen erheben",
+     "transcription": "ʃteːt aʊ̯f",
+     "tr.en": "get up",
+     "tr.ru": "вставать"
+    },
+    "A_rep1": {
+     "transcription": "ʃteːt ˈaʊ̯f",
+     "definition": "sich aus einer sitzenden oder liegenden Position erheben",
+     "tr.en": "gets up",
+     "tr.ru": "вставать"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "erinnert#14",
+    "lemma": "sich erinnern",
+    "kind": "VERB",
+    "markedContext": "Er <TARGET>hat</TARGET> <TARGET>sich</TARGET> gestern <TARGET>an</TARGET> seinen Bruder <TARGET>erinnert</TARGET>.",
+    "A": {
+     "transcription": "zɪç ɛʁˈʔɪnɐʁn",
+     "definition": "eine Erinnerung an jemanden oder etwas haben oder sich etwas ins Gedächtnis zurückrufen",
+     "tr.en": "remember",
+     "tr.ru": "вспоминать"
+    },
+    "B": {
+     "definition": "sich etwas Vergangenes wieder ins Bewusstsein rufen oder daran denken",
+     "transcription": "zɪç ɛʁˈʔɪnɐn",
+     "tr.en": "remember",
+     "tr.ru": "вспоминать"
+    },
+    "C": {
+     "definition": "sich etwas Vergangenes oder eine Person wieder ins Gedächtnis rufen",
+     "tr.en": "remember",
+     "tr.ru": "вспоминать",
+     "transcription": "zɪç ɛʁˈʔɪnɐn"
+    },
+    "D": {
+     "definition": "sich geistig etwas oder jemanden aus der Vergangenheit vergegenwärtigen",
+     "transcription": "zɪç ɛʁˈɪnɐn",
+     "tr.en": "remember",
+     "tr.ru": "вспоминать"
+    },
+    "A_rep1": {
+     "transcription": "zɪç ɛʁˈɪnɐʁn",
+     "definition": "sich etwas oder eine Person aus dem Gedächtnis ins Bewusstsein rufen",
+     "tr.en": "remember",
+     "tr.ru": "вспоминать"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "genitiv#8",
+    "lemma": "ist",
+    "kind": "VERB",
+    "markedContext": "Das Haus des Nachbarn <TARGET>ist</TARGET> alt.",
+    "A": {
+     "transcription": "ɪst",
+     "definition": "sich in einem bestimmten Zustand befinden",
+     "tr.en": "is",
+     "tr.ru": "есть"
+    },
+    "B": {
+     "definition": "als etwas oder in einem bestimmten Zustand bestehen bzw. sich befinden",
+     "transcription": "ɪst",
+     "tr.en": "is",
+     "tr.ru": "есть"
+    },
+    "C": {
+     "definition": "sich in einem bestimmten Zustand befinden",
+     "tr.en": "be",
+     "tr.ru": "быть",
+     "transcription": "ɪst"
+    },
+    "D": {
+     "definition": "in einem bestimmten Zustand sein oder eine bestimmte Eigenschaft haben",
+     "transcription": "ɪst",
+     "tr.en": "be",
+     "tr.ru": "быть"
+    },
+    "A_rep1": {
+     "transcription": "ɪst",
+     "definition": "sich in einem bestimmten Zustand befinden",
+     "tr.en": "is",
+     "tr.ru": "есть"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "kakao#6",
+    "lemma": "schmeckt",
+    "kind": "VERB",
+    "markedContext": "Der heiße Kakao <TARGET>schmeckt</TARGET> gut.",
+    "A": {
+     "transcription": "ʃmɛkt",
+     "definition": "einen angenehmen Geschmack haben",
+     "tr.en": "tastes",
+     "tr.ru": "имеет вкус"
+    },
+    "B": {
+     "definition": "einen angenehmen Geschmack haben",
+     "transcription": "ʃmɛkt",
+     "tr.en": "taste good",
+     "tr.ru": "быть вкусным"
+    },
+    "C": {
+     "definition": "einen angenehmen Geschmack haben",
+     "tr.en": "taste good",
+     "tr.ru": "быть вкусным",
+     "transcription": "ʃmɛkt"
+    },
+    "D": {
+     "definition": "einen angenehmen Geschmack haben",
+     "transcription": "ʃmɛkt",
+     "tr.en": "taste good",
+     "tr.ru": "быть вкусным"
+    },
+    "A_rep1": {
+     "transcription": "ʃmɛkt",
+     "definition": "einen angenehmen Geschmack haben",
+     "tr.en": "tastes",
+     "tr.ru": "вкусный"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "kakao#8",
+    "lemma": "gut",
+    "kind": "ADJ",
+    "markedContext": "Der heiße Kakao schmeckt <TARGET>gut</TARGET>.",
+    "A": {
+     "transcription": "ɡuːt",
+     "definition": "einen angenehmen, wohlschmeckenden Geschmack haben",
+     "tr.en": "good",
+     "tr.ru": "вкусно"
+    },
+    "B": {
+     "definition": "einen angenehmen, wohlschmeckenden Geschmack habend",
+     "transcription": "ɡuːt",
+     "tr.en": "good",
+     "tr.ru": "вкусный"
+    },
+    "C": {
+     "definition": "einen angenehmen, wohlschmeckenden Geschmack habend",
+     "tr.en": "good",
+     "tr.ru": "вкусный",
+     "transcription": "ɡuːt"
+    },
+    "D": {
+     "definition": "einen angenehmen, wohlschmeckenden Geschmack habend",
+     "transcription": "ɡuːt",
+     "tr.en": "good",
+     "tr.ru": "хороший"
+    },
+    "A_rep1": {
+     "transcription": "ɡuːt",
+     "definition": "einen angenehmen, zusagenden Geschmack habend",
+     "tr.en": "good",
+     "tr.ru": "хорошо"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "manche#2",
+    "lemma": "kommen",
+    "kind": "VERB",
+    "markedContext": "Manche <TARGET>kommen</TARGET> früh, viele gehen spät.",
+    "A": {
+     "transcription": "ˈkɔmən",
+     "definition": "sich an einem bestimmten Ort oder zu einer bestimmten Zeit einfinden",
+     "tr.en": "arrive",
+     "tr.ru": "приходить"
+    },
+    "B": {
+     "definition": "sich zu einem bestimmten Ort oder Zeitpunkt begeben bzw. dort eintreffen",
+     "transcription": "ˈkɔmən",
+     "tr.en": "come",
+     "tr.ru": "приходить"
+    },
+    "C": {
+     "definition": "sich zu einem bestimmten Ort oder zu einer bestimmten Zeit einfinden",
+     "tr.en": "come",
+     "tr.ru": "приходить",
+     "transcription": "ˈkɔmən"
+    },
+    "D": {
+     "definition": "sich an einen Ort oder zu einem Zeitpunkt bewegen und dort eintreffen",
+     "transcription": "ˈkɔmən",
+     "tr.en": "come",
+     "tr.ru": "приходить"
+    },
+    "A_rep1": {
+     "transcription": "ˈkɔmən",
+     "definition": "sich zu einem Ort oder zu einer bestimmten Gelegenheit hinbewegen und dort eintreffen",
+     "tr.en": "arrive",
+     "tr.ru": "приходить"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "relativ#9",
+    "lemma": "warten",
+    "kind": "VERB",
+    "markedContext": "Die Frau, die dort <TARGET>wartet</TARGET>, kennt niemanden.",
+    "A": {
+     "transcription": "ˈvaʁtn̩",
+     "definition": "sich an einem Ort aufhalten und auf jemanden oder etwas warten",
+     "tr.en": "waits",
+     "tr.ru": "ждать"
+    },
+    "B": {
+     "definition": "sich an einem Ort aufhalten und auf jemanden oder etwas hoffen oder mit dessen Eintreffen rechnen",
+     "transcription": "ˈvaʁtn̩",
+     "tr.en": "wait",
+     "tr.ru": "ждать"
+    },
+    "C": {
+     "definition": "sich an einem Ort aufhalten und auf jemanden oder etwas hoffen bzw. damit rechnen",
+     "tr.en": "wait",
+     "tr.ru": "ждать",
+     "transcription": "ˈvaʁtn̩"
+    },
+    "D": {
+     "definition": "sich an einem Ort aufhalten, bis jemand oder etwas kommt oder ein Ereignis eintritt",
+     "transcription": "ˈvaʁtn̩",
+     "tr.en": "wait",
+     "tr.ru": "ждать"
+    },
+    "A_rep1": {
+     "transcription": "ˈvaʁtən",
+     "definition": "sich an einem Ort aufhalten und dabei auf jemanden oder etwas warten",
+     "tr.en": "waits",
+     "tr.ru": "ждать"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "typo#8",
+    "lemma": "Zeit",
+    "kind": "NOUN",
+    "markedContext": "Ihc habe leider keine <TARGET>Zeit</TARGET>.",
+    "A": {
+     "transcription": "tsaɪ̯t",
+     "definition": "für etwas zur Verfügung stehender Zeitraum oder freie Gelegenheit",
+     "tr.en": "time",
+     "tr.ru": "времени"
+    },
+    "B": {
+     "definition": "für etwas verfügbare oder dafür vorgesehene Zeitspanne",
+     "transcription": "tsaɪ̯t",
+     "tr.en": "time",
+     "tr.ru": "время"
+    },
+    "C": {
+     "definition": "zur Verfügung stehende Gelegenheit oder Dauer für etwas",
+     "tr.en": "time",
+     "tr.ru": "время",
+     "transcription": "tsaɪ̯t"
+    },
+    "D": {
+     "definition": "verfügbare Gelegenheit oder freie Spanne für etwas",
+     "transcription": "tsaɪ̯t",
+     "tr.en": "time",
+     "tr.ru": "время"
+    },
+    "A_rep1": {
+     "transcription": "tsaɪ̯t",
+     "definition": "für etwas zur Verfügung stehender Zeitraum oder freie Gelegenheit",
+     "tr.en": "time",
+     "tr.ru": "времени"
+    },
+    "diffs": 6
+   },
+   {
+    "clickId": "ausweg#2",
+    "lemma": "geben",
+    "kind": "VERB",
+    "markedContext": "<TARGET>Es</TARGET> <TARGET>gibt</TARGET> keinen Ausweg.",
+    "A": {
+     "transcription": "ˈɡeːbən",
+     "definition": "vorhanden sein",
+     "tr.en": "there is",
+     "tr.ru": "есть"
+    },
+    "B": {
+     "definition": "vorhanden sein oder existieren",
+     "transcription": "ˈɡeːbən",
+     "tr.en": "there is",
+     "tr.ru": "есть"
+    },
+    "C": {
+     "definition": "vorhanden sein oder existieren",
+     "tr.en": "there is",
+     "tr.ru": "есть",
+     "transcription": "ˈɡeːbən"
+    },
+    "D": {
+     "definition": "vorhanden sein oder existieren",
+     "transcription": "ˈɡeːbən",
+     "tr.en": "exist",
+     "tr.ru": "существовать"
+    },
+    "A_rep1": {
+     "transcription": "ˈɡeːbən",
+     "definition": "vorhanden sein oder existieren",
+     "tr.en": "there is",
+     "tr.ru": "есть"
+    },
+    "diffs": 5
+   },
+   {
+    "clickId": "fremd#6",
+    "lemma": "very",
+    "kind": "ADV",
+    "markedContext": "Das Meeting war <TARGET>very</TARGET> good.",
+    "A": {
+     "definition": "in sehr hohem Maß; äußerst",
+     "tr.en": "very",
+     "tr.ru": "очень"
+    },
+    "B": {},
+    "C": {
+     "definition": "in sehr hohem Maß; äußerst",
+     "tr.en": "very",
+     "tr.ru": "очень",
+     "transcription": "ˈvɛʁi"
+    },
+    "D": {
+     "definition": "in hohem Maße; äußerst",
+     "tr.en": "very",
+     "tr.ru": "очень"
+    },
+    "A_rep1": {
+     "transcription": "ˈvɛʁi",
+     "definition": "in sehr hohem Maße",
+     "tr.en": "very",
+     "tr.ru": "очень"
+    },
+    "diffs": 5
+   },
+   {
+    "clickId": "manche#9",
+    "lemma": "gehen",
+    "kind": "VERB",
+    "markedContext": "Manche kommen früh, viele <TARGET>gehen</TARGET> spät.",
+    "A": {
+     "transcription": "ˈɡeːən",
+     "definition": "sich fortbewegen oder einen Ort verlassen",
+     "tr.en": "leave",
+     "tr.ru": "уходить"
+    },
+    "B": {
+     "definition": "sich fortbewegen oder einen Ort verlassen",
+     "transcription": "ˈɡeːən",
+     "tr.en": "go",
+     "tr.ru": "уходить"
+    },
+    "C": {
+     "definition": "sich an einen Ort begeben oder ihn verlassen",
+     "tr.en": "go",
+     "tr.ru": "уходить",
+     "transcription": "ˈɡeːən"
+    },
+    "D": {
+     "definition": "sich fortbewegen oder einen Ort verlassen",
+     "transcription": "ˈɡeːən",
+     "tr.en": "go",
+     "tr.ru": "идти"
+    },
+    "A_rep1": {
+     "transcription": "ˈɡeːən",
+     "definition": "sich von einem Ort zu einem anderen bewegen",
+     "tr.en": "go",
+     "tr.ru": "уходить"
+    },
+    "diffs": 5
+   },
+   {
+    "clickId": "kino#4",
+    "lemma": "heute",
+    "kind": "ADV",
+    "markedContext": "Wir gehen <TARGET>heute</TARGET> ins Kino.",
+    "A": {
+     "transcription": "ˈhɔʏ̯tə",
+     "definition": "an diesem Tag, an dem man spricht oder schreibt",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "B": {
+     "definition": "an diesem Tag, an dem gesprochen oder geschrieben wird",
+     "transcription": "ˈhɔʏ̯tə",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "C": {
+     "definition": "an diesem Tag, an dem gesprochen oder geschrieben wird",
+     "tr.en": "today",
+     "tr.ru": "сегодня",
+     "transcription": "ˈhɔɪ̯tə"
+    },
+    "D": {
+     "definition": "an diesem Tag",
+     "transcription": "ˈhɔʏ̯tə",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "A_rep1": {
+     "transcription": "ˈhɔʏ̯tə",
+     "definition": "an diesem Tag",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "diffs": 4
+   },
+   {
+    "clickId": "kino#8",
+    "lemma": "Kino",
+    "kind": "NOUN",
+    "markedContext": "Wir gehen heute ins <TARGET>Kino</TARGET>.",
+    "A": {
+     "transcription": "ˈkiːno",
+     "definition": "Gebäude oder Einrichtung, in der Filme öffentlich vorgeführt werden",
+     "tr.en": "cinema",
+     "tr.ru": "кинотеатр"
+    },
+    "B": {
+     "definition": "Gebäude oder Ort, in dem Filme auf einer Leinwand vor Publikum gezeigt werden",
+     "transcription": "ˈkiːnoː",
+     "tr.en": "cinema",
+     "tr.ru": "кинотеатр"
+    },
+    "C": {
+     "definition": "Gebäude oder Einrichtung, in der Filme vorgeführt werden",
+     "tr.en": "cinema",
+     "tr.ru": "кинотеатр",
+     "transcription": "ˈkiːno"
+    },
+    "D": {
+     "definition": "Gebäude oder Einrichtung, in der Kinofilme vorgeführt werden",
+     "transcription": "ˈkiːno",
+     "tr.en": "cinema",
+     "tr.ru": "кинотеатр"
+    },
+    "A_rep1": {
+     "transcription": "ˈkiːno",
+     "definition": "Gebäude oder Einrichtung, in der Filme öffentlich vorgeführt werden",
+     "tr.en": "cinema",
+     "tr.ru": "кинотеатр"
+    },
+    "diffs": 4
+   },
+   {
+    "clickId": "museum#12",
+    "lemma": "erst",
+    "kind": "ADV",
+    "markedContext": "Das Museum öffnet z.B. am Montag <TARGET>erst</TARGET> um zehn.",
+    "A": {
+     "transcription": "eːɐ̯st",
+     "definition": "zu einem relativ späten Zeitpunkt, nicht früher",
+     "tr.en": "not until",
+     "tr.ru": "только"
+    },
+    "B": {
+     "definition": "nicht früher als zu dem genannten Zeitpunkt",
+     "transcription": "eːɐ̯st",
+     "tr.en": "not until",
+     "tr.ru": "только"
+    },
+    "C": {
+     "definition": "nicht vor einem bestimmten Zeitpunkt, sondern erst zu diesem späteren Zeitpunkt",
+     "tr.en": "not until",
+     "tr.ru": "только",
+     "transcription": "eːɐ̯st"
+    },
+    "D": {
+     "definition": "nicht früher als zu dem genannten Zeitpunkt",
+     "transcription": "eːɐ̯st",
+     "tr.en": "only",
+     "tr.ru": "только"
+    },
+    "A_rep1": {
+     "transcription": "eːɐ̯st",
+     "definition": "zu einem relativ späten Zeitpunkt, nicht früher",
+     "tr.en": "only",
+     "tr.ru": "только"
+    },
+    "diffs": 4
+   },
+   {
+    "clickId": "museum#2",
+    "lemma": "Museum",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Das</TARGET> <TARGET>Museum</TARGET> öffnet z.B. am Montag erst um zehn.",
+    "A": {
+     "transcription": "muˈzeːʊ̯m",
+     "definition": "Einrichtung, in der öffentlich zugängliche Sammlungen von Kunstwerken, historischen oder wissenschaftlichen Gegenständen ausgestellt und bewahrt werden.",
+     "tr.en": "museum",
+     "tr.ru": "музей"
+    },
+    "B": {
+     "definition": "Ein Gebäude oder eine Einrichtung, in der Kunstwerke, historische Gegenstände oder andere bedeutende Objekte gesammelt, bewahrt und der Öffentlichkeit gezeigt werden.",
+     "transcription": "muˈzeːʊ̯m",
+     "tr.en": "museum",
+     "tr.ru": "музей"
+    },
+    "C": {
+     "definition": "Einrichtung, in der Kunstwerke, historische Gegenstände oder andere ausgewählte Objekte gesammelt, bewahrt und der Öffentlichkeit gezeigt werden.",
+     "tr.en": "museum",
+     "tr.ru": "музей",
+     "transcription": "muˈzeːʊm"
+    },
+    "D": {
+     "definition": "Gebäude oder Einrichtung, in der wertvolle, kulturgeschichtliche oder naturkundliche Gegenstände gesammelt, bewahrt und ausgestellt werden.",
+     "transcription": "muˈzeːʊ̯m",
+     "tr.en": "museum",
+     "tr.ru": "музей"
+    },
+    "A_rep1": {
+     "transcription": "muˈzeːʊm",
+     "definition": "Ein Museum ist eine Einrichtung, in der öffentlich zugängliche Sammlungen von Kunstwerken, historischen Gegenständen oder anderen Exponaten aufbewahrt und gezeigt werden.",
+     "tr.en": "museum",
+     "tr.ru": "музей"
+    },
+    "diffs": 4
+   },
+   {
+    "clickId": "passiv#2",
+    "lemma": "Paket",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Das</TARGET> <TARGET>Paket</TARGET> wird morgen geliefert.",
+    "A": {
+     "transcription": "paˈkeːt",
+     "definition": "Bündel oder Sendung von zusammengepackten Gegenständen",
+     "tr.en": "package",
+     "tr.ru": "посылка"
+    },
+    "B": {
+     "definition": "Bündel oder Behälter mit zusammen verpackten Dingen, das verschickt oder geliefert wird",
+     "transcription": "paˈkeːt",
+     "tr.en": "package",
+     "tr.ru": "посылка"
+    },
+    "C": {
+     "definition": "gebündelte oder verpackte Sendung, die zugestellt oder transportiert wird",
+     "tr.en": "parcel",
+     "tr.ru": "посылка",
+     "transcription": "paˈkeːt"
+    },
+    "D": {
+     "definition": "postalisch oder anderweitig versandte Sendung in einer meist quaderförmigen Verpackung",
+     "transcription": "paˈkeːt",
+     "tr.en": "package",
+     "tr.ru": "посылка"
+    },
+    "A_rep1": {
+     "transcription": "paˈkeːt",
+     "definition": "Bündel oder Sendung von zusammengepackten Gegenständen",
+     "tr.en": "package",
+     "tr.ru": "посылка"
+    },
+    "diffs": 4
+   },
+   {
+    "clickId": "aufstehen#8",
+    "lemma": "Morgen",
+    "kind": "NOUN",
+    "markedContext": "Meine Schwester steht jeden <TARGET>Morgen</TARGET> um sechs auf.",
+    "A": {
+     "transcription": "ˈmɔʁɡn̩",
+     "definition": "Tagesabschnitt zwischen Mitternacht und Mittag",
+     "tr.en": "morning",
+     "tr.ru": "утро"
+    },
+    "B": {
+     "definition": "der jeweils folgende oder gegenwärtige Tagesabschnitt zwischen Aufstehen und Mittag",
+     "transcription": "ˈmɔʁɡn̩",
+     "tr.en": "morning",
+     "tr.ru": "утро"
+    },
+    "C": {
+     "definition": "Tageszeit vom Aufstehen bis zum Beginn des Mittags",
+     "tr.en": "morning",
+     "tr.ru": "утро",
+     "transcription": "ˈmɔʁɡn̩"
+    },
+    "D": {
+     "definition": "Tageszeit vom Beginn des Tages bis zum Mittag",
+     "transcription": "ˈmɔʁɡn̩",
+     "tr.en": "morning",
+     "tr.ru": "утро"
+    },
+    "A_rep1": {
+     "transcription": "ˈmɔʁɡn̩",
+     "definition": "Tageszeit zwischen Mitternacht und Mittag",
+     "tr.en": "morning",
+     "tr.ru": "утро"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "erinnert#12",
+    "lemma": "Bruder",
+    "kind": "NOUN",
+    "markedContext": "Er hat sich gestern an seinen <TARGET>Bruder</TARGET> erinnert.",
+    "A": {
+     "transcription": "ˈbʁuːdɐ",
+     "definition": "männliche Person, die mit jemandem mindestens ein Elternteil gemeinsam hat",
+     "tr.en": "brother",
+     "tr.ru": "брат"
+    },
+    "B": {
+     "definition": "männliches Geschwisterkind",
+     "transcription": "ˈbʁuːdɐ",
+     "tr.en": "brother",
+     "tr.ru": "брат"
+    },
+    "C": {
+     "definition": "männliches Geschwisterteil",
+     "tr.en": "brother",
+     "tr.ru": "брат",
+     "transcription": "ˈbʁuːdɐ"
+    },
+    "D": {
+     "definition": "männliches Geschwisterteil",
+     "transcription": "ˈbʁuːdɐ",
+     "tr.en": "brother",
+     "tr.ru": "брат"
+    },
+    "A_rep1": {
+     "transcription": "ˈbruːdɐ",
+     "definition": "männliche Person, die mit jemandem mindestens einen gemeinsamen Elternteil hat",
+     "tr.en": "brother",
+     "tr.ru": "брат"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "fremd#2",
+    "lemma": "Meeting",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Das</TARGET> <TARGET>Meeting</TARGET> war very good.",
+    "A": {
+     "transcription": "ˈmiːtɪŋ",
+     "definition": "Zusammenkunft oder Besprechung mehrerer Personen",
+     "tr.en": "meeting",
+     "tr.ru": "встреча"
+    },
+    "B": {
+     "definition": "Zusammenkunft oder Besprechung, bei der mehrere Personen zusammenkommen",
+     "transcription": "ˈmiːtɪŋ",
+     "tr.en": "meeting",
+     "tr.ru": "встреча"
+    },
+    "C": {
+     "definition": "Zusammenkunft oder Besprechung, bei der sich mehrere Personen treffen",
+     "tr.en": "meeting",
+     "tr.ru": "встреча",
+     "transcription": "ˈmiːtɪŋ"
+    },
+    "D": {
+     "definition": "Zusammenkunft oder Besprechung, bei der sich mehrere Personen treffen",
+     "transcription": "ˈmiːtɪŋ",
+     "tr.en": "meeting",
+     "tr.ru": "встреча"
+    },
+    "A_rep1": {
+     "transcription": "ˈmiːtɪŋ",
+     "definition": "Zusammenkunft oder Besprechung mehrerer Personen, insbesondere zu einem bestimmten Zweck",
+     "tr.en": "meeting",
+     "tr.ru": "встреча"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "genitiv#10",
+    "lemma": "alt",
+    "kind": "ADJ",
+    "markedContext": "Das Haus des Nachbarn ist <TARGET>alt</TARGET>.",
+    "A": {
+     "transcription": "alt",
+     "definition": "seit langer Zeit bestehend",
+     "tr.en": "old",
+     "tr.ru": "старый"
+    },
+    "B": {
+     "definition": "seit langer Zeit bestehend oder in Gebrauch; nicht neu",
+     "transcription": "alt",
+     "tr.en": "old",
+     "tr.ru": "старый"
+    },
+    "C": {
+     "definition": "seit langer Zeit bestehend und nicht neu",
+     "tr.en": "old",
+     "tr.ru": "старый",
+     "transcription": "alt"
+    },
+    "D": {
+     "definition": "seit langer Zeit bestehend oder genutzt",
+     "transcription": "alt",
+     "tr.en": "old",
+     "tr.ru": "старый"
+    },
+    "A_rep1": {
+     "transcription": "alt",
+     "definition": "seit langer Zeit bestehend",
+     "tr.en": "old",
+     "tr.ru": "старый"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "genitiv#2",
+    "lemma": "Haus",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Das</TARGET> <TARGET>Haus</TARGET> des Nachbarn ist alt.",
+    "A": {
+     "transcription": "haʊ̯s",
+     "definition": "Gebäude, in dem Menschen wohnen oder das anderen Zwecken dient",
+     "tr.en": "house",
+     "tr.ru": "дом"
+    },
+    "B": {
+     "definition": "Gebäude, in dem Menschen wohnen oder das für einen bestimmten Zweck genutzt wird.",
+     "transcription": "haʊ̯s",
+     "tr.en": "house",
+     "tr.ru": "дом"
+    },
+    "C": {
+     "definition": "Gebäude, in dem Menschen wohnen",
+     "tr.en": "house",
+     "tr.ru": "дом",
+     "transcription": "haʊ̯s"
+    },
+    "D": {
+     "definition": "Gebäude, in dem Menschen wohnen oder arbeiten können",
+     "transcription": "haʊ̯s",
+     "tr.en": "house",
+     "tr.ru": "дом"
+    },
+    "A_rep1": {
+     "transcription": "haʊ̯s",
+     "definition": "Gebäude, in dem Menschen wohnen",
+     "tr.en": "house",
+     "tr.ru": "дом"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "kino#2",
+    "lemma": "gehen",
+    "kind": "VERB",
+    "markedContext": "Wir <TARGET>gehen</TARGET> heute ins Kino.",
+    "A": {
+     "transcription": "ˈɡeːən",
+     "definition": "sich von einem Ort zu einem anderen fortbewegen",
+     "tr.en": "go",
+     "tr.ru": "идти"
+    },
+    "B": {
+     "definition": "sich zu Fuß von einem Ort zu einem anderen bewegen",
+     "transcription": "ˈɡeːən",
+     "tr.en": "go",
+     "tr.ru": "идти"
+    },
+    "C": {
+     "definition": "sich zu Fuß von einem Ort zu einem anderen bewegen",
+     "tr.en": "go",
+     "tr.ru": "идти",
+     "transcription": "ˈɡeːən"
+    },
+    "D": {
+     "definition": "sich zu Fuß von einem Ort zu einem anderen bewegen",
+     "transcription": "ˈɡeːən",
+     "tr.en": "go",
+     "tr.ru": "идти"
+    },
+    "A_rep1": {
+     "transcription": "ˈɡeːən",
+     "definition": "sich zu Fuß fortbewegen",
+     "tr.en": "go",
+     "tr.ru": "идти"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "manche#11",
+    "lemma": "spät",
+    "kind": "ADV",
+    "markedContext": "Manche kommen früh, viele gehen <TARGET>spät</TARGET>.",
+    "A": {
+     "transcription": "ʃpɛːt",
+     "definition": "zu einem späten Zeitpunkt",
+     "tr.en": "late",
+     "tr.ru": "поздно"
+    },
+    "B": {
+     "definition": "zu einem relativ weit fortgeschrittenen Zeitpunkt",
+     "transcription": "ʃpɛːt",
+     "tr.en": "late",
+     "tr.ru": "поздно"
+    },
+    "C": {
+     "definition": "zu einem zeitlich fortgeschrittenen Zeitpunkt",
+     "tr.en": "late",
+     "tr.ru": "поздно",
+     "transcription": "ʃpɛːt"
+    },
+    "D": {
+     "definition": "zu einem relativ weit fortgeschrittenen Zeitpunkt",
+     "transcription": "ʃpɛːt",
+     "tr.en": "late",
+     "tr.ru": "поздно"
+    },
+    "A_rep1": {
+     "transcription": "ʃpɛːt",
+     "definition": "zu einem vergleichsweise weit fortgeschrittenen Zeitpunkt",
+     "tr.en": "late",
+     "tr.ru": "поздно"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "passiv#6",
+    "lemma": "morgen",
+    "kind": "ADV",
+    "markedContext": "Das Paket wird <TARGET>morgen</TARGET> geliefert.",
+    "A": {
+     "transcription": "ˈmɔʁɡn̩",
+     "definition": "am nächsten Tag",
+     "tr.en": "tomorrow",
+     "tr.ru": "завтра"
+    },
+    "B": {
+     "definition": "am folgenden Tag; am Tag nach heute",
+     "transcription": "ˈmɔʁɡn̩",
+     "tr.en": "tomorrow",
+     "tr.ru": "завтра"
+    },
+    "C": {
+     "definition": "am folgenden Tag",
+     "tr.en": "tomorrow",
+     "tr.ru": "завтра",
+     "transcription": "ˈmɔʁɡn̩"
+    },
+    "D": {
+     "definition": "am folgenden Tag",
+     "transcription": "ˈmɔʁɡn̩",
+     "tr.en": "tomorrow",
+     "tr.ru": "завтра"
+    },
+    "A_rep1": {
+     "transcription": "ˈmɔʁɡn̩",
+     "definition": "am nächsten Tag",
+     "tr.en": "tomorrow",
+     "tr.ru": "завтра"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "relativ#12",
+    "lemma": "kennen",
+    "kind": "VERB",
+    "markedContext": "Die Frau, die dort wartet, <TARGET>kennt</TARGET> niemanden.",
+    "A": {
+     "transcription": "ˈkɛnən",
+     "definition": "mit jemandem oder etwas vertraut sein",
+     "tr.en": "know",
+     "tr.ru": "знать"
+    },
+    "B": {
+     "definition": "mit jemandem oder etwas vertraut sein bzw. ihn oder es aus Erfahrung wiedererkennen",
+     "transcription": "ˈkɛnən",
+     "tr.en": "know",
+     "tr.ru": "знать"
+    },
+    "C": {
+     "definition": "mit niemandem persönlich vertraut sein",
+     "tr.en": "know",
+     "tr.ru": "знать",
+     "transcription": "ˈkɛnən"
+    },
+    "D": {
+     "definition": "mit jemandem oder etwas vertraut sein und ihn, sie oder es aus Erfahrung wiedererkennen",
+     "transcription": "ˈkɛnən",
+     "tr.en": "know",
+     "tr.ru": "знать"
+    },
+    "A_rep1": {
+     "transcription": "ˈkɛnən",
+     "definition": "mit jemandem oder etwas vertraut sein und über entsprechende Kenntnis verfügen",
+     "tr.en": "know",
+     "tr.ru": "знать"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "typo#2",
+    "lemma": "haben",
+    "kind": "VERB",
+    "markedContext": "Ihc <TARGET>habe</TARGET> leider keine Zeit.",
+    "A": {
+     "transcription": "ˈhaːbən",
+     "definition": "über etwas verfügen oder etwas besitzen",
+     "tr.en": "have",
+     "tr.ru": "иметь"
+    },
+    "B": {
+     "definition": "etwas besitzen oder zur Verfügung haben",
+     "transcription": "ˈhaːbən",
+     "tr.en": "have",
+     "tr.ru": "иметь"
+    },
+    "C": {
+     "definition": "etwas besitzen oder zur Verfügung haben",
+     "tr.en": "have",
+     "tr.ru": "иметь",
+     "transcription": "ˈhaːbən"
+    },
+    "D": {
+     "definition": "etwas besitzen oder zur Verfügung haben",
+     "transcription": "ˈhaːbən",
+     "tr.en": "have",
+     "tr.ru": "иметь"
+    },
+    "A_rep1": {
+     "transcription": "ˈhaːbən",
+     "definition": "als Besitz, Verfügbarkeit oder Vorhandensein bei jemandem gegeben sein",
+     "tr.en": "have",
+     "tr.ru": "иметь"
+    },
+    "diffs": 3
+   },
+   {
+    "clickId": "klitik#8",
+    "lemma": "heute",
+    "kind": "ADV",
+    "markedContext": "Wie geht's dir <TARGET>heute</TARGET>?",
+    "A": {
+     "transcription": "ˈhɔʏ̯tə",
+     "definition": "an diesem Tag",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "B": {
+     "definition": "an diesem Tag",
+     "transcription": "ˈhɔʏ̯tə",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "C": {
+     "definition": "am gegenwärtigen Tag",
+     "tr.en": "today",
+     "tr.ru": "сегодня",
+     "transcription": "ˈhɔʏ̯tə"
+    },
+    "D": {
+     "definition": "an diesem Tag, an dem gesprochen wird",
+     "transcription": "ˈhɔʏ̯tə",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "A_rep1": {
+     "transcription": "ˈhɔɪ̯tə",
+     "definition": "an diesem Tag",
+     "tr.en": "today",
+     "tr.ru": "сегодня"
+    },
+    "diffs": 2
+   },
+   {
+    "clickId": "manche#4",
+    "lemma": "früh",
+    "kind": "ADV",
+    "markedContext": "Manche kommen <TARGET>früh</TARGET>, viele gehen spät.",
+    "A": {
+     "transcription": "fʁyː",
+     "definition": "zu einem frühen Zeitpunkt",
+     "tr.en": "early",
+     "tr.ru": "рано"
+    },
+    "B": {
+     "definition": "zu einem frühen Zeitpunkt",
+     "transcription": "fʁyː",
+     "tr.en": "early",
+     "tr.ru": "рано"
+    },
+    "C": {
+     "definition": "zu einem frühen Zeitpunkt; nicht spät",
+     "tr.en": "early",
+     "tr.ru": "рано",
+     "transcription": "fʁyː"
+    },
+    "D": {
+     "definition": "zu einem frühen Zeitpunkt oder früher als erwartet",
+     "transcription": "fʁyː",
+     "tr.en": "early",
+     "tr.ru": "рано"
+    },
+    "A_rep1": {
+     "transcription": "fʁyː",
+     "definition": "zu einem frühen Zeitpunkt",
+     "tr.en": "early",
+     "tr.ru": "рано"
+    },
+    "diffs": 2
+   },
+   {
+    "clickId": "relativ#7",
+    "lemma": "dort",
+    "kind": "ADV",
+    "markedContext": "Die Frau, die <TARGET>dort</TARGET> wartet, kennt niemanden.",
+    "A": {
+     "transcription": "dɔʁt",
+     "definition": "an dem dort bezeichneten Ort",
+     "tr.en": "there",
+     "tr.ru": "там"
+    },
+    "B": {
+     "definition": "an einem dort genannten oder aus dem Kontext ersichtlichen Ort",
+     "transcription": "dɔʁt",
+     "tr.en": "there",
+     "tr.ru": "там"
+    },
+    "C": {
+     "definition": "an jenem Ort",
+     "tr.en": "there",
+     "tr.ru": "там",
+     "transcription": "dɔʁt"
+    },
+    "D": {
+     "definition": "an dem dort bezeichneten Ort",
+     "transcription": "dɔʁt",
+     "tr.en": "there",
+     "tr.ru": "там"
+    },
+    "A_rep1": {
+     "transcription": "dɔʁt",
+     "definition": "an dem dort bezeichneten Ort",
+     "tr.en": "there",
+     "tr.ru": "там"
+    },
+    "diffs": 2
+   },
+   {
+    "clickId": "verfuegung#2",
+    "lemma": "Lehrer",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Der</TARGET> <TARGET>Lehrer</TARGET> stellt den Schülern Material zur Verfügung.",
+    "A": {
+     "transcription": "ˈleːʁɐ",
+     "definition": "Person, die andere unterrichtet",
+     "tr.en": "teacher",
+     "tr.ru": "учитель"
+    },
+    "B": {
+     "definition": "Person, die Schüler unterrichtet",
+     "transcription": "ˈleːʁɐ",
+     "tr.en": "teacher",
+     "tr.ru": "учитель"
+    },
+    "C": {
+     "definition": "Person, die Schüler unterrichtet",
+     "tr.en": "teacher",
+     "tr.ru": "учитель",
+     "transcription": "ˈleːʁɐ"
+    },
+    "D": {
+     "definition": "Person, die andere unterrichtet",
+     "transcription": "ˈleːʁɐ",
+     "tr.en": "teacher",
+     "tr.ru": "учитель"
+    },
+    "A_rep1": {
+     "transcription": "ˈleːʁɐ",
+     "definition": "Person, die andere unterrichtet",
+     "tr.en": "teacher",
+     "tr.ru": "учитель"
+    },
+    "diffs": 2
+   },
+   {
+    "clickId": "museum#10",
+    "lemma": "Montag",
+    "kind": "PROPN",
+    "markedContext": "Das Museum öffnet z.B. am <TARGET>Montag</TARGET> erst um zehn.",
+    "A": {
+     "transcription": "ˈmoːntaːk",
+     "definition": "Wochentag zwischen Sonntag und Dienstag",
+     "tr.en": "Monday",
+     "tr.ru": "понедельник"
+    },
+    "B": {
+     "definition": "Wochentag zwischen Sonntag und Dienstag",
+     "transcription": "ˈmoːntaːk",
+     "tr.en": "Monday",
+     "tr.ru": "понедельник"
+    },
+    "C": {
+     "definition": "der Wochentag nach dem Sonntag",
+     "tr.en": "Monday",
+     "tr.ru": "понедельник",
+     "transcription": "ˈmoːntaːk"
+    },
+    "D": {
+     "definition": "Wochentag zwischen Sonntag und Dienstag",
+     "transcription": "ˈmoːntaːk",
+     "tr.en": "Monday",
+     "tr.ru": "понедельник"
+    },
+    "A_rep1": {
+     "transcription": "ˈmoːntaːk",
+     "definition": "Wochentag nach dem Sonntag",
+     "tr.en": "Monday"
+    },
+    "diffs": 1
+   },
+   {
+    "clickId": "aufstehen#2",
+    "lemma": "Schwester",
+    "kind": "NOUN",
+    "markedContext": "Meine <TARGET>Schwester</TARGET> steht jeden Morgen um sechs auf.",
+    "A": {
+     "transcription": "ˈʃvɛstɐ",
+     "definition": "weibliches Geschwisterkind",
+     "tr.en": "sister",
+     "tr.ru": "сестра"
+    },
+    "B": {
+     "definition": "weibliches Geschwisterkind",
+     "transcription": "ˈʃvɛstɐ",
+     "tr.en": "sister",
+     "tr.ru": "сестра"
+    },
+    "C": {
+     "definition": "weibliches Geschwisterkind",
+     "tr.en": "sister",
+     "tr.ru": "сестра",
+     "transcription": "ˈʃvɛstɐ"
+    },
+    "D": {
+     "definition": "weibliches Geschwisterkind",
+     "transcription": "ˈʃvɛstɐ",
+     "tr.en": "sister",
+     "tr.ru": "сестра"
+    },
+    "A_rep1": {
+     "transcription": "ˈʃvɛstɐ",
+     "definition": "weibliches Geschwisterkind",
+     "tr.en": "sister",
+     "tr.ru": "сестра"
+    },
+    "diffs": 0
+   },
+   {
+    "clickId": "erinnert#6",
+    "lemma": "gestern",
+    "kind": "ADV",
+    "markedContext": "Er hat sich <TARGET>gestern</TARGET> an seinen Bruder erinnert.",
+    "A": {
+     "transcription": "ˈɡɛstɐn",
+     "definition": "am Tag vor dem heutigen Tag",
+     "tr.en": "yesterday",
+     "tr.ru": "вчера"
+    },
+    "B": {
+     "definition": "am Tag vor dem heutigen Tag",
+     "transcription": "ˈɡɛstɐn",
+     "tr.en": "yesterday",
+     "tr.ru": "вчера"
+    },
+    "C": {
+     "definition": "am Tag vor dem heutigen Tag",
+     "tr.en": "yesterday",
+     "tr.ru": "вчера",
+     "transcription": "ˈɡɛstɐn"
+    },
+    "D": {
+     "definition": "am Tag vor dem heutigen Tag",
+     "transcription": "ˈɡɛstɐn",
+     "tr.en": "yesterday",
+     "tr.ru": "вчера"
+    },
+    "A_rep1": {
+     "transcription": "ˈɡɛstɐn",
+     "definition": "am Tag vor dem heutigen Tag",
+     "tr.en": "yesterday",
+     "tr.ru": "вчера"
+    },
+    "diffs": 0
+   },
+   {
+    "clickId": "kakao#2",
+    "lemma": "heiß",
+    "kind": "ADJ",
+    "markedContext": "Der <TARGET>heiße</TARGET> Kakao schmeckt gut.",
+    "A": {
+     "transcription": "haɪ̯s",
+     "definition": "eine hohe Temperatur habend",
+     "tr.en": "hot",
+     "tr.ru": "горячий"
+    },
+    "B": {
+     "definition": "eine hohe Temperatur habend",
+     "transcription": "haɪ̯s",
+     "tr.en": "hot",
+     "tr.ru": "горячий"
+    },
+    "C": {
+     "definition": "eine hohe Temperatur habend",
+     "tr.en": "hot",
+     "tr.ru": "горячий",
+     "transcription": "haɪ̯s"
+    },
+    "D": {
+     "definition": "eine hohe Temperatur habend",
+     "transcription": "haɪ̯s",
+     "tr.en": "hot",
+     "tr.ru": "горячий"
+    },
+    "A_rep1": {
+     "transcription": "haɪ̯s",
+     "definition": "eine hohe Temperatur habend",
+     "tr.en": "hot",
+     "tr.ru": "горячий"
+    },
+    "diffs": 0
+   },
+   {
+    "clickId": "relativ#2",
+    "lemma": "Frau",
+    "kind": "NOUN",
+    "markedContext": "<TARGET>Die</TARGET> <TARGET>Frau</TARGET>, die dort wartet, kennt niemanden.",
+    "A": {
+     "transcription": "fʁaʊ̯",
+     "definition": "erwachsene weibliche Person",
+     "tr.en": "woman",
+     "tr.ru": "женщина"
+    },
+    "B": {
+     "definition": "erwachsene weibliche Person",
+     "transcription": "fʁaʊ̯",
+     "tr.en": "woman",
+     "tr.ru": "женщина"
+    },
+    "C": {
+     "definition": "erwachsene weibliche Person",
+     "tr.en": "woman",
+     "tr.ru": "женщина",
+     "transcription": "fʁaʊ̯"
+    },
+    "D": {
+     "definition": "erwachsene weibliche Person",
+     "transcription": "fʁaʊ̯",
+     "tr.en": "woman",
+     "tr.ru": "женщина"
+    },
+    "A_rep1": {
+     "transcription": "fʁaʊ̯",
+     "definition": "erwachsene weibliche Person",
+     "tr.en": "woman",
+     "tr.ru": "женщина"
+    },
+    "diffs": 0
+   },
+   {
+    "clickId": "usw#0",
+    "lemma": "Anna",
+    "kind": "PROPN",
+    "markedContext": "<TARGET>Anna</TARGET> kauft Obst, Gemüse usw. auf dem Markt.",
+    "A": {
+     "transcription": "ˈana",
+     "definition": "weiblicher Vorname",
+     "tr.en": "Anna",
+     "tr.ru": "Анна"
+    },
+    "B": {
+     "definition": "weiblicher Vorname",
+     "transcription": "ˈana",
+     "tr.en": "Anna",
+     "tr.ru": "Анна"
+    },
+    "C": {
+     "definition": "weiblicher Vorname",
+     "tr.en": "Anna",
+     "tr.ru": "Анна",
+     "transcription": "ˈana"
+    },
+    "D": {
+     "definition": "weiblicher Vorname",
+     "transcription": "ˈana",
+     "tr.en": "Anna",
+     "tr.ru": "Анна"
+    },
+    "A_rep1": {
+     "transcription": "ˈana",
+     "definition": "weiblicher Vorname",
+     "tr.en": "Anna",
+     "tr.ru": "Анна"
+    },
+    "diffs": 0
+   }
+  ],
+  "definitionNeighborBleed": {
+   "A": {
+    "definitions": 96,
+    "withNeighborWord": 2,
+    "rate": 0.021
+   },
+   "B": {
+    "definitions": 95,
+    "withNeighborWord": 4,
+    "rate": 0.042
+   },
+   "C": {
+    "definitions": 96,
+    "withNeighborWord": 5,
+    "rate": 0.052
+   },
+   "D": {
+    "definitions": 47,
+    "withNeighborWord": 1,
+    "rate": 0.021
+   }
+  },
+  "definitionNeighborBleedExamples": {
+   "A": [
+    "rep0 kakao#4 Kakao: 'heißes Getränk aus Kakaopulver und meist Milch' <- ['heiße']",
+    "rep1 kakao#4 Kakao: 'heißes Getränk aus Kakaopulver' <- ['heiße']"
+   ],
+   "B": [
+    "rep0 kakao#4 Kakao: 'ein heißes Getränk aus Kakaopulver und meist Milch oder Wasser' <- ['heiße']",
+    "rep0 passiv#2 Paket: 'Bündel oder Behälter mit zusammen verpackten Dingen, das verschickt oder geliefert wird' <- ['geliefert']",
+    "rep0 verfuegung#2 Lehrer: 'Person, die Schüler unterrichtet' <- ['schülern']",
+    "rep1 verfuegung#2 Lehrer: 'Person, die Schüler unterrichtet' <- ['schülern']"
+   ],
+   "C": [
+    "rep0 kakao#4 Kakao: 'aus Kakaobohnen zubereitetes heißes Getränk' <- ['heiße']",
+    "rep0 relativ#12 kennen: 'mit niemandem persönlich vertraut sein' <- ['niemanden']",
+    "rep0 verfuegung#2 Lehrer: 'Person, die Schüler unterrichtet' <- ['schülern']",
+    "rep1 kakao#4 Kakao: 'heißes Getränk aus Kakaopulver und Milch oder Wasser' <- ['heiße']",
+    "rep1 relativ#12 kennen: 'mit niemandem vertraut oder bekannt sein' <- ['niemanden']"
+   ],
+   "D": [
+    "rep0 kakao#4 Kakao: 'heißes Getränk aus Kakaopulver und meist Milch' <- ['heiße']"
+   ]
+  }
+ }
+}

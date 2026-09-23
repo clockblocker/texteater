@@ -1,0 +1,941 @@
+{
+  "label": "risky",
+  "calls": 420,
+  "spendUsd": 0.05355,
+  "firstStartedAt": "2026-09-23T14:24:19.278Z",
+  "statusOverall": {
+    "T": {
+      "n": 140,
+      "Valid": 131,
+      "Invalid": 9,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 0,
+      "Skipped": 0,
+      "lost": 9,
+      "lostOf": "9/140",
+      "lostRate": 0.0643
+    },
+    "RS": {
+      "n": 140,
+      "Valid": 140,
+      "Invalid": 0,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 0,
+      "Skipped": 0,
+      "lost": 0,
+      "lostOf": "0/140",
+      "lostRate": 0
+    },
+    "RO": {
+      "n": 140,
+      "Valid": 140,
+      "Invalid": 0,
+      "ShapeInvalid": 0,
+      "ParseFailure": 0,
+      "ProviderFailure": 0,
+      "Skipped": 0,
+      "lost": 0,
+      "lostOf": "0/140",
+      "lostRate": 0
+    }
+  },
+  "heldOut": null,
+  "q2": null,
+  "risky": {
+    "cases": 70,
+    "perArm": {
+      "T": {
+        "n": 140,
+        "Valid": 131,
+        "Invalid": 9,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 9,
+        "lostOf": "9/140",
+        "lostRate": 0.0643
+      },
+      "RS": {
+        "n": 140,
+        "Valid": 140,
+        "Invalid": 0,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 0,
+        "lostOf": "0/140",
+        "lostRate": 0
+      },
+      "RO": {
+        "n": 140,
+        "Valid": 140,
+        "Invalid": 0,
+        "ShapeInvalid": 0,
+        "ParseFailure": 0,
+        "ProviderFailure": 0,
+        "Skipped": 0,
+        "lost": 0,
+        "lostOf": "0/140",
+        "lostRate": 0
+      }
+    },
+    "bySource": {
+      "resolution": {
+        "T": "2/26",
+        "RS": "0/26",
+        "RO": "0/26"
+      },
+      "grammar-corpus": {
+        "T": "6/64",
+        "RS": "0/64",
+        "RO": "0/64"
+      },
+      "waterfall": {
+        "T": "1/50",
+        "RS": "0/50",
+        "RO": "0/50"
+      }
+    },
+    "lostVsT": {
+      "RS": {
+        "diffRate": -0.0643,
+        "ci95": [
+          -0.1071,
+          -0.0286
+        ],
+        "pBelowZero": 0.9997
+      },
+      "RO": {
+        "diffRate": -0.0643,
+        "ci95": [
+          -0.1071,
+          -0.0214
+        ],
+        "pBelowZero": 0.9998
+      }
+    },
+    "agreement": {
+      "withinArm": {
+        "T": {
+          "pairs": 62,
+          "rate": 0.71
+        },
+        "RS": {
+          "pairs": 70,
+          "rate": 0.743
+        },
+        "RO": {
+          "pairs": 70,
+          "rate": 0.771
+        }
+      },
+      "withT": {
+        "RS": {
+          "pairs": 262,
+          "rate": 0.557
+        },
+        "RO": {
+          "pairs": 262,
+          "rate": 0.565
+        }
+      }
+    },
+    "perCase": [
+      {
+        "caseId": "reading-de-adj-sauer-acidic-reuse",
+        "source": "resolution",
+        "surface": "sauren",
+        "lemma": "sauer",
+        "T": "😖🍋x2",
+        "RS": "🍋😖x1 🍋x1",
+        "RO": "🍋x2"
+      },
+      {
+        "caseId": "reading-de-lexeme-cconj-entweder-oder",
+        "source": "resolution",
+        "surface": "entweder oder",
+        "lemma": "entweder … oder",
+        "T": "↔️x2",
+        "RS": "↔️x1 🔀x1",
+        "RO": "↔️x2"
+      },
+      {
+        "caseId": "reading-de-adj-menschlich-human",
+        "source": "resolution",
+        "surface": "menschliche",
+        "lemma": "menschlich",
+        "T": "🧑‍🤝‍🧑x1 LOST:\"🧑‍ मानव\"x1",
+        "RS": "🧑x2",
+        "RO": "🧑x2"
+      },
+      {
+        "caseId": "reading-de-lexeme-sconj-waehrend-adversative",
+        "source": "resolution",
+        "surface": "Während",
+        "lemma": "während",
+        "T": "↔️⏳x1 ⏳↔️x1",
+        "RS": "⚖️x2",
+        "RO": "↔️⏳x2"
+      },
+      {
+        "caseId": "reading-de-morpheme-suffix-chen-neighbor-house-isolation",
+        "source": "resolution",
+        "surface": "chen",
+        "lemma": "-chen",
+        "T": "LOST:\"🔹 sm\\n\"x1 🤏🏠x1",
+        "RS": "🏠🤏x1 🔹x1",
+        "RO": "🤏x2"
+      },
+      {
+        "caseId": "reading-de-phraseme-collocation-entscheidung-treffen-new",
+        "source": "resolution",
+        "surface": "trifft eine Entscheidung",
+        "lemma": "eine Entscheidung treffen",
+        "T": "🤔✅x2",
+        "RS": "🤔✅x2",
+        "RO": "🤔✅x2"
+      },
+      {
+        "caseId": "reading-de-idiom-mit-den-woelfen-heulen",
+        "source": "resolution",
+        "surface": "heulte mit den Wölfen",
+        "lemma": "mit den Wölfen heulen",
+        "T": "🐺📣x2",
+        "RS": "🐺😭x1 🐺📣x1",
+        "RO": "🐺😭x1 🐺😢x1"
+      },
+      {
+        "caseId": "reading-de-phraseme-proverb-viele-koeche",
+        "source": "resolution",
+        "surface": "viele Köche verderben den Brei",
+        "lemma": "Viele Köche verderben den Brei",
+        "T": "👥🍲💥x2",
+        "RS": "👥🍲💥x2",
+        "RO": "👥🌀x1 👥🤯x1"
+      },
+      {
+        "caseId": "reading-de-phraseme-idiom-den-faden-verlieren",
+        "source": "resolution",
+        "surface": "verlor den Faden",
+        "lemma": "den Faden verlieren",
+        "T": "🧠❓x2",
+        "RS": "🧠❓x2",
+        "RO": "🧠❓x2"
+      },
+      {
+        "caseId": "reading-de-lexeme-verb-laufen-operate-new",
+        "source": "resolution",
+        "surface": "läuft",
+        "lemma": "laufen",
+        "T": "⚙️▶️x1 ⚙️✅x1",
+        "RS": "⚙️✅x1 ⚙️▶️x1",
+        "RO": "⚙️✅x1 ⚙️▶️x1"
+      },
+      {
+        "caseId": "reading-de-lexeme-verb-laufen-operate-reuse",
+        "source": "resolution",
+        "surface": "läuft",
+        "lemma": "laufen",
+        "T": "⚙️▶️x2",
+        "RS": "⚙️▶️x2",
+        "RO": "⚙️x2"
+      },
+      {
+        "caseId": "reading-de-aufstehen-morning-six",
+        "source": "resolution",
+        "surface": "steht auf",
+        "lemma": "aufstehen",
+        "T": "🛏️⬆️x2",
+        "RS": "🛌⬆️x1 🛏️⬆️x1",
+        "RO": "🛏️⬆️x2"
+      },
+      {
+        "caseId": "reading-de-aufstehen-uprising",
+        "source": "resolution",
+        "surface": "stehen auf",
+        "lemma": "aufstehen",
+        "T": "✊⬆️x2",
+        "RS": "✊x1 ✊⬆️x1",
+        "RO": "✊⬆️x2"
+      },
+      {
+        "caseId": "grammar-de-verb-participle-mitgebracht",
+        "source": "grammar-corpus",
+        "surface": "hat mitgebracht",
+        "lemma": "mitbringen",
+        "T": "🎁➕x1 🎁➡️x1",
+        "RS": "🎒➕x1 🤲➡️x1",
+        "RO": "🎒➡️x2"
+      },
+      {
+        "caseId": "grammar-de-verb-past-ging",
+        "source": "grammar-corpus",
+        "surface": "ging",
+        "lemma": "gehen",
+        "T": "🚶x2",
+        "RS": "🚶x2",
+        "RO": "🚶x2"
+      },
+      {
+        "caseId": "grammar-de-verb-imperative-lauf",
+        "source": "grammar-corpus",
+        "surface": "Lauf",
+        "lemma": "laufen",
+        "T": "🏃‍♂️💨x2",
+        "RS": "🏃x1 🏃💨x1",
+        "RO": "🏃💨x2"
+      },
+      {
+        "caseId": "grammar-de-verb-passive-wurde-gebeten",
+        "source": "grammar-corpus",
+        "surface": "wurde um gebeten",
+        "lemma": "bitten",
+        "T": "🙏🗣️x2",
+        "RS": "🙏x2",
+        "RO": "🙏x1 🙏🗣️x1"
+      },
+      {
+        "caseId": "grammar-de-verb-full-modal-mag",
+        "source": "grammar-corpus",
+        "surface": "mag",
+        "lemma": "mögen",
+        "T": "❤️👍x2",
+        "RS": "❤️x2",
+        "RO": "❤️x2"
+      },
+      {
+        "caseId": "grammar-de-verb-state-passive-geschlossen",
+        "source": "grammar-corpus",
+        "surface": "ist geschlossen",
+        "lemma": "schließen",
+        "T": "🚪🔒x1 🔒x1",
+        "RS": "🔒x2",
+        "RO": "🔒x2"
+      },
+      {
+        "caseId": "grammar-de-verb-modal-moechte-bleiben",
+        "source": "grammar-corpus",
+        "surface": "möchte",
+        "lemma": "mögen",
+        "T": "🙏💭x2",
+        "RS": "🙏x2",
+        "RO": "🙏💭x2"
+      },
+      {
+        "caseId": "grammar-de-verb-copula-war-ruhig",
+        "source": "grammar-corpus",
+        "surface": "war",
+        "lemma": "sein",
+        "T": "🕰️x1 LOST:\"existential inhabits silence?\"x1",
+        "RS": "🕰️x2",
+        "RO": "🕰️x2"
+      },
+      {
+        "caseId": "grammar-de-verb-dw-separable-vorbereiten",
+        "source": "grammar-corpus",
+        "surface": "bereitet sich auf vor",
+        "lemma": "sich vorbereiten",
+        "T": "🛠️🎯x1 🧰🧠x1",
+        "RS": "🧰⏳x2",
+        "RO": "🧰⏳x1 🧠✅x1"
+      },
+      {
+        "caseId": "grammar-de-verb-dw-separable-aufsetzen",
+        "source": "grammar-corpus",
+        "surface": "setzt auf",
+        "lemma": "aufsetzen",
+        "T": "😷🎭x1 😷⬆️x1",
+        "RS": "😷x2",
+        "RO": "😷x2"
+      },
+      {
+        "caseId": "grammar-de-verb-demo-exists",
+        "source": "grammar-corpus",
+        "surface": "Es gibt",
+        "lemma": "geben",
+        "T": "🎁x1 LOST:\"وجود\"x1",
+        "RS": "👐x2",
+        "RO": "👐x1 🫴x1"
+      },
+      {
+        "caseId": "grammar-de-verb-subject-reflexive",
+        "source": "grammar-corpus",
+        "surface": "Es handelt sich um",
+        "lemma": "sich handeln",
+        "T": "ℹ️x1 🔎x1",
+        "RS": "🔎x2",
+        "RO": "🔎ℹ️x1 🔎x1"
+      },
+      {
+        "caseId": "grammar-de-verb-typo-tanzd",
+        "source": "grammar-corpus",
+        "surface": "tanzd",
+        "lemma": "tanzen",
+        "T": "💃🕺x2",
+        "RS": "💃x2",
+        "RO": "💃x2"
+      },
+      {
+        "caseId": "grammar-de-verb-dw-pluperfect-angekuendigt",
+        "source": "grammar-corpus",
+        "surface": "hatten angekündigt",
+        "lemma": "ankündigen",
+        "T": "📣🗣️x2",
+        "RS": "📣🔮x2",
+        "RO": "📣🔮x1 📢🔮x1"
+      },
+      {
+        "caseId": "grammar-de-verb-dw-separable-nachwirken",
+        "source": "grammar-corpus",
+        "surface": "wirken nach",
+        "lemma": "nachwirken",
+        "T": "🔄🧠x1 〰️🧠x1",
+        "RS": "〰️⏳x2",
+        "RO": "🔄🧠x1 🧠🌊x1"
+      },
+      {
+        "caseId": "grammar-de-noun-dev-acc-plur-buecher",
+        "source": "grammar-corpus",
+        "surface": "die Bücher",
+        "lemma": "Buch",
+        "T": "📖x2",
+        "RS": "📖x2",
+        "RO": "📖x2"
+      },
+      {
+        "caseId": "grammar-de-noun-dev-gen-sing-mannes",
+        "source": "grammar-corpus",
+        "surface": "des Mannes",
+        "lemma": "Mann",
+        "T": "👨x2",
+        "RS": "👨x2",
+        "RO": "👨x2"
+      },
+      {
+        "caseId": "grammar-de-noun-accept-dat-plur-haeusern",
+        "source": "grammar-corpus",
+        "surface": "den Häusern",
+        "lemma": "Haus",
+        "T": "🏠x2",
+        "RS": "🏠x2",
+        "RO": "🏠x2"
+      },
+      {
+        "caseId": "grammar-de-noun-dev-nom-plur-banken",
+        "source": "grammar-corpus",
+        "surface": "Die Banken",
+        "lemma": "Bank",
+        "T": "🏦x2",
+        "RS": "🏦x2",
+        "RO": "🏦x2"
+      },
+      {
+        "caseId": "grammar-de-noun-demo-suspended-kinderbuecher",
+        "source": "grammar-corpus",
+        "surface": "Kinder-",
+        "lemma": "Kinderbuch",
+        "T": "👧📖x1 🧒📖x1",
+        "RS": "📚🧒x2",
+        "RO": "📚🧒x2"
+      },
+      {
+        "caseId": "grammar-de-noun-dev-substantivized-reisenden",
+        "source": "grammar-corpus",
+        "surface": "Die Reisenden",
+        "lemma": "Reisende",
+        "T": "🧳🚶x2",
+        "RS": "🧳🚶x2",
+        "RO": "🧳🚶x2"
+      },
+      {
+        "caseId": "grammar-de-adj-demo-comparative-besser",
+        "source": "grammar-corpus",
+        "surface": "besser",
+        "lemma": "gut",
+        "T": "👍⬆️x2",
+        "RS": "👍⬆️x2",
+        "RO": "👍⬆️x2"
+      },
+      {
+        "caseId": "grammar-de-adj-dev-attributive-superlative-hoch",
+        "source": "grammar-corpus",
+        "surface": "höchste",
+        "lemma": "hoch",
+        "T": "⬆️x2",
+        "RS": "⬆️x2",
+        "RO": "⬆️x2"
+      },
+      {
+        "caseId": "grammar-de-adj-demo-ordinal-erste",
+        "source": "grammar-corpus",
+        "surface": "erste",
+        "lemma": "erst",
+        "T": "1️⃣x2",
+        "RS": "1️⃣x2",
+        "RO": "1️⃣x2"
+      },
+      {
+        "caseId": "grammar-de-idiom-flinte-past-full",
+        "source": "grammar-corpus",
+        "surface": "warf die Flinte ins Korn",
+        "lemma": "die Flinte ins Korn werfen",
+        "T": "🏳️😞x1 LOST:\"🏳️‍🏳️\"x1",
+        "RS": "🏳️x1 🏳️😞x1",
+        "RO": "🏳️😞x2"
+      },
+      {
+        "caseId": "grammar-de-idiom-teufel-wand-full",
+        "source": "grammar-corpus",
+        "surface": "malten den Teufel an die Wand",
+        "lemma": "den Teufel an die Wand malen",
+        "T": "😨🧱👹x1 😈🖼️x1",
+        "RS": "😨🧱x1 😰🔮x1",
+        "RO": "😱🔮x1 😨🔮x1"
+      },
+      {
+        "caseId": "grammar-de-idiom-fliegen-present-full",
+        "source": "grammar-corpus",
+        "surface": "schlägt zwei Fliegen mit einer Klappe",
+        "lemma": "zwei Fliegen mit einer Klappe schlagen",
+        "T": "2️⃣🎯✅x1 🎯✅x1",
+        "RS": "🎯🎯x1 2️⃣✅✅x1",
+        "RO": "🎯🎯x1 🎯✅✅x1"
+      },
+      {
+        "caseId": "grammar-de-idiom-ohr-present-full",
+        "source": "grammar-corpus",
+        "surface": "haut übers Ohr",
+        "lemma": "übers Ohr hauen",
+        "T": "🪤💸x2",
+        "RS": "🎭💸x2",
+        "RO": "🪤💸x1 🕵️‍♂️💸x1"
+      },
+      {
+        "caseId": "grammar-de-idiom-schlauch-present-full",
+        "source": "grammar-corpus",
+        "surface": "stehe auf dem Schlauch",
+        "lemma": "auf dem Schlauch stehen",
+        "T": "🤔❓x2",
+        "RS": "😕🧠x2",
+        "RO": "😕🧠x2"
+      },
+      {
+        "caseId": "grammar-de-coll-antrag-past-full",
+        "source": "grammar-corpus",
+        "surface": "stellte einen Antrag",
+        "lemma": "einen Antrag stellen",
+        "T": "📝📤x2",
+        "RS": "📝📤x1 📝📬x1",
+        "RO": "📝📤x2"
+      },
+      {
+        "caseId": "grammar-de-coll-abschied-past-full",
+        "source": "grammar-corpus",
+        "surface": "nahmen Abschied",
+        "lemma": "Abschied nehmen",
+        "T": "LOST:\"👋րաժեշտ\"x2",
+        "RS": "👋x2",
+        "RO": "👋x2"
+      },
+      {
+        "caseId": "grammar-de-coll-ende-imperative-full",
+        "source": "grammar-corpus",
+        "surface": "Komm zum Ende",
+        "lemma": "zum Ende kommen",
+        "T": "🏁x1 LOST:\"🏁 Tamam!\"x1",
+        "RS": "🏁x2",
+        "RO": "🏁x2"
+      },
+      {
+        "caseId": "waterfall-passiv#2",
+        "source": "waterfall",
+        "surface": "Das Paket",
+        "lemma": "Paket",
+        "T": "📦x2",
+        "RS": "📦x2",
+        "RO": "📦x2"
+      },
+      {
+        "caseId": "waterfall-relativ#2",
+        "source": "waterfall",
+        "surface": "Die Frau",
+        "lemma": "Frau",
+        "T": "👩x2",
+        "RS": "👩x2",
+        "RO": "👩x2"
+      },
+      {
+        "caseId": "waterfall-kakao#2",
+        "source": "waterfall",
+        "surface": "heiße",
+        "lemma": "heiß",
+        "T": "🔥x2",
+        "RS": "🔥x2",
+        "RO": "🔥x2"
+      },
+      {
+        "caseId": "waterfall-ausweg#2",
+        "source": "waterfall",
+        "surface": "Es gibt",
+        "lemma": "geben",
+        "T": "🎁x1 🫴x1",
+        "RS": "📍x1 🔎x1",
+        "RO": "➡️x2"
+      },
+      {
+        "caseId": "waterfall-museum#2",
+        "source": "waterfall",
+        "surface": "Das Museum",
+        "lemma": "Museum",
+        "T": "🏛️x2",
+        "RS": "🏛️x2",
+        "RO": "🏛️x2"
+      },
+      {
+        "caseId": "waterfall-genitiv#2",
+        "source": "waterfall",
+        "surface": "Das Haus",
+        "lemma": "Haus",
+        "T": "🏠x2",
+        "RS": "🏠x2",
+        "RO": "🏠x2"
+      },
+      {
+        "caseId": "waterfall-verfuegung#2",
+        "source": "waterfall",
+        "surface": "Der Lehrer",
+        "lemma": "Lehrer",
+        "T": "🧑‍🏫x1 👨‍🏫x1",
+        "RS": "🧑‍🏫x2",
+        "RO": "👨‍🏫x1 🧑‍🏫x1"
+      },
+      {
+        "caseId": "waterfall-kakao#4",
+        "source": "waterfall",
+        "surface": "Der Kakao",
+        "lemma": "Kakao",
+        "T": "☕x2",
+        "RS": "☕x2",
+        "RO": "☕x2"
+      },
+      {
+        "caseId": "waterfall-fremd#2",
+        "source": "waterfall",
+        "surface": "Das Meeting",
+        "lemma": "Meeting",
+        "T": "👥📅x1 👥🗣️x1",
+        "RS": "👥🗣️x1 👥🗓️x1",
+        "RO": "👥🗣️x2"
+      },
+      {
+        "caseId": "waterfall-museum#4",
+        "source": "waterfall",
+        "surface": "öffnet",
+        "lemma": "öffnen",
+        "T": "👐x1 🔓x1",
+        "RS": "🔓x2",
+        "RO": "🔓x2"
+      },
+      {
+        "caseId": "waterfall-usw#2",
+        "source": "waterfall",
+        "surface": "kauft",
+        "lemma": "kaufen",
+        "T": "🛒💶x1 🛒💳x1",
+        "RS": "🛒💳x1 🛒💰x1",
+        "RO": "🛒💰x1 💳🛍️x1"
+      },
+      {
+        "caseId": "waterfall-typo#2",
+        "source": "waterfall",
+        "surface": "habe",
+        "lemma": "haben",
+        "T": "🤲x2",
+        "RS": "🤲x2",
+        "RO": "👐x1 🤲x1"
+      },
+      {
+        "caseId": "waterfall-verfuegung#4",
+        "source": "waterfall",
+        "surface": "stellt zur Verfügung",
+        "lemma": "zur Verfügung stellen",
+        "T": "🤲📦x1 📦🤲x1",
+        "RS": "🤲📦x2",
+        "RO": "📦🤲x1 🤲📦x1"
+      },
+      {
+        "caseId": "waterfall-kakao#6",
+        "source": "waterfall",
+        "surface": "schmeckt",
+        "lemma": "schmecken",
+        "T": "👅👍x1 👅😋x1",
+        "RS": "👅x2",
+        "RO": "👅x2"
+      },
+      {
+        "caseId": "waterfall-fremd#4",
+        "source": "waterfall",
+        "surface": "war",
+        "lemma": "sein",
+        "T": "🔗x1 LOST:\"existential/status state\"x1",
+        "RS": "🕰️x2",
+        "RO": "🕰️x2"
+      },
+      {
+        "caseId": "waterfall-aufstehen#4",
+        "source": "waterfall",
+        "surface": "steht auf",
+        "lemma": "aufstehen",
+        "T": "🛌⬆️x1 🛏️⬆️x1",
+        "RS": "🛌⬆️x1 🛏️⬆️x1",
+        "RO": "🧍⬆️x2"
+      },
+      {
+        "caseId": "waterfall-genitiv#6",
+        "source": "waterfall",
+        "surface": "Nachbarn",
+        "lemma": "Nachbar",
+        "T": "🏠↔️x2",
+        "RS": "🏠↔️x2",
+        "RO": "🏠↔️x1 🏠👤x1"
+      },
+      {
+        "caseId": "waterfall-passiv#8",
+        "source": "waterfall",
+        "surface": "wird geliefert",
+        "lemma": "liefern",
+        "T": "📦🚚x2",
+        "RS": "📦🚚x2",
+        "RO": "📦🚚x2"
+      },
+      {
+        "caseId": "waterfall-relativ#9",
+        "source": "waterfall",
+        "surface": "wartet",
+        "lemma": "warten",
+        "T": "⏳x2",
+        "RS": "⏳x2",
+        "RO": "⏳x2"
+      },
+      {
+        "caseId": "waterfall-genitiv#8",
+        "source": "waterfall",
+        "surface": "ist",
+        "lemma": "sein",
+        "T": "🔗x1 🟰x1",
+        "RS": "🟰x2",
+        "RO": "🟰x2"
+      },
+      {
+        "caseId": "waterfall-verfuegung#8",
+        "source": "waterfall",
+        "surface": "Schülern",
+        "lemma": "Schüler",
+        "T": "🧑‍🎓x2",
+        "RS": "🧑‍🎓x2",
+        "RO": "🧑‍🎓x2"
+      },
+      {
+        "caseId": "waterfall-erinnert#14",
+        "source": "waterfall",
+        "surface": "hat sich an erinnert",
+        "lemma": "sich erinnern",
+        "T": "🧠💭x2",
+        "RS": "🧠💭x2",
+        "RO": "🧠💭x2"
+      },
+      {
+        "caseId": "waterfall-relativ#12",
+        "source": "waterfall",
+        "surface": "kennt",
+        "lemma": "kennen",
+        "T": "🧠🤝x2",
+        "RS": "👤💭x1 🧠👤x1",
+        "RO": "🧠👤x2"
+      },
+      {
+        "caseId": "waterfall-usw#15",
+        "source": "waterfall",
+        "surface": "dem Markt",
+        "lemma": "Markt",
+        "T": "🛒x2",
+        "RS": "🛒x2",
+        "RO": "🛒x2"
+      },
+      {
+        "caseId": "waterfall-faden#2",
+        "source": "waterfall",
+        "surface": "hat den Faden verloren",
+        "lemma": "den Faden verlieren",
+        "T": "🧠❓x2",
+        "RS": "🧠❓x2",
+        "RO": "🧠❓x2"
+      }
+    ]
+  },
+  "latency": {
+    "all": {
+      "T": {
+        "n": 140,
+        "uncached": 0,
+        "p50": 1206,
+        "p90": 1804,
+        "mean": 1350,
+        "warmP50": 1206,
+        "warmP90": 1804,
+        "providerP50": 938,
+        "providerP90": 1529,
+        "outputTokensMean": 7.97,
+        "outputTokensP50": 8,
+        "inputTokensMean": 1961.4,
+        "costPerCallUsd": 0.0001118,
+        "costPerWarmCallUsd": 0.0001118
+      },
+      "RS": {
+        "n": 140,
+        "uncached": 0,
+        "p50": 1262,
+        "p90": 1728,
+        "mean": 1392,
+        "warmP50": 1262,
+        "warmP90": 1728,
+        "providerP50": 982,
+        "providerP90": 1477,
+        "outputTokensMean": 15.43,
+        "outputTokensP50": 15,
+        "inputTokensMean": 2007.4,
+        "costPerCallUsd": 0.0001315,
+        "costPerWarmCallUsd": 0.0001315
+      },
+      "RO": {
+        "n": 140,
+        "uncached": 0,
+        "p50": 1194,
+        "p90": 1876,
+        "mean": 1304,
+        "warmP50": 1194,
+        "warmP90": 1876,
+        "providerP50": 942,
+        "providerP90": 1597,
+        "outputTokensMean": 17.66,
+        "outputTokensP50": 18,
+        "inputTokensMean": 2067.4,
+        "costPerCallUsd": 0.0001393,
+        "costPerWarmCallUsd": 0.0001393
+      }
+    },
+    "heldOut": null,
+    "q2": null,
+    "risky": {
+      "T": {
+        "n": 140,
+        "uncached": 0,
+        "p50": 1206,
+        "p90": 1804,
+        "mean": 1350,
+        "warmP50": 1206,
+        "warmP90": 1804,
+        "providerP50": 938,
+        "providerP90": 1529,
+        "outputTokensMean": 7.97,
+        "outputTokensP50": 8,
+        "inputTokensMean": 1961.4,
+        "costPerCallUsd": 0.0001118,
+        "costPerWarmCallUsd": 0.0001118
+      },
+      "RS": {
+        "n": 140,
+        "uncached": 0,
+        "p50": 1262,
+        "p90": 1728,
+        "mean": 1392,
+        "warmP50": 1262,
+        "warmP90": 1728,
+        "providerP50": 982,
+        "providerP90": 1477,
+        "outputTokensMean": 15.43,
+        "outputTokensP50": 15,
+        "inputTokensMean": 2007.4,
+        "costPerCallUsd": 0.0001315,
+        "costPerWarmCallUsd": 0.0001315
+      },
+      "RO": {
+        "n": 140,
+        "uncached": 0,
+        "p50": 1194,
+        "p90": 1876,
+        "mean": 1304,
+        "warmP50": 1194,
+        "warmP90": 1876,
+        "providerP50": 942,
+        "providerP90": 1597,
+        "outputTokensMean": 17.66,
+        "outputTokensP50": 18,
+        "inputTokensMean": 2067.4,
+        "costPerCallUsd": 0.0001393,
+        "costPerWarmCallUsd": 0.0001393
+      }
+    },
+    "pairedVsT": {
+      "RS": {
+        "ref": "T",
+        "pairs": 140,
+        "diffP50": 81,
+        "diffP50ci95": [
+          8,
+          163
+        ],
+        "diffMean": 42,
+        "diffMeanCi95": [
+          -119,
+          220
+        ],
+        "diffP10": -678,
+        "diffP90": 561,
+        "armFaster": 58
+      },
+      "RO": {
+        "ref": "T",
+        "pairs": 140,
+        "diffP50": 58,
+        "diffP50ci95": [
+          -59,
+          166
+        ],
+        "diffMean": -46,
+        "diffMeanCi95": [
+          -192,
+          86
+        ],
+        "diffP10": -732,
+        "diffP90": 708,
+        "armFaster": 66
+      }
+    },
+    "pairedOther": {
+      "RO_vs_RS": {
+        "ref": "RS",
+        "pairs": 140,
+        "diffP50": -13,
+        "diffP50ci95": [
+          -115,
+          77
+        ],
+        "diffMean": -88,
+        "diffMeanCi95": [
+          -246,
+          45
+        ],
+        "diffP10": -652,
+        "diffP90": 567,
+        "armFaster": 71
+      }
+    }
+  },
+  "nonContentFailures": [],
+  "heldOutPerCase": null
+}

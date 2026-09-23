@@ -1,0 +1,259 @@
+/**
+ * E9 click-time grammar harness on corpus encounters: E7's harness.ts
+ * (prototypes/audit/e7-intake-headwords/harness.ts) with the same arms,
+ * scoring, trace summaries and interleaving. Changes:
+ *   - `--intake e7:oracle,e7:oracle2` reads E7's recorded proposals from the
+ *     E7 results folder (a bare label reads E9's results folder);
+ *   - E9 ledger and $0.55 cap, billing stop (lib.ts);
+ *   - each record carries expectsUnresolved (corpus idealOutput
+ *     {decision:"Unresolved"}) so honest Unresolved can be scored;
+ *   - the pool stops starting case-reps after a billing failure.
+ *
+ * Arms
+ *   base  unmodified src resolveGrammar through grammarOperationExperiment.run
+ *   H     E7 variant: production judgments + the intake headword proposal
+ *         appended to canonicalFormAlternatives + E2 VERB infinitive-shape
+ *         guard + E2 Idiom/Collocation phraseme guard.
+ * Per case and repetition the arm order alternates (base first when
+ * (caseIndex + rep) is even).
+ *
+ *   bun --env-file=/Users/annagorelova/work/textfresser-batteries/.env.local \
+ *     prototypes/audit/e9-headwords-adj-idiom/harness.ts --corpora adjective,idiom,collocation \
+ *     --intake e7:oracle,e7:oracle2 --accept oracle --arms base,H --reps 2 --label oracle --stop-at 0.2
+ */
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import { getExperiment } from "../../../src/development.js";
+import { grammarOperationExperiment } from "../../../src/evaluation/grammar-operation.js";
+import type { OperationTrace } from "../../../src/types.js";
+import { encounterOf } from "../e2-canonical-form/shared.js";
+import type { VariantConfig } from "../e7-intake-headwords/variant-judgments.js";
+import {
+	projectAttestation,
+	variantResolveGrammar,
+} from "../e7-intake-headwords/variant-production.js";
+import { type Case, type CorpusName, loadCases } from "./cases.js";
+import {
+	billing,
+	type MeteredCall,
+	meteredOptions,
+	pool,
+	resultsDir,
+	Spend,
+} from "./lib.js";
+import {
+	callSummaries,
+	expectsUnresolved,
+	type Outcome,
+	score,
+} from "./record.js";
+
+const { values: args } = parseArgs({
+	options: {
+		corpora: { type: "string", default: "adjective,idiom,collocation" },
+		intake: { type: "string", default: "e7:oracle,e7:oracle2" },
+		arms: { type: "string", default: "base,H" },
+		reps: { type: "string", default: "2" },
+		"rep-offset": { type: "string", default: "0" },
+		cases: { type: "string" },
+		limit: { type: "string" },
+		label: { type: "string", default: "run" },
+		"stop-at": { type: "string", default: "0.05" },
+		concurrency: { type: "string", default: "4" },
+		/** Mapping statuses whose proposal H uses ("oracle" for oracle-target intake). */
+		accept: { type: "string", default: "oracle" },
+	},
+});
+const accepted = new Set((args.accept as string).split(","));
+const spend = new Spend("harness.ts", args.label as string, Number(args["stop-at"]));
+const outPath = resolve(resultsDir, `grammar-${args.label}.jsonl`);
+const e7Results = resolve(resultsDir, "../../e7-intake-headwords/results");
+
+// ------------------------------------------------------------- proposals
+
+type Mapping = {
+	caseId: string;
+	status: string;
+	proposal: string | null;
+	unitId?: string | null;
+};
+const mappings = new Map<string, Mapping & { intakeLabel: string }>();
+for (const label of (args.intake as string).split(",")) {
+	const path = label.startsWith("e7:")
+		? resolve(e7Results, `intake-${label.slice(3)}.jsonl`)
+		: resolve(resultsDir, `intake-${label}.jsonl`);
+	if (!existsSync(path)) throw Error(`missing ${path}`);
+	for (const line of readFileSync(path, "utf8").split("\n")) {
+		if (!line.trim()) continue;
+		const record = JSON.parse(line) as { cases?: Mapping[] };
+		for (const mapping of record.cases ?? [])
+			mappings.set(mapping.caseId, { ...mapping, intakeLabel: label });
+	}
+}
+
+// ----------------------------------------------------------------- arms
+
+const armH: VariantConfig = {
+	label: "H",
+	codeCandidates: false,
+	verbGuard: true,
+	speculative: false,
+	wording: false,
+	phrasemeGuard: true,
+	intakeProposals: true,
+};
+
+async function runArm(
+	item: Case,
+	arm: "base" | "H",
+	proposal: string | null,
+	traces: OperationTrace[],
+	calls: MeteredCall[],
+	scope: string,
+): Promise<Outcome> {
+	const input = { markedContext: item.markedContext, members: item.members };
+	const start = performance.now();
+	try {
+		if (arm === "base") {
+			const experiment = grammarOperationExperiment(
+				getExperiment(item.experimentId),
+				meteredOptions(spend, scope, calls),
+			);
+			const output = await experiment.run(input as never, {
+				signal: new AbortController().signal,
+				recordTrace: (trace) => traces.push(trace as OperationTrace),
+			});
+			return { ok: true, output, wallMs: performance.now() - start };
+		}
+		const encounter = encounterOf(item.experimentId, input);
+		const options = meteredOptions(spend, scope, calls, {
+			onOperation: (trace) => traces.push(trace),
+		});
+		const result = await Effect.runPromise(
+			Effect.either(variantResolveGrammar(options, armH, proposal)(encounter)),
+		);
+		if (result._tag === "Left") throw result.left;
+		return {
+			ok: true,
+			output: projectAttestation(result.right as never),
+			wallMs: performance.now() - start,
+		};
+	} catch (error) {
+		return { ok: false, error, wallMs: performance.now() - start };
+	}
+}
+
+async function runCaseRep(item: Case, rep: number, arms: ("base" | "H")[]) {
+	const mapping = mappings.get(item.caseId);
+	const proposal =
+		mapping && accepted.has(mapping.status) ? (mapping.proposal ?? null) : null;
+	const order = (item.caseIndex + rep) % 2 === 0 ? arms : [...arms].reverse();
+	const lines: string[] = [];
+	for (const [position, arm] of order.entries()) {
+		if (billing.failure) break;
+		const traces: OperationTrace[] = [];
+		const calls: MeteredCall[] = [];
+		const scope = `${item.caseId}#${rep}#${arm}`;
+		const startedAt = new Date().toISOString();
+		const outcome = await runArm(item, arm, proposal, traces, calls, scope);
+		const scored = score(item, outcome);
+		const output = scored.output as { lemma?: { canonicalForm?: string } } | undefined;
+		const canonicalForm = output?.lemma?.canonicalForm ?? null;
+		const summaries = callSummaries(traces);
+		const e2 =
+			traces.flatMap((trace) => trace.events).find((event) => event.kind === "E2Canonical")
+				?.data ?? null;
+		const expectUnresolved = expectsUnresolved(item);
+		lines.push(
+			JSON.stringify({
+				label: args.label,
+				set: item.set,
+				corpus: item.corpus,
+				kind: item.kind,
+				group: item.group ?? null,
+				caseId: item.caseId,
+				caseIndex: item.caseIndex,
+				rep,
+				arm,
+				order: position,
+				startedAt,
+				wallMs: outcome.wallMs,
+				operationMs: traces[0]?.durationMs ?? null,
+				goldCanonical: item.gold,
+				expectsUnresolved: expectUnresolved,
+				canonicalForm,
+				canonicalCorrect: item.gold !== null && canonicalForm === item.gold,
+				unresolvedCorrect: expectUnresolved ? scored.status === "Unresolved" : null,
+				intake: mapping
+					? { label: mapping.intakeLabel, status: mapping.status, proposal: mapping.proposal, unitId: mapping.unitId ?? null }
+					: null,
+				proposalUsedByArm: arm === "H" ? proposal : null,
+				e2,
+				lunaCalls: summaries.filter((call) => call.executor !== "TypeSafe").length,
+				costUsd: calls.reduce((sum, call) => sum + call.costUsd, 0),
+				calls: summaries,
+				...scored,
+			}),
+		);
+	}
+	if (lines.length) appendFileSync(outPath, `${lines.join("\n")}\n`);
+}
+
+// ------------------------------------------------------------------ main
+
+const names = (args.corpora as string).split(",") as CorpusName[];
+let cases = loadCases(names);
+if (args.cases) {
+	const wanted = new Set((args.cases as string).split(","));
+	cases = cases.filter((item) => wanted.has(item.caseId));
+}
+if (args.limit) cases = cases.slice(0, Number(args.limit));
+const arms = (args.arms as string).split(",") as ("base" | "H")[];
+const reps = Number(args.reps);
+const repOffset = Number(args["rep-offset"]);
+const jobs: { item: Case; rep: number }[] = [];
+// Rep-major order, so a cap or billing stop leaves whole reps.
+for (let rep = 1 + repOffset; rep <= reps + repOffset; rep++)
+	for (const item of cases) jobs.push({ item, rep });
+const unmapped = cases.filter((item) => !mappings.has(item.caseId)).length;
+console.error(
+	`E9 grammar ${args.label}: ${jobs.length} case-reps x arms ${arms.join(",")}; ${unmapped} cases without intake mapping`,
+);
+let done = 0,
+	skipped = 0;
+const started = performance.now();
+await pool(jobs, Number(args.concurrency), async (job) => {
+	if (!spend.allows()) {
+		skipped++;
+		return;
+	}
+	try {
+		await runCaseRep(job.item, job.rep, arms);
+	} catch (error) {
+		console.error("case-rep crashed", job.item.caseId, job.rep, error);
+	}
+	done++;
+	if (done % 20 === 0)
+		console.error(
+			`  ${done}/${jobs.length} total $${spend.total().toFixed(4)} ${((performance.now() - started) / 1000).toFixed(0)}s`,
+		);
+});
+spend.commit();
+const meta = {
+	label: args.label,
+	args,
+	jobs: jobs.length,
+	done,
+	skipped,
+	billingFailure: billing.failure,
+	spentThisRun: spend.spent,
+	totalAfter: spend.total(),
+	jevCalls: spend.jevCalls,
+	lunaCalls: spend.lunaCalls,
+	elapsedS: (performance.now() - started) / 1000,
+	finishedAt: new Date().toISOString(),
+};
+writeFileSync(resolve(resultsDir, `grammar-${args.label}-meta.json`), JSON.stringify(meta, null, 1));
+console.error(JSON.stringify(meta));

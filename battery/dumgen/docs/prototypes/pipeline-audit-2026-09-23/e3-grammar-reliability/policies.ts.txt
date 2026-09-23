@@ -1,0 +1,555 @@
+/**
+ * E3 consumption policies, expressed as rewrites of the jev answers that the
+ * UNMODIFIED src grammar code then consumes. A rewrite only changes
+ * `answer.choice` (probabilities stay as returned), so each policy equals a
+ * production change of the form "consume answer X differently" in
+ * resolveGrammarJudgments / resolveAuthoredGrammarIdentity.
+ *
+ * Question policies (`editQuestions`) change what is sent (a tape miss, so a
+ * live call) and re-expand the answer to the original question ids so src
+ * validation still passes, which is exactly what a production question
+ * change plus the matching consumption would do.
+ */
+import type { Questions } from "promptsmith/typesafe";
+import { locateAuthoredIdentity } from "../../../src/concrete-lang/de/authored-closed-sets/realizations.js";
+import { sameValue } from "../../../src/concrete-lang/de/authored-closed-sets/select.js";
+import { candidatesFor } from "../../../src/concrete-lang/de/sentence-analysis/identity.js";
+import type { DumgenOptions } from "../../../src/types.js";
+
+type ChoiceAnswer = {
+	type: "choice";
+	choice: string;
+	confidence: number;
+	probabilities: Record<string, number>;
+};
+type Answers = Record<string, ChoiceAnswer | { type: string }>;
+type State = Record<string, unknown>;
+export type Rewrite = { from: string; to: string };
+
+export type Policy = {
+	readonly name: string;
+	readonly description: string;
+	/** Rewrites features/identity answers in place; returns what changed. */
+	readonly rewrite?: (context: {
+		route: string;
+		call: "features" | "identity" | "other";
+		state: State;
+		questions: Questions;
+		answers: Answers;
+	}) => void;
+	/** Synthetic answer instead of a call (identity skip). */
+	readonly shortCircuit?: (context: {
+		route: string;
+		call: "features" | "identity" | "other";
+		state: State;
+		questions: Questions;
+	}) => { answers: Answers } | null;
+	/** Question edit for live variants: returns the questions to send. */
+	readonly editQuestions?: (context: {
+		route: string;
+		call: "features" | "identity" | "other";
+		state: State;
+		questions: Questions;
+	}) => Questions | null;
+};
+
+const lexeme = (route: string) => route.includes("/Lexeme/");
+function choiceOf(answers: Answers, id: string): ChoiceAnswer | null {
+	const answer = answers[id];
+	return answer && answer.type === "choice" ? (answer as ChoiceAnswer) : null;
+}
+function argmax(
+	answer: ChoiceAnswer,
+	allowed: (key: string) => boolean,
+): string | null {
+	let best: string | null = null;
+	let bestP = -1;
+	for (const [key, p] of Object.entries(answer.probabilities))
+		if (allowed(key) && p > bestP) {
+			best = key;
+			bestP = p;
+		}
+	return best;
+}
+
+// ---------------------------------------------------------------- support
+
+export const supportThreshold = (threshold: number): Policy => ({
+	name: `support-${threshold}`,
+	description: `support fails only when P(Unresolved) >= ${threshold}`,
+	rewrite({ call, answers }) {
+		if (call !== "features") return;
+		const support = choiceOf(answers, "support");
+		if (
+			support?.choice === "Unresolved" &&
+			(support.probabilities.Unresolved ?? 0) < threshold
+		)
+			support.choice = "Supported";
+	},
+});
+export const supportDropLexeme: Policy = {
+	name: "support-drop-lexeme",
+	description:
+		"support is ignored on Lexeme routes (kept as asked for Phraseme routes)",
+	rewrite({ call, route, answers }) {
+		if (call !== "features" || !lexeme(route)) return;
+		const support = choiceOf(answers, "support");
+		if (support) support.choice = "Supported";
+	},
+};
+export const supportDropAll: Policy = {
+	name: "support-drop-all",
+	description: "support is ignored on every route (upper bound; shows what it catches)",
+	rewrite({ call, answers }) {
+		if (call !== "features") return;
+		const support = choiceOf(answers, "support");
+		if (support) support.choice = "Supported";
+	},
+};
+
+// ------------------------------------------------------------ noun number
+
+const nounNumber = "surface.inflectionalFeatures.number";
+export const nounMarkedNumber: Policy = {
+	name: "noun-marked-number",
+	description:
+		"NOUN: inflection Marked with number Unmarked takes the higher of Sing/Plur instead of failing as incoherent",
+	rewrite({ call, route, answers }) {
+		if (call !== "features" || !route.endsWith("/NOUN")) return;
+		const inflection = choiceOf(answers, "inflection");
+		const number = choiceOf(answers, nounNumber);
+		if (inflection?.choice !== "Marked" || number?.choice !== "Unmarked")
+			return;
+		const best = argmax(number, (key) => key === "Sing" || key === "Plur");
+		if (best) number.choice = best;
+	},
+};
+/** Live question variant: NOUN surface number offers only Sing/Plur (+Unresolved). */
+export const nounNumberNoUnmarked: Policy = {
+	name: "noun-number-no-unmarked",
+	description:
+		"NOUN: the Unmarked option is removed from surface number (live question change)",
+	editQuestions({ call, route, questions }) {
+		if (call !== "features" || !route.endsWith("/NOUN")) return null;
+		const question = questions[nounNumber] as
+			| { type: string; criteria: Record<string, string> }
+			| undefined;
+		if (!question || !("Unmarked" in question.criteria)) return null;
+		const { Unmarked: _drop, ...criteria } = question.criteria;
+		return { ...questions, [nounNumber]: { ...question, criteria } } as Questions;
+	},
+};
+
+// ---------------------------------------------------------- PRON flags
+
+const referenceNumber = "lemma.coreFeatures.referenceNumber";
+export const pronReferenceNumberInapplicable: Policy = {
+	name: "pron-refnum-inapplicable",
+	description:
+		"PRON: referenceNumber Unresolved becomes Unmarked when the judged pronType is not Prs (feature applies only to personal/possessive)",
+	rewrite({ call, route, answers }) {
+		if (call !== "features" || !route.endsWith("/PRON")) return;
+		const answer = choiceOf(answers, referenceNumber);
+		const pronType = choiceOf(answers, "lemma.coreFeatures.pronType");
+		if (answer?.choice !== "Unresolved" || !pronType) return;
+		if (pronType.choice === "Prs" || pronType.choice === "Unresolved") return;
+		answer.choice = "Unmarked";
+	},
+};
+export const pronReferenceNumberArgmax: Policy = {
+	name: "pron-refnum-argmax",
+	description:
+		"PRON: referenceNumber Unresolved becomes the argmax of the non-Unresolved options, any pronType",
+	rewrite({ call, route, answers }) {
+		if (call !== "features" || !route.endsWith("/PRON")) return;
+		const answer = choiceOf(answers, referenceNumber);
+		if (answer?.choice !== "Unresolved") return;
+		const best = argmax(answer, (key) => key !== "Unresolved");
+		if (best) answer.choice = best;
+	},
+};
+
+// ------------------------------------------------------- low-stakes flags
+
+const lowStakesFlags = [
+	"lemma.coreFeatures.hyph",
+	"lemma.coreFeatures.abbr",
+	"lemma.coreFeatures.foreign",
+];
+export const lowStakesDefaults: Policy = {
+	name: "low-stakes-defaults",
+	description:
+		"historicalStatus Unresolved -> Current; hyph/abbr/foreign Unresolved -> Unmarked",
+	rewrite({ call, answers }) {
+		if (call !== "features") return;
+		const historical = choiceOf(answers, "historicalStatus");
+		if (historical?.choice === "Unresolved") historical.choice = "Current";
+		for (const id of lowStakesFlags) {
+			const answer = choiceOf(answers, id);
+			if (answer?.choice === "Unresolved" && "Unmarked" in answer.probabilities)
+				answer.choice = "Unmarked";
+		}
+	},
+};
+
+// ------------------------------------------------------------- spelling
+
+/**
+ * `spelling` (Canonical vs licensed Variant) is a Surface label, not identity.
+ * Run 1 showed it Unresolved on almost every typo / unknown-word case, always
+ * together with support; gold is Canonical there (the typo is carried by
+ * memberOrthographies).
+ */
+export const spellingTypoCanonical: Policy = {
+	name: "spelling-typo-canonical",
+	description:
+		"spelling Unresolved -> Canonical when some member orthography is judged Typo",
+	rewrite({ call, answers }) {
+		if (call !== "features") return;
+		const spelling = choiceOf(answers, "spelling");
+		if (spelling?.choice !== "Unresolved") return;
+		const typo = Object.keys(answers).some(
+			(id) => id.startsWith("orthography_") && choiceOf(answers, id)?.choice === "Typo",
+		);
+		if (typo) spelling.choice = "Canonical";
+	},
+};
+export const spellingDefault: Policy = {
+	name: "spelling-default",
+	description: "spelling Unresolved -> the higher of Canonical/Variant",
+	rewrite({ call, answers }) {
+		if (call !== "features") return;
+		const spelling = choiceOf(answers, "spelling");
+		if (spelling?.choice !== "Unresolved") return;
+		const best = argmax(spelling, (key) => key === "Canonical" || key === "Variant");
+		if (best) spelling.choice = best;
+	},
+};
+
+// ------------------------------------------------- closed-class catalog
+
+/** Core values every authored candidate of this Kind and spelling agrees on. */
+export function catalogFixedCore(
+	kind: string,
+	members: readonly string[],
+): Record<string, string> | null {
+	const candidates = candidatesFor(members.join(" ")).filter(
+		(member) => member.lemma.kind === kind,
+	);
+	if (!candidates.length) return null;
+	const fixed: Record<string, string> = {};
+	const keys = Object.keys(
+		candidates[0]!.lemma.coreFeatures as Record<string, unknown>,
+	);
+	for (const key of keys) {
+		const values = new Set(
+			candidates.map((member) =>
+				JSON.stringify(
+					(member.lemma.coreFeatures as Record<string, unknown>)[key] ??
+						null,
+				),
+			),
+		);
+		if (values.size !== 1) continue;
+		const value = JSON.parse([...values][0]!) as unknown;
+		fixed[`lemma.coreFeatures.${key}`] =
+			value === null ? "Unmarked" : String(value);
+	}
+	return fixed;
+}
+export const closedClassCatalogFill: Policy = {
+	name: "closed-class-catalog-fill",
+	description:
+		"DET/PRON: Core answers on which every authored candidate for the spelling agrees are taken from the catalog (offline proxy of closed-class-core-pruning: same questions asked, answers overridden)",
+	rewrite({ call, route, state, answers }) {
+		if (call !== "features") return;
+		const kind = route.split("/").at(-1)!;
+		if (kind !== "DET" && kind !== "PRON") return;
+		const fixed = catalogFixedCore(kind, state.members as string[]);
+		if (!fixed) return;
+		for (const [id, label] of Object.entries(fixed)) {
+			const answer = choiceOf(answers, id);
+			if (answer && label in answer.probabilities) answer.choice = label;
+		}
+	},
+};
+/**
+ * DET/PRON: an Unresolved Core answer is settled by the authored catalog when
+ * the spelling's candidates that agree with every other (resolved) Core
+ * answer leave only one value ("unique"), or by the most probable
+ * catalog-licensed value ("argmax", joint over all Unresolved Core answers).
+ * No compatible candidate: unchanged (the click still fails).
+ */
+export const closedClassUnresolvedFromCatalog = (
+	mode: "unique" | "argmax",
+): Policy => ({
+	name: `closed-class-unresolved-${mode}`,
+	description:
+		mode === "unique"
+			? "DET/PRON: Unresolved Core answer takes the value every catalog candidate compatible with the other Core answers shares"
+			: "DET/PRON: Unresolved Core answers take the most probable value licensed by a catalog candidate compatible with the other Core answers",
+	rewrite({ call, route, state, answers }) {
+		if (call !== "features") return;
+		const kind = route.split("/").at(-1)!;
+		if (kind !== "DET" && kind !== "PRON") return;
+		const candidates = candidatesFor((state.members as string[]).join(" ")).filter(
+			(member) => member.lemma.kind === kind,
+		);
+		if (!candidates.length) return;
+		const prefix = "lemma.coreFeatures.";
+		const ids = Object.keys(answers).filter((id) => id.startsWith(prefix));
+		const unresolved = ids.filter(
+			(id) => choiceOf(answers, id)?.choice === "Unresolved",
+		);
+		if (!unresolved.length) return;
+		const label = (member: (typeof candidates)[number], id: string) => {
+			const value = (member.lemma.coreFeatures as Record<string, unknown>)[
+				id.slice(prefix.length)
+			];
+			return value === null || value === undefined ? "Unmarked" : String(value);
+		};
+		const compatible = candidates.filter((member) =>
+			ids.every(
+				(id) =>
+					unresolved.includes(id) ||
+					label(member, id) === choiceOf(answers, id)?.choice,
+			),
+		);
+		if (!compatible.length) return;
+		if (mode === "unique") {
+			for (const id of unresolved) {
+				const values = new Set(compatible.map((member) => label(member, id)));
+				const answer = choiceOf(answers, id)!;
+				const [only] = [...values];
+				if (values.size === 1 && only && only in answer.probabilities)
+					answer.choice = only;
+			}
+			return;
+		}
+		let best: (typeof compatible)[number] | null = null;
+		let bestScore = -Infinity;
+		for (const member of compatible) {
+			let score = 0;
+			for (const id of unresolved)
+				score += Math.log(
+					Math.max(choiceOf(answers, id)!.probabilities[label(member, id)] ?? 0, 1e-6),
+				);
+			if (score > bestScore) {
+				best = member;
+				bestScore = score;
+			}
+		}
+		if (!best) return;
+		for (const id of unresolved) {
+			const answer = choiceOf(answers, id)!;
+			const value = label(best, id);
+			if (value in answer.probabilities) answer.choice = value;
+		}
+	},
+});
+/** Live variant: pruned Core questions are not sent; code fills them from the catalog. */
+export const closedClassCorePruning: Policy = {
+	name: "closed-class-core-pruning",
+	description:
+		"DET/PRON: Core questions fixed by every authored candidate of the spelling are not asked (live question change)",
+	editQuestions({ call, route, state, questions }) {
+		if (call !== "features") return null;
+		const kind = route.split("/").at(-1)!;
+		if (kind !== "DET" && kind !== "PRON") return null;
+		const fixed = catalogFixedCore(kind, state.members as string[]);
+		if (!fixed) return null;
+		const kept = Object.fromEntries(
+			Object.entries(questions).filter(([id]) => !(id in fixed)),
+		);
+		return Object.keys(kept).length === Object.keys(questions).length
+			? null
+			: (kept as Questions);
+	},
+};
+
+// ------------------------------------------------------ identity skip
+
+export const authoredIdentitySkip: Policy = {
+	name: "authored-identity-skip",
+	description:
+		"DET/PRON identity follow-up is skipped when no reviewed identity is compatible; answered NoMatch in code",
+	shortCircuit({ call, state, questions }) {
+		if (call !== "identity") return null;
+		const reviewed = state.reviewedIdentities as unknown[] | undefined;
+		if (!reviewed || reviewed.length) return null;
+		const criteria = (
+			questions.identity as { criteria: Record<string, string> }
+		).criteria;
+		return {
+			answers: {
+				identity: {
+					type: "choice",
+					choice: "NoMatch",
+					confidence: 1,
+					probabilities: Object.fromEntries(
+						Object.keys(criteria).map((key) => [
+							key,
+							key === "NoMatch" ? 1 : 0,
+						]),
+					),
+				},
+			},
+		};
+	},
+};
+
+/**
+ * The authored lookup compares the normalized spelling case-sensitively, so a
+ * sentence-initial "Er"/"Meine"/"Wir" kept with its capital misses and pays the
+ * identity follow-up. Emulates: when the exact spelling is not a Hit, retry the
+ * lookup with a lowercased initial; a unique Hit settles the identity in code.
+ */
+export const identityCasefoldLookup: Policy = {
+	name: "identity-casefold-lookup",
+	description:
+		"DET/PRON identity: retry the authored lookup with a lowercased initial before calling jev",
+	shortCircuit({ call, state, questions }) {
+		if (call !== "identity") return null;
+		const spelled = String(state.spelled ?? "");
+		const reviewed = (state.reviewedIdentities as { kind: "DET" | "PRON" }[]) ?? [];
+		if (!reviewed.length || spelled.slice(0, 1) === spelled.slice(0, 1).toLocaleLowerCase("de"))
+			return null;
+		const located = locateAuthoredIdentity({
+			kind: reviewed[0]!.kind,
+			spelled: spelled.slice(0, 1).toLocaleLowerCase("de") + spelled.slice(1),
+			core: JSON.parse(String(state.judgedCore)),
+			inflection: JSON.parse(String(state.judgedInflection)),
+		});
+		if (located.status !== "Hit") return null;
+		const index = reviewed.findIndex((lemma) => sameValue(lemma, located.matches[0]!.lemma));
+		if (index < 0) return null;
+		const criteria = (questions.identity as { criteria: Record<string, string> }).criteria;
+		const choice = `identity_${index}`;
+		return {
+			answers: {
+				identity: {
+					type: "choice",
+					choice,
+					confidence: 1,
+					probabilities: Object.fromEntries(Object.keys(criteria).map((key) => [key, key === choice ? 1 : 0])),
+				},
+			},
+		};
+	},
+};
+
+export function combine(name: string, ...policies: Policy[]): Policy {
+	return {
+		name,
+		description: policies.map((policy) => policy.name).join(" + "),
+		rewrite(context) {
+			for (const policy of policies) policy.rewrite?.(context);
+		},
+		shortCircuit(context) {
+			for (const policy of policies) {
+				const result = policy.shortCircuit?.(context);
+				if (result) return result;
+			}
+			return null;
+		},
+		editQuestions(context) {
+			let questions: Questions | null = null;
+			for (const policy of policies) {
+				const edited = policy.editQuestions?.({
+					...context,
+					questions: questions ?? context.questions,
+				});
+				if (edited) questions = edited;
+			}
+			return questions;
+		},
+	};
+}
+
+export const identityPolicy: Policy = {
+	name: "baseline-replay",
+	description: "no rewrite (fidelity check: must reproduce baseline exactly)",
+};
+
+// --------------------------------------------------------------- wrapper
+
+function callKind(route: string, questions: Questions) {
+	if ("support" in questions) return "features" as const;
+	if ("identity" in questions && !route.endsWith("/AUX")) return "identity" as const;
+	return "other" as const;
+}
+
+/**
+ * Wraps a judge so the policy sees (and may rewrite) every answer before src
+ * consumes it. `log` receives the choices that changed and the raw answers.
+ */
+export function policyJudge(
+	inner: DumgenOptions["judge"],
+	policy: Policy,
+	log: {
+		rewrites: Record<string, Rewrite>;
+		raw?: { value?: Record<string, unknown> };
+		shortCircuits: number;
+		editedQuestions: number;
+	},
+): DumgenOptions["judge"] {
+	return async (request, options) => {
+		const state = request.state as State;
+		const route = String(state.route ?? "");
+		const questions = request.questions as Questions;
+		const call = callKind(route, questions);
+		const synthetic = policy.shortCircuit?.({ route, call, state, questions });
+		if (synthetic) {
+			log.shortCircuits++;
+			return { ...synthetic, usage: { input_tokens: 0 } } as never;
+		}
+		const edited = policy.editQuestions?.({ route, call, state, questions });
+		if (edited) log.editedQuestions++;
+		const response = (await inner(
+			edited ? { ...request, questions: edited } : request,
+			options,
+		)) as { answers: Answers };
+		const answers = structuredClone(response.answers) as Answers;
+		if (call === "features" && log.raw) log.raw.value = structuredClone(answers);
+		if (edited) {
+			// Re-expand to the original question ids, as production code would.
+			for (const [id, question] of Object.entries(questions)) {
+				const criteria = (question as { criteria: Record<string, string> })
+					.criteria;
+				if (!(id in answers)) {
+					// A pruned question: code fills it with the catalog value.
+					const kind = route.split("/").at(-1)!;
+					const fixed = catalogFixedCore(kind, state.members as string[]) ?? {};
+					const label = fixed[id];
+					if (!label || !(label in criteria))
+						throw Error(`No code value for pruned question ${id}`);
+					answers[id] = {
+						type: "choice",
+						choice: label,
+						confidence: 1,
+						probabilities: Object.fromEntries(
+							Object.keys(criteria).map((key) => [key, key === label ? 1 : 0]),
+						),
+					};
+					continue;
+				}
+				const answer = answers[id] as ChoiceAnswer;
+				for (const key of Object.keys(criteria))
+					if (!(key in answer.probabilities)) answer.probabilities[key] = 0;
+			}
+		}
+		const before = Object.fromEntries(
+			Object.entries(answers).map(([id, answer]) => [
+				id,
+				(answer as ChoiceAnswer).choice,
+			]),
+		);
+		policy.rewrite?.({ route, call, state, questions, answers });
+		for (const [id, answer] of Object.entries(answers)) {
+			const after = (answer as ChoiceAnswer).choice;
+			if (before[id] !== after)
+				log.rewrites[`${call}:${id}`] = { from: String(before[id]), to: after };
+		}
+		return { ...response, answers } as never;
+	};
+}

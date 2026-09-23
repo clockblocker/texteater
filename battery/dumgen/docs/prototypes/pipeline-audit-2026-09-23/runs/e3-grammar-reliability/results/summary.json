@@ -1,0 +1,6601 @@
+{
+ "spend": {
+  "capUsd": 0.2,
+  "spentUsd": 0.193063494,
+  "entries": [
+   {
+    "at": "2026-09-23T07:54:13.575Z",
+    "what": "run1 baseline 1 corpora",
+    "spentUsd": 0.0025508700000000002,
+    "liveJev": 35,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T07:54:13.910Z",
+    "what": "run1 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,authored-identity-skip,combined-safe,combined-drop-lexeme over 1 corpora",
+    "spentUsd": 0,
+    "liveJev": 0,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T07:55:09.183Z",
+    "what": "run1 baseline 21 corpora",
+    "spentUsd": 0.13411179599999998,
+    "liveJev": 894,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T07:56:37.516Z",
+    "what": "run1 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,closed-class-unresolved-unique,closed-class-unresolved-argmax,authored-identity-skip,combined-safe,combined-drop-lexeme over 21 corpora",
+    "spentUsd": 0.006179731999999999,
+    "liveJev": 37,
+    "liveLuna": 33
+   },
+   {
+    "at": "2026-09-23T07:59:25.600Z",
+    "what": "run1 variants support-drop-lexeme+spelling-default,support-0.8+spelling-default,combined-safe-v2,combined-drop-lexeme-v2 over 21 corpora",
+    "spentUsd": 0.0029860000000000004,
+    "liveJev": 0,
+    "liveLuna": 24
+   },
+   {
+    "at": "2026-09-23T08:00:20.261Z",
+    "what": "natural clicks replay (waterfall answers) + live follow-ups for changed clicks",
+    "spentUsd": 0.00011314800000000001,
+    "liveJev": 1,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:01:00.838Z",
+    "what": "run1 baseline 21 corpora",
+    "spentUsd": 0,
+    "liveJev": 0,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:01:01.448Z",
+    "what": "run1 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,closed-class-unresolved-unique,closed-class-unresolved-argmax,authored-identity-skip,combined-safe,combined-drop-lexeme,support-drop-lexeme+spelling-default,support-0.8+spelling-default,combined-safe-v2,combined-drop-lexeme-v2 over 21 corpora",
+    "spentUsd": 0,
+    "liveJev": 0,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:01:27.301Z",
+    "what": "run2 baseline 5 corpora",
+    "spentUsd": 0.034058556000000025,
+    "liveJev": 244,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:01:51.316Z",
+    "what": "run2 variants baseline-replay,support-0.8,support-0.65,support-drop-lexeme,support-drop-all,noun-marked-number,pron-refnum-inapplicable,pron-refnum-argmax,low-stakes-defaults,closed-class-catalog-fill,closed-class-unresolved-unique,closed-class-unresolved-argmax,authored-identity-skip,combined-safe,combined-drop-lexeme,support-drop-lexeme+spelling-default,support-0.8+spelling-default,combined-safe-v2,combined-drop-lexeme-v2 over 5 corpora",
+    "spentUsd": 0.004050408,
+    "liveJev": 15,
+    "liveLuna": 27
+   },
+   {
+    "at": "2026-09-23T08:03:24.382Z",
+    "what": "P4 garbage NOUN targets (23) baseline + replayed policies",
+    "spentUsd": 0.003375708000000001,
+    "liveJev": 22,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:03:42.465Z",
+    "what": "P4 garbage NOUN targets (23) baseline + replayed policies",
+    "spentUsd": 0.001082628,
+    "liveJev": 1,
+    "liveLuna": 8
+   },
+   {
+    "at": "2026-09-23T08:04:19.242Z",
+    "what": "natural clicks LIVE question variants (noun-number-no-unmarked, closed-class-core-pruning)",
+    "spentUsd": 0.0016288440000000004,
+    "liveJev": 13,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:04:40.542Z",
+    "what": "natural clicks LIVE question variants (noun-number-no-unmarked, closed-class-core-pruning)",
+    "spentUsd": 0.002925804,
+    "liveJev": 20,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:07:44.071Z",
+    "what": "run1 variants identity-casefold-lookup,identity-skip+casefold over 2 corpora",
+    "spentUsd": 0,
+    "liveJev": 0,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:07:44.794Z",
+    "what": "run2 variants identity-casefold-lookup,identity-skip+casefold over 2 corpora",
+    "spentUsd": 0,
+    "liveJev": 0,
+    "liveLuna": 0
+   },
+   {
+    "at": "2026-09-23T08:08:16.086Z",
+    "what": "natural clicks replay (waterfall answers) + live follow-ups for changed clicks",
+    "spentUsd": 0,
+    "liveJev": 0,
+    "liveLuna": 0
+   }
+  ]
+ },
+ "run1": {
+  "cases": 880,
+  "fidelity": {
+   "replayed": 880,
+   "mismatches": 0
+  },
+  "baselineOutcomes": {
+   "interjection": {
+    "fail": 11,
+    "correct": 19,
+    "wrong": 4,
+    "deferred": 1
+   },
+   "ALL": {
+    "fail": 213,
+    "correct": 358,
+    "wrong": 218,
+    "deferred": 91
+   },
+   "adjective": {
+    "wrong": 6,
+    "deferred": 14,
+    "correct": 6,
+    "fail": 6
+   },
+   "adposition": {
+    "correct": 17,
+    "fail": 6,
+    "wrong": 10
+   },
+   "adverb": {
+    "correct": 14,
+    "wrong": 24,
+    "fail": 9,
+    "deferred": 2
+   },
+   "auxiliary": {
+    "correct": 9,
+    "fail": 4
+   },
+   "coordinating-conjunction": {
+    "correct": 21,
+    "fail": 24,
+    "wrong": 6,
+    "deferred": 1
+   },
+   "determiner": {
+    "correct": 11,
+    "wrong": 13,
+    "fail": 8
+   },
+   "noun": {
+    "correct": 23,
+    "deferred": 4,
+    "wrong": 10,
+    "fail": 8
+   },
+   "numeral": {
+    "wrong": 2,
+    "deferred": 7,
+    "correct": 17,
+    "fail": 5
+   },
+   "other": {
+    "fail": 22,
+    "correct": 5,
+    "wrong": 1
+   },
+   "particle": {
+    "correct": 22,
+    "wrong": 7,
+    "fail": 4
+   },
+   "pronoun": {
+    "correct": 46,
+    "fail": 70,
+    "wrong": 51
+   },
+   "proper-noun": {
+    "correct": 14,
+    "fail": 8,
+    "wrong": 10,
+    "deferred": 1
+   },
+   "subordinating-conjunction": {
+    "correct": 48,
+    "wrong": 6,
+    "fail": 2,
+    "deferred": 2
+   },
+   "symbol": {
+    "correct": 20,
+    "wrong": 8,
+    "fail": 5
+   },
+   "verb": {
+    "deferred": 44,
+    "wrong": 21,
+    "fail": 7,
+    "correct": 5
+   },
+   "aphorism": {
+    "correct": 19,
+    "fail": 1,
+    "wrong": 5,
+    "deferred": 1
+   },
+   "collocation": {
+    "deferred": 4,
+    "fail": 9,
+    "wrong": 1,
+    "correct": 6
+   },
+   "discourse-formula": {
+    "wrong": 15,
+    "correct": 11,
+    "deferred": 2
+   },
+   "idiom": {
+    "fail": 4,
+    "wrong": 15,
+    "deferred": 7,
+    "correct": 1
+   },
+   "proverb": {
+    "correct": 24,
+    "wrong": 3,
+    "deferred": 1
+   }
+  },
+  "baselineFailureReasons": {
+   "Unresolved:Q:support": 134,
+   "Unresolved:Q:lemma.coreFeatures.referenceNumber": 38,
+   "Unresolved:Q:lemma.coreFeatures.gender": 29,
+   "Unresolved:Applicable grammatical answers do not compose into a legal a": 4,
+   "Unresolved:Q:lemma.coreFeatures.gender[psor]": 4,
+   "CatalogMiss:Required DET identity is absent from the reviewed catalog": 2,
+   "Unresolved:Q:surface.inflectionalFeatures.gender[psor]": 2,
+   "InvalidOutput:NOUN suspended completion requires one trailing Divis member": 2,
+   "Unresolved:Q:surface.inflectionalFeatures.case": 2,
+   "Unresolved:Authored identity remains uncertain": 2,
+   "Unresolved:Q:surface.inflectionalFeatures.gender": 1,
+   "Unresolved:Q:lemma.coreFeatures.abbr": 1,
+   "Unresolved:Q:lemma.coreFeatures.case": 1,
+   "Unresolved:Q:lemma.coreFeatures.pronType": 1,
+   "Unresolved:Q:surface.inflectionalFeatures.number": 1
+  },
+  "variants": {
+   "support-0.8": {
+    "ALL": {
+     "changed": 82,
+     "netCorrect": 18,
+     "gainedCorrect": 20,
+     "lostCorrect": 2,
+     "failuresRemoved": 48,
+     "newWrongOutputs": 30,
+     "transitions": {
+      "fail->fail": 29,
+      "fail->wrong": 28,
+      "fail->correct": 20,
+      "correct->correct": 3,
+      "correct->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adverb": {
+      "changed": 6,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 3
+     },
+     "aphorism": {
+      "changed": 1,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "collocation": {
+      "changed": 9,
+      "netCorrect": 2,
+      "gainedCorrect": 4,
+      "lostCorrect": 2,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 4
+     },
+     "coordinating-conjunction": {
+      "changed": 9,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 7
+     },
+     "determiner": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "interjection": {
+      "changed": 9,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 2
+     },
+     "noun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 16,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "proper-noun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "symbol": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "verb": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "support-0.65": {
+    "ALL": {
+     "changed": 42,
+     "netCorrect": 12,
+     "gainedCorrect": 13,
+     "lostCorrect": 1,
+     "failuresRemoved": 35,
+     "newWrongOutputs": 23,
+     "transitions": {
+      "fail->fail": 4,
+      "fail->wrong": 22,
+      "fail->correct": 13,
+      "correct->correct": 2,
+      "correct->wrong": 1
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "adposition": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adverb": {
+      "changed": 3,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 2
+     },
+     "aphorism": {
+      "changed": 1,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "auxiliary": {
+      "changed": 3,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "collocation": {
+      "changed": 6,
+      "netCorrect": 1,
+      "gainedCorrect": 2,
+      "lostCorrect": 1,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 3
+     },
+     "coordinating-conjunction": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     },
+     "determiner": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "interjection": {
+      "changed": 5,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 2
+     },
+     "noun": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "proper-noun": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "symbol": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "verb": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 3
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "support-drop-lexeme": {
+    "ALL": {
+     "changed": 115,
+     "netCorrect": 21,
+     "gainedCorrect": 21,
+     "lostCorrect": 0,
+     "failuresRemoved": 53,
+     "newWrongOutputs": 32,
+     "transitions": {
+      "fail->fail": 60,
+      "fail->wrong": 32,
+      "fail->correct": 21,
+      "correct->correct": 2
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     },
+     "adverb": {
+      "changed": 9,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 4
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 7,
+      "gainedCorrect": 7,
+      "lostCorrect": 0,
+      "failuresRemoved": 20,
+      "newWrongOutputs": 13
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "interjection": {
+      "changed": 11,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 2
+     },
+     "noun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 0
+     },
+     "particle": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "support-drop-all": {
+    "ALL": {
+     "changed": 134,
+     "netCorrect": 24,
+     "gainedCorrect": 26,
+     "lostCorrect": 2,
+     "failuresRemoved": 62,
+     "newWrongOutputs": 38,
+     "transitions": {
+      "fail->fail": 64,
+      "fail->wrong": 36,
+      "fail->correct": 26,
+      "correct->correct": 6,
+      "correct->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     },
+     "adverb": {
+      "changed": 9,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 4
+     },
+     "aphorism": {
+      "changed": 1,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "collocation": {
+      "changed": 14,
+      "netCorrect": 2,
+      "gainedCorrect": 4,
+      "lostCorrect": 2,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 4
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 7,
+      "gainedCorrect": 7,
+      "lostCorrect": 0,
+      "failuresRemoved": 20,
+      "newWrongOutputs": 13
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "interjection": {
+      "changed": 11,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 2
+     },
+     "noun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 0
+     },
+     "particle": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "support-drop-lexeme+spelling-default": {
+    "ALL": {
+     "changed": 124,
+     "netCorrect": 23,
+     "gainedCorrect": 23,
+     "lostCorrect": 0,
+     "failuresRemoved": 75,
+     "newWrongOutputs": 52,
+     "transitions": {
+      "fail->fail": 43,
+      "fail->wrong": 52,
+      "fail->correct": 23,
+      "correct->correct": 6
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adposition": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     },
+     "adverb": {
+      "changed": 9,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 8,
+      "newWrongOutputs": 6
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 1
+     },
+     "collocation": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 7,
+      "gainedCorrect": 7,
+      "lostCorrect": 0,
+      "failuresRemoved": 23,
+      "newWrongOutputs": 16
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "interjection": {
+      "changed": 11,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 4
+     },
+     "noun": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 6,
+      "gainedCorrect": 6,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 3
+     },
+     "particle": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "support-0.8+spelling-default": {
+    "ALL": {
+     "changed": 121,
+     "netCorrect": 18,
+     "gainedCorrect": 21,
+     "lostCorrect": 3,
+     "failuresRemoved": 58,
+     "newWrongOutputs": 40,
+     "transitions": {
+      "fail->fail": 55,
+      "fail->wrong": 37,
+      "fail->correct": 21,
+      "correct->correct": 5,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 5,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adverb": {
+      "changed": 8,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 5
+     },
+     "aphorism": {
+      "changed": 1,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 1
+     },
+     "collocation": {
+      "changed": 14,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 5
+     },
+     "coordinating-conjunction": {
+      "changed": 13,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 7
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 8,
+      "newWrongOutputs": 4
+     },
+     "noun": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 6,
+      "gainedCorrect": 6,
+      "lostCorrect": 0,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 1
+     },
+     "particle": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "noun-marked-number": {
+    "ALL": {
+     "changed": 2,
+     "netCorrect": 1,
+     "gainedCorrect": 1,
+     "lostCorrect": 0,
+     "failuresRemoved": 1,
+     "newWrongOutputs": 0,
+     "transitions": {
+      "fail->correct": 1,
+      "fail->fail": 1
+     }
+    },
+    "perCorpus": {
+     "noun": {
+      "changed": 2,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "pron-refnum-inapplicable": {
+    "ALL": {
+     "changed": 49,
+     "netCorrect": 13,
+     "gainedCorrect": 16,
+     "lostCorrect": 3,
+     "failuresRemoved": 34,
+     "newWrongOutputs": 21,
+     "transitions": {
+      "fail->correct": 16,
+      "fail->wrong": 18,
+      "fail->fail": 12,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 49,
+      "netCorrect": 13,
+      "gainedCorrect": 16,
+      "lostCorrect": 3,
+      "failuresRemoved": 34,
+      "newWrongOutputs": 21
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   },
+   "pron-refnum-argmax": {
+    "ALL": {
+     "changed": 49,
+     "netCorrect": 7,
+     "gainedCorrect": 10,
+     "lostCorrect": 3,
+     "failuresRemoved": 30,
+     "newWrongOutputs": 23,
+     "transitions": {
+      "fail->wrong": 20,
+      "fail->correct": 10,
+      "fail->fail": 16,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 49,
+      "netCorrect": 7,
+      "gainedCorrect": 10,
+      "lostCorrect": 3,
+      "failuresRemoved": 30,
+      "newWrongOutputs": 23
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   },
+   "low-stakes-defaults": {
+    "ALL": {
+     "changed": 21,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 1,
+     "newWrongOutputs": 1,
+     "transitions": {
+      "fail->fail": 20,
+      "fail->wrong": 1
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 10,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "particle": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "subordinating-conjunction": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "verb": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "closed-class-catalog-fill": {
+    "ALL": {
+     "changed": 78,
+     "netCorrect": 27,
+     "gainedCorrect": 29,
+     "lostCorrect": 2,
+     "failuresRemoved": 41,
+     "newWrongOutputs": 25,
+     "transitions": {
+      "fail->wrong": 23,
+      "fail->fail": 16,
+      "fail->correct": 18,
+      "wrong->correct": 11,
+      "correct->wrong": 2,
+      "wrong->fail": 3,
+      "wrong->wrong": 5
+     }
+    },
+    "perCorpus": {
+     "determiner": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "pronoun": {
+      "changed": 75,
+      "netCorrect": 27,
+      "gainedCorrect": 29,
+      "lostCorrect": 2,
+      "failuresRemoved": 39,
+      "newWrongOutputs": 23
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut"
+    ]
+   },
+   "closed-class-unresolved-unique": {
+    "ALL": {
+     "changed": 48,
+     "netCorrect": 19,
+     "gainedCorrect": 21,
+     "lostCorrect": 2,
+     "failuresRemoved": 38,
+     "newWrongOutputs": 19,
+     "transitions": {
+      "fail->fail": 8,
+      "fail->wrong": 17,
+      "fail->correct": 21,
+      "correct->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "determiner": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 47,
+      "netCorrect": 19,
+      "gainedCorrect": 21,
+      "lostCorrect": 2,
+      "failuresRemoved": 38,
+      "newWrongOutputs": 19
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut"
+    ]
+   },
+   "closed-class-unresolved-argmax": {
+    "ALL": {
+     "changed": 52,
+     "netCorrect": 23,
+     "gainedCorrect": 25,
+     "lostCorrect": 2,
+     "failuresRemoved": 47,
+     "newWrongOutputs": 24,
+     "transitions": {
+      "fail->fail": 3,
+      "fail->wrong": 22,
+      "fail->correct": 25,
+      "correct->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "determiner": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 51,
+      "netCorrect": 23,
+      "gainedCorrect": 25,
+      "lostCorrect": 2,
+      "failuresRemoved": 47,
+      "newWrongOutputs": 24
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut"
+    ]
+   },
+   "authored-identity-skip": {
+    "ALL": {
+     "changed": 21,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 2,
+     "newWrongOutputs": 2,
+     "transitions": {
+      "fail->fail": 3,
+      "wrong->wrong": 16,
+      "fail->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "determiner": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 20,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "identity-casefold-lookup": {
+    "ALL": {
+     "changed": 14,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 0,
+     "newWrongOutputs": 0,
+     "transitions": {
+      "wrong->wrong": 14
+     }
+    },
+    "perCorpus": {
+     "determiner": {
+      "changed": 5,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 9,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "identity-skip+casefold": {
+    "ALL": {
+     "changed": 35,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 2,
+     "newWrongOutputs": 2,
+     "transitions": {
+      "wrong->wrong": 30,
+      "fail->fail": 3,
+      "fail->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "determiner": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 29,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "combined-safe": {
+    "ALL": {
+     "changed": 155,
+     "netCorrect": 37,
+     "gainedCorrect": 42,
+     "lostCorrect": 5,
+     "failuresRemoved": 93,
+     "newWrongOutputs": 56,
+     "transitions": {
+      "fail->fail": 54,
+      "fail->wrong": 51,
+      "fail->correct": 42,
+      "correct->correct": 3,
+      "correct->wrong": 5
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adverb": {
+      "changed": 6,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 3
+     },
+     "aphorism": {
+      "changed": 1,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "collocation": {
+      "changed": 10,
+      "netCorrect": 2,
+      "gainedCorrect": 4,
+      "lostCorrect": 2,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 4
+     },
+     "coordinating-conjunction": {
+      "changed": 10,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 7
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "interjection": {
+      "changed": 9,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 2
+     },
+     "noun": {
+      "changed": 4,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 20,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 0
+     },
+     "particle": {
+      "changed": 3,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 58,
+      "netCorrect": 18,
+      "gainedCorrect": 21,
+      "lostCorrect": 3,
+      "failuresRemoved": 43,
+      "newWrongOutputs": 25
+     },
+     "proper-noun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "subordinating-conjunction": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "combined-drop-lexeme": {
+    "ALL": {
+     "changed": 174,
+     "netCorrect": 40,
+     "gainedCorrect": 43,
+     "lostCorrect": 3,
+     "failuresRemoved": 98,
+     "newWrongOutputs": 58,
+     "transitions": {
+      "fail->fail": 71,
+      "fail->wrong": 55,
+      "fail->correct": 43,
+      "correct->correct": 2,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     },
+     "adverb": {
+      "changed": 9,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 4
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 0
+     },
+     "collocation": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 7,
+      "gainedCorrect": 7,
+      "lostCorrect": 0,
+      "failuresRemoved": 20,
+      "newWrongOutputs": 13
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "interjection": {
+      "changed": 11,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 2
+     },
+     "noun": {
+      "changed": 4,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 0
+     },
+     "particle": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 58,
+      "netCorrect": 18,
+      "gainedCorrect": 21,
+      "lostCorrect": 3,
+      "failuresRemoved": 43,
+      "newWrongOutputs": 25
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 5
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   },
+   "combined-safe-v2": {
+    "ALL": {
+     "changed": 179,
+     "netCorrect": 38,
+     "gainedCorrect": 44,
+     "lostCorrect": 6,
+     "failuresRemoved": 105,
+     "newWrongOutputs": 67,
+     "transitions": {
+      "fail->fail": 63,
+      "fail->wrong": 61,
+      "fail->correct": 44,
+      "correct->correct": 5,
+      "correct->wrong": 6
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "adposition": {
+      "changed": 5,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adverb": {
+      "changed": 8,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 5
+     },
+     "aphorism": {
+      "changed": 1,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 1
+     },
+     "collocation": {
+      "changed": 14,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 5
+     },
+     "coordinating-conjunction": {
+      "changed": 13,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 7
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 8,
+      "newWrongOutputs": 4
+     },
+     "noun": {
+      "changed": 5,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 6,
+      "gainedCorrect": 6,
+      "lostCorrect": 0,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 1
+     },
+     "particle": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 58,
+      "netCorrect": 19,
+      "gainedCorrect": 22,
+      "lostCorrect": 3,
+      "failuresRemoved": 45,
+      "newWrongOutputs": 26
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "combined-drop-lexeme-v2": {
+    "ALL": {
+     "changed": 182,
+     "netCorrect": 43,
+     "gainedCorrect": 46,
+     "lostCorrect": 3,
+     "failuresRemoved": 124,
+     "newWrongOutputs": 81,
+     "transitions": {
+      "fail->fail": 49,
+      "fail->wrong": 78,
+      "fail->correct": 46,
+      "correct->correct": 6,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "adjective": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 4
+     },
+     "adposition": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     },
+     "adverb": {
+      "changed": 9,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 8,
+      "newWrongOutputs": 6
+     },
+     "auxiliary": {
+      "changed": 4,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 1
+     },
+     "collocation": {
+      "changed": 6,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 7,
+      "gainedCorrect": 7,
+      "lostCorrect": 0,
+      "failuresRemoved": 24,
+      "newWrongOutputs": 17
+     },
+     "determiner": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "idiom": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "interjection": {
+      "changed": 11,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 4
+     },
+     "noun": {
+      "changed": 5,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 1,
+      "newWrongOutputs": 0
+     },
+     "numeral": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 6,
+      "gainedCorrect": 6,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 3
+     },
+     "particle": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "pronoun": {
+      "changed": 58,
+      "netCorrect": 19,
+      "gainedCorrect": 22,
+      "lostCorrect": 3,
+      "failuresRemoved": 45,
+      "newWrongOutputs": 26
+     },
+     "proper-noun": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "subordinating-conjunction": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "symbol": {
+      "changed": 4,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     },
+     "verb": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 6
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-fixed-jeglicher-gen-sing-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   }
+  },
+  "wrongKinds": {
+   "baselineWrong": {
+    "lemmaWrong": 159,
+    "lemmaRight:surfaceWrong": 31,
+    "lemmaRight:casingOnly": 23,
+    "goldUnresolvedAttested": 5
+   },
+   "support-0.8": {
+    "lemmaRight:surfaceWrong": 6,
+    "lemmaWrong": 21,
+    "lemmaRight:casingOnly": 1,
+    "goldUnresolvedAttested": 2
+   },
+   "support-drop-lexeme": {
+    "lemmaRight:surfaceWrong": 7,
+    "lemmaWrong": 21,
+    "lemmaRight:casingOnly": 4
+   },
+   "support-drop-lexeme+spelling-default": {
+    "lemmaRight:surfaceWrong": 18,
+    "lemmaWrong": 30,
+    "lemmaRight:casingOnly": 4
+   },
+   "pron-refnum-inapplicable": {
+    "lemmaWrong": 12,
+    "lemmaRight:casingOnly": 6,
+    "goldUnresolvedAttested": 3
+   },
+   "closed-class-unresolved-unique": {
+    "lemmaWrong": 10,
+    "lemmaRight:casingOnly": 7,
+    "goldUnresolvedAttested": 2
+   },
+   "closed-class-catalog-fill": {
+    "lemmaRight:surfaceWrong": 3,
+    "lemmaRight:casingOnly": 7,
+    "lemmaWrong": 13,
+    "goldUnresolvedAttested": 2
+   },
+   "noun-marked-number": {},
+   "authored-identity-skip": {
+    "lemmaWrong": 2
+   },
+   "combined-safe": {
+    "lemmaRight:surfaceWrong": 6,
+    "lemmaWrong": 37,
+    "lemmaRight:casingOnly": 8,
+    "goldUnresolvedAttested": 5
+   },
+   "combined-drop-lexeme": {
+    "lemmaRight:surfaceWrong": 7,
+    "lemmaWrong": 37,
+    "lemmaRight:casingOnly": 11,
+    "goldUnresolvedAttested": 3
+   }
+  }
+ },
+ "run2": {
+  "cases": 223,
+  "fidelity": {
+   "replayed": 223,
+   "mismatches": 0
+  },
+  "baselineOutcomes": {
+   "coordinating-conjunction": {
+    "correct": 20,
+    "fail": 24,
+    "wrong": 6,
+    "deferred": 2
+   },
+   "ALL": {
+    "correct": 79,
+    "fail": 97,
+    "wrong": 40,
+    "deferred": 7
+   },
+   "interjection": {
+    "fail": 10,
+    "correct": 20,
+    "wrong": 4,
+    "deferred": 1
+   },
+   "other": {
+    "fail": 22,
+    "correct": 5,
+    "wrong": 1
+   },
+   "pronoun": {
+    "correct": 28,
+    "fail": 32,
+    "wrong": 28
+   },
+   "collocation": {
+    "deferred": 4,
+    "fail": 9,
+    "wrong": 1,
+    "correct": 6
+   }
+  },
+  "baselineFailureReasons": {
+   "Unresolved:Q:support": 73,
+   "Unresolved:Q:lemma.coreFeatures.referenceNumber": 17,
+   "Unresolved:Q:lemma.coreFeatures.gender": 10,
+   "Unresolved:Q:lemma.coreFeatures.gender[psor]": 2,
+   "Unresolved:Authored identity remains uncertain": 2,
+   "Unresolved:Q:lemma.coreFeatures.case": 1,
+   "Unresolved:Q:lemma.coreFeatures.pronType": 1
+  },
+  "variants": {
+   "support-0.8": {
+    "ALL": {
+     "changed": 47,
+     "netCorrect": 12,
+     "gainedCorrect": 15,
+     "lostCorrect": 3,
+     "failuresRemoved": 25,
+     "newWrongOutputs": 13,
+     "transitions": {
+      "fail->correct": 15,
+      "fail->wrong": 10,
+      "fail->fail": 19,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 10,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 6
+     },
+     "coordinating-conjunction": {
+      "changed": 9,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 6
+     },
+     "interjection": {
+      "changed": 9,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 1
+     },
+     "other": {
+      "changed": 17,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "support-0.65": {
+    "ALL": {
+     "changed": 24,
+     "netCorrect": 9,
+     "gainedCorrect": 11,
+     "lostCorrect": 2,
+     "failuresRemoved": 20,
+     "newWrongOutputs": 11,
+     "transitions": {
+      "fail->correct": 11,
+      "fail->wrong": 9,
+      "fail->fail": 2,
+      "correct->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 9,
+      "netCorrect": 2,
+      "gainedCorrect": 4,
+      "lostCorrect": 2,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 5
+     },
+     "coordinating-conjunction": {
+      "changed": 6,
+      "netCorrect": 1,
+      "gainedCorrect": 1,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 5
+     },
+     "interjection": {
+      "changed": 4,
+      "netCorrect": 2,
+      "gainedCorrect": 2,
+      "lostCorrect": 0,
+      "failuresRemoved": 3,
+      "newWrongOutputs": 1
+     },
+     "other": {
+      "changed": 5,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "support-drop-lexeme": {
+    "ALL": {
+     "changed": 58,
+     "netCorrect": 16,
+     "gainedCorrect": 16,
+     "lostCorrect": 0,
+     "failuresRemoved": 28,
+     "newWrongOutputs": 12,
+     "transitions": {
+      "fail->correct": 16,
+      "fail->fail": 30,
+      "fail->wrong": 12
+     }
+    },
+    "perCorpus": {
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 8,
+      "gainedCorrect": 8,
+      "lostCorrect": 0,
+      "failuresRemoved": 19,
+      "newWrongOutputs": 11
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 1
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "support-drop-all": {
+    "ALL": {
+     "changed": 73,
+     "netCorrect": 17,
+     "gainedCorrect": 20,
+     "lostCorrect": 3,
+     "failuresRemoved": 35,
+     "newWrongOutputs": 18,
+     "transitions": {
+      "fail->correct": 20,
+      "fail->fail": 32,
+      "fail->wrong": 15,
+      "correct->correct": 3,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 15,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 6
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 8,
+      "gainedCorrect": 8,
+      "lostCorrect": 0,
+      "failuresRemoved": 19,
+      "newWrongOutputs": 11
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 1
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "support-drop-lexeme+spelling-default": {
+    "ALL": {
+     "changed": 63,
+     "netCorrect": 17,
+     "gainedCorrect": 17,
+     "lostCorrect": 0,
+     "failuresRemoved": 37,
+     "newWrongOutputs": 20,
+     "transitions": {
+      "fail->correct": 17,
+      "fail->wrong": 20,
+      "fail->fail": 23,
+      "correct->correct": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 5,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 8,
+      "gainedCorrect": 8,
+      "lostCorrect": 0,
+      "failuresRemoved": 23,
+      "newWrongOutputs": 15
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 2
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 8,
+      "newWrongOutputs": 3
+     },
+     "pronoun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "support-0.8+spelling-default": {
+    "ALL": {
+     "changed": 63,
+     "netCorrect": 13,
+     "gainedCorrect": 16,
+     "lostCorrect": 3,
+     "failuresRemoved": 28,
+     "newWrongOutputs": 15,
+     "transitions": {
+      "fail->correct": 16,
+      "fail->fail": 29,
+      "fail->wrong": 12,
+      "correct->correct": 3,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 15,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 6
+     },
+     "coordinating-conjunction": {
+      "changed": 14,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 6
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 2
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 2,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "noun-marked-number": {
+    "ALL": null,
+    "perCorpus": {},
+    "goldUnresolvedRegressions": []
+   },
+   "pron-refnum-inapplicable": {
+    "ALL": {
+     "changed": 23,
+     "netCorrect": 5,
+     "gainedCorrect": 8,
+     "lostCorrect": 3,
+     "failuresRemoved": 13,
+     "newWrongOutputs": 8,
+     "transitions": {
+      "fail->correct": 8,
+      "fail->wrong": 5,
+      "fail->fail": 7,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 23,
+      "netCorrect": 5,
+      "gainedCorrect": 8,
+      "lostCorrect": 3,
+      "failuresRemoved": 13,
+      "newWrongOutputs": 8
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   },
+   "pron-refnum-argmax": {
+    "ALL": {
+     "changed": 23,
+     "netCorrect": 3,
+     "gainedCorrect": 6,
+     "lostCorrect": 3,
+     "failuresRemoved": 12,
+     "newWrongOutputs": 9,
+     "transitions": {
+      "fail->correct": 6,
+      "fail->wrong": 6,
+      "fail->fail": 8,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 23,
+      "netCorrect": 3,
+      "gainedCorrect": 6,
+      "lostCorrect": 3,
+      "failuresRemoved": 12,
+      "newWrongOutputs": 9
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   },
+   "low-stakes-defaults": {
+    "ALL": {
+     "changed": 12,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 0,
+     "newWrongOutputs": 0,
+     "transitions": {
+      "fail->fail": 12
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "other": {
+      "changed": 10,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "closed-class-catalog-fill": {
+    "ALL": {
+     "changed": 37,
+     "netCorrect": 12,
+     "gainedCorrect": 14,
+     "lostCorrect": 2,
+     "failuresRemoved": 16,
+     "newWrongOutputs": 9,
+     "transitions": {
+      "wrong->wrong": 4,
+      "fail->correct": 9,
+      "fail->wrong": 7,
+      "fail->fail": 9,
+      "correct->wrong": 2,
+      "wrong->correct": 5,
+      "wrong->fail": 1
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 37,
+      "netCorrect": 12,
+      "gainedCorrect": 14,
+      "lostCorrect": 2,
+      "failuresRemoved": 16,
+      "newWrongOutputs": 9
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut"
+    ]
+   },
+   "closed-class-unresolved-unique": {
+    "ALL": {
+     "changed": 20,
+     "netCorrect": 9,
+     "gainedCorrect": 11,
+     "lostCorrect": 2,
+     "failuresRemoved": 15,
+     "newWrongOutputs": 6,
+     "transitions": {
+      "fail->wrong": 4,
+      "fail->correct": 11,
+      "correct->wrong": 2,
+      "fail->fail": 3
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 20,
+      "netCorrect": 9,
+      "gainedCorrect": 11,
+      "lostCorrect": 2,
+      "failuresRemoved": 15,
+      "newWrongOutputs": 6
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut"
+    ]
+   },
+   "closed-class-unresolved-argmax": {
+    "ALL": {
+     "changed": 22,
+     "netCorrect": 10,
+     "gainedCorrect": 12,
+     "lostCorrect": 2,
+     "failuresRemoved": 18,
+     "newWrongOutputs": 8,
+     "transitions": {
+      "fail->wrong": 6,
+      "fail->correct": 12,
+      "correct->wrong": 2,
+      "fail->fail": 2
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 22,
+      "netCorrect": 10,
+      "gainedCorrect": 12,
+      "lostCorrect": 2,
+      "failuresRemoved": 18,
+      "newWrongOutputs": 8
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut"
+    ]
+   },
+   "authored-identity-skip": {
+    "ALL": {
+     "changed": 11,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 2,
+     "newWrongOutputs": 2,
+     "transitions": {
+      "wrong->wrong": 9,
+      "fail->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 11,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "identity-casefold-lookup": {
+    "ALL": {
+     "changed": 7,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 0,
+     "newWrongOutputs": 0,
+     "transitions": {
+      "wrong->wrong": 7
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 7,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "identity-skip+casefold": {
+    "ALL": {
+     "changed": 18,
+     "netCorrect": 0,
+     "gainedCorrect": 0,
+     "lostCorrect": 0,
+     "failuresRemoved": 2,
+     "newWrongOutputs": 2,
+     "transitions": {
+      "wrong->wrong": 16,
+      "fail->wrong": 2
+     }
+    },
+    "perCorpus": {
+     "pronoun": {
+      "changed": 18,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 2,
+      "newWrongOutputs": 2
+     }
+    },
+    "goldUnresolvedRegressions": []
+   },
+   "combined-safe": {
+    "ALL": {
+     "changed": 78,
+     "netCorrect": 20,
+     "gainedCorrect": 26,
+     "lostCorrect": 6,
+     "failuresRemoved": 44,
+     "newWrongOutputs": 24,
+     "transitions": {
+      "fail->correct": 26,
+      "fail->wrong": 18,
+      "fail->fail": 28,
+      "correct->wrong": 6
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 11,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 6
+     },
+     "coordinating-conjunction": {
+      "changed": 10,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 6
+     },
+     "interjection": {
+      "changed": 9,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 1
+     },
+     "other": {
+      "changed": 20,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 28,
+      "netCorrect": 8,
+      "gainedCorrect": 11,
+      "lostCorrect": 3,
+      "failuresRemoved": 19,
+      "newWrongOutputs": 11
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all",
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "combined-drop-lexeme": {
+    "ALL": {
+     "changed": 85,
+     "netCorrect": 24,
+     "gainedCorrect": 27,
+     "lostCorrect": 3,
+     "failuresRemoved": 47,
+     "newWrongOutputs": 23,
+     "transitions": {
+      "fail->correct": 27,
+      "fail->fail": 35,
+      "fail->wrong": 20,
+      "correct->wrong": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 1,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 8,
+      "gainedCorrect": 8,
+      "lostCorrect": 0,
+      "failuresRemoved": 19,
+      "newWrongOutputs": 11
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 5,
+      "newWrongOutputs": 1
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 4,
+      "newWrongOutputs": 0
+     },
+     "pronoun": {
+      "changed": 28,
+      "netCorrect": 8,
+      "gainedCorrect": 11,
+      "lostCorrect": 3,
+      "failuresRemoved": 19,
+      "newWrongOutputs": 11
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   },
+   "combined-safe-v2": {
+    "ALL": {
+     "changed": 89,
+     "netCorrect": 22,
+     "gainedCorrect": 28,
+     "lostCorrect": 6,
+     "failuresRemoved": 49,
+     "newWrongOutputs": 27,
+     "transitions": {
+      "fail->correct": 28,
+      "fail->fail": 31,
+      "fail->wrong": 21,
+      "correct->wrong": 6,
+      "correct->correct": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 15,
+      "netCorrect": 1,
+      "gainedCorrect": 4,
+      "lostCorrect": 3,
+      "failuresRemoved": 7,
+      "newWrongOutputs": 6
+     },
+     "coordinating-conjunction": {
+      "changed": 14,
+      "netCorrect": 3,
+      "gainedCorrect": 3,
+      "lostCorrect": 0,
+      "failuresRemoved": 9,
+      "newWrongOutputs": 6
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 2
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 1
+     },
+     "pronoun": {
+      "changed": 28,
+      "netCorrect": 9,
+      "gainedCorrect": 12,
+      "lostCorrect": 3,
+      "failuresRemoved": 21,
+      "newWrongOutputs": 12
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all",
+     "collocation/grammar-de-coll-unresolved-mixed-occurrences",
+     "collocation/grammar-de-coll-unresolved-elliptic-kenntnis",
+     "collocation/grammar-de-coll-unresolved-marked-dependent"
+    ]
+   },
+   "combined-drop-lexeme-v2": {
+    "ALL": {
+     "changed": 89,
+     "netCorrect": 26,
+     "gainedCorrect": 29,
+     "lostCorrect": 3,
+     "failuresRemoved": 59,
+     "newWrongOutputs": 33,
+     "transitions": {
+      "fail->correct": 29,
+      "fail->wrong": 30,
+      "fail->fail": 24,
+      "correct->wrong": 3,
+      "correct->correct": 3
+     }
+    },
+    "perCorpus": {
+     "collocation": {
+      "changed": 5,
+      "netCorrect": 0,
+      "gainedCorrect": 0,
+      "lostCorrect": 0,
+      "failuresRemoved": 0,
+      "newWrongOutputs": 0
+     },
+     "coordinating-conjunction": {
+      "changed": 24,
+      "netCorrect": 8,
+      "gainedCorrect": 8,
+      "lostCorrect": 0,
+      "failuresRemoved": 24,
+      "newWrongOutputs": 16
+     },
+     "interjection": {
+      "changed": 10,
+      "netCorrect": 4,
+      "gainedCorrect": 4,
+      "lostCorrect": 0,
+      "failuresRemoved": 6,
+      "newWrongOutputs": 2
+     },
+     "other": {
+      "changed": 22,
+      "netCorrect": 5,
+      "gainedCorrect": 5,
+      "lostCorrect": 0,
+      "failuresRemoved": 8,
+      "newWrongOutputs": 3
+     },
+     "pronoun": {
+      "changed": 28,
+      "netCorrect": 9,
+      "gainedCorrect": 12,
+      "lostCorrect": 3,
+      "failuresRemoved": 21,
+      "newWrongOutputs": 12
+     }
+    },
+    "goldUnresolvedRegressions": [
+     "pronoun/grammar-de-pron-fixed-jeder-gen-masc",
+     "pronoun/grammar-de-pron-fixed-jeder-gen-neut",
+     "pronoun/grammar-de-pron-dev-total-foreign-all"
+    ]
+   }
+  },
+  "wrongKinds": {
+   "baselineWrong": {
+    "lemmaWrong": 26,
+    "lemmaRight:surfaceWrong": 2,
+    "lemmaRight:casingOnly": 7,
+    "goldUnresolvedAttested": 5
+   },
+   "support-0.8": {
+    "lemmaWrong": 10,
+    "goldUnresolvedAttested": 3
+   },
+   "support-drop-lexeme": {
+    "lemmaWrong": 9,
+    "lemmaRight:surfaceWrong": 1,
+    "lemmaRight:casingOnly": 2
+   },
+   "support-drop-lexeme+spelling-default": {
+    "lemmaWrong": 12,
+    "lemmaRight:casingOnly": 2,
+    "lemmaRight:surfaceWrong": 6
+   },
+   "pron-refnum-inapplicable": {
+    "lemmaWrong": 5,
+    "goldUnresolvedAttested": 3
+   },
+   "closed-class-unresolved-unique": {
+    "lemmaWrong": 3,
+    "goldUnresolvedAttested": 2,
+    "lemmaRight:casingOnly": 1
+   },
+   "closed-class-catalog-fill": {
+    "lemmaWrong": 6,
+    "goldUnresolvedAttested": 2,
+    "lemmaRight:casingOnly": 1
+   },
+   "noun-marked-number": {},
+   "authored-identity-skip": {
+    "lemmaWrong": 2
+   },
+   "combined-safe": {
+    "lemmaWrong": 17,
+    "goldUnresolvedAttested": 6,
+    "lemmaRight:casingOnly": 1
+   },
+   "combined-drop-lexeme": {
+    "lemmaWrong": 16,
+    "lemmaRight:casingOnly": 3,
+    "lemmaRight:surfaceWrong": 1,
+    "goldUnresolvedAttested": 3
+   }
+  }
+ },
+ "noise": {
+  "subset": 223,
+  "corpora": {
+   "coordinating-conjunction": 52,
+   "interjection": 35,
+   "other": 28,
+   "pronoun": 88,
+   "collocation": 20
+  },
+  "baselineVsBaseline": {
+   "transitions": {
+    "correct->correct": 73,
+    "fail->fail": 91,
+    "wrong->wrong": 33,
+    "deferred->deferred": 5,
+    "correct->fail": 2,
+    "fail->deferred": 1,
+    "fail->wrong": 4,
+    "fail->correct": 2,
+    "wrong->correct": 4,
+    "correct->wrong": 2,
+    "wrong->fail": 4,
+    "deferred->wrong": 1,
+    "wrong->deferred": 1
+   },
+   "flipsAmongKnown": 18,
+   "known": 215,
+   "correct": {
+    "1": 77,
+    "2": 79
+   },
+   "fail": {
+    "1": 98,
+    "2": 97
+   }
+  },
+  "failureReasons": {
+   "1": {
+    "Q:support": 73,
+    "Q:lemma.coreFeatures.referenceNumber": 16,
+    "Q:lemma.coreFeatures.gender": 12,
+    "LunaDeferred": 6,
+    "Q:lemma.coreFeatures.gender[psor]": 2,
+    "Q:lemma.coreFeatures.pronType": 1,
+    "Authored identity remains uncertain": 1,
+    "Q:lemma.coreFeatures.case": 1
+   },
+   "2": {
+    "Q:support": 73,
+    "Q:lemma.coreFeatures.referenceNumber": 17,
+    "Q:lemma.coreFeatures.gender": 10,
+    "LunaDeferred": 7,
+    "Authored identity remains uncertain": 2,
+    "Q:lemma.coreFeatures.gender[psor]": 2,
+    "Q:lemma.coreFeatures.pronType": 1,
+    "Q:lemma.coreFeatures.case": 1
+   }
+  },
+  "supportFailures": {
+   "run1": 73,
+   "run2": 73,
+   "both": 70,
+   "onlyRun1": 3,
+   "onlyRun2": 3
+  },
+  "referenceNumberFailures": {
+   "run1": 16,
+   "run2": 17,
+   "both": 12
+  },
+  "variants": {
+   "authored-identity-skip": {
+    "run1": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 1,
+     "newWrong": 1
+    },
+    "run2": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 2,
+     "newWrong": 2
+    },
+    "finalOutcomeFlipsBetweenRuns": 17,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 77,
+    "correctRun2": 79
+   },
+   "closed-class-catalog-fill": {
+    "run1": {
+     "net": 12,
+     "gained": 14,
+     "lost": 2,
+     "failuresRemoved": 15,
+     "newWrong": 8
+    },
+    "run2": {
+     "net": 12,
+     "gained": 14,
+     "lost": 2,
+     "failuresRemoved": 16,
+     "newWrong": 9
+    },
+    "finalOutcomeFlipsBetweenRuns": 9,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 89,
+    "correctRun2": 91
+   },
+   "closed-class-unresolved-argmax": {
+    "run1": {
+     "net": 10,
+     "gained": 12,
+     "lost": 2,
+     "failuresRemoved": 19,
+     "newWrong": 9
+    },
+    "run2": {
+     "net": 10,
+     "gained": 12,
+     "lost": 2,
+     "failuresRemoved": 18,
+     "newWrong": 8
+    },
+    "finalOutcomeFlipsBetweenRuns": 19,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 87,
+    "correctRun2": 89
+   },
+   "closed-class-unresolved-unique": {
+    "run1": {
+     "net": 10,
+     "gained": 12,
+     "lost": 2,
+     "failuresRemoved": 16,
+     "newWrong": 6
+    },
+    "run2": {
+     "net": 9,
+     "gained": 11,
+     "lost": 2,
+     "failuresRemoved": 15,
+     "newWrong": 6
+    },
+    "finalOutcomeFlipsBetweenRuns": 17,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 87,
+    "correctRun2": 88
+   },
+   "combined-drop-lexeme": {
+    "run1": {
+     "net": 26,
+     "gained": 29,
+     "lost": 3,
+     "failuresRemoved": 50,
+     "newWrong": 24
+    },
+    "run2": {
+     "net": 24,
+     "gained": 27,
+     "lost": 3,
+     "failuresRemoved": 47,
+     "newWrong": 23
+    },
+    "finalOutcomeFlipsBetweenRuns": 15,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 103,
+    "correctRun2": 103
+   },
+   "combined-drop-lexeme-v2": {
+    "run1": {
+     "net": 28,
+     "gained": 31,
+     "lost": 3,
+     "failuresRemoved": 62,
+     "newWrong": 34
+    },
+    "run2": {
+     "net": 26,
+     "gained": 29,
+     "lost": 3,
+     "failuresRemoved": 59,
+     "newWrong": 33
+    },
+    "finalOutcomeFlipsBetweenRuns": 15,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 105,
+    "correctRun2": 105
+   },
+   "combined-safe": {
+    "run1": {
+     "net": 22,
+     "gained": 27,
+     "lost": 5,
+     "failuresRemoved": 44,
+     "newWrong": 22
+    },
+    "run2": {
+     "net": 20,
+     "gained": 26,
+     "lost": 6,
+     "failuresRemoved": 44,
+     "newWrong": 24
+    },
+    "finalOutcomeFlipsBetweenRuns": 17,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 99,
+    "correctRun2": 99
+   },
+   "combined-safe-v2": {
+    "run1": {
+     "net": 23,
+     "gained": 29,
+     "lost": 6,
+     "failuresRemoved": 50,
+     "newWrong": 27
+    },
+    "run2": {
+     "net": 22,
+     "gained": 28,
+     "lost": 6,
+     "failuresRemoved": 49,
+     "newWrong": 27
+    },
+    "finalOutcomeFlipsBetweenRuns": 17,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 100,
+    "correctRun2": 101
+   },
+   "identity-casefold-lookup": {
+    "run1": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 0,
+     "newWrong": 0
+    },
+    "run2": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 0,
+     "newWrong": 0
+    },
+    "finalOutcomeFlipsBetweenRuns": 13,
+    "finalOutcomeKnownBoth": 88,
+    "correctRun1": 26,
+    "correctRun2": 28
+   },
+   "identity-skip+casefold": {
+    "run1": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 1,
+     "newWrong": 1
+    },
+    "run2": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 2,
+     "newWrong": 2
+    },
+    "finalOutcomeFlipsBetweenRuns": 12,
+    "finalOutcomeKnownBoth": 88,
+    "correctRun1": 26,
+    "correctRun2": 28
+   },
+   "low-stakes-defaults": {
+    "run1": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 0,
+     "newWrong": 0
+    },
+    "run2": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 0,
+     "newWrong": 0
+    },
+    "finalOutcomeFlipsBetweenRuns": 18,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 77,
+    "correctRun2": 79
+   },
+   "noun-marked-number": {
+    "run1": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 0,
+     "newWrong": 0
+    },
+    "run2": {
+     "net": 0,
+     "gained": 0,
+     "lost": 0,
+     "failuresRemoved": 0,
+     "newWrong": 0
+    },
+    "finalOutcomeFlipsBetweenRuns": 18,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 77,
+    "correctRun2": 79
+   },
+   "pron-refnum-argmax": {
+    "run1": {
+     "net": 3,
+     "gained": 6,
+     "lost": 3,
+     "failuresRemoved": 11,
+     "newWrong": 8
+    },
+    "run2": {
+     "net": 3,
+     "gained": 6,
+     "lost": 3,
+     "failuresRemoved": 12,
+     "newWrong": 9
+    },
+    "finalOutcomeFlipsBetweenRuns": 14,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 80,
+    "correctRun2": 82
+   },
+   "pron-refnum-inapplicable": {
+    "run1": {
+     "net": 6,
+     "gained": 9,
+     "lost": 3,
+     "failuresRemoved": 13,
+     "newWrong": 7
+    },
+    "run2": {
+     "net": 5,
+     "gained": 8,
+     "lost": 3,
+     "failuresRemoved": 13,
+     "newWrong": 8
+    },
+    "finalOutcomeFlipsBetweenRuns": 14,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 83,
+    "correctRun2": 84
+   },
+   "support-0.65": {
+    "run1": {
+     "net": 7,
+     "gained": 8,
+     "lost": 1,
+     "failuresRemoved": 18,
+     "newWrong": 11
+    },
+    "run2": {
+     "net": 9,
+     "gained": 11,
+     "lost": 2,
+     "failuresRemoved": 20,
+     "newWrong": 11
+    },
+    "finalOutcomeFlipsBetweenRuns": 22,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 84,
+    "correctRun2": 88
+   },
+   "support-0.8": {
+    "run1": {
+     "net": 13,
+     "gained": 15,
+     "lost": 2,
+     "failuresRemoved": 26,
+     "newWrong": 13
+    },
+    "run2": {
+     "net": 12,
+     "gained": 15,
+     "lost": 3,
+     "failuresRemoved": 25,
+     "newWrong": 13
+    },
+    "finalOutcomeFlipsBetweenRuns": 19,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 90,
+    "correctRun2": 91
+   },
+   "support-0.8+spelling-default": {
+    "run1": {
+     "net": 13,
+     "gained": 16,
+     "lost": 3,
+     "failuresRemoved": 30,
+     "newWrong": 17
+    },
+    "run2": {
+     "net": 13,
+     "gained": 16,
+     "lost": 3,
+     "failuresRemoved": 28,
+     "newWrong": 15
+    },
+    "finalOutcomeFlipsBetweenRuns": 19,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 90,
+    "correctRun2": 92
+   },
+   "support-drop-all": {
+    "run1": {
+     "net": 19,
+     "gained": 21,
+     "lost": 2,
+     "failuresRemoved": 38,
+     "newWrong": 19
+    },
+    "run2": {
+     "net": 17,
+     "gained": 20,
+     "lost": 3,
+     "failuresRemoved": 35,
+     "newWrong": 18
+    },
+    "finalOutcomeFlipsBetweenRuns": 19,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 96,
+    "correctRun2": 96
+   },
+   "support-drop-lexeme": {
+    "run1": {
+     "net": 17,
+     "gained": 17,
+     "lost": 0,
+     "failuresRemoved": 32,
+     "newWrong": 15
+    },
+    "run2": {
+     "net": 16,
+     "gained": 16,
+     "lost": 0,
+     "failuresRemoved": 28,
+     "newWrong": 12
+    },
+    "finalOutcomeFlipsBetweenRuns": 17,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 94,
+    "correctRun2": 95
+   },
+   "support-drop-lexeme+spelling-default": {
+    "run1": {
+     "net": 18,
+     "gained": 18,
+     "lost": 0,
+     "failuresRemoved": 41,
+     "newWrong": 23
+    },
+    "run2": {
+     "net": 17,
+     "gained": 17,
+     "lost": 0,
+     "failuresRemoved": 37,
+     "newWrong": 20
+    },
+    "finalOutcomeFlipsBetweenRuns": 17,
+    "finalOutcomeKnownBoth": 215,
+    "correctRun1": 95,
+    "correctRun2": 96
+   }
+  }
+ },
+ "authoredIdentity": {
+  "detPronCases": 199,
+  "lookups": {
+   "determiner:Hit:someCompatible": 17,
+   "determiner:Gap:someCompatible": 7,
+   "determiner:Gap:empty": 1,
+   "pronoun:Hit:someCompatible": 57,
+   "pronoun:Gap:empty": 20,
+   "pronoun:Gap:someCompatible": 21
+  },
+  "identityCalls": 49,
+  "identityCallMs": {
+   "p50": 303.5216250000012,
+   "p90": 336.35833300000013
+  },
+  "answers": {
+   "nonEmpty:identity_i": 26,
+   "empty:NoMatch": 19,
+   "nonEmpty:NoMatch": 2,
+   "empty:Unresolved": 2
+  }
+ },
+ "naturalClicks": {
+  "replayed": 77,
+  "baselineGrammarFailures": {
+   "manche#0": "Unresolved applicable question lemma.coreFeatures.referenceNumber",
+   "manche#7": "Unresolved applicable question lemma.coreFeatures.referenceNumber",
+   "museum#6": "Unresolved applicable question support",
+   "typo#0": "Unresolved applicable question support",
+   "usw#4": "Applicable grammatical answers do not compose into a legal analysis",
+   "usw#7": "Applicable grammatical answers do not compose into a legal analysis",
+   "verfuegung#10": "Applicable grammatical answers do not compose into a legal analysis",
+   "verfuegung#6": "Unresolved applicable question support"
+  },
+  "variants": {
+   "support-0.8": [
+    {
+     "click": "museum#6 z.B. Lexeme/ADV",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "ADV",
+      "canonicalForm": "z.B.",
+      "coreFeatures": {
+       "foreign": null,
+       "numType": null,
+       "pronType": null
+      }
+     },
+     "inflection": null
+    }
+   ],
+   "support-drop-lexeme": [
+    {
+     "click": "museum#6 z.B. Lexeme/ADV",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "ADV",
+      "canonicalForm": "z.B.",
+      "coreFeatures": {
+       "foreign": null,
+       "numType": null,
+       "pronType": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "typo#0 Ihc Lexeme/X",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question lemma.coreFeatures.abbr)",
+     "lemma": null,
+     "inflection": null
+    },
+    {
+     "click": "verfuegung#6 den Lexeme/NOUN",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question lemma.coreFeatures.gender)",
+     "lemma": null,
+     "inflection": null
+    }
+   ],
+   "noun-marked-number": [
+    {
+     "click": "usw#4 Obst Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Obst",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    },
+    {
+     "click": "usw#7 Gemüse Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Gemüse",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Plur"
+     }
+    },
+    {
+     "click": "verfuegung#10 Material Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Material",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    }
+   ],
+   "pron-refnum-inapplicable": [
+    {
+     "click": "manche#0 Manche Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "manche",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "manche#7 viele Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "viele",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    }
+   ],
+   "low-stakes-defaults": [
+    {
+     "click": "typo#0 Ihc Lexeme/X",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question support)",
+     "lemma": null,
+     "inflection": null
+    }
+   ],
+   "closed-class-catalog-fill": [
+    {
+     "click": "manche#0 Manche Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "manche",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "manche#7 viele Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "viele",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "relativ#5 die Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "die",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Rel",
+       "gender": "Fem",
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    }
+   ],
+   "closed-class-unresolved-unique": [
+    {
+     "click": "manche#0 Manche Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "manche",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "manche#7 viele Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "viele",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    }
+   ],
+   "authored-identity-skip": [
+    {
+     "click": "relativ#5 die Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "die",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Rel",
+       "gender": "Fem",
+       "referenceNumber": "Sing"
+      }
+     },
+     "inflection": null
+    }
+   ],
+   "combined-safe": [
+    {
+     "click": "manche#0 Manche Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "manche",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "manche#7 viele Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "viele",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "museum#6 z.B. Lexeme/ADV",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "ADV",
+      "canonicalForm": "z.B.",
+      "coreFeatures": {
+       "foreign": null,
+       "numType": null,
+       "pronType": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "typo#0 Ihc Lexeme/X",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question support)",
+     "lemma": null,
+     "inflection": null
+    },
+    {
+     "click": "usw#4 Obst Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Obst",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    },
+    {
+     "click": "usw#7 Gemüse Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Gemüse",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Plur"
+     }
+    },
+    {
+     "click": "verfuegung#10 Material Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Material",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    }
+   ],
+   "combined-drop-lexeme": [
+    {
+     "click": "manche#0 Manche Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "manche",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "manche#7 viele Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question lemma.coreFeatures.referenceNumber)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "viele",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "museum#6 z.B. Lexeme/ADV",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "ADV",
+      "canonicalForm": "z.B.",
+      "coreFeatures": {
+       "foreign": null,
+       "numType": null,
+       "pronType": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "typo#0 Ihc Lexeme/X",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question spelling)",
+     "lemma": null,
+     "inflection": null
+    },
+    {
+     "click": "usw#4 Obst Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Obst",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    },
+    {
+     "click": "usw#7 Gemüse Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Gemüse",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Plur"
+     }
+    },
+    {
+     "click": "verfuegung#10 Material Lexeme/NOUN",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Applicable grammatical answers do not compose into a legal analysis)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Material",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    },
+    {
+     "click": "verfuegung#6 den Lexeme/NOUN",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question lemma.coreFeatures.gender)",
+     "lemma": null,
+     "inflection": null
+    }
+   ],
+   "support-drop-lexeme+spelling-default": [
+    {
+     "click": "museum#6 z.B. Lexeme/ADV",
+     "targetMatchesGold": true,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "ADV",
+      "canonicalForm": "z.B.",
+      "coreFeatures": {
+       "foreign": null,
+       "numType": null,
+       "pronType": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "typo#0 Ihc Lexeme/X",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question lemma.coreFeatures.abbr)",
+     "lemma": null,
+     "inflection": null
+    },
+    {
+     "click": "verfuegung#6 den Lexeme/NOUN",
+     "targetMatchesGold": false,
+     "baseline": "Unresolved (Unresolved applicable question support)",
+     "variant": "Unresolved (Unresolved applicable question lemma.coreFeatures.gender)",
+     "lemma": null,
+     "inflection": null
+    }
+   ],
+   "identity-casefold-lookup": [
+    {
+     "click": "aufstehen#0 Meine Lexeme/DET",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "DET",
+      "canonicalForm": "mein",
+      "coreFeatures": {
+       "definite": null,
+       "extPos": null,
+       "foreign": null,
+       "numType": null,
+       "person": "1",
+       "polite": null,
+       "poss": "Yes",
+       "pronType": "Prs"
+      }
+     },
+     "inflection": {
+      "case": "Nom",
+      "degree": null,
+      "gender": "Fem",
+      "gender[psor]": null,
+      "number": "Sing",
+      "number[psor]": "Sing"
+     }
+    },
+    {
+     "click": "erinnert#0 Er Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "er",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": "3",
+       "polite": null,
+       "poss": null,
+       "pronType": "Prs",
+       "gender": "Masc",
+       "referenceNumber": "Sing"
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "faden#0 Er Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "er",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": "3",
+       "polite": null,
+       "poss": null,
+       "pronType": "Prs",
+       "gender": "Masc",
+       "referenceNumber": "Sing"
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "kino#0 Wir Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "wir",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": "1",
+       "polite": null,
+       "poss": null,
+       "pronType": "Prs",
+       "gender": null,
+       "referenceNumber": "Plur"
+      }
+     },
+     "inflection": null
+    }
+   ],
+   "identity-skip+casefold": [
+    {
+     "click": "aufstehen#0 Meine Lexeme/DET",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "DET",
+      "canonicalForm": "mein",
+      "coreFeatures": {
+       "definite": null,
+       "extPos": null,
+       "foreign": null,
+       "numType": null,
+       "person": "1",
+       "polite": null,
+       "poss": "Yes",
+       "pronType": "Prs"
+      }
+     },
+     "inflection": {
+      "case": "Nom",
+      "degree": null,
+      "gender": "Fem",
+      "gender[psor]": null,
+      "number": "Sing",
+      "number[psor]": "Sing"
+     }
+    },
+    {
+     "click": "erinnert#0 Er Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "er",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": "3",
+       "polite": null,
+       "poss": null,
+       "pronType": "Prs",
+       "gender": "Masc",
+       "referenceNumber": "Sing"
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "faden#0 Er Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "er",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": "3",
+       "polite": null,
+       "poss": null,
+       "pronType": "Prs",
+       "gender": "Masc",
+       "referenceNumber": "Sing"
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "kino#0 Wir Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "wir",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": "1",
+       "polite": null,
+       "poss": null,
+       "pronType": "Prs",
+       "gender": null,
+       "referenceNumber": "Plur"
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "relativ#5 die Lexeme/PRON",
+     "targetMatchesGold": true,
+     "baseline": "Success",
+     "variant": "Success",
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "die",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Rel",
+       "gender": "Fem",
+       "referenceNumber": "Sing"
+      }
+     },
+     "inflection": null
+    }
+   ]
+  }
+ },
+ "naturalLive": {
+  "noun-number-no-unmarked": {
+   "clicks": 20,
+   "identicalToBaseline": 17,
+   "changed": [
+    {
+     "click": "usw#4 Obst",
+     "baseline": "Unresolved",
+     "variant": "Success",
+     "error": null,
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Obst",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    },
+    {
+     "click": "usw#7 Gemüse",
+     "baseline": "Unresolved",
+     "variant": "Success",
+     "error": null,
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Gemüse",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    },
+    {
+     "click": "verfuegung#10 Material",
+     "baseline": "Unresolved",
+     "variant": "Success",
+     "error": null,
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "canonicalForm": "Material",
+      "coreFeatures": {
+       "gender": "Neut",
+       "hyph": null
+      }
+     },
+     "inflection": {
+      "article": null,
+      "case": "Acc",
+      "number": "Sing"
+     }
+    }
+   ],
+   "identityCalls": {
+    "baseline": 0,
+    "variant": 0
+   },
+   "featuresInputTokens": {
+    "baseline": 70002,
+    "variant": 69662
+   }
+  },
+  "closed-class-core-pruning": {
+   "clicks": 13,
+   "identicalToBaseline": 9,
+   "changed": [
+    {
+     "click": "manche#0 Manche",
+     "baseline": "Unresolved",
+     "variant": "Success",
+     "error": null,
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "manche",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "manche#7 viele",
+     "baseline": "Unresolved",
+     "variant": "Success",
+     "error": null,
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "viele",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Plur",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Ind",
+       "gender": null,
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "relativ#5 die",
+     "baseline": "Success",
+     "variant": "Success",
+     "error": null,
+     "lemma": {
+      "unitKind": "Lemma",
+      "language": "de",
+      "family": "Lexeme",
+      "kind": "PRON",
+      "canonicalForm": "die",
+      "coreFeatures": {
+       "case": "Nom",
+       "number": "Sing",
+       "gender[psor]": null,
+       "extPos": null,
+       "foreign": null,
+       "person": null,
+       "polite": null,
+       "poss": null,
+       "pronType": "Rel",
+       "gender": "Fem",
+       "referenceNumber": null
+      }
+     },
+     "inflection": null
+    },
+    {
+     "click": "typo#6 keine",
+     "baseline": "Success",
+     "variant": "Unresolved",
+     "error": "Unresolved applicable question surface.inflectionalFeatures.gender",
+     "lemma": null,
+     "inflection": null
+    }
+   ],
+   "identityCalls": {
+    "baseline": 6,
+    "variant": 6
+   },
+   "featuresInputTokens": {
+    "baseline": 63016,
+    "variant": 41079
+   }
+  }
+ },
+ "p4Garbage": {
+  "targets": 23,
+  "acceptedByPolicy": {
+   "baseline-replay": 5,
+   "support-0.8": 12,
+   "support-drop-lexeme": 14,
+   "noun-marked-number": 5,
+   "combined-safe": 12,
+   "combined-drop-lexeme": 14,
+   "support-drop-lexeme+spelling-default": 14
+  },
+  "rows": [
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "baseline-replay",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "baseline-replay",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "baseline-replay",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "baseline-replay",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "baseline-replay",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "baseline-replay",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "support-0.8",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "support-0.8",
+    "status": "Success",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "support-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "noun-marked-number",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "combined-safe",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "combined-safe",
+    "status": "Success",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "combined-drop-lexeme",
+    "status": "Success",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-massnahmen-click-massnahmen",
+    "words": [
+     "die",
+     "Maßnahmen"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-kritik-click-kritik",
+    "words": [
+     "die",
+     "Kritik"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.15
+   },
+   {
+    "id": "stray:target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht",
+    "words": [
+     "des",
+     "Rücksicht"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.68
+   },
+   {
+    "id": "stray:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "einem",
+     "Eis"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.65
+   },
+   {
+    "id": "bare:target-de-boundary-literal-eis-click-eis",
+    "words": [
+     "das"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.73
+   },
+   {
+    "id": "stray:target-de-boundary-free-object-click-cola",
+    "words": [
+     "Der",
+     "Cola"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.7
+   },
+   {
+    "id": "stray:target-de-demo-literal-gras-click-gras",
+    "words": [
+     "der",
+     "Gras"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.83
+   },
+   {
+    "id": "stray:target-de-robust-overlap-near-vase",
+    "words": [
+     "eine",
+     "Vase"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.77
+   },
+   {
+    "id": "stray:target-de-noun-article-repeated-article",
+    "words": [
+     "der",
+     "Abstieg"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.23
+   },
+   {
+    "id": "stray:target-de-noun-article-nested-complement",
+    "words": [
+     "der",
+     "Aufstiegs"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.81
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.57
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-dem-of-jungen",
+    "words": [
+     "die",
+     "Jungen"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.72
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-hike-click-die-of-flasche",
+    "words": [
+     "dem",
+     "Flasche"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-weather-click-das-of-wetter",
+    "words": [
+     "Der",
+     "Wetter"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-der-of-vater",
+    "words": [
+     "Der",
+     "Vater"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.2
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-predicate-click-des-of-mädchens",
+    "words": [
+     "der",
+     "Mädchens"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.55
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+    "words": [
+     "der",
+     "Wanderführerin"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.59
+   },
+   {
+    "id": "stray:target-de-noun-article-cross-quoted-click-der-of-gipfel",
+    "words": [
+     "die",
+     "Gipfel"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Success",
+    "supportPUnresolved": 0.39
+   },
+   {
+    "id": "bare:target-de-route-lexeme-noun",
+    "words": [
+     "Das"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.8
+   },
+   {
+    "id": "bare:target-de-core-kakao",
+    "words": [
+     "Der"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.86
+   },
+   {
+    "id": "bare:target-de-boundary-governed-near-bus",
+    "words": [
+     "den"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.75
+   },
+   {
+    "id": "bare:target-de-boundary-adjunct-click-wiese",
+    "words": [
+     "der"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.84
+   },
+   {
+    "id": "bare:target-de-route-phraseme-collocation-antrag-click-einen",
+    "words": [
+     "einen"
+    ],
+    "policy": "support-drop-lexeme+spelling-default",
+    "status": "Unresolved",
+    "supportPUnresolved": 0.82
+   }
+  ]
+ }
+}

@@ -1,0 +1,3228 @@
+{
+ "generatedAt": "2026-09-23T08:53:15.012Z",
+ "spend": {
+  "totalUsd": 0.33757,
+  "byRun": [
+   {
+    "script": "intake.ts",
+    "label": "pilot",
+    "usd": 0.003
+   },
+   {
+    "script": "harness.ts",
+    "label": "pilot",
+    "usd": 0.00166
+   },
+   {
+    "script": "intake.ts",
+    "label": "main",
+    "usd": 0.04724
+   },
+   {
+    "script": "intake.ts",
+    "label": "heldout-s1",
+    "usd": 0.0113
+   },
+   {
+    "script": "intake.ts",
+    "label": "heldout-s1b",
+    "usd": 0.00035
+   },
+   {
+    "script": "harness.ts",
+    "label": "heldout",
+    "usd": 0.0646
+   },
+   {
+    "script": "intake.ts",
+    "label": "verb",
+    "usd": 0.09912
+   },
+   {
+    "script": "intake.ts",
+    "label": "verb",
+    "usd": 0.01811
+   },
+   {
+    "script": "intake.ts",
+    "label": "verb-r",
+    "usd": 0.00077
+   },
+   {
+    "script": "harness.ts",
+    "label": "verb",
+    "usd": 0.04663
+   },
+   {
+    "script": "intake.ts",
+    "label": "oracle",
+    "usd": 0.00808
+   },
+   {
+    "script": "harness.ts",
+    "label": "oracle",
+    "usd": 0
+   },
+   {
+    "script": "intake.ts",
+    "label": "oracle2",
+    "usd": 0.01517
+   },
+   {
+    "script": "intake.ts",
+    "label": "verb-s2",
+    "usd": 0.02153
+   }
+  ],
+  "note": "grammar-oracle (Idiom/ADJ live grammar) failed on every call with TypeSafe HTTP 402 'no available API credits' at 08:45Z; $0 spent; records kept as results/grammar-oracle-402-failed.jsonl and excluded."
+ },
+ "srcState": "HEAD 29c5d859, git status clean for src/codegen/dist, src tree hash 0cbfec9bc7028726 before and after every live run (results/src-state-*.txt). E2 archived records were produced at the same HEAD (src last changed 08:53 +0200, E2 ran ~10:00 +0200).",
+ "intake": {
+  "heldout": {
+   "sentences": 54,
+   "listedTargetsPerSentence": 3.33,
+   "skippedTargetKinds": {
+    "closedOrNoCanonical:PRON": 25,
+    "closedOrNoCanonical:DET": 14
+   },
+   "headwordCalls": 54,
+   "headwordValid": 43,
+   "headwordInvalidOrFailed": [
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array"
+   ],
+   "headwordMs": {
+    "p50": 1550,
+    "p90": 2250,
+    "max": 2883
+   },
+   "headwordProviderMs": {
+    "p50": 1326,
+    "p90": 1966
+   },
+   "headwordTokensMean": {
+    "input": 1311,
+    "cached": 1211,
+    "output": 50
+   },
+   "headwordCostPerSentenceUsd": 0.000208,
+   "analyzeMs": {
+    "p50": 404,
+    "p90": 525
+   },
+   "analyzeCostPerSentenceUsd": 0.000667,
+   "analyzeJevCallsPerSentence": 1,
+   "intakeTotalMs": {
+    "p50": 1932,
+    "p90": 2627
+   },
+   "totalIntakeCostPerSentenceUsd": 0.000875,
+   "headwordStrict": {
+    "sentences": 54,
+    "listedTargetsPerSentence": 3.33,
+    "skippedTargetKinds": {
+     "closedOrNoCanonical:PRON": 25,
+     "closedOrNoCanonical:DET": 14
+    },
+    "headwordCalls": 54,
+    "headwordValid": 54,
+    "headwordInvalidOrFailed": [],
+    "headwordMs": {
+     "p50": 1450,
+     "p90": 1949,
+     "max": 3963
+    },
+    "headwordProviderMs": {
+     "p50": 1155,
+     "p90": 1640
+    },
+    "headwordTokensMean": {
+     "input": 1311,
+     "cached": 1211,
+     "output": 50
+    },
+    "headwordCostPerSentenceUsd": 0.000209,
+    "analyzeMs": null,
+    "analyzeCostPerSentenceUsd": null,
+    "analyzeJevCallsPerSentence": null,
+    "intakeTotalMs": null,
+    "totalIntakeCostPerSentenceUsd": 0.000209
+   },
+   "intakeTotalMsStrict": {
+    "n": 54,
+    "p50": 1918,
+    "p90": 2493
+   },
+   "totalIntakeCostPerSentenceStrictUsd": 0.000876,
+   "note": "analysis from intake-main; its headword calls used promptsmith createOpenAIExecutor (json_schema strict:false). The strict re-run (intake-heldout-s1, same analyses) supplies the proposals."
+  },
+  "verb": {
+   "sentences": 77,
+   "listedTargetsPerSentence": 5.53,
+   "skippedTargetKinds": {
+    "closedOrNoCanonical:PRON": 53,
+    "closedOrNoCanonical:DET": 37,
+    "closedOrNoCanonical:AUX": 4
+   },
+   "headwordCalls": 77,
+   "headwordValid": 77,
+   "headwordInvalidOrFailed": [],
+   "headwordMs": {
+    "p50": 1615,
+    "p90": 2781,
+    "max": 8376
+   },
+   "headwordProviderMs": {
+    "p50": 1359,
+    "p90": 2468
+   },
+   "headwordTokensMean": {
+    "input": 1361,
+    "cached": 1211,
+    "output": 72
+   },
+   "headwordCostPerSentenceUsd": 0.000282,
+   "analyzeMs": {
+    "p50": 450,
+    "p90": 680
+   },
+   "analyzeCostPerSentenceUsd": 0.00125,
+   "analyzeJevCallsPerSentence": 1.4,
+   "intakeTotalMs": {
+    "p50": 2096,
+    "p90": 3368
+   },
+   "totalIntakeCostPerSentenceUsd": 0.001532
+  },
+  "oracleIdiomAdj": {
+   "sentences": 59,
+   "listedTargetsPerSentence": 1,
+   "skippedTargetKinds": {},
+   "headwordCalls": 59,
+   "headwordValid": 59,
+   "headwordInvalidOrFailed": [],
+   "headwordMs": {
+    "p50": 1462,
+    "p90": 1822,
+    "max": 2515
+   },
+   "headwordProviderMs": {
+    "p50": 1225,
+    "p90": 1523
+   },
+   "headwordTokensMean": {
+    "input": 1261,
+    "cached": 1211,
+    "output": 29
+   },
+   "headwordCostPerSentenceUsd": 0.000137,
+   "analyzeMs": null,
+   "analyzeCostPerSentenceUsd": null,
+   "analyzeJevCallsPerSentence": null,
+   "intakeTotalMs": null,
+   "totalIntakeCostPerSentenceUsd": 0.000137
+  },
+  "oracleNounAdvCollocation": {
+   "sentences": 114,
+   "listedTargetsPerSentence": 1,
+   "skippedTargetKinds": {},
+   "headwordCalls": 114,
+   "headwordValid": 114,
+   "headwordInvalidOrFailed": [],
+   "headwordMs": {
+    "p50": 1411,
+    "p90": 1963,
+    "max": 3098
+   },
+   "headwordProviderMs": {
+    "p50": 1168,
+    "p90": 1560
+   },
+   "headwordTokensMean": {
+    "input": 1258,
+    "cached": 1211,
+    "output": 27
+   },
+   "headwordCostPerSentenceUsd": 0.000133,
+   "analyzeMs": null,
+   "analyzeCostPerSentenceUsd": null,
+   "analyzeJevCallsPerSentence": null,
+   "intakeTotalMs": null,
+   "totalIntakeCostPerSentenceUsd": 0.000133
+  },
+  "promptsmithExecutorValidity": {
+   "calls": 54,
+   "valid": 43,
+   "failures": [
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array",
+    "invalid: headwords is not an array"
+   ]
+  },
+  "strictVsPromptsmithStability": {
+   "sentencesWithBoth": 43,
+   "targetsCompared": 143,
+   "identical": 142,
+   "differences": [
+    {
+     "text": "Er sah seinen Fehler ein.",
+     "target": "1",
+     "promptsmith": "sehen",
+     "strict": "einsehen"
+    }
+   ]
+  },
+  "verbSecondSample": {
+   "note": "intake-verb-s2: headword call re-run on the stored VERB analyses (strict executor)",
+   "targetsCompared": 423,
+   "identical": 416,
+   "verbCaseProposalsCorrect": "61/61",
+   "differences": [
+    {
+     "text": "Sie wartet auf den nächsten Zug.",
+     "target": {
+      "n": 4,
+      "layer": "Lexeme",
+      "id": "t5",
+      "family": "Lexeme",
+      "kind": "ADJ",
+      "offsets": [
+       19
+      ],
+      "members": [
+       "nächsten [Head]"
+      ]
+     },
+     "first": "nächst",
+     "second": "nächste"
+    },
+    {
+     "text": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt an die Rentner weitergeleitet werden, ist an seine Grenzen gekommen.",
+     "target": {
+      "n": 7,
+      "layer": "Lexeme",
+      "id": "t11",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "offsets": [
+       60
+      ],
+      "members": [
+       "Angestellten [Head]"
+      ]
+     },
+     "first": "Angestellte",
+     "second": "Angestellter"
+    },
+    {
+     "text": "Die Eindrücke wirken noch nach, sagt der Historiker beim Treffen mit der DW in seiner Berliner Wohnung.",
+     "target": {
+      "n": 12,
+      "layer": "Lexeme",
+      "id": "t14",
+      "family": "Lexeme",
+      "kind": "ADJ",
+      "offsets": [
+       86
+      ],
+      "members": [
+       "Berliner [Head]"
+      ]
+     },
+     "first": "Berliner",
+     "second": "berliner"
+    },
+    {
+     "text": "Der Deutsche Ärztetag, die Vertretung der Mediziner in Deutschland, hat sich für ein Verbot jeder Form der organisierten Sterbehilfe ausgesprochen.",
+     "target": {
+      "n": 1,
+      "layer": "Lexeme",
+      "id": "t1",
+      "family": "Lexeme",
+      "kind": "NOUN",
+      "offsets": [
+       0,
+       4
+      ],
+      "members": [
+       "Der [Article]",
+       "Deutsche [Head]"
+      ]
+     },
+     "first": "Deutscher",
+     "second": "Deutsche"
+    },
+    {
+     "text": "Der Deutsche Ärztetag, die Vertretung der Mediziner in Deutschland, hat sich für ein Verbot jeder Form der organisierten Sterbehilfe ausgesprochen.",
+     "target": {
+      "n": 13,
+      "layer": "Phraseme",
+      "id": "p2",
+      "family": "Phraseme",
+      "kind": "Collocation",
+      "offsets": [
+       68,
+       72,
+       77,
+       133
+      ],
+      "members": [
+       "hat",
+       "sich",
+       "für",
+       "ausgesprochen"
+      ]
+     },
+     "first": "sich für aussprechen",
+     "second": "für sich aussprechen"
+    },
+    {
+     "text": "Durch die Meerenge war zuvor fast ein Fünftel des weltweit verbrauchten Rohöls verschifft worden.",
+     "target": {
+      "n": 6,
+      "layer": "Lexeme",
+      "id": "t7",
+      "family": "Lexeme",
+      "kind": "NUM",
+      "offsets": [
+       38
+      ],
+      "members": [
+       "Fünftel [Head]"
+      ]
+     },
+     "first": "5",
+     "second": "Fünftel"
+    },
+    {
+     "text": "Der pensionierte Lehrer erinnert sich noch deutlich an seinen ersten Schultag in dem kleinen Bergdorf.",
+     "target": {
+      "n": 6,
+      "layer": "Lexeme",
+      "id": "t7",
+      "family": "Lexeme",
+      "kind": "NUM",
+      "offsets": [
+       62
+      ],
+      "members": [
+       "ersten [Head]"
+      ]
+     },
+     "first": "1.",
+     "second": "eins"
+    }
+   ]
+  },
+  "match": {
+   "heldout": {
+    "cases": 54,
+    "statuses": {
+     "exact": 52,
+     "none": 2
+    },
+    "matched": 52,
+    "matchedWithGold": 52,
+    "proposalEqualsGold": 52,
+    "nullProposals": 0,
+    "wrongProposals": []
+   },
+   "verb": {
+    "cases": 77,
+    "statuses": {
+     "exact": 62,
+     "none": 14,
+     "membersOnly:DET": 1
+    },
+    "matched": 62,
+    "matchedWithGold": 62,
+    "proposalEqualsGold": 62,
+    "nullProposals": 0,
+    "wrongProposals": []
+   },
+   "adjectiveOracle": {
+    "cases": 32,
+    "statuses": {
+     "oracle": 32
+    },
+    "matched": 32,
+    "matchedWithGold": 32,
+    "proposalEqualsGold": 32,
+    "nullProposals": 0,
+    "wrongProposals": []
+   },
+   "idiomOracle": {
+    "cases": 27,
+    "statuses": {
+     "oracle": 27
+    },
+    "matched": 27,
+    "matchedWithGold": 27,
+    "proposalEqualsGold": 25,
+    "nullProposals": 1,
+    "wrongProposals": [
+     {
+      "caseId": "grammar-de-idiom-was-zum-truncation-partial",
+      "proposal": "was zum",
+      "gold": "was zum Teufel"
+     },
+     {
+      "caseId": "grammar-de-idiom-loeffel-typo-full",
+      "proposal": null,
+      "gold": "den Löffel abgeben"
+     }
+    ]
+   },
+   "nounOracle": {
+    "cases": 45,
+    "statuses": {
+     "oracle": 45
+    },
+    "matched": 45,
+    "matchedWithGold": 44,
+    "proposalEqualsGold": 37,
+    "nullProposals": 1,
+    "wrongProposals": [
+     {
+      "caseId": "grammar-de-noun-dev-variant-photographie",
+      "proposal": "Photographie",
+      "gold": "Fotografie"
+     },
+     {
+      "caseId": "grammar-de-noun-dev-suspended-hyphen-genitiv",
+      "proposal": "Kind",
+      "gold": "Kinderbuch"
+     },
+     {
+      "caseId": "grammar-de-noun-dev-suspended-typo",
+      "proposal": "Kinder",
+      "gold": "Kinderbuch"
+     },
+     {
+      "caseId": "grammar-de-noun-accept-suspended-nonbreaking",
+      "proposal": "Kind",
+      "gold": "Kinderbuch"
+     },
+     {
+      "caseId": "grammar-de-noun-accept-suspended-dativ-plural",
+      "proposal": "Kind",
+      "gold": "Kinderbuch"
+     },
+     {
+      "caseId": "grammar-de-noun-accept-suspended-nominativ-plural",
+      "proposal": null,
+      "gold": "Kinderbuch"
+     },
+     {
+      "caseId": "grammar-de-noun-dev-abbreviation-dipl-ing",
+      "proposal": "Dipl.-Ing.",
+      "gold": "Diplom-Ingenieur"
+     }
+    ]
+   },
+   "adverbOracle": {
+    "cases": 49,
+    "statuses": {
+     "oracle": 49
+    },
+    "matched": 49,
+    "matchedWithGold": 49,
+    "proposalEqualsGold": 40,
+    "nullProposals": 1,
+    "wrongProposals": [
+     {
+      "caseId": "grammar-de-adv-dev-foreign-remotely",
+      "proposal": null,
+      "gold": "remotely"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-ca",
+      "proposal": "ca.",
+      "gold": "circa"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-zb",
+      "proposal": "z.B.",
+      "gold": "zum Beispiel"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-usw",
+      "proposal": "usw.",
+      "gold": "und so weiter"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-usw-final",
+      "proposal": "usw.",
+      "gold": "und so weiter"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-ua",
+      "proposal": "u. a.",
+      "gold": "unter anderem"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-oae",
+      "proposal": "o.Ä.",
+      "gold": "oder Ähnliches"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-written-oder-aehnliches",
+      "proposal": "oder … Ähnliches",
+      "gold": "oder Ähnliches"
+     },
+     {
+      "caseId": "grammar-de-adv-dev-abbreviation-va",
+      "proposal": "v.a.",
+      "gold": "vor allem"
+     }
+    ]
+   },
+   "collocationOracle": {
+    "cases": 20,
+    "statuses": {
+     "oracle": 20
+    },
+    "matched": 20,
+    "matchedWithGold": 13,
+    "proposalEqualsGold": 12,
+    "nullProposals": 0,
+    "wrongProposals": [
+     {
+      "caseId": "grammar-de-coll-anspruch-participle-full",
+      "proposal": "Hilfe in Anspruch nehmen",
+      "gold": "in Anspruch nehmen"
+     }
+    ]
+   }
+  },
+  "unmatchedCases": [
+   {
+    "caseId": "heldout-sah-ein",
+    "members": [
+     "sah",
+     "ein"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "1"
+     },
+     {
+      "id": "t5",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "4"
+     },
+     {
+      "id": "p1",
+      "layer": "Phraseme",
+      "kind": "Idiom",
+      "words": "1,4"
+     }
+    ]
+   },
+   {
+    "caseId": "heldout-nahmen-teil",
+    "members": [
+     "nahmen",
+     "teil"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2"
+     },
+     {
+      "id": "t6",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "5"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-governed-preposition-wartet",
+    "members": [
+     "wartet",
+     "auf"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "1"
+     },
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "2"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-passive-wurde-gebeten",
+    "members": [
+     "wurde",
+     "um",
+     "gebeten"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "1,4"
+     },
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "2"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-state-passive-geschlossen",
+    "members": [
+     "ist",
+     "geschlossen"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "AUX",
+      "words": "2"
+     },
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "ADJ",
+      "words": "3"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-dw-perfect-ausgeschlossen",
+    "members": [
+     "hat",
+     "von",
+     "ausgeschlossen"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "3,16"
+     },
+     {
+      "id": "t10",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "10"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-dw-separable-nachwirken",
+    "members": [
+     "wirken",
+     "nach"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2"
+     },
+     {
+      "id": "t4",
+      "layer": "Lexeme",
+      "kind": "ADV",
+      "words": "4"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-dw-passive-weitergeleitet",
+    "members": [
+     "an",
+     "weitergeleitet",
+     "werden"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t13",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "12"
+     },
+     {
+      "id": "t16",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "15,16"
+     },
+     {
+      "id": "p1",
+      "layer": "Phraseme",
+      "kind": "Collocation",
+      "words": "12,17,18,19,20,21"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-dw-future-finden",
+    "members": [
+     "wird",
+     "finden"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "AUX",
+      "words": "2"
+     },
+     {
+      "id": "t7",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "7"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-dw-perfect-ausgesprochen",
+    "members": [
+     "hat",
+     "sich",
+     "für",
+     "ausgesprochen"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t8",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "9,19"
+     },
+     {
+      "id": "t9",
+      "layer": "Lexeme",
+      "kind": "PRON",
+      "words": "10"
+     },
+     {
+      "id": "t10",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "11"
+     },
+     {
+      "id": "p2",
+      "layer": "Phraseme",
+      "kind": "Collocation",
+      "words": "9,10,11,19"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-prep-governed-warten-auf",
+    "members": [
+     "warten",
+     "auf"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2"
+     },
+     {
+      "id": "t8",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "8"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+    "members": [
+     "sehnen",
+     "sich",
+     "nach"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2,3,4"
+     },
+     {
+      "id": "t7",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "8"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+    "members": [
+     "warnen",
+     "vor"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2"
+     },
+     {
+      "id": "t7",
+      "layer": "Lexeme",
+      "kind": "ADP",
+      "words": "7"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-dev-apocope-haett-bestellt",
+    "members": [
+     "hätt",
+     "bestellt"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t5",
+      "layer": "Lexeme",
+      "kind": "AUX",
+      "words": "5"
+     },
+     {
+      "id": "t6",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "10"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-copula-perfect-ist-gewesen",
+    "members": [
+     "ist",
+     "gewesen"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2"
+     },
+     {
+      "id": "t5",
+      "layer": "Lexeme",
+      "kind": "AUX",
+      "words": "5"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-copula-citation-sein",
+    "members": [
+     "sein"
+    ],
+    "status": "membersOnly:DET",
+    "overlapping": [
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "DET",
+      "words": "3"
+     }
+    ]
+   },
+   {
+    "caseId": "grammar-de-verb-recipient-passive-erhielt-ueberreicht",
+    "members": [
+     "erhielt",
+     "überreicht"
+    ],
+    "status": "none",
+    "overlapping": [
+     {
+      "id": "t2",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "2"
+     },
+     {
+      "id": "t3",
+      "layer": "Lexeme",
+      "kind": "VERB",
+      "words": "5"
+     }
+    ]
+   }
+  ]
+ },
+ "proposalRisk": {
+  "note": "Cases whose proposal is wrong or null. wouldIntroduceWrongLemma: production (E2 base, same src) got it right in >=1 rep and the proposal would be offered (differs from the joined candidate); under presence bias H would likely pick it.",
+  "cases": [
+   {
+    "caseId": "grammar-de-idiom-was-zum-truncation-partial",
+    "kind": "Idiom",
+    "members": "Was+zum",
+    "gold": "was zum Teufel",
+    "proposal": "was zum",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Unresolved",
+     "Unresolved"
+    ],
+    "productionCorrect": "0/2",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-dev-variant-photographie",
+    "kind": "NOUN",
+    "members": "die+Photographie",
+    "gold": "Fotografie",
+    "proposal": "Photographie",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Photographie"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-dev-suspended-hyphen-genitiv",
+    "kind": "NOUN",
+    "members": "des+Kinder‐",
+    "gold": "Kinderbuch",
+    "proposal": "Kind",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-dev-suspended-typo",
+    "kind": "NOUN",
+    "members": "Kidner-",
+    "gold": "Kinderbuch",
+    "proposal": "Kinder",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-accept-suspended-nonbreaking",
+    "kind": "NOUN",
+    "members": "Kinder‑",
+    "gold": "Kinderbuch",
+    "proposal": "Kind",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-accept-suspended-dativ-plural",
+    "kind": "NOUN",
+    "members": "Kinder-",
+    "gold": "Kinderbuch",
+    "proposal": "Kind",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "InvalidOutput"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-dev-abbreviation-dipl-ing",
+    "kind": "NOUN",
+    "members": "Dipl.-Ing.",
+    "gold": "Diplom-Ingenieur",
+    "proposal": "Dipl.-Ing.",
+    "proposalEqualsJoined": true,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-ca",
+    "kind": "ADV",
+    "members": "ca",
+    "gold": "circa",
+    "proposal": "ca.",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "ca"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-zb",
+    "kind": "ADV",
+    "members": "z.B.",
+    "gold": "zum Beispiel",
+    "proposal": "z.B.",
+    "proposalEqualsJoined": true,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-usw",
+    "kind": "ADV",
+    "members": "usw.",
+    "gold": "und so weiter",
+    "proposal": "usw.",
+    "proposalEqualsJoined": true,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-usw-final",
+    "kind": "ADV",
+    "members": "usw.",
+    "gold": "und so weiter",
+    "proposal": "usw.",
+    "proposalEqualsJoined": true,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-ua",
+    "kind": "ADV",
+    "members": "u.a.",
+    "gold": "unter anderem",
+    "proposal": "u. a.",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "u.a."
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-oae",
+    "kind": "ADV",
+    "members": "o.Ä.",
+    "gold": "oder Ähnliches",
+    "proposal": "o.Ä.",
+    "proposalEqualsJoined": true,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-written-oder-aehnliches",
+    "kind": "ADV",
+    "members": "oder+Ähnliches",
+    "gold": "oder Ähnliches",
+    "proposal": "oder … Ähnliches",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Unresolved"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-abbreviation-va",
+    "kind": "ADV",
+    "members": "v.a.",
+    "gold": "vor allem",
+    "proposal": "v.a.",
+    "proposalEqualsJoined": true,
+    "productionE2base": [
+     "v.a."
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-coll-anspruch-participle-full",
+    "kind": "Collocation",
+    "members": "hat+in+Anspruch+genommen",
+    "gold": "in Anspruch nehmen",
+    "proposal": "Hilfe in Anspruch nehmen",
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "Unresolved",
+     "ProviderFailure"
+    ],
+    "productionCorrect": "0/2",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-idiom-loeffel-typo-full",
+    "kind": "Idiom",
+    "members": "den+Löfel+abgab",
+    "gold": "den Löffel abgeben",
+    "proposal": null,
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "den Löffel abgeben",
+     "den Löfel abgab"
+    ],
+    "productionCorrect": "1/2",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-noun-accept-suspended-nominativ-plural",
+    "kind": "NOUN",
+    "members": "Kinder-",
+    "gold": "Kinderbuch",
+    "proposal": null,
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "InvalidOutput"
+    ],
+    "productionCorrect": "0/1",
+    "wouldIntroduceWrongLemma": false
+   },
+   {
+    "caseId": "grammar-de-adv-dev-foreign-remotely",
+    "kind": "ADV",
+    "members": "remotely",
+    "gold": "remotely",
+    "proposal": null,
+    "proposalEqualsJoined": false,
+    "productionE2base": [
+     "remotely"
+    ],
+    "productionCorrect": "1/1",
+    "wouldIntroduceWrongLemma": false
+   }
+  ],
+  "wouldIntroduce": []
+ },
+ "grammar": {
+  "heldout": {
+   "base1": {
+    "n": 54,
+    "statuses": {
+     "Success": 45,
+     "Unresolved": 9
+    },
+    "unresolvedQuestions": {
+     "support": 4,
+     "Unresolved hasSepPrefix": 4,
+     "surface.inflectionalFeatures.number": 1
+    },
+    "canonicalExact": 36,
+    "canonicalExactOfSuccess": "36/45",
+    "wrongLemmas": [
+     "entschied-sich#1: entschied sich (gold sich entscheiden)",
+     "tritt#1: tritt (gold treten)",
+     "zog-an#1: zog an (gold anziehen)",
+     "fiel-aus#1: fiel aus (gold ausfallen)",
+     "trat-zurueck#1: trat zurück (gold zurücktreten)",
+     "schlug-vor#1: schlug vor (gold vorschlagen)",
+     "verhielt-sich#1: verhielt sich (gold sich verhalten)",
+     "benahmen-sich#1: benahmen sich (gold sich benehmen)",
+     "unterhielten-sich#1: unterhielten sich (gold sich unterhalten)"
+    ],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.741,
+    "lunaCanonicalCalls": 40,
+    "lunaCanonicalMs": {
+     "p50": 1088,
+     "p90": 1308
+    },
+    "opMs": {
+     "p50": 1396,
+     "p90": 1719,
+     "mean": 1224
+    },
+    "opMsSuccess": {
+     "p50": 1408,
+     "p90": 1662
+    },
+    "costPerOpUsd": 0.00036
+   },
+   "base2": {
+    "n": 54,
+    "statuses": {
+     "Success": 44,
+     "Unresolved": 9,
+     "ProviderFailure": 1
+    },
+    "unresolvedQuestions": {
+     "support": 4,
+     "surface.inflectionalFeatures.number": 2,
+     "Unresolved hasSepPrefix": 3
+    },
+    "canonicalExact": 36,
+    "canonicalExactOfSuccess": "36/44",
+    "wrongLemmas": [
+     "wog#2: wog (gold wiegen)",
+     "mass#2: maß (gold messen)",
+     "zog-an#2: zog an (gold anziehen)",
+     "schlug-vor#2: schlug vor (gold vorschlagen)",
+     "verhielt-sich#2: verhielt sich (gold sich verhalten)",
+     "benahmen-sich#2: benahmen sich (gold sich benehmen)",
+     "unterhielten-sich#2: unterhielten sich (gold sich unterhalten)",
+     "verliess-sich-auf#2: sich auf jemanden verlassen (gold sich verlassen)"
+    ],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.741,
+    "lunaCanonicalCalls": 40,
+    "lunaCanonicalMs": {
+     "p50": 1064,
+     "p90": 1629
+    },
+    "opMs": {
+     "p50": 1346,
+     "p90": 1919,
+     "mean": 1243
+    },
+    "opMsSuccess": {
+     "p50": 1380,
+     "p90": 1951
+    },
+    "costPerOpUsd": 0.000353
+   },
+   "H1": {
+    "n": 54,
+    "statuses": {
+     "Success": 48,
+     "Unresolved": 6
+    },
+    "unresolvedQuestions": {
+     "Unresolved hasSepPrefix": 3,
+     "support": 2,
+     "spelling": 1
+    },
+    "canonicalExact": 48,
+    "canonicalExactOfSuccess": "48/48",
+    "wrongLemmas": [],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.019,
+    "lunaCanonicalCalls": 1,
+    "lunaCanonicalMs": {
+     "p50": 1126,
+     "p90": 1126
+    },
+    "opMs": {
+     "p50": 360,
+     "p90": 489,
+     "mean": 409
+    },
+    "opMsSuccess": {
+     "p50": 358,
+     "p90": 409
+    },
+    "costPerOpUsd": 0.000244
+   },
+   "H2": {
+    "n": 54,
+    "statuses": {
+     "Success": 50,
+     "Unresolved": 4
+    },
+    "unresolvedQuestions": {
+     "support": 2,
+     "spelling": 1,
+     "Unresolved hasSepPrefix": 1
+    },
+    "canonicalExact": 50,
+    "canonicalExactOfSuccess": "50/50",
+    "wrongLemmas": [],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.019,
+    "lunaCanonicalCalls": 1,
+    "lunaCanonicalMs": {
+     "p50": 1170,
+     "p90": 1170
+    },
+    "opMs": {
+     "p50": 355,
+     "p90": 444,
+     "mean": 389
+    },
+    "opMsSuccess": {
+     "p50": 355,
+     "p90": 440
+    },
+    "costPerOpUsd": 0.00024
+   },
+   "basePooled": {
+    "n": 108,
+    "statuses": {
+     "Success": 89,
+     "Unresolved": 18,
+     "ProviderFailure": 1
+    },
+    "unresolvedQuestions": {
+     "support": 8,
+     "Unresolved hasSepPrefix": 7,
+     "surface.inflectionalFeatures.number": 3
+    },
+    "canonicalExact": 72,
+    "canonicalExactOfSuccess": "72/89",
+    "wrongLemmas": [
+     "entschied-sich#1: entschied sich (gold sich entscheiden)",
+     "wog#2: wog (gold wiegen)",
+     "mass#2: maß (gold messen)",
+     "tritt#1: tritt (gold treten)",
+     "zog-an#1: zog an (gold anziehen)",
+     "zog-an#2: zog an (gold anziehen)",
+     "fiel-aus#1: fiel aus (gold ausfallen)",
+     "trat-zurueck#1: trat zurück (gold zurücktreten)",
+     "schlug-vor#1: schlug vor (gold vorschlagen)",
+     "schlug-vor#2: schlug vor (gold vorschlagen)",
+     "verhielt-sich#1: verhielt sich (gold sich verhalten)",
+     "verhielt-sich#2: verhielt sich (gold sich verhalten)",
+     "benahmen-sich#1: benahmen sich (gold sich benehmen)",
+     "benahmen-sich#2: benahmen sich (gold sich benehmen)",
+     "unterhielten-sich#1: unterhielten sich (gold sich unterhalten)",
+     "unterhielten-sich#2: unterhielten sich (gold sich unterhalten)",
+     "verliess-sich-auf#2: sich auf jemanden verlassen (gold sich verlassen)"
+    ],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.741,
+    "lunaCanonicalCalls": 80,
+    "lunaCanonicalMs": {
+     "p50": 1085,
+     "p90": 1612
+    },
+    "opMs": {
+     "p50": 1369,
+     "p90": 1845,
+     "mean": 1234
+    },
+    "opMsSuccess": {
+     "p50": 1392,
+     "p90": 1835
+    },
+    "costPerOpUsd": 0.000357
+   },
+   "HPooled": {
+    "n": 108,
+    "statuses": {
+     "Success": 98,
+     "Unresolved": 10
+    },
+    "unresolvedQuestions": {
+     "Unresolved hasSepPrefix": 4,
+     "support": 4,
+     "spelling": 2
+    },
+    "canonicalExact": 98,
+    "canonicalExactOfSuccess": "98/98",
+    "wrongLemmas": [],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.019,
+    "lunaCanonicalCalls": 2,
+    "lunaCanonicalMs": {
+     "p50": 1148,
+     "p90": 1166
+    },
+    "opMs": {
+     "p50": 358,
+     "p90": 469,
+     "mean": 399
+    },
+    "opMsSuccess": {
+     "p50": 358,
+     "p90": 433
+    },
+    "costPerOpUsd": 0.000242
+   },
+   "Hdetails": {
+    "proposalOffered": 104,
+    "proposalEqualsJoined": 0,
+    "chosenSource": {
+     "intake": 100,
+     "none(Unresolved)": 6,
+     "missing": 2
+    },
+    "guardFirings": [],
+    "offeredButNotChosen": [
+     {
+      "caseId": "heldout-log",
+      "rep": 1,
+      "proposal": "lügen",
+      "final": null,
+      "gold": "lügen",
+      "status": "Unresolved"
+     },
+     {
+      "caseId": "heldout-log",
+      "rep": 2,
+      "proposal": "lügen",
+      "final": null,
+      "gold": "lügen",
+      "status": "Unresolved"
+     },
+     {
+      "caseId": "heldout-goss",
+      "rep": 1,
+      "proposal": "gießen",
+      "final": null,
+      "gold": "gießen",
+      "status": "Unresolved"
+     },
+     {
+      "caseId": "heldout-goss",
+      "rep": 2,
+      "proposal": "gießen",
+      "final": null,
+      "gold": "gießen",
+      "status": "Unresolved"
+     }
+    ]
+   },
+   "H0Counterfactual": {
+    "n": 108,
+    "guardReverted": 0,
+    "canonicalExact": 98
+   },
+   "F": {
+    "n": 108,
+    "actions": {
+     "proposalReplacesLuna": 71,
+     "unchanged(Unresolved)": 18,
+     "guardThenProposal": 16,
+     "unchanged(ProviderFailure)": 1,
+     "unchanged": 2
+    },
+    "canonicalExact": 89,
+    "unknownBecauseLunaNotRun": 0,
+    "wrongLemmas": [],
+    "contractPass": null,
+    "lunaCanonicalRate": 0.083,
+    "opMsEstimate": {
+     "p50": 347,
+     "p90": 524
+    }
+   },
+   "pairedMsHminusBase": {
+    "n": 108,
+    "p10": -1451,
+    "p50": -985,
+    "p90": 33,
+    "mean": -835
+   },
+   "noise": {
+    "base1VsBase2": {
+     "canonical": {
+      "n": 8,
+      "cases": [
+       {
+        "caseId": "heldout-unterschrieb",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "heldout-wog",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "heldout-mass",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "heldout-tritt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "heldout-wurde-gestohlen",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "heldout-fiel-aus",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "heldout-trat-zurueck",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "heldout-verliess-sich-auf",
+        "a": true,
+        "b": false
+       }
+      ]
+     },
+     "status": {
+      "n": 3,
+      "cases": [
+       {
+        "caseId": "heldout-unterschrieb",
+        "a": "Unresolved",
+        "b": "Success"
+       },
+       {
+        "caseId": "heldout-entschied-sich",
+        "a": "Success",
+        "b": "Unresolved"
+       },
+       {
+        "caseId": "heldout-wurde-gestohlen",
+        "a": "Success",
+        "b": "ProviderFailure"
+       }
+      ]
+     }
+    },
+    "H1VsH2": {
+     "canonical": {
+      "n": 2,
+      "cases": [
+       {
+        "caseId": "heldout-unterschrieb",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "heldout-hinterliess",
+        "a": false,
+        "b": true
+       }
+      ]
+     },
+     "status": {
+      "n": 2,
+      "cases": [
+       {
+        "caseId": "heldout-unterschrieb",
+        "a": "Unresolved",
+        "b": "Success"
+       },
+       {
+        "caseId": "heldout-hinterliess",
+        "a": "Unresolved",
+        "b": "Success"
+       }
+      ]
+     }
+    }
+   },
+   "caseLevel": {
+    "consistentGains": [
+     "heldout-kroch",
+     "heldout-entschied-sich",
+     "heldout-widersprach",
+     "heldout-mied",
+     "heldout-zog-an",
+     "heldout-schlug-vor",
+     "heldout-verhielt-sich",
+     "heldout-benahmen-sich",
+     "heldout-unterhielten-sich"
+    ],
+    "consistentLosses": [],
+    "mixed": [
+     "heldout-hinterliess: base 0/2 vs H 1/2",
+     "heldout-wog: base 1/2 vs H 2/2",
+     "heldout-mass: base 1/2 vs H 2/2",
+     "heldout-tritt: base 1/2 vs H 2/2",
+     "heldout-wurde-gestohlen: base 1/2 vs H 2/2",
+     "heldout-fiel-aus: base 1/2 vs H 2/2",
+     "heldout-trat-zurueck: base 1/2 vs H 2/2",
+     "heldout-verliess-sich-auf: base 1/2 vs H 2/2"
+    ]
+   },
+   "directionalBaseToH": {
+    "canonical": {
+     "paired": 108,
+     "falseToTrue": 26,
+     "trueToFalse": 0,
+     "trueToFalseCases": [],
+     "falseToTrueCases": [
+      "heldout-kroch#1",
+      "heldout-kroch#2",
+      "heldout-entschied-sich#1",
+      "heldout-entschied-sich#2",
+      "heldout-widersprach#2",
+      "heldout-widersprach#1",
+      "heldout-hinterliess#2",
+      "heldout-wog#2",
+      "heldout-mied#1",
+      "heldout-mied#2",
+      "heldout-mass#2",
+      "heldout-tritt#1",
+      "heldout-wurde-gestohlen#2",
+      "heldout-zog-an#1",
+      "heldout-zog-an#2",
+      "heldout-fiel-aus#1",
+      "heldout-trat-zurueck#1",
+      "heldout-schlug-vor#1",
+      "heldout-schlug-vor#2",
+      "heldout-verhielt-sich#1",
+      "heldout-verhielt-sich#2",
+      "heldout-benahmen-sich#1",
+      "heldout-benahmen-sich#2",
+      "heldout-unterhielten-sich#1",
+      "heldout-unterhielten-sich#2",
+      "heldout-verliess-sich-auf#2"
+     ]
+    }
+   },
+   "wrongLemmasInH": [],
+   "acceptanceE4": {
+    "base": {
+     "ops": 108,
+     "opsWithProposal": 104,
+     "accepted": 70,
+     "acceptanceOfProposalOps": 0.673,
+     "acceptanceOfAllOps": 0.648,
+     "acceptanceOfSuccessOps": 0.787
+    },
+    "H": {
+     "ops": 108,
+     "opsWithProposal": 104,
+     "accepted": 96,
+     "acceptanceOfProposalOps": 0.923,
+     "acceptanceOfAllOps": 0.889,
+     "acceptanceOfSuccessOps": 0.98
+    },
+    "F": {
+     "ops": 108,
+     "opsWithProposal": 104,
+     "accepted": 87,
+     "acceptanceOfProposalOps": 0.837
+    }
+   }
+  },
+  "verbCorpus": {
+   "E2base1": {
+    "n": 77,
+    "statuses": {
+     "Success": 68,
+     "Unresolved": 8,
+     "ProviderFailure": 1
+    },
+    "unresolvedQuestions": {
+     "support": 6,
+     "Unresolved hasSepPrefix": 2
+    },
+    "canonicalExact": 48,
+    "canonicalExactOfSuccess": "48/68",
+    "wrongLemmas": [
+     "imperative-lauf#1: Lauf (gold laufen)",
+     "infinitive-hinauszulaufen#1: hinauszulaufen (gold hinauslaufen)",
+     "reflexive-erinnert#1: erinnert sich an (gold sich erinnern)",
+     "separable-finite-aufstehen#1: steht auf (gold aufstehen)",
+     "reflexive-schaemt#1: schämt sich (gold sich schämen)",
+     "full-modal-mag#1: mag (gold mögen)",
+     "elliptical-modal-kann#1: kann (gold können)",
+     "full-werden#1: wird (gold werden)",
+     "full-hat#1: hat (gold haben)",
+     "dw-future-finden#1: werden (gold finden)",
+     "prep-governed-warten-auf#1: warten auf (gold warten)",
+     "prep-free-reflexive-erholen-im#1: erholt sich (gold sich erholen)",
+     "dev-apocope-haett-bestellt#1: haben (gold bestellen)",
+     "modal-darf-bleiben#1: darf (gold dürfen)",
+     "modal-variant-muss#1: muß (gold müssen)",
+     "modal-typo-koenen#1: könen (gold können)",
+     "modal-contrast-mag#1: mag (gold mögen)",
+     "copula-sind-muede#1: sind (gold sein)",
+     "recipient-passive-bekommt-geliefert#1: bekommen (gold liefern)",
+     "resultative-bekommt-geoeffnet#1: bekommt (gold bekommen)"
+    ],
+    "contractPass": 46,
+    "lunaCanonicalRate": 0.61,
+    "lunaCanonicalCalls": 47,
+    "lunaCanonicalMs": {
+     "p50": 963,
+     "p90": 1330
+    },
+    "opMs": {
+     "p50": 1183,
+     "p90": 1633,
+     "mean": 1025
+    },
+    "opMsSuccess": {
+     "p50": 1208,
+     "p90": 1631
+    },
+    "costPerOpUsd": null
+   },
+   "E2base2": {
+    "n": 77,
+    "statuses": {
+     "Success": 69,
+     "ProviderFailure": 1,
+     "Unresolved": 7
+    },
+    "unresolvedQuestions": {
+     "support": 5,
+     "Unresolved hasSepPrefix": 2
+    },
+    "canonicalExact": 47,
+    "canonicalExactOfSuccess": "47/69",
+    "wrongLemmas": [
+     "subject-subordinate#2: es gibt (gold geben)",
+     "imperative-lauf#2: Lauf (gold laufen)",
+     "infinitive-hinauszulaufen#2: hinauszulaufen (gold hinauslaufen)",
+     "reflexive-erinnert#2: erinnert sich an (gold sich erinnern)",
+     "separable-finite-aufstehen#2: steht auf (gold aufstehen)",
+     "reflexive-schaemt#2: schämt sich (gold sich schämen)",
+     "full-modal-mag#2: mag (gold mögen)",
+     "elliptical-modal-kann#2: kann (gold können)",
+     "full-hat#2: hat (gold haben)",
+     "full-werden#2: wird (gold werden)",
+     "dw-future-finden#2: werden (gold finden)",
+     "prep-governed-verzichten-auf#2: verzichtet auf (gold verzichten)",
+     "prep-governed-reflexive-erinnern-an#2: erinnert sich an (gold sich erinnern)",
+     "prep-governed-reflexive-sehnen-nach#2: sehnen sich nach (gold sich sehnen)",
+     "prep-free-reflexive-erholen-im#2: erholt sich (gold sich erholen)",
+     "prep-governed-warnen-vor#2: warnen vor (gold warnen)",
+     "modal-darf-bleiben#2: darf (gold dürfen)",
+     "modal-typo-koenen#2: könen (gold können)",
+     "modal-contrast-mag#2: mag (gold mögen)",
+     "copula-sind-muede#2: sind (gold sein)",
+     "recipient-passive-bekommt-geliefert#2: bekommen (gold liefern)",
+     "resultative-bekommt-geoeffnet#2: bekommt (gold bekommen)"
+    ],
+    "contractPass": 42,
+    "lunaCanonicalRate": 0.584,
+    "lunaCanonicalCalls": 45,
+    "lunaCanonicalMs": {
+     "p50": 889,
+     "p90": 1191
+    },
+    "opMs": {
+     "p50": 1126,
+     "p90": 1484,
+     "mean": 920
+    },
+    "opMsSuccess": {
+     "p50": 1151,
+     "p90": 1452
+    },
+    "costPerOpUsd": null
+   },
+   "base": {
+    "n": 77,
+    "statuses": {
+     "Success": 68,
+     "Unresolved": 9
+    },
+    "unresolvedQuestions": {
+     "support": 7,
+     "Unresolved hasSepPrefix": 2
+    },
+    "canonicalExact": 48,
+    "canonicalExactOfSuccess": "48/68",
+    "wrongLemmas": [
+     "infinitive-hinauszulaufen#1: hinauszulaufen (gold hinauslaufen)",
+     "imperative-lauf#1: Lauf (gold laufen)",
+     "reflexive-erinnert#1: erinnert sich an (gold sich erinnern)",
+     "separable-finite-aufstehen#1: steht auf (gold aufstehen)",
+     "full-modal-mag#1: mag (gold mögen)",
+     "elliptical-modal-kann#1: kann (gold können)",
+     "full-werden#1: wird (gold werden)",
+     "full-hat#1: hat (gold haben)",
+     "dw-future-finden#1: werden (gold finden)",
+     "prep-governed-verzichten-auf#1: verzichtet auf (gold verzichten)",
+     "prep-governed-reflexive-erinnern-an#1: erinnert sich an (gold sich erinnern)",
+     "prep-free-reflexive-erholen-im#1: erholt sich (gold sich erholen)",
+     "prep-governed-reflexive-sehnen-nach#1: sehnen sich nach (gold sich sehnen)",
+     "prep-governed-warnen-vor#1: warnen vor (gold warnen)",
+     "modal-darf-bleiben#1: darf (gold dürfen)",
+     "modal-contrast-mag#1: mag (gold mögen)",
+     "modal-typo-koenen#1: könen (gold können)",
+     "copula-sind-muede#1: sind (gold sein)",
+     "recipient-passive-bekommt-geliefert#1: bekommen (gold liefern)",
+     "resultative-bekommt-geoeffnet#1: bekommt (gold bekommen)"
+    ],
+    "contractPass": 43,
+    "lunaCanonicalRate": 0.597,
+    "lunaCanonicalCalls": 46,
+    "lunaCanonicalMs": {
+     "p50": 998,
+     "p90": 1347
+    },
+    "opMs": {
+     "p50": 1225,
+     "p90": 1617,
+     "mean": 993
+    },
+    "opMsSuccess": {
+     "p50": 1253,
+     "p90": 1617
+    },
+    "costPerOpUsd": 0.000339
+   },
+   "H": {
+    "n": 77,
+    "statuses": {
+     "Success": 71,
+     "Unresolved": 6
+    },
+    "unresolvedQuestions": {
+     "support": 4,
+     "Unresolved hasSepPrefix": 2
+    },
+    "canonicalExact": 70,
+    "canonicalExactOfSuccess": "70/71",
+    "wrongLemmas": [
+     "dw-future-finden#1: werden (gold finden)"
+    ],
+    "contractPass": 64,
+    "lunaCanonicalRate": 0.143,
+    "lunaCanonicalCalls": 11,
+    "lunaCanonicalMs": {
+     "p50": 1026,
+     "p90": 1195
+    },
+    "opMs": {
+     "p50": 322,
+     "p90": 1291,
+     "mean": 492
+    },
+    "opMsSuccess": {
+     "p50": 322,
+     "p90": 1272
+    },
+    "costPerOpUsd": 0.000267
+   },
+   "Hreplay": {
+    "n": 94,
+    "statuses": {
+     "Success": 92,
+     "Unresolved": 2
+    },
+    "unresolvedQuestions": {
+     "Unresolved hasSepPrefix": 2
+    },
+    "canonicalExact": 92,
+    "canonicalExactOfSuccess": "92/92",
+    "wrongLemmas": [],
+    "contractPass": 86,
+    "lunaCanonicalRate": 0,
+    "lunaCanonicalCalls": 0,
+    "lunaCanonicalMs": {
+     "p50": null,
+     "p90": null
+    },
+    "opMs": {
+     "p50": 341,
+     "p90": 408,
+     "mean": 360
+    },
+    "opMsSuccess": {
+     "p50": 340,
+     "p90": 399
+    },
+    "costPerOpUsd": null,
+    "cases": 47
+   },
+   "Hdetails": {
+    "proposalOffered": 57,
+    "proposalEqualsJoined": 5,
+    "chosenSource": {
+     "intake": 56,
+     "none(Unresolved)": 4,
+     "missing": 9,
+     "joined": 6,
+     "missing(guard)": 2
+    },
+    "guardFirings": [
+     {
+      "caseId": "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+      "rep": 1,
+      "guard": {
+       "rejected": "sehnen sich nach",
+       "answer": "CandidateIsCanonical"
+      },
+      "proposal": null,
+      "final": "sich sehnen",
+      "gold": "sich sehnen"
+     },
+     {
+      "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+      "rep": 1,
+      "guard": {
+       "rejected": "warnen vor",
+       "answer": "CandidateIsCanonical"
+      },
+      "proposal": null,
+      "final": "warnen",
+      "gold": "warnen"
+     }
+    ],
+    "offeredButNotChosen": [
+     {
+      "caseId": "grammar-de-verb-typo-tanzd",
+      "rep": 1,
+      "proposal": "tanzen",
+      "final": null,
+      "gold": "tanzen",
+      "status": "Unresolved"
+     }
+    ]
+   },
+   "H0Counterfactual": {
+    "n": 77,
+    "guardReverted": 2,
+    "canonicalExact": 68
+   },
+   "F": {
+    "n": 77,
+    "actions": {
+     "proposalReplacesLuna": 37,
+     "unchanged": 15,
+     "guardThenProposal": 14,
+     "unchanged(Unresolved)": 9,
+     "guardThenLuna(notRun)": 2
+    },
+    "canonicalExact": 63,
+    "unknownBecauseLunaNotRun": 2,
+    "wrongLemmas": [
+     "infinitive-hinauszulaufen#1: hinauszulaufen (gold hinauslaufen)",
+     "dw-future-finden#1: werden (gold finden)",
+     "modal-typo-koenen#1: könen (gold können)"
+    ],
+    "contractPass": 58,
+    "lunaCanonicalRate": 0.143,
+    "opMsEstimate": {
+     "p50": 316,
+     "p90": 1184
+    }
+   },
+   "FonE2base": {
+    "n": 154,
+    "actions": {
+     "proposalReplacesLuna": 72,
+     "guardThenProposal": 30,
+     "unchanged": 32,
+     "unchanged(ProviderFailure)": 2,
+     "unchanged(Unresolved)": 15,
+     "guardThenLuna(notRun)": 3
+    },
+    "canonicalExact": 127,
+    "unknownBecauseLunaNotRun": 3,
+    "wrongLemmas": [
+     "infinitive-hinauszulaufen#1(e2): hinauszulaufen (gold hinauslaufen)",
+     "infinitive-hinauszulaufen#2(e2): hinauszulaufen (gold hinauslaufen)",
+     "dw-future-finden#1(e2): werden (gold finden)",
+     "dw-future-finden#2(e2): werden (gold finden)",
+     "dev-apocope-haett-bestellt#1(e2): haben (gold bestellen)",
+     "modal-typo-koenen#1(e2): könen (gold können)",
+     "modal-typo-koenen#2(e2): könen (gold können)"
+    ],
+    "contractPass": 119,
+    "lunaCanonicalRate": 0.149,
+    "opMsEstimate": {
+     "p50": 347,
+     "p90": 1258
+    }
+   },
+   "pairedMsHminusBase": {
+    "n": 77,
+    "p10": -1193,
+    "p50": -439,
+    "p90": 125,
+    "mean": -501
+   },
+   "noise": {
+    "E2base1VsE2base2": {
+     "pass": {
+      "n": 6,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-subject-subordinate",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-future-wird-reisen",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warten-auf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-verzichten-auf",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+        "a": true,
+        "b": false
+       }
+      ]
+     },
+     "canonical": {
+      "n": 9,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-subject-subordinate",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-future-wird-reisen",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warten-auf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-verzichten-auf",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-dev-apocope-haett-bestellt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-typo-mus",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-variant-muss",
+        "a": false,
+        "b": true
+       }
+      ]
+     }
+    },
+    "E2base1VsBase": {
+     "pass": {
+      "n": 7,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-reflexive-schaemt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-dw-perfect-ausgeschlossen",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warten-auf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-verzichten-auf",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-dw-perfect-ausgesprochen",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+        "a": true,
+        "b": false
+       }
+      ]
+     },
+     "canonical": {
+      "n": 6,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-reflexive-schaemt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warten-auf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-verzichten-auf",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-modal-variant-muss",
+        "a": false,
+        "b": true
+       }
+      ]
+     }
+    },
+    "E2base2VsBase": {
+     "pass": {
+      "n": 5,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-subject-subordinate",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-reflexive-schaemt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-future-wird-reisen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-dw-perfect-ausgeschlossen",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-dw-perfect-ausgesprochen",
+        "a": true,
+        "b": false
+       }
+      ]
+     },
+     "canonical": {
+      "n": 5,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-subject-subordinate",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-reflexive-schaemt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-future-wird-reisen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-dev-apocope-haett-bestellt",
+        "a": true,
+        "b": false
+       },
+       {
+        "caseId": "grammar-de-verb-modal-typo-mus",
+        "a": true,
+        "b": false
+       }
+      ]
+     }
+    },
+    "baseVsH": {
+     "pass": {
+      "n": 21,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-infinitive-hinauszulaufen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-imperative-lauf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-reflexive-erinnert",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-separable-finite-aufstehen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-full-modal-mag",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-elliptical-modal-kann",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-full-werden",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-full-hat",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-dw-perfect-ausgeschlossen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-verzichten-auf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-dw-perfect-ausgesprochen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-free-reflexive-erholen-im",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-darf-bleiben",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-contrast-mag",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-variant-muss",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-copula-sind-muede",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-recipient-passive-bekommt-geliefert",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-resultative-bekommt-geoeffnet",
+        "a": false,
+        "b": true
+       }
+      ]
+     },
+     "canonical": {
+      "n": 22,
+      "cases": [
+       {
+        "caseId": "grammar-de-verb-infinitive-hinauszulaufen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-imperative-lauf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-reflexive-erinnert",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-separable-finite-aufstehen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-full-modal-mag",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-elliptical-modal-kann",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-full-werden",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-full-hat",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-verzichten-auf",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-free-reflexive-erholen-im",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-prep-governed-warnen-vor",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-darf-bleiben",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-dev-apocope-haett-bestellt",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-typo-sol",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-typo-mus",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-contrast-mag",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-modal-typo-koenen",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-copula-sind-muede",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-recipient-passive-bekommt-geliefert",
+        "a": false,
+        "b": true
+       },
+       {
+        "caseId": "grammar-de-verb-resultative-bekommt-geoeffnet",
+        "a": false,
+        "b": true
+       }
+      ]
+     }
+    }
+   },
+   "caseLevel": {
+    "threeBaseRepsVsH": {
+     "consistentGains": [
+      "grammar-de-verb-imperative-lauf",
+      "grammar-de-verb-infinitive-hinauszulaufen",
+      "grammar-de-verb-reflexive-erinnert",
+      "grammar-de-verb-separable-finite-aufstehen",
+      "grammar-de-verb-full-modal-mag",
+      "grammar-de-verb-elliptical-modal-kann",
+      "grammar-de-verb-full-werden",
+      "grammar-de-verb-full-hat",
+      "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+      "grammar-de-verb-prep-free-reflexive-erholen-im",
+      "grammar-de-verb-modal-darf-bleiben",
+      "grammar-de-verb-modal-typo-sol",
+      "grammar-de-verb-modal-typo-koenen",
+      "grammar-de-verb-modal-contrast-mag",
+      "grammar-de-verb-copula-sind-muede",
+      "grammar-de-verb-recipient-passive-bekommt-geliefert",
+      "grammar-de-verb-resultative-bekommt-geoeffnet"
+     ],
+     "consistentLosses": [],
+     "mixed": [
+      "grammar-de-verb-subject-subordinate: B 2/3 vs H 1/1",
+      "grammar-de-verb-reflexive-schaemt: B 1/3 vs H 1/1",
+      "grammar-de-verb-future-wird-reisen: B 2/3 vs H 1/1",
+      "grammar-de-verb-prep-governed-warten-auf: B 2/3 vs H 1/1",
+      "grammar-de-verb-prep-governed-verzichten-auf: B 1/3 vs H 1/1",
+      "grammar-de-verb-prep-governed-reflexive-erinnern-an: B 1/3 vs H 1/1",
+      "grammar-de-verb-prep-governed-warnen-vor: B 1/3 vs H 1/1",
+      "grammar-de-verb-dev-apocope-haett-bestellt: B 1/3 vs H 1/1",
+      "grammar-de-verb-modal-typo-mus: B 1/3 vs H 1/1",
+      "grammar-de-verb-modal-variant-muss: B 2/3 vs H 1/1"
+     ]
+    },
+    "threeBaseRepsVsHplusReplay": {
+     "consistentGains": [
+      "grammar-de-verb-imperative-lauf",
+      "grammar-de-verb-infinitive-hinauszulaufen",
+      "grammar-de-verb-reflexive-erinnert",
+      "grammar-de-verb-separable-finite-aufstehen",
+      "grammar-de-verb-full-modal-mag",
+      "grammar-de-verb-elliptical-modal-kann",
+      "grammar-de-verb-full-werden",
+      "grammar-de-verb-full-hat",
+      "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+      "grammar-de-verb-prep-free-reflexive-erholen-im",
+      "grammar-de-verb-modal-darf-bleiben",
+      "grammar-de-verb-modal-typo-sol",
+      "grammar-de-verb-modal-typo-koenen",
+      "grammar-de-verb-modal-contrast-mag",
+      "grammar-de-verb-copula-sind-muede",
+      "grammar-de-verb-recipient-passive-bekommt-geliefert",
+      "grammar-de-verb-resultative-bekommt-geoeffnet"
+     ],
+     "consistentLosses": [],
+     "mixed": [
+      "grammar-de-verb-subject-subordinate: B 2/3 vs H 3/3",
+      "grammar-de-verb-reflexive-schaemt: B 1/3 vs H 1/1",
+      "grammar-de-verb-future-wird-reisen: B 2/3 vs H 3/3",
+      "grammar-de-verb-prep-governed-warten-auf: B 2/3 vs H 1/1",
+      "grammar-de-verb-prep-governed-verzichten-auf: B 1/3 vs H 3/3",
+      "grammar-de-verb-prep-governed-reflexive-erinnern-an: B 1/3 vs H 1/1",
+      "grammar-de-verb-prep-governed-warnen-vor: B 1/3 vs H 1/1",
+      "grammar-de-verb-dev-apocope-haett-bestellt: B 1/3 vs H 1/1",
+      "grammar-de-verb-modal-typo-mus: B 1/3 vs H 1/1",
+      "grammar-de-verb-modal-variant-muss: B 2/3 vs H 3/3"
+     ]
+    }
+   },
+   "directionalBaseToH": {
+    "canonical": {
+     "paired": 77,
+     "falseToTrue": 22,
+     "trueToFalse": 0,
+     "trueToFalseCases": [],
+     "falseToTrueCases": [
+      "grammar-de-verb-infinitive-hinauszulaufen#1",
+      "grammar-de-verb-imperative-lauf#1",
+      "grammar-de-verb-reflexive-erinnert#1",
+      "grammar-de-verb-separable-finite-aufstehen#1",
+      "grammar-de-verb-full-modal-mag#1",
+      "grammar-de-verb-elliptical-modal-kann#1",
+      "grammar-de-verb-full-werden#1",
+      "grammar-de-verb-full-hat#1",
+      "grammar-de-verb-prep-governed-verzichten-auf#1",
+      "grammar-de-verb-prep-governed-reflexive-erinnern-an#1",
+      "grammar-de-verb-prep-free-reflexive-erholen-im#1",
+      "grammar-de-verb-prep-governed-reflexive-sehnen-nach#1",
+      "grammar-de-verb-prep-governed-warnen-vor#1",
+      "grammar-de-verb-modal-darf-bleiben#1",
+      "grammar-de-verb-dev-apocope-haett-bestellt#1",
+      "grammar-de-verb-modal-typo-sol#1",
+      "grammar-de-verb-modal-typo-mus#1",
+      "grammar-de-verb-modal-contrast-mag#1",
+      "grammar-de-verb-modal-typo-koenen#1",
+      "grammar-de-verb-copula-sind-muede#1",
+      "grammar-de-verb-recipient-passive-bekommt-geliefert#1",
+      "grammar-de-verb-resultative-bekommt-geoeffnet#1"
+     ]
+    },
+    "pass": {
+     "paired": 77,
+     "falseToTrue": 21,
+     "trueToFalse": 0,
+     "trueToFalseCases": [],
+     "falseToTrueCases": [
+      "grammar-de-verb-infinitive-hinauszulaufen#1",
+      "grammar-de-verb-imperative-lauf#1",
+      "grammar-de-verb-reflexive-erinnert#1",
+      "grammar-de-verb-separable-finite-aufstehen#1",
+      "grammar-de-verb-full-modal-mag#1",
+      "grammar-de-verb-elliptical-modal-kann#1",
+      "grammar-de-verb-full-werden#1",
+      "grammar-de-verb-full-hat#1",
+      "grammar-de-verb-dw-perfect-ausgeschlossen#1",
+      "grammar-de-verb-prep-governed-verzichten-auf#1",
+      "grammar-de-verb-dw-perfect-ausgesprochen#1",
+      "grammar-de-verb-prep-governed-reflexive-erinnern-an#1",
+      "grammar-de-verb-prep-free-reflexive-erholen-im#1",
+      "grammar-de-verb-prep-governed-reflexive-sehnen-nach#1",
+      "grammar-de-verb-prep-governed-warnen-vor#1",
+      "grammar-de-verb-modal-darf-bleiben#1",
+      "grammar-de-verb-modal-contrast-mag#1",
+      "grammar-de-verb-modal-variant-muss#1",
+      "grammar-de-verb-copula-sind-muede#1",
+      "grammar-de-verb-recipient-passive-bekommt-geliefert#1",
+      "grammar-de-verb-resultative-bekommt-geoeffnet#1"
+     ]
+    }
+   },
+   "wrongLemmasInH": [
+    {
+     "caseId": "grammar-de-verb-dw-future-finden",
+     "rep": 1,
+     "produced": "werden",
+     "gold": "finden",
+     "proposal": null,
+     "baselineCorrect": "0/3",
+     "introduced": false
+    }
+   ],
+   "wrongLemmasInHreplay": [],
+   "replayVsE2base": {
+    "baseOnSameCaseReps": {
+     "n": 94,
+     "statuses": {
+      "Success": 91,
+      "ProviderFailure": 1,
+      "Unresolved": 2
+     },
+     "unresolvedQuestions": {
+      "Unresolved hasSepPrefix": 2
+     },
+     "canonicalExact": 68,
+     "canonicalExactOfSuccess": "68/91",
+     "wrongLemmas": [
+      "subject-subordinate#2: es gibt (gold geben)",
+      "imperative-lauf#2: Lauf (gold laufen)",
+      "imperative-lauf#1: Lauf (gold laufen)",
+      "infinitive-hinauszulaufen#1: hinauszulaufen (gold hinauslaufen)",
+      "infinitive-hinauszulaufen#2: hinauszulaufen (gold hinauslaufen)",
+      "full-modal-mag#1: mag (gold mögen)",
+      "full-modal-mag#2: mag (gold mögen)",
+      "elliptical-modal-kann#2: kann (gold können)",
+      "elliptical-modal-kann#1: kann (gold können)",
+      "full-werden#1: wird (gold werden)",
+      "full-hat#1: hat (gold haben)",
+      "full-hat#2: hat (gold haben)",
+      "full-werden#2: wird (gold werden)",
+      "prep-governed-verzichten-auf#2: verzichtet auf (gold verzichten)",
+      "modal-darf-bleiben#1: darf (gold dürfen)",
+      "modal-darf-bleiben#2: darf (gold dürfen)",
+      "modal-variant-muss#1: muß (gold müssen)",
+      "modal-contrast-mag#1: mag (gold mögen)",
+      "modal-contrast-mag#2: mag (gold mögen)",
+      "copula-sind-muede#1: sind (gold sein)",
+      "copula-sind-muede#2: sind (gold sein)",
+      "resultative-bekommt-geoeffnet#1: bekommt (gold bekommen)",
+      "resultative-bekommt-geoeffnet#2: bekommt (gold bekommen)"
+     ],
+     "contractPass": 63,
+     "lunaCanonicalRate": 0.66,
+     "lunaCanonicalCalls": 62,
+     "lunaCanonicalMs": {
+      "p50": 918,
+      "p90": 1278
+     },
+     "opMs": {
+      "p50": 1176,
+      "p90": 1545,
+      "mean": 1003
+     },
+     "opMsSuccess": {
+      "p50": 1175,
+      "p90": 1537
+     },
+     "costPerOpUsd": null
+    },
+    "canonical": {
+     "paired": 94,
+     "falseToTrue": 24,
+     "trueToFalse": 0,
+     "trueToFalseCases": [],
+     "falseToTrueCases": [
+      "grammar-de-verb-subject-subordinate#2",
+      "grammar-de-verb-imperative-lauf#2",
+      "grammar-de-verb-imperative-lauf#1",
+      "grammar-de-verb-infinitive-hinauszulaufen#1",
+      "grammar-de-verb-infinitive-hinauszulaufen#2",
+      "grammar-de-verb-future-wird-reisen#2",
+      "grammar-de-verb-full-modal-mag#1",
+      "grammar-de-verb-full-modal-mag#2",
+      "grammar-de-verb-elliptical-modal-kann#2",
+      "grammar-de-verb-elliptical-modal-kann#1",
+      "grammar-de-verb-full-werden#1",
+      "grammar-de-verb-full-hat#1",
+      "grammar-de-verb-full-hat#2",
+      "grammar-de-verb-full-werden#2",
+      "grammar-de-verb-prep-governed-verzichten-auf#2",
+      "grammar-de-verb-modal-darf-bleiben#1",
+      "grammar-de-verb-modal-darf-bleiben#2",
+      "grammar-de-verb-modal-variant-muss#1",
+      "grammar-de-verb-modal-contrast-mag#1",
+      "grammar-de-verb-modal-contrast-mag#2",
+      "grammar-de-verb-copula-sind-muede#1",
+      "grammar-de-verb-copula-sind-muede#2",
+      "grammar-de-verb-resultative-bekommt-geoeffnet#1",
+      "grammar-de-verb-resultative-bekommt-geoeffnet#2"
+     ]
+    },
+    "pass": {
+     "paired": 94,
+     "falseToTrue": 25,
+     "trueToFalse": 2,
+     "trueToFalseCases": [
+      "grammar-de-verb-copula-imperative-sei#2: sein -> sein",
+      "grammar-de-verb-copula-imperative-sei#1: sein -> sein"
+     ],
+     "falseToTrueCases": [
+      "grammar-de-verb-subject-subordinate#2",
+      "grammar-de-verb-imperative-lauf#2",
+      "grammar-de-verb-imperative-lauf#1",
+      "grammar-de-verb-infinitive-hinauszulaufen#1",
+      "grammar-de-verb-infinitive-hinauszulaufen#2",
+      "grammar-de-verb-future-wird-reisen#2",
+      "grammar-de-verb-full-modal-mag#1",
+      "grammar-de-verb-full-modal-mag#2",
+      "grammar-de-verb-elliptical-modal-kann#2",
+      "grammar-de-verb-elliptical-modal-kann#1",
+      "grammar-de-verb-full-werden#1",
+      "grammar-de-verb-full-hat#1",
+      "grammar-de-verb-full-hat#2",
+      "grammar-de-verb-full-werden#2",
+      "grammar-de-verb-prep-governed-verzichten-auf#2",
+      "grammar-de-verb-modal-darf-bleiben#1",
+      "grammar-de-verb-modal-darf-bleiben#2",
+      "grammar-de-verb-modal-variant-muss#1",
+      "grammar-de-verb-modal-variant-muss#2",
+      "grammar-de-verb-modal-contrast-mag#1",
+      "grammar-de-verb-modal-contrast-mag#2",
+      "grammar-de-verb-copula-sind-muede#1",
+      "grammar-de-verb-copula-sind-muede#2",
+      "grammar-de-verb-resultative-bekommt-geoeffnet#1",
+      "grammar-de-verb-resultative-bekommt-geoeffnet#2"
+     ]
+    },
+    "pairedMsReplayMinusBase": {
+     "n": 94,
+     "p10": -1178,
+     "p50": -830,
+     "p90": 36,
+     "mean": -642
+    }
+   },
+   "acceptanceE4": {
+    "base": {
+     "ops": 77,
+     "opsWithProposal": 62,
+     "accepted": 41,
+     "acceptanceOfProposalOps": 0.661,
+     "acceptanceOfAllOps": 0.532,
+     "acceptanceOfSuccessOps": 0.603
+    },
+    "H": {
+     "ops": 77,
+     "opsWithProposal": 62,
+     "accepted": 60,
+     "acceptanceOfProposalOps": 0.968,
+     "acceptanceOfAllOps": 0.779,
+     "acceptanceOfSuccessOps": 0.845
+    },
+    "E2base": {
+     "ops": 154,
+     "opsWithProposal": 124,
+     "accepted": 80,
+     "acceptanceOfProposalOps": 0.645,
+     "acceptanceOfAllOps": 0.519,
+     "acceptanceOfSuccessOps": 0.584
+    },
+    "Hreplay": {
+     "ops": 94,
+     "opsWithProposal": 94,
+     "accepted": 92,
+     "acceptanceOfProposalOps": 0.979,
+     "acceptanceOfAllOps": 0.979,
+     "acceptanceOfSuccessOps": 1
+    },
+    "F": {
+     "ops": 77,
+     "opsWithProposal": 62,
+     "accepted": 56,
+     "acceptanceOfProposalOps": 0.903
+    }
+   }
+  },
+  "adjectiveOffline": {
+   "note": "Live ADJ grammar could not run (jev 402). E2base = archived unmodified-src rep; Hreplay = E2 arm-A records whose request equals H's; F = counterfactual on E2base with oracle-target proposals.",
+   "E2base": {
+    "n": 32,
+    "statuses": {
+     "Success": 26,
+     "Unresolved": 6
+    },
+    "unresolvedQuestions": {
+     "surface.inflectionalFeatures.case": 1,
+     "support": 5
+    },
+    "canonicalExact": 23,
+    "canonicalExactOfSuccess": "23/26",
+    "wrongLemmas": [
+     "grammar-de-adj-dev-predicative-blau#1: Blau (gold blau)",
+     "grammar-de-adj-accept-irregular-superlative-beste#1: beste (gold gut)",
+     "grammar-de-adj-accept-ordinal-zweite#1: zweite (gold zweit)"
+    ],
+    "contractPass": 17,
+    "lunaCanonicalRate": 0.438,
+    "lunaCanonicalCalls": 14,
+    "lunaCanonicalMs": {
+     "p50": 1053,
+     "p90": 1217
+    },
+    "opMs": {
+     "p50": 439,
+     "p90": 1488,
+     "mean": 839
+    },
+    "opMsSuccess": {
+     "p50": 1239,
+     "p90": 1530
+    },
+    "costPerOpUsd": null
+   },
+   "Hreplay": {
+    "n": 23,
+    "statuses": {
+     "Success": 21,
+     "Unresolved": 2
+    },
+    "unresolvedQuestions": {
+     "support": 2
+    },
+    "canonicalExact": 21,
+    "canonicalExactOfSuccess": "21/21",
+    "wrongLemmas": [],
+    "contractPass": 13,
+    "lunaCanonicalRate": 0,
+    "lunaCanonicalCalls": 0,
+    "lunaCanonicalMs": {
+     "p50": null,
+     "p90": null
+    },
+    "opMs": {
+     "p50": 358,
+     "p90": 425,
+     "mean": 361
+    },
+    "opMsSuccess": {
+     "p50": 358,
+     "p90": 430
+    },
+    "costPerOpUsd": null,
+    "cases": 23
+   },
+   "F": {
+    "n": 32,
+    "actions": {
+     "unchanged": 12,
+     "proposalReplacesLuna": 14,
+     "unchanged(Unresolved)": 6
+    },
+    "canonicalExact": 23,
+    "unknownBecauseLunaNotRun": 0,
+    "wrongLemmas": [
+     "dev-predicative-blau#1(e2): Blau (gold blau)",
+     "accept-irregular-superlative-beste#1(e2): beste (gold gut)",
+     "accept-ordinal-zweite#1(e2): zweite (gold zweit)"
+    ],
+    "contractPass": 17,
+    "lunaCanonicalRate": 0,
+    "opMsEstimate": {
+     "p50": 342,
+     "p90": 441
+    }
+   },
+   "replayVsE2base": {
+    "baseOnSameCaseReps": {
+     "n": 23,
+     "statuses": {
+      "Success": 21,
+      "Unresolved": 2
+     },
+     "unresolvedQuestions": {
+      "support": 2
+     },
+     "canonicalExact": 19,
+     "canonicalExactOfSuccess": "19/21",
+     "wrongLemmas": [
+      "grammar-de-adj-dev-predicative-blau#1: Blau (gold blau)",
+      "grammar-de-adj-accept-ordinal-zweite#1: zweite (gold zweit)"
+     ],
+     "contractPass": 13,
+     "lunaCanonicalRate": 0.478,
+     "lunaCanonicalCalls": 11,
+     "lunaCanonicalMs": {
+      "p50": 1052,
+      "p90": 1226
+     },
+     "opMs": {
+      "p50": 537,
+      "p90": 1482,
+      "mean": 889
+     },
+     "opMsSuccess": {
+      "p50": 1239,
+      "p90": 1492
+     },
+     "costPerOpUsd": null
+    },
+    "canonical": {
+     "paired": 23,
+     "falseToTrue": 2,
+     "trueToFalse": 0,
+     "trueToFalseCases": [],
+     "falseToTrueCases": [
+      "grammar-de-adj-dev-predicative-blau#1",
+      "grammar-de-adj-accept-ordinal-zweite#1"
+     ]
+    },
+    "pass": {
+     "paired": 23,
+     "falseToTrue": 1,
+     "trueToFalse": 1,
+     "trueToFalseCases": [
+      "grammar-de-adj-accept-participial-glaenzend#1: glänzend -> glänzend"
+     ],
+     "falseToTrueCases": [
+      "grammar-de-adj-accept-ordinal-zweite#1"
+     ]
+    },
+    "pairedMsReplayMinusBase": {
+     "n": 23,
+     "p10": -1174,
+     "p50": -246,
+     "p90": 65,
+     "mean": -529
+    }
+   },
+   "wrongLemmasInHreplay": [],
+   "acceptanceE4": {
+    "E2base": {
+     "ops": 32,
+     "opsWithProposal": 32,
+     "accepted": 23,
+     "acceptanceOfProposalOps": 0.719,
+     "acceptanceOfAllOps": 0.719,
+     "acceptanceOfSuccessOps": 0.885
+    },
+    "Hreplay": {
+     "ops": 23,
+     "opsWithProposal": 23,
+     "accepted": 21,
+     "acceptanceOfProposalOps": 0.913,
+     "acceptanceOfAllOps": 0.913,
+     "acceptanceOfSuccessOps": 1
+    },
+    "F": {
+     "ops": 32,
+     "opsWithProposal": 32,
+     "accepted": 23,
+     "acceptanceOfProposalOps": 0.719
+    }
+   }
+  },
+  "idiomOffline": {
+   "note": "Live Idiom grammar could not run (jev 402). Proposals are oracle-target (case target only, no analyzeSentence). F = counterfactual on the 2 archived E2 base reps with phraseme guard + oracle proposal.",
+   "E2base": {
+    "n": 54,
+    "statuses": {
+     "Unresolved": 9,
+     "Success": 43,
+     "ProviderFailure": 2
+    },
+    "unresolvedQuestions": {
+     "support": 9
+    },
+    "canonicalExact": 12,
+    "canonicalExactOfSuccess": "12/43",
+    "wrongLemmas": [
+     "grammar-de-idiom-faeustchen-perfect-full#1: hat sich ins Fäustchen gelacht (gold sich ins Fäustchen lachen)",
+     "grammar-de-idiom-hand-fuss-subjunctive-full#1: Hand und Fuß hätte (gold Hand und Fuß haben)",
+     "grammar-de-idiom-fliegen-present-full#1: schlägt zwei Fliegen mit einer Klappe (gold zwei Fliegen mit einer Klappe schlagen)",
+     "grammar-de-idiom-schneider-past-full#1: fror wie ein Schneider (gold frieren wie ein Schneider)",
+     "grammar-de-idiom-tomaten-present-full#1: hast Tomaten auf den Augen (gold Tomaten auf den Augen haben)",
+     "grammar-de-idiom-kalte-schulter-future-full#1: jemandem die kalte Schulter zeigen (gold die kalte Schulter zeigen)",
+     "grammar-de-idiom-faden-perfect-full#1: hat den Faden verloren (gold den Faden verlieren)",
+     "grammar-de-idiom-dick-duenn-past-full#1: gingen durch dick und dünn (gold durch dick und dünn gehen)",
+     "grammar-de-idiom-ohr-present-full#1: haut übers Ohr (gold übers Ohr hauen)",
+     "grammar-de-idiom-wolken-past-full#1: fiel aus allen Wolken (gold aus allen Wolken fallen)",
+     "grammar-de-idiom-wolke-present-full#1: schwebt auf Wolke sieben (gold auf Wolke sieben schweben)",
+     "grammar-de-idiom-kirche-imperative-full#1: lass die Kirche im Dorf (gold die Kirche im Dorf lassen)",
+     "grammar-de-idiom-blatt-future-full#1: wird kein Blatt vor den Mund nehmen (gold kein Blatt vor den Mund nehmen)",
+     "grammar-de-idiom-licht-passive-full#1: wurde Licht ins Dunkel gebracht (gold Licht ins Dunkel bringen)",
+     "grammar-de-idiom-schlauch-present-full#1: stehe auf dem Schlauch (gold auf dem Schlauch stehen)",
+     "grammar-de-idiom-hand-fuss-subjunctive-full#2: Hand und Fuß hätte (gold Hand und Fuß haben)",
+     "grammar-de-idiom-faeustchen-perfect-full#2: hat sich ins Fäustchen gelacht (gold sich ins Fäustchen lachen)",
+     "grammar-de-idiom-schneider-past-full#2: fror wie ein Schneider (gold frieren wie ein Schneider)",
+     "grammar-de-idiom-fliegen-present-full#2: schlägt zwei Fliegen mit einer Klappe (gold zwei Fliegen mit einer Klappe schlagen)",
+     "grammar-de-idiom-loeffel-typo-full#2: den Löfel abgab (gold den Löffel abgeben)",
+     "grammar-de-idiom-kalte-schulter-future-full#2: jemandem die kalte Schulter zeigen (gold die kalte Schulter zeigen)",
+     "grammar-de-idiom-tomaten-present-full#2: hast Tomaten auf den Augen (gold Tomaten auf den Augen haben)",
+     "grammar-de-idiom-dick-duenn-past-full#2: gingen durch dick und dünn (gold durch dick und dünn gehen)",
+     "grammar-de-idiom-faden-perfect-full#2: hat den Faden verloren (gold den Faden verlieren)",
+     "grammar-de-idiom-wolke-present-full#2: schwebt auf Wolke sieben (gold auf Wolke sieben schweben)",
+     "grammar-de-idiom-wolken-past-full#2: fiel aus allen Wolken (gold aus allen Wolken fallen)",
+     "grammar-de-idiom-kirche-imperative-full#2: lass die Kirche im Dorf (gold die Kirche im Dorf lassen)",
+     "grammar-de-idiom-blatt-future-full#2: wird kein Blatt vor den Mund nehmen (gold kein Blatt vor den Mund nehmen)",
+     "grammar-de-idiom-ohr-present-full#2: jemanden übers Ohr hauen (gold übers Ohr hauen)",
+     "grammar-de-idiom-licht-passive-full#2: wurde Licht ins Dunkel gebracht (gold Licht ins Dunkel bringen)",
+     "grammar-de-idiom-schlauch-present-full#2: stehe auf dem Schlauch (gold auf dem Schlauch stehen)"
+    ],
+    "contractPass": 8,
+    "lunaCanonicalRate": 0.204,
+    "lunaCanonicalCalls": 11,
+    "lunaCanonicalMs": {
+     "p50": 933,
+     "p90": 2464
+    },
+    "opMs": {
+     "p50": 363,
+     "p90": 1297,
+     "mean": 624
+    },
+    "opMsSuccess": {
+     "p50": 361,
+     "p90": 1325
+    },
+    "costPerOpUsd": null
+   },
+   "E2Ap": {
+    "n": 27,
+    "statuses": {
+     "Unresolved": 4,
+     "Success": 23
+    },
+    "unresolvedQuestions": {
+     "support": 4
+    },
+    "canonicalExact": 20,
+    "canonicalExactOfSuccess": "20/23",
+    "wrongLemmas": [
+     "grammar-de-idiom-kalte-schulter-future-full#2: jemandem die kalte Schulter zeigen (gold die kalte Schulter zeigen)",
+     "grammar-de-idiom-kirche-imperative-full#2: jemandem die Kirche im Dorf lassen (gold die Kirche im Dorf lassen)",
+     "grammar-de-idiom-ohr-present-full#2: jemanden übers Ohr hauen (gold übers Ohr hauen)"
+    ],
+    "contractPass": 11,
+    "lunaCanonicalRate": 0.815,
+    "lunaCanonicalCalls": 22,
+    "lunaCanonicalMs": {
+     "p50": 872,
+     "p90": 1251
+    },
+    "opMs": {
+     "p50": 1215,
+     "p90": 1609,
+     "mean": 1129
+    },
+    "opMsSuccess": {
+     "p50": 1232,
+     "p90": 1621
+    },
+    "costPerOpUsd": null
+   },
+   "Hreplay": {
+    "n": 3
+   },
+   "F": {
+    "n": 54,
+    "actions": {
+     "unchanged(Unresolved)": 9,
+     "guardThenProposal": 27,
+     "unchanged": 5,
+     "proposalReplacesLuna": 10,
+     "guardThenLuna(notRun)": 1,
+     "unchanged(ProviderFailure)": 2
+    },
+    "canonicalExact": 42,
+    "unknownBecauseLunaNotRun": 1,
+    "wrongLemmas": [],
+    "contractPass": 26,
+    "lunaCanonicalRate": 0.037,
+    "opMsEstimate": {
+     "p50": 353,
+     "p90": 382
+    }
+   },
+   "Fpass": {
+    "paired": 54,
+    "falseToTrue": 18,
+    "trueToFalse": 0,
+    "trueToFalseCases": [],
+    "falseToTrueCases": [
+     "grammar-de-idiom-faeustchen-perfect-full#1",
+     "grammar-de-idiom-hand-fuss-subjunctive-full#1",
+     "grammar-de-idiom-fliegen-present-full#1",
+     "grammar-de-idiom-schneider-past-full#1",
+     "grammar-de-idiom-kalte-schulter-future-full#1",
+     "grammar-de-idiom-faden-perfect-full#1",
+     "grammar-de-idiom-kirche-imperative-full#1",
+     "grammar-de-idiom-blatt-future-full#1",
+     "grammar-de-idiom-licht-passive-full#1",
+     "grammar-de-idiom-hand-fuss-subjunctive-full#2",
+     "grammar-de-idiom-faeustchen-perfect-full#2",
+     "grammar-de-idiom-schneider-past-full#2",
+     "grammar-de-idiom-fliegen-present-full#2",
+     "grammar-de-idiom-kalte-schulter-future-full#2",
+     "grammar-de-idiom-faden-perfect-full#2",
+     "grammar-de-idiom-kirche-imperative-full#2",
+     "grammar-de-idiom-blatt-future-full#2",
+     "grammar-de-idiom-licht-passive-full#2"
+    ]
+   },
+   "acceptanceE4": {
+    "E2base": {
+     "ops": 54,
+     "opsWithProposal": 52,
+     "accepted": 11,
+     "acceptanceOfProposalOps": 0.212,
+     "acceptanceOfAllOps": 0.204,
+     "acceptanceOfSuccessOps": 0.256
+    },
+    "E2Ap": {
+     "ops": 27,
+     "opsWithProposal": 26,
+     "accepted": 19,
+     "acceptanceOfProposalOps": 0.731,
+     "acceptanceOfAllOps": 0.704,
+     "acceptanceOfSuccessOps": 0.826
+    },
+    "F": {
+     "ops": 54,
+     "opsWithProposal": 52,
+     "accepted": 41,
+     "acceptanceOfProposalOps": 0.788
+    }
+   }
+  }
+ },
+ "price": {
+  "lunaInput": 4.0000000000000003e-7,
+  "lunaCached": 4e-8,
+  "lunaOutput": 0.0000024,
+  "jevInput": 4.2000000000000006e-8
+ }
+}

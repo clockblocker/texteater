@@ -1,0 +1,357 @@
+/**
+ * E9 production-click grammar harness. E7's harness ran corpus encounters
+ * with proposals mapped onto them; this one runs what tf-demo runs: the
+ * learner clicks a member word, the stored analysis selects the unit
+ * (resolvedUnitAt through click-select.ts), and resolveGrammar gets the
+ * encounter built from the stored segmented sentence and that unit's
+ * membership. Arm H carries the intake proposal made for exactly that unit.
+ *
+ * Arms (same as E7/E9 harness.ts, interleaved per job and rep):
+ *   base  unmodified src: createDumgen(...).resolveGrammar(encounter)
+ *   H     E7 variant judgments + proposal + VERB guard + phraseme guard
+ *   G     the same variant with no proposal: guards only (E2's Ap), the
+ *         fair baseline for H once the guards ship anyway
+ * Both outputs go through the evaluation projection (projectAttestation).
+ *
+ * Jobs: one per distinct unit selected by clicking any member of a case,
+ * restricted by --families (Phraseme: item 3) and to units that carry a
+ * non-null proposal (a unit without one runs H = base + guards only, which
+ * no production click would differ on except through the guards).
+ *
+ * Match class of the unit against the case target:
+ *   exact          same words, same Kind (E7's "exact")
+ *   exactNoAux     same words once the case's auxiliary words are removed
+ *                  (analysis keeps a tense/passive auxiliary as its own AUX
+ *                  Target; the corpus lists it as a member), same Kind
+ *   kindOnly       same words (or modulo auxiliary), different Kind
+ *   partial        overlapping words, different set
+ * goldCanonical is the case gold for exact/exactNoAux/kindOnly; partial
+ * units are judged by hand in judgments.ts. contractPass (corpus evaluator)
+ * only for exact corpus units.
+ *
+ *   bun --env-file=/Users/annagorelova/work/textfresser-batteries/.env.local \
+ *     prototypes/audit/e9-headwords-adj-idiom/clicks.ts --intake phrasemes \
+ *     --families Phraseme --reps 2 --label phrasemes --stop-at 0.3
+ */
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import { effectiveRoute } from "../../../src/concrete-lang/de/sentence-analysis/analysis.js";
+import { createDumgen } from "../../../src/index.js";
+import type {
+	OperationTrace,
+	SegmentedSentence,
+	SentenceAnalysis,
+} from "../../../src/types.js";
+import type { VariantConfig } from "../e7-intake-headwords/variant-judgments.js";
+import {
+	projectAttestation,
+	variantResolveGrammar,
+} from "../e7-intake-headwords/variant-production.js";
+import { type Case, type CorpusName, loadCases } from "./cases.js";
+import { type Click, encounterOfClick } from "./click-select.js";
+import {
+	billing,
+	type MeteredCall,
+	meteredOptions,
+	pool,
+	resultsDir,
+	Spend,
+} from "./lib.js";
+import { callSummaries, expectsUnresolved, type Outcome, score } from "./record.js";
+
+const { values: args } = parseArgs({
+	options: {
+		intake: { type: "string", default: "phrasemes" },
+		families: { type: "string", default: "Lexeme,Phraseme" },
+		/** Only units of these Kinds (G differs from base only on VERB/Idiom/Collocation). */
+		kinds: { type: "string" },
+		/** Only units whose proposal differs from this E7 mapping's proposal (e.g. e7:oracle). */
+		"differs-from": { type: "string" },
+		reps: { type: "string", default: "2" },
+		arms: { type: "string", default: "base,H" },
+		label: { type: "string", default: "clicks" },
+		cases: { type: "string" },
+		limit: { type: "string" },
+		"stop-at": { type: "string", default: "0.05" },
+		concurrency: { type: "string", default: "4" },
+		"dry-run": { type: "boolean", default: false },
+	},
+});
+const families = new Set((args.families as string).split(","));
+const kinds = args.kinds ? new Set((args.kinds as string).split(",")) : null;
+const outPath = resolve(resultsDir, `clicks-${args.label}.jsonl`);
+
+// ---------------------------------------------------------------- intake
+
+type IntakeCase = {
+	caseId: string;
+	status: string;
+	proposal: string | null;
+	clicks?: (Click & { member: string; listedN: number | null; proposal: string | null })[];
+};
+type IntakeRecord = {
+	text: string;
+	sentence: SegmentedSentence<"de">;
+	analysis: SentenceAnalysis | null;
+	listed?: { n: number; id: string; kind: string; family: string; members: string[] }[];
+	cases?: IntakeCase[];
+};
+const records: (IntakeRecord & { intakeLabel: string })[] = [];
+for (const label of (args.intake as string).split(",")) {
+	const path = resolve(resultsDir, `intake-${label}.jsonl`);
+	if (!existsSync(path)) throw Error(`missing ${path}`);
+	for (const line of readFileSync(path, "utf8").split("\n"))
+		if (line.trim()) records.push({ ...(JSON.parse(line) as IntakeRecord), intakeLabel: label });
+}
+const otherProposals = new Map<string, string | null>();
+if (args["differs-from"]) {
+	const label = args["differs-from"] as string;
+	const path = label.startsWith("e7:")
+		? resolve(resultsDir, "../../e7-intake-headwords/results", `intake-${label.slice(3)}.jsonl`)
+		: resolve(resultsDir, `intake-${label}.jsonl`);
+	for (const line of readFileSync(path, "utf8").split("\n"))
+		if (line.trim())
+			for (const c of (JSON.parse(line) as IntakeRecord).cases ?? [])
+				otherProposals.set(c.caseId, c.proposal);
+}
+
+const allCases = new Map(
+	loadCases(["adjective", "idiom", "collocation", "verb", "noun", "adverb", "heldout", "hard"] as CorpusName[]).map(
+		(item) => [item.caseId, item],
+	),
+);
+
+// -------------------------------------------------------------- matching
+
+function wordIndex(text: string, offset: number): number {
+	let index = -1;
+	for (const match of text.matchAll(/\S+/gu)) {
+		index++;
+		const start = match.index as number;
+		if (offset >= start && offset < start + match[0].length) return index;
+	}
+	return -1;
+}
+const key = (words: number[]) => [...new Set(words)].sort((a, b) => a - b).join(",");
+
+function matchClass(item: Case, analysis: SentenceAnalysis, click: Click) {
+	const caseWords = key(item.memberOffsets.map((offset) => wordIndex(item.text, offset)));
+	const unitWords = key((click.offsets ?? []).map((offset) => wordIndex(item.text, offset)));
+	// A case word is an auxiliary when the analysis put it in an AUX Lexeme Target.
+	const auxTargets = new Set(
+		analysis.targets
+			.filter((target) => effectiveRoute(target).kind === "AUX")
+			.flatMap((target) => target.members.map((member) => wordIndex(item.text, member.offset))),
+	);
+	const caseNoAux = key(
+		caseWords
+			.split(",")
+			.map(Number)
+			.filter((word) => !auxTargets.has(word)),
+	);
+	const sameKind = click.kind === item.kind;
+	if (unitWords === caseWords) return sameKind ? "exact" : "kindOnly";
+	if (unitWords === caseNoAux) return sameKind ? "exactNoAux" : "kindOnly";
+	return "partial";
+}
+
+// ----------------------------------------------------------------- jobs
+
+type Job = {
+	jobIndex: number;
+	item: Case;
+	record: IntakeRecord & { intakeLabel: string };
+	click: Click & { member: string; proposal: string | null };
+	match: string;
+	unitText: string;
+};
+const jobs: Job[] = [];
+const wanted = args.cases ? new Set((args.cases as string).split(",")) : null;
+for (const record of records) {
+	if (!record.analysis) continue;
+	for (const intakeCase of record.cases ?? []) {
+		if (wanted && !wanted.has(intakeCase.caseId)) continue;
+		const item = allCases.get(intakeCase.caseId);
+		if (!item) continue;
+		const seen = new Set<string>();
+		for (const click of intakeCase.clicks ?? []) {
+			if (click.reason !== "analysis" || !click.unitId || !click.family) continue;
+			if (!families.has(click.family)) continue;
+			if (kinds && !kinds.has(click.kind as string)) continue;
+			if (seen.has(click.unitId)) continue;
+			seen.add(click.unitId);
+			if (click.proposal === null) continue;
+			if (args["differs-from"] && otherProposals.get(item.caseId) === click.proposal)
+				continue;
+			const unitText = (click.memberSegmentIndices ?? [])
+				.map((index) => record.sentence.segments[index]?.text)
+				.join(" ");
+			jobs.push({
+				jobIndex: jobs.length,
+				item,
+				record,
+				click,
+				match: matchClass(item, record.analysis, click),
+				unitText,
+			});
+		}
+	}
+}
+const limited = args.limit ? jobs.slice(0, Number(args.limit)) : jobs;
+console.error(
+	`E9 clicks ${args.label}: ${limited.length} unit clicks from ${records.length} intake records; match ${JSON.stringify(
+		limited.reduce<Record<string, number>>((acc, job) => {
+			acc[job.match] = (acc[job.match] ?? 0) + 1;
+			return acc;
+		}, {}),
+	)}`,
+);
+if (args["dry-run"]) {
+	for (const job of limited)
+		console.log(
+			`${job.item.caseId} | click ${job.click.member} -> ${job.click.family}/${job.click.kind} [${job.unitText}] ${job.match} | proposal ${job.click.proposal} | gold ${job.item.gold}`,
+		);
+	process.exit(0);
+}
+const spend = new Spend("clicks.ts", args.label as string, Number(args["stop-at"]));
+
+// ----------------------------------------------------------------- arms
+
+const armH: VariantConfig = {
+	label: "H",
+	codeCandidates: false,
+	verbGuard: true,
+	speculative: false,
+	wording: false,
+	phrasemeGuard: true,
+	intakeProposals: true,
+};
+
+const armG: VariantConfig = { ...armH, label: "G", intakeProposals: false };
+
+async function runArm(job: Job, arm: "base" | "H" | "G", traces: OperationTrace[], calls: MeteredCall[], scope: string): Promise<Outcome> {
+	const start = performance.now();
+	try {
+		const encounter = encounterOfClick(job.record.sentence, job.click);
+		const options = meteredOptions(spend, scope, calls, {
+			onOperation: (trace) => traces.push(trace),
+		});
+		const effect =
+			arm === "base"
+				? createDumgen(options).resolveGrammar(encounter)
+				: arm === "G"
+					? variantResolveGrammar(options, armG, null)(encounter)
+					: variantResolveGrammar(options, armH, job.click.proposal)(encounter);
+		const result = await Effect.runPromise(Effect.either(effect as Effect.Effect<unknown, unknown>));
+		if (result._tag === "Left") throw result.left;
+		return { ok: true, output: projectAttestation(result.right as never), wallMs: performance.now() - start };
+	} catch (error) {
+		return { ok: false, error, wallMs: performance.now() - start };
+	}
+}
+
+async function runJob(job: Job, rep: number) {
+	const configured = (args.arms as string).split(",") as ("base" | "H" | "G")[];
+	const arms = (job.jobIndex + rep) % 2 === 0 ? configured : [...configured].reverse();
+	const lines: string[] = [];
+	const goldApplies = job.match !== "partial";
+	for (const [position, arm] of arms.entries()) {
+		if (billing.failure) break;
+		const traces: OperationTrace[] = [];
+		const calls: MeteredCall[] = [];
+		const scope = `${job.item.caseId}:${job.click.unitId}#${rep}#${arm}`;
+		const startedAt = new Date().toISOString();
+		const outcome = await runArm(job, arm, traces, calls, scope);
+		// Corpus evaluator only when the encounter equals the corpus target.
+		const scored =
+			job.match === "exact"
+				? score(job.item, outcome)
+				: score({ ...job.item, set: "hard" }, outcome);
+		const output = scored.output as { lemma?: { canonicalForm?: string } } | undefined;
+		const canonicalForm = output?.lemma?.canonicalForm ?? null;
+		const summaries = callSummaries(traces);
+		const e2 = traces.flatMap((trace) => trace.events).find((event) => event.kind === "E2Canonical")?.data ?? null;
+		const expectUnresolved = job.match === "exact" && expectsUnresolved(job.item);
+		lines.push(
+			JSON.stringify({
+				label: args.label,
+				intakeLabel: job.record.intakeLabel,
+				set: job.item.set,
+				corpus: job.item.corpus,
+				caseKind: job.item.kind,
+				group: job.item.group ?? null,
+				caseId: job.item.caseId,
+				caseMembers: job.item.members,
+				unitId: job.click.unitId,
+				clickedMember: job.click.member,
+				family: job.click.family,
+				kind: job.click.kind,
+				unitText: job.unitText,
+				match: job.match,
+				jobIndex: job.jobIndex,
+				rep,
+				arm,
+				order: position,
+				startedAt,
+				wallMs: outcome.wallMs,
+				operationMs: traces[0]?.durationMs ?? null,
+				proposal: job.click.proposal,
+				proposalUsedByArm: arm === "H" ? job.click.proposal : null,
+				goldCanonical: goldApplies ? job.item.gold : null,
+				caseGold: job.item.gold,
+				expectsUnresolved: expectUnresolved,
+				canonicalForm,
+				canonicalCorrect: goldApplies && job.item.gold !== null ? canonicalForm === job.item.gold : null,
+				unresolvedCorrect: expectUnresolved ? scored.status === "Unresolved" : null,
+				e2,
+				lunaCalls: summaries.filter((call) => call.executor !== "TypeSafe").length,
+				costUsd: calls.reduce((sum, call) => sum + call.costUsd, 0),
+				calls: summaries,
+				...scored,
+			}),
+		);
+	}
+	if (lines.length) appendFileSync(outPath, `${lines.join("\n")}\n`);
+}
+
+// ------------------------------------------------------------------ main
+
+const reps = Number(args.reps);
+const work: { job: Job; rep: number }[] = [];
+for (let rep = 1; rep <= reps; rep++) for (const job of limited) work.push({ job, rep });
+let done = 0,
+	skipped = 0;
+const started = performance.now();
+await pool(work, Number(args.concurrency), async ({ job, rep }) => {
+	if (!spend.allows()) {
+		skipped++;
+		return;
+	}
+	try {
+		await runJob(job, rep);
+	} catch (error) {
+		console.error("job crashed", job.item.caseId, rep, error);
+	}
+	done++;
+	if (done % 20 === 0)
+		console.error(`  ${done}/${work.length} total $${spend.total().toFixed(4)} ${((performance.now() - started) / 1000).toFixed(0)}s`);
+});
+spend.commit();
+const meta = {
+	label: args.label,
+	args,
+	jobs: work.length,
+	done,
+	skipped,
+	billingFailure: billing.failure,
+	spentThisRun: spend.spent,
+	totalAfter: spend.total(),
+	jevCalls: spend.jevCalls,
+	lunaCalls: spend.lunaCalls,
+	elapsedS: (performance.now() - started) / 1000,
+	finishedAt: new Date().toISOString(),
+};
+writeFileSync(resolve(resultsDir, `clicks-${args.label}-meta.json`), JSON.stringify(meta, null, 1));
+console.error(JSON.stringify(meta));

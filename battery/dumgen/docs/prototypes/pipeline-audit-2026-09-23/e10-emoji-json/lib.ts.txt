@@ -1,0 +1,382 @@
+/**
+ * E10 shared helpers. Reuses the E4 validator, grapheme helpers, pricing,
+ * pool and the E4 JSON arm (J) verbatim from ../e4-emoji/lib.ts. Adds:
+ *   - a spend ledger in THIS folder with the E10 cap ($0.40);
+ *   - one Luna call per arm through the unmodified promptsmith
+ *     createOpenAIExecutor, with a wrapping fetch that (a) keeps a clone of
+ *     the response so the raw output text and usage are recorded even when
+ *     promptsmith throws on unparsable JSON, and (b) for strict arms, flips
+ *     exactly the one `"strict":false` in the request body to `"strict":true`.
+ *     Everything else in the request is byte-identical to production.
+ */
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import { configurationSchema } from "promptsmith/schemas";
+import { defaultModelConfiguration } from "../../../src/universal/model.ts";
+import {
+	jsonOutputSchema as e4JsonSchema,
+	jsonPrompt as e4JsonPrompt,
+	lunaCost,
+	productionPrompt,
+	validEmoji,
+} from "../e4-emoji/lib.ts";
+import { variantPrompts, wireSchemas } from "./variant-prompts.ts";
+
+export const here = new URL(".", import.meta.url).pathname;
+export const resultsDir = resolve(here, "results");
+
+// ------------------------------------------------------------------ ledger
+export const CAP_USD = 0.4;
+/** No call starts once prior + spent + estimate + reserve would exceed the cap. */
+const RESERVE_USD = 0.005;
+type LedgerEntry = {
+	script: string;
+	label: string;
+	startedAt: string;
+	finishedAt?: string;
+	spentUsd: number;
+	lunaCalls: number;
+	jevCalls: number;
+	note?: string;
+};
+const ledgerPath = resolve(resultsDir, "ledger.json");
+async function readLedger(): Promise<LedgerEntry[]> {
+	try {
+		return JSON.parse(await readFile(ledgerPath, "utf8")) as LedgerEntry[];
+	} catch {
+		return [];
+	}
+}
+export class Spend {
+	prior = 0;
+	spent = 0;
+	lunaCalls = 0;
+	skipped = 0;
+	private entry: LedgerEntry;
+	private constructor(
+		script: string,
+		label: string,
+		private readonly scriptCap: number,
+	) {
+		this.entry = {
+			script,
+			label,
+			startedAt: new Date().toISOString(),
+			spentUsd: 0,
+			lunaCalls: 0,
+			jevCalls: 0,
+		};
+	}
+	static async open(script: string, label: string, scriptCap: number) {
+		await mkdir(resultsDir, { recursive: true });
+		const spend = new Spend(script, label, scriptCap);
+		spend.prior = (await readLedger()).reduce(
+			(sum, entry) => sum + entry.spentUsd,
+			0,
+		);
+		console.log(
+			`[spend] prior ledger total $${spend.prior.toFixed(5)}; script cap $${scriptCap}; global cap $${CAP_USD}`,
+		);
+		return spend;
+	}
+	allows(estimate = 0.0002) {
+		const ok =
+			this.prior + this.spent + estimate + RESERVE_USD <= CAP_USD &&
+			this.spent + estimate <= this.scriptCap;
+		if (!ok) this.skipped++;
+		return ok;
+	}
+	add(usd: number) {
+		this.spent += usd;
+		this.lunaCalls++;
+	}
+	async close(note?: string) {
+		const ledger = await readLedger();
+		ledger.push({
+			...this.entry,
+			finishedAt: new Date().toISOString(),
+			spentUsd: this.spent,
+			lunaCalls: this.lunaCalls,
+			jevCalls: 0,
+			...(note ? { note } : {}),
+		});
+		await writeFile(ledgerPath, `${JSON.stringify(ledger, null, 2)}\n`);
+		console.log(
+			`[spend] this run $${this.spent.toFixed(5)} (${this.lunaCalls} Luna calls, ${this.skipped} skipped by cap); ledger total $${(this.prior + this.spent).toFixed(5)}`,
+		);
+	}
+}
+
+// -------------------------------------------------------------------- arms
+export type Arm = "T" | "J4" | "RS" | "RS!" | "RO" | "RO!";
+export const armOrder: readonly Arm[] = ["T", "J4", "RS", "RS!", "RO", "RO!"];
+type Shape = "text" | "string" | "object";
+type ArmSpec = {
+	description: string;
+	systemPrompt: string;
+	outputSchema?: Record<string, unknown>;
+	strict: boolean;
+	shape: Shape;
+};
+export const armSpecs: Record<Arm, ArmSpec> = {
+	T: {
+		description:
+			"Production: src/generated/prompts.ts reading-generation/de, text output",
+		systemPrompt: productionPrompt,
+		strict: false,
+		shape: "text",
+	},
+	J4: {
+		description:
+			"E4 arm J, unchanged: text artifact with the final sentence swapped, json_schema {emoji: string + description}, strict false",
+		systemPrompt: e4JsonPrompt,
+		outputSchema: e4JsonSchema,
+		strict: false,
+		shape: "object",
+	},
+	RS: {
+		description:
+			"Regenerated with outputFormat json, output schema unchanged (string): demos \"🏠\", wire {value: string}, strict false (promptsmith as today)",
+		systemPrompt: variantPrompts.jsonStr,
+		outputSchema: wireSchemas.jsonStr,
+		strict: false,
+		shape: "string",
+	},
+	"RS!": {
+		description: "RS with strict json_schema (only the strict flag differs)",
+		systemPrompt: variantPrompts.jsonStr,
+		outputSchema: wireSchemas.jsonStr,
+		strict: true,
+		shape: "string",
+	},
+	RO: {
+		description:
+			"Regenerated with outputFormat json, output schema {emoji}: demos {\"emoji\":\"🏠\"}, wire {value: {emoji: string}}, strict false (promptsmith as today)",
+		systemPrompt: variantPrompts.jsonObj,
+		outputSchema: wireSchemas.jsonObj,
+		strict: false,
+		shape: "object",
+	},
+	"RO!": {
+		description: "RO with strict json_schema (only the strict flag differs)",
+		systemPrompt: variantPrompts.jsonObj,
+		outputSchema: wireSchemas.jsonObj,
+		strict: true,
+		shape: "object",
+	},
+};
+if (variantPrompts.text !== productionPrompt)
+	throw Error("control prompt differs from the production artifact");
+
+// -------------------------------------------------------------------- call
+export type CallStatus =
+	| "Valid"
+	| "Invalid" // parsed, right shape, emoji text fails the production validator
+	| "ShapeInvalid" // parsed JSON but not the declared shape (lost click in production)
+	| "ParseFailure" // HTTP 200 but output text is not JSON (promptsmith throws; lost click)
+	| "ProviderFailure" // transport / HTTP error / timeout
+	| "Skipped";
+export type CallResult = {
+	status: CallStatus;
+	reason?: string;
+	/** The model's output_text, verbatim. */
+	rawText: string | null;
+	/** The string the production validator saw. */
+	candidate: string | null;
+	emoji: string | null;
+	httpStatus: number | null;
+	error?: string;
+	durationMs: number;
+	providerMs: number | null;
+	startedAt: number;
+	inputTokens: number;
+	cachedTokens: number;
+	outputTokens: number;
+	costUsd: number;
+	requestBody?: string;
+};
+
+/** Set when a billing or auth error is seen; no further call starts. */
+export let abortReason: string | null = null;
+
+function outputTextOf(payload: {
+	output?: { content?: { type?: string; text?: string }[] }[];
+}) {
+	return (payload.output ?? [])
+		.flatMap((item) => item.content ?? [])
+		.filter((content) => content.type === "output_text")
+		.map((content) => content.text ?? "")
+		.join("");
+}
+
+function classify(
+	shape: Shape,
+	output: unknown,
+): Pick<CallResult, "status" | "reason" | "candidate" | "emoji"> {
+	if (shape === "text" || shape === "string") {
+		if (typeof output !== "string")
+			return {
+				status: "ShapeInvalid",
+				reason: `value is ${output === undefined ? "missing" : Array.isArray(output) ? "array" : typeof output}`,
+				candidate: null,
+				emoji: null,
+			};
+		const emoji = validEmoji(output);
+		return {
+			status: emoji === null ? "Invalid" : "Valid",
+			candidate: output,
+			emoji,
+		};
+	}
+	if (!output || typeof output !== "object" || Array.isArray(output))
+		return {
+			status: "ShapeInvalid",
+			reason: `value is ${output === undefined ? "missing" : Array.isArray(output) ? "array" : typeof output}`,
+			candidate: typeof output === "string" ? output : null,
+			emoji: null,
+		};
+	const keys = Object.keys(output);
+	const value = (output as { emoji?: unknown }).emoji;
+	if (typeof value !== "string" || keys.length !== 1)
+		return {
+			status: "ShapeInvalid",
+			reason: `keys [${keys.join(",")}], emoji ${typeof value}`,
+			candidate: typeof value === "string" ? value : null,
+			emoji: null,
+		};
+	const emoji = validEmoji(value);
+	return {
+		status: emoji === null ? "Invalid" : "Valid",
+		candidate: value,
+		emoji,
+	};
+}
+
+export async function emojiCall(
+	spend: Spend,
+	arm: Arm,
+	input: Record<string, unknown>,
+	options: { keepRequestBody?: boolean } = {},
+): Promise<CallResult> {
+	const spec = armSpecs[arm];
+	const startedAt = Date.now();
+	const empty = {
+		rawText: null,
+		candidate: null,
+		emoji: null,
+		httpStatus: null,
+		durationMs: 0,
+		providerMs: null,
+		startedAt,
+		inputTokens: 0,
+		cachedTokens: 0,
+		outputTokens: 0,
+		costUsd: 0,
+	};
+	if (abortReason)
+		return { status: "Skipped", reason: `aborted: ${abortReason}`, ...empty };
+	if (!spend.allows())
+		return { status: "Skipped", reason: "spend cap", ...empty };
+	const capture: {
+		status?: number;
+		clone?: Response;
+		body?: string;
+		processingMs?: number | null;
+	} = {};
+	const execute = createOpenAIExecutor({
+		fetch: async (url, init) => {
+			let body = String(init?.body ?? "");
+			if (spec.strict) {
+				const needle = '"strict":false';
+				const count = body.split(needle).length - 1;
+				if (count !== 1)
+					throw Error(`expected one strict:false in body, found ${count}`);
+				body = body.replace(needle, '"strict":true');
+			}
+			capture.body = body;
+			const response = await globalThis.fetch(url, { ...init, body });
+			capture.status = response.status;
+			const processing = response.headers.get("openai-processing-ms");
+			capture.processingMs = processing === null ? null : Number(processing);
+			capture.clone = response.clone();
+			return response;
+		},
+	});
+	const start = performance.now();
+	let output: unknown;
+	let thrown: unknown = null;
+	try {
+		const response = await execute({
+			systemPrompt: spec.systemPrompt,
+			outputFormat: spec.shape === "text" ? "text" : "json",
+			...(spec.outputSchema ? { outputSchema: spec.outputSchema } : {}),
+			cachePrompt: true,
+			input,
+			configuration: configurationSchema.parse(defaultModelConfiguration),
+			signal: AbortSignal.timeout(30_000),
+		} as never);
+		output = response.output;
+	} catch (error) {
+		thrown = error;
+	}
+	const durationMs = performance.now() - start;
+	// Usage and raw text come from the response clone, so a 200 response whose
+	// JSON promptsmith cannot parse is still metered.
+	let rawText: string | null = null;
+	let usage: Parameters<typeof lunaCost>[0] = null;
+	let payloadStatus: string | undefined;
+	if (capture.clone && capture.status === 200) {
+		try {
+			const payload = JSON.parse(await capture.clone.text()) as {
+				status?: string;
+				output?: { content?: { type?: string; text?: string }[] }[];
+				usage?: Parameters<typeof lunaCost>[0];
+			};
+			payloadStatus = payload.status;
+			usage = payload.usage ?? null;
+			rawText = outputTextOf(payload);
+		} catch {
+			/* body unreadable; treated below */
+		}
+	}
+	const cost = lunaCost(usage);
+	if (capture.status !== undefined) spend.add(cost.costUsd);
+	const base = {
+		rawText,
+		httpStatus: capture.status ?? null,
+		durationMs,
+		providerMs: capture.processingMs ?? null,
+		startedAt,
+		...cost,
+		...(options.keepRequestBody && capture.body
+			? { requestBody: capture.body }
+			: {}),
+	};
+	if (thrown === null)
+		return { ...base, ...classify(spec.shape, output) };
+	const message = String(thrown);
+	if (capture.status === 200 && payloadStatus === "completed" && rawText !== null)
+		return {
+			...base,
+			status: "ParseFailure",
+			reason: "output text is not JSON",
+			candidate: null,
+			emoji: null,
+			error: message.slice(0, 500),
+		};
+	if (
+		capture.status === 401 ||
+		capture.status === 402 ||
+		capture.status === 403 ||
+		/insufficient_quota|billing|payment|invalid_api_key/iu.test(message)
+	)
+		abortReason = `HTTP ${capture.status ?? "?"}: ${message.slice(0, 300)}`;
+	return {
+		...base,
+		status: "ProviderFailure",
+		candidate: null,
+		emoji: null,
+		error: message.slice(0, 500),
+	};
+}

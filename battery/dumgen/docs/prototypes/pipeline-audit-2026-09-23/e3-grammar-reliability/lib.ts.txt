@@ -1,0 +1,383 @@
+/**
+ * E3 shared harness: run the unmodified src grammar operation over the 21
+ * grammatical-resolution/de/* evaluation selections with a recording "tape"
+ * in front of the model executors.
+ *
+ * - Baseline arm: src code, live calls, every request/response stored on the
+ *   tape keyed by sha256(stableJson(request content)).
+ * - Consumption variants: the SAME src code, but the judge is wrapped so the
+ *   features answers are rewritten by a pure policy function before src
+ *   consumes them. Requests are served from the tape of the same run, so the
+ *   variant sees exactly the answers the baseline saw. Follow-up calls the
+ *   baseline never made (Luna canonical, DET/PRON identity, NOUN case,
+ *   lexical strings) miss the tape and run live; they are recorded too.
+ * - Question variants: the wrapper edits the questions before they are sent
+ *   (a tape miss, so live) and re-expands the answers to the original
+ *   question set, exactly as a production question change would behave.
+ *
+ * Every live call is metered against the spend cap from returned usage.
+ */
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { Effect } from "effect";
+import { stableJson } from "promptsmith";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import { configurationSchema } from "promptsmith/schemas";
+import {
+	createTypeSafeExecutor,
+	type Questions,
+} from "promptsmith/typesafe";
+import { corpusRegistrations } from "../../../src/concrete-lang/de/experiments.js";
+import { getExperiment } from "../../../src/development.js";
+import { grammarOperationExperiment } from "../../../src/evaluation/grammar-operation.js";
+import type {
+	DumgenOptions,
+	ModelRequest,
+	OperationTrace,
+} from "../../../src/types.js";
+
+export const price = {
+	lunaInput: 0.4 / 1e6,
+	lunaCached: 0.04 / 1e6,
+	lunaOutput: 2.4 / 1e6,
+	jevInput: 0.042 / 1e6,
+};
+
+export const grammarExperimentIds: string[] = corpusRegistrations
+	.map((registration) => registration.source.route)
+	.filter((route) => route.startsWith("grammatical-resolution/"));
+
+export type EvalCase = {
+	readonly experimentId: string;
+	readonly caseId: string;
+	readonly input: { markedContext: string; members: string[] };
+	readonly idealOutput: unknown;
+};
+
+export function evaluationCases(experimentId: string): EvalCase[] {
+	const definition = getExperiment(experimentId);
+	const selection = definition.evaluation;
+	return selection.ids.map((caseId, index) => {
+		const golden = selection.cases[index] as {
+			input: EvalCase["input"];
+			idealOutput: unknown;
+		};
+		return {
+			experimentId,
+			caseId,
+			input: golden.input,
+			idealOutput: golden.idealOutput,
+		};
+	});
+}
+
+// ------------------------------------------------------------------ tape
+
+export type TapeEntry = {
+	readonly kind: "jev" | "luna";
+	readonly response: unknown;
+	readonly durationMs: number;
+	readonly costUsd: number;
+	readonly recordedBy: string;
+};
+export type Tape = Map<string, TapeEntry>;
+
+export function sha(value: unknown): string {
+	return createHash("sha256").update(stableJson(value)).digest("hex");
+}
+export function loadTape(file: string): Tape {
+	if (!existsSync(file)) return new Map();
+	return new Map(
+		Object.entries(JSON.parse(readFileSync(file, "utf8"))) as [
+			string,
+			TapeEntry,
+		][],
+	);
+}
+export function saveTape(file: string, tape: Tape) {
+	writeFileSync(file, JSON.stringify(Object.fromEntries(tape)));
+}
+
+// ------------------------------------------------------------- spend meter
+
+export class SpendMeter {
+	spentUsd = 0;
+	liveJev = 0;
+	liveLuna = 0;
+	transportRetries = 0;
+	constructor(
+		readonly capUsd: number,
+		readonly reserveUsd = 0.004,
+	) {}
+	get exhausted() {
+		return this.spentUsd >= this.capUsd - this.reserveUsd;
+	}
+}
+
+export function jevCost(response: unknown): number {
+	const usage = (response as { usage?: { input_tokens?: number } })?.usage;
+	return (usage?.input_tokens ?? 0) * price.jevInput;
+}
+export function lunaCost(metadata: unknown): number {
+	const usage =
+		(
+			metadata as {
+				usage?: {
+					input_tokens?: number;
+					output_tokens?: number;
+					input_tokens_details?: { cached_tokens?: number };
+				};
+			}
+		)?.usage ?? {};
+	const input = usage.input_tokens ?? 0;
+	const cached = usage.input_tokens_details?.cached_tokens ?? 0;
+	const output = usage.output_tokens ?? 0;
+	return (
+		(input - cached) * price.lunaInput +
+		cached * price.lunaCached +
+		output * price.lunaOutput
+	);
+}
+
+type JudgeRequest = Parameters<DumgenOptions["judge"]>[0];
+type JudgeOptions = Parameters<DumgenOptions["judge"]>[1];
+
+/** A judge that serves from the tape and records live misses. */
+export function tapedJudge(
+	tape: Tape,
+	meter: SpendMeter,
+	arm: string,
+	live: { value: DumgenOptions["judge"] | null },
+): DumgenOptions["judge"] {
+	return async (request: JudgeRequest, options: JudgeOptions) => {
+		const key = `jev:${sha({ state: request.state, questions: request.questions, model: request.model })}`;
+		const hit = tape.get(key);
+		if (hit) return structuredClone(hit.response) as never;
+		if (!live.value) throw Error("Tape miss in offline mode");
+		if (meter.exhausted) throw Error("SpendCapReached");
+		let lastError: unknown;
+		for (let attempt = 0; attempt < 3; attempt++) {
+			const start = performance.now();
+			try {
+				const response = await live.value(request, options);
+				const costUsd = jevCost(response);
+				meter.spentUsd += costUsd;
+				meter.liveJev++;
+				tape.set(key, {
+					kind: "jev",
+					response,
+					durationMs: performance.now() - start,
+					costUsd,
+					recordedBy: arm,
+				});
+				return structuredClone(response) as never;
+			} catch (error) {
+				lastError = error;
+				const message =
+					error instanceof Error ? error.message : String(error);
+				// Only transport failures are retried; they are not what E3 studies.
+				if (!/socket|connect|ECONN|fetch|network|timed? ?out|5\d\d/iu.test(message))
+					throw error;
+				meter.transportRetries++;
+			}
+		}
+		throw lastError;
+	};
+}
+
+/**
+ * Luna behind the tape. A miss runs live only when `liveAllowed()` says so;
+ * otherwise it throws LunaDeferred (the case outcome is then unknown, and it
+ * is resolved later only if some arm's answers differ from the baseline).
+ */
+export function tapedExecutor(
+	tape: Tape,
+	meter: SpendMeter,
+	arm: string,
+	liveAllowed: () => boolean,
+): DumgenOptions["execute"] {
+	const live = createOpenAIExecutor();
+	return async (request: ModelRequest) => {
+		const key = `luna:${sha({
+			systemPrompt: request.systemPrompt,
+			input: request.input,
+			outputSchema: request.outputSchema ?? null,
+			outputFormat: request.outputFormat ?? "json",
+			configuration: request.configuration,
+		})}`;
+		const hit = tape.get(key);
+		if (hit) return structuredClone(hit.response) as never;
+		if (!liveAllowed()) throw Error("LunaDeferred");
+		if (meter.exhausted) throw Error("SpendCapReached");
+		const start = performance.now();
+		const response = await live({
+			...request,
+			configuration: configurationSchema.parse(request.configuration),
+		} as never);
+		const costUsd = lunaCost(response.metadata);
+		meter.spentUsd += costUsd;
+		meter.liveLuna++;
+		tape.set(key, {
+			kind: "luna",
+			response,
+			durationMs: performance.now() - start,
+			costUsd,
+			recordedBy: arm,
+		});
+		return structuredClone(response) as never;
+	};
+}
+
+export function liveJudge(): DumgenOptions["judge"] {
+	return (request, options) => createTypeSafeExecutor()(request, options);
+}
+
+// ------------------------------------------------------------ run one case
+
+export type CaseRecord = {
+	readonly experimentId: string;
+	readonly caseId: string;
+	readonly arm: string;
+	readonly run: number;
+	readonly goldUnresolved: boolean;
+	readonly status: string;
+	readonly contractPass: boolean | null;
+	/** contractPass, or gold Unresolved answered Unresolved/CatalogMiss. */
+	readonly correct: boolean;
+	readonly error?: string;
+	readonly output?: unknown;
+	readonly idealOutput: unknown;
+	readonly calls: {
+		readonly executor: string;
+		readonly route: string;
+		readonly durationMs: number;
+		readonly failure?: string;
+	}[];
+	readonly events: { kind: string; data: unknown }[];
+	/** Raw features answers (choice + probabilities) as the model returned them. */
+	readonly featuresAnswers?: Record<string, unknown>;
+	/** Answer ids the policy rewrote, with before/after choice. */
+	readonly rewrites?: Record<string, { from: string; to: string }>;
+	readonly durationMs: number;
+};
+
+export async function runCase(
+	evalCase: EvalCase,
+	options: DumgenOptions,
+	arm: string,
+	run: number,
+	extras: {
+		rewrites?: Record<string, { from: string; to: string }>;
+		rawFeatures?: { value?: Record<string, unknown> };
+	} = {},
+): Promise<CaseRecord> {
+	const definition = getExperiment(evalCase.experimentId);
+	const traces: OperationTrace[] = [];
+	const experiment = grammarOperationExperiment(definition, {
+		...options,
+		onOperation: (trace) => traces.push(trace),
+	});
+	const start = performance.now();
+	let status = "Success";
+	let output: unknown;
+	let contractPass: boolean | null = null;
+	let error: string | undefined;
+	const controller = new AbortController();
+	try {
+		output = await experiment.run(evalCase.input as never, {
+			signal: controller.signal,
+			recordTrace: () => {},
+		});
+		const parsed = experiment.corpus.outputSchema.safeParse(output);
+		if (!parsed.success) {
+			status = "InvalidOutput";
+		} else {
+			const evaluation = experiment.evaluator({
+				caseId: evalCase.caseId,
+				input: evalCase.input,
+				idealOutput: evalCase.idealOutput,
+				output: parsed.data,
+			} as never) as { contractPass?: boolean };
+			contractPass = evaluation.contractPass === true;
+		}
+	} catch (caught) {
+		const tag =
+			caught && typeof caught === "object" && "_tag" in caught
+				? String((caught as { _tag: unknown })._tag)
+				: undefined;
+		error = caught instanceof Error ? caught.message : String(caught);
+		status = error.includes("LunaDeferred")
+			? "Deferred"
+			: error.includes("SpendCapReached")
+				? "CapReached"
+				: tag === "InvalidModelOutput"
+					? "InvalidOutput"
+					: (tag ?? "EvaluationFailure");
+	}
+	const goldUnresolved =
+		!!evalCase.idealOutput &&
+		typeof evalCase.idealOutput === "object" &&
+		"decision" in evalCase.idealOutput;
+	const correct = goldUnresolved
+		? status === "Unresolved" || status === "CatalogMiss"
+		: contractPass === true;
+	const trace = traces.find((item) => item.operation === "resolveGrammar");
+	const features = trace?.calls.find((call) =>
+		(call.request as { route: string }).route.endsWith("/features"),
+	);
+	return {
+		experimentId: evalCase.experimentId,
+		caseId: evalCase.caseId,
+		arm,
+		run,
+		goldUnresolved,
+		status,
+		contractPass,
+		correct,
+		...(error ? { error } : {}),
+		...(output === undefined ? {} : { output }),
+		idealOutput: evalCase.idealOutput,
+		calls:
+			trace?.calls.map((call) => ({
+				executor: call.executor,
+				route: (call.request as { route: string }).route,
+				durationMs: call.durationMs,
+				...(call.failure ? { failure: call.failure } : {}),
+			})) ?? [],
+		events: trace?.events.map((event) => ({ ...event })) ?? [],
+		...(extras.rawFeatures?.value
+			? { featuresAnswers: extras.rawFeatures.value }
+			: features
+				? {
+						featuresAnswers: (
+							features.output as { answers?: Record<string, unknown> }
+						)?.answers,
+					}
+				: {}),
+		...(extras.rewrites && Object.keys(extras.rewrites).length
+			? { rewrites: extras.rewrites }
+			: {}),
+		durationMs: performance.now() - start,
+	};
+}
+
+export async function pool<T, R>(
+	items: readonly T[],
+	concurrency: number,
+	work: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+	const results: R[] = new Array(items.length);
+	let next = 0;
+	async function worker() {
+		while (next < items.length) {
+			const index = next++;
+			results[index] = await work(items[index] as T, index);
+		}
+	}
+	await Promise.all(
+		Array.from({ length: Math.min(concurrency, items.length) }, worker),
+	);
+	return results;
+}
+
+export { Effect, type Questions };

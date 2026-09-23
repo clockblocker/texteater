@@ -1,0 +1,50 @@
+[
+ {
+  "script": "run.ts",
+  "label": "smoke",
+  "startedAt": "2026-09-23T14:13:07.210Z",
+  "spentUsd": 0.0009504,
+  "lunaCalls": 6,
+  "finishedAt": "2026-09-23T14:13:11.092Z"
+ },
+ {
+  "script": "run.ts",
+  "label": "pilot",
+  "startedAt": "2026-09-23T14:13:24.458Z",
+  "spentUsd": 0.023664000000000008,
+  "lunaCalls": 144,
+  "finishedAt": "2026-09-23T14:14:18.764Z"
+ },
+ {
+  "script": "run.ts",
+  "label": "main-e5",
+  "startedAt": "2026-09-23T14:14:44.488Z",
+  "spentUsd": 0.11041200000000005,
+  "lunaCalls": 768,
+  "finishedAt": "2026-09-23T14:17:36.878Z"
+ },
+ {
+  "script": "run.ts",
+  "label": "main-heldout",
+  "startedAt": "2026-09-23T14:17:45.414Z",
+  "spentUsd": 0.04515040000000001,
+  "lunaCalls": 288,
+  "finishedAt": "2026-09-23T14:19:41.546Z"
+ },
+ {
+  "script": "run.ts",
+  "label": "main-e5-rep2",
+  "startedAt": "2026-09-23T14:25:53.832Z",
+  "spentUsd": 0.05528880000000007,
+  "lunaCalls": 384,
+  "finishedAt": "2026-09-23T14:27:16.212Z"
+ },
+ {
+  "script": "run.ts",
+  "label": "main-heldout-rep1",
+  "startedAt": "2026-09-23T14:27:29.303Z",
+  "spentUsd": 0.04517200000000001,
+  "lunaCalls": 288,
+  "finishedAt": "2026-09-23T14:29:21.320Z"
+ }
+]

@@ -1,0 +1,400 @@
+/**
+ * E8: NOUN surface number without the Unmarked option.
+ *
+ * Reuses the E3 harness (../e3-grammar-reliability/lib.ts runCase, spend
+ * metering, cost functions; policies.ts policyJudge + the question-edit
+ * mechanics of nounNumberNoUnmarked). Every arm runs the UNMODIFIED src
+ * resolveGrammar through grammarOperationExperiment; the variant only edits
+ * the questions sent to jev (Unmarked criterion removed from
+ * `surface.inflectionalFeatures.number`) and re-expands the answer with
+ * P(Unmarked)=0 so src validation passes. No rewrite, no argmax fallback: an
+ * Unresolved number stays Unresolved.
+ *
+ * Arms (each a full, independent jev sample; Luna text follow-ups share one
+ * tape keyed by the exact request so Luna noise does not leak into the
+ * comparison):
+ *   b1  baseline rep 1. jev answers for the 78 evaluation cases are served
+ *       from E3's run-1 baseline tape (recorded 2026-09-23 07:55 by the same
+ *       src, no src file is newer than that tape); a request that misses the
+ *       tape (demo/probe cases) runs live.
+ *   b2  baseline rep 2, live.
+ *   v1  variant rep 1, live for NOUN.
+ *   v2  variant rep 2, live for NOUN.
+ *   For PROPN cases the NOUN-only variant sends byte-identical requests, so
+ *   v1/v2 PROPN records are produced OFFLINE from b1/b2 tapes (a miss would
+ *   throw, proving non-interference at $0).
+ *   p1/p2 (optional, --arms p1,p2): Unmarked also removed for PROPN, live.
+ *
+ *   bun --env-file=/Users/annagorelova/work/textfresser-batteries/.env.local run.ts --arms b1,b2n,v1,v2,b2p,v1p,v2p
+ *   bun ... run.ts --dry        (offline: tape coverage + cost estimate, no API)
+ */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { parseArgs } from "node:util";
+import { configurationSchema } from "promptsmith/schemas";
+import { createOpenAIExecutor } from "promptsmith/openai";
+import type { Questions } from "promptsmith/typesafe";
+import nounCorpus from "../../../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
+import propnCorpus from "../../../src/concrete-lang/de/grammatical-resolution/lexeme/proper-noun/corpus.json";
+import type { DumgenOptions, ModelRequest } from "../../../src/types.js";
+import {
+	type CaseRecord,
+	type EvalCase,
+	evaluationCases,
+	jevCost,
+	liveJudge,
+	loadTape,
+	lunaCost,
+	pool,
+	runCase,
+	SpendMeter,
+	sha,
+	type Tape,
+} from "../e3-grammar-reliability/lib.ts";
+import {
+	type Policy,
+	policyJudge,
+	type Rewrite,
+} from "../e3-grammar-reliability/policies.ts";
+
+const here = dirname(new URL(import.meta.url).pathname);
+const results = resolve(here, "results");
+mkdirSync(results, { recursive: true });
+const e3Tape = resolve(here, "../e3-grammar-reliability/results/tape-run1.json");
+
+const { values: args } = parseArgs({
+	options: {
+		arms: { type: "string", default: "b1,b2n,v1,v2,b2p,v1p,v2p" },
+		dry: { type: "boolean", default: false },
+		concurrency: { type: "string", default: "6" },
+		cap: { type: "string", default: "0.03" },
+		/** Stop new live calls when this invocation has spent this much. */
+		"max-spend": { type: "string" },
+		/** Meter stops new live calls this far below the remaining cap. */
+		reserve: { type: "string", default: "0.0015" },
+	},
+});
+
+// ------------------------------------------------------------------ cases
+
+const NOUN = "grammatical-resolution/de/lexeme/noun";
+const PROPN = "grammatical-resolution/de/lexeme/proper-noun";
+type Tagged = EvalCase & { readonly set: "eval" | "demo" | "probe" };
+
+function corpusCase(experimentId: string, corpus: unknown, caseId: string): Tagged {
+	const item = (corpus as Record<string, { input: EvalCase["input"]; idealOutput: unknown }>)[caseId];
+	if (!item) throw Error(`Missing corpus case ${caseId}`);
+	return { experimentId, caseId, input: item.input, idealOutput: item.idealOutput, set: "demo" };
+}
+/** Citation NOUN probes authored for E8 (NOT corpus gold), modelled on the demo citation-haus case. */
+function probe(caseId: string, markedContext: string, member: string, gender: string): Tagged {
+	return {
+		experimentId: NOUN,
+		caseId,
+		input: { markedContext, members: [member] },
+		idealOutput: {
+			memberOrthographies: ["Standard"],
+			normalizedMembers: [member],
+			surface: { spelling: "Canonical", surfaceFeatures: null, inflectionalFeatures: null },
+			lemma: { canonicalForm: member, coreFeatures: { gender, hyph: null } },
+			realizationCoverage: "Full",
+			articleEvidence: null,
+		},
+		set: "probe",
+	};
+}
+const nounCases: Tagged[] = [
+	...evaluationCases(NOUN).map((item) => ({ ...item, set: "eval" as const })),
+	corpusCase(NOUN, nounCorpus, "grammar-de-noun-demo-citation-haus"),
+	probe("e8-probe-citation-obst", "Wörterbucheintrag: <TARGET>Obst</TARGET>.", "Obst", "Neut"),
+	probe("e8-probe-citation-gemuese", "Stichwort: <TARGET>Gemüse</TARGET>.", "Gemüse", "Neut"),
+	probe("e8-probe-citation-material", "Im Wörterbuch steht der Eintrag <TARGET>Material</TARGET>.", "Material", "Neut"),
+	probe("e8-probe-citation-tisch", "Wörterbucheintrag: <TARGET>Tisch</TARGET>.", "Tisch", "Masc"),
+];
+const propnCases: Tagged[] = [
+	...evaluationCases(PROPN).map((item) => ({ ...item, set: "eval" as const })),
+	corpusCase(PROPN, propnCorpus, "grammar-de-propn-demo-citation-work-tonio-kroeger"),
+];
+const nearTie = nounCases.filter((item) =>
+	["grammar-de-noun-dev-nested", "grammar-de-noun-dev-suspended-right-jugendbuecher"].includes(item.caseId),
+);
+const caseKey = (item: { experimentId: string; caseId: string }) =>
+	`${item.experimentId}|${item.caseId}`;
+
+// ----------------------------------------------------------------- policy
+
+const numberPath = "surface.inflectionalFeatures.number";
+/** E3's nounNumberNoUnmarked generalised to a kind set (NOUN only is the E8 variant). */
+function numberNoUnmarked(name: string, kinds: readonly string[]): Policy {
+	return {
+		name,
+		description: `${kinds.join("+")}: the Unmarked option is removed from surface number (live question change, no fallback)`,
+		editQuestions({ call, route, questions }) {
+			if (call !== "features" || !kinds.some((kind) => route.endsWith(`/${kind}`)))
+				return null;
+			const question = questions[numberPath] as
+				| { type: string; criteria: Record<string, string> }
+				| undefined;
+			if (!question || !("Unmarked" in question.criteria)) return null;
+			const { Unmarked: _drop, ...criteria } = question.criteria;
+			return { ...questions, [numberPath]: { ...question, criteria } } as Questions;
+		},
+	};
+}
+const nounOnly = numberNoUnmarked("noun-number-no-unmarked", ["NOUN"]);
+const nounAndPropn = numberNoUnmarked("noun+propn-number-no-unmarked", ["NOUN", "PROPN"]);
+
+// ------------------------------------------------------------------ spend
+
+const ledgerFile = resolve(results, "spend-ledger.json");
+type Ledger = {
+	capUsd: number;
+	spentUsd: number;
+	entries: { at: string; what: string; spentUsd: number; liveJev: number; liveLuna: number; retries: number }[];
+};
+const ledger: Ledger = existsSync(ledgerFile)
+	? JSON.parse(readFileSync(ledgerFile, "utf8"))
+	: { capUsd: Number(args.cap), spentUsd: 0, entries: [] };
+const meter = new SpendMeter(
+	Math.min(
+		ledger.capUsd - ledger.spentUsd,
+		args["max-spend"] ? Number(args["max-spend"]) : Infinity,
+	),
+	Number(args.reserve),
+);
+function commit(what: string, before: { spent: number; jev: number; luna: number; retries: number }) {
+	const spent = meter.spentUsd - before.spent;
+	ledger.spentUsd += spent;
+	ledger.entries.push({
+		at: new Date().toISOString(),
+		what,
+		spentUsd: spent,
+		liveJev: meter.liveJev - before.jev,
+		liveLuna: meter.liveLuna - before.luna,
+		retries: meter.transportRetries - before.retries,
+	});
+	if (!args.dry) writeFileSync(ledgerFile, JSON.stringify(ledger, null, 2));
+	console.error(`[spend] ${what}: +$${spent.toFixed(5)} (total $${ledger.spentUsd.toFixed(5)} of $${ledger.capUsd})`);
+}
+const snapshot = () => ({
+	spent: meter.spentUsd,
+	jev: meter.liveJev,
+	luna: meter.liveLuna,
+	retries: meter.transportRetries,
+});
+
+// ------------------------------------------------------------------ tapes
+
+function readTape(file: string): Tape {
+	return loadTape(file);
+}
+function writeTape(file: string, tape: Tape, keys?: Set<string>) {
+	const entries = [...tape.entries()].filter(([key]) => !keys || keys.has(key));
+	writeFileSync(file, JSON.stringify(Object.fromEntries(entries)));
+}
+const tapeFile = (arm: string) => resolve(results, `tape-${arm}.json`);
+const lunaTapeFile = resolve(results, "tape-luna.json");
+const e3 = readTape(e3Tape);
+const lunaTape: Tape = readTape(lunaTapeFile);
+const lunaSeeded = new Set<string>();
+for (const [key, entry] of e3)
+	if (entry.kind === "luna" && !lunaTape.has(key)) {
+		lunaTape.set(key, { ...entry, recordedBy: `e3:${entry.recordedBy}` });
+		lunaSeeded.add(key);
+	}
+const lunaUsed = new Set<string>([...lunaTape.keys()].filter((key) => !lunaSeeded.has(key)));
+
+type CallLog = {
+	kind: "jev" | "luna";
+	key: string;
+	route: string;
+	source: "tape" | "live";
+	recordedBy: string;
+	durationMs: number;
+	costUsd: number;
+	inputTokens?: number;
+};
+
+function loggedJudge(
+	tape: Tape,
+	arm: string,
+	live: boolean,
+	calls: CallLog[],
+	used: Set<string>,
+): DumgenOptions["judge"] {
+	const inner = liveJudge();
+	return async (request, options) => {
+		const key = `jev:${sha({ state: request.state, questions: request.questions, model: request.model })}`;
+		const route = String((request.state as { route?: unknown }).route ?? "");
+		const hit = tape.get(key);
+		if (hit) {
+			used.add(key);
+			calls.push({ kind: "jev", key, route, source: "tape", recordedBy: hit.recordedBy, durationMs: hit.durationMs, costUsd: hit.costUsd, inputTokens: (hit.response as { usage?: { input_tokens?: number } }).usage?.input_tokens });
+			return structuredClone(hit.response) as never;
+		}
+		if (!live) throw Error(`Tape miss in offline mode (${route})`);
+		if (meter.exhausted) throw Error("SpendCapReached");
+		let lastError: unknown;
+		for (let attempt = 0; attempt < 3; attempt++) {
+			const start = performance.now();
+			try {
+				const response = await inner(request, options);
+				const durationMs = performance.now() - start;
+				const costUsd = jevCost(response);
+				meter.spentUsd += costUsd;
+				meter.liveJev++;
+				tape.set(key, { kind: "jev", response, durationMs, costUsd, recordedBy: arm });
+				used.add(key);
+				calls.push({ kind: "jev", key, route, source: "live", recordedBy: arm, durationMs, costUsd, inputTokens: (response as { usage?: { input_tokens?: number } }).usage?.input_tokens });
+				return structuredClone(response) as never;
+			} catch (error) {
+				lastError = error;
+				const message = error instanceof Error ? error.message : String(error);
+				if (!/socket|connect|ECONN|fetch|network|timed? ?out|5\d\d/iu.test(message)) throw error;
+				meter.transportRetries++;
+			}
+		}
+		throw lastError;
+	};
+}
+
+const openai = createOpenAIExecutor();
+function loggedExecutor(arm: string, live: boolean, calls: CallLog[]): DumgenOptions["execute"] {
+	return async (request: ModelRequest) => {
+		const key = `luna:${sha({
+			systemPrompt: request.systemPrompt,
+			input: request.input,
+			outputSchema: request.outputSchema ?? null,
+			outputFormat: request.outputFormat ?? "json",
+			configuration: request.configuration,
+		})}`;
+		const route = String((request as { route?: unknown }).route ?? "");
+		const hit = lunaTape.get(key);
+		if (hit) {
+			lunaUsed.add(key);
+			calls.push({ kind: "luna", key, route, source: "tape", recordedBy: hit.recordedBy, durationMs: hit.durationMs, costUsd: hit.costUsd });
+			return structuredClone(hit.response) as never;
+		}
+		if (!live) throw Error("LunaDeferred");
+		if (meter.exhausted) throw Error("SpendCapReached");
+		const start = performance.now();
+		const response = await openai({
+			...request,
+			configuration: configurationSchema.parse(request.configuration),
+		} as never);
+		const durationMs = performance.now() - start;
+		const costUsd = lunaCost(response.metadata);
+		meter.spentUsd += costUsd;
+		meter.liveLuna++;
+		lunaTape.set(key, { kind: "luna", response, durationMs, costUsd, recordedBy: arm });
+		lunaUsed.add(key);
+		calls.push({ kind: "luna", key, route, source: "live", recordedBy: arm, durationMs, costUsd });
+		return structuredClone(response) as never;
+	};
+}
+
+// -------------------------------------------------------------------- arms
+
+type ArmPlan = {
+	name: string;
+	/** Tape the jev judge reads/writes. */
+	tape: string;
+	/** Extra read-only tape consulted first (b1: E3 run-1). */
+	seed?: Tape;
+	policy: Policy | null;
+	cases: Tagged[];
+	liveJev: boolean;
+	liveLuna: boolean;
+	rep: number;
+};
+const plans: Record<string, () => ArmPlan[]> = {
+	b1: () => [{ name: "b1", tape: "b1", seed: e3, policy: null, cases: [...nounCases, ...propnCases], liveJev: true, liveLuna: true, rep: 1 }],
+	// NOUN first so the verdict-critical arms run before the PROPN control.
+	b2n: () => [{ name: "b2", tape: "b2", policy: null, cases: nounCases, liveJev: true, liveLuna: true, rep: 2 }],
+	v1: () => [{ name: "v1", tape: "v1", policy: nounOnly, cases: nounCases, liveJev: true, liveLuna: true, rep: 1 }],
+	v2: () => [{ name: "v2", tape: "v2", policy: nounOnly, cases: nounCases, liveJev: true, liveLuna: true, rep: 2 }],
+	b2p: () => [{ name: "b2", tape: "b2", policy: null, cases: propnCases, liveJev: true, liveLuna: true, rep: 2 }],
+	// PROPN is untouched by the NOUN-only variant: replay the paired baseline tape offline.
+	v1p: () => [{ name: "v1", tape: "b1", policy: nounOnly, cases: propnCases, liveJev: false, liveLuna: false, rep: 1 }],
+	v2p: () => [{ name: "v2", tape: "b2", policy: nounOnly, cases: propnCases, liveJev: false, liveLuna: false, rep: 2 }],
+	// Optional extension: Unmarked removed for PROPN too (only if budget remains).
+	p1: () => [{ name: "p1", tape: "p1", policy: nounAndPropn, cases: propnCases, liveJev: true, liveLuna: true, rep: 1 }],
+	p2: () => [{ name: "p2", tape: "p2", policy: nounAndPropn, cases: propnCases, liveJev: true, liveLuna: true, rep: 2 }],
+	// Near-tie resample: the only two NOUN cases whose outcome flipped between
+	// variant reps (both on a near-tied \`canonical\` answer) get three more
+	// independent samples per arm, interleaved b3,v3,b4,v4,b5,v5.
+	...Object.fromEntries(
+		[3, 4, 5].flatMap((rep) => [
+			[`nt-b${rep}`, () => [{ name: `nt-b${rep}`, tape: `nt-b${rep}`, policy: null, cases: nearTie, liveJev: true, liveLuna: true, rep }]],
+			[`nt-v${rep}`, () => [{ name: `nt-v${rep}`, tape: `nt-v${rep}`, policy: nounOnly, cases: nearTie, liveJev: true, liveLuna: true, rep }]],
+		]),
+	),
+};
+
+export type E8Record = CaseRecord & {
+	set: Tagged["set"];
+	jevCalls: CallLog[];
+	lunaCalls: CallLog[];
+	editedQuestions: number;
+	/** The number question exactly as sent to jev (criteria keys). */
+	numberOptionsSent?: string[];
+};
+
+async function runArm(plan: ArmPlan) {
+	const before = snapshot();
+	const recordsFile = resolve(results, `records-${plan.name}.json`);
+	const records = new Map<string, E8Record>(
+		existsSync(recordsFile) && !args.dry
+			? (JSON.parse(readFileSync(recordsFile, "utf8")) as E8Record[]).map((record) => [caseKey(record), record])
+			: [],
+	);
+	const own = readTape(tapeFile(plan.tape));
+	// b1: E3 entries are copied in (only the ones actually used are saved).
+	if (plan.seed) for (const [key, entry] of plan.seed) if (entry.kind === "jev" && !own.has(key)) own.set(key, { ...entry, recordedBy: `e3:${entry.recordedBy}` });
+	const used = new Set<string>(existsSync(tapeFile(plan.tape)) ? Object.keys(JSON.parse(readFileSync(tapeFile(plan.tape), "utf8"))) : []);
+	const todo = plan.cases.filter((item) => !records.has(caseKey(item)));
+	console.error(`[${plan.name}${plan.liveJev ? "" : " offline"}] ${todo.length} cases (${records.size} stored) tape=${plan.tape}`);
+	const concurrency = Number(args.concurrency);
+	await pool(todo, concurrency, async (item) => {
+		if (plan.liveJev && meter.exhausted) return;
+		const jevCalls: CallLog[] = [];
+		const lunaCalls: CallLog[] = [];
+		const log = { rewrites: {} as Record<string, Rewrite>, raw: {} as { value?: Record<string, unknown> }, shortCircuits: 0, editedQuestions: 0 };
+		let numberOptionsSent: string[] | undefined;
+		const base = loggedJudge(own, plan.name, plan.liveJev && !args.dry, jevCalls, used);
+		const spy: DumgenOptions["judge"] = async (request, options) => {
+			const question = (request.questions as Record<string, { criteria?: Record<string, string> }>)[numberPath];
+			if ("support" in (request.questions as object) && question?.criteria) numberOptionsSent = Object.keys(question.criteria);
+			return base(request, options);
+		};
+		const judge = plan.policy ? policyJudge(spy, plan.policy, log) : spy;
+		const record = await runCase(
+			item,
+			{ judge, execute: loggedExecutor(plan.name, plan.liveLuna && !args.dry, lunaCalls) },
+			plan.name,
+			plan.rep,
+			plan.policy ? { rewrites: log.rewrites, rawFeatures: log.raw } : {},
+		);
+		if (record.status === "CapReached") return;
+		records.set(caseKey(item), { ...record, set: item.set, jevCalls, lunaCalls, editedQuestions: log.editedQuestions, ...(numberOptionsSent ? { numberOptionsSent } : {}) });
+	});
+	if (args.dry) {
+		const all = [...records.values()].filter((record) => plan.cases.some((item) => caseKey(item) === caseKey(record)));
+		const misses = all.filter((record) => /Tape miss/u.test(record.error ?? "")).length;
+		const hits = all.flatMap((record) => record.jevCalls).filter((call) => call.source === "tape");
+		const tokens = hits.map((call) => call.inputTokens ?? 0);
+		console.log(JSON.stringify({ arm: plan.name, cases: all.length, jevTapeMisses: misses, tapeHits: hits.length, meanInputTokens: tokens.reduce((a, b) => a + b, 0) / Math.max(1, tokens.length), meanCostUsd: hits.reduce((a, c) => a + c.costUsd, 0) / Math.max(1, hits.length), deferred: all.filter((r) => r.status === "Deferred").length, byStatus: Object.fromEntries(Object.entries(Object.groupBy(all, (r) => r.status)).map(([k, v]) => [k, v!.length])) }));
+		return;
+	}
+	writeFileSync(recordsFile, JSON.stringify([...records.values()]));
+	writeTape(tapeFile(plan.tape), own, used);
+	writeTape(lunaTapeFile, lunaTape, lunaUsed);
+	commit(`${plan.name} ${plan.cases.length} cases (${plan.liveJev ? "live" : "offline"}, tape ${plan.tape})`, before);
+}
+
+for (const arm of args.arms.split(",").map((name) => name.trim())) {
+	const factory = plans[arm];
+	if (!factory) throw Error(`Unknown arm ${arm}`);
+	for (const plan of factory()) await runArm(plan);
+}
+console.error(`[done] meter $${meter.spentUsd.toFixed(5)} liveJev=${meter.liveJev} liveLuna=${meter.liveLuna} retries=${meter.transportRetries}`);

@@ -1,0 +1,1360 @@
+{
+  "label": "baseline",
+  "spendUsd": 0.0927,
+  "sentences": 16,
+  "clicks": 78,
+  "outcomes": {
+    "Resolved": 64,
+    "reading:InvalidModelOutput": 5,
+    "grammar:Unresolved": 8,
+    "classify:Unresolved": 1
+  },
+  "intake": {
+    "sentences": 16,
+    "segmentMs": 498,
+    "analyzePhaseMs": 1931,
+    "wallMs": 2430,
+    "analyzeLatency": {
+      "n": 16,
+      "p50": 431,
+      "p90": 561,
+      "mean": 434,
+      "max": 571
+    },
+    "meanQuestions": 71,
+    "meanChunks": 1,
+    "meanInputTokens": 16793,
+    "failures": [
+      {
+        "caseId": "sentence-de-usw",
+        "failure": {
+          "tag": "ProviderFailure",
+          "stage": "analyzeSentence",
+          "message": "Connection error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "route": "de/sentence"
+        }
+      }
+    ],
+    "perCallFitMsPerQuestion": {
+      "n": 48,
+      "slopeMsPerUnit": 1.25,
+      "interceptMs": 325,
+      "r": 0.33
+    },
+    "perCallFitMsPerKiloToken": {
+      "n": 48,
+      "slopeMsPerUnit": 14.72,
+      "interceptMs": 172,
+      "r": 0.8
+    },
+    "repeatFitMsPerQuestion": {
+      "n": 30,
+      "slopeMsPerUnit": 1.67,
+      "interceptMs": 293,
+      "r": 0.41
+    },
+    "repeatsByConcurrency": {
+      "c4": {
+        "n": 16,
+        "p50": 427,
+        "p90": 545,
+        "mean": 448,
+        "max": 582
+      },
+      "c1": {
+        "n": 16,
+        "p50": 395,
+        "p90": 536,
+        "mean": 396,
+        "max": 785
+      }
+    },
+    "rows": [
+      {
+        "caseId": "kakao",
+        "resolvable": 5,
+        "questions": 51,
+        "chunks": 1,
+        "inputTokens": 13503,
+        "analyzeMs": 413,
+        "contractPass": true,
+        "membersFound": "4/4",
+        "routeCorrect": "4/4",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "kino",
+        "resolvable": 5,
+        "questions": 51,
+        "chunks": 1,
+        "inputTokens": 13098,
+        "analyzeMs": 392,
+        "contractPass": true,
+        "membersFound": "5/5",
+        "routeCorrect": "5/5",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "aufstehen",
+        "resolvable": 8,
+        "questions": 118,
+        "chunks": 1,
+        "inputTokens": 24536,
+        "analyzeMs": 560,
+        "contractPass": true,
+        "membersFound": "7/7",
+        "routeCorrect": "7/7",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "erinnert",
+        "resolvable": 8,
+        "questions": 120,
+        "chunks": 1,
+        "inputTokens": 27684,
+        "analyzeMs": 571,
+        "contractPass": true,
+        "membersFound": "5/5",
+        "routeCorrect": "5/5",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "ausweg",
+        "resolvable": 4,
+        "questions": 36,
+        "chunks": 1,
+        "inputTokens": 11373,
+        "analyzeMs": 373,
+        "contractPass": true,
+        "membersFound": "3/3",
+        "routeCorrect": "3/3",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "relativ",
+        "resolvable": 7,
+        "questions": 94,
+        "chunks": 1,
+        "inputTokens": 22028,
+        "analyzeMs": 431,
+        "contractPass": true,
+        "membersFound": "6/6",
+        "routeCorrect": "6/6",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "passiv",
+        "resolvable": 5,
+        "questions": 52,
+        "chunks": 1,
+        "inputTokens": 14156,
+        "analyzeMs": 377,
+        "contractPass": true,
+        "membersFound": "3/3",
+        "routeCorrect": "3/3",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "faden",
+        "resolvable": 5,
+        "questions": 53,
+        "chunks": 1,
+        "inputTokens": 14233,
+        "analyzeMs": 458,
+        "contractPass": true,
+        "membersFound": "3/3",
+        "routeCorrect": "3/3",
+        "phrasemes": "1/1 (+0)",
+        "scoreFailures": []
+      },
+      {
+        "caseId": "usw",
+        "resolvable": 8,
+        "questions": null,
+        "chunks": 1,
+        "inputTokens": 0,
+        "analyzeMs": 47,
+        "contractPass": null,
+        "membersFound": null,
+        "routeCorrect": null,
+        "phrasemes": null,
+        "scoreFailures": []
+      },
+      {
+        "caseId": "museum",
+        "resolvable": 9,
+        "questions": 145,
+        "chunks": 1,
+        "inputTokens": 27406,
+        "analyzeMs": 561,
+        "contractPass": false,
+        "membersFound": "7/8",
+        "routeCorrect": "7/8",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": [
+          "[m Montag] NOUN: no target with these members"
+        ]
+      },
+      {
+        "caseId": "genitiv",
+        "resolvable": 6,
+        "questions": 71,
+        "chunks": 1,
+        "inputTokens": 17229,
+        "analyzeMs": 409,
+        "contractPass": false,
+        "membersFound": "3/4",
+        "routeCorrect": "3/4",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": [
+          "[des Nachbarn] NOUN: no target with these members"
+        ]
+      },
+      {
+        "caseId": "typo",
+        "resolvable": 5,
+        "questions": 52,
+        "chunks": 1,
+        "inputTokens": 14086,
+        "analyzeMs": 468,
+        "contractPass": false,
+        "membersFound": "5/5",
+        "routeCorrect": "4/5",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": [
+          "[Ihc] PRON: route X"
+        ]
+      },
+      {
+        "caseId": "klitik",
+        "resolvable": 5,
+        "questions": 52,
+        "chunks": 1,
+        "inputTokens": 13837,
+        "analyzeMs": 464,
+        "contractPass": false,
+        "membersFound": "2/4",
+        "routeCorrect": "2/4",
+        "phrasemes": "0/1 (+1)",
+        "scoreFailures": [
+          "[Wie] ADV: no target with these members",
+          "[geht s] VERB: no target with these members",
+          "{Wie geht dir} DiscourseFormula: no Phraseme Target with these words",
+          "extra Phraseme DiscourseFormula over {Wie dir}"
+        ]
+      },
+      {
+        "caseId": "verfuegung",
+        "resolvable": 8,
+        "questions": 118,
+        "chunks": 1,
+        "inputTokens": 24073,
+        "analyzeMs": 527,
+        "contractPass": false,
+        "membersFound": "5/6",
+        "routeCorrect": "5/6",
+        "phrasemes": "1/1 (+0)",
+        "scoreFailures": [
+          "[den Schülern] NOUN: no target with these members"
+        ]
+      },
+      {
+        "caseId": "manche",
+        "resolvable": 6,
+        "questions": 71,
+        "chunks": 1,
+        "inputTokens": 17236,
+        "analyzeMs": 367,
+        "contractPass": false,
+        "membersFound": "6/6",
+        "routeCorrect": "4/6",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": [
+          "[früh] ADJ: route ADV",
+          "[spät] ADJ: route ADV"
+        ]
+      },
+      {
+        "caseId": "fremd",
+        "resolvable": 5,
+        "questions": 52,
+        "chunks": 1,
+        "inputTokens": 14206,
+        "analyzeMs": 525,
+        "contractPass": false,
+        "membersFound": "4/4",
+        "routeCorrect": "2/4",
+        "phrasemes": "0/0 (+0)",
+        "scoreFailures": [
+          "[very] X: route ADV",
+          "[good] X: route ADJ"
+        ]
+      }
+    ]
+  },
+  "clickCriticalPath": {
+    "all": {
+      "n": 78,
+      "p50": 1860,
+      "p90": 3033,
+      "mean": 1843,
+      "max": 4054
+    },
+    "resolved": {
+      "n": 64,
+      "p50": 1902,
+      "p90": 3180,
+      "mean": 2042,
+      "max": 4054
+    },
+    "byDecision": {
+      "New:authored": {
+        "n": 10,
+        "p50": 392,
+        "p90": 771,
+        "mean": 548,
+        "max": 944
+      },
+      "New:generated": {
+        "n": 54,
+        "p50": 2029,
+        "p90": 3281,
+        "mean": 2318,
+        "max": 4054
+      }
+    }
+  },
+  "breakdown": {
+    "meanSelectMs": 43,
+    "meanSelectClassifiedMs": 336,
+    "meanGrammarMs": 544,
+    "meanTailAfterGrammarMs": 1419,
+    "meanReadingMs": 1120,
+    "meanDraftMs": 1349,
+    "draftIsLongPole": "45/54 generated New readings (mean excess 424 ms)",
+    "shareOfCriticalPath": {
+      "select": 0.02,
+      "grammar": 0.3,
+      "tail": 0.68
+    },
+    "grammarRoundTrips": {
+      "n": 77,
+      "p50": 1,
+      "p90": 2,
+      "mean": 1,
+      "max": 2
+    },
+    "sequentialRoundTripsResolved": {
+      "n": 64,
+      "p50": 2,
+      "p90": 3,
+      "mean": 2,
+      "max": 4
+    }
+  },
+  "byRoute": {
+    "Lexeme/NOUN": {
+      "clicks": 20,
+      "resolved": 15,
+      "critical": {
+        "n": 20,
+        "p50": 1789,
+        "p90": 2305,
+        "mean": 1680,
+        "max": 2739
+      },
+      "grammar": {
+        "n": 20,
+        "p50": 327,
+        "p90": 472,
+        "mean": 438,
+        "max": 1339
+      },
+      "reading": {
+        "n": 15,
+        "p50": 1216,
+        "p90": 1533,
+        "mean": 1196,
+        "max": 1543
+      },
+      "draft": {
+        "n": 15,
+        "p50": 1452,
+        "p90": 1857,
+        "mean": 1477,
+        "max": 1963
+      }
+    },
+    "Lexeme/VERB": {
+      "clicks": 15,
+      "resolved": 15,
+      "critical": {
+        "n": 15,
+        "p50": 2699,
+        "p90": 3533,
+        "mean": 2640,
+        "max": 4054
+      },
+      "grammar": {
+        "n": 15,
+        "p50": 1231,
+        "p90": 1509,
+        "mean": 1045,
+        "max": 2733
+      },
+      "reading": {
+        "n": 15,
+        "p50": 1342,
+        "p90": 1656,
+        "mean": 1352,
+        "max": 1853
+      },
+      "draft": {
+        "n": 15,
+        "p50": 1496,
+        "p90": 1680,
+        "mean": 1547,
+        "max": 2319
+      }
+    },
+    "Lexeme/ADV": {
+      "clicks": 11,
+      "resolved": 9,
+      "critical": {
+        "n": 11,
+        "p50": 1982,
+        "p90": 3281,
+        "mean": 2068,
+        "max": 3771
+      },
+      "grammar": {
+        "n": 11,
+        "p50": 328,
+        "p90": 375,
+        "mean": 339,
+        "max": 399
+      },
+      "reading": {
+        "n": 9,
+        "p50": 1270,
+        "p90": 3441,
+        "mean": 1513,
+        "max": 3441
+      },
+      "draft": {
+        "n": 9,
+        "p50": 1634,
+        "p90": 2952,
+        "mean": 1666,
+        "max": 2952
+      }
+    },
+    "Lexeme/PRON": {
+      "clicks": 7,
+      "resolved": 4,
+      "critical": {
+        "n": 7,
+        "p50": 618,
+        "p90": 1882,
+        "mean": 699,
+        "max": 1882
+      },
+      "grammar": {
+        "n": 7,
+        "p50": 611,
+        "p90": 766,
+        "mean": 514,
+        "max": 766
+      },
+      "reading": {
+        "n": 4,
+        "p50": 4,
+        "p90": 6,
+        "mean": 4,
+        "max": 6
+      },
+      "draft": {
+        "n": 4,
+        "p50": 4,
+        "p90": 7,
+        "mean": 5,
+        "max": 7
+      }
+    },
+    "Lexeme/DET": {
+      "clicks": 6,
+      "resolved": 6,
+      "critical": {
+        "n": 6,
+        "p50": 353,
+        "p90": 944,
+        "mean": 513,
+        "max": 944
+      },
+      "grammar": {
+        "n": 6,
+        "p50": 349,
+        "p90": 738,
+        "mean": 452,
+        "max": 738
+      },
+      "reading": {
+        "n": 6,
+        "p50": 2,
+        "p90": 3,
+        "mean": 2,
+        "max": 3
+      },
+      "draft": {
+        "n": 6,
+        "p50": 2,
+        "p90": 4,
+        "mean": 3,
+        "max": 4
+      }
+    },
+    "Lexeme/ADP": {
+      "clicks": 6,
+      "resolved": 4,
+      "critical": {
+        "n": 6,
+        "p50": 1873,
+        "p90": 2807,
+        "mean": 2096,
+        "max": 2807
+      },
+      "grammar": {
+        "n": 6,
+        "p50": 332,
+        "p90": 1176,
+        "mean": 474,
+        "max": 1176
+      },
+      "reading": {
+        "n": 4,
+        "p50": 982,
+        "p90": 1373,
+        "mean": 1143,
+        "max": 1373
+      },
+      "draft": {
+        "n": 4,
+        "p50": 1305,
+        "p90": 1623,
+        "mean": 1360,
+        "max": 1623
+      }
+    },
+    "Lexeme/ADJ": {
+      "clicks": 4,
+      "resolved": 4,
+      "critical": {
+        "n": 4,
+        "p50": 1727,
+        "p90": 3180,
+        "mean": 2251,
+        "max": 3180
+      },
+      "grammar": {
+        "n": 4,
+        "p50": 319,
+        "p90": 1288,
+        "mean": 568,
+        "max": 1288
+      },
+      "reading": {
+        "n": 4,
+        "p50": 1202,
+        "p90": 2149,
+        "mean": 1564,
+        "max": 2149
+      },
+      "draft": {
+        "n": 4,
+        "p50": 1280,
+        "p90": 1892,
+        "mean": 1442,
+        "max": 1892
+      }
+    },
+    "Lexeme/NUM": {
+      "clicks": 2,
+      "resolved": 2,
+      "critical": {
+        "n": 2,
+        "p50": 1669,
+        "p90": 2345,
+        "mean": 2007,
+        "max": 2345
+      },
+      "grammar": {
+        "n": 2,
+        "p50": 304,
+        "p90": 370,
+        "mean": 337,
+        "max": 370
+      },
+      "reading": {
+        "n": 2,
+        "p50": 1017,
+        "p90": 1378,
+        "mean": 1197,
+        "max": 1378
+      },
+      "draft": {
+        "n": 2,
+        "p50": 1363,
+        "p90": 1975,
+        "mean": 1669,
+        "max": 1975
+      }
+    },
+    "Lexeme/PROPN": {
+      "clicks": 2,
+      "resolved": 2,
+      "critical": {
+        "n": 2,
+        "p50": 1844,
+        "p90": 3500,
+        "mean": 2672,
+        "max": 3500
+      },
+      "grammar": {
+        "n": 2,
+        "p50": 349,
+        "p90": 417,
+        "mean": 383,
+        "max": 417
+      },
+      "reading": {
+        "n": 2,
+        "p50": 1400,
+        "p90": 1443,
+        "mean": 1422,
+        "max": 1443
+      },
+      "draft": {
+        "n": 2,
+        "p50": 1425,
+        "p90": 2819,
+        "mean": 2122,
+        "max": 2819
+      }
+    },
+    "Phraseme/Idiom": {
+      "clicks": 1,
+      "resolved": 1,
+      "critical": {
+        "n": 1,
+        "p50": 2595,
+        "p90": 2595,
+        "mean": 2595,
+        "max": 2595
+      },
+      "grammar": {
+        "n": 1,
+        "p50": 359,
+        "p90": 359,
+        "mean": 359,
+        "max": 359
+      },
+      "reading": {
+        "n": 1,
+        "p50": 1142,
+        "p90": 1142,
+        "mean": 1142,
+        "max": 1142
+      },
+      "draft": {
+        "n": 1,
+        "p50": 2234,
+        "p90": 2234,
+        "mean": 2234,
+        "max": 2234
+      }
+    },
+    "Phraseme/DiscourseFormula": {
+      "clicks": 1,
+      "resolved": 1,
+      "critical": {
+        "n": 1,
+        "p50": 1810,
+        "p90": 1810,
+        "mean": 1810,
+        "max": 1810
+      },
+      "grammar": {
+        "n": 1,
+        "p50": 331,
+        "p90": 331,
+        "mean": 331,
+        "max": 331
+      },
+      "reading": {
+        "n": 1,
+        "p50": 1356,
+        "p90": 1356,
+        "mean": 1356,
+        "max": 1356
+      },
+      "draft": {
+        "n": 1,
+        "p50": 1478,
+        "p90": 1478,
+        "mean": 1478,
+        "max": 1478
+      }
+    },
+    "Lexeme/X": {
+      "clicks": 1,
+      "resolved": 0,
+      "critical": {
+        "n": 1,
+        "p50": 316,
+        "p90": 316,
+        "mean": 316,
+        "max": 316
+      },
+      "grammar": {
+        "n": 1,
+        "p50": 316,
+        "p90": 316,
+        "mean": 316,
+        "max": 316
+      },
+      "reading": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null,
+        "max": null
+      },
+      "draft": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null,
+        "max": null
+      }
+    },
+    "unclassified": {
+      "clicks": 1,
+      "resolved": 0,
+      "critical": {
+        "n": 1,
+        "p50": 357,
+        "p90": 357,
+        "mean": 357,
+        "max": 357
+      },
+      "grammar": {
+        "n": 1,
+        "p50": 0,
+        "p90": 0,
+        "mean": 0,
+        "max": 0
+      },
+      "reading": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null,
+        "max": null
+      },
+      "draft": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null,
+        "max": null
+      }
+    },
+    "Phraseme/Collocation": {
+      "clicks": 1,
+      "resolved": 1,
+      "critical": {
+        "n": 1,
+        "p50": 3817,
+        "p90": 3817,
+        "mean": 3817,
+        "max": 3817
+      },
+      "grammar": {
+        "n": 1,
+        "p50": 375,
+        "p90": 375,
+        "mean": 375,
+        "max": 375
+      },
+      "reading": {
+        "n": 1,
+        "p50": 1264,
+        "p90": 1264,
+        "mean": 1264,
+        "max": 1264
+      },
+      "draft": {
+        "n": 1,
+        "p50": 3440,
+        "p90": 3440,
+        "mean": 3440,
+        "max": 3440
+      }
+    }
+  },
+  "followUps": {
+    "all": {
+      "grammar.text": "13/77",
+      "grammar.lexicalStrings": "0/77",
+      "grammar.nounCase": "0/77",
+      "grammar.authoredIdentity": "6/77",
+      "reading.authoredChoice": "0/77",
+      "reading.compare": "0/77",
+      "reading.generate": "59/77"
+    },
+    "byRoute": {
+      "Lexeme/DET": {
+        "grammar.authoredIdentity": "2/6"
+      },
+      "Lexeme/ADP": {
+        "grammar.text": "1/6",
+        "reading.generate": "6/6"
+      },
+      "Lexeme/NUM": {
+        "reading.generate": "2/2"
+      },
+      "Lexeme/NOUN": {
+        "grammar.text": "2/20",
+        "reading.generate": "16/20"
+      },
+      "Lexeme/VERB": {
+        "grammar.text": "9/15",
+        "reading.generate": "15/15"
+      },
+      "Lexeme/PRON": {
+        "grammar.authoredIdentity": "4/7",
+        "reading.generate": "1/7"
+      },
+      "Lexeme/ADV": {
+        "reading.generate": "10/11"
+      },
+      "Phraseme/Idiom": {
+        "reading.generate": "1/1"
+      },
+      "Lexeme/ADJ": {
+        "grammar.text": "1/4",
+        "reading.generate": "4/4"
+      },
+      "Phraseme/DiscourseFormula": {
+        "reading.generate": "1/1"
+      },
+      "Lexeme/PROPN": {
+        "reading.generate": "2/2"
+      },
+      "Lexeme/X": {},
+      "Phraseme/Collocation": {
+        "reading.generate": "1/1"
+      }
+    },
+    "grammarTextStages": {
+      "generateCanonicalForm": 13
+    },
+    "draftCallsPerResolvedClick": 3.38
+  },
+  "stageStats": [
+    {
+      "stage": "grammar.features",
+      "calls": 77,
+      "failures": 0,
+      "p50Ms": 335,
+      "p90Ms": 403,
+      "meanMs": 344,
+      "maxMs": 615,
+      "meanQuestions": 15.9,
+      "meanInputTokens": 3963,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 0,
+      "costUsd": 0.01282
+    },
+    {
+      "stage": "reading.generate",
+      "calls": 66,
+      "failures": 5,
+      "p50Ms": 1264,
+      "p90Ms": 1594,
+      "meanMs": 1294,
+      "maxMs": 3435,
+      "meanQuestions": null,
+      "meanInputTokens": 1956,
+      "meanCachedTokens": 1922,
+      "meanOutputTokens": 9,
+      "costUsd": 0.00731,
+      "providerMsP50": 1010,
+      "serviceTiers": [
+        "priority"
+      ]
+    },
+    {
+      "stage": "draft.definition",
+      "calls": 59,
+      "failures": 0,
+      "p50Ms": 1182,
+      "p90Ms": 1512,
+      "meanMs": 1224,
+      "maxMs": 2070,
+      "meanQuestions": null,
+      "meanInputTokens": 255,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 24,
+      "costUsd": 0.00948,
+      "providerMsP50": 945,
+      "serviceTiers": [
+        "priority"
+      ]
+    },
+    {
+      "stage": "draft.translations.en",
+      "calls": 59,
+      "failures": 0,
+      "p50Ms": 1310,
+      "p90Ms": 1673,
+      "meanMs": 1401,
+      "maxMs": 3434,
+      "meanQuestions": null,
+      "meanInputTokens": 273,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 15,
+      "costUsd": 0.00863,
+      "providerMsP50": 1068,
+      "serviceTiers": [
+        "priority"
+      ]
+    },
+    {
+      "stage": "draft.translations.ru",
+      "calls": 59,
+      "failures": 0,
+      "p50Ms": 1014,
+      "p90Ms": 1488,
+      "meanMs": 1128,
+      "maxMs": 2946,
+      "meanQuestions": null,
+      "meanInputTokens": 273,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 17,
+      "costUsd": 0.0088,
+      "providerMsP50": 768,
+      "serviceTiers": [
+        "priority"
+      ]
+    },
+    {
+      "stage": "draft.transcription",
+      "calls": 59,
+      "failures": 0,
+      "p50Ms": 1080,
+      "p90Ms": 1618,
+      "meanMs": 1172,
+      "maxMs": 2226,
+      "meanQuestions": null,
+      "meanInputTokens": 143,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 22,
+      "costUsd": 0.00647,
+      "providerMsP50": 821,
+      "serviceTiers": [
+        "priority"
+      ]
+    },
+    {
+      "stage": "intake.analyze",
+      "calls": 48,
+      "failures": 3,
+      "p50Ms": 422,
+      "p90Ms": 555,
+      "meanMs": 423,
+      "maxMs": 782,
+      "meanQuestions": 78.3,
+      "meanInputTokens": 17016,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 0,
+      "costUsd": 0.03431
+    },
+    {
+      "stage": "reading.compare",
+      "calls": 30,
+      "failures": 0,
+      "p50Ms": 323,
+      "p90Ms": 394,
+      "meanMs": 331,
+      "maxMs": 490,
+      "meanQuestions": 1,
+      "meanInputTokens": 643,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 0,
+      "costUsd": 0.00081
+    },
+    {
+      "stage": "intake.segment",
+      "calls": 16,
+      "failures": 0,
+      "p50Ms": 408,
+      "p90Ms": 483,
+      "meanMs": 420,
+      "maxMs": 488,
+      "meanQuestions": 3,
+      "meanInputTokens": 650,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 0,
+      "costUsd": 0.00044
+    },
+    {
+      "stage": "grammar.text",
+      "calls": 13,
+      "failures": 0,
+      "p50Ms": 970,
+      "p90Ms": 1105,
+      "meanMs": 1054,
+      "maxMs": 2111,
+      "meanQuestions": null,
+      "meanInputTokens": 269,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 17,
+      "costUsd": 0.00193,
+      "providerMsP50": 736,
+      "serviceTiers": [
+        "priority"
+      ]
+    },
+    {
+      "stage": "click.classify",
+      "calls": 10,
+      "failures": 0,
+      "p50Ms": 325,
+      "p90Ms": 355,
+      "meanMs": 334,
+      "maxMs": 385,
+      "meanQuestions": 7.8,
+      "meanInputTokens": 3492,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 0,
+      "costUsd": 0.00147
+    },
+    {
+      "stage": "grammar.authoredIdentity",
+      "calls": 6,
+      "failures": 0,
+      "p50Ms": 274,
+      "p90Ms": 440,
+      "meanMs": 308,
+      "maxMs": 440,
+      "meanQuestions": 1,
+      "meanInputTokens": 815,
+      "meanCachedTokens": 0,
+      "meanOutputTokens": 0,
+      "costUsd": 0.00021
+    }
+  ],
+  "failureModes": [
+    {
+      "stage": "reading:InvalidModelOutput",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Emoji Description must contain one to four emoji graphemes\"\n  }\n]",
+      "count": 5,
+      "examples": "ausweg#6 \"Ausweg\" Lexeme/NOUN [Ausweg]; genitiv#4 \"des\" Lexeme/ADP [des]; museum#8 \"am\" Lexeme/ADP [am]; relativ#5 \"die\" Lexeme/PRON [die]"
+    },
+    {
+      "stage": "grammar:Unresolved",
+      "message": "Unresolved applicable question support",
+      "count": 3,
+      "examples": "museum#6 \"z.B.\" Lexeme/ADV [z.B.]; typo#0 \"Ihc\" Lexeme/X [Ihc]; verfuegung#6 \"den\" Lexeme/NOUN [den]"
+    },
+    {
+      "stage": "grammar:Unresolved",
+      "message": "Applicable grammatical answers do not compose into a legal analysis",
+      "count": 3,
+      "examples": "usw#4 \"Obst\" Lexeme/NOUN [Obst]; usw#7 \"Gemüse\" Lexeme/NOUN [Gemüse]; verfuegung#10 \"Material\" Lexeme/NOUN [Material]"
+    },
+    {
+      "stage": "grammar:Unresolved",
+      "message": "Unresolved applicable question lemma.coreFeatures.referenceNumber",
+      "count": 2,
+      "examples": "manche#0 \"Manche\" Lexeme/PRON [Manche]; manche#7 \"viele\" Lexeme/PRON [viele]"
+    },
+    {
+      "stage": "classify:Unresolved",
+      "message": "Assembled target is not defensible",
+      "count": 1,
+      "examples": "usw#9 \"usw.\"  []"
+    }
+  ],
+  "callFailures": [
+    {
+      "label": "intake.analyze",
+      "scopeId": "1be1f1c6-83cc-4082-badd-9307d00e6600",
+      "failure": "Connection error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()"
+    },
+    {
+      "label": "intake.analyze",
+      "scopeId": "c1#0:c63208b6-0ca1-45c8-9ddb-99153effbfbd",
+      "failure": "Connection error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()"
+    },
+    {
+      "label": "intake.analyze",
+      "scopeId": "c1#0:08c68e05-6fbe-4b5c-a30c-70ace5eb7f40",
+      "failure": "Connection error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()"
+    },
+    {
+      "label": "reading.generate",
+      "scopeId": "relativ#5",
+      "failure": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Emoji Description must contain one to four emoji graphemes\"\n  }\n]"
+    },
+    {
+      "label": "reading.generate",
+      "scopeId": "genitiv#4",
+      "failure": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Emoji Description must contain one to four emoji graphemes\"\n  }\n]"
+    },
+    {
+      "label": "reading.generate",
+      "scopeId": "ausweg#6",
+      "failure": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Emoji Description must contain one to four emoji graphemes\"\n  }\n]"
+    },
+    {
+      "label": "reading.generate",
+      "scopeId": "typo#4",
+      "failure": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Emoji Description must contain one to four emoji graphemes\"\n  }\n]"
+    },
+    {
+      "label": "reading.generate",
+      "scopeId": "museum#8",
+      "failure": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Emoji Description must contain one to four emoji graphemes\"\n  }\n]"
+    }
+  ],
+  "draftFailures": [],
+  "coverage": {
+    "analysis": 68,
+    "classified": 10,
+    "fallbackReasons": {
+      "clickedNotMember": "kino#6 \"ins\", museum#8 \"am\"",
+      "noAnalysis": "usw#0 \"Anna\", usw#11 \"auf\", usw#13 \"dem\", usw#15 \"Markt\", usw#2 \"kauft\", usw#4 \"Obst\", usw#7 \"Gemüse\", usw#9 \"usw.\""
+    },
+    "targetMatchesGold": {
+      "analysis": "58/68",
+      "classified": "7/10"
+    },
+    "goldMismatches": [
+      "fremd#6 analysis: got [very] ADV, gold [very] X",
+      "fremd#8 analysis: got [good] ADJ, gold [good] X",
+      "genitiv#4 analysis: got [des] ADP, gold [des Nachbarn] NOUN",
+      "genitiv#6 analysis: got [Nachbarn] NOUN, gold [des Nachbarn] NOUN",
+      "manche#11 analysis: got [spät] ADV, gold [spät] ADJ",
+      "manche#4 analysis: got [früh] ADV, gold [früh] ADJ",
+      "museum#10 analysis: got [Montag] PROPN, gold [Montag] NOUN",
+      "typo#0 analysis: got [Ihc] X, gold [Ihc] PRON",
+      "usw#11 classified: got [auf dem Markt] ADP, gold [auf] ADP",
+      "usw#13 classified: got [dem Markt] DET, gold [dem Markt] NOUN",
+      "usw#9 classified: got [-] -, gold [usw.] ADV",
+      "verfuegung#6 analysis: got [den] NOUN, gold [den Schülern] NOUN",
+      "verfuegung#8 analysis: got [Schülern] NOUN, gold [den Schülern] NOUN"
+    ]
+  },
+  "concurrencyEffect": {
+    "grammar.features": {
+      "2-4": {
+        "n": 21,
+        "p50": 328,
+        "p90": 376,
+        "mean": 335,
+        "max": 455
+      },
+      "5-8": {
+        "n": 25,
+        "p50": 343,
+        "p90": 412,
+        "mean": 357,
+        "max": 615
+      },
+      "9+": {
+        "n": 31,
+        "p50": 328,
+        "p90": 379,
+        "mean": 340,
+        "max": 432
+      }
+    },
+    "reading.generate": {
+      "0-1": {
+        "n": 1,
+        "p50": 1050,
+        "p90": 1050,
+        "mean": 1050,
+        "max": 1050
+      },
+      "2-4": {
+        "n": 8,
+        "p50": 862,
+        "p90": 1594,
+        "mean": 1053,
+        "max": 1594
+      },
+      "5-8": {
+        "n": 15,
+        "p50": 1352,
+        "p90": 1566,
+        "mean": 1344,
+        "max": 1850
+      },
+      "9+": {
+        "n": 42,
+        "p50": 1264,
+        "p90": 1617,
+        "mean": 1328,
+        "max": 3435
+      }
+    },
+    "draft.definition": {
+      "5-8": {
+        "n": 11,
+        "p50": 1172,
+        "p90": 1419,
+        "mean": 1181,
+        "max": 1701
+      },
+      "9+": {
+        "n": 48,
+        "p50": 1182,
+        "p90": 1512,
+        "mean": 1234,
+        "max": 2070
+      }
+    },
+    "draft.transcription": {
+      "5-8": {
+        "n": 11,
+        "p50": 1128,
+        "p90": 1850,
+        "mean": 1240,
+        "max": 1854
+      },
+      "9+": {
+        "n": 48,
+        "p50": 1068,
+        "p90": 1516,
+        "mean": 1157,
+        "max": 2226
+      }
+    },
+    "click.classify": {
+      "2-4": {
+        "n": 2,
+        "p50": 288,
+        "p90": 325,
+        "mean": 307,
+        "max": 325
+      },
+      "5-8": {
+        "n": 3,
+        "p50": 330,
+        "p90": 355,
+        "mean": 336,
+        "max": 355
+      },
+      "9+": {
+        "n": 5,
+        "p50": 343,
+        "p90": 385,
+        "mean": 344,
+        "max": 385
+      }
+    },
+    "intake.analyze": {
+      "0-1": {
+        "n": 18,
+        "p50": 402,
+        "p90": 532,
+        "mean": 400,
+        "max": 782
+      },
+      "2-4": {
+        "n": 30,
+        "p50": 424,
+        "p90": 555,
+        "mean": 436,
+        "max": 580
+      }
+    }
+  },
+  "pass2": {
+    "withOwn": {
+      "runs": 20,
+      "pickedOwn": 18,
+      "pickedDistractor": 0,
+      "generatedNew": 1,
+      "failed": [
+        "typo#2: Generated Reading collides with a candidate rejected by TypeSafe"
+      ],
+      "readingMs": {
+        "n": 20,
+        "p50": 326,
+        "p90": 495,
+        "mean": 429,
+        "max": 1276
+      },
+      "compositeCriticalPathMs": {
+        "n": 20,
+        "p50": 692,
+        "p90": 2078,
+        "mean": 1068,
+        "max": 2763
+      }
+    },
+    "distractorsOnly": {
+      "runs": 10,
+      "noMatchThenGenerated": 5,
+      "wronglyReused": 5,
+      "failed": [],
+      "readingMs": {
+        "n": 10,
+        "p50": 350,
+        "p90": 1374,
+        "mean": 842,
+        "max": 1902
+      },
+      "compositeCriticalPathMs": {
+        "n": 10,
+        "p50": 1630,
+        "p90": 3817,
+        "mean": 2067,
+        "max": 4108
+      }
+    },
+    "compareCall": {
+      "n": 30,
+      "p50": 323,
+      "p90": 394,
+      "mean": 331,
+      "max": 490
+    },
+    "generateAfterCompare": {
+      "n": 7,
+      "p50": 862,
+      "p90": 1594,
+      "mean": 987,
+      "max": 1594
+    }
+  },
+  "waterfalls": [
+    "passiv#8 \"geliefert\" Lexeme/VERB analysis Resolved New critical 4054 ms\n  grammar.features               1 +  615 ms |######\n  grammar.text                 616 + 2111 ms |      #####################\n  reading.generate            2739 + 1186 ms |                           ############\n  draft.transcription         2740 +  955 ms |                           #########\n  draft.definition            2740 + 1124 ms |                           ###########\n  draft.translations.ru       2740 + 1154 ms |                           ###########\n  draft.translations.en       2740 + 1314 ms |                           #############",
+    "verfuegung#4 \"stellt\" Phraseme/Collocation analysis Resolved New critical 3817 ms\n  grammar.features              10 +  365 ms |####\n  reading.generate             383 + 1258 ms |    #############\n  draft.transcription          383 + 1044 ms |    ###########\n  draft.definition             383 + 1377 ms |    ##############\n  draft.translations.en        383 + 3434 ms |    ####################################\n  draft.translations.ru        384 + 1682 ms |    ##################",
+    "kino#4 \"heute\" Lexeme/ADV analysis Resolved New critical 3771 ms\n  grammar.features               2 +  324 ms |###\n  reading.generate             335 + 3435 ms |    ####################################\n  draft.transcription          336 +  909 ms |    ##########\n  draft.translations.ru        336 +  909 ms |    ##########\n  draft.definition             336 +  965 ms |    ##########\n  draft.translations.en        336 + 1075 ms |    ###########",
+    "usw#2 \"kauft\" Lexeme/VERB classified Resolved New critical 3533 ms\n  click.classify                 2 +  343 ms |####\n  grammar.features             346 +  352 ms |    ####\n  grammar.text                 698 +  981 ms |        ###########\n  reading.generate            1683 + 1850 ms |                   #####################\n  draft.definition            1684 +  833 ms |                   #########\n  draft.translations.ru       1684 +  942 ms |                   ###########\n  draft.transcription         1684 + 1127 ms |                   #############\n  draft.translations.en       1684 + 1509 ms |                   #################",
+    "usw#0 \"Anna\" Lexeme/PROPN classified Resolved New critical 3500 ms\n  click.classify                 1 +  330 ms |####\n  grammar.features             334 +  345 ms |    ####\n  reading.generate             686 + 1439 ms |        ################\n  draft.transcription          686 +  904 ms |        ##########\n  draft.translations.ru        686 +  982 ms |        ###########\n  draft.definition             686 + 1204 ms |        ##############\n  draft.translations.en        686 + 2815 ms |        ################################",
+    "klitik#8 \"heute\" Lexeme/ADV analysis Resolved New critical 3281 ms\n  grammar.features               2 +  324 ms |####\n  reading.generate             335 + 1342 ms |    ################\n  draft.transcription          335 + 1306 ms |    ################\n  draft.translations.en        335 + 1365 ms |    #################\n  draft.definition             335 + 1503 ms |    ##################\n  draft.translations.ru        335 + 2946 ms |    ####################################"
+  ]
+}

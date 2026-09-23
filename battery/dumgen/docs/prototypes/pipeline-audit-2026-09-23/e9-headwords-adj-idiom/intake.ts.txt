@@ -1,0 +1,463 @@
+/**
+ * E9 copy of prototypes/audit/e7-intake-headwords/intake.ts. Changes: E9
+ * cases (adds the hard held-out set), E9 ledger/cap, a billing stop on the
+ * headword call, and a `clicks` field per case: for every case member, the
+ * unit tf-demo would select on a click (click-select.ts, i.e. resolvedUnitAt
+ * on the stored analysis) and the intake proposal made for that unit. The
+ * prompt, target listing, parser and strict executor are E7's, unchanged.
+ *
+ * E7 intake phase. For every unique case sentence:
+ *   1. segmentSentence (no model call) and analyzeSentence, both unmodified
+ *      src, live jev;
+ *   2. the intake headword call (one Luna request, cached system prompt) over
+ *      every listed Lexeme/Phraseme target of the analysis;
+ *   3. each case on that sentence is mapped to the analysis unit whose words
+ *      equal the case's target words (Lexeme cases against Lexeme targets,
+ *      Phraseme cases against Phraseme targets) and whose Kind equals the
+ *      case route; only such an exact match yields a proposal.
+ * Appends one JSON line per sentence to results/intake-<label>.jsonl.
+ *
+ *   bun --env-file=/Users/annagorelova/work/textfresser-batteries/.env.local \
+ *     prototypes/audit/e7-intake-headwords/intake.ts --corpora heldout,verb --label main --stop-at 0.2
+ */
+import { appendFileSync, existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { parseArgs } from "node:util";
+import * as Effect from "effect/Effect";
+import { selectPhrasemeKind, effectiveRoute } from "../../../src/concrete-lang/de/sentence-analysis/analysis.js";
+import { createDumgen } from "../../../src/index.js";
+import type {
+	OperationTrace,
+	SegmentedSentence,
+	SentenceAnalysis,
+} from "../../../src/types.js";
+import { type Case, type CorpusName, loadCases } from "./cases.js";
+import { type Click, segmentIndexAt, selectClick } from "./click-select.js";
+import {
+	type IntakeTarget,
+	intakeInput,
+	intakeOutputSchema,
+	intakeSystemPrompt,
+	intakeTargets,
+	parseProposals,
+} from "../e7-intake-headwords/intake-prompt.js";
+import { strictLuna } from "../e7-intake-headwords/luna-strict.js";
+import {
+	type MeteredCall,
+	billing,
+	lunaUsage,
+	meteredOptions,
+	noteBillingFailure,
+	pool,
+	rawLuna,
+	resultsDir,
+	Spend,
+} from "./lib.js";
+
+const { values: args } = parseArgs({
+	options: {
+		corpora: { type: "string", default: "heldout" },
+		label: { type: "string", default: "run" },
+		limit: { type: "string" },
+		cases: { type: "string" },
+		"stop-at": { type: "string", default: "0.05" },
+		concurrency: { type: "string", default: "4" },
+		/** strict: local strict-schema executor (luna-strict.ts); promptsmith: createOpenAIExecutor. */
+		executor: { type: "string", default: "strict" },
+		/** Reuse segmentation + analysis from intake-<label>.jsonl; only the headword call runs. */
+		reuse: { type: "string" },
+		/**
+		 * Oracle-target mode (budget fallback): no segmentation or analysis; the
+		 * headword call lists only the case's own target (route and members from
+		 * the corpus). Mapping status is "oracle". Measures proposal precision and
+		 * click-time behaviour assuming intake produced the corpus target.
+		 */
+		oracle: { type: "boolean", default: false },
+	},
+});
+const spend = new Spend("intake.ts", args.label as string, Number(args["stop-at"]));
+const outPath = resolve(resultsDir, `intake-${args.label}.jsonl`);
+
+const names = (args.corpora as string).split(",") as CorpusName[];
+let cases = loadCases(names);
+if (args.cases) {
+	const wanted = new Set((args.cases as string).split(","));
+	cases = cases.filter((item) => wanted.has(item.caseId));
+}
+// Skip sentences already analysed under this label (resumable).
+const done = new Set<string>();
+if (existsSync(outPath))
+	for (const line of readFileSync(outPath, "utf8").split("\n"))
+		if (line.trim()) done.add((JSON.parse(line) as { text: string }).text);
+const byText = new Map<string, Case[]>();
+for (const item of cases) {
+	if (done.has(item.text)) continue;
+	byText.set(item.text, [...(byText.get(item.text) ?? []), item]);
+}
+let sentences = [...byText.entries()];
+if (args.limit) sentences = sentences.slice(0, Number(args.limit));
+type StoredIntake = {
+	text: string;
+	sentence: SegmentedSentence<"de">;
+	analysis: SentenceAnalysis | null;
+	analyzeAttempts: unknown;
+	analyzeMs: number | null;
+	analyzeJev: unknown;
+	analyzeTraceCalls: unknown;
+};
+const reused = new Map<string, StoredIntake>();
+if (args.reuse)
+	for (const line of readFileSync(resolve(resultsDir, `intake-${args.reuse}.jsonl`), "utf8").split("\n"))
+		if (line.trim()) {
+			const stored = JSON.parse(line) as StoredIntake;
+			if (stored.analysis) reused.set(stored.text, stored);
+		}
+console.error(
+	`E7 intake ${args.label}: ${sentences.length} sentences (${cases.length} cases, ${done.size} already done)`,
+);
+
+const lunaConfiguration = {
+	model: "gpt-5.6-luna",
+	settings: { reasoning: { effort: "none" }, service_tier: "fast" },
+};
+
+function chunks(text: string) {
+	return [...text.matchAll(/\S+/gu)].map((match) => ({
+		start: match.index as number,
+		end: (match.index as number) + match[0].length,
+		text: match[0],
+	}));
+}
+function wordIndex(text: string, offset: number): number {
+	return chunks(text).findIndex(
+		(chunk) => offset >= chunk.start && offset < chunk.end,
+	);
+}
+const key = (words: number[]) => [...new Set(words)].sort((a, b) => a - b).join(",");
+
+function mapCase(
+	item: Case,
+	analysis: SentenceAnalysis,
+	listed: IntakeTarget[],
+	proposals: Map<number, string | null> | null,
+) {
+	const caseKey = key(item.memberOffsets.map((offset) => wordIndex(item.text, offset)));
+	type Unit = { id: string; layer: string; kind: string; words: string; n?: number };
+	const units: Unit[] = [];
+	for (const target of analysis.targets)
+		units.push({
+			id: target.id,
+			layer: "Lexeme",
+			kind: effectiveRoute(target).kind,
+			words: key(target.members.map((m) => wordIndex(item.text, m.offset))),
+		});
+	for (const phraseme of analysis.phrasemes) {
+		const offsets = phraseme.members.flatMap(
+			(id) =>
+				analysis.targets
+					.find((target) => target.id === id)
+					?.members.map((member) => member.offset) ?? [],
+		);
+		units.push({
+			id: phraseme.id,
+			layer: "Phraseme",
+			kind: selectPhrasemeKind(phraseme).kind,
+			words: key(offsets.map((offset) => wordIndex(item.text, offset))),
+		});
+	}
+	for (const unit of units)
+		unit.n = listed.find((target) => target.id === unit.id)?.n;
+	const sameLayer = units.filter((unit) => unit.layer === item.family);
+	const sameWords = sameLayer.filter((unit) => unit.words === caseKey);
+	const exact = sameWords.find((unit) => unit.kind === item.kind && unit.n !== undefined);
+	const caseWords = new Set(caseKey.split(","));
+	const overlapping = units
+		.filter((unit) => unit.words.split(",").some((word) => caseWords.has(word)))
+		.map((unit) => ({ id: unit.id, layer: unit.layer, kind: unit.kind, words: unit.words }));
+	const status = exact
+		? "exact"
+		: sameWords.length
+			? `membersOnly:${sameWords.map((unit) => unit.kind).join("|")}`
+			: "none";
+	const proposal =
+		exact && proposals ? (proposals.get(exact.n as number) ?? null) : null;
+	return {
+		caseId: item.caseId,
+		corpus: item.corpus,
+		kind: item.kind,
+		gold: item.gold,
+		caseWords: caseKey,
+		status,
+		unitId: exact?.id ?? null,
+		unitN: exact?.n ?? null,
+		proposal,
+		proposalCorrect: proposal !== null && item.gold !== null ? proposal === item.gold : null,
+		overlapping,
+	};
+}
+
+async function intakeSentence([text, items]: [string, Case[]]) {
+	if (!spend.allows()) return { skipped: true };
+	const calls: MeteredCall[] = [];
+	const traces: OperationTrace[] = [];
+	const options = meteredOptions(spend, text, calls, {
+		onOperation: (trace) => traces.push(trace),
+	});
+	if (args.oracle) return oracleSentence(text, items);
+	const stored = reused.get(text);
+	let base: Record<string, unknown> & { analyzeMs?: number | null };
+	let analysis: SentenceAnalysis | null = null;
+	if (args.reuse) {
+		if (!stored) return { skipped: true, reason: "no stored analysis" };
+		analysis = stored.analysis;
+		base = {
+			text,
+			caseIds: items.map((item) => item.caseId),
+			sentence: stored.sentence,
+			analysis,
+			analysisReusedFrom: args.reuse,
+			analyzeAttempts: stored.analyzeAttempts,
+			analyzeMs: stored.analyzeMs,
+			analyzeJev: stored.analyzeJev,
+			analyzeTraceCalls: stored.analyzeTraceCalls,
+		};
+	} else {
+		const dumgen = createDumgen(options);
+		const segmented = await Effect.runPromise(
+			Effect.either(dumgen.segmentSentence({ language: "de", stitchedText: text })),
+		);
+		if (segmented._tag === "Left") {
+			const record = { text, failure: { stage: "segment", error: String(segmented.left) } };
+			appendFileSync(outPath, `${JSON.stringify(record)}\n`);
+			return record;
+		}
+		const sentence = segmented.right as SegmentedSentence<"de">;
+		const attempts: { ms: number; ok: boolean; error?: string }[] = [];
+		for (let attempt = 0; attempt < 2 && !analysis; attempt++) {
+			const started = performance.now();
+			const result = await Effect.runPromise(
+				Effect.either(dumgen.analyzeSentence({ sentence })),
+			);
+			const ms = performance.now() - started;
+			if (result._tag === "Right") {
+				analysis = result.right as SentenceAnalysis;
+				attempts.push({ ms, ok: true });
+			} else {
+				const error = result.left as { _tag?: string; message?: string };
+				attempts.push({ ms, ok: false, error: `${error._tag}: ${error.message}` });
+				if (error._tag !== "ProviderFailure") break;
+			}
+		}
+		const analyzeCalls = calls.filter((call) => call.executor === "jev");
+		base = {
+			text,
+			caseIds: items.map((item) => item.caseId),
+			sentence,
+			analysis,
+			analyzeAttempts: attempts,
+			analyzeMs: attempts.at(-1)?.ok ? attempts.at(-1)?.ms : null,
+			analyzeJev: {
+				calls: analyzeCalls.length,
+				inputTokens: analyzeCalls.reduce((sum, call) => sum + call.inputTokens, 0),
+				costUsd: analyzeCalls.reduce((sum, call) => sum + call.costUsd, 0),
+			},
+			analyzeTraceCalls: traces
+				.filter((trace) => trace.operation === "analyzeSentence")
+				.flatMap((trace) => trace.calls.map((call) => ({ durationMs: call.durationMs, transport: call.transport }))),
+		};
+	}
+	if (!analysis) {
+		const record = { ...base, failure: { stage: "analyze" }, cases: items.map((item) => mapCaseMissing(item)) };
+		appendFileSync(outPath, `${JSON.stringify(record)}\n`);
+		return record;
+	}
+	const { listed, skipped } = intakeTargets(analysis);
+	const input = intakeInput({ ...analysis, stitchedText: text }, listed);
+	const headwordAttempts: {
+		ms: number;
+		ok: boolean;
+		executor?: string;
+		rawText?: string;
+		error?: string;
+		output?: unknown;
+		usage?: ReturnType<typeof lunaUsage>;
+		timing?: unknown;
+	}[] = [];
+	let proposals: Map<number, string | null> | null = null;
+	if (listed.length) {
+		for (let attempt = 0; attempt < 2 && !proposals; attempt++) {
+			if (attempt > 0 && !spend.allows()) break;
+			const started = performance.now();
+			try {
+				const response: { output: unknown; metadata?: unknown; rawText?: string } =
+					args.executor === "promptsmith"
+						? await rawLuna({
+								stage: "intakeHeadwords",
+								route: "de/intake/headwords",
+								systemPrompt: intakeSystemPrompt,
+								input,
+								outputSchema: intakeOutputSchema as never,
+								cachePrompt: true,
+								configuration: lunaConfiguration,
+								signal: AbortSignal.timeout(20000),
+							} as never)
+						: await strictLuna({
+								systemPrompt: intakeSystemPrompt,
+								input,
+								outputSchema: intakeOutputSchema as never,
+								configuration: lunaConfiguration,
+								signal: AbortSignal.timeout(20000),
+							});
+				const ms = performance.now() - started;
+				const usage = lunaUsage(response.metadata);
+				spend.spent += usage.costUsd;
+				spend.lunaCalls++;
+				try {
+					proposals = parseProposals(response.output, listed);
+					headwordAttempts.push({ ms, ok: true, executor: args.executor, output: response.output, rawText: response.rawText, usage, timing: (response.metadata as { timing?: unknown })?.timing });
+				} catch (error) {
+					headwordAttempts.push({ ms, ok: false, executor: args.executor, error: `invalid: ${(error as Error).message}`, output: response.output, rawText: response.rawText, usage });
+					break; // an invalid answer is not retried
+				}
+			} catch (error) {
+				noteBillingFailure(error);
+				headwordAttempts.push({ ms: performance.now() - started, ok: false, error: `transport: ${(error as Error).message}` });
+				if (billing.failure) break;
+			}
+		}
+	}
+	const record = {
+		...base,
+		listed,
+		skippedTargets: skipped,
+		intakeInput: input,
+		headwordAttempts,
+		headwordMs: headwordAttempts.at(-1)?.ok ? headwordAttempts.at(-1)?.ms : null,
+		proposals: proposals ? Object.fromEntries(proposals) : null,
+		cases: items.map((item) => ({
+			...mapCase(item, analysis as SentenceAnalysis, listed, proposals),
+			clicks: clicksOf(item, base.sentence as SegmentedSentence<"de">, analysis as SentenceAnalysis, listed, proposals),
+		})),
+	};
+	appendFileSync(outPath, `${JSON.stringify(record)}\n`);
+	console.error(
+		`  ${items[0]?.caseId}: ${listed.length} targets, analyze ${Math.round((base.analyzeMs as number | null) ?? -1)} ms, headword ${Math.round(record.headwordMs ?? -1)} ms, ${record.cases.map((c) => `${c.status}:${c.proposal}${c.gold ? `/${c.gold}` : ""}`).join(" ")}  $${spend.total().toFixed(4)}`,
+	);
+	return record;
+}
+async function oracleSentence(text: string, items: Case[]) {
+	const records = [];
+	for (const item of items) {
+		if (!spend.allows()) return { skipped: true };
+		const listed: IntakeTarget[] = [
+			{
+				n: 1,
+				layer: item.family,
+				id: "oracle",
+				family: item.family,
+				kind: item.kind,
+				offsets: item.memberOffsets,
+				members:
+					item.family === "Phraseme"
+						? item.members
+						: item.members.map((member) => `${member} [Unresolved]`),
+			},
+		];
+		const input = {
+			sentence: text,
+			targets: listed.map((target) => ({ target: target.n, route: `${target.family}/${target.kind}`, members: target.members })),
+		};
+		const started = performance.now();
+		let proposal: string | null = null;
+		const attempt: Record<string, unknown> = {};
+		try {
+			const response = await strictLuna({
+				systemPrompt: intakeSystemPrompt,
+				input,
+				outputSchema: intakeOutputSchema as never,
+				configuration: lunaConfiguration,
+				signal: AbortSignal.timeout(20000),
+			});
+			const usage = lunaUsage(response.metadata);
+			spend.spent += usage.costUsd;
+			spend.lunaCalls++;
+			Object.assign(attempt, { ms: performance.now() - started, output: response.output, rawText: response.rawText, usage, timing: response.metadata.timing });
+			proposal = parseProposals(response.output, listed).get(1) ?? null;
+			attempt.ok = true;
+		} catch (error) {
+			Object.assign(attempt, { ms: performance.now() - started, ok: false, error: (error as Error).message });
+		}
+		const record = {
+			text,
+			oracle: true,
+			caseIds: [item.caseId],
+			listed,
+			intakeInput: input,
+			headwordAttempts: [attempt],
+			headwordMs: attempt.ok ? attempt.ms : null,
+			proposals: attempt.ok ? { 1: proposal } : null,
+			cases: [
+				{
+					caseId: item.caseId,
+					corpus: item.corpus,
+					kind: item.kind,
+					gold: item.gold,
+					status: attempt.ok ? "oracle" : "oracleFailed",
+					unitId: "oracle",
+					unitN: 1,
+					proposal,
+					proposalCorrect: proposal !== null && item.gold !== null ? proposal === item.gold : null,
+				},
+			],
+		};
+		appendFileSync(outPath, `${JSON.stringify(record)}\n`);
+		console.error(`  ${item.caseId}: oracle ${Math.round(attempt.ms as number)} ms ${proposal} / ${item.gold}  $${spend.total().toFixed(4)}`);
+		records.push(record);
+	}
+	return records;
+}
+/** E9: the production click on every case member, with the proposal for the selected unit. */
+function clicksOf(
+	item: Case,
+	sentence: SegmentedSentence<"de">,
+	analysis: SentenceAnalysis,
+	listed: IntakeTarget[],
+	proposals: Map<number, string | null> | null,
+): (Click & { member: string; listedN: number | null; proposal: string | null })[] {
+	return item.memberOffsets.map((offset, index) => {
+		const click = selectClick(analysis, sentence, segmentIndexAt(sentence, offset));
+		const listedN = listed.find((target) => target.id === click.unitId)?.n ?? null;
+		return {
+			member: item.members[index] as string,
+			...click,
+			listedN,
+			proposal: listedN !== null && proposals ? (proposals.get(listedN) ?? null) : null,
+		};
+	});
+}
+function mapCaseMissing(item: Case) {
+	return { caseId: item.caseId, corpus: item.corpus, kind: item.kind, gold: item.gold, status: "noAnalysis", proposal: null, proposalCorrect: null };
+}
+
+const started = performance.now();
+const results = await pool(sentences, Number(args.concurrency), async (entry) => {
+	try {
+		return await intakeSentence(entry);
+	} catch (error) {
+		console.error("sentence crashed", entry[0], error);
+		return { crashed: true };
+	}
+});
+spend.commit();
+console.error(
+	JSON.stringify({
+		label: args.label,
+		sentences: sentences.length,
+		skipped: results.filter((r) => (r as { skipped?: boolean }).skipped).length,
+		spentThisRun: spend.spent,
+		total: spend.total(),
+		jevCalls: spend.jevCalls,
+		lunaCalls: spend.lunaCalls,
+		elapsedS: (performance.now() - started) / 1000,
+	}),
+);

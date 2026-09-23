@@ -1,0 +1,10 @@
+E5 original, all outputs: hits 186 misses 43 falseFlags 19 trueOk 1043  recall 0.812 precision 0.907  n=1291
+E11 corrected, all outputs: hits 205 misses 24 falseFlags 20 trueOk 1042  recall 0.895 precision 0.911  n=1291
+E5 original, distinct lines: hits 107 misses 26 falseFlags 11 trueOk 343  recall 0.805 precision 0.907  n=487
+E11 corrected, distinct lines: hits 117 misses 16 falseFlags 12 trueOk 342  recall 0.880 precision 0.907  n=487
+  E5 original on arm A: hits 177 misses 33 falseFlags 9
+  E5 original on arm W1: hits 8 misses 8 falseFlags 9
+  E5 original on arm W2: hits 1 misses 2 falseFlags 1
+  E11 corrected on arm A: hits 192 misses 18 falseFlags 6
+  E11 corrected on arm W1: hits 11 misses 5 falseFlags 13
+  E11 corrected on arm W2: hits 2 misses 1 falseFlags 1

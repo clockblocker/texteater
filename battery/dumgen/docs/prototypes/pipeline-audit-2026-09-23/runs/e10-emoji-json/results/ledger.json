@@ -1,0 +1,29 @@
+[
+  {
+    "script": "run",
+    "label": "pilot",
+    "startedAt": "2026-09-23T14:12:31.183Z",
+    "spentUsd": 0.005877160000000001,
+    "lunaCalls": 24,
+    "jevCalls": 0,
+    "finishedAt": "2026-09-23T14:12:43.352Z"
+  },
+  {
+    "script": "run",
+    "label": "main",
+    "startedAt": "2026-09-23T14:13:02.369Z",
+    "spentUsd": 0.3261178799999999,
+    "lunaCalls": 2567,
+    "jevCalls": 0,
+    "finishedAt": "2026-09-23T14:22:05.920Z"
+  },
+  {
+    "script": "run",
+    "label": "risky",
+    "startedAt": "2026-09-23T14:24:19.273Z",
+    "spentUsd": 0.0535528,
+    "lunaCalls": 420,
+    "jevCalls": 0,
+    "finishedAt": "2026-09-23T14:25:56.069Z"
+  }
+]
