@@ -6,7 +6,12 @@ const repositoryRoot = resolve(import.meta.dir, "../..");
 
 function plan(cwd: string, args: string[]) {
 	const result = Bun.spawnSync(
-		[resolve(repositoryRoot, "node_modules/.bin/turbo"), "run", ...args, "--dry=json"],
+		[
+			resolve(repositoryRoot, "node_modules/.bin/turbo"),
+			"run",
+			...args,
+			"--dry=json",
+		],
 		{
 			cwd,
 			env: { ...process.env, TURBO_TELEMETRY_DISABLED: "1" },
@@ -63,7 +68,10 @@ test("tf-demo development builds every in-house dependency before starting", () 
 
 test("a battery's build script builds its in-house dependencies first", () => {
 	const manifest = JSON.parse(
-		readFileSync(resolve(repositoryRoot, "battery/dumgen/package.json"), "utf8"),
+		readFileSync(
+			resolve(repositoryRoot, "battery/dumgen/package.json"),
+			"utf8",
+		),
 	) as { scripts: Record<string, string> };
 	expect(manifest.scripts.build).toBe("turbo run build:package");
 
