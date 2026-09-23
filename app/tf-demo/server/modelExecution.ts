@@ -6,6 +6,17 @@ import { createTypeSafeExecutor } from "promptsmith/typesafe";
 import type { InspectionCapture } from "./inspectionCapture";
 import type { GenerationEvent } from "./resolutionFailure";
 
+/**
+ * Bounds one Luna request so a provider stall settles as a ProviderFailure,
+ * never a retry (#445). Above the slowest recorded success (20.8 s).
+ */
+export const LUNA_DEADLINE_MS = 30_000;
+
+/** Test seam: the promptsmith transport and its deadline. */
+export type LunaTransport = Parameters<typeof createOpenAIExecutor>[0] & {
+	readonly deadlineMs?: number;
+};
+
 /** Model transport stays behind Dumgen's injected execution boundary. */
 export function createProductionDumgen(
 	onEvent?: (event: GenerationEvent) => void,
@@ -17,27 +28,46 @@ export function createProductionDumgen(
 		| "knowledgeDraft"
 	> = {},
 	inspection?: InspectionCapture,
+	transport?: LunaTransport,
 ) {
-	return createDumgen(productionOptions(onEvent, configuration, inspection));
+	return createDumgen(
+		productionOptions(onEvent, configuration, inspection, transport),
+	);
 }
 
 export function createProductionKnowledgeDraft(
 	input: Parameters<typeof draftKnowledge>[1],
 	inspection?: InspectionCapture,
+	transport?: LunaTransport,
 ) {
-	return draftKnowledge(productionOptions(undefined, {}, inspection), input);
+	return draftKnowledge(
+		productionOptions(undefined, {}, inspection, transport),
+		input,
+	);
 }
 
 function productionOptions(
 	onEvent: ((event: GenerationEvent) => void) | undefined,
 	configuration: Partial<DumgenOptions>,
 	inspection?: InspectionCapture,
+	{ deadlineMs = LUNA_DEADLINE_MS, ...transport }: LunaTransport = {},
 ): DumgenOptions {
-	const execute = createOpenAIExecutor();
+	const execute = createOpenAIExecutor(transport);
 	return {
 		...configuration,
 		judge: (request, options) => createTypeSafeExecutor()(request, options),
-		onOperation: (trace) => {
+		onOperation: (dumgenTrace) => {
+			// The deadline is host transport policy, so the host records it as evidence.
+			const trace = {
+				...dumgenTrace,
+				generationConfiguration: {
+					...dumgenTrace.generationConfiguration,
+					settings: {
+						...dumgenTrace.generationConfiguration.settings,
+						deadlineMs,
+					},
+				},
+			};
 			inspection?.operation(trace);
 			onEvent?.({
 				kind: "TraceRecorded",
@@ -67,10 +97,25 @@ function productionOptions(
 				);
 			}
 		},
-		execute: async (request) =>
-			await execute({
-				...request,
-				configuration: configurationSchema.parse(request.configuration),
-			}),
+		execute: async (request) => {
+			// Dumgen keys its call graph on request.signal, so only the transport sees the deadline.
+			const deadline = AbortSignal.timeout(deadlineMs);
+			try {
+				return await execute({
+					...request,
+					configuration: configurationSchema.parse(
+						request.configuration,
+					),
+					signal: AbortSignal.any([request.signal, deadline]),
+				});
+			} catch (error) {
+				if (deadline.aborted && !request.signal.aborted)
+					throw Error(
+						`LunaDeadlineExceeded: no response within ${deadlineMs} ms`,
+						{ cause: error },
+					);
+				throw error;
+			}
+		},
 	};
 }
