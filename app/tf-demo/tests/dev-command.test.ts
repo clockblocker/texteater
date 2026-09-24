@@ -13,16 +13,21 @@ test("dev reports how to stop the process occupying the Convex port", async () =
 		) as { scripts: { "dev:package": string } };
 		const convexExecutable = join(fixtureDirectory, "convex");
 		const lsofExecutable = join(fixtureDirectory, "lsof");
+		// The env sync runs `npx convex env set`; stub it so the test never
+		// writes to the developer's running deployment.
+		const npxExecutable = join(fixtureDirectory, "npx");
 		await Promise.all([
 			writeFile(
 				convexExecutable,
 				'#!/bin/sh\nprintf "%s\\n" "A local backend is still running on port 3210." >&2\nexit 1\n',
 			),
 			writeFile(lsofExecutable, '#!/bin/sh\nprintf "%s\\n" "4242"\n'),
+			writeFile(npxExecutable, "#!/bin/sh\nexit 0\n"),
 		]);
 		await Promise.all([
 			chmod(convexExecutable, 0o755),
 			chmod(lsofExecutable, 0o755),
+			chmod(npxExecutable, 0o755),
 		]);
 
 		const child = Bun.spawn(["sh", "-c", manifest.scripts["dev:package"]], {
