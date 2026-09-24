@@ -5,6 +5,9 @@
  * regions) work for any composition. BITES, EYE and WORDS are the shipped
  * composition: the creature is whatever survives of the page after six equal
  * circular bites (from `img/code/optimal_circles.json`).
+ *
+ * `field.ts` draws and traces arbitrary shapes (and finds the bites that eat
+ * a page down to one); `colour.ts` has OKLCH and the product palette.
  */
 import circles from "../../code/optimal_circles.json";
 
@@ -276,4 +279,9 @@ export type Variant = {
 	readonly title: string;
 	/** Returns a complete SVG document. */
 	render(): string;
+	/**
+	 * For SMIL or CSS animated documents: the span to film, in seconds, and
+	 * how many evenly spaced frames the filmstrip shows (default 10).
+	 */
+	readonly animation?: { readonly seconds: number; readonly frames?: number };
 };

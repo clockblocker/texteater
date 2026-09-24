@@ -15,7 +15,12 @@ import {
 	governablePrepositionIn,
 	governablePrepositions,
 } from "../governable-prepositions.js";
-import { type Government, headOf, type LexemeTarget } from "./analysis.js";
+import {
+	type Government,
+	headOf,
+	type LexemeTarget,
+	type PhrasemeTarget,
+} from "./analysis.js";
 import type { Answers } from "./assemble.js";
 import type { Placement } from "./placement.js";
 
@@ -86,13 +91,17 @@ export const governorTau = 0.6;
  * One Government per governed preposition. The governor vote is summed per
  * word, so `nimmt` and `teil` vote together for `teilnehmen`, and the word
  * reaching `governorTau` governs. Failing that, a preposition the Lexeme
- * layer made a verb's `GovernedPreposition` member is governed by that verb.
- * A preposition voted to govern itself and an unresolved case yield nothing.
+ * layer made a verb's `GovernedPreposition` member is governed by that verb,
+ * and failing that, the vote summed over a Phraseme's words lets the
+ * expression govern (`mit … nichts zu tun haben`, the vote split between
+ * `tun` and `haben`). A preposition voted to govern itself and an unresolved
+ * case yield nothing.
  */
 export function assembleGovernment(
 	placement: Placement,
 	targets: readonly LexemeTarget[],
 	answers: Answers,
+	phrasemes: readonly PhrasemeTarget[] = [],
 ): Government[] {
 	const targetAt = (offset: number) =>
 		targets.find((target) =>
@@ -120,7 +129,21 @@ export function assembleGovernment(
 			(member) => member.offset === piece.offset,
 		)?.role;
 		if (!governor && role === "GovernedPreposition") governor = own;
-		if (!governor || headOf(governor).offset === piece.offset) continue;
+		if (governor && headOf(governor).offset === piece.offset) continue;
+		const expression = governor
+			? undefined
+			: phrasemes.find(
+					(phraseme) =>
+						!phraseme.members.includes(own.id) &&
+						[...votes]
+							.filter(([target]) =>
+								phraseme.members.includes(target.id),
+							)
+							.reduce((sum, [, share]) => sum + share, 0) >=
+							governorTau,
+				);
+		const governorId = governor?.id ?? expression?.id;
+		if (!governorId) continue;
 		const voted = Object.entries(
 			probabilities(answers, `case_${index}`),
 		).sort((a, b) => b[1] - a[1])[0]?.[0];
@@ -132,7 +155,7 @@ export function assembleGovernment(
 			offset: piece.offset,
 			preposition: piece.preposition,
 			case: governedCase,
-			governor: governor.id,
+			governor: governorId,
 		});
 	}
 	return government;

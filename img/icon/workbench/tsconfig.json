@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"noEmit": true,
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"lib": ["esnext", "dom"],
+		"types": ["bun-types"]
+	},
+	"include": ["**/*.ts"],
+	"exclude": ["out"]
+}

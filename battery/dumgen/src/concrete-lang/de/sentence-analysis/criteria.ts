@@ -35,7 +35,7 @@ export const realizationCriteria = targetCriteria
 
 /** The fixedness rules: which words are fixed lexical members of one expression. */
 export const fixednessCriteria = `An expression is an established multiword unit with its own dictionary identity, made of words that are its fixed lexical members. A word is a fixed lexical member when the expression requires this particular word or a narrow set of alternatives in this slot: replacing it with an ordinary synonym would break the expression. A fixed preposition or fixed article of the expression counts as a member through the word that carries it (ins Feuer, zur Verfügung, das Eis). Free arguments, modifiers and fillers are never members, however close they stand: in stellt den Schülern Material zur Verfügung the expression is stellt ... zur Verfügung and den Schülern and Material are free.
-Degrees of fixedness. A free combination lets every word be replaced by a synonym (ein Buch kaufen). A preferred combination is conventional but freely replaceable and has no expression of its own (starker Regen). A collocation restricts the lexical choice while the meaning stays compositional: German Funktionsverbgefüge (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, eine Frage stellen, zur Kenntnis nehmen, Abschied nehmen). An idiom is established and noncompositional in this contextual meaning (den Faden verlieren, das Eis brechen, Öl ins Feuer gießen); identical literal wording used literally is not an idiom. A discourse formula is a fixed conversational routine (Guten Morgen, Herzlichen Dank, Wie geht's). A proverb is a traditional complete saying (Morgenstund hat Gold im Mund); an aphorism is an established attributed maxim (Zeit ist Geld).
+Degrees of fixedness. A free combination lets every word be replaced by a synonym (ein Buch kaufen). A preferred combination is conventional but freely replaceable and has no expression of its own (starker Regen). A collocation is only a German Funktionsverbgefüge, a support verb with its predicate noun: the lexical choice is restricted while the meaning stays compositional (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, eine Frage stellen, zur Kenntnis nehmen, Abschied nehmen). An idiom is established and noncompositional in this contextual meaning, with or without a noun (den Faden verlieren, das Eis brechen, Öl ins Feuer gießen, es in sich haben); identical literal wording used literally is not an idiom. A discourse formula is a fixed conversational routine (Guten Morgen, Herzlichen Dank, Wie geht's). A proverb is a traditional complete saying (Morgenstund hat Gold im Mund); an aphorism is an established attributed maxim (Zeit ist Geld).
 Mere proximity, frequency or ordinary compositional combination never establishes an expression. When membership is uncertain or contradictory, answer Unresolved instead of repairing, trimming or extending the expression.`;
 
 /** The Lexeme layer's route inventory: Lexeme Kinds only (AUX is not a route, ADR 0026). */
@@ -54,13 +54,14 @@ export const lexemeRoutes: Record<string, string> = {
 	"Lexeme/NOUN":
 		"Common noun with its one absorbed overt article, including substantivized participles, whether or not it is part of a larger expression",
 	"Lexeme/NUM": "Numeral",
-	"Lexeme/PART": "Particle",
+	"Lexeme/PART":
+		"Particle, including the infinitive marker zu before an infinitive (schwer zu erklären, versucht zu schlafen)",
 	"Lexeme/PRON":
 		"Pronoun used substantively, or attributive genitive dessen/deren/wessen",
 	"Lexeme/PROPN": "Proper noun",
 	"Lexeme/PUNCT": "Punctuation resolvable as its own unit",
 	"Lexeme/SCONJ":
-		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass)",
+		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass); a zu without um, ohne or statt is not one",
 	"Lexeme/SYM": "Symbol",
 	"Lexeme/VERB":
 		"One lexical verb with its own auxiliaries, separable particle, required reflexive, governed preposition and lexically selected es; modals and copulas included; whether or not it is part of a larger expression",
@@ -93,14 +94,14 @@ export type RoleAnswer = keyof typeof roles;
 export const fixednessLevels = [
 	"Free combination: this word can be replaced by any synonym without breaking anything",
 	"Preferred combination: conventional wording with no expression of its own",
-	"Collocation: the lexical choice is restricted but the meaning stays compositional (Funktionsverbgefüge)",
+	"Collocation: a Funktionsverbgefüge, a support verb with its predicate noun; the lexical choice is restricted but the meaning stays compositional",
 	"Fixed expression: an established noncompositional idiom, discourse formula, proverb or aphorism in this contextual meaning",
 ] as const;
 
 export const phrasemeKindOptions = {
 	Aphorism: "Established concise attributed maxim",
 	Collocation:
-		"Conventional multiword expression with restricted lexical choices and a compositional overall meaning",
+		"Funktionsverbgefüge: a support verb with its predicate noun, restricted in wording and compositional in meaning; wording without a predicate noun is never one",
 	DiscourseFormula: "Established fixed discourse formula",
 	Idiom: "Established noncompositional expression in this contextual meaning",
 	Proverb: "Established traditional saying",

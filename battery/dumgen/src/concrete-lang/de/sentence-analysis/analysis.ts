@@ -10,7 +10,8 @@
  * Mass over authored headword groups. The Phraseme layer partitions a subset
  * of the Lexeme Targets into Phraseme Targets, whose members are words, never
  * Segments, with one Kind Mass and a fixedness score. Government links each
- * governed preposition to the Lexeme Target that selects it (ADR 0030).
+ * governed preposition to the Lexeme or Phraseme Target that selects it (ADR
+ * 0030).
  * Nothing resolved is stored; the Resolution Selector below is the one pure
  * function that applies the policy.
  */
@@ -103,7 +104,9 @@ export type Fusion = {
 /**
  * One governed preposition: the Segment realizing it (the preposition, a
  * fused word's adposition or a pronominal adverb), its ADP headword, the case
- * the government requires and the governing Lexeme Target's id.
+ * the government requires and the governing Lexeme Target's id, or a Phraseme
+ * Target's id when the expression governs and no one word does (`mit … zu tun
+ * haben`).
  */
 export type Government = {
 	readonly offset: number;
@@ -277,19 +280,41 @@ export type SelectedPhrasemeKind = {
 };
 
 /**
+ * A Collocation is a Funktionsverbgefüge (ADR 0028): a support verb with its
+ * predicate noun. Grammar refuses any other wording on the Collocation route.
+ */
+function funktionsverbgefuege(
+	analysis: SentenceAnalysis,
+	phraseme: PhrasemeTarget,
+): boolean {
+	const kinds = new Set(
+		membersOf(analysis, phraseme).map(
+			(target) => effectiveRoute(target).kind,
+		),
+	);
+	return kinds.has("VERB") && kinds.has("NOUN");
+}
+
+/**
  * Kind under the `score` policy: the fixedness Score establishes the
  * expression and the Kind Mass only names it. Below the floor the Phraseme
  * is `None`; above it the best named Kind wins even when `None` carries
- * more mass, and `Unresolved` wins only when no Kind has any mass.
+ * more mass, and `Unresolved` wins only when no Kind has any mass. Words
+ * without a support verb and a predicate noun cannot be named Collocation.
  */
 export function selectPhrasemeKind(
+	analysis: SentenceAnalysis,
 	phraseme: PhrasemeTarget,
 ): SelectedPhrasemeKind {
 	if (phraseme.fixedness < fixednessFloor)
 		return { kind: "None", share: phraseme.kindMass.None ?? 0 };
+	const collocation = funktionsverbgefuege(analysis, phraseme);
 	const named = Object.fromEntries(
 		Object.entries(phraseme.kindMass).filter(
-			([key]) => key !== "None" && key !== "Unresolved",
+			([key]) =>
+				key !== "None" &&
+				key !== "Unresolved" &&
+				(key !== "Collocation" || collocation),
 		),
 	);
 	const { key, share } = argmax(named);
@@ -365,7 +390,7 @@ export function resolvedUnitAt(
 	const largest = largestOf(analysis, offset);
 	if (!largest) return null;
 	if (largest.layer === "Phraseme") {
-		const kind = selectPhrasemeKind(largest.phraseme);
+		const kind = selectPhrasemeKind(analysis, largest.phraseme);
 		if (kind.kind !== "None" && kind.kind !== "Unresolved")
 			return {
 				family: "Phraseme",
@@ -377,6 +402,18 @@ export function resolvedUnitAt(
 		return lexemeUnit(target);
 	}
 	return lexemeUnit(largest.target);
+}
+
+/**
+ * The route and Segment span of the word at an offset, ignoring any Phraseme
+ * over it: what a host resolves when grammar refuses the Phraseme.
+ */
+export function resolvedWordAt(
+	analysis: SentenceAnalysis,
+	offset: number,
+): ReturnType<typeof resolvedUnitAt> {
+	const target = targetOf(analysis, offset);
+	return target ? lexemeUnit(target) : null;
 }
 
 function lexemeUnit(target: LexemeTarget) {
@@ -392,10 +429,21 @@ function lexemeUnit(target: LexemeTarget) {
 
 // ------------------------------------------------------------- Government
 
+/** The Lexeme Targets behind a Government's governor: one word, or a Phraseme's words. */
+export function governorTargets(
+	analysis: SentenceAnalysis,
+	governor: string,
+): LexemeTarget[] {
+	const phraseme = analysis.phrasemes.find((entry) => entry.id === governor);
+	if (phraseme) return membersOf(analysis, phraseme);
+	return analysis.targets.filter((target) => target.id === governor);
+}
+
 /**
  * The governed prepositions a unit attests in this sentence: every
- * Government whose governor has a member among the unit's offsets. A
- * Phraseme reaches the government of its member words.
+ * Government whose governing word has a member among the unit's offsets. A
+ * Phraseme reaches the government of its member words; a Phraseme's own
+ * government reaches only a unit covering the whole Phraseme.
  */
 export function governedPrepositionsAt(
 	analysis: SentenceAnalysis,
@@ -404,10 +452,19 @@ export function governedPrepositionsAt(
 	const covered = new Set(offsets);
 	const found = new Map<string, GovernedPrepositionDraft>();
 	for (const entry of analysis.government) {
+		const phraseme = analysis.phrasemes.find(
+			(candidate) => candidate.id === entry.governor,
+		);
 		const governor = analysis.targets.find(
 			(target) => target.id === entry.governor,
 		);
-		if (governor?.members.some((member) => covered.has(member.offset)))
+		if (
+			phraseme
+				? offsetsOf(analysis, phraseme).every((offset) =>
+						covered.has(offset),
+					)
+				: governor?.members.some((member) => covered.has(member.offset))
+		)
 			found.set(`${entry.preposition}/${entry.case}`, {
 				preposition: entry.preposition,
 				case: entry.case,

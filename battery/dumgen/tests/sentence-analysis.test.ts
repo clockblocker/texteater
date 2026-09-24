@@ -11,7 +11,9 @@ import {
 	governedPrepositionsAt,
 	headOf,
 	largestOf,
+	offsetsOf,
 	resolvedUnitAt,
+	resolvedWordAt,
 	selectIdentity,
 	selectPhrasemeKind,
 	targetOf,
@@ -44,16 +46,23 @@ type Plan = {
 	/** Phraseme groups by head index with their Kind and fixedness. */
 	readonly expressions: readonly {
 		readonly heads: readonly number[];
-		readonly kind: string;
+		/** One Kind, or the Kind Mass every head answers. */
+		readonly kind: string | Readonly<Record<string, number>>;
 		readonly fixedness: number;
 		/** Free words the pair answers still tie to the expression. */
 		readonly carried?: readonly number[];
 	}[];
 	/** Head pairs the pair answers tie across expressions. */
 	readonly crossLinks?: readonly (readonly [number, number])[];
-	/** Governor and case per governable preposition index; every other one is None. */
+	/** Governor, or governors splitting the vote, and case per governable preposition index; every other one is None. */
 	readonly government?: Readonly<
-		Record<number, { readonly governor?: number; readonly case?: string }>
+		Record<
+			number,
+			{
+				readonly governor?: number | readonly number[];
+				readonly case?: string;
+			}
+		>
 	>;
 };
 
@@ -121,6 +130,7 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 					}
 					const options = Object.keys(question.criteria);
 					let chosen: string;
+					let split: Readonly<Record<string, number>> | undefined;
 					if (prefix === "m") {
 						const [anchor, other] = numbers as [number, number];
 						chosen = sameWord(anchor, other)
@@ -131,13 +141,31 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 					else if (prefix === "role")
 						chosen = plan.roles[numbers[0] ?? -1] ?? "Free";
 					else if (prefix === "id") chosen = "NoMatch";
-					else if (prefix === "pk")
-						chosen = expression(numbers[0] ?? -1)?.kind ?? "None";
-					else if (prefix === "gov") {
+					else if (prefix === "pk") {
+						const kind = expression(numbers[0] ?? -1)?.kind;
+						if (typeof kind === "object") split = kind;
+						chosen =
+							typeof kind === "object"
+								? (Object.entries(kind).sort(
+										(a, b) => b[1] - a[1],
+									)[0]?.[0] ?? "None")
+								: (kind ?? "None");
+					} else if (prefix === "gov") {
 						const governor =
 							plan.government?.[numbers[0] ?? -1]?.governor;
+						const governors =
+							governor === undefined ? [] : [governor].flat();
+						if (governors.length > 1)
+							split = Object.fromEntries(
+								governors.map((g) => [
+									`s${g}`,
+									1 / governors.length,
+								]),
+							);
 						chosen =
-							governor === undefined ? "None" : `s${governor}`;
+							governors[0] === undefined
+								? "None"
+								: `s${governors[0]}`;
 					} else if (prefix === "case")
 						chosen =
 							plan.government?.[numbers[0] ?? -1]?.case ??
@@ -154,7 +182,11 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 							probabilities: Object.fromEntries(
 								options.map((option) => [
 									option,
-									option === chosen ? 1 : 0,
+									split
+										? (split[option] ?? 0)
+										: option === chosen
+											? 1
+											: 0,
 								]),
 							),
 						},
@@ -243,7 +275,7 @@ test("a Funktionsverbgefüge is a Collocation over words, the fused article reac
 	]);
 	expect(analysis.phrasemes).toHaveLength(1);
 	const phraseme = analysis.phrasemes[0]!;
-	expect(selectPhrasemeKind(phraseme).kind).toBe("Collocation");
+	expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Collocation");
 	expect(
 		phraseme.members.map(
 			(id) => words[analysis.targets.findIndex((t) => t.id === id)],
@@ -873,4 +905,105 @@ test("a sentence without a governable preposition asks no government question", 
 	);
 	expect(analysis.government).toEqual([]);
 	expect(JSON.stringify(traces)).not.toContain("gov_");
+});
+
+// Input indices: Mit0 solchem2 Unsinn4 wollten6 sie8 nichts10 zu12 tun14 haben16 .17
+// Offsets: Mit0 solchem4 Unsinn12 wollten19 sie27 nichts31 zu38 tun41 haben45
+test("a preposition with a free complement leaves its expression, which governs it and is no Collocation without a predicate noun", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10], [12], [14], [16]],
+		routes: {
+			0: "Lexeme/ADP",
+			2: "Lexeme/DET",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/VERB",
+			8: "Lexeme/PRON",
+			10: "Lexeme/PRON",
+			12: "Lexeme/PART",
+			14: "Lexeme/VERB",
+			16: "Lexeme/VERB",
+		},
+		roles: {},
+		expressions: [
+			{
+				heads: [0, 10, 12, 14, 16],
+				kind: { Collocation: 0.6, Idiom: 0.3, None: 0.1 },
+				fixedness: 2.2,
+			},
+		],
+		// No one word wins the vote; the expression's words do together.
+		government: { 0: { governor: [14, 16] } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"unsinn",
+				"Mit solchem Unsinn wollten sie nichts zu tun haben.",
+			),
+		}),
+	);
+	expect(analysis.phrasemes).toHaveLength(1);
+	const phraseme = analysis.phrasemes[0];
+	if (!phraseme) throw Error("Expected the expression");
+	expect(offsetsOf(analysis, phraseme)).toEqual([31, 38, 41, 45]);
+	expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Idiom");
+	expect(analysis.government).toEqual([
+		{ offset: 0, preposition: "mit", case: "Dat", governor: phraseme.id },
+	]);
+	expect(governedPrepositionsAt(analysis, [31, 38, 41, 45])).toEqual([
+		{ preposition: "mit", case: "Dat" },
+	]);
+	expect(governedPrepositionsAt(analysis, [45])).toEqual([]);
+	expect(resolvedUnitAt(analysis, 0)).toEqual({
+		family: "Lexeme",
+		kind: "ADP",
+		offsets: [0],
+	});
+	expect(resolvedUnitAt(analysis, 38)).toEqual({
+		family: "Phraseme",
+		kind: "Idiom",
+		offsets: [31, 38, 41, 45],
+	});
+	expect(resolvedWordAt(analysis, 38)).toEqual({
+		family: "Lexeme",
+		kind: "PART",
+		offsets: [38],
+	});
+});
+
+test("wording named only Collocation without a predicate noun resolves no Phraseme", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10], [12], [14], [16]],
+		routes: {
+			0: "Lexeme/ADP",
+			2: "Lexeme/DET",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/VERB",
+			8: "Lexeme/PRON",
+			10: "Lexeme/PRON",
+			12: "Lexeme/PART",
+			14: "Lexeme/VERB",
+			16: "Lexeme/VERB",
+		},
+		roles: {},
+		expressions: [
+			{ heads: [10, 12, 14, 16], kind: "Collocation", fixedness: 2.2 },
+		],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"unsinn",
+				"Mit solchem Unsinn wollten sie nichts zu tun haben.",
+			),
+		}),
+	);
+	const phraseme = analysis.phrasemes[0];
+	if (!phraseme) throw Error("Expected the expression");
+	expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Unresolved");
+	expect(resolvedUnitAt(analysis, 45)).toEqual({
+		family: "Lexeme",
+		kind: "VERB",
+		offsets: [45],
+	});
 });

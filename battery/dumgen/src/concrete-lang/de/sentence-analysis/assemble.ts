@@ -9,9 +9,9 @@
  * standalone, joins the noun its phrase opens onto, or stands alone as DET;
  * a Phraseme's members are words, projected by Head, only a word whose own
  * fixedness Score reaches the floor joins one, one pair alone never ties two
- * expressions together, and a governor with only what it governs is
- * valency, not a Phraseme. Government is read over the finished Lexeme
- * Targets.
+ * expressions together, a preposition joins only with its complement, and a
+ * governor with only what it governs is valency, not a Phraseme. Government
+ * is read over the finished Lexeme Targets and Phraseme Targets.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -151,6 +151,9 @@ const headOffsetOf = (target: LexemeTarget) =>
 		target.members.find((member) => member.role === "Head") ??
 		target.members[0]
 	)?.offset ?? 0;
+
+/** Kinds a preposition's complement is made of. */
+const nominal = new Set(["NOUN", "PROPN", "PRON"]);
 
 /** The first Lexeme Target after `offset` that is not prenominal: the word an article's phrase opens onto. */
 function phraseHeadAfter(
@@ -553,13 +556,44 @@ export function assembleAnalysis(
 			all.indexOf(head) === position &&
 			(scoreOf(answers, `fix_${head}`) ?? 0) >= policy.fixednessFloor,
 	);
+	// A preposition is a fixed member only through the noun it opens onto
+	// (ins Feuer, zur Verfügung); one whose nominal complement is free
+	// material is valency (ADR 0029), as mit in mit solchem Unsinn … zu tun.
+	const freeComplement = (head: number, component: readonly number[]) =>
+		targets.some((target) => {
+			if (
+				headIndexOf.get(target.id) !== head ||
+				winner(target.routeMass) !== "ADP"
+			)
+				return false;
+			const complement = targets
+				.filter(
+					(other) =>
+						headOffsetOf(other) > headOffsetOf(target) &&
+						!prenominal.has(winner(other.routeMass)) &&
+						winner(other.routeMass) !== "DET",
+				)
+				.sort((a, b) => headOffsetOf(a) - headOffsetOf(b))[0];
+			const complementHead = complement
+				? headIndexOf.get(complement.id)
+				: undefined;
+			return (
+				complement !== undefined &&
+				nominal.has(winner(complement.routeMass)) &&
+				(complementHead === undefined ||
+					!component.includes(complementHead))
+			);
+		});
 	const phrasemes: PhrasemeTarget[] = [];
-	for (const component of expressionsOf(
+	for (const linked of expressionsOf(
 		heads,
 		(a, b) =>
 			(noulOf(answers, `same_${Math.min(a, b)}_${Math.max(a, b)}`) ??
 				0) >= policy.phrasemeTau,
 	)) {
+		const component = linked.filter(
+			(head) => !freeComplement(head, linked),
+		);
 		if (component.length < 2) continue;
 		const kindMass: Record<string, number> = {};
 		let fixedness = 0;
@@ -599,11 +633,11 @@ export function assembleAnalysis(
 	}
 	// A governor with only the prepositions it governs is valency, which
 	// government already records (ADR 0030), not an expression.
-	const government = assembleGovernment(placement, targets, answers);
+	const wordGovernment = assembleGovernment(placement, targets, answers);
 	const valencyOnly = (phraseme: PhrasemeTarget) =>
 		phraseme.members.every((id) => {
 			const target = targets.find((candidate) => candidate.id === id);
-			return government.some(
+			return wordGovernment.some(
 				(link) =>
 					phraseme.members.includes(link.governor) &&
 					(link.governor === id ||
@@ -612,17 +646,23 @@ export function assembleAnalysis(
 						)),
 			);
 		});
+	const expressions = phrasemes
+		.filter((phraseme) => !valencyOnly(phraseme))
+		.map((phraseme, position) => ({
+			...phraseme,
+			id: `p${position + 1}`,
+		}));
 	return {
 		stitchedText: placement.stitchedText,
 		segments: placement.segments,
 		targets,
-		phrasemes: phrasemes
-			.filter((phraseme) => !valencyOnly(phraseme))
-			.map((phraseme, position) => ({
-				...phraseme,
-				id: `p${position + 1}`,
-			})),
+		phrasemes: expressions,
 		fusions: placement.fusions,
-		government,
+		government: assembleGovernment(
+			placement,
+			targets,
+			answers,
+			expressions,
+		),
 	};
 }

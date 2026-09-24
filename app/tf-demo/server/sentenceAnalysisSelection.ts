@@ -1,4 +1,10 @@
-import { headOf, resolvedUnitAt, selectIdentity, targetOf } from "dumgen";
+import {
+	headOf,
+	resolvedUnitAt,
+	resolvedWordAt,
+	selectIdentity,
+	targetOf,
+} from "dumgen";
 import type { SentenceAnalysis } from "dumgen/types";
 import { storedSegmentRanges } from "./attestedGovernment";
 
@@ -59,6 +65,9 @@ export type AnalysisSelection =
  * A lone word whose selected identity is AUX is classified as well: ADR 0026
  * forbids AUX as a target, and texteater#523 decides what the selector should
  * do instead. Every classified outcome names its reason.
+ *
+ * The `word` layer skips any Phraseme over the click: the clicked word is
+ * what a host resolves once grammar refuses the Phraseme.
  */
 export function selectAnalysisTarget(
 	analysis: SentenceAnalysis | null | undefined,
@@ -67,6 +76,7 @@ export function selectAnalysisTarget(
 		readonly segments: readonly StoredSegmentForSelection[];
 	},
 	clickedSegmentIndex: number,
+	layer: "largest" | "word" = "largest",
 ): AnalysisSelection {
 	if (!analysis) return { target: null, reason: "noAnalysis" };
 	if (analysis.stitchedText !== stored.stitchedText)
@@ -90,7 +100,10 @@ export function selectAnalysisTarget(
 		(segment) => segment.kind === "ResolvableText",
 	);
 	if (!anchor) return { target: null, reason: "noAnchor" };
-	const unit = resolvedUnitAt(analysis, anchor.offset);
+	const unit =
+		layer === "word"
+			? resolvedWordAt(analysis, anchor.offset)
+			: resolvedUnitAt(analysis, anchor.offset);
 	// Without a resolved Phraseme the unit is the anchor's word.
 	const word = targetOf(analysis, anchor.offset);
 	const identity = word ? selectIdentity(word, headOf(word)) : null;

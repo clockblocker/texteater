@@ -12,6 +12,7 @@ import { segmentSchema } from "../../../universal/schemas.js";
 import {
 	effectiveRoute,
 	type Government,
+	governorTargets,
 	headOf,
 	membersOf,
 	type SentenceAnalysis,
@@ -165,7 +166,7 @@ export function scoreAnalysis(
 		}
 		matched.add(phraseme.id);
 		phrasemesFound += 1;
-		const kind = selectPhrasemeKind(phraseme).kind;
+		const kind = selectPhrasemeKind(analysis, phraseme).kind;
 		if (kind === expected.kind) phrasemesCorrect += 1;
 		else failures.push(`${label}: kind ${kind}`);
 	}
@@ -174,7 +175,7 @@ export function scoreAnalysis(
 		: [];
 	for (const phraseme of extra)
 		failures.push(
-			`extra Phraseme ${selectPhrasemeKind(phraseme).kind} over {${membersOf(
+			`extra Phraseme ${selectPhrasemeKind(analysis, phraseme).kind} over {${membersOf(
 				analysis,
 				phraseme,
 			)
@@ -211,8 +212,10 @@ function scoreGovernment(
 ) {
 	const failures: string[] = [];
 	if (!gold.government) return { correct: 0, extra: 0, failures };
-	const governorOf = (id: string) =>
-		analysis.targets.find((target) => target.id === id);
+	const governorLabel = (id: string) =>
+		governorTargets(analysis, id)
+			.map((target) => text(headOf(target).offset))
+			.join(" ") || "?";
 	const matched = new Set<Government>();
 	let correct = 0;
 	for (const expected of gold.government) {
@@ -225,25 +228,24 @@ function scoreGovernment(
 			continue;
 		}
 		matched.add(found);
-		const governor = governorOf(found.governor);
-		const actual = `${governor ? text(headOf(governor).offset) : "?"} + ${found.preposition} ${found.case}`;
+		const actual = `${governorLabel(found.governor)} + ${found.preposition} ${found.case}`;
 		if (
 			found.preposition === expected.preposition &&
 			found.case === expected.case &&
-			governor?.members.some((member) =>
-				expected.governors.includes(member.offset),
+			governorTargets(analysis, found.governor).some((governor) =>
+				governor.members.some((member) =>
+					expected.governors.includes(member.offset),
+				),
 			)
 		)
 			correct += 1;
 		else failures.push(`${label}: got ${actual}`);
 	}
 	const extra = analysis.government.filter((entry) => !matched.has(entry));
-	for (const entry of extra) {
-		const governor = governorOf(entry.governor);
+	for (const entry of extra)
 		failures.push(
-			`extra government ${governor ? text(headOf(governor).offset) : "?"} + ${text(entry.offset)} ${entry.case}`,
+			`extra government ${governorLabel(entry.governor)} + ${text(entry.offset)} ${entry.case}`,
 		);
-	}
 	return { correct, extra: extra.length, failures };
 }
 
@@ -343,15 +345,15 @@ export function projectGold(analysis: SentenceAnalysis): SentenceGold {
 			};
 		}),
 		phrasemes: analysis.phrasemes.map((phraseme) => ({
-			kind: selectPhrasemeKind(phraseme).kind,
+			kind: selectPhrasemeKind(analysis, phraseme).kind,
 			words: membersOf(analysis, phraseme)
 				.map((target) => headOf(target).offset)
 				.sort((a, b) => a - b),
 		})),
 		government: analysis.government.map((entry) => ({
-			governors: analysis.targets
-				.filter((target) => target.id === entry.governor)
-				.map((target) => headOf(target).offset),
+			governors: governorTargets(analysis, entry.governor).map(
+				(target) => headOf(target).offset,
+			),
 			offset: entry.offset,
 			preposition: entry.preposition,
 			case: entry.case,
