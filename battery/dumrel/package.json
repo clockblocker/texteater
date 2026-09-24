@@ -29,6 +29,11 @@
 			"types": "./dist/generated/linked-validation.d.ts",
 			"import": "./dist/generated/linked-validation.js",
 			"default": "./dist/generated/linked-validation.js"
+		},
+		"./validation-artifact": {
+			"types": "./dist/generated/validation.d.ts",
+			"import": "./dist/generated/validation.js",
+			"default": "./dist/generated/validation.js"
 		}
 	},
 	"files": [
@@ -45,7 +50,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/generated/linked-validation.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/generated/linked-validation.ts src/generated/validation.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",

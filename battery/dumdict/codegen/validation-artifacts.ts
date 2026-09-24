@@ -1,18 +1,18 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 } from "dumrel/schema";
+import { encodedValidation as dumrelValidation } from "dumrel/validation-artifact";
 import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
 	type ZodValidationOperationRegistration,
 } from "dumval/compiler";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
-import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
-import { encodedValidation as dumrelValidation } from "../../dumrel/src/generated/validation.js";
 import { normalizeText } from "../../dumrel/src/semantics.js";
 import { unitSchemas } from "../src/generated/unit-schemas.js";
 import {

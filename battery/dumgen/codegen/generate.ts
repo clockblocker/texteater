@@ -1,4 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
+import { encodedValidation as dumrelValidation } from "dumrel/validation-artifact";
 import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
@@ -8,10 +10,8 @@ import { z } from "zod";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
 import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import { loadRoutes } from "../../dumling/codegen/routes.js";
-import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
 import { dumrelOutputTypes } from "../../dumrel/codegen/output-types.js";
-import { encodedValidation as dumrelValidation } from "../../dumrel/src/generated/validation.js";
 import { normalizeText } from "../../dumrel/src/semantics.js";
 
 const check = process.argv.includes("--check");

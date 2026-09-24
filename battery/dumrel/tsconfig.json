@@ -6,6 +6,9 @@
 			"dumling": ["../dumling/src/index.ts"],
 			"dumling/types": ["../dumling/src/types.ts"],
 			"dumling/validation": ["../dumling/src/validation/operations.ts"],
+			"dumling/validation-artifact": [
+				"../dumling/src/generated/validation.ts"
+			],
 			"dumling/schema/*": ["../dumling/src/generated/schemas/*"],
 			"dumrel": ["./src/index.ts"],
 			"dumrel/schema": ["./src/schemas.ts"],

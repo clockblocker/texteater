@@ -16,5 +16,10 @@
 			"dumling/schema/*": ["../dumling/dist/generated/schemas/*"]
 		}
 	},
-	"include": ["src/index.ts", "src/types.ts", "src/schemas.ts"]
+	"include": [
+		"src/index.ts",
+		"src/types.ts",
+		"src/schemas.ts",
+		"src/generated/validation.ts"
+	]
 }

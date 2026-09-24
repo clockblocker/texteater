@@ -221,6 +221,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		rationale: "Package metadata.",
 	},
 	{
+		specifier: "dumling/validation-artifact",
+		classification: "development-support",
+		rationale:
+			"Unlinked compiled validation that sibling generators link against; never loaded at application runtime.",
+	},
+	{
 		specifier: "dumling/compiled-validation",
 		classification: "operational",
 		rationale:
@@ -229,6 +235,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			id: "dumling.compiled-validation",
 			description: "Validate through the shared rule protocol",
 		},
+	},
+	{
+		specifier: "dumrel/validation-artifact",
+		classification: "development-support",
+		rationale:
+			"Unlinked compiled validation that sibling generators link against; never loaded at application runtime.",
 	},
 	{
 		specifier: "dumrel/compiled-validation",

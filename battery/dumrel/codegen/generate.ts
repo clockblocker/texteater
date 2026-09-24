@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
@@ -6,7 +7,6 @@ import {
 } from "dumval/compiler";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
 import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
-import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import {
 	directSemanticRelationSchema,
 	governedCaseSchema,
