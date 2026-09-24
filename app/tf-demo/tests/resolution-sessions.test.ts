@@ -495,7 +495,7 @@ describe("Resolution Session", () => {
 		const guard = await startSession(t, select("request-1"));
 		const advance = (args: {
 			guard: SessionGuard;
-			progress: "RouteAvailable" | "GrammarAvailable" | "Committing";
+			progress: "RouteAvailable" | "GrammarAvailable";
 			grammar?: ReturnType<typeof grammarProjection>;
 		}) => t.mutation(internal.resolutionSessions.advance, args);
 
@@ -520,7 +520,7 @@ describe("Resolution Session", () => {
 		await expect(
 			advance({
 				guard: { ...guard, runToken: "old" },
-				progress: "Committing",
+				progress: "RouteAvailable",
 			}),
 		).rejects.toThrow("no longer active");
 	});

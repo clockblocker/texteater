@@ -108,7 +108,6 @@ export function createResolutionSessionLifecycle(
 		advance: async (event) => {
 			switch (event.progress) {
 				case "RouteAvailable":
-				case "Committing":
 					return;
 				case "GrammarAvailable":
 					await hop(`Save ${event.progress}`, event, () =>

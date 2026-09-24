@@ -47,8 +47,7 @@ export type ResolutionSessionAdvance =
 			readonly readingResolution: Parameters<
 				ResolutionProgressObserver["readingAvailable"]
 			>[0]["readingResolution"];
-	  }
-	| { readonly progress: "Committing" };
+	  };
 
 export type ResolutionSessionSettlement =
 	| { readonly kind: "CatalogMiss"; readonly miss: ResolutionCatalogMiss }
@@ -148,10 +147,6 @@ export function executeResolutionSession({
 					readingResolution,
 				});
 				phase = "Commit";
-			},
-			async committing() {
-				phase = "Commit";
-				await lifecycle.advance({ progress: "Committing" });
 			},
 		};
 

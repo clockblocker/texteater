@@ -276,7 +276,6 @@ export type ResolutionProgressObserver = {
 		readonly reading: Dumling.Reading<"de">;
 		readonly readingResolution: ReadingResolution;
 	}): Promise<void>;
-	committing(): Promise<void>;
 };
 
 export type ResolutionContext = {
@@ -635,9 +634,6 @@ export function createTfDemoOrchestrator(options: {
 				grammatical.attestation.surface,
 			);
 			const readingKey = readingIdentityKey(reading);
-			yield* Effect.tryPromise(
-				() => options.observer?.committing() ?? Promise.resolve(),
-			);
 			const persisted = yield* Effect.tryPromise(() =>
 				options.persistence.persistResolvedClick({
 					...input,

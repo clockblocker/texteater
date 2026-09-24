@@ -677,7 +677,6 @@ test("Knowledge drafts start from the Lemma before the Emoji Description and are
 			async readingAvailable() {
 				readingAvailable.resolve();
 			},
-			async committing() {},
 		},
 	});
 	const pending = Effect.runPromise(
@@ -983,9 +982,6 @@ test("a failed Reading checkpoint prevents occurrence commit", async () => {
 			async readingAvailable() {
 				throw Error("Checkpoint unavailable");
 			},
-			async committing() {
-				throw Error("Must not commit after checkpoint failure");
-			},
 		},
 	});
 	await expect(
@@ -1000,17 +996,13 @@ test("a failed Reading checkpoint prevents occurrence commit", async () => {
 
 test("the occurrence commit waits for the in-flight Reading checkpoint", async () => {
 	const checkpoint = Promise.withResolvers<void>();
-	let saved = false;
-	let savedBeforeCommit: boolean | undefined;
+	let commitsWhenSaved: number | undefined;
 	const run = setup(["🏦"], {}, [reading], {
 		observer: {
 			async grammarAvailable() {},
 			async readingAvailable() {
 				await checkpoint.promise;
-				saved = true;
-			},
-			async committing() {
-				savedBeforeCommit = saved;
+				commitsWhenSaved = run.writes.length;
 			},
 		},
 	});
@@ -1021,7 +1013,7 @@ test("the occurrence commit waits for the in-flight Reading checkpoint", async (
 	expect(run.writes).toHaveLength(0);
 	checkpoint.resolve();
 	await outcome;
-	expect(savedBeforeCommit).toBe(true);
+	expect(commitsWhenSaved).toBe(0);
 	expect(run.writes).toHaveLength(1);
 });
 

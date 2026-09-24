@@ -314,7 +314,6 @@ export const advance = internalMutation({
 			v.literal("RouteAvailable"),
 			v.literal("GrammarAvailable"),
 			v.literal("ReadingAvailable"),
-			v.literal("Committing"),
 		),
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),

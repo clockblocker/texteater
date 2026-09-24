@@ -666,7 +666,11 @@ export async function advanceResolutionSession(
 	ctx: MutationCtx,
 	args: {
 		readonly guard: ResolutionSessionGuard;
-		readonly progress: Exclude<ResolutionProgress, "Starting">;
+		/** Committing is written only by the commit transaction itself. */
+		readonly progress: Exclude<
+			ResolutionProgress,
+			"Starting" | "Committing"
+		>;
 		readonly grammar?: ResolutionGrammarProjection;
 		readonly reading?: ResolutionReadingProjection;
 		readonly grammaticalCheckpoint?: Infer<
