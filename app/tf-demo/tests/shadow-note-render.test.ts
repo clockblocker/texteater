@@ -27,7 +27,6 @@ function noteFixture(): ShadowNote {
 			kind: "NOUN",
 		},
 		inspection: {
-			revision: "convex-4",
 			candidates: [
 				{
 					unitKind: "Lemma",
@@ -143,9 +142,6 @@ test("the paginated Note interface merges Shadow referrers by Reading", async ()
 test("keeps conflict feedback after refresh and ignores a completion from an older target epoch", () => {
 	const conflict = {
 		status: "conflict",
-		code: "revisionConflict",
-		baseRevision: "convex-1",
-		latestRevision: "convex-2",
 		message: "Inspection is stale.",
 	} as const;
 	expect(shadowCleanupFeedback(conflict)).toEqual({

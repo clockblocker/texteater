@@ -35,7 +35,6 @@ const dictionaryAndOccurrenceTables = [
 	"dictionaryLemmas",
 	"readingEntries",
 	"ownedSurfaces",
-	"dictionaryState",
 	"attestations",
 ] as const satisfies readonly TableName[];
 
@@ -120,22 +119,16 @@ async function expectCompleted(
 	});
 }
 
-test("a host-composed empty Dumdict plan does not advance revision", async () => {
+test("a host-composed empty Dumdict plan commits without writes", async () => {
 	const t = createTestConvex();
-	await t.run((ctx) =>
-		ctx.db.insert("dictionaryState", { key: "global", revision: 7 }),
-	);
-	const before = await rows(t, "dictionaryState");
+	const before = await snapshot(t, dictionaryAndOccurrenceTables);
 
 	const result = await t.run((ctx) =>
-		applyDumdictPlanInTransaction(ctx, {
-			baseRevision: "convex-2",
-			changes: [],
-		}),
+		applyDumdictPlanInTransaction(ctx, { changes: [] }),
 	);
 
-	expect(result).toEqual({ status: "committed", nextRevision: "convex-7" });
-	expect(await rows(t, "dictionaryState")).toEqual(before);
+	expect(result).toEqual({ status: "committed", nextRevision: "convex" });
+	expect(await snapshot(t, dictionaryAndOccurrenceTables)).toEqual(before);
 });
 
 test("the storage adapter rejects a malformed internal plan before writes", async () => {
@@ -147,7 +140,6 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 	await t.run(async (ctx) => {
 		await expect(
 			applyDumdictPlanInTransaction(ctx, {
-				baseRevision: "convex-0",
 				changes: [
 					{
 						type: "createLemma",
@@ -159,7 +151,6 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 		).rejects.toThrow();
 		await expect(
 			applyDumdictPlanInTransaction(ctx, {
-				baseRevision: "convex-0",
 				changes: [
 					{
 						type: "createLemma",
@@ -180,7 +171,6 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 			}),
 		).rejects.toThrow("cannot contain Knowledge");
 		expect(await ctx.db.query("lemmas").collect()).toEqual([]);
-		expect(await ctx.db.query("dictionaryState").collect()).toEqual([]);
 	});
 });
 
@@ -278,8 +268,6 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			clickedAt: expect.any(Number),
 		},
 	]);
-	// The empty dictionary plan did not advance a revision.
-	expect(await rows(t, "dictionaryState")).toEqual([]);
 	if (!attestationId) throw new Error("Expected an Attestation.");
 	await expectCompleted(t, "request-1", attestationId);
 });

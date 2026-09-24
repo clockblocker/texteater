@@ -32,8 +32,8 @@ import { dumdictPlannedChangeValidator } from "../model/validators";
 import {
 	applyReadingKnowledgeChange,
 	assertLemmaRecordHasNoKnowledge,
-	bumpDictionaryRevision,
 	type CompactReadingEntry,
+	DICTIONARY_REVISION,
 	findCanonicalLemma,
 	findCanonicalReading,
 	findCanonicalSurface,
@@ -41,14 +41,12 @@ import {
 	findPending,
 	findReading,
 	findSurface,
-	getState,
 	MAX_PATCH_OPS,
 	MAX_PLANNED_CHANGES,
 	MAX_RELATIONS_PER_READING,
 	pendingLocatorKey,
 	readingIdentityKey,
 	requireDirectSemanticRelation,
-	revisionString,
 	withoutSemanticRelationTargets,
 } from "./storage";
 
@@ -103,7 +101,6 @@ async function cachedPresence(
 async function preconditionFails(
 	ctx: MutationCtx,
 	preconditionValue: unknown,
-	transactionRevision: string,
 	shadow: PreflightState,
 ): Promise<boolean> {
 	const precondition = requireRecord(
@@ -111,8 +108,9 @@ async function preconditionFails(
 		"Dumdict precondition",
 	);
 	switch (precondition.kind) {
+		// The transaction's own reads guard a plan, so no revision can be stale.
 		case "revisionMatches":
-			return precondition.revision !== transactionRevision;
+			return false;
 		case "lemmaExists": {
 			const key = lemmaIdentityKey(precondition.lemma);
 			return !(await cachedPresence(shadow.lemmas, key, () =>
@@ -794,35 +792,18 @@ const commitResultValidator = v.union(
 	v.object({ status: v.literal("committed"), nextRevision: v.string() }),
 	v.object({
 		status: v.literal("conflict"),
-		code: v.union(
-			v.literal("revisionConflict"),
-			v.literal("semanticPreconditionFailed"),
-		),
-		latestRevision: v.optional(v.string()),
-		message: v.optional(v.string()),
+		code: v.literal("semanticPreconditionFailed"),
 	}),
 );
 
 export async function applyDumdictPlanInTransaction(
 	ctx: MutationCtx,
-	args: { baseRevision: string; changes: readonly unknown[] },
+	args: { changes: readonly unknown[] },
 ) {
 	if (args.changes.length > MAX_PLANNED_CHANGES) {
 		throw new Error(
 			`A commit supports at most ${MAX_PLANNED_CHANGES} planned changes.`,
 		);
-	}
-	const state = await getState(ctx);
-	const revision = revisionString(state?.revision ?? 0);
-	if (args.changes.length === 0) {
-		return { status: "committed" as const, nextRevision: revision };
-	}
-	if (args.baseRevision !== revision) {
-		return {
-			status: "conflict" as const,
-			code: "revisionConflict" as const,
-			latestRevision: revision,
-		};
 	}
 	const shadow = createPreflightState();
 	for (const changeValue of args.changes) {
@@ -833,11 +814,10 @@ export async function applyDumdictPlanInTransaction(
 			);
 		}
 		for (const precondition of change.preconditions) {
-			if (await preconditionFails(ctx, precondition, revision, shadow)) {
+			if (await preconditionFails(ctx, precondition, shadow)) {
 				return {
 					status: "conflict" as const,
 					code: "semanticPreconditionFailed" as const,
-					latestRevision: revision,
 				};
 			}
 		}
@@ -851,17 +831,12 @@ export async function applyDumdictPlanInTransaction(
 		}
 	}
 
-	return {
-		status: "committed" as const,
-		nextRevision: await bumpDictionaryRevision(ctx),
-	};
+	return { status: "committed" as const, nextRevision: DICTIONARY_REVISION };
 }
 
+/** The action-side adapter's commit, kept for Dumdict's storage contract. */
 export const commitDumdictChanges = internalMutation({
-	args: {
-		baseRevision: v.string(),
-		changes: v.array(dumdictPlannedChangeValidator),
-	},
+	args: { changes: v.array(dumdictPlannedChangeValidator) },
 	returns: commitResultValidator,
 	handler: applyDumdictPlanInTransaction,
 });
@@ -883,7 +858,7 @@ export async function materializeGrammaticalComponent(
 			type: "createReading",
 			entry: { reading, ...empty },
 		});
-	await mergeAuthoredComponentKnowledge(ctx, reading);
+	await completeAuthoredComponentKnowledge(ctx, reading);
 	const id = makeSurfaceId("de", surface);
 	if (!(await findSurface(ctx, id)))
 		await applyChange(ctx, {
@@ -893,20 +868,10 @@ export async function materializeGrammaticalComponent(
 }
 
 /**
- * Completes a stored component entry's reviewed Knowledge outside a planned
- * commit, advancing the dictionary revision when anything changed.
+ * Completes reviewed component entries outside a planned commit, without
+ * replacing existing Knowledge or creating encounters.
  */
 export async function completeAuthoredComponentKnowledge(
-	ctx: MutationCtx,
-	reading: unknown,
-) {
-	const changed = await mergeAuthoredComponentKnowledge(ctx, reading);
-	if (changed) await bumpDictionaryRevision(ctx);
-	return changed;
-}
-
-/** Completes reviewed component entries without replacing existing Knowledge or creating encounters. */
-async function mergeAuthoredComponentKnowledge(
 	ctx: MutationCtx,
 	reading: unknown,
 ) {

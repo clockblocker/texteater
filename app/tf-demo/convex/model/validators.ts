@@ -632,7 +632,6 @@ export const reusedResolvedClickCommitValidator = v.object({
 });
 
 export const dictionaryPlanValidator = v.object({
-	baseRevision: v.string(),
 	changes: v.array(dumdictPlannedChangeValidator),
 });
 
@@ -668,12 +667,8 @@ const membershipConflictValidator = v.object({
 
 const dictionaryConflictValidator = v.object({
 	status: v.literal("DictionaryConflict"),
-	code: v.union(
-		v.literal("revisionConflict"),
-		v.literal("semanticPreconditionFailed"),
-	),
+	code: v.literal("semanticPreconditionFailed"),
 	message: v.string(),
-	latestRevision: v.optional(v.string()),
 });
 
 const resolvedClickConflictValidator = v.union(

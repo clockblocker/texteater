@@ -3,6 +3,7 @@ import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames } from "../convex/demoReset";
+import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import {
 	attachPendingShadowReference,
 	collectStructuralShadowReferences,
@@ -18,6 +19,7 @@ import {
 	backfillPendingShadowReferencesPage,
 	backfillStructuralShadowReferencesPage,
 } from "../convex/shadows";
+import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 
 beforeEach(() => {
@@ -424,6 +426,83 @@ describe("Shadow backfills and presentation", () => {
 		expect(second?.isDone).toBe(true);
 	});
 
+	test("keeps a Shadow Note and its loaded pages while an unrelated Knowledge batch commits", async () => {
+		const t = createTestConvex();
+		const shadowId = await t.run(async (ctx) => {
+			await insertSourceReading(ctx);
+			const id = await attachPendingShadowReference(ctx, pendingRecord());
+			for (let index = 0; index < 51; index += 1) {
+				await insertPendingRelation(
+					ctx,
+					pendingRecord("reading-source", `pending-${index}`),
+					id,
+				);
+			}
+			return id;
+		});
+		const gehenReading = {
+			unitKind: "Reading",
+			lemma: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "VERB",
+				canonicalForm: "gehen",
+				coreFeatures: {
+					verbType: null,
+					lexicallyReflexive: null,
+					hasSepPrefix: null,
+				},
+			},
+			emojiDescription: "🚶",
+		} as const;
+		await t.run((ctx) =>
+			createDumdictTransaction(ctx).ensureReadingEntry({
+				entry: {
+					reading: gehenReading,
+					attestedTranslations: [],
+					attestations: [],
+					notes: "",
+				},
+			}),
+		);
+		const note = await shadowNote(t, shadowId);
+		if (!note) throw new Error("Expected a Shadow Note.");
+		const loader = createPaginatedNoteLoader(note, async (cursor) =>
+			shadowReferences(t, shadowId, cursor),
+		);
+		await loader.loadMore();
+		expect(
+			loader.current().note.references.page[0]?.pendingRelations,
+		).toHaveLength(51);
+
+		expect(
+			await t.run((ctx) =>
+				createDumdictTransaction(ctx).applyGeneratedKnowledge({
+					reading: gehenReading,
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "definition",
+							value: "sich zu Fuß fortbewegen",
+						},
+					],
+					pendingRelations: [],
+				}),
+			),
+		).toMatchObject({ status: "committed" });
+
+		// The Note is keyed by its Shadow alone, so an unchanged Note keeps
+		// its mounted container and the pages it loaded.
+		const refreshed = await shadowNote(t, shadowId);
+		expect(refreshed).toEqual(note);
+		if (!refreshed) throw new Error("Expected a Shadow Note.");
+		loader.refresh(refreshed);
+		expect(
+			loader.current().note.references.page[0]?.pendingRelations,
+		).toHaveLength(51);
+	});
+
 	test("inspects zero, one, or many dictionary-backed candidates by the exact normalized descriptor", async () => {
 		const t = createTestConvex();
 		const lemmaRows = [
@@ -435,10 +514,6 @@ describe("Shadow backfills and presentation", () => {
 			["wrong-kind", "de", "Bank", "Lexeme", "VERB", "🏦"],
 		] as const;
 		const { shadowId, candidates } = await t.run(async (ctx) => {
-			await ctx.db.insert("dictionaryState", {
-				key: "global",
-				revision: 7,
-			});
 			await insertSourceReading(ctx);
 			const stored = [];
 			for (const [
@@ -483,7 +558,6 @@ describe("Shadow backfills and presentation", () => {
 		if (!first || !second) throw new Error("Expected two candidates.");
 
 		const note = await shadowNote(t, shadowId);
-		expect(note?.inspection.revision).toBe("convex-7");
 		expect(
 			note?.inspection.candidates.map(({ lemmaId }) => lemmaId),
 		).toEqual([first.lemmaId, second.lemmaId]);

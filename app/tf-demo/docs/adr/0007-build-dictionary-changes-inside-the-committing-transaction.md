@@ -47,5 +47,7 @@ weight those hops paid for.
 - Whether Resolution Inspector capture is on travels in the scheduled
   action's arguments and captured steps are saved in one mutation, so tracing
   adds no hop to the path it observes.
-- Navigation and Shadow cleanup actions still use the action-side adapter;
-  they can move to mutations the same way when their latency matters.
+- Reviewed navigation and Shadow cleanup now plan and commit in their own
+  mutations through `ensureReadingEntry` and `cleanupRelations`. No dictionary
+  write crosses an action hop, so the global dictionary revision is retired
+  and Convex's conflict handling protects every plan.

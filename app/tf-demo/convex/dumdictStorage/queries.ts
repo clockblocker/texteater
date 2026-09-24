@@ -12,7 +12,7 @@ import { lemmaValueValidator } from "../model/validators";
 import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
-	currentRevision,
+	DICTIONARY_REVISION,
 	dictionaryLemmasWithCanonicalForm,
 	findLemmaByKey,
 	findReadingByKey,
@@ -30,14 +30,11 @@ export const findDumdictStoredReadings = internalQuery({
 	args: { lemmaKey: v.string() },
 	returns: v.object({ revision: v.string(), candidates: v.array(v.any()) }),
 	handler: async (ctx, { lemmaKey }) => {
-		const [revision, lemma] = await Promise.all([
-			currentRevision(ctx),
-			ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
-				.unique(),
-		]);
-		if (!lemma) return { revision, candidates: [] };
+		const lemma = await ctx.db
+			.query("lemmas")
+			.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
+			.unique();
+		if (!lemma) return { revision: DICTIONARY_REVISION, candidates: [] };
 		const [dictionaryLemma, readings] = await Promise.all([
 			ctx.db
 				.query("dictionaryLemmas")
@@ -48,7 +45,8 @@ export const findDumdictStoredReadings = internalQuery({
 				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 				.take(MAX_READING_CANDIDATES + 1),
 		]);
-		if (!dictionaryLemma) return { revision, candidates: [] };
+		if (!dictionaryLemma)
+			return { revision: DICTIONARY_REVISION, candidates: [] };
 		if (readings.length > MAX_READING_CANDIDATES) {
 			throw new Error(
 				`Stored Reading lookup supports at most ${MAX_READING_CANDIDATES} candidates.`,
@@ -58,7 +56,7 @@ export const findDumdictStoredReadings = internalQuery({
 			readings.map((reading) => loadReading(ctx, reading)),
 		);
 		return {
-			revision,
+			revision: DICTIONARY_REVISION,
 			candidates: readings.flatMap((_reading, index) => {
 				const entry = entries[index];
 				return entry
@@ -169,14 +167,13 @@ export async function loadReadingEntryContextSlice(
 ) {
 	switch (args.intent) {
 		case "ensureReadingEntry": {
-			const [revision, lemma, reading] = await Promise.all([
-				currentRevision(ctx),
+			const [lemma, reading] = await Promise.all([
 				findLemmaByKey(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
 			]);
 			return {
 				intent: args.intent,
-				revision,
+				revision: DICTIONARY_REVISION,
 				...(lemma
 					? {
 							existingLemma: {
@@ -188,15 +185,14 @@ export async function loadReadingEntryContextSlice(
 			};
 		}
 		case "ensureOwnedSurface": {
-			const [revision, lemma, reading, surface] = await Promise.all([
-				currentRevision(ctx),
+			const [lemma, reading, surface] = await Promise.all([
 				findLemmaByKey(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
 				findSurface(ctx, args.surfaceKey),
 			]);
 			return {
 				intent: args.intent,
-				revision,
+				revision: DICTIONARY_REVISION,
 				...(lemma
 					? {
 							existingLemma: {
@@ -213,8 +209,7 @@ export async function loadReadingEntryContextSlice(
 				1 + args.pendingLocatorKeys.length,
 				"Generated-Knowledge context",
 			);
-			const [revision, reading, pending, inventory] = await Promise.all([
-				currentRevision(ctx),
+			const [reading, pending, inventory] = await Promise.all([
 				findReadingByKey(ctx, args.readingKey),
 				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
 				loadRelationNeighbourhood(ctx, {
@@ -226,7 +221,7 @@ export async function loadReadingEntryContextSlice(
 			]);
 			return {
 				intent: args.intent,
-				revision,
+				revision: DICTIONARY_REVISION,
 				...(reading ? { existingReading: reading.entry } : {}),
 				exactPendingRelations: pending,
 				relationLemmas: inventory.lemmas,
@@ -250,7 +245,6 @@ export async function loadReadingEntryContextSlice(
 				"New-note explicit Lemma target loading",
 			);
 			const [
-				revision,
 				lemma,
 				reading,
 				surfaces,
@@ -258,7 +252,6 @@ export async function loadReadingEntryContextSlice(
 				pending,
 				matchingPending,
 			] = await Promise.all([
-				currentRevision(ctx),
 				findLemmaByKey(ctx, args.lemmaKey),
 				findReadingByKey(ctx, args.readingKey),
 				Promise.all(surfaceKeys.map((key) => findSurface(ctx, key))),
@@ -321,7 +314,7 @@ export async function loadReadingEntryContextSlice(
 			});
 			return {
 				intent: args.intent,
-				revision,
+				revision: DICTIONARY_REVISION,
 				...(lemma
 					? {
 							existingLemma: {
@@ -356,8 +349,7 @@ export const getDumdictRelationsCleanupInfo = internalQuery({
 	args: { canonicalForm: v.string() },
 	returns: v.any(),
 	handler: async (ctx, { canonicalForm }) => {
-		const [revision, lemmas, pending] = await Promise.all([
-			currentRevision(ctx),
+		const [lemmas, pending] = await Promise.all([
 			dictionaryLemmasWithCanonicalForm(ctx, canonicalForm),
 			ctx.db
 				.query("pendingSemanticRelations")
@@ -372,7 +364,7 @@ export const getDumdictRelationsCleanupInfo = internalQuery({
 			);
 		}
 		return {
-			revision,
+			revision: DICTIONARY_REVISION,
 			canonicalForm,
 			candidateLemmas: lemmas.map((lemma) => ({
 				lemma: lemmaValue(lemma),
@@ -387,63 +379,57 @@ export const getDumdictRelationsCleanupInfo = internalQuery({
 	},
 });
 
+/** Loads the exact pending relations one cleanup resolves and their neighbourhood. */
+export async function loadCleanupRelationsSlice(
+	ctx: ServerCtx,
+	rawLocatorKeys: readonly string[],
+) {
+	assertPlanBudget(rawLocatorKeys.length, "Relations-cleanup context");
+	const locatorKeys = uniqueBoundedKeys(
+		rawLocatorKeys,
+		"Relations-cleanup locator loading",
+	);
+	const pending = await Promise.all(
+		locatorKeys.map((locatorKey) =>
+			ctx.db
+				.query("pendingSemanticRelations")
+				.withIndex("by_locator_key", (q) =>
+					q.eq("locatorKey", locatorKey),
+				)
+				.unique(),
+		),
+	);
+	const pendingRelations = pending.flatMap((record) =>
+		record
+			? [requireRecord(record.record, "Pending Semantic Relation record")]
+			: [],
+	);
+	const inventory = await loadRelationNeighbourhood(
+		ctx,
+		pendingRelationSeeds(pendingRelations),
+	);
+	return {
+		revision: DICTIONARY_REVISION,
+		pendingRelations,
+		relationLemmas: inventory.lemmas,
+		relationReadings: inventory.readings,
+	};
+}
+
 export const loadDumdictCleanupRelationsContext = internalQuery({
-	args: {
-		locatorKeys: v.array(v.string()),
-	},
+	args: { locatorKeys: v.array(v.string()) },
 	returns: v.any(),
-	handler: async (ctx, args) => {
-		assertPlanBudget(args.locatorKeys.length, "Relations-cleanup context");
-		const locatorKeys = uniqueBoundedKeys(
-			args.locatorKeys,
-			"Relations-cleanup locator loading",
-		);
-		const [revision, pending] = await Promise.all([
-			currentRevision(ctx),
-			Promise.all(
-				locatorKeys.map((locatorKey) =>
-					ctx.db
-						.query("pendingSemanticRelations")
-						.withIndex("by_locator_key", (q) =>
-							q.eq("locatorKey", locatorKey),
-						)
-						.unique(),
-				),
-			),
-		]);
-		const pendingRelations = pending.flatMap((record) =>
-			record
-				? [
-						requireRecord(
-							record.record,
-							"Pending Semantic Relation record",
-						),
-					]
-				: [],
-		);
-		const inventory = await loadRelationNeighbourhood(
-			ctx,
-			pendingRelationSeeds(pendingRelations),
-		);
-		return {
-			revision,
-			pendingRelations,
-			relationLemmas: inventory.lemmas,
-			relationReadings: inventory.readings,
-		};
-	},
+	handler: (ctx, { locatorKeys }) =>
+		loadCleanupRelationsSlice(ctx, locatorKeys),
 });
 
 export const loadDumdictReadingForPatch = internalQuery({
 	args: { readingKey: v.string() },
 	returns: v.any(),
 	handler: async (ctx, { readingKey }) => {
-		const [revision, reading] = await Promise.all([
-			currentRevision(ctx),
-			findReadingByKey(ctx, readingKey),
-		]);
+		const reading = await findReadingByKey(ctx, readingKey);
 		return {
-			revision,
+			revision: DICTIONARY_REVISION,
 			...(reading ? { reading: reading.entry } : {}),
 		};
 	},

@@ -71,7 +71,6 @@ export const shadowNoteValidator = v.object({
 	}),
 	descriptor: unitShadowProjectionValidator,
 	inspection: v.object({
-		revision: v.string(),
 		candidates: v.array(
 			v.object({
 				lemmaId: v.id("lemmas"),
@@ -118,32 +117,17 @@ async function loadShadowInspection(
 	ctx: QueryCtx,
 	descriptor: ShadowDescriptor,
 ) {
-	if (!isUnitReadingFamily(descriptor.family)) {
-		const state = await ctx.db
-			.query("dictionaryState")
-			.withIndex("by_key", (q) => q.eq("key", "global"))
-			.unique();
-		return {
-			revision: `convex-${state?.revision ?? 0}`,
-			candidates: [],
-		};
-	}
-	const [state, lemmas] = await Promise.all([
-		ctx.db
-			.query("dictionaryState")
-			.withIndex("by_key", (q) => q.eq("key", "global"))
-			.unique(),
-		ctx.db
-			.query("lemmas")
-			.withIndex("by_shadow_descriptor", (q) =>
-				q
-					.eq("language", descriptor.language)
-					.eq("canonicalForm", descriptor.canonicalForm)
-					.eq("family", descriptor.family)
-					.eq("kind", descriptor.kind),
-			)
-			.take(MAX_SHADOW_CANDIDATE_LEMMAS + 1),
-	]);
+	if (!isUnitReadingFamily(descriptor.family)) return { candidates: [] };
+	const lemmas = await ctx.db
+		.query("lemmas")
+		.withIndex("by_shadow_descriptor", (q) =>
+			q
+				.eq("language", descriptor.language)
+				.eq("canonicalForm", descriptor.canonicalForm)
+				.eq("family", descriptor.family)
+				.eq("kind", descriptor.kind),
+		)
+		.take(MAX_SHADOW_CANDIDATE_LEMMAS + 1);
 	if (lemmas.length > MAX_SHADOW_CANDIDATE_LEMMAS) {
 		throw new Error(
 			`Shadow inspection supports at most ${MAX_SHADOW_CANDIDATE_LEMMAS} exactly matching Lemmas.`,
@@ -194,7 +178,6 @@ async function loadShadowInspection(
 	);
 
 	return {
-		revision: `convex-${state?.revision ?? 0}`,
 		candidates: candidates.sort((left, right) =>
 			`${left.canonicalForm}\0${left.family}\0${left.kind}\0${left.lemmaId}`.localeCompare(
 				`${right.canonicalForm}\0${right.family}\0${right.kind}\0${right.lemmaId}`,

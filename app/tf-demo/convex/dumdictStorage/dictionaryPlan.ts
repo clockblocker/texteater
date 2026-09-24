@@ -57,12 +57,14 @@ function mutablePreconditions(
 	});
 }
 
-/** Converts the package plan into the mutable Convex transport shape. */
+/**
+ * Converts the package plan into the mutable Convex transport shape. Its base
+ * revision is dropped: a plan commits against the transaction's own reads.
+ */
 export function dictionaryPlanResult(
-	input: DumdictPlan<"de">,
+	input: Pick<DumdictPlan<"de">, "changes">,
 ): DictionaryPlanResult {
 	return {
-		baseRevision: input.baseRevision,
 		changes: input.changes.map((change) => {
 			const preconditions = mutablePreconditions(change.preconditions);
 			switch (change.type) {

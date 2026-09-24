@@ -14,7 +14,6 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { bumpDictionaryRevision } from "./dumdictStorage/storage";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import { loadStoredSegments } from "./model/storedSegments";
@@ -74,7 +73,6 @@ export const resetDemoTableNames = [
 	"sentenceAnalyses",
 	"sentences",
 	"texts",
-	"dictionaryState",
 ] as const satisfies readonly TableNames[];
 
 function assertVisitorId(visitorId: string): void {
@@ -795,7 +793,6 @@ export const clearReadingDataBatch = internalMutation({
 				cursor = { ...cursor, phase: nextReadingPhase(cursor.phase) };
 			}
 		}
-		if (deleted > 0) await bumpDictionaryRevision(ctx);
 		const nextCursor =
 			cursor.itemIndex >= readingKeys.length ? null : cursor;
 		return {
@@ -980,7 +977,6 @@ export const clearLemmaDataBatch = internalMutation({
 			if (!phaseComplete) break;
 			cursor = { ...cursor, phase: nextLemmaPhase(cursor.phase) };
 		}
-		if (deleted > 0) await bumpDictionaryRevision(ctx);
 		const nextCursor = cursor.itemIndex >= lemmaIds.length ? null : cursor;
 		return {
 			deleted,

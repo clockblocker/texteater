@@ -3,7 +3,7 @@ import {
 	useQuery,
 	useMutation as useReactQueryMutation,
 } from "@tanstack/react-query";
-import { useAction, useConvex, useMutation } from "convex/react";
+import { useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
@@ -133,8 +133,8 @@ function ReadingNoteContainer({
 		api.knowledgeGeneration.ensureForReading,
 	);
 	const nounArticle = useNounArticleNavigation();
-	const followAlternative = useAction(
-		api.orchestration.followGrammaticalAlternative,
+	const followAlternative = useMutation(
+		api.reviewedNavigation.followGrammaticalAlternative,
 	);
 	const alternativeMutation = useReactQueryMutation({
 		mutationFn: async (readingKey: string) => {

@@ -2,19 +2,25 @@ import type { Infer } from "convex/values";
 import {
 	type AddNewNoteRequest,
 	type ApplyGeneratedKnowledgeRequest,
+	type CleanupRelationsRequest,
+	type CleanupRelationsSlice,
 	createDumdictPlanner,
 	type DumdictPlanOutcome,
 	type EnsureOwnedSurfaceRequest,
+	type EnsureReadingEntryRequest,
 	type MutationRejectedCode,
 	type ReadingEntryContext,
 	type ReadingEntryContextLoad,
 } from "dumdict/planning";
-
 import type { MutationCtx } from "./_generated/server";
 import { readingEntryContextArgs } from "./dumdictStorage/contextRequest";
 import { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
-import { loadReadingEntryContextSlice } from "./dumdictStorage/queries";
+import {
+	loadCleanupRelationsSlice,
+	loadReadingEntryContextSlice,
+} from "./dumdictStorage/queries";
 import { applyDumdictPlanInTransaction } from "./dumdictStorage/transaction";
+import { pendingLocatorIndexKey } from "./model/dumdictPendingIndexes";
 import type { dictionaryPlanValidator } from "./model/validators";
 
 export type DumdictTransactionPlan = Infer<typeof dictionaryPlanValidator>;
@@ -23,8 +29,9 @@ export type DumdictTransactionPlan = Infer<typeof dictionaryPlanValidator>;
 export type DumdictTransactionOutcome =
 	| {
 			readonly status: "committed";
-			readonly nextRevision: string;
 			readonly plan: DumdictTransactionPlan;
+			/** The planner's summary of what the plan changed. */
+			readonly message: string;
 	  }
 	| {
 			readonly status: "rejected";
@@ -33,8 +40,7 @@ export type DumdictTransactionOutcome =
 	  }
 	| {
 			readonly status: "conflict";
-			readonly code: "revisionConflict" | "semanticPreconditionFailed";
-			readonly latestRevision?: string;
+			readonly code: "semanticPreconditionFailed";
 			readonly message?: string;
 	  };
 
@@ -46,8 +52,14 @@ export type DumdictTransaction = {
 	readonly ensureOwnedSurface: (
 		request: EnsureOwnedSurfaceRequest<"de">,
 	) => Promise<DumdictTransactionOutcome>;
+	readonly ensureReadingEntry: (
+		request: EnsureReadingEntryRequest<"de">,
+	) => Promise<DumdictTransactionOutcome>;
 	readonly applyGeneratedKnowledge: (
 		request: ApplyGeneratedKnowledgeRequest<"de">,
+	) => Promise<DumdictTransactionOutcome>;
+	readonly cleanupRelations: (
+		request: CleanupRelationsRequest<"de">,
 	) => Promise<DumdictTransactionOutcome>;
 };
 
@@ -55,13 +67,12 @@ export type DumdictTransaction = {
  * Transaction-local Shared Demo Dictionary persistence seam.
  *
  * The returned module never opens a nested Convex transaction. Dictionary
- * writes therefore commit or roll back with the host occurrence or generated
- * Knowledge write that requested them. Workflow methods plan where the data
- * is: they read the slice from `ctx.db`, plan with the same Dumdict planners
- * as the action adapter in `dumdictStorage/adapter.ts`, and apply in the same
- * transaction. The revision a plan was built against is therefore the
- * revision it commits against, so Convex's optimistic concurrency, not a
- * retry loop, resolves concurrent writers.
+ * writes therefore commit or roll back with the host write that requested
+ * them. Workflow methods plan where the data is: they read the slice from
+ * `ctx.db`, plan with the same Dumdict planners as the Effect service, and
+ * apply in the same transaction. A plan therefore commits against the reads
+ * it was built from, so Convex's optimistic concurrency, not a revision check
+ * or a retry loop, resolves concurrent writers.
  */
 export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 	const planner = createDumdictPlanner("de");
@@ -83,7 +94,9 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 		if (outcome.status === "rejected") return outcome;
 		const plan = dictionaryPlanResult(outcome.plan);
 		const commit = await applyDumdictPlanInTransaction(ctx, plan);
-		return commit.status === "committed" ? { ...commit, plan } : commit;
+		return commit.status === "committed"
+			? { status: "committed", plan, message: outcome.summary.message }
+			: commit;
 	}
 	return {
 		addNewNote: async (request) =>
@@ -103,6 +116,16 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 					request,
 				),
 			),
+		ensureReadingEntry: async (request) =>
+			apply(
+				planner.ensureReadingEntry(
+					await loadContext({
+						intent: "ensureReadingEntry",
+						request,
+					}),
+					request,
+				),
+			),
 		applyGeneratedKnowledge: async (request) =>
 			apply(
 				planner.applyGeneratedKnowledge(
@@ -110,6 +133,18 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 						intent: "applyGeneratedKnowledge",
 						request,
 					}),
+					request,
+				),
+			),
+		cleanupRelations: async (request) =>
+			apply(
+				planner.cleanupRelations(
+					(await loadCleanupRelationsSlice(
+						ctx,
+						request.resolutions.map(({ locator }) =>
+							pendingLocatorIndexKey(locator),
+						),
+					)) as unknown as CleanupRelationsSlice<"de">,
 					request,
 				),
 			),

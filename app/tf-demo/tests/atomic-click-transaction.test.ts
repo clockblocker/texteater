@@ -45,7 +45,6 @@ const dictionaryAndOccurrenceTables = [
 	"dictionaryLemmas",
 	"readingEntries",
 	"ownedSurfaces",
-	"dictionaryState",
 	"attestations",
 	"accumulatedKnowledge",
 	"knowledgeGenerationAttempts",
@@ -149,7 +148,6 @@ test("a New Reading plans and commits dictionary, occurrence membership, and Cli
 	expect(await rows(t, "visitorClicks")).toEqual([
 		expect.objectContaining({ attestationId: result.attestationId }),
 	]);
-	expect((await rows(t, "dictionaryState"))[0]?.revision).toBe(1);
 	const [segment] = await rows(t, "segments");
 	expect(segment?._id).toBe(segmentIds[0]);
 	expect(segment?.attestationMembership).toEqual({
@@ -344,7 +342,6 @@ test("a New decision for a Reading another commit stored first commits as a reus
 test("a reused Reading gains a previously unseen Surface in the occurrence transaction", async () => {
 	const t = createTestConvex();
 	const readingId = await t.run(async (ctx) => {
-		await ctx.db.insert("dictionaryState", { key: "global", revision: 0 });
 		const lemmaId = await insertBankLemma(ctx);
 		await ctx.db.insert("dictionaryLemmas", { lemmaId });
 		const readingId = await insertBankReading(ctx, lemmaId);
@@ -363,7 +360,6 @@ test("a reused Reading gains a previously unseen Surface in the occurrence trans
 	expect(await rows(t, "surfaces")).toHaveLength(1);
 	expect(await rows(t, "ownedSurfaces")).toHaveLength(1);
 	expect((await rows(t, "attestations"))[0]?.readingId).toBe(readingId);
-	expect((await rows(t, "dictionaryState"))[0]?.revision).toBe(1);
 });
 
 test("a reused Reading that no longer exists is reported as a dictionary conflict without writes", async () => {
@@ -445,7 +441,6 @@ test("a failure after the dictionary commit rolls back dictionary, occurrence, a
 	).rejects.toThrow("attemptKey collides with a different occurrence.");
 
 	expect(await snapshot(t)).toEqual(before);
-	expect(await rows(t, "dictionaryState")).toEqual([]);
 	expect(await rows(t, "attestations")).toHaveLength(1);
 	expect((await rows(t, "visitorClicks"))[0]?.attestationId).toBeUndefined();
 	expect(

@@ -1,11 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { useAction } from "convex/react";
+import { useMutation as useConvexMutation } from "convex/react";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
 export function useNounArticleNavigation() {
-	const openArticle = useAction(api.orchestration.followNounArticle);
+	const openArticle = useConvexMutation(
+		api.reviewedNavigation.followNounArticle,
+	);
 	const { follow } = useWorkspaceInteraction();
 	const mutation = useMutation({
 		mutationFn: async (lemmaId: Id<"lemmas">) => {

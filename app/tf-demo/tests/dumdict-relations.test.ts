@@ -17,7 +17,7 @@ import {
 	executeOutput,
 	rejectJudgment,
 } from "../../../battery/dumgen/tests/execution-fixture.js";
-import { internal } from "../convex/_generated/api";
+import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
 import { dictionaryPlanResult } from "../convex/dumdictStorage/dictionaryPlan";
@@ -132,7 +132,7 @@ async function insertReading(
 	});
 }
 
-/** The `gehen` Reading with two owned Surfaces, at dictionary revision 0. */
+/** The `gehen` Reading with two owned Surfaces. */
 async function seededDictionary(
 	options: { readonly gehenRecord?: Record<string, unknown> } = {},
 ) {
@@ -221,10 +221,6 @@ function snapshot(t: TestConvexDb) {
 			),
 		),
 	);
-}
-
-async function revision(t: TestConvexDb) {
-	return (await rows(t, "dictionaryState"))[0]?.revision;
 }
 
 async function readingIdFor(
@@ -337,7 +333,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		};
 		await expect(
 			readingEntryContext(t, newNoteArgs),
-		).resolves.toMatchObject({ revision: "convex-0" });
+		).resolves.toMatchObject({ revision: "convex" });
 		await expect(
 			readingEntryContext(t, {
 				...newNoteArgs,
@@ -377,7 +373,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					),
 				},
 			),
-		).resolves.toMatchObject({ revision: "convex-0" });
+		).resolves.toMatchObject({ revision: "convex" });
 		await expect(
 			t.query(
 				internal.dumdictStorage.queries
@@ -412,8 +408,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					},
 				}),
 			),
-		).toMatchObject({ status: "applied", nextRevision: "convex-1" });
-		expect(await revision(boundary)).toBe(1);
+		).toMatchObject({ status: "applied" });
 		expect(
 			(await readingKnowledge(boundary, gehenReading))?.semanticRelations
 				?.nearSynonym,
@@ -503,13 +498,13 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			contexts.map(({ intent, revision }) => ({ intent, revision })),
 		).toEqual([
-			{ intent: "addNewNote", revision: "convex-0" },
+			{ intent: "addNewNote", revision: "convex" },
 			{
 				intent: "applyGeneratedKnowledge",
-				revision: "convex-0",
+				revision: "convex",
 			},
-			{ intent: "ensureOwnedSurface", revision: "convex-0" },
-			{ intent: "ensureReadingEntry", revision: "convex-0" },
+			{ intent: "ensureOwnedSurface", revision: "convex" },
+			{ intent: "ensureReadingEntry", revision: "convex" },
 		]);
 		expect(contexts[2]).not.toHaveProperty("relationLemmas");
 		expect(contexts[3]).not.toHaveProperty("relationReadings");
@@ -628,7 +623,6 @@ describe("tf-demo Dumdict relation storage", () => {
 			code: "readingAlreadyExists",
 		});
 		expect(await rows(t, "pendingSemanticRelations")).toHaveLength(1);
-		expect(await revision(t)).toBe(2);
 	});
 
 	test("persists exact Reading targets and navigates to the target Reading Note", async () => {
@@ -865,7 +859,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		).not.toMatchObject({ definition: "sich gehend fortbewegen" });
 	});
 
-	test("loads cleanup context and atomically resolves only the exact pending locator", async () => {
+	test("Shadow cleanup commits only the exact pending locator in its own mutation", async () => {
 		const { t } = await seededDictionary();
 		const dict = dictionaryFor(t);
 		await Effect.runPromise(
@@ -923,20 +917,21 @@ describe("tf-demo Dumdict relation storage", () => {
 			expect.objectContaining(laufenLemma),
 		]);
 		expect(info.pendingRelations).toHaveLength(2);
-		const locator = info.pendingRelations.find(
-			({ pending }) => pending.relation === "nearSynonym",
-		)?.locator;
-		if (!locator) throw new Error("Expected a pending relation.");
-		expect(
-			await Effect.runPromise(
-				dict
-					.cleanupRelations({
-						baseRevision: info.revision,
-						resolutions: [{ locator }],
-					})
-					.pipe(Effect.catchAll(Effect.succeed)),
-			),
-		).toMatchObject({ status: "applied" });
+		const pending = (await rows(t, "pendingSemanticRelations")).find(
+			({ record }) =>
+				(record as { pending: { relation: string } }).pending
+					.relation === "nearSynonym",
+		);
+		if (!pending?.shadowId) throw new Error("Expected a pending relation.");
+		const cleanup = () =>
+			t.mutation(api.shadowResolution.cleanupPendingRelation, {
+				shadowId: pending.shadowId as Id<"shadows">,
+				locatorKey: pending.locatorKey,
+			});
+		expect(await cleanup()).toEqual({
+			status: "applied",
+			message: "Resolved 1 relation.",
+		});
 		expect(await rows(t, "pendingSemanticRelations")).toEqual([
 			expect.objectContaining({
 				record: expect.objectContaining({
@@ -953,33 +948,12 @@ describe("tf-demo Dumdict relation storage", () => {
 				?.nearSynonym,
 		).toBeUndefined();
 
-		expect(
-			await Effect.runPromise(
-				dict
-					.cleanupRelations({
-						baseRevision: info.revision,
-						resolutions: [{ locator }],
-					})
-					.pipe(Effect.catchAll(Effect.succeed)),
-			),
-		).toMatchObject({ _tag: "DumdictRevisionConflict" });
-		const latest = await Effect.runPromise(
-			dict.getInfoForRelationsCleanup({
-				canonicalForm: "laufen",
-			}),
-		);
-		expect(
-			await Effect.runPromise(
-				dict
-					.cleanupRelations({
-						baseRevision: latest.revision,
-						resolutions: [{ locator }],
-					})
-					.pipe(Effect.catchAll(Effect.succeed)),
-			),
-		).toMatchObject({
-			_tag: "DumdictSemanticPreconditionFailure",
+		const before = await snapshot(t);
+		expect(await cleanup()).toEqual({
+			status: "conflict",
+			message: "The exact pending Shadow reference no longer exists.",
 		});
+		expect(await snapshot(t)).toEqual(before);
 	});
 
 	test("resolves pending Shadows automatically when their exact Lemma appears", async () => {

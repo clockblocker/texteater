@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { useAction, useConvex } from "convex/react";
+import { useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useReducer, useRef, useState } from "react";
 import type { ShadowNoteTarget } from "@/lib/navigation";
@@ -44,7 +44,7 @@ export function ShadowNoteView({
 	}
 	return (
 		<ShadowNoteContainer
-			key={`${noteQuery.data.target.shadowId}:${noteQuery.data.inspection.revision}`}
+			key={noteQuery.data.target.shadowId}
 			note={noteQuery.data}
 			presentation={presentation}
 			onRefresh={() => noteQuery.refetch().then(() => undefined)}
@@ -63,8 +63,8 @@ function ShadowNoteContainer({
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
-	const cleanupPendingRelation = useAction(
-		api.orchestration.cleanupPendingRelation,
+	const cleanupPendingRelation = useMutation(
+		api.shadowResolution.cleanupPendingRelation,
 	);
 	const loadShadowPage = useCallback(
 		(cursor: string) =>
@@ -92,7 +92,6 @@ function ShadowNoteContainer({
 			const result = await cleanupPendingRelation({
 				shadowId: note.target.shadowId,
 				locatorKey,
-				baseRevision: note.inspection.revision,
 			});
 			if (!isCurrentShadowAction(attempt, actionEpoch.current)) return;
 			await onRefresh();

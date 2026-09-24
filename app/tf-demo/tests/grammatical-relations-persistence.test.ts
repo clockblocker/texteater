@@ -137,7 +137,7 @@ test("reviewed alternatives are visible without preloading and only the selected
 		),
 	).toBe(true);
 	const follow = () =>
-		t.action(api.orchestration.followGrammaticalAlternative, {
+		t.mutation(api.reviewedNavigation.followGrammaticalAlternative, {
 			sourceReadingId,
 			readingKey: mir.readingKey,
 		});
@@ -168,7 +168,7 @@ test("unreviewed destinations cannot create arbitrary Readings", async () => {
 	const { t, sourceReadingId } = await database();
 	const before = await snapshot(t);
 	await expect(
-		t.action(api.orchestration.followGrammaticalAlternative, {
+		t.mutation(api.reviewedNavigation.followGrammaticalAlternative, {
 			sourceReadingId,
 			readingKey: "invented-reading",
 		}),
@@ -182,7 +182,7 @@ test("unreviewed destinations cannot create arbitrary Readings", async () => {
 test("noun heading navigation materializes the authored DET Reading without relations or encounters", async () => {
 	const t = createTestConvex();
 	const lemmaId = await insertLemma(t, noun);
-	const id = await t.action(api.orchestration.followNounArticle, {
+	const id = await t.mutation(api.reviewedNavigation.followNounArticle, {
 		lemmaId,
 	});
 	const articleLemma = await t.run(async (ctx) => {
@@ -202,7 +202,7 @@ test("noun heading navigation materializes the authored DET Reading without rela
 		expect(await rows(t, table)).toHaveLength(0);
 	const before = await snapshot(t);
 	expect(
-		await t.action(api.orchestration.followNounArticle, { lemmaId }),
+		await t.mutation(api.reviewedNavigation.followNounArticle, { lemmaId }),
 	).toBe(id);
 	expect(await snapshot(t)).toEqual(before);
 });
@@ -211,7 +211,7 @@ test("noun heading navigation rejects non-nouns before writing", async () => {
 	const { t, sourceLemmaId } = await database();
 	const before = await snapshot(t);
 	await expect(
-		t.action(api.orchestration.followNounArticle, {
+		t.mutation(api.reviewedNavigation.followNounArticle, {
 			lemmaId: sourceLemmaId,
 		}),
 	).rejects.toThrow("no noun heading article");
@@ -230,7 +230,7 @@ test("noun composition creates its article Reading with authored Knowledge befor
 	});
 	await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
 	expect(await rows(t, "accumulatedKnowledge")).toHaveLength(1);
-	const id = await t.action(api.orchestration.followNounArticle, {
+	const id = await t.mutation(api.reviewedNavigation.followNounArticle, {
 		lemmaId,
 	});
 	expect((await knowledgeRows(t))[0]?.knowledge.definition).toContain(
@@ -241,7 +241,7 @@ test("noun composition creates its article Reading with authored Knowledge befor
 	expect(await rows(t, "visitorClicks")).toHaveLength(0);
 	const before = await snapshot(t);
 	expect(
-		await t.action(api.orchestration.followNounArticle, { lemmaId }),
+		await t.mutation(api.reviewedNavigation.followNounArticle, { lemmaId }),
 	).toBe(id);
 	expect(await snapshot(t)).toEqual(before);
 });
@@ -302,11 +302,7 @@ test("authored article completion repairs empty entries and preserves existing K
 		});
 		await ctx.db.delete(accumulated._id);
 	});
-	const [stateBefore] = await rows(t, "dictionaryState");
 	expect(await complete()).toBe(true);
-	expect((await rows(t, "dictionaryState"))[0]?.revision).toBe(
-		(stateBefore?.revision ?? 0) + 1,
-	);
 	const [restored] = await knowledgeRows(t);
 	expect(restored?.knowledge.definition).toContain("„die“");
 	expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(

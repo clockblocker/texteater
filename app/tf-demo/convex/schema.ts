@@ -547,9 +547,4 @@ export default defineSchema({
 			"stage",
 			"lastSeenAt",
 		]),
-
-	dictionaryState: defineTable({
-		key: v.literal("global"),
-		revision: v.number(),
-	}).index("by_key", ["key"]),
 });

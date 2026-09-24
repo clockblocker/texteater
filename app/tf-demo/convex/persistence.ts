@@ -370,17 +370,10 @@ export const persistResolvedClick = internalMutation({
 			});
 			return {
 				status: "DictionaryConflict" as const,
-				code:
-					dictionaryCommit.status === "conflict"
-						? dictionaryCommit.code
-						: ("semanticPreconditionFailed" as const),
+				code: "semanticPreconditionFailed" as const,
 				message:
 					dictionaryCommit.message ??
 					"The Shared Demo Dictionary rejected this click.",
-				...(dictionaryCommit.status === "conflict" &&
-				dictionaryCommit.latestRevision
-					? { latestRevision: dictionaryCommit.latestRevision }
-					: {}),
 			};
 		}
 

@@ -63,11 +63,11 @@ export function createConvexDumdictStorage(
 					) as Promise<ReadingPatchSlice<"de">>,
 			);
 		},
-		commitChanges({ baseRevision, changes }) {
+		commitChanges({ changes }) {
 			return storageEffect("commitChanges", () =>
 				ctx.runMutation(
 					internal.dumdictStorage.transaction.commitDumdictChanges,
-					dictionaryPlanResult({ baseRevision, changes }),
+					dictionaryPlanResult({ changes }),
 				),
 			);
 		},

@@ -3,7 +3,6 @@ import { deriveNounArticle } from "dumgen/authored";
 import { parseGermanSurface } from "../../server/operationalParsing";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
-import { bumpDictionaryRevision } from "../dumdictStorage/storage";
 import { materializeGrammaticalComponent } from "../dumdictStorage/transaction";
 import { surfaceValue } from "./occurrenceAttestations";
 
@@ -40,7 +39,6 @@ export async function migrateNounArticle(
 			? { inflectionalFeatures: value.inflectionalFeatures }
 			: {}),
 	});
-	await bumpDictionaryRevision(ctx);
 }
 
 /** A separate per-row pass bounds work even when one Surface has many occurrences. */

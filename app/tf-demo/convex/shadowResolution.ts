@@ -1,13 +1,21 @@
 import { v } from "convex/values";
+import { directSemanticRelationValues } from "dumrel";
 
-import { internalQuery, type QueryCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+import { type MutationCtx, mutation } from "./_generated/server";
+import { DICTIONARY_REVISION } from "./dumdictStorage/storage";
+import { createDumdictTransaction } from "./dumdictTransaction";
 import {
 	descriptorFromStoredShadow,
 	pendingShadowDescriptor,
 	shadowIsCompatible,
 } from "./model/shadows";
 
-function locatorKeyFromRecord(value: unknown): string | null {
+function locatorFromRecord(value: unknown): {
+	sourceReadingKey: string;
+	relation: (typeof directSemanticRelationValues)[number];
+	targetPendingId: string;
+} | null {
 	if (value === null || typeof value !== "object" || Array.isArray(value)) {
 		return null;
 	}
@@ -23,34 +31,37 @@ function locatorKeyFromRecord(value: unknown): string | null {
 	if (
 		typeof fields.sourceReadingKey !== "string" ||
 		typeof fields.relation !== "string" ||
+		!directSemanticRelationValues.includes(
+			fields.relation as (typeof directSemanticRelationValues)[number],
+		) ||
 		typeof fields.targetPendingId !== "string"
 	) {
 		return null;
 	}
+	return {
+		sourceReadingKey: fields.sourceReadingKey,
+		relation:
+			fields.relation as (typeof directSemanticRelationValues)[number],
+		targetPendingId: fields.targetPendingId,
+	};
+}
+
+function locatorKey(
+	locator: NonNullable<ReturnType<typeof locatorFromRecord>>,
+) {
 	return JSON.stringify([
-		fields.sourceReadingKey,
-		fields.relation,
-		fields.targetPendingId,
+		locator.sourceReadingKey,
+		locator.relation,
+		locator.targetPendingId,
 	]);
 }
 
-async function currentRevision(ctx: QueryCtx) {
-	const state = await ctx.db
-		.query("dictionaryState")
-		.withIndex("by_key", (q) => q.eq("key", "global"))
-		.unique();
-	return `convex-${state?.revision ?? 0}`;
-}
-
-async function loadSelectionHandler(
-	ctx: QueryCtx,
-	args: {
-		shadowId: import("./_generated/dataModel").Id<"shadows">;
-		locatorKey: string;
-	},
+/** The exact pending reference a Shadow Note offered, if it still refers to that Shadow. */
+async function loadPendingSelection(
+	ctx: MutationCtx,
+	args: { shadowId: Id<"shadows">; locatorKey: string },
 ) {
-	const [revision, pending, shadow] = await Promise.all([
-		currentRevision(ctx),
+	const [pending, shadow] = await Promise.all([
 		ctx.db
 			.query("pendingSemanticRelations")
 			.withIndex("by_locator_key", (q) =>
@@ -59,35 +70,64 @@ async function loadSelectionHandler(
 			.unique(),
 		ctx.db.get(args.shadowId),
 	]);
-	let compatiblePending = false;
+	const locator = locatorFromRecord(pending?.record);
 	try {
-		compatiblePending =
-			shadow !== null &&
+		return shadow !== null &&
 			pending !== null &&
 			pending.shadowId === args.shadowId &&
-			locatorKeyFromRecord(pending.record) === args.locatorKey &&
+			locator !== null &&
+			locatorKey(locator) === args.locatorKey &&
 			shadowIsCompatible(
 				shadow,
 				pendingShadowDescriptor(pending.record),
 			) &&
-			shadowIsCompatible(shadow, descriptorFromStoredShadow(shadow));
+			shadowIsCompatible(shadow, descriptorFromStoredShadow(shadow))
+			? locator
+			: null;
 	} catch {
-		compatiblePending = false;
+		return null;
 	}
-	return {
-		revision,
-		pendingRecord: compatiblePending ? (pending?.record ?? null) : null,
-	};
 }
 
-export const loadPendingSelection = internalQuery({
-	args: {
-		shadowId: v.id("shadows"),
-		locatorKey: v.string(),
-	},
-	returns: v.object({
-		revision: v.string(),
-		pendingRecord: v.union(v.null(), v.any()),
+const shadowCleanupResultValidator = v.union(
+	v.object({ status: v.literal("applied"), message: v.string() }),
+	v.object({ status: v.literal("conflict"), message: v.string() }),
+	v.object({
+		status: v.literal("rejected"),
+		code: v.string(),
+		message: v.string(),
 	}),
-	handler: loadSelectionHandler,
+);
+
+/**
+ * Resolves one pending Shadow reference a Shadow Note offered, planning and
+ * committing the relation cleanup in this transaction.
+ */
+export const cleanupPendingRelation = mutation({
+	args: { shadowId: v.id("shadows"), locatorKey: v.string() },
+	returns: shadowCleanupResultValidator,
+	handler: async (ctx, args) => {
+		const locator = await loadPendingSelection(ctx, args);
+		if (!locator)
+			return {
+				status: "conflict" as const,
+				message: "The exact pending Shadow reference no longer exists.",
+			};
+		const result = await createDumdictTransaction(ctx).cleanupRelations({
+			baseRevision: DICTIONARY_REVISION,
+			resolutions: [{ locator }],
+		});
+		if (result.status === "committed")
+			return { status: "applied" as const, message: result.message };
+		return result.status === "conflict"
+			? {
+					status: "conflict" as const,
+					message: result.message ?? "Shadow cleanup conflicted.",
+				}
+			: {
+					status: "rejected" as const,
+					code: result.code,
+					message: result.message ?? "Shadow cleanup was rejected.",
+				};
+	},
 });

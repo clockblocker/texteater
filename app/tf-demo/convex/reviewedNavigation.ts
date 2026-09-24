@@ -1,37 +1,18 @@
 import { v } from "convex/values";
 import { selectNounHeadingArticle } from "dumgen/authored";
 import { readingIdentityKey } from "../server/linguisticIdentity";
-import { parseGermanLemma } from "../server/operationalParsing";
-import { internalMutation, internalQuery } from "./_generated/server";
+import {
+	parseGermanLemma,
+	parseGermanReading,
+} from "../server/operationalParsing";
+import { type MutationCtx, mutation } from "./_generated/server";
 import { completeAuthoredComponentKnowledge } from "./dumdictStorage/transaction";
+import { createDumdictTransaction } from "./dumdictTransaction";
 import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
-import { lemmaValueValidator, readingValueValidator } from "./model/validators";
+import { reviewedAlternatives } from "./modules/notes/relations";
 
-export const nounSource = internalQuery({
-	args: { lemmaId: v.id("lemmas") },
-	returns: lemmaValueValidator,
-	handler: async (ctx, { lemmaId }) => {
-		const lemma = await ctx.db.get(lemmaId);
-		if (!lemma) throw new Error("Lemma not found.");
-		return lemmaValue(lemma);
-	},
-});
-
-export const source = internalQuery({
-	args: { readingId: v.id("readings") },
-	returns: readingValueValidator,
-	handler: async (ctx, { readingId }) => {
-		const reading = await ctx.db.get(readingId);
-		if (!reading) throw new Error("Reading not found.");
-		const lemma = await ctx.db.get(reading.lemmaId);
-		if (!lemma) throw new Error("Lemma not found.");
-		return readingValue(reading, lemma);
-	},
-});
-export const destination = internalQuery({
-	args: { readingKey: v.string() },
-	returns: v.union(v.id("readings"), v.null()),
-	handler: async (ctx, { readingKey }) =>
+async function destination(ctx: MutationCtx, readingKey: string) {
+	return (
 		(
 			await ctx.db
 				.query("readings")
@@ -39,28 +20,81 @@ export const destination = internalQuery({
 					q.eq("readingKey", readingKey),
 				)
 				.unique()
-		)?._id ?? null,
+		)?._id ?? null
+	);
+}
+
+/** Materializes only the reviewed Reading selected by this navigation request. */
+export const followGrammaticalAlternative = mutation({
+	args: { sourceReadingId: v.id("readings"), readingKey: v.string() },
+	returns: v.id("readings"),
+	handler: async (ctx, { sourceReadingId, readingKey }) => {
+		const reading = await ctx.db.get(sourceReadingId);
+		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
+		if (!reading || !lemma) throw new Error("Reading not found.");
+		const source = parseGermanReading(readingValue(reading, lemma));
+		const selected = reviewedAlternatives(source.lemma).find(
+			(alternative) =>
+				readingIdentityKey(alternative.reading) === readingKey,
+		);
+		if (!selected)
+			throw new Error(
+				"This Reading is not a reviewed grammatical alternative.",
+			);
+		const existing = await destination(ctx, readingKey);
+		if (existing) return existing;
+		const stored = await createDumdictTransaction(ctx).ensureReadingEntry({
+			entry: {
+				reading: selected.reading,
+				attestedTranslations: [],
+				attestations: [],
+				notes: "",
+			},
+		});
+		const created = await destination(ctx, readingKey);
+		if (stored.status !== "committed" || !created)
+			throw new Error("Grammatical alternative could not be stored.");
+		return created;
+	},
 });
 
-/** Completes an article entry stored before its reviewed Knowledge was authored. */
-export const completeNounArticleKnowledge = internalMutation({
+/** Opens a noun heading's reviewed article without creating a semantic relation or encounter. */
+export const followNounArticle = mutation({
 	args: { lemmaId: v.id("lemmas") },
 	returns: v.id("readings"),
 	handler: async (ctx, { lemmaId }) => {
 		const noun = await ctx.db.get(lemmaId);
-		const selected = noun
-			? selectNounHeadingArticle(parseGermanLemma(lemmaValue(noun)))
-			: null;
+		if (!noun) throw new Error("Lemma not found.");
+		const selected = selectNounHeadingArticle(
+			parseGermanLemma(lemmaValue(noun)),
+		);
 		if (!selected)
 			throw new Error("This Lemma has no noun heading article.");
 		const readingKey = readingIdentityKey(selected.reading);
-		const reading = await ctx.db
-			.query("readings")
-			.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
-			.unique();
+		if (!(await destination(ctx, readingKey))) {
+			const stored = await createDumdictTransaction(
+				ctx,
+			).ensureReadingEntry({
+				entry: {
+					reading: selected.reading,
+					knowledge: {
+						definition: selected.knowledge.definition,
+						translations: selected.knowledge.translations,
+					},
+					attestedTranslations: [],
+					attestations: [],
+					notes: "",
+				},
+			});
+			if (stored.status !== "committed")
+				throw new Error("The article Reading could not be stored.");
+		}
+		const reading = await destination(ctx, readingKey);
 		if (!reading)
 			throw new Error("Article Reading has not been materialized.");
+		// An article stored before its reviewed Knowledge was authored is
+		// completed here.
 		await completeAuthoredComponentKnowledge(ctx, selected.reading);
-		return reading._id;
+		return reading;
 	},
 });

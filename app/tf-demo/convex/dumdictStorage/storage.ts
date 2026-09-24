@@ -23,7 +23,6 @@ import {
 	withoutKeys,
 } from "../model/readingKnowledge";
 
-export const STATE_KEY = "global" as const;
 export const MAX_PLANNED_CHANGES = 50;
 export const MAX_PATCH_OPS = 50;
 export const MAX_READING_CANDIDATES = 40;
@@ -41,35 +40,15 @@ export type CompactReadingEntry = AnyRecord & {
 	knowledge?: AnyRecord;
 };
 
-export function revisionString(revision: number): string {
-	return `convex-${revision}`;
-}
-
-export async function getState(ctx: ServerCtx) {
-	return ctx.db
-		.query("dictionaryState")
-		.withIndex("by_key", (q) => q.eq("key", STATE_KEY))
-		.unique();
-}
-
-export async function currentRevision(ctx: ServerCtx): Promise<string> {
-	return revisionString((await getState(ctx))?.revision ?? 0);
-}
-
-/** The one place dictionary writes advance the revision readers compare against. */
-export async function bumpDictionaryRevision(
-	ctx: MutationCtx,
-): Promise<string> {
-	const state = await getState(ctx);
-	const next = (state?.revision ?? 0) + 1;
-	if (state) await ctx.db.patch(state._id, { revision: next });
-	else
-		await ctx.db.insert("dictionaryState", {
-			key: STATE_KEY,
-			revision: next,
-		});
-	return revisionString(next);
-}
+/**
+ * The store revision every Dumdict slice and commit reports. Dumdict's storage
+ * contract versions each slice so a plan built across transactions can be
+ * checked when it commits. tf-demo plans and commits every dictionary change
+ * in one Convex mutation, whose optimistic concurrency already retries a plan
+ * whose reads changed; the action-side adapter only reads. So the revision
+ * never advances and `revisionMatches` always holds.
+ */
+export const DICTIONARY_REVISION = "convex";
 
 export function assertLemmaRecordHasNoKnowledge(record: AnyRecord): void {
 	if (record.knowledge !== undefined) {

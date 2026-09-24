@@ -1,4 +1,4 @@
-import type { DumdictService, StoreRevision } from "dumdict";
+import type { DumdictService } from "dumdict";
 import { makeSurfaceId } from "dumdict/runtime";
 import { validateEncounter } from "dumgen";
 import type {
@@ -156,9 +156,8 @@ export type ResolvedClickCommit =
 	  }
 	| {
 			readonly status: "DictionaryConflict";
-			readonly code: "revisionConflict" | "semanticPreconditionFailed";
+			readonly code: "semanticPreconditionFailed";
 			readonly message: string;
-			readonly latestRevision?: StoreRevision;
 	  };
 
 type ResolvedGrammatical = ResolvedGrammar;
