@@ -5,7 +5,8 @@
  * `same_a_b` Noul is at or above tau (single link) and only then average the
  * members' fixedness against the floor, so a free word two fixed words vouch
  * for was carried in (`ganz und gar normal`); it now gates each word on its
- * own fixedness first (`gate@1.5`). This lab asks production's exact
+ * own fixedness first (`gate@1.5`) and cuts every bridge between two
+ * multiword sides after linking. This lab asks production's exact
  * questions once per sentence, keeps the answers, and re-assembles the
  * Phraseme layer under each membership policy over the same answers, so the
  * comparison is paired and jev's run-to-run noise cancels:
@@ -13,8 +14,9 @@
  * - `single`: the connected components at tau, production before the gate.
  * - `complete`: greedy complete linkage, strongest pair first; two clusters
  *   merge only when every cross pair is at or above tau.
- * - `gate@g`: single link over the Heads whose own `fix_i` is at or above g;
- *   `gate@1.5` is production.
+ * - `gate@g`: single link over the Heads whose own `fix_i` is at or above g.
+ * - `gate@1.5 + complete|average|bridge cut`: the gate, then another linkage;
+ *   the bridge cut is production.
  *
  * Clicks are probed through `resolvedUnitAt`, what tf-demo reads at click
  * time, against the target-classification click gold.
@@ -62,10 +64,14 @@ const floor = productionPolicy.fixednessFloor;
 
 // ------------------------------------------------------------------ corpus
 
-/** The request that exposed the bug (tf-demo 55484a34), with authored gold. */
-function ganzUndGar(): Sentence {
-	const text =
-		"Mr und Mrs Dursley im Ligusterweg Nummer 4 waren stolz darauf, ganz und gar normal zu sein, sehr stolz sogar.";
+/** A sentence from a tf-demo request, segmented like tf-demo, with authored click gold. */
+function adhoc(
+	id: string,
+	text: string,
+	gold: (
+		segments: readonly { readonly text: string }[],
+	) => readonly [number, Record<string, unknown>][],
+): Sentence {
 	const segments = [...text.matchAll(/\p{L}+|\d+|\s+|[^\p{L}\d\s]/gu)].map(
 		([piece]) => ({
 			kind: /^\s+$/u.test(piece)
@@ -76,40 +82,65 @@ function ganzUndGar(): Sentence {
 			text: piece,
 		}),
 	);
-	const idiom = {
-		family: "Phraseme",
-		kind: "Idiom",
-		memberSegmentIndices: [23, 25, 27],
-	};
-	const click = (
-		index: number,
-		idealOutput: Record<string, unknown>,
-	): ClickCase => ({
-		id: `adhoc-ganz-und-gar-click-${segments[index]?.text}`,
-		clickedSegmentIndex: index,
-		idealOutput,
-	});
 	return {
 		key: text,
-		id: "adhoc-ganz-und-gar",
+		id: `adhoc-${id}`,
 		segments,
 		resolvable: segments.flatMap((s, i) =>
 			s.kind === "ResolvableText" ? [i] : [],
 		),
-		cases: [
-			click(23, idiom),
-			click(25, idiom),
-			click(27, idiom),
-			click(29, {
-				family: "Lexeme",
-				kind: "ADJ",
-				memberSegmentIndices: [29],
-			}),
-		],
+		cases: gold(segments).map(([index, idealOutput]) => ({
+			id: `adhoc-${id}-click-${segments[index]?.text}`,
+			clickedSegmentIndex: index,
+			idealOutput,
+		})),
 	};
 }
 
-const sentences = [...loadSentences("all"), ganzUndGar()];
+const lexeme = (kind: string, memberSegmentIndices: readonly number[]) => ({
+	family: "Lexeme",
+	kind,
+	memberSegmentIndices,
+});
+
+/** The request that exposed the carried free word (tf-demo 55484a34). */
+const ganzUndGar = adhoc(
+	"ganz-und-gar",
+	"Mr und Mrs Dursley im Ligusterweg Nummer 4 waren stolz darauf, ganz und gar normal zu sein, sehr stolz sogar.",
+	() => {
+		const idiom = {
+			family: "Phraseme",
+			kind: "Idiom",
+			memberSegmentIndices: [23, 25, 27],
+		};
+		return [
+			[23, idiom],
+			[25, idiom],
+			[27, idiom],
+			[29, lexeme("ADJ", [29])],
+		];
+	},
+);
+
+/**
+ * The request that exposed single-link chaining (tf-demo b7f79c52): one
+ * cross-clause pair joined `auf die Idee kommen` to `sich in ... verstricken`.
+ * Gold only where the domain model is settled: the reflexive verb is a Lexeme
+ * whose preposition is governed, not a Phraseme member.
+ */
+const ideeVerstricken = adhoc(
+	"idee-verstricken",
+	"Niemand wäre auf die Idee gekommen, sie könnten sich in eine merkwürdige und geheimnisvolle Geschichte verstricken, denn mit solchem Unsinn wollten sie nichts zu tun haben.",
+	() => [
+		[17, lexeme("VERB", [17, 31])],
+		[31, lexeme("VERB", [17, 31])],
+		[19, lexeme("ADP", [19])],
+	],
+);
+
+const adhocSentences = [ganzUndGar, ideeVerstricken];
+
+const sentences = [...loadSentences("all"), ...adhocSentences];
 const segmented = (sentence: Sentence): SegmentedSentence<"de"> =>
 	({
 		id: sentence.id,
@@ -121,10 +152,10 @@ const segmented = (sentence: Sentence): SegmentedSentence<"de"> =>
 
 type Stored = Record<string, Answers>;
 
-async function collect(): Promise<Stored> {
+async function collect(wanted: readonly Sentence[]): Promise<Stored> {
 	const stored: Stored = {};
 	const calls: Call[] = [];
-	const queue = [...sentences];
+	const queue = [...wanted];
 	let done = 0;
 	const worker = async () => {
 		for (;;) {
@@ -160,7 +191,7 @@ async function collect(): Promise<Stored> {
 			stored[sentence.key] = answers as Answers;
 			done += 1;
 			if (done % 25 === 0)
-				console.error(`${done}/${sentences.length} sentences`);
+				console.error(`${done}/${wanted.length} sentences`);
 		}
 	};
 	await Promise.all(Array.from({ length: concurrency }, worker));
@@ -238,12 +269,112 @@ const gated =
 		];
 	};
 
+/**
+ * Greedy average linkage, strongest pair first: two clusters merge only when
+ * the mean Noul over every cross pair is at or above tau, so one strong
+ * cross pair cannot chain two expressions but one weak pair cannot veto.
+ */
+function averageLink(heads: number[], answers: Answers): number[][] {
+	const cluster = new Map(heads.map((head) => [head, [head]]));
+	const pairs = heads
+		.flatMap((a, position) =>
+			heads.slice(position + 1).map((b) => ({
+				a,
+				b,
+				value: noul(answers, a, b),
+			})),
+		)
+		.filter((pair) => pair.value >= tau)
+		.sort((x, y) => y.value - x.value);
+	for (const { a, b } of pairs) {
+		const left = cluster.get(a);
+		const right = cluster.get(b);
+		if (!left || !right || left === right) continue;
+		const cross = left.flatMap((x) =>
+			right.map((y) => noul(answers, x, y)),
+		);
+		if (cross.reduce((sum, value) => sum + value, 0) / cross.length < tau)
+			continue;
+		const merged = [...left, ...right];
+		for (const member of merged) cluster.set(member, merged);
+	}
+	return [...new Set(cluster.values())];
+}
+
+/**
+ * Single link, then every bridge whose removal leaves two words or more on
+ * both sides is cut: two expressions held together by one pair come apart,
+ * a word hanging on its expression by one pair stays.
+ */
+function bridgeSplit(heads: number[], answers: Answers): number[][] {
+	const linked = (a: number, b: number) => noul(answers, a, b) >= tau;
+	const reach = (from: number, within: number[], cut: [number, number]) => {
+		const seen = new Set([from]);
+		const stack = [from];
+		while (stack.length) {
+			const current = stack.pop() as number;
+			for (const next of within)
+				if (
+					!seen.has(next) &&
+					linked(current, next) &&
+					!(
+						(current === cut[0] && next === cut[1]) ||
+						(current === cut[1] && next === cut[0])
+					)
+				) {
+					seen.add(next);
+					stack.push(next);
+				}
+		}
+		return seen;
+	};
+	const result: number[][] = [];
+	const queue = singleLink(heads, answers);
+	while (queue.length) {
+		const component = queue.pop() as number[];
+		let split = false;
+		for (const [position, a] of component.entries()) {
+			for (const b of component.slice(position + 1)) {
+				if (!linked(a, b)) continue;
+				const side = reach(a, component, [a, b]);
+				if (side.has(b)) continue;
+				if (side.size < 2 || component.length - side.size < 2) continue;
+				queue.push(
+					[...side],
+					component.filter((head) => !side.has(head)),
+				);
+				split = true;
+				break;
+			}
+			if (split) break;
+		}
+		if (!split) result.push(component);
+	}
+	return result;
+}
+
+const gatedBy =
+	(threshold: number, link: Policy["components"]) =>
+	(heads: number[], answers: Answers): number[][] => {
+		const kept = heads.filter((head) => fix(answers, head) >= threshold);
+		return [
+			...link(kept, answers),
+			...heads
+				.filter((head) => !kept.includes(head))
+				.map((head) => [head]),
+		];
+	};
+
+const production = "gate@1.5 + bridge cut (production)";
 const policies: Policy[] = [
 	{ name: "single (before the gate)", components: singleLink },
 	{ name: "complete", components: completeLink },
 	{ name: "gate@1.0", components: gated(1.0) },
 	{ name: "gate@1.25", components: gated(1.25) },
-	{ name: "gate@1.5 (production)", components: gated(1.5) },
+	{ name: "gate@1.5 (before the bridge cut)", components: gated(1.5) },
+	{ name: "gate@1.5 + complete", components: gatedBy(1.5, completeLink) },
+	{ name: "gate@1.5 + average", components: gatedBy(1.5, averageLink) },
+	{ name: production, components: gatedBy(1.5, bridgeSplit) },
 ];
 
 // -------------------------------------------------------------- assembly
@@ -255,7 +386,10 @@ function headIndexOf(placement: Placement) {
 		for (const piece of pieces) indexAt.set(piece.offset, index);
 	return (target: SentenceAnalysis["targets"][number]) => {
 		// Production gives an article left over from a fusion no Head index.
-		if (target.provenance === "fusion-table:unattached-article")
+		if (
+			target.provenance === "fusion-table:unattached-article" ||
+			target.provenance === "guard:articleScope"
+		)
 			return undefined;
 		const head =
 			target.members.find((member) => member.role === "Head") ??
@@ -392,11 +526,12 @@ function probe(
 
 // -------------------------------------------------------------------- main
 
-const stored: Stored = replay
-	? JSON.parse(await readFile(replay, "utf8"))
-	: await collect();
-if (!replay) {
-	const path = "/tmp/phraseme-linkage-answers.json";
+// A replay asks only the sentences its file lacks and saves them back.
+const stored: Stored = replay ? JSON.parse(await readFile(replay, "utf8")) : {};
+const missing = sentences.filter((sentence) => !stored[sentence.key]);
+if (missing.length) {
+	Object.assign(stored, await collect(missing));
+	const path = replay || "/tmp/phraseme-linkage-answers.json";
 	await save(path, stored);
 	console.error(`answers saved to ${path}`);
 }
@@ -407,6 +542,7 @@ const results = new Map<string, Map<string, Probe>>(
 	policies.map((policy) => [policy.name, new Map()]),
 );
 let mismatchedBaseline = 0;
+const partitions: string[] = [];
 
 for (const sentence of sentences) {
 	const answers = stored[sentence.key];
@@ -420,7 +556,7 @@ for (const sentence of sentences) {
 		assembled,
 		placement,
 		answers,
-		policies.at(-1) as Policy,
+		policies.find((policy) => policy.name === production) as Policy,
 	);
 	const shape = (list: readonly PhrasemeTarget[]) =>
 		list
@@ -461,6 +597,22 @@ for (const sentence of sentences) {
 			...assembled,
 			phrasemes: phrasemeLayer(assembled, placement, answers, policy),
 		};
+		if (adhocSentences.includes(sentence)) {
+			const text = (offset: number) =>
+				analysis.segments.find((s) => s.offset === offset)?.text;
+			const word = (id: string) =>
+				analysis.targets
+					.find((target) => target.id === id)
+					?.members.map((member) => text(member.offset))
+					.join("+");
+			partitions.push(
+				`${sentence.id} · ${policy.name}: ${
+					analysis.phrasemes
+						.map((p) => `{${p.members.map(word).join(" | ")}}`)
+						.join("  ") || "none"
+				}`,
+			);
+		}
 		for (const click of sentence.cases)
 			results
 				.get(policy.name)
@@ -507,15 +659,18 @@ for (const tier of tiers) {
 		),
 	);
 }
+console.log("\n## Phraseme partitions of the tf-demo sentences");
+for (const line of partitions) console.log(line);
 console.log(`\n## all ${rows.length} clicks`);
 console.table(table(rows.map((row) => row.click.id)));
 
 const scope = argv.includes("--all-flips") ? rows : selected;
+const against = flag("baseline", policies[0]?.name ?? "");
 console.log(
-	`\n## flips against single link (${scope === rows ? "all clicks" : "trickiest set"})`,
+	`\n## flips against ${against} (${scope === rows ? "all clicks" : "trickiest set"})`,
 );
-const baseline = results.get(policies[0]?.name ?? "");
-for (const policy of policies.slice(1)) {
+const baseline = results.get(against);
+for (const policy of policies.filter((policy) => policy.name !== against)) {
 	console.log(`\n### ${policy.name}`);
 	for (const row of scope) {
 		const before = baseline?.get(row.click.id);

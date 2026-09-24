@@ -7,8 +7,9 @@
  * Heads is split at them); a fused word never joins a group whole, its
  * adposition is a singleton and its article joins the noun its phrase opens
  * onto, or stands alone; a Phraseme's members are words, projected by
- * Head, and only a word whose own fixedness Score reaches the floor joins
- * one. Government comes last, over the finished Lexeme Targets.
+ * Head, only a word whose own fixedness Score reaches the floor joins one,
+ * and one pair alone never ties two expressions together. Government comes
+ * last, over the finished Lexeme Targets.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -282,6 +283,82 @@ function identityMassOf(
 	};
 }
 
+// ------------------------------------------------------- Phraseme linkage
+
+/** The words `from` reaches over `linked` pairs inside `within`, without the pair `cut`. */
+function reached(
+	from: number,
+	within: readonly number[],
+	linked: (a: number, b: number) => boolean,
+	cut: readonly [number, number],
+): Set<number> {
+	const seen = new Set([from]);
+	const stack = [from];
+	for (
+		let current = stack.pop();
+		current !== undefined;
+		current = stack.pop()
+	)
+		for (const next of within)
+			if (
+				!seen.has(next) &&
+				linked(current, next) &&
+				!(
+					(current === cut[0] && next === cut[1]) ||
+					(current === cut[1] && next === cut[0])
+				)
+			) {
+				seen.add(next);
+				stack.push(next);
+			}
+	return seen;
+}
+
+/**
+ * Expressions over the linked pairs: connected components, then every
+ * bridge with two words or more on both sides is cut. One cross pair cannot
+ * chain two expressions (`auf die Idee kommen` and `sich in … verstricken`),
+ * while a word hanging on its expression by one pair, like an article or a
+ * preposition, stays in.
+ */
+function expressionsOf(
+	heads: readonly number[],
+	linked: (a: number, b: number) => boolean,
+): number[][] {
+	const expressions: number[][] = [];
+	const unvisited = new Set(heads);
+	const queue: number[][] = [];
+	for (const head of heads) {
+		if (!unvisited.has(head)) continue;
+		const component = [...reached(head, heads, linked, [-1, -1])];
+		for (const member of component) unvisited.delete(member);
+		queue.push(component);
+	}
+	for (let component = queue.pop(); component; component = queue.pop()) {
+		const bridge = component
+			.flatMap((a, position) =>
+				component.slice(position + 1).map((b) => [a, b] as const),
+			)
+			.filter(([a, b]) => linked(a, b))
+			.map(([a, b]) => reached(a, component, linked, [a, b]))
+			.find(
+				(side) =>
+					side.size >= 2 &&
+					component.length - side.size >= 2 &&
+					side.size < component.length,
+			);
+		if (!bridge) {
+			expressions.push(component);
+			continue;
+		}
+		queue.push(
+			[...bridge],
+			component.filter((head) => !bridge.has(head)),
+		);
+	}
+	return expressions.sort((a, b) => Math.min(...a) - Math.min(...b));
+}
+
 // ------------------------------------------------------------- assembly
 
 export function assembleAnalysis(
@@ -449,29 +526,13 @@ export function assembleAnalysis(
 			all.indexOf(head) === position &&
 			(scoreOf(answers, `fix_${head}`) ?? 0) >= policy.fixednessFloor,
 	);
-	const parent = new Map<number, number>(heads.map((head) => [head, head]));
-	const find = (index: number): number => {
-		let current = index;
-		for (;;) {
-			const next = parent.get(current);
-			if (next === undefined || next === current) return current;
-			current = next;
-		}
-	};
-	for (const [position, a] of heads.entries())
-		for (const b of heads.slice(position + 1))
-			if (
-				(noulOf(answers, `same_${Math.min(a, b)}_${Math.max(a, b)}`) ??
-					0) >= policy.phrasemeTau
-			)
-				parent.set(find(a), find(b));
-	const byRoot = new Map<number, number[]>();
-	for (const head of heads) {
-		const root = find(head);
-		byRoot.set(root, [...(byRoot.get(root) ?? []), head]);
-	}
 	const phrasemes: PhrasemeTarget[] = [];
-	for (const component of byRoot.values()) {
+	for (const component of expressionsOf(
+		heads,
+		(a, b) =>
+			(noulOf(answers, `same_${Math.min(a, b)}_${Math.max(a, b)}`) ??
+				0) >= policy.phrasemeTau,
+	)) {
 		if (component.length < 2) continue;
 		const kindMass: Record<string, number> = {};
 		let fixedness = 0;

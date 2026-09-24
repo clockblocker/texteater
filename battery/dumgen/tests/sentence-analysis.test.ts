@@ -49,6 +49,8 @@ type Plan = {
 		/** Free words the pair answers still tie to the expression. */
 		readonly carried?: readonly number[];
 	}[];
+	/** Head pairs the pair answers tie across expressions. */
+	readonly crossLinks?: readonly (readonly [number, number])[];
 	/** Governor and case per governable preposition index; every other one is None. */
 	readonly government?: Readonly<
 		Record<number, { readonly governor?: number; readonly case?: string }>
@@ -75,7 +77,13 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 					if (question.type === "noul") {
 						const [a, b] = numbers as [number, number];
 						const shared =
-							tiedTo(a) !== undefined && tiedTo(a) === tiedTo(b);
+							(tiedTo(a) !== undefined &&
+								tiedTo(a) === tiedTo(b)) ||
+							(plan.crossLinks ?? []).some(
+								([x, y]) =>
+									(x === a && y === b) ||
+									(x === b && y === a),
+							);
 						return [
 							id,
 							{ type: "noul", noul: shared ? 0.9 : 0.05 },
@@ -420,6 +428,51 @@ test("a free word the pair answers tie to an expression stays out of it", async 
 		kind: "ADJ",
 		offsets: [22],
 	});
+});
+
+test("one pair alone never ties two expressions into one Phraseme", async () => {
+	// Er0 hat2 den4 Faden6 verloren8 und10 das12 Eis14 gebrochen16 .17
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4, 6], [8], [10], [12, 14], [16]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/VERB",
+			10: "Lexeme/CCONJ",
+			12: "Lexeme/NOUN",
+			14: "Lexeme/NOUN",
+			16: "Lexeme/VERB",
+		},
+		roles: { 4: "Article", 6: "Head", 12: "Article", 14: "Head" },
+		expressions: [
+			{ heads: [6, 8], kind: "Idiom", fixedness: 2 },
+			{ heads: [14, 16], kind: "Idiom", fixedness: 2 },
+		],
+		crossLinks: [[8, 14]],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"faden-eis",
+				"Er hat den Faden verloren und das Eis gebrochen.",
+			),
+		}),
+	);
+	const words = lexemesOf(analysis);
+	expect(
+		analysis.phrasemes.map((phraseme) =>
+			phraseme.members.map(
+				(id) =>
+					words[analysis.targets.findIndex((t) => t.id === id)]
+						?.members,
+			),
+		),
+	).toEqual([
+		["den/Article Faden/Head", "verloren/Head"],
+		["das/Article Eis/Head", "gebrochen/Head"],
+	]);
 });
 
 test("a word glued around two Heads is split at them and each keeps its own route", async () => {

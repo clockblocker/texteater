@@ -497,6 +497,29 @@ rest on click gold that calls Funktionsverbgefüge Lexemes against ADR 0028;
 `zum Beispiel` and `vor allem` stay wrong, split into words instead of
 Collocations where the gold wants a two-word ADV.
 
+Single link behind the gate still chains: in tf-demo b7f79c52 (`Niemand
+wäre auf die Idee gekommen, sie könnten sich in … verstricken, denn mit
+solchem Unsinn …`) one cross-clause pair, `auf–verstricken` 0.53 to 0.63
+over four samples, joined `auf die Idee kommen` to `sich verstricken in`;
+`verstricken–mit` 0.46 to 0.52 sometimes added a third expression. The lab
+now carries that sentence (320 sentences, 548 clicks, same answers) and
+three linkages behind the gate (`--baseline` names the flip reference):
+
+| membership behind own Score ≥ 1.5 | trickiest 100 pass | all 548 pass | flips vs single link |
+| --- | --- | --- | --- |
+| single link (before) | **64** | **395** | — |
+| complete linkage | 55 | 386 | +3 −12 |
+| average linkage, cross mean ≥ 0.5 | 58 | 389 | +6 −12 |
+| single link, then cut every bridge with ≥ 2 words on both sides (production) | **64** | **395** | none; splits b7f79c52 |
+
+Average and complete linkage lose `ließ die Katze aus dem Sack`, `trifft
+eine Entscheidung` and `ganz und gar`, whose articles and prepositions hang
+on one or two strong pairs. The bridge cut is production now. It changes no corpus click: the
+corpus sentences hold one expression each, so it cannot show chaining, and
+in b7f79c52 the reflexive verb still forms `{sich verstricken | in}`
+(`in–verstricken` 0.65 to 0.69), a Phraseme where the click gold wants a Lexeme with
+a governed preposition.
+
 `fixtures.ts` now emits both layers: `targets` are Lexeme Targets, `phrasemes`
 are Phraseme Targets whose members are target ids, and the gold has a
 `phrasemes` list per sentence naming member words by head. On the 16
