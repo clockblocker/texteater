@@ -107,6 +107,7 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		CONTEXT_ITEM: p.specs?.contexts ?? spec.CONTEXT_ITEM,
 		BAR_ENTER: p.specs?.barEnter ?? spec.BAR_ENTER,
 		BAR_EXIT: p.specs?.barExit ?? spec.BAR_EXIT,
+		HEADING_RESIZE: spec.HEADING_RESIZE,
 		FLY_TRAVEL: p.specs?.flyTravel ?? spec.FLY_TRAVEL,
 		FLY_ROTATE: p.specs?.flyRotate ?? spec.FLY_ROTATE,
 		FLY_FADE: p.specs?.flyFade ?? spec.FLY_FADE,

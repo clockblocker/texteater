@@ -705,7 +705,9 @@ test("the ground line steps down and back up, and a link pushes a cover that clo
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(2);
 	/* each Cover's Heading is its bar; only the top one's ← is live */
 	await expect(
-		frame.locator('[data-form="sheet"] [data-heading] button'),
+		frame.locator(
+			'[data-form="sheet"] [data-heading] [data-heading-chrome="back"]',
+		),
 	).toHaveCount(2);
 	await frame.getByRole("button", { name: "Close cover" }).click();
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);

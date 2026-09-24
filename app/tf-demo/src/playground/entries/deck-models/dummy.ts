@@ -55,6 +55,11 @@ export type DummyNote = {
 	readonly tail: { readonly form: string; readonly gloss: string };
 	/** Source Contexts: sentences the word was met in, most recent first. */
 	readonly contexts: readonly SourceContext[];
+	/**
+	 * A key into the fake db when this Note is ported: its Blocks and its
+	 * Heading are the real renderers', fed by the fixture.
+	 */
+	readonly fixture?: string;
 };
 
 export const TEXTS: readonly DummyText[] = [
@@ -65,6 +70,7 @@ export const TEXTS: readonly DummyText[] = [
 			["Das", "Haus", "steht", "am", "Ende", "der", "Straße."],
 			["Niemand", "hatte", "es", "seit", "Jahren", "betreten."],
 			["Nur", "der", "Wind", "kannte", "noch", "den", "Weg", "hinein."],
+			["Die", "Dämmerung", "legte", "sich", "über", "den", "Hof."],
 		],
 	},
 	{
@@ -116,6 +122,7 @@ const LEMMA_OF: Readonly<Record<string, string>> = {
 
 const GLOSS: Readonly<Record<string, string>> = {
 	Haus: "house",
+	Dämmerung: "twilight",
 	Straße: "street",
 	Weg: "way",
 	Wind: "wind",
@@ -177,6 +184,11 @@ const RELATED: Readonly<Record<string, string>> = {
 	Brief: "Tisch",
 };
 
+/** Notes rendered from the fake db rather than from the dummy pools. */
+const PORTED: Readonly<Record<string, string>> = {
+	"Reading:Dämmerung": "Reading:readings-653",
+};
+
 export function noteId(kind: NoteKind, word: string): string {
 	return `${kind}:${cleanWord(word)}`;
 }
@@ -233,7 +245,7 @@ function linesFor(kind: NoteKind, word: string): readonly string[] {
 }
 
 /** The first Sentence the word appears in, for "Go to source". */
-function sourceOf(word: string): NoteLink | null {
+export function sourceOf(word: string): NoteLink | null {
 	const first = contextsFor(word).find((context) => context.textId !== null);
 	if (!first?.textId) return null;
 	return {
@@ -312,7 +324,9 @@ export function noteFor(kind: NoteKind, word: string): DummyNote {
 				: kind === "Surface"
 					? { form: clean, gloss: FORM_OF[clean] ?? "uninflected" }
 					: { form: clean, gloss: "as written" };
+	const fixture = PORTED[noteId(kind, word)];
 	return {
+		...(fixture ? { fixture } : {}),
 		id: noteId(kind, word),
 		kind,
 		word: clean,

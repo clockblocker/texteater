@@ -10,6 +10,18 @@ import { TextPresentation } from "@/views/text-view";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 
+/** The fake db, built by the Vite plugin; every playground reads the same one. */
+export const playgroundNotesQuery = {
+	queryKey: ["playground-notes"],
+	queryFn: async (): Promise<PlaygroundSnapshot> => {
+		const response = await fetch("/__playground/notes");
+		if (!response.ok)
+			throw new Error("Could not load playground fixtures.");
+		return response.json();
+	},
+	gcTime: 10_000,
+} as const;
+
 export function PlaygroundNote({
 	target,
 	presentation,

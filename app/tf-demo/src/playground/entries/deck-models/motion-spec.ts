@@ -241,6 +241,12 @@ export function after(spec: Tween, delayMs: number): Tween {
  */
 export const BAR_ENTER = tween(160, EASE_OUT, 180);
 export const BAR_EXIT = tween(100);
+/**
+ * A Cover's Heading changing height in place, with no change of form: the
+ * tall Heading folding to a bar once its body scrolls, or a switch of the
+ * Heading's design. A change of form still rides `MORPH` with the box.
+ */
+export const HEADING_RESIZE = tween(200);
 
 /* --------------------------------------------------------- drag tweens */
 

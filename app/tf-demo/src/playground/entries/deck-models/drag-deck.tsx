@@ -35,6 +35,21 @@ import {
 	textById,
 } from "./dummy";
 import {
+	COVER_GUTTER_REM,
+	coverHeadingRem,
+	coverHeadingRuled,
+	DEFAULT_HEADING_DESIGN,
+	HEADING_VARIANT_LABEL,
+	HEADING_VARIANTS,
+	type HeadingControl,
+	type HeadingDesign,
+	HeadingDesignProvider,
+	ONE_LINE_TITLE,
+	SheetChrome,
+	useFolded,
+	useHeadingDesign,
+} from "./heading-design";
+import {
 	ALL_INTERACTIONS,
 	type DeckInteraction,
 	DeckInteractions,
@@ -50,6 +65,13 @@ import {
 	type motionOf,
 	PILE_HEIGHT_REM,
 } from "./motion-spec";
+import {
+	FixtureNotesProvider,
+	PortedBlocks,
+	PortedTitle,
+	usePortedFollow,
+	usePortedReading,
+} from "./real-note";
 import { useDeckReducedMotion } from "./reduced-motion";
 import {
 	type DeckMotionOverrides,
@@ -102,12 +124,11 @@ type Subject =
 			readonly text: DummyText;
 			readonly focus: TextFocus | null;
 	  };
-/** A Cover's ←: Collapse to its Card, or Close, and whether it is live. */
-type CoverBack = {
-	readonly label: string;
-	readonly enabled: boolean;
-	readonly onBack: () => void;
-};
+/**
+ * A Cover's ←: Collapse to its Card, or Close, and whether it is live. Its
+ * × is the same shape: every Cover in the Pane leaves, back to the Ground.
+ */
+type CoverBack = HeadingControl;
 /** One workspace instance of a Subject; a fresh one for every open (issue 483). */
 type Presentation = { readonly id: number; readonly subject: Subject };
 type Deck = {
@@ -350,6 +371,10 @@ const RULES = [
 	{
 		move: "X",
 		means: "Closes a Floating Pane. Its Note collapses back to its Card if the Deck is still live.",
+	},
+	{
+		move: "× on a Cover",
+		means: "Every Cover in the Pane leaves at once, each as its ← would, and the Ground shows.",
 	},
 	{
 		move: "Drag a Cover's Heading",
@@ -708,7 +733,9 @@ export function CompassModel({
 		>
 			<DeckInteractions value={interactions}>
 				<DeckMotionProvider motion={motion}>
-					<CompassRuntime {...props} />
+					<FixtureNotesProvider>
+						<CompassRuntime {...props} />
+					</FixtureNotesProvider>
 				</DeckMotionProvider>
 			</DeckInteractions>
 		</MotionConfig>
@@ -728,6 +755,12 @@ function CompassRuntime({
 	 * is gone and only the click, Escape and a new selection sweep.
 	 */
 	const [swipeSweeps, setSwipeSweeps] = useState(true);
+	/** The Cover Heading under study; see `heading-design.tsx`. */
+	const [headingDesign, setHeadingDesign] = useState<HeadingDesign>(
+		DEFAULT_HEADING_DESIGN,
+	);
+	const headingDesignRef = useRef(headingDesign);
+	headingDesignRef.current = headingDesign;
 	const allows = (interaction: DeckInteraction) =>
 		policy(interaction) && (interaction !== "sweep" || swipeSweeps);
 	const {
@@ -826,6 +859,14 @@ function CompassRuntime({
 	const handles = useRef(new Map<number, NoteHandle>());
 	const gestureCheckpoint = useRef<Checkpoint | null>(null);
 	const pendingLift = useRef<PendingLift | null>(null);
+	/** A link in a Cover's Heading under a pointer that has not moved yet. */
+	const pendingHeading = useRef<{
+		readonly pointerId: number;
+		readonly x: number;
+		readonly y: number;
+		readonly sheet: SheetRef;
+		readonly heading: HTMLElement;
+	} | null>(null);
 	/** A lift started under this click: the click is not a click. */
 	const swallowClick = useRef(false);
 	/** The Pane the reader last touched: what Escape sweeps. */
@@ -1202,6 +1243,25 @@ function CompassRuntime({
 		const top = pane?.covers.at(-1);
 		if (!top || top.id !== sheetId || !allows("collapse")) return;
 		leaveCover(paneId, top, "←");
+	}
+	/**
+	 * A Cover's ×: every Cover in the Pane leaves at once, each as its ←
+	 * would, and the Ground is what remains. The lowest Cover is applied
+	 * last, so if two collapse onto one Deck, the one nearest the Ground
+	 * is in front.
+	 */
+	function clearCovers(paneId: string) {
+		const pane = findPane(layoutRef.current, paneId);
+		if (!pane?.covers.length || !allows("collapse")) return;
+		log(
+			`×: ${pane.covers.length > 1 ? `${pane.covers.length.toString()} Covers leave` : "the Cover leaves"} ${paneId}; its Ground shows`,
+		);
+		setLayout((node) =>
+			[...pane.covers].reverse().reduce(
+				(next, cover) => collapseTo(next, cover.card),
+				updatePane(node, paneId, (p) => ({ ...p, covers: [] })),
+			),
+		);
 	}
 	function follow(paneId: string, link: NoteLink) {
 		if (!allows("follow")) return;
@@ -1582,10 +1642,30 @@ function CompassRuntime({
 		pane: PaneNode,
 	) {
 		if (event.button !== 0 || barHold.current || dragRef.current) return;
-		if ((event.target as HTMLElement).closest("button")) return;
+		const target = event.target as HTMLElement;
 		const ground = sheetsOf(pane)[0];
-		if (!ground?.card || pane.covers.length || !allows("lift")) return;
 		const bar = event.currentTarget;
+		/* a link in a Floating Ground's title reads past the slop, as a
+		   Cover's does */
+		if (target.closest("[data-heading-title] button")) {
+			if (
+				ground?.card &&
+				!isRooted(pane) &&
+				!pane.covers.length &&
+				allows("lift") &&
+				headingDesignRef.current.linksDrag
+			)
+				pendingHeading.current = {
+					pointerId: event.pointerId,
+					x: event.clientX,
+					y: event.clientY,
+					sheet: ground,
+					heading: bar,
+				};
+			return;
+		}
+		if (target.closest("button")) return;
+		if (!ground?.card || pane.covers.length || !allows("lift")) return;
 		const lift = {
 			pointerId: event.pointerId,
 			x: event.clientX,
@@ -1625,9 +1705,21 @@ function CompassRuntime({
 	) {
 		if (event.button !== 0 || dragRef.current) return;
 		const target = event.target as HTMLElement;
-		if (target.closest("button")) return;
 		const heading = target.closest<HTMLElement>("[data-heading]");
-		if (!heading) return;
+		if (!heading || target.closest("[data-heading-chrome]")) return;
+		/* a link in the title waits for the slop: a release inside it is
+		   the link's click, a move past it lifts the Cover */
+		if (target.closest("[data-heading-title] button")) {
+			if (!headingDesignRef.current.linksDrag) return;
+			pendingHeading.current = {
+				pointerId: event.pointerId,
+				x: event.clientX,
+				y: event.clientY,
+				sheet,
+				heading,
+			};
+			return;
+		}
 		event.preventDefault();
 		liftSheet(
 			sheet,
@@ -1700,6 +1792,29 @@ function CompassRuntime({
 		setDrag({ ...d });
 	}
 	function frameMove(event: ReactPointerEvent<HTMLElement>) {
+		const fromLink = pendingHeading.current;
+		if (fromLink && fromLink.pointerId === event.pointerId) {
+			if (
+				Math.hypot(
+					event.clientX - fromLink.x,
+					event.clientY - fromLink.y,
+				) <= ARM_SLOP
+			)
+				return;
+			pendingHeading.current = null;
+			/* the link under the press is not followed */
+			swallowClick.current = true;
+			liftSheet(
+				fromLink.sheet,
+				{
+					pointerId: fromLink.pointerId,
+					x: fromLink.x,
+					y: fromLink.y,
+				},
+				"Drag Heading from a link",
+				fromLink.heading,
+			);
+		}
 		if (!allows("drag")) return;
 		const pending = pendingLift.current;
 		if (pending && pending.pointerId === event.pointerId) {
@@ -2040,6 +2155,7 @@ function CompassRuntime({
 	}
 	function frameUp(event: ReactPointerEvent<HTMLElement>) {
 		pendingLift.current = null;
+		pendingHeading.current = null;
 		stopBarHold();
 		const d = dragRef.current;
 		if (!d || d.pointerId !== event.pointerId) return;
@@ -2104,6 +2220,7 @@ function CompassRuntime({
 	}
 	function cancelDrag(event?: ReactPointerEvent<HTMLElement>) {
 		pendingLift.current = null;
+		pendingHeading.current = null;
 		stopBarHold();
 		const d = dragRef.current;
 		if (!d || (event && event.pointerId !== d.pointerId)) return;
@@ -2352,67 +2469,88 @@ function CompassRuntime({
 					onPointerUp={stopBarHold}
 					onPointerCancel={stopBarHold}
 					onPointerLeave={stopBarHold}
-					className={`absolute inset-x-0 top-0 z-20 flex items-center gap-2 border-b bg-paper ps-2 pe-3 select-none ${pane.preview ? "border-dashed border-link/60" : "border-line"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
+					className={`absolute inset-x-0 top-0 z-20 border-b bg-paper select-none ${pane.preview ? "border-dashed border-link/60" : "border-line"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
 					style={{
 						height: `${BAR_REM.toString()}rem`,
 						transformOrigin: "0% 50%",
 					}}
 				>
-					<button
-						type="button"
-						disabled={!control.enabled}
-						aria-label={control.label}
-						title={control.label}
-						onClick={() => back(pane.id, control.glyph)}
-						className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised disabled:text-ink-muted disabled:hover:bg-transparent"
-					>
-						{control.glyph}
-					</button>
-					<nav
-						aria-label="Trail"
-						className="flex min-w-0 items-center gap-1 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase"
-					>
-						<AnimatePresence initial={false}>
-							{trail.map((crumb, index) => (
-								<motion.span
-									key={`${index.toString()}-${crumb}`}
-									/* a preview Pane is there at once, crumbs and all */
-									initial={
-										pane.preview ? false : { opacity: 0 }
+					<PaneBarFace
+						subject={
+							ground.kind === "Sheet" ? ground.card.subject : null
+						}
+						titled={!rooted}
+						width={
+							ground.kind === "Sheet" ? null : GROUND_LIST_WIDTH
+						}
+						back={
+							rooted
+								? {
+										label: control.label,
+										enabled: control.enabled,
+										onPress: () => back(pane.id, "←"),
 									}
-									animate={{
-										opacity: 1,
-										transition: transition(BAR_ENTER),
-									}}
-									exit={{
-										opacity: 0,
-										transition: transition(BAR_EXIT),
-									}}
-									className="contents"
-								>
-									{index > 0 ? (
-										<span aria-hidden="true">›</span>
-									) : null}
-									<span
-										className={
-											index === trail.length - 1
-												? holdingHere
-													? "text-link"
-													: "text-ink"
-												: undefined
+								: null
+						}
+						clear={
+							rooted
+								? null
+								: {
+										label: control.label,
+										enabled: control.enabled,
+										onPress: () => back(pane.id, "×"),
+									}
+						}
+						onFollow={(link) => follow(pane.id, link)}
+					>
+						<nav
+							aria-label="Trail"
+							className="flex min-w-0 items-center gap-1 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase"
+						>
+							<AnimatePresence initial={false}>
+								{trail.map((crumb, index) => (
+									<motion.span
+										key={`${index.toString()}-${crumb}`}
+										/* a preview Pane is there at once, crumbs and all */
+										initial={
+											pane.preview
+												? false
+												: { opacity: 0 }
 										}
+										animate={{
+											opacity: 1,
+											transition: transition(BAR_ENTER),
+										}}
+										exit={{
+											opacity: 0,
+											transition: transition(BAR_EXIT),
+										}}
+										className="contents"
 									>
-										{crumb}
-									</span>
-								</motion.span>
-							))}
-						</AnimatePresence>
-						{gloss ? (
-							<span className="ms-2 shrink-0 normal-case tracking-normal text-ink-muted">
-								{gloss}
-							</span>
-						) : null}
-					</nav>
+										{index > 0 ? (
+											<span aria-hidden="true">›</span>
+										) : null}
+										<span
+											className={
+												index === trail.length - 1
+													? holdingHere
+														? "text-link"
+														: "text-ink"
+													: undefined
+											}
+										>
+											{crumb}
+										</span>
+									</motion.span>
+								))}
+							</AnimatePresence>
+							{gloss ? (
+								<span className="ms-2 shrink-0 normal-case tracking-normal text-ink-muted">
+									{gloss}
+								</span>
+							) : null}
+						</nav>
+					</PaneBarFace>
 				</motion.div>
 				{/* the Menu and the Library are the Ground's first rungs: lists, in the Pane */}
 				{ground.kind === "Menu" ? (
@@ -2611,8 +2749,20 @@ function CompassRuntime({
 											!ghost &&
 											isTop &&
 											allows("collapse"),
-										onBack: () =>
+										onPress: () =>
 											coverBack(pane.id, sheet.sheetId),
+									}
+						}
+						clear={
+							sheet.ground
+								? null
+								: {
+										label: "Close every Cover",
+										enabled:
+											!ghost &&
+											isTop &&
+											allows("collapse"),
+										onPress: () => clearCovers(pane.id),
 									}
 						}
 						onDown={
@@ -2700,17 +2850,19 @@ function CompassRuntime({
 			onPointerUp={frameUp}
 			onPointerCancel={cancelDrag}
 		>
-			{renderLayout(displayLayout)}
-			{/* every Note, in every form, placed over the Panes.
+			<HeadingDesignProvider value={headingDesign}>
+				{renderLayout(displayLayout)}
+				{/* every Note, in every form, placed over the Panes.
 			    No AnimatePresence: nothing here has an exit to play, and
 			    holding a swept Note for the frame it takes to find that
 			    out leaves the old deck standing over the new one. */}
-			<div
-				data-deck-notes=""
-				className="pointer-events-none absolute inset-0"
-			>
-				{renderNotes()}
-			</div>
+				<div
+					data-deck-notes=""
+					className="pointer-events-none absolute inset-0"
+				>
+					{renderNotes()}
+				</div>
+			</HeadingDesignProvider>
 		</div>
 	);
 	if (embedded) return frame;
@@ -2743,6 +2895,67 @@ function CompassRuntime({
 							className="accent-link"
 						/>
 					</label>
+					<fieldset className="flex flex-col gap-1.5 border-t border-line pt-2">
+						<legend className="float-left mb-1 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
+							Cover Heading
+						</legend>
+						<div className="clear-left grid grid-cols-3 gap-0.5 rounded-md border border-line p-0.5">
+							{HEADING_VARIANTS.map((variant) => (
+								<label
+									key={variant}
+									className="grid cursor-pointer place-items-center rounded-[0.3rem] px-1 py-1 text-center text-[0.72rem] leading-tight text-ink-soft transition-colors select-none hover:text-ink has-[:checked]:bg-raised has-[:checked]:text-ink has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-link/50"
+								>
+									<input
+										type="radio"
+										name="cover-heading-design"
+										value={variant}
+										checked={
+											headingDesign.variant === variant
+										}
+										onChange={() =>
+											setHeadingDesign((design) => ({
+												...design,
+												variant,
+											}))
+										}
+										className="sr-only"
+									/>
+									{HEADING_VARIANT_LABEL[variant]}
+								</label>
+							))}
+						</div>
+						<label className="flex cursor-pointer items-center justify-between gap-3 select-none">
+							<span>Links in the Heading drag</span>
+							<input
+								type="checkbox"
+								checked={headingDesign.linksDrag}
+								onChange={(event) => {
+									const linksDrag = event.target.checked;
+									setHeadingDesign((design) => ({
+										...design,
+										linksDrag,
+									}));
+								}}
+								className="accent-link"
+							/>
+						</label>
+						<button
+							type="button"
+							onClick={() =>
+								openCover(
+									activePane.current,
+									present({
+										kind: "Note",
+										note: noteFor("Reading", "Dämmerung"),
+									}),
+									"Open the ported Reading",
+								)
+							}
+							className="self-start text-[0.78rem] text-link underline-offset-2 hover:underline"
+						>
+							Open the ported Reading (Dämmerung)
+						</button>
+					</fieldset>
 					<button
 						type="button"
 						onClick={spawnEmptyPane}
@@ -2813,6 +3026,32 @@ function initialLayout(
 	};
 }
 
+/**
+ * A Note's column. As a Sheet its gutters hold ← and ×, and whichever
+ * draws them, a Cover's Heading or a Ground's Pane bar, sets its title on
+ * `title`, the body's column. The gutters widen as a Card becomes a Sheet
+ * and the column widens with them, so the text keeps its measure and its
+ * place. A Text reads at prose width; a ported Note is laid out by the
+ * Notes page's own column.
+ */
+function sheetColumn(subject: Subject, sheet: boolean, ported: boolean) {
+	const column = sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH;
+	/* a Text's Blocks carry a rem of their own inside the column */
+	const gutterRem = sheet
+		? COVER_GUTTER_REM - (subject.kind === "Text" ? 1 : 0)
+		: 1;
+	const body = `calc(${column} + ${(2 * (gutterRem - 1)).toString()}rem)`;
+	return {
+		column,
+		gutterRem,
+		body,
+		title: ported ? "var(--container-note)" : body,
+	};
+}
+
+/** The Menu's and the Library's column, gutters included, as a Text's. */
+const GROUND_LIST_WIDTH = "43rem";
+
 /* ----------------------------------------------------------- ground list */
 
 /** A Menu or a Library rung: a list the Ground walks by tapping. */
@@ -2830,7 +3069,13 @@ function GroundList({
 			className="h-full overflow-auto"
 			style={{ paddingTop: `${BAR_REM.toString()}rem` }}
 		>
-			<div className="mx-auto w-full max-w-[42rem] px-8 pt-10 pb-12">
+			<div
+				className="mx-auto w-full pt-10 pb-12"
+				style={{
+					maxWidth: GROUND_LIST_WIDTH,
+					paddingInline: `${COVER_GUTTER_REM.toString()}rem`,
+				}}
+			>
 				<h2 className="mb-5 font-sans text-[0.68rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
 					{title}
 				</h2>
@@ -2841,7 +3086,7 @@ function GroundList({
 								type="button"
 								data-ground-item={item.key}
 								onClick={() => onPick(item.key)}
-								className="w-full rounded-md px-3 py-2 text-left font-serif text-[1.15rem] text-ink hover:bg-raised"
+								className="-mx-3 w-[calc(100%+1.5rem)] rounded-md px-3 py-2 text-left font-serif text-[1.15rem] text-ink hover:bg-raised"
 							>
 								{item.label}
 							</button>
@@ -2881,6 +3126,7 @@ function PresentationView({
 	litWord,
 	register,
 	back = null,
+	clear = null,
 	onDown,
 	onFollow,
 	onSegment,
@@ -2916,6 +3162,8 @@ function PresentationView({
 	register: (id: number, handle: NoteHandle | null) => void;
 	/** A Cover's ←, drawn in its Heading; a Ground's is on the Pane bar. */
 	back?: CoverBack | null;
+	/** A Cover's ×, drawn in its Heading's right margin. */
+	clear?: CoverBack | null;
 	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	onFollow: (link: NoteLink) => void;
 	onSegment: (word: string, element: HTMLElement) => void;
@@ -2934,6 +3182,7 @@ function PresentationView({
 	} = useDeckMotion();
 	const allows = useDeckInteractions();
 	const reduce = useDeckReducedMotion();
+	const design = useHeadingDesign();
 	const left = useMotionValue(box.left);
 	const top = useMotionValue(box.top);
 	const width = useMotionValue(box.width);
@@ -3027,7 +3276,13 @@ function PresentationView({
 
 	function down(event: ReactPointerEvent<HTMLElement>) {
 		const target = event.target as HTMLElement;
-		if (target.closest("button")) return;
+		/* a button is a click, except a link in a Cover's title while the
+		   links drag: that one is the Heading's to read past the slop */
+		if (
+			target.closest("button") &&
+			!(design.linksDrag && target.closest("[data-heading-title] button"))
+		)
+			return;
 		if (covered) return;
 		/* a Sheet is handled by its bar, never by its content: a Card is
 		   picked up from anywhere, a Sheet's body only scrolls. A Cover's
@@ -3113,8 +3368,36 @@ function PresentationView({
 					: "var(--line-strong)";
 	const subject = card.subject;
 	const dataForm = ground ? "ground" : form;
-	/* one column width in every form: a Text Sheet reads at prose width */
-	const column = sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH;
+	const note = subject.kind === "Note" ? subject.note : null;
+	const ported = usePortedReading(note);
+	const portedFollow = usePortedFollow(note?.word ?? "", onFollow);
+	const isCover = sheet && !ground && back !== null;
+	const folded = useFolded(section, isCover && design.variant === "shrink");
+	const {
+		column,
+		gutterRem,
+		body: bodyWidth,
+		title: coverWidth,
+	} = sheetColumn(subject, sheet, ported !== null);
+	const titles = ported
+		? {
+				card: (
+					<PortedTitle
+						note={ported}
+						presentation="Card"
+						follow={portedFollow}
+					/>
+				),
+				cover: (
+					<PortedTitle
+						note={ported}
+						presentation="Sheet"
+						follow={portedFollow}
+					/>
+				),
+			}
+		: null;
+
 	return (
 		<motion.article
 			ref={section}
@@ -3165,6 +3448,12 @@ function PresentationView({
 					form={form}
 					ground={ground}
 					back={back}
+					clear={clear}
+					coverRem={coverHeadingRem(design.variant, folded)}
+					coverWidth={coverWidth}
+					folded={folded}
+					titles={titles}
+					morphing={morphing}
 					grab={
 						sheet &&
 						!ground &&
@@ -3188,39 +3477,60 @@ function PresentationView({
 					transition={{ layout: positionSpec }}
 					className={`relative order-1 min-h-0 flex-1 ${sheet ? "overflow-y-auto" : "overflow-hidden"}`}
 				>
-					<div
-						className={`mx-auto flex w-full flex-col gap-3 px-4 ${below ? "pt-3" : sheet ? "pt-4 pb-4" : "pb-4"}`}
-						style={{ maxWidth: column }}
-					>
-						{subject.kind === "Text" ? (
-							<TextBlock
-								text={subject.text}
-								focus={subject.focus}
-								form={form}
-								shown={showText}
-								litWord={litWord}
-								onSegment={onSegment}
-								onSegmentDown={onSegmentDown}
+					{ported ? (
+						/* a Card's links are inert until it is a Sheet (#485) */
+						<div
+							inert={!sheet}
+							className={
+								sheet
+									? "[&_[data-note-presentation]>article]:pt-3"
+									: ""
+							}
+						>
+							<PortedBlocks
+								note={ported}
+								presentation={sheet ? "Sheet" : "Card"}
+								follow={portedFollow}
 							/>
-						) : (
-							<>
-								<ContextsBlock
-									note={subject.note}
+						</div>
+					) : (
+						<div
+							className={`mx-auto flex w-full flex-col gap-3 ${below ? "pt-3" : sheet ? "pt-4 pb-4" : "pb-4"}`}
+							style={{
+								maxWidth: bodyWidth,
+								paddingInline: `${gutterRem.toString()}rem`,
+							}}
+						>
+							{subject.kind === "Text" ? (
+								<TextBlock
+									text={subject.text}
+									focus={subject.focus}
 									form={form}
+									shown={showText}
 									litWord={litWord}
 									onSegment={onSegment}
 									onSegmentDown={onSegmentDown}
 								/>
-								<BodyBlock note={subject.note} />
-								<LinksBlock
-									note={subject.note}
-									form={form}
-									onFollow={onFollow}
-									onSegmentDown={onSegmentDown}
-								/>
-							</>
-						)}
-					</div>
+							) : (
+								<>
+									<ContextsBlock
+										note={subject.note}
+										form={form}
+										litWord={litWord}
+										onSegment={onSegment}
+										onSegmentDown={onSegmentDown}
+									/>
+									<BodyBlock note={subject.note} />
+									<LinksBlock
+										note={subject.note}
+										form={form}
+										onFollow={onFollow}
+										onSegmentDown={onSegmentDown}
+									/>
+								</>
+							)}
+						</div>
+					)}
 					{/* the Card's clip fades its content out; the Sheet lifts the fade */}
 					<motion.div
 						aria-hidden="true"
@@ -3240,19 +3550,30 @@ function PresentationView({
 /**
  * The Heading: pinned first, the Note's lift handle in every form. As a
  * Card it is the one-line row (form, then gloss), at the bottom edge when
- * the Card is a Card Tail. As a Cover it is the Cover's bar: its ← and its
- * label. As a Ground it folds shut, because the Pane bar carries the label.
+ * the Card is a Card Tail. As a Cover it is the Cover's bar: ← in its left
+ * margin, × in its right, and the title on the body's column; its height
+ * is the design's (see `heading-design.tsx`). As a Ground it folds shut,
+ * because the Pane bar carries the label. A ported Note's title is its
+ * real Reading Header, in both faces.
  *
  * The row is one element whose height rides `MORPH` with the Note's box,
  * so the Cover's top edge is the Note's own edge in every frame. Only the
  * words change: the face leaving goes on `BAR_EXIT`, the one arriving
- * follows on `BAR_ENTER`, and the row between them never fades.
+ * follows on `BAR_ENTER`, and the row between them never fades. A change
+ * of height with no change of form, a fold or a switch of design, rides
+ * `HEADING_RESIZE`.
  */
 function HeadingBlock({
 	subject,
 	form,
 	ground,
 	back,
+	clear,
+	coverRem,
+	coverWidth,
+	folded,
+	titles,
+	morphing,
 	grab,
 	atBottom,
 	layout,
@@ -3264,6 +3585,16 @@ function HeadingBlock({
 	form: NoteForm;
 	ground: boolean;
 	back: CoverBack | null;
+	clear: CoverBack | null;
+	/** The Cover face's height, in rem. */
+	coverRem: number;
+	/** The body column the Cover's title sits on, gutters included. */
+	coverWidth: string;
+	folded: boolean;
+	/** A ported Note's real title, as a Card and as a Cover. */
+	titles: { card: ReactNode; cover: ReactNode } | null;
+	/** The form changed this render: the row rides `MORPH`. */
+	morphing: boolean;
 	/** The row is the Cover's handle right now. */
 	grab: boolean;
 	atBottom: boolean;
@@ -3274,11 +3605,13 @@ function HeadingBlock({
 	/** The content column's width; the Card's row is centred at it. */
 	column: string;
 }) {
-	const { transition, MORPH, BAR_ENTER, BAR_EXIT } = useDeckMotion();
+	const { transition, MORPH, BAR_ENTER, BAR_EXIT, HEADING_RESIZE } =
+		useDeckMotion();
+	const design = useHeadingDesign();
 	const rem = remPx();
 	const face = form === "card" ? "card" : ground || !back ? null : "cover";
 	const rowRem =
-		face === "card" ? HEADER_REM : face === "cover" ? BAR_REM : 0;
+		face === "card" ? HEADER_REM : face === "cover" ? coverRem : 0;
 	const title =
 		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
 	const gloss = subjectGloss(subject);
@@ -3287,15 +3620,21 @@ function HeadingBlock({
 		animate: { opacity: 1, transition: transition(BAR_ENTER) },
 		exit: { opacity: 0, transition: transition(BAR_EXIT) },
 	};
+	const rowSpec = morphing ? MORPH : transition(HEADING_RESIZE);
 	return (
 		<motion.div
 			data-heading=""
+			data-heading-variant={face === "cover" ? design.variant : undefined}
+			data-folded={face === "cover" ? folded : undefined}
 			/* `initial={false}`: a Note is dealt at its size; only a change
 			   of form is a move. */
 			initial={false}
 			layout={layout ? "position" : false}
 			layoutDependency={`${form}:${atBottom.toString()}`}
-			transition={{ ...MORPH, layout: positionSpec }}
+			transition={{
+				...rowSpec,
+				layout: positionSpec,
+			}}
 			animate={{ height: rowRem * rem, opacity: face ? 1 : 0 }}
 			style={{ order: atBottom ? 2 : 0, y: offset }}
 			className={`relative w-full shrink-0 overflow-hidden select-none ${grab ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
@@ -3305,57 +3644,143 @@ function HeadingBlock({
 					<motion.div
 						key="card"
 						{...fade}
-						className={`absolute inset-0 flex justify-center px-4 ${atBottom ? "" : "pb-2"}`}
+						className={`absolute inset-0 flex justify-center ${titles ? "px-3.5" : "px-4"} ${atBottom ? "" : "pb-2"}`}
 					>
 						<div
 							className="relative flex h-full w-full min-w-0 items-end gap-4"
 							style={{ maxWidth: column }}
 						>
-							<h2
-								className={`min-w-0 flex-1 truncate font-serif text-[1rem] font-normal leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
-							>
-								{title}
-							</h2>
-							{gloss ? (
-								<span
-									className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
+							{titles ? (
+								/* a Card's links are inert until it is a Sheet (#485) */
+								<div
+									inert
+									className={`min-w-0 flex-1 ${ONE_LINE_TITLE} ${atBottom ? "pb-3" : ""}`}
 								>
-									{gloss}
-								</span>
-							) : null}
+									{titles.card}
+								</div>
+							) : (
+								<>
+									<h2
+										className={`min-w-0 flex-1 truncate font-serif text-[1rem] font-normal leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
+									>
+										{title}
+									</h2>
+									{gloss ? (
+										<span
+											className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
+										>
+											{gloss}
+										</span>
+									) : null}
+								</>
+							)}
 						</div>
 					</motion.div>
-				) : face === "cover" && back ? (
+				) : face === "cover" && back && clear ? (
 					<motion.div
 						key="cover"
 						{...fade}
-						/* the row is always the row's height; a divider in the
-						   Note, like the Pane bar's, not a second box's edge */
-						className="absolute inset-x-0 top-0 flex items-center gap-2 border-b border-line ps-2 pe-3"
-						style={{ height: `${BAR_REM.toString()}rem` }}
+						className="absolute inset-0"
 					>
-						<button
-							type="button"
-							disabled={!back.enabled}
-							aria-label={back.label}
-							title={back.label}
-							onClick={back.onBack}
-							className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised disabled:text-ink-muted disabled:hover:bg-transparent"
+						<SheetChrome
+							ruled={coverHeadingRuled(design.variant, folded)}
+							maxWidth={coverWidth}
+							back={back}
+							clear={clear}
+							linksDrag={design.linksDrag}
 						>
-							←
-						</button>
-						<h2 className="min-w-0 truncate font-mono text-[0.62rem] font-normal tracking-[0.08em] text-ink uppercase">
-							{subjectLabel(subject)}
-						</h2>
-						{gloss ? (
-							<span className="shrink-0 font-mono text-[0.62rem] text-ink-muted">
-								{gloss}
-							</span>
-						) : null}
+							{titles ? (
+								titles.cover
+							) : (
+								<SheetTitle subject={subject} />
+							)}
+						</SheetChrome>
 					</motion.div>
 				) : null}
 			</AnimatePresence>
 		</motion.div>
+	);
+}
+
+/** A dummy Sheet's title in its chrome: the form, then what kind of Note it is. */
+function SheetTitle({ subject }: { subject: Subject }) {
+	const gloss = subjectGloss(subject);
+	return (
+		<div className="flex min-w-0 items-baseline gap-3">
+			<h2 className="min-w-0 truncate font-serif text-[1rem] font-normal leading-[1.4] text-ink">
+				{subject.kind === "Text"
+					? subject.text.title
+					: subject.note.tail.form}
+			</h2>
+			{subject.kind === "Note" ? (
+				<span className="shrink-0 font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase">
+					{subject.note.kind}
+					{gloss ? (
+						<span className="ms-2 normal-case tracking-normal">
+							{gloss}
+						</span>
+					) : null}
+				</span>
+			) : null}
+		</div>
+	);
+}
+
+/**
+ * A Pane bar's face: the Ground's chrome, laid out as a Cover's Heading.
+ * A Rooted Pane shows its ← and its trail; a Floating Pane its ×, and its
+ * Ground's title, the real one when the Ground is a ported Note.
+ */
+function PaneBarFace({
+	subject,
+	titled,
+	width,
+	back,
+	clear,
+	onFollow,
+	children,
+}: {
+	/** The Ground's Subject when it is a Sheet: its column is the bar's. */
+	subject: Subject | null;
+	/** Shows the Ground's title; otherwise the trail. */
+	titled: boolean;
+	/** The column when the Ground is a list rather than a Sheet. */
+	width: string | null;
+	back: CoverBack | null;
+	clear: CoverBack | null;
+	onFollow: (link: NoteLink) => void;
+	/** The trail. */
+	children: ReactNode;
+}) {
+	const design = useHeadingDesign();
+	const note = subject?.kind === "Note" ? subject.note : null;
+	const ported = usePortedReading(note);
+	const portedFollow = usePortedFollow(note?.word ?? "", onFollow);
+	return (
+		<SheetChrome
+			ruled={false}
+			maxWidth={
+				width ??
+				(subject
+					? sheetColumn(subject, true, ported !== null).title
+					: "")
+			}
+			back={back}
+			clear={clear}
+			linksDrag={design.linksDrag}
+		>
+			{!titled || !subject ? (
+				children
+			) : ported ? (
+				<PortedTitle
+					note={ported}
+					presentation="Sheet"
+					follow={portedFollow}
+				/>
+			) : (
+				<SheetTitle subject={subject} />
+			)}
+		</SheetChrome>
 	);
 }
 

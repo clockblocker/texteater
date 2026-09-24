@@ -16,7 +16,7 @@ import type { Id } from "../../../convex/_generated/dataModel";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 import type { EntryRoute } from "../playground-router";
 import { CardFrame, SheetFrame, Stage } from "./frames";
-import { PlaygroundNote } from "./playground-note";
+import { PlaygroundNote, playgroundNotesQuery } from "./playground-note";
 
 type PlaygroundCatalog = PlaygroundSnapshot["catalog"];
 
@@ -29,16 +29,7 @@ type PlaygroundCatalog = PlaygroundSnapshot["catalog"];
  * of that walk is a history entry and can be reloaded or linked to.
  */
 export function NotesGallery({ route }: { readonly route: EntryRoute }) {
-	const catalog = useQuery({
-		queryKey: ["playground-notes"],
-		queryFn: async (): Promise<PlaygroundSnapshot> => {
-			const response = await fetch("/__playground/notes");
-			if (!response.ok)
-				throw new Error("Could not load playground fixtures.");
-			return response.json();
-		},
-		gcTime: 10_000,
-	});
+	const catalog = useQuery(playgroundNotesQuery);
 	const target = useMemo(
 		() => targetFromSegments(route.segments),
 		[route.segments],
