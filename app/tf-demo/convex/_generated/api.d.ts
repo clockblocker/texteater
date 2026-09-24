@@ -36,6 +36,7 @@ import type * as model_intakeRuns from "../model/intakeRuns.js";
 import type * as model_knowledgeAttempts from "../model/knowledgeAttempts.js";
 import type * as model_knowledgeCoverage from "../model/knowledgeCoverage.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
+import type * as model_knowledgeScheduling from "../model/knowledgeScheduling.js";
 import type * as model_nounArticleMigration from "../model/nounArticleMigration.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
@@ -112,6 +113,7 @@ declare const fullApi: ApiFromModules<{
   "model/knowledgeAttempts": typeof model_knowledgeAttempts;
   "model/knowledgeCoverage": typeof model_knowledgeCoverage;
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
+  "model/knowledgeScheduling": typeof model_knowledgeScheduling;
   "model/nounArticleMigration": typeof model_nounArticleMigration;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;

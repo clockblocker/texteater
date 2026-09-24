@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
-import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import { inspectionJson } from "./model/inspection";
+import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { requireClickableSegment } from "./model/resolutionLookup";
 import {
 	advanceResolutionSession,

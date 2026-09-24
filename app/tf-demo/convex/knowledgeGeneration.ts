@@ -7,19 +7,13 @@ import {
 	knowledgeRequestComplete,
 } from "../server/knowledgeCompletion";
 import { parseGermanReading } from "../server/operationalParsing";
-import type { Id } from "./_generated/dataModel";
-import {
-	internalMutation,
-	type MutationCtx,
-	mutation,
-} from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { canonicalJson } from "./model/canonicalJson";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	claimKnowledgeRun,
-	demandKnowledgeAttempt,
 	endKnowledgeRun,
 	failKnowledgeRun,
 	findKnowledgeAttempt,
@@ -36,6 +30,10 @@ import {
 	recordCoverageEvidence,
 } from "./model/knowledgeCoverage";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
+import {
+	assertKey,
+	scheduleKnowledgeGeneration,
+} from "./model/knowledgeScheduling";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
 import {
@@ -61,58 +59,6 @@ const attemptInputValidator = v.object({
 });
 
 const GENERATION_FAILED_MESSAGE = "Knowledge generation failed. Please retry.";
-
-function assertKey(value: string, name: string): void {
-	if (value.trim().length === 0 || value.length > 200) {
-		throw new Error(`${name} must contain between 1 and 200 characters.`);
-	}
-}
-
-export async function scheduleKnowledgeGeneration(
-	ctx: MutationCtx,
-	input: {
-		attemptKey: string;
-		knowledgeDraftJson?: string;
-		visitorId: string;
-		readingId: Id<"readings">;
-		attestationId: Id<"attestations">;
-	},
-): Promise<void> {
-	assertKey(input.attemptKey, "attemptKey");
-	assertKey(input.visitorId, "visitorId");
-	if (!ctx.scheduler) return;
-	const occurrence = await loadOccurrenceAttestation(
-		ctx,
-		input.attestationId,
-	);
-	if (!occurrence || occurrence.reading._id !== input.readingId) {
-		throw new Error(
-			"Knowledge generation requires the exact saved occurrence.",
-		);
-	}
-	const ownerReadingKey = occurrence.reading.readingKey;
-	const [accumulated, settings] = await Promise.all([
-		findAccumulatedKnowledge(ctx, ownerReadingKey),
-		loadKnowledgeSettings(ctx, input.visitorId),
-	]);
-	const translationLanguages = translationLanguageValues.filter(
-		(language) => settings.translations[language],
-	);
-	const missing = missingKnowledge(accumulated, {
-		translationLanguages,
-		// Government can only be all that is missing once the base is covered.
-		attestedGovernment:
-			accumulated?.status === "Full"
-				? await occurrenceGovernment(ctx, occurrence)
-				: [],
-	});
-	if (nothingMissing(missing)) return;
-	await demandKnowledgeAttempt(ctx, {
-		...input,
-		ownerReadingKey,
-		translationLanguages,
-	});
-}
 
 export const retry = internalMutation({
 	args: attemptInputValidator.fields,

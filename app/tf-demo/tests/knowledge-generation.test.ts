@@ -2,7 +2,6 @@ import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import type { FunctionArgs } from "convex/server";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
-import { scheduleKnowledgeGeneration } from "../convex/knowledgeGeneration";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import * as containment from "../convex/model/generatedKnowledgeContainment";
 import {
@@ -15,6 +14,7 @@ import {
 	KNOWLEDGE_RETRY_COOLDOWN_MS,
 	STALE_KNOWLEDGE_RUN_AFTER_MS,
 } from "../convex/model/knowledgeAttempts";
+import { scheduleKnowledgeGeneration } from "../convex/model/knowledgeScheduling";
 import { publishInRelationChunks } from "../convex/model/relationPublicationChunks";
 import { replaceAccumulatedKnowledge } from "../convex/model/shadows";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";

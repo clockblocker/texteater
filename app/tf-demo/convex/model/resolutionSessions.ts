@@ -7,8 +7,8 @@ import {
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
-import { scheduleKnowledgeGeneration } from "../knowledgeGeneration";
 import { inspectionRequested } from "./inspection";
+import { scheduleKnowledgeGeneration } from "./knowledgeScheduling";
 
 export { projectResolutionGrammar, projectResolutionReading };
 
