@@ -1,15 +1,14 @@
-import type * as Effect from "effect/Effect";
+import * as Effect from "effect/Effect";
 import type {
 	EntryType,
 	Questions,
 	SystemOneResult,
 } from "promptsmith/typesafe";
-import type { CallTrace, DumgenOptions } from "../types.js";
+import type { DumgenOptions } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 import {
 	type Called,
 	call,
-	fingerprint,
 	judgmentConfiguration,
 	type OperationScope,
 } from "./trace.js";
@@ -83,107 +82,53 @@ export function judgmentCaller(options: DumgenOptions) {
 		questions: Q,
 		scope: OperationScope,
 		dependsOn: readonly string[],
-	): Effect.Effect<Called<SystemOneResult<Q>>, DumgenFailure> =>
-		call(async (signal) => {
-			if (!Object.keys(questions).length)
-				throw new DumgenFailure(
-					"InvalidInput",
-					stage,
-					"Empty judgment batch",
-					route,
-				);
-			for (const question of Object.values(questions)) {
-				if (
-					question.type === "choice" &&
-					(Object.keys(question.criteria).length < 2 ||
-						Object.keys(question.criteria).length > 255)
-				)
-					throw new DumgenFailure(
-						"InvalidInput",
-						stage,
-						"Choice requires 2–255 complete candidates",
-						route,
-					);
-				if (
-					question.type === "score" &&
-					(question.criteria.length < 2 ||
-						question.criteria.length > 10)
-				)
-					throw new DumgenFailure(
-						"InvalidInput",
-						stage,
-						"Score requires 2–10 levels",
-						route,
-					);
-			}
-			const configuration = judgmentConfiguration(options);
-			const request = {
+	): Effect.Effect<Called<SystemOneResult<Q>>, DumgenFailure> => {
+		const invalid = (message: string) =>
+			Effect.fail(
+				new DumgenFailure("InvalidInput", stage, message, route),
+			);
+		if (!Object.keys(questions).length)
+			return invalid("Empty judgment batch");
+		for (const question of Object.values(questions)) {
+			if (
+				question.type === "choice" &&
+				(Object.keys(question.criteria).length < 2 ||
+					Object.keys(question.criteria).length > 255)
+			)
+				return invalid("Choice requires 2–255 complete candidates");
+			if (
+				question.type === "score" &&
+				(question.criteria.length < 2 || question.criteria.length > 10)
+			)
+				return invalid("Score requires 2–10 levels");
+		}
+		const configuration = judgmentConfiguration(options);
+		return call(options, scope, {
+			executor: "TypeSafe",
+			dependsOn,
+			fingerprinted: { questions, state },
+			request: (signal) => ({
 				stage,
 				route,
 				input: state,
 				questions,
 				configuration,
 				signal,
-			};
-			const base = {
-				id: `${scope.id}:${++scope.sequence}`,
-				operationId: scope.id,
-				executor: "TypeSafe" as const,
-				request,
-				dependsOn,
-				fingerprint: await fingerprint({ questions, state }),
-			};
-			const startedAt = Date.now();
-			const start = performance.now();
-			let output: unknown;
-			let transport: CallTrace["transport"] = "Failure";
-			let validation: CallTrace["validation"] = "NotRun";
-			let failure: string | undefined;
-			try {
-				signal.throwIfAborted();
-				output = await options.judge(
+			}),
+			send: (request) =>
+				options.judge(
 					{ state, questions, model: configuration.model },
 					{
-						signal,
+						signal: request.signal,
 						timeout: configuration.settings.timeoutMs,
 						retry: { maxRetries: 0 },
 					},
-				);
-				transport = "Success";
-				signal.throwIfAborted();
-				validation = "Invalid";
+				),
+			evidence: (output) => (output === undefined ? {} : { output }),
+			validate: (output) => {
 				validateAnswers(questions, output, stage, route);
-				validation = "Valid";
-				return { id: base.id, output };
-			} catch (error) {
-				failure =
-					error instanceof Error ? error.message : String(error);
-				if (signal.aborted) {
-					transport = "Interrupted";
-					throw error;
-				}
-				// The executor is the transport boundary. After it succeeds, output
-				// checks raise DumgenFailures and any other throw is a defect.
-				if (transport !== "Success")
-					throw new DumgenFailure(
-						"ProviderFailure",
-						stage,
-						failure,
-						route,
-					);
-				throw error;
-			} finally {
-				const exchange: CallTrace = {
-					...base,
-					transport,
-					validation,
-					...(output === undefined ? {} : { output }),
-					...(failure ? { failure } : {}),
-					startedAt,
-					durationMs: performance.now() - start,
-				};
-				scope.calls.push(exchange);
-				options.onModelExchange?.(exchange);
-			}
+				return output;
+			},
 		});
+	};
 }

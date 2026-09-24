@@ -12,6 +12,25 @@ import type {
 import { DumgenFailure } from "./failure.js";
 
 /**
+ * The requests one Dumgen instance may have in flight. A request holds one
+ * permit for its transport only; `demand` counts holders and waiters, so a
+ * request knows whether it had to queue.
+ */
+export type RequestBudget = {
+	readonly permits: number;
+	readonly semaphore: Effect.Semaphore;
+	demand: number;
+};
+export function requestBudget(options: DumgenOptions): RequestBudget {
+	const permits = options.requestBudget ?? 16;
+	return {
+		permits,
+		semaphore: Effect.unsafeMakeSemaphore(permits),
+		demand: 0,
+	};
+}
+
+/**
  * One operation's evidence: every call it starts records its CallTrace here,
  * and its steps record free-form events. Calls name their dependencies by the
  * IDs earlier calls returned.
@@ -20,6 +39,7 @@ export type OperationScope = {
 	readonly id: string;
 	readonly calls: CallTrace[];
 	readonly events: { kind: string; data: unknown }[];
+	readonly budget: RequestBudget;
 	sequence: number;
 };
 /** A finished call's output and the ID its dependents name. */
@@ -70,29 +90,146 @@ export async function fingerprint(value: unknown): Promise<string> {
 	).join("");
 }
 
+/** One model or judgment request, as its call sends and records it. */
+export type Exchange<Request extends CallTrace["request"], Response, T> = {
+	readonly executor: CallTrace["executor"];
+	readonly dependsOn: readonly string[];
+	/** What the CallTrace's fingerprint hashes. */
+	readonly fingerprinted: unknown;
+	/** The request as sent, carrying the transport's signal. */
+	request(signal: AbortSignal): Request;
+	send(request: Request): Promise<Response>;
+	/** What the CallTrace keeps of a response. */
+	evidence(response: Response): Pick<CallTrace, "output" | "metadata">;
+	/** Output checks raise DumgenFailures; any other throw is a defect. */
+	validate(response: Response): T;
+};
+
+const messageOf = (error: unknown) =>
+	error instanceof Error ? error.message : String(error);
+
 /**
- * One model or judgment call as its own Effect. Interruption aborts the
- * transport's signal, then waits until the call has settled and recorded its
- * CallTrace, so no call outlives its operation's trace. A DumgenFailure is the
- * call's failure; any other rejection is a defect.
+ * One model or judgment call as its own Effect. It holds a budget permit for
+ * its transport only, and its timing starts once it holds one (#446); a
+ * request that waited records RequestQueued. Interruption while queued
+ * starts nothing and records nothing. Interruption in flight aborts the
+ * transport's signal and waits until it settles, so every started call
+ * records its CallTrace before its operation's trace is emitted. Anything
+ * the executor throws is a ProviderFailure.
  */
-export function call<T>(
-	run: (signal: AbortSignal) => Promise<T>,
-): Effect.Effect<T, DumgenFailure> {
-	return Effect.async<T, DumgenFailure>((resume, signal) => {
-		const pending = Promise.resolve()
-			.then(() => run(signal))
-			.then(
-				(value) => resume(Effect.succeed(value)),
-				(error) =>
-					resume(
-						error instanceof DumgenFailure
-							? Effect.fail(error as DumgenFailure)
-							: Effect.die(error),
-					),
+export function call<Request extends CallTrace["request"], Response, T>(
+	options: DumgenOptions,
+	scope: OperationScope,
+	exchange: Exchange<Request, Response, T>,
+): Effect.Effect<Called<T>, DumgenFailure> {
+	const { budget } = scope;
+	return Effect.uninterruptibleMask((restore) =>
+		Effect.gen(function* () {
+			const hash = yield* restore(
+				Effect.promise(() => fingerprint(exchange.fingerprinted)),
 			);
-		return Effect.promise(() => pending);
-	});
+			const queued = budget.demand >= budget.permits;
+			const queuedAt = performance.now();
+			budget.demand++;
+			yield* restore(budget.semaphore.take(1)).pipe(
+				Effect.onInterrupt(() =>
+					Effect.sync(() => {
+						budget.demand--;
+					}),
+				),
+			);
+			let request: Request | undefined;
+			let settled:
+				| { readonly ok: true; readonly response: Response }
+				| { readonly ok: false; readonly error: unknown }
+				| undefined;
+			const id = `${scope.id}:${++scope.sequence}`;
+			const startedAt = Date.now();
+			const start = performance.now();
+			const sent = yield* Effect.exit(
+				restore(
+					Effect.async<void>((resume, signal) => {
+						if (queued)
+							recordEvent(scope, "RequestQueued", {
+								callId: id,
+								waitMs: start - queuedAt,
+							});
+						const sending = exchange.request(signal);
+						request = sending;
+						const pending = Promise.resolve()
+							.then(() => exchange.send(sending))
+							.then(
+								(response) => {
+									settled = { ok: true, response };
+								},
+								(error) => {
+									settled = { ok: false, error };
+								},
+							)
+							.then(() => resume(Effect.void));
+						return Effect.promise(() => pending);
+					}),
+				),
+			);
+			budget.demand--;
+			yield* budget.semaphore.release(1);
+			if (!request) return yield* Effect.interrupt;
+			let transport: CallTrace["transport"];
+			let validation: CallTrace["validation"] = "NotRun";
+			let failure: string | undefined;
+			let result: Exit.Exit<Called<T>, DumgenFailure>;
+			if (Exit.isFailure(sent)) {
+				transport = "Interrupted";
+				failure =
+					settled?.ok === false
+						? messageOf(settled.error)
+						: "The request was interrupted";
+				result = Exit.failCause(sent.cause);
+			} else if (settled?.ok) {
+				transport = "Success";
+				validation = "Invalid";
+				try {
+					const output = exchange.validate(settled.response);
+					validation = "Valid";
+					result = Exit.succeed({ id, output });
+				} catch (error) {
+					failure = messageOf(error);
+					result =
+						error instanceof DumgenFailure
+							? Exit.fail(error)
+							: Exit.die(error);
+				}
+			} else {
+				transport = "Failure";
+				failure = messageOf(settled?.error);
+				result = Exit.fail(
+					new DumgenFailure(
+						"ProviderFailure",
+						request.stage,
+						failure,
+						request.route,
+					),
+				);
+			}
+			const trace: CallTrace = {
+				id,
+				operationId: scope.id,
+				executor: exchange.executor,
+				request,
+				dependsOn: exchange.dependsOn,
+				fingerprint: hash,
+				transport,
+				validation,
+				...(settled?.ok ? exchange.evidence(settled.response) : {}),
+				...(failure ? { failure } : {}),
+				startedAt,
+				durationMs: performance.now() - start,
+			};
+			scope.calls.push(trace);
+			options.onModelExchange?.(trace);
+			return yield* result;
+		}),
+	);
 }
 
 /**
@@ -131,7 +268,10 @@ function failureOf(
  * Each run of the returned Effect gets its own scope. Its OperationTrace is
  * emitted once the run has ended and every call it started has settled.
  */
-export function operation(options: DumgenOptions) {
+export function operation(
+	options: DumgenOptions,
+	budget: RequestBudget = requestBudget(options),
+) {
 	return <T>(
 		stage: string,
 		input: unknown,
@@ -142,6 +282,7 @@ export function operation(options: DumgenOptions) {
 				id: crypto.randomUUID(),
 				calls: [],
 				events: [],
+				budget,
 				sequence: 0,
 			};
 			const startedAt = Date.now();

@@ -46,6 +46,12 @@ import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
  */
 export const DRAFT_GRACE_MS = 1_500;
 
+/**
+ * Accepted German sentences analysed at once during intake. Their requests
+ * draw from the same Dumgen request budget as segmentation.
+ */
+export const SENTENCE_ANALYSIS_CONCURRENCY = 4;
+
 export type PersistedSentence = {
 	readonly sentenceId: string;
 	readonly textId: string;
@@ -323,6 +329,8 @@ export function createTfDemoOrchestrator(options: {
 	}) => Effect.Effect<KnowledgeDraft, unknown>;
 	/** How long a new Reading waits for unfinished drafts before committing. */
 	readonly draftGraceMs?: number;
+	/** Measurement seam; production uses SENTENCE_ANALYSIS_CONCURRENCY. */
+	readonly analysisConcurrency?: number;
 }) {
 	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
 	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
@@ -409,7 +417,11 @@ export function createTfDemoOrchestrator(options: {
 							};
 						},
 					),
-				{ concurrency: 4 },
+				{
+					concurrency:
+						options.analysisConcurrency ??
+						SENTENCE_ANALYSIS_CONCURRENCY,
+				},
 			);
 			const persisted = yield* Effect.tryPromise(() =>
 				options.persistence.persistSubmittedText({

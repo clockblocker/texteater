@@ -12,7 +12,7 @@ import type {
 	SegmentedSentence,
 } from "../../types.js";
 import { DumgenFailure } from "../../universal/failure.js";
-import { operation } from "../../universal/trace.js";
+import { operation, type RequestBudget } from "../../universal/trace.js";
 import {
 	markedContext,
 	parse,
@@ -69,8 +69,9 @@ type KnowledgeInput = {
 /** German owns its dispatch and model-call grouping behind the shared encounter contract. */
 export function createGermanOperations(
 	options: DumgenOptions,
+	budget: RequestBudget,
 ): Omit<Dumgen, "segment" | "segmentSentence"> {
-	const task = operation(options);
+	const task = operation(options, budget);
 	const operations = {
 		analyzeSentence(raw: { sentence: SegmentedSentence<"de"> }) {
 			return task("analyzeSentence", raw, (scope) => {

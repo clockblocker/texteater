@@ -102,7 +102,7 @@ function productionOptions(
 			}
 		},
 		execute: async (request) => {
-			// Dumgen keys its call graph on request.signal, so only the transport sees the deadline.
+			// request.signal is Dumgen's interruption; only the transport sees the deadline.
 			const deadline = AbortSignal.timeout(deadlineMs);
 			try {
 				return await execute({

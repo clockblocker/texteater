@@ -232,6 +232,11 @@ export type DumgenOptions = {
 		readonly model?: string;
 		readonly timeoutMs?: number;
 	};
+	/**
+	 * Model and judgment requests one Dumgen instance keeps in flight; each
+	 * holds a permit for its transport only. Defaults to 16.
+	 */
+	readonly requestBudget?: number;
 	readonly routeOverrides?: Readonly<
 		Record<string, Partial<ModelConfiguration>>
 	>;

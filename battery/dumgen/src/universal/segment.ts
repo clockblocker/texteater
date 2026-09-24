@@ -12,14 +12,17 @@ import { judgmentCaller } from "./judgment.js";
 import { effectiveConfiguration, executeGeneration } from "./model.js";
 import { choice } from "./questions.js";
 import { isStitchedText } from "./segmentation.js";
-import { operation, recordEvent } from "./trace.js";
+import { operation, type RequestBudget, recordEvent } from "./trace.js";
 import { parse } from "./validation.js";
 
 const segmenters = { de: segmentGerman, en: segmentEnglish, he: segmentHebrew };
 const invalidStitching = (message: string) =>
 	new DumgenFailure("InvalidModelOutput", "segment", message, "intake");
-export function createSegmentation(options: DumgenOptions) {
-	const run = operation(options);
+export function createSegmentation(
+	options: DumgenOptions,
+	budget: RequestBudget,
+) {
+	const run = operation(options, budget);
 	return function segment(raw: {
 		readonly sourceSentences: readonly [string, ...string[]];
 	}) {
@@ -214,8 +217,11 @@ function stitchTrustedText(text: string): string {
 	return text.replaceAll(/\s+/gu, " ").trim();
 }
 
-export function createTrustedSegmentation(options: DumgenOptions) {
-	const run = operation(options);
+export function createTrustedSegmentation(
+	options: DumgenOptions,
+	budget: RequestBudget,
+) {
+	const run = operation(options, budget);
 	return function segmentSentence<L extends "de" | "en" | "he">(input: {
 		readonly language: L;
 		readonly stitchedText: string;
