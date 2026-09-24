@@ -360,7 +360,7 @@ test("invalid inventory fails as a whole with contextual paths", () => {
 });
 
 test("a requested source gets exactly its edges from the whole projection", () => {
-	const entries = [
+	const entries: readonly Dumrel.ReadingWithKnowledge[] = [
 		{
 			reading: dog,
 			knowledge: {
@@ -382,7 +382,7 @@ test("a requested source gets exactly its edges from the whole projection", () =
 				semanticRelations: { targetKind: "reading", synonym: [animal] },
 			},
 		},
-	] as const;
+	];
 	const whole = project(entries);
 	for (const { reading } of entries) {
 		const result = projectSemanticRelations(entries, { source: reading });

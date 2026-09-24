@@ -13,7 +13,7 @@ import {
 	evaluationRunSchema,
 	runManifestSchema,
 } from "./schemas.js";
-import { stableJson } from "./stable-json.js";
+import { fingerprint } from "./stable-json.js";
 
 export type {
 	OperationEvaluationRun,
@@ -23,6 +23,7 @@ export type {
 } from "./operation-evaluation.js";
 export { runOperationExperiment } from "./operation-evaluation.js";
 export { summarizeQuality } from "./quality.js";
+export { fingerprint } from "./stable-json.js";
 
 export type ModelConfiguration = z.infer<typeof configurationSchema>;
 export type EvaluationRun = z.infer<typeof evaluationRunSchema>;
@@ -44,13 +45,6 @@ export type EvaluationExecutor = (
 	},
 ) => Promise<{ readonly output: unknown; readonly metadata?: unknown }>;
 
-export async function fingerprint(value: unknown): Promise<string> {
-	const bytes = new TextEncoder().encode(stableJson(value));
-	const hash = await crypto.subtle.digest("SHA-256", bytes);
-	return Array.from(new Uint8Array(hash), (byte) =>
-		byte.toString(16).padStart(2, "0"),
-	).join("");
-}
 function message(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
 }

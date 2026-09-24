@@ -9,14 +9,17 @@ import {
 	getSelectionState,
 } from "./authoring/golden-corpus.js";
 import { assertCaseSelectionsUncontaminated } from "./authoring/selection-contamination.js";
-import { fingerprint, type ModelConfiguration } from "./evaluation.js";
 import { summarizeQuality } from "./quality.js";
 import {
+	type configurationSchema,
 	operationCaseRecordSchema,
 	operationEvaluationRunSchema,
 	operationManifestSchema,
 	type storedRunSchema,
 } from "./schemas.js";
+import { fingerprint } from "./stable-json.js";
+
+type ModelConfiguration = z.infer<typeof configurationSchema>;
 
 export type OperationEvaluationRun = z.infer<
 	typeof operationEvaluationRunSchema
