@@ -319,12 +319,6 @@ export const clearVisitorDataBatch = internalMutation({
 	},
 });
 
-export const resetDemoDataBatch = internalMutation({
-	args: { tableIndex: v.optional(v.number()) },
-	returns: tableResetResultValidator,
-	handler: (ctx, { tableIndex }) => clearTableBatch(ctx, tableIndex),
-});
-
 export const listTextIds = internalQuery({
 	args: { paginationOpts: paginationOptsValidator },
 	returns: paginationResultValidator(v.id("texts")),
@@ -1052,43 +1046,33 @@ export const clearLemmaDataBatch = internalMutation({
 	},
 });
 
-/** Bounded full reset of every tf-demo table, processed in mutation batches. */
+/** Clears every tf-demo table, processed in bounded mutation batches. */
+async function clearAllTables(ctx: ActionCtx): Promise<{ deleted: number }> {
+	let deleted = 0;
+	let tableIndex = 0;
+	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
+		const result = await ctx.runMutation(
+			internal.demoReset.clearSharedDataBatch,
+			{ tableIndex },
+		);
+		deleted += result.deleted;
+		tableIndex = result.nextTableIndex;
+		if (!result.hasMore) return { deleted };
+	}
+	throw new Error("Demo reset exceeded its batch limit.");
+}
+
+/** Full reset for `bun run reset`. */
 export const resetDemoData = internalAction({
 	args: {},
 	returns: v.object({ deleted: v.number() }),
-	handler: async (ctx): Promise<{ deleted: number }> => {
-		let deleted = 0;
-		let tableIndex = 0;
-		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-			const result = await ctx.runMutation(
-				internal.demoReset.resetDemoDataBatch,
-				{ tableIndex },
-			);
-			deleted += result.deleted;
-			tableIndex = result.nextTableIndex;
-			if (!result.hasMore) return { deleted };
-		}
-		throw new Error("Demo reset exceeded its batch limit.");
-	},
+	handler: clearAllTables,
 });
 
 export const clearSharedData = action({
 	args: {},
 	returns: v.object({ deleted: v.number() }),
-	handler: async (ctx): Promise<{ deleted: number }> => {
-		let deleted = 0;
-		let tableIndex = 0;
-		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-			const result = await ctx.runMutation(
-				internal.demoReset.clearSharedDataBatch,
-				{ tableIndex },
-			);
-			deleted += result.deleted;
-			tableIndex = result.nextTableIndex;
-			if (!result.hasMore) return { deleted };
-		}
-		throw new Error("Shared-data reset exceeded its batch limit.");
-	},
+	handler: clearAllTables,
 });
 
 export type StripAnalysesResult = StripTextAnalysisResult & {

@@ -19,10 +19,8 @@ import {
 } from "../../../battery/dumgen/tests/execution-fixture.js";
 import { internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
-import {
-	createConvexDumdictStorage,
-	dictionaryPlanResult,
-} from "../convex/dumdictActionStorage";
+import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
+import { dictionaryPlanResult } from "../convex/dumdictStorage/dictionaryPlan";
 import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage/transaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
@@ -187,13 +185,16 @@ function readingEntryContext(
 	t: TestConvexDb,
 	request: Parameters<
 		typeof t.query<
-			typeof internal.dumdictStorage.loadDumdictReadingEntryContext
+			typeof internal.dumdictStorage.queries.loadDumdictReadingEntryContext
 		>
 	>[1]["request"],
 ) {
-	return t.query(internal.dumdictStorage.loadDumdictReadingEntryContext, {
-		request,
-	});
+	return t.query(
+		internal.dumdictStorage.queries.loadDumdictReadingEntryContext,
+		{
+			request,
+		},
+	);
 }
 
 /** Commits a plan through the mutation-side applier in one transaction. */
@@ -364,7 +365,8 @@ describe("tf-demo Dumdict relation storage", () => {
 
 		await expect(
 			t.query(
-				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
+				internal.dumdictStorage.queries
+					.loadDumdictCleanupRelationsContext,
 				{
 					locatorKeys: Array.from(
 						{ length: 16 },
@@ -375,7 +377,8 @@ describe("tf-demo Dumdict relation storage", () => {
 		).resolves.toMatchObject({ revision: "convex-0" });
 		await expect(
 			t.query(
-				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
+				internal.dumdictStorage.queries
+					.loadDumdictCleanupRelationsContext,
 				{
 					locatorKeys: Array.from(
 						{ length: 51 },
@@ -486,7 +489,8 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(queried).toEqual(
 			Array.from({ length: 4 }, () =>
 				getFunctionName(
-					internal.dumdictStorage.loadDumdictReadingEntryContext,
+					internal.dumdictStorage.queries
+						.loadDumdictReadingEntryContext,
 				),
 			),
 		);
@@ -679,9 +683,12 @@ describe("tf-demo Dumdict relation storage", () => {
 			}),
 		);
 		expect(
-			await t.query(internal.dumdictStorage.loadDumdictReadingForPatch, {
-				readingKey: readingFingerprint(laufenReading),
-			}),
+			await t.query(
+				internal.dumdictStorage.queries.loadDumdictReadingForPatch,
+				{
+					readingKey: readingFingerprint(laufenReading),
+				},
+			),
 		).toMatchObject({
 			reading: {
 				knowledge: {
@@ -744,9 +751,12 @@ describe("tf-demo Dumdict relation storage", () => {
 		);
 		expect(await rows(t, "semanticRelationEdges")).toHaveLength(0);
 		expect(
-			await t.query(internal.dumdictStorage.loadDumdictReadingForPatch, {
-				readingKey: readingFingerprint(laufenReading),
-			}),
+			await t.query(
+				internal.dumdictStorage.queries.loadDumdictReadingForPatch,
+				{
+					readingKey: readingFingerprint(laufenReading),
+				},
+			),
 		).toMatchObject({
 			reading: {
 				knowledge: { semanticRelations: { targetKind: "reading" } },
@@ -1145,7 +1155,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		};
 		await expect(
 			t.mutation(
-				internal.dumdictStorage.commitDumdictChanges,
+				internal.dumdictStorage.transaction.commitDumdictChanges,
 				dictionaryPlanResult(plan),
 			),
 		).rejects.toThrow("target Lemma is missing");

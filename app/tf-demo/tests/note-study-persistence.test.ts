@@ -7,7 +7,7 @@ import { createDumdictService } from "dumdict/runtime";
 import * as Effect from "effect/Effect";
 import { api } from "../convex/_generated/api";
 import type { TableNames } from "../convex/_generated/dataModel";
-import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
 import schema from "../convex/schema";
 import {
 	NOTE_STUDY_DATABASE,

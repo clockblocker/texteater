@@ -48,7 +48,6 @@ export async function requireClickableSegment(
 export async function reconstructReusableAttestation(
 	ctx: MutationCtx | QueryCtx,
 	attestationId: Id<"attestations">,
-	_clickedSegmentIndex: number,
 ) {
 	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
 	if (!occurrence) {
@@ -146,11 +145,7 @@ export async function findAttestationForSegmentValue(
 	);
 	const attestationId = segment.attestationMembership?.attestationId;
 	if (!attestationId) return null;
-	const reusable = await reconstructReusableAttestation(
-		ctx,
-		attestationId,
-		clickedSegmentIndex,
-	);
+	const reusable = await reconstructReusableAttestation(ctx, attestationId);
 	return reusable.sentenceId === sentenceId ? reusable.value : null;
 }
 
@@ -182,7 +177,6 @@ export async function findClickResult(
 		const reusable = await reconstructReusableAttestation(
 			ctx,
 			click.attestationId,
-			args.clickedSegmentIndex,
 		);
 		return {
 			clickId: click._id,

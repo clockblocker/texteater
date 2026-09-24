@@ -553,27 +553,25 @@ describe("Shadow reset lifecycle", () => {
 		);
 	});
 
-	for (const [name, reset] of [
-		["shared reset", internal.demoReset.clearSharedDataBatch],
-		["full reset", internal.demoReset.resetDemoDataBatch],
-	] as const) {
-		test(`${name} removes active and dormant Shadow rows`, async () => {
-			const { t } = await lifecycleDb();
-			let tableIndex = 0;
-			for (
-				let batch = 0;
-				batch < 100 && tableIndex < resetDemoTableNames.length;
-				batch += 1
-			) {
-				const result = await t.mutation(reset, { tableIndex });
-				tableIndex = result.nextTableIndex;
-				if (!result.hasMore) break;
-			}
-			expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
-			expect(await rows(t, "structuralShadowReferences")).toEqual([]);
-			expect(await rows(t, "shadows")).toEqual([]);
-		});
-	}
+	test("shared reset removes active and dormant Shadow rows", async () => {
+		const { t } = await lifecycleDb();
+		let tableIndex = 0;
+		for (
+			let batch = 0;
+			batch < 100 && tableIndex < resetDemoTableNames.length;
+			batch += 1
+		) {
+			const result = await t.mutation(
+				internal.demoReset.clearSharedDataBatch,
+				{ tableIndex },
+			);
+			tableIndex = result.nextTableIndex;
+			if (!result.hasMore) break;
+		}
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+		expect(await rows(t, "structuralShadowReferences")).toEqual([]);
+		expect(await rows(t, "shadows")).toEqual([]);
+	});
 });
 
 test("Reading deletion removes outgoing edges and preserves incoming edges until the target Lemma dies", async () => {

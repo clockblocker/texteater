@@ -592,26 +592,6 @@ export const storedGrammaticalCheckpointValidator =
 		}),
 	});
 
-export const nonResolvedGrammaticalValidator = v.union(
-	v.object({
-		decision: v.literal("Unresolved"),
-		language: grammaticalLanguageValidator,
-	}),
-	v.object({
-		decision: v.literal("NotImplemented"),
-		language: grammaticalLanguageValidator,
-		route: v.object({
-			family: v.string(),
-			kind: v.string(),
-		}),
-	}),
-);
-
-export const grammaticalResultValidator = v.union(
-	resolvedGrammaticalValidator,
-	nonResolvedGrammaticalValidator,
-);
-
 export const reusableAttestationValidator = v.object({
 	attestationId: v.id("attestations"),
 	grammatical: resolvedGrammaticalValidator,

@@ -900,11 +900,7 @@ export async function completeResolutionSession(
 		attestationId,
 	});
 	const { readingId, value: occurrence } =
-		await reconstructReusableAttestation(
-			ctx,
-			attestationId,
-			session.clickedSegmentIndex,
-		);
+		await reconstructReusableAttestation(ctx, attestationId);
 	await ctx.db.patch(session._id, {
 		lifecycle: {
 			state: "Terminal",

@@ -5,7 +5,7 @@ import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames } from "../convex/demoReset";
-import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
@@ -774,7 +774,7 @@ describe("tf-demo post-reset contract", () => {
 		const tableIndex = resetDemoTableNames.indexOf("personalAnnotations");
 
 		expect(
-			await t.mutation(internal.demoReset.resetDemoDataBatch, {
+			await t.mutation(internal.demoReset.clearSharedDataBatch, {
 				tableIndex,
 			}),
 		).toEqual({ deleted: 400, hasMore: true, nextTableIndex: tableIndex });

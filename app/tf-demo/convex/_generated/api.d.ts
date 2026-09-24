@@ -12,8 +12,6 @@ import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as definitionTextActions from "../definitionTextActions.js";
 import type * as definitionTexts from "../definitionTexts.js";
 import type * as demoReset from "../demoReset.js";
-import type * as dumdictActionStorage from "../dumdictActionStorage.js";
-import type * as dumdictStorage from "../dumdictStorage.js";
 import type * as dumdictStorage_adapter from "../dumdictStorage/adapter.js";
 import type * as dumdictStorage_contextRequest from "../dumdictStorage/contextRequest.js";
 import type * as dumdictStorage_dictionaryPlan from "../dumdictStorage/dictionaryPlan.js";
@@ -85,8 +83,6 @@ declare const fullApi: ApiFromModules<{
   definitionTextActions: typeof definitionTextActions;
   definitionTexts: typeof definitionTexts;
   demoReset: typeof demoReset;
-  dumdictActionStorage: typeof dumdictActionStorage;
-  dumdictStorage: typeof dumdictStorage;
   "dumdictStorage/adapter": typeof dumdictStorage_adapter;
   "dumdictStorage/contextRequest": typeof dumdictStorage_contextRequest;
   "dumdictStorage/dictionaryPlan": typeof dumdictStorage_dictionaryPlan;

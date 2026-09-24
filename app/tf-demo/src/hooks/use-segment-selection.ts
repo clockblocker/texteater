@@ -1,7 +1,6 @@
 import { useMutation } from "convex/react";
 import { useState } from "react";
 
-import { usePendingMutation } from "@/hooks/use-pending-mutation";
 import {
 	shouldRequestRouteNote,
 	useRouteNotePreference,
@@ -26,9 +25,7 @@ export function useSegmentSelection(visitorId: string) {
 	);
 	const { presentCards } = useWorkspaceInteraction();
 	const [routeNotesEnabled] = useRouteNotePreference();
-	const selectSegment = usePendingMutation(
-		api.resolutionSessions.selectSegment,
-	);
+	const selectSegment = useMutation(api.resolutionSessions.selectSegment);
 	const [selectedSegmentKey, setSelectedSegmentKey] = useState<string | null>(
 		null,
 	);
@@ -46,7 +43,7 @@ export function useSegmentSelection(visitorId: string) {
 			const requestId = crypto.randomUUID();
 			const startedAt = Date.now();
 			const clock = performance.now();
-			const result = await selectSegment.run({
+			const result = await selectSegment({
 				requestId,
 				visitorId,
 				sentenceId,

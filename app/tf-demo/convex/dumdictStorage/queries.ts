@@ -22,12 +22,6 @@ import {
 	uniqueBoundedKeys,
 } from "./storage";
 
-export const getDumdictRevision = internalQuery({
-	args: {},
-	returns: v.string(),
-	handler: async (ctx) => currentRevision(ctx),
-});
-
 export const findDumdictStoredReadings = internalQuery({
 	args: { lemmaKey: v.string() },
 	returns: v.object({ revision: v.string(), candidates: v.array(v.any()) }),

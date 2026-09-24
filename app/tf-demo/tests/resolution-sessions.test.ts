@@ -1037,7 +1037,7 @@ describe("Resolution Session", () => {
 			const { select } = await bankenSource(reset);
 			await startSession(reset, select("request-1"));
 			expect(
-				await reset.mutation(internal.demoReset.resetDemoDataBatch, {
+				await reset.mutation(internal.demoReset.clearSharedDataBatch, {
 					tableIndex: 0,
 				}),
 			).toEqual({ deleted: 1, hasMore: true, nextTableIndex: 1 });
@@ -1395,7 +1395,7 @@ describe("Resolution Session", () => {
 			activeSessionCount: 1,
 		});
 		expect(
-			await t.mutation(internal.demoReset.resetDemoDataBatch, {
+			await t.mutation(internal.demoReset.clearSharedDataBatch, {
 				tableIndex: 0,
 			}),
 		).toEqual({ deleted: 1, hasMore: true, nextTableIndex: 1 });

@@ -35,7 +35,8 @@ export function createConvexDumdictStorage(
 				"findStoredReadings",
 				() =>
 					ctx.runQuery(
-						internal.dumdictStorage.findDumdictStoredReadings,
+						internal.dumdictStorage.queries
+							.findDumdictStoredReadings,
 						{ lemmaKey: lemmaIdentityKey(lemma) },
 					) as unknown as Promise<StoredReadingsSlice<"de">>,
 			);
@@ -45,7 +46,8 @@ export function createConvexDumdictStorage(
 				"loadReadingEntryContext",
 				() =>
 					ctx.runQuery(
-						internal.dumdictStorage.loadDumdictReadingEntryContext,
+						internal.dumdictStorage.queries
+							.loadDumdictReadingEntryContext,
 						{ request: readingEntryContextArgs(request) },
 					) as unknown as Promise<ReadingEntryContext<"de">>,
 			);
@@ -55,7 +57,8 @@ export function createConvexDumdictStorage(
 				"loadReadingForPatch",
 				() =>
 					ctx.runQuery(
-						internal.dumdictStorage.loadDumdictReadingForPatch,
+						internal.dumdictStorage.queries
+							.loadDumdictReadingForPatch,
 						{ readingKey: publicReadingIdentityKey(reading) },
 					) as Promise<ReadingPatchSlice<"de">>,
 			);
@@ -63,7 +66,7 @@ export function createConvexDumdictStorage(
 		commitChanges({ baseRevision, changes }) {
 			return storageEffect("commitChanges", () =>
 				ctx.runMutation(
-					internal.dumdictStorage.commitDumdictChanges,
+					internal.dumdictStorage.transaction.commitDumdictChanges,
 					dictionaryPlanResult({ baseRevision, changes }),
 				),
 			);
@@ -73,7 +76,8 @@ export function createConvexDumdictStorage(
 				"getInfoForRelationsCleanup",
 				() =>
 					ctx.runQuery(
-						internal.dumdictStorage.getDumdictRelationsCleanupInfo,
+						internal.dumdictStorage.queries
+							.getDumdictRelationsCleanupInfo,
 						{ canonicalForm },
 					) as unknown as Promise<RelationsCleanupInfoSlice<"de">>,
 			);
@@ -83,7 +87,7 @@ export function createConvexDumdictStorage(
 				"loadCleanupRelationsContext",
 				() =>
 					ctx.runQuery(
-						internal.dumdictStorage
+						internal.dumdictStorage.queries
 							.loadDumdictCleanupRelationsContext,
 						{
 							locatorKeys: resolutions.map(({ locator }) =>

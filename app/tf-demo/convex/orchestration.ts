@@ -34,7 +34,7 @@ import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { api, internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
-import { createConvexDumdictStorage } from "./dumdictActionStorage";
+import { createConvexDumdictStorage } from "./dumdictStorage/adapter";
 import { inspectionFor } from "./inspectionAction";
 import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 import { resolutionSessionGuardValidator } from "./model/validators";
