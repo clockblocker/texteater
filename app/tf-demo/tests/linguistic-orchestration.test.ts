@@ -17,6 +17,8 @@ import type {
 } from "dumgen/types";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
+import * as Fiber from "effect/Fiber";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
@@ -791,6 +793,20 @@ test("failed Knowledge speculation does not fail Reading resolution", async () =
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });
 
+test("a defective Knowledge draft is logged as a bug and does not fail Reading resolution", async () => {
+	using log = silencedConsole();
+	const run = setup(["🏦"], {}, [], {
+		draftKnowledge: () => Effect.die(new TypeError("draft bug")),
+	});
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
+	);
+	expect(run.writes).toHaveLength(1);
+	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
+	expect(log.error.mock.calls[0]?.[1]).toBeInstanceOf(TypeError);
+	expect(log.warn).not.toHaveBeenCalled();
+});
+
 test("a reused Reading drops an unfinished Knowledge draft instead of waiting for it", async () => {
 	let interrupted = false;
 	const run = setup(
@@ -1301,6 +1317,95 @@ test("intake never analyses sentences in other languages", async () => {
 		}),
 	);
 	expect(analysed).toEqual(["Das Haus.:de"]);
+});
+
+function silencedConsole() {
+	const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+	const error = jest.spyOn(console, "error").mockImplementation(() => {});
+	return {
+		warn,
+		error,
+		[Symbol.dispose]() {
+			warn.mockRestore();
+			error.mockRestore();
+		},
+	};
+}
+
+/** The queued fixture consumes its outputs, so each test takes a fresh copy. */
+const twoGermanSentences = () => [
+	{
+		items: [
+			{
+				id: "0",
+				decision: "Accepted",
+				language: "de",
+				stitchedText: "Hallo.",
+			},
+			{
+				id: "1",
+				decision: "Accepted",
+				language: "de",
+				stitchedText: "Welt!",
+			},
+		],
+	},
+];
+
+test("a defect in Sentence Analysis still stores the sentence and is logged as a bug", async () => {
+	using log = silencedConsole();
+	const run = setup(twoGermanSentences(), {}, [], {
+		analyzeSentence: ({ sentence }) =>
+			sentence.segments.map(({ text }) => text).join("") === "Hallo."
+				? Effect.die(new TypeError("analysis bug"))
+				: Effect.fail(
+						new DumgenFailure(
+							"ProviderFailure",
+							"analyzeSentence",
+							"model unavailable",
+						),
+					),
+	});
+	await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "defective-analysis",
+			sourceText: "Hallo. Welt!",
+		}),
+	);
+	const sentences = run.submitted[0]?.sentences ?? [];
+	expect(sentences.map((sentence) => sentence.stitchedText)).toEqual([
+		"Hallo.",
+		"Welt!",
+	]);
+	expect(sentences.every((sentence) => !sentence.analysis)).toBe(true);
+	expect(log.error).toHaveBeenCalledTimes(1);
+	expect(String(log.error.mock.calls[0]?.[0])).toContain("hit a bug");
+	expect(log.error.mock.calls[0]?.[1]).toBeInstanceOf(TypeError);
+	expect(log.warn).toHaveBeenCalledTimes(1);
+});
+
+test("interrupting a submission during Sentence Analysis propagates, stores nothing and logs nothing", async () => {
+	using log = silencedConsole();
+	const started = Promise.withResolvers<void>();
+	const run = setup(twoGermanSentences(), {}, [], {
+		analyzeSentence: () =>
+			Effect.zipRight(
+				Effect.sync(() => started.resolve()),
+				Effect.never,
+			),
+	});
+	const fiber = Effect.runFork(
+		run.orchestrator.submitText({
+			submissionKey: "interrupted-analysis",
+			sourceText: "Hallo. Welt!",
+		}),
+	);
+	await started.promise;
+	const exit = await Effect.runPromise(Fiber.interrupt(fiber));
+	expect(Exit.isInterrupted(exit)).toBe(true);
+	expect(run.submitted).toHaveLength(0);
+	expect(log.warn).not.toHaveBeenCalled();
+	expect(log.error).not.toHaveBeenCalled();
 });
 
 // ------------------------------------------------ Sentence Analysis at click

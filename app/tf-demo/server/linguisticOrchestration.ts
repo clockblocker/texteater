@@ -14,7 +14,7 @@ import type {
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import type { UnknownException } from "effect/Cause";
+import * as Cause from "effect/Cause";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -439,14 +439,9 @@ export function createTfDemoOrchestrator(options: {
 					)
 				: analysis
 		).pipe(
-			Effect.catchAll((failure) =>
-				Effect.sync(() => {
-					console.warn(
-						`Sentence Analysis failed for ${sentence.id}; the sentence is stored without one.`,
-						failure,
-					);
-					return null;
-				}),
+			withoutFailedWork(
+				`Sentence Analysis for ${sentence.id}`,
+				"the sentence is stored without one",
 			),
 		);
 	}
@@ -546,7 +541,10 @@ export function createTfDemoOrchestrator(options: {
 						settle: settleDrafts.signal,
 					})
 					.pipe(
-						Effect.catchAll(() => Effect.succeed(null)),
+						withoutFailedWork(
+							"The Knowledge draft",
+							"the click commits without it",
+						),
 						Effect.forkScoped,
 					);
 			const [grammarSaved, readingsLoaded] = yield* Effect.all(
@@ -922,10 +920,37 @@ export function createTfDemoOrchestrator(options: {
 	return Object.freeze({ submitText, resolveSegment });
 }
 
+/**
+ * Drops optional work that failed or hit a bug, warning on a failure and
+ * logging a defect as a bug. Interruption propagates and is never logged.
+ */
+function withoutFailedWork(subject: string, consequence: string) {
+	return <Value, Error>(
+		work: Effect.Effect<Value, Error>,
+	): Effect.Effect<Value | null> =>
+		Effect.catchAllCause(work, (cause) => {
+			if (Cause.isInterruptedOnly(cause)) return Effect.interrupt;
+			const failure = Cause.failureOption(cause);
+			return Effect.sync(() => {
+				if (Option.isSome(failure))
+					console.warn(
+						`${subject} failed; ${consequence}.`,
+						failure.value,
+					);
+				else
+					console.error(
+						`${subject} hit a bug; ${consequence}.`,
+						Cause.squash(cause),
+					);
+				return null;
+			});
+		});
+}
+
 /** Transitional test-port boundary; production Dumgen and Dumdict return Effects. */
 function effectFrom<Value, Error>(
 	value: Effect.Effect<Value, Error> | Promise<Value>,
-): Effect.Effect<Value, Error | UnknownException> {
+): Effect.Effect<Value, Error | Cause.UnknownException> {
 	return Effect.isEffect(value) ? value : Effect.tryPromise(() => value);
 }
 
