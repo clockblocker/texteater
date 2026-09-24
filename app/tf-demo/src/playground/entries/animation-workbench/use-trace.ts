@@ -37,10 +37,6 @@ const PROBES: readonly {
 			`Heading ${element.closest<HTMLElement>("[data-card-id]")?.dataset.cardId ?? ""}`,
 	},
 	{
-		selector: "[data-cover-bar]",
-		name: (element) => `Cover bar ${element.dataset.coverBar ?? ""}`,
-	},
-	{
 		selector: "[data-zone]",
 		name: (element) => `Zone ${element.dataset.zone ?? ""}`,
 	},

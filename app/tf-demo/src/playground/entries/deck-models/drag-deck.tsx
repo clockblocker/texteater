@@ -102,6 +102,12 @@ type Subject =
 			readonly text: DummyText;
 			readonly focus: TextFocus | null;
 	  };
+/** A Cover's ←: Collapse to its Card, or Close, and whether it is live. */
+type CoverBack = {
+	readonly label: string;
+	readonly enabled: boolean;
+	readonly onBack: () => void;
+};
 /** One workspace instance of a Subject; a fresh one for every open (issue 483). */
 type Presentation = { readonly id: number; readonly subject: Subject };
 type Deck = {
@@ -297,7 +303,8 @@ const DISMISS_EXEMPT_SELECTOR = [
 	'[data-form="card"]',
 	"[data-return-zone]",
 	"[data-pane-bar]",
-	"[data-cover-bar]",
+	/* a Cover's Heading is its handle and its ← */
+	"[data-heading]",
 ].join(", ");
 
 const RULES = [
@@ -334,7 +341,7 @@ const RULES = [
 		means: "Closes a Floating Pane. Its Note collapses back to its Card if the Deck is still live.",
 	},
 	{
-		move: "Drag a Cover's bar",
+		move: "Drag a Cover's Heading",
 		means: "Lifts the Cover into a Held Card. A Floating Ground lifts by its Pane bar the same way, and its Pane closes behind it.",
 	},
 	{
@@ -1521,9 +1528,10 @@ function CompassRuntime({
 	}
 	/**
 	 * A Sheet is handled by its bar, not by its content: the Card emerges
-	 * from the bar rather than the whole Sheet shrinking into the hand. The
-	 * one element stays one element (ADR 0006); only its box starts the
-	 * morph at the bar instead of at the Sheet.
+	 * from the bar (a Cover's Heading, or a Ground's Pane bar) rather than
+	 * the whole Sheet shrinking into the hand. The one element stays one
+	 * element (ADR 0006); only its box starts the morph at the bar instead
+	 * of at the Sheet.
 	 */
 	function emergeFrom(card: Presentation, bar: HTMLElement | null) {
 		const frame = root.current;
@@ -1618,19 +1626,22 @@ function CompassRuntime({
 		)
 			stopBarHold();
 	}
-	/** A Cover's bar lifts the Cover, straight into the hand. */
-	function coverBarDown(
+	/** A Cover's Heading is its bar: it lifts the Cover, straight into the hand. */
+	function coverHeadingDown(
 		event: ReactPointerEvent<HTMLElement>,
 		sheet: SheetRef,
 	) {
 		if (event.button !== 0 || dragRef.current) return;
-		if ((event.target as HTMLElement).closest("button")) return;
+		const target = event.target as HTMLElement;
+		if (target.closest("button")) return;
+		const heading = target.closest<HTMLElement>("[data-heading]");
+		if (!heading) return;
 		event.preventDefault();
 		liftSheet(
 			sheet,
 			{ pointerId: event.pointerId, x: event.clientX, y: event.clientY },
-			"Drag bar",
-			event.currentTarget,
+			"Drag Heading",
+			heading,
 		);
 	}
 
@@ -2498,72 +2509,6 @@ function CompassRuntime({
 	}
 
 	/**
-	 * A Cover's own bar: its ← and its label, sitting on the Cover's box
-	 * above the Note. Pane chrome, not Note content (ADR 0006), so it is
-	 * drawn beside the Note rather than inside it, and arrives a beat after
-	 * the box the way the Pane bar used to.
-	 */
-	function renderCoverBar(
-		sheet: SheetRef,
-		box: Box,
-		z: number,
-		isTop: boolean,
-	): ReactNode {
-		const card = sheet.card;
-		if (!card) return null;
-		const label = deckHolding(layout, card.id)
-			? "Collapse back to card"
-			: "Close cover";
-		const ghost = sheet.preview;
-		const grabs = isTop && !ghost && allows("lift");
-		return (
-			<motion.div
-				key={
-					ghost
-						? `ghost-bar-${sheet.paneId}`
-						: `bar-${sheet.sheetId.toString()}`
-				}
-				data-cover-bar={sheet.sheetId}
-				data-pane={sheet.paneId}
-				data-preview={ghost || undefined}
-				/* a ghost is there at once: it previews a state, it does not arrive */
-				initial={ghost ? false : { opacity: 0 }}
-				animate={{ opacity: 1, transition: transition(BAR_ENTER) }}
-				onPointerDown={
-					grabs ? (event) => coverBarDown(event, sheet) : undefined
-				}
-				className={`absolute flex items-center gap-2 rounded-t-[0.9rem] border border-b-0 bg-paper ps-2 pe-3 select-none ${ghost ? "pointer-events-none border-dashed border-link" : "pointer-events-auto border-line-strong"} ${grabs ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
-				style={{
-					left: box.left,
-					top: box.top,
-					width: box.width,
-					height: `${BAR_REM.toString()}rem`,
-					zIndex: z,
-				}}
-			>
-				<button
-					type="button"
-					disabled={ghost || !isTop || !allows("collapse")}
-					aria-label={label}
-					title={label}
-					onClick={() => coverBack(sheet.paneId, sheet.sheetId)}
-					className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised disabled:text-ink-muted disabled:hover:bg-transparent"
-				>
-					←
-				</button>
-				<span className="min-w-0 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink uppercase">
-					{subjectLabel(card.subject)}
-				</span>
-				{subjectGloss(card.subject) ? (
-					<span className="shrink-0 font-mono text-[0.62rem] text-ink-muted">
-						{subjectGloss(card.subject)}
-					</span>
-				) : null}
-			</motion.div>
-		);
-	}
-
-	/**
 	 * Every Note, in whatever form it is in right now, with the box it
 	 * should occupy: each Pane's Ground and Covers, the top Sheet's Deck,
 	 * and a loose Card in hand. Read off the display layout, so a ghost is
@@ -2584,11 +2529,9 @@ function CompassRuntime({
 				const isTop = index === sheets.length - 1;
 				const ghost = sheet.preview;
 				if (!ghost) rendered.add(sheet.card.id);
-				const coverBox = sheet.ground ? null : coverBoxIn(paneBox, rem);
-				if (coverBox)
-					notes.push(
-						renderCoverBar(sheet, coverBox, Z.sheet + index, isTop),
-					);
+				/* a Cover's Heading is its bar: the ← and the handle ride
+				   the Note's own box rather than sitting beside it */
+				const grabs = isTop && !ghost && allows("lift");
 				notes.push(
 					<PresentationView
 						key={
@@ -2600,16 +2543,9 @@ function CompassRuntime({
 						form="sheet"
 						place="open"
 						box={
-							coverBox
-								? {
-										...coverBox,
-										top: coverBox.top + BAR_REM * rem,
-										height: Math.max(
-											0,
-											coverBox.height - BAR_REM * rem,
-										),
-									}
-								: groundBoxIn(paneBox, rem)
+							sheet.ground
+								? groundBoxIn(paneBox, rem)
+								: coverBoxIn(paneBox, rem)
 						}
 						z={Z.sheet + index}
 						held={false}
@@ -2626,7 +2562,29 @@ function CompassRuntime({
 						litWord={isTop ? (sheet.deck?.word ?? null) : null}
 						epoch={layoutEpoch}
 						register={ghost ? () => {} : register}
-						onDown={() => {}}
+						back={
+							sheet.ground
+								? null
+								: {
+										label: deckHolding(
+											layout,
+											sheet.card.id,
+										)
+											? "Collapse back to card"
+											: "Close cover",
+										enabled:
+											!ghost &&
+											isTop &&
+											allows("collapse"),
+										onBack: () =>
+											coverBack(pane.id, sheet.sheetId),
+									}
+						}
+						onDown={
+							grabs
+								? (event) => coverHeadingDown(event, sheet)
+								: () => {}
+						}
 						onHoldLift={(lift) =>
 							liftSheet(sheet, lift, "Hold margin")
 						}
@@ -2894,6 +2852,7 @@ function PresentationView({
 	showText,
 	litWord,
 	register,
+	back = null,
 	onDown,
 	onHoldLift,
 	onFollow,
@@ -2926,6 +2885,8 @@ function PresentationView({
 	/** The word this Sheet's Deck was dealt for, lit in its Segments. */
 	litWord: string | null;
 	register: (id: number, handle: NoteHandle | null) => void;
+	/** A Cover's ←, drawn in its Heading; a Ground's is on the Pane bar. */
+	back?: CoverBack | null;
 	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
 	onHoldLift: (lift: Lift) => void;
 	onFollow: (link: NoteLink) => void;
@@ -3135,8 +3096,9 @@ function PresentationView({
 		if (target.closest("button")) return;
 		if (covered) return;
 		/* a Sheet is handled by its bar, never by its content: a Card is
-		   picked up from anywhere, a Sheet's body only scrolls */
-		if (form === "card") onDown(event);
+		   picked up from anywhere, a Sheet's body only scrolls. A Cover's
+		   bar is its Heading. */
+		if (form === "card" || target.closest("[data-heading]")) onDown(event);
 	}
 
 	const sheet = form === "sheet";
@@ -3260,7 +3222,7 @@ function PresentationView({
 			onPointerLeave={stopHold}
 			/* `contain` stops the width/height spring's recalc at this Note
 			   rather than letting it walk the deck */
-			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : sheet ? "rounded-b-[0.9rem]" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
+			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
 		>
 			{/* the content column: one width in every form, centred inside a
 			    Heading and a scroller that both span the Pane, so the scrollbar
@@ -3272,6 +3234,15 @@ function PresentationView({
 				<HeadingBlock
 					subject={subject}
 					form={form}
+					ground={ground}
+					back={back}
+					grab={
+						sheet &&
+						!ground &&
+						!covered &&
+						!preview &&
+						allows("lift")
+					}
 					atBottom={below}
 					layout={!held && morphing}
 					offset={headingOffset}
@@ -3344,6 +3315,11 @@ function PresentationView({
 							onPointerCancel={stopHold}
 							onPointerLeave={stopHold}
 							className={`absolute z-10 touch-none select-none ${MARGIN_CLASS[margin]}`}
+							style={
+								margin === "bottom"
+									? undefined
+									: { top: `${BAR_REM.toString()}rem` }
+							}
 						/>
 					))
 				: null}
@@ -3368,23 +3344,33 @@ function PresentationView({
 }
 
 const MARGINS = ["left", "right", "bottom"] as const;
+/* the side margins start under the Heading: the Heading is the Cover's
+   bar, and its ← sits in the left margin's column */
 const MARGIN_CLASS: Record<(typeof MARGINS)[number], string> = {
-	left: "inset-y-0 left-0 w-6",
-	right: "inset-y-0 right-0 w-6",
+	left: "bottom-0 left-0 w-6",
+	right: "bottom-0 right-0 w-6",
 	bottom: "inset-x-0 bottom-0 h-5",
 };
 
 /* --------------------------------------------------------------- blocks */
 
 /**
- * The Heading: pinned first, the Card's lift handle. In Card form
- * it is the one-line row (form, then gloss); in Sheet form the title grows
- * and the kind label shows above it. When the Card is a Card Tail the row
- * sits at the bottom edge.
+ * The Heading: pinned first, the Note's lift handle in every form. As a
+ * Card it is the one-line row (form, then gloss), at the bottom edge when
+ * the Card is a Card Tail. As a Cover it is the Cover's bar: its ← and its
+ * label. As a Ground it folds shut, because the Pane bar carries the label.
+ *
+ * The row is one element whose height rides `MORPH` with the Note's box,
+ * so the Cover's top edge is the Note's own edge in every frame. Only the
+ * words change: the face leaving goes on `BAR_EXIT`, the one arriving
+ * follows on `BAR_ENTER`, and the row between them never fades.
  */
 function HeadingBlock({
 	subject,
 	form,
+	ground,
+	back,
+	grab,
 	atBottom,
 	layout,
 	offset,
@@ -3393,56 +3379,99 @@ function HeadingBlock({
 }: {
 	subject: Subject;
 	form: NoteForm;
+	ground: boolean;
+	back: CoverBack | null;
+	/** The row is the Cover's handle right now. */
+	grab: boolean;
 	atBottom: boolean;
 	layout: boolean;
 	offset: MotionValue<number>;
 	/** What the row's position rides; see `positionSpec` in `PresentationView`. */
 	positionSpec: ReturnType<typeof motionOf>;
-	/** The content column's width; the Heading row is centred at it. */
+	/** The content column's width; the Card's row is centred at it. */
 	column: string;
 }) {
-	const { MORPH } = useDeckMotion();
-	const sheet = form === "sheet";
+	const { transition, MORPH, BAR_ENTER, BAR_EXIT } = useDeckMotion();
 	const rem = remPx();
-	/* A Sheet has no Heading row: its bar carries the label and the gloss.
-	   The row folds shut on the morph, so a Card's title travels into the
-	   bar and returns from it. A Card's row shows its form and gloss. */
+	const face = form === "card" ? "card" : ground || !back ? null : "cover";
+	const rowRem =
+		face === "card" ? HEADER_REM : face === "cover" ? BAR_REM : 0;
 	const title =
 		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
-	const gloss = subject.kind === "Text" ? null : subject.note.tail.gloss;
+	const gloss = subjectGloss(subject);
+	const fade = {
+		initial: { opacity: 0 },
+		animate: { opacity: 1, transition: transition(BAR_ENTER) },
+		exit: { opacity: 0, transition: transition(BAR_EXIT) },
+	};
 	return (
 		<motion.div
 			data-heading=""
-			/* `initial={false}`: a Card is dealt at its size; only a change
+			/* `initial={false}`: a Note is dealt at its size; only a change
 			   of form is a move. */
 			initial={false}
 			layout={layout ? "position" : false}
 			layoutDependency={`${form}:${atBottom.toString()}`}
 			transition={{ ...MORPH, layout: positionSpec }}
-			animate={{
-				height: sheet ? 0 : HEADER_REM * rem,
-				opacity: sheet ? 0 : 1,
-			}}
+			animate={{ height: rowRem * rem, opacity: face ? 1 : 0 }}
 			style={{ order: atBottom ? 2 : 0, y: offset }}
-			className={`flex w-full shrink-0 justify-center overflow-hidden px-4 ${atBottom || sheet ? "" : "pb-2"}`}
+			className={`relative w-full shrink-0 overflow-hidden select-none ${grab ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
 		>
-			<div
-				className="relative flex h-full w-full min-w-0 items-end gap-4"
-				style={{ maxWidth: column }}
-			>
-				<h2
-					className={`min-w-0 flex-1 truncate font-serif text-[1rem] font-normal leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
-				>
-					{title}
-				</h2>
-				{gloss ? (
-					<span
-						className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
+			<AnimatePresence initial={false}>
+				{face === "card" ? (
+					<motion.div
+						key="card"
+						{...fade}
+						className={`absolute inset-0 flex justify-center px-4 ${atBottom ? "" : "pb-2"}`}
 					>
-						{gloss}
-					</span>
+						<div
+							className="relative flex h-full w-full min-w-0 items-end gap-4"
+							style={{ maxWidth: column }}
+						>
+							<h2
+								className={`min-w-0 flex-1 truncate font-serif text-[1rem] font-normal leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
+							>
+								{title}
+							</h2>
+							{gloss ? (
+								<span
+									className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
+								>
+									{gloss}
+								</span>
+							) : null}
+						</div>
+					</motion.div>
+				) : face === "cover" && back ? (
+					<motion.div
+						key="cover"
+						{...fade}
+						/* the row is always the row's height; a divider in the
+						   Note, like the Pane bar's, not a second box's edge */
+						className="absolute inset-x-0 top-0 flex items-center gap-2 border-b border-line ps-2 pe-3"
+						style={{ height: `${BAR_REM.toString()}rem` }}
+					>
+						<button
+							type="button"
+							disabled={!back.enabled}
+							aria-label={back.label}
+							title={back.label}
+							onClick={back.onBack}
+							className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.9rem] text-link hover:bg-raised disabled:text-ink-muted disabled:hover:bg-transparent"
+						>
+							←
+						</button>
+						<h2 className="min-w-0 truncate font-mono text-[0.62rem] font-normal tracking-[0.08em] text-ink uppercase">
+							{subjectLabel(subject)}
+						</h2>
+						{gloss ? (
+							<span className="shrink-0 font-mono text-[0.62rem] text-ink-muted">
+								{gloss}
+							</span>
+						) : null}
+					</motion.div>
 				) : null}
-			</div>
+			</AnimatePresence>
 		</motion.div>
 	);
 }

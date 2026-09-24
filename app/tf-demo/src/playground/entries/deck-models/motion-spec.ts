@@ -316,7 +316,11 @@ export function after(spec: Tween, delayMs: number): Tween {
 	return { ...spec, delayMs };
 }
 
-/** The Pane bar: Sheet chrome, arriving after the box and leaving first. */
+/**
+ * A bar's words: the Pane bar's trail, and the Heading's face as it turns
+ * between a Card's title and a Cover's ← and label. They arrive after the
+ * box has started and leave first; the row that holds them never fades.
+ */
 export const BAR_ENTER = tween(160, EASE_OUT, 180);
 export const BAR_EXIT = tween(100);
 

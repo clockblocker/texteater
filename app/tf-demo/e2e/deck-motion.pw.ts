@@ -13,19 +13,15 @@ async function startDrag(page: Page, card: Locator, dx: number, dy: number) {
 	await page.mouse.move(x + dx, y + dy, { steps: 5 });
 }
 
-/** A Sheet is handled by its bar: drag from the bar's free middle, clear of its ← button. */
-async function startBarDrag(
+/** A Cover is handled by its Heading: drag from its free middle, clear of its ← button. */
+async function startHeadingDrag(
 	page: Page,
-	frame: Locator,
 	sheet: Locator,
 	dx: number,
 	dy: number,
 ) {
-	const id = await sheet.getAttribute("data-sheet-id");
-	const bar = await frame
-		.locator(`[data-cover-bar="${id ?? ""}"]`)
-		.boundingBox();
-	if (!bar) throw new Error("Missing cover bar geometry");
+	const bar = await sheet.locator("[data-heading]").boundingBox();
+	if (!bar) throw new Error("Missing cover heading geometry");
 	const x = bar.x + bar.width * 0.6;
 	const y = bar.y + bar.height / 2;
 	await page.mouse.move(x, y);
@@ -223,7 +219,7 @@ test("sheet morph permits collapse but isolates the bar lift", async ({
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
 	await page.mouse.up();
 	/* and the bar is, but only when the scenario allows a lift */
-	await startBarDrag(page, frame, sheet, -110, 0);
+	await startHeadingDrag(page, sheet, -110, 0);
 	await expect(frame.locator("[data-held]")).toHaveCount(0);
 	await page.mouse.up();
 	await expect(sheet).toHaveCount(1);
@@ -474,7 +470,7 @@ test("a lifted sheet goes home in one motion, not two", async ({ page }) => {
 	const note = frame.locator(`article[data-card-id="${id ?? ""}"]`);
 	/* lift it by its bar and let go without going anywhere: the Note is
 	   in the hand, and its slot is a whole Sheet's height away */
-	await startBarDrag(page, frame, sheet, 3, 3);
+	await startHeadingDrag(page, sheet, 3, 3);
 	const samples = note.evaluate(async (element) => {
 		const taken: { y: number; held: boolean }[] = [];
 		const start = performance.now();
@@ -605,8 +601,10 @@ test("the ground line steps down and back up, and a link pushes a cover that clo
 		.first()
 		.click();
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(2);
-	/* each Cover carries its own bar; only the top one's ← is live */
-	await expect(frame.locator("[data-cover-bar]")).toHaveCount(2);
+	/* each Cover's Heading is its bar; only the top one's ← is live */
+	await expect(
+		frame.locator('[data-form="sheet"] [data-heading] button'),
+	).toHaveCount(2);
 	await frame.getByRole("button", { name: "Close cover" }).click();
 	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
 	await frame.getByRole("button", { name: "Collapse back to card" }).click();
