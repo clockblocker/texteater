@@ -672,6 +672,59 @@ test("a card pulled off a swipe tears loose: the deck goes home and the card fol
 	await expect(cards).toHaveCount(4);
 });
 
+test("a throw is read by its direction: left sweeps, right goes home, up opens; a slow long drag left lets go", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	const cards = frame.locator('[data-form="card"]');
+	const panes = frame.locator("[data-deck-pane]");
+	const gesture = async (path: readonly [number, number, number][]) => {
+		await frame.locator('[data-word="noch"]').click();
+		await expect(cards).toHaveCount(4);
+		const heading = await frame
+			.locator('[data-place="open"] [data-heading]')
+			.boundingBox();
+		if (!heading) throw new Error("Missing heading geometry");
+		const x = heading.x + heading.width / 2;
+		const y = heading.y + heading.height / 2;
+		await page.mouse.move(x, y);
+		await page.mouse.down();
+		for (const [dx, dy, wait] of path) {
+			await page.mouse.move(x + dx, y + dy);
+			await page.waitForTimeout(wait);
+		}
+		await page.mouse.up();
+		await expect(frame.locator("[data-held]")).toHaveCount(0);
+	};
+	const steps = (n: number, dx: number, dy: number, wait: number) =>
+		Array.from(
+			{ length: n },
+			(_, i) =>
+				[(i + 1) * dx, (i + 1) * dy, wait] as [number, number, number],
+		);
+
+	/* thrown left, it sweeps, though the throw drifts well off its axis */
+	await gesture(steps(6, -70, 12, 8));
+	await expect(cards).toHaveCount(0);
+	await expect(panes).toHaveCount(1);
+	/* thrown right, the Card goes back on its Deck, not into a new Pane */
+	await gesture(steps(6, 70, 0, 8));
+	await expect(cards).toHaveCount(4);
+	await expect(panes).toHaveCount(1);
+	await page.keyboard.press("Escape");
+	await expect(cards).toHaveCount(0);
+	/* thrown up, it opens */
+	await gesture(steps(4, 0, -30, 8));
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
+	await page.goto("/playground/deck-models");
+	/* carried slowly far left, the Card lets go of the swipe and is a
+	   plain drag: dropped on the left, it is a new Pane */
+	await gesture([...steps(50, -12, 0, 30), [-600, 0, 300]]);
+	await expect(panes).toHaveCount(2);
+	await expect(cards).toHaveCount(3);
+});
+
 test("the ground line steps down and back up, and a link pushes a cover that closes", async ({
 	page,
 }) => {

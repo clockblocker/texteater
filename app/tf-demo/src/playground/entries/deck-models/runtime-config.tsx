@@ -24,6 +24,8 @@ export const DEFAULT_DECK_MOTION = {
 	deckFollow: spec.DECK_FOLLOW,
 	deckFollowFalloff: spec.DECK_FOLLOW_FALLOFF,
 	swipeBreakPx: spec.SWIPE_BREAK_PX,
+	swipeLetGoPx: spec.SWIPE_LET_GO_PX,
+	flickSpeed: spec.FLICK_SPEED,
 	contextStaggerMs: spec.CONTEXT_STAGGER,
 	contextStaggerMaxMs: spec.CONTEXT_STAGGER_MAX,
 } as const;
@@ -96,6 +98,8 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 			spec.deckFollowFor(distance, p.deckFollow, p.deckFollowFalloff),
 		DECK_FOLLOW_SPRING: transition(spec.DECK_FOLLOW_SPRING),
 		SWIPE_BREAK_PX: p.swipeBreakPx,
+		SWIPE_LET_GO_PX: p.swipeLetGoPx,
+		FLICK_SPEED: p.flickSpeed,
 		TEAR_CATCH_UP: transition(spec.TEAR_CATCH_UP),
 		contextDelayFor: (nth: number) =>
 			Math.min(

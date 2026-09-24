@@ -62,6 +62,14 @@ export const PARAMETERS: readonly Parameter[] = [
 		unit: "px",
 	},
 	{
+		key: "swipeLetGoPx",
+		label: "Slow let-go distance, left",
+		min: 100,
+		max: 800,
+		step: 10,
+		unit: "px",
+	},
+	{
 		key: "flyDistance",
 		label: "Exit distance",
 		min: 100,
@@ -134,6 +142,14 @@ export const PARAMETERS: readonly Parameter[] = [
 		max: 400,
 		step: 10,
 		unit: "ms",
+	},
+	{
+		key: "flickSpeed",
+		label: "Flick speed",
+		min: 0.1,
+		max: 3,
+		step: 0.05,
+		unit: "px/ms",
 	},
 ];
 

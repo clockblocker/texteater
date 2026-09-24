@@ -27,7 +27,7 @@ export type Entry = {
 const source = "deck-models/drag-deck.tsx";
 const spring = ["stiffness", "damping"] as const;
 const morph = ["morphStiffness", "morphDamping"] as const;
-const release = ["commitDistance", "throwProjectionMs"] as const;
+const release = ["commitDistance", "throwProjectionMs", "flickSpeed"] as const;
 
 export const SECTIONS: readonly {
 	readonly title: string;
@@ -61,7 +61,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "sweep"],
 				title: "Sweep / swipe left",
 				instruction:
-					"Drag a card left: the whole deck follows the finger and turns red past the commit distance. Release there and the whole deck goes, there is no per-card removal. Pull well up, down or back right and the card tears loose: the deck springs back and the card is a plain drag. Try a short fast throw and a slow release: a flick is read where it was heading.",
+					"Drag a card left: the whole deck follows the finger and turns red past the commit distance. Release there and the whole deck goes, there is no per-card removal. Pull well up, down or back right, or carry it slowly far left, and the card tears loose: the deck springs back and the card is a plain drag. A throw left sweeps whatever it drifts through. Try a short fast throw and a slow release: a flick is read where it was heading.",
 				source,
 				initialScene: "deck",
 				knobs: [
@@ -72,6 +72,7 @@ export const SECTIONS: readonly {
 					"deckFollow",
 					"deckFollowFalloff",
 					"swipeBreakPx",
+					"swipeLetGoPx",
 					"flyDistance",
 					"flyRotateTo",
 					"durationScale",

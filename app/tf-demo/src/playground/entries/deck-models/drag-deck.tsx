@@ -262,6 +262,8 @@ function CompassRuntime({
 		DECK_FOLLOW_SPRING,
 		rubberBand,
 		SWIPE_BREAK_PX,
+		SWIPE_LET_GO_PX,
+		FLICK_SPEED,
 		TEAR_CATCH_UP,
 		FLY_DISTANCE,
 		FLY_FADE,
@@ -811,6 +813,10 @@ function CompassRuntime({
 				? null
 				: findSheet(layoutRef.current, d.deckSheet);
 		const holderBox = holder ? paneBoxes[holder.paneId] : undefined;
+		/* a Card off its Deck thrown right goes back to it, wherever it is
+		   let go: the throw says where it is headed, not where it is */
+		if (holder?.deck && !d.lifted && flickOf(d, now) === "right")
+			return { kind: "return" };
 		if (
 			holder?.deck &&
 			holderBox &&
@@ -1350,7 +1356,7 @@ function CompassRuntime({
 				setDrag({ ...d });
 			} else takeInHand(d, "Drag");
 		}
-		if (d.phase === "swiping") swipeDeck(d, dx, dy);
+		if (d.phase === "swiping") swipeDeck(d, dx, dy, event.timeStamp);
 		reassess(d, event.clientX, event.clientY, event.timeStamp);
 	}
 	/**
@@ -1365,6 +1371,17 @@ function CompassRuntime({
 			dx: d.last.x - d.start.x + vx * THROW_PROJECTION_MS,
 			dy: d.last.y - d.start.y + vy * THROW_PROJECTION_MS,
 		};
+	}
+	/**
+	 * Which way the hand is throwing, if it is: its speed along its main
+	 * axis, while that speed is still fresh, past `FLICK_SPEED`.
+	 */
+	function flickOf(d: Drag, now: number): "left" | "right" | null {
+		if (now - d.last.t > VELOCITY_STALE_MS) return null;
+		const { vx, vy } = d.v;
+		if (Math.abs(vx) < FLICK_SPEED || Math.abs(vx) < Math.abs(vy))
+			return null;
+		return vx < 0 ? "left" : "right";
 	}
 	/**
 	 * What letting go now would do, shown before it is done: the commit
@@ -1382,8 +1399,17 @@ function CompassRuntime({
 		   gone stale, look again without it */
 		if (now - d.last.t <= VELOCITY_STALE_MS)
 			staleTimer.current = window.setTimeout(() => {
-				if (dragRef.current === d)
-					reassess(d, d.last.x, d.last.y, performance.now());
+				if (dragRef.current !== d) return;
+				const later = performance.now();
+				/* a swipe held still past the let-go line is a slow one */
+				if (d.phase === "swiping")
+					swipeDeck(
+						d,
+						d.last.x - d.start.x,
+						d.last.y - d.start.y,
+						later,
+					);
+				reassess(d, d.last.x, d.last.y, later);
 			}, VELOCITY_STALE_MS + 1);
 	}
 	/** Every other Card on the Deck `d`'s Card rests in, and how many ranks away it is. */
@@ -1404,10 +1430,17 @@ function CompassRuntime({
 	 * A Deck swiped left moves as one thing: the Card under the finger
 	 * leads and the others trail at their share of its travel. Pulled
 	 * right or off its axis it gives and resists, and pulled past
-	 * `SWIPE_BREAK_PX` the Card tears loose.
+	 * `SWIPE_BREAK_PX`, or carried slowly left past `SWIPE_LET_GO_PX`, the
+	 * Card tears loose. A hand throwing left tears nothing: the throw is
+	 * the sweep, and a throw drifts.
 	 */
-	function swipeDeck(d: Drag, dx: number, dy: number) {
-		if (dx > SWIPE_BREAK_PX || Math.abs(dy) > SWIPE_BREAK_PX) {
+	function swipeDeck(d: Drag, dx: number, dy: number, now: number) {
+		if (
+			flickOf(d, now) !== "left" &&
+			(dx > SWIPE_BREAK_PX ||
+				Math.abs(dy) > SWIPE_BREAK_PX ||
+				dx < -SWIPE_LET_GO_PX)
+		) {
 			tearLoose(d, dx, dy);
 			return;
 		}

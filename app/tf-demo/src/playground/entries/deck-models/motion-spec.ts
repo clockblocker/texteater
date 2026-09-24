@@ -365,6 +365,22 @@ export function rubberBand(d: number, limit = SWIPE_RUBBER_PX): number {
 export const SWIPE_BREAK_PX = 48;
 
 /**
+ * How far left a swipe may be carried slowly before the Card tears loose,
+ * as it does pulled off the axis: a long drag left is taking the Card
+ * somewhere, a new Pane on the left, not throwing the Deck away. A hand
+ * that is throwing carries the swipe past it.
+ */
+export const SWIPE_LET_GO_PX = 240;
+
+/**
+ * A hand moving faster than this, in px per ms along its main axis, is
+ * throwing. Thrown left, a swipe holds, whatever the hand drifts through
+ * on the way, and sweeps; thrown right, a Card off a Deck goes back to
+ * its slot wherever it is let go.
+ */
+export const FLICK_SPEED = 0.6;
+
+/**
  * The torn-off Card catching up to the finger from where the rubber band
  * held it: quick, and short of any overshoot, since a Card that passes
  * the finger reads as thrown rather than let go.

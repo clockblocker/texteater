@@ -15,11 +15,11 @@ export const RULES = [
 	},
 	{
 		move: "Drag ↑ a Card",
-		means: "Takes it in hand. Far enough up, or flicked up, a ghost Cover shows where it opens, and letting go opens it; back down on the Deck, it rests. Any drag but a swipe is in hand at once, and a release does what the ghost and the Card's border show.",
+		means: "Takes it in hand. Far enough up, or flicked up, a ghost Cover shows where it opens, and letting go opens it; back down on the Deck, it rests. Any drag but a swipe is in hand at once, and a release does what the ghost and the Card's border show. Thrown right, it goes back on its Deck.",
 	},
 	{
 		move: "Drag ← a Card",
-		means: "Swipes the whole Deck, when the switch is on: it follows the finger and turns red past the line. Let go there, or flick, and it is swept; short of it, it springs back. Pull well up, down or back right and the Card tears loose: the Deck springs back and the Card is a plain drag.",
+		means: "Swipes the whole Deck, when the switch is on: it follows the finger and turns red past the line. Let go there, or throw it, and it is swept; short of it, it springs back. Pull well up, down or back right, or carry it slowly far left, and the Card tears loose: the Deck springs back and the Card is a plain drag. A throw drifts and still sweeps.",
 	},
 	{
 		move: "← on a Cover",
