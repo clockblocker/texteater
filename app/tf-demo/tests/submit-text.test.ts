@@ -45,6 +45,7 @@ test("a text over the sentence limit is Rejected with its reason before any work
 	const t = createTestConvex();
 	await expect(
 		t.action(api.orchestration.submitText, {
+			visitorId: "visitor-1",
 			submissionKey: "too-many-sentences",
 			sourceText,
 		}),
@@ -60,6 +61,7 @@ test("a provider failure still throws instead of becoming Rejected", async () =>
 	const t = createTestConvex();
 	const error = await t
 		.action(api.orchestration.submitText, {
+			visitorId: "visitor-1",
 			submissionKey: "provider-failure",
 			sourceText: "Die Banken sind geschlossen.",
 		})

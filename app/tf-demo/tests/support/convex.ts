@@ -1,4 +1,5 @@
 import { readdirSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeFunctionReference, type TransactionLimits } from "convex/server";
 import { convexTest, type TestConvex } from "convex-test";
@@ -27,6 +28,48 @@ const modules: Record<string, () => Promise<unknown>> = Object.fromEntries(
 );
 
 /**
+ * The built modules of a Convex component package, which the packages'
+ * own `test` helpers would find through `import.meta.glob`.
+ */
+function componentModules(packageDirectory: string) {
+	const root = join(packageDirectory, "dist", "component");
+	return Object.fromEntries(
+		readdirSync(root, { recursive: true, encoding: "utf8" })
+			.filter((path) => path.endsWith(".js"))
+			.map((path) => [join(root, path), () => import(join(root, path))]),
+	);
+}
+
+const rateLimiterDirectory = dirname(
+	fileURLToPath(import.meta.resolve("@convex-dev/rate-limiter/package.json")),
+);
+const batchWorkerDirectory = dirname(
+	Bun.resolveSync(
+		"@convex-dev/batch-worker/package.json",
+		rateLimiterDirectory,
+	),
+);
+
+/** Each component convex.config.ts mounts that the functions call, by its mount path. */
+const components = await Promise.all(
+	[
+		["rateLimiter", rateLimiterDirectory],
+		["rateLimiter/batchWorker", batchWorkerDirectory],
+	].map(async ([name, directory]) => ({
+		name,
+		schema: (await import(join(directory, "dist/component/schema.js")))
+			.default,
+		modules: componentModules(directory),
+	})),
+);
+
+function registerComponents(t: TestConvexDb): TestConvexDb {
+	for (const { name, schema, modules } of components)
+		t.registerComponent(name, schema, modules);
+	return t;
+}
+
+/**
  * With `transactionLimits`, every transaction is held to Convex's
  * per-transaction limits: `true` for the defaults, or the defaults with the
  * given limits tightened.
@@ -34,28 +77,32 @@ const modules: Record<string, () => Promise<unknown>> = Object.fromEntries(
 export function createTestConvex(
 	options: { readonly transactionLimits?: true | TransactionLimits } = {},
 ): TestConvexDb {
-	return options.transactionLimits === undefined
-		? convexTest(schema, modules)
-		: convexTest({
-				schema,
-				modules,
-				transactionLimits: options.transactionLimits,
-			});
+	return registerComponents(
+		options.transactionLimits === undefined
+			? convexTest(schema, modules)
+			: convexTest({
+					schema,
+					modules,
+					transactionLimits: options.transactionLimits,
+				}),
+	);
 }
 
 /** The stand-in with some Convex modules replaced, keyed by their path under convex/. */
 export function createTestConvexWith(
 	replaced: Record<string, () => Promise<unknown>>,
 ): TestConvexDb {
-	return convexTest(schema, {
-		...modules,
-		...Object.fromEntries(
-			Object.entries(replaced).map(([path, load]) => [
-				`../../convex/${path}`,
-				load,
-			]),
-		),
-	});
+	return registerComponents(
+		convexTest(schema, {
+			...modules,
+			...Object.fromEntries(
+				Object.entries(replaced).map(([path, load]) => [
+					`../../convex/${path}`,
+					load,
+				]),
+			),
+		}),
+	);
 }
 
 /**

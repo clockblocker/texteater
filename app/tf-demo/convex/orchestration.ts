@@ -89,12 +89,13 @@ export const submitText = action({
 	args: {
 		submissionKey: v.string(),
 		sourceText: v.string(),
+		visitorId: v.string(),
 		inspectionVisitorId: v.optional(v.string()),
 	},
 	returns: submitTextResultValidator,
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
-		// Only limit violations become Rejected, checked here before any
-		// work; every other failure still throws.
+		// Only text and rate limit violations become Rejected, checked here
+		// before any model work; every other failure still throws.
 		const sentences = splitInSentences(args.sourceText);
 		const limitViolation = textSubmissionLimitViolation(
 			args.sourceText,
@@ -109,6 +110,11 @@ export const submitText = action({
 			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
 		);
 		if (analyzed) return { status: "Accepted", textId: analyzed };
+		const limit = await ctx.runMutation(
+			internal.rateLimits.consumeTextSubmission,
+			{ visitorId: args.visitorId },
+		);
+		if (!limit.ok) return { status: "Rejected", message: limit.message };
 		const sentenceCount = sentences.length;
 		const inspectionVisitorId = inspectionEnabled()
 			? args.inspectionVisitorId

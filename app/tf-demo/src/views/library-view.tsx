@@ -59,6 +59,7 @@ export function LibraryView() {
 
 		try {
 			const result = await submitText.run({
+				visitorId,
 				inspectionVisitorId: import.meta.env.DEV
 					? visitorId
 					: undefined,

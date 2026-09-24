@@ -65,6 +65,7 @@ import type * as modules_text_submission from "../modules/text/submission.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
 import type * as personalAnnotations from "../personalAnnotations.js";
+import type * as rateLimits from "../rateLimits.js";
 import type * as readingBlockLayouts from "../readingBlockLayouts.js";
 import type * as readingNotes from "../readingNotes.js";
 import type * as relationPublication from "../relationPublication.js";
@@ -144,6 +145,7 @@ declare const fullApi: ApiFromModules<{
   orchestration: typeof orchestration;
   persistence: typeof persistence;
   personalAnnotations: typeof personalAnnotations;
+  rateLimits: typeof rateLimits;
   readingBlockLayouts: typeof readingBlockLayouts;
   readingNotes: typeof readingNotes;
   relationPublication: typeof relationPublication;
@@ -188,4 +190,5 @@ export declare const internal: FilterApi<
 
 export declare const components: {
   migrations: import("@convex-dev/migrations/_generated/component.js").ComponentApi<"migrations">;
+  rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
 };

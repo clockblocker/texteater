@@ -43,6 +43,7 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 	const submitted = await client.action(api.orchestration.submitText, {
 		submissionKey: `live-pipeline:${runId}:Aufstieg`,
 		sourceText,
+		visitorId,
 	});
 	if (submitted.status !== "Accepted") throw new Error(submitted.message);
 	const text = await client.query(api.textViews.get, {

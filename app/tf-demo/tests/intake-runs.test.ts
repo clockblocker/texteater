@@ -339,6 +339,7 @@ async function submitBankTexts(t: TestConvexDb, submissionKey: string) {
 	const warn = spyOn(console, "warn").mockImplementation(() => {});
 	try {
 		return await t.action(api.orchestration.submitText, {
+			visitorId: "visitor-1",
 			submissionKey,
 			sourceText: "Die Banken. The banks.",
 		});
@@ -413,6 +414,7 @@ test("re-submitting an analyzed Text returns it without any model call", async (
 	try {
 		expect(
 			await t.action(api.orchestration.submitText, {
+				visitorId: "visitor-1",
 				submissionKey: "banks",
 				sourceText: "Die Banken. The banks.",
 			}),
@@ -453,6 +455,7 @@ test("a submission that fails before a Text exists is recorded without a Text ID
 	try {
 		await expect(
 			t.action(api.orchestration.submitText, {
+				visitorId: "visitor-1",
 				submissionKey: "unavailable",
 				sourceText: "Die Banken.",
 			}),
@@ -503,6 +506,7 @@ test("a failed summary write is logged and changes neither the result nor the er
 		try {
 			await expect(
 				t.action(api.orchestration.submitText, {
+					visitorId: "visitor-1",
 					submissionKey: "unavailable",
 					sourceText: "Die Banken.",
 				}),

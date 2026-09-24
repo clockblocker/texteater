@@ -85,6 +85,7 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 		setSegmentationError(null);
 		try {
 			const result = await segmentText.run({
+				visitorId,
 				inspectionVisitorId: import.meta.env.DEV
 					? visitorId
 					: undefined,

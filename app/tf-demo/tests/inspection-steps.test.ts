@@ -148,6 +148,7 @@ test("an inspected submission shows its root, code steps and each Dumgen call on
 	const warnings = spyOn(console, "warn").mockImplementation(() => {});
 	try {
 		await t.action(api.orchestration.submitText, {
+			visitorId: "visitor-1",
 			submissionKey: "submission",
 			sourceText: "Die Banken.",
 			inspectionVisitorId: "visitor-1",
@@ -194,6 +195,7 @@ test("a failed inspected submission fails its root", async () => {
 	try {
 		await expect(
 			t.action(api.orchestration.submitText, {
+				visitorId: "visitor-1",
 				submissionKey: "unavailable",
 				sourceText: "Die Banken.",
 				inspectionVisitorId: "visitor-1",

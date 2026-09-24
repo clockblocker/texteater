@@ -28,6 +28,7 @@
 	},
 	"dependencies": {
 		"@convex-dev/migrations": "^0.3.6",
+		"@convex-dev/rate-limiter": "^0.4.0",
 		"@convex-dev/react-query": "^0.1.0",
 		"@tailwindcss/vite": "^4",
 		"@tanstack/react-query": "^5.101.4",

@@ -77,6 +77,7 @@ test("without TF_INSPECTION a selection or submission asking for inspection capt
 	try {
 		await t
 			.action(api.orchestration.submitText, {
+				visitorId: "visitor-1",
 				submissionKey: "inspected",
 				sourceText: "Die Banken sind geschlossen.",
 				inspectionVisitorId: "visitor-1",

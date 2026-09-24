@@ -41,6 +41,7 @@ import {
 	visitorError,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
+import { consumeRateLimit } from "./rateLimits";
 import {
 	loadResolutionContext,
 	resolutionContextValidator,
@@ -211,6 +212,13 @@ export const selectSegment = mutation({
 					deduplicated: true,
 				};
 			}
+			// Only a selection that starts a paid run counts.
+			const limit = await consumeRateLimit(
+				ctx,
+				"segmentSelection",
+				args.visitorId,
+			);
+			if (!limit.ok) throw visitorError("RateLimited", limit.message);
 			await startResolutionSession(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
