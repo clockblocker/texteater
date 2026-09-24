@@ -244,7 +244,10 @@ export const selectSegment = mutation({
 			};
 		};
 		const result = await select();
-		if (inspect) {
+		// A click that joins a running session has no run of its own to inspect.
+		const joined =
+			result.kind === "Resolving" && result.requestId !== args.requestId;
+		if (inspect && !joined) {
 			const existing = await ctx.db
 				.query("inspectionClicks")
 				.withIndex("by_request_id", (q) =>

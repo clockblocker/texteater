@@ -443,6 +443,38 @@ describe("Resolution Session", () => {
 		});
 	});
 
+	test("an inspected click that joins a running session records no inspection of its own", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const inspected = (requestId: string) => ({
+			...select(requestId),
+			routeNoteRequested: false,
+			inspect: true,
+		});
+		await t.mutation(
+			api.resolutionSessions.selectSegment,
+			inspected("request-1"),
+		);
+
+		expect(
+			await t.mutation(
+				api.resolutionSessions.selectSegment,
+				inspected("request-2"),
+			),
+		).toMatchObject({ kind: "Resolving", requestId: "request-1" });
+
+		expect(
+			(await rows(t, "inspectionClicks")).map(
+				({ requestId }) => requestId,
+			),
+		).toEqual(["request-1"]);
+		expect(
+			(await rows(t, "inspectionSteps")).map(
+				({ requestId }) => requestId,
+			),
+		).toEqual(["request-1"]);
+	});
+
 	test("another Visitor's click on a resolving Segment starts its own session", async () => {
 		const t = createTestConvex();
 		const { select, segmentId } = await bankenSource(t);
