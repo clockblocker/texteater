@@ -584,9 +584,9 @@ describe("Resolution Session", () => {
 				await t.query(api.resolutionSessions.getResolutionNote, {
 					requestId: "request-1",
 				})
-			)?.terminal,
+			)?.lifecycle,
 		).toMatchObject({
-			kind: "Complete",
+			outcome: "Complete",
 			target: { kind: "Reading", readingId: committed.readingId },
 			canonical: {
 				readingId: committed.readingId,
@@ -601,9 +601,9 @@ describe("Resolution Session", () => {
 				await t.query(api.resolutionSessions.getResolutionNote, {
 					requestId: "request-route",
 				})
-			)?.terminal,
+			)?.lifecycle,
 		).toMatchObject({
-			kind: "Complete",
+			outcome: "Complete",
 			target: {
 				kind: "Attestation",
 				attestationId: committed.attestationId,
@@ -949,8 +949,10 @@ describe("Resolution Session", () => {
 		const note = await t.query(api.resolutionSessions.getResolutionNote, {
 			requestId: "request-1",
 		});
-		expect(note?.terminal).toEqual({
-			kind: "PermanentFailure",
+		expect(note?.lifecycle).toEqual({
+			state: "Terminal",
+			progress: expect.any(String),
+			outcome: "PermanentFailure",
 			failureCode: "ProviderUnavailable",
 			diagnosticId,
 			message: "Reading generation is temporarily unavailable.",
@@ -2055,7 +2057,12 @@ function grammaticalInput(canonicalForm = "Bank") {
 				normalizedSurface: "Banken",
 				spelling: "Canonical" as const,
 
-				lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
+				lemma: {
+					canonicalForm,
+					family: "Lexeme",
+					kind: "NOUN",
+					coreFeatures: { gender: "Fem", hyph: null },
+				},
 			},
 		},
 		provider: { raw: "must not leak" },
@@ -2079,8 +2086,9 @@ function grammarProjection(canonicalForm = "Bank") {
 		spelling: "Canonical" as const,
 		grundform: false as const,
 		canonicalForm,
-		family: "Lexeme",
-		kind: "NOUN",
+		family: "Lexeme" as const,
+		kind: "NOUN" as const,
+		coreFeatures: { gender: "Fem" as const, hyph: null },
 	};
 }
 
@@ -2088,7 +2096,7 @@ function readingProjection(emojiDescription = "🏦", canonicalForm = "Bank") {
 	return {
 		emojiDescription,
 		canonicalForm,
-		family: "Lexeme",
-		kind: "NOUN",
+		family: "Lexeme" as const,
+		kind: "NOUN" as const,
 	};
 }

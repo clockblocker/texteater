@@ -7,6 +7,8 @@ import {
 	catalogMissStageValidator,
 	definitionTextStateValidator,
 	directSemanticRelationValidator,
+	familyValidator,
+	kindValidator,
 	knowledgeGenerationAttemptStateValidator,
 	knowledgeProductionEvidenceValidator,
 	knowledgeStatusValidator,
@@ -142,8 +144,8 @@ export default defineSchema({
 	lemmas: defineTable({
 		lemmaKey: v.string(),
 		language: languageValidator,
-		family: v.string(),
-		kind: v.string(),
+		family: familyValidator,
+		kind: kindValidator,
 		canonicalForm: v.string(),
 		coreFeatures: v.any(),
 	})
@@ -245,8 +247,8 @@ export default defineSchema({
 		shadowKey: v.string(),
 		language: languageValidator,
 		canonicalForm: v.string(),
-		family: v.string(),
-		kind: v.string(),
+		family: familyValidator,
+		kind: kindValidator,
 	}).index("by_shadow_key", ["shadowKey"]),
 
 	structuralShadowReferences: defineTable({

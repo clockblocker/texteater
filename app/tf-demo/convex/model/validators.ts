@@ -1,4 +1,5 @@
 import { ConvexError, type Infer, v } from "convex/values";
+import type * as Dumling from "dumling/types";
 import {
 	directSemanticRelationValues,
 	translationLanguageValues,
@@ -11,6 +12,45 @@ const segmentKindValues = [
 	"OpaqueText",
 	"Whitespace",
 	"Punctuation",
+] as const;
+export const lexemeKindValues = [
+	"ADJ",
+	"ADP",
+	"ADV",
+	"AUX",
+	"CCONJ",
+	"DET",
+	"INTJ",
+	"NOUN",
+	"NUM",
+	"PART",
+	"PRON",
+	"PROPN",
+	"PUNCT",
+	"SCONJ",
+	"SYM",
+	"VERB",
+	"X",
+] as const;
+export const morphemeKindValues = [
+	"Circumfix",
+	"Clitic",
+	"Duplifix",
+	"Infix",
+	"Interfix",
+	"Prefix",
+	"Root",
+	"Suffix",
+	"Suffixoid",
+	"ToneMarking",
+	"Transfix",
+] as const;
+export const phrasemeKindValues = [
+	"Aphorism",
+	"Collocation",
+	"DiscourseFormula",
+	"Idiom",
+	"Proverb",
 ] as const;
 const memberOrthographyValues = ["Standard", "Typo"] as const;
 const realizationCoverageValues = ["Full", "Partial"] as const;
@@ -33,6 +73,36 @@ export function literalUnion<const Value extends string>(
 export const languageValidator = literalUnion(
 	enabledSegmentationLanguageValues,
 );
+
+const familyValues = ["Lexeme", "Morpheme", "Phraseme"] as const;
+const kindValues = [
+	...lexemeKindValues,
+	...morphemeKindValues,
+	...phrasemeKindValues,
+] as const;
+
+export const familyValidator = literalUnion(familyValues);
+export const kindValidator = literalUnion(kindValues);
+
+const families = new Set<string>(familyValues);
+const kinds = new Set<string>(kindValues);
+
+export function isFamily(value: string): value is Dumling.Family {
+	return families.has(value);
+}
+
+export function isKind(value: string): value is Dumling.Kind {
+	return kinds.has(value);
+}
+
+type SameMembers<A, B> = [A] extends [B]
+	? [B] extends [A]
+		? true
+		: false
+	: false;
+// The validators admit every Dumling Family and Kind, and nothing else.
+true satisfies SameMembers<Infer<typeof familyValidator>, Dumling.Family>;
+true satisfies SameMembers<Infer<typeof kindValidator>, Dumling.Kind>;
 
 export const grammaticalLanguageValidator = v.literal(
 	grammaticalResolutionLanguageValues[0],
@@ -384,7 +454,7 @@ export const resolutionOutcomeValidator = v.union(
 	v.literal("PermanentFailure"),
 );
 
-const activeResolutionActivityValidator = v.union(
+export const activeResolutionActivityValidator = v.union(
 	v.literal("Scheduled"),
 	v.literal("Running"),
 );
@@ -518,8 +588,8 @@ export const resolutionGrammarProjectionValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
-	/** Lets the resolving Reading Note take its headword tone before commit. Absent on older Sessions. */
-	coreFeatures: v.optional(v.any()),
+	/** Lets the resolving Reading Note take its headword tone before commit. */
+	coreFeatures: v.any(),
 });
 
 export const resolutionReadingProjectionValidator = v.object({

@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 
 import type { Doc, Id } from "../../_generated/dataModel";
@@ -17,7 +18,10 @@ import {
 	projectFeaturesForPresentation,
 } from "./featurePresentation";
 import { projectPendingRelations } from "./pendingRelations";
-import { isUnitReadingFamily } from "./unitReadingFamilies";
+import {
+	isUnitReadingFamily,
+	type UnitReadingFamily,
+} from "./unitReadingFamilies";
 
 const SHADOW_REFERENCE_PAGE_SIZE = 50;
 const MAX_SHADOW_CANDIDATE_LEMMAS = 100;
@@ -117,14 +121,15 @@ async function loadShadowInspection(
 	ctx: QueryCtx,
 	descriptor: ShadowDescriptor,
 ) {
-	if (!isUnitReadingFamily(descriptor.family)) return { candidates: [] };
+	const { family } = descriptor;
+	if (!isUnitReadingFamily(family)) return { candidates: [] };
 	const lemmas = await ctx.db
 		.query("lemmas")
 		.withIndex("by_shadow_descriptor", (q) =>
 			q
 				.eq("language", descriptor.language)
 				.eq("canonicalForm", descriptor.canonicalForm)
-				.eq("family", descriptor.family)
+				.eq("family", family)
 				.eq("kind", descriptor.kind),
 		)
 		.take(MAX_SHADOW_CANDIDATE_LEMMAS + 1);
@@ -150,8 +155,8 @@ async function loadShadowInspection(
 		): {
 			lemmaId: Id<"lemmas">;
 			canonicalForm: string;
-			family: string;
-			kind: string;
+			family: UnitReadingFamily;
+			kind: Dumling.Kind;
 			coreFeatures: { name: string; value: string }[];
 			target: {
 				kind: "Lemma";
@@ -163,8 +168,9 @@ async function loadShadowInspection(
 						{
 							lemmaId: lemma._id,
 							canonicalForm: lemma.canonicalForm,
-							family: lemma.family,
-							kind: lemma.kind,
+							// The index matched these exactly.
+							family,
+							kind: descriptor.kind,
 							coreFeatures: projectFeaturesForPresentation(
 								lemma.coreFeatures,
 							),

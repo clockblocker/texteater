@@ -17,6 +17,7 @@ import {
 	presentLemma,
 	presentSurface,
 } from "../../model/presentedDumling";
+import { familyValidator, kindValidator } from "../../model/validators";
 import {
 	projectOccurrenceSource,
 	sourceOriginValidator,
@@ -73,8 +74,8 @@ const surfaceRouteConnectionValidator = v.object({
 	surfaceId: v.id("surfaces"),
 	normalizedSurface: v.string(),
 	canonicalForm: v.string(),
-	family: v.string(),
-	kind: v.string(),
+	family: familyValidator,
+	kind: kindValidator,
 	target: surfaceTargetValidator,
 });
 
@@ -109,8 +110,8 @@ const surfaceRouteNoteValidator = v.object({
 const lemmaRouteConnectionValidator = v.object({
 	lemmaId: v.id("lemmas"),
 	canonicalForm: v.string(),
-	family: v.string(),
-	kind: v.string(),
+	family: familyValidator,
+	kind: kindValidator,
 	target: lemmaTargetValidator,
 });
 

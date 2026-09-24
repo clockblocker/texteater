@@ -28,7 +28,11 @@ import {
 	pendingShadowDescriptor,
 	replaceAccumulatedKnowledge,
 } from "../model/shadows";
-import { dumdictPlannedChangeValidator } from "../model/validators";
+import {
+	dumdictPlannedChangeValidator,
+	isFamily,
+	isKind,
+} from "../model/validators";
 import {
 	applyReadingKnowledgeChange,
 	assertLemmaRecordHasNoKnowledge,
@@ -454,6 +458,19 @@ async function syncSemanticRelationsFromKnowledge(
 	);
 }
 
+function requireFamily(value: unknown): Dumling.Family {
+	const family = requireString(value, "Lemma family");
+	if (!isFamily(family))
+		throw new Error(`Unsupported Lemma family: ${family}`);
+	return family;
+}
+
+function requireKind(value: unknown): Dumling.Kind {
+	const kind = requireString(value, "Lemma kind");
+	if (!isKind(kind)) throw new Error(`Unsupported Lemma kind: ${kind}`);
+	return kind;
+}
+
 function optionalRecord(value: unknown): AnyRecord | null {
 	return value !== null && typeof value === "object" && !Array.isArray(value)
 		? (value as AnyRecord)
@@ -482,8 +499,8 @@ async function applyChange(
 				(await ctx.db.insert("lemmas", {
 					lemmaKey,
 					language,
-					family: requireString(lemma.family, "Lemma family"),
-					kind: requireString(lemma.kind, "Lemma kind"),
+					family: requireFamily(lemma.family),
+					kind: requireKind(lemma.kind),
 					canonicalForm: requireString(
 						lemma.canonicalForm,
 						"Lemma canonicalForm",

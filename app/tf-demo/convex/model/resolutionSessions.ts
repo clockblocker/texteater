@@ -3,6 +3,8 @@ import { restoreStoredGrammar } from "../../server/resolutionGrammar";
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,
+	type ResolutionGrammarProjection,
+	type ResolutionReadingProjection,
 } from "../../server/resolutionSessionProjection";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
@@ -14,13 +16,14 @@ export { projectResolutionGrammar, projectResolutionReading };
 
 import { reconstructReusableAttestation } from "./resolutionLookup";
 import {
+	activeResolutionActivityValidator,
 	type readingValueValidator,
-	resolutionActivityValidator,
-	type resolutionFailureCodeValidator,
+	type resolutionActivityValidator,
+	resolutionFailureCodeValidator,
 	type resolutionGenerationEventValidator,
 	resolutionGrammarProjectionValidator,
 	type resolutionLifecycleValidator,
-	resolutionOutcomeValidator,
+	type resolutionOutcomeValidator,
 	type resolutionPhaseValidator,
 	resolutionProgressValidator,
 	resolutionReadingProjectionValidator,
@@ -65,10 +68,12 @@ export type ResolutionLifecycle = Infer<typeof resolutionLifecycleValidator>;
 export type ResolutionSessionGuard = Infer<
 	typeof resolutionSessionGuardValidator
 >;
-export type ResolutionGrammarProjection = Infer<
+/** A Grammar projection as the Session row stores it. */
+export type StoredResolutionGrammar = Infer<
 	typeof resolutionGrammarProjectionValidator
 >;
-export type ResolutionReadingProjection = Infer<
+/** A Reading projection as the Session row stores it. */
+export type StoredResolutionReading = Infer<
 	typeof resolutionReadingProjectionValidator
 >;
 export type ResolutionPhase = Infer<typeof resolutionPhaseValidator>;
@@ -138,63 +143,92 @@ export function assertResolutionLifecycle(
 	}
 }
 
+const canonicalOccurrenceValidator = v.object({
+	readingId: v.id("readings"),
+	lemmaId: v.id("lemmas"),
+	surfaceId: v.id("surfaces"),
+	surfaceLanguage: v.literal("de"),
+	normalizedSurface: v.string(),
+	attestationId: v.id("attestations"),
+});
+
+/**
+ * A Resolution Note's lifecycle: the Session's lifecycle with each Terminal
+ * outcome carrying what the client shows for it.
+ */
+const resolutionNoteLifecycleValidator = v.union(
+	v.object({
+		state: v.literal("Active"),
+		progress: resolutionProgressValidator,
+		activity: activeResolutionActivityValidator,
+	}),
+	v.object({
+		state: v.literal("Terminal"),
+		progress: v.literal("Committing"),
+		outcome: v.literal("Complete"),
+		attestationId: v.id("attestations"),
+		target: v.union(
+			v.object({
+				kind: v.literal("Reading"),
+				readingId: v.id("readings"),
+			}),
+			v.object({
+				kind: v.literal("Attestation"),
+				attestationId: v.id("attestations"),
+			}),
+		),
+		canonical: v.optional(canonicalOccurrenceValidator),
+	}),
+	v.object({
+		state: v.literal("Terminal"),
+		progress: resolutionProgressValidator,
+		outcome: v.literal("Unresolved"),
+	}),
+	v.object({
+		state: v.literal("Terminal"),
+		progress: resolutionProgressValidator,
+		outcome: v.literal("PermanentFailure"),
+		failureCode: resolutionFailureCodeValidator,
+		diagnosticId: v.string(),
+		message: v.string(),
+	}),
+);
+
+const resolutionRouteValidator = v.object({
+	textId: v.id("texts"),
+	sentenceId: v.id("sentences"),
+	stitchedText: v.string(),
+	clickedSegmentIndex: v.number(),
+	selectedSegment: v.string(),
+});
+
 export const resolutionNoteValidator = v.object({
 	kind: v.literal("ResolutionNote"),
 	target: v.object({
 		kind: v.literal("Resolution"),
 		requestId: v.string(),
 	}),
-	progress: resolutionProgressValidator,
-	activity: resolutionActivityValidator,
-	outcome: v.optional(resolutionOutcomeValidator),
-	route: v.object({
-		textId: v.id("texts"),
-		sentenceId: v.id("sentences"),
-		stitchedText: v.string(),
-		clickedSegmentIndex: v.number(),
-		selectedSegment: v.string(),
-	}),
+	lifecycle: resolutionNoteLifecycleValidator,
+	route: resolutionRouteValidator,
 	grammar: v.optional(resolutionGrammarProjectionValidator),
 	reading: v.optional(resolutionReadingProjectionValidator),
-	terminal: v.optional(
-		v.union(
-			v.object({
-				kind: v.literal("Complete"),
-				attestationId: v.id("attestations"),
-				canonical: v.optional(
-					v.object({
-						readingId: v.id("readings"),
-						lemmaId: v.id("lemmas"),
-						surfaceId: v.id("surfaces"),
-						surfaceLanguage: v.literal("de"),
-						normalizedSurface: v.string(),
-						attestationId: v.id("attestations"),
-					}),
-				),
-				target: v.union(
-					v.object({
-						kind: v.literal("Reading"),
-						readingId: v.id("readings"),
-					}),
-					v.object({
-						kind: v.literal("Attestation"),
-						attestationId: v.id("attestations"),
-					}),
-				),
-			}),
-			v.object({ kind: v.literal("Unresolved") }),
-			v.object({
-				kind: v.literal("PermanentFailure"),
-				failureCode: v.string(),
-				diagnosticId: v.string(),
-				message: v.string(),
-			}),
-		),
-	),
 	updatedAt: v.number(),
 });
 
-export type ResolutionNote = Infer<typeof resolutionNoteValidator>;
+/**
+ * The validator stores Family and Kind as strings; the Note keeps the
+ * per-Kind projections the Session was written from.
+ */
+export type ResolutionNote = Omit<
+	Infer<typeof resolutionNoteValidator>,
+	"grammar" | "reading"
+> & {
+	grammar?: ResolutionGrammarProjection;
+	reading?: ResolutionReadingProjection;
+};
+export type ResolutionNoteLifecycle = Infer<
+	typeof resolutionNoteLifecycleValidator
+>;
 
 export function assertResolutionProgressTransition(
 	current: ResolutionProgress,
@@ -227,54 +261,68 @@ export async function loadResolutionNote(
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
 	if (!session) return null;
-	const { lifecycle } = session;
-	const activity =
-		lifecycle.state === "Active" ? lifecycle.activity : "Terminal";
-	const outcome =
-		lifecycle.state === "Terminal" ? lifecycle.outcome : undefined;
-	const canonical =
-		outcome === "Complete" && session.attestationId
-			? await loadCanonicalOccurrence(ctx, session.attestationId)
-			: null;
 	return {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId },
-		progress: lifecycle.progress,
-		activity,
-		...(outcome ? { outcome } : {}),
+		lifecycle: await resolutionNoteLifecycle(ctx, session),
 		route: session.route,
-		...(session.grammar ? { grammar: session.grammar } : {}),
-		...(session.reading ? { reading: session.reading } : {}),
-		...(outcome === "Complete" && session.readingId && session.attestationId
-			? {
-					terminal: {
-						kind: "Complete" as const,
-						attestationId: session.attestationId,
-						...(canonical ? { canonical } : {}),
-						target: occurrenceNoteTarget(
-							Boolean(session.routeNoteRequested),
-							session.readingId,
-							session.attestationId,
-						),
-					},
-				}
-			: outcome === "Unresolved"
-				? { terminal: { kind: "Unresolved" as const } }
-				: outcome === "PermanentFailure"
-					? {
-							terminal: {
-								kind: "PermanentFailure" as const,
-								failureCode: session.failureCode ?? "Internal",
-								diagnosticId:
-									session.diagnosticId ?? session.requestId,
-								message:
-									session.failureMessage ??
-									"Resolution could not be completed.",
-							},
-						}
-					: {}),
+		// The Session stores what projectResolutionGrammar and
+		// projectResolutionReading produced.
+		...(session.grammar
+			? { grammar: session.grammar as ResolutionGrammarProjection }
+			: {}),
+		...(session.reading
+			? { reading: session.reading as ResolutionReadingProjection }
+			: {}),
 		updatedAt: session.updatedAt,
 	};
+}
+
+async function resolutionNoteLifecycle(
+	ctx: QueryCtx,
+	session: ResolutionSession,
+): Promise<ResolutionNoteLifecycle> {
+	const { lifecycle } = session;
+	if (lifecycle.state === "Active") return lifecycle;
+	switch (lifecycle.outcome) {
+		case "Complete": {
+			const { readingId, attestationId } = session;
+			if (!readingId || !attestationId)
+				throw new Error(
+					"A complete Resolution Session must name its Reading and Attestation.",
+				);
+			const canonical = await loadCanonicalOccurrence(ctx, attestationId);
+			return {
+				state: "Terminal",
+				progress: "Committing",
+				outcome: "Complete",
+				attestationId,
+				target: occurrenceNoteTarget(
+					Boolean(session.routeNoteRequested),
+					readingId,
+					attestationId,
+				),
+				...(canonical ? { canonical } : {}),
+			};
+		}
+		case "Unresolved":
+			return {
+				state: "Terminal",
+				progress: lifecycle.progress,
+				outcome: "Unresolved",
+			};
+		case "PermanentFailure":
+			return {
+				state: "Terminal",
+				progress: lifecycle.progress,
+				outcome: "PermanentFailure",
+				failureCode: session.failureCode ?? "Internal",
+				diagnosticId: session.diagnosticId ?? session.requestId,
+				message:
+					session.failureMessage ??
+					"Resolution could not be completed.",
+			};
+	}
 }
 
 /**
@@ -733,8 +781,8 @@ export async function advanceResolutionSession(
 			ResolutionProgress,
 			"Starting" | "Committing"
 		>;
-		readonly grammar?: ResolutionGrammarProjection;
-		readonly reading?: ResolutionReadingProjection;
+		readonly grammar?: StoredResolutionGrammar;
+		readonly reading?: StoredResolutionReading;
 		readonly grammaticalCheckpoint?: Infer<
 			typeof resolvedGrammaticalValidator
 		>;

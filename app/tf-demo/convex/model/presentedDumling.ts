@@ -1,7 +1,9 @@
 import { type Infer, v } from "convex/values";
 import { checkIfGrundform, parseUnit } from "dumling";
 import {
+	familyValidator,
 	grundformValidator,
+	kindValidator,
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
@@ -23,8 +25,8 @@ export const presentedFeatureSetValidator = v.record(
 export const presentedLemmaValidator = v.object({
 	language: languageValidator,
 	canonicalForm: v.string(),
-	family: v.string(),
-	kind: v.string(),
+	family: familyValidator,
+	kind: kindValidator,
 	coreFeatures: presentedFeatureSetValidator,
 });
 

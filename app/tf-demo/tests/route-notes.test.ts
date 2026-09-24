@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import { makeSurfaceId } from "dumdict";
 import { nounArticleReference } from "dumgen";
+import type * as Dumling from "dumling/types";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";
@@ -38,8 +39,8 @@ function noteOfKind<Kind extends RouteNote["kind"]>(
 type LemmaSeed = {
 	readonly language: "de" | "he";
 	readonly canonicalForm: string;
-	readonly family: string;
-	readonly kind: string;
+	readonly family: Dumling.Family;
+	readonly kind: Dumling.Kind;
 	readonly pronType?: "Dem" | "Rel";
 };
 
@@ -218,11 +219,11 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 			family: "Morpheme",
 			kind: "Prefix",
 		},
-		...Array.from({ length: 51 }, (_, index) => ({
+		...Array.from({ length: 51 }, () => ({
 			language: "de" as const,
 			canonicalForm: "Bank",
 			family: "Lexeme",
-			kind: `KIND-${index}`,
+			kind: "NOUN",
 		})),
 		{
 			language: "he",

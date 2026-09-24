@@ -27,16 +27,16 @@ const grammar = {
 	spelling: "Canonical" as const,
 	grundform: false,
 	canonicalForm: "Bank",
-	family: "Lexeme",
-	kind: "NOUN",
-	coreFeatures: { gender: "Fem", hyph: null },
+	family: "Lexeme" as const,
+	kind: "NOUN" as const,
+	coreFeatures: { gender: "Fem" as const, hyph: null },
 };
 
 const reading = {
 	emojiDescription: "🏦",
 	canonicalForm: "Bank",
-	family: "Lexeme",
-	kind: "NOUN",
+	family: "Lexeme" as const,
+	kind: "NOUN" as const,
 };
 
 test("active Resolution presentations use final-Note skeletons instead of WIP content", () => {
@@ -45,8 +45,11 @@ test("active Resolution presentations use final-Note skeletons instead of WIP co
 			note: {
 				kind: "ResolutionNote",
 				target: { kind: "Resolution", requestId: "request-1" },
-				progress: "ReadingAvailable",
-				activity: "Running",
+				lifecycle: {
+					state: "Active",
+					progress: "ReadingAvailable",
+					activity: "Running",
+				},
 				route,
 				grammar,
 				reading,
@@ -88,24 +91,33 @@ test("projects each available Resolution step onto the front of one deck", () =>
 	const starting = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "Starting",
-		activity: "Running",
+		lifecycle: {
+			state: "Active",
+			progress: "Starting",
+			activity: "Running",
+		},
 		route,
 		updatedAt: 1,
 	});
 	const routed = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "RouteAvailable",
-		activity: "Running",
+		lifecycle: {
+			state: "Active",
+			progress: "RouteAvailable",
+			activity: "Running",
+		},
 		route,
 		updatedAt: 2,
 	});
 	const grammatical = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "GrammarAvailable",
-		activity: "Running",
+		lifecycle: {
+			state: "Active",
+			progress: "GrammarAvailable",
+			activity: "Running",
+		},
 		route,
 		grammar,
 		updatedAt: 3,
@@ -113,8 +125,11 @@ test("projects each available Resolution step onto the front of one deck", () =>
 	const readable = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "ReadingAvailable",
-		activity: "Running",
+		lifecycle: {
+			state: "Active",
+			progress: "ReadingAvailable",
+			activity: "Running",
+		},
 		route,
 		grammar,
 		reading,
@@ -141,14 +156,10 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 	const cards = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "Committing",
-		activity: "Terminal",
-		outcome: "Complete",
-		route,
-		grammar,
-		reading,
-		terminal: {
-			kind: "Complete",
+		lifecycle: {
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
 			attestationId: "attestation-1" as never,
 			target: {
 				kind: "Reading",
@@ -163,6 +174,9 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 				attestationId: "attestation-1" as never,
 			},
 		},
+		route,
+		grammar,
+		reading,
 		updatedAt: 5,
 	});
 
@@ -248,17 +262,16 @@ test("a terminal failure keeps Resolution foremost without discarding reached st
 	const cards = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "GrammarAvailable",
-		activity: "Terminal",
-		outcome: "PermanentFailure",
-		route,
-		grammar,
-		terminal: {
-			kind: "PermanentFailure",
+		lifecycle: {
+			state: "Terminal",
+			progress: "GrammarAvailable",
+			outcome: "PermanentFailure",
 			failureCode: "ProviderUnavailable",
 			diagnosticId: "diagnostic-1",
 			message: "Reading is temporarily unavailable.",
 		},
+		route,
+		grammar,
 		updatedAt: 5,
 	});
 
@@ -274,23 +287,22 @@ test("completion reconciliation preserves its canonical Route Note target", () =
 	const note = {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "Committing",
-		activity: "Terminal",
-		outcome: "Complete",
+		lifecycle: {
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
+			attestationId: "attestation-1" as never,
+			target: {
+				kind: "Attestation",
+				attestationId: "attestation-1" as never,
+			},
+		},
 		route: {
 			textId: "text-1" as never,
 			sentenceId: "sentence-1" as never,
 			stitchedText: "Die Banken.",
 			clickedSegmentIndex: 2,
 			selectedSegment: "Banken",
-		},
-		terminal: {
-			kind: "Complete",
-			attestationId: "attestation-1" as never,
-			target: {
-				kind: "Attestation",
-				attestationId: "attestation-1" as never,
-			},
 		},
 		updatedAt: 1,
 	} as const;
@@ -337,14 +349,17 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 	const base = {
 		kind: "ResolutionNote" as const,
 		target: { kind: "Resolution" as const, requestId: "request-1" },
-		activity: "Running" as const,
 		route,
 		grammar,
 	};
 	expect(
 		resolvingReadingNoteData({
 			...base,
-			progress: "RouteAvailable",
+			lifecycle: {
+				state: "Active",
+				progress: "RouteAvailable",
+				activity: "Running",
+			},
 			grammar: undefined,
 			updatedAt: 1,
 		}),
@@ -352,7 +367,11 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 
 	const grammatical = renderResolving({
 		...base,
-		progress: "GrammarAvailable",
+		lifecycle: {
+			state: "Active",
+			progress: "GrammarAvailable",
+			activity: "Running",
+		},
 		updatedAt: 2,
 	});
 	expect(grammatical).toContain('data-note-kind="Reading"');
@@ -372,7 +391,11 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 
 	const readable = renderResolving({
 		...base,
-		progress: "ReadingAvailable",
+		lifecycle: {
+			state: "Active",
+			progress: "ReadingAvailable",
+			activity: "Running",
+		},
 		reading,
 		updatedAt: 3,
 	});
@@ -390,8 +413,11 @@ test("the Reading step renders the resolving Note once Grammar is known and a sk
 			note: {
 				kind: "ResolutionNote",
 				target: { kind: "Resolution", requestId: "request-1" },
-				progress: "RouteAvailable",
-				activity: "Running",
+				lifecycle: {
+					state: "Active",
+					progress: "RouteAvailable",
+					activity: "Running",
+				},
 				route,
 				updatedAt: 1,
 			},
@@ -404,17 +430,16 @@ test("a failed Session keeps its Grammar steps but drops the Reading step", () =
 	const cards = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "GrammarAvailable",
-		activity: "Terminal",
-		outcome: "PermanentFailure",
-		route,
-		grammar,
-		terminal: {
-			kind: "PermanentFailure",
+		lifecycle: {
+			state: "Terminal",
+			progress: "GrammarAvailable",
+			outcome: "PermanentFailure",
 			failureCode: "ProviderUnavailable",
 			diagnosticId: "diagnostic-1",
 			message: "Reading is temporarily unavailable.",
 		},
+		route,
+		grammar,
 		updatedAt: 5,
 	});
 	expect(stepKinds(cards)).not.toContain("Reading");
@@ -424,14 +449,10 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 	const cards = resolutionDeckCards({
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		progress: "Committing",
-		activity: "Terminal",
-		outcome: "Complete",
-		route,
-		grammar,
-		reading,
-		terminal: {
-			kind: "Complete",
+		lifecycle: {
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
 			attestationId: "attestation-1" as never,
 			target: { kind: "Reading", readingId: "reading-1" as never },
 			canonical: {
@@ -443,6 +464,9 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 				attestationId: "attestation-1" as never,
 			},
 		},
+		route,
+		grammar,
+		reading,
 		updatedAt: 5,
 	});
 	expect(cards[0]).toEqual({

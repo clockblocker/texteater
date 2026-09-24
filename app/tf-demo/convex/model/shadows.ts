@@ -1,47 +1,21 @@
+import type * as Dumling from "dumling/types";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
+import {
+	lexemeKindValues,
+	morphemeKindValues,
+	phrasemeKindValues,
+} from "./validators";
 
 const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
 const descriptorKeys = ["canonicalForm", "family", "kind", "language"];
-const lexemeKinds = new Set([
-	"ADJ",
-	"ADP",
-	"ADV",
-	"AUX",
-	"CCONJ",
-	"DET",
-	"INTJ",
-	"NOUN",
-	"NUM",
-	"PART",
-	"PRON",
-	"PROPN",
-	"PUNCT",
-	"SCONJ",
-	"SYM",
-	"VERB",
-	"X",
-]);
-const morphemeKinds = new Set([
-	"Circumfix",
-	"Clitic",
-	"Duplifix",
-	"Infix",
-	"Interfix",
-	"Prefix",
-	"Root",
-	"Suffix",
-	"Suffixoid",
-	"ToneMarking",
-	"Transfix",
-]);
-const commonPhrasemeKinds = new Set([
-	"Aphorism",
-	"DiscourseFormula",
-	"Idiom",
-	"Proverb",
-]);
+const lexemeKinds = new Set<string>(lexemeKindValues);
+const morphemeKinds = new Set<string>(morphemeKindValues);
+// Collocation is a Phraseme Kind only in German.
+const commonPhrasemeKinds = new Set<string>(
+	phrasemeKindValues.filter((kind) => kind !== "Collocation"),
+);
 
 type ServerCtx = MutationCtx | QueryCtx;
 type UnknownRecord = Record<string, unknown>;
@@ -49,8 +23,8 @@ type UnknownRecord = Record<string, unknown>;
 export type ShadowDescriptor = {
 	readonly language: "de" | "en" | "he";
 	readonly canonicalForm: string;
-	readonly family: string;
-	readonly kind: string;
+	readonly family: Dumling.Family;
+	readonly kind: Dumling.Kind;
 };
 
 export type StructuralShadowReference = {
@@ -107,7 +81,7 @@ export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
 	if (language !== "de" && language !== "en" && language !== "he") {
 		throw new Error(`Unsupported Unit Shadow language: ${language}`);
 	}
-	const normalized: ShadowDescriptor = {
+	const normalized = {
 		language,
 		canonicalForm: normalizedString(
 			descriptor.canonicalForm,
@@ -129,7 +103,8 @@ export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
 			`${normalized.language}/${normalized.family}/${normalized.kind} is not a supported Dumling Lemma route.`,
 		);
 	}
-	return normalized;
+	// The route check above admits only Dumling Families and Kinds.
+	return normalized as ShadowDescriptor;
 }
 
 export function shadowKeyFor(value: unknown): string {

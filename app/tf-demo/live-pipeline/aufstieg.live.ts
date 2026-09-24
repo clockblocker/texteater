@@ -92,7 +92,7 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 						api.resolutionSessions.getResolutionNote,
 						{ requestId: selectionRequestId },
 					);
-					return resolution?.activity;
+					return resolution?.lifecycle.state;
 				},
 				{
 					timeout: 120_000,
@@ -107,10 +107,15 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 			api.resolutionSessions.getResolutionNote,
 			{ requestId: selectionRequestId },
 		);
-		expect(completed?.outcome).toBe("Complete");
+		const lifecycle = completed?.lifecycle;
+		expect(lifecycle?.state === "Terminal" && lifecycle.outcome).toBe(
+			"Complete",
+		);
 		if (
-			completed?.terminal?.kind !== "Complete" ||
-			!completed.terminal.canonical
+			!completed ||
+			lifecycle?.state !== "Terminal" ||
+			lifecycle.outcome !== "Complete" ||
+			!lifecycle.canonical
 		) {
 			throw new Error(
 				`Resolution did not commit: ${JSON.stringify(completed)}`,
@@ -119,7 +124,7 @@ test("Aufstieg: real generation from text intake through click, persistence and 
 		expect(completed.route.sentenceId).toBe(sentence.sentenceId);
 		expect(completed.route.clickedSegmentIndex).toBe(segment.index);
 		expect(completed.route.selectedSegment).toBe("Aufstieg");
-		const canonical = completed.terminal.canonical;
+		const canonical = lifecycle.canonical;
 		expect(canonical.normalizedSurface).toBe("der Aufstieg");
 		const nounSurfaceNote = await client.query(api.routeNotes.get, {
 			target: {

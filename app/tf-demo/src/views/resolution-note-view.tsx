@@ -121,7 +121,8 @@ export function ResolutionNoteFrame({
 	presentation: Presentation;
 	onRetry?: () => Promise<unknown>;
 }) {
-	if (note.activity !== "Terminal" || note.terminal?.kind === "Complete") {
+	const { lifecycle } = note;
+	if (lifecycle.state === "Active" || lifecycle.outcome === "Complete") {
 		return (
 			<NoteSkeletonFor kind="Attestation" presentation={presentation} />
 		);
@@ -136,18 +137,18 @@ export function ResolutionNoteFrame({
 				<h1 className="text-xl font-semibold tracking-tight text-balance">
 					{title}
 				</h1>
-				{note.terminal?.kind === "Unresolved" ? (
+				{lifecycle.outcome === "Unresolved" ? (
 					<p className="text-sm text-ink-muted" role="status">
 						This Segment could not be resolved. This Resolution URL
 						remains available.
 					</p>
-				) : note.terminal?.kind === "PermanentFailure" ? (
+				) : (
 					<div className="flex flex-col items-start gap-3">
 						<p className="text-sm text-destructive" role="alert">
-							{note.terminal.message}
+							{lifecycle.message}
 						</p>
 						<p className="text-xs text-ink-muted">
-							Diagnostic reference: {note.terminal.diagnosticId}
+							Diagnostic reference: {lifecycle.diagnosticId}
 						</p>
 						{onRetry ? (
 							<Button
@@ -158,7 +159,7 @@ export function ResolutionNoteFrame({
 							</Button>
 						) : null}
 					</div>
-				) : null}
+				)}
 			</div>
 		</div>
 	);

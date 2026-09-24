@@ -31,8 +31,8 @@ export function resolvingReadingNoteData(
 	const requestId = note.target.requestId;
 	const placeholder = <Table extends TableNames>(table: Table) =>
 		`resolving:${requestId}:${table}` as Id<Table>;
-	// The Session projects the route as plain strings; the stored Note narrows
-	// them per family and kind, which the renderer registry re-derives anyway.
+	// The projection is per Kind, but spreading its fields loses that
+	// correlation, so the assembled Reading is narrowed back to the Note's.
 	const lemma = {
 		unitKind: "Lemma" as const,
 		ownerKind: "Lemma" as const,
@@ -42,7 +42,7 @@ export function resolvingReadingNoteData(
 		family: grammar.family,
 		kind: grammar.kind,
 		canonicalForm: grammar.canonicalForm,
-		coreFeatures: grammar.coreFeatures ?? {},
+		coreFeatures: grammar.coreFeatures,
 	};
 	const reading = {
 		unitKind: "Reading" as const,

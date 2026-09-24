@@ -1,5 +1,8 @@
 import type { Id } from "../../convex/_generated/dataModel";
-import type { ResolutionNote } from "../../convex/model/resolutionSessions";
+import type {
+	ResolutionNote,
+	ResolutionNoteLifecycle,
+} from "../../convex/model/resolutionSessions";
 import type {
 	ReadingNotePresentationContext,
 	ResolutionStepKind,
@@ -28,11 +31,12 @@ const progressPosition = {
 export function resolutionDeckCards(
 	note: ResolutionNote,
 ): readonly WorkspaceCardTarget[] {
-	if (note.terminal?.kind === "Complete") {
-		return completedCards(note, note.terminal);
+	const { lifecycle } = note;
+	if (lifecycle.state === "Terminal" && lifecycle.outcome === "Complete") {
+		return completedCards(note, lifecycle);
 	}
 	const steps = availableStepCards(note);
-	if (note.activity === "Terminal" || steps.length === 0) {
+	if (lifecycle.state === "Terminal" || steps.length === 0) {
 		return [resolutionCard(note.target.requestId), ...steps];
 	}
 	return steps;
@@ -53,13 +57,15 @@ function availableStepCards(
 	// and fills in as the emoji and Knowledge arrive. A failed Session keeps
 	// its Grammar steps but not a Reading that will never finish loading.
 	const failed =
-		note.activity === "Terminal" && note.terminal?.kind !== "Complete";
+		note.lifecycle.state === "Terminal" &&
+		note.lifecycle.outcome !== "Complete";
 	return [
 		...(note.grammar && !failed ? [stepCard(requestId, "Reading")] : []),
 		...(note.grammar
 			? [stepCard(requestId, "Lemma"), stepCard(requestId, "Surface")]
 			: []),
-		...(progressPosition[note.progress] >= progressPosition.RouteAvailable
+		...(progressPosition[note.lifecycle.progress] >=
+		progressPosition.RouteAvailable
 			? [stepCard(requestId, "Attestation")]
 			: []),
 	];
@@ -67,19 +73,16 @@ function availableStepCards(
 
 function completedCards(
 	note: ResolutionNote,
-	terminal: Extract<
-		NonNullable<ResolutionNote["terminal"]>,
-		{ readonly kind: "Complete" }
-	>,
+	completion: Extract<ResolutionNoteLifecycle, { outcome: "Complete" }>,
 ): readonly WorkspaceCardTarget[] {
-	const { canonical } = terminal;
+	const { canonical } = completion;
 	if (!canonical) {
 		const role =
-			terminal.target.kind === "Reading" ? "Reading" : "Attestation";
+			completion.target.kind === "Reading" ? "Reading" : "Attestation";
 		const finalCard = canonicalCard(
 			note.target.requestId,
 			role,
-			terminal.target,
+			completion.target,
 		);
 		const steps = availableStepCards(note);
 		return steps.some(({ key }) => key === finalCard.key)
@@ -90,7 +93,7 @@ function completedCards(
 	}
 	return canonicalResolutionDeckCards(
 		note.target.requestId,
-		terminal.target,
+		completion.target,
 		canonical,
 		{ resolutionRequestId: note.target.requestId },
 	);
