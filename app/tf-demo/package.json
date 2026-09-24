@@ -52,6 +52,7 @@
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
 		"@vitejs/plugin-react": "^6",
+		"convex-test": "^0.0.59",
 		"vite": "^8"
 	}
 }

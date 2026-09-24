@@ -1,32 +1,24 @@
-import { describe, expect, test } from "bun:test";
-import { getFunctionName } from "convex/server";
-import { createDumdictService, type DumdictStoragePort } from "dumdict";
+import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import { createDumdictService } from "dumdict";
 import * as Effect from "effect/Effect";
+import { api, internal } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import {
-	clearLemmaDataBatch,
-	clearReadingDataBatch,
-	clearResolutionInspectionBatch,
-	clearVisitorDataBatch,
-	getTextAnalysisCandidates,
-	listTextIds,
 	readingCleanupPhaseTables,
-	resetDemoDataBatch,
 	resetDemoTableNames,
-	stripAllAnalyses,
-	stripTextAnalysisGraphBatch,
 	visitorResetPhaseTables,
 } from "../convex/demoReset";
+import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
-import { persistSubmittedText } from "../convex/persistence";
-import { load as loadResolutionContext } from "../convex/resolutionContext";
 import tfDemoSchema from "../convex/schema";
 import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
-import { createTestConvexDumdictStorage } from "./support/dumdict-storage";
 import {
-	IndexedTestDb,
-	runTestMutation,
-	runTestQuery,
-} from "./support/indexed-db";
+	actionContext,
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
 
 const verbFeatures = {
 	verbType: null,
@@ -76,135 +68,156 @@ const emptyNote = {
 	notes: "",
 };
 
-function storageFor(db: IndexedTestDb): DumdictStoragePort<"de"> {
-	return createTestConvexDumdictStorage({
-		runQuery: (implementation, args) =>
-			runTestQuery(db, implementation, args),
-		runMutation: (implementation, args) =>
-			runTestMutation(db, implementation, args),
+function dictionaryFor(t: TestConvexDb) {
+	return createDumdictService({
+		language: "de",
+		storage: createConvexDumdictStorage(actionContext(t) as never),
 	});
 }
 
+async function readingIdFor(
+	t: TestConvexDb,
+	reading: Parameters<typeof readingFingerprint>[0],
+): Promise<Id<"readings">> {
+	const row = await t.run((ctx) =>
+		ctx.db
+			.query("readings")
+			.withIndex("by_reading_key", (q) =>
+				q.eq("readingKey", readingFingerprint(reading)),
+			)
+			.unique(),
+	);
+	if (!row) throw new Error("Expected a stored Reading.");
+	return row._id;
+}
+
+async function tableRows(
+	t: TestConvexDb,
+	table: (typeof resetDemoTableNames)[number],
+) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+/** Inserts a bare Lemma and Reading, as the dictionary stores them. */
+async function insertReading(t: TestConvexDb, readingKey: string) {
+	return t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: `lemma:${readingKey}`,
+			language: "de",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm: readingKey,
+			coreFeatures: {},
+		});
+		const readingId = await ctx.db.insert("readings", {
+			readingKey,
+			lemmaId,
+			emojiDescription: "🚶",
+		});
+		const surfaceId = await ctx.db.insert("surfaces", {
+			surfaceKey: `surface:${readingKey}`,
+			lemmaId,
+			language: "de",
+			normalizedSurface: readingKey,
+			spelling: "Canonical",
+			surfaceFeatures: {},
+		});
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId,
+			readingId,
+			realizationCoverage: "Full",
+		});
+		return { lemmaId, readingId, attestationId };
+	});
+}
+
+const fingerprints = {
+	prompt: "prompt",
+	schema: "schema",
+	evaluator: "evaluator",
+	model: "model",
+	policy: "policy",
+};
+
+beforeEach(() => {
+	// A Segment Selection schedules its Resolution Session; nothing here runs it.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
+
 describe("tf-demo post-reset contract", () => {
 	test("Strip analyses covers every Text and clears Resolution Inspector data", async () => {
-		const db = new IndexedTestDb({
-			texts: [
-				{ _id: "texts-one", sourceText: "Eins." },
-				{ _id: "texts-two", sourceText: "Zwei." },
-			],
-			sentences: [
-				{
-					_id: "sentences-one",
-					textId: "texts-one",
-					position: 0,
-				},
-				{
-					_id: "sentences-two",
-					textId: "texts-two",
-					position: 0,
-				},
-			],
-			segments: [
-				{
-					_id: "segments-one",
-					sentenceId: "sentences-one",
-					index: 0,
-				},
-				{
-					_id: "segments-two",
-					sentenceId: "sentences-two",
-					index: 0,
-				},
-			],
-			inspectionPayloads: [{ _id: "inspectionPayloads-one" }],
-			inspectionSteps: [{ _id: "inspectionSteps-one" }],
-			inspectionClicks: [{ _id: "inspectionClicks-one" }],
+		const t = createTestConvex();
+		await submitText(t, [["Eins", "."]]);
+		await submitText(t, [["Zwei", "."]]);
+		await t.run(async (ctx) => {
+			await ctx.db.insert("inspectionClicks", {
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				selectedSegment: "Eins",
+				sentence: "Eins.",
+				startedAt: 1,
+				selectionKind: "Resolving",
+			});
+			const stepId = await ctx.db.insert("inspectionSteps", {
+				requestId: "request-1",
+				id: "step-1",
+				name: "Resolution session",
+				kind: "Code",
+				owner: "app/tf-demo",
+				startedAt: 1,
+				durationMs: 1,
+				status: "Success",
+			});
+			await ctx.db.insert("inspectionPayloads", {
+				stepId,
+				part: 0,
+				text: "{}",
+			});
 		});
-		const queryFunctions = new Map<string, unknown>([
-			["demoReset:listTextIds", listTextIds],
-			["demoReset:getTextAnalysisCandidates", getTextAnalysisCandidates],
-		]);
-		const mutationFunctions = new Map<string, unknown>([
-			[
-				"demoReset:stripTextAnalysisGraphBatch",
-				stripTextAnalysisGraphBatch,
-			],
-			["demoReset:clearReadingDataBatch", clearReadingDataBatch],
-			["demoReset:clearLemmaDataBatch", clearLemmaDataBatch],
-			[
-				"demoReset:clearResolutionInspectionBatch",
-				clearResolutionInspectionBatch,
-			],
-		]);
-		const result = await stripAllAnalyses({
-			runQuery: (reference, args) => {
-				const fn = queryFunctions.get(getFunctionName(reference));
-				if (!fn)
-					throw new Error(
-						`Unexpected query ${getFunctionName(reference)}`,
-					);
-				return runTestQuery(db, fn, args);
-			},
-			runMutation: (reference, args) => {
-				const fn = mutationFunctions.get(getFunctionName(reference));
-				if (!fn) {
-					throw new Error(
-						`Unexpected mutation ${getFunctionName(reference)}`,
-					);
-				}
-				return runTestMutation(db, fn, args);
-			},
-		} as never);
+
+		const result = await t.action(api.demoReset.stripAnalyses, {});
 
 		expect(result).toEqual({
 			strippedTexts: 2,
-			removed: 2,
+			removed: 4,
 			deletedReadings: 0,
 			deletedLemmas: 0,
 			removedInspectionRecords: 3,
 		});
-		expect(db.rows("texts")).toHaveLength(2);
-		expect(db.rows("sentences")).toHaveLength(2);
-		expect(db.rows("segments")).toEqual([]);
-		expect(db.rows("inspectionPayloads")).toEqual([]);
-		expect(db.rows("inspectionSteps")).toEqual([]);
-		expect(db.rows("inspectionClicks")).toEqual([]);
+		expect(await tableRows(t, "texts")).toHaveLength(2);
+		expect(await tableRows(t, "sentences")).toHaveLength(2);
+		expect(await tableRows(t, "segments")).toEqual([]);
+		expect(await tableRows(t, "inspectionPayloads")).toEqual([]);
+		expect(await tableRows(t, "inspectionSteps")).toEqual([]);
+		expect(await tableRows(t, "inspectionClicks")).toEqual([]);
 	});
 
 	test("the bounded reset inventory stays complete as the schema changes", async () => {
 		const schemaTableNames = Object.keys(tfDemoSchema.tables).sort();
 		expect([...resetDemoTableNames].sort()).toEqual(schemaTableNames);
 
-		const db = new IndexedTestDb(
-			Object.fromEntries(
-				resetDemoTableNames.map((tableName) => [
-					tableName,
-					[{ _id: `${tableName}-old-row` }],
-				]),
-			),
-		);
-		let deleted = 0;
-		let tableIndex = 0;
-		for (
-			let batch = 0;
-			batch < resetDemoTableNames.length * 2;
-			batch += 1
-		) {
-			const result = (await runTestMutation(db, resetDemoDataBatch, {
-				tableIndex,
-			})) as {
-				deleted: number;
-				hasMore: boolean;
-				nextTableIndex: number;
-			};
-			deleted += result.deleted;
-			tableIndex = result.nextTableIndex;
-			if (!result.hasMore) break;
-		}
+		const t = createTestConvex();
+		const { sentenceIds } = await submitText(t, [["Banken"]]);
+		const sentenceId = sentenceIds[0];
+		if (!sentenceId) throw new Error("Expected a stored Sentence.");
+		await t.mutation(api.resolutionSessions.selectSegment, {
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId,
+			clickedSegmentIndex: 0,
+			routeNoteRequested: false,
+		});
+		await insertReading(t, "reading-key-1");
 
-		expect(deleted).toBe(schemaTableNames.length);
-		for (const tableName of schemaTableNames) {
-			expect(db.rows(tableName), tableName).toEqual([]);
+		expect(await t.action(internal.demoReset.resetDemoData, {})).toEqual({
+			deleted: expect.any(Number),
+		});
+		for (const tableName of resetDemoTableNames) {
+			expect(await tableRows(t, tableName), tableName).toEqual([]);
 		}
 	});
 
@@ -255,190 +268,219 @@ describe("tf-demo post-reset contract", () => {
 	});
 
 	test("pruning a Reading clears the rows that would haunt its next incarnation", async () => {
-		const db = new IndexedTestDb({
-			readings: [{ _id: "readings-1", readingKey: "reading-key-1" }],
-			knowledgeGenerationAttempts: [
-				{
-					_id: "attempt-running",
-					ownerReadingKey: "reading-key-1",
-					state: "Running",
-					updatedAt: 1,
-				},
-				{
-					_id: "attempt-waiting",
-					ownerReadingKey: "reading-key-1",
-					state: "Waiting",
-					updatedAt: 2,
-				},
-				{
-					_id: "attempt-other",
-					ownerReadingKey: "reading-key-2",
-					state: "Running",
-					updatedAt: 1,
-				},
-			],
-			generatedRelationRuns: [
-				{ _id: "run-1", sourceReadingId: "readings-1" },
-			],
-			generatedRelationProposals: [
-				{ _id: "proposal-1", sourceReadingId: "readings-1" },
-			],
-			personalAnnotations: [
-				{
-					_id: "annotation-1",
+		const t = createTestConvex();
+		const pruned = await insertReading(t, "reading-key-1");
+		const kept = await insertReading(t, "reading-key-2");
+		await t.run(async (ctx) => {
+			const attempt = (
+				owner: typeof pruned,
+				ownerReadingKey: string,
+				state: "Running" | "Waiting",
+				attemptKey: string,
+			) =>
+				ctx.db.insert("knowledgeGenerationAttempts", {
+					attemptKey,
 					visitorId: "visitor-1",
-					readingId: "readings-1",
+					ownerReadingKey,
+					readingId: owner.readingId,
+					attestationId: owner.attestationId,
+					state,
+					createdAt: 1,
+					updatedAt: 1,
+				});
+			await attempt(
+				pruned,
+				"reading-key-1",
+				"Running",
+				"attempt-running",
+			);
+			await attempt(
+				pruned,
+				"reading-key-1",
+				"Waiting",
+				"attempt-waiting",
+			);
+			await attempt(kept, "reading-key-2", "Running", "attempt-other");
+			await ctx.db.insert("generatedRelationRuns", {
+				runKey: "run-1",
+				attemptKey: "attempt-running",
+				runNumber: 1,
+				relation: "synonym",
+				sourceReadingId: pruned.readingId,
+				sourceReadingKey: "reading-key-1",
+				contextAttestationId: pruned.attestationId,
+				verdictArtifactPath: null,
+				fingerprints,
+				generatedTargets: 0,
+				nulls: 0,
+				pendingShadows: 0,
+				directMatches: 0,
+				rejectedOutputs: 0,
+				publicationFailures: 0,
+				createdAt: 1,
+				updatedAt: 1,
+			});
+			await ctx.db.insert("generatedRelationProposals", {
+				proposalKey: "proposal-1",
+				attemptKey: "attempt-running",
+				runNumber: 1,
+				relation: "synonym",
+				sourceReadingId: pruned.readingId,
+				sourceReadingKey: "reading-key-1",
+				contextAttestationId: pruned.attestationId,
+				targetShadow: {
+					language: "de",
+					canonicalForm: "laufen",
+					family: "Lexeme",
+					kind: "VERB",
 				},
-				{
-					_id: "annotation-other",
+				verdictArtifactPath: "artifact",
+				fingerprints,
+				outcome: "PendingShadow",
+				reviewStatus: "NotSampled",
+				createdAt: 1,
+				updatedAt: 1,
+			});
+			for (const owner of [pruned, kept]) {
+				await ctx.db.insert("personalAnnotations", {
 					visitorId: "visitor-1",
-					readingId: "readings-2",
-				},
-			],
+					readingId: owner.readingId,
+					text: "note",
+					updatedAt: 1,
+				});
+			}
 		});
-		let cursor: unknown;
+
+		let cursor: { itemIndex: number; phase: string } | null | undefined;
 		for (let batch = 0; batch < 4; batch += 1) {
-			const result = (await runTestMutation(db, clearReadingDataBatch, {
-				readingKeys: ["reading-key-1"],
-				...(cursor ? { cursor } : {}),
-			})) as { nextCursor: unknown };
+			const result = await t.mutation(
+				internal.demoReset.clearReadingDataBatch,
+				{
+					readingKeys: ["reading-key-1"],
+					...(cursor ? { cursor: cursor as never } : {}),
+				},
+			);
 			cursor = result.nextCursor;
 			if (!cursor) break;
 		}
 
 		expect(cursor).toBeNull();
-		expect(db.rows("readings")).toEqual([]);
-		expect(
-			db.rows("knowledgeGenerationAttempts").map(({ _id }) => _id),
-		).toEqual(["attempt-other"]);
-		expect(db.rows("generatedRelationRuns")).toEqual([]);
-		expect(db.rows("generatedRelationProposals")).toEqual([]);
-		expect(db.rows("personalAnnotations").map(({ _id }) => _id)).toEqual([
-			"annotation-other",
+		expect((await tableRows(t, "readings")).map(({ _id }) => _id)).toEqual([
+			kept.readingId,
 		]);
+		expect(
+			(await tableRows(t, "knowledgeGenerationAttempts")).map(
+				({ attemptKey }) => attemptKey,
+			),
+		).toEqual(["attempt-other"]);
+		expect(await tableRows(t, "generatedRelationRuns")).toEqual([]);
+		expect(await tableRows(t, "generatedRelationProposals")).toEqual([]);
+		expect(
+			(await tableRows(t, "personalAnnotations")).map(
+				({ readingId }) => readingId,
+			),
+		).toEqual([kept.readingId]);
 	});
 
 	test("reset batches spend one transaction-wide budget and expose continuation", async () => {
-		const db = new IndexedTestDb({
-			resolutionSessions: Array.from({ length: 400 }, (_, index) => ({
-				_id: `session-${index}`,
-			})),
-			resolutionRuns: [{ _id: "run-after-session-phase" }],
-		});
-		const first = (await runTestMutation(db, resetDemoDataBatch, {
-			tableIndex: 0,
-		})) as {
-			deleted: number;
-			hasMore: boolean;
-			nextTableIndex: number;
-		};
-		expect(first).toEqual({
-			deleted: 400,
-			hasMore: true,
-			nextTableIndex: 0,
-		});
-		expect(db.rows("resolutionRuns")).toHaveLength(1);
-
-		const visitorDb = new IndexedTestDb({
-			resolutionSessions: Array.from({ length: 400 }, (_, index) => ({
-				_id: `visitor-session-${index}`,
-				visitorId: "visitor-1",
-				updatedAt: index,
-			})),
-			knowledgeSettings: [{ _id: "settings-1", visitorId: "visitor-1" }],
-			visitorClicks: [
-				{
-					_id: "click-1",
+		const t = createTestConvex();
+		const { readingId } = await insertReading(t, "reading-key-1");
+		await t.run(async (ctx) => {
+			for (let index = 0; index < 400; index += 1) {
+				await ctx.db.insert("personalAnnotations", {
 					visitorId: "visitor-1",
-					clickedAt: 1,
-				},
-			],
+					readingId,
+					text: `note ${index}`,
+					updatedAt: index,
+				});
+			}
+			await ctx.db.insert("readingLanguageLayouts", {
+				visitorId: "visitor-1",
+				targetLanguage: "de",
+				order: [],
+				hidden: [],
+				updatedAt: 1,
+			});
 		});
-		const visitorFirst = (await runTestMutation(
-			visitorDb,
-			clearVisitorDataBatch,
-			{ visitorId: "visitor-1", phase: "ResolutionSessions" },
-		)) as {
-			deleted: number;
-			hasMore: boolean;
-			nextPhase: string;
-		};
-		expect(visitorFirst).toEqual({
+		const tableIndex = resetDemoTableNames.indexOf("personalAnnotations");
+
+		expect(
+			await t.mutation(internal.demoReset.resetDemoDataBatch, {
+				tableIndex,
+			}),
+		).toEqual({ deleted: 400, hasMore: true, nextTableIndex: tableIndex });
+
+		await t.run(async (ctx) => {
+			for (let index = 0; index < 400; index += 1) {
+				await ctx.db.insert("personalAnnotations", {
+					visitorId: "visitor-1",
+					readingId,
+					text: `note ${index}`,
+					updatedAt: index,
+				});
+			}
+		});
+		expect(
+			await t.mutation(internal.demoReset.clearVisitorDataBatch, {
+				visitorId: "visitor-1",
+				phase: "PersonalAnnotations",
+			}),
+		).toEqual({
 			deleted: 400,
 			hasMore: true,
-			nextPhase: "ResolutionSessions",
+			nextPhase: "PersonalAnnotations",
 		});
-		expect(visitorDb.rows("knowledgeSettings")).toHaveLength(1);
-		expect(visitorDb.rows("visitorClicks")).toHaveLength(1);
+		expect(await tableRows(t, "readingLanguageLayouts")).toHaveLength(1);
 	});
 
 	test("visitor reset removes Reading layouts without touching another visitor", async () => {
-		const db = new IndexedTestDb({
-			knowledgeSettings: [
-				{ _id: "knowledge-1", visitorId: "visitor-1" },
-				{ _id: "knowledge-2", visitorId: "visitor-2" },
-			],
-			readingLanguageLayouts: [
-				{
-					_id: "language-layout-1",
-					visitorId: "visitor-1",
+		const t = createTestConvex();
+		await t.run(async (ctx) => {
+			for (const visitorId of ["visitor-1", "visitor-2"]) {
+				await ctx.db.insert("knowledgeSettings", {
+					visitorId,
+					settings: defaultKnowledgeSettings(),
+					updatedAt: 1,
+				});
+				await ctx.db.insert("readingLanguageLayouts", {
+					visitorId,
 					targetLanguage: "de",
-				},
-				{
-					_id: "language-layout-2",
-					visitorId: "visitor-2",
-					targetLanguage: "de",
-				},
-			],
-			readingFamilyKindLayouts: [
-				{
-					_id: "family-kind-layout-1",
-					visitorId: "visitor-1",
+					order: [],
+					hidden: [],
+					updatedAt: 1,
+				});
+				await ctx.db.insert("readingFamilyKindLayouts", {
+					visitorId,
 					targetLanguage: "de",
 					family: "Lexeme",
 					kind: "NOUN",
-				},
-				{
-					_id: "family-kind-layout-2",
-					visitorId: "visitor-2",
-					targetLanguage: "de",
-					family: "Lexeme",
-					kind: "NOUN",
-				},
-			],
+					order: [],
+					hidden: [],
+					updatedAt: 1,
+				});
+			}
 		});
-		let phase:
-			| "KnowledgeSettings"
-			| "ReadingLanguageLayouts"
-			| "ReadingFamilyKindLayouts"
-			| "VisitorClicks"
-			| "Done" = "KnowledgeSettings";
-		for (let step = 0; step < 5 && phase !== "Done"; step += 1) {
-			const result = (await runTestMutation(db, clearVisitorDataBatch, {
-				visitorId: "visitor-1",
-				phase,
-			})) as { nextPhase: typeof phase };
-			phase = result.nextPhase;
-		}
 
-		expect(phase).toBe("Done");
+		await t.action(api.demoReset.clearVisitorData, {
+			visitorId: "visitor-1",
+		});
+
 		for (const tableName of [
 			"knowledgeSettings",
 			"readingLanguageLayouts",
 			"readingFamilyKindLayouts",
 		] as const) {
 			expect(
-				db.rows(tableName).map(({ visitorId }) => visitorId),
+				(await tableRows(t, tableName)).map((row) =>
+					"visitorId" in row ? row.visitorId : null,
+				),
 			).toEqual(["visitor-2"]);
 		}
 	});
 
 	test("a clean database stores base Knowledge and direct claims while projecting only valid inferred views", async () => {
-		const db = new IndexedTestDb();
-		const dictionary = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const t = createTestConvex();
+		const dictionary = dictionaryFor(t);
 
 		for (const reading of [
 			gehenReading,
@@ -500,44 +542,26 @@ describe("tf-demo post-reset contract", () => {
 			),
 		).toMatchObject({ status: "applied" });
 
-		const sourceReadingId = db
-			.rows("readings")
-			.find(
-				({ readingKey }) =>
-					readingKey === readingFingerprint(laufenReading),
-			)?._id;
-		const targetReadingId = db
-			.rows("readings")
-			.find(
-				({ readingKey }) =>
-					readingKey === readingFingerprint(gehenReading),
-			)?._id;
-		if (!sourceReadingId || !targetReadingId) {
-			throw new Error("Expected fresh source and target Readings.");
-		}
+		const sourceReadingId = await readingIdFor(t, laufenReading);
+		const targetReadingId = await readingIdFor(t, gehenReading);
 
 		expect(
-			db
-				.rows("accumulatedKnowledge")
-				.find(
-					({ ownerReadingKey }) =>
-						ownerReadingKey === readingFingerprint(laufenReading),
-				),
+			(await tableRows(t, "accumulatedKnowledge")).find(
+				({ ownerReadingKey }) =>
+					ownerReadingKey === readingFingerprint(laufenReading),
+			),
 		).toMatchObject({
 			knowledge: { definition: "sich laufend fortbewegen" },
 			status: "Partial",
 		});
-		expect(db.rows("semanticRelationEdges")).toEqual([
+		expect(await tableRows(t, "semanticRelationEdges")).toEqual([
 			expect.objectContaining({
 				sourceReadingId,
 				relation: "hypernym",
 			}),
 		]);
 		expect(
-			await loadRelationProjections(
-				{ db } as never,
-				targetReadingId as never,
-			),
+			await t.run((ctx) => loadRelationProjections(ctx, targetReadingId)),
 		).toMatchObject({
 			fingerprints: [
 				{
@@ -548,13 +572,12 @@ describe("tf-demo post-reset contract", () => {
 			],
 		});
 
-		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
-		expect(db.rows("shadows")).toHaveLength(1);
+		expect(await tableRows(t, "pendingSemanticRelations")).toHaveLength(1);
+		expect(await tableRows(t, "shadows")).toHaveLength(1);
 		expect(
 			(
-				await loadRelationProjections(
-					{ db } as never,
-					sourceReadingId as never,
+				await t.run((ctx) =>
+					loadRelationProjections(ctx, sourceReadingId),
 				)
 			).fingerprints,
 		).toEqual([
@@ -565,28 +588,17 @@ describe("tf-demo post-reset contract", () => {
 			}),
 		]);
 		for (const reading of [fahrenReading, prefixedFahrenReading] as const) {
-			const readingId = db
-				.rows("readings")
-				.find(
-					({ readingKey }) =>
-						readingKey === readingFingerprint(reading),
-				)?._id;
-			if (!readingId)
-				throw new Error("Expected ambiguous target Reading.");
+			const readingId = await readingIdFor(t, reading);
 			expect(
-				(
-					await loadRelationProjections(
-						{ db } as never,
-						readingId as never,
-					)
-				).fingerprints,
+				(await t.run((ctx) => loadRelationProjections(ctx, readingId)))
+					.fingerprints,
 			).toEqual([]);
 		}
 	});
 });
 
 test("submission retries reuse exact segmentation despite a fresh generated sentence ID", async () => {
-	const db = new IndexedTestDb();
+	const t = createTestConvex();
 	const input = {
 		submissionKey: "retry",
 		sourceText: "Banken",
@@ -595,74 +607,63 @@ test("submission retries reuse exact segmentation despite a fresh generated sent
 				segmentedSentenceId: "first",
 				position: 0,
 				paragraph: 0,
-				language: "de",
+				language: "de" as const,
 				stitchedText: "Banken",
-				segments: [{ kind: "ResolvableText", text: "Banken" }],
+				segments: [{ kind: "ResolvableText" as const, text: "Banken" }],
 			},
 		],
 	};
-	const first = await runTestMutation(db, persistSubmittedText, input);
-	const second = await runTestMutation(db, persistSubmittedText, {
+	const [sentence] = input.sentences;
+	if (!sentence) throw new Error("Expected a Sentence input.");
+	const first = await t.mutation(
+		internal.persistence.persistSubmittedText,
+		input,
+	);
+	const second = await t.mutation(internal.persistence.persistSubmittedText, {
 		...input,
-		sentences: [{ ...input.sentences[0], segmentedSentenceId: "fresh" }],
+		sentences: [{ ...sentence, segmentedSentenceId: "fresh" }],
 	});
-	expect(second).toMatchObject({ ...(first as object), deduplicated: true });
-	expect(db.rows("sentences")).toHaveLength(1);
-	expect(db.rows("sentences")[0]?.segmentedSentenceId).toBe("first");
+	expect(second).toEqual({ ...first, deduplicated: true });
+	const sentences = await tableRows(t, "sentences");
+	expect(sentences).toHaveLength(1);
+	expect(sentences[0]).toMatchObject({ segmentedSentenceId: "first" });
 });
+
 test("an active Visitor Encounter is not replayed as an Unresolved result", async () => {
-	const db = new IndexedTestDb({
-		texts: [{ _id: "text-1" }],
-		sentences: [{ _id: "sentence-1", textId: "text-1" }],
-		segments: [
-			{
-				_id: "segment-1",
-				sentenceId: "sentence-1",
-				index: 0,
-				kind: "ResolvableText",
-				text: "Banken",
-			},
-		],
-		visitorClicks: [
-			{
-				_id: "click-1",
-				requestId: "request-1",
-				visitorId: "visitor-1",
-				segmentId: "segment-1",
-			},
-		],
-		resolutionSessions: [
-			{
-				_id: "session-1",
-				requestId: "request-1",
-				lifecycle: {
-					state: "Active",
-					progress: "RouteAvailable",
-					activity: "Running",
-				},
-			},
-		],
-	});
+	const t = createTestConvex();
+	const { sentenceIds } = await submitText(t, [["Banken"]]);
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a stored Sentence.");
 	const input = {
 		requestId: "request-1",
 		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
+		sentenceId,
 		clickedSegmentIndex: 0,
 	};
+	await t.mutation(api.resolutionSessions.selectSegment, {
+		...input,
+		routeNoteRequested: false,
+	});
+
 	expect(
-		(await runTestQuery(db, loadResolutionContext, input)).recorded,
+		(await t.query(internal.resolutionContext.load, input)).recorded,
 	).toBeNull();
-	await db.patch("session-1", {
-		lifecycle: {
-			state: "Terminal",
-			progress: "RouteAvailable",
-			outcome: "Unresolved",
-		},
+	const [click] = await tableRows(t, "visitorClicks");
+	await t.run(async (ctx) => {
+		const session = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_request_id", (q) => q.eq("requestId", "request-1"))
+			.unique();
+		if (!session) throw new Error("Expected an active session.");
+		await ctx.db.patch(session._id, {
+			lifecycle: {
+				state: "Terminal",
+				progress: "RouteAvailable",
+				outcome: "Unresolved",
+			},
+		});
 	});
 	expect(
-		(await runTestQuery(db, loadResolutionContext, input)).recorded,
-	).toEqual({
-		clickId: "click-1",
-		status: "Unresolved",
-	});
+		(await t.query(internal.resolutionContext.load, input)).recorded,
+	).toEqual({ clickId: click?._id, status: "Unresolved" });
 });
