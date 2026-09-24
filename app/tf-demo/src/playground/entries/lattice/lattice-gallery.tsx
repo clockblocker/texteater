@@ -26,9 +26,9 @@ import {
 } from "lego";
 import { Fragment, type ReactNode, useEffect, useMemo, useState } from "react";
 
-import latticeFixtures from "../../../../../../battery/dumgen/prototypes/intake/fixtures/lattice.json";
 import type { EntryRoute } from "../../playground-router";
 import { Stage } from "../frames";
+import latticeFixtures from "./lattice.json";
 
 /** Gold for one Lexeme Target, keyed by offset (issue 495). */
 type GoldTarget = {
@@ -44,7 +44,7 @@ type GoldPhraseme = {
 	readonly kind: string;
 	readonly words: readonly number[];
 };
-/** One fixture as `prototypes/intake/fixtures.ts` emits it: the production analysis and its gold. */
+/** One fixture as dumgen's `prototypes/intake/fixtures.ts` emits it: the production analysis and its gold. */
 type Fixture = {
 	readonly analysis: SegmentedSentence;
 	readonly gold: {
@@ -1012,7 +1012,8 @@ function Legend({
 				A dotted outline marks a piece of a fused word. Selecting a word
 				inside a Phraseme lights up the whole Phraseme. Produced {at} by{" "}
 				<Mono>{design}</Mono>; re-emit with{" "}
-				<Mono>bun prototypes/intake/fixtures.ts</Mono> in dumgen.
+				<Mono>bun prototypes/intake/fixtures.ts</Mono> in dumgen,
+				passing this entry's <Mono>lattice.json</Mono>.
 			</p>
 		</div>
 	);

@@ -211,8 +211,9 @@ candidates and live latency per Identity State.
 
 ## Playground
 
-`/playground/lattice/<sentence id>` renders `prototypes/intake/fixtures/lattice.json`,
+`/playground/lattice/<sentence id>` renders tf-demo's `lattice.json`,
 emitted by the production operation for the 16 corpus sentences, through the
 package's Resolution Selector: a click lights up the largest unit, a
 Phraseme's panel lists its member words and descends to each, a word's panel
-ascends to its Phraseme. Re-emit with `bun prototypes/intake/fixtures.ts`.
+ascends to its Phraseme. Re-emit with `bun prototypes/intake/fixtures.ts
+<output path>`.

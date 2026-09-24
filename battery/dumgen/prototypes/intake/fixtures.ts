@@ -3,10 +3,10 @@
  * run through the production `analyzeSentence` operation (Dumgen ADR 0006)
  * and emitted with their two-layer gold, scored by the production scorer.
  *
- *   zsh -ic 'bun prototypes/intake/fixtures.ts'
+ *   zsh -ic 'bun prototypes/intake/fixtures.ts ../../app/tf-demo/src/playground/entries/lattice/lattice.json'
  *
- * Output: `prototypes/intake/fixtures/lattice.json`, which the tf-demo
- * playground entry `lattice` imports. The DTO and the Resolution Selector
+ * The argument is the output path. The tf-demo playground entry `lattice`
+ * owns that file and imports it. The DTO and the Resolution Selector
  * are the package's own (`dumgen` and `dumgen/types`); nothing here is a
  * prototype of the design any more, only a way to look at it.
  */
@@ -30,6 +30,9 @@ export type Fixture = {
 	readonly note: string;
 	readonly produced: { readonly design: string; readonly at: string };
 };
+
+const [outputPath] = process.argv.slice(2);
+if (!outputPath) throw Error("Pass the lattice fixture output path");
 
 const dumgen = createDumgen({
 	judge: createTypeSafeExecutor({
@@ -130,10 +133,7 @@ for (const spec of fixtureSentences) {
 		},
 	});
 }
-await save(
-	new URL("./fixtures/lattice.json", import.meta.url).pathname,
-	fixtures,
-);
+await save(outputPath, fixtures);
 const scores = fixtures.map((fixture) => ({
 	id: fixture.analysis.sentenceId,
 	...scoreAnalysis(fixture.analysis, fixture.gold),

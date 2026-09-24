@@ -58,7 +58,7 @@ click-time design can even detect.
     zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus grammar --roles --runs 2'
     zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --shape questions --concurrency 3 --runs 2'
     zsh -ic 'bun prototypes/intake/lab.ts --grouping anchored --route extended --route-policy groupVote --threshold 0.6 --corpus lemma --identity --identity-shape rubric --runs 2'
-    zsh -ic 'bun prototypes/intake/fixtures.ts'
+    zsh -ic 'bun prototypes/intake/fixtures.ts ../../app/tf-demo/src/playground/entries/lattice/lattice.json'
 
 Every run stores its raw answers under `/tmp/intake-*.json`. `--from <file>`
 re-scores a stored run under a different threshold or route policy without
@@ -376,10 +376,10 @@ that shape.
 ## Playground fixtures (2026-09-21)
 
 `fixtures.ts` runs the 16 sentences in `fixtures/sentences.ts` through the
-production `analyzeSentence` operation and writes `fixtures/lattice.json`:
-one Sentence Analysis per sentence (offset-keyed Segments, Lexeme Targets
-with roles, Route Mass and Identity Mass, Phraseme Targets) with the gold
-for both layers keyed by offset. The DTO and the Resolution Selector are the
+production `analyzeSentence` operation and writes the tf-demo playground's
+`lattice.json`: one Sentence Analysis per sentence (offset-keyed Segments,
+Lexeme Targets with roles, Route Mass and Identity Mass, Phraseme Targets)
+with the gold for both layers keyed by offset. The DTO and the Resolution Selector are the
 package's own (`dumgen`, `dumgen/types`); the tf-demo playground entry
 `lattice` imports them and renders nothing the selector did not derive. The
 same 16 sentences are the `sentence-analysis/de` corpus.
