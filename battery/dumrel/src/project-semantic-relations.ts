@@ -21,16 +21,32 @@ const algebra = {
 } as const satisfies Record<SemanticRelation, SemanticRelation>;
 const relationOrder = Object.keys(algebra);
 
-// Structural indexing is private to this projection, not a persistent ID codec.
-function key(value: unknown): string {
-	if (Array.isArray(value)) return `[${value.map(key).join(",")}]`;
-	if (value !== null && typeof value === "object")
-		return `{${Object.entries(value)
-			.filter(([, member]) => member !== undefined)
-			.sort(([left], [right]) => compare(left, right))
-			.map(([name, member]) => `${JSON.stringify(name)}:${key(member)}`)
-			.join(",")}}`;
-	return JSON.stringify(value);
+/**
+ * Structural indexing private to one projection, not a persistent ID codec.
+ * Keys are cached by object identity, which holds because a projection never
+ * mutates the values it indexes.
+ */
+function structuralKeys() {
+	const cache = new WeakMap<object, string>();
+	function key(value: unknown): string {
+		if (value === null || typeof value !== "object")
+			return JSON.stringify(value);
+		const known = cache.get(value);
+		if (known !== undefined) return known;
+		const computed = Array.isArray(value)
+			? `[${value.map(key).join(",")}]`
+			: `{${Object.entries(value)
+					.filter(([, member]) => member !== undefined)
+					.sort(([left], [right]) => compare(left, right))
+					.map(
+						([name, member]) =>
+							`${JSON.stringify(name)}:${key(member)}`,
+					)
+					.join(",")}}`;
+		cache.set(value, computed);
+		return computed;
+	}
+	return key;
 }
 
 function compare(left: string, right: string): number {
@@ -52,6 +68,10 @@ function compare(left: string, right: string): number {
  * meronym, holonym), then structural target key, independently of input order.
  * No inputs are mutated and no extra Readings are invented.
  *
+ * With `options.source`, only that Reading's edges are projected: the same
+ * edges the whole projection holds for it, without inferring every other
+ * source's. The source must be supplied in the inventory.
+ *
  * @remarks
  * Lemma targets temporarily allow every supplied Reading of that Lemma to
  * participate, including unrelated Readings. A Lemma without supplied Readings
@@ -62,9 +82,11 @@ function compare(left: string, right: string): number {
  */
 export function projectSemanticRelations(
 	entries: readonly ReadingWithKnowledge[],
+	options: { readonly source?: Dumling.Reading } = {},
 ):
 	| { success: true; value: readonly SemanticRelationProjection[] }
 	| { success: false; error: ParsingError } {
+	const key = structuralKeys();
 	const parsed = parseProjectionShape(entries);
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed };
@@ -95,6 +117,31 @@ export function projectSemanticRelations(
 		const lemma = key(entry.reading.lemma);
 		byLemma.set(lemma, [...(byLemma.get(lemma) ?? []), entry.reading]);
 	}
+	/** The requested source's structural key, once it is in the inventory. */
+	function parseSource(source: Dumling.Reading): string | ParsingError {
+		const normalized = parseProjectionShape([
+			{ reading: source, knowledge: {} },
+		]);
+		if (normalized instanceof ParsingError)
+			return new ParsingError(
+				normalized.issues.map((issue) => ({
+					...issue,
+					path: ["source", ...issue.path.slice(2)],
+				})),
+			);
+		const reading = normalized[0]?.reading;
+		const identity = reading ? key(reading) : undefined;
+		return identity !== undefined && inventory.has(identity)
+			? identity
+			: conflict(
+					["source"],
+					"Projection source must be supplied in the inventory",
+				);
+	}
+	const requested = options.source ? parseSource(options.source) : undefined;
+	if (requested instanceof ParsingError)
+		return { success: false, error: requested };
+	const only: string | undefined = requested;
 	const edges = new Map<string, SemanticRelationProjection>();
 	const edgeKey = (edge: SemanticRelationProjection) =>
 		JSON.stringify([key(edge.source), edge.relation, key(edge.target)]);
@@ -106,6 +153,12 @@ export function projectSemanticRelations(
 	function add(edge: SemanticRelationProjection) {
 		const identity = edgeKey(edge);
 		if (!edges.has(identity)) edges.set(identity, edge);
+	}
+	function targetsReadings(source: Dumling.Reading) {
+		return (
+			inventory.get(key(source))?.knowledge.semanticRelations
+				?.targetKind === "reading"
+		);
 	}
 	for (const [index, { reading, knowledge }] of parsed.entries()) {
 		const relations = knowledge.semanticRelations;
@@ -157,11 +210,7 @@ export function projectSemanticRelations(
 		add({
 			source,
 			relation,
-			target:
-				inventory.get(key(source))?.knowledge.semanticRelations
-					?.targetKind === "reading"
-					? target
-					: target.lemma,
+			target: targetsReadings(source) ? target : target.lemma,
 			provenance: "inferred",
 		});
 	}
@@ -203,27 +252,52 @@ export function projectSemanticRelations(
 		});
 		for (const member of members) components.set(member, readings);
 	}
+	/** The substitution sources of an edge: its synonym component, or just the requested source. */
+	function sourcesFor(edge: SemanticRelationProjection) {
+		const component = components.get(key(edge.source)) ?? [];
+		if (only === undefined) return component;
+		const source = inventory.get(only)?.reading;
+		return source && components.get(only) === component ? [source] : [];
+	}
 	for (const edge of base) {
 		if (edge.relation === "nearSynonym" || edge.relation === "nearAntonym")
 			continue;
 		const targets = targetsFor(edge.target);
-		for (const source of components.get(key(edge.source)) ?? []) {
+		for (const source of sourcesFor(edge)) {
+			const readingMode = targetsReadings(source);
 			if (
 				targets.length === 0 &&
 				edge.target.unitKind === "Lemma" &&
-				inventory.get(key(source))?.knowledge.semanticRelations
-					?.targetKind !== "reading"
+				!readingMode
 			)
 				add({ ...edge, source, provenance: "inferred" });
-			for (const target of targets)
-				for (const member of components.get(key(target)) ?? [])
+			// Members of one component, or Readings of one Lemma in Lemma
+			// mode, infer the same edge; each is inferred once.
+			const seenComponents = new Set<Dumling.Reading[]>();
+			const seenLemmas = new Set<string>();
+			for (const target of targets) {
+				const component = components.get(key(target)) ?? [];
+				if (seenComponents.has(component)) continue;
+				seenComponents.add(component);
+				for (const member of component) {
+					if (!readingMode) {
+						const lemma = key(member.lemma);
+						if (seenLemmas.has(lemma)) continue;
+						seenLemmas.add(lemma);
+					}
 					infer(source, edge.relation, member);
+				}
+			}
 		}
 	}
 	return {
 		success: true,
 		value: [...edges.values()]
-			.filter((edge) => edge.provenance === "direct" || !isSelf(edge))
+			.filter(
+				(edge) =>
+					(only === undefined || key(edge.source) === only) &&
+					(edge.provenance === "direct" || !isSelf(edge)),
+			)
 			.sort(
 				(left, right) =>
 					compare(key(left.source), key(right.source)) ||

@@ -1620,7 +1620,7 @@ describe("Reading Note relation neighbourhood caps", () => {
 				}),
 			]),
 		});
-	}, 30_000); // Projecting a neighbourhood of fifty Readings takes seconds.
+	});
 
 	test("a neighbourhood with more edges than the cap truncates the note instead of throwing", async () => {
 		const t = createTestConvex();

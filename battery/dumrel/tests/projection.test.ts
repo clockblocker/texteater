@@ -358,3 +358,109 @@ test("invalid inventory fails as a whole with contextual paths", () => {
 		expect(result).not.toHaveProperty("value");
 	}
 });
+
+test("a requested source gets exactly its edges from the whole projection", () => {
+	const entries = [
+		{
+			reading: dog,
+			knowledge: {
+				semanticRelations: {
+					synonym: [hound.lemma],
+					hypernym: [animal.lemma],
+					nearAntonym: [brute.lemma],
+				},
+			},
+		},
+		{
+			reading: hound,
+			knowledge: { semanticRelations: { hypernym: [animal.lemma] } },
+		},
+		{ reading: animal, knowledge: {} },
+		{
+			reading: brute,
+			knowledge: {
+				semanticRelations: { targetKind: "reading", synonym: [animal] },
+			},
+		},
+	] as const;
+	const whole = project(entries);
+	for (const { reading } of entries) {
+		const result = projectSemanticRelations(entries, { source: reading });
+		if (!result.success) throw result.error;
+		expect(result.value).toEqual(
+			whole.filter(
+				(edge) =>
+					edge.source.lemma.canonicalForm ===
+						reading.lemma.canonicalForm &&
+					edge.source.emojiDescription === reading.emojiDescription,
+			),
+		);
+	}
+	const missing = projectSemanticRelations(entries, {
+		source: reading("Katze"),
+	});
+	expect(missing.success).toBe(false);
+	if (!missing.success)
+		expect(missing.error.issues[0]?.path).toEqual(["source"]);
+});
+
+// Convex allows a query one second of user code; a relation neighbourhood of
+// fifty Readings must project in a small share of it.
+function projectedWithinBudget(
+	entries: readonly Dumrel.ReadingWithKnowledge[],
+) {
+	const started = performance.now();
+	const result = projectSemanticRelations(entries);
+	expect(performance.now() - started).toBeLessThan(200);
+	if (!result.success) throw result.error;
+	return result.value;
+}
+
+test("fifty Readings of one synonym Lemma project within budget", () => {
+	const source = {
+		reading: dog,
+		knowledge: { semanticRelations: { synonym: [animal.lemma] } },
+	};
+	const senses = Array.from({ length: 50 }, (_, index) => ({
+		reading: reading("Tier", String.fromCodePoint(0x1f400 + index)),
+		knowledge: {},
+	}));
+	expect(projectedWithinBudget([source, ...senses])).toHaveLength(51);
+});
+
+test("a synonym component with hundreds of edges projects within budget", () => {
+	const synonyms = Array.from({ length: 5 }, (_, index) =>
+		reading(`Hund${index}`),
+	);
+	const hypernyms = (prefix: string, count: number) =>
+		Array.from(
+			{ length: count },
+			(_, index) => reading(`${prefix}${index}`).lemma,
+		);
+	const entries = [
+		{
+			reading: dog,
+			knowledge: {
+				semanticRelations: {
+					synonym: synonyms.map((synonym) => synonym.lemma),
+					hypernym: hypernyms("Quelle", 10),
+				},
+			},
+		},
+		...synonyms.map((synonym, index) => ({
+			reading: synonym,
+			knowledge: {
+				semanticRelations: {
+					hypernym: hypernyms(`Ober${index}-`, 49),
+				},
+			},
+		})),
+	];
+	expect(
+		projectedWithinBudget(entries).filter(
+			(edge) =>
+				edge.source.lemma.canonicalForm === "Hund" &&
+				edge.relation === "hypernym",
+		),
+	).toHaveLength(10 + 5 * 49);
+});
