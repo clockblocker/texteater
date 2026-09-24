@@ -1,15 +1,13 @@
 import type { Infer } from "convex/values";
 import { splitInSentences } from "../../../server/sentenceSplitting";
+import { MAX_SEGMENTS_PER_SENTENCE } from "../../../server/storedSegments";
 import {
 	assertTextSubmissionWithinLimits,
 	MAX_SOURCE_SENTENCES,
 } from "../../../server/textSubmissionLimits";
 import type { Id } from "../../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../../_generated/server";
-import {
-	loadStoredSegments,
-	MAX_SEGMENTS_PER_SENTENCE,
-} from "../../model/storedSegments";
+import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	type sentenceInputValidator,
 	visitorError,

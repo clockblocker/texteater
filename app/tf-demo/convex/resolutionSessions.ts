@@ -1,5 +1,6 @@
 import type { GenericTableInfo, OrderedQuery } from "convex/server";
 import { v } from "convex/values";
+import { inspectionJson } from "../server/inspectionPayload";
 import { internal } from "./_generated/api";
 import {
 	internalMutation,
@@ -8,7 +9,6 @@ import {
 	query,
 } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
-import { inspectionJson } from "./model/inspection";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { requireClickableSegment } from "./model/resolutionLookup";
 import {

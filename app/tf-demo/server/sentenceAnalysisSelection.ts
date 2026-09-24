@@ -6,10 +6,7 @@ import {
 	targetOf,
 } from "dumgen";
 import type { SentenceAnalysis } from "dumgen/types";
-import {
-	type StoredSegment,
-	storedSegmentRanges,
-} from "../convex/model/storedSegments";
+import { type StoredSegment, storedSegmentRanges } from "./storedSegments";
 
 /** Selection reads offsets, which a stored Segment's text alone determines. */
 export type StoredSegmentForSelection = Pick<

@@ -3,7 +3,7 @@ import type { SentenceAnalysis } from "dumgen/types";
 import {
 	encounterSentenceOf,
 	storedSegmentsOf,
-} from "../convex/model/storedSegments";
+} from "../server/storedSegments";
 
 const piece = (
 	offset: number,

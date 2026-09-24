@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { spellingOf } from "../server/storedSegments";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
@@ -8,7 +9,6 @@ import {
 	loadSentenceAnalysis,
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
-import { spellingOf } from "./model/storedSegments";
 import {
 	languageValidator,
 	lemmaValueValidator,

@@ -1,13 +1,10 @@
 import { governedPrepositionsAt } from "dumgen/authored";
 import type { GovernedPrepositionDraft } from "dumgen/types";
 import {
-	type StoredSegment,
-	storedSegmentRanges,
-} from "../convex/model/storedSegments";
-import {
 	fromStoredSentenceAnalysis,
 	type StoredSentenceAnalysis,
 } from "./sentenceAnalysisStorage";
+import { type StoredSegment, storedSegmentRanges } from "./storedSegments";
 
 type StoredSentence = {
 	readonly stitchedText: string;

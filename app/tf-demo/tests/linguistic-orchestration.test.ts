@@ -22,7 +22,6 @@ import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
-import type { StoredSegment } from "../convex/model/storedSegments";
 import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
 import {
 	createInspectionCapture,
@@ -38,6 +37,7 @@ import {
 } from "../server/linguisticOrchestration";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { toStoredSentenceAnalysis } from "../server/sentenceAnalysisStorage";
+import type { StoredSegment } from "../server/storedSegments";
 import {
 	MAX_SOURCE_SENTENCE_CHARACTERS,
 	MAX_SOURCE_SENTENCES,

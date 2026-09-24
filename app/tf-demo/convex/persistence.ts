@@ -9,6 +9,7 @@ import {
 	parseGermanAttestation,
 	parseGermanReading,
 } from "../server/operationalParsing";
+import { spellingOf } from "../server/storedSegments";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
@@ -34,7 +35,6 @@ import {
 	requireCommittingSession,
 	settleResolutionSession,
 } from "./model/resolutionSessions";
-import { spellingOf } from "./model/storedSegments";
 import {
 	occurrenceAttestationInputValidator,
 	readingDecisionValidator,

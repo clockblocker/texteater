@@ -2,15 +2,15 @@ import {
 	parseGermanAttestation,
 	parseGermanReading,
 } from "../../server/operationalParsing";
+import {
+	encounterSentenceOf,
+	MAX_SEGMENTS_PER_SENTENCE,
+	spellingOf,
+} from "../../server/storedSegments";
 
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
-import {
-	encounterSentenceOf,
-	loadStoredSegments,
-	MAX_SEGMENTS_PER_SENTENCE,
-	spellingOf,
-} from "./storedSegments";
+import { loadStoredSegments } from "./storedSegments";
 
 type ServerCtx = QueryCtx | MutationCtx;
 

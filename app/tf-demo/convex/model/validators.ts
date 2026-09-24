@@ -145,7 +145,7 @@ export const storedSegmentInputValidator = v.object({
 	surface: v.optional(v.string()),
 });
 
-/** A stored Segment at its storage key; see model/storedSegments.ts. */
+/** A stored Segment at its storage key; see server/storedSegments.ts. */
 export const storedSegmentValidator = storedSegmentInputValidator.extend({
 	index: v.number(),
 });

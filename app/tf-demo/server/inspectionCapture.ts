@@ -5,11 +5,11 @@ import * as Exit from "effect/Exit";
 import * as Option from "effect/Option";
 import * as Runtime from "effect/Runtime";
 import * as Tracer from "effect/Tracer";
-import {
-	type CapturedInspectionStep,
-	type InspectionStep,
-	inspectionJson,
+import type {
+	CapturedInspectionStep,
+	InspectionStep,
 } from "../convex/model/inspection";
+import { inspectionJson } from "./inspectionPayload";
 
 const OWNER = "inspection.owner";
 const INPUT = "inspection.input";

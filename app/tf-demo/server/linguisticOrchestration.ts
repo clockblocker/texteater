@@ -20,14 +20,6 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
-import {
-	assertStoredSentence,
-	type EncounterSentence,
-	encounterSentenceOf,
-	type StoredSegment,
-	type StoredSegmentValue,
-	storedSegmentsOf,
-} from "../convex/model/storedSegments";
 import { inspectionStep } from "./inspectionCapture";
 import { analysisOutcomeOf, type IntakeRunRecorder } from "./intakeRun";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
@@ -39,6 +31,14 @@ import {
 	selectAnalysisTarget,
 } from "./sentenceAnalysisSelection";
 import { splitInParagraphs } from "./sentenceSplitting";
+import {
+	assertStoredSentence,
+	type EncounterSentence,
+	encounterSentenceOf,
+	type StoredSegment,
+	type StoredSegmentValue,
+	storedSegmentsOf,
+} from "./storedSegments";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /**

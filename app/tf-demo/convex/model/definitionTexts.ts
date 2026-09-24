@@ -2,10 +2,9 @@ import type { FunctionReference } from "convex/server";
 import { makeFunctionReference } from "convex/server";
 
 import type { Infer } from "convex/values";
-
+import { MAX_SEGMENTS_PER_SENTENCE } from "../../server/storedSegments";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
-import { MAX_SEGMENTS_PER_SENTENCE } from "./storedSegments";
 import type { segmentInputValidator } from "./validators";
 
 const materializeDefinitionText = makeFunctionReference<

@@ -1,16 +1,14 @@
 import { expect, test } from "bun:test";
 import type { OperationTrace } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import {
-	inspectionJson,
-	inspectionPayloadChunks,
-} from "../convex/model/inspection";
+import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
 	createInspectionCapture,
 	inspected,
 	inspectionStep,
 	spanHops,
 } from "../server/inspectionCapture";
+import { inspectionJson } from "../server/inspectionPayload";
 
 test("capture preserves repeated linguistic values and redacts credentials", () => {
 	const lemma = { canonicalForm: "Bank" };
