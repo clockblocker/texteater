@@ -6,7 +6,7 @@ import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames, STRIP_SEGMENT_BATCH } from "../convex/demoReset";
-import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
+import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";

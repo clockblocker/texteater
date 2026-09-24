@@ -3,7 +3,7 @@ import { deriveNounArticle } from "dumgen/authored";
 import { parseGermanSurface } from "../../server/operationalParsing";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
-import { materializeGrammaticalComponent } from "../dumdictStorage/transaction";
+import { materializeGrammaticalComponent } from "../dumdictTransaction";
 import { surfaceValue } from "./occurrenceAttestations";
 
 /** Re-keys grammar without dropping old destinations. Collisions retain an ID redirect. */

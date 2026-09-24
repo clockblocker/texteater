@@ -1,4 +1,4 @@
-import { MAX_PLANNED_CHANGES } from "../dumdictStorage/storage";
+import { MAX_PLANNED_CHANGES } from "../dumdictTransaction";
 
 /**
  * Relation targets and pending proposals one publication starts with. Each

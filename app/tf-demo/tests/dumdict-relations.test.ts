@@ -16,10 +16,12 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
-import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
-import { dictionaryPlanResult } from "../convex/dumdictStorage/dictionaryPlan";
-import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage/transaction";
-import { createDumdictTransaction } from "../convex/dumdictTransaction";
+import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import {
+	applyDumdictPlanInTransaction,
+	createDumdictTransaction,
+	dictionaryPlanResult,
+} from "../convex/dumdictTransaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {

@@ -6,8 +6,10 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import { type MutationCtx, mutation } from "./_generated/server";
-import { completeAuthoredComponentKnowledge } from "./dumdictStorage/transaction";
-import { createDumdictTransaction } from "./dumdictTransaction";
+import {
+	completeAuthoredComponentKnowledge,
+	createDumdictTransaction,
+} from "./dumdictTransaction";
 import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
 import { visitorError } from "./model/validators";
 import { reviewedAlternatives } from "./modules/notes/relations";

@@ -3,8 +3,10 @@ import { directSemanticRelationValues } from "dumrel";
 
 import type { Id } from "./_generated/dataModel";
 import { type MutationCtx, mutation } from "./_generated/server";
-import { DICTIONARY_REVISION } from "./dumdictStorage/storage";
-import { createDumdictTransaction } from "./dumdictTransaction";
+import {
+	createDumdictTransaction,
+	DICTIONARY_REVISION,
+} from "./dumdictTransaction";
 import {
 	descriptorFromStoredShadow,
 	pendingShadowDescriptor,

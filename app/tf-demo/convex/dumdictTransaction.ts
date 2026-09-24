@@ -28,6 +28,25 @@ import { applyDumdictPlanInTransaction } from "./dumdictStorage/transaction";
 import { pendingLocatorIndexKey } from "./model/dumdictPendingIndexes";
 import type { dictionaryPlanValidator } from "./model/validators";
 
+/**
+ * The transaction-local pieces a host write uses beside the workflow methods:
+ * the commit budget and the revision a request carries, the Dictionary
+ * lookups it branches on, the reviewed-component writes outside a planned
+ * commit, and the applier for a plan built elsewhere.
+ */
+export { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
+export {
+	DICTIONARY_REVISION,
+	findReadingByKey,
+	findSurface,
+	MAX_PLANNED_CHANGES,
+} from "./dumdictStorage/storage";
+export {
+	applyDumdictPlanInTransaction,
+	completeAuthoredComponentKnowledge,
+	materializeGrammaticalComponent,
+} from "./dumdictStorage/transaction";
+
 export type DumdictTransactionPlan = Infer<typeof dictionaryPlanValidator>;
 
 /** Outcome of planning and committing one dictionary workflow in the host transaction. */
