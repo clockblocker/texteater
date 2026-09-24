@@ -382,6 +382,65 @@ export function leanFor(
 	return Math.max(max, Math.min(0, dx * perPx));
 }
 
+/* ----------------------------------------------------------- deck swipe */
+
+/**
+ * A Deck swiped left moves as one thing. The Card under the finger leads
+ * and every other Card follows at a share of its travel, a little less
+ * for each Card further from it, so the whole Deck trails after the hand
+ * rather than one Card leaving it.
+ *
+ * It does not fade while it goes. Each Card is its own layer, so a Deck
+ * at partial opacity shows every Card behind through the one in front.
+ */
+export const DECK_FOLLOW = 0.9;
+export const DECK_FOLLOW_FALLOFF = 0.12;
+/** No Card trails at less than this share, however deep in the Deck. */
+const DECK_FOLLOW_MIN = 0.5;
+
+/** The share of the lead Card's travel a Card `distance` ranks away follows at. */
+export function deckFollowFor(
+	distance: number,
+	follow = DECK_FOLLOW,
+	falloff = DECK_FOLLOW_FALLOFF,
+): number {
+	return Math.max(DECK_FOLLOW_MIN, follow - falloff * (distance - 1));
+}
+
+/**
+ * What the trailing Cards ride to their share. Their lag behind the lead
+ * Card is the follow-through: the Deck has weight, the hand is pulling it.
+ * No `fromRest`: the target moves every frame and each retarget has to
+ * keep the speed it already has.
+ */
+export const DECK_FOLLOW_SPRING = spring(700, 45);
+
+/**
+ * The give in a swipe pulled right, or off its axis: the Deck moves a
+ * little and resists more the further it is pulled, and never goes past
+ * `SWIPE_RUBBER_PX`. The curve is iOS's scroll overshoot.
+ */
+export const SWIPE_RUBBER_PX = 40;
+
+export function rubberBand(d: number, limit = SWIPE_RUBBER_PX): number {
+	return Math.sign(d) * limit * (1 - 1 / ((Math.abs(d) / limit) * 0.55 + 1));
+}
+
+/**
+ * How far the finger may pull off the swipe, up, down or back right past
+ * where it started, before the Card tears loose: the Deck springs back
+ * without it and the Card is in hand, a plain drag. A distance, not a
+ * wait, so the way out of a swipe is a move the reader makes.
+ */
+export const SWIPE_BREAK_PX = 48;
+
+/**
+ * The torn-off Card catching up to the finger from where the rubber band
+ * held it: quick, and short of any overshoot, since a Card that passes
+ * the finger reads as thrown rather than let go.
+ */
+export const TEAR_CATCH_UP = spring(900, 55);
+
 /**
  * A Card armed for Open as sheet swells a little as it rises: up to 5 %
  * over 800 px, upward only.

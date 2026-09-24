@@ -72,6 +72,28 @@ export const PARAMETERS: readonly Parameter[] = [
 		step: 0.005,
 	},
 	{
+		key: "deckFollow",
+		label: "Deck follow",
+		min: 0,
+		max: 1,
+		step: 0.05,
+	},
+	{
+		key: "deckFollowFalloff",
+		label: "Follow falloff per card",
+		min: 0,
+		max: 0.5,
+		step: 0.01,
+	},
+	{
+		key: "swipeBreakPx",
+		label: "Tear-off distance",
+		min: 16,
+		max: 200,
+		step: 2,
+		unit: "px",
+	},
+	{
 		key: "flyDistance",
 		label: "Exit distance",
 		min: 100,

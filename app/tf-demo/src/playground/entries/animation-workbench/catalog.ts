@@ -91,7 +91,7 @@ export const SECTIONS: readonly {
 				interactions: ["drag", "sweep"],
 				title: "Sweep / swipe left",
 				instruction:
-					"Drag a card left past the commit distance, then release: the whole deck goes, there is no per-card removal. Try a short fast throw and a slow release to compare the distance and velocity thresholds.",
+					"Drag a card left: the whole deck follows the finger and turns red past the commit distance. Release there and the whole deck goes, there is no per-card removal. Pull well up, down or back right and the card tears loose: the deck springs back and the card is a plain drag. Try a short fast throw and a slow release to compare the distance and velocity thresholds.",
 				source,
 				initialScene: "deck",
 				knobs: [
@@ -99,6 +99,9 @@ export const SECTIONS: readonly {
 					...release,
 					"tiltMax",
 					"tiltPerPx",
+					"deckFollow",
+					"deckFollowFalloff",
+					"swipeBreakPx",
 					"flyDistance",
 					"flyRotateTo",
 					"durationScale",

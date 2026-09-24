@@ -27,6 +27,9 @@ export const DEFAULT_DECK_MOTION = {
 	flyRotateTo: spec.FLY_ROTATE_TO,
 	tiltMax: spec.TILT_MAX,
 	tiltPerPx: 1 / 16,
+	deckFollow: spec.DECK_FOLLOW,
+	deckFollowFalloff: spec.DECK_FOLLOW_FALLOFF,
+	swipeBreakPx: spec.SWIPE_BREAK_PX,
 	expandScaleMax: spec.EXPAND_SCALE_MAX,
 	expandPerPx: 1 / 800,
 	contextStaggerMs: spec.CONTEXT_STAGGER,
@@ -109,6 +112,11 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		FLY_ROTATE_TO: p.flyRotateTo,
 		TILT_MAX: p.tiltMax,
 		leanFor: (dx: number) => spec.leanFor(dx, p.tiltMax, p.tiltPerPx),
+		deckFollowFor: (distance: number) =>
+			spec.deckFollowFor(distance, p.deckFollow, p.deckFollowFalloff),
+		DECK_FOLLOW_SPRING: transition(spec.DECK_FOLLOW_SPRING),
+		SWIPE_BREAK_PX: p.swipeBreakPx,
+		TEAR_CATCH_UP: transition(spec.TEAR_CATCH_UP),
 		expandScaleFor: (dy: number) =>
 			spec.expandScaleFor(dy, p.expandScaleMax, p.expandPerPx),
 		contextDelayFor: (nth: number) =>

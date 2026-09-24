@@ -5,6 +5,7 @@ import {
 	MotionConfig,
 	type MotionValue,
 	motion,
+	motionValue,
 	useMotionValue,
 	useTransform,
 } from "motion/react";
@@ -80,8 +81,9 @@ import { ModelShell, useEventLog } from "./shared";
  * A Deck is hidden, never ended, by covering: only the top Sheet's Deck is
  * drawn, and ← reveals the one beneath. A Deck ends when its Sheet leaves,
  * or by a Sweep: a dismissive click on its Sheet, Escape, or (behind the
- * policy switch of #479) a fast swipe left on any of its Cards. There is no
- * per-Card removal.
+ * policy switch of #479) a swipe left on any of its Cards, which takes the
+ * whole Deck with the finger. There is no per-Card removal, and no place
+ * a Card can be dropped that ends its Deck.
  *
  * A Note is one element in every form (ADR 0006). The same `PresentationView`
  * is a Card in the Deck, the Held Card under the pointer, and the Sheet in a
@@ -158,7 +160,6 @@ type LayoutNode = PaneNode | SplitNode;
 type Edge = "left" | "right";
 type Destination =
 	| { readonly kind: "return" }
-	| { readonly kind: "sweep" }
 	/** The Pane the Card was lifted out of: a drop here is a release in place. */
 	| { readonly kind: "home"; readonly paneId: string }
 	| { readonly kind: "sheet"; readonly paneId: string }
@@ -224,6 +225,16 @@ type Drag = {
 	moved: boolean;
 	v: { vx: number; vy: number };
 	last: { x: number; y: number; t: number };
+	/**
+	 * A Card torn off a swipe sits this far from the finger, where the
+	 * rubber band held it, and the gap closes on its own spring. `stop`
+	 * ends the catch-up.
+	 */
+	gap: {
+		readonly x: MotionValue<number>;
+		readonly y: MotionValue<number>;
+		readonly stop: () => void;
+	} | null;
 };
 type NoteForm = "card" | "sheet";
 type Place = "above" | "open" | "below";
@@ -247,9 +258,8 @@ type Checkpoint = {
 /**
  * Where a drop lands, read off the Pane: inside the rectangle a Pane on
  * the left or right would take, it spawns that Pane; in the band between
- * them that reaches a little past the Deck, it goes back on the Deck; in
- * the band under that one, the Card and its whole Deck are swept; on the
- * Pane bar it lands nowhere; anywhere else in the Pane it opens as a
+ * them that reaches a little past the Deck, it goes back on the Deck; on
+ * the Pane bar it lands nowhere; anywhere else in the Pane it opens as a
  * Cover there. A Card lifted out of a Sheet reads that last region in
  * its own Pane as home: a release there is a release in place, and
  * previews nothing. An edge region is the very rectangle a drop there
@@ -270,7 +280,7 @@ const Z = {
 	/** The Deck's Cards, rising toward the expanded one. */
 	deck: 10,
 	zone: 30,
-	/** The return and sweep bands, over the Deck's Pane's zones. */
+	/** The return band, over the Deck's Pane's zones. */
 	returnZone: 35,
 	/** The Held Card, over everything until it has landed. */
 	held: 40,
@@ -318,7 +328,7 @@ const RULES = [
 	},
 	{
 		move: "Drag a word or link",
-		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, under that band to sweep the Deck, anywhere else in a Pane for a Cover. A lifted Sheet dropped in its own Pane goes back to its Deck, or closes if it has none.",
+		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, anywhere else in a Pane for a Cover. A lifted Sheet dropped in its own Pane goes back to its Deck, or closes if it has none.",
 	},
 	{
 		move: "Drag ↑ a Card",
@@ -326,7 +336,7 @@ const RULES = [
 	},
 	{
 		move: "Drag ← a Card",
-		means: "Arms Sweep: the whole Deck goes, when the switch is on.",
+		means: "Swipes the whole Deck, when the switch is on: it follows the finger and turns red past the line. Let go there, or flick, and it is swept; short of it, it springs back. Pull well up, down or back right and the Card tears loose: the Deck springs back and the Card is a plain drag.",
 	},
 	{
 		move: "← on a Cover",
@@ -741,6 +751,11 @@ function CompassRuntime({
 		LIFT,
 		leanFor,
 		expandScaleFor,
+		deckFollowFor,
+		DECK_FOLLOW_SPRING,
+		rubberBand,
+		SWIPE_BREAK_PX,
+		TEAR_CATCH_UP,
 		FLY_DISTANCE,
 		FLY_FADE,
 		FLY_ROTATE,
@@ -1250,26 +1265,12 @@ function CompassRuntime({
 		};
 	}
 	/**
-	 * The sweep band: under the return band, between the two edge regions,
-	 * down to the Pane's bottom. A Card dropped here takes its Deck with it.
-	 */
-	function sweepZone(paneBox: Box, card: Presentation): Box {
-		const band = returnZone(paneBox, card);
-		const top = band.top + band.height;
-		return {
-			left: band.left,
-			top,
-			width: band.width,
-			height: Math.max(0, paneBox.top + paneBox.height - top),
-		};
-	}
-	/**
-	 * What is under the pointer. The return and sweep bands follow their
-	 * Deck's Pane, so they are read live; everything else is read off the
+	 * What is under the pointer. The return band follows its Deck's Pane,
+	 * so it is read live; everything else is read off the
 	 * Panes as they rested before any preview moved them, so a ghost
 	 * opening never moves the region that opened it. Leaving a region
 	 * takes a little more than entering it did. The Pane bar is chrome,
-	 * then the bands, then the sides; the rest of a Pane opens a Cover.
+	 * then the band, then the sides; the rest of a Pane opens a Cover.
 	 */
 	function destinationAt(
 		px: number,
@@ -1289,13 +1290,10 @@ function CompassRuntime({
 		if (
 			holder?.deck &&
 			holderBox &&
-			!inside(dropRegions(holderBox, d.card, rem).bar, x, y)
-		) {
-			if (inside(returnZone(holderBox, d.card), x, y))
-				return { kind: "return" };
-			if (inside(sweepZone(holderBox, d.card), x, y))
-				return { kind: "sweep" };
-		}
+			!inside(dropRegions(holderBox, d.card, rem).bar, x, y) &&
+			inside(returnZone(holderBox, d.card), x, y)
+		)
+			return { kind: "return" };
 		/* no drop until the rest boxes describe this layout */
 		const panes = panesOf(layoutRef.current);
 		if (
@@ -1412,6 +1410,7 @@ function CompassRuntime({
 			moved: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: event.clientX, y: event.clientY, t: now },
+			gap: null,
 		};
 		dragRef.current = d;
 		setDrag(d);
@@ -1471,6 +1470,7 @@ function CompassRuntime({
 			moved: true,
 			v: { vx: 0, vy: 0 },
 			last: { x: lift.x, y: lift.y, t: now },
+			gap: null,
 		};
 		dragRef.current = d;
 		setDrag(d);
@@ -1733,8 +1733,11 @@ function CompassRuntime({
 		const vy = (event.clientY - d.last.y) / dt;
 		d.v = { vx: d.v.vx * 0.6 + vx * 0.4, vy: d.v.vy * 0.6 + vy * 0.4 };
 		d.last = { x: event.clientX, y: event.clientY, t: event.timeStamp };
-		h.x.set(dx);
-		h.y.set(dy);
+		/* a swiped Card is placed by the swipe, on its rubber band */
+		if (d.arm !== "sweep") {
+			h.x.set(dx + (d.gap?.x.get() ?? 0));
+			h.y.set(dy + (d.gap?.y.get() ?? 0));
+		}
 
 		if (!d.arm && !d.free && Math.hypot(dx, dy) > ARM_SLOP) {
 			d.moved = true;
@@ -1744,7 +1747,7 @@ function CompassRuntime({
 				if (dx < 0 && allows("sweep") && d.deckSheet !== null) {
 					d.arm = "sweep";
 					d.armedAt = event.timeStamp;
-					log("Drag ←: armed Sweep");
+					log("Drag ←: swipe the Deck");
 					setDrag({ ...d });
 				} else release(d, dx < 0 ? "Drag ←" : "Drag →");
 			} else if (dy < 0 && allows("expand")) {
@@ -1755,14 +1758,8 @@ function CompassRuntime({
 			} else release(d, "Drag ↓");
 		}
 
-		if (d.arm === "sweep") {
-			/* the lean and the swell are decoration on top of a gesture
-			   that already reads in the border and the label */
-			h.rotate.set(reduce ? 0 : leanFor(dx));
-			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
-				release(d, "Held a beat");
-			else if (dx > 12) release(d, "Turned back");
-		} else if (d.arm === "expand") {
+		if (d.arm === "sweep") swipeDeck(d, dx, dy);
+		else if (d.arm === "expand") {
 			h.scale.set(reduce ? 1 : expandScaleFor(dy));
 			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
 				release(d, "Held a beat");
@@ -1775,6 +1772,100 @@ function CompassRuntime({
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
 		);
+	}
+	/** Every other Card on the Deck `d`'s Card rests in, and how many ranks away it is. */
+	function followersOf(d: Drag): { h: NoteHandle; distance: number }[] {
+		if (d.deckSheet === null) return [];
+		const deck = findSheet(layoutRef.current, d.deckSheet)?.deck;
+		if (!deck) return [];
+		const cards = visibleCards(deck);
+		const lead = cards.findIndex((card) => card.id === d.card.id);
+		return cards.flatMap((card, index) => {
+			const h = handles.current.get(card.id);
+			return card.id === d.card.id || !h
+				? []
+				: [{ h, distance: Math.abs(index - lead) }];
+		});
+	}
+	/**
+	 * A Deck swiped left moves as one thing: the Card under the finger
+	 * leads and the others trail at their share of its travel. Pulled
+	 * right or off its axis it gives and resists, and pulled past
+	 * `SWIPE_BREAK_PX` the Card tears loose.
+	 */
+	function swipeDeck(d: Drag, dx: number, dy: number) {
+		if (dx > SWIPE_BREAK_PX || Math.abs(dy) > SWIPE_BREAK_PX) {
+			tearLoose(d, dx, dy);
+			return;
+		}
+		const { h } = d;
+		const x = dx < 0 ? dx : rubberBand(dx);
+		h.x.set(x);
+		h.y.set(rubberBand(dy));
+		/* the lean is decoration on a move the Deck already makes */
+		const lean = reduce ? 0 : leanFor(x);
+		h.rotate.set(lean);
+		for (const { h: other, distance } of followersOf(d)) {
+			const share = deckFollowFor(distance);
+			/* the lag is motion on its own; reduced, the Deck moves rigidly */
+			if (reduce) other.x.set(x * share);
+			else animate(other.x, x * share, DECK_FOLLOW_SPRING);
+			other.rotate.set(lean * share);
+		}
+	}
+	/** The Cards that followed a swipe go back to their slots. */
+	function settleFollowers(d: Drag) {
+		const toRest = (value: MotionValue<number>) => {
+			if (reduce) value.jump(0);
+			else animate(value, 0, SPRING);
+		};
+		for (const { h } of followersOf(d)) {
+			toRest(h.x);
+			toRest(h.rotate);
+		}
+	}
+	/** A swipe let go short of the line: the Deck springs back together. */
+	function snapDeck(d: Drag) {
+		settleFollowers(d);
+		snapBack(d.h);
+	}
+	/**
+	 * Pulled off the swipe, the Card tears loose: the Deck springs back
+	 * without it, and the Card is in hand, a plain drag. It closes the gap
+	 * the rubber band left between it and the finger on its own spring
+	 * rather than jumping to the finger.
+	 */
+	function tearLoose(d: Drag, dx: number, dy: number) {
+		const { h } = d;
+		settleFollowers(d);
+		const gap = {
+			x: motionValue(h.x.get() - dx),
+			y: motionValue(h.y.get() - dy),
+		};
+		const place = () => {
+			h.x.set(d.last.x - d.start.x + gap.x.get());
+			h.y.set(d.last.y - d.start.y + gap.y.get());
+		};
+		const watching = [gap.x.on("change", place), gap.y.on("change", place)];
+		const running = reduce
+			? []
+			: [
+					animate(gap.x, 0, TEAR_CATCH_UP),
+					animate(gap.y, 0, TEAR_CATCH_UP),
+				];
+		d.gap = {
+			...gap,
+			stop: () => {
+				for (const stop of watching) stop();
+				for (const run of running) run.stop();
+			},
+		};
+		if (reduce) {
+			gap.x.jump(0);
+			gap.y.jump(0);
+			place();
+		}
+		release(d, "Pulled off the swipe");
 	}
 	function settle(run: () => Promise<unknown>, then: () => void) {
 		settlingRef.current = true;
@@ -1980,6 +2071,8 @@ function CompassRuntime({
 		const d = dragRef.current;
 		if (!d || d.pointerId !== event.pointerId) return;
 		dragRef.current = null;
+		/* the release takes the Card from where it is, gap and all */
+		d.gap?.stop();
 		const { h } = d;
 		const dx = h.x.get();
 		const dy = h.y.get();
@@ -2013,22 +2106,13 @@ function CompassRuntime({
 		}
 		if (d.arm === "sweep") {
 			if (dx < -COMMIT || vx < -THROW) sweepByDrag(d, "Swipe ←");
-			else snapBack(h);
+			else snapDeck(d);
 			return;
 		}
 		if (d.arm === "expand") {
 			if (dy < -COMMIT || vy < -THROW)
 				growFromHand(d, () => openCover(d.paneId, card, "Open ↑"));
 			else snapBack(h);
-			return;
-		}
-		if (
-			allows("sweep") &&
-			d.deckSheet !== null &&
-			vx < -THROW &&
-			Math.abs(vx) > Math.abs(vy)
-		) {
-			sweepByDrag(d, "Throw ←");
 			return;
 		}
 		if (allows("expand") && vy < -THROW) {
@@ -2041,10 +2125,6 @@ function CompassRuntime({
 		const target = destinationAt(event.clientX, event.clientY, d);
 		if (!target || target.kind === "return") {
 			goHome(d);
-			return;
-		}
-		if (target.kind === "sweep") {
-			sweepByDrag(d, "Drop under the Deck");
 			return;
 		}
 		if (target.kind === "home") {
@@ -2063,6 +2143,7 @@ function CompassRuntime({
 		const d = dragRef.current;
 		if (!d || (event && event.pointerId !== d.pointerId)) return;
 		dragRef.current = null;
+		d.gap?.stop();
 		if (root.current?.hasPointerCapture(d.pointerId))
 			root.current.releasePointerCapture(d.pointerId);
 		log("Drag cancelled");
@@ -2079,7 +2160,8 @@ function CompassRuntime({
 			setDrag(null);
 			setDestination(null);
 			setPastCommit(false);
-		} else snapBack(d.h);
+		} else if (d.arm === "sweep") snapDeck(d);
+		else snapBack(d.h);
 	}
 
 	useEffect(() => {
@@ -2177,65 +2259,36 @@ function CompassRuntime({
 
 	const dragging = drag !== null;
 	const showZones = allows("drop") && dragging && drag.free;
-	const armLabel =
-		drag?.arm === "sweep"
-			? "Sweep"
-			: drag?.arm === "expand"
-				? "Open as Cover"
-				: null;
+	/* a swipe has no label: the Deck moving with the finger is the label */
+	const armLabel = drag?.arm === "expand" ? "Open as Cover" : null;
 	const register = (id: number, handle: NoteHandle | null) => {
 		if (handle) handles.current.set(id, handle);
 		else handles.current.delete(id);
 	};
 
-	/**
-	 * The return band over a Deck's footprint and the sweep band under it:
-	 * drawn on demand, where they are read.
-	 */
+	/** The return band over a Deck's footprint: drawn on demand, where it is read. */
 	function renderReturnZone(sheet: SheetRef, paneBox: Box): ReactNode[] {
 		const deck = sheet.deck;
 		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId) return [];
-		const bands = [
-			{
-				name: "return",
-				box: returnZone(paneBox, drag.card),
-				active: destination?.kind === "return",
-				label: "Back on the Deck",
-				className:
-					"rounded-[1.1rem] border-line-strong bg-paper/60 data-[active=true]:border-link data-[active=true]:bg-link/15",
-				labelClass: "text-link",
-			},
-			{
-				name: "sweep",
-				box: sweepZone(paneBox, drag.card),
-				active: destination?.kind === "sweep",
-				label: "Sweep the Deck",
-				className:
-					"border-destructive/40 bg-destructive/5 data-[active=true]:border-destructive data-[active=true]:bg-destructive/15",
-				labelClass: "text-destructive",
-			},
-		] as const;
-		return bands.map((band) => (
+		return [
 			<div
-				key={`${band.name}-${sheet.sheetId.toString()}`}
+				key={`return-${sheet.sheetId.toString()}`}
 				aria-hidden="true"
-				data-return-zone={band.name}
-				data-active={band.active}
+				data-return-zone="return"
+				data-active={destination?.kind === "return"}
 				data-shown={zonesVisible}
-				className={`pointer-events-none absolute flex items-end justify-center border border-dashed pb-3 transition-colors data-[shown=false]:invisible ${band.className}`}
+				className="pointer-events-none absolute flex items-end justify-center rounded-[1.1rem] border border-dashed border-line-strong bg-paper/60 pb-3 transition-colors data-[active=true]:border-link data-[active=true]:bg-link/15 data-[shown=false]:invisible"
 				style={{
-					...band.box,
+					...returnZone(paneBox, drag.card),
 					zIndex: Z.returnZone,
 					transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
 				}}
 			>
-				<span
-					className={`rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${band.labelClass}`}
-				>
-					{band.label}
+				<span className="rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase">
+					Back on the Deck
 				</span>
-			</div>
-		));
+			</div>,
+		];
 	}
 
 	/** The drop regions of every resting Pane, drawn on demand where they are read. */
@@ -2456,6 +2509,10 @@ function CompassRuntime({
 		const expanded = expandedOf(deck, cards);
 		const openAt = expanded ? order.indexOf(expanded) : count - 1;
 		const column = deckColumn(paneBox);
+		/* a swiped Deck moves as a stack: every Card keeps its z, and every
+		   Card wears the commit line */
+		const swiping =
+			drag?.arm === "sweep" && drag.deckSheet === sheet.sheetId;
 		return order.flatMap((card, index) => {
 			const place: Place =
 				index < openAt ? "above" : index > openAt ? "below" : "open";
@@ -2470,7 +2527,7 @@ function CompassRuntime({
 			/* z rises toward the expanded Card from both sides; a Held
 			   Card is over all of them until it has landed */
 			const z =
-				held && !landed
+				held && !landed && !swiping
 					? Z.held
 					: Z.deck +
 						(place === "open"
@@ -2489,7 +2546,8 @@ function CompassRuntime({
 					held={held}
 					arm={held ? (drag?.arm ?? null) : null}
 					free={held ? (drag?.free ?? false) : false}
-					pastCommit={held && pastCommit}
+					swiping={swiping}
+					pastCommit={(held || swiping) && pastCommit}
 					armLabel={held ? armLabel : null}
 					paneId={sheet.paneId}
 					sheetId={null}
@@ -2841,6 +2899,7 @@ function PresentationView({
 	held,
 	arm,
 	free,
+	swiping = false,
 	pastCommit,
 	armLabel,
 	paneId,
@@ -2867,6 +2926,8 @@ function PresentationView({
 	held: boolean;
 	arm: Arm | null;
 	free: boolean;
+	/** On a Deck being swiped: it moves with the Deck, whichever Card leads. */
+	swiping?: boolean;
 	pastCommit: boolean;
 	armLabel: string | null;
 	paneId: string;
@@ -3166,8 +3227,10 @@ function PresentationView({
 		headingOffset,
 		bodyOffset,
 	]);
+	/* a swiped Deck turns only once a release would sweep it: before
+	   that, the move says what is happening and the colour says nothing */
 	const borderColor =
-		arm === "sweep"
+		swiping && pastCommit
 			? "var(--destructive)"
 			: arm === "expand" || free || holding || preview
 				? "var(--link)"
@@ -3189,6 +3252,7 @@ function PresentationView({
 			data-held={held || undefined}
 			data-arm={arm ?? undefined}
 			data-past={pastCommit}
+			data-swiping={swiping || undefined}
 			data-holding={holding}
 			data-pane={paneId}
 			data-sheet-id={sheetId ?? undefined}
@@ -3333,7 +3397,7 @@ function PresentationView({
 						}
 						exit={ARM_LABEL_FROM}
 						transition={transition(ARM_LABEL)}
-						className={`absolute top-3 z-10 rounded-md border px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] uppercase ${arm === "sweep" ? "right-3 border-destructive bg-paper text-destructive" : "left-3 border-link bg-paper text-link"}`}
+						className="absolute top-3 left-3 z-10 rounded-md border border-link bg-paper px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase"
 					>
 						{armLabel}
 					</motion.div>

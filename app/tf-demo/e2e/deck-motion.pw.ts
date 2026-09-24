@@ -570,6 +570,115 @@ test("sweep scenario sweeps the whole deck but cannot expand", async ({
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
 });
 
+test("a swipe moves the whole deck, turns it at the line and springs it back together", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	const cards = frame.locator('[data-form="card"]');
+	await expect(cards).toHaveCount(4);
+	const lefts = () =>
+		cards.evaluateAll((elements) =>
+			elements.map((element) => element.getBoundingClientRect().x),
+		);
+	const rest = await lefts();
+	const heading = await frame
+		.locator('[data-place="open"] [data-heading]')
+		.boundingBox();
+	if (!heading) throw new Error("Missing heading geometry");
+	const x = heading.x + heading.width / 2;
+	const y = heading.y + heading.height / 2;
+	await page.mouse.move(x, y);
+	await page.mouse.down();
+	await page.mouse.move(x - 60, y, { steps: 5 });
+	/* every Card moves, not only the one in hand, and none is red yet */
+	await expect(frame.locator("[data-swiping]")).toHaveCount(4);
+	await expect
+		.poll(async () =>
+			(await lefts()).filter(
+				(left, index) => left < (rest[index] ?? 0) - 20,
+			),
+		)
+		.toHaveLength(4);
+	await expect(frame.locator('[data-swiping][data-past="true"]')).toHaveCount(
+		0,
+	);
+	/* past the line the whole Deck says so; back inside it, it takes it back */
+	await page.mouse.move(x - 160, y, { steps: 5 });
+	await expect(frame.locator('[data-swiping][data-past="true"]')).toHaveCount(
+		4,
+	);
+	await page.mouse.move(x - 30, y, { steps: 5 });
+	await expect(frame.locator('[data-swiping][data-past="true"]')).toHaveCount(
+		0,
+	);
+	await expect(frame.locator('[data-arm="sweep"]')).toHaveCount(1);
+	/* let go short of the line: the Deck is whole again, every Card home */
+	await page.mouse.up();
+	await expect(frame.locator("[data-swiping]")).toHaveCount(0);
+	await expect(cards).toHaveCount(4);
+	await expect
+		.poll(async () =>
+			(await lefts()).every(
+				(left, index) => Math.abs(left - (rest[index] ?? 0)) < 1,
+			),
+		)
+		.toBe(true);
+});
+
+test("a card pulled off a swipe tears loose: the deck goes home and the card follows the hand", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	const cards = frame.locator('[data-form="card"]');
+	await expect(cards).toHaveCount(4);
+	const lefts = () =>
+		cards.evaluateAll((elements) =>
+			elements.map((element) => element.getBoundingClientRect().x),
+		);
+	const rest = await lefts();
+	const lead = frame.locator('[data-place="open"]');
+	const heading = await lead.locator("[data-heading]").boundingBox();
+	if (!heading) throw new Error("Missing heading geometry");
+	const x = heading.x + heading.width / 2;
+	const y = heading.y + heading.height / 2;
+	await page.mouse.move(x, y);
+	await page.mouse.down();
+	await page.mouse.move(x - 60, y, { steps: 5 });
+	await expect(frame.locator("[data-swiping]")).toHaveCount(4);
+	/* well off the swipe's axis: the Card is in hand, the Deck is not */
+	await page.mouse.move(x - 60, y + 160, { steps: 8 });
+	await expect(frame.locator("[data-swiping]")).toHaveCount(0);
+	await expect(frame.locator("[data-held]")).toHaveCount(1);
+	await expect(frame.locator("[data-arm]")).toHaveCount(0);
+	await expect
+		.poll(async () =>
+			(await lefts()).filter(
+				(left, index) => Math.abs(left - (rest[index] ?? 0)) < 1,
+			),
+		)
+		.toHaveLength(3);
+	/* the Card closes the rubber band's gap and rides under the hand */
+	await expect
+		.poll(async () => {
+			const box = await lead.locator("[data-heading]").boundingBox();
+			return box
+				? Math.hypot(
+						box.x + box.width / 2 - (x - 60),
+						box.y + box.height / 2 - (y + 160),
+					)
+				: Number.POSITIVE_INFINITY;
+		})
+		.toBeLessThan(4);
+	await page.keyboard.press("Escape");
+	await page.mouse.up();
+	await expect(frame.locator("[data-held]")).toHaveCount(0);
+	await expect(cards).toHaveCount(4);
+});
+
 test("the ground line steps down and back up, and a link pushes a cover that closes", async ({
 	page,
 }) => {
