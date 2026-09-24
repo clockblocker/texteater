@@ -32,6 +32,11 @@ export type StripTextAnalysisResult = {
 	deletedLemmas: number;
 };
 
+type StrippedTextAnalysis = StripTextAnalysisResult & {
+	/** The Readings pruned because they lost their last source. */
+	readonly prunedReadingKeys: readonly string[];
+};
+
 /**
  * Removes one Text's derived graph while preserving the Text and Sentences.
  * Shared Readings, Lemmas, and Surfaces survive when another occurrence still
@@ -46,17 +51,23 @@ export async function stripTextAnalysisGraph(
 		readonly protectedReadingKeys?: readonly string[];
 		/**
 		 * A pruned Reading takes its own Definition Text with it. The nested
-		 * removal runs without this cascade so the work stays bounded.
+		 * removal runs without this cascade and reports what it pruned, so
+		 * its caller removes those Definition Texts in turn.
 		 */
 		readonly removeDefinitionTexts?: boolean;
 	} = {},
-): Promise<StripTextAnalysisResult> {
+): Promise<StrippedTextAnalysis> {
 	const candidates = await ctx.runQuery(
 		internal.demoReset.getTextAnalysisCandidates,
 		{ textId },
 	);
 	if (!candidates) {
-		return { removed: 0, deletedReadings: 0, deletedLemmas: 0 };
+		return {
+			removed: 0,
+			deletedReadings: 0,
+			deletedLemmas: 0,
+			prunedReadingKeys: [],
+		};
 	}
 	let removed = 0;
 	let fromPosition = 0;
@@ -150,29 +161,54 @@ export async function stripTextAnalysisGraph(
 			);
 		}
 	}
-	return { removed, deletedReadings, deletedLemmas };
+	return {
+		removed,
+		deletedReadings,
+		deletedLemmas,
+		prunedReadingKeys: doomedReadingKeys,
+	};
 }
 
 /**
  * Strips and deletes one Reading's Definition Text together with its state
  * row. Readings that lose their last source inside that definition are
- * pruned, but their own Definition Texts are left for a later pass.
+ * pruned, and their own Definition Texts are removed after it the same way,
+ * one at a time, until no pruned Reading keeps one.
  */
 export async function removeDefinitionText(
 	ctx: ActionCtx,
 	ownerReadingKey: string,
 ): Promise<void> {
+	const pending = [ownerReadingKey];
+	const removed = new Set<string>();
+	for (
+		let readingKey = pending.pop();
+		readingKey;
+		readingKey = pending.pop()
+	) {
+		if (removed.has(readingKey)) continue;
+		removed.add(readingKey);
+		pending.push(...(await removeOneDefinitionText(ctx, readingKey)));
+	}
+}
+
+/** Removes one Definition Text and returns the Readings its stripping pruned. */
+async function removeOneDefinitionText(
+	ctx: ActionCtx,
+	ownerReadingKey: string,
+): Promise<readonly string[]> {
 	const sync = await ctx.runQuery(internal.definitionTexts.loadSync, {
 		ownerReadingKey,
 	});
-	if (!sync) return;
-	if (sync.textId) {
-		await stripTextAnalysisGraph(ctx, sync.textId, {
-			protectedReadingKeys: [ownerReadingKey],
-			removeDefinitionTexts: false,
-		});
-	}
+	if (!sync) return [];
+	const stripped = sync.textId
+		? await stripTextAnalysisGraph(ctx, sync.textId, {
+				protectedReadingKeys: [ownerReadingKey],
+				removeDefinitionTexts: false,
+			})
+		: null;
 	await ctx.runMutation(internal.definitionTexts.deleteRows, {
 		ownerReadingKey,
 	});
+	return stripped?.prunedReadingKeys ?? [];
 }

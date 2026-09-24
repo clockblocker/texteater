@@ -179,4 +179,5 @@ Attestation without matching all and only its members.
 **Analysis Stripping**:
 Removal of derived analysis, including each Sentence Analysis, for the Texts in
 scope while preserving those Texts and their Sentences. Apart from full reset, it is the only operation that ends
-Occurrence Attestations and memberships.
+Occurrence Attestations and memberships. Stripping every analysis scopes the
+Visitor Texts; a Definition Text is stripped only with the Reading it defines.

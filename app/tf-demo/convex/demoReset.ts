@@ -278,11 +278,18 @@ export const clearVisitorDataBatch = internalMutation({
 	},
 });
 
+/**
+ * Visitor Texts only. A Definition Text is stripped with its Reading when
+ * that Reading is pruned, so a surviving Reading keeps a clickable definition.
+ */
 export const listTextIds = internalQuery({
 	args: { paginationOpts: paginationOptsValidator },
 	returns: paginationResultValidator(v.id("texts")),
 	handler: async (ctx, { paginationOpts }) => {
-		const result = await ctx.db.query("texts").paginate(paginationOpts);
+		const result = await ctx.db
+			.query("texts")
+			.withIndex("by_origin_kind", (q) => q.eq("origin.kind", undefined))
+			.paginate(paginationOpts);
 		return { ...result, page: result.page.map((text) => text._id) };
 	},
 });

@@ -2,18 +2,23 @@ import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 
 import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
+import type { ActionCtx } from "../convex/_generated/server";
+import { stripAllAnalyses } from "../convex/demoReset";
 import {
 	definitionOf,
+	findDefinitionText,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
 import { listLibraryTexts } from "../convex/texts";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
 import {
+	actionContext,
 	createPlaygroundConvex,
 	createTestConvex,
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,
 	playgroundFixtures,
+	submitText,
 	type TestConvexDb,
 } from "./support/convex";
 
@@ -459,3 +464,128 @@ test(
 	},
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,
 );
+
+/** Stores a Reading, its Lemma, and one Surface of it. */
+async function insertUnit(t: TestConvexDb, readingKey: string) {
+	return t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: `lemma:${readingKey}`,
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: readingKey,
+			coreFeatures: { gender: "Neut", hyph: null },
+		});
+		const readingId = await ctx.db.insert("readings", {
+			readingKey,
+			lemmaId,
+			emojiDescription: "📦",
+		});
+		const surfaceId = await ctx.db.insert("surfaces", {
+			surfaceKey: `surface:${readingKey}`,
+			lemmaId,
+			language: "de",
+			normalizedSurface: readingKey,
+			spelling: "Canonical",
+			surfaceFeatures: {},
+		});
+		return { readingId, surfaceId };
+	});
+}
+
+/** Gives a Reading a Ready Definition Text and returns its Segments. */
+async function materializeDefinition(
+	t: TestConvexDb,
+	readingKey: string,
+	definition: string,
+) {
+	await t.run((ctx) => syncDefinitionText(ctx, readingKey, { definition }));
+	await t.mutation(internal.definitionTexts.persistSegmented, {
+		ownerReadingKey: readingKey,
+		definition,
+		language: "de",
+		segmentedSentenceId: `definition:${readingKey}`,
+		segments: proseSegments(definition),
+	});
+	await t.mutation(internal.definitionTexts.settle, {
+		ownerReadingKey: readingKey,
+		outcome: { kind: "Ready" },
+	});
+	return definitionSegments(t, readingKey);
+}
+
+/** The Segments of a Reading's live Definition Text; none when it has none. */
+function definitionSegments(t: TestConvexDb, readingKey: string) {
+	return t.run(async (ctx) => {
+		const sentenceId = (await findDefinitionText(ctx, readingKey))
+			?.sentenceId;
+		if (!sentenceId) return [];
+		return ctx.db
+			.query("segments")
+			.withIndex("by_sentence_id_and_index", (q) =>
+				q.eq("sentenceId", sentenceId),
+			)
+			.collect();
+	});
+}
+
+/** Commits one single-Segment occurrence of `unit`. */
+function attestSegment(
+	t: TestConvexDb,
+	unit: { readingId: Id<"readings">; surfaceId: Id<"surfaces"> },
+	segmentId: Id<"segments"> | undefined,
+) {
+	if (!segmentId) throw new Error("Expected a Segment to attest.");
+	return t.run(async (ctx) => {
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId: unit.surfaceId,
+			readingId: unit.readingId,
+			realizationCoverage: "Full",
+		});
+		await ctx.db.patch(segmentId, {
+			attestationMembership: { attestationId, orthography: "Standard" },
+		});
+	});
+}
+
+test("stripping analyses keeps a surviving Reading's definition clickable and removes pruned Readings' Definition Texts", async () => {
+	const t = createTestConvex();
+	// An article entry: no Attestation, so stripping never prunes it.
+	await insertUnit(t, "reading:der");
+	await materializeDefinition(t, "reading:der", "Ein Artikel.");
+	// Bank is met only in a Visitor Text; its definition is the only source
+	// of Ufer, whose own definition must leave with it.
+	const bank = await insertUnit(t, "reading:bank");
+	const ufer = await insertUnit(t, "reading:ufer");
+	const [ein, , uferWord] = await materializeDefinition(
+		t,
+		"reading:bank",
+		"Ein Ufer.",
+	);
+	expect(ein?.text).toBe("Ein");
+	await attestSegment(t, ufer, uferWord?._id);
+	await materializeDefinition(t, "reading:ufer", "Ein Rand.");
+	const visitorText = await submitText(t, [["Bank", "."]]);
+	await attestSegment(t, bank, visitorText.segmentIds[0]?.[0]);
+
+	await stripAllAnalyses(actionContext(t) as unknown as ActionCtx);
+
+	expect(
+		(await definitionSegments(t, "reading:der")).map(({ text }) => text),
+	).toEqual(["Ein", " ", "Artikel", "."]);
+	expect(
+		(await tableRows(t, "definitionTexts")).map(
+			({ ownerReadingKey, state }) => [ownerReadingKey, state],
+		),
+	).toEqual([["reading:der", "Ready"]]);
+	expect(
+		(await tableRows(t, "texts")).map(({ origin }) => origin?.readingKey),
+	).toEqual(["reading:der", undefined]);
+	expect(
+		await t.run(async (ctx) =>
+			(await ctx.db.query("readings").collect()).map(
+				({ readingKey }) => readingKey,
+			),
+		),
+	).toEqual(["reading:der"]);
+});
