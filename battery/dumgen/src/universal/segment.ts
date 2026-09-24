@@ -10,11 +10,13 @@ import { DumgenFailure } from "./failure.js";
 import { judgmentCaller, recordedJudgment } from "./judgment.js";
 import { effectiveConfiguration, executeGeneration } from "./model.js";
 import { choice } from "./questions.js";
-import { assertStitchedText } from "./segmentation.js";
+import { isStitchedText } from "./segmentation.js";
 import { operationTask, recordEvent } from "./trace.js";
 import { parse } from "./validation.js";
 
 const segmenters = { de: segmentGerman, en: segmentEnglish, he: segmentHebrew };
+const invalidStitching = (message: string) =>
+	new DumgenFailure("InvalidModelOutput", "segment", message, "intake");
 export function createSegmentation(options: DumgenOptions) {
 	const task = operationTask(options);
 	return function segment(raw: {
@@ -142,17 +144,20 @@ export function createSegmentation(options: DumgenOptions) {
 								!("stitchedText" in value) ||
 								typeof value.stitchedText !== "string"
 							)
-								throw Error(
+								throw invalidStitching(
 									"Stitching must return only stitchedText",
 								);
 							if (
 								value.stitchedText.replaceAll(/\s/gu, "") !==
 								sourceText.replaceAll(/\s/gu, "")
 							)
-								throw Error(
+								throw invalidStitching(
 									"Stitching changed non-whitespace characters",
 								);
-							assertStitchedText(value.stitchedText);
+							if (!isStitchedText(value.stitchedText))
+								throw invalidStitching(
+									"Stitched Text must be trimmed, with single ASCII spaces",
+								);
 							return value.stitchedText;
 						},
 						[recordedJudgment(signal, state).id],

@@ -22,13 +22,17 @@ export type SourceSegmentationTrace = Readonly<{
 	readonly rules: readonly string[];
 }>;
 
+export function isStitchedText(text: string): boolean {
+	return (
+		text.length > 0 &&
+		text.trim() === text &&
+		!/[^\S ]/u.test(text) &&
+		!text.includes("  ")
+	);
+}
+
 export function assertStitchedText(text: string): void {
-	if (
-		text.length === 0 ||
-		text.trim() !== text ||
-		/[^\S ]/u.test(text) ||
-		text.includes("  ")
-	) {
+	if (!isStitchedText(text)) {
 		throw new Error(
 			"Source Segmentation requires non-empty, trimmed Stitched Text with single ASCII spaces.",
 		);

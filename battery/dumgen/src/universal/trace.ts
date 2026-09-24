@@ -62,7 +62,7 @@ export function operationTask(options: DumgenOptions) {
 		input: unknown,
 		run: (signal: AbortSignal) => Promise<T>,
 	) =>
-		task(stage, async (signal) => {
+		task(async (signal) => {
 			const context: Context = {
 				id: crypto.randomUUID(),
 				calls: [],
@@ -85,7 +85,7 @@ export function operationTask(options: DumgenOptions) {
 						? "Interrupted"
 						: error instanceof DumgenFailure
 							? error._tag
-							: "InvalidModelOutput",
+							: "Defect",
 					message:
 						error instanceof Error ? error.message : String(error),
 				};

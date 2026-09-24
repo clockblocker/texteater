@@ -120,7 +120,12 @@ export function resolveOrGenerateTranslation(
 						typeof value.translation !== "string" ||
 						!normalizeText(value.translation)
 					)
-						throw Error("Expected nonempty translation text only");
+						throw new DumgenFailure(
+							"InvalidModelOutput",
+							stage,
+							"Expected nonempty translation text only",
+							route,
+						);
 					return normalizeText(value.translation);
 				},
 			);

@@ -640,14 +640,22 @@ export async function resolveGrammarJudgments(
 			const wantsCanonical = Boolean(needed.canonicalForm);
 			const wantsMembers =
 				Object.keys(needed).length > (wantsCanonical ? 1 : 0);
+			const textStage = wantsCanonical
+				? wantsMembers
+					? "generateCanonicalFormAndNormalizedMembers"
+					: "generateCanonicalForm"
+				: "generateNormalizedMembers";
+			const invalidText = (message: string) =>
+				new DumgenFailure(
+					"InvalidModelOutput",
+					textStage,
+					message,
+					`${route}/text`,
+				);
 			const generated = await executeGeneration(
 				options,
 				{
-					stage: wantsCanonical
-						? wantsMembers
-							? "generateCanonicalFormAndNormalizedMembers"
-							: "generateCanonicalForm"
-						: "generateNormalizedMembers",
+					stage: textStage,
 					route: `${route}/text`,
 					input: {
 						...input,
@@ -694,7 +702,7 @@ export async function resolveGrammarJudgments(
 				},
 				(raw) => {
 					if (!raw || typeof raw !== "object" || Array.isArray(raw))
-						throw Error("Expected requested text fields");
+						throw invalidText("Expected requested text fields");
 					const values = raw as Record<string, unknown>;
 					if (
 						Object.keys(values).length !==
@@ -707,7 +715,7 @@ export async function resolveGrammarJudgments(
 									/\s/u.test(values[key] as string)),
 						)
 					)
-						throw Error(
+						throw invalidText(
 							"Generated text does not match the requested fields",
 						);
 					return values as Record<string, string>;

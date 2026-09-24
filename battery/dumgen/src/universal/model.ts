@@ -99,7 +99,12 @@ export async function executeGeneration<T>(
 			typeof response !== "object" ||
 			!("output" in response)
 		)
-			throw Error("Generation executor omitted its output envelope");
+			throw new DumgenFailure(
+				"InvalidModelOutput",
+				request.stage,
+				"Generation executor omitted its output envelope",
+				request.route,
+			);
 		const output = validate(response.output);
 		validation = "Valid";
 		return output;
@@ -109,16 +114,16 @@ export async function executeGeneration<T>(
 			transport = "Interrupted";
 			throw error;
 		}
-		throw error instanceof DumgenFailure
-			? error
-			: new DumgenFailure(
-					transport === "Success"
-						? "InvalidModelOutput"
-						: "ProviderFailure",
-					request.stage,
-					failure,
-					request.route,
-				);
+		// The executor is the transport boundary. After it succeeds, output
+		// checks raise DumgenFailures and any other throw is a defect.
+		if (transport !== "Success")
+			throw new DumgenFailure(
+				"ProviderFailure",
+				request.stage,
+				failure,
+				request.route,
+			);
+		throw error;
 	} finally {
 		const exchange: CallTrace = {
 			...base,

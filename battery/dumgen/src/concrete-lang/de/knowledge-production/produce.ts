@@ -16,6 +16,7 @@ import {
 	executeGeneration,
 } from "../../../universal/model.js";
 import { choice } from "../../../universal/questions.js";
+import { settleAll } from "../../../universal/task.js";
 import { contextFor, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import {
@@ -104,20 +105,14 @@ export async function produceKnowledge(
 		detail: Pick<KnowledgeFailure, "leaf" | "candidate"> = {},
 	): KnowledgeFailure => {
 		signal.throwIfAborted();
-		const failure =
-			error instanceof DumgenFailure
-				? error
-				: new DumgenFailure(
-						"InvalidModelOutput",
-						stage,
-						error instanceof Error ? error.message : String(error),
-						route,
-					);
+		// Only a DumgenFailure is an aspect's failure; anything else is a
+		// defect and fails the operation.
+		if (!(error instanceof DumgenFailure)) throw error;
 		return {
 			aspect,
 			...detail,
-			code: failure._tag,
-			message: failure.message,
+			code: error._tag,
+			message: error.message,
 		};
 	};
 	const failed = (
@@ -174,6 +169,9 @@ export async function produceKnowledge(
 	};
 	const textOutcomes: Array<TextOutcome | undefined> = [];
 	const textJobs: Array<Promise<void>> = [];
+	// A defect in one job fails the operation; siblings still settle but
+	// deliver nothing more.
+	let stopped = false;
 	const publishOutcomes = () => {
 		result.changes = [
 			...authored.production.changes,
@@ -233,7 +231,12 @@ export async function produceKnowledge(
 								(output.text !== null &&
 									typeof output.text !== "string")
 							)
-								throw Error("Expected only text or null");
+								throw new DumgenFailure(
+									"InvalidModelOutput",
+									stage,
+									"Expected only text or null",
+									route,
+								);
 							if (output.text === null) return null;
 							const analysis = leaf
 								? { translations: { [leaf]: output.text } }
@@ -319,6 +322,7 @@ export async function produceKnowledge(
 							],
 						};
 					}
+					if (stopped) return;
 					textOutcomes[outcomeIndex] = outcome;
 					publishOutcomes();
 					if (
@@ -328,11 +332,14 @@ export async function produceKnowledge(
 						signal.throwIfAborted();
 						options.onKnowledgeContribution?.(outcome.changes);
 					}
-				})(),
+				})().catch((error: unknown) => {
+					stopped = true;
+					throw error;
+				}),
 			);
 		}
 	}
-	await Promise.all(textJobs);
+	await settleAll(textJobs);
 	const requestedRelations = Object.keys(
 		authored.missing.semanticRelations ?? {},
 	) as Dumrel.DirectSemanticRelation[];
@@ -392,8 +399,11 @@ export async function produceKnowledge(
 								!normalizeText(value),
 						)
 					)
-						throw Error(
+						throw new DumgenFailure(
+							"InvalidModelOutput",
+							stage,
 							"Expected a bounded flat array of candidate text",
+							route,
 						);
 					return [
 						...new Set(

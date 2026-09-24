@@ -4,10 +4,12 @@ import type {
 	Encounter,
 	KnowledgeRequest,
 } from "../../../types.js";
+import { DumgenFailure } from "../../../universal/failure.js";
 import {
 	effectiveConfiguration,
 	executeGeneration,
 } from "../../../universal/model.js";
+import { settleAll } from "../../../universal/task.js";
 import {
 	fingerprint,
 	operationTask,
@@ -54,8 +56,14 @@ function draftInput(lemma: Dumling.Lemma, encounter?: Encounter, extra = "") {
 	].join("\n");
 }
 
-function draftText(output: unknown) {
-	if (typeof output !== "string") throw Error("Expected text");
+function draftText(stage: string, route: string, output: unknown) {
+	if (typeof output !== "string")
+		throw new DumgenFailure(
+			"InvalidModelOutput",
+			stage,
+			"Expected text",
+			route,
+		);
 	return output.trim();
 }
 
@@ -107,7 +115,11 @@ export function draftKnowledge(
 				lemma.family !== encounter.target.family ||
 				lemma.kind !== encounter.target.kind
 			)
-				throw Error("Draft Lemma and Encounter routes disagree");
+				throw new DumgenFailure(
+					"InvalidInput",
+					"draftKnowledge",
+					"Draft Lemma and Encounter routes disagree",
+				);
 			const sourceFingerprint = await knowledgeDraftFingerprint(
 				encounter,
 				lemma,
@@ -157,7 +169,12 @@ export function draftKnowledge(
 													),
 										outputFormat: "text",
 									},
-									draftText,
+									(output) =>
+										draftText(
+											"draftKnowledge",
+											route,
+											output,
+										),
 									[],
 								);
 								return text
@@ -173,6 +190,8 @@ export function draftKnowledge(
 									: [];
 							} catch (error) {
 								signal.throwIfAborted();
+								if (!(error instanceof DumgenFailure))
+									throw error;
 								recordEvent(signal, "KnowledgeDraftFailed", {
 									aspect,
 									language: language ?? null,
@@ -212,7 +231,11 @@ export function draftKnowledge(
 								(output) =>
 									[
 										...new Set(
-											draftText(output)
+											draftText(
+												"draftRelationCandidates",
+												route,
+												output,
+											)
 												.split("\n")
 												.map((line) => line.trim())
 												.filter(Boolean),
@@ -223,6 +246,7 @@ export function draftKnowledge(
 							return { requested, candidates };
 						} catch (error) {
 							signal.throwIfAborted();
+							if (!(error instanceof DumgenFailure)) throw error;
 							recordEvent(signal, "RelationDraftFailed", {
 								message: String(error),
 							});
@@ -230,10 +254,10 @@ export function draftKnowledge(
 						}
 					})()
 				: Promise.resolve(undefined);
-			const [texts, relations] = await Promise.all([
-				Promise.all(jobs),
-				relationsJob,
-			]);
+			const textsJob = settleAll(jobs);
+			await Promise.allSettled([textsJob, relationsJob]);
+			const texts = await textsJob,
+				relations = await relationsJob;
 			return {
 				sourceFingerprint,
 				texts: texts.flat(),
