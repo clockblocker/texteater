@@ -3,8 +3,7 @@ import { v } from "convex/values";
 import { createDumgen, DumgenFailure } from "dumgen";
 import type { Dumgen, DumgenOptions } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import { choiceAnswers } from "../../../battery/dumgen/tests/execution-fixture.js";
-import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
+import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import { api } from "../convex/_generated/api";
 import { internalMutation } from "../convex/_generated/server";
 import { intakeRunValidator } from "../convex/model/intakeRuns";
@@ -27,6 +26,37 @@ import { fakeProviders, unavailableProviders } from "./support/providers";
 
 const sleep = (ms: number) =>
 	new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/** Certain answers to a Choice batch. */
+function choiceAnswers(
+	questions: Questions,
+	select: (id: string) => string,
+): SystemOneResult<Questions> {
+	return {
+		model: "fixture",
+		usage: { input_tokens: 1, output_tokens: 1 },
+		answers: Object.fromEntries(
+			Object.entries(questions).map(([id, question]) => {
+				if (question.type !== "choice") throw Error("Expected Choice");
+				const choice = select(id);
+				return [
+					id,
+					{
+						type: "choice",
+						choice,
+						confidence: 1,
+						probabilities: Object.fromEntries(
+							Object.keys(question.criteria).map((key) => [
+								key,
+								key === choice ? 1 : 0,
+							]),
+						),
+					},
+				];
+			}),
+		),
+	} as SystemOneResult<Questions>;
+}
 
 type IntakePlan = Record<
 	string,
@@ -289,25 +319,20 @@ test("a failed and a defective analysis both store their sentence and say Failed
 
 // ------------------------------------------------ the submitText action
 
-const bankTexts = () =>
-	pipelineFixture([
-		{
-			items: [
-				{
-					id: "0",
-					decision: "Accepted",
-					language: "de",
-					stitchedText: "Die Banken.",
-				},
-				{
-					id: "1",
-					decision: "Accepted",
-					language: "en",
-					stitchedText: "The banks.",
-				},
-			],
+/** Intake accepts both sentences; every other judgment, such as analysis, is unavailable. */
+const bankTexts = (): Pick<DumgenOptions, "execute" | "judge"> => {
+	const intake = intakeJudge({ "The banks.": { language: "en" } });
+	return {
+		judge: async (request, options) => {
+			if (!Object.hasOwn(request.questions, "language"))
+				throw Error("unavailable");
+			return intake(request, options);
 		},
-	]);
+		execute: async () => {
+			throw Error("Unexpected stitching");
+		},
+	};
+};
 
 async function submitBankTexts(t: TestConvexDb, submissionKey: string) {
 	const providers = fakeProviders(bankTexts());

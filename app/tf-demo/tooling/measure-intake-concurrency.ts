@@ -13,7 +13,6 @@
 import { parseArgs } from "node:util";
 import type { OperationTrace } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import corpus from "../../../battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json";
 import { createTfDemoOrchestrator } from "../server/linguisticOrchestration";
 import { createProductionDumgen } from "../server/modelExecution";
 
@@ -52,16 +51,27 @@ const prose = [
 	"Zu Hause kochten sie zusammen eine Kartoffelsuppe.",
 	"Am Abend war Lena müde, aber glücklich.",
 ];
+/** The first 16 sentences of Dumgen's sentence-analysis corpus. */
+const corpus = [
+	"Der heiße Kakao schmeckt gut.",
+	"Wir gehen heute ins Kino.",
+	"Meine Schwester steht jeden Morgen um sechs auf.",
+	"Er hat sich gestern an seinen Bruder erinnert.",
+	"Es gibt keinen Ausweg.",
+	"Die Frau, die dort wartet, kennt niemanden.",
+	"Das Paket wird morgen geliefert.",
+	"Er hat den Faden verloren.",
+	"Anna kauft Obst, Gemüse usw. auf dem Markt.",
+	"Das Museum öffnet z.B. am Montag erst um zehn.",
+	"Das Haus des Nachbarn ist alt.",
+	"Ihc habe leider keine Zeit.",
+	"Wie geht's dir heute?",
+	"Der Lehrer stellt den Schülern Material zur Verfügung.",
+	"Manche kommen früh, viele gehen spät.",
+	"Das Meeting war very good.",
+];
 const texts: Record<string, string> = {
-	T16: Object.values(
-		corpus.cases as Record<
-			string,
-			{ input: { segments: { text: string }[] } }
-		>,
-	)
-		.slice(0, 16)
-		.map(({ input }) => input.segments.map(({ text }) => text).join(""))
-		.join(" "),
+	T16: corpus.join(" "),
 	T25: prose.join(" "),
 };
 const text = texts[args.text];
