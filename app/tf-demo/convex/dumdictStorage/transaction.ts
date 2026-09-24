@@ -883,7 +883,7 @@ export async function materializeGrammaticalComponent(
 			type: "createReading",
 			entry: { reading, ...empty },
 		});
-	await completeAuthoredComponentKnowledge(ctx, reading);
+	await mergeAuthoredComponentKnowledge(ctx, reading);
 	const id = makeSurfaceId("de", surface);
 	if (!(await findSurface(ctx, id)))
 		await applyChange(ctx, {
@@ -892,8 +892,21 @@ export async function materializeGrammaticalComponent(
 		});
 }
 
-/** Completes reviewed component entries without replacing existing Knowledge or creating encounters. */
+/**
+ * Completes a stored component entry's reviewed Knowledge outside a planned
+ * commit, advancing the dictionary revision when anything changed.
+ */
 export async function completeAuthoredComponentKnowledge(
+	ctx: MutationCtx,
+	reading: unknown,
+) {
+	const changed = await mergeAuthoredComponentKnowledge(ctx, reading);
+	if (changed) await bumpDictionaryRevision(ctx);
+	return changed;
+}
+
+/** Completes reviewed component entries without replacing existing Knowledge or creating encounters. */
+async function mergeAuthoredComponentKnowledge(
 	ctx: MutationCtx,
 	reading: unknown,
 ) {

@@ -279,7 +279,7 @@ for (const [article, gender, spelled, canonical] of [
 	});
 }
 
-test("authored article backfill repairs empty entries and preserves existing Knowledge", async () => {
+test("authored article completion repairs empty entries and preserves existing Knowledge", async () => {
 	const t = createTestConvex();
 	const reference = nounArticleReference({
 		article: "Definite",
@@ -302,7 +302,11 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 		});
 		await ctx.db.delete(accumulated._id);
 	});
+	const [stateBefore] = await rows(t, "dictionaryState");
 	expect(await complete()).toBe(true);
+	expect((await rows(t, "dictionaryState"))[0]?.revision).toBe(
+		(stateBefore?.revision ?? 0) + 1,
+	);
 	const [restored] = await knowledgeRows(t);
 	expect(restored?.knowledge.definition).toContain("„die“");
 	expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(

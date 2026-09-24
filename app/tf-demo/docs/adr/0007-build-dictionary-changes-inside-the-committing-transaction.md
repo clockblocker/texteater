@@ -40,10 +40,10 @@ weight those hops paid for.
 ## Consequences
 
 - `persistence.persistResolvedClick` receives the Reading decision, not a
-  plan; `dumdictTransaction` exposes `addNewNote`, `ensureOwnedSurface`,
-  `ensureReadingEntry`, and `applyGeneratedKnowledge` as plan-and-commit
-  operations, and `dumdictStorage/planner.ts` is the mutation-side adapter of
-  the storage seam next to the action-side `adapter.ts`.
+  plan; `dumdictTransaction` exposes `addNewNote`, `ensureOwnedSurface`, and
+  `applyGeneratedKnowledge` as plan-and-commit operations, and is the
+  mutation-side adapter of the storage seam next to the action-side
+  `dumdictStorage/adapter.ts`.
 - Whether Resolution Inspector capture is on travels in the scheduled
   action's arguments and captured steps are saved in one mutation, so tracing
   adds no hop to the path it observes.
