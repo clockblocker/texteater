@@ -15,6 +15,7 @@ import { usePendingAction } from "@/hooks/use-pending-action";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { parseSubmittedTextId, type SentenceView } from "@/lib/action-results";
 import { actuateSourceContextFocus } from "@/lib/source-context-focus";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
 import type { TextSubjectTarget } from "@/workspace/sheet-workspace";
@@ -59,7 +60,7 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	const error =
 		selection.error ??
 		segmentationError ??
-		mutationMessage(textQuery.error);
+		(textQuery.error ? visitorErrorMessage(textQuery.error) : null);
 	const needsSegmentation =
 		sentences.length > 0 &&
 		sentences.every((sentence) => sentence.segments.length === 0);
@@ -97,9 +98,7 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 			}
 			setNotice("Text split into segments.");
 		} catch (cause) {
-			setSegmentationError(
-				mutationMessage(cause) ?? "Text segmentation failed.",
-			);
+			setSegmentationError(visitorErrorMessage(cause));
 		}
 	}
 
@@ -388,8 +387,4 @@ export function TextViewSkeleton() {
 			</div>
 		</div>
 	);
-}
-
-function mutationMessage(error: unknown): string | null {
-	return error instanceof Error ? error.message : null;
 }

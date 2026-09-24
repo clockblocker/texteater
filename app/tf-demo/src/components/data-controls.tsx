@@ -26,6 +26,7 @@ import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -129,9 +130,7 @@ function useDemoDataControls(
 			const result = await clearVisitorData.run({ visitorId });
 			setNotice(`Cleared ${result.deleted} visitor-owned records.`);
 		} catch (cause) {
-			setInteractionError(
-				mutationMessage(cause) ?? "Visitor-data reset failed.",
-			);
+			setInteractionError(visitorErrorMessage(cause));
 		}
 	}
 
@@ -144,9 +143,7 @@ function useDemoDataControls(
 				`Stripped ${result.removed} analysis records from ${result.strippedTexts} Texts and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Texts and their Sentences were kept.`,
 			);
 		} catch (cause) {
-			setInteractionError(
-				mutationMessage(cause) ?? "Analysis stripping failed.",
-			);
+			setInteractionError(visitorErrorMessage(cause));
 		}
 	}
 
@@ -169,9 +166,7 @@ function useDemoDataControls(
 			}
 			setNotice("Text split into segments.");
 		} catch (cause) {
-			setInteractionError(
-				mutationMessage(cause) ?? "Text segmentation failed.",
-			);
+			setInteractionError(visitorErrorMessage(cause));
 		}
 	}
 
@@ -185,9 +180,7 @@ function useDemoDataControls(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
 			);
 		} catch (cause) {
-			setInteractionError(
-				mutationMessage(cause) ?? "Shared-data reset failed.",
-			);
+			setInteractionError(visitorErrorMessage(cause));
 		}
 	}
 
@@ -377,8 +370,4 @@ function DemoDataCard({
 			) : null}
 		</Card>
 	);
-}
-
-function mutationMessage(error: unknown): string | null {
-	return error instanceof Error ? error.message : null;
 }
