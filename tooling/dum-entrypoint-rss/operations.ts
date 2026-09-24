@@ -245,19 +245,17 @@ export async function runRepresentativeOperation(
 						),
 					),
 				}),
-				execute: async () => ({
-					memberOrthographies: ["Standard"],
-					normalizedMembers: ["Bank"],
-					surface: {
-						spelling: "Canonical",
-						surfaceFeatures: null,
-						inflectionalFeatures: { case: "Nom", number: "Sing" },
-					},
-					lemma: {
-						canonicalForm: "Bank",
-						coreFeatures: { gender: "Fem", hyph: null },
-					},
-					realizationCoverage: "Full",
+				// Text generation fills whichever headword or member fields the
+				// judged analysis still needs; the probe spells each as the input.
+				execute: async (request: {
+					outputSchema: { required: readonly string[] };
+				}) => ({
+					output: Object.fromEntries(
+						request.outputSchema.required.map((key) => [
+							key,
+							"Bank",
+						]),
+					),
 				}),
 			});
 			const { runPromise } = await import("effect/Effect");
