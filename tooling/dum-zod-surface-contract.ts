@@ -3,6 +3,11 @@ import { operationalEntrypoints } from "./dum-entrypoint-rss/inventory";
 export const DUM_PUBLIC_ZOD_SURFACES = {
 	"dumrel/schema": [
 		"directSemanticRelationSchema",
+		"governedCaseSchema",
+		"governedPrepositionSchema",
+		"governedPrepositionsSchema",
+		"governmentProjectionSchema",
+		"governmentRelationSchema",
 		"knowledgeChangeSchema",
 		"knowledgeRequestMaskSchema",
 		"knowledgeRouteSchema",
@@ -39,7 +44,6 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"classifyInputSchema",
 		"comparisonInputSchema",
 		"encounterSchema",
-		"generationInputSchema",
 		"knowledgeInputSchema",
 		"knowledgeProductionSchema",
 		"knowledgeRequestMaskSchema",

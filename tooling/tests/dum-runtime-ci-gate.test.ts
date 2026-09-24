@@ -16,7 +16,7 @@ import {
 
 describe("current compiled validation", () => {
 	test("all replacement validation roots agree with canonical schemas", () => {
-		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(546);
+		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(550);
 		for (const target of DUM_DIFFERENTIAL_TARGETS)
 			expect(
 				compareDifferentialTarget(target).mismatches,
