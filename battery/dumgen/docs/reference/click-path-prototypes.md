@@ -1,5 +1,7 @@
 # Click-path pipeline prototypes (2026-09-18)
 
+Lab code lives in `battery/dumgen/prototypes/`; commands run from `battery/dumgen`.
+
 Live jev experiments answering: how many System One round trips does one click
 really need, and what does folding them cost in accuracy?
 

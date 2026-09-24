@@ -1,5 +1,9 @@
 # Intake-first click pipeline (2026-09-18)
 
+Lab code lives in `battery/dumgen/prototypes/intake/`; commands run from
+`battery/dumgen`. The click-path prototypes are in
+[click-path-prototypes.md](click-path-prototypes.md).
+
 Production owns the design since 2026-09-21: `analyzeSentence` in
 `src/concrete-lang/de/sentence-analysis/` (Dumgen ADR 0006), evaluated as the
 `sentence-analysis/de` operation experiment. This directory is the lab that
@@ -7,7 +11,7 @@ measured it and still re-scores stored runs; `fixtures.ts` emits the
 playground fixtures through the production operation, and the lab's own
 DTO copy is gone.
 
-The click-path prototypes one directory up asked how few round trips *one
+The click-path prototypes asked how few round trips *one
 click* needs. These ask the opposite question: **how much of the work can move
 into intake, so a click only has to run the steps that actually generate
 something** (canonical form, Emoji Description, Knowledge texts) and those can
