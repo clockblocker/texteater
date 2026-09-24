@@ -30,7 +30,10 @@
 		"./workspace.css": {
 			"development": "./workspace/workspace.css",
 			"default": "./dist/workspace.css"
-		}
+		},
+		"./e2e/harness": "./e2e/harness/harness.tsx",
+		"./e2e/harness.css": "./e2e/harness/harness.css",
+		"./e2e/workspace.pw": "./e2e/workspace.pw.ts"
 	},
 	"files": [
 		"dist",

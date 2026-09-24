@@ -1,10 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Harness } from "react-resizable-panels/e2e/harness";
 import type { WorkspaceProps } from "react-resizable-panels/workspace";
-import { Harness } from "../../../react-resizable-panels/e2e/harness/harness";
 import { Workspace } from "../../src/molecules/workspace";
 import "../../src/styles.css";
-import "../../../react-resizable-panels/e2e/harness/harness.css";
+import "react-resizable-panels/e2e/harness.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("The #root element is required.");
