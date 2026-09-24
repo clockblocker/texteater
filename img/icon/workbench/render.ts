@@ -1,8 +1,10 @@
 /**
  * Render textfresser icon variants through Chromium, the way browsers show them.
  *
- *   bun img/icon/workbench/render.ts            every variant, plus out/sheet.png
- *   bun img/icon/workbench/render.ts <id> ...   only those variants, no sheet
+ *   bun img/icon/workbench/render.ts                every variant, plus out/sheet.png
+ *   bun img/icon/workbench/render.ts <id> ...       only those variants, no sheet
+ *   bun img/icon/workbench/render.ts 'zoo-*' ...    ids ending in * match by prefix
+ *   ... --sheet=<name>                              also write out/<name>.png/.html
  *
  * For each variant, writes to out/:
  *   <id>.svg        the document
@@ -103,10 +105,19 @@ function sheetHtml(
 }
 
 async function main(): Promise<void> {
-	const requested = process.argv.slice(2);
+	const args = process.argv.slice(2);
+	const sheetName =
+		args
+			.find((arg) => arg.startsWith("--sheet="))
+			?.slice("--sheet=".length) ?? null;
+	const requested = args.filter((arg) => !arg.startsWith("--"));
 	const variants = await loadVariants();
+	const matches = (pattern: string, id: string) =>
+		pattern.endsWith("*")
+			? id.startsWith(pattern.slice(0, -1))
+			: id === pattern;
 	const unknown = requested.filter(
-		(id) => !variants.some((variant) => variant.id === id),
+		(pattern) => !variants.some(({ id }) => matches(pattern, id)),
 	);
 	if (unknown.length) {
 		throw new Error(
@@ -114,8 +125,11 @@ async function main(): Promise<void> {
 		);
 	}
 	const selected = requested.length
-		? variants.filter(({ id }) => requested.includes(id))
+		? variants.filter(({ id }) =>
+				requested.some((pattern) => matches(pattern, id)),
+			)
 		: variants;
+	const sheet = sheetName ?? (requested.length ? null : "sheet");
 	const baseline = variants.find(({ id }) => id === "baseline")?.render();
 
 	await mkdir(OUT, { recursive: true });
@@ -156,18 +170,18 @@ async function main(): Promise<void> {
 		);
 	}
 
-	if (!requested.length && rendered.length) {
+	if (sheet && rendered.length) {
 		await page.setViewportSize({ width: 800, height: 600 });
 		await shoot(
 			page,
 			sheetHtml(rendered, (item) => dataUrl(item.svg)),
-			`${OUT}sheet.png`,
+			`${OUT}${sheet}.png`,
 		);
 		await writeFile(
-			`${OUT}sheet.html`,
+			`${OUT}${sheet}.html`,
 			sheetHtml(rendered, (item) => `${item.variant.id}.svg`),
 		);
-		console.log("✓ out/sheet.png, out/sheet.html");
+		console.log(`✓ out/${sheet}.png, out/${sheet}.html`);
 	}
 
 	await browser.close();
