@@ -425,6 +425,8 @@ export const generationFailureCategoryValidator = v.union(
 export const resolutionFailureCodeValidator = v.union(
 	generationFailureCategoryValidator,
 	v.literal("CatalogMiss"),
+	v.literal("DictionaryConflict"),
+	v.literal("MembershipConflict"),
 	v.literal("Internal"),
 );
 

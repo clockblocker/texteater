@@ -349,6 +349,7 @@ export const persistResolvedClick = internalMutation({
 				kind: "PermanentFailure",
 				message:
 					"This occurrence overlaps a different saved occurrence.",
+				failureCode: "MembershipConflict",
 			});
 			return {
 				status: "MembershipConflict" as const,
@@ -367,6 +368,7 @@ export const persistResolvedClick = internalMutation({
 				kind: "PermanentFailure",
 				message:
 					"The shared dictionary rejected this resolution before it could be saved.",
+				failureCode: "DictionaryConflict",
 			});
 			return {
 				status: "DictionaryConflict" as const,

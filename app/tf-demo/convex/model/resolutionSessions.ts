@@ -474,11 +474,18 @@ async function scheduleRun(
 	);
 }
 
-/** Starts a fresh run of `session` under a new run token. */
+/**
+ * Starts a fresh run of `session` under a new run token. It resumes from the
+ * session's checkpoints unless `resolveAgain` discards them.
+ */
 async function restartRun(
 	ctx: MutationCtx,
 	session: ResolutionSession,
-	values: { readonly runNumber: number; readonly retryDeadlineAt?: number },
+	values: {
+		readonly runNumber: number;
+		readonly retryDeadlineAt?: number;
+		readonly resolveAgain?: boolean;
+	},
 ): Promise<void> {
 	const runToken = crypto.randomUUID();
 	await ctx.db.patch(session._id, {
@@ -489,9 +496,19 @@ async function restartRun(
 			: { retryDeadlineAt: values.retryDeadlineAt }),
 		lifecycle: {
 			state: "Active",
-			progress: session.lifecycle.progress,
+			progress: values.resolveAgain
+				? "Starting"
+				: session.lifecycle.progress,
 			activity: "Scheduled",
 		},
+		...(values.resolveAgain
+			? {
+					grammar: undefined,
+					reading: undefined,
+					grammaticalCheckpoint: undefined,
+					readingCheckpoint: undefined,
+				}
+			: {}),
 		readingId: undefined,
 		attestationId: undefined,
 		failureCode: undefined,
@@ -580,9 +597,11 @@ export async function startResolutionSession(
 }
 
 /**
- * A learner's retry of a PermanentFailure. Unlike stale recovery it resets
+ * A learner's retry of a PermanentFailure. Unlike stale recovery it retries
  * every failure category, since provider configuration, model policy, or
- * catalog data may have changed since.
+ * catalog data may have changed since. A retry after a commit conflict
+ * resolves again from the start, because its saved decisions would only
+ * conflict again; any other retry resumes from the saved checkpoints.
  */
 export async function retryResolutionSession(
 	ctx: MutationCtx,
@@ -608,6 +627,9 @@ export async function retryResolutionSession(
 	await restartRun(ctx, session, {
 		runNumber: 1,
 		retryDeadlineAt: Date.now() + RECOVERY_DEADLINE_MS,
+		resolveAgain:
+			session.failureCode === "DictionaryConflict" ||
+			session.failureCode === "MembershipConflict",
 	});
 	return true;
 }

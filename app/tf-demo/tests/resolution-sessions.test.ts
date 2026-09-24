@@ -17,7 +17,9 @@ import {
 } from "./support/convex";
 import {
 	bankOccurrenceCommit,
+	bankReading,
 	commitBankOccurrence,
+	dieBankenOccurrenceCommit,
 	type Selection,
 	type SessionGuard,
 	startSession,
@@ -989,6 +991,81 @@ describe("Resolution Session", () => {
 				},
 			]),
 		);
+	});
+
+	test("a retry after a commit conflict resolves again instead of replaying its checkpoints", async () => {
+		const t = createTestConvex();
+		const { sentenceIds } = await submitText(t, [
+			["die", " ", "Banken", "."],
+		]);
+		const sentenceId = sentenceIds[0];
+		if (!sentenceId) throw new Error("Expected a Sentence.");
+		// visitor-1 proposes `die Banken` over Segments 0 and 2, but visitor-2
+		// has committed `Banken` alone.
+		const loser = {
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId,
+			clickedSegmentIndex: 0,
+		};
+		const guard = await startSession(t, loser);
+		await commitBankOccurrence(t, {
+			requestId: "request-winner",
+			visitorId: "visitor-2",
+			sentenceId,
+			clickedSegmentIndex: 2,
+		});
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection(),
+			grammaticalCheckpoint: bankGrammar(sentenceId),
+		});
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard,
+			progress: "ReadingAvailable",
+			reading: readingProjection(),
+			readingCheckpoint: {
+				resolution: { decision: "New", emojiDescription: "🏦" },
+				reading: bankReading,
+			},
+		});
+		expect(
+			await t.mutation(
+				internal.persistence.persistResolvedClick,
+				dieBankenOccurrenceCommit(loser, guard, [0, 2]),
+			),
+		).toMatchObject({ status: "MembershipConflict" });
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+			failureCode: "MembershipConflict",
+		});
+
+		expect(
+			await t.mutation(api.resolutionSessions.retryResolution, {
+				requestId: "request-1",
+				visitorId: "visitor-1",
+			}),
+		).toEqual({ retried: true });
+
+		const retried = await session(t, "request-1");
+		expect(retried.lifecycle).toEqual({
+			state: "Active",
+			progress: "Starting",
+			activity: "Scheduled",
+		});
+		for (const field of [
+			"grammar",
+			"reading",
+			"grammaticalCheckpoint",
+			"readingCheckpoint",
+		])
+			expect(retried).not.toHaveProperty(field);
+		const claimed = await t.mutation(internal.resolutionSessions.beginRun, {
+			guard: await startSessionGuard(t, "request-1"),
+		});
+		expect(claimed?.checkpoints).toEqual({});
 	});
 
 	test("cleanup removes stale active and old terminal sessions but keeps a completed target that vanished", async () => {
