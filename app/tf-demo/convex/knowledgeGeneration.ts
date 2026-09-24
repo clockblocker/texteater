@@ -309,7 +309,7 @@ const BASE_TEXT_ASPECTS = new Set([
 	"transcription",
 	"translations",
 ]);
-const MAX_PUBLISHED_CHANGES_PER_READING = 500;
+const MAX_PUBLISHED_CHANGES_PER_RUN = 500;
 
 /**
  * Publishes one batch of generated Knowledge for a Running attempt.
@@ -390,21 +390,19 @@ export const publish = internalMutation({
 			{ changes: args.changes, pendingRelations: args.pendingRelations },
 			publishRelations ? args.relationPublication.requestedKinds : [],
 		);
+		// Only this run's own rows: its keys share the attempt and run prefix.
+		const runPrefix = `${attempt.attemptKey}:${runNumber}:`;
 		const published = new Set(
 			(
 				await ctx.db
 					.query("knowledgeChanges")
-					.withIndex("by_owner_reading_key", (q) =>
-						q.eq("ownerReadingKey", attempt.ownerReadingKey),
+					.withIndex("by_knowledge_change_key", (q) =>
+						q
+							.gte("knowledgeChangeKey", runPrefix)
+							.lt("knowledgeChangeKey", `${runPrefix}\uffff`),
 					)
-					.take(MAX_PUBLISHED_CHANGES_PER_READING)
-			)
-				.filter((row) =>
-					row.knowledgeChangeKey.startsWith(
-						`${attempt.attemptKey}:${runNumber}:`,
-					),
-				)
-				.map((row) => canonicalJson(row.change)),
+					.take(MAX_PUBLISHED_CHANGES_PER_RUN)
+			).map((row) => canonicalJson(row.change)),
 		);
 		const changes = publishable.changes.filter(
 			(change) => !published.has(canonicalJson(change)),

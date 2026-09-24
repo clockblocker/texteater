@@ -1193,6 +1193,69 @@ test("recorded relation evidence lets a Reading whose relations live as edges re
 	});
 });
 
+test("a final publication skips what its run already published behind many earlier changes", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	// Earlier attempts left more changes than one index page for this Reading.
+	await t.run(async (ctx) => {
+		for (let index = 0; index < 520; index++)
+			await ctx.db.insert("knowledgeChanges", {
+				knowledgeChangeKey: `earlier:1:1:${index}`,
+				ownerReadingKey: occurrence.readingKey,
+				change: {
+					kind: "Contribute",
+					aspect: "notes",
+					value: `${index}`,
+				},
+				createdAt: 1,
+			});
+	});
+	await insertAttempt(t, occurrence, "attempt-1");
+	const definition = {
+		kind: "Contribute",
+		aspect: "definition",
+		value: "Ein Geldinstitut.",
+	};
+	const transcription = {
+		kind: "Contribute",
+		aspect: "transcription",
+		value: "baŋk",
+	};
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "attempt-1",
+				final: false,
+				changes: [definition],
+			}),
+		),
+	).toEqual({ status: "Committed" });
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "attempt-1",
+				changes: [definition, transcription],
+			}),
+		),
+	).toEqual({ status: "Committed" });
+
+	const published = (await rows(t, "knowledgeChanges")).filter((row) =>
+		row.knowledgeChangeKey.startsWith("attempt-1:"),
+	);
+	expect(
+		published.map(({ knowledgeChangeKey, change }) => ({
+			knowledgeChangeKey,
+			change,
+		})),
+	).toEqual([
+		{ knowledgeChangeKey: "attempt-1:1:1:0", change: definition },
+		{ knowledgeChangeKey: "attempt-1:1:2:0", change: transcription },
+	]);
+	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+});
+
 test("a rejected dictionary plan fails the final publication without recording changes", async () => {
 	const t = createTestConvex();
 	// The attempt's Reading is not in the dictionary, so planning is rejected.
