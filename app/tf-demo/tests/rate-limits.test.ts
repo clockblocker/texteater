@@ -102,29 +102,50 @@ test("selecting past the per-Visitor limit is rejected without scheduling a run"
 });
 
 test("another Visitor is unaffected until the global bucket runs out", async () => {
-	const drain = makeFunctionReference<"mutation">("drainLimits:drain");
+	const drain = makeFunctionReference<
+		"mutation",
+		{ from: number; count: number },
+		number
+	>("drainLimits:drain");
 	const t = createTestConvexWith({
 		"drainLimits.ts": async () => ({
 			drain: internalMutation({
-				args: { count: v.number() },
-				handler: async (ctx, { count }) => {
-					for (let index = 0; index < count; index += 1)
-						await consumeRateLimit(
+				args: { from: v.number(), count: v.number() },
+				returns: v.number(),
+				handler: async (ctx, { from, count }) => {
+					let admitted = 0;
+					for (let index = from; index < from + count; index += 1) {
+						const status = await consumeRateLimit(
 							ctx,
 							"segmentSelection",
 							`crowd-${index}`,
 						);
+						if (status.ok) admitted += 1;
+					}
+					return admitted;
 				},
 			}),
 		}),
 	});
 	const available = await words(t, 3);
 	await select(t, "visitor-1", available[0]);
-	await t.mutation(drain, { count: GLOBAL - 2 });
+	// Half the global bucket leaves room in every shard.
+	expect(await t.mutation(drain, { from: 0, count: GLOBAL / 2 })).toBe(
+		GLOBAL / 2,
+	);
 
 	expect(await select(t, "visitor-2", available[1])).toMatchObject({
 		kind: "Resolving",
 	});
+	// The shards may strand fractions of a unit, but never admit past the rate.
+	const admitted = await t.mutation(drain, {
+		from: GLOBAL / 2,
+		count: 2 * GLOBAL,
+	});
+	expect(GLOBAL / 2 + 2 + admitted).toBeLessThanOrEqual(GLOBAL);
+	expect(GLOBAL / 2 + 2 + admitted).toBeGreaterThan(
+		GLOBAL - RATE_LIMITS.segmentSelectionGlobal.shards,
+	);
 	await expect(select(t, "visitor-3", available[2])).rejects.toMatchObject({
 		data: { code: "RateLimited" },
 	});
