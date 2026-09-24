@@ -2,10 +2,11 @@
  * Pure assembly of the judge's answers into a Sentence Analysis (Dumgen ADR
  * 0006). The invariants live here, never in a question: connected components
  * of the symmetrized membership matrix at tau; one route vote per group; a
- * NOUN keeps at most the one article opening its phrase; one Head per word
- * (a group glued around two Heads is split at them); a fused word never
- * joins a group whole, its adposition is a singleton and its article joins
- * the next NOUN without one; a Phraseme's members are words, projected by
+ * NOUN keeps at most the one article opening its phrase, with only
+ * prenominal words between them; one Head per word (a group glued around two
+ * Heads is split at them); a fused word never joins a group whole, its
+ * adposition is a singleton and its article joins the noun its phrase opens
+ * onto, or stands alone; a Phraseme's members are words, projected by
  * Head, and only a word whose own fixedness Score reaches the floor joins
  * one. Government comes last, over the finished Lexeme Targets.
  */
@@ -137,6 +138,29 @@ function winner(mass: Distribution): string {
 	for (const entry of Object.entries(mass))
 		if (entry[1] > best[1]) best = entry;
 	return best[0];
+}
+
+/** Kinds that may stand between an article and its noun (`im sehr dichten und dunklen Wald`). */
+const prenominal = new Set(["ADJ", "ADV", "NUM", "CCONJ"]);
+
+const headOffsetOf = (target: LexemeTarget) =>
+	(
+		target.members.find((member) => member.role === "Head") ??
+		target.members[0]
+	)?.offset ?? 0;
+
+/** The first Lexeme Target after `offset` that is not prenominal: the word an article's phrase opens onto. */
+function phraseHeadAfter(
+	targets: readonly LexemeTarget[],
+	offset: number,
+): LexemeTarget | undefined {
+	return targets
+		.filter(
+			(target) =>
+				headOffsetOf(target) > offset &&
+				!prenominal.has(winner(target.routeMass)),
+		)
+		.sort((a, b) => headOffsetOf(a) - headOffsetOf(b))[0];
 }
 
 function roleOf(answers: Answers, index: number): RoleAnswer {
@@ -348,19 +372,20 @@ export function assembleAnalysis(
 			provenance: word.unresolved ? `guard:${word.unresolved}` : "vote",
 		});
 	}
-	// A fused article joins the next NOUN target that has no article yet (ADR 0024).
+	// A fused article joins the noun its phrase opens onto, when that noun has
+	// no article yet (ADR 0024); a name, a later noun past another word or an
+	// unresolved word leaves it standing alone.
 	for (const article of fusedArticles) {
-		const noun = targets
-			.filter(
-				(target) =>
-					winner(target.routeMass) === "NOUN" &&
-					(target.members[0]?.offset ?? -1) > article.offset &&
-					!target.members.some((member) => member.role === "Article"),
+		const next = phraseHeadAfter(targets, article.offset);
+		const noun =
+			next &&
+			winner(next.routeMass) === "NOUN" &&
+			next.members.every(
+				(member) =>
+					member.role !== "Article" && member.offset > article.offset,
 			)
-			.sort(
-				(a, b) =>
-					(a.members[0]?.offset ?? 0) - (b.members[0]?.offset ?? 0),
-			)[0];
+				? next
+				: undefined;
 		if (noun) {
 			const position = targets.indexOf(noun);
 			targets[position] = {
@@ -379,6 +404,38 @@ export function assembleAnalysis(
 				identity: null,
 				provenance: "fusion-table:unattached-article",
 			});
+	}
+	// Whatever grouped them, an article only opens its own noun's phrase: a
+	// word past the prenominal ones between them splits the article off.
+	const indexAt = new Map<number, number>();
+	for (const [index, pieces] of placement.pieces)
+		for (const piece of pieces) indexAt.set(piece.offset, index);
+	for (const [position, target] of [...targets.entries()]) {
+		const article = target.members.find(
+			(member) => member.role === "Article",
+		);
+		if (!article || winner(target.routeMass) !== "NOUN") continue;
+		const head = phraseHeadAfter(
+			targets.filter((other) => other !== target),
+			article.offset,
+		);
+		if (!head || headOffsetOf(head) > headOffsetOf(target)) continue;
+		const index = indexAt.get(article.offset);
+		targets[position] = {
+			...target,
+			members: target.members.filter((member) => member !== article),
+			provenance: `${target.provenance}+guard:articleScope`,
+		};
+		targets.push({
+			id: nextId(),
+			members: [{ offset: article.offset, role: "Head" }],
+			routeMass: { DET: 1 },
+			identity:
+				index === undefined || fusionOf(index)
+					? null
+					: identityMassOf(sentence, answers, index),
+			provenance: "guard:articleScope",
+		});
 	}
 	targets.sort(
 		(a, b) => (a.members[0]?.offset ?? 0) - (b.members[0]?.offset ?? 0),

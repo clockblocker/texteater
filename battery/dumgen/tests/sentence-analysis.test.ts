@@ -267,6 +267,123 @@ test("a Funktionsverbgefüge is a Collocation over words, the fused article reac
 	).toHaveLength(28);
 });
 
+/** Each Lexeme Target as `text/Role` members, its winning route and provenance. */
+function lexemesOf(analysis: SentenceAnalysis) {
+	const text = (offset: number) =>
+		analysis.segments.find((s) => s.offset === offset)?.text;
+	return analysis.targets.map((target) => ({
+		members: target.members
+			.map((m) => `${text(m.offset)}/${m.role}`)
+			.join(" "),
+		route: Object.entries(target.routeMass).sort(
+			(a, b) => b[1] - a[1],
+		)[0]?.[0],
+		provenance: target.provenance,
+	}));
+}
+
+test("a fused article joins the noun across prenominal words", async () => {
+	// Wir0 bleiben2 im4 sehr6 dichten8 Wald10 .11
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/ADV",
+			8: "Lexeme/ADJ",
+			10: "Lexeme/NOUN",
+		},
+		roles: {},
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("wald", "Wir bleiben im sehr dichten Wald."),
+		}),
+	);
+	expect(lexemesOf(analysis).slice(2)).toEqual([
+		{ members: "i/Head", route: "ADP", provenance: "fusion-table" },
+		{
+			members: "m/Article Wald/Head",
+			route: "NOUN",
+			provenance: "vote+fusion-table",
+		},
+		{ members: "sehr/Head", route: "ADV", provenance: "vote" },
+		{ members: "dichten/Head", route: "ADJ", provenance: "vote" },
+	]);
+});
+
+test("a fused article before a name stands alone instead of reaching a later noun", async () => {
+	// Wir0 wohnen2 im4 Ligusterweg6 Nummer8 410 .11
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/PROPN",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/NUM",
+		},
+		roles: {},
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"ligusterweg",
+				"Wir wohnen im Ligusterweg Nummer 4.",
+			),
+		}),
+	);
+	expect(lexemesOf(analysis).slice(2, 6)).toEqual([
+		{ members: "i/Head", route: "ADP", provenance: "fusion-table" },
+		{
+			members: "m/Head",
+			route: "DET",
+			provenance: "fusion-table:unattached-article",
+		},
+		{ members: "Ligusterweg/Head", route: "PROPN", provenance: "vote" },
+		{ members: "Nummer/Head", route: "NOUN", provenance: "vote" },
+	]);
+});
+
+test("an article grouped with a noun past another word is split off", async () => {
+	// Wir0 wohnen2 in4 dem6 Ligusterweg8 Nummer10 412 .13
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6, 10], [8], [12]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/PROPN",
+			10: "Lexeme/NOUN",
+			12: "Lexeme/NUM",
+		},
+		roles: { 6: "Article", 10: "Head" },
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"in-dem-ligusterweg",
+				"Wir wohnen in dem Ligusterweg Nummer 4.",
+			),
+		}),
+	);
+	expect(lexemesOf(analysis).slice(3, 6)).toEqual([
+		{ members: "dem/Head", route: "DET", provenance: "guard:articleScope" },
+		{ members: "Ligusterweg/Head", route: "PROPN", provenance: "vote" },
+		{
+			members: "Nummer/Head",
+			route: "NOUN",
+			provenance: "vote+guard:articleScope",
+		},
+	]);
+});
+
 test("a free word the pair answers tie to an expression stays out of it", async () => {
 	const sentence = sentenceOf(
 		"ganz-und-gar",
