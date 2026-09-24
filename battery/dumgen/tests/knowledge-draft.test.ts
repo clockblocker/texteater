@@ -9,13 +9,13 @@ import {
 	draftTranslationOperationExperiment,
 	reviewedAlternatives,
 } from "../src/concrete-lang/de/knowledge-production/draft-translations/experiment.js";
+import { choiceAnswers } from "../src/testing.js";
 import type {
 	DumgenOptions,
 	KnowledgeInput,
 	OperationTrace,
 } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
-import { choiceAnswers } from "./execution-fixture.js";
 
 const input = {
 	encounter: {

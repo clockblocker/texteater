@@ -11,12 +11,9 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { createDumgen } from "dumgen";
+import { executeOutput, rejectJudgment } from "dumgen/testing";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import {
-	executeOutput,
-	rejectJudgment,
-} from "../../../battery/dumgen/tests/execution-fixture.js";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";

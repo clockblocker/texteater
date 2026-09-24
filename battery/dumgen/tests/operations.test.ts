@@ -15,12 +15,12 @@ import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/nou
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
 import {
 	executeOutput,
+	grammarFixture,
+	knowledgeFixture,
 	queuedTargetJudgment,
 	readingJudgment,
 	rejectJudgment,
-} from "./execution-fixture.js";
-import { grammarFixture } from "./grammar-fixture.js";
-import { knowledgeFixture } from "./knowledge-fixture.js";
+} from "../src/testing.js";
 
 const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {

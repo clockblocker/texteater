@@ -1,4 +1,4 @@
-import type { DumgenOptions } from "../src/types.js";
+import type { DumgenOptions } from "../types.js";
 import { queuedTargetJudgment, readingJudgment } from "./execution-fixture.js";
 import { grammarFixture } from "./grammar-fixture.js";
 import { intakeFixture } from "./intake-fixture.js";

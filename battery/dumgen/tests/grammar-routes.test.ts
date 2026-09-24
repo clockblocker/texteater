@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test";
 import { getExperiment } from "dumgen/development";
 import { Effect } from "effect";
+import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
-import { grammarFixture } from "./grammar-fixture.js";
 
 const examples = [
 	["lexeme/noun", "NOUN", "grammar-de-noun-demo-suspended-kinderbuecher"],

@@ -5,9 +5,9 @@ import { readingOperationExperiment } from "../src/concrete-lang/de/reading-emoj
 import { evaluateGeneratedEmoji } from "../src/concrete-lang/de/reading-emoji-description/generate/cases.js";
 import cases from "../src/concrete-lang/de/reading-emoji-description/operation-cases.json";
 import { comparisonInputSchema } from "../src/generated/schemas.js";
+import { choiceAnswers, readingJudgment } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
-import { choiceAnswers, readingJudgment } from "./execution-fixture.js";
 
 const base = comparisonInputSchema.parse(
 	cases["reading-de-noun-bank-financial-reuse"].input,

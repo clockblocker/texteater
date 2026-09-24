@@ -2,11 +2,10 @@ import { expect, test } from "bun:test";
 import { Effect } from "effect";
 import { projectSegmentation } from "../src/concrete-lang/de/segmentation/experiment.js";
 import cases from "../src/concrete-lang/de/segmentation/operation-cases.json";
+import { choiceAnswers, intakeFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { segmentInputSchema } from "../src/universal/schemas.js";
-import { choiceAnswers } from "./execution-fixture.js";
-import { intakeFixture } from "./intake-fixture.js";
 
 for (const [id, example] of Object.entries(cases))
 	test(`${id}: independent intake and lossless source segmentation`, async () => {

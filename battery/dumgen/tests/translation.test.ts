@@ -3,8 +3,8 @@ import { Effect } from "effect";
 import { translationAnalysisInputSchema } from "../src/concrete-lang/de/knowledge-production/structured-schemas.js";
 import { resolveOrGenerateTranslation } from "../src/concrete-lang/de/knowledge-production/translation/operation.js";
 import data from "../src/concrete-lang/de/knowledge-production/translation/source-data.json";
+import { choiceAnswers } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
-import { choiceAnswers } from "./execution-fixture.js";
 
 const base = translationAnalysisInputSchema.parse(
 	data.cases["translation-cover-near-equivalent"].input,

@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
+import { grammarFixture } from "../src/testing.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
-import { grammarFixture } from "./grammar-fixture.js";
 
 const encounter = validateEncounter({
 	sentence: {

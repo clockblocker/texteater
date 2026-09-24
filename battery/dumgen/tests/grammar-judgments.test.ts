@@ -5,10 +5,10 @@ import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resol
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
 import review from "../src/evaluation/redesign/review-cases.json";
+import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
-import { grammarFixture } from "./grammar-fixture.js";
 
 for (const example of review.constructions)
 	test(`${example.id}: complete scoped grammar and independent supplied targets`, async () => {

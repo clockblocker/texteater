@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
+import { intakeFixture } from "dumgen/testing";
 import { Effect } from "effect";
-import { intakeFixture } from "../../../battery/dumgen/tests/intake-fixture.js";
 import { segmentForLaboratory } from "../src/segmentation.js";
 
 test("Laboratory admits English intake with a complete operation trace", async () => {

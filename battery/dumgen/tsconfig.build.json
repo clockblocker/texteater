@@ -14,6 +14,7 @@
 		"src/schemas.ts",
 		"src/development.ts",
 		"src/authored.ts",
-		"src/validation.ts"
+		"src/validation.ts",
+		"src/testing.ts"
 	]
 }

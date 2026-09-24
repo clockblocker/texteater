@@ -10,7 +10,7 @@ import {
 	deriveGrammaticalComponent,
 	validateEncounter,
 } from "../src/index.js";
-import { grammarFixture } from "./grammar-fixture.js";
+import { grammarFixture } from "../src/testing.js";
 
 for (const name of [
 	"demo-exists",

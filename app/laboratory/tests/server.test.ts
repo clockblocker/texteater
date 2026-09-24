@@ -2,11 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-	choiceAnswers,
-	executeOutput,
-} from "../../../battery/dumgen/tests/execution-fixture.js";
-import { grammarFixture } from "../../../battery/dumgen/tests/grammar-fixture.js";
+import { choiceAnswers, executeOutput, grammarFixture } from "dumgen/testing";
 import { startLaboratoryServer } from "../src/server";
 
 test("HTTP workbench retains session isolation, supplied targets, retry diagnostics and current logs", async () => {

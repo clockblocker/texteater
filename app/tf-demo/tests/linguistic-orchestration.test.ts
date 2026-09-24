@@ -6,6 +6,7 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { createDumgen, DumgenFailure } from "dumgen";
+import { pipelineFixture } from "dumgen/testing";
 import type {
 	Dumgen,
 	DumgenOptions,
@@ -19,7 +20,6 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
-import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
 import type { StoredSegment } from "../convex/model/storedSegments";

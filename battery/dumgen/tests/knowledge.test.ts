@@ -4,13 +4,13 @@ import { Effect, Fiber } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import expectedOutcomes from "../src/concrete-lang/de/knowledge-production/evaluation/operation-outcomes.json";
 import { knowledgeInputSchema } from "../src/schemas.js";
+import { choiceAnswers } from "../src/testing.js";
 import type {
 	KnowledgeInput,
 	KnowledgeProduction,
 	OperationTrace,
 } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
-import { choiceAnswers } from "./execution-fixture.js";
 
 const input = {
 	encounter: {
@@ -398,7 +398,7 @@ test("all retained Knowledge corpora run through production Knowledge with compl
 	const { knowledgeOperationExperiment } = await import(
 		"../src/evaluation/knowledge-operation.js"
 	);
-	const { knowledgeFixture } = await import("./knowledge-fixture.js");
+	const { knowledgeFixture } = await import("../src/testing.js");
 	let count = 0;
 	for (const family of ["lexeme", "phraseme", "morpheme"]) {
 		const definition = getExperiment(`knowledge-analysis/de/${family}`);

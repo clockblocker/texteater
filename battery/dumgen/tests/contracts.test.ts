@@ -6,7 +6,7 @@ import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import pronounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
 import { grammarSchemas } from "../src/generated/schemas.js";
-import { grammarFixture } from "./grammar-fixture.js";
+import { grammarFixture } from "../src/testing.js";
 
 // Expected identities come from the reviewed catalog, independently of each
 // corpus answer. Replaying an answer alone only proves schema compatibility.

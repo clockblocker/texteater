@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
-import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
+import { pipelineFixture } from "dumgen/testing";
 import { api, internal } from "../convex/_generated/api";
 import {
 	createTestConvex,

@@ -5,10 +5,10 @@ import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import { locateAuthoredIdentity } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
 import { targetCriteria } from "../src/concrete-lang/de/target-classification/judgments.js";
+import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
-import { grammarFixture } from "./grammar-fixture.js";
 
 type Core = Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"];
 const core = (features: Partial<Core>): Core => ({

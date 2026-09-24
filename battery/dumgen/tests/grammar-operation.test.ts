@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import { operationExperiment } from "../src/development.js";
+import { grammarFixture } from "../src/testing.js";
 import type {
 	JudgmentRequest,
 	LemmaCandidate,
@@ -10,7 +11,6 @@ import type {
 } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
-import { grammarFixture } from "./grammar-fixture.js";
 
 type SentRequest = Parameters<TypeSafeExecutor>[0];
 const route = "grammatical-resolution/de/lexeme/adjective";

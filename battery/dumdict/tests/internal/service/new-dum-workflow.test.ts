@@ -1,11 +1,10 @@
 import { expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
+import { grammarFixture, knowledgeFixture } from "dumgen/testing";
 import type { Encounter } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
-import { grammarFixture } from "../../../../dumgen/tests/grammar-fixture.js";
-import { knowledgeFixture } from "../../../../dumgen/tests/knowledge-fixture.js";
 import {
 	ParsingError,
 	parseAsCommitChangesRequest,

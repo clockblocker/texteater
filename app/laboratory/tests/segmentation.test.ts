@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
+import { intakeFixture } from "dumgen/testing";
 import type { ModelExchange } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import { intakeFixture } from "../../../battery/dumgen/tests/intake-fixture.js";
 import { segmentForLaboratory } from "../src/segmentation";
 
 test("published segmentation retains bounded intake and deterministic segmentation evidence", async () => {

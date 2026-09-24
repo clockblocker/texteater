@@ -1,4 +1,4 @@
-import type { DumgenOptions } from "../src/types.js";
+import type { DumgenOptions } from "../types.js";
 import { choiceAnswers } from "./execution-fixture.js";
 
 type Analysis = {

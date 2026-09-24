@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { Effect, Exit, Fiber } from "effect";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
+import { choiceAnswers, rejectJudgment } from "../src/testing.js";
 import type {
 	CallTrace,
 	DumgenOptions,
@@ -9,7 +10,6 @@ import type {
 	SegmentedSentence,
 } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
-import { choiceAnswers, rejectJudgment } from "./execution-fixture.js";
 
 const sleep = (ms: number) =>
 	new Promise<void>((resolve) => setTimeout(resolve, ms));

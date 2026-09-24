@@ -8,9 +8,9 @@ import {
 } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
 import { resolveAuthoredGrammarIdentity } from "../src/concrete-lang/de/grammatical-resolution/authored-identity.js";
 import auxiliaryCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
+import { choiceAnswers } from "../src/testing.js";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { operation } from "../src/universal/trace.js";
-import { choiceAnswers } from "./execution-fixture.js";
 
 const member = (form: string, kind: string, grammaticalCase?: string) => {
 	const result = authoredMembers.find(
@@ -256,7 +256,7 @@ test("a sentence-initial capital retries its lowercase spelling; a mid-sentence 
 });
 
 test("the sentence-initial flag marks a target whose first member is the first ResolvableText Segment", async () => {
-	const { grammarFixture } = await import("./grammar-fixture.js");
+	const { grammarFixture } = await import("../src/testing.js");
 	const { createDumgen } = await import("../src/universal/dumgen.js");
 	const { validateEncounter } = await import(
 		"../src/universal/validation.js"
@@ -317,7 +317,7 @@ test("the sentence-initial flag marks a target whose first member is the first R
 });
 
 test("Open PRON population misses copy exact headwords and generate changed text", async () => {
-	const { grammarFixture } = await import("./grammar-fixture.js");
+	const { grammarFixture } = await import("../src/testing.js");
 	const { createDumgen } = await import("../src/universal/dumgen.js");
 	const { validateEncounter } = await import(
 		"../src/universal/validation.js"

@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { createDumgen } from "dumgen";
+import { pipelineFixture } from "dumgen/testing";
 import type { ModelExchange, SegmentedSentence } from "dumgen/types";
 import * as Effect from "effect/Effect";
-import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import { GermanClassificationResolver } from "../src/classification";
 
 const sentence: SegmentedSentence<"de"> = {

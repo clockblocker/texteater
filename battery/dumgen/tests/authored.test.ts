@@ -11,8 +11,8 @@ import { Effect } from "effect";
 import { stableJson } from "promptsmith";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import { knowledgeInputSchema } from "../src/schemas.js";
+import { executeOutput, rejectJudgment } from "../src/testing.js";
 import { createDumgen as createSourceDumgen } from "../src/universal/dumgen.js";
-import { executeOutput, rejectJudgment } from "./execution-fixture.js";
 
 test("every authored member supplies all advertised Knowledge without a provider", async () => {
 	let calls = 0;

@@ -9,7 +9,7 @@
  *   bun prototypes/audit/measure-inputs.ts --dump grammar.features:grammar-de-verb-subject-question
  *
  * Stub answers: grammar replays the reviewed ideal output through the test
- * fixture (tests/grammar-fixture.ts), so follow-ups (Luna canonical form,
+ * fixture (src/testing/grammar-fixture.ts), so follow-ups (Luna canonical form,
  * lexical strings, noun Case, DET/PRON identity) fire exactly when gold
  * answers would make them fire. Other stages answer with a neutral default
  * (Exclude / NoMatch / Free / score 0), which is enough to record the one
@@ -37,6 +37,7 @@ import { targetCriteria } from "../../src/concrete-lang/de/target-classification
 import targetData from "../../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../../src/generated/prompts.js";
 import { createDumgen, draftKnowledge } from "../../src/index.js";
+import { grammarFixture } from "../../src/testing.js";
 import type {
 	CallTrace,
 	DumgenOptions,
@@ -45,7 +46,6 @@ import type {
 	Segment,
 	SegmentedSentence,
 } from "../../src/types.js";
-import { grammarFixture } from "../../tests/grammar-fixture.js";
 
 const here = dirname(new URL(import.meta.url).pathname);
 const root = resolve(here, "../..");

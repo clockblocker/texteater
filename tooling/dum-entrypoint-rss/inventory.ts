@@ -10,6 +10,7 @@ export type OperationalEntryPoint = {
 
 export type ExemptEntryPoint = {
 	readonly classification:
+		| "development-support"
 		| "metadata"
 		| "schema-authoring-exempt"
 		| "type-only";
@@ -207,6 +208,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		specifier: "dumgen/development",
 		classification: "schema-authoring-exempt",
 		rationale: "Explicit schema or experiment authoring surface.",
+	},
+	{
+		specifier: "dumgen/testing",
+		classification: "development-support",
+		rationale:
+			"Deterministic model doubles for sibling workspaces' tests; never loaded at application runtime.",
 	},
 	{
 		specifier: "dumgen/package.json",

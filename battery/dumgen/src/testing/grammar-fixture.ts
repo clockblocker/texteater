@@ -1,6 +1,6 @@
 import { stableJson } from "promptsmith";
-import type { GrammarOutput } from "../src/concrete-lang/de/grammatical-resolution/project.js";
-import type { DumgenOptions } from "../src/types.js";
+import type { GrammarOutput } from "../concrete-lang/de/grammatical-resolution/project.js";
+import type { DumgenOptions } from "../types.js";
 import { choiceAnswers } from "./execution-fixture.js";
 
 /** Inject a reviewed expected analysis as separate bounded answers and requested text. */

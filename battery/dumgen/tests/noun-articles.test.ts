@@ -2,10 +2,10 @@ import { expect, test } from "bun:test";
 import { checkIfGrundform, parseUnit } from "dumling";
 import { Effect } from "effect";
 import { deriveNounArticle, nounArticleReference } from "../src/index.js";
+import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
-import { grammarFixture } from "./grammar-fixture.js";
 
 function example(
 	text: string,

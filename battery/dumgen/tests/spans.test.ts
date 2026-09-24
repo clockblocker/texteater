@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { Effect, Exit, Option, Tracer } from "effect";
+import { intakeFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
-import { intakeFixture } from "./intake-fixture.js";
 
 type Recorded = {
 	readonly name: string;

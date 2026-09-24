@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
 import { Cause, Effect, Exit } from "effect";
+import { rejectJudgment } from "../src/testing.js";
 import type { KnowledgeInput, OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { DumgenFailure } from "../src/universal/failure.js";
 import { executeGeneration } from "../src/universal/model.js";
 import { operation } from "../src/universal/trace.js";
-import { rejectJudgment } from "./execution-fixture.js";
 
 const input = {
 	encounter: {

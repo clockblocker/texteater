@@ -2,9 +2,9 @@ import { expect, test } from "bun:test";
 import { Effect, Fiber } from "effect";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
+import { choiceAnswers } from "../src/testing.js";
 import type { OperationTrace, SegmentedSentence } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
-import { choiceAnswers } from "./execution-fixture.js";
 
 const sleep = (ms: number) =>
 	new Promise<void>((resolve) => setTimeout(resolve, ms));

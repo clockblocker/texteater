@@ -40,6 +40,7 @@ function auditsDeclarationReachability(
 		case "operational":
 		case "type-only":
 			return true;
+		case "development-support":
 		case "metadata":
 		case "schema-authoring-exempt":
 			return false;

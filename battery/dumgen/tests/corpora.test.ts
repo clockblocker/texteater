@@ -10,7 +10,7 @@ import { createGermanHighLevelTargetClassificationProjection } from "../src/conc
 import targetData from "../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
-import { grammarFixture } from "./grammar-fixture.js";
+import { grammarFixture } from "../src/testing.js";
 
 const kinds: Record<string, string> = {
 	"proper-noun": "PROPN",
