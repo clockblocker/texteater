@@ -139,14 +139,23 @@ const buildSourceSeams = new Map<string, readonly string[]>([
 		"battery/dumgen/codegen/generate.ts",
 		[
 			"../../dumling/codegen/operations.js",
+			"../../dumling/codegen/output-types.js",
 			"../../dumling/codegen/routes.js",
 			"../../dumrel/codegen/format-typescript.js",
+			"../../dumrel/codegen/output-types.js",
 			"../../dumrel/src/semantics.js",
 		],
 	],
 	[
 		"battery/dumrel/codegen/generate.ts",
-		["../../dumling/codegen/operations.js"],
+		[
+			"../../dumling/codegen/operations.js",
+			"../../dumling/codegen/output-types.js",
+		],
+	],
+	[
+		"battery/dumrel/codegen/output-types.ts",
+		["../../dumling/codegen/output-types.js"],
 	],
 	[
 		"app/laboratory/tests/evaluations.test.ts",
