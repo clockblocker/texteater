@@ -191,9 +191,7 @@ export function isAllowedDeveloperDocumentationPath(
 		/^(?:app|battery)\/[^/]+\/(?:AGENTS|CLAUDE|CONTEXT|VISION)\.md$/u.test(
 			path,
 		) ||
-		/^(?:\.agents|(?:app|battery)\/[^/]+\/\.agents)\/skills\/.+\.md$/u.test(
-			path,
-		) ||
+		isInstalledSkillPath(path) ||
 		/^(?:app|battery)\/[^/]+\/convex\/_generated\/ai\/guidelines\.md$/u.test(
 			path,
 		) ||
@@ -206,13 +204,18 @@ export function isAllowedDeveloperDocumentationPath(
 	);
 }
 
+/** Installed agent skills are vendored from their skill sources, not authored here. */
+function isInstalledSkillPath(path: string): boolean {
+	return /^(?:\.agents|(?:app|battery)\/[^/]+\/\.agents)\/skills\/.+\.md$/u.test(
+		path,
+	);
+}
+
 function isAgentInstructionPath(candidate: string): boolean {
 	const path = normalizeRepositoryPath(candidate);
 	return (
 		/^(?:(?:app|battery)\/[^/]+\/)?(?:AGENTS|CLAUDE)\.md$/u.test(path) ||
-		/^(?:\.agents|(?:app|battery)\/[^/]+\/\.agents)\/skills\/.+\.md$/u.test(
-			path,
-		) ||
+		isInstalledSkillPath(path) ||
 		/^(?:app|battery)\/[^/]+\/convex\/_generated\/ai\/guidelines\.md$/u.test(
 			path,
 		)
@@ -528,13 +531,20 @@ export function auditGoalsAndVisions(
 	return issues;
 }
 
+/** Installed skills stay out of the count on both sides of the comparison. */
 export function auditScopedCount(
 	census: DocumentationCensus,
 ): DocumentationIssue[] {
-	if (census.current.length < census.baseline.count) return [];
+	const authored = (files: readonly string[]) =>
+		files.filter(
+			(file) => !isInstalledSkillPath(normalizeRepositoryPath(file)),
+		).length;
+	const current = authored(census.current);
+	const baseline = authored(census.baseline.files);
+	if (current < baseline) return [];
 	return [
 		{
-			detail: `current scoped count ${census.current.length} must be below the ${census.baseline.count}-file baseline; human review still decides whether the reduction is drastic`,
+			detail: `current scoped count ${current} must be below the ${baseline}-file baseline, both without installed skills; human review still decides whether the reduction is drastic`,
 			file: "tooling/developer-documentation-baseline.json",
 			kind: "scoped-count",
 			severity: "error",

@@ -173,6 +173,39 @@ test("checks that the final scoped count is lower without defining drastic", () 
 	).toMatchObject([{ kind: "scoped-count" }]);
 });
 
+test("leaves installed skills out of both sides of the scoped count", () => {
+	const skill = ".agents/skills/animate/SKILL.md";
+	const appSkill = "app/tf-demo/.agents/skills/convex/SKILL.md";
+	expect(
+		auditScopedCount({
+			baseline: {
+				commit: "abc",
+				count: 3,
+				files: ["README.md", "docs/reference/policy.md", skill],
+				policyIssue: 307,
+			},
+			created: [appSkill],
+			current: ["README.md", skill, appSkill],
+			removed: ["docs/reference/policy.md"],
+			retained: ["README.md", skill],
+		}),
+	).toEqual([]);
+	expect(
+		auditScopedCount({
+			baseline: {
+				commit: "abc",
+				count: 2,
+				files: ["README.md", skill],
+				policyIssue: 307,
+			},
+			created: [],
+			current: ["README.md"],
+			removed: [skill],
+			retained: ["README.md"],
+		}),
+	).toMatchObject([{ kind: "scoped-count" }]);
+});
+
 test("rejects coordination files but exempts functional agent instructions", () => {
 	expect(
 		auditCoordinationFiles([
