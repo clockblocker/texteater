@@ -43,9 +43,25 @@ export type PaginatedNoteLoader<Note extends PaginatedNote> = {
 	readonly subscribe: (listener: () => void) => () => void;
 };
 
+/**
+ * The part of a Note one "load more" returns. Each Note kind keeps its own
+ * list shape; only the list and its continuation travel, never the body.
+ */
+export type NotePage<Note extends PaginatedNote> = Note extends {
+	readonly kind: "Reading";
+}
+	? Note["sourceContexts"]
+	: Note extends { readonly kind: "Shadow" }
+		? Note["references"]
+		: Note extends { readonly kind: "Lemma" }
+			? Note["connections"]
+			: Note extends { readonly kind: "Surface" }
+				? Pick<Note, "analyses" | "continueCursor" | "isDone">
+				: never;
+
 export type PaginatedNoteTransport<Note extends PaginatedNote> = (
 	cursor: string,
-) => Promise<Note | null>;
+) => Promise<NotePage<Note> | null>;
 
 /**
  * Owns pagination composition for every Note kind, including stale request
@@ -100,11 +116,11 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 			try {
 				const next = await loadPage(cursor);
 				if (requestedRevision !== revision) return;
-				if (!next || !sameNote(requestedNote, next)) {
+				if (!next) {
 					publish({ ...snapshot, hasMore: false });
 					return;
 				}
-				const merged = mergeNotePages(requestedNote, next);
+				const merged = mergeNotePage(requestedNote, next);
 				publish({
 					note: merged,
 					hasMore: !continuation(merged).isDone,
@@ -265,40 +281,40 @@ function rebaseNote<Note extends PaginatedNote>(
 	throw new Error("Paginated Note refresh must describe the same subject.");
 }
 
-function mergeNotePages<Note extends PaginatedNote>(
+function mergeNotePage<Note extends PaginatedNote>(
 	current: Note,
-	next: Note,
+	pageValue: NotePage<Note>,
 ): Note {
-	if (current.kind === "Reading" && next.kind === "Reading") {
+	if (current.kind === "Reading") {
+		const next = pageValue as NotePage<AnyReadingNoteData>;
 		return {
 			...current,
 			sourceContexts: {
 				page: deduplicateBy(
-					[
-						...current.sourceContexts.page,
-						...next.sourceContexts.page,
-					],
+					[...current.sourceContexts.page, ...next.page],
 					(value) => value.attestationId,
 				),
-				continueCursor: next.sourceContexts.continueCursor,
-				isDone: next.sourceContexts.isDone,
+				continueCursor: next.continueCursor,
+				isDone: next.isDone,
 			},
 		} as Note;
 	}
-	if (current.kind === "Shadow" && next.kind === "Shadow") {
+	if (current.kind === "Shadow") {
+		const next = pageValue as NotePage<ShadowNoteData>;
 		return {
 			...current,
 			references: {
 				page: mergeReferrers([
 					...current.references.page,
-					...next.references.page,
+					...next.page,
 				]),
-				continueCursor: next.references.continueCursor,
-				isDone: next.references.isDone,
+				continueCursor: next.continueCursor,
+				isDone: next.isDone,
 			},
 		} as Note;
 	}
-	if (current.kind === "Surface" && next.kind === "Surface") {
+	if (current.kind === "Surface") {
+		const next = pageValue as NotePage<NoteDataFor<"Surface">>;
 		return {
 			...current,
 			analyses: deduplicateBy(
@@ -309,37 +325,27 @@ function mergeNotePages<Note extends PaginatedNote>(
 			isDone: next.isDone,
 		} as Note;
 	}
-	if (current.kind === "Lemma" && next.kind === "Lemma") {
-		return {
-			...current,
-			connections: {
-				surfaces: deduplicateBy(
-					[
-						...current.connections.surfaces,
-						...next.connections.surfaces,
-					],
-					(value) => value.surfaceId,
-				),
-				readings: deduplicateBy(
-					[
-						...current.connections.readings,
-						...next.connections.readings,
-					],
-					(value) => value.readingId,
-				),
-				sameWrittenForm: deduplicateBy(
-					[
-						...current.connections.sameWrittenForm,
-						...next.connections.sameWrittenForm,
-					],
-					(value) => value.lemmaId,
-				),
-				continueCursor: next.connections.continueCursor,
-				isDone: next.connections.isDone,
-			},
-		} as Note;
-	}
-	throw new Error("Paginated Note pages must describe the same subject.");
+	const next = pageValue as NotePage<NoteDataFor<"Lemma">>;
+	const connections = (current as NoteDataFor<"Lemma">).connections;
+	return {
+		...current,
+		connections: {
+			surfaces: deduplicateBy(
+				[...connections.surfaces, ...next.surfaces],
+				(value) => value.surfaceId,
+			),
+			readings: deduplicateBy(
+				[...connections.readings, ...next.readings],
+				(value) => value.readingId,
+			),
+			sameWrittenForm: deduplicateBy(
+				[...connections.sameWrittenForm, ...next.sameWrittenForm],
+				(value) => value.lemmaId,
+			),
+			continueCursor: next.continueCursor,
+			isDone: next.isDone,
+		},
+	} as Note;
 }
 
 function mergeReferrers(

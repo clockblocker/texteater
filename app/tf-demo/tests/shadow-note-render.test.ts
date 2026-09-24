@@ -122,7 +122,10 @@ test("the paginated Note interface merges Shadow referrers by Reading", async ()
 			structuralReferences: [],
 		},
 	];
-	const loader = createPaginatedNoteLoader(first, async () => next);
+	const loader = createPaginatedNoteLoader(
+		first,
+		async () => next.references,
+	);
 
 	await loader.loadMore();
 

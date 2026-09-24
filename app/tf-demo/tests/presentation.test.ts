@@ -10,7 +10,10 @@ import {
 import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
 import { projectResolvedRelationTargets } from "../convex/modules/notes/relations";
 import { isUnitReadingFamily } from "../convex/modules/notes/unitReadingFamilies";
-import { get as getReadingNote } from "../convex/readingNotes";
+import {
+	get as getReadingNote,
+	sourceContexts as getSourceContexts,
+} from "../convex/readingNotes";
 import { get as getTextView, occurrenceFocus } from "../convex/textViews";
 import {
 	lemmaIdentityKey,
@@ -367,7 +370,13 @@ test("note and text queries expose target-specific interfaces", () => {
 	expect(focusArgs).toContain('"textId"');
 	expect(focusArgs).toContain('"attestationId"');
 	expect(noteArgs).toContain('"readingId"');
-	expect(noteArgs).toContain('"contextCursor"');
+	// Paging travels through its own query, so the body never takes a cursor.
+	expect(noteArgs).not.toContain('"contextCursor"');
+	expect(getSourceContexts.exportArgs()).toContain('"cursor"');
+	expect(getSourceContexts.exportReturns()).toContain('"sentenceSnippet"');
+	expect(getSourceContexts.exportReturns()).not.toContain(
+		'"personalAnnotation"',
+	);
 	expect(noteArgs).toContain('"visitorId"');
 	expect(noteArgs).not.toContain('"value":"RouteNote"');
 	expect(noteArgs).not.toContain('"value":"ShadowNote"');

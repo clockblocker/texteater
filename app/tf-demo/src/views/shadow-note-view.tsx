@@ -67,13 +67,11 @@ function ShadowNoteContainer({
 		api.orchestration.cleanupPendingRelation,
 	);
 	const loadShadowPage = useCallback(
-		async (cursor: string): Promise<ShadowNote | null> => {
-			const next = await convex.query(api.shadowNotes.get, {
+		(cursor: string) =>
+			convex.query(api.shadowNotes.references, {
 				shadowId: note.target.shadowId,
-				contextCursor: cursor,
-			});
-			return next?.kind === "Shadow" ? next : null;
-		},
+				cursor,
+			}),
 		[convex, note.target.shadowId],
 	);
 	const pagination = usePaginatedNoteLoading(note, loadShadowPage);

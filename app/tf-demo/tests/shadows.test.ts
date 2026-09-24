@@ -130,15 +130,16 @@ async function insertSourceReading(
 	});
 }
 
-function shadowNote(
+function shadowNote(t: TestConvexDb, shadowId: Id<"shadows">) {
+	return t.query(api.shadowNotes.get, { shadowId });
+}
+
+function shadowReferences(
 	t: TestConvexDb,
 	shadowId: Id<"shadows">,
-	contextCursor?: string,
+	cursor = "",
 ) {
-	return t.query(api.shadowNotes.get, {
-		shadowId,
-		...(contextCursor ? { contextCursor } : {}),
-	});
+	return t.query(api.shadowNotes.references, { shadowId, cursor });
 }
 
 describe("Shadow descriptor and storage seam", () => {
@@ -375,14 +376,12 @@ describe("Shadow backfills and presentation", () => {
 		expect(note.references.page).toHaveLength(1);
 		expect(note.references.page[0]?.pendingRelations).toHaveLength(1);
 		expect(note.references.page[0]?.structuralReferences).toHaveLength(0);
-		const structuralPage = await shadowNote(
+		const structuralPage = await shadowReferences(
 			t,
 			shadowId,
 			note.references.continueCursor,
 		);
-		expect(
-			structuralPage?.references.page[0]?.structuralReferences,
-		).toHaveLength(2);
+		expect(structuralPage?.page[0]?.structuralReferences).toHaveLength(2);
 
 		await t.run(async (ctx) => {
 			for (const row of await ctx.db
@@ -416,13 +415,13 @@ describe("Shadow backfills and presentation", () => {
 		const first = await shadowNote(t, shadowId);
 		expect(first?.references.page[0]?.pendingRelations).toHaveLength(50);
 		expect(first?.references.isDone).toBe(false);
-		const second = await shadowNote(
+		const second = await shadowReferences(
 			t,
 			shadowId,
 			first?.references.continueCursor,
 		);
-		expect(second?.references.page[0]?.pendingRelations).toHaveLength(1);
-		expect(second?.references.isDone).toBe(true);
+		expect(second?.page[0]?.pendingRelations).toHaveLength(1);
+		expect(second?.isDone).toBe(true);
 	});
 
 	test("inspects zero, one, or many dictionary-backed candidates by the exact normalized descriptor", async () => {

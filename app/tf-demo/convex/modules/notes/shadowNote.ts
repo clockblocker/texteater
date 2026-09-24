@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import type * as Dumrel from "dumrel/types";
 
-import type { Id } from "../../_generated/dataModel";
+import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
 	collectStructuralShadowReferences,
@@ -29,6 +29,40 @@ const unitShadowProjectionValidator = v.object({
 	kind: v.string(),
 });
 
+/** One page of the Readings that refer to a Shadow, loaded apart from the Note body. */
+export const shadowReferencePageValidator = v.object({
+	page: v.array(
+		v.object({
+			reading: v.object({
+				readingId: v.id("readings"),
+				canonicalForm: v.string(),
+				emojiDescription: v.string(),
+				target: v.object({
+					kind: v.literal("Reading"),
+					readingId: v.id("readings"),
+				}),
+			}),
+			pendingRelations: v.array(
+				v.object({
+					locatorKey: v.string(),
+					relation: semanticRelationValidator,
+				}),
+			),
+			structuralReferences: v.array(
+				v.object({
+					aspect: v.union(
+						v.literal("morphologicalTree"),
+						v.literal("lexicalBreakdown"),
+					),
+					path: v.string(),
+				}),
+			),
+		}),
+	),
+	continueCursor: v.string(),
+	isDone: v.boolean(),
+});
+
 export const shadowNoteValidator = v.object({
 	kind: v.literal("Shadow"),
 	target: v.object({
@@ -52,38 +86,7 @@ export const shadowNoteValidator = v.object({
 			}),
 		),
 	}),
-	references: v.object({
-		page: v.array(
-			v.object({
-				reading: v.object({
-					readingId: v.id("readings"),
-					canonicalForm: v.string(),
-					emojiDescription: v.string(),
-					target: v.object({
-						kind: v.literal("Reading"),
-						readingId: v.id("readings"),
-					}),
-				}),
-				pendingRelations: v.array(
-					v.object({
-						locatorKey: v.string(),
-						relation: semanticRelationValidator,
-					}),
-				),
-				structuralReferences: v.array(
-					v.object({
-						aspect: v.union(
-							v.literal("morphologicalTree"),
-							v.literal("lexicalBreakdown"),
-						),
-						path: v.string(),
-					}),
-				),
-			}),
-		),
-		continueCursor: v.string(),
-		isDone: v.boolean(),
-	}),
+	references: shadowReferencePageValidator,
 });
 
 type ShadowReferenceCursor = {
@@ -200,23 +203,59 @@ async function loadShadowInspection(
 	};
 }
 
-export async function loadShadowNote(
-	ctx: QueryCtx,
-	shadowIdValue: string,
-	contextCursor?: string,
-) {
+async function loadCompatibleShadow(ctx: QueryCtx, shadowIdValue: string) {
 	const shadowId = ctx.db.normalizeId("shadows", shadowIdValue);
 	if (!shadowId) return null;
 	const shadow = await ctx.db.get(shadowId);
 	if (!shadow) return null;
-	let descriptor: ShadowDescriptor;
 	try {
-		descriptor = descriptorFromStoredShadow(shadow);
-		if (!shadowIsCompatible(shadow, descriptor)) return null;
+		const descriptor = descriptorFromStoredShadow(shadow);
+		return shadowIsCompatible(shadow, descriptor)
+			? { shadow, descriptor }
+			: null;
 	} catch {
 		return null;
 	}
+}
 
+/** The Shadow Note body with the first page of its references. */
+export async function loadShadowNote(ctx: QueryCtx, shadowIdValue: string) {
+	const compatible = await loadCompatibleShadow(ctx, shadowIdValue);
+	if (!compatible) return null;
+	const { shadow, descriptor } = compatible;
+	const references = await loadShadowReferencePage(ctx, shadow);
+	if (!references) return null;
+	return {
+		kind: "Shadow" as const,
+		target: { kind: "Shadow" as const, shadowId: shadow._id },
+		descriptor,
+		inspection: await loadShadowInspection(ctx, descriptor),
+		references,
+	};
+}
+
+/** A later page of a Shadow's references; the body is not recomputed. */
+export async function loadShadowNoteReferences(
+	ctx: QueryCtx,
+	shadowIdValue: string,
+	cursor: string,
+) {
+	const compatible = await loadCompatibleShadow(ctx, shadowIdValue);
+	return compatible
+		? loadShadowReferencePage(ctx, compatible.shadow, cursor)
+		: null;
+}
+
+/**
+ * One page of the Readings that refer to the Shadow, grouped by Reading.
+ * Null when the Shadow has no references or a reference no longer matches.
+ */
+async function loadShadowReferencePage(
+	ctx: QueryCtx,
+	shadow: Doc<"shadows">,
+	contextCursor?: string,
+) {
+	const shadowId = shadow._id;
 	const [firstPending, firstStructural] = await Promise.all([
 		ctx.db
 			.query("pendingSemanticRelations")
@@ -423,26 +462,20 @@ export async function loadShadowNote(
 	}
 
 	return {
-		kind: "Shadow" as const,
-		target: { kind: "Shadow" as const, shadowId: shadow._id },
-		descriptor,
-		inspection: await loadShadowInspection(ctx, descriptor),
-		references: {
-			page: [...groups.values()].map((group) => ({
-				...group,
-				pendingRelations: group.pendingRelations.sort((left, right) =>
-					left.locatorKey.localeCompare(right.locatorKey),
-				),
-				structuralReferences: group.structuralReferences.sort(
-					(left, right) =>
-						`${left.aspect}:${left.path}`.localeCompare(
-							`${right.aspect}:${right.path}`,
-						),
-				),
-			})),
-			continueCursor,
-			isDone,
-		},
+		page: [...groups.values()].map((group) => ({
+			...group,
+			pendingRelations: group.pendingRelations.sort((left, right) =>
+				left.locatorKey.localeCompare(right.locatorKey),
+			),
+			structuralReferences: group.structuralReferences.sort(
+				(left, right) =>
+					`${left.aspect}:${left.path}`.localeCompare(
+						`${right.aspect}:${right.path}`,
+					),
+			),
+		})),
+		continueCursor,
+		isDone,
 	};
 }
 

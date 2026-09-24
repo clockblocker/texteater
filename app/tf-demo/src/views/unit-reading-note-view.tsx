@@ -149,14 +149,12 @@ function ReadingNoteContainer({
 		mutationFn: updatePersonalAnnotation,
 	});
 	const loadSourceContextPage = useCallback(
-		async (cursor: string): Promise<UnitReadingNote | null> => {
-			const next = await convex.query(api.readingNotes.get, {
+		(cursor: string) =>
+			convex.query(api.readingNotes.sourceContexts, {
 				readingId: note.target.readingId,
 				visitorId,
-				contextCursor: cursor,
-			});
-			return next?.kind === "Reading" ? next : null;
-		},
+				cursor,
+			}),
 		[convex, note.target.readingId, visitorId],
 	);
 	const pagination = usePaginatedNoteLoading(note, loadSourceContextPage);

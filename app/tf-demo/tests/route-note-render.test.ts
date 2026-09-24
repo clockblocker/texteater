@@ -96,7 +96,6 @@ test("Surface Note pages merge every analysis without replacing the aggregate", 
 		isDone: false,
 	};
 	const second = {
-		...surfaceNote(),
 		analyses: surfaceNote().analyses.slice(1),
 		continueCursor: "",
 		isDone: true,

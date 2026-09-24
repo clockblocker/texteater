@@ -143,6 +143,25 @@ const readingKnowledgeValidator = v.object({
 	),
 });
 
+/** One page of a Reading's Source Contexts, loaded apart from the Note body. */
+export const sourceContextPageValidator = v.object({
+	page: v.array(
+		v.object({
+			attestationId: v.id("attestations"),
+			textId: v.id("texts"),
+			sentencePosition: v.number(),
+			sentenceSnippet: v.string(),
+			segments: v.array(sourceSegmentValidator),
+			memberSegmentIndices: v.array(v.number()),
+			memberTexts: v.array(v.string()),
+			origin: sourceOriginValidator,
+			target: sourceTargetValidator,
+		}),
+	),
+	continueCursor: v.string(),
+	isDone: v.boolean(),
+});
+
 export const readingNoteValidator = v.object({
 	kind: v.literal("Reading"),
 	target: v.object({
@@ -183,23 +202,7 @@ export const readingNoteValidator = v.object({
 			sentence: sentenceViewValidator,
 		}),
 	),
-	sourceContexts: v.object({
-		page: v.array(
-			v.object({
-				attestationId: v.id("attestations"),
-				textId: v.id("texts"),
-				sentencePosition: v.number(),
-				sentenceSnippet: v.string(),
-				segments: v.array(sourceSegmentValidator),
-				memberSegmentIndices: v.array(v.number()),
-				memberTexts: v.array(v.string()),
-				origin: sourceOriginValidator,
-				target: sourceTargetValidator,
-			}),
-		),
-		continueCursor: v.string(),
-		isDone: v.boolean(),
-	}),
+	sourceContexts: sourceContextPageValidator,
 });
 
 export type SourceContextProjection = {
@@ -216,18 +219,25 @@ export type SourceContextProjection = {
 	readonly target: SourceTarget;
 };
 
-export async function loadUnitReadingNote(
-	ctx: QueryCtx,
-	readingIdValue: string,
-	visitorId: string,
-	contextCursor?: string,
-) {
+async function loadUnitReading(ctx: QueryCtx, readingIdValue: string) {
 	const readingId = ctx.db.normalizeId("readings", readingIdValue);
 	if (!readingId) return null;
 	const reading = await ctx.db.get(readingId);
 	if (!reading) return null;
 	const lemma = await ctx.db.get(reading.lemmaId);
 	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
+	return { reading, lemma };
+}
+
+/** The Reading Note body with the first page of its Source Contexts. */
+export async function loadUnitReadingNote(
+	ctx: QueryCtx,
+	readingIdValue: string,
+	visitorId: string,
+) {
+	const unit = await loadUnitReading(ctx, readingIdValue);
+	if (!unit) return null;
+	const { reading, lemma } = unit;
 
 	const [
 		readingKnowledge,
@@ -255,13 +265,7 @@ export async function loadUnitReadingNote(
 			)
 			.take(MAX_PENDING_RELATIONS_PER_READING_NOTE + 1),
 		loadStructuralReferencesForReading(ctx, reading.readingKey),
-		loadSourceContextPage(
-			ctx,
-			reading._id,
-			reading.readingKey,
-			visitorId,
-			contextCursor,
-		),
+		loadSourceContextPage(ctx, reading._id, reading.readingKey, visitorId),
 		ctx.db
 			.query("knowledgeGenerationAttempts")
 			.withIndex("by_owner_reading_key_and_updated_at", (q) =>
@@ -366,6 +370,24 @@ async function projectDefinitionText(
 		state: "Ready" as const,
 		sentence: await projectSentenceView(ctx, sentence, visitorId),
 	};
+}
+
+/** A later page of a Reading's Source Contexts; the body is not recomputed. */
+export async function loadReadingSourceContexts(
+	ctx: QueryCtx,
+	readingIdValue: string,
+	visitorId: string,
+	cursor: string,
+) {
+	const unit = await loadUnitReading(ctx, readingIdValue);
+	if (!unit) return null;
+	return loadSourceContextPage(
+		ctx,
+		unit.reading._id,
+		unit.reading.readingKey,
+		visitorId,
+		cursor,
+	);
 }
 
 export async function loadSourceContextPage(

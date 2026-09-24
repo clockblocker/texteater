@@ -88,7 +88,7 @@ function PaginatedSurfaceNote({
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
 	const loadSurfacePage = useCallback(
-		async (cursor: string): Promise<PaginatedSurfaceNote | null> => {
+		async (cursor: string) => {
 			const next = await convex.query(api.routeNotes.get, {
 				target: {
 					kind: "Surface",
@@ -97,7 +97,13 @@ function PaginatedSurfaceNote({
 					contextCursor: cursor,
 				},
 			});
-			return next?.kind === "Surface" ? next : null;
+			return next?.kind === "Surface"
+				? {
+						analyses: next.analyses,
+						continueCursor: next.continueCursor,
+						isDone: next.isDone,
+					}
+				: null;
 		},
 		[
 			convex,
@@ -131,7 +137,7 @@ function PaginatedRouteNote({
 	const convex = useConvex();
 	const nounArticle = useNounArticleNavigation();
 	const loadRoutePage = useCallback(
-		async (cursor: string): Promise<PaginatedRouteNote | null> => {
+		async (cursor: string) => {
 			const next = await convex.query(api.routeNotes.get, {
 				target: {
 					kind: "Lemma",
@@ -139,7 +145,7 @@ function PaginatedRouteNote({
 					contextCursor: cursor,
 				},
 			});
-			return next?.kind === "Lemma" ? next : null;
+			return next?.kind === "Lemma" ? next.connections : null;
 		},
 		[convex, initialNote.target.lemmaId],
 	);
