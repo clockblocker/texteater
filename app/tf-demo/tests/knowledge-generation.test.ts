@@ -10,7 +10,10 @@ import {
 	generatedKnowledgeAllowedForPublication,
 	RELATION_PUBLICATION_FINGERPRINTS,
 } from "../convex/model/generatedKnowledgeContainment";
-import { STALE_KNOWLEDGE_RUN_AFTER_MS } from "../convex/model/knowledgeAttempts";
+import {
+	KNOWLEDGE_RETRY_COOLDOWN_MS,
+	STALE_KNOWLEDGE_RUN_AFTER_MS,
+} from "../convex/model/knowledgeAttempts";
 import { replaceAccumulatedKnowledge } from "../convex/model/shadows";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
@@ -935,6 +938,48 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	const [retried] = await attempts(retry);
 	expect(retried).toEqual(expect.objectContaining({ state: "Scheduled" }));
 	expect(retried).not.toHaveProperty("failureMessage");
+});
+
+test("a repeated demand reruns a Failed attempt only after its cooldown, unless it was interrupted", async () => {
+	const demandAgain = async (failureCode: string) => {
+		const t = createTestConvex();
+		const occurrence = await seedOccurrence(t);
+		await insertAttempt(t, occurrence, "failed", {
+			state: "Failed",
+			failureCode,
+			failureMessage: "Knowledge generation failed. Please retry.",
+			createdAt: Date.now(),
+		});
+		await schedule(t, {
+			attemptKey: "failed",
+			visitorId: "visitor-1",
+			readingId: occurrence.readingId,
+			attestationId: occurrence.attestationId,
+		});
+		return t;
+	};
+
+	const failed = await demandAgain("generationFailed");
+	expect(await scheduledAttempts(failed)).toEqual([]);
+	expect((await attempts(failed))[0]).toMatchObject({ state: "Failed" });
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	const [attempt] = await attempts(failed);
+	if (!attempt) throw new Error("Expected the Failed attempt.");
+	await schedule(failed, {
+		attemptKey: "failed",
+		visitorId: "visitor-1",
+		readingId: attempt.readingId,
+		attestationId: attempt.attestationId,
+	});
+	expect(await scheduledAttempts(failed)).toEqual(queued("failed"));
+	expect((await attempts(failed))[0]).toMatchObject({ state: "Scheduled" });
+
+	const interrupted = await demandAgain("interrupted");
+	expect(await scheduledAttempts(interrupted)).toEqual(queued("failed"));
+	expect((await attempts(interrupted))[0]).toMatchObject({
+		state: "Scheduled",
+	});
 });
 
 test("a second Knowledge demand for the same Reading waits for the active attempt", async () => {

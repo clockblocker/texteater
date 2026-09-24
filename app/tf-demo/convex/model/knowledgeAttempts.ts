@@ -21,6 +21,13 @@ export type KnowledgeAttempt = Doc<"knowledgeGenerationAttempts">;
 /** Longer than a Convex action may run, so a quiet run is a dead one. */
 export const STALE_KNOWLEDGE_RUN_AFTER_MS = 11 * 60 * 1_000;
 
+/**
+ * How long a Failed attempt waits before a repeated demand reruns it. Failure
+ * codes cannot tell a passing failure from a lasting one, and opening a note
+ * demands again, so only an interrupted run retries at once.
+ */
+export const KNOWLEDGE_RETRY_COOLDOWN_MS = 5 * 60 * 1_000;
+
 const INTERRUPTED_MESSAGE =
 	"Knowledge generation was interrupted. Please retry.";
 
@@ -136,8 +143,9 @@ async function promoteNextWaiting(
 
 /**
  * Records one occurrence's demand for Knowledge. A repeated demand is
- * idempotent; one for a Failed attempt retries it. Only one attempt per
- * Reading is active, and later demands wait behind it.
+ * idempotent; one for a Failed attempt retries it, at once when the run was
+ * interrupted and otherwise once the retry cooldown has passed. Only one
+ * attempt per Reading is active, and later demands wait behind it.
  */
 export async function demandKnowledgeAttempt(
 	ctx: MutationCtx,
@@ -161,7 +169,11 @@ export async function demandKnowledgeAttempt(
 		) {
 			throw new Error("attemptKey collides with a different occurrence.");
 		}
-		if (existing.state === "Failed")
+		if (
+			existing.state === "Failed" &&
+			(existing.failureCode === "interrupted" ||
+				Date.now() - existing.updatedAt >= KNOWLEDGE_RETRY_COOLDOWN_MS)
+		)
 			await retryFailedAttempt(ctx, existing);
 		return;
 	}
