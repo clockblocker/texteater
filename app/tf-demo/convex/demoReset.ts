@@ -48,6 +48,7 @@ export const resetDemoTableNames = [
 	"generatedRelationProposals",
 	"generatedRelationRuns",
 	"knowledgeProductionRuns",
+	"intakeRuns",
 	"knowledgeGenerationAttempts",
 	"relationPublicationControls",
 	"knowledgeSettings",

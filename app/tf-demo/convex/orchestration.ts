@@ -12,6 +12,13 @@ import {
 	spanHops,
 } from "../server/inspectionCapture";
 import {
+	attemptOutcomeOf,
+	createIntakeRunRecorder,
+	type IntakeRun,
+	type IntakeRunRecorder,
+	recordIntakeRun,
+} from "../server/intakeRun";
+import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
 	type OrchestrationPersistence,
@@ -75,12 +82,14 @@ export const submitText = action({
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
 		// Only limit violations become Rejected, checked here before any
 		// work; every other failure still throws.
+		const sentences = splitInSentences(args.sourceText);
 		const limitViolation = textSubmissionLimitViolation(
 			args.sourceText,
-			splitInSentences(args.sourceText),
+			sentences,
 		);
 		if (limitViolation !== undefined)
 			return { status: "Rejected", message: limitViolation };
+		const sentenceCount = sentences.length;
 		const requestId = crypto.randomUUID();
 		if (args.inspectionVisitorId) {
 			await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
@@ -94,11 +103,17 @@ export const submitText = action({
 			requestId,
 			Boolean(args.inspectionVisitorId),
 		);
+		const intake = createIntakeRunRecorder(sentenceCount);
+		const createdAt = Date.now();
+		const start = performance.now();
 		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
+		let attempt: Pick<IntakeRun, "outcome" | "failureTag" | "textId"> = {
+			outcome: "Accepted",
+		};
 		try {
 			const result = await Effect.runPromise(
 				inspected(
-					orchestratorFor(ctx, null, undefined, inspection)
+					orchestratorFor(ctx, null, undefined, inspection, intake)
 						.submitText(args)
 						.pipe(
 							Effect.withSpan("Analyze submitted text", {
@@ -113,10 +128,12 @@ export const submitText = action({
 				),
 			);
 			state = "Complete";
-			return {
-				status: "Accepted",
-				textId: convexId<"texts">(result.persisted.textId),
-			};
+			const textId = convexId<"texts">(result.persisted.textId);
+			attempt = { outcome: "Accepted", textId };
+			return { status: "Accepted", textId };
+		} catch (error) {
+			attempt = attemptOutcomeOf(error);
+			throw error;
 		} finally {
 			await inspection?.flush();
 			if (args.inspectionVisitorId) {
@@ -125,6 +142,16 @@ export const submitText = action({
 					{ requestId, state },
 				);
 			}
+			await recordIntakeRun(
+				(run) => ctx.runMutation(internal.intakeRuns.record, run),
+				intake.summary({
+					runId: requestId,
+					submissionKey: args.submissionKey,
+					...attempt,
+					durationMs: performance.now() - start,
+					createdAt,
+				}),
+			);
 		}
 	},
 });
@@ -187,6 +214,7 @@ function orchestratorFor(
 	sessionGuard: ResolutionSessionGuard | null,
 	observer?: ResolutionProgressObserver,
 	inspection?: InspectionCapture,
+	intake?: IntakeRunRecorder,
 ) {
 	const dictionary = createDumdictService({
 		language: "de",
@@ -233,12 +261,13 @@ function orchestratorFor(
 			}),
 		dumgen: createProductionDumgen(
 			observer?.generationEvent,
-			{},
+			intake ? { onOperation: intake.operation } : {},
 			inspection,
 		),
 		dictionary,
 		persistence,
 		...(observer ? { observer } : {}),
+		...(intake ? { intake } : {}),
 	});
 }
 

@@ -30,6 +30,7 @@ export function createProductionDumgen(
 		| "judgmentConfiguration"
 		| "onKnowledgeContribution"
 		| "knowledgeDraft"
+		| "onOperation"
 	> = {},
 	inspection?: InspectionCapture,
 	transport?: LunaTransport,
@@ -73,6 +74,7 @@ function productionOptions(
 				},
 			};
 			inspection?.operation(trace);
+			configuration.onOperation?.(trace);
 			onEvent?.({
 				kind: "TraceRecorded",
 				traceJson: JSON.stringify(trace),

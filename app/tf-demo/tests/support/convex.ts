@@ -30,14 +30,28 @@ export function createTestConvex(): TestConvexDb {
 	return convexTest(schema, modules);
 }
 
+/** The stand-in with some Convex modules replaced, keyed by their path under convex/. */
+export function createTestConvexWith(
+	replaced: Record<string, () => Promise<unknown>>,
+): TestConvexDb {
+	return convexTest(schema, {
+		...modules,
+		...Object.fromEntries(
+			Object.entries(replaced).map(([path, load]) => [
+				`../../convex/${path}`,
+				load,
+			]),
+		),
+	});
+}
+
 /**
  * The stand-in with the playground fixtures from tooling/ registered as the
  * `playgroundFixtures` module, reachable through `playgroundFixtures`.
  */
 export function createPlaygroundConvex(): TestConvexDb {
-	return convexTest(schema, {
-		...modules,
-		"../../convex/playgroundFixtures.ts": () =>
+	return createTestConvexWith({
+		"playgroundFixtures.ts": () =>
 			import("../../tooling/playground-fixtures"),
 	});
 }

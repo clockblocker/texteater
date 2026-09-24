@@ -20,6 +20,7 @@ import type * as dumdictStorage_storage from "../dumdictStorage/storage.js";
 import type * as dumdictStorage_transaction from "../dumdictStorage/transaction.js";
 import type * as dumdictTransaction from "../dumdictTransaction.js";
 import type * as inspectionAction from "../inspectionAction.js";
+import type * as intakeRuns from "../intakeRuns.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
 import type * as knowledgeSettings from "../knowledgeSettings.js";
@@ -31,6 +32,7 @@ import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexe
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_grammarCheckpoint from "../model/grammarCheckpoint.js";
 import type * as model_inspection from "../model/inspection.js";
+import type * as model_intakeRuns from "../model/intakeRuns.js";
 import type * as model_knowledgeAttempts from "../model/knowledgeAttempts.js";
 import type * as model_knowledgeCoverage from "../model/knowledgeCoverage.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
@@ -93,6 +95,7 @@ declare const fullApi: ApiFromModules<{
   "dumdictStorage/transaction": typeof dumdictStorage_transaction;
   dumdictTransaction: typeof dumdictTransaction;
   inspectionAction: typeof inspectionAction;
+  intakeRuns: typeof intakeRuns;
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
   knowledgeSettings: typeof knowledgeSettings;
@@ -104,6 +107,7 @@ declare const fullApi: ApiFromModules<{
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/grammarCheckpoint": typeof model_grammarCheckpoint;
   "model/inspection": typeof model_inspection;
+  "model/intakeRuns": typeof model_intakeRuns;
   "model/knowledgeAttempts": typeof model_knowledgeAttempts;
   "model/knowledgeCoverage": typeof model_knowledgeCoverage;
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;

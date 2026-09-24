@@ -29,6 +29,7 @@ import {
 	storedSegmentsOf,
 } from "../convex/model/storedSegments";
 import { inspectionStep } from "./inspectionCapture";
+import { analysisOutcomeOf, type IntakeRunRecorder } from "./intakeRun";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
@@ -332,6 +333,8 @@ export function createTfDemoOrchestrator(options: {
 	readonly draftGraceMs?: number;
 	/** Measurement seam; production uses SENTENCE_ANALYSIS_CONCURRENCY. */
 	readonly analysisConcurrency?: number;
+	/** Receives each started Sentence Analysis outcome by sentence position. */
+	readonly intake?: Pick<IntakeRunRecorder, "analysed">;
 }) {
 	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
 	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
@@ -399,7 +402,7 @@ export function createTfDemoOrchestrator(options: {
 				accepted,
 				({ sentence, position }) =>
 					Effect.map(
-						analyzeAcceptedSentence(sentence),
+						analyzeAcceptedSentence(sentence, position),
 						(analysis): SubmittedSentence => {
 							const stitchedText = sentence.segments
 								.map(({ text }) => text)
@@ -444,6 +447,7 @@ export function createTfDemoOrchestrator(options: {
 
 	function analyzeAcceptedSentence(
 		sentence: SegmentedSentence<"de" | "en" | "he">,
+		position: number,
 	): Effect.Effect<SentenceAnalysis | null> {
 		if (sentence.language !== "de") return Effect.succeed(null);
 		const german: SegmentedSentence<"de"> = { ...sentence, language: "de" };
@@ -453,6 +457,11 @@ export function createTfDemoOrchestrator(options: {
 				inspectionStep("app/tf-demo · linguisticOrchestration", {
 					sentenceId: sentence.id,
 				}),
+			),
+			Effect.onExit((exit) =>
+				Effect.sync(() =>
+					options.intake?.analysed(position, analysisOutcomeOf(exit)),
+				),
 			),
 			withoutFailedWork(
 				`Sentence Analysis for ${sentence.id}`,

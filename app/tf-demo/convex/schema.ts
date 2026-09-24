@@ -1,6 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { inspectionStepValidator } from "./model/inspection";
+import { intakeRunValidator } from "./model/intakeRuns";
 
 import {
 	catalogMissStageValidator,
@@ -66,6 +67,10 @@ export default defineSchema({
 		part: v.number(),
 		text: v.string(),
 	}).index("by_step_id_and_part", ["stepId", "part"]),
+
+	intakeRuns: defineTable(intakeRunValidator)
+		.index("by_run_id", ["runId"])
+		.index("by_submission_key", ["submissionKey"]),
 
 	texts: defineTable({
 		title: v.optional(v.string()),

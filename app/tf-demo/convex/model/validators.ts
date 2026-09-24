@@ -23,7 +23,7 @@ const semanticRelationValues = [
 
 import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
 
-function literalUnion<const Value extends string>(
+export function literalUnion<const Value extends string>(
 	values: readonly [Value, ...Value[]],
 ) {
 	const [first, ...rest] = values;
