@@ -8,7 +8,9 @@ import {
 	type MutationCtx,
 } from "./_generated/server";
 import {
+	DEFINITION_FAILED_MESSAGE,
 	findDefinitionText,
+	MAX_INTERRUPTED_DEFINITION_TEXT_RUNS,
 	ownsDefinitionTextRun,
 	STALE_DEFINITION_TEXT_RUN_AFTER_MS,
 	scheduleDefinitionTextRun,
@@ -22,8 +24,6 @@ import {
 } from "./model/validators";
 
 const MAX_SENTENCES_PER_DEFINITION = 8;
-
-const DEFINITION_FAILED_MESSAGE = "Definition segmentation failed.";
 
 export const loadSync = internalQuery({
 	args: { ownerReadingKey: v.string() },
@@ -89,7 +89,8 @@ export const markRunning = internalMutation({
 /**
  * The watchdog every scheduled run carries. A run that stayed Scheduled or
  * Running longer than an action may live lost its action, so the row goes
- * back to Scheduled and materializes again for the latest definition.
+ * back to Scheduled and materializes again for the latest definition. After
+ * MAX_INTERRUPTED_DEFINITION_TEXT_RUNS dead runs in a row it fails instead.
  */
 export const recoverStaleRun = internalMutation({
 	args: { ownerReadingKey: v.string(), runNumber: v.number() },
@@ -106,8 +107,19 @@ export const recoverStaleRun = internalMutation({
 			);
 			return false;
 		}
+		const interruptedRuns = (row.interruptedRuns ?? 0) + 1;
+		if (interruptedRuns >= MAX_INTERRUPTED_DEFINITION_TEXT_RUNS) {
+			await ctx.db.patch(row._id, {
+				state: "Failed",
+				interruptedRuns,
+				failureMessage: DEFINITION_FAILED_MESSAGE,
+				updatedAt: Date.now(),
+			});
+			return true;
+		}
 		await ctx.db.patch(row._id, {
 			state: "Scheduled",
+			interruptedRuns,
 			updatedAt: Date.now(),
 		});
 		await scheduleDefinitionTextRun(ctx, row);
@@ -215,6 +227,7 @@ export const settle = internalMutation({
 			}
 			await ctx.db.patch(row._id, {
 				state: "Scheduled",
+				interruptedRuns: undefined,
 				updatedAt: Date.now(),
 			});
 			await scheduleDefinitionTextRun(ctx, row);
@@ -225,6 +238,7 @@ export const settle = internalMutation({
 				state: "Failed",
 				// The internal error stays in the log; the learner sees this.
 				failureMessage: DEFINITION_FAILED_MESSAGE,
+				interruptedRuns: undefined,
 				updatedAt: Date.now(),
 			});
 			return "Settled";
@@ -232,6 +246,7 @@ export const settle = internalMutation({
 		if (row.definition !== row.materializedDefinition) {
 			await ctx.db.patch(row._id, {
 				state: "Scheduled",
+				interruptedRuns: undefined,
 				updatedAt: Date.now(),
 			});
 			await scheduleDefinitionTextRun(ctx, row);
@@ -240,6 +255,7 @@ export const settle = internalMutation({
 		if (row.state !== "Ready") {
 			await ctx.db.patch(row._id, {
 				state: "Ready",
+				interruptedRuns: undefined,
 				updatedAt: Date.now(),
 			});
 		}

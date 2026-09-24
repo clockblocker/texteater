@@ -7,6 +7,7 @@ import { stripAllAnalyses } from "../convex/demoReset";
 import {
 	definitionOf,
 	findDefinitionText,
+	MAX_INTERRUPTED_DEFINITION_TEXT_RUNS,
 	STALE_DEFINITION_TEXT_RUN_AFTER_MS,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
@@ -395,6 +396,63 @@ test("the watchdog reruns a Scheduled row whose action never claimed it, and a f
 		state: "Failed",
 		failureMessage: "Definition segmentation failed.",
 	});
+});
+
+test("the watchdog fails a row whose runs keep dying, and the next Knowledge change reschedules it", async () => {
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Alt." });
+	for (let dead = 1; dead <= MAX_INTERRUPTED_DEFINITION_TEXT_RUNS; dead++) {
+		const runNumber = await claimRun(t);
+		jest.setSystemTime(Date.now() + STALE_DEFINITION_TEXT_RUN_AFTER_MS);
+		expect(
+			await t.mutation(internal.definitionTexts.recoverStaleRun, {
+				ownerReadingKey: READING_KEY,
+				runNumber,
+			}),
+		).toBe(true);
+	}
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
+		state: "Failed",
+		interruptedRuns: MAX_INTERRUPTED_DEFINITION_TEXT_RUNS,
+		failureMessage: "Definition segmentation failed.",
+	});
+	// The first run and one rerun per recovery but the last.
+	expect(await scheduledRuns(t)).toHaveLength(
+		MAX_INTERRUPTED_DEFINITION_TEXT_RUNS,
+	);
+
+	await sync(t, { definition: "Alt." });
+	const [row] = await tableRows(t, "definitionTexts");
+	expect(row).toMatchObject({ state: "Scheduled" });
+	expect(row).not.toHaveProperty("interruptedRuns");
+	expect(await scheduledRuns(t)).toHaveLength(
+		MAX_INTERRUPTED_DEFINITION_TEXT_RUNS + 1,
+	);
+});
+
+test("a run that settles ends the row's streak of dead runs", async () => {
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Alt." });
+	const deadRun = await claimRun(t);
+	jest.setSystemTime(Date.now() + STALE_DEFINITION_TEXT_RUN_AFTER_MS);
+	await t.mutation(internal.definitionTexts.recoverStaleRun, {
+		ownerReadingKey: READING_KEY,
+		runNumber: deadRun,
+	});
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
+		interruptedRuns: 1,
+	});
+
+	await t.mutation(internal.definitionTexts.settle, {
+		ownerReadingKey: READING_KEY,
+		runNumber: await claimRun(t),
+		outcome: { kind: "Failed" },
+	});
+	expect((await tableRows(t, "definitionTexts"))[0]).not.toHaveProperty(
+		"interruptedRuns",
+	);
 });
 
 /** Wraps a database reader so every method called on it or its queries is named in `calls`. */

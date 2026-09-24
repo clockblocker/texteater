@@ -97,6 +97,8 @@ export default defineSchema({
 		state: definitionTextStateValidator,
 		/** The last materialization run claimed; a late run cannot settle a newer one. */
 		runNumber: v.optional(v.number()),
+		/** Runs in a row the watchdog found dead; cleared when a run settles. */
+		interruptedRuns: v.optional(v.number()),
 		textId: v.optional(v.id("texts")),
 		sentenceId: v.optional(v.id("sentences")),
 		failureMessage: v.optional(v.string()),

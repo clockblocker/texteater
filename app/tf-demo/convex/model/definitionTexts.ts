@@ -33,6 +33,14 @@ const recoverStaleDefinitionTextRun = makeFunctionReference<
 /** Longer than a Convex action may run, so a quiet run is a dead one. */
 export const STALE_DEFINITION_TEXT_RUN_AFTER_MS = 11 * 60 * 1_000;
 
+/**
+ * Dead runs in a row after which the watchdog fails the row instead of
+ * running it again. The next change to the Reading's Knowledge reschedules it.
+ */
+export const MAX_INTERRUPTED_DEFINITION_TEXT_RUNS = 3;
+
+export const DEFINITION_FAILED_MESSAGE = "Definition segmentation failed.";
+
 /** The definition aspect of stored Reading Knowledge, or null when absent. */
 export function definitionOf(knowledge: unknown): string | null {
 	if (
@@ -106,6 +114,7 @@ export async function syncDefinitionText(
 		definition,
 		state: settled ? "Scheduled" : existing.state,
 		failureMessage: undefined,
+		...(settled ? { interruptedRuns: undefined } : {}),
 		updatedAt: Date.now(),
 	});
 	if (settled) await scheduleDefinitionTextRun(ctx, existing);
