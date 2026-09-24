@@ -1680,7 +1680,8 @@ describe("Resolution Session", () => {
 			status: "Reused",
 			readingId: winner.readingId,
 			attestationId: winner.attestationId,
-			deduplicated: false,
+			// The winner's commit already advanced the loser's Encounter.
+			deduplicated: true,
 		});
 		expect(await session(t, "request-loser")).toMatchObject({
 			lifecycle: { state: "Terminal", outcome: "Complete" },

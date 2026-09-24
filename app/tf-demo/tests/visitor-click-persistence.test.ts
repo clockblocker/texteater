@@ -335,7 +335,8 @@ test("an unresolved model loser records and returns the committed winner", async
 		status: "Reused",
 		clickId: encounter?._id,
 		attestationId: winnerId,
-		deduplicated: false,
+		// The winner's commit already advanced the loser's Encounter.
+		deduplicated: true,
 		occurrence: {
 			grammatical: {
 				encounter: { target: { memberSegmentIndices: [0, 2] } },

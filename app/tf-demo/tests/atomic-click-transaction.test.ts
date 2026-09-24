@@ -9,6 +9,7 @@ import {
 	migrateCompositionOwnership,
 	migrateNounArticle,
 } from "../convex/model/nounArticleMigration";
+import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
 import schema from "../convex/schema";
 import {
 	lemmaIdentityKey,
@@ -157,6 +158,74 @@ test("a New Reading plans and commits dictionary, occurrence membership, and Cli
 	// Committed Attestation Membership replaces the Segment Resolution State.
 	expect(segment?.resolutionState).toBeUndefined();
 	await expectCompleted(t, "request-1", result.attestationId);
+});
+
+test("a commit advances every Visitor's earlier Encounter of its members, so their Source Contexts show it", async () => {
+	const t = createTestConvex();
+	const { selection, guard, segmentIds } = await selectIn(t, ["Banken"]);
+	const [segmentId] = segmentIds;
+	if (!segmentId) throw new Error("Expected a stored Segment.");
+	const segment = await t.run((ctx) => ctx.db.get(segmentId));
+	if (!segment) throw new Error("Expected a stored Segment.");
+	const sentence = await t.run((ctx) => ctx.db.get(segment.sentenceId));
+	if (!sentence) throw new Error("Expected a stored Sentence.");
+	// Other Visitors met the Segment before, and their sessions ended
+	// without an occurrence. 300 is more than one commit advances.
+	const earlierVisitors = Array.from(
+		{ length: 300 },
+		(_, index) => `visitor-earlier-${index}`,
+	);
+	await t.run(async (ctx) => {
+		for (const [index, visitorId] of earlierVisitors.entries())
+			await ctx.db.insert("visitorClicks", {
+				requestId: `earlier-${index}`,
+				visitorId,
+				textId: sentence.textId,
+				sentenceId: sentence._id,
+				segmentId,
+				clickedAt: index,
+			});
+	});
+
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(selection, guard, "New"),
+	);
+	if (result.status !== "Committed") throw new Error("Expected a commit.");
+	const advanced = async () =>
+		(await rows(t, "visitorClicks")).filter(
+			({ attestationId, readingId }) =>
+				attestationId === result.attestationId &&
+				readingId === result.readingId,
+		).length;
+	expect(await advanced()).toBe(256);
+
+	const continuations = await t.run((ctx) =>
+		ctx.db.system.query("_scheduled_functions").collect(),
+	);
+	const continuation = continuations.find(
+		({ name }) => name === "visitorEncounters:advanceMemberEncounters",
+	);
+	expect(continuation?.args).toEqual([
+		{ segmentIds: [segmentId], attestationId: result.attestationId },
+	]);
+	await t.mutation(
+		internal.visitorEncounters.advanceMemberEncounters,
+		continuation?.args[0],
+	);
+	expect(await advanced()).toBe(earlierVisitors.length + 1);
+
+	const contexts = await t.run((ctx) =>
+		loadSourceContextPage(
+			ctx,
+			result.readingId,
+			readingKey,
+			"visitor-earlier-0",
+		),
+	);
+	expect(contexts.page.map(({ attestationId }) => attestationId)).toEqual([
+		result.attestationId,
+	]);
 });
 
 test("Knowledge drafts follow the committed occurrence and a late writer cannot replace them", async () => {

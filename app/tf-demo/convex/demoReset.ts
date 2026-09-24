@@ -506,7 +506,9 @@ async function stripSentenceAnalysisBatch(
 		const clickBudget = STRIP_DELETE_BUDGET - deleted;
 		const clicks = await ctx.db
 			.query("visitorClicks")
-			.withIndex("by_segment_id", (q) => q.eq("segmentId", segment._id))
+			.withIndex("by_segment_id_and_attestation_id", (q) =>
+				q.eq("segmentId", segment._id),
+			)
 			.take(clickBudget);
 		await Promise.all(clicks.map((click) => ctx.db.delete(click._id)));
 		deleted += clicks.length;

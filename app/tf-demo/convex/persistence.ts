@@ -45,7 +45,10 @@ import {
 	sentenceInputValidator,
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
-import { ensureVisitorEncounter } from "./model/visitorClicks";
+import {
+	advanceMemberEncounters,
+	ensureVisitorEncounter,
+} from "./model/visitorClicks";
 import {
 	findAnalyzedSubmission,
 	persistSubmittedText as persistSubmittedTextImplementation,
@@ -477,6 +480,10 @@ export const persistResolvedClick = internalMutation({
 				});
 			}),
 		);
+		await advanceMemberEncounters(ctx, {
+			segmentIds: members.map(({ _id }) => _id),
+			attestationId,
+		});
 		return {
 			status: "Committed" as const,
 			...(await completeResolutionSession(ctx, session, attestationId, {

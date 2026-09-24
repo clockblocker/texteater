@@ -80,6 +80,7 @@ import type * as shadowResolution from "../shadowResolution.js";
 import type * as shadows from "../shadows.js";
 import type * as textViews from "../textViews.js";
 import type * as texts from "../texts.js";
+import type * as visitorEncounters from "../visitorEncounters.js";
 
 import type {
   ApiFromModules,
@@ -160,6 +161,7 @@ declare const fullApi: ApiFromModules<{
   shadows: typeof shadows;
   textViews: typeof textViews;
   texts: typeof texts;
+  visitorEncounters: typeof visitorEncounters;
 }>;
 
 /**

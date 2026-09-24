@@ -437,7 +437,10 @@ export default defineSchema({
 		clickedAt: v.number(),
 	})
 		.index("by_request_id", ["requestId"])
-		.index("by_segment_id", ["segmentId"])
+		.index("by_segment_id_and_attestation_id", [
+			"segmentId",
+			"attestationId",
+		])
 		.index("by_visitor_id_and_attestation_id", [
 			"visitorId",
 			"attestationId",
