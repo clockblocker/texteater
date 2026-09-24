@@ -6,7 +6,7 @@ test("docs workspace keeps its package commands local", async () => {
 	).json();
 
 	expect(manifest.private).toBe(true);
-	expect(manifest.scripts.build).toContain(
+	expect(manifest.scripts["build:package"]).toContain(
 		"../../tooling/manifest-policy.ts package",
 	);
 	expect(manifest.scripts.validate).toBe(

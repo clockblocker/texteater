@@ -76,14 +76,13 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 				reading: { unitKind: "Reading", emojiDescription: "🏦" },
 				attestation: { unitKind: "Attestation" },
 			},
-			generation: { modelCalls: 5 },
+			generation: { modelCalls: 4 },
 		});
 		expect(run.requests.map((value) => value.stage)).toEqual([
 			"classifyTarget",
-			"classifyTarget",
 			"resolveGrammar",
-			"resolveGrammar",
-			"resolveOrGenerateReadingEmojiDescription",
+			"generateNormalizedMembers",
+			"generateReadingEmojiDescription",
 		]);
 		expect(run.resolver.snapshot()).toHaveLength(1);
 		expect(run.resolver.snapshot()[0]?.readingEntries).toHaveLength(1);
@@ -97,7 +96,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 			generation: { cache: "member-hit", modelCalls: 0 },
 			stages: { target: { traceOrigin: "cached" } },
 		});
-		expect(run.requests).toHaveLength(5);
+		expect(run.requests).toHaveLength(4);
 	});
 	test("a supplied target bypasses classification and stays separate from whole-unit caches", async () => {
 		const run = harness([grammar, "🏦", classification, grammar, "🏦"]);
@@ -107,8 +106,8 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		});
 		expect(run.requests.map((value) => value.stage)).toEqual([
 			"resolveGrammar",
-			"resolveGrammar",
-			"resolveOrGenerateReadingEmojiDescription",
+			"generateNormalizedMembers",
+			"generateReadingEmojiDescription",
 		]);
 		expect(await run.resolve()).toMatchObject({ decision: "Resolved" });
 		expect(run.requests.at(-1)?.stage).toBe(
@@ -137,7 +136,7 @@ describe("Laboratory uses the published Encounter pipeline and dictionary", () =
 		});
 		expect(
 			run.requests.filter((value) => value.stage === "classifyTarget"),
-		).toHaveLength(2);
+		).toHaveLength(1);
 	});
 	test("different occurrences compare stored Reading candidates through Dumdict", async () => {
 		const run = harness([

@@ -91,7 +91,19 @@ test("CLI and Laboratory share cases, evaluation records and configured storage"
 		expect(calls).toBe(
 			cli.cases.reduce((sum, record) => sum + record.calls, 0) * 2,
 		);
-		expect(cli.summary.succeeded).toBe(cli.summary.total);
+		expect(
+			cli.cases
+				.filter(
+					(record) =>
+						record.status !== "Success" &&
+						!(
+							record.status === "Unresolved" &&
+							(record.idealOutput as { decision?: string })
+								.decision === "Unresolved"
+						),
+				)
+				.map((record) => record.caseId),
+		).toEqual([]);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}
