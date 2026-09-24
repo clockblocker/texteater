@@ -5,6 +5,7 @@ import {
 	shouldRequestRouteNote,
 	useRouteNotePreference,
 } from "@/lib/route-note-preference";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { segmentSelectionDeckCards } from "@/views/segment-selection-deck";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -71,11 +72,7 @@ export function useSegmentSelection(visitorId: string) {
 			});
 		} catch (cause) {
 			setSelectedSegmentKey(null);
-			setError(
-				cause instanceof Error
-					? cause.message
-					: "Segment resolution failed.",
-			);
+			setError(visitorErrorMessage(cause));
 		}
 	}
 

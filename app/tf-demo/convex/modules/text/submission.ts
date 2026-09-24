@@ -10,7 +10,10 @@ import {
 	loadStoredSegments,
 	MAX_SEGMENTS_PER_SENTENCE,
 } from "../../model/storedSegments";
-import type { sentenceInputValidator } from "../../model/validators";
+import {
+	type sentenceInputValidator,
+	visitorError,
+} from "../../model/validators";
 
 type SubmittedText = {
 	submissionKey: string;
@@ -156,7 +159,8 @@ export async function persistSubmittedText(
 					);
 				});
 			if (!completeExactAnalysis) {
-				throw new Error(
+				throw visitorError(
+					"Conflict",
 					"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
 				);
 			}

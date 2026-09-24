@@ -9,6 +9,7 @@ import { type MutationCtx, mutation } from "./_generated/server";
 import { completeAuthoredComponentKnowledge } from "./dumdictStorage/transaction";
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
+import { visitorError } from "./model/validators";
 import { reviewedAlternatives } from "./modules/notes/relations";
 
 async function destination(ctx: MutationCtx, readingKey: string) {
@@ -38,7 +39,8 @@ export const followGrammaticalAlternative = mutation({
 				readingIdentityKey(alternative.reading) === readingKey,
 		);
 		if (!selected)
-			throw new Error(
+			throw visitorError(
+				"InvalidInput",
 				"This Reading is not a reviewed grammatical alternative.",
 			);
 		const existing = await destination(ctx, readingKey);

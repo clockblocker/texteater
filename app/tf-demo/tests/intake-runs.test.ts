@@ -403,6 +403,27 @@ test("submitText records one summary row per attempt, with no text, prompt or mo
 	expect(new Set(rows.map((item) => item.runId)).size).toBe(2);
 });
 
+test("a re-submission whose stored analysis differs throws a coded Conflict", async () => {
+	const t = createTestConvex();
+	await submitBankTexts(t, "banks");
+	// A strip in progress has removed one stored Segment.
+	await t.run(async (ctx) => {
+		const segment = await ctx.db.query("segments").first();
+		if (segment) await ctx.db.delete(segment._id);
+	});
+
+	await expect(submitBankTexts(t, "banks")).rejects.toMatchObject({
+		data: {
+			code: "Conflict",
+			message: expect.stringContaining("retry after stripping"),
+		},
+	});
+	expect((await intakeRuns(t)).map(({ outcome }) => outcome)).toEqual([
+		"Accepted",
+		"Failed",
+	]);
+});
+
 test("a submission that fails before a Text exists is recorded without a Text ID", async () => {
 	const t = createTestConvex();
 	const providers = unavailableProviders();

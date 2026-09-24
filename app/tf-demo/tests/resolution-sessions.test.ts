@@ -500,7 +500,12 @@ describe("Resolution Session", () => {
 				...args,
 				visitorId: "visitor-2",
 			}),
-		).rejects.toThrow("different click");
+		).rejects.toMatchObject({
+			data: {
+				code: "InvalidInput",
+				message: expect.stringContaining("different click"),
+			},
+		});
 		await expect(
 			t.mutation(api.resolutionSessions.selectSegment, {
 				...args,
@@ -1367,7 +1372,12 @@ describe("Resolution Session", () => {
 					},
 				],
 			}),
-		).rejects.toThrow("analysis is incomplete");
+		).rejects.toMatchObject({
+			data: {
+				code: "Conflict",
+				message: expect.stringContaining("analysis is incomplete"),
+			},
+		});
 	});
 
 	test("the scheduled run completes an occurrence another session committed, without model work", async () => {

@@ -172,7 +172,12 @@ test("unreviewed destinations cannot create arbitrary Readings", async () => {
 			sourceReadingId,
 			readingKey: "invented-reading",
 		}),
-	).rejects.toThrow("not a reviewed");
+	).rejects.toMatchObject({
+		data: {
+			code: "InvalidInput",
+			message: expect.stringContaining("not a reviewed"),
+		},
+	});
 	expect(await snapshot(t)).toEqual(before);
 	expect(
 		reviewedAlternatives({ ...lemma, canonicalForm: "unreviewed" }),

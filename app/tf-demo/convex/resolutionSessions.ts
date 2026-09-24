@@ -37,6 +37,7 @@ import {
 	resolutionSessionGuardValidator,
 	resolvedGrammaticalValidator,
 	safeGenerationFailureValidator,
+	visitorError,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
 import {
@@ -121,7 +122,8 @@ export const selectSegment = mutation({
 					Boolean(existing.routeNoteRequested) !==
 						args.routeNoteRequested
 				) {
-					throw new Error(
+					throw visitorError(
+						"InvalidInput",
 						"requestId was already used for a different click.",
 					);
 				}

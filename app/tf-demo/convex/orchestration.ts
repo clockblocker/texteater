@@ -1,8 +1,10 @@
 "use node";
 
-import { type Infer, v } from "convex/values";
+import { ConvexError, type Infer, type Value, v } from "convex/values";
 import { createDumdictService } from "dumdict/runtime";
+import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
+import * as Runtime from "effect/Runtime";
 import {
 	type InspectionCapture,
 	inspected,
@@ -60,6 +62,23 @@ const submitTextResultValidator = v.union(
 );
 
 type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
+
+/**
+ * The coded Visitor error behind a failed Effect. Convex sends only a
+ * ConvexError thrown as itself to the client, not one wrapped in a failure.
+ */
+function visitorErrorIn(error: unknown): ConvexError<Value> | undefined {
+	const cause = Runtime.isFiberFailure(error)
+		? error[Runtime.FiberFailureCauseId]
+		: Cause.die(error);
+	for (const failure of [...Cause.failures(cause), ...Cause.defects(cause)]) {
+		const thrown = Cause.isUnknownException(failure)
+			? failure.error
+			: failure;
+		if (thrown instanceof ConvexError) return thrown;
+	}
+	return undefined;
+}
 
 function convexId<TableName extends TableNames>(value: string): Id<TableName> {
 	return value as Id<TableName>;
@@ -126,7 +145,7 @@ export const submitText = action({
 			return { status: "Accepted", textId };
 		} catch (error) {
 			attempt = attemptOutcomeOf(error);
-			throw error;
+			throw visitorErrorIn(error) ?? error;
 		} finally {
 			await inspection?.flush();
 			if (args.inspectionVisitorId) {

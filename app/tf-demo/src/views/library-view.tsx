@@ -28,7 +28,7 @@ import {
 import { type FormEvent, useState } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
-import { parseSubmittedTextId } from "@/lib/action-results";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
@@ -65,19 +65,20 @@ export function LibraryView() {
 				submissionKey: submissionKeyFor(normalized),
 				sourceText: normalized,
 			});
-			follow({
-				kind: "Text",
-				textId: parseSubmittedTextId(result),
-			});
+			if (result.status === "Rejected") {
+				setInteractionError(result.message);
+				return;
+			}
+			follow({ kind: "Text", textId: result.textId });
 			setIsAddTextOpen(false);
 		} catch (cause) {
-			setInteractionError(
-				mutationMessage(cause) ?? "Text analysis failed.",
-			);
+			setInteractionError(visitorErrorMessage(cause));
 		}
 	}
 
-	const error = interactionError ?? mutationMessage(textsQuery.error);
+	const error =
+		interactionError ??
+		(textsQuery.error ? visitorErrorMessage(textsQuery.error) : null);
 
 	return (
 		<div className="relative flex h-full min-h-0 flex-col bg-muted/30">
@@ -243,10 +244,6 @@ function LibrarySkeleton() {
 			))}
 		</div>
 	);
-}
-
-function mutationMessage(error: unknown): string | null {
-	return error instanceof Error ? error.message : null;
 }
 
 function formatDate(timestamp: number): string {
