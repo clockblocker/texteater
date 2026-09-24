@@ -1,12 +1,10 @@
 import { expect, test } from "bun:test";
 import type { FunctionReturnType } from "convex/server";
-import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { api } from "../convex/_generated/api";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
-import { linkMembers } from "../src/notes/universal/blocks/renderers/common/link-members";
 import type { ReadingPresentationCapabilities } from "../src/notes/universal/note/capabilities";
 
 type ReadingNote = Extract<
@@ -222,24 +220,26 @@ test("a definition-sourced Source Context is prefixed with the defined Reading a
 	);
 });
 
-test("linkMembers lights the attested instance of a repeated word, by index", () => {
-	const markup = renderToStaticMarkup(
-		createElement(
-			"p",
-			null,
-			...linkMembers(
-				[
-					{ kind: "ResolvableText", text: "Haus" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "und" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "Haus" },
-				],
-				[4],
-				() => {},
-			),
-		),
-	);
+test("a Source Context lights the attested instance of a repeated word, by index", () => {
+	const markup = render({ state: "Plain" }, {}, [
+		{
+			attestationId: "attestations-2",
+			textId: "texts-1",
+			sentencePosition: 0,
+			sentenceSnippet: "Haus und Haus",
+			segments: [
+				{ kind: "ResolvableText", text: "Haus" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "und" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "Haus" },
+			],
+			memberSegmentIndices: [4],
+			memberTexts: ["Haus"],
+			origin: { kind: "Text" },
+			target: { kind: "Text", textId: "texts-1" },
+		} as unknown as ReadingNote["sourceContexts"]["page"][number],
+	]);
 	expect(markup.match(/data-slot="reader-segment"/g)).toHaveLength(1);
 	expect(markup).toMatch(/Haus und <\/span><button[^>]*>Haus<\/button>/);
 });

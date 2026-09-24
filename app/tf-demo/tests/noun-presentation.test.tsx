@@ -1,14 +1,32 @@
 import { expect, test } from "bun:test";
-import type { ComponentProps } from "react";
+import type { FunctionReturnType } from "convex/server";
+import {
+	type ComponentProps,
+	isValidElement,
+	type ReactElement,
+	type ReactNode,
+} from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import type { api } from "../convex/_generated/api";
 import { coreGender, nounHeadingArticle } from "../shared/grammatical-gender";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
-import { linkMembers } from "../src/notes/universal/blocks/renderers/common/link-members";
-import { NounArticle } from "../src/notes/universal/blocks/renderers/common/noun-article";
-import { SourceQuote } from "../src/notes/universal/blocks/renderers/common/source-quote";
-import { ReadingHeader } from "../src/notes/universal/blocks/renderers/reading/header/default";
-import { renderDefaultSurfaceHeader } from "../src/notes/universal/blocks/renderers/surface/header/default";
+import { renderNote } from "../src/notes";
 import { ReaderSentence } from "../src/views/reader-sentence";
+
+type ReadingNote = Extract<
+	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
+	{ readonly kind: "Reading" }
+>;
+type SurfaceNote = Extract<
+	NonNullable<FunctionReturnType<typeof api.routeNotes.get>>,
+	{ readonly kind: "Surface" }
+>;
+type NounArticleNavigation = NonNullable<
+	Extract<
+		Parameters<typeof renderNote>[0],
+		{ readonly noteData: ReadingNote }
+	>["capabilities"]
+>["nounArticle"];
 
 const lemma = {
 	language: "de",
@@ -37,41 +55,24 @@ test("only noun and pronoun Core Features supply colour", () => {
 });
 
 test("noun Reading heading has separate article and noun destinations", () => {
-	const props = {
-		note: {
-			reading: {
-				lemma: { ...lemma, lemmaId: "lemma-1" },
-				emojiDescription: "⛰️⬆️",
-			},
-			knowledge: {},
-		},
-		capabilities: {
-			knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
-			follow: () => {},
-			nounArticle: { follow: () => {}, pending: false, error: null },
-		},
-	} as unknown as ComponentProps<typeof ReadingHeader>;
-	const markup = renderToStaticMarkup(<ReadingHeader {...props} />);
+	const followed: unknown[] = [];
+	const note = renderReading(readingNote(), {
+		follow: (id) => followed.push(id),
+		pending: false,
+		error: null,
+	});
+	const markup = renderToStaticMarkup(blockOf(note, "Header"));
 	expect(markup).toContain("[--link:var(--gender-masculine)]");
 	expect(markup).toContain("der, open its authored DET Reading");
 	expect(markup).toContain("Aufstieg, open its Lemma");
 	expect(markup).toContain("⛰️⬆️");
-	const followed: unknown[] = [];
-	const article = NounArticle({
-		lemma,
-		lemmaId: props.note.reading.lemma.lemmaId,
-		navigation: {
-			follow: (id) => followed.push(id),
-			pending: false,
-			error: null,
-		},
-	});
-	article?.props.children[0].props.onClick();
+	click(note, "der, open its authored DET Reading");
 	expect(followed).toEqual(["lemma-1"]);
 });
 
 test("Surface heading links its existing article once and follows the exact analysis", () => {
 	const follows: unknown[] = [];
+	const follow = (...args: unknown[]) => follows.push(args);
 	const article = {
 		presented: { normalizedSurface: "einem" },
 		target: { kind: "Surface", language: "de", normalizedSurface: "einem" },
@@ -82,49 +83,56 @@ test("Surface heading links its existing article once and follows the exact anal
 		presented: { lemma },
 		article,
 	};
-	const props = {
-		noteData: {
-			analyses: [analysis],
-			target: { normalizedSurface: "einem Aufstieg" },
+	const surfaceNote = (analyses: readonly unknown[]) =>
+		({
+			kind: "Surface",
+			target: {
+				kind: "Surface",
+				language: "de",
+				normalizedSurface: "einem Aufstieg",
+			},
+			analyses,
+			continueCursor: "",
 			isDone: true,
-		},
-		PresentationCapabilities: {
-			follow: (...args: unknown[]) => follows.push(args),
-		},
-	} as unknown as Parameters<typeof renderDefaultSurfaceHeader>[0];
-	const element = renderDefaultSurfaceHeader(props);
+		}) as unknown as SurfaceNote;
+	const heading = (
+		analyses: readonly unknown[],
+		activeAnalysisKey?: string,
+	) =>
+		blockOf(
+			renderNote({
+				noteData: surfaceNote(analyses),
+				capabilities: {
+					follow,
+					...(activeAnalysisKey
+						? { activeAnalysisKey: activeAnalysisKey as never }
+						: {}),
+				},
+			}),
+			"Header",
+		);
+	const element = heading([analysis]);
 	const markup = renderToStaticMarkup(element);
 	expect(markup).toContain("[--link:var(--gender-masculine)]");
 	expect(markup).toContain(">einem</button> Aufstieg");
-	const title = element.props.children.props.children[0];
-	title.props.children.props.children[0].props.onClick();
+	click(element, "einem, open its DET Surface");
 	expect(follows).toEqual([[article.target, article.presentationContext]]);
-	const ambiguous = {
-		...props,
-		noteData: {
-			...props.noteData,
-			analyses: [
-				analysis,
-				{
-					...analysis,
-					analysisKey: "other",
-					presented: {
-						lemma: { ...lemma, coreFeatures: { gender: "Fem" } },
-					},
-				},
-			],
+	const ambiguous = [
+		analysis,
+		{
+			...analysis,
+			analysisKey: "other",
+			presented: {
+				lemma: { ...lemma, coreFeatures: { gender: "Fem" } },
+			},
 		},
-	} as unknown as Parameters<typeof renderDefaultSurfaceHeader>[0];
-	expect(
-		renderToStaticMarkup(renderDefaultSurfaceHeader(ambiguous)),
-	).not.toContain("[--link:var(--gender-");
-	ambiguous.PresentationCapabilities = {
-		...ambiguous.PresentationCapabilities,
-		activeAnalysisKey: "other" as never,
-	};
-	expect(
-		renderToStaticMarkup(renderDefaultSurfaceHeader(ambiguous)),
-	).toContain("[--link:var(--gender-feminine)]");
+	];
+	expect(renderToStaticMarkup(heading(ambiguous))).not.toContain(
+		"[--link:var(--gender-",
+	);
+	expect(renderToStaticMarkup(heading(ambiguous, "other"))).toContain(
+		"[--link:var(--gender-feminine)]",
+	);
 });
 
 test("reader and source quotations retain gender with selection, but not for an unencountered visitor", () => {
@@ -174,10 +182,12 @@ test("reader and source quotations retain gender with selection, but not for an 
 			})),
 		}),
 	).not.toContain("[--link:var(--gender-");
-	const quote = renderToStaticMarkup(
-		linkMembers(sentence.segments, [0, 2], () => {}),
-	);
-	expect(quote.match(/\[--link:var\(--gender-feminine\)\]/g)).toHaveLength(2);
+	const quote = sourceQuote(sentence.segments, [0, 2]);
+	expect(
+		quote.match(
+			/data-slot="reader-segment"[^>]*\[--link:var\(--gender-feminine\)\]/g,
+		),
+	).toHaveLength(2);
 });
 
 test("source quote rule receives only the occurrence members' gender tone", () => {
@@ -186,24 +196,155 @@ test("source quote rule receives only the occurrence members' gender tone", () =
 		{ kind: "Whitespace", text: " " },
 		{ kind: "ResolvableText", text: "Frau", gender: "Fem" as const },
 	];
-	const quote = SourceQuote({
-		segments,
-		memberSegmentIndices: [0],
-		origin: { kind: "Text" },
-		follow: () => {},
-	});
-	const markup = renderToStaticMarkup(quote);
+	const markup = sourceQuote(segments, [0]);
 	expect(markup).toContain(
 		'data-slot="quote" class="[--link:var(--gender-masculine)]',
 	);
 	expect(markup).not.toContain("--gender-feminine");
-	const unencountered = renderToStaticMarkup(
-		SourceQuote({
-			segments: segments.map(({ kind, text }) => ({ kind, text })),
-			memberSegmentIndices: [0],
-			origin: { kind: "Text" },
-			follow: () => {},
-		}),
-	);
-	expect(unencountered).not.toContain("--gender-");
+	expect(
+		sourceQuote(
+			segments.map(({ kind, text }) => ({ kind, text })),
+			[0],
+		),
+	).not.toContain("--gender-");
 });
+
+function readingNote(sourceContexts: readonly unknown[] = []): ReadingNote {
+	return {
+		kind: "Reading",
+		target: { kind: "Reading", readingId: "reading-1" },
+		reading: {
+			unitKind: "Reading",
+			ownerKind: "Reading",
+			ownerKey: "reading:aufstieg",
+			readingId: "reading-1",
+			emojiDescription: "⛰️⬆️",
+			lemma: {
+				...lemma,
+				unitKind: "Lemma",
+				ownerKind: "Lemma",
+				ownerKey: "lemma:aufstieg",
+				lemmaId: "lemma-1",
+			},
+		},
+		knowledgeState: { status: "Full", activity: "Idle" },
+		personalAnnotation: "",
+		knowledge: {},
+		knowledgeUpdatedAt: null,
+		definitionText: { state: "Absent" },
+		relations: [],
+		relationsTruncated: false,
+		grammaticalAlternatives: [],
+		pendingRelations: [],
+		structuralReferences: [],
+		sourceContexts: {
+			page: sourceContexts,
+			continueCursor: "",
+			isDone: true,
+		},
+	} as unknown as ReadingNote;
+}
+
+function renderReading(
+	note: ReadingNote,
+	nounArticle?: NounArticleNavigation,
+): ReactElement {
+	return renderNote({
+		noteData: note,
+		capabilities: {
+			knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
+			sourceContexts: {
+				items: note.sourceContexts.page,
+				hasMore: false,
+				isLoading: false,
+				error: null,
+				loadMore: null,
+			},
+			personalAnnotation: { isSaving: false, error: null, save: null },
+			...(nounArticle ? { nounArticle } : {}),
+			follow: () => {},
+		},
+	});
+}
+
+/** The Source Contexts Block of a Reading Note met in one Text Sentence. */
+function sourceQuote(
+	segments: readonly unknown[],
+	memberSegmentIndices: readonly number[],
+): string {
+	const note = readingNote([
+		{
+			attestationId: "attestation-1",
+			textId: "text-1",
+			sentencePosition: 0,
+			sentenceSnippet: "",
+			segments,
+			memberSegmentIndices,
+			memberTexts: [],
+			origin: { kind: "Text" },
+			target: { kind: "Text", textId: "text-1" },
+		},
+	]);
+	return renderToStaticMarkup(blockOf(renderReading(note), "SourceContexts"));
+}
+
+type Props = Readonly<Record<string, unknown>>;
+
+/**
+ * The first element whose props match, searching an element's children
+ * before, when `render` is set, rendering it as a function component.
+ * Rendering one runs its hooks, so such a search must run inside a render.
+ */
+function find(
+	node: ReactNode,
+	matches: (props: Props) => boolean,
+	render = false,
+): ReactElement<Props> | undefined {
+	if (Array.isArray(node)) {
+		for (const child of node) {
+			const found = find(child, matches, render);
+			if (found) return found;
+		}
+		return undefined;
+	}
+	if (!isValidElement<Props>(node)) return undefined;
+	if (matches(node.props)) return node;
+	const found = find(node.props.children as ReactNode, matches, render);
+	const { type } = node;
+	if (
+		found ||
+		!render ||
+		typeof type !== "function" ||
+		type.prototype?.isReactComponent
+	)
+		return found;
+	return find(
+		(type as (props: Props) => ReactNode)(node.props),
+		matches,
+		render,
+	);
+}
+
+/** The element a rendered Note shows for one Block. */
+function blockOf(note: ReactElement, blockKind: string): ReactElement {
+	const block = find(note, (props) => props.blockKind === blockKind);
+	if (!block) throw new Error(`The Note renders no ${blockKind} Block.`);
+	return block.props.children as ReactElement;
+}
+
+/** Calls the click handler of the control labelled `label`, as a keyboard press would. */
+function click(node: ReactElement, label: string): void {
+	function Probe() {
+		const control = find(
+			node,
+			(props) => props["aria-label"] === label,
+			true,
+		);
+		if (!control) throw new Error(`Nothing is labelled ${label}.`);
+		(control.props.onClick as (event: { detail: number }) => void)({
+			detail: 0,
+		});
+		return null;
+	}
+	renderToStaticMarkup(<Probe />);
+}
