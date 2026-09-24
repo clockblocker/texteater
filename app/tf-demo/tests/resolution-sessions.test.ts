@@ -1102,12 +1102,18 @@ describe("Resolution Session", () => {
 		for (const requestId of ["stale", "failed", "complete-missing"])
 			await patchSession(t, requestId, { updatedAt: old });
 
-		const result = await t.mutation(internal.resolutionSessions.cleanup, {
+		const cutoffs = {
 			staleBefore: Date.now() - 1,
 			terminalBefore: Date.now() - 1,
-		});
+		};
 
-		expect(result).toEqual({ deleted: 3, hasMore: false });
+		// Active sessions go in one batch, Terminal ones in the next.
+		expect(
+			await t.mutation(internal.resolutionSessions.cleanup, cutoffs),
+		).toEqual({ deleted: 1, hasMore: true });
+		expect(
+			await t.mutation(internal.resolutionSessions.cleanup, cutoffs),
+		).toEqual({ deleted: 2, hasMore: false });
 		expect(await rows(t, "resolutionSessions")).toEqual([]);
 	});
 
@@ -1168,6 +1174,50 @@ describe("Resolution Session", () => {
 				({ requestId }) => requestId,
 			),
 		).toEqual(["recent"]);
+	});
+
+	test("repeated cleanup removes expired runs whose traces outgrow one transaction", async () => {
+		const t = createTestConvex({ transactionLimits: true });
+		const expiredAt = Date.now() - 1;
+		// 120 runs of 200 KB are 24 MB, past the 16 MiB a transaction may read.
+		const traceJson = "x".repeat(200 * 1024);
+		for (let chunk = 0; chunk < 6; chunk += 1)
+			await t.run(async (ctx) => {
+				for (let index = 0; index < 20; index += 1) {
+					const requestId = `request-${chunk}-${index}`;
+					await ctx.db.insert("resolutionRuns", {
+						requestId,
+						runToken: "run-token",
+						runNumber: 1,
+						phase: "Route",
+						state: "Failed",
+						generationEvents: [
+							{
+								kind: "TraceRecorded",
+								requestId,
+								runToken: "run-token",
+								phase: "Route",
+								traceJson,
+							},
+						],
+						startedAt: expiredAt,
+						expiresAt: expiredAt,
+					});
+				}
+			});
+
+		const cutoffs = {
+			staleBefore: Date.now() - 1,
+			terminalBefore: Date.now() - 1,
+		};
+		let batches = 0;
+		while (
+			(await t.mutation(internal.resolutionSessions.cleanup, cutoffs))
+				.hasMore
+		)
+			if (++batches > 20) throw new Error("Cleanup made no progress.");
+
+		expect(await rows(t, "resolutionRuns")).toEqual([]);
 	});
 
 	test("scheduled cleanup continues until nothing expired is left", async () => {

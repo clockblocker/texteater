@@ -1,3 +1,4 @@
+import type { GenericTableInfo, OrderedQuery } from "convex/server";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import {
@@ -50,6 +51,13 @@ import { saveInspectionStep } from "./resolutionInspection";
 
 const MAX_IDENTIFIER_LENGTH = 200;
 const CLEANUP_BATCH_SIZE = 200;
+/**
+ * Bytes one cleanup page may read before it stops. The page may run one
+ * document, at most 1 MiB, past it, deleting a row reads it again, and the
+ * batch first reads one row to pick its query, so a batch reads at most
+ * 11 MiB of Convex's 16 MiB per-transaction limit.
+ */
+const CLEANUP_BATCH_MAX_BYTES = 4 * 1024 * 1024;
 
 const readingCheckpointValidator = v.object({
 	resolution: v.object({
@@ -462,47 +470,65 @@ export const cleanupExpired = internalMutation({
 
 /**
  * Deletes one batch of expired runs, else of Active sessions untouched since
- * `staleBefore` and Terminal ones since `terminalBefore`. Every row it reads
- * is deleted, so repeated batches always make progress.
+ * `staleBefore`, else of Terminal ones untouched since `terminalBefore`.
+ * Every row it reads is deleted, so repeated batches always make progress.
  */
 async function cleanupBatch(
 	ctx: MutationCtx,
 	cutoffs: { readonly staleBefore: number; readonly terminalBefore: number },
 ): Promise<{ deleted: number; hasMore: boolean }> {
-	const expiredRuns = await ctx.db
-		.query("resolutionRuns")
-		.withIndex("by_expires_at", (q) => q.lte("expiresAt", Date.now()))
-		.take(CLEANUP_BATCH_SIZE);
-	if (expiredRuns.length > 0) {
-		await Promise.all(expiredRuns.map((run) => ctx.db.delete(run._id)));
+	const now = Date.now();
+	const expiredRuns = () =>
+		ctx.db
+			.query("resolutionRuns")
+			.withIndex("by_expires_at", (q) => q.lte("expiresAt", now));
+	// A function may paginate only once, so the first row picks the query.
+	if (await expiredRuns().first()) {
+		const runs = await cleanupPage(expiredRuns());
+		await Promise.all(runs.page.map((run) => ctx.db.delete(run._id)));
 		// Sessions come after the runs, so there may be more.
-		return { deleted: expiredRuns.length, hasMore: true };
+		return { deleted: runs.page.length, hasMore: true };
 	}
-	const activeRows = await ctx.db
-		.query("resolutionSessions")
-		.withIndex("by_lifecycle_state_and_updated_at", (q) =>
-			q
-				.eq("lifecycle.state", "Active")
-				.lte("updatedAt", cutoffs.staleBefore),
-		)
-		.take(CLEANUP_BATCH_SIZE);
-	const terminalRows =
-		activeRows.length === CLEANUP_BATCH_SIZE
-			? []
-			: await ctx.db
-					.query("resolutionSessions")
-					.withIndex("by_lifecycle_state_and_updated_at", (q) =>
-						q
-							.eq("lifecycle.state", "Terminal")
-							.lte("updatedAt", cutoffs.terminalBefore),
-					)
-					.take(CLEANUP_BATCH_SIZE - activeRows.length);
-	const rowsToDelete = [...activeRows, ...terminalRows];
-	await deleteResolutionSessions(ctx, rowsToDelete);
-	return {
-		deleted: rowsToDelete.length,
-		hasMore: rowsToDelete.length === CLEANUP_BATCH_SIZE,
-	};
+	const staleActive = () =>
+		ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+				q
+					.eq("lifecycle.state", "Active")
+					.lte("updatedAt", cutoffs.staleBefore),
+			);
+	if (await staleActive().first()) {
+		const sessions = await cleanupPage(staleActive());
+		await deleteResolutionSessions(ctx, sessions.page);
+		// Terminal sessions come after the Active ones, so there may be more.
+		return { deleted: sessions.page.length, hasMore: true };
+	}
+	const sessions = await cleanupPage(
+		ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+				q
+					.eq("lifecycle.state", "Terminal")
+					.lte("updatedAt", cutoffs.terminalBefore),
+			),
+	);
+	await deleteResolutionSessions(ctx, sessions.page);
+	return { deleted: sessions.page.length, hasMore: !sessions.isDone };
+}
+
+/**
+ * The first rows of `query`, stopping early once they have read
+ * `CLEANUP_BATCH_MAX_BYTES`, so runs carrying whole generation traces stay
+ * inside the transaction limits.
+ */
+function cleanupPage<Table extends GenericTableInfo>(
+	query: OrderedQuery<Table>,
+) {
+	return query.paginate({
+		cursor: null,
+		numItems: CLEANUP_BATCH_SIZE,
+		maximumBytesRead: CLEANUP_BATCH_MAX_BYTES,
+	});
 }
 
 function assertIdentifier(value: string, name: string): void {
