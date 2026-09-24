@@ -2,19 +2,23 @@ import { v } from "convex/values";
 
 import { internalQuery } from "../_generated/server";
 import { lemmaValue } from "../model/occurrenceAttestations";
-import { requireRecord } from "../model/readingKnowledge";
+import {
+	type AnyRecord,
+	requireRecord,
+	requireString,
+} from "../model/readingKnowledge";
 import { pendingShadowDescriptor } from "../model/shadows";
 import { lemmaValueValidator } from "../model/validators";
 import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
 	currentRevision,
+	dictionaryLemmasWithCanonicalForm,
 	findLemmaByKey,
 	findReadingByKey,
 	findSurface,
 	loadReading,
-	loadRelationInventory,
-	MAX_CLEANUP_CANDIDATE_LEMMAS,
+	loadRelationNeighbourhood,
 	MAX_PENDING_RELATIONS_PER_SLICE,
 	MAX_READING_CANDIDATES,
 	pendingLocatorKey,
@@ -79,11 +83,15 @@ const readingEntryContextArgsValidator = v.union(
 		surfaceKeys: v.array(v.string()),
 		explicitLemmaTargetKeys: v.array(v.string()),
 		pendingLocatorKeys: v.array(v.string()),
+		pendingTargetCanonicalForms: v.array(v.string()),
 	}),
 	v.object({
 		intent: v.literal("applyGeneratedKnowledge"),
 		readingKey: v.string(),
 		pendingLocatorKeys: v.array(v.string()),
+		pendingTargetCanonicalForms: v.array(v.string()),
+		relationTargetLemmaKeys: v.array(v.string()),
+		relationTargetReadingKeys: v.array(v.string()),
 	}),
 	v.object({
 		intent: v.literal("ensureOwnedSurface"),
@@ -97,6 +105,22 @@ const readingEntryContextArgsValidator = v.union(
 		readingKey: v.string(),
 	}),
 );
+
+/** The Readings pending relations start from and the Shadow forms they target. */
+function pendingRelationSeeds(records: readonly AnyRecord[]) {
+	return {
+		sourceReadingKeys: records.map((record) =>
+			requireString(
+				requireRecord(record.locator, "Pending locator")
+					.sourceReadingKey,
+				"sourceReadingKey",
+			),
+		),
+		targetCanonicalForms: records.map(
+			(record) => pendingShadowDescriptor(record).canonicalForm,
+		),
+	};
+}
 
 async function loadExactPendingRecords(
 	ctx: ServerCtx,
@@ -193,7 +217,12 @@ export async function loadReadingEntryContextSlice(
 				currentRevision(ctx),
 				findReadingByKey(ctx, args.readingKey),
 				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
-				loadRelationInventory(ctx),
+				loadRelationNeighbourhood(ctx, {
+					sourceReadingKeys: [args.readingKey],
+					targetReadingKeys: args.relationTargetReadingKeys,
+					targetLemmaKeys: args.relationTargetLemmaKeys,
+					targetCanonicalForms: args.pendingTargetCanonicalForms,
+				}),
 			]);
 			return {
 				intent: args.intent,
@@ -228,7 +257,6 @@ export async function loadReadingEntryContextSlice(
 				explicitTargets,
 				pending,
 				matchingPending,
-				inventory,
 			] = await Promise.all([
 				currentRevision(ctx),
 				findLemmaByKey(ctx, args.lemmaKey),
@@ -249,12 +277,48 @@ export async function loadReadingEntryContextSlice(
 						),
 					)
 					.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
-				loadRelationInventory(ctx),
 			]);
 			if (matchingPending.length > MAX_PENDING_RELATIONS_PER_SLICE)
 				throw new Error(
 					`A pending-relation slice supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} matching records.`,
 				);
+			const pendingRelationsMatchingProposedLemma =
+				matchingPending.flatMap((record) => {
+					try {
+						const descriptor = pendingShadowDescriptor(
+							record.record,
+						);
+						return descriptor.language ===
+							args.proposedLemma.language &&
+							descriptor.canonicalForm ===
+								args.proposedLemma.canonicalForm &&
+							descriptor.family === args.proposedLemma.family &&
+							descriptor.kind === args.proposedLemma.kind
+							? [
+									requireRecord(
+										record.record,
+										"Pending Semantic Relation record",
+									),
+								]
+							: [];
+					} catch {
+						return [];
+					}
+				});
+			// A click names no relations, so it only reads a neighbourhood
+			// when pending relations resolve to its new Lemma.
+			const matching = pendingRelationSeeds(
+				pendingRelationsMatchingProposedLemma,
+			);
+			const inventory = await loadRelationNeighbourhood(ctx, {
+				sourceReadingKeys: matching.sourceReadingKeys,
+				sourceLemmaKeys: [args.lemmaKey],
+				targetLemmaKeys: args.explicitLemmaTargetKeys,
+				targetCanonicalForms: [
+					...args.pendingTargetCanonicalForms,
+					...matching.targetCanonicalForms,
+				],
+			});
 			return {
 				intent: args.intent,
 				revision,
@@ -274,31 +338,7 @@ export async function loadReadingEntryContextSlice(
 						target ? [{ lemma: lemmaValue(target.canonical) }] : [],
 				),
 				exactPendingRelations: pending,
-				pendingRelationsMatchingProposedLemma: matchingPending.flatMap(
-					(record) => {
-						try {
-							const descriptor = pendingShadowDescriptor(
-								record.record,
-							);
-							return descriptor.language ===
-								args.proposedLemma.language &&
-								descriptor.canonicalForm ===
-									args.proposedLemma.canonicalForm &&
-								descriptor.family ===
-									args.proposedLemma.family &&
-								descriptor.kind === args.proposedLemma.kind
-								? [
-										requireRecord(
-											record.record,
-											"Pending Semantic Relation record",
-										),
-									]
-								: [];
-						} catch {
-							return [];
-						}
-					},
-				),
+				pendingRelationsMatchingProposedLemma,
 				relationLemmas: inventory.lemmas,
 				relationReadings: inventory.readings,
 			};
@@ -318,12 +358,7 @@ export const getDumdictRelationsCleanupInfo = internalQuery({
 	handler: async (ctx, { canonicalForm }) => {
 		const [revision, lemmas, pending] = await Promise.all([
 			currentRevision(ctx),
-			ctx.db
-				.query("lemmas")
-				.withIndex("by_language_and_canonical_form", (q) =>
-					q.eq("language", "de").eq("canonicalForm", canonicalForm),
-				)
-				.take(MAX_CLEANUP_CANDIDATE_LEMMAS + 1),
+			dictionaryLemmasWithCanonicalForm(ctx, canonicalForm),
 			ctx.db
 				.query("pendingSemanticRelations")
 				.withIndex("by_target_canonical_form", (q) =>
@@ -331,30 +366,17 @@ export const getDumdictRelationsCleanupInfo = internalQuery({
 				)
 				.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
 		]);
-		if (lemmas.length > MAX_CLEANUP_CANDIDATE_LEMMAS) {
-			throw new Error(
-				`Relations cleanup supports at most ${MAX_CLEANUP_CANDIDATE_LEMMAS} candidate Lemmas.`,
-			);
-		}
 		if (pending.length > MAX_PENDING_RELATIONS_PER_SLICE) {
 			throw new Error(
 				`Relations cleanup supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} pending records.`,
 			);
 		}
-		const dictionaryLemmas = await Promise.all(
-			lemmas.map((lemma) =>
-				ctx.db
-					.query("dictionaryLemmas")
-					.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-					.unique(),
-			),
-		);
 		return {
 			revision,
 			canonicalForm,
-			candidateLemmas: lemmas.flatMap((lemma, index) =>
-				dictionaryLemmas[index] ? [{ lemma: lemmaValue(lemma) }] : [],
-			),
+			candidateLemmas: lemmas.map((lemma) => ({
+				lemma: lemmaValue(lemma),
+			})),
 			pendingRelations: pending.map((record) =>
 				requireRecord(
 					record.record,
@@ -376,7 +398,7 @@ export const loadDumdictCleanupRelationsContext = internalQuery({
 			args.locatorKeys,
 			"Relations-cleanup locator loading",
 		);
-		const [revision, pending, inventory] = await Promise.all([
+		const [revision, pending] = await Promise.all([
 			currentRevision(ctx),
 			Promise.all(
 				locatorKeys.map((locatorKey) =>
@@ -388,20 +410,24 @@ export const loadDumdictCleanupRelationsContext = internalQuery({
 						.unique(),
 				),
 			),
-			loadRelationInventory(ctx),
 		]);
+		const pendingRelations = pending.flatMap((record) =>
+			record
+				? [
+						requireRecord(
+							record.record,
+							"Pending Semantic Relation record",
+						),
+					]
+				: [],
+		);
+		const inventory = await loadRelationNeighbourhood(
+			ctx,
+			pendingRelationSeeds(pendingRelations),
+		);
 		return {
 			revision,
-			pendingRelations: pending.flatMap((record) =>
-				record
-					? [
-							requireRecord(
-								record.record,
-								"Pending Semantic Relation record",
-							),
-						]
-					: [],
-			),
+			pendingRelations,
 			relationLemmas: inventory.lemmas,
 			relationReadings: inventory.readings,
 		};

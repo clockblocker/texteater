@@ -28,11 +28,15 @@ export type ReadingEntryContextArgs =
 			readonly surfaceKeys: string[];
 			readonly explicitLemmaTargetKeys: string[];
 			readonly pendingLocatorKeys: string[];
+			readonly pendingTargetCanonicalForms: string[];
 	  }
 	| {
 			readonly intent: "applyGeneratedKnowledge";
 			readonly readingKey: string;
 			readonly pendingLocatorKeys: string[];
+			readonly pendingTargetCanonicalForms: string[];
+			readonly relationTargetLemmaKeys: string[];
+			readonly relationTargetReadingKeys: string[];
 	  }
 	| {
 			readonly intent: "ensureOwnedSurface";
@@ -78,6 +82,12 @@ export function readingEntryContextArgs(
 							]
 						: [],
 				),
+				pendingTargetCanonicalForms: request.relations.flatMap(
+					({ target }) =>
+						target.kind === "pending"
+							? [target.pending.target.canonicalForm]
+							: [],
+				),
 			};
 		case "applyGeneratedKnowledge":
 			return {
@@ -90,6 +100,15 @@ export function readingEntryContextArgs(
 							pending,
 						),
 					),
+				),
+				pendingTargetCanonicalForms: request.pendingRelations.map(
+					({ target }) => target.canonicalForm,
+				),
+				relationTargetLemmaKeys: request.relationTargetLemmas.map(
+					(lemma) => lemmaIdentityKey(lemma),
+				),
+				relationTargetReadingKeys: request.relationTargetReadings.map(
+					(reading) => readingIdentityKey(reading),
 				),
 			};
 		case "ensureOwnedSurface":

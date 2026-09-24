@@ -29,9 +29,9 @@ export const MAX_PATCH_OPS = 50;
 export const MAX_READING_CANDIDATES = 40;
 export const MAX_CONTEXT_KEYS = 50;
 export const MAX_PENDING_RELATIONS_PER_SLICE = 100;
-export const MAX_CLEANUP_CANDIDATE_LEMMAS = 100;
-export const MAX_RELATION_INVENTORY_LEMMAS = 100;
-export const MAX_RELATION_INVENTORY_READINGS = 200;
+const MAX_CLEANUP_CANDIDATE_LEMMAS = 100;
+const MAX_RELATION_NEIGHBOURHOOD_LEMMAS = 100;
+const MAX_RELATION_NEIGHBOURHOOD_READINGS = 200;
 export const MAX_RELATIONS_PER_READING = 200;
 const directSemanticRelations = new Set<string>(directSemanticRelationValues);
 
@@ -349,53 +349,128 @@ export async function loadCanonicalReadingKnowledge(
 	return Object.keys(knowledge).length === 0 ? undefined : knowledge;
 }
 
-export async function loadRelationInventory(ctx: ServerCtx) {
-	const dictionaryRows = await ctx.db
-		.query("dictionaryLemmas")
-		.take(MAX_RELATION_INVENTORY_LEMMAS + 1);
-	if (dictionaryRows.length > MAX_RELATION_INVENTORY_LEMMAS) {
+/** Dictionary Lemmas a Unit Shadow with this canonical form could resolve to. */
+export async function dictionaryLemmasWithCanonicalForm(
+	ctx: ServerCtx,
+	canonicalForm: string,
+) {
+	const lemmas = await ctx.db
+		.query("lemmas")
+		.withIndex("by_language_and_canonical_form", (q) =>
+			q.eq("language", "de").eq("canonicalForm", canonicalForm),
+		)
+		.take(MAX_CLEANUP_CANDIDATE_LEMMAS + 1);
+	if (lemmas.length > MAX_CLEANUP_CANDIDATE_LEMMAS)
 		throw new Error(
-			`Relation planning supports at most ${MAX_RELATION_INVENTORY_LEMMAS} dictionary Lemmas.`,
+			`Relation planning supports at most ${MAX_CLEANUP_CANDIDATE_LEMMAS} Lemmas per canonical form.`,
 		);
-	}
-	const lemmas = await Promise.all(
-		dictionaryRows.map(({ lemmaId }) => ctx.db.get(lemmaId)),
+	const memberships = await Promise.all(
+		lemmas.map((lemma) =>
+			ctx.db
+				.query("dictionaryLemmas")
+				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+				.unique(),
+		),
 	);
-	const canonicalReadings: Doc<"readings">[] = [];
-	for (const lemma of lemmas) {
-		if (!lemma) continue;
-		const remaining =
-			MAX_RELATION_INVENTORY_READINGS - canonicalReadings.length;
-		const readings = await ctx.db
-			.query("readings")
-			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-			.take(remaining + 1);
-		if (readings.length > remaining) {
+	return lemmas.filter((_lemma, index) => memberships[index]);
+}
+
+/**
+ * Loads the closed relation inventory one plan checks, not the whole
+ * dictionary: the Readings and Lemmas its relations start from, their direct
+ * targets, every dictionary Lemma a target Shadow's canonical form could
+ * resolve to, and each loaded Reading's Lemma and own relation targets. A plan
+ * that names no target reads nothing.
+ */
+export async function loadRelationNeighbourhood(
+	ctx: ServerCtx,
+	seeds: {
+		readonly sourceReadingKeys?: readonly string[];
+		readonly sourceLemmaKeys?: readonly string[];
+		readonly targetReadingKeys?: readonly string[];
+		readonly targetLemmaKeys?: readonly string[];
+		readonly targetCanonicalForms: readonly string[];
+	},
+) {
+	const targetReadingKeys = seeds.targetReadingKeys ?? [];
+	const targetLemmaKeys = seeds.targetLemmaKeys ?? [];
+	const lemmas = new Map<Id<"lemmas">, Doc<"lemmas">>();
+	const readings = new Map<string, CompactReadingEntry>();
+	if (
+		targetReadingKeys.length +
+			targetLemmaKeys.length +
+			seeds.targetCanonicalForms.length ===
+		0
+	)
+		return { lemmas: [], readings: [] };
+	const addLemma = (lemma: Doc<"lemmas"> | null | undefined) => {
+		if (!lemma || lemmas.has(lemma._id)) return;
+		if (lemmas.size >= MAX_RELATION_NEIGHBOURHOOD_LEMMAS)
 			throw new Error(
-				`Relation planning supports at most ${MAX_RELATION_INVENTORY_READINGS} dictionary Readings.`,
+				`Relation planning supports at most ${MAX_RELATION_NEIGHBOURHOOD_LEMMAS} neighbourhood Lemmas.`,
 			);
-		}
-		for (const reading of readings) {
-			if (
-				!canonicalReadings.some(
-					(existing) => existing._id === reading._id,
-				)
-			) {
-				canonicalReadings.push(reading);
-			}
-		}
-	}
-	const readings = await Promise.all(
-		canonicalReadings.map((reading) => loadReading(ctx, reading)),
-	);
-	return {
-		lemmas: lemmas.flatMap((lemma) =>
-			lemma ? [{ lemma: lemmaValue(lemma) }] : [],
-		),
-		readings: readings.flatMap((reading) =>
-			reading ? [reading.entry] : [],
-		),
+		lemmas.set(lemma._id, lemma);
 	};
+	const [keyed, byForm] = await Promise.all([
+		Promise.all(
+			[
+				...new Set([
+					...(seeds.sourceLemmaKeys ?? []),
+					...targetLemmaKeys,
+				]),
+			].map((key) => findLemmaByKey(ctx, key)),
+		),
+		Promise.all(
+			uniqueBoundedKeys(
+				seeds.targetCanonicalForms,
+				"Relation neighbourhood Shadow loading",
+			).map((form) => dictionaryLemmasWithCanonicalForm(ctx, form)),
+		),
+	]);
+	for (const lemma of keyed) addLemma(lemma?.canonical);
+	for (const lemma of byForm.flat()) addLemma(lemma);
+	let frontier = [
+		...new Set([...(seeds.sourceReadingKeys ?? []), ...targetReadingKeys]),
+	];
+	while (frontier.length > 0) {
+		const loaded = await Promise.all(
+			frontier.map((key) => findReadingByKey(ctx, key)),
+		);
+		const next = new Set<string>();
+		const lemmaLoads: Promise<Doc<"lemmas"> | null>[] = [];
+		for (const reading of loaded) {
+			if (!reading || readings.has(reading.readingKey)) continue;
+			if (readings.size >= MAX_RELATION_NEIGHBOURHOOD_READINGS)
+				throw new Error(
+					`Relation planning supports at most ${MAX_RELATION_NEIGHBOURHOOD_READINGS} neighbourhood Readings.`,
+				);
+			readings.set(reading.readingKey, reading.entry);
+			lemmaLoads.push(ctx.db.get(reading.lemmaId));
+			const relations = optionalRecord(
+				optionalRecord(reading.entry.knowledge)?.semanticRelations,
+			);
+			for (const [relation, targets] of Object.entries(relations ?? {}))
+				if (relation !== "targetKind" && Array.isArray(targets))
+					for (const target of targets)
+						if (relations?.targetKind === "reading")
+							next.add(readingIdentityKey(target));
+						else lemmaLoads.push(findCanonicalLemma(ctx, target));
+		}
+		for (const lemma of await Promise.all(lemmaLoads)) addLemma(lemma);
+		frontier = [...next].filter((key) => !readings.has(key));
+	}
+	return {
+		lemmas: [...lemmas.values()].map((lemma) => ({
+			lemma: lemmaValue(lemma),
+		})),
+		readings: [...readings.values()],
+	};
+}
+
+function optionalRecord(value: unknown): AnyRecord | undefined {
+	return value !== null && typeof value === "object" && !Array.isArray(value)
+		? (value as AnyRecord)
+		: undefined;
 }
 
 export async function findCanonicalSurface(ctx: ServerCtx, surfaceKey: string) {

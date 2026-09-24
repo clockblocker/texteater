@@ -43,6 +43,21 @@ export function storageRequestFor<L extends Dumling.Language>(
 				intent: load.intent,
 				reading: load.request.reading,
 				pendingRelations: [...load.request.pendingRelations],
+				relationTargetLemmas: load.request.changes.flatMap((change) =>
+					change.aspect === "semanticRelations" &&
+					"value" in change &&
+					change.targetKind !== "reading"
+						? [...change.value]
+						: [],
+				),
+				relationTargetReadings: load.request.changes.flatMap(
+					(change) =>
+						change.aspect === "semanticRelations" &&
+						"value" in change &&
+						change.targetKind === "reading"
+							? [...change.value]
+							: [],
+				),
 			};
 		case "ensureOwnedSurface":
 			return {

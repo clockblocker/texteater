@@ -22,6 +22,7 @@ import type { Id, TableNames } from "../convex/_generated/dataModel";
 import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
 import { dictionaryPlanResult } from "../convex/dumdictStorage/dictionaryPlan";
 import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage/transaction";
+import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {
@@ -332,6 +333,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				{ length: 16 },
 				(_, index) => `pending-${index}`,
 			),
+			pendingTargetCanonicalForms: [],
 		};
 		await expect(
 			readingEntryContext(t, newNoteArgs),
@@ -358,6 +360,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					lemmaIdentityKey(gehenLemma),
 				),
 				pendingLocatorKeys: [],
+				pendingTargetCanonicalForms: [],
 			}),
 		).rejects.toThrow(
 			"New-note context can produce at most 50 planned changes",
@@ -434,6 +437,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			],
 			explicitLemmaTargetKeys: [lemmaIdentityKey(gehenLemma)],
 			pendingLocatorKeys: [],
+			pendingTargetCanonicalForms: [],
 		})) as {
 			existingOwnedSurfaces: unknown[];
 			explicitExistingLemmaTargets: unknown[];
@@ -473,6 +477,8 @@ describe("tf-demo Dumdict relation storage", () => {
 					intent: "applyGeneratedKnowledge",
 					reading: gehenReading,
 					pendingRelations: [],
+					relationTargetLemmas: [],
+					relationTargetReadings: [],
 				}),
 				storage.loadReadingEntryContext({
 					intent: "ensureOwnedSurface",
@@ -1162,50 +1168,144 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(await snapshot(t)).toEqual(before);
 	});
 
-	test("fails relation planning explicitly when the complete Lemma inventory overflows", async () => {
-		const { t, gehenLemmaId } = await seededDictionary();
+	test("plans relations against their neighbourhood past 150 dictionary Lemmas", async () => {
+		const { t } = await seededDictionary();
+		const stehenLemma = { ...gehenLemma, canonicalForm: "stehen" } as const;
+		const fehlenLemma = { ...gehenLemma, canonicalForm: "fehlen" } as const;
+		await insertReading(
+			t,
+			await insertDictionaryLemma(t, laufenLemma),
+			laufenReading,
+		);
+		await insertDictionaryLemma(t, stehenLemma);
 		await t.run(async (ctx) => {
-			// The inventory counts membership rows, so 100 more make 101.
-			for (let index = 0; index < 100; index += 1)
+			for (let index = 0; index < 160; index += 1) {
+				const lemma = {
+					...gehenLemma,
+					canonicalForm: `füllen${index}`,
+				} as const;
+				const { unitKind: _, ...stored } = lemma;
 				await ctx.db.insert("dictionaryLemmas", {
-					lemmaId: gehenLemmaId,
+					lemmaId: await ctx.db.insert("lemmas", {
+						lemmaKey: lemmaIdentityKey(lemma),
+						...stored,
+					}),
 				});
+			}
 		});
-		await expect(
-			readingEntryContext(t, {
-				intent: "addNewNote",
-				lemmaKey: lemmaIdentityKey(laufenLemma),
-				proposedLemma: laufenLemma,
-				readingKey: readingFingerprint(laufenReading),
-				surfaceKeys: [],
-				explicitLemmaTargetKeys: [],
-				pendingLocatorKeys: [],
-			}),
-		).rejects.toThrow("at most 100 dictionary Lemmas");
+		expect(await rows(t, "dictionaryLemmas")).toHaveLength(163);
+		const transaction = <Result>(
+			run: (
+				dictionary: ReturnType<typeof createDumdictTransaction>,
+			) => Promise<Result>,
+		) => t.run((ctx) => run(createDumdictTransaction(ctx)));
+
+		expect(
+			await transaction((dictionary) =>
+				dictionary.addNewNote({
+					draft: { reading: springenReading, note },
+				}),
+			),
+		).toMatchObject({ status: "committed" });
+		expect(
+			await transaction((dictionary) =>
+				dictionary.applyGeneratedKnowledge({
+					reading: gehenReading,
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "semanticRelations",
+							relation: "nearSynonym",
+							value: [laufenLemma],
+						},
+					],
+					pendingRelations: [
+						{
+							relation: "antonym",
+							target: {
+								language: "de",
+								canonicalForm: "stehen",
+								family: "Lexeme",
+								kind: "VERB",
+							},
+						},
+					],
+				}),
+			),
+		).toMatchObject({ status: "committed" });
+		expect(
+			(await readingKnowledge(t, gehenReading))?.semanticRelations,
+		).toEqual({ nearSynonym: [laufenLemma], antonym: [stehenLemma] });
+
+		expect(
+			await transaction((dictionary) =>
+				dictionary.applyGeneratedKnowledge({
+					reading: laufenReading,
+					changes: [
+						{
+							kind: "Contribute",
+							aspect: "semanticRelations",
+							relation: "antonym",
+							value: [fehlenLemma],
+						},
+					],
+					pendingRelations: [],
+				}),
+			),
+		).toMatchObject({ status: "rejected", code: "invalidRequest" });
+		expect(
+			await transaction((dictionary) =>
+				dictionary.addNewNote({
+					draft: {
+						reading: { ...springenReading, emojiDescription: "🐸" },
+						note,
+						relations: [
+							{
+								relation: "antonym",
+								target: {
+									kind: "existing",
+									lemma: fehlenLemma,
+								},
+							},
+						],
+					},
+				}),
+			),
+		).toMatchObject({ status: "rejected", code: "relationTargetMissing" });
 	});
 
-	test("fails relation planning explicitly when the complete Reading inventory overflows", async () => {
-		const { t, gehenLemmaId } = await seededDictionary();
+	test("fails relation planning explicitly when a neighbourhood's Lemmas overflow", async () => {
+		const { t, gehenReadingId } = await seededDictionary();
 		await t.run(async (ctx) => {
-			// With the seeded gehen Reading, 200 more make 201.
-			for (let index = 0; index < 200; index += 1)
-				await ctx.db.insert("readings", {
-					readingKey: `reading-key-overflow-${index}`,
-					lemmaId: gehenLemmaId,
-					emojiDescription: "overflow",
+			// The source Reading's own Lemma and 100 targets make 101.
+			for (let index = 0; index < 100; index += 1) {
+				const lemma = {
+					...gehenLemma,
+					canonicalForm: `ziel${index}`,
+				} as const;
+				const { unitKind: _, ...stored } = lemma;
+				const lemmaId = await ctx.db.insert("lemmas", {
+					lemmaKey: lemmaIdentityKey(lemma),
+					...stored,
 				});
+				await ctx.db.insert("dictionaryLemmas", { lemmaId });
+				await ctx.db.insert("semanticRelationEdges", {
+					sourceReadingId: gehenReadingId,
+					targetLemmaId: lemmaId,
+					relation: "nearSynonym",
+				});
+			}
 		});
 		await expect(
 			readingEntryContext(t, {
-				intent: "addNewNote",
-				lemmaKey: lemmaIdentityKey(laufenLemma),
-				proposedLemma: laufenLemma,
-				readingKey: readingFingerprint(laufenReading),
-				surfaceKeys: [],
-				explicitLemmaTargetKeys: [],
+				intent: "applyGeneratedKnowledge",
+				readingKey: readingFingerprint(gehenReading),
 				pendingLocatorKeys: [],
+				pendingTargetCanonicalForms: [],
+				relationTargetLemmaKeys: [],
+				relationTargetReadingKeys: [readingFingerprint(gehenReading)],
 			}),
-		).rejects.toThrow("at most 200 dictionary Readings");
+		).rejects.toThrow("at most 100 neighbourhood Lemmas");
 	});
 
 	test("fails relation planning explicitly when one Reading's edge inventory overflows", async () => {
@@ -1220,13 +1320,12 @@ describe("tf-demo Dumdict relation storage", () => {
 		});
 		await expect(
 			readingEntryContext(t, {
-				intent: "addNewNote",
-				lemmaKey: lemmaIdentityKey(laufenLemma),
-				proposedLemma: laufenLemma,
-				readingKey: readingFingerprint(laufenReading),
-				surfaceKeys: [],
-				explicitLemmaTargetKeys: [],
+				intent: "applyGeneratedKnowledge",
+				readingKey: readingFingerprint(gehenReading),
 				pendingLocatorKeys: [],
+				pendingTargetCanonicalForms: [],
+				relationTargetLemmaKeys: [lemmaIdentityKey(laufenLemma)],
+				relationTargetReadingKeys: [],
 			}),
 		).rejects.toThrow("at most 200 Semantic Relation edges");
 	});

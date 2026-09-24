@@ -43,6 +43,9 @@ export type LoadReadingEntryContextRequest<L extends Dumling.Language> =
 			intent: "applyGeneratedKnowledge";
 			reading: Dumling.Reading<L>;
 			pendingRelations: DumdictPendingSemanticRelation<L>[];
+			/** Direct Semantic Relation targets the Knowledge Changes name. */
+			relationTargetLemmas: Dumling.Lemma<L>[];
+			relationTargetReadings: Dumling.Reading<L>[];
 	  }
 	| {
 			intent: "ensureOwnedSurface";
