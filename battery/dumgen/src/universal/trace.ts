@@ -125,9 +125,10 @@ export function call<Request extends CallTrace["request"], Response, T>(
 	const { budget } = scope;
 	return Effect.uninterruptibleMask((restore) =>
 		Effect.gen(function* () {
-			const hash = yield* restore(
-				Effect.promise(() => fingerprint(exchange.fingerprinted)),
-			);
+			// Hashing runs alongside the queue: taking the permit is the call's
+			// first wait, so requests queue in the order they were issued.
+			const hashing = fingerprint(exchange.fingerprinted);
+			hashing.catch(() => {});
 			const queued = budget.demand >= budget.permits;
 			const queuedAt = performance.now();
 			budget.demand++;
@@ -149,31 +150,47 @@ export function call<Request extends CallTrace["request"], Response, T>(
 			const sent = yield* Effect.exit(
 				restore(
 					Effect.async<void>((resume, signal) => {
-						if (queued)
-							recordEvent(scope, "RequestQueued", {
-								callId: id,
-								waitMs: start - queuedAt,
-							});
-						const sending = exchange.request(signal);
-						request = sending;
 						const pending = Promise.resolve()
-							.then(() => exchange.send(sending))
-							.then(
-								(response) => {
-									settled = { ok: true, response };
-								},
-								(error) => {
+							.then(async () => {
+								// Interrupted before sending, for example by a sibling's
+								// failure right after a permit came free: nothing starts.
+								if (signal.aborted) return;
+								if (queued)
+									recordEvent(scope, "RequestQueued", {
+										callId: id,
+										waitMs: start - queuedAt,
+									});
+								const sending = exchange.request(signal);
+								request = sending;
+								try {
+									settled = {
+										ok: true,
+										response: await exchange.send(sending),
+									};
+								} catch (error) {
 									settled = { ok: false, error };
-								},
-							)
-							.then(() => resume(Effect.void));
+								}
+							})
+							.then(
+								() => resume(Effect.void),
+								(defect) => resume(Effect.die(defect)),
+							);
 						return Effect.promise(() => pending);
 					}),
 				),
 			);
+			// Nothing waits between the release and this call's result, so a
+			// failure reaches its siblings before a queued one can start.
+			const hashed = yield* Effect.exit(Effect.promise(() => hashing));
 			budget.demand--;
 			yield* budget.semaphore.release(1);
-			if (!request) return yield* Effect.interrupt;
+			if (!request)
+				return yield* Exit.isFailure(sent)
+					? Effect.failCause(sent.cause)
+					: Effect.interrupt;
+			if (Exit.isFailure(hashed))
+				return yield* Effect.failCause(hashed.cause);
+			const hash = hashed.value;
 			let transport: CallTrace["transport"];
 			let validation: CallTrace["validation"] = "NotRun";
 			let failure: string | undefined;
