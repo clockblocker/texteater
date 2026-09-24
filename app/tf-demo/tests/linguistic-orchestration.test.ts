@@ -1314,7 +1314,7 @@ test("intake never analyses sentences in other languages", async () => {
 
 const verfuegungSelection = { ...selection, clickedSegmentIndex: 10 };
 
-test("a click reads the stored analysis: a Collocation over `stellt zur Verfügung` covers the fused `zur` and skips classification", async () => {
+test("a click reads the stored analysis: a Collocation over `stellt zur Verfügung` covers the fused `zur` and skips classification; refused, it falls to the clicked word", async () => {
 	const inspection = createInspectionCapture();
 	const run = setupWithAnalysis([], {
 		inspection,
@@ -1324,12 +1324,19 @@ test("a click reads the stored analysis: a Collocation over `stellt zur Verfügu
 		run.orchestrator.resolveSegment(verfuegungSelection),
 	);
 	expect(result).toMatchObject({ grammatical: { decision: "Unresolved" } });
-	expect(run.encounters).toHaveLength(1);
-	expect(run.encounters[0]?.target).toEqual({
-		family: "Phraseme",
-		kind: "Collocation",
-		memberSegmentIndices: [2, 8, 10],
-	});
+	expect(run.encounters.map((encounter) => encounter.target)).toEqual([
+		{
+			family: "Phraseme",
+			kind: "Collocation",
+			memberSegmentIndices: [2, 8, 10],
+		},
+		{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [10] },
+	]);
+	expect(
+		inspection.steps.some(
+			(step) => step.name === "Select target · analysis word",
+		),
+	).toBe(true);
 	expect(
 		run.requests.filter((request) => request.stage === "classifyTarget"),
 	).toHaveLength(0);

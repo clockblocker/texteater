@@ -373,7 +373,7 @@ function PhrasemePanel({
 }) {
 	const text = (offset: number) =>
 		sentence.segments.find((s) => s.offset === offset)?.text ?? "?";
-	const kind = selectPhrasemeKind(phraseme);
+	const kind = selectPhrasemeKind(sentence, phraseme);
 	const words = membersOf(sentence, phraseme);
 	const verdict = phrasemeVerdict(sentence, phraseme, gold);
 	return (
@@ -465,7 +465,7 @@ function phrasemeVerdict(
 	const same = gold.find(
 		(entry) => [...entry.words].sort((a, b) => a - b).join(",") === heads,
 	);
-	const kind = selectPhrasemeKind(phraseme).kind;
+	const kind = selectPhrasemeKind(sentence, phraseme).kind;
 	if (!same)
 		return {
 			ok: false,
@@ -768,7 +768,7 @@ function TargetList({
 				) : null}
 				<ul className="grid gap-1 text-[0.8rem]">
 					{sentence.phrasemes.map((phraseme) => {
-						const kind = selectPhrasemeKind(phraseme);
+						const kind = selectPhrasemeKind(sentence, phraseme);
 						const verdict = phrasemeVerdict(
 							sentence,
 							phraseme,

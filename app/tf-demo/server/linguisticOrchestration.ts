@@ -687,27 +687,44 @@ export function createTfDemoOrchestrator(options: {
 					}
 					const view = parseGermanSentence(stored);
 					const sentence = view.sentence;
+					const resolve = (target: Encounter<"de">["target"]) => {
+						const encounter: Encounter<"de"> = { sentence, target };
+						return Effect.map(
+							options.dumgen.resolveGrammar(
+								encounter,
+								context.lemmaCandidates,
+							),
+							(attestation) => ({
+								decision: "Resolved" as const,
+								language: "de" as const,
+								encounter,
+								attestation,
+							}),
+						);
+					};
 					return yield* Effect.gen(function* () {
 						const target = yield* selectTarget(
 							stored,
 							view,
 							request.clickedSegmentIndex,
 						);
-						const encounter: Encounter<"de"> = {
-							sentence,
-							target,
-						};
-						const attestation =
-							yield* options.dumgen.resolveGrammar(
-								encounter,
-								context.lemmaCandidates,
-							);
-						return {
-							decision: "Resolved" as const,
-							language: "de" as const,
-							encounter,
-							attestation,
-						};
+						// Grammar may refuse a Phraseme the analysis named; the
+						// clicked word beneath it still resolves.
+						return yield* resolve(target).pipe(
+							Effect.catchTag("Unresolved", (failure) => {
+								const word =
+									target.family === "Phraseme"
+										? selectWord(
+												stored,
+												view,
+												request.clickedSegmentIndex,
+											)
+										: null;
+								return word
+									? Effect.flatMap(word, resolve)
+									: Effect.fail(failure);
+							}),
+						);
 					}).pipe(
 						Effect.catchTag("Unresolved", () =>
 							Effect.succeed({
@@ -787,11 +804,48 @@ export function createTfDemoOrchestrator(options: {
 				);
 			}
 
+			/**
+			 * The clicked word beneath a refused Phraseme, read from the
+			 * analysis, or null when the analysis has no resolved word there.
+			 */
+			function selectWord(
+				stored: PersistedSentence,
+				view: EncounterSentence,
+				clickedSegmentIndex: number,
+			) {
+				const selection = analysedTarget(
+					stored,
+					view,
+					clickedSegmentIndex,
+					"word",
+				);
+				if (!selection.target) return null;
+				const selected = Effect.succeed({
+					path: "analysis" as const,
+					target: selection.target,
+				});
+				return Effect.map(
+					options.inspection
+						? options.inspection.effect(
+								"Select target · analysis word",
+								"app/tf-demo · linguisticOrchestration",
+								{
+									clickedSegmentIndex,
+									reason: "phrasemeRefused",
+								},
+								selected,
+							)
+						: selected,
+					({ target }) => target,
+				);
+			}
+
 			/** The analysis target, or why the click is classified instead. */
 			function analysedTarget(
 				stored: PersistedSentence,
 				view: EncounterSentence,
 				clickedSegmentIndex: number,
+				layer: "largest" | "word" = "largest",
 			):
 				| { readonly target: Encounter<"de">["target"] }
 				| {
@@ -802,6 +856,7 @@ export function createTfDemoOrchestrator(options: {
 					context.analysis,
 					stored,
 					clickedSegmentIndex,
+					layer,
 				);
 				if (!selection.target) return selection;
 				const target = {
